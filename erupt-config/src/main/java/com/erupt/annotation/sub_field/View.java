@@ -18,7 +18,7 @@ public @interface View {
 
     boolean show() default true;
 
-    int sort() default Integer.MAX_VALUE;
+    int sort() default 0;
 
 
     class Model {

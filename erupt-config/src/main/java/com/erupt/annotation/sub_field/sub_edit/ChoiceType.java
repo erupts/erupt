@@ -6,5 +6,5 @@ package com.erupt.annotation.sub_field.sub_edit;
 public @interface ChoiceType {
     String[] values() default {};
 
-    ChoiceEnum choiceType() default ChoiceEnum.SING;
+    ChoiceEnum choiceEnum() default ChoiceEnum.SING;
 }

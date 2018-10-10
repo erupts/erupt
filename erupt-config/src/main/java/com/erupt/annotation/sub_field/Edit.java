@@ -1,9 +1,7 @@
 package com.erupt.annotation.sub_field;
 
-import com.erupt.annotation.sub_field.sub_edit.BoolType;
-import com.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import com.erupt.annotation.sub_field.sub_edit.DictType;
-import com.erupt.annotation.sub_field.sub_edit.ReferenceType;
+import com.erupt.annotation.constant.DataLength;
+import com.erupt.annotation.sub_field.sub_edit.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,20 +21,23 @@ public @interface Edit {
 
     EditType type() default EditType.INPUT;
 
-    String placeholder() default "";
-
-    String defaultVal() default "";
-
     boolean show() default true;
+
+    boolean readOnly() default false;
 
     int sort() default 0;
 
+    String group() default "";
 
-    ReferenceType reference() default @ReferenceType;
+    //other type
 
-    BoolType boolValue() default @BoolType;
+    InputType inputType() default @InputType;
 
-    ChoiceType choiceValue() default @ChoiceType;
+    ReferenceType referenceType() default @ReferenceType;
+
+    BoolType boolType() default @BoolType;
+
+    ChoiceType choiceType() default @ChoiceType;
 
     DictType dictType() default @DictType;
 

@@ -3,6 +3,8 @@ package com.erupt.service;
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.model.EruptModel;
+import com.erupt.test.mmo;
+import org.json.JSONObject;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -47,5 +49,31 @@ public class CoreService implements InitializingBean {
                 ERUPTS.put(eruptName, eruptModel);
             }
         }
+    }
+
+    public static void main(String[] args) {
+        Class<?> clazz = mmo.class;
+        List<EruptField> eruptFields = new ArrayList<>();
+        for (Field field : clazz.getFields()) {
+            EruptField eruptField = field.getAnnotation(EruptField.class);
+            if (null != eruptField) {
+                eruptFields.add(eruptField);
+            }
+        }
+        String configInfo = clazz.getAnnotation(Erupt.class).toString();
+        String newConfig = configInfo
+                .replaceAll("@com\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
+                .replaceAll("@com\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
+                .replaceAll("@com\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
+                .replaceAll("@com\\.erupt\\.annotation\\.\\w+", "")
+                .replace("=,", "='',")
+                .replace("=)","='')")
+                .replace("=", ":")
+                .replace("(", "{")
+                .replace(")", "}")
+                ;
+
+        System.out.println(new JSONObject(newConfig));
+
     }
 }
