@@ -1,41 +1,38 @@
 package com.erupt.model;
 
 import com.erupt.annotation.Erupt;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
 
 /**
  * Created by liyuepeng on 9/29/18.
  */
-public class EruptModel {
+public class EruptModel implements Serializable{
 
-    private Class<?> clazz;
+    private transient Class<?> clazz;
 
-    private Erupt erupt;
+    private transient Erupt erupt;
 
-    private JSONArray eruptViews;
+    private JsonObject eruptJson;
 
-    private JSONObject eruptJson;
+    private JsonArray eruptFieldViews;
 
-    List<EruptFieldModel> eruptFieldModels;
+    private List<EruptFieldModel> eruptFieldModels;
 
-    public JSONObject getEruptJson() {
-        return eruptJson;
+
+
+    public Class<?> getClazz() {
+        return clazz;
     }
 
-    public void setEruptJson(JSONObject eruptJson) {
-        this.eruptJson = eruptJson;
-    }
-
-    public List<EruptFieldModel> getEruptFieldModels() {
-        return eruptFieldModels;
-    }
-
-    public void setEruptFieldModels(List<EruptFieldModel> eruptFieldModels) {
-        this.eruptFieldModels = eruptFieldModels;
+    public void setClazz(Class<?> clazz) {
+        this.clazz = clazz;
     }
 
     public Erupt getErupt() {
@@ -46,19 +43,27 @@ public class EruptModel {
         this.erupt = erupt;
     }
 
-    public Class<?> getClazz() {
-        return clazz;
+    public JsonObject getEruptJson() {
+        return eruptJson;
     }
 
-    public void setClazz(Class<?> clazz) {
-        this.clazz = clazz;
+    public void setEruptJson(JsonObject eruptJson) {
+        this.eruptJson = eruptJson;
     }
 
-    public JSONArray getEruptViews() {
-        return eruptViews;
+    public JsonArray getEruptFieldViews() {
+        return eruptFieldViews;
     }
 
-    public void setEruptViews(JSONArray eruptViews) {
-        this.eruptViews = eruptViews;
+    public void setEruptFieldViews(JsonArray eruptFieldViews) {
+        this.eruptFieldViews = eruptFieldViews;
+    }
+
+    public List<EruptFieldModel> getEruptFieldModels() {
+        return eruptFieldModels;
+    }
+
+    public void setEruptFieldModels(List<EruptFieldModel> eruptFieldModels) {
+        this.eruptFieldModels = eruptFieldModels;
     }
 }

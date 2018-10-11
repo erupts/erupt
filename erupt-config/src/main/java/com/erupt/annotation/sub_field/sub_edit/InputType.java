@@ -1,5 +1,6 @@
 package com.erupt.annotation.sub_field.sub_edit;
 
+import com.erupt.annotation.ColorEnum;
 import com.erupt.annotation.constant.DataLength;
 
 /**
@@ -7,6 +8,8 @@ import com.erupt.annotation.constant.DataLength;
  */
 public @interface InputType {
     InputEnum inputEnum() default InputEnum.STRING;
+
+    ColorEnum color() default ColorEnum.DEFAULT;
 
     int length() default DataLength.UNLIMITED;
 

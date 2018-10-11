@@ -4,6 +4,7 @@ import com.erupt.annotation.fun.DataProxy;
 import com.erupt.annotation.sub_erupt.DataFilter;
 import com.erupt.annotation.sub_erupt.Power;
 import com.erupt.annotation.sub_erupt.RowOperation;
+import com.erupt.annotation.sub_erupt.ShowType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,7 +18,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Erupt {
 
-    String name() default "";
+    ShowType showType() default ShowType.TABLE;
+
+    String name();
 
     Power power() default @Power;
 

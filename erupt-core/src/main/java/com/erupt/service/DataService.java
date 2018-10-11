@@ -21,16 +21,22 @@ public class DataService {
         throw new RuntimeException("没有新增权限");
     }
 
-    public void delete() {
-
+    public void delete(EruptModel eruptModel) {
+        if (eruptModel.getErupt().power().del()) {
+            System.out.println(1);
+        }
+        throw new RuntimeException("没有删除权限");
     }
 
-    public void edit() {
+    public void edit(EruptModel eruptModel) {
+        if (eruptModel.getErupt().power().edit()) {
 
+        }
+        throw new RuntimeException("没有修改权限");
     }
 
     public void query(EruptModel eruptModel) {
-        if (eruptModel.getErupt().power().add()) {
+        if (eruptModel.getErupt().power().query()) {
 
         }
         throw new RuntimeException("没有查询权限");

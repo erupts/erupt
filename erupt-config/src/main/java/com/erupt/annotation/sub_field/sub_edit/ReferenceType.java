@@ -8,7 +8,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface ReferenceType {
-    String id() default "";
+    String id();
 
-    String label() default "";
+    String label();
+
+    String filter() default "";
 }

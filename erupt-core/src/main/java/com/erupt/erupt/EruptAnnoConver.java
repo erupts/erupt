@@ -4,47 +4,56 @@ import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.util.ConfigUtil;
+import com.erupt.constant.EruptConst;
 import com.erupt.model.EruptFieldModel;
 import com.erupt.model.EruptModel;
-import lombok.extern.java.Log;
-import org.json.JSONArray;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.fusesource.jansi.Ansi;
 import org.json.JSONObject;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * Created by liyuepeng on 10/10/18.
  */
-@Log
 public class EruptAnnoConver {
     public static JSONObject converEruptJson(String eruptStr, Erupt erupt) {
-        JSONObject eruptJson = new JSONObject(ConfigUtil.annoStrToJsonStr(eruptStr));
 
-        return eruptJson;
+        return null;
     }
+
 
     public static void validateEruptFieldInfo(EruptFieldModel eruptFieldModel) {
         for (View view : eruptFieldModel.getEruptField().multiView()) {
             if ("".equals(view.name())) {
-                throw new RuntimeException(eruptFieldModel.getField().getName() + "[" + view.title() + "]" + "-->multiView请指定name值");
+                throw new RuntimeException(eruptFieldModel.getField().getName() + "[" + view.title() + "]" + EruptConst.LOG_ARROWS_SYMBOL + "multiView请指定name值");
             }
         }
 
         switch (eruptFieldModel.getEruptField().edit().type()) {
             case DICT:
-                if ("".equals(eruptFieldModel.getEruptField().edit().dictType().dictCode())) {
-                    throw new RuntimeException(eruptFieldModel.getField().getName() + "-->字典类型未提供字典编码");
+                if (eruptFieldModel.getEruptField().edit().dictType().length == 0) {
+                    throw new RuntimeException(ansi().fg(Ansi.Color.RED).a(
+                            eruptFieldModel.getField().getName() + EruptConst.LOG_ARROWS_SYMBOL + "字典类型未指定注解@DictType值"
+                    ).toString());
                 }
                 break;
             case CHOICE:
-                if (eruptFieldModel.getEruptField().edit().choiceType().values().length == 0) {
-                    throw new RuntimeException(eruptFieldModel.getField().getName() + "-->单选/多选类型数据未提供可选值");
+                if (eruptFieldModel.getEruptField().edit().choiceType().length == 0) {
+                    throw new RuntimeException(ansi().fg(Ansi.Color.RED).a(
+                            eruptFieldModel.getField().getName() + EruptConst.LOG_ARROWS_SYMBOL + "单选/多选类型未指定注解@ChoiceType值"
+                    ).toString());
                 }
                 break;
             case REFERENCE:
-                if ("".equals(eruptFieldModel.getEruptField().edit().referenceType().id())) {
-                    throw new RuntimeException(eruptFieldModel.getField().getName() + "-->引用类型未填写引用ID");
+                if (eruptFieldModel.getEruptField().edit().referenceType().length == 0) {
+                    throw new RuntimeException(ansi().fg(Ansi.Color.RED).a(
+                            eruptFieldModel.getField().getName() + EruptConst.LOG_ARROWS_SYMBOL + "引用类型未指定注解@ReferenceType值"
+                    ).toString());
                 }
                 break;
-
             case BOOLEAN:
 
                 break;
@@ -52,26 +61,25 @@ public class EruptAnnoConver {
     }
 
 
-    //生成列视图
-    public static void shakeViewToLineView(EruptModel eruptModel) {
-        JSONArray eruptViews = new JSONArray();
+    //生成展示列视图
+    public static void gcEruptFieldViews(EruptModel eruptModel) {
+        JsonArray eruptViews = new JsonArray();
         eruptModel.getEruptFieldModels().forEach((eruptFieldModel) -> {
             EruptField eruptField = eruptFieldModel.getEruptField();
             if (eruptField.multiView().length != 0) {
-
                 for (View view : eruptField.multiView()) {
-                    JSONObject jsonObject = new JSONObject(ConfigUtil.annoStrToJsonStr(view.toString()));
-                    jsonObject.put("name", eruptFieldModel.getField().getName() + "_" + view.name());
-                    eruptViews.put(jsonObject);
+                    JsonObject jsonObject = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(view.toString())).getAsJsonObject();
+                    jsonObject.addProperty("name", eruptFieldModel.getField().getName() + "_" + view.name());
+                    eruptViews.add(jsonObject);
                 }
             } else {
-                JSONObject jsonObject = new JSONObject(ConfigUtil.annoStrToJsonStr(eruptField.view().toString()));
-                jsonObject.put("name", eruptFieldModel.getField().getName());
-                eruptViews.put(jsonObject);
+                JsonObject jsonObject = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(eruptField.view().toString())).getAsJsonObject();
+                jsonObject.addProperty("name", eruptFieldModel.getField().getName());
+                eruptViews.add(jsonObject);
             }
 
         });
-        eruptModel.setEruptViews(eruptViews);
+        eruptModel.setEruptFieldViews(eruptViews);
     }
 
 }

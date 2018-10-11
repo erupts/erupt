@@ -5,5 +5,7 @@ package com.erupt.annotation.sub_field.sub_edit;
  * 字段必须返回DictItem对象才能正常使用
  */
 public @interface DictType {
-    String dictCode() default "";
+    String dictCode();
+
+
 }

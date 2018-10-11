@@ -4,12 +4,12 @@ import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_erupt.Power;
 import com.erupt.annotation.sub_erupt.RowOperation;
-import com.erupt.annotation.sub_field.*;
-import com.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
-import com.erupt.annotation.sub_field.sub_edit.InputEnum;
-import com.erupt.annotation.sub_field.sub_edit.InputType;
-import com.erupt.annotation.sub_field.sub_edit.ReferenceType;
+import com.erupt.annotation.sub_field.Search;
+import com.erupt.annotation.sub_field.View;
+import com.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import com.erupt.annotation.sub_field.sub_edit.VL;
 
 import javax.persistence.*;
 
@@ -17,8 +17,9 @@ import javax.persistence.*;
  * Created by liyuepeng on 9/28/18.
  */
 @Erupt(
+        name = "测试",
         power = @Power(add = false),
-        rowOperation = {@RowOperation(
+        rowOperation = @RowOperation(
                 icon = "fa fa-icon",
                 title = "执行",
                 operationHandler = OperationHandlerImpl.class,
@@ -32,13 +33,11 @@ import javax.persistence.*;
                                 notNull = true
                         )
                 }
-        )}
+        )
 )
 @Entity
 @Table(name = "ERUPT_TEST")
 public class mmo {
-
-
     @Id
     @GeneratedValue
     public Long id;
@@ -46,16 +45,13 @@ public class mmo {
     @Column(name = "NAME")
     @EruptField(
             multiView = {
-                    @View(title = "张三", name = "abc"),
-                    @View(title = "李四", name = "def"),
-                    @View(title = "王五", name = "jhi"),
+                    @View(title = "张三", name = "abc")
             },
             edit = @Edit(
                     title = "名称",
                     notNull = true,
-                    type = EditType.INPUT,
-                    inputType = @InputType(placeholder = "请输入姓名", inputEnum = InputEnum.NUMBER),
-                    choiceType = @ChoiceType(values = {"张三", "李四"})),
+                    type = EditType.INPUT
+            ),
             search = @Search(isSearch = true)
     )
     public String name;
@@ -66,9 +62,15 @@ public class mmo {
             edit = @Edit(
                     title = "名称",
                     notNull = true,
-                    type = EditType.INPUT,
-                    inputType = @InputType(placeholder = "请输入姓名", inputEnum = InputEnum.NUMBER),
-                    choiceType = @ChoiceType(values = {"张三", "李四"})),
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(
+                            vl = {
+                                    @VL(value = 123, label = "张三"),
+                                    @VL(value = 123, label = "李四"),
+                                    @VL(value = 123, label = "王五")
+                            }
+                    )
+            ),
             search = @Search(isSearch = true)
     )
     public String text;

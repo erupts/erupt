@@ -1,6 +1,5 @@
 package com.erupt.annotation.sub_field;
 
-import com.erupt.annotation.constant.DataLength;
 import com.erupt.annotation.sub_field.sub_edit.*;
 
 import java.lang.annotation.ElementType;
@@ -30,77 +29,15 @@ public @interface Edit {
     String group() default "";
 
 
-    InputType inputType() default @InputType;
+    //如下注解虽为数组形式但是实际使用中只取数组为第零个的值
+    InputType[] inputType() default {};
 
-    ReferenceType referenceType() default @ReferenceType;
+    ReferenceType[] referenceType() default {};
 
-    BoolType boolType() default @BoolType;
+    BoolType[] boolType() default {};
 
-    ChoiceType choiceType() default @ChoiceType;
+    ChoiceType[] choiceType() default {};
 
-    DictType dictType() default @DictType;
-
-    class Model {
-        private String title;
-
-        private EditType type;
-
-        private String placeholder;
-
-        private String defaultVal;
-
-        private boolean show;
-
-        private int sort;
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public EditType getType() {
-            return type;
-        }
-
-        public void setType(EditType type) {
-            this.type = type;
-        }
-
-        public String getPlaceholder() {
-            return placeholder;
-        }
-
-        public void setPlaceholder(String placeholder) {
-            this.placeholder = placeholder;
-        }
-
-        public String getDefaultVal() {
-            return defaultVal;
-        }
-
-        public void setDefaultVal(String defaultVal) {
-            this.defaultVal = defaultVal;
-        }
-
-        public boolean isShow() {
-            return show;
-        }
-
-        public void setShow(boolean show) {
-            this.show = show;
-        }
-
-        public int getSort() {
-            return sort;
-        }
-
-        public void setSort(int sort) {
-            this.sort = sort;
-        }
-    }
-
+    DictType[] dictType() default {};
 
 }
