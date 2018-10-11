@@ -1,10 +1,7 @@
 package com.erupt.annotation;
 
 import com.erupt.annotation.fun.DataProxy;
-import com.erupt.annotation.sub_erupt.DataFilter;
-import com.erupt.annotation.sub_erupt.Power;
-import com.erupt.annotation.sub_erupt.RowOperation;
-import com.erupt.annotation.sub_erupt.ShowType;
+import com.erupt.annotation.sub_erupt.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -21,6 +18,8 @@ public @interface Erupt {
     ShowType showType() default ShowType.TABLE;
 
     String name();
+
+    Card[] cards() default {};
 
     Power power() default @Power;
 

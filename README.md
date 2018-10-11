@@ -1,31 +1,35 @@
 # erupt
+### YuePeng
 
 #### 项目介绍
-基于注解的java后台快速开发框架，前端页面结构完全由注解指定，将前端工作量减少至零
+基于注解理念的java后台快速开发框架，前端页面结构完全由注解指定，将前端工作量减少至零
 
 #### 软件架构
-erupt
+1. JAVA 8
+2. Spring Boot
+3. JPA
 
 
 #### 安装教程
-1. xxxx
-2. xxxx
-3. xxxx
+1. 指定数据库信息，即可运行使用。
 
 #### 使用说明
-1. xxxx
-2. xxxx
-3. xxxx
+在实体类与实体类字段上使用@Erupt和@EruptField注解
 
 #### 参与贡献
-1. YuePeng
 
 
-#### 码云特技
-
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+#### 开发计划
+1. 完成注解功能         OK 
+2. 完成界面结构的构建    OK
+3. 完善数据层        
+4. 开发前端界面
+5. 完善注解功能
+6. 完善数据功能
+7. 开发菜单功能
+8. 开发用户界面功能
+9. 开发BI报表功能
+10. 开发任务调度功能
+11. 支持多数据源功能（缓存，csv等）
+12. 完善BI报表功能（大数据，自动化图表等）
+13. 未来展望。。。。。。（开源|产品）

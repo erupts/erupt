@@ -10,7 +10,7 @@ public @interface Card {
 
     String value();
 
-    String txt();
+    String desc();
 
     ColorEnum color() default ColorEnum.DEFAULT;
 }

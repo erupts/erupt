@@ -58,7 +58,7 @@ public class mmo {
 
     @Column(name = "TEXT")
     @EruptField(
-            view = @View(title = "王五"),
+            view = @View(title = "名称"),
             edit = @Edit(
                     title = "名称",
                     notNull = true,
