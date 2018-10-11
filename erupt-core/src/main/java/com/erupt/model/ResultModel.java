@@ -10,6 +10,6 @@ public class ResultModel {
     private Object data;
 
     enum Status {
-        SUCCESS, ERROR, NO_LOGIN,
+        SUCCESS, ERROR, NO_LOGIN, NO_RIGHT
     }
 }

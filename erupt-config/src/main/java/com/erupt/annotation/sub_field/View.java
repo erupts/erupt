@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface View {
 
-    String column() default "";
+    String name() default "";
 
     String title() default "";
 
@@ -20,43 +20,4 @@ public @interface View {
 
     int sort() default 0;
 
-
-    class Model {
-
-        public Model(View view) {
-            this.title = view.title();
-            this.show = view.show();
-            this.sort = view.sort();
-        }
-
-        private String title;
-
-        private boolean show;
-
-        private int sort;
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public boolean isShow() {
-            return show;
-        }
-
-        public void setShow(boolean show) {
-            this.show = show;
-        }
-
-        public int getSort() {
-            return sort;
-        }
-
-        public void setSort(int sort) {
-            this.sort = sort;
-        }
-    }
 }

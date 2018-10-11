@@ -1,4 +1,4 @@
-//package com.erupt.util;
+//package com.erupt.dao;
 //
 //import org.hibernate.*;
 //import org.hibernate.criterion.Criterion;
@@ -13,8 +13,7 @@
 //import java.util.*;
 //
 //@Repository
-//@SuppressWarnings("unchecked")
-//public class HibernateBaseDao {
+//public class HibernateDao {
 //
 //	public static final int BATCH_SIZE = 30;
 //

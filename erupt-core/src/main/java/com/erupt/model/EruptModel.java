@@ -1,6 +1,8 @@
 package com.erupt.model;
 
 import com.erupt.annotation.Erupt;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -14,8 +16,27 @@ public class EruptModel {
 
     private Erupt erupt;
 
-    private List<Field> eruptFields;
+    private JSONArray eruptViews;
 
+    private JSONObject eruptJson;
+
+    List<EruptFieldModel> eruptFieldModels;
+
+    public JSONObject getEruptJson() {
+        return eruptJson;
+    }
+
+    public void setEruptJson(JSONObject eruptJson) {
+        this.eruptJson = eruptJson;
+    }
+
+    public List<EruptFieldModel> getEruptFieldModels() {
+        return eruptFieldModels;
+    }
+
+    public void setEruptFieldModels(List<EruptFieldModel> eruptFieldModels) {
+        this.eruptFieldModels = eruptFieldModels;
+    }
 
     public Erupt getErupt() {
         return erupt;
@@ -23,14 +44,6 @@ public class EruptModel {
 
     public void setErupt(Erupt erupt) {
         this.erupt = erupt;
-    }
-
-    public List<Field> getEruptFields() {
-        return eruptFields;
-    }
-
-    public void setEruptFields(List<Field> eruptFields) {
-        this.eruptFields = eruptFields;
     }
 
     public Class<?> getClazz() {
@@ -41,5 +54,11 @@ public class EruptModel {
         this.clazz = clazz;
     }
 
+    public JSONArray getEruptViews() {
+        return eruptViews;
+    }
 
+    public void setEruptViews(JSONArray eruptViews) {
+        this.eruptViews = eruptViews;
+    }
 }

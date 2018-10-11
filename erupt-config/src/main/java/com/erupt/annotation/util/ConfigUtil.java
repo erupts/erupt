@@ -5,7 +5,7 @@ package com.erupt.annotation.util;
  */
 public class ConfigUtil {
 
-    public static String annotationStrToJsonStr(String annotationStr) {
+    public static String annoStrToJsonStr(String annotationStr) {
         return annotationStr
                 .replaceAll("@com\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
                 .replaceAll("@com\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
@@ -17,5 +17,7 @@ public class ConfigUtil {
                 .replace("(", "{")
                 .replace(")", "}");
     }
+
+
 
 }

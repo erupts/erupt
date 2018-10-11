@@ -21,7 +21,7 @@ import javax.persistence.*;
         rowOperation = {@RowOperation(
                 icon = "fa fa-icon",
                 title = "执行",
-                oerationHandler = OperationHandlerImpl.class,
+                operationHandler = OperationHandlerImpl.class,
                 edits = {
                         @Edit(
                                 title = "姓名",
@@ -45,7 +45,11 @@ public class mmo {
 
     @Column(name = "NAME")
     @EruptField(
-            view = @View(title = "名称"),
+            multiView = {
+                    @View(title = "张三", name = "abc"),
+                    @View(title = "李四", name = "def"),
+                    @View(title = "王五", name = "jhi"),
+            },
             edit = @Edit(
                     title = "名称",
                     notNull = true,
@@ -56,19 +60,17 @@ public class mmo {
     )
     public String name;
 
-
+    @Column(name = "TEXT")
     @EruptField(
-            multiView = {
-                    @View(column = "name", title = "用户名"),
-                    @View(column = "password", title = "密码")
-            },
+            view = @View(title = "王五"),
             edit = @Edit(
-                    title = "用户",
+                    title = "名称",
                     notNull = true,
-                    type = EditType.REFERENCE,
-                    referenceType = @ReferenceType(label = "name", id = "id")
-            ),
+                    type = EditType.INPUT,
+                    inputType = @InputType(placeholder = "请输入姓名", inputEnum = InputEnum.NUMBER),
+                    choiceType = @ChoiceType(values = {"张三", "李四"})),
             search = @Search(isSearch = true)
     )
-    public User user;
+    public String text;
+
 }

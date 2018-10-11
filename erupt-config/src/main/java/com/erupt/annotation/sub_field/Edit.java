@@ -29,7 +29,6 @@ public @interface Edit {
 
     String group() default "";
 
-    //other type
 
     InputType inputType() default @InputType;
 

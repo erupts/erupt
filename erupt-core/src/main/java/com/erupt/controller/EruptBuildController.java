@@ -20,9 +20,7 @@ public class EruptBuildController {
     @ResponseBody
     public void getEruptTableView(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        eruptModel.getEruptFields().forEach(field -> {
 
-        });
     }
 
     @GetMapping("/row/edit/{erupt}")

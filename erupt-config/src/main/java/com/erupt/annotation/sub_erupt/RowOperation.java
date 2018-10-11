@@ -16,5 +16,5 @@ public @interface RowOperation {
 
     Edit[] edits() default {};
 
-    Class<? extends OperationHandler> oerationHandler();
+    Class<? extends OperationHandler> operationHandler();
 }
