@@ -21,10 +21,7 @@ public class EruptModel implements Serializable{
 
     private JsonObject eruptJson;
 
-    private JsonArray eruptFieldViews;
-
     private List<EruptFieldModel> eruptFieldModels;
-
 
 
     public Class<?> getClazz() {
@@ -49,14 +46,6 @@ public class EruptModel implements Serializable{
 
     public void setEruptJson(JsonObject eruptJson) {
         this.eruptJson = eruptJson;
-    }
-
-    public JsonArray getEruptFieldViews() {
-        return eruptFieldViews;
-    }
-
-    public void setEruptFieldViews(JsonArray eruptFieldViews) {
-        this.eruptFieldViews = eruptFieldViews;
     }
 
     public List<EruptFieldModel> getEruptFieldModels() {

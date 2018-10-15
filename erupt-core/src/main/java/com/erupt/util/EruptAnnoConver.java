@@ -1,4 +1,4 @@
-package com.erupt.erupt;
+package com.erupt.util;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
@@ -26,11 +26,11 @@ public class EruptAnnoConver {
 
 
     public static void validateEruptFieldInfo(EruptFieldModel eruptFieldModel) {
-        for (View view : eruptFieldModel.getEruptField().multiView()) {
-            if ("".equals(view.name())) {
-                throw new RuntimeException(eruptFieldModel.getField().getName() + "[" + view.title() + "]" + EruptConst.LOG_ARROWS_SYMBOL + "multiView请指定name值");
-            }
-        }
+//        for (View view : eruptFieldModel.getEruptField().view()) {
+//            if ("".equals(view.column())) {
+//                throw new RuntimeException(eruptFieldModel.getField().getName() + "[" + view.title() + "]" + EruptConst.LOG_ARROWS_SYMBOL + "multiView请指定name值");
+//            }
+//        }
 
         switch (eruptFieldModel.getEruptField().edit().type()) {
             case DICT:
@@ -61,25 +61,25 @@ public class EruptAnnoConver {
     }
 
 
-    //生成展示列视图
-    public static void gcEruptFieldViews(EruptModel eruptModel) {
-        JsonArray eruptViews = new JsonArray();
-        eruptModel.getEruptFieldModels().forEach((eruptFieldModel) -> {
-            EruptField eruptField = eruptFieldModel.getEruptField();
-            if (eruptField.multiView().length != 0) {
-                for (View view : eruptField.multiView()) {
-                    JsonObject jsonObject = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(view.toString())).getAsJsonObject();
-                    jsonObject.addProperty("name", eruptFieldModel.getField().getName() + "_" + view.name());
-                    eruptViews.add(jsonObject);
-                }
-            } else {
-                JsonObject jsonObject = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(eruptField.view().toString())).getAsJsonObject();
-                jsonObject.addProperty("name", eruptFieldModel.getField().getName());
-                eruptViews.add(jsonObject);
-            }
-
-        });
-        eruptModel.setEruptFieldViews(eruptViews);
-    }
+//    //生成展示列视图
+//    public static void gcEruptFieldViews(EruptModel eruptModel) {
+//        JsonArray eruptViews = new JsonArray();
+//        eruptModel.getEruptFieldModels().forEach((eruptFieldModel) -> {
+//            EruptField eruptField = eruptFieldModel.getEruptField();
+//            if (eruptField.multiView().length != 0) {
+//                for (View view : eruptField.multiView()) {
+//                    JsonObject jsonObject = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(view.toString())).getAsJsonObject();
+//                    jsonObject.addProperty("name", eruptFieldModel.getField().getName() + "_" + view.name());
+//                    eruptViews.add(jsonObject);
+//                }
+//            } else {
+//                JsonObject jsonObject = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(eruptField.view().toString())).getAsJsonObject();
+//                jsonObject.addProperty("name", eruptFieldModel.getField().getName());
+//                eruptViews.add(jsonObject);
+//            }
+//
+//        });
+//        eruptModel.setEruptFieldViews(eruptViews);
+//    }
 
 }

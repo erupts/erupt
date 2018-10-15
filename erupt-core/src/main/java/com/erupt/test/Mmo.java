@@ -8,8 +8,11 @@ import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.Search;
 import com.erupt.annotation.sub_field.View;
+import com.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
 import com.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import com.erupt.annotation.sub_field.sub_edit.VL;
+import com.erupt.model.BaseModel;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -18,7 +21,6 @@ import javax.persistence.*;
  */
 @Erupt(
         name = "测试",
-        power = @Power(add = false),
         rowOperation = @RowOperation(
                 icon = "fa fa-icon",
                 title = "执行",
@@ -37,15 +39,15 @@ import javax.persistence.*;
 )
 @Entity
 @Table(name = "ERUPT_TEST")
-public class mmo {
-    @Id
-    @GeneratedValue
-    public Long id;
+public class Mmo extends BaseModel {
+
 
     @Column(name = "NAME")
     @EruptField(
-            multiView = {
-                    @View(title = "张三", name = "abc")
+            views = {
+                    @View(title = "张三", column = "abc"),
+                    @View(title = "张三", column = "def"),
+                    @View(title = "张三", column = "kkk")
             },
             edit = @Edit(
                     title = "名称",
@@ -54,11 +56,11 @@ public class mmo {
             ),
             search = @Search(isSearch = true)
     )
-    public String name;
+    private String name;
 
     @Column(name = "TEXT")
     @EruptField(
-            view = @View(title = "名称"),
+            views = @View(title = "名称"),
             edit = @Edit(
                     title = "名称",
                     notNull = true,
@@ -68,11 +70,27 @@ public class mmo {
                                     @VL(value = 123, label = "张三"),
                                     @VL(value = 123, label = "李四"),
                                     @VL(value = 123, label = "王五")
-                            }
+                            },
+                            choiceEnum = ChoiceEnum.SING
                     )
             ),
             search = @Search(isSearch = true)
     )
-    public String text;
+    private String text;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }

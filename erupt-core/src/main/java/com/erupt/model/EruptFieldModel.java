@@ -2,6 +2,7 @@ package com.erupt.model;
 
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.util.ConfigUtil;
+import com.erupt.util.EruptAnnoConver;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -21,11 +22,25 @@ public class EruptFieldModel implements Serializable {
 
     private JsonObject eruptFieldJson;
 
+    private String fieldName;
+
+    private String fieldReturnName;
+
+    public EruptFieldModel(EruptField eruptField, Field field) {
+        this.eruptField = eruptField;
+        this.field = field;
+        this.eruptFieldJson = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(eruptField.toString())).getAsJsonObject();
+        this.fieldName = field.getName();
+        this.fieldReturnName = field.getType().getSimpleName();
+        EruptAnnoConver.validateEruptFieldInfo(this);
+    }
+
+    public EruptFieldModel() {
+
+    }
 
     public void setEruptField(EruptField eruptField) {
         this.eruptField = eruptField;
-
-        this.eruptFieldJson = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(eruptField.toString())).getAsJsonObject();
     }
 
     public EruptField getEruptField() {
@@ -42,5 +57,25 @@ public class EruptFieldModel implements Serializable {
 
     public JsonObject getEruptFieldJson() {
         return eruptFieldJson;
+    }
+
+    public void setEruptFieldJson(JsonObject eruptFieldJson) {
+        this.eruptFieldJson = eruptFieldJson;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public String getFieldReturnName() {
+        return fieldReturnName;
+    }
+
+    public void setFieldReturnName(String fieldReturnName) {
+        this.fieldReturnName = fieldReturnName;
     }
 }
