@@ -13,5 +13,6 @@ public enum EditType {
     IMAGE,            //图片
     QRCODE,           //二维码
     ATTACHMENT,       //附件
-    TAB               //TAB选项卡
+    TAB,              //TAB选项卡
+    COLOR,            //颜色
 }

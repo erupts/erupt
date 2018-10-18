@@ -7,7 +7,7 @@ import com.erupt.annotation.sub_field.sub_edit.*;
  */
 public @interface Edit {
 
-    String title() default "";
+    String title();
 
     boolean notNull() default false;
 
@@ -34,5 +34,7 @@ public @interface Edit {
     DictType[] dictType() default {};
 
     DateType[] dateType() default {};
+
+    TabType[] tabType() default {};
 
 }

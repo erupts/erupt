@@ -1,6 +1,6 @@
 package com.erupt.annotation.sub_erupt;
 
-import com.erupt.annotation.ColorEnum;
+import com.erupt.annotation.constant.RgbColor;
 
 /**
  * Created by liyuepeng on 10/11/18.
@@ -12,5 +12,5 @@ public @interface Card {
 
     String desc();
 
-    ColorEnum color() default ColorEnum.DEFAULT;
+    RgbColor color() default RgbColor.blue;
 }

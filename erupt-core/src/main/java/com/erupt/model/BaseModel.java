@@ -1,6 +1,7 @@
 package com.erupt.model;
 
 import com.erupt.annotation.EruptField;
+import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.View;
 
 import javax.persistence.*;
@@ -15,7 +16,8 @@ public class BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     @EruptField(
-            views = @View(title = "id", show = false)
+            views = @View(title = "id", show = false),
+            edit = @Edit(title = "id", show = false)
     )
     private Long id;
 }

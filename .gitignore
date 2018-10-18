@@ -1,3 +1,4 @@
 ### IntelliJ IDEA ###
 *.iml
 */.idea/
+*/node_modules/
