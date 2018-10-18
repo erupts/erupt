@@ -1,0 +1,120 @@
+<div class="button-page">
+  <div class="row">
+    <!-- bootstrap modal start -->
+    <div class="col-sm-12">
+      <!-- Notification card start -->
+      <app-card [title]="'Notifications'">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="sub-title">Notification Position</div>
+            <p>This plugin has layout options where you can display it in any corner of the screen, simply click one layout corners and press the buttons on the other section to see the magic</p>
+            <div class="location-selector">
+              <div class="bit top left" data-position="top left"></div>
+              <div class="bit top right" data-position="top right"></div>
+              <div class="bit top" data-position="top"></div>
+              <div class="bit bottom left" data-position="bottom left"></div>
+              <div class="bit bottom right" data-position="bottom right"></div>
+              <div class="bit bottom" data-position="bottom"></div>
+            </div>
+          </div>
+          <div class="col-sm-12 model-btn-card">
+            <div class="sub-title">Notification Position</div>
+            <p>Notification All Options : <code> (click) with option, title, msg, showClose, timeout, position, theme, type</code></p>
+            <ul class="notifications">
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', showClose: true, timeout: 5000, theme:'bootstrap', type:'wait', position:'top-left', closeOther:true})">Top Left</button>
+              </li>
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', showClose: true, timeout: 5000, theme:'bootstrap', type:'wait', position:'top-right', closeOther:true})">Top Right</button>
+              </li>
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', showClose: true, timeout: 5000, theme:'bootstrap', type:'wait', position:'top-center', closeOther:true})">Top Center</button>
+              </li>
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', showClose: true, timeout: 5000, theme:'bootstrap', type:'wait', position:'bottom-left', closeOther:true})">Bottom Left</button>
+              </li>
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', showClose: true, timeout: 5000, theme:'bootstrap', type:'wait', position:'bottom-right', closeOther:true})">Bottom Right</button>
+              </li>
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', showClose: true, timeout: 5000, theme:'bootstrap', type:'wait', position:'bottom-center', closeOther:true})">Bottom Center</button>
+              </li>
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', showClose: true, timeout: 5000, theme:'bootstrap', type:'wait', position:'center-center', closeOther:true})">Center Center</button>
+              </li>
+            </ul>
+            <div class="sub-title">Notification Default</div>
+            <p>Change data-type : <code> theme="default"</code> to change notification color</p>
+            <ul class="notifications">
+              <li>
+                <button class="btn btn-inverse waves-light" mdbRippleRadius (click)="addToast({title:'Inverse Toasty', msg:'Turning standard Inverse alerts into awesome notifications', timeout: 5000, theme:'default', position:'bottom-right', type:'default'})">Default</button>
+              </li>
+              <li>
+                <button class="btn btn-info waves-light" mdbRippleRadius (click)="addToast({title:'Info Toasty', msg:'Turning standard Info alerts into awesome notifications', timeout: 5000, theme:'default', position:'bottom-right', type:'info'})">Info</button>
+              </li>
+              <li>
+                <button class="btn btn-success waves-light" mdbRippleRadius (click)="addToast({title:'Success Toasty', msg:'Turning standard Success alerts into awesome notifications', timeout: 5000, theme:'default', position:'bottom-right', type:'success'})">Success</button>
+              </li>
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Primary Toasty', msg:'Turning standard Primary alerts into awesome notifications', timeout: 5000, theme:'default', position:'bottom-right', type:'wait'})">Primary/Wait</button>
+              </li>
+              <li>
+                <button class="btn btn-warning" mdbRippleRadius (click)="addToast({title:'Warning Toasty', msg:'Turning standard Warning alerts into awesome notifications', timeout: 5000, theme:'default', position:'bottom-right', type:'warning'})">Warning</button>
+              </li>
+              <li>
+                <button class="btn btn-danger waves-light" mdbRippleRadius (click)="addToast({title:'Danger Toasty', msg:'Turning standard Danger alerts into awesome notifications', timeout: 5000, theme:'default', position:'bottom-right', type:'error'})">Danger/Error</button>
+              </li>
+            </ul>
+            <div class="sub-title">Notification Bootstrap</div>
+            <p>Change data-type : <code> theme="bootstrap"</code> to change notification color</p>
+            <ul class="notifications">
+              <li>
+                <button class="btn btn-inverse waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', timeout: 5000, theme:'bootstrap', position:'bottom-right', type:'default'})">Default</button>
+              </li>
+              <li>
+                <button class="btn btn-info waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', timeout: 5000, theme:'bootstrap', position:'bottom-right', type:'info'})">Info</button>
+              </li>
+              <li>
+                <button class="btn btn-success waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', timeout: 5000, theme:'bootstrap', position:'bottom-right', type:'success'})">Success</button>
+              </li>
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', timeout: 5000, theme:'bootstrap', position:'bottom-right', type:'wait'})">Primary/Wait</button>
+              </li>
+              <li>
+                <button class="btn btn-warning" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', timeout: 5000, theme:'bootstrap', position:'bottom-right', type:'warning'})">Warning</button>
+              </li>
+              <li>
+                <button class="btn btn-danger waves-light" mdbRippleRadius (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', timeout: 5000, theme:'bootstrap', position:'bottom-right', type:'error'})">Danger/Error</button>
+              </li>
+            </ul>
+            <div class="sub-title">Notification Material</div>
+            <p>Change data-type : <code> theme="material"</code> to change notification color</p>
+            <ul class="notifications">
+              <li>
+                <button class="btn btn-inverse waves-light" mdbRippleRadius (click)="addToast({title:'Material Toasty', msg:'Turning standard Material alerts into awesome notifications', timeout: 5000, theme:'material', position:'bottom-right', type:'default'})">Default</button>
+              </li>
+              <li>
+                <button class="btn btn-info waves-light" mdbRippleRadius (click)="addToast({title:'Material Toasty', msg:'Turning standard Material alerts into awesome notifications', timeout: 5000, theme:'material', position:'bottom-right', type:'info'})">Info</button>
+              </li>
+              <li>
+                <button class="btn btn-success waves-light" mdbRippleRadius (click)="addToast({title:'Material Toasty', msg:'Turning standard Material alerts into awesome notifications', timeout: 5000, theme:'material', position:'bottom-right', type:'success'})">Success</button>
+              </li>
+              <li>
+                <button class="btn btn-primary waves-light" mdbRippleRadius (click)="addToast({title:'Material Toasty', msg:'Turning standard Material alerts into awesome notifications', timeout: 5000, theme:'material', position:'bottom-right', type:'wait'})">Primary/Wait</button>
+              </li>
+              <li>
+                <button class="btn btn-warning" mdbRippleRadius (click)="addToast({title:'Material Toasty', msg:'Turning standard Material alerts into awesome notifications', timeout: 5000, theme:'material', position:'bottom-right', type:'warning'})">Warning</button>
+              </li>
+              <li>
+                <button class="btn btn-danger waves-light" mdbRippleRadius (click)="addToast({title:'Material Toasty', msg:'Turning standard Material alerts into awesome notifications', timeout: 5000, theme:'material', position:'bottom-right', type:'error'})">Danger/Error</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </app-card>
+      <!-- Notification card end -->
+    </div>
+    <!-- Bootstrap modal end -->
+  </div>
+</div>
+<ng2-toasty [position]="position"></ng2-toasty>

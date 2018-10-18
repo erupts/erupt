@@ -1,0 +1,64 @@
+/**
+Template Name: Material Able Admin Template
+Author: #
+Email: #
+File: style.css
+=============
+  == Table of Contents==
+	- Custom Css
+	- Generic classes
+		-	Margin, Padding, Font class, text align, position, floating, overflow, background class, text color, display class, boarder class
+	- Theme Elements
+		-	Accordion, Button, tabs, typography, buttons, box shadow, pagination, Basic card
+	- General Elements
+		-	Lable & Badges, Materialize general elements, Lables
+	- Pages
+		-   Progress bar, Chat , dark layout
+============= */
+// General theme contents
+
+@import '~bootstrap/scss/bootstrap';
+@import "themify-icons/themify-icons";
+
+@import "partials/variables";
+@import "partials/mixins";
+@import "partials/general";
+@import "partials/generic";
+
+// Menu
+@import "partials/menu/menu";
+@import "partials/menu/horizontal-menu";
+
+// Important Theme elements
+@import "partials/theme-elements/button";
+@import "partials/theme-elements/form-elements";
+
+// Theme elements
+@import "partials/theme-elements/label-badges";
+
+// Tables
+@import "partials/tables/tables";
+
+// Other
+@import "partials/other/chat";
+@import "partials/other/progress-bar";
+
+// Responsive css
+@import "partials/responsive/responsive";
+
+// dark layout css
+// dark layout css
+@import "partials/dark";
+
+//angular custom
+@import "partials/custom";
+
+@import '~ngx-bar-rating/themes/br-default-theme';
+@import '~ngx-bar-rating/themes/br-bootstrap-theme';
+@import '~ngx-bar-rating/themes/br-fontawesome-theme';
+@import '~ngx-bar-rating/themes/br-fontawesome-o-theme';
+@import '~ngx-bar-rating/themes/br-horizontal-theme';
+@import '~ngx-bar-rating/themes/br-vertical-theme';
+@import '~ngx-bar-rating/themes/br-stars-theme';
+@import '~ngx-bar-rating/themes/br-movie-theme';
+@import '~ngx-bar-rating/themes/br-square-theme';

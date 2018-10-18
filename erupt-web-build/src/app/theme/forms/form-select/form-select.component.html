@@ -1,0 +1,204 @@
+<div class="row">
+  <div class="col-sm-12">
+    <!-- Default select start -->
+    <app-card [title]="'Default Select'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="row">
+        <div class="col-sm-12 col-xl-3 m-b-30">
+          <h4 class="sub-title">Default Select</h4>
+          <select name="select" class="form-control form-control-default">
+            <option value="opt1">Select One Value Only</option>
+            <option value="opt2">Type 2</option>
+            <option value="opt3">Type 3</option>
+            <option value="opt4">Type 4</option>
+            <option value="opt5">Type 5</option>
+            <option value="opt6">Type 6</option>
+            <option value="opt7">Type 7</option>
+            <option value="opt8">Type 8</option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-xl-3 m-b-30">
+          <h4 class="sub-title">Primary Select</h4>
+          <select name="select" class="form-control form-control-primary">
+            <option value="opt1">Select One Value Only</option>
+            <option value="opt2">Type 2</option>
+            <option value="opt3">Type 3</option>
+            <option value="opt4">Type 4</option>
+            <option value="opt5">Type 5</option>
+            <option value="opt6">Type 6</option>
+            <option value="opt7">Type 7</option>
+            <option value="opt8">Type 8</option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-xl-3 m-b-30">
+          <h4 class="sub-title">Success Select</h4>
+          <select name="select" class="form-control form-control-success">
+            <option value="opt1">Select One Value Only</option>
+            <option value="opt2">Type 2</option>
+            <option value="opt3">Type 3</option>
+            <option value="opt4">Type 4</option>
+            <option value="opt5">Type 5</option>
+            <option value="opt6">Type 6</option>
+            <option value="opt7">Type 7</option>
+            <option value="opt8">Type 8</option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-xl-3 m-b-30">
+          <h4 class="sub-title">Info Select</h4>
+          <select name="select" class="form-control form-control-info">
+            <option value="opt1">Select One Value Only</option>
+            <option value="opt2">Type 2</option>
+            <option value="opt3">Type 3</option>
+            <option value="opt4">Type 4</option>
+            <option value="opt5">Type 5</option>
+            <option value="opt6">Type 6</option>
+            <option value="opt7">Type 7</option>
+            <option value="opt8">Type 8</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-xl-3 m-b-30 ">
+          <h4 class="sub-title">Warning Select</h4>
+          <select name="select" class="form-control form-control-warning">
+            <option value="opt1">Select One Value Only</option>
+            <option value="opt2">Type 2</option>
+            <option value="opt3">Type 3</option>
+            <option value="opt4">Type 4</option>
+            <option value="opt5">Type 5</option>
+            <option value="opt6">Type 6</option>
+            <option value="opt7">Type 7</option>
+            <option value="opt8">Type 8</option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-xl-3 m-b-30">
+          <h4 class="sub-title">Danger Select</h4>
+          <select name="select" class="form-control form-control-danger">
+            <option value="opt1">Select One Value Only</option>
+            <option value="opt2">Type 2</option>
+            <option value="opt3">Type 3</option>
+            <option value="opt4">Type 4</option>
+            <option value="opt5">Type 5</option>
+            <option value="opt6">Type 6</option>
+            <option value="opt7">Type 7</option>
+            <option value="opt8">Type 8</option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-xl-3 ">
+          <h4 class="sub-title">Inverse Select</h4>
+          <select name="select" class="form-control form-control-inverse">
+            <option value="opt1">Select One Value Only</option>
+            <option value="opt2">Type 2</option>
+            <option value="opt3">Type 3</option>
+            <option value="opt4">Type 4</option>
+            <option value="opt5">Type 5</option>
+            <option value="opt6">Type 6</option>
+            <option value="opt7">Type 7</option>
+            <option value="opt8">Type 8</option>
+          </select>
+        </div>
+      </div>
+    </app-card>
+
+    <app-card [title]="'Default Select'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="row">
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">Single Select</h4>
+          <ng-select [ngClass]="'ng-select'" [options]="simpleOption" [(ngModel)]="selectedOption"> </ng-select>
+          <p class="m-t-10"><code>ng-select</code> can take a regular select box like this...</p>
+        </div>
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">Multi Select</h4>
+          <ng-select [ngClass]="'ng-select'" [options]="simpleOption" [multiple]="true"></ng-select>
+          <p class="m-t-10">The ng-select above is declared with the <code>multiple</code> attribute</p>
+        </div>
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">With Placeholder</h4>
+          <tag-input [ngClass]="'tag-select'" theme='bootstrap' [secondaryPlaceholder]="'Select your nice name'" [placeholder] = "'Select Name +'" [ngModel]="[]" [onlyFromAutocomplete]="true">
+            <tag-input-dropdown [autocompleteItems]="autocompleteItems"></tag-input-dropdown>
+          </tag-input>
+          <p class="m-t-10"><code>tag-input</code> uses the <code>secondaryPlaceholder and placeholder</code> attribute on multiple select boxes</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">Tagging Support</h4>
+          <tag-input [ngClass]="'tag-select'" theme='bootstrap' [placeholder] = "'+'" [ngModel]="['Dolor']" [addOnBlur]="true" [clearOnBlur]="true">
+            <tag-input-dropdown [autocompleteItems]="autocompleteItems"></tag-input-dropdown>
+          </tag-input>
+          <p class="m-t-10">The select below is declared with the <code>tag-input and tag-input-dropdown</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">DIACRITICS SUPPORT</h4>
+          <tag-input [ngClass]="'tag-select'" theme='bootstrap' [placeholder] = "'Select Name +'" [ngModel]="[]" [onlyFromAutocomplete]="true">
+            <tag-input-dropdown [displayBy]="'value'" [identifyBy]="'id'" [autocompleteItems]="autocompleteItemsAsObjects"></tag-input-dropdown>
+          </tag-input>
+          <p class="m-t-10">The select below is declared with the tag-input <code>onlyFromAutocomplete(true/false)</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">RTL Support</h4>
+          <tag-input [ngClass]="'tag-select'" theme='bootstrap' [placeholder] = "'+'" [ngModel]="['Dolor']" [addOnBlur]="true" [clearOnBlur]="true">
+            <tag-input-dropdown [autocompleteItems]="autocompleteItems"></tag-input-dropdown>
+          </tag-input>
+          <p class="m-t-10">The select below is declared with the class<code>.tag-input-rtl</code></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">LIMITING THE NUMBER OF SELECTIONS</h4>
+          <tag-input [ngClass]="'tag-select'" theme='bootstrap' [placeholder] = "'+'" [maxItems]="3" [ngModel]="['Dolor']" [addOnBlur]="true" [clearOnBlur]="true">
+            <tag-input-dropdown [autocompleteItems]="autocompleteItems"></tag-input-dropdown>
+          </tag-input>
+          <p class="m-t-10">The select below is declared with the tag-input<code>maxItems</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">LOADING WITH ARRAY</h4>
+          <tag-input [ngClass]="'tag-select'" theme='bootstrap' [placeholder] = "'Select Name +'" [ngModel]="[]" [onlyFromAutocomplete]="true">
+            <tag-input-dropdown [displayBy]="'value'" [identifyBy]="'id'" [autocompleteItems]="autocompleteItemsAsObjects"></tag-input-dropdown>
+          </tag-input>
+          <p class="m-t-10">The select below is declared with the tag-input <code>onlyFromAutocomplete(true/false)</code></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">Loading options</h4>
+          <ng-select [ngClass]="'ng-select'" [options]="characters" [(ngModel)]="selectedCharacter"></ng-select>
+          <p class="m-t-10"><code>ng-select</code> with loading options</p>
+        </div>
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">Allow clear</h4>
+          <ng-select [ngClass]="'ng-select'" [allowClear]="true" [options]="simpleOption" [(ngModel)]="selectedOption"></ng-select>
+          <p class="m-t-10">The ng-select above is declared with the <code>allowClear</code> attribute</p>
+        </div>
+        <div class="col-sm-12 col-xl-4 m-b-30">
+          <h4 class="sub-title">With Placeholder</h4>
+          <ng-select [ngClass]="'ng-select'" [options]="simpleOption" [disabled]="isDisabled" [(ngModel)]="selectedOption"></ng-select>
+          <button [ngClass]="'btn btn-primary m-t-10'" (click)="isDisabled = !isDisabled">
+            <span *ngIf="!isDisabled">Disable</span>
+            <span *ngIf="isDisabled">Enable</span>
+          </button>
+          <p class="m-t-10"><code>ng-select</code> uses the <code>disabled</code> attribute on multiple select boxes</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-xl-6 m-b-30">
+          <h4 class="sub-title">Select With Icon</h4>
+          <ng-select [ngClass]="'ng-select'" [options]="countries" [allowClear]="true" [(ngModel)]="selectedCountry">
+            <ng-template #optionTemplate let-option="option">
+              <div class="famfamfam-flags {{option?.value.toLowerCase()}}"></div>
+              {{option?.label}}
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="col-sm-12 col-xl-6">
+          <h4 class="sub-title">Multiple Select With Icon</h4>
+          <ng-select [ngClass]="'ng-select'" [options]="countries" [multiple]="true" [allowClear]="true" [(ngModel)]="selectedCountries">
+            <ng-template #optionTemplate let-option="option">
+              <div class="famfamfam-flags {{option?.value.toLowerCase()}}"></div>
+              {{option?.label}}
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>

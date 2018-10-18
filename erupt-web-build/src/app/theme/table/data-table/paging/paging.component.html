@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [title]="'Ng-X Pagination'">
+      <span class="m-b-20">use class <code>data-table</code> with ngx-datatable</span><br><br>
+      <ngx-datatable
+        class="data-table"
+        [rows]="rowsClient"
+        [columns]="[{name:'Name'},{name:'Gender'},{name:'Company'}]"
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [scrollbarH]="true"
+        [rowHeight]="'auto'"
+        [limit]="10">
+      </ngx-datatable>
+    </app-card>
+  </div>
+</div>

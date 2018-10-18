@@ -1,0 +1,173 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <h5>Bootstrap card</h5>
+      </div>
+      <div class="card-block">
+        <div class="row">
+          <!-- basic card start -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card">
+              <div class="card-block">
+                <h5>Basic card</h5>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's</p>
+              </div>
+            </div>
+          </div>
+          <!-- basic card end -->
+
+          <!-- card with header start -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>This is header</h5>
+              </div>
+              <div class="card-block">
+                <h5>Card with header</h5>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's</p>
+              </div>
+            </div>
+          </div>
+          <!-- card with header end -->
+
+          <!-- card with header, footer start -->
+          <div class="col-md-6 col-lg-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>This is header</h5>
+              </div>
+              <div class="card-block">
+                <h5>Card with header</h5>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's</p>
+              </div>
+              <div class="card-footer">
+                <p class="m-b-0"> my footer</p>
+              </div>
+            </div>
+          </div>
+          <!-- card with header, footer end -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <h5>Color card</h5>
+      </div>
+      <div class="card-block">
+        <div class="row">
+          <div class="col-md-6 col-lg-4">
+            <div class="card text-white bg-primary">
+              <div class="card-header">Header</div>
+              <div class="card-body">
+                <h5 class="card-title">Primary card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card text-white bg-secondary">
+              <div class="card-header">Header</div>
+              <div class="card-body">
+                <h5 class="card-title">Secondary card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card text-white bg-success">
+              <div class="card-header">Header</div>
+              <div class="card-body">
+                <h5 class="card-title">Success card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card text-white bg-danger">
+              <div class="card-header">Header</div>
+              <div class="card-body">
+                <h5 class="card-title">Danger card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card text-white bg-warning">
+              <div class="card-header">Header</div>
+              <div class="card-body">
+                <h5 class="card-title">Warning card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card text-white bg-info">
+              <div class="card-header">Header</div>
+              <div class="card-body">
+                <h5 class="card-title">Info card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card bg-light">
+              <div class="card-header text-primary">Header</div>
+              <div class="card-body text-primary">
+                <h5 class="card-title">Light card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="card text-white card-inverse" style="border: 1px solid #fff">
+              <div class="card-header">Header</div>
+              <div class="card-body">
+                <h5 class="card-title">Dark card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 col-lg-6">
+    <app-card [title]="'Default'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <ngb-pagination [collectionSize]="totalItems" [boundaryLinks]="true"></ngb-pagination>
+    </app-card>
+  </div>
+  <div class="col-md-12 col-lg-6">
+    <app-card [title]="'Disabled'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <ngb-pagination [collectionSize]="bigTotalItems" [disabled]="true" [maxSize]="maxSize" [boundaryLinks]="true"></ngb-pagination>
+    </app-card>
+  </div>
+  <div class="col-md-12 col-lg-6">
+    <app-card [title]="'Pagination Size'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="sub-title m-t-15">Large</div>
+      <div class="scrollmenu">
+        <ngb-pagination [collectionSize]="bigTotalItems" [maxSize]="maxSize" size="lg"></ngb-pagination>
+      </div>
+      <div class="sub-title m-t-15">Medium</div>
+      <ngb-pagination [collectionSize]="bigTotalItems" [maxSize]="maxSize" [boundaryLinks]="true"></ngb-pagination>
+      <div class="sub-title m-t-15">Small</div>
+      <ngb-pagination [collectionSize]="bigTotalItems" [maxSize]="maxSize" size="sm" [boundaryLinks]="true"></ngb-pagination>
+    </app-card>
+  </div>
+  <div class="col-md-12 col-lg-6">
+    <app-card [title]="'Pagination Advance'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="sub-title m-t-15">maxSize = 5, rotate = false</div>
+      <ngb-pagination [collectionSize]="120" [(page)]="pageAdvance" [maxSize]="5" [boundaryLinks]="true"></ngb-pagination>
+      <div class="sub-title m-t-15">maxSize = 5, rotate = true</div>
+      <ngb-pagination [collectionSize]="120" [(page)]="pageAdvance" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
+      <div class="sub-title m-t-15">maxSize = 5, rotate = true, ellipses = false</div>
+      <ngb-pagination [collectionSize]="120" [(page)]="pageAdvance" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+    </app-card>
+  </div>
+</div>

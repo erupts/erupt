@@ -1,0 +1,180 @@
+<div class="row">
+  <div class="col-sm-12">
+    <!-- Basic Inputs Validation start -->
+    <app-card [title]="'Basic Inputs Validation'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Simple Input</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="name" placeholder="Text Input Validation" formControlName="name">
+            <div class="messages text-danger" *ngIf="myForm.controls.name.errors?.required">Name can't be blank</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Password</label>
+          <div class="col-sm-10">
+            <input type="password" class="form-control" id="password"  placeholder="Password input" formControlName="password">
+            <div class="messages text-danger error" *ngIf="myForm.controls.password.errors?.required">Password can't be blank</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Repeat Password</label>
+          <div class="col-sm-10">
+            <input type="password" class="form-control" id="rpassword" placeholder="Repeat Password" formControlName="rpassword">
+            <div class="messages text-danger" *ngIf="myForm.controls.rpassword.errors?.required">Repeat password can't be blank</div>
+            <div class="messages text-danger" *ngIf="myForm.controls.rpassword.errors?.equalTo">The passwords does not match</div>
+
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="email" placeholder="Enter valid e-mail address" formControlName="email">
+            <div class="messages text-danger" *ngIf="myForm.controls.email.errors?.required">Email can't be blank</div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Radio Buttons</label>
+          <div class="col-sm-10">
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" value="option1" formControlName="gender"> Male
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" value="option2" formControlName="gender"> Female
+              </label>
+            </div>
+            <div class="messages text-danger" *ngIf="myForm.controls.gender.errors?.required">Gender can't be blank</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2"></label>
+          <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary m-b-0 waves-light" mdbRippleRadius [disabled]="!myForm.valid">Submit</button>
+          </div>
+        </div>
+      </form>
+    </app-card>
+    <!-- Basic Inputs Validation end -->
+    <!-- Tooltip Validation card start -->
+    <app-card [title]="'Tooltip Validation'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <form [formGroup]="mytooltipForm">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Enter Username</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control tooltip-form" id="usernameP" formControlName="usernameP" name="Username" placeholder="Enter Username">
+            <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="Username can't be blank" *ngIf="mytooltipForm.controls.usernameP.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Enter Email-id</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control tooltip-form" id="EmailP" formControlName="EmailP" name="Email" placeholder="Enter email id">
+            <div class="messages text-danger tooltip-error" placement="top" ngbTooltip="Email can't be blank" *ngIf="mytooltipForm.controls.EmailP.errors?.required"><i class="text-danger icofont icofont-close-circled"></i></div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2"></label>
+          <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary m-b-0 waves-light" mdbRippleRadius [disabled]="!mytooltipForm.valid">Submit</button>
+          </div>
+        </div>
+      </form>
+    </app-card>
+    <!-- Tooltip Validation card end -->
+    <!-- Number Validation card start -->
+    <app-card [title]="'Number Validation'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <form [formGroup]="mynumberForm">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Integers Only</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="integer" id="integer" formControlName="integer" placeholder="Integers Only">
+            <div class="messages text-danger" *ngIf="mynumberForm.controls.integer.errors?.required">Integer can't be blank</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Numbers Only</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="numeric" id="numeric" formControlName="numeric" placeholder="Numbers Only">
+            <div class="messages text-danger" *ngIf="mynumberForm.controls.numeric.errors?.required">Numeric can't be blank</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Greater number</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="Number" id="greater" formControlName="greater" placeholder="Number Greter than 50">
+            <div class="messages text-danger" *ngIf="mynumberForm.controls.greater.errors?.required">Numeric can't be blank</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Less number</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="Numbers" id="less" formControlName="less" lt="5" placeholder="Number Less than 50">
+            <div class="messages text-danger" *ngIf="mynumberForm.controls.less.errors?.required">Numeric can't be blank</div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2"></label>
+          <div class="col-sm-10">
+            <button type="submit" [disabled]="!mynumberForm.valid" class="btn btn-primary m-b-0 waves-light" mdbRippleRadius>Submit</button>
+          </div>
+        </div>
+      </form>
+    </app-card>
+    <!-- Number Validation card end -->
+    <!-- component form start -->
+    <app-card [title]="'Form components Validation'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <form [formGroup]="checkdropForm">
+        <div class="form-group row">
+          <label class="col-sm-2">Radio Buttons</label>
+          <div class="col-sm-10">
+            <div class="form-radio">
+              <div class="radio radiofill radio-primary radio-inline">
+                <label>
+                  <input type="radio" value="free" formControlName="area">
+                  <i class="helper"></i>Select here
+                </label>
+              </div>
+              <div class="radio radiofill radio-primary radio-inline">
+                <label>
+                  <input type="radio" value="personal" formControlName="area">
+                  <i class="helper"></i>Another select
+                </label>
+              </div>
+            </div>
+            <div class="messages text-danger" *ngIf="checkdropForm.controls.area.errors?.required">Member can't be blank</div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2">Select Checkbox</label>
+          <div class="col-sm-10">
+            <div class="checkbox-fade fade-in-primary">
+              <label>
+                <input type="checkbox" value="HTML" formControlName="job">
+                <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                <span>HTML</span>
+              </label>
+            </div>
+            <div class="checkbox-fade fade-in-primary">
+              <label>
+                <input type="checkbox" value="CSS" formControlName="job">
+                <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                <span>CSS</span>
+              </label>
+            </div>
+            <div class="messages text-danger" *ngIf="checkdropForm.controls.job.errors?.required">Language can't be blank</div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2"></label>
+          <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary m-b-0 waves-light" mdbRippleRadius [disabled]="!checkdropForm.valid">Submit</button>
+          </div>
+        </div>
+      </form>
+    </app-card>
+    <!-- component form end -->
+  </div>
+</div>

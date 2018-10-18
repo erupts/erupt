@@ -1,0 +1,576 @@
+<div class="row button-page">
+  <!-- Static Example modal start-->
+  <div class="col-sm-12">
+    <app-card [title]="'Static Example'" [cardOptionBlock]="true">
+      <!-- popup example start -->
+      <div class="bd-example bd-example-modal">
+        <div class="modal">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Modal body text goes here.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary mobtn waves-light" mdbRippleRadius data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary mobtn waves-light" mdbRippleRadius>Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- popup example end -->
+    </app-card>
+  </div>
+  <!-- Static Example modal start-->
+  <!-- bootstrap modal start -->
+  <div class="col-lg-12 col-xl-6">
+    <app-card [title]="'Bootstrap modals'" [blockClass]="'model-btn-card'" [cardOptionBlock]="true">
+      <p>use code<code> modal-lg, modal-sm</code> to use large and small popup modal.</p>
+      <ul class="model-btn">
+        <li>
+          <!-- modal static-->
+          <button type="button" class="btn btn-default" mdbRippleRadius (click)="modalDefault.show()">Static</button>
+          <app-modal-basic #modalDefault>
+            <div class="app-modal-header">
+              <h4 class="modal-title">Modal title</h4>
+              <button type="button" class="close basic-close" (click)="modalDefault.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="app-modal-body">
+              <h5>Default Modal</h5>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing lorem impus dolorsit.onsectetur adipiscing</p>
+            </div>
+            <div class="app-modal-footer">
+              <button type="button" class="btn btn-default" mdbRippleRadius (click)="modalDefault.hide()">Close</button>
+              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Save changes</button>
+            </div>
+          </app-modal-basic>
+        </li>
+        <li>
+          <!-- modal large-->
+          <button type="button" class="btn btn-primary waves-light" mdbRippleRadius (click)="modalLarge.show()">Large</button>
+          <app-modal-basic #modalLarge [dialogClass]="'modal-lg'">
+            <div class="app-modal-header">
+              <h4 class="modal-title">Modal title</h4>
+              <button type="button" class="close basic-close" (click)="modalLarge.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="app-modal-body">
+              <h5>Large Modal</h5>
+              <p>This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit.</p>
+            </div>
+            <div class="app-modal-footer">
+              <button type="button" class="btn btn-default" mdbRippleRadius (click)="modalLarge.hide()">Close</button>
+              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Save changes</button>
+            </div>
+          </app-modal-basic>
+        </li>
+        <li>
+          <!-- modal small-->
+          <button type="button" class="btn btn-success waves-light" mdbRippleRadius (click)="modalSmall.show()">Small</button>
+          <app-modal-basic #modalSmall [dialogClass]="'modal-sm'">
+            <div class="app-modal-header">
+              <h4 class="modal-title">Modal title</h4>
+              <button type="button" class="close basic-close" (click)="modalSmall.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="app-modal-body">
+              <h5>Small Modal</h5>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing .</p>
+            </div>
+            <div class="app-modal-footer">
+              <button type="button" class="btn btn-default" mdbRippleRadius (click)="modalSmall.hide()">Close</button>
+            </div>
+          </app-modal-basic>
+        </li>
+      </ul>
+    </app-card>
+  </div>
+  <!-- Bootstrap modal end -->
+  <!-- Custom modal start -->
+  <div class="col-lg-12 col-xl-6">
+    <app-card [title]="'Custom modals'" [blockClass]="'model-btn-card'" [cardOptionBlock]="true">
+      <p>use custom modals tabs, overflow, lightbox, Multi modal.</p>
+      <ul>
+        <li>
+          <!-- modal tabs -->
+          <button type="button" class="btn btn-warning" mdbRippleRadius (click)="modalTabs.show()">Tabs</button>
+          <app-modal-basic #modalTabs [hideHeader]="true" [hideFooter]="true">
+            <div class="app-modal-body">
+              <button type="button" class="close basic-close" (click)="modalTabs.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <ngb-tabset>
+                <ngb-tab title="Home">
+                  <ng-template ngbTabContent>
+                    <div [@fadeInOutTranslate] class="m-t-15">
+                      <div class="m-4">
+                        <h6>Home</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing lorem impus dolorsit.onsectetur adipiscing</p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Profile">
+                  <ng-template ngbTabContent>
+                    <div [@fadeInOutTranslate] class="m-t-15">
+                      <div class="m-4">
+                        <h6>Profile</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing lorem impus dolorsit.onsectetur adipiscing</p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Messages">
+                  <ng-template ngbTabContent>
+                    <div [@fadeInOutTranslate] class="m-t-15">
+                      <div class="m-4">
+                        <h6>Messages</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing lorem impus dolorsit.onsectetur adipiscing</p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Settings">
+                  <ng-template ngbTabContent>
+                    <div [@fadeInOutTranslate] class="m-t-15">
+                      <div class="m-4">
+                        <h6>Settings</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing lorem impus dolorsit.onsectetur adipiscing</p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+              </ngb-tabset>
+            </div>
+          </app-modal-basic>
+        </li>
+        <li>
+          <!-- modal overflow start-->
+          <button type="button" class="btn btn-danger waves-light" mdbRippleRadius (click)="modalOverflow.show()">Overflow</button>
+          <app-modal-basic #modalOverflow [hideHeader]="true" [hideFooter]="true">
+            <div class="app-modal-body">
+              <button type="button" class="close basic-close-light-box" (click)="modalOverflow.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h5 class="font-header">Some text above the scrollable box</h5>
+              <p>This is Photoshop's version of Lorem IpThis is Photoshop's version Similique velit aut et cumque illum consequatur of Lorem Ipsum.</p>
+              <h5>Overflow container</h5>
+              <perfect-scrollbar class="overflow-container" [style.width]="'100%'" [style.height]="'300px'" [config]="config">
+                <p>This is Photoshop's Similique velit aut et cumque illum consequatur version of Lorem IpThis is Photoshop's version of Lorem Ipsum.</p>
+                <img src="assets/images/modal/overflow.jpg" alt="" class="img img-fluid" />
+                <p class="p-t-15">Similique velit aut et cumque illum consequatur doloribus quis ipsam sunt sint qui impedit nihil voluptate animi nesciunt corporis aspernatur quaerat sed rem voluptas commodi magnam porro eum sunt quis ullam aut odit laudantium quia soluta corrupti aut qui officiis hic voluptatibus aut itaque voluptates qui expedita minus autem aliquid et debitis omnis provident quia voluptate illo tempora illum maiores perferendis dolorem recusandae ut reprehenderit ad est eum occaecati quam non et quod amet illo id doloremque vitae porro porro sit amet voluptatem quia laboriosam aliquam quia quis facilis eveniet dolorum sunt neque rerum earum ut eaque ab tenetur quia nam quis rerum cumque eos excepturi nostrum qui distinctio porro enim vitae eligendi accusantium quia possimus et autem error repellendus vitae ad quia laborum minima autem nulla optio ad ea nobis animi illo voluptates cum recusandae temporibus voluptate amet quam excepturi odio quia suscipit inventore et rerum quos rerum aut doloribus aut consequatur earum impedit reiciendis saepe voluptates exercitationem maxime culpa saepe ducimus culpa ut aliquam magnam aut veniam sit totam architecto vel distinctio aspernatur aut qui labore quaerat rerum voluptatem sapiente sint sed explicabo et hic laboriosam sit nesciunt et minus et aut dignissimos ut porro incidunt sint et nihil id tempora aut et illum molestiae aperiam minus earum repellendus tempora illo itaque amet facilis quia rem iure quod corrupti dolores et sequi sunt ipsa labore quia unde qui blanditiis ut eos at quia beatae sit repellat quibusdam neque natus expedita sed perspiciatis atque quas voluptatem autem velit enim qui omnis molestiae et repellat sapiente corporis ipsam sed veritatis in quo quod et occaecati quia rerum iusto cumque accusamus numquam sunt quo sequi id molestiae consequatur doloribus molestiae autem nisi nostrum blanditiis et nihil sed nobis incidunt omnis quos minima eius quo accusamus qui ea minus aut est tempora quia inventore ad delectus vel et accusamus fuga eius ipsa aliquam alias sint maxime quae enim atque corrupti libero eos nesciunt et voluptas velit numquam illo non qui quaerat enim omnis et ex asperiores inventore quisquam est enim labore ut nobis consequatur fuga ut quo vel molestiae alias eius quod aspernatur laudantium pariatur eius fuga inventore esse at alias repudiandae perspiciatis id qui fuga consequatur recusandae atque iste commodi sapiente eaque labore ipsa aut sint quo vel recusandae ab iusto ducimus minus voluptas ex et illo commodi ipsa pariatur qui quae adipisci saepe dicta delectus nostrum illum incidunt laboriosam est maxime eum debitis et explicabo quia doloribus quod occaecati tempore tempora labore nihil enim recusandae et dolorum temporibus molestiae sint non porro neque minus provident reprehenderit similique illum voluptate qui dicta dolorum totam quia ut nihil dolore fugiat laboriosam molestiae eveniet omnis consequatur non magni nemo consequatur laboriosam non facilis harum eaque illo pariatur rerum dolores quis autem nemo aut enim tenetur pariatur et non quam repudiandae quia aliquam sunt corporis aperiam natus aut reprehenderit non non illum cum laboriosam nulla quaerat eligendi laudantium perspiciatis.</p>
+              </perfect-scrollbar>
+              <h5 class="font-header p-t-15">Some text below the scrollable box</h5>
+              <p>This is Photoshop's version of Lorem IpThis is Similique velit aut et cumque illum consequatur Photoshop's version of Lorem Ipsum.</p>
+            </div>
+          </app-modal-basic>
+        </li>
+        <li>
+          <!-- modal light box-->
+
+          <button type="button" class="btn btn-info waves-light" mdbRippleRadius (click)="modalLightBox.show()">Light Box</button>
+          <app-modal-basic #modalLightBox [hideHeader]="true" [hideFooter]="true">
+            <div class="app-modal-body">
+              <button type="button" class="close basic-close-light-box" (click)="modalLightBox.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <img src="assets/images/modal/overflow.jpg" alt="" class="img img-fluid" />
+            </div>
+          </app-modal-basic>
+        </li>
+        <li>
+          <!-- multi modal -->
+          <button type="button" class="btn btn-success waves-light m-b-10" mdbRippleRadius (click)="modalMulti1.show()">Multi Model</button>
+          <!-- modal 1 -->
+          <app-modal-basic #modalMulti1>
+            <div class="app-modal-header">
+              <h4 class="modal-title">Modal 1</h4>
+              <button type="button" class="close basic-close" (click)="modalMulti1.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="app-modal-body">
+              Content for the dialog / modal goes here.
+              <p class="p-t-50 p-b-50">more content</p>
+              <button data-toggle="modal" (click)="modalMulti2.show()" class="btn btn-primary waves-light" mdbRippleRadius>Launch modal</button>
+            </div>
+            <div class="app-modal-footer">
+              <button type="button" class="btn btn-default" mdbRippleRadius (click)="modalMulti1.hide()">Close</button>
+              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Save changes</button>
+            </div>
+          </app-modal-basic>
+          <!-- modal 2 -->
+          <app-modal-basic #modalMulti2>
+            <div class="app-modal-header">
+              <h4 class="modal-title">Modal 2</h4>
+              <button type="button" class="close basic-close" (click)="modalMulti2.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="app-modal-body">
+              Content for the dialog / modal goes here.
+              <p class="p-t-40 p-b-40">more content</p>
+              <button data-toggle="modal" (click)="modalMulti3.show()" class="btn btn-primary waves-light" mdbRippleRadius>Launch modal</button>
+            </div>
+            <div class="app-modal-footer">
+              <button type="button" class="btn btn-default" mdbRippleRadius (click)="modalMulti2.hide()">Close</button>
+              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Save changes</button>
+            </div>
+          </app-modal-basic>
+          <!-- modal 3 -->
+          <app-modal-basic #modalMulti3>
+            <div class="app-modal-header">
+              <h4 class="modal-title">Modal 3</h4>
+              <button type="button" class="close basic-close" (click)="modalMulti3.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="app-modal-body">
+              Content for the dialog / modal goes here.
+              <p class="p-t-30 p-b-30">more content</p>
+              <button data-toggle="modal" (click)="modalMulti4.show()" class="btn btn-primary waves-light" mdbRippleRadius>Launch modal</button>
+            </div>
+            <div class="app-modal-footer">
+              <button type="button" class="btn btn-default" mdbRippleRadius (click)="modalMulti3.hide()">Close</button>
+              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Save changes</button>
+            </div>
+          </app-modal-basic>
+          <!-- modal 4 -->
+          <app-modal-basic #modalMulti4>
+            <div class="app-modal-header">
+              <h4 class="modal-title">Modal 4</h4>
+              <button type="button" class="close basic-close" (click)="modalMulti4.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="app-modal-body">
+              Content for the dialog / modal goes here.
+              <p class="p-t-20 p-b-20">more content</p>
+            </div>
+            <div class="app-modal-footer">
+              <button type="button" class="btn btn-default" mdbRippleRadius (click)="modalMulti4.hide()">Close</button>
+              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Save changes</button>
+            </div>
+          </app-modal-basic>
+        </li>
+      </ul>
+    </app-card>
+  </div>
+  <!-- Custom modal end -->
+  <!-- Sweet alert start -->
+  <div class="col-sm-12">
+    <app-card [title]="'Sweet Alert/Message Box'" [blockClass]="'model-btn-card'" [cardOptionBlock]="true">
+      <p>use button<code> (click) </code> set for <code>swal</code> function to use effect.</p>
+      <ul>
+        <li>
+          <button type="button" class="btn btn-primary sweet-1 m-b-10 waves-light" mdbRippleRadius (click)="openBasicSwal()">Basic</button>
+        </li>
+        <li>
+          <button type="button" class="btn btn-success alert-success-msg m-b-10 waves-light" mdbRippleRadius (click)="openSuccessSwal()">Success</button>
+        </li>
+        <li>
+          <button type="button" class="btn btn-warning alert-confirm m-b-10" mdbRippleRadius (click)="openConfirmsSwal()">Confirm</button>
+        </li>
+        <li>
+          <button type="button" class="btn btn-danger alert-success-cancel m-b-10 waves-light" mdbRippleRadius (click)="openSuccessCancelSwal()">Success or Cancel</button>
+        </li>
+        <li>
+          <button type="button" class="btn btn-primary alert-prompt m-b-10 waves-light" mdbRippleRadius (click)="openPromptSwal()">Prompt</button>
+        </li>
+        <li>
+          <button type="button" class="btn btn-success alert-ajax m-b-10 waves-light" mdbRippleRadius (click)="openAjaxSwal()">Ajax</button>
+        </li>
+      </ul>
+    </app-card>
+  </div>
+  <!-- Sweet alert end -->
+  <!-- Animation modal start / Nifty Modal Window Effects start-->
+  <div class="col-sm-12">
+    <app-card [title]="'Animation Modals'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <p>use button with class<code> md-effect-1 to 18</code> to use effect.</p>
+      <div class="animation-model">
+        <button type="button" class="btn btn-default btn-outline-default waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-1')">Fade in &amp; Scale</button>
+        <button type="button" class="btn btn-primary btn-outline-primary waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-2')">Slide in (right)</button>
+        <button type="button" class="btn btn-success btn-outline-success waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-3')">Slide in (bottom)</button>
+        <button type="button" class="btn btn-warning btn-outline-warning md-trigger" mdbRippleRadius (click)="openMyModal('effect-4')">Newspaper</button>
+        <button type="button" class="btn btn-danger btn-outline-danger waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-5')">Fall</button>
+        <button type="button" class="btn btn-info btn-outline-info waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-6')">Side Fall</button>
+        <button type="button" class="btn btn-default btn-outline-default waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-7')">Sticky Up</button>
+        <button type="button" class="btn btn-primary btn-outline-primary waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-8')">3D Flip (horizontal)</button>
+        <button type="button" class="btn btn-success btn-outline-success waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-9')">3D Flip (vertical)</button>
+        <button type="button" class="btn btn-warning btn-outline-warning md-trigger" mdbRippleRadius (click)="openMyModal('effect-10')">3D Sign</button>
+        <button type="button" class="btn btn-danger btn-outline-danger waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-11')">Super Scaled</button>
+        <button type="button" class="btn btn-info btn-outline-info waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-12')">Just Me</button>
+        <button type="button" class="btn btn-primary btn-outline-primary waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-13')">3D Slit</button>
+        <button type="button" class="btn btn-success btn-outline-success waves-light md-trigger" mdbRippleRadius (click)="openMyModal('effect-14')">3D Rotate Bottom</button>
+        <button type="button" class="btn btn-warning btn-outline-warning md-trigger" mdbRippleRadius (click)="openMyModal('effect-15')">3D Rotate In Left</button>
+        <button type="button" class="btn btn-danger btn-outline-danger waves-light md-trigger md-setperspective" mdbRippleRadius (click)="openMyModal('effect-17')">Let me in</button>
+        <button type="button" class="btn btn-default btn-outline-default waves-light md-trigger md-setperspective" mdbRippleRadius (click)="openMyModal('effect-18')">Make way!</button>
+        <button type="button" class="btn btn-primary btn-outline-primary waves-light md-trigger md-setperspective" mdbRippleRadius (click)="openMyModal('effect-19')">Slip from top</button>
+        <!-- animation modal Dialogs start -->
+        <app-modal-animation [modalID]="'effect-1'" [modalClass]="'md-effect-1'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-2'" [modalClass]="'md-effect-2'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-3'" [modalClass]="'md-effect-3'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-4'" [modalClass]="'md-effect-4'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-5'" [modalClass]="'md-effect-5'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-6'" [modalClass]="'md-effect-6'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-7'" [modalClass]="'md-effect-7'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-8'" [modalClass]="'md-effect-8'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-9'" [modalClass]="'md-effect-9'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-10'" [modalClass]="'md-effect-10'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-11'" [modalClass]="'md-effect-11'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-12'" [modalClass]="'md-effect-12'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-danger md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-13'" [modalClass]="'md-effect-13'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-14'" [modalClass]="'md-effect-14'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-15'" [modalClass]="'md-effect-15'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-17'" [modalClass]="'md-effect-17'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-18'" [modalClass]="'md-effect-18'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+
+        <app-modal-animation [modalID]="'effect-19'" [modalClass]="'md-effect-19'">
+          <h3>Modal Dialog</h3>
+          <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+              <li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
+              <li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
+              <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <button (click)="closeMyModal($event)" class="btn btn-primary md-close">Close Me!!</button>
+          </div>
+          <button (click)="closeMyModal($event)" aria-label="Close" class="md-close-btn"><i class="icofont icofont-ui-close"></i></button>
+        </app-modal-animation>
+      </div>
+    </app-card>
+  </div>
+  <!-- Animation modal end / Nifty Modal Window Effects end-->
+</div>

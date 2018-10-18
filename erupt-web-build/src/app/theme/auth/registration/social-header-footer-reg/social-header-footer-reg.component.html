@@ -1,0 +1,220 @@
+<div id="pcoded" class="pcoded"
+     [attr.nav-type]="navType"
+     [attr.pcoded-device-type]="pcodedDeviceType"
+     [attr.fream-type]="freamType"
+     [attr.layout-type]="layoutType"
+     (window:resize)="onResize($event)"
+>
+  <div class="pcoded-overlay-box"></div>
+  <div class="pcoded-container navbar-wrapper">
+    <nav class="navbar header-navbar pcoded-header position-fixed" style="top: 0"  [attr.header-theme]="headerTheme">
+      <div class="navbar-wrapper">
+        <div class="navbar-logo">
+          <a [routerLink]="['/dashboard/default/']" class="waves-light" mdbRippleRadius>
+            <img class="img-fluid" src="assets/images/logo.png" alt="Able Pro 7" />
+          </a>
+          <a href="javascript:" class="mobile-options waves-light" mdbRippleRadius (click)="toggleHeaderNavRight()">
+            <i class="feather icon-more-horizontal"></i>
+          </a>
+        </div>
+        <div class="navbar-container container-fluid">
+          <ul class="nav-left">
+            <li class="waves-light" mdbRippleRadius>
+              <div class="sidebar_toggle"><a href="javascript:"><i class="icon-menu"></i></a></div>
+            </li>
+            <li class="header-search">
+              <div id="main-search" class="main-search morphsearch-search">
+                <div class="input-group">
+                  <span class="input-group-prepend search-close" (click)="searchOff()"><i class="feather icon-x input-group-text"></i></span>
+                  <input class="form-control" [style.width]="searchWidthString">
+                  <span class="input-group-append search-btn" (click)="searchOn()"><i class="feather icon-search input-group-text"></i></span>
+                </div>
+              </div>
+            </li>
+            <li class="waves-light" mdbRippleRadius appToggleFullScreen>
+              <a href="javascript:">
+                <i class="feather icon-maximize full-screen"></i>
+              </a>
+            </li>
+          </ul>
+          <ul [@mobileHeaderNavRight]="navRight" [ngClass]="navRight" class="nav-right">
+            <li (clickOutside)="notificationOutsideClick('live')" class="header-notification waves-light" mdbRippleRadius (click)="toggleLiveNotification()">
+              <a href="javascript:">
+                <i class="feather icon-bell"></i>
+                <span class="badge bg-c-red">5</span>
+              </a>
+              <ul [@notificationBottom]="liveNotification" class="show-notification" [ngClass]="liveNotificationClass">
+                <li>
+                  <h6>Notifications</h6>
+                  <label class="label label-danger">New</label>
+                </li>
+                <li mdbRippleRadius>
+                  <div class="media">
+                    <img class="d-flex align-self-center img-radius" src="assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                    <div class="media-body">
+                      <h5 class="notification-user">John Doe</h5>
+                      <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                      <span class="notification-time">30 minutes ago</span>
+                    </div>
+                  </div>
+                </li>
+                <li mdbRippleRadius>
+                  <div class="media">
+                    <img class="d-flex align-self-center img-radius" src="assets/images/avatar-4.jpg" alt="Generic placeholder image">
+                    <div class="media-body">
+                      <h5 class="notification-user">Joseph William</h5>
+                      <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                      <span class="notification-time">30 minutes ago</span>
+                    </div>
+                  </div>
+                </li>
+                <li mdbRippleRadius>
+                  <div class="media">
+                    <img class="d-flex align-self-center img-radius" src="assets/images/avatar-3.jpg" alt="Generic placeholder image">
+                    <div class="media-body">
+                      <h5 class="notification-user">Sara Soudein</h5>
+                      <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                      <span class="notification-time">30 minutes ago</span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li (clickOutside)="notificationOutsideClick('profile')" class="user-profile header-notification waves-light" mdbRippleRadius (click)="toggleProfileNotification()">
+              <a href="javascript:">
+                <img src="assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                <span>John Doe</span>
+                <i class="feather icon-chevron-down"></i>
+              </a>
+              <ul [@notificationBottom]="profileNotification" class="show-notification profile-notification" [ngClass]="profileNotificationClass">
+                <li mdbRippleRadius>
+                  <a href="javascript:">
+                    <i class="feather icon-settings"></i> Settings
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a [routerLink]="['/user/profile/']">
+                    <i class="feather icon-user"></i> Profile
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a href="javascript:">
+                    <i class="feather icon-mail"></i> My Messages
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a [routerLink]="['/auth/lock-screen/']" target="_blank">
+                    <i class="feather icon-lock"></i> Lock Screen
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a [routerLink]="['/auth/login/simple/']" target="_blank">
+                    <i class="feather icon-log-out"></i> Logout
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <section class="login-block">
+    <!-- Container-fluid starts -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <!-- Authentication card start -->
+          <form class="md-float-material form-material m-t-40 m-b-40">
+            <div class="auth-box card">
+              <div class="card-block">
+                <div class="row m-b-20">
+                  <div class="col-md-12">
+                    <h3 class="text-center txt-primary">Sign up</h3>
+                  </div>
+                </div>
+                <div class="row m-b-20">
+                  <div class="col-md-6">
+                    <a href="javascript:" class="btn btn-facebook m-b-20 btn-block waves-light" mdbRippleRadius><i class="fa fa-facebook"></i>facebook</a>
+                  </div>
+                  <div class="col-md-6">
+                    <a href="javascript:" class="btn btn-twitter m-b-0 btn-block waves-light" mdbRippleRadius><i class="fa fa-twitter"></i>twitter</a>
+                  </div>
+                </div>
+                <p class="text-muted text-center p-b-5">Sign up with your regular account</p>
+                <div class="form-group form-primary">
+                  <input type="text" name="user-name" class="form-control" required="">
+                  <span class="form-bar"></span>
+                  <label class="float-label">Choose Username</label>
+                </div>
+                <div class="form-group form-primary">
+                  <input type="text" name="email" class="form-control" required="">
+                  <span class="form-bar"></span>
+                  <label class="float-label">Your Email Address</label>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group form-primary">
+                      <input type="password" name="password" class="form-control" required="">
+                      <span class="form-bar"></span>
+                      <label class="float-label">Password</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group form-primary">
+                      <input type="password" name="confirm-password" class="form-control" required="">
+                      <span class="form-bar"></span>
+                      <label class="float-label">Confirm Password</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row m-t-25 text-left">
+                  <div class="col-md-12">
+                    <div class="checkbox-fade fade-in-primary">
+                      <label>
+                        <input type="checkbox" value="">
+                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                        <span class="text-inverse">I read and accept <a href="javascript:">Terms &amp; Conditions.</a></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="checkbox-fade fade-in-primary">
+                      <label>
+                        <input type="checkbox" value="">
+                        <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                        <span class="text-inverse">Send me the <a href="javascript:">Newsletter</a> weekly.</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row m-t-30">
+                  <div class="col-md-12">
+                    <button type="button" class="btn btn-primary btn-md btn-block waves-light text-center m-b-20" mdbRippleRadius>Sign up now</button>
+                  </div>
+                </div>
+                <hr/>
+                <div class="row">
+                  <div class="col-md-10">
+                    <p class="text-inverse text-left m-b-0">Thank you.</p>
+                    <p class="text-inverse text-left"><a [routerLink]="['/dashboard/default']"><b>Back to website</b></a></p>
+                  </div>
+                  <div class="col-md-2">
+                    <img src="assets/images/auth/Logo-small-bottom.png" alt="small-logo.png">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- end of form -->
+        </div>
+        <!-- Authentication card end -->
+      </div>
+      <!-- end of row -->
+    </div>
+    <!-- end of container-fluid -->
+  </section>
+</div>
+<div class="footer">
+  <p class="text-center m-b-0">Copyright &copy; 2017 ABLE PRO 7 ADMIN , All rights reserved.</p>
+</div>

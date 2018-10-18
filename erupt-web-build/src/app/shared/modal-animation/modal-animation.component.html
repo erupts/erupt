@@ -1,0 +1,9 @@
+<div class="md-modal" [ngClass]="modalClass" id="{{modalID}}">
+  <div class="md-content" [ngClass]="contentClass">
+    <ng-content></ng-content>
+  </div>
+</div>
+<div *ngIf="(backDrop); else backDropOver" class="md-overlay"></div>
+<ng-template #backDropOver>
+  <div class="md-overlay" (click)="close(modalID)"></div>
+</ng-template>

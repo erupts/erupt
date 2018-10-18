@@ -1,0 +1,196 @@
+/**  =====================
+      Mail-pages css start
+==========================  **/
+.card-block.email-card{
+    padding: 10px 25px;
+}
+.email-card {
+    .user-head {
+        background-color: $primary-color;
+        padding: 10px;
+        min-height: 81px;
+        display: flex;
+        align-items: center;
+        .user-name {
+            margin-left: 10px;
+            margin-bottom: 10px;
+            span {
+                display: block;
+                color: $white-txt;
+            }
+        }
+    }
+    label{
+        margin-bottom: 0;
+    }
+    .user-body {
+        margin-left: -15px;
+        margin-right: -15px;
+        background-color: #fff;
+        .page-list {
+            border-bottom:0px solid transparent;
+            li {
+                text-transform: capitalize;
+                border-bottom: 1px solid #e9ecef;
+                transition: all ease-in .3s;
+                cursor: pointer;
+                &.mail-section {
+                    display: block;
+                    margin-bottom: 0;
+                    a{
+                        padding: 15px 20px;
+                        border-radius: 0px !important;
+                        color: $inverse-color;
+                        border: 0px solid transparent;
+                        &.active,
+                        &:hover {
+                            color:$primary-color;
+                            background-color: lighten($primary-color,30%);
+                        }
+                    }
+                }
+                i {
+                    margin-right: 10px;
+                }
+                &:last-child{
+                    border-bottom:0px solid transparent;
+                }
+
+            }
+        }
+        .label-list {
+            a {
+                padding: 10px 20px;
+                display: block;
+                color: #6a6a6a;
+                position: relative;
+                padding-left: 25px;
+                &:before {
+                    content: '';
+                    position: absolute;
+                    height: 10px;
+                    width: 10px;
+                    border-radius: 50px;
+                    left: 0;
+                    top: 16px;
+                }
+                &.mail-work {
+                    &:before {
+                        background-color: $primary-color;
+                    }
+                }
+                &.mail-design {
+                    &:before {
+                        background-color: $info-color;
+                    }
+                }
+                &.mail-family {
+                    &:before {
+                        background-color: $success-color;
+                    }
+                }
+                &.mail-friends {
+                    &:before {
+                        background-color: $warning-color;
+                    }
+                }
+                &.mail-office {
+                    &:before {
+                        background-color: $danger-color;
+                    }
+                }
+            }
+        }
+    }
+    .mail-box-head {
+        background-color: $primary-color;
+        min-height: 80px;
+        padding: 20px 0 0;
+        .input-group {
+            margin-bottom: 0;
+        }
+        .form-control,.float-label,.material-addone{
+            color: #fff;
+        }
+
+    }
+    .mail-body {
+        padding: 20px 0;
+        .mail-body-header {
+            margin-bottom: 20px;
+            .btn,.btn-group{
+                margin: 2px;
+            }
+        }
+    }
+    .mail-body-content {
+        .check-star {
+            display: flex;
+            align-items: center;
+            .icofont-star {
+                margin-top: -8px;
+            }
+        }
+        tr {
+            transition: all ease-in .3s;
+        }
+        tr:hover {
+            background-color: lighten($primary-color,30%);
+            cursor: pointer;
+        }
+        .unread {
+            a {
+                color: #222;
+                font-weight: 500;
+            }
+        }
+        .read {
+            a {
+                color: #222;
+                font-weight: 400;
+            }
+        }
+    }
+}
+
+.email-read {
+    .photo-table {
+        padding-right: 10px;
+    }
+    .user-name{
+        margin-bottom:10px;
+    }
+}
+
+.mail-body-content.email-read {
+    .card {
+        box-shadow: none;
+        margin-bottom: 0;
+    }
+}
+
+.user-name {
+    margin-bottom: 20px;
+}
+
+.email-card .user-mail h6 {
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    color: #292b2c;
+}
+
+.email-content {
+    line-height: 30px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 15px;
+}
+
+.mail-img {
+    margin-top: 20px;
+}
+
+.email-welcome-txt {
+    font-weight: 500;
+}
+/**====== Mail-pages css end ======**/

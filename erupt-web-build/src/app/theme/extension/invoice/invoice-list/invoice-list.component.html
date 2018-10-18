@@ -1,0 +1,724 @@
+<div class="page-body">
+  <div class="row">
+    <!-- Right column start -->
+    <div class="col-xl-3 col-lg-12 push-xl-9">
+      <!-- Search box card start -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-header-text">Search Box</h5></div>
+        <div class="card-body p-t-10">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search here...">
+          </div>
+          <div class="task-right">
+            <div class="accordion-block scale-accordion">
+              <ngb-accordion #acc="ngbAccordion" activeIds="ngb-open-p1, ngb-open-p2, ngb-open-p3" class="ngb-accordion">
+                <ngb-panel id="ngb-open-p1" title="Completed Stats">
+                  <ng-template class="accordion-content" ngbPanelContent>
+                    <div class="taskboard-right-progress">
+                      <h6>Highest Priority</h6>
+                      <div class="faq-progress m-b-10">
+                        <div class="progress">
+                          <!-- <span class="faq-text3"></span> -->
+                          <div class="faq-bar3" style="width: 80%;"></div>
+                        </div>
+                      </div>
+                      <h6>High priority</h6>
+                      <div class="faq-progress m-b-10">
+                        <div class="progress">
+                          <!-- <span class="faq-text1"></span> -->
+                          <div class="faq-bar1" style="width: 70%;"></div>
+                        </div>
+                      </div>
+                      <h6>Normal priority</h6>
+                      <div class="faq-progress m-b-10">
+                        <div class="progress">
+                          <!-- <span class="faq-text2"></span> -->
+                          <div class="faq-bar2" style="width: 50%;"></div>
+                        </div>
+                      </div>
+                      <h6>Low priority</h6>
+                      <div class="faq-progress">
+                        <div class="progress">
+                          <!-- <span class="faq-text4"></span> -->
+                          <div class="faq-bar4" style="width: 60%;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="ngb-open-p2" title="Assign Users">
+                  <ng-template class="accordion-content" ngbPanelContent>
+                    <div class="user-box assign-user taskboard-right-users">
+                      <div class="media m-b-15">
+                        <div class="media-left media-middle photo-table">
+                          <a href="javascript:;">
+                            <img class="media-object img-radius" src="assets/images/avatar-1.jpg" alt="Generic placeholder image">
+                            <div class="live-status bg-danger"></div>
+                          </a>
+                        </div>
+                        <div class="media-body">
+                          <h6>Josephin Doe</h6>
+                          <p>Santa Ana,CA</p>
+                        </div>
+                      </div>
+                      <div class="media m-b-15">
+                        <div class="media-left media-middle photo-table">
+                          <a href="javascript:;">
+                            <img class="media-object img-radius" src="assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                            <div class="live-status bg-success"></div>
+                          </a>
+                        </div>
+                        <div class="media-body">
+                          <h6>Josephin Doe</h6>
+                          <p>Huntingston, NJ</p>
+                        </div>
+                      </div>
+                      <div class="media m-b-15">
+                        <div class="media-left media-middle photo-table">
+                          <a href="javascript:;">
+                            <img class="media-object img-radius" src="assets/images/avatar-3.jpg" alt="Generic placeholder image">
+                            <div class="live-status bg-danger"></div>
+                          </a>
+                        </div>
+                        <div class="media-body">
+                          <h6>Josephin Doe</h6>
+                          <p>Willingstion, WA</p>
+                        </div>
+                      </div>
+                      <div class="media">
+                        <div class="media-left media-middle photo-table">
+                          <a href="javascript:;">
+                            <img class="media-object img-radius" src="assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                            <div class="live-status bg-success"></div>
+                          </a>
+                        </div>
+                        <div class="media-body">
+                          <h6>Josephin Doe</h6>
+                          <p>Illions, IL</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="ngb-open-p3" title="Revision">
+                  <ng-template class="accordion-content" ngbPanelContent>
+                    <div class="taskboard-right-revision user-box">
+                      <div class="media m-b-10">
+                        <div class="media-left">
+                          <a class="btn btn-outline-primary btn-lg bg-white txt-muted btn-icon" href="javascript:;" role="button"><i class="icofont icofont-gears"></i>
+                          </a>
+                        </div>
+                        <div class="media-body">
+                          <div class="chat-header">Drop the IE specific hacks for temporal inputs</div>
+                          <p class="chat-header  text-muted">4 minutes ago</p>
+                        </div>
+                        <!-- end of media body -->
+                      </div>
+                      <!-- end of media -->
+                      <div class="media m-b-10">
+                        <div class="media-left">
+                          <a class="btn btn-outline-danger btn-lg bg-white txt-muted btn-icon" href="javascript:;" role="button"><i class="icofont icofont-share"></i>
+                          </a>
+                        </div>
+                        <div class="media-body">
+                          <div class="chat-header">Have Carousel ignore keyboard events go to news</div>
+                          <p class="chat-header  text-muted">12 Dec,2015</p>
+                        </div>
+                        <!-- end of media body -->
+                      </div>
+                      <!-- end of media -->
+                      <div class="media m-b-10">
+                        <div class="media-left">
+                          <a class="btn btn-outline-warning btn-lg bg-white txt-muted btn-icon" href="javascript:;" role="button"><i class="icofont icofont-font"></i>
+                          </a>
+                        </div>
+                        <div class="media-body">
+                          <div class="chat-header">Add full font overrides for popovers and tooltips</div>
+                          <p class="chat-header text-muted">2 month ago</p>
+                        </div>
+                        <!-- end of media body -->
+                      </div>
+                      <!-- end of media -->
+                      <div class="media">
+                        <div class="media-left">
+                          <a class="btn btn-outline-success btn-lg bg-white txt-muted btn-icon" href="javascript:;" role="button"><i class="icofont icofont-responsive"></i>
+                          </a>
+                        </div>
+                        <div class="media-body">
+                          <div class="chat-header">Responsive Asssignment</div>
+                          <p class="chat-header  text-muted">6 month ago</p>
+                        </div>
+                        <!-- end of media body -->
+                      </div>
+                      <!-- end of media -->
+                    </div>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+            </div>
+            <!-- end of task-right-revision -->
+          </div>
+          <!-- end of sidebar-right -->
+        </div>
+        <!-- end of card-body -->
+      </div>
+      <!-- Search box card end -->
+    </div>
+    <!-- Right column end -->
+    <!-- Left column start -->
+    <div class="col-xl-9 col-lg-12 pull-xl-3 filter-bar">
+      <!-- Nav Filter tab start -->
+      <nav class="navbar navbar-light bg-faded m-b-30 p-10">
+        <ul class="nav navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="javascript:;">Filter: <span class="sr-only">(current)</span></a>
+          </li>
+          <li ngbDropdown="" class="nav-item dropdown">
+            <a ngbDropdownToggle="" class="nav-link dropdown-toggle" mdbRippleRadius href="javascript:;" id="bydate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-clock-time"></i> By Date</a>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="bydate">
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Show all</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Today</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Yesterday</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">This week</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">This month</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">This year</a>
+            </div>
+          </li>
+          <!-- end of by date dropdown -->
+          <li ngbDropdown class="nav-item dropdown">
+            <a ngbDropdownToggle class="nav-link dropdown-toggle" mdbRippleRadius href="javascript:;" id="bystatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-chart-histogram-alt"></i> By Status</a>
+            <div  ngbDropdownMenu class="dropdown-menu" aria-labelledby="bystatus">
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Show all</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Open</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">On hold</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Resolved</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Closed</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Dublicate</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Wontfix</a>
+            </div>
+          </li>
+          <!-- end of by status dropdown -->
+          <li ngbDropdown class="nav-item dropdown">
+            <a ngbDropdownToggle class="nav-link dropdown-toggle" mdbRippleRadius href="javascript:;" id="bypriority" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-sub-listing"></i> By Priority</a>
+            <div  ngbDropdownMenu class="dropdown-menu" aria-labelledby="bypriority">
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Show all</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Highest</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">High</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Normal</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Low</a>
+            </div>
+          </li>
+        </ul>
+        <div class="nav-item nav-grid">
+          <span class="m-r-15">View Mode: </span>
+          <button type="button" class="btn btn-sm btn-primary waves-light m-r-10" mdbRippleRadius data-toggle="tooltip" data-placement="top" title="list view">
+            <i class="icofont icofont-listine-dots"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-primary waves-light" mdbRippleRadius data-toggle="tooltip" data-placement="top" title="grid view">
+            <i class="icofont icofont-table"></i>
+          </button>
+        </div>
+        <!-- end of by priority dropdown -->
+      </nav>
+      <!-- Nav Filter tab end -->
+      <!-- Task board design block start-->
+      <div class="row">
+        <div class="col-sm-6">
+          <!-- Invoice list card start -->
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>John Doe </h5>
+              <!-- <span class="label label-default float-right"> 28 January, 2015 </span> -->
+              <div ngbDropdown class="dropdown-secondary dropdown float-right">
+                <button ngbDropdownToggle class="btn btn-primary btn-mini dropdown-toggle waves-light" mdbRippleRadius type="button" id="dropdown8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown8" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-danger"></span>Pending</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-warning"></span>Paid</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item active" href="javascript:;"><span class="point-marker bg-success"></span>On Hold</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-info"></span>Canceled</a>
+                </div>
+                <!-- end of dropdown menu -->
+                <span class="f-left m-r-5 text-inverse">Status : </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled">
+                    <li>Invoice #: &nbsp;0028</li>
+                    <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled text-right">
+                    <li>$8,750</li>
+                    <li>Method: <span class="text-semibold">SWIFT</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="task-list-table">
+                <p class="task-due"><strong> Due : </strong><strong class="label label-primary">23 hours</strong></p>
+              </div>
+              <div class="task-board m-0">
+                <a href="javasript:;" class="btn btn-info btn-mini b-none waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt m-0"></i></a>
+                <!-- end of dropdown-secondary -->
+                <div ngbDropdown class="dropdown-secondary dropdown">
+                  <button ngbDropdownToggle class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" mdbRippleRadius type="button" id="dropdown2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                  <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown2" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-attachment"></i> Download invoice</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
+                  </div>
+                  <!-- end of dropdown menu -->
+                </div>
+                <!-- end of seconadary -->
+              </div>
+              <!-- end of pull-right class -->
+            </div>
+            <!-- end of card-footer -->
+          </div>
+          <!-- Invoice list card end -->
+        </div>
+        <div class="col-sm-6">
+          <!-- Invoice list card start -->
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>John Doe </h5>
+              <!-- <span class="label label-default float-right"> 28 January, 2015 </span> -->
+              <div ngbDropdown class="dropdown-secondary dropdown float-right">
+                <button ngbDropdownToggle class="btn btn-primary btn-mini dropdown-toggle waves-light" mdbRippleRadius type="button" id="dropdown16" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown16" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-danger"></span>Pending</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-warning"></span>Paid</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item active" href="javascript:;"><span class="point-marker bg-success"></span>On Hold</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-info"></span>Canceled</a>
+                </div>
+                <!-- end of dropdown menu -->
+                <span class="f-left m-r-5 text-inverse">Status : </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled">
+                    <li>Invoice #: &nbsp;0028</li>
+                    <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled text-right">
+                    <li>$8,750</li>
+                    <li>Method: <span class="text-semibold">SWIFT</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="task-list-table">
+                <p class="task-due"><strong> Due : </strong><strong class="label label-warning">23 hours</strong></p>
+              </div>
+              <div class="task-board m-0">
+                <a href="javasript:;" class="btn btn-info btn-mini b-none waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt m-0"></i></a>
+                <!-- end of dropdown-secondary -->
+                <div ngbDropdown class="dropdown-secondary dropdown">
+                  <button ngbDropdownToggle class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" mdbRippleRadius type="button" id="dropdown11" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                  <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown11" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-attachment"></i> Download invoice</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
+                  </div>
+                  <!-- end of dropdown menu -->
+                </div>
+                <!-- end of seconadary -->
+              </div>
+              <!-- end of pull-right class -->
+            </div>
+            <!-- end of card-footer -->
+          </div>
+          <!-- Invoice list card end -->
+        </div>
+        <div class="col-sm-6">
+          <!-- Invoice list card start -->
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>John Doe </h5>
+              <!-- <span class="label label-default float-right"> 28 January, 2015 </span> -->
+              <div ngbDropdown class="dropdown-secondary dropdown float-right">
+                <button ngbDropdownToggle class="btn btn-primary btn-mini dropdown-toggle waves-light" mdbRippleRadius type="button" id="dropdown9" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown9" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-danger"></span>Pending</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-warning"></span>Paid</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item active" href="javascript:;"><span class="point-marker bg-success"></span>On Hold</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-info"></span>Canceled</a>
+                </div>
+                <!-- end of dropdown menu -->
+                <span class="f-left m-r-5 text-inverse">Status : </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled">
+                    <li>Invoice #: &nbsp;0028</li>
+                    <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled text-right">
+                    <li>$8,750</li>
+                    <li>Method: <span class="text-semibold">SWIFT</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="task-list-table">
+                <p class="task-due"><strong> Due : </strong><strong class="label label-warning">23 hours</strong></p>
+              </div>
+              <div class="task-board m-0">
+                <a href="javasript:;" class="btn btn-info btn-mini b-none waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt m-0"></i></a>
+                <!-- end of dropdown-secondary -->
+                <div ngbDropdown class="dropdown-secondary dropdown">
+                  <button ngbDropdownToggle class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" mdbRippleRadius type="button" id="dropdown3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                  <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown3" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-attachment"></i> Download invoice</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
+                  </div>
+                  <!-- end of dropdown menu -->
+                </div>
+                <!-- end of seconadary -->
+              </div>
+              <!-- end of pull-right class -->
+            </div>
+            <!-- end of card-footer -->
+          </div>
+          <!-- Invoice list card end -->
+        </div>
+        <div class="col-sm-6">
+          <!-- Invoice list card start -->
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>John Doe </h5>
+              <!-- <span class="label label-default float-right"> 28 January, 2015 </span> -->
+              <div ngbDropdown class="dropdown-secondary dropdown float-right">
+                <button ngbDropdownToggle class="btn btn-primary btn-mini dropdown-toggle waves-light" mdbRippleRadius type="button" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown10" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-danger"></span>Pending</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-warning"></span>Paid</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item active" href="javascript:;"><span class="point-marker bg-success"></span>On Hold</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-info"></span>Canceled</a>
+                </div>
+                <!-- end of dropdown menu -->
+                <span class="f-left m-r-5 text-inverse">Status : </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled">
+                    <li>Invoice #: &nbsp;0028</li>
+                    <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled text-right">
+                    <li>$8,750</li>
+                    <li>Method: <span class="text-semibold">SWIFT</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="task-list-table">
+                <p class="task-due"><strong> Due : </strong><strong class="label label-info">23 hours</strong></p>
+              </div>
+              <div class="task-board m-0">
+                <a href="javasript:;" class="btn btn-info btn-mini b-none waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt m-0"></i></a>
+                <!-- end of dropdown-secondary -->
+                <div ngbDropdown class="dropdown-secondary dropdown">
+                  <button ngbDropdownToggle class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" mdbRippleRadius type="button" id="dropdown4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                  <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown4" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-attachment"></i> Download invoice</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
+                  </div>
+                  <!-- end of dropdown menu -->
+                </div>
+                <!-- end of seconadary -->
+              </div>
+              <!-- end of pull-right class -->
+            </div>
+            <!-- end of card-footer -->
+          </div>
+          <!-- Invoice list card end -->
+        </div>
+        <div class="col-sm-6">
+          <!-- Invoice list card start -->
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>John Doe </h5>
+              <!-- <span class="label label-default float-right"> 28 January, 2015 </span> -->
+              <div ngbDropdown class="dropdown-secondary dropdown float-right">
+                <button ngbDropdownToggle class="btn btn-primary btn-mini dropdown-toggle waves-light" mdbRippleRadius type="button" id="dropdown15" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown15" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-danger"></span>Pending</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-warning"></span>Paid</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item active" href="javascript:;"><span class="point-marker bg-success"></span>On Hold</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-info"></span>Canceled</a>
+                </div>
+                <!-- end of dropdown menu -->
+                <span class="f-left m-r-5 text-inverse">Status : </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled">
+                    <li>Invoice #: &nbsp;0028</li>
+                    <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled text-right">
+                    <li>$8,750</li>
+                    <li>Method: <span class="text-semibold">SWIFT</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="task-list-table">
+                <p class="task-due"><strong> Due : </strong><strong class="label label-success">23 hours</strong></p>
+              </div>
+              <div class="task-board m-0">
+                <a href="javasript:;" class="btn btn-info btn-mini b-none waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt m-0"></i></a>
+                <!-- end of dropdown-secondary -->
+                <div ngbDropdown class="dropdown-secondary dropdown">
+                  <button ngbDropdownToggle class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" mdbRippleRadius type="button" id="dropdown5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                  <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown5" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-attachment"></i> Download invoice</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
+                  </div>
+                  <!-- end of dropdown menu -->
+                </div>
+                <!-- end of seconadary -->
+              </div>
+              <!-- end of pull-right class -->
+            </div>
+            <!-- end of card-footer -->
+          </div>
+          <!-- Invoice list card end -->
+        </div>
+        <div class="col-sm-6">
+          <!-- Invoice list card start -->
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>John Doe </h5>
+              <!-- <span class="label label-default float-right"> 28 January, 2015 </span> -->
+              <div ngbDropdown class="dropdown-secondary dropdown float-right">
+                <button ngbDropdownToggle class="btn btn-primary btn-mini dropdown-toggle waves-light" mdbRippleRadius type="button" id="dropdown12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown12" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-danger"></span>Pending</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-warning"></span>Paid</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item active" href="javascript:;"><span class="point-marker bg-success"></span>On Hold</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-info"></span>Canceled</a>
+                </div>
+                <!-- end of dropdown menu -->
+                <span class="f-left m-r-5 text-inverse">Status : </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled">
+                    <li>Invoice #: &nbsp;0028</li>
+                    <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled text-right">
+                    <li>$8,750</li>
+                    <li>Method: <span class="text-semibold">SWIFT</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="task-list-table">
+                <p class="task-due"><strong> Due : </strong><strong class="label label-danger">23 hours</strong></p>
+              </div>
+              <div class="task-board m-0">
+                <a href="javasript:;" class="btn btn-info btn-mini b-none waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt m-0"></i></a>
+                <!-- end of dropdown-secondary -->
+                <div ngbDropdown class="dropdown-secondary dropdown">
+                  <button ngbDropdownToggle class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" mdbRippleRadius type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                  <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-attachment"></i> Download invoice</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
+                  </div>
+                  <!-- end of dropdown menu -->
+                </div>
+                <!-- end of seconadary -->
+              </div>
+              <!-- end of pull-right class -->
+            </div>
+            <!-- end of card-footer -->
+          </div>
+          <!-- Invoice list card end -->
+        </div>
+        <div class="col-sm-6">
+          <!-- Invoice list card start -->
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>John Doe </h5>
+              <!-- <span class="label label-default float-right"> 28 January, 2015 </span> -->
+              <div ngbDropdown class="dropdown-secondary dropdown float-right">
+                <button ngbDropdownToggle class="btn btn-primary btn-mini dropdown-toggle waves-light" mdbRippleRadius type="button" id="dropdown13" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown13" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-danger"></span>Pending</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-warning"></span>Paid</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item active" href="javascript:;"><span class="point-marker bg-success"></span>On Hold</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-info"></span>Canceled</a>
+                </div>
+                <!-- end of dropdown menu -->
+                <span class="f-left m-r-5 text-inverse">Status : </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled">
+                    <li>Invoice #: &nbsp;0028</li>
+                    <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled text-right">
+                    <li>$8,750</li>
+                    <li>Method: <span class="text-semibold">SWIFT</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="task-list-table">
+                <p class="task-due"><strong> Due : </strong><strong class="label label-warning">23 hours</strong></p>
+              </div>
+              <div class="task-board m-0">
+                <a href="javasript:;" class="btn btn-info btn-mini b-none waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt m-0"></i></a>
+                <!-- end of dropdown-secondary -->
+                <div ngbDropdown class="dropdown-secondary dropdown">
+                  <button ngbDropdownToggle class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" mdbRippleRadius type="button" id="dropdown7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                  <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-attachment"></i> Download invoice</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
+                  </div>
+                  <!-- end of dropdown menu -->
+                </div>
+                <!-- end of seconadary -->
+              </div>
+              <!-- end of pull-right class -->
+            </div>
+            <!-- end of card-footer -->
+          </div>
+          <!-- Invoice list card end -->
+        </div>
+        <div class="col-sm-6">
+          <!-- Invoice list card start -->
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>John Doe </h5>
+              <!-- <span class="label label-default float-right"> 28 January, 2015 </span> -->
+              <div ngbDropdown class="dropdown-secondary dropdown float-right">
+                <button ngbDropdownToggle class="btn btn-primary btn-mini dropdown-toggle waves-light" mdbRippleRadius type="button" id="dropdown14" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overdue</button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown14" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-danger"></span>Pending</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-warning"></span>Paid</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item active" href="javascript:;"><span class="point-marker bg-success"></span>On Hold</a>
+                  <a class="dropdown-item" mdbRippleRadius href="javascript:;"><span class="point-marker bg-info"></span>Canceled</a>
+                </div>
+                <!-- end of dropdown menu -->
+                <span class="f-left m-r-5 text-inverse">Status : </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled">
+                    <li>Invoice #: &nbsp;0028</li>
+                    <li>Issued on: <span class="text-semibold">2015/01/25</span></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6">
+                  <ul class="list list-unstyled text-right">
+                    <li>$8,750</li>
+                    <li>Method: <span class="text-semibold">SWIFT</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="task-list-table">
+                <p class="task-due"><strong> Due : </strong><strong class="label label-primary">23 hours</strong></p>
+              </div>
+              <div class="task-board m-0">
+                <a href="javasript:;" class="btn btn-info btn-mini b-none waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt m-0"></i></a>
+                <!-- end of dropdown-secondary -->
+                <div ngbDropdown class="dropdown-secondary dropdown">
+                  <button ngbDropdownToggle class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" mdbRippleRadius type="button" id="dropdown1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                  <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown1" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-attachment"></i> Download invoice</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
+                    <a class="dropdown-item" mdbRippleRadius href="javascript:;"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
+                  </div>
+                  <!-- end of dropdown menu -->
+                </div>
+                <!-- end of seconadary -->
+              </div>
+              <!-- end of pull-right class -->
+            </div>
+            <!-- end of card-footer -->
+          </div>
+          <!-- Invoice list card end -->
+        </div>
+      </div>
+      <!-- Task board design block end -->
+    </div>
+    <!-- Left column end -->
+  </div>
+
+</div>

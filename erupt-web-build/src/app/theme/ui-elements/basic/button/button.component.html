@@ -1,0 +1,792 @@
+<div class="page-body button-page">
+  <div class="row">
+    <div class="col-sm-12">
+      <app-card [title]="'Color States'">
+        <p>Checkout color states of all buttons on popover to buttons</p>
+        <ng-template #primaryContent>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Normal</span>
+                <span class='block'>
+                  <small>#4680ff</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#4680ff;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Hover</span>
+                <span class='block'>
+                  <small>#79a3ff</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#79a3ff;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Active</span>
+                <span class='block'>
+                  <small>#0956ff</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#0956ff;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Disabled</span>
+                <span class='block'>
+                  <small>#c3d5ff</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#c3d5ff;'></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <button type="button" class="btn btn-primary waves-light" mdbRippleRadius popoverTitle="Primary color states" placement="bottom" [ngbPopover]="primaryContent">Primary button</button>
+        <ng-template #successContent>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Normal</span>
+                <span class='block'>
+                  <small>#2ECC71</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#2ECC71;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Hover</span>
+                <span class='block'>
+                  <small>#54D98C</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#54D98C;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Active</span>
+                <span class='block'>
+                  <small>#239A55</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#239A55;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Disabled</span>
+                <span class='block'>
+                  <small>#96E5B8</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#96E5B8;'></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <button type="button" class="btn btn-success waves-light" mdbRippleRadius popoverTitle="Success color states" placement="bottom" [ngbPopover]="successContent">Success button</button>
+        <ng-template #infoContent>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Normal</span>
+                <span class='block'>
+                  <small>#5DADE2</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#5DADE2;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Hover</span>
+                <span class='block'>
+                  <small>#88C3EA</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#88C3EA;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Active</span>
+                <span class='block'>
+                  <small>#2993D9</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#2993D9;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Disabled</span>
+                <span class='block'>
+                  <small>#AED6F0</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#AED6F0;'></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <button type="button" class="btn btn-info waves-light" mdbRippleRadius popoverTitle="Info color states" placement="bottom" [ngbPopover]="infoContent">Info button</button>
+        <ng-template #warningContent>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Normal</span>
+                <span class='block'>
+                  <small>#F1C40F</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#F1C40F;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Hover</span>
+                <span class='block'>
+                  <small>#F4D03F</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#F4D03F;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Active</span>
+                <span class='block'>
+                  <small>#B8960B</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#B8960B;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Disabled</span>
+                <span class='block'>
+                  <small>#F8E187</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#F8E187;'></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <button type="button" class="btn btn-warning" mdbRippleRadius popoverTitle="Warning color states" placement="bottom" [ngbPopover]="warningContent">warning button</button>
+        <ng-template #dangerContent>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Normal</span>
+                <span class='block'>
+                  <small>#E74C3C</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#E74C3C;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Hover</span>
+                <span class='block'>
+                  <small>#ED7669</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#ED7669;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Active</span>
+                <span class='block'>
+                  <small>#CD2A19</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#CD2A19;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Disabled</span>
+                <span class='block'>
+                  <small>#F3A59D</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#F3A59D;'></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <button type="button" class="btn btn-danger waves-light" mdbRippleRadius popoverTitle="Danger color states" placement="bottom" [ngbPopover]="dangerContent">Danger button</button>
+        <ng-template #inverseContent>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Normal</span>
+                <span class='block'>
+                  <small>#34495E</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#34495E;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Hover</span>
+                <span class='block'>
+                  <small>#46627F</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#46627F;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Active</span>
+                <span class='block'>
+                  <small>#1E2A37</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#1E2A37;'></div>
+              </div>
+            </div>
+          </div>
+          <div class='color-code'>
+            <div class='row'>
+              <div class='col-sm-6 col-xs-12'>
+                <span class='block'>Disabled</span>
+                <span class='block'>
+                  <small>#99A4AE</small>
+                </span>
+              </div>
+              <div class='col-sm-6 col-xs-12'>
+                <div class='display-color' style='background-color:#99A4AE;'></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <button type="button" class="btn btn-inverse waves-light" mdbRippleRadius popoverTitle="Inverse color states" placement="bottom" [ngbPopover]="inverseContent">Inverse button</button>
+        <button type="button" class="btn btn-disabled disabled" popoverTitle="Disabled color states" placement="bottom" [ngbPopover]="'Vivamus sagittis lacus vel augue laoreet rutrum faucibus.'">Disabled button</button>
+      </app-card>
+      <app-card [title]="'Basic Buttons'">
+        <!-- button Default -->
+        <p>
+          Use the button classes on an <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, or <code>&lt;input&gt;</code> element.
+        </p>
+        <button class="btn btn-primary waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn btn-success waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn btn-info waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn btn-warning" mdbRippleRadius>Warning Button</button>
+        <button class="btn btn-danger waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn btn-inverse waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn btn-disabled disabled">Disabled Button</button>
+      </app-card>
+      <app-card [title]="'Rounded buttons'">
+        <!-- button Rounded -->
+        <p> Add <code>.btn-round</code> to default button to get rounded corners.</p>
+        <button class="btn btn-primary btn-round waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn btn-success btn-round waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn btn-info btn-round waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn btn-warning btn-round" mdbRippleRadius>Warning Button</button>
+        <button class="btn btn-danger btn-round waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn btn-inverse btn-round waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn btn-disabled btn-round disabled">Disabled Button</button>
+      </app-card>
+      <app-card [title]="'Square Buttons'">
+        <!-- buttton square -->
+        <p> Add <code>.btn-square</code> to default button to get square corners.</p>
+        <button class="btn btn-primary btn-square waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn btn-success btn-square waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn btn-info btn-square waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn btn-warning btn-square" mdbRippleRadius>Warning Button</button>
+        <button class="btn btn-danger btn-square waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn btn-inverse btn-square waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn btn-disabled btn-square disabled">Disabled Button</button>
+      </app-card>
+      <app-card [title]="'Skew Buttons'">
+        <!-- buttton skew -->
+        <p> Add <code>.btn-skew</code> to default button to get skew Buttons.</p>
+        <button class="btn btn-primary btn-skew waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn btn-success btn-skew waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn btn-info btn-skew waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn btn-warning btn-skew" mdbRippleRadius>Warning Button</button>
+        <button class="btn btn-danger btn-skew waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn btn-inverse btn-skew waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn btn-disabled btn-skew disabled">Disabled Button</button>
+      </app-card>
+      <app-card [title]="'Inner Border Buttons'">
+        <p>Use Class <code>.btn-out</code> inside button to make inner solid Border Button.</p>
+        <button class="btn btn-out btn-primary btn-square waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn btn-out btn-success btn-square waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn btn-out btn-info btn-square waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn btn-out btn-warning btn-square" mdbRippleRadius>Warning Button</button>
+        <button class="btn btn-out btn-danger btn-square waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn btn-out btn-inverse btn-square waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn btn-out btn-disabled btn-square disabled">Disabled Button</button>
+        <p>Use Class <code>.btn-out-dashed</code> inside button to make inner dashed Border Button.</p>
+        <button class="btn btn-out-dashed btn-primary btn-square waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn btn-out-dashed btn-success btn-square waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn btn-out-dashed btn-info btn-square waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn btn-out-dashed btn-warning btn-square" mdbRippleRadius>Warning Button</button>
+        <button class="btn btn-out-dashed btn-danger btn-square waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn btn-out-dashed btn-inverse btn-square waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn btn-out-dashed btn-disabled btn-square disabled">Disabled Button</button>
+        <p>Use Class <code>.btn-out-dotted</code> inside button to make inner solid dotted Button.</p>
+        <button class="btn btn-out-dotted btn-primary btn-square waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn btn-out-dotted btn-success btn-square waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn btn-out-dotted btn-info btn-square waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn btn-out-dotted btn-warning btn-square" mdbRippleRadius>Warning Button</button>
+        <button class="btn btn-out-dotted btn-danger btn-square waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn btn-out-dotted btn-inverse btn-square waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn btn-out-dotted btn-disabled btn-square disabled">Disabled Button</button>
+      </app-card>
+      <app-card [title]="'Gradient Special'">
+        <h4 class="sub-title">Vertical gradient</h4>
+        <p>Use Class <code>.btn-grd-*</code> inside button to make gradient Button.</p>
+        <button class="btn btn-grd-primary waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn btn-grd-success waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn btn-grd-info waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn btn-grd-warning" mdbRippleRadius>Warning Button</button>
+        <button class="btn btn-grd-danger waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn btn-grd-inverse waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn btn-grd-disabled btn-disabled disabled">Disabled Button</button>
+        <h4 class="sub-title">Horizontal gradient</h4>
+        <p>Use Class <code>.hor-grd .btn-grd-*</code> inside button to make horizontal gradient Button.</p>
+        <button class="btn hor-grd btn-grd-primary waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn hor-grd btn-grd-success waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn hor-grd btn-grd-info waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn hor-grd btn-grd-warning" mdbRippleRadius>Warning Button</button>
+        <button class="btn hor-grd btn-grd-danger waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn hor-grd btn-grd-inverse waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn hor-grd btn-grd-disabled btn-disabled disabled">Disabled Button</button>
+      </app-card>
+      <app-card [title]="'Materialized'">
+        <p>Use Class <code>.btn-mat</code> inside button to make matrialized Button.</p>
+        <button class="btn btn-mat btn-primary waves-light" mdbRippleRadius>Primary Button</button>
+        <button class="btn btn-mat btn-success waves-light" mdbRippleRadius>Success Button</button>
+        <button class="btn btn-mat btn-info waves-light" mdbRippleRadius>Info Button</button>
+        <button class="btn btn-mat btn-warning" mdbRippleRadius>Warning Button</button>
+        <button class="btn btn-mat btn-danger waves-light" mdbRippleRadius>Danger Button</button>
+        <button class="btn btn-mat btn-inverse waves-light" mdbRippleRadius>Inverse Button</button>
+        <button class="btn btn-mat btn-disabled disabled">Disabled Button</button>
+      </app-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 col-lg-6">
+      <app-card [title]="'Buttons With Icon'">
+        <!-- button Default -->
+        <p>Use <code>&lt;i class="icofont icofont-star"&gt;</code> inside button to add icon.</p>
+        <button class="btn btn-primary waves-light" mdbRippleRadius><i class="icofont icofont-user-alt-3"></i>Primary Button</button>
+        <button class="btn btn-success waves-light" mdbRippleRadius><i class="icofont icofont-check-circled"></i>Success Button</button>
+        <button class="btn btn-info waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Info Button</button>
+        <button class="btn btn-warning" mdbRippleRadius><i class="icofont icofont-warning-alt"></i>Warning Button</button>
+        <button class="btn btn-danger waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt"></i>Danger Button</button>
+        <button class="btn btn-inverse waves-light" mdbRippleRadius><i class="icofont icofont-exchange"></i>Inverse Button</button>
+        <button class="btn btn-disabled disabled"><i class="icofont icofont-not-allowed"></i>Disabled Button</button>
+      </app-card>
+    </div>
+    <!-- Border button -->
+    <div class="col-md-12 col-lg-6">
+      <app-card [title]="'Border Buttons'">
+        <!-- button Default -->
+        <p>Use Class <code>btn-outline-*</code> inside button to make Border Button.</p>
+        <button class="btn btn-primary btn-outline-primary waves-light" mdbRippleRadius><i class="icofont icofont-user-alt-3"></i>Primary Button</button>
+        <button class="btn btn-success btn-outline-success waves-light" mdbRippleRadius><i class="icofont icofont-check-circled"></i>Success Button</button>
+        <button class="btn btn-info btn-outline-info waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Info Button</button>
+        <button class="btn btn-warning btn-outline-warning" mdbRippleRadius><i class="icofont icofont-warning-alt"></i>Warning Button</button>
+        <button class="btn btn-danger btn-outline-danger waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt"></i>Danger Button</button>
+        <button class="btn btn-inverse btn-outline-inverse waves-light" mdbRippleRadius><i class="icofont icofont-exchange"></i>Inverse Button</button>
+        <button class="btn btn-disabled btn-outline-disabled disabled"><i class="icofont icofont-not-allowed"></i>Disabled Button</button>
+      </app-card>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <app-card [title]="'Buttons Dropdown'" [cardOptionBlock]="true">
+        <!-- button Default -->
+        <div ngbDropdown class="dropdown-primary">
+          <button ngbDropdownToggle class="btn btn-primary waves-light" mdbRippleRadius type="button">Primary</button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+          </div>
+        </div>
+        <div ngbDropdown class="dropdown-success">
+          <button ngbDropdownToggle class="btn btn-success waves-light" mdbRippleRadius type="button">Success</button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+          </div>
+        </div>
+        <div ngbDropdown class="dropdown-info">
+          <button ngbDropdownToggle class="btn btn-info waves-light" mdbRippleRadius type="button">Info</button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+          </div>
+        </div>
+        <div ngbDropdown class="dropdown-warning">
+          <button ngbDropdownToggle class="btn btn-warning" mdbRippleRadius type="button">Warning</button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item" mdbRippleRadius href="javascript:">Something else here</a>
+          </div>
+        </div>
+        <div ngbDropdown class="dropdown-danger">
+          <button ngbDropdownToggle class="btn btn-danger waves-light" mdbRippleRadius type="button">Danger</button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+          </div>
+        </div>
+        <div ngbDropdown class="dropdown-inverse">
+          <button ngbDropdownToggle class="btn btn-inverse waves-light" mdbRippleRadius type="button">Inverse</button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+          </div>
+        </div>
+        <div ngbDropdown class="dropdown-disabled">
+          <button ngbDropdownToggle class="btn btn-disabled waves-light disabled" mdbRippleRadius type="button">Disabled</button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <!-- Border button -->
+    <div class="col-md-12 col-lg-6">
+      <app-card [title]="'Buttons with split dropdown with icon'" [cardOptionBlock]="true">
+        <div ngbDropdown class="btn-group dropdown-split-primary">
+          <button type="button" class="btn btn-primary waves-light" mdbRippleRadius><i class="icofont icofont-user-alt-3"></i>Primary</button>
+          <button ngbDropdownToggle type="button" class="btn btn-primary dropdown-toggle-split waves-light" mdbRippleRadius>
+            <span class="sr-only">Toggle primary</span>
+          </button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Separated link</a>
+          </div>
+        </div>
+        <div ngbDropdown class="btn-group dropdown-split-success">
+          <button type="button" class="btn btn-success waves-light" mdbRippleRadius><i class="icofont icofont-check-circled"></i>Success</button>
+          <button ngbDropdownToggle type="button" class="btn btn-success dropdown-toggle-split waves-light" mdbRippleRadius>
+            <span class="sr-only">Toggle primary</span>
+          </button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Separated link</a>
+          </div>
+        </div>
+        <div ngbDropdown class="btn-group dropdown-split-info">
+          <button type="button" class="btn btn-info waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Info</button>
+          <button ngbDropdownToggle type="button" class="btn btn-info dropdown-toggle-split waves-light" mdbRippleRadius>
+            <span class="sr-only">Toggle primary</span>
+          </button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Separated link</a>
+          </div>
+        </div>
+        <div ngbDropdown class="btn-group dropdown-split-warning">
+          <button type="button" class="btn btn-warning" mdbRippleRadius><i class="icofont icofont-warning-alt"></i>Warning</button>
+          <button ngbDropdownToggle type="button" class="btn btn-warning dropdown-toggle-split" mdbRippleRadius>
+            <span class="sr-only">Toggle primary</span>
+          </button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item" mdbRippleRadius href="javascript:">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" mdbRippleRadius href="javascript:">Separated link</a>
+          </div>
+        </div>
+        <div ngbDropdown class="btn-group dropdown-split-danger">
+          <button type="button" class="btn btn-danger waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt"></i>Danger</button>
+          <button ngbDropdownToggle type="button" class="btn btn-danger dropdown-toggle-split waves-light" mdbRippleRadius>
+            <span class="sr-only">Toggle primary</span>
+          </button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Separated link</a>
+          </div>
+        </div>
+        <div ngbDropdown class="btn-group dropdown-split-inverse">
+          <button type="button" class="btn btn-inverse waves-light" mdbRippleRadius><i class="icofont icofont-exchange"></i>Inverse</button>
+          <button ngbDropdownToggle type="button" class="btn btn-inverse dropdown-toggle-split waves-light" mdbRippleRadius>
+            <span class="sr-only">Toggle primary</span>
+          </button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Separated link</a>
+          </div>
+        </div>
+        <div ngbDropdown class="btn-group dropdown-split-disabled">
+          <button type="button" class="btn btn-disabled disabled waves-light" mdbRippleRadius><i class="icofont icofont-not-allowed"></i>Disabled</button>
+          <button ngbDropdownToggle type="button" class="btn btn-disabled disabled dropdown-toggle-split waves-light" mdbRippleRadius>
+            <span class="sr-only">Toggle primary</span>
+          </button>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Another action</a>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Something else here</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item waves-light" mdbRippleRadius href="javascript:">Separated link</a>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <app-card [title]="'Icon Button'" [blockClass]="'icon-btn'">
+        <!-- button Default -->
+        <p>Use <code>&lt;i class="icofont icofont-star"&gt;</code> inside button to add icon.</p>
+        <div>
+          <button class="btn btn-primary waves-light" mdbRippleRadius><i class="icofont icofont-user-alt-3"></i></button>
+          <button class="btn btn-success waves-light" mdbRippleRadius><i class="icofont icofont-check-circled"></i></button>
+          <button class="btn btn-info waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i></button>
+          <button class="btn btn-warning" mdbRippleRadius><i class="icofont icofont-warning-alt"></i></button>
+          <button class="btn btn-danger waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt"></i></button>
+          <button class="btn btn-inverse waves-light" mdbRippleRadius><i class="icofont icofont-exchange"></i></button>
+          <button class="btn btn-disabled disabled"><i class="icofont icofont-not-allowed"></i></button>
+        </div>
+        <div>
+          <button class="btn btn-primary btn-icon waves-light" mdbRippleRadius><i class="icofont icofont-user-alt-3"></i></button>
+          <button class="btn btn-success btn-icon waves-light" mdbRippleRadius><i class="icofont icofont-check-circled"></i></button>
+          <button class="btn btn-info btn-icon waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i></button>
+          <button class="btn btn-warning btn-icon" mdbRippleRadius><i class="icofont icofont-warning-alt"></i></button>
+          <button class="btn btn-danger btn-icon waves-light" mdbRippleRadius><i class="icofont icofont-eye-alt"></i></button>
+          <button class="btn btn-inverse btn-icon waves-light" mdbRippleRadius><i class="icofont icofont-exchange"></i></button>
+          <button class="btn btn-disabled btn-icon disabled"><i class="icofont icofont-not-allowed"></i></button>
+        </div>
+      </app-card>
+    </div>
+    <!-- Border button -->
+    <div class="col-md-12 col-lg-6">
+      <app-card [title]="'Icon Border Button'" [blockClass]="'icon-btn'">
+        <!-- button Default -->
+        <p>Use Class <code>btn-outline-*</code> inside button to make Border Button.</p>
+        <div>
+          <button class="btn btn-primary btn-outline-primary" mdbRippleRadius><i class="icofont icofont-user-alt-3"></i></button>
+          <button class="btn btn-success btn-outline-success" mdbRippleRadius><i class="icofont icofont-check-circled"></i></button>
+          <button class="btn btn-info btn-outline-info" mdbRippleRadius><i class="icofont icofont-info-square"></i></button>
+          <button class="btn btn-warning btn-outline-warning" mdbRippleRadius><i class="icofont icofont-warning-alt"></i></button>
+          <button class="btn btn-danger btn-outline-danger" mdbRippleRadius><i class="icofont icofont-eye-alt"></i></button>
+          <button class="btn btn-inverse btn-outline-inverse" mdbRippleRadius><i class="icofont icofont-exchange"></i></button>
+          <button class="btn btn-disabled btn-outline-disabled disabled"><i class="icofont icofont-not-allowed"></i></button>
+        </div>
+        <div>
+          <button class="btn btn-primary btn-outline-primary btn-icon" mdbRippleRadius><i class="icofont icofont-user-alt-3"></i></button>
+          <button class="btn btn-success btn-outline-success btn-icon" mdbRippleRadius><i class="icofont icofont-check-circled"></i></button>
+          <button class="btn btn-info btn-outline-info btn-icon" mdbRippleRadius><i class="icofont icofont-info-square"></i></button>
+          <button class="btn btn-warning btn-outline-warning btn-icon" mdbRippleRadius><i class="icofont icofont-warning-alt"></i></button>
+          <button class="btn btn-danger btn-outline-danger btn-icon" mdbRippleRadius><i class="icofont icofont-eye-alt"></i></button>
+          <button class="btn btn-inverse btn-outline-inverse btn-icon" mdbRippleRadius><i class="icofont icofont-exchange"></i></button>
+          <button class="btn btn-disabled btn-outline-disabled btn-icon disabled" mdbRippleRadius><i class="icofont icofont-not-allowed"></i></button>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-sm-12">
+      <app-card [title]="'Group Buttons'">
+        <!-- button Default -->
+        <p>Use <code>btn-xlg, btn-lg, btn-md, btn-sm, btn-mini</code> inside class to use different size button.</p>
+        <div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-xlg waves-light" mdbRippleRadius>Left</button>
+            <button type="button" class="btn btn-primary btn-xlg waves-light" mdbRippleRadius>Middle</button>
+            <button type="button" class="btn btn-primary btn-xlg waves-light" mdbRippleRadius>Right</button>
+          </div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-lg waves-light" mdbRippleRadius>Left</button>
+            <button type="button" class="btn btn-primary btn-lg waves-light" mdbRippleRadius>Middle</button>
+            <button type="button" class="btn btn-primary btn-lg waves-light" mdbRippleRadius>Right</button>
+          </div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-md waves-light" mdbRippleRadius>Left</button>
+            <button type="button" class="btn btn-primary btn-md waves-light" mdbRippleRadius>Middle</button>
+            <button type="button" class="btn btn-primary btn-md waves-light" mdbRippleRadius>Right</button>
+          </div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius>Left</button>
+            <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius>Middle</button>
+            <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius>Right</button>
+          </div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-mini waves-light" mdbRippleRadius>Left</button>
+            <button type="button" class="btn btn-primary btn-mini waves-light" mdbRippleRadius>Middle</button>
+            <button type="button" class="btn btn-primary btn-mini waves-light" mdbRippleRadius>Right</button>
+          </div>
+        </div>
+        <div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-xlg waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Left</button>
+            <button type="button" class="btn btn-primary btn-xlg waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Middle</button>
+            <button type="button" class="btn btn-primary btn-xlg waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Right</button>
+          </div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-lg waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Left</button>
+            <button type="button" class="btn btn-primary btn-lg waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Middle</button>
+            <button type="button" class="btn btn-primary btn-lg waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Right</button>
+          </div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-md waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Left</button>
+            <button type="button" class="btn btn-primary btn-md waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Middle</button>
+            <button type="button" class="btn btn-primary btn-md waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Right</button>
+          </div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Left</button>
+            <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Middle</button>
+            <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Right</button>
+          </div>
+          <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg">
+            <button type="button" class="btn btn-primary btn-mini waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Left</button>
+            <button type="button" class="btn btn-primary btn-mini waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Middle</button>
+            <button type="button" class="btn btn-primary btn-mini waves-light" mdbRippleRadius><i class="icofont icofont-info-square"></i>Right</button>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-sm-12">
+      <app-card [title]="'Social Buttons'">
+        <a href="javascript:" class="btn btn-facebook waves-light" mdbRippleRadius><i class="icofont icofont-social-facebook"></i>Facebook</a>
+        <a href="javascript:" class="btn btn-twitter waves-light" mdbRippleRadius><i class="icofont icofont-social-twitter"></i>Twitter</a>
+        <a href="javascript:" class="btn btn-linkedin waves-light" mdbRippleRadius><i class="icofont icofont-brand-linkedin"></i>Linkedin</a>
+        <a href="javascript:" class="btn btn-dribbble waves-light" mdbRippleRadius><i class="icofont icofont-social-dribble"></i>Dribble</a>
+        <a href="javascript:" class="btn btn-google-plus waves-light" mdbRippleRadius><i class="icofont icofont-social-google-plus"></i>Google+</a>
+        <a href="javascript:" class="btn btn-instagram waves-light" mdbRippleRadius><i class="icofont icofont-social-instagram"></i>Instagram</a>
+        <a href="javascript:" class="btn btn-pinterest waves-light" mdbRippleRadius><i class="icofont icofont-social-pinterest"></i>Pinterest</a>
+        <a href="javascript:" class="btn btn-dropbox waves-light" mdbRippleRadius><i class="icofont icofont-social-dropbox"></i>Dropbox</a>
+        <a href="javascript:" class="btn btn-tumblr waves-light" mdbRippleRadius><i class="icofont icofont-social-tumblr"></i>Tumbler</a>
+      </app-card>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <app-card [title]="'Social Buttons without label'" [blockClass]="'remove-label'">
+        <a href="javascript:" class="btn btn-facebook waves-light" mdbRippleRadius><i class="icofont icofont-social-facebook"></i></a>
+        <a href="javascript:" class="btn btn-twitter waves-light" mdbRippleRadius><i class="icofont icofont-social-twitter"></i></a>
+        <a href="javascript:" class="btn btn-linkedin waves-light" mdbRippleRadius><i class="icofont icofont-brand-linkedin"></i></a>
+        <a href="javascript:" class="btn btn-dribbble waves-light" mdbRippleRadius><i class="icofont icofont-social-dribble"></i></a>
+        <a href="javascript:" class="btn btn-google-plus waves-light" mdbRippleRadius><i class="icofont icofont-social-google-plus"></i></a>
+        <a href="javascript:" class="btn btn-instagram waves-light" mdbRippleRadius><i class="icofont icofont-social-instagram"></i></a>
+        <a href="javascript:" class="btn btn-pinterest waves-light" mdbRippleRadius><i class="icofont icofont-social-pinterest"></i></a>
+        <a href="javascript:" class="btn btn-dropbox waves-light" mdbRippleRadius><i class="icofont icofont-social-dropbox"></i></a>
+        <a href="javascript:" class="btn btn-tumblr waves-light" mdbRippleRadius><i class="icofont icofont-social-tumblr"></i></a>
+      </app-card>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <app-card [title]="'Link Buttons'" [blockClass]="'remove-label'">
+        <a href="javascript:" class="btn btn-primary waves-light" mdbRippleRadius>Link</a>
+        <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Button</button>
+        <input type="button" class="btn btn-primary waves-light" mdbRippleRadius value="Input">
+        <input type="submit" class="btn btn-primary waves-light" mdbRippleRadius value="Submit">
+      </app-card>
+    </div>
+    <div class="col-sm-12">
+      <app-card [title]="'Block Buttons'">
+        <div class="row">
+          <div class="col-lg-6 col-md-12">
+            <div class="form-group">
+              <button class="btn btn-primary btn-block waves-light" mdbRippleRadius>Default Button</button>
+              <button class="btn btn-primary btn-outline-primary btn-block" mdbRippleRadius><i class="icofont icofont-user-alt-3"></i>Border Button</button>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12">
+            <!-- Block level buttons with icon -->
+            <div class="form-group">
+              <button class="btn btn-success btn-square btn-block waves-light" mdbRippleRadius>Square Button</button>
+              <button class="btn btn-info btn-round btn-block waves-light" mdbRippleRadius>Rounded Button</button>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </div>
+  </div>
+</div>

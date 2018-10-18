@@ -1,0 +1,634 @@
+<div id="pcoded" class="pcoded"
+     [ngClass]="animateSidebar"
+     [attr.nav-type]="navType"
+     [attr.theme-layout]="themeLayout"
+     [attr.vertical-placement]="verticalPlacement"
+     [attr.vertical-layout]="verticalLayout"
+     [attr.pcoded-device-type]="pcodedDeviceType"
+     [attr.vertical-nav-type]="verticalNavType"
+     [attr.vertical-effect]="verticalEffect"
+     [attr.vnavigation-view]="vnavigationView"
+     [attr.fream-type]="freamType"
+     [attr.sidebar-img]="sidebarImg"
+     [attr.sidebar-img-type]="sidebarImgType"
+     [attr.layout-type]="layoutType"
+     (window:resize)="onResize($event)"
+  >
+  <div class="pcoded-overlay-box"></div>
+  <div class="pcoded-container navbar-wrapper">
+    <nav class="navbar header-navbar pcoded-header"  [attr.header-theme]="headerTheme" [attr.pcoded-header-position]="pcodedHeaderPosition">
+      <div class="navbar-wrapper">
+        <div class="navbar-logo">
+          <a class="mobile-menu waves-light" mdbRippleRadius id="mobile-collapse" href="javascript:" (click)="toggleOpened($event)" [exclude]="'#main_navbar'" (clickOutside)="onClickedOutsideSidebar($event)">
+            <i class="feather" [ngClass]="toggleIcon"></i>
+          </a>
+          <a [routerLink]="['/dashboard/default/']" class="waves-light" mdbRippleRadius>
+            <img class="img-fluid" src="assets/images/logo.png" alt="Able Pro 7" />
+          </a>
+          <a href="javascript:" class="mobile-options waves-light" mdbRippleRadius (click)="toggleHeaderNavRight()">
+            <i class="feather icon-more-horizontal"></i>
+          </a>
+        </div>
+        <div class="navbar-container container-fluid">
+          <ul class="nav-left">
+            <li class="waves-light" mdbRippleRadius>
+              <div class="sidebar_toggle"><a href="javascript:"><i class="icon-menu"></i></a></div>
+            </li>
+            <li class="header-search">
+              <div id="main-search" class="main-search morphsearch-search">
+                <div class="input-group">
+                  <span class="input-group-prepend search-close" (click)="searchOff()"><i class="feather icon-x input-group-text"></i></span>
+                  <input class="form-control" [style.width]="searchWidthString">
+                  <span class="input-group-append search-btn" (click)="searchOn()"><i class="feather icon-search input-group-text"></i></span>
+                </div>
+              </div>
+            </li>
+            <li class="waves-light" mdbRippleRadius appToggleFullScreen>
+              <a href="javascript:">
+                <i class="feather icon-maximize full-screen"></i>
+              </a>
+            </li>
+          </ul>
+          <ul [@mobileHeaderNavRight]="navRight" [ngClass]="navRight" class="nav-right">
+            <li (clickOutside)="notificationOutsideClick('live')" class="header-notification waves-light" mdbRippleRadius (click)="toggleLiveNotification()">
+              <a href="javascript:">
+                <i class="feather icon-bell"></i>
+                <span class="badge bg-c-red">5</span>
+              </a>
+              <ul [@notificationBottom]="liveNotification" class="show-notification" [ngClass]="liveNotificationClass">
+                <li>
+                  <h6>Notifications</h6>
+                  <label class="label label-danger">New</label>
+                </li>
+                <li mdbRippleRadius>
+                  <div class="media">
+                    <img class="d-flex align-self-center img-radius" src="assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                    <div class="media-body">
+                      <h5 class="notification-user">John Doe</h5>
+                      <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                      <span class="notification-time">30 minutes ago</span>
+                    </div>
+                  </div>
+                </li>
+                <li mdbRippleRadius>
+                  <div class="media">
+                    <img class="d-flex align-self-center img-radius" src="assets/images/avatar-4.jpg" alt="Generic placeholder image">
+                    <div class="media-body">
+                      <h5 class="notification-user">Joseph William</h5>
+                      <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                      <span class="notification-time">30 minutes ago</span>
+                    </div>
+                  </div>
+                </li>
+                <li mdbRippleRadius>
+                  <div class="media">
+                    <img class="d-flex align-self-center img-radius" src="assets/images/avatar-3.jpg" alt="Generic placeholder image">
+                    <div class="media-body">
+                      <h5 class="notification-user">Sara Soudein</h5>
+                      <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                      <span class="notification-time">30 minutes ago</span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li class="waves-light" mdbRippleRadius>
+              <a href="javascript:" (click)="toggleChat()">
+                <i class="feather icon-message-square"></i>
+                <span class="badge bg-c-green">3</span>
+              </a>
+            </li>
+            <li (clickOutside)="notificationOutsideClick('profile')" class="user-profile header-notification waves-light" mdbRippleRadius (click)="toggleProfileNotification()">
+              <a href="javascript:">
+                <img src="assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                <span>John Doe</span>
+                <i class="feather icon-chevron-down"></i>
+              </a>
+              <ul [@notificationBottom]="profileNotification" class="show-notification profile-notification" [ngClass]="profileNotificationClass">
+                <li mdbRippleRadius>
+                  <a href="javascript:">
+                    <i class="feather icon-settings"></i> Settings
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a [routerLink]="['/user/profile/']">
+                    <i class="feather icon-user"></i> Profile
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a href="javascript:">
+                    <i class="feather icon-mail"></i> My Messages
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a [routerLink]="['/auth/lock-screen/']" target="_blank">
+                    <i class="feather icon-lock"></i> Lock Screen
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a [routerLink]="['/auth/login/simple/']" target="_blank">
+                    <i class="feather icon-log-out"></i> Logout
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Sidebar chat start -->
+    <div [@slideInOut]="chatSlideInOut" id="sidebar" class="users p-chat-user showChat" [ngClass]="chatSlideInOut">
+      <div class="had-container">
+        <div class="p-fixed users-main">
+          <div class="user-box">
+            <div class="chat-search-box">
+              <span class="back_friendlist" (click)="toggleChat()">
+                <i class="feather icon-x"></i>
+              </span>
+              <div class="right-icon-control">
+                <form class="form-material" action="javascript:">
+                  <div class="form-group form-primary">
+                    <input type="text" name="search-text" class="form-control" id="search-friends" required="">
+                    <span class="form-bar"></span>
+                    <label class="float-label"><i class="feather icon-search m-r-10"></i>Search Friend</label>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="main-friend-list">
+              <perfect-scrollbar [style.max-width]="'280px'" [style.max-height]="'calc(100vh - 92px)'" [config]="config">
+                <div mdbRippleRadius class="media userlist-box" data-username="Josephin Doe" placement="left" ngbTooltip="Josephin Doe" (click)="toggleInnerChat()">
+                  <a class="media-left" href="javascript:">
+                    <img class="media-object img-radius img-radius" src="assets/images/avatar-3.jpg" alt="Josephin Doe">
+                    <div class="live-status bg-success"></div>
+                  </a>
+                  <div class="media-body">
+                    <div class="f-13 chat-header">Josephin Doe</div>
+                  </div>
+                </div>
+                <div mdbRippleRadius class="media userlist-box" data-username="Lary Doe" placement="left" ngbTooltip="Lary Doe" (click)="toggleInnerChat()">
+                  <a class="media-left" href="javascript:">
+                    <img class="media-object img-radius" src="assets/images/avatar-2.jpg" alt="Lary Doe">
+                    <div class="live-status bg-danger"></div>
+                  </a>
+                  <div class="media-body">
+                    <div class="f-13 chat-header">Lary Doe</div>
+                  </div>
+                </div>
+                <div mdbRippleRadius class="media userlist-box" data-username="Alice" placement="left" ngbTooltip="Alice" (click)="toggleInnerChat()">
+                  <a class="media-left" href="javascript:">
+                    <img class="media-object img-radius" src="assets/images/avatar-4.jpg" alt="Alice">
+                    <div class="live-status bg-success"></div>
+                  </a>
+                  <div class="media-body">
+                    <div class="f-13 chat-header">Alice</div>
+                  </div>
+                </div>
+                <div mdbRippleRadius class="media userlist-box" data-username="Alia" placement="left" ngbTooltip="Alia" (click)="toggleInnerChat()">
+                  <a class="media-left" href="javascript:">
+                    <img class="media-object img-radius" src="assets/images/avatar-3.jpg" alt="Alia">
+                    <div class="live-status bg-success"></div>
+                  </a>
+                  <div class="media-body">
+                    <div class="f-13 chat-header">Alia</div>
+                  </div>
+                </div>
+                <div mdbRippleRadius class="media userlist-box" data-username="Suzen" placement="left" ngbTooltip="Suzen" (click)="toggleInnerChat()">
+                <a class="media-left" href="javascript:">
+                  <img class="media-object img-radius" src="assets/images/avatar-2.jpg" alt="Suzen">
+                  <div class="live-status bg-danger"></div>
+                </a>
+                <div class="media-body">
+                  <div class="f-13 chat-header">Suzen</div>
+                </div>
+              </div>
+              </perfect-scrollbar>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Sidebar inner chat start-->
+    <div [@slideInOut]="innerChatSlideInOut" class="showChat_inner">
+      <div class="media chat-inner-header">
+        <a class="back_chatBox">
+          <i class="feather icon-more" (click)="toggleInnerChat()"></i> Josephin Doe
+        </a>
+      </div>
+      <div class="main-friend-chat">
+        <perfect-scrollbar [style.max-width]="'280px'" [style.max-height]="'calc(100vh - 150px)'" [config]="config">
+          <div class="media chat-messages">
+            <a class="media-left photo-table" href="javascript:">
+              <img class="media-object img-radius img-radius m-t-5" src="assets/images/avatar-2.jpg" alt="Generic placeholder image">
+            </a>
+            <div class="media-body chat-menu-content">
+              <div class="">
+                <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+              </div>
+              <p class="chat-time">8:20 a.m.</p>
+            </div>
+          </div>
+          <div class="media chat-messages">
+            <div class="media-body chat-menu-reply">
+              <div class="">
+                <p class="chat-cont">Ohh! very nice</p>
+              </div>
+              <p class="chat-time">8:22 a.m.</p>
+            </div>
+          </div>
+          <div class="media chat-messages">
+            <a class="media-left photo-table" href="javascript:">
+              <img class="media-object img-radius img-radius m-t-5" src="assets/images/avatar-2.jpg" alt="Generic placeholder image">
+            </a>
+            <div class="media-body chat-menu-content">
+              <div class="">
+                <p class="chat-cont">can you come with me?</p>
+              </div>
+              <p class="chat-time">8:20 a.m.</p>
+            </div>
+          </div>
+        </perfect-scrollbar>
+      </div>
+      <div class="chat-reply-box">
+        <div class="right-icon-control">
+          <form class="form-material">
+            <div class="form-group form-primary">
+              <input type="text" name="footer-email" class="form-control" required="">
+              <span class="form-bar"></span>
+              <label class="float-label">
+                <i class="feather icon-search m-r-10"></i>Share Your Thoughts
+              </label>
+            </div>
+          </form>
+          <div class="form-icon ">
+            <button class="btn btn-success btn-icon  waves-effect waves-light">
+              <i class="feather icon-message-circle"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Sidebar inner chat end-->
+
+    <div class="pcoded-main-container" [style.margin-top]="headerFixedMargin"> <!--  -->
+      <div class="pcoded-wrapper">
+        <nav
+          id="main_navbar"
+          class="pcoded-navbar"
+          (clickOutside)="onClickedOutsideSidebar($event)"
+          [exclude]="'#mobile-collapse'"
+          [attr.navbar-theme]="navBarTheme"
+          [attr.active-item-theme]="activeItemTheme"
+          sub-item-theme="theme2"
+          active-item-style="style0"
+          [attr.pcoded-header-position]="pcodedHeaderPosition"
+          [attr.pcoded-navbar-position]="pcodedSidebarPosition"
+          [style.top]="headerFixedTop"
+          [style.height]="sidebarFixedNavHeight"
+        >
+          <div class="pcoded-inner-navbar main-menu" appAccordion>
+            <div class="">
+              <div class="main-menu-header">
+                <img class="img-menu-user img-radius" src="assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                <div class="user-details">
+                  <p id="more-details" (click)="toggleOpenedSidebar()"> John Doe
+                    <i class="feather icon-chevron-down m-l-10"></i>
+                  </p>
+                </div>
+              </div>
+              <div class="main-menu-content">
+                <ul>
+                  <li [@mobileMenuTop]="isCollapsedSideBar" class="more-details" [ngClass]="isCollapsedSideBar">
+                    <a [routerLink]="['/user/profile']" mdbRippleRadius><i class="feather icon-user"></i>View Profile</a>
+                    <a href="javascript:" mdbRippleRadius><i class="feather icon-settings"></i>Settings</a>
+                    <a [routerLink]="['/auth/login/simple']" mdbRippleRadius target="_blank"><i class="feather icon-log-out"></i>Logout</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <perfect-scrollbar [style.max-width]="'235px'" [style.max-height]="sidebarFixedHeight" [config]="config" [ngClass]="perfectDisable">
+              <div *ngFor="let asideItems of menuItems.getAll()" class="d-color">
+                <div class="pcoded-navigation-label" [attr.menu-title-theme]="menuTitleTheme">{{asideItems.label}}</div>
+                <ul class="pcoded-item pcoded-left-item" [attr.item-border]="itemBorder" [attr.item-border-style]="itemBorderStyle" [attr.subitem-border]="subItemBorder" *ngFor="let asideItem of asideItems.main" appAccordionLink group="{{asideItem.state}}">
+                  <li [routerLinkActive]="['active']" *ngIf="asideItem.type === 'external'" appAccordionLink group="{{asideItem.state}}">
+                    <a [routerLinkActive]="['active']" mdbRippleRadius href="{{asideItem.external}}" target="{{asideItem.target ? '_blank' : '_self'}}" appAccordionToggle>
+                      <span class="pcoded-micon"><i class="{{ asideItem.icon }}"></i><b>{{ asideItem.short_label }}</b></span>
+                      <span class="pcoded-mtext">{{ asideItem.name }}</span>
+                      <span *ngFor="let asideBadge of asideItem.badge" class="pcoded-badge label label-{{ asideBadge.type }}">{{asideBadge.value}}</span>
+                      <span class="pcoded-mcaret"></span>
+                    </a>
+                  </li>
+
+                  <li [routerLinkActive]="['active']" *ngIf="asideItem.type === 'link'" appAccordionLink group="{{asideItem.state}}">
+                    <a [routerLinkActive]="['active']" mdbRippleRadius [routerLink]="['/', asideItem.main_state, asideItem.state]" target="{{asideItem.target ? '_blank' : '_self'}}" appAccordionToggle *ngIf="asideItem.main_state; else mainContent">
+                      <span class="pcoded-micon"><i class="{{ asideItem.icon }}"></i><b>{{ asideItem.short_label }}</b></span>
+                      <span class="pcoded-mtext">{{ asideItem.name }}</span>
+                      <span *ngFor="let asideBadge of asideItem.badge" class="pcoded-badge label label-{{ asideBadge.type }}">{{asideBadge.value}}</span>
+                      <span class="pcoded-mcaret"></span>
+                    </a>
+                    <ng-template #mainContent>
+                      <a [routerLinkActive]="['active']" mdbRippleRadius [routerLink]="['/', asideItem.state]" target="{{asideItem.target ? '_blank' : '_self'}}" appAccordionToggle>
+                        <span class="pcoded-micon"><i class="{{ asideItem.icon }}"></i><b>{{ asideItem.short_label }}</b></span>
+                        <span class="pcoded-mtext">{{ asideItem.name }}</span>
+                        <span *ngFor="let asideBadge of asideItem.badge" class="pcoded-badge label label-{{ asideBadge.type }}">{{asideBadge.value}}</span>
+                        <span class="pcoded-mcaret"></span>
+                      </a>
+                    </ng-template>
+                  </li>
+                  <li [routerLinkActive]="['active']" *ngIf="asideItem.type === 'sub'" class="pcoded-hasmenu" [attr.dropdown-icon]="dropDownIcon" [attr.subitem-icon]="subItemIcon" appAccordionLink group="{{asideItem.state}}">
+                    <a [routerLinkActive]="['active']" mdbRippleRadius [routerLinkActive]="['active']" href="javascript:;" appAccordionToggle>
+                      <span class="pcoded-micon"><i class="{{ asideItem.icon }}"></i><b>{{ asideItem.short_label }}</b></span>
+                      <span class="pcoded-mtext">{{ asideItem.name }}</span>
+                      <span *ngFor="let asideBadge of asideItem.badge" class="pcoded-badge label label-{{ asideBadge.type }}">{{asideBadge.value}}</span>
+                      <span class="pcoded-mcaret"></span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                      <ng-template ngFor let-asideChildren [ngForOf]="asideItem.children">
+                        <li [routerLinkActive]="['active']" *ngIf="asideChildren.type !== 'sub'">
+                          <a [routerLinkActive]="['active']" mdbRippleRadius [routerLink]="['/', asideItem.state, asideChildren.state]" target="{{asideChildren.target ? '_blank' : '_self'}}">
+                            <span class="pcoded-micon"><i class="icon-angle-right"></i></span>
+                            <span class="pcoded-mtext">{{ asideChildren.name }} </span>
+                            <span *ngFor="let asideChildrenBadge of asideChildren.badge" class="pcoded-badge label label-{{ asideChildrenBadge.type }}">{{asideChildrenBadge.value}}</span>
+                            <span class="pcoded-mcaret"></span>
+                          </a>
+                        </li>
+
+                        <li [routerLinkActive]="['active']" class="pcoded-hasmenu" [attr.dropdown-icon]="dropDownIcon" [attr.subitem-icon]="subItemIcon" *ngIf="asideChildren.type === 'sub'" appAccordionLink group="sub-toggled">
+                          <a [routerLinkActive]="['active']" mdbRippleRadius href="javascript:;" appAccordionToggle>
+                            <span class="pcoded-micon"><i class="icon-direction-alt"></i></span>
+                            <span class="pcoded-mtext">{{ asideChildren.name }}</span>
+                            <span *ngFor="let asideChildrenBadge of asideChildren.badge" class="pcoded-badge label label-{{ asideChildrenBadge.type }}">{{asideChildrenBadge.value}}</span>
+                            <span class="pcoded-mcaret"></span>
+                          </a>
+                          <ul class="pcoded-submenu">
+                            <ng-template ngFor let-asideChildrenSub [ngForOf]="asideChildren.children">
+                              <li [routerLinkActive]="['active']">
+                                <a [routerLinkActive]="['active']" mdbRippleRadius [routerLink]="['/', asideItem.state, asideChildren.state, asideChildrenSub.state]" target="{{asideChildrenSub.target ? '_blank' : '_self'}}">
+                                  <span class="pcoded-micon"><i class="icon-angle-right"></i></span>
+                                  <span class="pcoded-mtext">{{ asideChildrenSub.name }}</span>
+                                  <span *ngFor="let asideChildrenSubBadge of asideChildrenSub.badge" class="pcoded-badge label label-{{ asideChildrenSubBadge.type }}">{{asideChildrenSubBadge.value}}</span>
+                                  <span class="pcoded-mcaret"></span>
+                                </a>
+                              </li>
+                            </ng-template>
+                          </ul>
+                        </li>
+                      </ng-template>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </perfect-scrollbar>
+          </div>
+        </nav>
+        <div class="pcoded-content">
+          <app-breadcrumbs></app-breadcrumbs>
+          <div class="pcoded-inner-content">
+            <!-- Main-body start -->
+            <div class="main-body">
+              <div class="page-wrapper">
+                <router-outlet>
+                  <app-title></app-title>
+                  <app-spinner></app-spinner>
+                </router-outlet>
+              </div>
+            </div>
+            <div id="styleSelector" [ngClass]="configOpenRightBar">
+              <div class="selector-toggle waves-light">
+                <a href="javascript:" placement="left" class="waves-light" mdbRippleRadius ngbTooltip="Live layout customizer" (click)="toggleRightbar()"></a>
+              </div>
+              <ul>
+                <li>
+                  <p class="selector-title main-title st-main-title"><b>Able-pro 7.0 </b> Customizer</p><span class="text-muted">Live customizer with tons of options</span></li>
+                <li>
+                  <p class="selector-title">Main layouts</p>
+                </li>
+                <li>
+                  <div class="theme-color">
+                    <a href="javascript:" (click)="setNavBarTheme('themelight1')" mdbRippleRadius navbar-theme="themelight1" placement="top" ngbTooltip="Light Sidebar">
+                      <span class="head"></span>
+                      <span class="cont"></span>
+                    </a>
+                    <a href="javascript:" (click)="setNavBarTheme('theme1')" mdbRippleRadius navbar-theme="theme1" placement="top" ngbTooltip="Dark Sidebar">
+                      <span class="head"></span>
+                      <span class="cont"></span>
+                    </a>
+                    <a href="javascript:" (click)="setLayoutType('light')" mdbRippleRadius layout-type="light" placement="top" ngbTooltip="Light Layout">
+                      <span class="head"></span>
+                      <span class="cont"></span>
+                    </a>
+                    <a href="javascript:" (click)="setLayoutType('dark')" class="waves-light" mdbRippleRadius layout-type="dark" placement="top" ngbTooltip="Dark Layout">
+                      <span class="head"></span>
+                      <span class="cont"></span>
+                    </a>
+                    <a href="javascript:" (click)="constructor(menuItems)" class="Layout-type waves-light" mdbRippleRadius layout-type="reset" placement="top" ngbTooltip="Default">
+                      <i class="feather icon-power"></i>
+                    </a>
+                  </div>
+                </li>
+              </ul>
+              <perfect-scrollbar [style.max-width]="'100%'" [style.max-height]="'calc(100vh - 495px)'" [config]="config">
+                <div class="style-cont m-t-10">
+                  <ngb-tabset>
+                    <ngb-tab title="Layouts">
+                      <ng-template ngbTabContent>
+                        <div [@fadeInOutTranslate] class="m-t-15">
+                          <ul>
+                            <li class="theme-option">
+                              <div class="checkbox-fade fade-in-primary">
+                                <label>
+                                  <input type="checkbox" value="false" id="theme-layout" name="vertical-item-border" [checked]="isVerticalLayoutChecked" (change)="setVerticalLayout()">
+                                  <span class="cr"><i class="cr-icon fa fa-check txt-success"></i></span>
+                                  <span>Box Layout - with patterns</span>
+                                </label>
+                              </div>
+                            </li>
+                            <li class="theme-option" id="bg-pattern-visiblity" [ngClass]="displayBoxLayout">
+                              <div class="theme-color">
+                                <a href="javascript:" class="small" (click)="setBackgroundPattern('theme1')" themebg-pattern="theme1"></a>
+                                <a href="javascript:" class="small" (click)="setBackgroundPattern('theme2')" themebg-pattern="theme2"></a>
+                                <a href="javascript:" class="small" (click)="setBackgroundPattern('theme3')" themebg-pattern="theme3"></a>
+                                <a href="javascript:" class="small" (click)="setBackgroundPattern('theme4')" themebg-pattern="theme4"></a>
+                                <a href="javascript:" class="small" (click)="setBackgroundPattern('theme5')" themebg-pattern="theme5"></a>
+                                <a href="javascript:" class="small" (click)="setBackgroundPattern('theme6')" themebg-pattern="theme6"></a>
+                              </div>
+                            </li>
+                            <li class="theme-option">
+                              <div class="checkbox-fade fade-in-primary">
+                                <label>
+                                  <input type="checkbox" value="false" id="sidebar-position" name="sidebar-position" [checked]="isSidebarChecked" (change)="setSidebarPosition()">
+                                  <span class="cr"><i class="cr-icon fa fa-check txt-success"></i></span>
+                                  <span>Fixed Sidebar Position</span>
+                                </label>
+                              </div>
+                            </li>
+                            <li class="theme-option">
+                              <div class="checkbox-fade fade-in-primary">
+                                <label>
+                                  <input type="checkbox" value="false" id="header-position" name="header-position" [checked]="isHeaderChecked" (change)="setHeaderPosition()">
+                                  <span class="cr"><i class="cr-icon fa fa-check txt-success"></i></span>
+                                  <span>Fixed Header Position</span>
+                                </label>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </ng-template>
+                    </ngb-tab>
+                    <ngb-tab title="Sidebar Settings">
+                      <ng-template ngbTabContent>
+                        <div [@fadeInOutTranslate] class="m-t-15">
+                          <ul>
+                            <li class="theme-option">
+                              <p class="sub-title drp-title">Menu Type</p>
+                              <div class="form-radio" id="menu-effect">
+                                <div class="radio radiofill radio-primary radio-inline" ngbTooltip="Color icon">
+                                  <label>
+                                    <input type="radio" name="radio" value="st1" (click)="this.navType=$event.target.value">
+                                    <i class="helper"></i>
+                                    <span class="micon st1"><i class="feather icon-bell"></i></span>
+                                  </label>
+                                </div>
+                                <div class="radio radiofill radio-success radio-inline" ngbTooltip="Simple icon">
+                                  <label>
+                                    <input type="radio" name="radio" value="st2" (click)="this.navType=$event.target.value" checked="true">
+                                    <i class="helper"></i>
+                                    <span class="micon st2"><i class="feather icon-bell"></i></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </li>
+                            <li class="theme-option">
+                              <p class="sub-title drp-title">SideBar Effect</p>
+                              <select id="vertical-menu-effect" class="form-control minimal" (change)="this.verticalEffect=$event.target.value">
+                                <option value="shrink" selected>shrink</option>
+                                <option value="overlay">overlay</option>
+                                <option value="push">Push</option>
+                              </select>
+                            </li>
+                            <li class="theme-option">
+                              <p class="sub-title drp-title">Hide/Show Border</p>
+                              <select id="vertical-border-style" class="form-control minimal" (change)="this.itemBorderStyle=$event.target.value">
+                                <option value="solid">Style 1</option>
+                                <option value="dotted">Style 2</option>
+                                <option value="dashed">Style 3</option>
+                                <option value="none" selected>No Border</option>
+                              </select>
+                            </li>
+                            <li class="theme-option">
+                              <p class="sub-title drp-title">Drop-Down Icon</p>
+                              <select id="vertical-dropdown-icon" class="form-control minimal" (change)="this.dropDownIcon=$event.target.value">
+                                <option value="style1" selected>Style 1</option>
+                                <option value="style2">style 2</option>
+                                <option value="style3">style 3</option>
+                              </select>
+                            </li>
+                            <li class="theme-option">
+                              <p class="sub-title drp-title">Sub Menu Drop-down Icon</p>
+                              <select id="vertical-subitem-icon" class="form-control minimal" (change)="this.subItemIcon=$event.target.value">
+                                <option value="style1" selected>Style 1</option>
+                                <option value="style2">style 2</option>
+                                <option value="style3">style 3</option>
+                                <option value="style4">style 4</option>
+                                <option value="style5">style 5</option>
+                                <option value="style6">style 6</option>
+                                <option value="style7">no icon</option>
+                              </select>
+                            </li>
+                          </ul>
+                        </div>
+                      </ng-template>
+                    </ngb-tab>
+                  </ngb-tabset>
+                  <div class="tab-content tabs">
+                    <ul>
+                      <li>
+                        <p class="selector-title">Header color</p>
+                      </li>
+                      <li class="theme-option">
+                        <div class="theme-color">
+                          <a href="javascript:" class="header-theme" mdbRippleRadius (click)="this.menuTitleTheme=this.freamType=this.activeItemTheme=this.headerTheme='theme1';setBackgroundPattern('theme1')" header-theme="theme1">
+                            <span class="head"></span>
+                            <span class="cont"></span>
+                          </a>
+                          <a href="javascript:" class="header-theme" mdbRippleRadius (click)="this.menuTitleTheme=this.freamType=this.activeItemTheme=this.headerTheme='theme2';setBackgroundPattern('theme2')" header-theme="theme2">
+                            <span class="head"></span>
+                            <span class="cont"></span></a>
+                          <a href="javascript:" class="header-theme" mdbRippleRadius (click)="this.menuTitleTheme=this.freamType=this.activeItemTheme=this.headerTheme='theme3';setBackgroundPattern('theme3')" header-theme="theme3">
+                            <span class="head"></span>
+                            <span class="cont"></span>
+                          </a>
+                          <a href="javascript:" class="header-theme" mdbRippleRadius (click)="this.menuTitleTheme=this.freamType=this.activeItemTheme=this.headerTheme='theme4';setBackgroundPattern('theme4')" header-theme="theme4">
+                            <span class="head"></span>
+                            <span class="cont"></span>
+                          </a>
+                          <a href="javascript:" class="header-theme" mdbRippleRadius (click)="this.menuTitleTheme=this.freamType=this.activeItemTheme=this.headerTheme='theme5';setBackgroundPattern('theme5')" header-theme="theme5">
+                            <span class="head"></span>
+                            <span class="cont"></span>
+                          </a>
+                          <a href="javascript:" class="header-theme" mdbRippleRadius (click)="this.menuTitleTheme=this.freamType=this.activeItemTheme=this.headerTheme='theme6';setBackgroundPattern('theme6')" header-theme="theme6">
+                            <span class="head"></span>
+                            <span class="cont"></span>
+                          </a>
+                        </div>
+                      </li>
+                      <li>
+                        <p class="selector-title">Active link color</p>
+                      </li>
+                      <li class="theme-option">
+                        <div class="theme-color">
+                          <a href="javascript:" (click)="this.activeItemTheme='theme1'" class="small" active-item-theme="theme1"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme2'" class="small" active-item-theme="theme2"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme3'" class="small" active-item-theme="theme3"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme4'" class="small" active-item-theme="theme4"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme5'" class="small" active-item-theme="theme5"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme6'" class="small" active-item-theme="theme6"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme7'" class="small" active-item-theme="theme7"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme8'" class="small" active-item-theme="theme8"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme9'" class="small" active-item-theme="theme9"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme10'" class="small" active-item-theme="theme10"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme11'" class="small" active-item-theme="theme11"></a>
+                          <a href="javascript:" (click)="this.activeItemTheme='theme12'" class="small" active-item-theme="theme12"></a>
+                        </div>
+                      </li>
+                      <li>
+                        <p class="selector-title">Menu Caption Color</p>
+                      </li>
+                      <li class="theme-option">
+                        <div class="theme-color">
+                          <a href="javascript:" class="small" (click)="this.menuTitleTheme='theme1'" menu-caption="theme1"></a>
+                          <a href="javascript:" class="small" (click)="this.menuTitleTheme='theme2'" menu-caption="theme2"></a>
+                          <a href="javascript:" class="small" (click)="this.menuTitleTheme='theme3'" menu-caption="theme3"></a>
+                          <a href="javascript:" class="small" (click)="this.menuTitleTheme='theme4'" menu-caption="theme4"></a>
+                          <a href="javascript:" class="small" (click)="this.menuTitleTheme='theme5'" menu-caption="theme5"></a>
+                          <a href="javascript:" class="small" (click)="this.menuTitleTheme='theme6'" menu-caption="theme6"></a>
+                          <a href="javascript:" class="small" (click)="this.menuTitleTheme='theme7'" menu-caption="theme7"></a>
+                          <a href="javascript:" class="small" (click)="this.menuTitleTheme='theme8'" menu-caption="theme8"></a>
+                          <a href="javascript:" class="small" (click)="this.menuTitleTheme='theme9'" menu-caption="theme9"></a>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </perfect-scrollbar>
+              <ul>
+                <li>
+                  <a href="http://phoenixcoded.net/" mdbRippleRadius target="_blank" class="btn btn-success btn-block m-r-15 m-t-10 m-b-10">Profile</a>
+                  <a href="http://ableproadmin.com/doc-7.0/" mdbRippleRadius target="_blank" class="btn btn-primary btn-block m-r-15 m-t-5 m-b-10">Online Documentation</a>
+                </li>
+                <li class="text-center">
+                  <span class="text-center f-18 m-t-15 m-b-15 d-block">Thank you for sharing !</span>
+                  <a href="https://www.facebook.com/phoenixcoded" mdbRippleRadius target="_blank" class="btn btn-facebook soc-icon m-b-20"><i class="fa fa-facebook"></i></a>
+                  <a href="https://twitter.com/phoenixcoded" mdbRippleRadius target="_blank" class="btn btn-twitter soc-icon m-l-20 m-b-20"><i class="fa fa-twitter"></i></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

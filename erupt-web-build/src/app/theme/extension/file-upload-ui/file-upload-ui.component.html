@@ -1,0 +1,109 @@
+<div class="page-body">
+  <div class="row">
+    <div class="col-sm-12">
+      <app-card [title]="'Angular2 File Upload'">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="sub-title">Drag & Drop</div>
+            <div
+              ng2FileDrop
+              [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+              (fileOver)="fileOverBase($event)"
+              [uploader]="uploader"
+              class="well ngb-drop-zone text-center waves-light" mdbRippleRadius>
+              Drag & Drop files here
+            </div>
+
+            <div
+              ng2FileDrop
+              [ngClass]="{'another-file-over-class': hasAnotherDropZoneOver}"
+              (fileOver)="fileOverAnother($event)"
+              [uploader]="uploader"
+              class="well ngb-drop-zone text-center waves-light" mdbRippleRadius>
+              Drag & Drop files here
+            </div>
+
+            <div class="sub-title">Multiple File</div>
+            <label class="custom-file mb-3">
+              <input type="file" ng2FileSelect [uploader]="uploader" multiple class="custom-file-input">
+              <span class="custom-file-control"></span>
+            </label>
+
+            <div class="sub-title">Single File</div>
+            <label class="custom-file">
+              <input type="file" ng2FileSelect [uploader]="uploader" class="custom-file-input">
+              <span class="custom-file-control"></span>
+            </label>
+          </div>
+
+          <div class="col-md-9">
+            <div class="sub-title">Upload Queue</div>
+            <p>Queue length: {{ uploader?.queue?.length }}</p>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th width="50%">Name</th>
+                  <th>Size</th>
+                  <th>Progress</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of uploader.queue">
+                  <td><strong>{{ item?.file?.name }}</strong></td>
+                  <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                  <td *ngIf="uploader.isHTML5">
+                    <div class="progress" style="margin-bottom: 0;">
+                      <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <span *ngIf="item.isSuccess"><i class="fa fa-check"></i></span>
+                    <span *ngIf="item.isCancel"><i class="fa fa-ban"></i></span>
+                    <span *ngIf="item.isError"><i class="fa fa-times"></i></span>
+                  </td>
+                  <td nowrap>
+                    <button type="button" class="btn btn-success btn-sm waves-light" mdbRippleRadius (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
+                      <span class="fa fa-upload"></span> Upload
+                    </button>
+                    <button type="button" class="btn btn-warning btn-sm waves-light" mdbRippleRadius (click)="item.cancel()" [disabled]="!item.isUploading">
+                      <span class="fa fa-ban"></span> Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm waves-light" mdbRippleRadius (click)="item.remove()">
+                      <span class="fa fa-trash"></span> Remove
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="text-center">
+                    <span>Your Uploaded Files</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div>
+              <div class="sub-title">Queue progress</div>
+              <p><ngb-progressbar type="primary" [value]="uploader.progress"></ngb-progressbar></p>
+
+              <div class="sub-title">Common Action</div>
+              <button type="button" class="btn btn-success waves-light m-b-5" mdbRippleRadius (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+                <span class="fa fa-upload"></span> Upload all
+              </button>
+              <button type="button" class="btn btn-warning waves-light m-b-5" mdbRippleRadius (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
+                <span class="fa fa-ban"></span> Cancel all
+              </button>
+              <button type="button" class="btn btn-danger waves-light m-b-5" mdbRippleRadius (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
+                <span class="fa fa-trash"></span> Remove all
+              </button>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </div>
+  </div>
+
+</div>

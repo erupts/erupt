@@ -1,0 +1,298 @@
+<div class="row">
+  <div class="col-sm-12">
+    <!-- Horizontal-border table start -->
+    <app-card [title]="'Horizontal borders'" [classHeader]="true" [blockClass]="'table-border-style'" [cardOptionBlock]="true">
+      <span class="code-header">Example of <code>horizontal</code> table borders. This is a default table border style attached to <code>.table</code> class. All borders have the same grey color and style, table itself doesn't have a border, but you can add this border using <code>.table-framed</code> class added to the table with <code>.table</code> class.</span>
+      <div class="table-responsive">
+        <table class="table table-framed">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- Horizontal-border table end -->
+    <!-- Vertical borders table start -->
+    <app-card [title]="'Vertical borders'" [classHeader]="true" [blockClass]="'table-border-style'" [cardOptionBlock]="true">
+      <span class="code-header">Example of <code>vertical</code> table borders. This is a default table border style attached to <code>.table</code> class. All borders have the same grey color and style, table itself doesn't have a border, but you can add this border using <code>.table-framed</code> class added to the table with <code>.table</code> class.</span>
+      <div class="table-responsive">
+        <table class="table table-columned">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- Vertical borders table start -->
+    <!-- Both borders table start -->
+    <app-card [title]="'Both borders'" [classHeader]="true" [blockClass]="'table-border-style'" [cardOptionBlock]="true">
+      <span class="code-header">Example of <code>table-bordered</code> table borders. This is a default table border style attached to <code>.table</code> class. All borders have the same grey color and style, table itself doesn't have a border, but you can add this border using <code>.table-framed</code> class added to the table with <code>.table</code> class.</span>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- Both borders table end -->
+    <!-- Borderless table start -->
+    <app-card [title]="'Border less table'" [classHeader]="true" [blockClass]="'table-border-style'" [cardOptionBlock]="true">
+      <span class="code-header">Example of <code>table-borderless</code> table borders. This is a default table border style attached to <code>.table</code> class. All borders have the same grey color and style, table itself doesn't have a border, but you can add this border using <code>.table-framed</code> class added to the table with <code>.table</code> class.</span>
+      <div class="table-responsive">
+        <table class="table table-borderless">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- Borderless table start -->
+    <!-- Default table border table start-->
+    <app-card [title]="'Default table border'" [classHeader]="true" [blockClass]="'table-border-style'" [cardOptionBlock]="true">
+      <span class="code-header">Example of a default <code>thead</code> border. This border has 1px width and slightly darker color than other borders for better visual separation of table <code>head</code> and table <code>body</code>. Vertical cell borders in the table head always have the same color as borders in table body.</span>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- Default table border table end-->
+    <!-- Solid border table start-->
+    <app-card [title]="'Solid border'" [classHeader]="true" [blockClass]="'table-border-style'" [cardOptionBlock]="true">
+      <span class="code-header">Example of a <code>solid</code>border inside table head. This border inherits all styling options from the default border style, the only difference is it has <code>2px</code> width. Sometimes it could be useful for visual separation and addition highlight. To use this border add <code>.border-solid</code> to the table head row.</span>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+          <tr class="border-solid">
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- Solid border table end-->
+    <!-- Double border table start -->
+    <app-card [title]="'Double border'" [classHeader]="true" [blockClass]="'table-border-style'" [cardOptionBlock]="true">
+      <span class="code-header">Example of a <code>double</code> border inside table head. This border has <code>3px</code> width, <code>double</code> style and inherits all styling options from the default border style. Visually it displays table <code>head</code> and <code>body</code> as 2 separated table areas. To use this border add <code>.border-double</code> to the table head row.</span>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+          <tr class="border-double">
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- Border-bottom color table start-->
+    <app-card [title]="'Border bottom color'" [classHeader]="true" [blockClass]="'table-border-style'" [cardOptionBlock]="true">
+      <span class="code-header">Example of a table head border with <code>custom</code> color. According to the custom color system options, you can set any of predefined colors by adding <code>.border-bottom-*</code> class to the table head row. This technique works with all border styles demonstrated above.</span>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+          <tr class="border-bottom-danger">
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="border-bottom-primary">
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr class="border-bottom-warning">
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+  </div>
+</div>

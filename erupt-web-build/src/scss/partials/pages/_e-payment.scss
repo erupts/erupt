@@ -1,0 +1,34 @@
+/**  =====================
+      Payment-card css start
+==========================  **/
+.payment-card {
+    .icofont-paypal-alt {
+        display: block;
+        font-size: 60px;
+        color: #ed5565;
+    }
+    .icofont-visa-alt {
+        @extend .icofont-paypal-alt;
+        color: #1c84c6;
+    }
+    .icofont-mastercard {
+        @extend .icofont-paypal-alt;
+        color: #f8ac59;
+    }
+}
+.demo-container {
+    padding-bottom: 0;
+}
+
+.jp-card .jp-card-front,
+.jp-card .jp-card-back {
+    background: $primary-color !important;
+}
+
+.payment-form {
+    max-width: 550px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 0;
+}
+/**====== Payment-card css end ======**/

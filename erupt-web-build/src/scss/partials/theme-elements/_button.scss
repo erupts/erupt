@@ -1,0 +1,722 @@
+/**  =====================
+      Theme-Buttons css start
+==========================  **/
+.btn-default .badge {
+    background-color: #fff;
+    color: #e0e0e0;
+}
+
+.btn {
+    border-radius: 2px;
+    text-transform: capitalize;
+    font-size: 15px;
+    padding: 10px 19px;
+    @media only screen and (max-width: 480px) {
+        padding: 10px 15px;
+    }
+    cursor: pointer;
+    // box-shadow: 0px 6px 5px -4px rgba(0, 0, 0, 0.62);
+    &:active,
+    &:hover {
+        // box-shadow: 0px 4px 5px -4px rgba(0, 0, 0, 0.62);
+    }
+}
+
+.close {
+    cursor: pointer;
+}
+
+.button-page .card-block {
+    margin-bottom: -20px;
+
+    ul {
+        margin-bottom: 0;
+        display: inline-block;
+    }
+
+    a {
+        margin-bottom: 20px;
+    }
+
+    ul li {
+        display: inline-block;
+        margin-right: 20px;
+        float: left;
+    }
+}
+
+.button-page .btn {
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+
+.btn {
+    &.btn-round {
+        border-radius: 2rem;
+    }
+
+    &.btn-square {
+        border-radius: 0;
+    }
+
+    &.btn-skew {
+        transform: skew(-15deg);
+    }
+
+    i {
+        margin-right: 5px;
+    }
+
+    &.btn-icon {
+        border-radius: 50%;
+        width: 40px;
+        line-height: 30px;
+        height: 40px;
+        padding: 3px;
+        text-align: center;
+    }
+
+    &.btn-out {
+        outline: 1px solid #fff;
+        outline-offset: -5px;
+    }
+
+    &.btn-out-dashed {
+        outline: 1px dashed #fff;
+        outline-offset: -5px;
+    }
+
+    &.btn-out-dotted {
+        outline: 1px dotted #fff;
+        outline-offset: -5px;
+    }
+}
+
+.btn-group,
+.btn-group-vertical {
+    display: inline-block;
+}
+
+.btn-group .btn {
+    float: left;
+}
+
+.icon-btn i {
+    margin-right: 0;
+}
+
+.button-page .btn-group {
+    margin-right: 10px;
+}
+
+.show > .dropdown-menu {
+    overflow: hidden;
+}
+
+.dropdown-danger,
+.dropdown-default,
+.dropdown-disabled,
+.dropdown-info,
+.dropdown-inverse,
+.dropdown-primary,
+.dropdown-success,
+.dropdown-warning,
+.dropdown-warning {
+    display: inline-block;
+    position: relative;
+}
+
+.btn-group [class*=btn-],
+.dropdown-split [class*=btn-] {
+    margin-right: 0;
+}
+
+.list-group-item.active {
+    background-color: $primary-color;
+    border-color: $primary-color;
+}
+
+.show > .btn-primary.dropdown-toggle {
+    @include buttons-active(theme-color(primary, active), theme-color(primary, active));
+}
+
+#Note-list li {
+    &:hover .Note-delete {
+        opacity: 1;
+        transform: translateX(0px);
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.80);
+        }
+    }
+}
+
+.button-list .btn {
+    margin-bottom: 10px;
+    margin-right: 30px;
+}
+
+.Note-delete {
+    margin-bottom: 0;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.60);
+    border: none;
+    position: absolute;
+    right: 20px;
+    color: #fff;
+    transition: all ease-in 0.3s;
+    border-radius: 2px;
+    cursor: pointer;
+    transform: translateX(10px);
+}
+
+.popover-body {
+    .color-code {
+        margin-bottom: 10px;
+    }
+
+    .display-color {
+        width: 75px;
+        height: 2.50rem;
+        border-radius: 0.25rem;
+        margin-right: 30px;
+        @include button-trans(theme-color(primary, trans), theme-color(primary, trans));
+    }
+
+    span.block {
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+    }
+}
+
+.popover-title {
+    text-align: center;
+}
+
+.btn.btn-disabled,
+.dropdown-disabled,
+.dropdown-split-disabled {
+    cursor: not-allowed;
+}
+
+.nav-pills .nav-link,
+.nav-pills .nav-link,
+.nav-pills .nav-link.active {
+    &.active,
+    &.active:focus,
+    &.active:hover {
+        background: transparent;
+        color: #0275d8;
+        text-align: center;
+        border-bottom: 1px solid #0275d8;
+    }
+}
+
+.btn {
+    /**====== Basic-Buttons css Start ======**/
+    &-primary {
+        @include buttons(theme-color(primary, base), theme-color(primary, base));
+
+        &:hover {
+            @include buttons-hover(theme-color(primary, hover), theme-color(primary, hover));
+        }
+
+        &:active {
+            @include buttons-active(theme-color(primary, active), theme-color(primary, active));
+        }
+
+        &:focus {
+            @include buttons-focus(theme-color(primary, hover));
+        }
+
+        &.disabled {
+            @include button-trans(theme-color(primary, trans), theme-color(primary, trans));
+        }
+    }
+
+    &-warning {
+        @include buttons(theme-color(warning, base), theme-color(warning, base));
+
+        &:hover {
+            @include buttons-hover(theme-color(warning, hover), theme-color(warning, hover));
+            color: #fff;
+        }
+
+        &:active {
+            @include buttons-active(theme-color(warning, active), theme-color(warning, active));
+        }
+
+        &:focus {
+            @include buttons-focus(theme-color(warning, hover));
+        }
+
+        &.disabled {
+            @include button-trans(theme-color(warning, trans), theme-color(warning, trans));
+        }
+    }
+
+    &-danger {
+        @include buttons(theme-color(danger, base), theme-color(danger, base));
+
+        &:hover {
+            @include buttons-hover(theme-color(danger, hover), theme-color(danger, hover));
+        }
+
+        &:active {
+            @include buttons-active(theme-color(danger, active), theme-color(danger, active));
+        }
+
+        &:focus {
+            @include buttons-focus(theme-color(danger, hover));
+        }
+
+        &.disabled {
+            @include button-trans(theme-color(danger, trans), theme-color(danger, trans));
+        }
+    }
+
+    &-success {
+        @include buttons(theme-color(success, base), theme-color(success, base));
+
+        &:hover {
+            @include buttons-hover(theme-color(success, hover), theme-color(success, hover));
+        }
+
+        &:active {
+            @include buttons-active(theme-color(success, active), theme-color(success, active));
+        }
+
+        &:focus {
+            @include buttons-focus(theme-color(success, hover));
+        }
+
+        &.disabled {
+            @include button-trans(theme-color(success, trans), theme-color(success, trans));
+        }
+    }
+
+    &-inverse {
+        @include buttons(theme-color(inverse, base), theme-color(inverse, base));
+
+        &:hover {
+            @include buttons-hover(theme-color(inverse, hover), theme-color(inverse, hover));
+        }
+
+        &:active {
+            @include buttons-active(theme-color(inverse, active), theme-color(inverse, active));
+        }
+
+        &:focus {
+            @include buttons-focus(theme-color(inverse, hover));
+        }
+
+        &.disabled {
+            @include button-trans(theme-color(inverse, trans), theme-color(inverse, trans));
+        }
+    }
+
+    &-info {
+        @include buttons(theme-color(info, base), theme-color(info, base));
+
+        &:hover {
+            @include buttons-hover(theme-color(info, hover), theme-color(info, hover));
+        }
+
+        &:active {
+            @include buttons-active(theme-color(info, active), theme-color(info, active));
+        }
+
+        &:focus {
+            @include buttons-focus(theme-color(info, hover));
+        }
+
+        &.disabled {
+            @include button-trans(theme-color(info, trans), theme-color(info, trans));
+        }
+    }
+
+    &-disabled {
+        @include buttons(theme-color(disabled, trans), theme-color(disabled, trans));
+    }
+    /**====== Basic-Buttons css end ======**/
+    /**====== Outline-Buttons css Start ======**/
+    &-outline-primary {
+        @include buttons-borders(theme-color(primary, active));
+        background-color: transparent;
+    }
+
+    &-outline-warning {
+        @include buttons-borders(theme-color(warning, active));
+        background-color: transparent;
+    }
+
+    &-outline-danger {
+        @include buttons-borders(theme-color(danger, active));
+        background-color: transparent;
+    }
+
+    &-outline-success {
+        @include buttons-borders(theme-color(success, active));
+        background-color: transparent;
+    }
+
+    &-outline-inverse {
+        @include buttons-borders(theme-color(inverse, active));
+        background-color: transparent;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    &-outline-warning {
+        @include buttons-borders(theme-color(warning, active));
+        background-color: transparent;
+    }
+
+    &-outline-info {
+        @include buttons-borders(theme-color(info, active));
+        background-color: transparent;
+    }
+
+    &-outline-disabled {
+        @include buttons-borders(theme-color(disabled, active));
+    }
+    /**====== Outline-Buttons css end ======**/
+    /**====== gradient css Start ======**/
+    &-grd-danger,
+    &-grd-disabled,
+    &-grd-info,
+    &-grd-inverse,
+    &-grd-primary,
+    &-grd-success,
+    &-grd-warning,
+    &-grd-warning {
+        background-size: 200% auto;
+        transition: 0.5s ease-in-out;
+        color: #fff;
+
+        &:hover {
+            background-position: right center;
+        }
+
+        &.hor-grd {
+            background-size: auto 200%;
+
+            &:hover {
+                background-position: bottom center;
+            }
+        }
+    }
+
+    &-grd-primary {
+        background-image: linear-gradient(to right, theme-color(primary, hover) 0%, theme-color(primary, active) 51%, theme-color(primary, hover) 100%);
+
+        &.hor-grd {
+            background-image: linear-gradient(to top, theme-color(primary, hover) 0%, theme-color(primary, active) 51%, theme-color(primary, hover) 100%);
+        }
+    }
+
+    &-grd-warning {
+        background-image: linear-gradient(to right, theme-color(warning, hover) 0%, theme-color(warning, active) 51%, theme-color(warning, hover) 100%);
+
+        &.hor-grd {
+            background-image: linear-gradient(to top, theme-color(warning, hover) 0%, theme-color(warning, active) 51%, theme-color(warning, hover) 100%);
+        }
+    }
+
+    &-grd-danger {
+        background-image: linear-gradient(to right, theme-color(danger, hover) 0%, theme-color(danger, active) 51%, theme-color(danger, hover) 100%);
+
+        &.hor-grd {
+            background-image: linear-gradient(to top, theme-color(danger, hover) 0%, theme-color(danger, active) 51%, theme-color(danger, hover) 100%);
+        }
+    }
+
+    &-grd-success {
+        background-image: linear-gradient(to right, theme-color(success, hover) 0%, theme-color(success, active) 51%, theme-color(success, hover) 100%);
+
+        &.hor-grd {
+            background-image: linear-gradient(to top, theme-color(success, hover) 0%, theme-color(success, active) 51%, theme-color(success, hover) 100%);
+        }
+    }
+
+    &-grd-inverse {
+        background-image: linear-gradient(to right, theme-color(inverse, hover) 0%, theme-color(inverse, active) 51%, theme-color(inverse, hover) 100%);
+
+        &.hor-grd {
+            background-image: linear-gradient(to top, theme-color(inverse, hover) 0%, theme-color(inverse, active) 51%, theme-color(inverse, hover) 100%);
+        }
+    }
+
+    &-grd-info {
+        background-image: linear-gradient(to right, theme-color(info, hover) 0%, theme-color(info, active) 51%, theme-color(info, hover) 100%);
+
+        &.hor-grd {
+            background-image: linear-gradient(to top, theme-color(info, hover) 0%, theme-color(info, active) 51%, theme-color(info, hover) 100%);
+        }
+    }
+
+    &-grd-disabled {
+        background-image: linear-gradient(to right, theme-color(disabled, hover) 0%, theme-color(disabled, active) 51%, theme-color(disabled, hover) 100%);
+
+        &.hor-grd {
+            background-image: linear-gradient(to top, theme-color(disabled, hover) 0%, theme-color(disabled, active) 51%, theme-color(disabled, hover) 100%);
+        }
+    }
+    /**====== gradient-Buttons css end ======**/
+    /**====== matrialized-Buttons css Start ======**/
+    &-mat {
+        position: relative;
+        border-radius: 0;
+        border: none;
+
+        &:before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            right: 50%;
+            height: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        &:hover {
+            border: none;
+
+            &:before {
+                left: 0;
+                right: 0;
+            }
+        }
+    }
+
+    &-primary.btn-mat {
+        background-color: theme-color(primary, base);
+
+        &:before {
+            background-color: theme-color(primary, active);
+        }
+    }
+
+    &-warning.btn-mat {
+        background-color: theme-color(warning, base);
+
+        &:before {
+            background-color: theme-color(warning, active);
+        }
+    }
+
+    &-danger.btn-mat {
+        background-color: theme-color(danger, base);
+
+        &:before {
+            background-color: theme-color(danger, active);
+        }
+    }
+
+    &-success.btn-mat {
+        background-color: theme-color(success, base);
+
+        &:before {
+            background-color: theme-color(success, active);
+        }
+    }
+
+    &-inverse.btn-mat {
+        background-color: theme-color(inverse, base);
+
+        &:before {
+            background-color: theme-color(inverse, active);
+        }
+    }
+
+    &-info.btn-mat {
+        background-color: theme-color(info, base);
+
+        &:before {
+            background-color: theme-color(info, active);
+        }
+    }
+
+    &-outline-disabled {
+        background-color: theme-color(disabled, base);
+
+        &:before {
+            background-color: theme-color(disabled, active);
+        }
+    }
+    /**====== matrialized css end ======**/
+    /**====== Button-Size css start ======**/
+    &-xlg {
+        padding: 14px 20px;
+        font-size: 21px;
+        line-height: 40px;
+    }
+
+    &-lg {
+        padding: 12px 18px;
+        font-size: 18px;
+        line-height: 32px;
+    }
+
+    &-md {
+        padding: 10px 16px;
+        font-size: 15px;
+        line-height: 23px;
+    }
+
+    &-sm {
+        padding: 8px 14px;
+        line-height: 16px;
+        font-size: 11px;
+    }
+
+    &-mini {
+        padding: 5px 10px;
+        line-height: 14px;
+        font-size: 10px;
+    }
+    /**====== Button-Size css end ======**/
+    /**====== Badges-button css start ======**/
+    &-primary .badge {
+        @include labels-badge-inverse(theme-color(primary, base));
+    }
+
+    &-success .badge {
+        @include labels-badge-inverse(theme-color(success, base));
+    }
+
+    &-info .badge {
+        @include labels-badge-inverse(theme-color(info, base));
+    }
+
+    &-warning .badge {
+        @include labels-badge-inverse(theme-color(warning, base));
+    }
+
+    &-danger .badge {
+        @include labels-badge-inverse(theme-color(danger, base));
+    }
+    /**====== Badges-button css end ======**/
+    /**====== Social-Buttons css start ======**/
+    &-dribbble,
+    &-dropbox,
+    &-facebook,
+    &-flickr,
+    &-github,
+    &-google-plus,
+    &-instagram,
+    &-linkedin,
+    &-pinterest,
+    &-skype,
+    &-tumblr,
+    &-twitter,
+    &-youtube {
+        color: #fff;
+
+        &:focus,
+        &:hover {
+            color: #fff;
+            box-shadow: none;
+        }
+    }
+
+    &-facebook {
+        background-color: #3b5998;
+    }
+
+    &-twitter {
+        background-color: #00ACED;
+    }
+
+    &-linkedin {
+        background-color: #007BB6;
+    }
+
+    &-dribbble {
+        background-color: #EA4C89;
+    }
+
+    &-google-plus {
+        background-color: #DD4B39;
+    }
+
+    &-instagram {
+        background-color: #517FA4;
+    }
+
+    &-pinterest {
+        background-color: #CB2027;
+    }
+
+    &-dropbox {
+        background-color: #32506D;
+    }
+
+    &-tumblr {
+        background-color: #00ACED;
+    }
+    /**====== Social-Buttons css end ======**/
+}
+/**====== Drop-down-Buttons css start ======**/
+
+.dropdown-primary,
+.dropdown-split-primary {
+    .dropdown-menu a {
+        &:hover {
+            @include dropdown-hover(theme-color(primary, base));
+        }
+    }
+}
+
+.dropdown-split-success,
+.dropdown-success {
+    .dropdown-menu a {
+        &:hover {
+            @include dropdown-hover(theme-color(success, base));
+        }
+    }
+}
+
+.dropdown-info,
+.dropdown-split-info {
+    .dropdown-menu a {
+        &:hover {
+            @include dropdown-hover(theme-color(info, base));
+        }
+    }
+}
+
+.dropdown-split-warning,
+.dropdown-warning {
+    .dropdown-menu a {
+        &:hover {
+            @include dropdown-hover(theme-color(warning, base));
+        }
+    }
+}
+
+.dropdown-danger,
+.dropdown-split-danger {
+    .dropdown-menu a {
+        &:hover {
+            @include dropdown-hover(theme-color(danger, base));
+        }
+    }
+}
+
+.dropdown-inverse,
+.dropdown-split-inverse {
+    .dropdown-item {
+        transition: all 0.3s ease-in;
+    }
+
+    .dropdown-item:hover {
+        @include dropdown-hover(theme-color(inverse, base));
+    }
+}
+/**====== Drop-down-Buttons css end ======**/
+/**====== Theme-Buttons css end ======**/

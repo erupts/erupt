@@ -1,0 +1,1353 @@
+<div class="page-body">
+  <div class="row">
+
+    <div class="col-xl-6 col-md-12">
+      <app-card [title]="'To Do List'" [blockClass]="'widget-last-task'">
+        <div class="to-do-list">
+          <div class="checkbox-fade fade-in-default">
+            <label class="check-task">
+              <input type="checkbox" value="" appToDoListRead>
+              <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+              <span>Check your Email</span>
+            </label>
+          </div>
+          <div class="float-right">
+            <a href="javascript:" class="delete_todolist" appToDoListRemove><i class="fa fa-trash"></i></a>
+          </div>
+        </div>
+        <div class="to-do-list">
+          <div class="checkbox-fade fade-in-default">
+            <label class="check-task done-task">
+              <input type="checkbox" value="" checked appToDoListRead>
+              <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+              <span>Make YouTube Video</span>
+            </label>
+          </div>
+          <div class="float-right">
+            <a href="javascript:" class="delete_todolist" appToDoListRemove><i class="fa fa-trash"></i></a>
+          </div>
+        </div>
+        <div class="to-do-list">
+          <div class="checkbox-fade fade-in-default">
+            <label class="check-task">
+              <input type="checkbox" value="" appToDoListRead>
+              <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+              <span>Create Banner</span>
+            </label>
+          </div>
+          <div class="float-right">
+            <a href="javascript:" class="delete_todolist" appToDoListRemove><i class="fa fa-trash"></i></a>
+          </div>
+        </div>
+        <div class="to-do-list">
+          <div class="checkbox-fade fade-in-default">
+            <label class="check-task">
+              <input type="checkbox" value="" appToDoListRead>
+              <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+              <span>Upload Project</span>
+            </label>
+          </div>
+          <div class="float-right">
+            <a href="javascript:" class="delete_todolist" appToDoListRemove><i class="fa fa-trash"></i></a>
+          </div>
+        </div>
+        <div class="right-icon-control">
+          <form class="form-material" action="javascript:">
+            <div class="form-group form-primary">
+              <input type="text" name="footer-email" class="form-control" required="">
+              <span class="form-bar"></span>
+              <label class="float-label">Add Task</label>
+            </div>
+          </form>
+          <div class="form-icon ">
+            <button class="btn btn-primary btn-icon waves-light" mdbRippleRadius>
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <app-card [title]="'My Projects'" [blockClass]="'widget-last-task'">
+        <p class="m-b-10">New Dashboard <span class="float-right">5 Mins ago</span></p>
+        <ul class="list-unstyled m-b-25">
+          <li class="d-inline-block"><img src="assets/images/avatar-5.jpg" alt="user-image" class="img-radius img-30 m-r-15"></li>
+          <li class="d-inline-block"><img src="assets/images/avatar-1.jpg" alt="user-image" class="img-radius img-30 m-r-15"></li>
+        </ul>
+        <p class="m-b-10 ">Web Design <span class="float-right">8 Mins ago</span></p>
+        <ul class="list-unstyled  m-b-25">
+          <li class="d-inline-block"><img src="assets/images/avatar-5.jpg" alt="user-image" class="img-radius img-30 m-r-15"></li>
+          <li class="d-inline-block"><img src="assets/images/avatar-2.jpg" alt="user-image" class="img-radius img-30 m-r-15"></li>
+          <li class="d-inline-block"><img src="assets/images/avatar-3.jpg" alt="user-image" class="img-radius img-30 m-r-15"></li>
+        </ul>
+        <p class="m-b-10">Android Design <span class="float-right">12 Mins ago</span></p>
+        <ul class="list-unstyled">
+          <li class="d-inline-block"><img src="assets/images/avatar-4.jpg" alt="user-image" class="img-radius img-30 m-r-15"></li>
+        </ul>
+        <div class="right-icon-control m-t-15">
+          <form class="form-material" action="javascript:">
+            <div class="form-group form-primary">
+              <input name="footer-email" class="form-control" required="">
+              <span class="form-bar"></span>
+              <label class="float-label">Add Project</label>
+            </div>
+          </form>
+          <div class="form-icon ">
+            <button class="btn btn-primary btn-icon waves-light" mdbRippleRadius>
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <app-card [title]="'Traffic Sources'" [cardClass]="'trafic-card'">
+        <p class="m-b-10">Direct <span class="float-right"><i class="fa fa-caret-up m-r-10"></i>25%</span></p>
+        <div class="progress blue">
+          <div class="progress-bar bg-c-blue" [style.width]="'75%'"></div>
+        </div>
+        <p class="m-b-10 m-t-30">Social <span class="float-right"><i class="fa fa-caret-down m-r-10"></i>58</span></p>
+        <div class="progress green">
+          <div class="progress-bar bg-c-green" [style.width]="'50%'"></div>
+        </div>
+        <p class="m-b-10 m-t-30">Referral <span class="float-right"><i class="fa fa-caret-up m-r-10"></i>20%</span></p>
+        <div class="progress red">
+          <div class="progress-bar bg-c-red" [style.width]="'20%'"></div>
+        </div>
+        <p class="m-b-10 m-t-30">Bounce <span class="float-right"><i class="fa fa-caret-down m-r-10"></i>580</span></p>
+        <div class="progress yellow">
+          <div class="progress-bar bg-c-yellow" [style.width]="'40%'"></div>
+        </div>
+        <p class="m-b-10 m-t-30">Internet <span class="float-right"><i class="fa fa-caret-up m-r-10"></i>70%</span></p>
+        <div class="progress purple">
+          <div class="progress-bar bg-c-purple" [style.width]="'90%'"></div>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-xl-8 col-md-12">
+      <app-card [title]="'Projects'" [cardClass]="'table-card'">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+                    </label>
+                  </div>
+                </div>
+                Assigned</th>
+              <th>Name</th>
+              <th>Due Date</th>
+              <th class="text-right">Priority</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle">
+                  <img src="assets/images/avatar-4.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+                  <div class="d-inline-block">
+                    <h6>John Deo</h6>
+                    <p class="text-muted m-b-0">Graphics Designer</p>
+                  </div>
+                </div>
+              </td>
+              <td>Able Pro</td>
+              <td>Jun, 26</td>
+              <td class="text-right"><label class="label label-danger">Low</label></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle">
+                  <img src="assets/images/avatar-5.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+                  <div class="d-inline-block">
+                    <h6>Jenifer Vintage</h6>
+                    <p class="text-muted m-b-0">Web Designer</p>
+                  </div>
+                </div>
+              </td>
+              <td>Able Pro</td>
+              <td>March, 31</td>
+              <td class="text-right"><label class="label label-primary">high</label></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle">
+                  <img src="assets/images/avatar-3.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+                  <div class="d-inline-block">
+                    <h6>William Jem</h6>
+                    <p class="text-muted m-b-0">Developer</p>
+                  </div>
+                </div>
+              </td>
+              <td>Flatable</td>
+              <td>Aug, 02</td>
+              <td class="text-right"><label class="label label-success">medium</label></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle">
+                  <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+                  <div class="d-inline-block">
+                    <h6>David Jones</h6>
+                    <p class="text-muted m-b-0">Developer</p>
+                  </div>
+                </div>
+              </td>
+              <td>Able Pro</td>
+              <td>Sep, 22</td>
+              <td class="text-right"><label class="label label-primary">high</label></td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="text-right m-r-20">
+            <a href="javascript:" class=" b-b-primary text-primary">View all Projects</a>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-4 col-md-12">
+      <app-card [title]="'Team Members'">
+        <div class="align-middle">
+          <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Developer</p>
+          </div>
+        </div>
+        <div class="align-middle m-t-25">
+          <img src="assets/images/avatar-1.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Developer</p>
+          </div>
+        </div>
+        <div class="align-middle m-t-25">
+          <img src="assets/images/avatar-3.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Developer</p>
+          </div>
+        </div>
+        <div class="align-middle m-t-25">
+          <img src="assets/images/avatar-4.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Developer</p>
+          </div>
+        </div>
+        <div class="align-middle m-t-25">
+          <img src="assets/images/avatar-4.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Developer</p>
+          </div>
+        </div>
+        <div class="align-middle m-t-25 m-b-10">
+          <img src="assets/images/avatar-5.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Developer</p>
+          </div>
+        </div>
+        <div class="text-center m-b-10">
+          <a href="javascript:" class="b-b-primary text-primary">View all Projects</a>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-xl-4 col-md-6">
+      <app-card [title]="'User Activity'" [cardClass]="'user-activity-card'">
+        <div class="row m-b-25">
+          <div class="col-auto p-r-0">
+            <div class="u-img">
+              <img src="assets/images/breadcrumb-bg.jpg" alt="user image" class="img-radius cover-img">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img">
+            </div>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">John Deo</h6>
+            <p class="text-muted m-b-5">Lorem Ipsum is simply dummy text.</p>
+            <p class="text-muted m-b-0"><i class="fa fa-clock-o m-r-10"></i>2 min ago</p>
+          </div>
+        </div>
+        <div class="row m-b-25">
+          <div class="col-auto p-r-0">
+            <div class="u-img">
+              <img src="assets/images/breadcrumb-bg.jpg" alt="user image" class="img-radius cover-img">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img">
+            </div>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">John Deo</h6>
+            <p class="text-muted m-b-5">Lorem Ipsum is simply dummy text.</p>
+            <p class="text-muted m-b-0"><i class="fa fa-clock-o m-r-10"></i>2 min ago</p>
+          </div>
+        </div>
+        <div class="row m-b-25">
+          <div class="col-auto p-r-0">
+            <div class="u-img">
+              <img src="assets/images/breadcrumb-bg.jpg" alt="user image" class="img-radius cover-img">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img">
+            </div>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">John Deo</h6>
+            <p class="text-muted m-b-5">Lorem Ipsum is simply dummy text.</p>
+            <p class="text-muted m-b-0"><i class="fa fa-clock-o m-r-10"></i>2 min ago</p>
+          </div>
+        </div>
+        <div class="row m-b-25">
+          <div class="col-auto p-r-0">
+            <div class="u-img">
+              <img src="assets/images/breadcrumb-bg.jpg" alt="user image" class="img-radius cover-img">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img">
+            </div>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">John Deo</h6>
+            <p class="text-muted m-b-5">Lorem Ipsum is simply dummy text.</p>
+            <p class="text-muted m-b-0"><i class="fa fa-clock-o m-r-10"></i>2 min ago</p>
+          </div>
+        </div>
+        <div class="text-center">
+          <a href="javascript:" class="b-b-primary text-primary">View all Projects</a>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-4 col-md-6">
+      <app-card [title]="'Messages'" [cardClass]="'user-Messages-card'">
+        <div class="row m-b-30">
+          <div class="col-auto p-r-0">
+            <div class="u-img">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img">
+              <span class="tot-msg">2</span>
+            </div>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">John Deo <span class="text-muted float-right f-13">5:05 PM</span></h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is simply.</p>
+          </div>
+        </div>
+        <div class="row m-b-30">
+          <div class="col-auto p-r-0">
+            <div class="u-img">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img">
+              <span class="tot-msg">3</span>
+            </div>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">John Deo <span class="text-muted float-right f-13">5:05 PM</span></h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is simply.</p>
+          </div>
+        </div>
+        <div class="row m-b-30">
+          <div class="col-auto p-r-0">
+            <div class="u-img">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img">
+            </div>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">John Deo <span class="text-muted float-right f-13">5:05 PM</span></h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is simply.</p>
+          </div>
+        </div>
+        <div class="row m-b-30">
+          <div class="col-auto p-r-0">
+            <div class="u-img">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img">
+              <span class="tot-msg">5</span>
+            </div>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">John Deo <span class="text-muted float-right f-13">5:05 PM</span></h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is simply.</p>
+          </div>
+        </div>
+        <div class="row m-b-30">
+          <div class="col-auto p-r-0">
+            <div class="u-img">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img">
+              <span class="tot-msg">1</span>
+            </div>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">John Deo <span class="text-muted float-right f-13">5:05 PM</span></h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is simply.</p>
+          </div>
+        </div>
+        <div class="text-center">
+          <a href="javascript:" class="b-b-primary text-primary">View all Projects</a>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-4 col-md-12">
+      <app-card [title]="'Chat'" [cardClass]="'chat-card'">
+        <div class="row m-b-20 received-chat">
+          <div class="col-auto p-r-0">
+            <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius img-40">
+          </div>
+          <div class="col">
+            <div class="msg">
+              <p class="m-b-0">Nice to meet you!</p>
+            </div>
+            <p class="text-muted m-b-0"><i class="fa fa-clock-o m-r-10"></i>10:20am</p>
+          </div>
+        </div>
+        <div class="row m-b-20 send-chat">
+          <div class="col">
+            <div class="msg">
+              <p class="m-b-0">Nice to meet you!</p>
+            </div>
+            <p class="text-muted m-b-0"><i class="fa fa-clock-o m-r-10"></i>10:20am</p>
+          </div>
+          <div class="col-auto p-l-0">
+            <img src="assets/images/avatar-1.jpg" alt="user image" class="img-radius img-40">
+          </div>
+        </div>
+        <div class="row m-b-20 received-chat">
+          <div class="col-auto p-r-0">
+            <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius img-40">
+          </div>
+          <div class="col">
+            <div class="msg">
+              <p class="m-b-0">Nice to meet you!</p>
+              <img src="assets/images/mega-menu/01.jpg" alt="">
+              <img src="assets/images/mega-menu/03.jpg" alt="">
+            </div>
+            <p class="text-muted m-b-0"><i class="fa fa-clock-o m-r-10"></i>10:20am</p>
+          </div>
+        </div>
+        <div class="right-icon-control">
+          <form class="form-material" action="javascript:">
+            <div class="form-group form-primary">
+              <input type="text" name="footer-email" class="form-control" required="">
+              <span class="form-bar"></span>
+              <label class="float-label">Add Task</label>
+            </div>
+          </form>
+          <div class="form-icon ">
+            <button class="btn btn-primary btn-outline-primary btn-icon waves-light b-none" mdbRippleRadius>
+              <i class="fa fa-send"></i>
+            </button>
+          </div>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-xl-6 col-md-12">
+      <app-card [title]="'Latest Updates'" [cardClass]="'latest-update-card'">
+        <div class="latest-update-box">
+          <div class="row p-t-20 p-b-30">
+            <div class="col-auto text-right update-meta">
+              <p class="text-muted m-b-0 d-inline">2 hrs ago</p>
+              <i class="fa fa-twitter bg-twitter update-icon"></i>
+            </div>
+            <div class="col">
+              <h6>+ 1652 Followers</h6>
+              <p class="text-muted m-b-0">You’re getting more and more followers, keep it up!</p>
+            </div>
+          </div>
+          <div class="row p-b-30">
+            <div class="col-auto text-right update-meta">
+              <p class="text-muted m-b-0 d-inline">4 hrs ago</p>
+              <i class="fa fa-briefcase bg-c-red update-icon"></i>
+            </div>
+            <div class="col">
+              <h6>+ 5 New Products were added!</h6>
+              <p class="text-muted m-b-0">Congratulations!</p>
+            </div>
+          </div>
+          <div class="row p-b-30">
+            <div class="col-auto text-right update-meta">
+              <p class="text-muted m-b-0 d-inline">1 day ago</p>
+              <i class="fa fa-check bg-c-green update-icon"></i>
+            </div>
+            <div class="col">
+              <h6>Database backup completed!</h6>
+              <p class="text-muted m-b-0">Download the <span class="text-c-blue">latest backup</span>.</p>
+            </div>
+          </div>
+          <div class="row p-b-0">
+            <div class="col-auto text-right update-meta">
+              <p class="text-muted m-b-0 d-inline">2 day ago</p>
+              <i class="fa fa-facebook bg-facebook update-icon"></i>
+            </div>
+            <div class="col">
+              <h6>+2 Friend Requests</h6>
+              <p class="text-muted m-b-10">This is great, keep it up!</p>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <tr>
+                    <td class="b-none">
+                      <a href="javascript:" class="align-middle">
+                        <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+                        <div class="d-inline-block">
+                          <h6>Jeny William</h6>
+                          <p class="text-muted m-b-0">Graphic Designer</p>
+                        </div>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="b-none">
+                      <a href="javascript:" class="align-middle">
+                        <img src="assets/images/avatar-1.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+                        <div class="d-inline-block">
+                          <h6>John Deo</h6>
+                          <p class="text-muted m-b-0">Web Designer</p>
+                        </div>
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <a href="javascript:" class="b-b-primary text-primary">View all Projects</a>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-6 col-md-12">
+      <app-card [title]="'Recent Tickets'" [cardClass]="'table-card'" [blockClass]="'p-b-5'">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless">
+            <thead>
+            <tr>
+              <th>Status</th>
+              <th>Subject</th>
+              <th>Department</th>
+              <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><label class="label label-success">open</label></td>
+              <td>Website down for one week</td>
+              <td>Support</td>
+              <td>Today 2:00</td>
+            </tr>
+            <tr>
+              <td><label class="label label-primary">progress</label></td>
+              <td>Loosing control on server</td>
+              <td>Support</td>
+              <td>Yesterday</td>
+            </tr>
+            <tr>
+              <td><label class="label label-danger">closed</label></td>
+              <td>Authorizations keys</td>
+              <td>Support</td>
+              <td>27, Aug</td>
+            </tr>
+            <tr>
+              <td><label class="label label-success">open</label></td>
+              <td>Restoring default settings</td>
+              <td>Support</td>
+              <td>Today 9:00</td>
+            </tr>
+            <tr>
+              <td><label class="label label-primary">progress</label></td>
+              <td>Loosing control on server</td>
+              <td>Support</td>
+              <td>Yesterday</td>
+            </tr>
+            <tr>
+              <td><label class="label label-success">open</label></td>
+              <td>Restoring default settings</td>
+              <td>Support</td>
+              <td>Today 9:00</td>
+            </tr>
+            <tr>
+              <td><label class="label label-success">open</label></td>
+              <td>Restoring default settings</td>
+              <td>Support</td>
+              <td>Today 9:00</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-xl-8 col-md-12">
+      <app-card [title]="'Application Sales'" [cardClass]="'table-card'">
+        <div class="table-responsive">
+          <table class="table table-hover  table-borderless">
+            <thead>
+            <tr>
+              <th>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" id="selectall1"/>
+                      <span class="cr">
+                        <i class="cr-icon feather icon-check f-w-600 txt-default"></i>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                Application</th>
+              <th>Sales</th>
+              <th>Change</th>
+              <th>Avg Price</th>
+              <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" class="case1" name="case1" value="1"/>
+                      <span class="cr">
+                        <i class="cr-icon feather icon-check f-w-600 txt-default"></i>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle">
+                  <h6>Able Pro</h6>
+                  <p class="text-muted m-b-0">Powerful Admin Theme</p>
+                </div>
+              </td>
+              <td>16,300</td>
+              <td>
+                <div id="app-sale1" style="height:50px"></div>
+              </td>
+              <td>$53</td>
+              <td class="text-c-blue">$15,652</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" class="case1" name="case1" value="2"/>
+                      <span class="cr">
+                        <i class="cr-icon feather icon-check f-w-600 txt-default"></i>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle">
+                  <h6>Photoshop</h6>
+                  <p class="text-muted m-b-0">Design Software</p>
+                </div>
+              </td>
+              <td>26,421</td>
+              <td>
+                <div id="app-sale2" style="height:50px"></div>
+              </td>
+              <td>$35</td>
+              <td class="text-c-blue">$18,785</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" class="case1" name="case1" value="3"/>
+                      <span class="cr">
+                        <i class="cr-icon feather icon-check f-w-600 txt-default"></i>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle">
+                  <h6>Guruable</h6>
+                  <p class="text-muted m-b-0">Best Admin Template</p>
+                </div>
+              </td>
+              <td>8,265</td>
+              <td>
+                <div id="app-sale3" style="height:50px"></div>
+              </td>
+              <td>$98</td>
+              <td class="text-c-blue">$9,652</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" class="case1" name="case1" value="4"/>
+                      <span class="cr">
+                        <i class="cr-icon feather icon-check f-w-600 txt-default"></i>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle">
+                  <h6>Flatable</h6>
+                  <p class="text-muted m-b-0">Admin App</p>
+                </div>
+              </td>
+              <td>10,652</td>
+              <td>
+                <div id="app-sale4" style="height:50px"></div>
+              </td>
+              <td>$20</td>
+              <td class="text-c-blue">$7,856</td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="text-center">
+            <a href="javascript:" class=" b-b-primary text-primary">View all Projects</a>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-4 col-md-12">
+      <app-card [title]="'Friends'">
+        <div class="align-middle m-b-30">
+          <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is dummy.</p>
+          </div>
+        </div>
+        <div class="align-middle m-b-30">
+          <img src="assets/images/avatar-1.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is dummy.</p>
+          </div>
+        </div>
+        <div class="align-middle m-b-30">
+          <img src="assets/images/avatar-3.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is dummy.</p>
+          </div>
+        </div>
+        <div class="align-middle m-b-30">
+          <img src="assets/images/avatar-4.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is dummy.</p>
+          </div>
+        </div>
+        <div class="align-middle m-b-30">
+          <img src="assets/images/avatar-5.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is dummy.</p>
+          </div>
+        </div>
+        <div class="align-middle m-b-10">
+          <img src="assets/images/avatar-3.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+          <div class="d-inline-block">
+            <h6>David Jones</h6>
+            <p class="text-muted m-b-0">Lorem Ipsum is dummy.</p>
+          </div>
+        </div>
+        <div class="text-center">
+          <a href="javascript:" class="b-b-primary text-primary">View Friend List</a>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-xl-8 col-md-12">
+      <app-card [title]="'Active Tickets'" [cardClass]="'table-card'">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless">
+            <thead>
+            <tr>
+              <th>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+                    </label>
+                  </div>
+                </div>
+                Due</th>
+              <th>User</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle text-center">
+                  <h6>12</h6>
+                  <p class="text-muted m-b-0">hours</p>
+                </div>
+              </td>
+              <td>
+                <div class="d-inline-block align-middle">
+                  <img src="assets/images/avatar-4.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+                  <div class="d-inline-block">
+                    <h6 class="text-muted m-b-0 m-t-15">John Deo</h6>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="d-inline-block align-middle">
+                  <h6>[#1183] Workaround for OS X selects printing bug</h6>
+                  <p class="text-muted m-b-0">Chrome fixed the bug several versions ago, thus rendering this...</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle text-center">
+                  <h6>16</h6>
+                  <p class="text-muted m-b-0">hours</p>
+                </div>
+              </td>
+              <td>
+                <div class="d-inline-block align-middle">
+                  <img src="assets/images/avatar-1.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+                  <div class="d-inline-block">
+                    <h6 class="text-muted m-b-0 m-t-15">Jems Win</h6>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="d-inline-block align-middle">
+                  <h6>[#1249] Vertically center carousel controls</h6>
+                  <p class="text-muted m-b-0">Try any carousel control and reduce the screen width below...</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="chk-option">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label class="check-task">
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-default"></i></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="d-inline-block align-middle text-center">
+                  <h6>40</h6>
+                  <p class="text-muted m-b-0">hours</p>
+                </div>
+              </td>
+              <td>
+                <div class="d-inline-block align-middle">
+                  <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
+                  <div class="d-inline-block">
+                    <h6 class="text-muted m-b-0 m-t-15">Jeny Wiliiam</h6>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="d-inline-block align-middle">
+                  <h6>[#1254] Inaccurate small pagination height</h6>
+                  <p class="text-muted m-b-0">The height of pagination elements is not consistent with...</p>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="text-right m-r-20">
+            <a href="javascript:" class=" b-b-primary text-primary">View all Projects</a>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-4 col-md-12">
+      <app-card [title]="'Latest Posts'" [cardClass]="'latest-posts-card'">
+        <div class="row m-b-25">
+          <div class="col-auto p-r-0">
+            <img src="assets/images/mega-menu/01.jpg" alt="user image" class="latest-posts-img">
+          </div>
+          <div class="col">
+            <h6>Up unpacked friendly</h6>
+            <p class="text-muted m-b-10"><i class="fa fa-play-circle-o"></i> Video | 14 minutes ago</p>
+            <p class="text-muted m-b-0">Lorem Ipsum is simply dummy text of the.</p>
+          </div>
+        </div>
+        <div class="row m-b-25">
+          <div class="col-auto p-r-0">
+            <iframe class="embed-responsive-item latest-posts-img" src="//www.youtube.com/embed/b0fI60sBMV0"></iframe>
+          </div>
+          <div class="col">
+            <h6>Up unpacked friendly</h6>
+            <p class="text-muted m-b-10"><i class="fa fa-play-circle-o"></i> tutorials | 14 minutes ago</p>
+            <p class="text-muted m-b-0">Lorem Ipsum is simply dummy text of the.</p>
+          </div>
+        </div>
+        <div class="row m-b-20">
+          <div class="col-auto p-r-0">
+            <img src="assets/images/mega-menu/03.jpg" alt="user image" class="latest-posts-img">
+          </div>
+          <div class="col">
+            <h6>Up unpacked friendly</h6>
+            <p class="text-muted m-b-10"><i class="fa fa-play-circle-o"></i> Video | 14 minutes ago</p>
+            <p class="text-muted m-b-0">Lorem Ipsum is simply dummy text of the.</p>
+          </div>
+        </div>
+        <div class="text-center">
+          <a href="javascript:" class="b-b-primary text-primary">View Friend List</a>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-xl-4 col-md-12">
+      <app-card [title]="'Tasks'" [cardClass]="'task-card'">
+        <ul class="list-unstyled task-list">
+          <li>
+            <i class="fa fa-check task-icon bg-c-green"></i>
+            <p class="m-b-5">8:50</p>
+            <h6 class="text-muted">Call to customer <span class="text-c-blue">Jacob</span> and discuss the</h6>
+          </li>
+          <li>
+            <i class="task-icon bg-c-blue"></i>
+            <p class="m-b-5">Sat, 5 Mar</p>
+            <h6 class="text-muted">Design mobile Application</h6>
+          </li>
+          <li>
+            <i class="task-icon bg-c-red"></i>
+            <p class="m-b-5">Sun, 17 Feb</p>
+            <h6 class="text-muted"><span class="text-c-blue">Jeny</span> assign you a task <span class="text-c-blue">Mockup Design.</span></h6>
+          </li>
+          <li class="p-b-10">
+            <i class="task-icon bg-c-blue"></i>
+            <p class="m-b-5">Sat, 29 Mar</p>
+            <h6 class="text-muted">Design mobile Application</h6>
+          </li>
+        </ul>
+        <div class="text-center">
+          <a href="javascript:" class="b-b-primary text-primary">View Friend List</a>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-8 col-md-12">
+      <app-card [title]="'Project Status'" [cardClass]="'table-card'">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Project</th>
+              <th>Status</th>
+              <th>Progress</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>562</td>
+              <td>Able Pro Admin Theme</td>
+              <td><label class="label label-primary">Developing</label></td>
+              <td>
+                <div [style.width]="'75px'"><chart id="project-status1" [type]="'pie'" [data]="projectStatus1Data" [options]="projectStatusOption"></chart></div>
+              </td>
+            </tr>
+            <tr>
+              <td>563</td>
+              <td>Flatable Template</td>
+              <td><label class="label label-success">Design</label></td>
+              <td>
+                <div [style.width]="'75px'"><chart id="project-status2" [type]="'pie'" [data]="projectStatus2Data" [options]="projectStatusOption"></chart></div>
+              </td>
+            </tr>
+            <tr>
+              <td>564</td>
+              <td>Able Pro Admin Panel</td>
+              <td><label class="label label-danger">Testing</label></td>
+              <td>
+                <div [style.width]="'75px'"><chart id="project-status3" [type]="'pie'" [data]="projectStatus3Data" [options]="projectStatusOption"></chart></div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="text-right m-r-20">
+            <a href="javascript:" class=" b-b-primary text-primary">View all Projects</a>
+          </div>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-xl-8 col-md-12">
+      <app-card [title]="'Latest Activity'" [cardClass]="'latest-activity-card'">
+        <div class="latest-update-box">
+          <div class="row p-t-20 p-b-30">
+            <div class="col-auto text-right update-meta">
+              <p class="text-muted m-b-0 d-inline">just now</p>
+              <i class="fa fa-fighter-jet bg-c-blue update-icon"></i>
+            </div>
+            <div class="col">
+              <h6>John Deo</h6>
+              <p class="text-muted m-b-15">The trip was an amazing and a life changing experience!!</p>
+              <img src="assets/images/mega-menu/01.jpg" alt="" class="img-fluid img-100 m-r-15 m-b-10">
+              <img src="assets/images/mega-menu/03.jpg" alt="" class="img-fluid img-100 m-r-15 m-b-10">
+            </div>
+          </div>
+          <div class="row p-b-30">
+            <div class="col-auto text-right update-meta">
+              <p class="text-muted m-b-0 d-inline">5 min ago</p>
+              <i class="fa fa-file-text bg-c-blue update-icon"></i>
+            </div>
+            <div class="col">
+              <h6>Administrator</h6>
+              <p class="text-muted m-b-0">Free courses for all our customers at A1 Conference Room - 9:00 am tomorrow!</p>
+            </div>
+          </div>
+          <div class="row p-b-30">
+            <div class="col-auto text-right update-meta">
+              <p class="text-muted m-b-0 d-inline">3 hours ago</p>
+              <i class="fa fa-map-marker bg-c-blue update-icon"></i>
+            </div>
+            <div class="col">
+              <h6>Jeny William</h6>
+              <p class="text-muted m-b-15">Happy Hour! Free drinks at <span class="text-c-blue">Cafe-Bar all </span>day long!</p>
+              <agm-map [style.height]="'200px'" [latitude]="21.6776887" [longitude]="71.566261" [zoom]="8" [disableDefaultUI]="false" [zoomControl]="false">
+                <agm-marker [latitude]="21.6776887" [longitude]="71.566261">
+                  <agm-info-window><span class="text-c-blue">Cafe-Bar </span>- Nice Place</agm-info-window>
+                </agm-marker>
+              </agm-map>
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+          <a href="javascript:" class=" b-b-primary text-primary">View all Activity</a>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-4 col-md-12">
+      <app-card [title]="'Feeds'" [cardClass]="'feed-card'">
+        <div class="row m-b-30">
+          <div class="col-auto p-r-0">
+            <i class="fa fa-bell bg-c-blue feed-icon"></i>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">You have 3 pending tasks. <span class="text-muted float-right f-13">Just Now</span></h6>
+          </div>
+        </div>
+        <div class="row m-b-30">
+          <div class="col-auto p-r-0">
+            <i class="fa fa-shopping-cart bg-c-red feed-icon"></i>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">New order received <span class="text-muted float-right f-13">Just Now</span></h6>
+          </div>
+        </div>
+        <div class="row m-b-30">
+          <div class="col-auto p-r-0">
+            <i class="fa fa-file-text bg-c-green feed-icon"></i>
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">You have 3 pending tasks. <span class="text-muted float-right f-13">Just Now</span></h6>
+          </div>
+        </div>
+        <div class="text-center">
+          <a href="javascript:" class="b-b-primary text-primary">View all Feeds</a>
+        </div>
+      </app-card>
+      <app-card [title]="'Upcoming Deadlines'" [cardClass]="'feed-card'">
+        <div class="row m-b-25">
+          <div class="col-auto p-r-0">
+            <img src="assets/images/mega-menu/01.jpg" alt="" class="img-fluid img-50">
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">New able - Redesign</h6>
+            <p class="text-c-red m-b-0">2 Days Remaining</p>
+          </div>
+        </div>
+        <div class="row m-b-25">
+          <div class="col-auto p-r-0">
+            <img src="assets/images/mega-menu/02.jpg" alt="" class="img-fluid img-50">
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">New Admin Dashboard</h6>
+            <p class="text-c-red m-b-0">Proposal in 6 Days</p>
+          </div>
+        </div>
+        <div class="row m-b-20">
+          <div class="col-auto p-r-0">
+            <img src="assets/images/mega-menu/03.jpg" alt="" class="img-fluid img-50">
+          </div>
+          <div class="col">
+            <h6 class="m-b-5">Logo Design</h6>
+            <p class="text-c-green m-b-0">10 Days Remaining</p>
+          </div>
+        </div>
+        <div class="text-center">
+          <a href="javascript:" class="b-b-primary text-primary">View all Feeds</a>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-xl-6 col-md-12">
+      <app-card [title]="'Global Sales by Top Locations'" [cardClass]="'table-card'">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless">
+            <thead>
+            <tr>
+              <th></th>
+              <th>Country</th>
+              <th>Sales</th>
+              <th class="text-right">Average</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><img src="assets/images/widget/GERMANY.jpg" alt="" class="img-fluid img-30"></td>
+              <td>Germany</td>
+              <td>3,562</td>
+              <td class="text-right">56.23%</td>
+            </tr>
+            <tr>
+              <td><img src="assets/images/widget/USA.jpg" alt="" class="img-fluid img-30"></td>
+              <td>USA</td>
+              <td>2,650</td>
+              <td class="text-right">25.23%</td>
+            </tr>
+            <tr>
+              <td><img src="assets/images/widget/AUSTRALIA.jpg" alt="" class="img-fluid img-30"></td>
+              <td>Australia</td>
+              <td>956</td>
+              <td class="text-right">12.45%</td>
+            </tr>
+            <tr>
+              <td><img src="assets/images/widget/UK.jpg" alt="" class="img-fluid img-30"></td>
+              <td>United Kingdom</td>
+              <td>689</td>
+              <td class="text-right">8.65%</td>
+            </tr>
+            <tr>
+              <td><img src="assets/images/widget/BRAZIL.jpg" alt="" class="img-fluid img-30"></td>
+              <td>Brazil</td>
+              <td>560</td>
+              <td class="text-right">3.56%</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-right  m-r-20">
+          <a href="javascript:" class="b-b-primary text-primary">View all Sales Locations </a>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-xl-6 col-md-12">
+      <app-card [title]="'Employee'" [cardClass]="'table-card'">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Salary</th>
+              <th>Country</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>1</td>
+              <td>John Deo</td>
+              <td>$26,325</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Jeny William</td>
+              <td>$10,256</td>
+              <td>Canada</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Anjelina Joli</td>
+              <td>$16,854</td>
+              <td>South Africa</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Philip Morris</td>
+              <td>$31,564</td>
+              <td>Korea</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Allesia Smith</td>
+              <td>$26,325</td>
+              <td>Neatherland</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-right  m-r-20">
+          <a href="javascript:" class="b-b-primary text-primary">View all Employee</a>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-md-12">
+      <app-card [title]="'Latest Order'" [cardClass]="'table-card latest-activity-card'">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless">
+            <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Order ID</th>
+              <th>Photo</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>John Deo</td>
+              <td>#81412314</td>
+              <td><img src="assets/images/widget/PHONE1.jpg" alt="" class="img-fluid"></td>
+              <td>Moto G5</td>
+              <td>10</td>
+              <td>17-2-2017</td>
+              <td><label class="label label-warning">Pending</label></td>
+              <td><a href="javascript:"><i class="fa fa-pencil-square-o f-16 m-r-15"></i></a><a href="javascript:"><i class="fa fa-trash f-16"></i></a></td>
+            </tr>
+            <tr>
+              <td>Jenny William</td>
+              <td>#68457898</td>
+              <td><img src="assets/images/widget/PHONE2.jpg" alt="" class="img-fluid"></td>
+              <td>iPhone 8</td>
+              <td>16</td>
+              <td>20-2-2017</td>
+              <td><label class="label label-primary">Paid</label></td>
+              <td><a href="javascript:"><i class="fa fa-pencil-square-o f-16 m-r-15"></i></a><a href="javascript:"><i class="fa fa-trash f-16"></i></a></td>
+            </tr>
+            <tr>
+              <td>Lori Moore</td>
+              <td>#45457898</td>
+              <td><img src="assets/images/widget/PHONE3.jpg" alt="" class="img-fluid"></td>
+              <td>Redmi 4</td>
+              <td>20</td>
+              <td>17-2-2017</td>
+              <td><label class="label label-success">Success</label></td>
+              <td><a href="javascript:"><i class="fa fa-pencil-square-o f-16 m-r-15"></i></a><a href="javascript:"><i class="fa fa-trash f-16"></i></a></td>
+            </tr>
+            <tr>
+              <td>Austin Pena</td>
+              <td>#62446232</td>
+              <td><img src="assets/images/widget/PHONE4.jpg" alt="" class="img-fluid"></td>
+              <td>Jio</td>
+              <td>15</td>
+              <td>25-4-2017</td>
+              <td><label class="label label-danger">Failed</label></td>
+              <td><a href="javascript:"><i class="fa fa-pencil-square-o f-16 m-r-15"></i></a><a href="javascript:"><i class="fa fa-trash f-16"></i></a></td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+        <div class="text-right  m-r-20">
+          <a href="javascript:" class="b-b-primary text-primary">View all Orders</a>
+        </div>
+      </app-card>
+    </div>
+
+    <div class="col-md-12">
+      <app-card [title]="'Customer Reviews'" [cardClass]="'table-card review-card'">
+        <div class="review-block">
+          <div class="row">
+            <div class="col-sm-auto p-r-0">
+              <img src="assets/images/avatar-2.jpg" alt="user image" class="img-radius profile-img cust-img m-b-15">
+            </div>
+            <div class="col">
+              <h6 class="m-b-15">John Deo <span class="float-right f-13 text-muted"> a week ago</span></h6>
+              <a href="javascript:"><i class="fa fa-star f-18 text-c-yellow"></i></a>
+              <a href="javascript:"><i class="fa fa-star f-18 text-c-yellow"></i></a>
+              <a href="javascript:"><i class="fa fa-star f-18 text-c-yellow"></i></a>
+              <a href="javascript:"><i class="fa fa-star f-18 text-default"></i></a>
+              <a href="javascript:"><i class="fa fa-star f-18 text-default"></i></a>
+              <p class="m-t-15 m-b-15 text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
+                galley of type and scrambled it to make a type specimen book.</p>
+              <a href="javascript:" class="m-r-30"><i class="fa fa-thumbs-up m-r-15"></i>Helpful?</a>
+              <a href="javascript:"><i class="fa fa-heart text-c-red m-r-15"></i></a>
+              <a href="javascript:"><i class="fa fa-pencil-square-o"></i></a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-auto p-r-0">
+              <img src="assets/images/avatar-4.jpg" alt="user image" class="img-radius profile-img cust-img m-b-15">
+            </div>
+            <div class="col">
+              <h6 class="m-b-15">Allina D’croze <span class="float-right f-13 text-muted"> a week ago</span></h6>
+              <a href="javascript:"><i class="fa fa-star f-18 text-c-yellow"></i></a>
+              <a href="javascript:"><i class="fa fa-star f-18 text-default"></i></a>
+              <a href="javascript:"><i class="fa fa-star f-18 text-default"></i></a>
+              <a href="javascript:"><i class="fa fa-star f-18 text-default"></i></a>
+              <a href="javascript:"><i class="fa fa-star f-18 text-default"></i></a>
+              <p class="m-t-15 m-b-15 text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
+                galley of type and scrambled it to make a type specimen book.</p>
+              <a href="javascript:" class="m-r-30"><i class="fa fa-thumbs-up m-r-15"></i>Helpful?</a>
+              <a href="javascript:"><i class="fa fa-heart text-c-red m-r-15"></i></a>
+              <a href="javascript:"><i class="fa fa-pencil-square-o"></i></a>
+              <blockquote class="blockquote m-t-15 m-b-0">
+                <h6>Allina D’croze</h6>
+                <p class="m-b-0 text-muted">Lorem Ipsum is simply dummy text of the industry.</p>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+        <div class="text-right  m-r-20">
+          <a href="javascript:" class="b-b-primary text-primary">View all Customer Reviews</a>
+        </div>
+      </app-card>
+    </div>
+
+  </div>
+</div>

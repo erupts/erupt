@@ -1,0 +1,148 @@
+<div id="pcoded" class="pcoded"
+     [attr.nav-type]="navType"
+     [attr.pcoded-device-type]="pcodedDeviceType"
+     [attr.fream-type]="freamType"
+     [attr.layout-type]="layoutType"
+     (window:resize)="onResize($event)"
+>
+  <div class="pcoded-overlay-box"></div>
+  <div class="pcoded-container navbar-wrapper">
+    <nav class="navbar header-navbar pcoded-header"  [attr.header-theme]="headerTheme" [attr.pcoded-header-position]="pcodedHeaderPosition">
+      <div class="navbar-wrapper">
+        <div class="navbar-logo">
+          <a [routerLink]="['/dashboard/default/']" class="waves-light" mdbRippleRadius>
+            <img class="img-fluid" src="assets/images/logo.png" alt="Able Pro 7" />
+          </a>
+          <a href="javascript:" class="mobile-options waves-light" mdbRippleRadius (click)="toggleHeaderNavRight()">
+            <i class="feather icon-more-horizontal"></i>
+          </a>
+        </div>
+        <div class="navbar-container container-fluid">
+          <ul class="nav-left">
+            <li class="waves-light" mdbRippleRadius>
+              <div class="sidebar_toggle"><a href="javascript:"><i class="icon-menu"></i></a></div>
+            </li>
+            <li class="header-search">
+              <div id="main-search" class="main-search morphsearch-search">
+                <div class="input-group">
+                  <span class="input-group-prepend search-close" (click)="searchOff()"><i class="feather icon-x input-group-text"></i></span>
+                  <input class="form-control" [style.width]="searchWidthString">
+                  <span class="input-group-append search-btn" (click)="searchOn()"><i class="feather icon-search input-group-text"></i></span>
+                </div>
+              </div>
+            </li>
+            <li class="waves-light" mdbRippleRadius appToggleFullScreen>
+              <a href="javascript:">
+                <i class="feather icon-maximize full-screen"></i>
+              </a>
+            </li>
+          </ul>
+          <ul [@mobileHeaderNavRight]="navRight" [ngClass]="navRight" class="nav-right">
+            <li (clickOutside)="notificationOutsideClick('live')" class="header-notification waves-light" mdbRippleRadius (click)="toggleLiveNotification()">
+              <a href="javascript:">
+                <i class="feather icon-bell"></i>
+                <span class="badge bg-c-red">5</span>
+              </a>
+              <ul [@notificationBottom]="liveNotification" class="show-notification" [ngClass]="liveNotificationClass">
+                <li>
+                  <h6>Notifications</h6>
+                  <label class="label label-danger">New</label>
+                </li>
+                <li mdbRippleRadius>
+                  <div class="media">
+                    <img class="d-flex align-self-center img-radius" src="assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                    <div class="media-body">
+                      <h5 class="notification-user">John Doe</h5>
+                      <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                      <span class="notification-time">30 minutes ago</span>
+                    </div>
+                  </div>
+                </li>
+                <li mdbRippleRadius>
+                  <div class="media">
+                    <img class="d-flex align-self-center img-radius" src="assets/images/avatar-4.jpg" alt="Generic placeholder image">
+                    <div class="media-body">
+                      <h5 class="notification-user">Joseph William</h5>
+                      <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                      <span class="notification-time">30 minutes ago</span>
+                    </div>
+                  </div>
+                </li>
+                <li mdbRippleRadius>
+                  <div class="media">
+                    <img class="d-flex align-self-center img-radius" src="assets/images/avatar-3.jpg" alt="Generic placeholder image">
+                    <div class="media-body">
+                      <h5 class="notification-user">Sara Soudein</h5>
+                      <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                      <span class="notification-time">30 minutes ago</span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li (clickOutside)="notificationOutsideClick('profile')" class="user-profile header-notification waves-light" mdbRippleRadius (click)="toggleProfileNotification()">
+              <a href="javascript:">
+                <img src="assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                <span>John Doe</span>
+                <i class="feather icon-chevron-down"></i>
+              </a>
+              <ul [@notificationBottom]="profileNotification" class="show-notification profile-notification" [ngClass]="profileNotificationClass">
+                <li mdbRippleRadius>
+                  <a href="javascript:">
+                    <i class="feather icon-settings"></i> Settings
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a [routerLink]="['/user/profile/']">
+                    <i class="feather icon-user"></i> Profile
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a href="javascript:">
+                    <i class="feather icon-mail"></i> My Messages
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a [routerLink]="['/auth/lock-screen/']" target="_blank">
+                    <i class="feather icon-lock"></i> Lock Screen
+                  </a>
+                </li>
+                <li mdbRippleRadius>
+                  <a [routerLink]="['/auth/login/simple/']" target="_blank">
+                    <i class="feather icon-log-out"></i> Logout
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <section class="login-block offline-404">
+    <!-- Container-fluid starts -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <!-- auth body start -->
+          <div class="card auth-box">
+            <div class="card-block text-center">
+              <form action="javascript:">
+                <h1>Offline</h1>
+                <h2 class="m-b-15 text-muted">Oops! Website Is Temporarily Offline</h2>
+                <div class="left-icon-control">
+                  <input type="text" class="form-control form-control-lg" placeholder="Try a new Search">
+                  <div class="form-icon">
+                    <i class="icofont icofont-search"></i>
+                  </div>
+                </div>
+                <a [routerLink]="['/dashboard/default']" class="btn btn-inverse m-t-30 waves-light" mdbRippleRadius>Back to Home</a>
+              </form>
+            </div>
+          </div>
+          <!-- auth body end -->
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

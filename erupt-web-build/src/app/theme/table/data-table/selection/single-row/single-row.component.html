@@ -1,0 +1,29 @@
+<app-card [title]="'Ng-X Single Row Selection'">
+  <span class="m-b-20">use attribute <code>selectionType</code> as <code>single</code> with ngx-datatable element</span><br><br>
+  <ngx-datatable
+    class="data-table"
+    [rows]="rows"
+    [columnMode]="'force'"
+    [scrollbarH]="true"
+    [columns]="columns"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    [limit]="10"
+    [selected]="selected"
+    [selectionType]="'single'"
+    (activate)="onActivate($event)"
+    (select)='onSelect($event)'>
+  </ngx-datatable>
+  <div class="row">
+    <div class='col-sm-12 selected-column'>
+      <h4 class="sub-title p-t-15">Selected Row</h4>
+      <ul>
+        <li *ngFor='let sel of selected'>
+          <span class="label label-primary">{{sel.name}}</span>
+        </li>
+        <li *ngIf="!selected.length">No Selections</li>
+      </ul>
+    </div>
+  </div>
+</app-card>

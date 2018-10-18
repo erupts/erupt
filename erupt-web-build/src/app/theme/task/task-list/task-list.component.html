@@ -1,0 +1,139 @@
+<div class="page-body">
+  <div class="row">
+    <div class="col-sm-12">
+      <app-card [title]="'Task List'" [cardOptionBlock]="true">
+        <ngx-datatable
+          class="data-table table-responsive task-list-table"
+          [rows]="rowsTask"
+          [loadingIndicator]="loadingIndicator"
+          [columnMode]="'force'"
+          [scrollbarH]="true"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [limit]="10"
+          [rowHeight]="66"
+          [reorderable]="reorderable">
+          <ngx-datatable-column name="#">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              #{{row['id']}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Task List">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a href="javascript:">{{row['task']}}</a>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Last Commit">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <input type="date" class="form-control" value="{{row['date']}}" />
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Status">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <select name="select" class="form-control form-control-sm">
+                <option value="opt1" [selected]="row.status === 'opt1'">Open</option>
+                <option value="opt2" [selected]="row.status === 'opt2'">Resolved</option>
+                <option value="opt3" [selected]="row.status === 'opt3'">Invalid</option>
+                <option value="opt4" [selected]="row.status === 'opt4'">On hold</option>
+                <option value="opt5" [selected]="row.status === 'opt5'">Close</option>
+              </select>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Assiged User">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a href="javascript:;" *ngFor="let image of row.images">
+                <img class="img-fluid img-radius" src="{{image}}">
+              </a>
+              <a href="javascript:;"><i class="fa fa-plus f-w-600"></i></a>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Action">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div ngbDropdown class="text-center">
+                <a ngbDropdownToggle class="dropdown-toggle addon-btn" data-toggle="dropdown" aria-expanded="true">
+                  <i class="icofont icofont-ui-settings"></i>
+                </a>
+                <div ngbDropdownMenu class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" href="javascript:;"><i class="icofont icofont-attachment"></i>Attach File</a>
+                  <a class="dropdown-item" href="javascript:;"><i class="icofont icofont-ui-edit"></i>Edit Task</a>
+                  <div role="separator" class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="javascript:;"><i class="icofont icofont-refresh"></i>Reassign Task</a>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </app-card>
+
+      <app-card [title]="'To list'">
+        <div class="row">
+          <div class="col-md-12 btn-add-task">
+            <div class="input-group input-group-button">
+              <input type="text" class="form-control" placeholder="Add Task">
+              <span class="input-group-addon waves-light" mdbRippleRadius id="basic-addon1">
+                <button class="btn btn-primary"><i class="icofont icofont-plus f-w-600"></i>Add task</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="new-task">
+          <div class="to-do-list">
+            <div class="checkbox-fade fade-in-primary">
+              <label>
+                <input type="checkbox" value="1">
+                <span class="cr">
+                  <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                </span>
+                <span>Add Proper Cursor In Sortable Page</span>
+              </label>
+            </div>
+          </div>
+          <div class="to-do-list">
+            <div class="checkbox-fade fade-in-primary">
+              <label>
+                <input type="checkbox" value="2">
+                <span class="cr">
+                  <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                </span>
+                <span>Edit the draft for the icons</span>
+              </label>
+            </div>
+          </div>
+          <div class="to-do-list">
+            <div class="checkbox-fade fade-in-primary">
+              <label>
+                <input type="checkbox" value="3">
+                <span class="cr">
+                  <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                </span>
+                <span>Create UI design model</span>
+              </label>
+            </div>
+          </div>
+          <div class="to-do-list">
+            <div class="checkbox-fade fade-in-primary">
+              <label>
+                <input type="checkbox" value="4" checked>
+                <span class="cr">
+                  <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                </span>
+                <span>Checkbox Design issue</span>
+              </label>
+            </div>
+          </div>
+          <div class="to-do-list">
+            <div class="checkbox-fade fade-in-primary">
+              <label>
+                <input type="checkbox" value="5">
+                <span class="cr">
+                  <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                </span>
+                <span>Testing live data store</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </div>
+  </div>
+</div>

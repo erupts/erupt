@@ -1,0 +1,187 @@
+<simple-notifications [options]="options"></simple-notifications>
+
+<div class="row">
+  <div class="col-sm-12">
+    <!-- Basic notifications card start -->
+    <app-card [title]="'Basic notifications'" [blockClass]="'table-border-style'">
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+          <tr>
+            <td>Primary Notice</td>
+            <td>
+              <button type="button" class="btn btn-warning btn-sm" mdbRippleRadius (click)="addNotify({title:'PNotify', msg: 'Check me out! I\'m a notice.', type:'crate', subType: 'warn'})">Warning <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use type <code>warn</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Success Notice</td>
+            <td>
+              <button type="button" class="btn btn-success btn-sm waves-light" mdbRippleRadius (click)="addNotify({title:'PNotify', msg: 'Check me out! I\'m a notice.', type:'success'})">Success <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use type <code>success</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Info Notice</td>
+            <td>
+              <button type="button" class="btn btn-info btn-sm waves-light" mdbRippleRadius (click)="addNotify({title:'PNotify', msg: 'Check me out! I\'m a notice.', type:'info'})">Info <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use type <code>info</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Danger Notice</td>
+            <td>
+              <button type="button" class="btn btn-danger btn-sm waves-light" mdbRippleRadius (click)="addNotify({title:'PNotify', msg: 'Check me out! I\'m a notice.', type:'error'})">Danger <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use type <code>danger</code> to use this style notification</td>
+          </tr>
+          <!-- basic notification end -->
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- Basic notifications card end -->
+  </div>
+  <div class="col-sm-12">
+    <!-- Basic notifications card start -->
+    <app-card [title]="'Animate notifications'" [blockClass]="'table-border-style'">
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+          <tr>
+            <td>fromRight Notice</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title:'PNotify', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight'})">Default/fromRight <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use animate <code>fromRight</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>fromLeft Notice</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title:'PNotify', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromLeft'})">fromLeft <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use animate <code>fromLeft</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Sacle Notice</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title:'PNotify', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'scale'})">Scale <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use animate <code>scale</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Rotate Notice</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title:'PNotify', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'rotate'})">Rotate <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use animate <code>rotate</code> to use this style notification</td>
+          </tr>
+          <!-- basic notification end -->
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- Basic notifications card end -->
+  </div>
+  <div class="col-sm-12">
+    <!-- notifications option start -->
+    <app-card [title]="'Options notifications'" [blockClass]="'table-border-style'">
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+          <tr>
+            <td>No Title</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({msg: 'Check me out! - no title', type:'info', animate: 'fromRight', theClass:'small-icon'})">No Title <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use title <code>null or not use 'title' input</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>No Message</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'Only Title', type:'info', animate: 'fromRight', theClass:'small-icon'})">No Message <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use msg <code>not use 'msg' input</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Small Icon</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'Small Icon', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight', theClass:'small-icon'})">Small Icon <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use theClass <code>small-icon</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>No Icon</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'No Icon', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight', theClass:'no-icon'})">No Icon <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use theClass <code>no-icon</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Click To Close</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'Click To Close', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight', clickToClose: true})"> Click to close <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use clickToClose <code>true/false</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Show Progress</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'Show Progress', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight', timeOut:2000, pauseOnHover:false, showProgressBar: true})"> Show Progress <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use showProgressBar<code>true</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Pus On Hover</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'Push On Hover', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight', timeOut:2000, pauseOnHover:true, showProgressBar: true})"> Push On Hover <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use pauseOnHover<code>true</code> to use this style notification</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- notifications option end -->
+  </div>
+  <div class="col-sm-12">
+    <!-- notifications position start -->
+    <app-card [title]="'notifications position'" [blockClass]="'table-border-style'">
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+          <tr>
+            <td>Top Left</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'Top Left', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight', position1: 'top', position2: 'left', maxStack: 1})">Top Left <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use position1 <code>top</code> position2 <code>left</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Top Right</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'Top Right', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight', position1: 'top', position2: 'right', maxStack: 1})">Top Right <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use position1 <code>top</code> position2 <code>right</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Bottom Left</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'Bottom Left', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight', position1: 'bottom', position2: 'left', maxStack: 1})">Bottom Left <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use position1 <code>bottom</code> position2 <code>left</code> to use this style notification</td>
+          </tr>
+          <tr>
+            <td>Bottom Right</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius (click)="addNotify({title: 'Bottom Right', msg: 'Check me out! I\'m a notice.', type:'info', animate: 'fromRight', position1: 'bottom', position2: 'right', maxStack: 1})">Bottom Right <i class="icofont icofont-play-alt-2"></i></button>
+            </td>
+            <td>Use position1 <code>bottom</code> position2 <code>right</code> to use this style notification</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+    <!-- notifications option end -->
+  </div>
+</div>

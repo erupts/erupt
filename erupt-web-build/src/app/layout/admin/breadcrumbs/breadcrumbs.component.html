@@ -1,0 +1,24 @@
+<div class="" *ngFor="let breadcrumb of breadcrumbs; let last = last">
+  <div class="page-header" *ngIf="breadcrumb.status && last">
+    <div class="page-block" *ngIf="last">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="page-header-title">
+            <span *ngFor="let breadcrumb of breadcrumbs; let last = last"><h4 *ngIf="last" class="m-b-10">{{ breadcrumb.label }}</h4></span>
+            <!--<p class="m-b-0" *ngIf="breadcrumb.caption">{{ breadcrumb.caption }}</p>-->
+          </div>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/dashboard/default/']">
+                <i class="feather icon-home"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item" *ngFor="let breadcrumb of breadcrumbs;">
+              <a [ngClass]="breadcrumb.status === false ? 'not-active': ''" [routerLink]="breadcrumb.url">{{breadcrumb.label}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

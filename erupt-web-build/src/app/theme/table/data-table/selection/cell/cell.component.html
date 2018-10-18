@@ -1,0 +1,18 @@
+<app-card [title]="'Ng-X Cell Selection'">
+  <span class="m-b-20">use class <code>data-table</code> with ngx-datatable</span><br><br>
+  <ngx-datatable
+    class="material data-table selection-cell"
+    [rows]="rows"
+    [columnMode]="'force'"
+    [columns]="columns"
+    [scrollbarH]="true"
+    [limit]="10"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="50"
+    [selected]="selected"
+    [selectionType]="'cell'"
+    (select)="onSelect($event)"
+    (activate)="onActivate($event)">
+  </ngx-datatable>
+</app-card>

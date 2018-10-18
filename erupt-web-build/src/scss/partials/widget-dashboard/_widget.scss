@@ -1,0 +1,883 @@
+.social-card {
+    color: #fff;
+    overflow: hidden;
+
+    .social-icon {
+        background-color: #fff;
+        border-radius: 5px;
+        text-align: center;
+        padding: 22px 23px;
+      display: inline-block;
+    }
+
+    .download-icon {
+        color: #fff;
+        background-color: rgba(255,255,255,0.5);
+        position: absolute;
+        height: 125px;
+        width: 125px;
+        right: -125px;
+        font-size: 35px;
+        padding: 40px 22px;
+        border-radius: 50%;
+        transition: all 0.3s ease-in-out;
+    }
+
+    &:hover {
+        .download-icon {
+            right: -60px;
+        }
+    }
+}
+
+.total-card {
+    .text-left {
+        h4 {
+            color: #fff;
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+
+        p {
+            color: #fff;
+            font-size: 15px;
+        }
+    }
+    overflow: hidden;
+
+    .value-badges {
+        position: absolute;
+        top: 10px;
+        right: 5px;
+    }
+}
+
+.table-card {
+    .card-block {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+
+        .table {
+            > thead > tr > th {
+                border-top: 0;
+            }
+
+            .chk-option {
+                vertical-align: middle;
+                width: 30px;
+                display: inline-block;
+
+                .checkbox-fade,
+                .checkbox-fade .cr,
+                .checkbox-zoom,
+                .checkbox-zoom .cr {
+                    margin-right: 0;
+                }
+            }
+
+            label {
+                margin-bottom: 0;
+            }
+
+            tr {
+                td,
+                th {
+                    &:first-child {
+                        padding-left: 20px;
+                    }
+
+                    &:last-child {
+                        padding-right: 20px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.latest-update-card {
+    .card-block {
+        padding-top: 0;
+
+        .latest-update-box {
+            position: relative;
+
+            td {
+                border-top: none;
+            }
+
+            &:after {
+                content: "";
+                position: absolute;
+                background: $theme-border;
+                height: 100%;
+                width: 1px;
+                top: 0;
+                left: 108px;
+                z-index: 1;
+            }
+
+            .update-meta {
+                z-index: 2;
+                min-width: 160px;
+
+                .update-icon {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    text-align: center;
+                    padding: 12px 13px;
+                    font-size: 16px;
+                    color: #fff;
+                    margin-left: 10px;
+                }
+            }
+            @media only screen and (max-width: 575px) {
+                &:after {
+                    display: none;
+                }
+
+                .update-meta {
+                    z-index: 2;
+                    min-width: 100%;
+                    text-align: left !important;
+                    margin-bottom: 15px;
+                    border-top: 1px solid #f1f1f1;
+                    padding-top: 15px;
+                }
+            }
+        }
+    }
+}
+
+.review-card {
+    .review-block {
+        .cust-img {
+            width: 50px;
+            height: 50px;
+        }
+
+        > div {
+            padding-top: 25px;
+            padding-bottom: 25px;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 5px;
+            padding-right: 5px;
+
+            &:hover {
+                background-color: transparentize($primary-color, 0.9);
+            }
+        }
+    }
+}
+
+.chat-card {
+    .msg {
+        margin-bottom: 5px;
+        display: inline-block;
+        padding: 10px;
+        position: relative;
+
+        img {
+            width: 60px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            margin-right: 10px;
+        }
+    }
+
+    .received-chat {
+        .msg {
+            background: transparentize($primary-color, 0.9);
+            border-radius: 0 5px 5px 5px;
+
+            &:after {
+                content: "";
+                position: absolute;
+                left: -7px;
+                top: -7px;
+                transform: rotate(45deg);
+                border: 7px solid transparent;
+                border-bottom-color: transparentize($primary-color, 0.9);
+            }
+        }
+    }
+
+    .send-chat {
+        text-align: right;
+
+        .msg {
+            background: transparentize($success-color, 0.9);
+            border-radius: 5px 0 5px 5px;
+
+            &:after {
+                content: "";
+                position: absolute;
+                right: -7px;
+                top: -7px;
+                transform: rotate(45deg);
+                border: 7px solid transparent;
+                border-right-color: transparentize($success-color, 0.9);
+            }
+        }
+    }
+}
+
+.user-card2 {
+    .risk-rate {
+        display: inline-block;
+        margin: 0 auto;
+
+        span {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 6px dashed #d6d6d6;
+            border-top-color: $color-green;
+            border-bottom-color: transparent;
+            padding: 45px;
+            display: block;
+            position: relative;
+
+            &:after {
+                content: "";
+                width: 90px;
+                height: 90px;
+                background-color: transparentize($color-green,0.5);
+                border-radius: 50%;
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                z-index: 1;
+            }
+
+            b {
+                font-size: 20px;
+                color: #fff;
+                z-index: 2;
+                position: relative;
+            }
+        }
+    }
+}
+// =====  todo ======
+
+.to-do-list {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+
+    i {
+        color: #ccc;
+        font-size: 17px;
+        opacity: 0;
+    }
+
+    &:last-child {
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    &:hover i {
+        opacity: 1;
+        transition: opacity ease-in 0.3s;
+    }
+
+    p {
+        display: inline-block;
+    }
+}
+
+.to-do-label {
+    .checkbox-fade {
+        display: block;
+
+        .delete_todo {
+            float: right;
+            font-size: 24px;
+            color: #ccc;
+        }
+    }
+
+    .check-task {
+        display: block;
+    }
+
+    i {
+        cursor: pointer;
+    }
+}
+
+.done-task .captions,
+.done-task span {
+    color: #919aa3;
+    text-decoration: line-through;
+}
+// ======= todo end ==========
+
+.trafic-card {
+    .progress {
+        height: 7px;
+
+        &.blue {
+            background-color: transparentize($color-blue, 0.5);
+        }
+
+        &.green {
+            background-color: transparentize($color-green, 0.5);
+        }
+
+        &.red {
+            background-color: transparentize($color-red, 0.5);
+        }
+
+        &.purple {
+            background-color: transparentize($color-purple, 0.5);
+        }
+
+        &.yellow {
+            background-color: transparentize($color-yellow, 0.5);
+        }
+    }
+}
+
+.user-activity-card {
+    .u-img {
+        position: relative;
+
+        .cover-img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .profile-img {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            bottom: 0;
+            right: -5px;
+        }
+    }
+}
+
+.user-Messages-card {
+    .u-img {
+        position: relative;
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .tot-msg {
+            width: 15px;
+            height: 15px;
+            position: absolute;
+            bottom: 0;
+            right: -5px;
+            background-color: $color-red;
+            color: #fff;
+            font-size: 10px;
+            border-radius: 50%;
+            text-align: center;
+        }
+    }
+}
+
+.latest-posts-card {
+    .latest-posts-img {
+        width: 90px;
+        height: 80px;
+    }
+}
+
+.task-card {
+    .task-list {
+        position: relative;
+
+        &:after {
+            content: "";
+            position: absolute;
+            background: $theme-border;
+            height: 100%;
+            width: 2px;
+            top: 0;
+            left: 10px;
+            z-index: 1;
+        }
+
+        &:before {
+            content: "";
+            position: absolute;
+            background: $theme-border;
+            height: 15px;
+            width: 15px;
+            bottom: -14px;
+            left: 3px;
+            z-index: 2;
+            border-radius: 50%;
+        }
+
+        li {
+            margin-bottom: 30px;
+            padding-left: 30px;
+            position: relative;
+
+            .task-icon {
+                position: absolute;
+                left: 3px;
+                top: 1px;
+                border-radius: 50%;
+                padding: 2px;
+                color: #fff;
+                min-width: 15px;
+                min-height: 15px;
+                z-index: 2;
+            }
+        }
+    }
+}
+
+.latest-activity-card {
+    .card-block {
+        padding-top: 0;
+
+        .latest-update-box {
+            position: relative;
+
+            .update-meta {
+                z-index: 2;
+                min-width: 160px;
+
+                .update-icon {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    text-align: center;
+                    padding: 12px 13px;
+                    font-size: 16px;
+                    color: #fff;
+                    margin-left: 10px;
+                }
+            }
+            @media only screen and (max-width: 575px) {
+                .update-meta {
+                    z-index: 2;
+                    min-width: 100%;
+                    text-align: left !important;
+                    margin-bottom: 15px;
+                    border-top: 1px solid #f1f1f1;
+                    padding-top: 15px;
+                }
+            }
+        }
+    }
+}
+
+.feed-card {
+    h6 {
+        margin-top: 7px;
+    }
+
+    .feed-icon {
+        color: #fff;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        padding: 8px;
+    }
+}
+
+.latest-activity-card {
+    .table td {
+        vertical-align: middle;
+    }
+}
+
+.order-visitor-card {
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $primary-color;
+        color: #fff;
+    }
+}
+
+.user-card-full {
+    overflow: hidden;
+
+    .user-profile {
+        border-radius: 5px 0 0 5px;
+    }
+
+    .social-link {
+        li {
+            display: inline-block;
+
+            a {
+                i {
+                    color: $light-color;
+                }
+                font-size: 20px;
+                margin: 0 10px 0 0;
+                transition: all 0.3s ease-in-out;
+
+                i {
+                    &.facebook {
+                        &:hover {
+                            color: $facebook;
+                        }
+                    }
+
+                    &.twitter {
+                        &:hover {
+                            color: $twitter;
+                        }
+                    }
+
+                    &.instagram {
+                        &:hover {
+                            color: $instagram;
+                        }
+                    }
+
+                    &.youtube {
+                        &:hover {
+                            color: $youtube;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.wather-card {
+    overflow: hidden;
+
+    .nature-card {
+        position: relative;
+        background: linear-gradient(lighten($color-blue,5%) 60%, $color-blue 100%);
+        overflow: hidden;
+
+        .main-img {
+            width: 100%;
+            @media only screen and (min-width: 1400px) {
+                height: 260px;
+            }
+        }
+
+        .bottom-img {
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+        }
+
+        .snow1,
+        .snow2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .snow1 {
+            animation: sparcle 2.1s linear infinite;
+        }
+
+        .snow2 {
+            animation: sparcle 2.1s linear infinite;
+            animation-delay: 1.15s;
+        }
+
+        .nature-cont {
+            position: absolute;
+            top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+    }
+}
+@keyframes sparcle {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateY(-5px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+
+    80% {
+        opacity: 1;
+        transform: translateY(5px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+.widget-statstic-card {
+    position: relative;
+    overflow: hidden;
+
+    .st-icon {
+        color: #fff;
+        font-size: 23px;
+        padding: 40px 40px 20px 20px;
+        border-radius: 50%;
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    h2 {
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    span {
+        border-radius: 30px;
+        padding: 5px 20px;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    &:hover {
+        .st-icon {
+            font-size: 50px;
+        }
+    }
+}
+
+.widget-visitor-card {
+    overflow: hidden;
+    padding: 10px 0;
+
+    i {
+        color: #fff;
+        font-size: 80px;
+        position: absolute;
+        bottom: -10px;
+        opacity: 0.3;
+        left: -10px;
+        transform: rotate(15deg);
+        transition: all 0.3s ease-in-out;
+    }
+
+    &:hover {
+        i {
+            transform: rotate(0deg) scale(1.4);
+            opacity: 0.5;
+        }
+    }
+}
+
+.app-design {
+    .btn {
+        padding: 5px 8px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 5px;
+    }
+
+    .team-section {
+        img {
+            width: 35px;
+            border-radius: 5px;
+        }
+    }
+
+    .progress-box {
+        p {
+            margin-bottom: 0;
+        }
+
+        .progress {
+            width: calc(100% - 80px);
+            height: 8px;
+            text-align: center;
+            margin: 0 auto;
+            background-color: #E5E5E5;
+            border-radius: 30px;
+            position: relative;
+            overflow: inherit;
+
+            .progress-bar {
+                border-radius: 30px;
+
+                label {
+                    position: absolute;
+                    top: -24px;
+                    right: 0;
+                    font-weight: 600;
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+}
+
+.order-card {
+    color: #fff;
+    overflow: hidden;
+
+    .card-icon {
+        position: absolute;
+        right: -17px;
+        font-size: 100px;
+        top: 20px;
+        opacity: 0.5;
+    }
+}
+
+.statustic-card {
+    .card-block {
+        position: relative;
+
+        .progress {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+            height: 5px;
+            overflow: visible;
+
+            .progress-bar {
+                position: relative;
+
+                &:before {
+                    content: "";
+                    height: 5px;
+                    width: 5px;
+                    border-radius: 50%;
+                    position: absolute;
+                    right: 0;
+                    background: inherit;
+                }
+
+                &.bg-c-blue:before {
+                    animation: blue-blink-bar 0.5s linear infinite;
+                }
+
+                &.bg-c-green:before {
+                    animation: green-blink-bar 0.5s linear infinite;
+                }
+
+                &.bg-c-red:before {
+                    animation: red-blink-bar 0.5s linear infinite;
+                }
+
+                &.bg-c-yellow:before {
+                    animation: yellow-blink-bar 0.5s linear infinite;
+                }
+            }
+        }
+    }
+}
+@keyframes blue-blink-bar {
+    0% {
+        box-shadow: 0 0 0 0 transparentize($color-blue,0.9);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px transparentize($color-blue,0.7);
+    }
+}
+@keyframes green-blink-bar {
+    0% {
+        box-shadow: 0 0 0 0 transparentize($color-green,0.9);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px transparentize($color-green,0.7);
+    }
+}
+@keyframes red-blink-bar {
+    0% {
+        box-shadow: 0 0 0 0 transparentize($color-red,0.9);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px transparentize($color-red,0.7);
+    }
+}
+@keyframes yellow-blink-bar {
+    0% {
+        box-shadow: 0 0 0 0 transparentize($color-yellow,0.9);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px transparentize($color-yellow,0.7);
+    }
+}
+// statustic card end
+.statustic-progress-card {
+    .progress {
+        height: 5px;
+    }
+}
+.quater-card{
+    .progress{
+        height: 4px;
+    }
+}
+
+.client-map {
+    img {
+        vertical-align: top;
+        width: 90px;
+    }
+
+    .client-detail {
+        margin-bottom: 20px;
+        img{
+            border-radius: 5px;
+        }
+    }
+
+    .client-profile {
+        float: left;
+    }
+
+    .client-contain {
+        display: inline-block;
+        margin-left: 20px;
+
+        h5 {
+            display: block;
+            text-transform: capitalize;
+            font-weight: 600;
+            font-size: 18px;
+            padding-bottom: 10px;
+        }
+    }
+
+    .client-card-box {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+
+        .client-border {
+            border-right: 1px solid #ccc;
+        }
+
+        .client-border-card {
+            border-top: 1px solid #ccc;
+        }
+    }
+}

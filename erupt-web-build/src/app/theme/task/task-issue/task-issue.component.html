@@ -1,0 +1,170 @@
+<div class="page-body">
+  <div class="row">
+    <div class="col-xl-4">
+      <!-- Overall Progress card start -->
+      <div class="card">
+        <div class="card-body">
+          <!-- <p>.col-sm-4</p> -->
+          <div class="issue-list-progress">
+            <h6>Overall Progress</h6>
+            <div class="issue-progress">
+              <div class="progress">
+                <span #issueText1 class="issue-text1 txt-primary"></span>
+                <div #issueBar1 class="issue-bar1 bg-primary"></div>
+              </div>
+              <!-- end of progress -->
+            </div>
+            <!-- end of issue progress -->
+          </div>
+          <!-- end of issue list progress -->
+          <!-- end of matric progress -->
+          <div class="table-responsive">
+            <table class="table matrics-table">
+              <tbody>
+              <tr>
+                <td>
+                  <strong>Assigned Hours</strong>
+                </td>
+                <td class="txt-primary">70 Hours</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Time Consumed</strong>
+                </td>
+                <td class="txt-danger">49 Hours</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Issues</strong>
+                </td>
+                <td class="txt-primary">19</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Bugs</strong>
+                </td>
+                <td class="txt-primary">16</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Health</strong>
+                </td>
+                <td class="txt-success">75%</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Commits</strong>
+                </td>
+                <td class="txt-primary">280</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Bugs Percentage</strong>
+                </td>
+                <td class="txt-danger">25%</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Assign Date</strong>
+                </td>
+                <td class="txt-info">02/11/2016</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Last closed on</strong>
+                </td>
+                <td class="txt-info">15/01/2017</td>
+              </tr>
+              </tbody>
+              <!-- end of tbody -->
+            </table>
+          </div>
+          <!-- end of table -->
+        </div>
+      </div>
+      <!-- Overall Progress card stendart -->
+    </div>
+    <div class="col-xl-8">
+      <!-- New ticket button card start -->
+      <div class="card">
+        <div class="card-body">
+          <div class="waves-light m-r-10 v-middle issue-btn-group" mdbRippleRadius>
+            <button type="button" class="btn btn-sm btn-success btn-new-tickets waves-light m-r-15 m-t-5 m-b-5" mdbRippleRadius><i class="icofont icofont-paper-plane"></i><span class="m-l-10">New Tickets</span></button>
+            <div class="btn-group m-t-5 m-b-5">
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius><i class="icofont icofont-ui-user"></i></button>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius><i class="icofont icofont-edit-alt"></i></button>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius><i class="icofont icofont-reply"></i></button>
+              <button type="button" class="btn btn-primary btn-sm waves-light" mdbRippleRadius><i class="icofont icofont-printer"></i></button>
+            </div>
+            <div class="float-right bug-issue-link">
+              <ol class="breadcrumb bg-white m-0 p-t-5 p-b-0">
+                <li class="breadcrumb-item"><a href="javascript:;">16 Bugs</a></li>
+                <li class="breadcrumb-item"><a href="javascript:;">19 Issue</a></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- New ticket button card end -->
+      <!-- bug list card start -->
+      <app-card [title]="'Issue Details'" [cardOptionBlock]="true">
+        <ngx-datatable
+          class="data-table table-responsive task-list-table material"
+          [rows]="rowsTask"
+          [loadingIndicator]="loadingIndicator"
+          [columnMode]="'force'"
+          [scrollbarH]="true"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [limit]="10"
+          [scrollbarH]="true"
+          [rowHeight]="50"
+          [reorderable]="reorderable">
+          <ngx-datatable-column name="Bug">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row['type']}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="#">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a href="javascript:">{{row['id']}}</a>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Description">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row['description']}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Start Date">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row['date']}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Priority">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span class="label label-danger" *ngIf="row.priority === 'Highest'">{{row.priority}}</span>
+              <span class="label label-warning" *ngIf="row.priority === 'High'">{{row.priority}}</span>
+              <span class="label label-success" *ngIf="row.priority === 'Normal'">{{row.priority}}</span>
+              <span class="label label-primary" *ngIf="row.priority === 'Slow'">{{row.priority}}</span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Assigned">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a href="javascript:">{{row['assigned']}}</a>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Status">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span class="label label-primary" *ngIf="row.status === 'Open'">{{row.status}}</span>
+              <span class="label label-danger" *ngIf="row.status === 'Close'">{{row.status}}</span>
+              <span class="label label-warning" *ngIf="row.status === 'Pending'">{{row.status}}</span>
+              <span class="label label-info" *ngIf="row.status === 'On Hold'">{{row.status}}</span>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </app-card>
+      <!-- bug list card end -->
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,280 @@
+<div class="row">
+  <div class="col-sm-12">
+    <!-- Default Date-Picker card start -->
+    <app-card [title]="'Default Date-Picker'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="row">
+        <div class="col-sm-12 col-xl-4 m-b-30">
+          <h4 class="sub-title">Date</h4>
+          <p>Add type<code>&lt;input type="date"&gt;</code></p>
+          <input class="form-control" type="date" />
+        </div>
+        <div class="col-sm-12 col-xl-4 m-b-30">
+          <h4 class="sub-title">Month</h4>
+          <p>Add type<code>&lt;input type="month"&gt;</code></p>
+          <input class="form-control" type="month" />
+        </div>
+        <div class="col-sm-12 col-xl-4 m-b-30">
+          <h4 class="sub-title">Week</h4>
+          <p>Add type<code>&lt;input type="week"&gt;</code></p>
+          <input class="form-control" type="week" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-xl-4 m-b-30">
+          <h4 class="sub-title">Date-time-local</h4>
+          <p>Add type<code>&lt;input type="datetime-local"&gt;</code></p>
+          <input class="form-control" type="datetime-local" />
+        </div>
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">Time</h4>
+          <p>Add type<code>&lt;input type="time"&gt;</code></p>
+          <input class="form-control" type="time" />
+        </div>
+      </div>
+    </app-card>
+    <!-- Default Date-Picker card end -->
+
+    <!-- bootstrap-date-picker start-->
+    <app-card [title]="'Bootstrap Date-Picker'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="row">
+        <div class="col-sm-12 col-xl-3 m-b-30">
+          <h4 class="sub-title">Simple Popup</h4>
+          <form class="form-inline">
+            <div class="form-group">
+              <div class="input-group">
+                <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="modelPopup" ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append bg-default" (click)="d.toggle()" >
+                  <span class="input-group-text icofont icofont-ui-calendar"></span>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <pre>Selected Date: {{ parserFormatter.format(modelPopup) }}</pre>
+
+          <h4 class="sub-title"> Select Today </h4>
+          <button class="btn btn-primary" (click)="selectToday()">Select Today</button>
+        </div>
+        <div class="col-sm-12 col-xl-3 m-b-30">
+          <h4 class="sub-title">Simple Inline</h4>
+          <ngb-datepicker #dp [(ngModel)]="model" (navigate)="date = $event.next"></ngb-datepicker>
+          <pre class="m-t-20">Selected Month/Year: {{ date.month }}/{{ date.year }}</pre>
+          <pre>Selected Date: {{ parserFormatter.format(model) }}</pre>
+        </div>
+        <div class="col-sm-12 col-xl-6 m-b-30">
+          <h4 class="sub-title">Multiple months Inline</h4>
+          <div class="scrollmenu">
+            <ngb-datepicker [displayMonths]="displayMonths" [navigation]="navigation"></ngb-datepicker>
+          </div>
+          <div class="m-t-10">
+            <select class="custom-select" [(ngModel)]="displayMonths">
+              <option [ngValue]="1">One month</option>
+              <option [ngValue]="2">Two months</option>
+              <option [ngValue]="3">Three months</option>
+            </select>
+            <select class="custom-select" [(ngModel)]="navigation">
+              <option value="none">Without navigation</option>
+              <option value="select">With select boxes</option>
+              <option value="arrows">Without select boxes</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-lg-6">
+          <h4 class="sub-title">Range Picker</h4>
+          <div class="scrollmenu">
+            <ngb-datepicker #dp ngModel (ngModelChange)="onDateChange($event)" [displayMonths]="2" [dayTemplate]="t">
+            </ngb-datepicker>
+
+            <ng-template #t let-date="date" let-focused="focused">
+              <span class="custom-range"
+                    [class.focused]="focused"
+                    [class.range]="isFrom(date) || isTo(date) || isInside(date) || isHovered(date)"
+                    [class.faded]="isHovered(date) || isInside(date)"
+                    (mouseenter)="hoveredDate = date"
+                    (mouseleave)="hoveredDate = null">
+                {{ date.day }}
+              </span>
+            </ng-template>
+          </div>
+          <pre class="m-t-20">Selected Date Range: {{ parserFormatter.format(fromDate) }} to {{ parserFormatter.format(toDate) }}</pre>
+        </div>
+        <div class="col-md-12 col-lg-3 m-b-30">
+          <h4 class="sub-title">Disabled</h4>
+          <ngb-datepicker [(ngModel)]="modelDisabled" [disabled]="disabled"></ngb-datepicker><br>
+          <button class="btn btn-{{disabled ? 'danger' : 'success'}} m-t-10" (click)="disabled = !disabled">
+            {{ disabled ? "Disabled" : "Enabled"}}
+          </button>
+        </div>
+        <div class="col-md-12 col-lg-3">
+          <h4 class="sub-title">Custom Day</h4>
+          <form class="form-inline">
+            <div class="form-group">
+              <div class="input-group">
+                <input class="form-control" placeholder="yyyy-mm-dd"
+                       name="dp" [(ngModel)]="modelCustomDay" ngbDatepicker [dayTemplate]="customDay" [markDisabled]="isDisabled" #dcd="ngbDatepicker">
+                <div class="input-group-append bg-default" (click)="dcd.toggle()" >
+                  <span class="input-group-text icofont icofont-ui-calendar"></span>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <ng-template #customDay let-date="date" let-currentMonth="currentMonth" let-selected="selected" let-disabled="disabled" let-focused="focused">
+            <span class="custom-day"
+                  [class.weekend]="isWeekend(date)"
+                  [class.focused]="focused"
+                  [class.bg-primary]="selected"
+                  [class.hidden]="date.month !== currentMonth"
+                  [class.text-muted]="disabled">
+              {{ date.day }}
+            </span>
+          </ng-template>
+        </div>
+      </div>
+    </app-card>
+    <!-- bootstrap-date-picker end-->
+
+    <!-- color-picker start-->
+    <app-card [title]="'Color Picker'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="row">
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">Basic</h4>
+          <input class="form-control" [(colorPicker)]="basicColor" [style.background]="basicColor"/>
+          <p>set colorPicker<code>#2f6a87 any color</code> and set style<code>background</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">Show Color Code </h4>
+          <input class="form-control" [(colorPicker)]="showColorCode" [style.background]="showColorCode" [value]="showColorCode"/>
+          <p>set attribute<code>value</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title"> Code Format</h4>
+          <input class="form-control" [(colorPicker)]="showColorCodeHSAL" [style.background]="showColorCodeHSAL" [value]="showColorCodeHSAL" [cpOutputFormat]="'hsla'"/><br>
+          <input class="form-control" [(colorPicker)]="showColorCodeRGBA" [style.background]="showColorCodeRGBA" [value]="showColorCodeRGBA" [cpOutputFormat]="'rgba'"/>
+          <p>set attribute cpOutputFormat with <code>hex-default, rgba, hsla</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title"> Element Color</h4>
+          <h1><span [(colorPicker)]="changeMeColor"
+                    [cpPosition]="'bottom'"
+                    [style.color]="changeMeColor"
+                    [cpPositionOffset]="'50%'"
+                    [cpPositionRelativeToArrow]="true">Change me!</span></h1>
+          <p>set attribute <code>cpPositionRelativeToArrow,cpPositionOffset</code></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">Cancel Button</h4>
+          <input class="form-control" [(colorPicker)]="basicColor"
+                 [style.background]="basicColor"
+                 [value]="basicColor" [cpCancelButton]="true"
+                 [cpCancelButtonClass]= "'btn btn-primary btn-xs'"/>
+          <p>set cpCancelButton<code>true/false</code> and class cpCancelButtonClass<code>btn btn-primary btn-xs</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">OK Button - Multiple</h4>
+          <input class="form-control" [(colorPicker)]="basicColor"
+                 [style.background]="basicColor"
+                 [value]="basicColor"
+                 [cpOKButton]="true"
+                 [cpSaveClickOutside]="false"
+                 [cpCancelButton]="true"
+                 [cpCancelButtonClass]= "'btn btn-danger btn-xs'"
+                 [cpOKButtonClass]= "'btn btn-primary btn-xs'"/>
+          <p>set cpOKButton<code>true/false</code>and class cpCancelButtonClass<code>btn btn-primary btn-xs</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">Toggle Event</h4>
+          <input class="form-control" #ignoredInput [(colorPicker)]="basicColor"
+                 [(cpToggle)]="toggle"
+                 [style.background]="basicColor"
+                 [cpIgnoredElements]="[ignoredButton, ignoredInput]"/>
+
+          <button (click)="toggle=!toggle;lastColor=color" #ignoredButton class="btn btn-primary btn-sm m-t-10">Toggle</button>
+          <p>set cpToggle<code>toggle</code> with button</p>
+        </div>
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">Preset Colors</h4>
+          <input class="form-control" [(colorPicker)]="basicColor" [cpPosition]="'left'"
+                 [style.background]="basicColor"
+                 [cpPresetColors]="['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']"/>
+          <p>set cpPresetColors<code>['#fff', '#000', '#2889e9', '#e920e9', '#fff500', 'rgb(236,64,64)']</code></p>
+        </div>
+      </div>
+    </app-card>
+
+    <app-card [title]="'Dialog Positions'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="row">
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">Position Bottom</h4>
+          <input class="form-control" [(colorPicker)]="basicColor" [style.background]="basicColor" [value]="basicColor" [cpPosition]="'bottom'"/>
+          <p>set cpPosition<code>bottom</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">Position Top</h4>
+          <input class="form-control" [(colorPicker)]="basicColor" [style.background]="basicColor" [value]="basicColor" [cpPosition]="'top'"/>
+          <p>set cpPosition<code>top</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">Position Right</h4>
+          <input class="form-control" [(colorPicker)]="basicColor" [style.background]="basicColor" [value]="basicColor" [cpPosition]="'right'"/>
+          <p>set cpPosition<code>right</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-3">
+          <h4 class="sub-title">Position Left</h4>
+          <input class="form-control" [(colorPicker)]="basicColor" [style.background]="basicColor" [value]="basicColor" [cpPosition]="'left'"/>
+          <p>set cpPosition<code>left</code></p>
+        </div>
+      </div>
+    </app-card>
+
+    <app-card [title]="'Transparent COLOR PICKER'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="row">
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">RGB Transparent</h4>
+          <input class="form-control" [(colorPicker)]="color13" [cpPosition]="'top'" [style.background]="color13" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'" [value]="color13"/>
+          <p>set cpOutputFormat<code>rgba</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">RGBA Transparent</h4>
+          <input class="form-control" [(colorPicker)]="color14" [cpPosition]="'bottom'" [style.background]="color14" [cpAlphaChannel]="'always'" [cpOutputFormat]="'rgba'" [value]="color14"/>
+          <br>
+          <p>set cpAlphaChannel<code>always</code> with cpOutputFormat<code>rgba</code></p>
+        </div>
+        <div class="col-sm-12 col-xl-4">
+          <h4 class="sub-title">HEX Transparent</h4>
+          <input class="form-control" [cpPosition]="'bottom'" [colorPicker]="color15" (colorPickerChange)="rgbaText=onChangeColorHex8($event);color15=$event" [style.background]="rgbaText" [cpAlphaChannel]="'always'" [cpOutputFormat]="'hex'" [value]="color15"/>
+          <p>set cpOutputFormat<code>hex</code> with cpAlphaChannel<code>always</code></p>
+        </div>
+      </div>
+    </app-card>
+
+    <app-card [title]="'Inline Color Picker'" [headerContent]="'Lorem ipsum dolor sit amet, consectetur adipisicing elit'" [cardOptionBlock]="true">
+      <div class="row">
+        <div class="col-sm-12 col-xl-3">
+          <div style="height: 400px">
+              <span [(colorPicker)]="arrayColors[selectedColor]"
+                    [cpDialogDisplay]="'inline'"
+                    [style.background]="arrayColors[selectedColor]"
+                    [cpCancelButtonClass]= "'btn btn-primary btn-xs'"
+                    [cpCancelButton]="true"
+                    [cpToggle]="true">
+              </span>
+          </div>
+        </div>
+        <div class="col-sm-12 col-xl-2">
+          <div class="array-colors-element" [style.background]="arrayColors['color']" (click)="selectedColor='color'"></div>
+          <div class="array-colors-element" [style.background]="arrayColors['color2']" (click)="selectedColor='color2'"></div>
+          <div class="array-colors-element" [style.background]="arrayColors['color3']" (click)="selectedColor='color3'"></div>
+          <div class="array-colors-element" [style.background]="arrayColors['color4']" (click)="selectedColor='color4'"></div>
+          <div class="array-colors-element" [style.background]="arrayColors['color5']" (click)="selectedColor='color5'"></div>
+        </div>
+      </div>
+    </app-card>
+    <!-- color-picker end-->
+
+  </div>
+</div>

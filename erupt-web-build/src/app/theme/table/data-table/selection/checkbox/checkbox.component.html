@@ -1,0 +1,48 @@
+<app-card [title]="'Ng-X Checkbox Selection'">
+  <span class="m-b-20">use class <code>dt-chk</code> with ngx-datatable element</span><br><br>
+  <ngx-datatable
+    class="data-table dt-chk"
+    [rows]="rows"
+    [columnMode]="'force'"
+    [scrollbarH]="true"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    [limit]="10"
+    [selected]="selected"
+    [selectionType]="'checkbox'"
+    (activate)="onActivate($event)"
+    (select)='onSelect($event)'>
+    <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
+      <ng-template class="datatable-checkbox" ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
+        <div class="checkbox-fade fade-in-default datatable-header-cell-label">
+          <label>
+            <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)"/>
+            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+          </label>
+        </div>
+
+      </ng-template>
+      <ng-template class="datatable-checkbox" ngx-datatable-cell-template let-value="value" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
+        <div class="checkbox-fade fade-in-default datatable-header-cell-label">
+          <label>
+            <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)"/>
+            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+          </label>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Name"></ngx-datatable-column>
+    <ngx-datatable-column name="Gender"></ngx-datatable-column>
+    <ngx-datatable-column name="Company"></ngx-datatable-column>
+  </ngx-datatable>
+  <div class="row">
+    <div class='col-sm-12 selected-column'>
+      <h4 class="sub-title p-t-15">Selected Row</h4>
+      <span *ngFor='let sel of selected'>
+          <label class="label label-primary">{{sel.name}}</label>
+        </span>
+      <span *ngIf="!selected.length">No Selections</span>
+    </div>
+  </div>
+</app-card>

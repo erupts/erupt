@@ -1,0 +1,77 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [title]="'Ng-X CHILD ROWS (SHOW EXTRA / DETAILED INFORMATION)'" [classHeader]="true">
+      <span class="code-header">use class <code>expandable</code> and <code>data-table</code> inside ngx-datatable element with <code>ngx-datatable-column</code> elements</span>
+      <ngx-datatable
+        #myTable
+        class="data-table expandable"
+        [rows]='rows'
+        [limit]="10"
+        [columnMode]="'force'"
+        [scrollbarH]="true"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="'auto'"
+        (page)="onPage($event)">
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="'auto'" #myDetailRow (toggle)="onDetailToggle($event)">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div class="dt-desc">
+              <table class="table-striped table-bordered">
+                <tr>
+                  <th colspan="2"><strong>Address</strong></th>
+                </tr>
+                <tr>
+                  <td>City</td>
+                  <td>{{row.address.city}}</td>
+                </tr>
+                <tr>
+                  <td>State</td>
+                  <td>{{row.address.state}}</td>
+                </tr>
+              </table>
+            </div>
+
+          </ng-template>
+        </ngx-datatable-row-detail>
+        <ngx-datatable-column
+          [width]="50"
+          [resizeable]="false"
+          [sortable]="false"
+          [draggable]="false"
+          [canAutoResize]="false">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a
+              href="javascript:;"
+              [class.datatable-icon-right]="!expanded"
+              [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row"
+              (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Index">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <strong>{{row['id']}}</strong>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Expanded">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <strong>{{expanded === 1}}</strong>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Name">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <strong>{{value}}</strong>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Gender">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <i [innerHTML]="row['name']"></i> and <i>{{value}}</i>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Age"></ngx-datatable-column>
+      </ngx-datatable>
+    </app-card>
+  </div>
+</div>

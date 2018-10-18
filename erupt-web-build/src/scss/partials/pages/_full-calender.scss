@@ -1,0 +1,222 @@
+/**  =====================
+      Full-calender css start
+==========================  **/
+.fc-left {
+    margin-bottom: 10px;
+}
+#external-events h4 {
+    font-size: 16px;
+    margin-top: 0;
+    padding-top: 1em;
+}
+#external-events .fc-event {
+    background: #fff;
+    color: #000;
+    cursor: move;
+    padding: 5px 18px;
+    margin-bottom: 5px;
+}
+#external-events p {
+    margin: 1.5em 0;
+    font-size: 11px;
+    color: #666;
+}
+#external-events p input {
+    margin: 0;
+    vertical-align: middle;
+}
+.fc th,
+.fc td {
+    line-height: 2.5;
+}
+.fc-state-default {
+    background-color: #fff;
+    color: #272727;
+}
+tr:first-child > td > .fc-day-grid-event {
+    color: #000;
+    padding-left: 10px;
+    background: #f3f3f3;
+}
+.fc-nonbusiness {
+    background-color: #fff;
+}
+.fc-state-active {
+    background-color: $primary-color;
+    color: #fff;
+}
+.fc-toolbar {
+    margin-bottom: 8px;
+}
+.fc-toolbar .fc-center {
+    display: block;
+}
+.fc-center h2 {
+    font-weight: 300;
+    font-size: 25px;
+    margin-top: 10px;
+}
+.fc button {
+    height: auto;
+    padding: 10px;
+}
+.fc-toolbar .fc-left {
+    float: right;
+}
+.fc-button-group {
+    margin-right: 10px;
+}
+.fc .fc-toolbar > * > * {
+    margin-left: 0;
+}
+.fc-event,
+.fc-event-dot {
+    background-color: transparent;
+}
+.fc-day-grid-event:hover {
+    color: #000 !important;
+    opacity: 0.8;
+}
+.fc-time-grid-event .fc-content {
+    color: #fff;
+}
+.fc-bgevent {
+    /* default look for background events */
+
+    background: #d8d6d6 !important;
+}
+.fc-state-default {
+    background-image: none !important;
+    border-color: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+.fc-state-down,
+.fc-state-active {
+    background-color: none !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
+.fc th {
+    background: $primary-color;
+    color: #fff;
+    border-color: $primary-color;
+}
+.fc-event-container{
+    a{
+        padding: 5px;
+    }
+}
+.fc-event {
+    line-height: 1.3;
+    border-radius: 2px;
+}
+tr:first-child > td > .fc-day-grid-event {
+    margin-left: 0;
+}
+.clndr{
+    width: 100%;
+}
+.clndr {
+    background-color: #F3F3F3;
+    box-shadow: 0 4 px 0 #272727
+}
+.clndr .clndr-controls {
+    padding: 14px;
+    background-color: #303549;
+    color: #fff;
+    text-align: center
+}
+.clndr.clndr-controls.clndr-previous-button {
+    float: left;
+    text-align: left
+}
+.clndr.clndr-controls.clndr-next-button {
+    float: right;
+    text-align: right
+}
+.clndr.clndr-controls.clndr-next-button,
+.clndr.clndr-controls.clndr-previous-button {
+    width: 30px;
+    cursor: pointer
+}
+.clndr.clndr-controls.clndr-next-button:hover,
+.clndr.clndr-controls.clndr-previous-button:hover {
+    opacity: .5
+}
+.clndr.clndr-grid {
+    float: left;
+    width: 65%;
+    background-color: #FFF
+}
+.clndr.clndr-grid.days-of-the-week {
+    width: 100%;
+    background-color: #F6BB42
+}
+.clndr.clndr-grid.days-of-the-week.header-day {
+    float: left;
+    width: 14.2857%;
+    padding: 14px;
+    text-align: center;
+    color: #fff
+}
+.clndr.clndr-grid.days {
+    width: 100%
+}
+.clndr.clndr-grid.days.day,
+.clndr.clndr-grid.days.empty {
+    float: left;
+    width: 14.2857%;
+    padding: 12px 0;
+    text-align: center;
+    color: #4f4f4f
+}
+.clndr .clndr-grid .days .day.event .day-number,
+.clndr .clndr-grid .days .empty.event .day-number {
+    border: 1px solid $danger-color;
+    border-radius: 50%;
+    padding: 6px 9px
+}
+.clndr.clndr-grid.days.day.adjacent-month.day-number,
+.clndr.clndr-grid.days.day.inactive.day-number,
+.clndr.clndr-grid.days.empty.adjacent-month.day-number {
+    opacity: .3;
+    cursor: pointer
+}
+.clndr.clndr-grid.days.day.selected {
+    background-color: $danger-color;
+    color: #fff
+}
+.clndr.clndr-grid.days.today {
+    color: #fff;
+    background-image: none
+}
+.clndr.event-listing {
+    background-color: $primary-color;
+    float: left;
+    width: 35%
+}
+.clndr.event-listing.event-listing-title {
+    padding: 15.5px;
+    font-size: .88rem;
+    background-color: $warning-color;
+    text-align: center;
+    color: #fff;
+    letter-spacing: 1px
+}
+.clndr.event-listing.event-item {
+    padding: 6px 14px;
+    color: #4f4f4f
+}
+.clndr .event-listing .event-item-location {
+    font-weight: 400
+}
+.fc-event{
+    border-color:$primary-color;
+}
+.clndr .clndr-grid .days .day.event .day-number, .clndr .clndr-grid .days .empty.event .day-number{
+     color:$primary-color;
+     border:none;
+     padding:0;
+}
+/**====== Full-calender css end ======**/

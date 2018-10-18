@@ -1,0 +1,256 @@
+
+/* data table */
+ngx-datatable.data-table {
+  border: 1px solid #eceeef;
+}
+
+.data-table {
+  datatable-header {
+    border-bottom: 2px solid #ccc;
+  }
+  datatable-footer {
+    border-top: 2px solid #ccc;
+    padding: 0 0.75rem;
+    background-color: #eceeef;
+    box-shadow: inset 0 2px 4px -2px rgba(0, 0, 0, 0.15);
+  }
+  .empty-row {
+    padding: 0.75rem;
+    text-align: center;
+  }
+  .datatable-row-wrapper:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  datatable-body-cell {
+    padding: 0.75rem;
+    + datatable-body-cell {
+      border-left: 1px solid #eceeef;
+    }
+  }
+  datatable-header-cell {
+    .datatable-header-cell-label {
+      padding: .75rem 30px .75rem .75rem;
+    }
+    + datatable-header-cell {
+      border-left: 1px solid #eceeef;
+    }
+    &.sortable {
+      &:before, &:after {
+        font-family: 'IcoFont' !important;
+        position: absolute;
+        top: 10px;
+        color: #ccc;
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+.datatable-header-cell-wrapper, .datatable-header-cell-label {
+  display: block;
+}
+.dt-cust-search.f-right{
+  label{
+    display: inline-block;
+  }
+  .form-control{
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+  }
+}
+.data-table {
+  datatable-header-cell.sortable {
+    &:after {
+      content: "\eb53";
+      right: 10px;
+    }
+    &:before {
+      content: "\eb56";
+      right: 15px;
+    }
+    &.sort-active {
+      &.sort-desc:after, &.sort-asc:before {
+        color: #666;
+      }
+    }
+  }
+  &.scroll .datatable-body, &.fullscreen .datatable-body {
+    height: 500px !important;
+  }
+  datatable-scroller {
+    width: auto !important;
+  }
+}
+
+.datatable-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 16px;
+  .page-count {
+    line-height: 50px;
+    height: 50px;
+    padding: 0 1.2rem;
+  }
+  .datatable-pager {
+    margin: 0 10px;
+    li {
+      vertical-align: middle;
+      &.disabled a {
+        color: rgba(0, 0, 0, 0.26) !important;
+        background-color: transparent !important;
+      }
+      &.active a {
+        background-color: $color-blue;
+        color: #fff;
+      }
+    }
+    a {
+      padding: 0 6px;
+      border-radius: 3px;
+      margin: 6px 3px;
+      text-align: center;
+      vertical-align: top;
+      color: rgba(0, 0, 0, 0.54);
+      text-decoration: none;
+      vertical-align: bottom;
+      &:hover {
+        color: rgba(0, 0, 0, 0.75);
+        background-color: rgba(158, 158, 158, 0.2);
+      }
+    }
+    .datatable-icon-left, .datatable-icon-skip, .datatable-icon-right, .datatable-icon-prev {
+      font-size: 20px;
+      line-height: 20px;
+      padding: 0 3px;
+    }
+  }
+}
+
+.datatable-icon-right:before {
+  content: "\eb27";
+  font-family: 'icofont';
+  font-style: normal;
+}
+
+.datatable-icon-skip:before {
+  content: "\eb3a";
+  font-family: 'icofont';
+  font-style: normal;
+}
+
+.datatable-icon-left:before {
+  content: "\eb26";
+  font-family: 'icofont';
+  font-style: normal;
+}
+
+.datatable-icon-down:before {
+  content: "\eb28";
+  font-family: 'icofont';
+  font-style: normal;
+}
+
+.datatable-icon-prev:before {
+  content: "\eb39";
+  font-family: 'icofont';
+  font-style: normal;
+}
+
+.dt-desc {
+  th, td {
+    padding: .75rem;
+  }
+  padding: 0.45rem 50px;
+  table {
+    min-width: 400px;
+  }
+}
+
+.datatable-row-detail {
+  background-color: #f9f9f9;
+  box-shadow: inset 0px 2px 9px -6px rgba(0, 0, 0, 0.68);
+}
+
+.expandable {
+  datatable-body-cell + datatable-body-cell, datatable-header-cell + datatable-header-cell {
+    width: calc(calc(100% - 50px) / 5) !important;
+  }
+  .datatable-body-row, .datatable-header-inner {
+    width: 100% !important;
+  }
+}
+
+.datatable-row-center, .datatable-scroll, .data-table.expandable datatable-scroller {
+  width: 100% !important;
+}
+
+.ngx-datatable.data-table {
+  &.single-selection .datatable-body-row.active:hover .datatable-row-group, &.multi-selection .datatable-body-row.active:hover .datatable-row-group, &.single-selection .datatable-body-row.active .datatable-row-group, &.multi-selection .datatable-body-row.active .datatable-row-group {
+    background: $color-blue !important;
+    color: #FFF !important;
+  }
+}
+.ngx-datatable.fixed-row .datatable-scroll .datatable-body-row .datatable-body-cell{
+  overflow: visible !important;
+}
+.selection-cell .datatable-body-cell.active {
+  background: $color-blue !important;
+  color: #FFF !important;
+}
+
+.selected-column label {
+  margin-bottom: 5px;
+}
+
+.dt-chk {
+  label {
+    margin-bottom: 0;
+  }
+  .datatable-body-cell {
+    line-height: 1 !important;
+    overflow: hidden;
+  }
+}
+
+.full-data-search {
+  margin-left: 0.5em;
+  display: inline-block;
+  width: auto !important;
+}
+
+.full-data-show-entry {
+  width: 75px;
+  display: inline-block;
+}
+
+.full-data-table {
+  .glyphicon {
+    font-family: IcoFont;
+    position: absolute;
+    right: 14px;
+    font-size: 20px;
+    top: 9px;
+    &.glyphicon-triangle-bottom:before {
+      content: "\eb53";
+    }
+    &.glyphicon-triangle-top:before {
+      content: "\eb56";
+    }
+  }
+  th {
+    position: relative;
+  }
+}
+
+
+.pcoded[layout-type="dark"], body.dark {
+  .data-table datatable-footer {
+    background-color: transparent;
+  }
+  .datatable-footer .datatable-pager a {
+    color: $light-color-text;
+  }
+  .datatable-row-detail {
+    background-color: transparent;
+  }
+}

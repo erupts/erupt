@@ -1,0 +1,69 @@
+<section class="login-block">
+  <!-- Container-fluid starts -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <!-- Authentication card start -->
+        <form class="md-float-material form-material" action="javascript:">
+          <div class="text-center">
+            <img src="assets/images/logo.png" alt="logo.png">
+          </div>
+          <div class="auth-box card">
+            <div class="card-block">
+              <div class="row m-b-20">
+                <div class="col-md-12">
+                  <h3 class="text-center txt-primary">Sign In</h3>
+                </div>
+              </div>
+              <div class="row m-b-20">
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-facebook m-b-20 btn-block waves-light" mdbRippleRadius><i class="fa fa-facebook"></i>facebook</button>
+                </div>
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-twitter m-b-20 btn-block waves-light" mdbRippleRadius><i class="fa fa-twitter"></i>twitter</button>
+                </div>
+              </div>
+              <p class="text-muted text-center p-b-5">Sign in with your regular account</p>
+              <div class="form-group form-primary">
+                <input type="text" name="user-name" class="form-control" required="">
+                <span class="form-bar"></span>
+                <label class="float-label">Username</label>
+              </div>
+              <div class="form-group form-primary">
+                <input type="password" name="password" class="form-control" required="">
+                <span class="form-bar"></span>
+                <label class="float-label">Password</label>
+              </div>
+              <div class="row m-t-25 text-left">
+                <div class="col-12">
+                  <div class="checkbox-fade fade-in-primary">
+                    <label>
+                      <input type="checkbox" value="">
+                      <span class="cr"><i class="cr-icon fa fa-check txt-primary"></i></span>
+                      <span class="text-inverse">Remember me</span>
+                    </label>
+                  </div>
+                  <div class="forgot-phone text-right float-right">
+                    <a [routerLink]="['/auth/forgot']" class="text-right f-w-600"> Forgot Password?</a>
+                  </div>
+                </div>
+              </div>
+              <div class="row m-t-30">
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-primary btn-md btn-block waves-light text-center m-b-20" mdbRippleRadius>LOGIN</button>
+                </div>
+              </div>
+              <p class="text-inverse text-left">Don't have an account?<a [routerLink]="['/auth/registration/simple']"> <b>Register here </b></a>for free!</p>
+            </div>
+          </div>
+        </form>
+        <!-- end of form -->
+      </div>
+      <!-- Authentication card end -->
+    </div>
+    <!-- end of col-sm-12 -->
+  </div>
+  <!-- end of container-fluid -->
+</section>
+
+

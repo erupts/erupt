@@ -1,0 +1,27 @@
+<app-card [title]="'Ng-X Multi Rows Selection'">
+  <span class="m-b-20">use attribute <code>selectionType</code> as <code>multi</code> with ngx-datatable element and select with <code>Ctrl</code> key</span><br><br>
+  <ngx-datatable
+    class="data-table"
+    [rows]="rows"
+    [columnMode]="'force'"
+    [scrollbarH]="true"
+    [columns]="columns"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    [limit]="10"
+    [selected]="selected"
+    [selectionType]="'multi'"
+    (activate)="onActivate($event)"
+    (select)='onSelect($event)'>
+  </ngx-datatable>
+  <div class="row">
+    <div class='col-sm-12 selected-column'>
+      <h4 class="sub-title p-t-15">Selected Row</h4>
+      <span *ngFor='let sel of selected'>
+          <label class="label label-primary">{{sel.name}}</label>
+        </span>
+      <span *ngIf="!selected.length">No Selections</span>
+    </div>
+  </div>
+</app-card>

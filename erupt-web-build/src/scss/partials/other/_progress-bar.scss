@@ -1,0 +1,39 @@
+/**  =====================
+      Progress-bar css start
+==========================  **/
+.progress-xl{
+	height:30px;
+}
+.progress-lg{
+	height:24px;
+}
+.progres-md{
+	height:18px;
+}
+.progress-sm{
+	height:12px;
+}
+.progress-xs{
+	height:6px;
+}
+.progress-bar-page .progress{
+	margin-bottom:2rem;
+}
+
+$orange-color:#e67e22;
+$yellow-color:#f1c40f;
+$emrald-color:#2ecc71;
+$progress-name:progress-bar-default,progress-bar-primary,progress-bar-success,progress-bar-info,progress-bar-warning,progress-bar-danger,
+progress-bar-pink,progress-bar-purple,progress-bar-orange,progress-bar-yellow,progress-bar-emrald;
+$progress-color:$default-color, $primary-color,$success-color,$info-color
+,$warning-color ,$danger-color, $pink-color, $purple-color, $orange-color,
+$yellow-color,$emrald-color;
+
+@each $var in $progress-name {
+	$i:index($progress-name, $var);
+	.#{$var}
+	{
+		background-color: nth($progress-color,$i);
+	}
+}
+/**====== Progress-bar css end ======**/

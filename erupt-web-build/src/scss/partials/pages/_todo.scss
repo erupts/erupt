@@ -1,0 +1,148 @@
+/**  =====================
+      Todo css start
+==========================  **/
+
+#task-container {
+    ul {
+        overflow: hidden;
+    }
+    .task-headline {
+        display: none;
+        color: #666666;
+        border-bottom: 1px solid #C8C7BB;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        font-size: 1.6em;
+        position: relative;
+        &:before {
+            height: 1px;
+            width: 100%;
+            background: #FFF;
+            position: absolute;
+            content: " ";
+            bottom: 0;
+            left: 0;
+        }
+    }
+    .nothing-message {
+        height: 160px;
+        color: #666;
+        background-size: 15%;
+    }
+    li {
+        float: left;
+        width: 49%;
+        overflow: auto;
+        height: auto;
+        min-height: 10px;
+        background: #FFF;
+        display: inline-block;
+        padding: 20px;
+        border: 1px solid #CCC;
+        color: #666;
+        border-top: 9px solid $primary-color;
+        cursor: pointer;
+        margin-bottom: 20px;
+        margin-right: 2%;
+        transition: all 0.3s;
+        position: relative;
+        &:nth-child(even) {
+            margin-right: 0;
+        }
+        &:hover {
+            opacity: 1;
+            border-top: 9px solid $default-color;
+        }
+        &.complete {
+            opacity: 1;
+            border-top: 9px solid $danger-color;
+            transition: all ease-in 0.3s;
+            &:before {
+                background: url("../assets/images/complete.png") no-repeat;
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                content: "";
+                width: 55px;
+                height: 55px;
+                background-size: 100%;
+            }
+            &:hover {
+                border-top: 9px solid $default-color;
+                opacity: 1;
+            }
+            p {
+                text-decoration: line-through;
+            }
+        }
+    }
+    p {
+        line-height: 1.6em;
+        text-align: left;
+    }
+}
+
+.add-line.complete {
+    text-decoration: line-through;
+}
+
+.task-panel {
+    .to-do-label {
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        &:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding: 0;
+        }
+    }
+}
+
+.to-do-list {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    i {
+        color: #ccc;
+        font-size: 17px;
+        opacity: 0;
+    }
+    &:last-child {
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+    &:hover i {
+        opacity: 1;
+        transition: opacity ease-in 0.3s;
+    }
+    p {
+        display: inline-block;
+    }
+}
+
+.to-do-label {
+    .checkbox-fade {
+        display: block;
+        .delete_todo {
+            float: right;
+            font-size: 24px;
+            color: #ccc;
+        }
+    }
+    .check-task {
+        display: block;
+    }
+    i {
+        cursor: pointer;
+    }
+}
+
+.done-task span,
+.done-task .captions {
+    color: #919aa3;
+    text-decoration: line-through;
+}
+
+
+/**====== Todo css end ======**/

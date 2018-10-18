@@ -1,0 +1,131 @@
+<div class="page-body">
+  <div class="row">
+    <div class="col-sm-12">
+      <!-- Bootstrap slider card start -->
+      <div class="card">
+        <div class="card-header">
+          <h5>Bootstrap slider - FadIn FadOut</h5>
+        </div>
+        <div class="card-block">
+          <ngb-carousel>
+            <ng-template ngbSlide>
+              <img src="assets/images/slider/slide1.jpg" alt="Random first slide">
+              <div class="carousel-caption">
+                <h3>First slide label</h3>
+              </div>
+            </ng-template>
+            <ng-template ngbSlide>
+              <img src="assets/images/slider/slide2.jpg" alt="Random second slide">
+              <div class="carousel-caption">
+                <h3>Second slide label</h3>
+              </div>
+            </ng-template>
+            <ng-template ngbSlide>
+              <img src="assets/images/slider/slide3.jpg" alt="Random third slide">
+              <div class="carousel-caption">
+                <h3>Third slide label</h3>
+              </div>
+            </ng-template>
+            <ng-template ngbSlide>
+              <img src="assets/images/slider/slide4.jpg" alt="Random third slide">
+              <div class="carousel-caption">
+                <h3>Fourth slide label</h3>
+              </div>
+            </ng-template>
+          </ngb-carousel>
+        </div>
+      </div>
+      <!-- Bootstrap slider card end -->
+    </div>
+    <div class="col-sm-12">
+      <!-- Owl corousel style 1 card start -->
+      <div class="card">
+        <div class="card-header">
+          <h5>Owl carousel Banner</h5>
+        </div>
+        <div class="card-block">
+          <ngx-carousel class="banner ngx-carousel" [inputs]="carouselBanner" (carouselLoad)="carouselBannerLoad()">
+            <ngx-item NgxCarouselItem *ngFor="let tile of carouselBannerItems; let i = index;">
+              <div class="bannerStyle" >
+                <img [attr.src]="tile" alt="" class="img-fluid">
+              </div>
+            </ngx-item>
+            <button NgxCarouselPrev class="carousel-control-prev"><i class="icofont icofont-rounded-left"></i></button>
+            <button NgxCarouselNext class="carousel-control-next"><i class="icofont icofont-rounded-right"></i></button>
+          </ngx-carousel>
+        </div>
+      </div>
+      <!-- Owl corousel style 1 card end -->
+    </div>
+    <div class="col-lg-12 col-xl-6">
+      <!-- Owl corousel style 2 card start -->
+      <div class="card">
+        <div class="card-header">
+          <h5>Owl carousel style 1</h5>
+        </div>
+        <div class="card-block">
+          <ngx-carousel class="ngx-carousel" [inputs]="carouselTile" (carouselLoad)="carouselTileLoad()">
+            <ngx-tile NgxCarouselItem *ngFor="let tile of carouselTileItems; let i = index;">
+              <div class="tile">
+                <img [attr.src]="tile" alt="" class="img-fluid">
+                <h4>Tile</h4>
+                <p>content</p>
+              </div>
+            </ngx-tile>
+            <button NgxCarouselPrev class="carousel-control-prev"><i class="icofont icofont-rounded-left"></i></button>
+            <button NgxCarouselNext class="carousel-control-next"><i class="icofont icofont-rounded-right"></i></button>
+          </ngx-carousel>
+        </div>
+      </div>
+      <!-- Owl corousel style 2 card end -->
+    </div>
+    <div class="col-sm-12 col-lg-6">
+      <!-- Swiper slider card start -->
+      <div class="card">
+        <div class="card-header">
+          <h5>Owl carousel style 2 (fixed-width)</h5>
+        </div>
+        <div class="card-block">
+          <ngx-carousel class="ngx-carousel" [inputs]="carouselTileTwo" (carouselLoad)="carouselTileTwoLoad()">
+            <ngx-tile NgxCarouselItem *ngFor="let tile of carouselTileTwoItems; let i = index;">
+              <div class="wBg">
+                <div class="tile">
+                  <img [attr.src]="tile" alt="" class="img-fluid">
+                  <h4>Tile</h4>
+                  <p>content</p>
+                </div>
+              </div>
+            </ngx-tile>
+            <button NgxCarouselPrev class="carousel-control-prev"><i class="icofont icofont-rounded-left"></i></button>
+            <button NgxCarouselNext class="carousel-control-next"><i class="icofont icofont-rounded-right"></i></button>
+          </ngx-carousel>
+        </div>
+      </div>
+      <!-- Swiper slider card end -->
+    </div>
+    <div class="col-sm-12">
+      <!-- Swiper slider card start -->
+      <div class="card">
+        <div class="card-header">
+          <h5>Swiper slider</h5>
+        </div>
+        <div class="card-block">
+          <ngx-carousel class="ngx-carousel" [inputs]="carouselTileOne" (carouselLoad)="carouselTileOneLoad()">
+            <ngx-tile NgxCarouselItem *ngFor="let tile of carouselTileOneItems; let i = index;">
+              <div class="wBg">
+                <div class="tile" [style.background]="'url(' + tile + ')'">
+                  <h1>{{i}}</h1>
+                </div>
+                <h4>Tile</h4>
+                <p>content</p>
+              </div>
+            </ngx-tile>
+            <button NgxCarouselPrev class="d-none">&lt;</button>
+            <button NgxCarouselNext class="d-none">&gt;</button>
+          </ngx-carousel>
+        </div>
+      </div>
+      <!-- Swiper slider card end -->
+    </div>
+  </div>
+</div>
