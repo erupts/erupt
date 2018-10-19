@@ -112,7 +112,8 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "颜色",
-                    type = EditType.COLOR
+                    type = EditType.INPUT,
+                    inputType = @InputType(color = UiColor.danger,placeholder = "holder",defaultVal="2333")
             )
     )
     private String color;

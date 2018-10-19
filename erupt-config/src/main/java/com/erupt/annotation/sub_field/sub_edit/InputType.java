@@ -11,7 +11,7 @@ public @interface InputType {
 
     UiColor color() default UiColor.DEFAULT;
 
-    int length() default DataLength.UNLIMITED;
+    int length() default DataLength.NAME_LENGTH;
 
     String placeholder() default "";
 
