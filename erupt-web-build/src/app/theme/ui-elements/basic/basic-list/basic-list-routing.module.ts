@@ -9,7 +9,7 @@ const routes: Routes = [
     data: {
       title: 'List',
       icon: 'icon-layout-grid2-alt',
-      caption: 'lorem ipsum dolor sit amet, consectetur adipisicing elit - list',
+      caption: 'lorem ipsum dolor sit amet, consectetur adipisicing elit - build',
       status: true
     }
   }

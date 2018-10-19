@@ -44,10 +44,10 @@ export class TableBasicDataComponent implements OnInit {
     });
 
     this.fetchFilterData((data) => {
-      // cache our list
+      // cache our build
       this.tempFilter = [...data];
 
-      // push our inital complete list
+      // push our inital complete build
       this.rowsFilter = data;
     });
   }

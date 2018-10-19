@@ -1,0 +1,135 @@
+<div class="page-body m-t-40" *ngIf="eruptModel==null">
+  <h1 class="text-center">404</h1>
+</div>
+<div class="page-body" *ngIf="eruptModel!=null">
+  <div class="row">
+    <div class="col-lg-3 col-md-6" *ngFor="let card of eruptModel.eruptJson.cards">
+      <div class="card">
+        <div class="card-block">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h4 class="text-c-{{card.color}}">{{card.value}}</h4>
+              <h6 class="text-muted m-b-0">{{card.desc}}</h6>
+            </div>
+            <div class="col-4 text-right">
+              <i class="{{card.icon}} f-28"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-c-{{card.color}}">
+          <div class="row align-items-center">
+            <div class="col-9">
+              <p class="text-white m-b-0">% change</p>
+            </div>
+            <!--<div class="col-3 text-right">-->
+            <!--<i class="feather icon-trending-up text-white f-16"></i>-->
+            <!--</div>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 filter-bar">
+      <nav class="navbar navbar-light bg-faded m-b-30 p-10">
+        <ul class="nav navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="javascript:;">Filter: <span class="sr-only">(current)</span></a>
+          </li>
+          <li ngbDropdown="" class="nav-item dropdown">
+            <a ngbDropdownToggle="" class="nav-link dropdown-toggle" mdbRippleRadius href="javascript:;" id="bydate"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+              class="icofont icofont-clock-time"></i> By Date</a>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="bydate">
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Show all</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Today</a>
+              <a class="dropdown-item" mdbRippleRadius href="javascript:;">Yesterday</a>
+            </div>
+          </li>
+        </ul>
+        <div class="nav-item nav-grid">
+          <span class="m-r-15">View Mode: </span>
+          <button type="button" class="btn btn-sm btn-primary waves-light m-r-10" mdbRippleRadius data-toggle="tooltip"
+                  data-placement="top" title="list view">
+            <i class="fa fa-list"></i>
+          </button>
+        </div>
+        <!-- end of by priority dropdown -->
+      </nav>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-12">
+      <app-modal-basic #modalLarge [dialogClass]="'modal-lg'">
+        <div class="app-modal-header">
+          <h4 class="modal-title">Modal title</h4>
+          <button type="button" class="close basic-close" (click)="modalLarge.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="app-modal-body">
+          <h5>Large Modal</h5>
+          <p>This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel
+            velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec
+            sagittis sem nibh id elit.</p>
+        </div>
+        <div class="app-modal-footer">
+          <button type="button" class="btn btn-default" mdbRippleRadius (click)="modalLarge.hide()">Close</button>
+          <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Save changes</button>
+        </div>
+      </app-modal-basic>
+      <app-card [title]="eruptModel.eruptJson.name" [classHeader]="'true'" [headerClass]="'borderless'">
+        <div class="row">
+          <ng-container *ngFor="let field of eruptModel.eruptFieldModels">
+            <div class="col-12">
+              <erupt-edit-type [edit]="field.eruptFieldJson.edit">
+
+              </erupt-edit-type>
+            </div>
+          </ng-container>
+        </div>
+
+
+
+        <div class="md-tabs">
+          <ngb-tabset>
+            <ng-container *ngFor="let field of eruptModel.eruptFieldModels">
+              <ngb-tab *ngIf="field.eruptFieldJson.edit.type=='TAB'">
+                <ng-template ngbTabTitle><i class="fa fa-table"></i>&nbsp;&nbsp;{{field.eruptFieldJson.edit.title}}
+                </ng-template>
+                <ng-template ngbTabContent>
+                  <div [@fadeInOutTranslate] class="m-t-15">
+                    <p class="m-4">1. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum.
+                      Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi
+                      elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer
+                      adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et
+                      magnis
+                      dis.....
+                      1. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum.
+                      Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi
+                      elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer
+                      adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et
+                      magnis
+                      dis.....
+                      1. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum.
+                      Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi
+                      elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer
+                      adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et
+                      magnis
+                      dis.....
+                    </p>
+                    <h1>{{field.fieldName}}</h1>
+                  </div>
+                </ng-template>
+              </ngb-tab>
+            </ng-container>
+          </ngb-tabset>
+        </div>
+      </app-card>
+    </div>
+  </div>
+</div>

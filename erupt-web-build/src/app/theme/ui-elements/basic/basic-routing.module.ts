@@ -44,7 +44,7 @@ const routes: Routes = [
       },
       {
         path: 'list',
-        loadChildren: './basic-list/basic-list.module#BasicListModule'
+        loadChildren: './basic-build/basic-build.module#BasicListModule'
       },
       {
         path: 'tooltip',

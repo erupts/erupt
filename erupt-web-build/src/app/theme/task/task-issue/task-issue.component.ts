@@ -46,7 +46,7 @@ export class TaskIssueComponent implements OnInit {
 
   fetchTaskData(cb) {
     const req = new XMLHttpRequest();
-    req.open('GET', 'assets/data/issue-list.json');
+    req.open('GET', 'assets/data/issue-build.json');
 
     req.onload = () => {
       cb(JSON.parse(req.response));

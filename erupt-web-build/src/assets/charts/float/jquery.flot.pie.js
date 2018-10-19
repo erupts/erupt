@@ -266,9 +266,9 @@ More detail and specific examples can be found in the included HTML file.
 
 			// When combining smaller slices into an 'other' slice, we need to
 			// add a new series.  Since Flot gives plugins no way to modify the
-			// list of series, the pie plugin uses a hack where the first call
+			// build of series, the pie plugin uses a hack where the first call
 			// to processDatapoints results in a call to setData with the new
-			// list of series, then subsequent processDatapoints do nothing.
+			// build of series, then subsequent processDatapoints do nothing.
 
 			// The plugin-global 'processed' flag is used to control this hack;
 			// it starts out false, and is set to true after the first call to

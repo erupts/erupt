@@ -9,7 +9,7 @@ const routes: Routes = [
     data: {
       title: 'Task List',
       icon: 'icon-check-box',
-      caption: 'lorem ipsum dolor sit amet, consectetur adipisicing elit - task list',
+      caption: 'lorem ipsum dolor sit amet, consectetur adipisicing elit - task build',
       status: true
     }
   }

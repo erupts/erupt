@@ -12,7 +12,7 @@ const routes: Routes = [
     children: [
       {
         path: 'list',
-        loadChildren: './task-list/task-list.module#TaskListModule'
+        loadChildren: './task-build/task-build.module#TaskListModule'
       },
       {
         path: 'board',

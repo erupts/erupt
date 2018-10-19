@@ -25,7 +25,7 @@ export class TaskListComponent implements OnInit {
 
   fetchTaskData(cb) {
     const req = new XMLHttpRequest();
-    req.open('GET', 'assets/data/task-list.json');
+    req.open('GET', 'assets/data/task-build.json');
 
     req.onload = () => {
       cb(JSON.parse(req.response));

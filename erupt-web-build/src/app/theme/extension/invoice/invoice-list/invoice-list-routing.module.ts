@@ -9,7 +9,7 @@ const routes: Routes = [
     data: {
       title: 'Issue List',
       icon: 'icon-layout-media-right',
-      caption: 'lorem ipsum dolor sit amet, consectetur adipisicing elit - invoice list',
+      caption: 'lorem ipsum dolor sit amet, consectetur adipisicing elit - invoice build',
       status: true
     }
   }

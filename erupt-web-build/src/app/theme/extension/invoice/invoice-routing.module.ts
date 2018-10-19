@@ -19,7 +19,7 @@ const routes: Routes = [
       },
       {
         path: 'list',
-        loadChildren: './invoice-list/invoice-list.module#InvoiceListModule'
+        loadChildren: './invoice-build/invoice-build.module#InvoiceListModule'
       }
     ]
   }

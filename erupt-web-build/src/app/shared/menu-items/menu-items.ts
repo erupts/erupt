@@ -581,7 +581,7 @@ const MENUITEMS = [
         short_label: 'M',
         name: 'Menu Levels',
         type: 'sub',
-        icon: 'feather icon-list',
+        icon: 'feather icon-build',
         children: [
           {
             state: '',
