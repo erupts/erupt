@@ -1,0 +1,500 @@
+/* =======================
+   Start Color-page Css
+=========================== */
+
+.amber-colors ul li p,
+.bg-danger li p,
+.bg-default li p,
+.bg-info li p,
+.bg-primary li p,
+.bg-success li p,
+.bg-warning li p,
+.blue-colors ul li p,
+.blue-grey-colors ul li p,
+.brown-colors ul li p,
+.cyan-colors ul li p,
+.deep-orange-colors ul li p,
+.deep-purple-colors ul li p,
+.green-colors ul li p,
+.grey-colors ul li p,
+.indigo-colors ul li p,
+.light-blue-colors ul li p,
+.light-green-colors ul li p,
+.lime-colors ul li p,
+.orange-colors ul li p,
+.pink-colors ul li p,
+.purple-colors ul li p,
+.red-colors ul li p,
+.teal-colors ul li p,
+.yellow-colors ul li p,
+.primary-colorr ul li p,
+.success-colorr ul li p,
+.info-colorr ul li p,
+.warning-colorr ul li p,
+.danger-colorr ul li p {
+    font-size: 18px;
+    padding: 10px 0;
+    text-align: center;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 0;
+}
+
+
+/**====== Accent-red-color css start ======**/
+
+$m-val:14;
+$or:#d50505;
+@while $m-val >=1 {
+    .red-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Accent-red-color css end ======**/
+
+
+/**====== Accent-pink-color css start ======**/
+
+$m-val:14;
+$or:#c61565;
+@while $m-val >=1 {
+    .pink-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Accent-pink-color css end ======**/
+
+
+/**====== Accent-purple-color css start ======**/
+
+$m-val:14;
+$or:#ab05ff;
+@while $m-val >=1 {
+    .purple-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Accent-purple-color css end ======**/
+
+
+/**====== Deep-purple-color css start ======**/
+
+$m-val:14;
+$or:#6505ea;
+@while $m-val >=1 {
+    .deep-purple-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Deep-purple-color css end ======**/
+
+
+/**====== Indigo-color css start ======**/
+
+$m-val:14;
+$or:#3452fe;
+@while $m-val >=1 {
+    .indigo-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 2.5%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Indigo-color css end ======**/
+
+
+/**====== Blue-accent-color css start ======**/
+
+$m-val:14;
+$or:#2d65ff;
+@while $m-val >=1 {
+    .blue-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 2.5%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Blue-accent-color css end ======**/
+
+
+/**====== Light-blue-color css start ======**/
+
+$m-val:14;
+$or:#0593ea;
+@while $m-val >=1 {
+    .light-blue-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Light-blue-color css end ======**/
+
+
+/**====== Cyan-color css start ======**/
+
+$m-val:14;
+$or:#05b9d4;
+@while $m-val >=1 {
+    .cyan-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Cyan-color css start ======**/
+
+
+/**====== Teal-color css start ======**/
+
+$m-val:14;
+$or:#05c0a6;
+@while $m-val >=1 {
+    .teal-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Teal-color css end ======**/
+
+
+/**====== Green-color css start ======**/
+
+$m-val:14;
+$or:#05c956;
+@while $m-val >=1 {
+    .green-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Green-color css end ======**/
+
+
+/**====== Light-Green-color css start ======**/
+
+$m-val:14;
+$or:#67dd1b;
+@while $m-val >=1 {
+    .light-green-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Light-Green-color css end ======**/
+
+
+/**====== Lime-color css start ======**/
+
+$m-val:14;
+$or:#afea05;
+@while $m-val >=1 {
+    .lime-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Lime-color css end ======**/
+
+
+/**====== Yellow-color css start ======**/
+
+$m-val:14;
+$or:#ffd605;
+@while $m-val >=1 {
+    .yellow-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 2.5%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Yellow-color css end ======**/
+
+
+/**====== Amber-color css start ======**/
+
+$m-val:14;
+$or:#ffac05;
+@while $m-val >=1 {
+    .amber-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 2.5%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Amber-color css end ======**/
+
+
+/**====== Orange-color css start ======**/
+
+$m-val:14;
+$or:#ff6f05;
+@while $m-val >=1 {
+    .orange-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Orange-color css start ======**/
+
+
+/**====== Deep-Orange-color css start ======**/
+
+$m-val:14;
+$or:#dd3005;
+@while $m-val >=1 {
+    .deep-orange-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 3%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Deep-Orange-color css end ======**/
+
+
+/**====== Brown-color css start ======**/
+
+$m-val:14;
+$or:#412b27;
+@while $m-val >=1 {
+    .brown-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 5%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Brown-color css end ======**/
+
+
+/**====== Grey-color css start ======**/
+
+$m-val:14;
+$or:#252525;
+@while $m-val >=1 {
+    .grey-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 5%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Grey-color css end ======**/
+
+
+/**====== Blue-color css start ======**/
+
+$m-val:14;
+$or:#2a363b;
+@while $m-val >=1 {
+    .blue-grey-colors ul li:nth-child(#{$m-val}) {
+        $or: lighten($or, 5%);
+        background-color: $or;
+        p:before {
+            content: "#{$or}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Blue-color css end ======**/
+
+
+/**====== Primary-color css start ======**/
+
+$m-val:14;
+$primary-colorr:#1abc9c;
+@while $m-val >=1 {
+    .primary-colorr ul li:nth-child(#{$m-val}) {
+        $primary-colorr: lighten($primary-colorr, 3%);
+        background-color: $primary-colorr;
+        p:before {
+            content: "#{$primary-colorr}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Primary-color css end ======**/
+
+
+/**====== Success-color css start ======**/
+
+$m-val:14;
+$success-colorr:#2ecc71;
+@while $m-val >=1 {
+    .success-colorr ul li:nth-child(#{$m-val}) {
+        $success-colorr: lighten($success-colorr, 2%);
+        background-color: $success-colorr;
+        p:before {
+            content: "#{$success-colorr}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Success-color css end ======**/
+
+
+/**====== Info-color css start ======**/
+
+$m-val:14;
+$info-colorr:#3498DB;
+@while $m-val >=1 {
+    .info-colorr ul li:nth-child(#{$m-val}) {
+        $info-colorr: lighten($info-colorr, 2%);
+        background-color: $info-colorr;
+        p:before {
+            content: "#{$info-colorr}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Info-color css end ======**/
+
+
+/**====== Warning-color css start ======**/
+
+$m-val:14;
+$warning-colorr:#f1c40f;
+@while $m-val >=1 {
+    .warning-colorr ul li:nth-child(#{$m-val}) {
+        $warning-colorr: lighten($warning-colorr, 2%);
+        background-color: $warning-colorr;
+        p:before {
+            content: "#{$warning-colorr}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Warning-color css end ======**/
+
+
+/**====== Danger-color css start ======**/
+
+$m-val:14;
+$danger-colorr: #e74c3c;
+@while $m-val >=1 {
+    .danger-colorr ul li:nth-child(#{$m-val}) {
+        $danger-colorr: lighten($danger-colorr, 2%);
+        background-color: $danger-colorr;
+        p:before {
+            content: "#{$danger-colorr}";
+        }
+        $m-val: $m-val - 1;
+    }
+}
+
+
+/**====== Danger-color css end ======**/
+
+
+/**====== Color-color css end ======**/

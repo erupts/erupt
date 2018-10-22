@@ -1,0 +1,291 @@
+/**  =====================
+      Ready-to-use css start
+==========================  **/
+
+.bg-pic {
+    background-color: rgba(0, 0, 0, 0.50);
+    background-blend-mode: overlay
+}
+
+// j-pro css starts
+.j-pro {
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, .15);
+    .j-header {
+        background-color: $primary-color;
+        border-top: 1px solid $primary-color;
+        box-shadow: none
+    }
+    .j-icon-right {
+        border-left: 1px solid rgba(0, 0, 0, 0.32)
+    }
+    .j-icon-left {
+        border-right: 1px solid rgba(0, 0, 0, 0.32)
+    }
+    .j-footer {
+        background-color: $white-txt;
+        border-top: 1px dashed $primary-color;
+        padding: 20px 25px;
+        position: inherit;
+        button {
+            margin-bottom: 0;
+            float: right
+        }
+    }
+    .j-divider-text span {
+        color: #222
+    }
+    .btn-primary.disabled,
+    .btn-primary:disabled {
+        background-color: $success-color;
+        border-color: $success-color;
+    }
+}
+
+.j-pro input[type="text"],
+.j-pro input[type="password"],
+.j-pro input[type="email"],
+.j-pro input[type="search"],
+.j-pro input[type="url"],
+.j-pro textarea,
+.j-pro select,
+.j-forms input[type="text"],
+.j-forms input[type="password"],
+.j-forms input[type="email"],
+.j-forms input[type="search"],
+.j-forms input[type="url"],
+.j-forms textarea,
+.j-forms select {
+    border: 1px solid rgba(0, 0, 0, .15)
+}
+
+.j-pro input[type="text"]:hover,
+.j-pro input[type="password"]:hover,
+.j-pro input[type="email"]:hover,
+.j-pro input[type="search"]:hover,
+.j-pro input[type="url"]:hover,
+.j-pro textarea:hover,
+.j-pro select:hover,
+.j-pro input[type="text"]:focus,
+.j-pro input[type="password"]:focus,
+.j-pro input[type="email"]:focus,
+.j-pro input[type="search"]:focus,
+.j-pro input[type="url"]:focus,
+.j-pro textarea:focus,
+.j-pro select:focus,
+.j-pro .j-file-button:hover + input,
+.j-forms input[type="text"]:hover,
+.j-forms input[type="password"]:hover,
+.j-forms input[type="email"]:hover,
+.j-forms input[type="search"]:hover,
+.j-forms input[type="url"]:hover,
+.j-forms textarea:hover,
+.j-forms select:hover,
+.j-forms input[type="text"]:focus,
+.j-forms input[type="password"]:focus,
+.j-forms input[type="email"]:focus,
+.j-forms input[type="search"]:focus,
+.j-forms input[type="url"]:focus,
+.j-forms textarea:focus,
+.j-forms select:focus {
+    border: 1px solid $primary-color
+}
+
+.j-pro .j-radio-toggle,
+.j-pro .j-checkbox-toggle,
+.j-pro .j-inline-group .j-radio-toggle,
+.j-pro .j-inline-group .j-checkbox-toggle {
+    padding: 9px 0 18px 0
+}
+
+.j-pro .j-tooltip,
+.j-pro .j-tooltip-image {
+    background-color: $primary-color;
+    &:before {
+        border-color: $primary-color transparent
+    }
+}
+
+.j-pro .j-primary-btn,
+.j-pro .j-file-button,
+.j-pro .j-secondary-btn,
+.j-pro .j-widget .j-addon-btn {
+    background-color: $primary-color;
+    &:hover {
+        background-color: lighten($primary-color, 5%)
+    }
+}
+
+.j-pro .j-ratings input + label:hover,
+.j-pro .j-ratings input + label:hover ~ label,
+.j-pro .j-ratings input:checked + label,
+.j-pro .j-ratings input:checked + label ~ label {
+    color: $primary-color
+}
+
+.j-unit .checkbox-fade {
+    display: block;
+    margin-top: 20px
+}
+
+// j-pro css end
+// j-forms css start
+.j-forms {
+    button i {
+        margin-right: 0
+    }
+    .checkbox-fade {
+        margin-top: 10px;
+        .disabled-view {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+    .link {
+        color: $primary-color;
+        border-bottom: none;
+        text-transform: capitalize;
+        margin-bottom: 15px
+    }
+    .label {
+        margin-bottom: 15px
+    }
+    .btn-primary:disabled {
+        background-color: $default-color;
+        border-color: $default-color;
+    }
+    .radio-toggle,
+    .checkbox-toggle,
+    .inline-group .radio-toggle,
+    .inline-group .checkbox-toggle {
+        padding: 9px 0 8px 0px;
+    }
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, .15);
+    .header {
+        background-color: $primary-color;
+        border-top: 1px solid $primary-color;
+        box-shadow: none
+    }
+    .divider-text span {
+        color: #222
+    }
+    .widget .addon,
+    .widget .addon-btn {
+        background-color: $primary-color;
+        color: $white-txt;
+        &:hover,
+        &:focus {
+            background-color: lighten($primary-color, 5%);
+            i {
+                color: $white-txt
+            }
+        }
+        i {
+            color: $white-txt
+        }
+    }
+    .footer {
+        background-color: #fff;
+        border-top: 1px dashed #1abc9c;
+        padding: 20px 25px;
+        position: inherit;
+        button {
+            float: right;
+            margin-bottom: 0
+        }
+    }
+    .stepper {
+        .stepper-arrow {
+            background-color: $primary-color;
+            &:hover {
+                background-color: lighten($primary-color, 5%)
+            }
+            &.up {
+                &:after {
+                    border-bottom: 7px solid $white-txt
+                }
+            }
+            &.down {
+                &:after {
+                    border-top: 7px solid $white-txt
+                }
+            }
+        }
+    }
+}
+
+.popup-menu {
+    padding: 0;
+    .popup-list {
+        background:$primary-color;
+        border-radius: 0;
+        > ul > li {
+            transition: all ease-in .3s;
+            color: #fff;
+            border-left: none;
+            cursor: pointer;
+            &:hover {
+                background-color: #384c5f;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.j-tabs-container .j-tabs-label,
+.j-tabs-container input[type="radio"]:checked + .j-tabs-label {
+    border-top: 4px solid $primary-color;
+}
+
+.pop-up-logo img {
+    margin-top: 10px;
+    margin-left: 80px;
+}
+
+.popup-list-open .popup-list-wrapper {
+    z-index: 99;
+}
+
+.span4 label {
+    color: #222 !important;
+}
+
+.pop-up-wrapper {
+	margin-left:0 !important;
+}
+@media only screen and (max-width:480px) {
+    .j-forms,.j-pro{
+        border: none;
+        background-color: #fff;
+        .footer,.j-footer{
+            border-top:none;
+            button{
+                margin: 5px;
+            }
+        }
+        .j-content{
+            padding: 0;
+        }
+        .j-divider-text{
+            border-top: none;
+            span{
+                white-space: unset;
+                background: transparent;
+                border: none;
+            }
+        }
+        .icon-right ~ input, .j-forms .icon-right ~ textarea{
+            padding-right: 0;
+        }
+    }
+    .j-wrapper{
+        padding: 0;
+        border:none;
+        background-color: transparent;
+    }
+
+}
+// j-forms css end
+
+/**====== Ready-to-use css end ======**/

@@ -1,0 +1,193 @@
+/**  =====================
+      Chatting css start
+==========================  **/
+.user-box {
+    height: 100%;
+
+    .media-object {
+        height: 45px;
+        width: 45px;
+        display: inline-block;
+    }
+}
+
+.p-chat-user {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100%;
+    z-index: 1030;
+    background-color: #fff;
+    box-shadow: -2px 0 11px -2px rgba(0, 0, 0, 0.3);
+
+    .chat-search-box {
+        padding: 20px;
+    }
+
+    .userlist-box {
+        cursor: pointer;
+        border-bottom: 1px solid #efefef;
+
+        .media-left {
+            padding-right: 10px;
+        }
+    }
+}
+
+.showChat_inner {
+    position: fixed;
+    top: 0;
+    background-color: #fff;
+    right: 0;
+    display: none;
+    width: 280px;
+    height: 100%;
+    z-index: 1032;
+
+    .chat-reply-box {
+        background-color: #fff;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 20px 20px 0;
+        border-top: 1px solid #ccc;
+    }
+
+    .chat-inner-header {
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+        padding: 20px;
+    }
+
+    .chat-messages {
+        padding-bottom: 20px;
+        padding-left: 15px;
+        padding-right: 15px;
+
+        .chat-menu-content,
+        .chat-menu-reply {
+            > div {
+                position: relative;
+                overflow: visible;
+                display: inline-block;
+                .chat-cont {
+                    padding: 10px;
+                    margin-bottom: 0;
+                }
+            }
+            .chat-time {
+                margin: 9px 8px 0 10px;
+            }
+        }
+
+        .chat-menu-reply {
+            text-align: right;
+            padding-right: 10px;
+            > div {
+                border-radius: 10px 10px 0;
+                background: $theme-bg-color;
+                &:before {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    right: -10px;
+                    width: 0;
+                    height: 0;
+                    border: 5px solid transparent;
+                    border-left-color: $theme-bg-color;
+                    border-bottom-color: $theme-bg-color;
+                }
+            }
+        }
+
+        .chat-menu-content {
+            > div {
+                background: lighten($primary-color,30%);
+                border-radius: 0 10px 10px;
+
+                &:before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -14px;
+                    width: 0;
+                    height: 0;
+                    border: 8px solid transparent;
+                    border-right-color: lighten($primary-color,30%);
+                    border-top-color: lighten($primary-color,30%);
+                }
+            }
+        }
+    }
+}
+
+.back_chatBox,
+.back_friendlist {
+    margin: 0 auto;
+    font-weight: 600;
+
+    i {
+        position: absolute;
+        line-height: 18px;
+        font-size: 20px;
+        left: -40px;
+        top: 80px;
+        cursor: pointer;
+        text-align: center;
+        background-color: #fff;
+        box-shadow: -2px 0 9px -2px rgba(0, 0, 0, 0.3);
+        padding: 12px 0 12px 7px;
+        border-radius: 50% 0 0 50%;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+.users-main {
+    height: 100%;
+    width: 280px;
+    position: fixed;
+    border-radius: 0;
+
+    .media {
+        display: flex;
+        align-items: center;
+        padding-top: 0;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        position: relative;
+
+        .chat-header {
+            font-size: 14px;
+            font-weight: 600;
+        }
+    }
+
+    .media-body div + div {
+        font-size: 12px;
+    }
+}
+
+.photo-table img {
+    display: inline-block;
+    width: 40px;
+    margin-bottom: 5px;
+}
+
+.live-status {
+    height: 10px;
+    width: 10px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border-radius: 100%;
+    border: 1px solid;
+}
+.showChat {
+    display: none;
+}
+/**====== Chatting css end ======**/

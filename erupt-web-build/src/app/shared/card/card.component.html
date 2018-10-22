@@ -1,0 +1,27 @@
+<div class="card {{ fullCard }} {{ cardLoad }}" [@cardClose]="cardClose" [ngClass]="cardClass">
+  <div class="card-header" *ngIf="title" mdbRippleRadius [ngClass]="headerClass">
+    <h5>{{ title }}</h5>
+    <span *ngIf="!classHeader">{{ headerContent }}</span>
+    <span *ngIf="classHeader">
+      <ng-content select=".code-header"></ng-content>
+    </span>
+    <div class="card-header-right" *ngIf="!cardOptionBlock">
+      <ul class="list-unstyled card-option" [@cardIconToggle]="cardIconToggle">
+        <li *ngIf="!isCardToggled" (click)="toggleCardOption()"><i class="feather open-card-option icon-chevron-left"></i></li>
+        <li><i class="feather {{ fullCardIcon }} full-card" (click)="fullScreen($event)"></i></li>
+        <li><i class="feather minimize-card icon-minus" appCardToggleEvent (click)="toggleCard($event)"></i></li>
+        <li><i class="feather icon-refresh-cw reload-card" (click)="cardRefresh($event)" ></i></li>
+        <li><i class="feather icon-trash close-card" (click)="closeCard($event)"></i></li>
+        <li *ngIf="isCardToggled" (click)="toggleCardOption()"><i class="feather open-card-option icon-x"></i></li>
+      </ul>
+    </div>
+  </div>
+
+  <div [@cardToggle]="cardToggle" class="card-block-hid">
+    <div class="card-block" [ngClass]="blockClass">
+      <ng-content></ng-content>
+    </div>
+  </div>
+
+  <div class="card-loader" *ngIf="loadCard"><i class="fa fa-spinner rotate-refresh"></i></div>
+</div>

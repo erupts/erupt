@@ -1,0 +1,191 @@
+.tag-chips {
+  .ng2-tag-input {
+    border-bottom: 1px solid $color-blue !important;
+    border: 1px solid $color-blue;
+    line-height: 30px;
+    border-radius: 2px;
+    padding: 6px !important;
+    tag {
+      color: #fff !important;
+      background: linear-gradient(45deg, #00bcd4, #08e3ff) !important;
+      border-radius: 2px !important;
+      &.tag--editing {
+        color: #333 !important;
+        background: #fff !important;
+      }
+    }
+    &.bootstrap {
+      @extend tag;
+    }
+    &.minimal {
+      tag {
+        border-radius: 15px !important;
+      }
+    }
+    &.dark tag {
+      background: linear-gradient(45deg, #150909, #bbb8b8) !important;
+    }
+    &.danger tag {
+      background: linear-gradient(45deg, #FF5370, #ff869a) !important;
+    }
+    &.success tag {
+      background: linear-gradient(45deg, #2ed8b6, #59e0c5) !important;
+    }
+    &.warning tag {
+      background: linear-gradient(45deg, #FFB64D, #ffcb80) !important;
+    }
+    &.minimal-dark tag {
+      border-radius: 15px !important;
+      background: linear-gradient(45deg, #150909, #bbb8b8) !important;
+    }
+    &.minimal-danger tag {
+      border-radius: 15px !important;
+      background: linear-gradient(45deg, #FF5370, #ff869a) !important;
+    }
+    &.minimal-success tag {
+      border-radius: 15px !important;
+      background: linear-gradient(45deg, #2ed8b6, #59e0c5) !important;
+    }
+    &.minimal-warning tag {
+      border-radius: 15px !important;
+      background: linear-gradient(45deg, #FFB64D, #ffcb80) !important;
+    }
+  }
+  .tag__text {
+    line-height: 2;
+    font-size: 11px;
+    font-weight: 400;
+  }
+  delete-icon svg {
+    height: 12px !important;
+    line-height: 1;
+    vertical-align: top !important;
+    margin-top: 5px;
+    path {
+      fill: #fff !important;
+    }
+  }
+  .ng2-tags-container tag {
+    padding: 3px 6px !important;
+    height: 27px !important;
+  }
+  delete-icon:hover {
+    transform: none !important;
+  }
+  .ng2-tag-input__text-input {
+    height: auto !important;
+  }
+}
+
+ng-select.ng-select > div {
+  border: none;
+  > div.single {
+    background-color: $color-blue;
+    color: #fff;
+    padding: 8px 30px 8px 20px;
+    border-radius: 4px;
+    height: auto;
+  }
+  &.disabled > div.single {
+    background-color: #aaa;
+    color: #fff;
+  }
+  > div.single > div {
+    &.clear:hover, &.toggle:hover {
+      background-color: transparent;
+    }
+    &.clear {
+      color: #fff;
+    }
+    &.toggle {
+      color: #fff;
+      font-size: 9px;
+    }
+    &.clear, &.toggle {
+      width: 0;
+    }
+  }
+}
+
+.ng-select select-dropdown .highlighted {
+  background-color: $color-blue;
+}
+
+.famfamfam-flags {
+  display: inline-block;
+  margin-right: 6px;
+  width: 16px;
+}
+
+ng-select.ng-select > div > div {
+  &.multiple {
+    border: 1px solid #aaa;
+    padding: 6px 10px 6px 10px !important;
+    border-radius: 4px;
+    > div.option {
+      span.deselect-option {
+        color: #fff !important;
+        font-size: 10px !important;
+        vertical-align: middle;
+        font-weight: bold;
+        margin-right: 2px;
+      }
+      background-color: $color-blue !important;
+      border: 1px solid $color-blue !important;
+      padding: 5px 15px !important;
+      color: #fff !important;
+      margin: 0 2px 2px !important;
+    }
+  }
+  &.single > div {
+    &.placeholder {
+      color: #fff;
+    }
+    &.clear {
+      font-size: 10px;
+      margin-right: 14px;
+      font-weight: bold;
+    }
+  }
+}
+
+.tag-select {
+  .bootstrap tag {
+    padding: 5px 10px !important;
+    height: auto !important;
+    z-index: 0;
+    line-height: 25px !important;
+    background: $color-blue !important;
+    delete-icon{
+      &:hover{
+        transform: scale(1);
+      }
+      svg{
+        height: 27px !important;
+      }
+    }
+  }
+  tag-input-form {
+    padding: 0px 10px 0px 10px !important;
+  }
+  .ng2-tag-input {
+    border-bottom: 1px solid #aaa !important;
+    border: 1px solid #aaa;
+    padding: 5px !important;
+    border-radius: 4px;
+  }
+}
+
+.pcoded[layout-type="dark"], body.dark {
+  .tag-chips .ng2-tag-input__text-input, .ng2-tag-input__text-input {
+    background-color: transparent;
+    color: $light-color-text;
+  }
+
+  select-dropdown > div {
+    background-color: lighten($dark-layout-color, 10%);
+  }
+  select-dropdown .selected {
+    background-color: lighten($dark-layout-color, 5%);
+  }
+}

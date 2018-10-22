@@ -1,0 +1,1010 @@
+/**  =====================
+      Custom css start
+==========================  **/
+body {
+    background-color: $theme-bg-color;
+    font-size: $theme-font-size;
+    overflow-x: hidden;
+    color: $theme-font-color;
+    font-family: $theme-font-family;
+    background-attachment: fixed;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.0) 200px, rgba(255, 255, 255, 0.9) 0%);
+}
+
+ul {
+    padding-left: 0;
+    list-style-type: none;
+    margin-bottom: 0;
+}
+
+* {
+    &:focus {
+        outline: none;
+    }
+}
+
+a {
+    font-size: 13px;
+    @media only screen and(min-width: 1400px) {
+        font-size: 14px;
+    }
+    color: $inverse-color;
+    transition: all 0.3s ease-in-out;
+
+    &:focus,
+    &:hover {
+        text-decoration: none;
+        color: $primary-color;
+    }
+}
+h1,h2,h3,h4,h5,h6{
+    font-weight: 600;
+}
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.75rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-size: 1rem;
+}
+
+h6 {
+    font-size: 0.875rem;
+}
+
+p {
+    font-size: 13px;
+}
+
+b,
+strong {
+    font-weight: 600;
+}
+
+code {
+    padding: 0 3px;
+    border-radius: 3px;
+}
+
+.img-radius {
+    border-radius: 50%;
+}
+
+.media-left {
+    padding-right: 20px;
+}
+/**====== Custom css end ======**/
+/**  =====================
+      Main-body css start
+==========================  **/
+
+.main-body {
+    .page-wrapper {
+        padding: 0.6rem;
+        transition: all ease-in 0.3s;
+    }
+}
+/**====== Main-body css end ======**/
+/**  =====================
+      Card-Layout css start
+==========================  **/
+.card {
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 10px -1px rgba(69, 90, 100, 0.3);
+    border: none;
+    margin-bottom: 30px;
+    transition: all 0.3s ease-in-out;
+
+    .card-footer {
+        border-top: 1px solid rgba(0, 0, 0, .125);
+        padding: 15px 20px;
+        border-radius: 0 0 5px 5px;
+    }
+
+    .card-header {
+        background-color: transparent;
+        border-bottom: 1px solid rgba(0, 0, 0, .125);
+        padding: 20px;
+        position: relative;
+        &.borderless{
+            border-bottom: 0px solid transparent;
+            + .card-block,
+            + .card-block-big,
+            + .card-block-small{
+                padding-top: 0;
+            }
+        }
+        .card-header-left {
+            display: inline-block;
+        }
+
+        .card-header-right {
+            right: 10px;
+            top: 13px;
+            display: inline-block;
+            float: right;
+            padding: 7px 0;
+            position: absolute;
+            @media only screen and (max-width: 575px) {
+                display: none;
+            }
+
+            i {
+                margin: 0 4px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 500;
+                color: $card-header-color;
+                line-height: 1;
+            }
+
+            .card-option {
+                width: 35px;
+                height: 20px;
+                overflow: hidden;
+                transition: 0.3s ease-in-out;
+
+                li {
+                    display: inline-block;
+                }
+            }
+        }
+
+        span {
+            display: block;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        h5 {
+            margin-bottom: 0;
+            color: $card-header-color;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 10px;
+            line-height: 1.1;
+        }
+    }
+
+    .card-block {
+        padding: 1.25rem;
+        &.card-p-0{
+            padding: 1.25rem 0 0 0;
+        }
+        &.p-b-0{
+            padding-bottom: 0;
+        }
+        table {
+            tr {
+                padding-bottom: 20px;
+            }
+        }
+
+        .sub-title {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        code {
+            background-color: #eee;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            top: 38px;
+        }
+
+        p {
+            line-height: 1.4;
+        }
+
+        a {
+            &.dropdown-item {
+                margin-bottom: 0;
+                font-size: 14px;
+                transition: 0.25s;
+
+                &:active,
+                .active {
+                    background-color: $primary-color;
+                }
+            }
+        }
+
+        &.remove-label i {
+            margin: 0;
+            padding: 0;
+        }
+
+        &.button-list span.badge {
+            margin-left: 5px;
+        }
+
+        .dropdown-menu {
+            background-color: #fff;
+            padding: 0;
+
+            .dropdown-divider {
+                background-color: #ddd;
+                margin: 3px 0;
+            }
+        }
+
+        .dropdown-menu > a {
+            padding: 10px 16px;
+            line-height: 1.429;
+        }
+
+        .dropdown-menu > li > a:focus,
+        .dropdown-menu > li > a:hover {
+            background-color: rgba(202, 206, 209, 0.5);
+        }
+
+        .dropdown-menu > li:first-child > a:first-child {
+            border-top-right-radius: 4px;
+            border-top-left-radius: 4px;
+        }
+
+        .badge-box {
+            padding: 10px;
+            margin: 12px 0;
+        }
+    }
+
+    .card-block-big {
+        padding: 1.5625rem;
+    }
+
+    .card-block-small {
+        padding: 0.9375rem;
+    }
+}
+
+.card-footer {
+    background: transparent;
+}
+
+.pcoded {
+    .card {
+        &.full-card {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99999;
+            box-shadow: 0 0 35px 0 rgba(0, 0, 0, 0.44);
+            border-radius: 0px;
+            width: calc(100vw - 17px);
+            height: 100vh;
+
+            &.card-load {
+                position: fixed;
+            }
+        }
+
+        &.card-load {
+            position: relative;
+            overflow: hidden;
+
+            .card-loader {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                background-color: rgba(256, 256, 256,0.7);
+                z-index: 999;
+
+                i {
+                    margin: 0 auto;
+                    color: $primary-color;
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+}
+
+.rotate-refresh {
+    animation: mymove 0.8s infinite linear;
+    display: inline-block;
+}
+@-webkit-keyframes mymove {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes mymove {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.page-header {
+    background-size: cover;
+    position: relative;
+    border-radius: 0;
+    padding-bottom: 50px;
+
+    h4 {
+        color: #fff;
+        font-weight: 400;
+    }
+
+    .page-block {
+        padding: 1.25rem;
+
+        .breadcrumb {
+            background: transparent;
+            margin-bottom: 0;
+            padding: 0;
+
+            a {
+                font-size: 14px;
+                color: #fff;
+            }
+
+            .breadcrumb-item {
+                + .breadcrumb-item:before {
+                    font-family: "feather";
+                    content: "\e844";
+                    color: #fff;
+                }
+
+                &:last-child a {
+                    color: #fff;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+    @media only screen and (max-width: 768px) {
+        .page-block .breadcrumb {
+            float: left;
+            margin-top: 10px;
+        }
+    }
+}
+
+.sub-title {
+    border-bottom: 1px solid rgba(204, 204, 204, 0.35);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #2c3e50;
+}
+/**======  Card-Layout css end ======**/
+/*======= Typography css start ========*/
+.blockquote {
+    border-left: 0.25rem solid #eceeef;
+    padding: 0.5rem 1rem;
+
+    &.blockquote-reverse {
+        text-align: right;
+        padding-right: 1rem;
+        border-right: 0.25rem solid #eceeef;
+        border-left: none;
+    }
+}
+
+.typography {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: 0 0 20px;
+    }
+
+    small {
+        margin-left: 10px;
+        font-weight: 500;
+        color: #777;
+    }
+}
+
+.card-block.list-tag {
+    ul li {
+        display: block;
+        float: none;
+        margin-bottom: 5px;
+    }
+
+    ol li {
+        margin-bottom: 5px;
+    }
+}
+
+.inline-order-list {
+    margin-top: 50px;
+
+    h4,
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.card-block ul li.list-inline-item {
+    display: inline-block;
+    float: left;
+}
+/*======= Typography css end ========*/
+/**  =====================
+      Modal css start
+==========================  **/
+
+.modal {
+    z-index: 1050;
+
+    .modal-dialog {
+        pointer-events: all;
+    }
+}
+
+.bd-example .modal {
+    display: block;
+    position: inherit;
+    background-color: #2C3E50;
+    margin-bottom: 20px;
+}
+
+.card .overflow-container h5 {
+    margin-bottom: 5px;
+}
+
+.button-page .card-block a.nav-link {
+    margin-bottom: 0;
+}
+
+.sweet-alert button.confirm {
+    @extend .btn-primary;
+    background-color: $primary-color;
+}
+
+.sweet-alert .sa-input-error {
+    top: 23px;
+}
+/**====== Modal css end ======**/
+/**  =====================
+      Accordion css start
+==========================  **/
+.accordion-msg {
+    display: block;
+    color: #222222;
+    padding: 14px 20px;
+    border-top: 1px solid #ddd;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.accordion-msg:focus,
+.accordion-msg:hover {
+    text-decoration: none;
+    outline: none;
+}
+
+.faq-accordion .accordion-desc {
+    padding: 20px;
+}
+
+.accordion-desc {
+    color: #222222;
+    padding: 0 20px 20px;
+}
+
+#color-accordion .accordion-desc {
+    margin-top: 14px;
+}
+
+.ui-accordion-header-icon {
+    float: right;
+    font-size: 20px;
+}
+
+.accordion-title {
+    margin-bottom: 0;
+}
+
+.accordion-block {
+    padding: 0;
+
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.color-accordion-block a {
+    &.ui-state-active,
+    &:focus,
+    &:hover {
+        color: #fff;
+        background: #4680ff;
+    }
+}
+
+a.bg-default:focus,
+a.bg-default:hover {
+    background-color: lighten($default-color, 10%) ;
+    color: #fff;
+}
+
+a.bg-primary:focus,
+a.bg-primary:hover {
+    background-color: lighten($primary-color, 10%) ;
+    color: #fff;
+}
+
+a.bg-success:focus,
+a.bg-success:hover {
+    background-color: lighten($success-color, 10%) ;
+    color: #fff;
+}
+
+a.bg-info:focus,
+a.bg-info:hover {
+    background-color: lighten($info-color, 10%) ;
+    color: #fff;
+}
+
+a.bg-warning:focus,
+a.bg-warning:hover {
+    background-color: lighten($warning-color, 10%) ;
+    color: #fff;
+}
+
+a.bg-danger:focus,
+a.bg-danger:hover {
+    background-color: lighten($danger-color, 10%) ;
+    color: #fff;
+}
+/**====== Accordion css end ======**/
+/**  =====================
+      Tabs css start
+==========================  **/
+.tab-list p {
+    padding: 10px;
+}
+
+.tab-with-img i {
+    position: absolute;
+    padding: 5px;
+}
+
+.tab-icon {
+    margin-bottom: 30px;
+
+    i {
+        padding-right: 10px;
+    }
+}
+
+.tab-below {
+    border-top: 1px solid #ddd;
+    border-bottom: none;
+
+    &.nav-tabs .nav-link.active {
+        border-color: transparent #ddd #ddd #ddd;
+    }
+
+    .nav-item {
+        margin-top: -2px;
+    }
+
+    &.nav-tabs .nav-link {
+        border-bottom-right-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+    }
+}
+
+.card-header~.tab-icon .tab-with-img .sub-title i {
+    right: 10px;
+}
+
+.tab-with-img .nav-link {
+    position: relative;
+}
+
+.tabs-left,
+.tabs-right {
+    min-width: 120px;
+    vertical-align: top;
+    width: 150px;
+}
+
+.tabs-left,
+.tabs-left-content,
+.tabs-right,
+.tabs-right-content {
+    display: table-cell;
+}
+
+.nav-tabs.tabs-left .slide {
+    height: 35px;
+    width: 4px;
+    bottom: 15px;
+}
+
+.nav-tabs.tabs-right .slide {
+    height: 35px;
+    width: 4px;
+    bottom: 15px;
+    right: 0;
+}
+
+.md-tabs.tabs-left .nav-item,
+.md-tabs.tabs-right .nav-item,
+.tabs-left .nav-item,
+.tabs-right .nav-item {
+    width: 100%;
+    position: relative;
+}
+
+.md-tabs {
+    position: relative;
+
+    .nav-item+.nav-item {
+        margin: 0;
+    }
+
+    .nav-link {
+        border: none;
+        color: $inverse-color;
+    }
+
+    .nav-item {
+        flex: 1;
+        text-align: center;
+        position: relative;
+    }
+
+    .nav-link:focus,
+    .nav-link:hover {
+        border: none;
+    }
+
+    .nav-item .nav-link.active~.slide {
+        opacity: 1;
+        transition: all 0.3s ease-out;
+    }
+
+    .nav-item .nav-link~.slide {
+        opacity: 0;
+        transition: all 0.3s ease-out;
+    }
+
+    .nav-item.open .nav-link,
+    .nav-item.open .nav-link:focus,
+    .nav-item.open .nav-link:hover,
+    .nav-link.active,
+    .nav-link.active:focus,
+    .nav-link.active:hover {
+        color: $primary-color;
+        border: none;
+        background-color: transparent;
+        border-radius: 0;
+    }
+
+    .nav-item a {
+        padding: 20px 0 ;
+        color: $inverse-color;
+    }
+}
+
+.nav-tabs .slide {
+    background: $primary-color;
+    width: 100%;
+    height: 4px;
+    position: absolute;
+    transition: left 0.3s ease-out;
+    bottom: 0;
+
+    .nav-item.show .nav-link,
+    .nav-link {
+        color: $primary-color;
+    }
+}
+
+.img-tabs {
+    img {
+        width: 100px;
+        margin: 0 auto;
+    }
+
+    a {
+        opacity: 0.5;
+        transition: all ease-in-out 0.3s;
+
+        span i {
+            height: 25px;
+            width: 25px;
+            border-radius: 100%;
+            bottom: 10px;
+            right: 70px;
+        }
+
+        img {
+            border: 3px solid;
+        }
+
+        &.active {
+            opacity: 1;
+            transition: all ease-in-out 0.3s;
+        }
+    }
+
+    .nav-item:first-child {
+        border-bottom: none;
+    }
+}
+
+#pc-left-panel-menu {
+    margin-bottom: 20px;
+}
+
+.img-circle {
+    border-radius: 50%;
+}
+
+.b-none {
+    border: none ;
+}
+/**====== Tabs css end ======**/
+/**  =====================
+      Table css start
+==========================  **/
+.table-primary,
+.table-primary > td,
+.table-primary > th {
+    background-color: #4680FE;
+}
+
+.table-responsive {
+    display: inline-block;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table.table-xl {
+    td,
+    th {
+        padding: 1.25rem 2rem;
+    }
+}
+
+.table.table-lg {
+    td,
+    th {
+        padding: 0.9rem 2rem;
+    }
+}
+
+.table.table-de {
+    td,
+    th {
+        padding: 0.75rem 2rem;
+    }
+}
+
+.table.table-sm {
+    td,
+    th {
+        padding: 0.6rem 2rem;
+    }
+}
+
+.table.table-xs {
+    td,
+    th {
+        padding: 0.4rem 2rem;
+    }
+}
+
+.table-columned {
+    > tbody > tr {
+        > td:first-child,
+        > th:first-child {
+            border-left: 0;
+        }
+    }
+
+    > tfoot > tr {
+        > td:first-child,
+        > th:first-child {
+            border-left: 0;
+        }
+    }
+
+    > tbody > tr {
+        > td,
+        > th {
+            border: 0;
+            border-left: 1px solid #ddd;
+        }
+    }
+
+    > tfoot > tr {
+        > td,
+        > th {
+            border: 0;
+            border-left: 1px solid #ddd;
+        }
+    }
+}
+
+.table-border-style {
+    padding: 0;
+
+    .table {
+        margin-bottom: 0;
+    }
+}
+
+.table > thead > tr > th {
+    border-bottom-color: #ccc;
+}
+
+.table-borderless tbody tr {
+    td,
+    th {
+        border: 0;
+    }
+}
+
+.table-bordered > thead > tr.border-solid {
+    > td,
+    > th {
+        border-bottom-width: 2px;
+    }
+
+    &:first-child {
+        > td,
+        th {
+            border-bottom-width: 2px;
+        }
+    }
+}
+
+.table-bordered > thead > tr.border-double {
+    > td,
+    > th {
+        border-bottom-width: 3px;
+        border-bottom-style: double;
+    }
+
+    &:first-child {
+        > td,
+        th {
+            border-bottom-width: 3px;
+            border-bottom-style: double;
+        }
+    }
+}
+/**====== Table css end ======**/
+/*====== Warning css starts ======= */
+.ie-warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999999;
+    background: #000000;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+    font-family: "Courier New", Courier, monospace;
+    padding: 50px 0;
+}
+
+.ie-warning p {
+    font-size: 17px;
+}
+
+.ie-warning .iew-container {
+    min-width: 1024px;
+    width: 100%;
+    height: 200px;
+    background: #fff;
+    margin: 50px 0;
+}
+
+.ie-warning .iew-download {
+    list-style: none;
+    padding: 30px 0;
+    margin: 0 auto;
+    width: 720px;
+}
+
+.ie-warning .iew-download > li {
+    float: left;
+    vertical-align: top;
+}
+
+.ie-warning .iew-download > li > a {
+    display: block;
+    color: #000;
+    width: 140px;
+    font-size: 15px;
+    padding: 15px 0;
+}
+
+.ie-warning .iew-download > li > a > div {
+    margin-top: 10px;
+}
+
+.ie-warning .iew-download > li > a:hover {
+    background-color: #eee;
+}
+/*====== Warning css ends ======= */
+
+.progress {
+    height: 1rem;
+
+    .progress-bar {
+        height: 100%;
+        color: inherit;
+    }
+}
+//============================  loadewr ===============================
+/**  =====================
+      Theme-preloader css start
+==========================  **/
+.loader-bg {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 1);
+    z-index: 9999;
+    .loader-bar {
+        position: fixed;
+        height: 5px;
+        width: 80%;
+        top: 0;
+        left: 0;
+        background: rgba(33, 150, 243, 1);
+        animation: barfiller 2.0s;
+    }
+}
+@keyframes  barfiller{
+    0% {width: 0;}
+    25% {width: 20%;}
+    50% {width: 40%;}
+    70% {width: 60%;}
+    100% {width: 80%;}
+}
+@-moz-document url-prefix() {
+    select {
+        -webkit-appearance: none ;
+        -moz-appearance: none ;
+        background: #FFF url("../assets/images/select-arrow.png") no-repeat 95% center ;
+    }
+}

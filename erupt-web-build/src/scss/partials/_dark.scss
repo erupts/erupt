@@ -1,0 +1,286 @@
+.pcoded[layout-type="dark"] {
+    color: $light-color-text;
+
+    a {
+        color: $light-color-text;
+    }
+
+    text {
+        fill: $light-color-text;
+    }
+
+    .card {
+        background-color: lighten($dark-layout-color,5%);
+
+        code {
+            background-color: lighten($dark-layout-color,10%);
+            color: $light-color-text;
+        }
+
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: lighten($dark-layout-color,10%);
+        }
+
+        .card-header {
+            h5 {
+                color: $light-color-text;
+            }
+
+            .card-header-right i {
+                color: $light-color-text;
+            }
+        }
+
+        .card-block {
+            code {
+                background-color: lighten($dark-layout-color,10%);
+
+                &.language-markup {
+                    background-color: #fff;
+                }
+            }
+
+            .dropdown-menu {
+                background-color: lighten($dark-layout-color,7%);
+            }
+        }
+    }
+
+    .card-footer {
+        background-color: lighten($dark-layout-color,3%);
+    }
+
+    .dropdown-menu {
+        background-color: lighten($dark-layout-color,7%);
+
+        .dropdown-item {
+            .dropdown-divider {
+                border-top: 1px solid $dark-layout-color;
+            }
+
+            &:focus,
+            &:hover {
+                background-color: $dark-layout-color;
+            }
+        }
+    }
+
+    .sub-title {
+        color: lighten($dark-layout-color,20%);
+    }
+
+    .b-l-default,
+    .b-l-theme {
+        border-left: 1px solid lighten($dark-layout-color,10%);
+    }
+
+    .b-r-default,
+    .b-r-theme,
+    .messages-content {
+        border-right: 1px solid lighten($dark-layout-color,10%);
+    }
+
+    .btn-default {
+        background-color: lighten($dark-layout-color,10%);
+        color: $light-color-text;
+    }
+    .pcoded-main-container {
+        background-color: lighten($dark-layout-color,10%);
+    }
+    &[vertical-layout="box"],
+    &[theme-layout="vertical"][vertical-nav-type="collapsed"]{
+        .pcoded-container {
+            background-color: lighten($dark-layout-color,10%);
+        }
+    }
+
+    .progress {
+        background-color: lighten($dark-layout-color,10%);
+    }
+
+    .alert {
+        &.alert-danger,
+        &.alert-default,
+        &.alert-info,
+        &.alert-primary,
+        &.alert-success,
+        &.alert-warning {
+            background-color: $dark-layout-color;
+        }
+        $alert-name: default, primary, success, info, warning, danger;
+        $alert-color: $default-color, $primary-color, $success-color, $info-color, $warning-color, $danger-color;
+        @each $var in $alert-name {
+            $i: index($alert-name, $var);
+
+            &.background-#{$var} {
+                background-color: nth($alert-color, $i);
+                color: #fff;
+            }
+        }
+    }
+
+    .accordion-msg {
+        color: $light-color-text;
+        border-top: 1px solid lighten($dark-layout-color,10%);
+    }
+
+    .accordion-desc {
+        color: $light-color-text;
+    }
+
+    .header-navbar {
+        .navbar-wrapper {
+            .navbar-container {
+                .nav-right > .header-notification:nth-child(1) {
+                    .show-notification {
+                        li:first-child:hover {
+                            background-color: $dark-layout-color !important;
+                        }
+                    }
+                }
+
+                .header-notification {
+                    .profile-notification,
+                    .show-notification {
+                        color: $light-color-text;
+                        background-color: $dark-layout-color;
+
+                        &.show:before {
+                            border-left-color: $dark-layout-color;
+                            border-top-color: $dark-layout-color;
+                        }
+
+                        a {
+                            color: $light-color-text;
+                        }
+                    }
+                }
+
+                .header-notification {
+                    .profile-notification li:hover,
+                    .show-notification li:hover {
+                        background-color: lighten($dark-layout-color,10%);
+                    }
+                }
+            }
+        }
+    }
+
+    .p-chat-user {
+        background-color: lighten($dark-layout-color,5%);
+
+        .userlist-box {
+            border-bottom: 1px solid lighten($dark-layout-color,10%);
+
+            .chat-header {
+                color: $light-color-text;
+            }
+        }
+    }
+
+    .back_chatBox,
+    .back_friendlist {
+        i {
+            background-color: lighten($dark-layout-color,5%);
+            color: $light-color-text;
+        }
+    }
+
+    .showChat_inner {
+        background-color: lighten($dark-layout-color,5%);
+
+        .chat-messages {
+            .chat-menu-content > div {
+                background-color: $dark-layout-color;
+
+                &:before {
+                    border-right-color: $dark-layout-color;
+                    border-top-color: $dark-layout-color;
+                }
+            }
+
+            .chat-menu-reply > div {
+                background-color: lighten($dark-layout-color,10%);
+
+                &:before {
+                    border-left-color: lighten($dark-layout-color,10%);
+                    border-bottom-color: lighten($dark-layout-color,10%);
+                }
+            }
+        }
+
+        .chat-inner-header {
+            border-bottom: 1px solid $dark-layout-color;
+        }
+
+        .chat-reply-box {
+            background-color: lighten($dark-layout-color,5%);
+            border-top: 1px solid $dark-layout-color;
+        }
+    }
+
+    .form-control {
+        background-color: transparent;
+        color: $light-color-text;
+    }
+
+    select.form-control {
+        background-color: lighten($dark-layout-color,5%);
+    }
+
+    .bg-white {
+        background: lighten($dark-layout-color,5%) !important;
+    }
+
+    .card-header-img {
+        h5,
+        h6 {
+            color: $light-color-text;
+        }
+    }
+
+    .text-inverse {
+        color: $light-color-text !important;
+    }
+
+    #styleSelector {
+        color: $dark-layout-color;
+
+        .form-control {
+            color: $dark-layout-color;
+        }
+    }
+
+    .chat-card .chat-control .chat-form .form-control {
+        background-color: transparent;
+
+        &:active,
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
+    .table {
+        > thead > tr > th {
+            border-bottom-color: lighten($dark-layout-color,10%);
+        }
+
+        td,
+        th {
+            border-top-color: lighten($dark-layout-color,10%);
+        }
+    }
+
+    .main-menu .main-menu-header:before,
+    .page-header:before {
+        background-color: lighten($dark-layout-color,5%);
+    }
+    @each $value in $color-name {
+        $i: index($color-name, $value);
+
+        .bg-#{$value} {
+            background: nth($color-color,$i),;
+        }
+    }
+}

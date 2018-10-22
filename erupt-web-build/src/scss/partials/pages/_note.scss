@@ -1,0 +1,54 @@
+/**  =====================
+      Note css start
+==========================  **/
+.note-card {
+    padding-top: 0;
+    padding-bottom: 0;
+    .note-box-aside {
+        border-right: 1px solid #ddd;
+        .row {
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+    }
+    .Note-header {
+        padding: 20px 0;
+    }
+    .note-write {
+        position: relative;
+        &:before {
+            content: '';
+            position: absolute;
+            width: 0px;
+            top: 0;
+            left: 32px;
+            bottom: 0;
+            border-left: 1px solid $primary-color;;
+        }
+        &:after {
+            content: '';
+            position: absolute;
+            width: 0px;
+            top: 0;
+            left: 34px;
+            bottom: 0;
+            border-left: 1px solid $primary-color;
+        }
+
+        background:-webkit-linear-gradient(top, lighten($primary-color,15%) 0%, lighten($primary-color,30%) 5%) 0 0;
+        background-size:100% 35px;
+    }
+    #Note-pad {
+        border: none;
+        resize: none;
+        background: transparent;
+        padding:0px 20px 0 50px;
+        line-height: 35px;
+    }
+    .Note-created__on {
+        display: block;
+    }
+}
+
+/**====== Note css end ======**/

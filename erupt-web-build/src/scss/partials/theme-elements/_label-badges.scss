@@ -1,0 +1,146 @@
+/**  =====================
+      Label-Badges css start
+==========================  **/
+
+.label {
+    border-radius: 4px;
+    font-size: 75%;
+    padding: 4px 7px;
+    margin-right: 5px;
+    font-weight: 400;
+    color: #fff;
+}
+
+.label-main {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 8px 5px;
+}
+
+.badge {
+    border-radius: 10px;
+    padding: 3px 7px;
+}
+.badge-top-left {
+    margin-right: -10px;
+    right: 100%;
+    top: -3px;
+}
+.badge-top-right {
+    margin-left: -10px;
+    top: -3px;
+}
+.badge-bottom-left {
+    margin-left: -33px;
+    bottom: -12px;
+    right: 97%;
+}
+.badge-bottom-right {
+    margin-left: -10px;
+    bottom: -12px;
+}
+.label.label-lg {
+    padding: 8px 21px;
+}
+
+.label.label-md {
+    padding: 6px 14px;
+}
+
+.badge-lg {
+    padding: 5px 9px;
+    font-size: 14px;
+}
+
+.badge-md {
+    padding: 4px 8px;
+    font-size: 14px;
+}
+
+span.badge {
+    display: inline-block;
+}
+
+.label-default {
+    @include labels-active(theme-color(default, base), theme-color(default, base));
+}
+
+.label-inverse-default {
+    border: 1px solid;
+    @include labels-inverse(theme-color(default, base), theme-color(default, base));
+}
+
+.label-inverse-primary {
+    border: 1px solid;
+    @include labels-inverse(theme-color(primary, base), theme-color(primary, base));
+}
+
+.label-inverse-success {
+    border: 1px solid;
+    @include labels-inverse(theme-color(success, base), theme-color(success, base));
+}
+
+.label-inverse-warning {
+    border: 1px solid;
+    @include labels-inverse(theme-color(warning, base), theme-color(warning, base));
+}
+
+.label-inverse-danger {
+    border: 1px solid;
+    @include labels-inverse(theme-color(danger, base), theme-color(danger, base));
+}
+
+.label-inverse-info {
+    border: 1px solid;
+    @include labels-inverse(theme-color(info, base), theme-color(info, base));
+}
+
+.label-inverse-info-border {
+    border: 1px solid;
+    @include labels-inverse(theme-color(inverse, base), theme-color(inverse, base));
+}
+
+.badge-inverse-default {
+    border: 1px solid;
+    @include labels-inverse(theme-color(default, base), theme-color(default, base));
+}
+
+.badge-inverse-primary {
+    border: 1px solid;
+    @include labels-inverse(theme-color(primary, base), theme-color(primary, base));
+}
+
+.badge-inverse-success {
+    border: 1px solid;
+    @include labels-inverse(theme-color(success, base), theme-color(success, base));
+}
+
+.badge-inverse-warning {
+    border: 1px solid;
+    @include labels-inverse(theme-color(warning, base), theme-color(warning, base));
+}
+
+.badge-inverse-danger {
+    border: 1px solid;
+    @include labels-inverse(theme-color(danger, base), theme-color(danger, base));
+}
+
+.badge-inverse-info {
+    border: 1px solid;
+    @include labels-inverse(theme-color(inverse, base), theme-color(inverse, base));
+}
+
+.label-icon{
+    position: relative;
+    label {
+       position: absolute;
+   }
+}
+
+.icofont.icofont-envelope {
+    font-size: 20px;
+}
+
+
+
+/*===== Label and Badges css end =====*/

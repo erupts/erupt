@@ -1,0 +1,120 @@
+/**  =====================
+      Alert css start
+==========================  **/
+.alert {
+    font-size: 15px;
+    margin-bottom: 2rem;
+}
+
+.alert.icons-alert {
+    border-left-width: 48px;
+    .alert-icon {
+        left: 15px;
+        position: relative;
+        text-align: center;
+        top: 0;
+        z-index: 3;
+    }
+    p {
+        line-height: 21px;
+        margin-bottom: 0;
+    }
+}
+
+.close {
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+
+/*===== Primary alert ===== */
+
+$alert-name:default,
+primary,
+success,
+info,
+warning,
+danger;
+$alert-color:$default-color,
+$primary-color,
+$success-color,
+$info-color,
+$warning-color,
+$danger-color;
+@each $var in $alert-name {
+    $i: index($alert-name, $var);
+    .alert-#{$var} {
+        background-color: #fff;
+        border-color: nth($alert-color, $i);
+        color: nth($alert-color, $i);
+    }
+}
+
+
+/*===== Border alert ===== */
+
+$alert-name:default,
+primary,
+success,
+info,
+warning,
+danger;
+$alert-color:$default-color,
+$primary-color,
+$success-color,
+$info-color,
+$warning-color,
+$danger-color;
+@each $var in $alert-name {
+    $i: index($alert-name, $var);
+    .border-#{$var} {
+        border-color: transparent;
+        border-left: 3px solid nth($alert-color, $i);
+        border-radius: 0;
+        box-shadow: 0 0 1px #999;
+        color: nth($alert-color, $i);
+    }
+}
+
+
+/*===== Solid-background alert ===== */
+
+$alert-name:default,
+primary,
+success,
+info,
+warning,
+danger;
+$alert-color:$default-color,
+$primary-color,
+$success-color,
+$info-color,
+$warning-color,
+$danger-color;
+@each $var in $alert-name {
+    $i: index($alert-name, $var);
+    .background-#{$var} {
+        background-color: nth($alert-color, $i);
+        color: #fff;
+    }
+}
+
+.icons-alert {
+    position: relative;
+    &:before {
+        color: #fff;
+        content: '\f027';
+        font-family: 'IcoFont' !important;
+        font-size: 16px;
+        left: -30px;
+        position: absolute;
+        top: 17px;
+    }
+}
+
+[class*="alert-"] code {
+    margin-left: 10px;
+}
+
+
+/*======= Alert css ends ===========*/

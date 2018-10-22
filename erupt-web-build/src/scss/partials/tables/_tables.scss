@@ -1,0 +1,428 @@
+/**  =====================
+      Data-table css start
+==========================  **/
+table.table-bordered.dataTable tbody td:focus,
+table.table-bordered.dataTable tbody th:focus {
+    outline: none;
+}
+
+.card .card-block ul.pagination li {
+    margin-right: 0;
+}
+
+.page-item.active .page-link {
+    background-color: $primary-color;
+    border-color: $primary-color;
+}
+
+.page-link {
+    color: #222;
+}
+
+.table-hover tbody tr:hover {
+    background-color: transparentize($primary-color, 0.9);
+}
+
+td.highlight {
+    font-weight: 500;
+    color: $info-color;
+    background-color: #f5f5f5;
+}
+
+.table.compact td,
+.table.compact th {
+    padding: 0.45rem;
+}
+
+.dataTables_paginate {
+    .pagination {
+        float: right;
+    }
+}
+
+#multi-table_wrapper .dataTables_paginate {
+    .pagination {
+        float: none;
+    }
+}
+
+#dt-live-dom .form-control,
+#footer-search tfoot .form-control,
+#footer-select tfoot .form-control,
+#form-input-table .form-control,
+.search-api .form-control {
+    width: 90%;
+}
+
+.search-api {
+    .column_filter,
+    .global_filter {
+        margin: 0 auto;
+    }
+}
+
+.search-api .checkbox-fade {
+    display: block;
+    text-align: center;
+}
+
+td.details-control {
+    background: url("../assets/images/details_open.png") no-repeat center center;
+    cursor: pointer;
+}
+
+tr.shown td.details-control {
+    background: url("../assets/images/details_close.png") no-repeat center center;
+}
+
+#row-delete,
+#row-select {
+    .selected {
+        background-color: $primary-color;
+        color: $white-txt;
+    }
+}
+/*===== Autofill data-table ===== */
+div.dt-autofill-list div.dt-autofill-button button {
+    background-color: $primary-color;
+    border-color: $primary-color;
+}
+
+table.dataTable {
+    border-collapse: collapse ;
+}
+
+table.dataTable tbody > tr > .selected,
+table.dataTable tbody > tr.selected {
+    background-color: $primary-color;
+    color: $white-txt;
+}
+
+table.dataTable td.select-checkbox:before,
+table.dataTable th.select-checkbox:before {
+    margin-top: 0;
+}
+
+table.dataTable tr.selected td.select-checkbox:after,
+table.dataTable tr.selected th.select-checkbox:after {
+    margin-top: -6px;
+    margin-left: -5px;
+}
+/*===== Button data-table ===== */
+a.dt-button,
+a.dt-button.active:not(.disabled),
+a.dt-button:active:not(.disabled),
+a.dt-button:focus:not(.disabled),
+button.dt-button,
+button.dt-button.active:not(.disabled),
+button.dt-button:active:not(.disabled),
+button.dt-button:focus:not(.disabled),
+div.dt-button,
+div.dt-button.active:not(.disabled),
+div.dt-button:active:not(.disabled),
+div.dt-button:focus:not(.disabled) {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    border-radius: 2px;
+    color: $white-txt;
+    background-image: none;
+    font-size: 14px;
+}
+
+a.dt-button.btn-warning,
+button.dt-button.btn-warning,
+div.dt-button.btn-warning {
+    background-color: $warning-color;
+    border-color: $warning-color;
+    border-radius: 2px;
+    color: $white-txt;
+    background-image: none;
+}
+
+a.dt-button.btn-danger,
+button.dt-button.btn-danger,
+div.dt-button.btn-danger {
+    background-color: $danger-color;
+    border-color: $danger-color;
+    border-radius: 2px;
+    color: $white-txt;
+    background-image: none;
+}
+
+a.dt-button.btn-inverse,
+button.dt-button.btn-inverse,
+div.dt-button.btn-inverse {
+    background-color: $inverse-color;
+    border-color: $inverse-color;
+    border-radius: 2px;
+    color: $white-txt;
+    background-image: none;
+}
+
+a.dt-button:hover:not(.disabled),
+button.dt-button:hover:not(.disabled),
+div.dt-button:hover:not(.disabled) {
+    background-image: none;
+    background-color: lighten($primary-color, 5%);
+    border-color: $primary-color;
+}
+
+a.dt-button.btn-warning:hover:not(.disabled),
+button.dt-button.btn-warning:hover:not(.disabled),
+div.dt-button.btn-warning:hover:not(.disabled) {
+    background-image: none;
+    background-color: lighten($warning-color, 10%);
+    border-color: $warning-color;
+}
+
+a.dt-button.btn-danger:hover:not(.disabled),
+button.dt-button.btn-danger:hover:not(.disabled),
+div.dt-button.btn-danger:hover:not(.disabled) {
+    background-image: none;
+    background-color: lighten($danger-color, 10%);
+    border-color: $danger-color;
+}
+
+a.dt-button.btn-inverse:hover:not(.disabled),
+button.dt-button.btn-inverse:hover:not(.disabled),
+div.dt-button.btn-inverse:hover:not(.disabled) {
+    background-image: none;
+    background-color: lighten($inverse-color, 10%);
+    border-color: $inverse-color;
+}
+
+div.dt-button-collection a.dt-button.active:not(.disabled),
+div.dt-button-collection a.dt-button:active:not(.disabled),
+div.dt-button-collection button.dt-button.active:not(.disabled),
+div.dt-button-collection button.dt-button:active:not(.disabled),
+div.dt-button-collection div.dt-button.active:not(.disabled),
+div.dt-button-collection div.dt-button:active:not(.disabled) {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    background-image: none;
+}
+
+div.dt-buttons {
+    clear: both;
+}
+
+.card .table-card-header {
+    b {
+        display: block;
+        color: $primary-color;
+        margin-top: 15px;
+    }
+
+    span {
+        color: darken($primary-color, 10%);
+        display: inline-block;
+        margin-top: 0;
+    }
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    display: inline-block;
+}
+/*===== Colreorder data-table ===== */
+table.DTCR_clonedTable.dataTable {
+    position: absolute ;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 202;
+}
+
+div.DTCR_pointer {
+    width: 1px;
+    background-color: #0259C4;
+    z-index: 201;
+}
+/*===== Fixed-column data-table ===== */
+table.DTFC_Cloned tfoot,
+table.DTFC_Cloned thead {
+    background-color: white;
+}
+
+div.DTFC_Blocker {
+    background-color: white;
+}
+
+div.DTFC_LeftWrapper table.dataTable,
+div.DTFC_RightWrapper table.dataTable {
+    margin-bottom: 0;
+    z-index: 2;
+}
+
+div.DTFC_LeftWrapper table.dataTable.no-footer,
+div.DTFC_RightWrapper table.dataTable.no-footer {
+    border-bottom: none;
+}
+
+td,
+th {
+    white-space: nowrap;
+}
+/*===== Fixed-header data-table ===== */
+table.fixedHeader-floating {
+    position: fixed ;
+    background-color: white;
+}
+
+table.fixedHeader-floating.no-footer {
+    border-bottom-width: 0;
+}
+
+table.fixedHeader-locked {
+    position: absolute ;
+    background-color: white;
+}
+@media print {
+    table.fixedHeader-floating {
+        display: none;
+    }
+}
+/*===== Key-table data-table ===== */
+table.dataTable td.focus,
+table.dataTable th.focus {
+    outline: 3px solid $primary-color;
+    outline-offset: -1px;
+}
+
+table.dataTable td.focus {
+    outline: 1px solid $danger-color;
+    outline-offset: -3px;
+    background-color: #f8e6e6 ;
+}
+
+#events {
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: #f6f6f6;
+    border: 1px solid #999;
+    border-radius: 3px;
+    height: 100px;
+    overflow: auto;
+}
+/*===== Row-Re-order data-table ===== */
+table.dt-rowReorder-float {
+    position: absolute ;
+    opacity: 0.8;
+    table-layout: fixed;
+    outline: 2px solid #888;
+    outline-offset: -2px;
+    z-index: 2001;
+}
+
+tr.dt-rowReorder-moving {
+    outline: 2px solid #555;
+    outline-offset: -2px;
+}
+
+body.dt-rowReorder-noOverflow {
+    overflow-x: hidden;
+}
+
+table.dataTable td.reorder {
+    text-align: center;
+    cursor: move;
+}
+
+#result {
+    border: 1px solid #888;
+    background: #f7f7f7;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+/*===== Scroller data-table ===== */
+div.DTS {
+    display: block ;
+}
+
+div.DTS tbody td,
+div.DTS tbody th {
+    white-space: nowrap;
+}
+
+div.DTS div.DTS_Loading {
+    z-index: 1;
+}
+
+div.DTS div.dataTables_scrollBody table {
+    z-index: 2;
+}
+
+div.DTS div.dataTables_length,
+div.DTS div.dataTables_paginate {
+    display: none;
+}
+/**====== Data-table css end ======**/
+.table td,
+.table th {
+    padding: 1.25rem 0.75rem;
+}
+
+.table thead th {
+    border-bottom: 1px solid #d6dde1;
+}
+
+.invoice-box,
+.invoive-info {
+    .table {
+        td,
+        th {
+            padding: 3px 0;
+        }
+    }
+}
+
+table.invoice-table {
+    td,
+    th {
+        padding: 3px 0;
+    }
+}
+
+th {
+    font-weight: 600;
+}
+
+table.dataTable {
+    &.display,
+    &.stripe {
+        tbody tr.odd {
+            background-color: lighten($primary-color,30%);
+        }
+    }
+
+    &.display,
+    &.order-column.stripe {
+        tbody tr.even > .sorting_1 {
+            background-color: lighten($primary-color,35%);
+        }
+
+        tbody tr.odd > .sorting_1 {
+            background-color: lighten($primary-color,25%);
+        }
+    }
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: transparentize($primary-color, 0.9);
+}
+
+.dataTables_filter .form-control {
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.dataTable.table {
+    td,
+    th {
+        padding: 0.75rem;
+    }
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr > {
+    td:first-child:before,
+    th:first-child:before {
+        top: 14px;
+    }
+}

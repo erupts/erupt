@@ -1,0 +1,68 @@
+/**  =====================
+      Breadcrumb css start
+==========================  **/
+.caption-breadcrumb{
+	.breadcrumb-header{
+		display:inline-block;
+		span{
+			display: block;
+			font-size: 13px;
+			margin-top: 5px;
+		}
+	}
+}
+
+.front-icon-breadcrumb{
+	.breadcrumb-header{
+		display: inline-block;
+	}
+	.big-icon{
+		display: inline-block;
+		i{
+			font-size: 50px;
+			margin-right: 10px;
+			color: $primary-color;
+		}
+	}
+	.d-inline-block{
+		span{
+			display: block;
+			font-size: 13px;
+			margin-top: 5px;
+		}
+	}
+}
+.breadcrumb{
+	background-color: transparent;
+	margin-bottom: 0;
+}
+.primary-breadcrumb{
+	@extend .caption-breadcrumb;
+	background-color: $primary-color;
+	color: #fff;
+	h5,a,.breadcrumb li:last-child a,.breadcrumb-item+.breadcrumb-item::before{
+		color: #fff;
+	}
+}
+.inverse-breadcrumb{
+	@extend .primary-breadcrumb;
+	background-color: $inverse-color;
+}
+.danger-breadcrumb{
+	@extend .primary-breadcrumb;
+	background-color: $danger-color;
+}
+.info-breadcrumb{
+	@extend .primary-breadcrumb;
+	background-color: $info-color;
+}
+.warning-breadcrumb{
+	@extend .primary-breadcrumb;
+	background-color: $warning-color;
+}
+.success-breadcrumb{
+	@extend .primary-breadcrumb;
+	background-color: $success-color;
+}
+
+/**====== Breadcrumb css end ======**/

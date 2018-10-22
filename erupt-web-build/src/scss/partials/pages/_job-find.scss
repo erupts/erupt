@@ -1,0 +1,142 @@
+/**  =====================
+      Job-pages css start
+==========================  **/
+
+.job-right-header {
+    .card-header .card-header-right {
+        top: 7px;
+        right: 15px;
+    }
+
+    .radio-inline {
+        display: block;
+    }
+
+    .checkbox-fade {
+        display: block;
+
+        label {
+            position: absolute;
+            z-index: 99;
+        }
+
+        div {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 20px;
+        }
+    }
+
+    a {
+        color: $primary-color;
+        font-weight: 500;
+    }
+}
+
+.job-details-list {
+    padding-left: inherit;
+    list-style-type: square;
+    margin-bottom: 40px;
+
+    li {
+        margin-bottom: 10px;
+    }
+}
+
+.company-name {
+    p {
+        font-weight: 500;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+}
+
+.job-cards {
+    .media {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        border-bottom: 1px solid #ddd;
+    }
+
+    &:last-child {
+        .media {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+    }
+
+    img {
+        width: 60px;
+    }
+
+    .media-right {
+        position: absolute;
+        top: 20px;
+        right: 0;
+    }
+    .media-left{
+        @media only screen and ( max-width:575px ){
+            padding-right: 0;
+        }
+    }
+}
+
+.job-badge {
+    position: absolute;
+    top: 35px;
+    right: -15px;
+    &:after{
+        content: "";
+        border: 7px solid transparent;
+        border-top-color: darken($primary-color, 15%);
+        position: absolute;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        top: -7px;
+        right: 8px;
+        z-index: 1;
+    }
+    .label{
+        width: 50px;
+        text-align: center;
+        padding: 7px;
+        border-radius: 0;
+        z-index: 10;
+    }
+    @media only screen and ( max-width: 768px ){
+        display: none;
+    }
+}
+
+.job-lable {
+    margin-bottom: 20px;
+
+    .label {
+        margin: 5px 10px 5px 0;
+        position: relative;
+        z-index: 9;
+        display: inline-block;
+        padding: 5px 10px 5px 12px;
+    }
+}
+
+.job-card-desc {
+    font-weight: 500;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.job-meta-data {
+    text-transform: capitalize;
+    font-size: 12px;
+    margin-bottom: 10px;
+
+    i {
+        margin-right: 5px;
+        color: $primary-color;
+    }
+}
+/**====== Job-pages css end ======**/

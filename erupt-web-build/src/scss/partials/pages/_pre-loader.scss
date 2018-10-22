@@ -1,0 +1,543 @@
+/**  =====================
+      Pre-loader css start
+==========================  **/
+
+
+/*===== Loader1 =====*/
+
+.loader {
+    margin: 18px auto;
+    top: 65px;
+    left: 65px;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    transform: translate(-50%, -50%);
+    &.animation-start .circle {
+        animation: rotating 2s ease-in-out infinite;
+    }
+    &.animation-stop .circle {
+        animation-iteration-count: 1;
+    }
+    .circle {
+        width: 50px;
+        height: 50px;
+        display: block;
+        position: absolute;
+        transform-origin: 50% 50%;
+        animation-iteration-count: 0;
+    }
+    .circle:after {
+        content: '';
+        top: 0;
+        left: 0;
+        width: 10px;
+        height: 10px;
+        display: block;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #1abc9c;
+    }
+    .circle.delay-1 {
+        animation-delay: 0.125s;
+    }
+    .circle.size-1:after {
+        width: 11px;
+        height: 11px;
+    }
+    .circle.delay-2 {
+        animation-delay: 0.25s;
+    }
+    .circle.size-2:after {
+        width: 12px;
+        height: 12px;
+    }
+    .circle.delay-3 {
+        animation-delay: 0.375s;
+    }
+    .circle.size-3:after {
+        width: 13px;
+        height: 13px;
+    }
+    .circle.delay-4 {
+        animation-delay: 0.5s;
+    }
+    .circle.size-4:after {
+        width: 14px;
+        height: 14px;
+    }
+    .circle.delay-5 {
+        animation-delay: 0.625s;
+    }
+    .circle.size-5:after {
+        width: 15px;
+        height: 15px;
+    }
+    .circle.delay-6 {
+        animation-delay: 0.75s;
+    }
+    .circle.size-6:after {
+        width: 16px;
+        height: 16px;
+    }
+    .circle.delay-7 {
+        animation-delay: 0.875s;
+    }
+    .circle.size-7:after {
+        width: 17px;
+        height: 17px;
+    }
+    .circle.delay-8 {
+        animation-delay: 1s;
+    }
+    .circle.size-8:after {
+        width: 18px;
+        height: 18px;
+    }
+    .circle.delay-9 {
+        animation-delay: 1.125s;
+    }
+    .circle.size-9:after {
+        width: 19px;
+        height: 19px;
+    }
+    .circle.delay-10 {
+        animation-delay: 1.25s;
+    }
+    .circle.size-10:after {
+        width: 20px;
+        height: 20px;
+    }
+    .circle.delay-11 {
+        animation-delay: 1.375s;
+    }
+    .circle.size-11:after {
+        width: 21px;
+        height: 21px;
+    }
+    .circle.delay-12 {
+        animation-delay: 1.5s;
+    }
+    .circle.size-12:after {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+@keyframes rotating {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+/*===== Loader2 =====*/
+
+#loader2 {
+    width: 80px;
+    height: 130px;
+    display: block;
+    transform-origin: 50% 50%;
+    top: calc(50% - 50px);
+    left: calc(50% - 50px);
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+#circle-loader2 {
+    fill: none;
+    stroke: $primary-color;
+    stroke-width: 4;
+    animation: draw 3s ease-in-out infinite;
+}
+
+@keyframes draw {
+    0% {
+        stroke-dasharray: 20, 282.6;
+    }
+    50% {
+        stroke-dasharray: 200, 282.6;
+    }
+    100% {
+        stroke-dasharray: 20, 282.6;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/*==== Loader3 ====*/
+
+.preloader3 {
+    width: auto;
+    height: 130px;
+    text-align: center;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    > div {
+        margin: 2px;
+        background-color: $primary-color;
+        height: 10px;
+        width: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        -webkit-animation: stretchdelay 0.7s infinite ease-in-out;
+        animation: stretchdelay 0.7s infinite ease-in-out;
+    }
+    .circ2 {
+        -webkit-animation-delay: -0.6s;
+        animation-delay: -0.6s;
+    }
+    .circ3 {
+        -webkit-animation-delay: -0.5s;
+        animation-delay: -0.5s;
+    }
+    .circ4 {
+        -webkit-animation-delay: -0.4s;
+        animation-delay: -0.4s;
+    }
+    .circ5 {
+        -webkit-animation-delay: -0.3s;
+        animation-delay: -0.3s;
+    }
+    .loader-md {
+        height: 13px;
+        width: 13px;
+    }
+    .loader-lg {
+        height: 18px;
+        width: 18px;
+    }
+}
+
+@-webkit-keyframes stretchdelay {
+    0%,
+    40%,
+    100% {
+        -webkit-transform: translateY(-10px)
+    }
+    20% {
+        -webkit-transform: translateY(-20px)
+    }
+}
+
+@keyframes stretchdelay {
+    0%,
+    40%,
+    100% {
+        transform: translateY(-10px);
+        -webkit-transform: translateY(-10px);
+    }
+    20% {
+        transform: translateY(-20px);
+        -webkit-transform: translateY(-20px);
+    }
+}
+
+@keyframes rotateColor {
+    0% {
+        border-top-color: #1b8bf9;
+    }
+    12.5% {
+        border-bottom-color: rgba(27, 139, 249, 0.8);
+    }
+    25% {
+        border-bottom-color: rgba(27, 139, 249, 0.6);
+    }
+    37.5% {
+        border-bottom-color: rgba(27, 139, 249, 0.4);
+    }
+    50% {
+        border-bottom-color: rgba(27, 139, 249, 0.6);
+    }
+    50.00001% {
+        border-bottom-color: #1b8bf9;
+    }
+    62.5% {
+        border-bottom-color: rgba(27, 139, 249, 0.8);
+    }
+    75% {
+        border-bottom-color: rgba(27, 139, 249, 0.6);
+    }
+    87.5% {
+        border-bottom-color: rgba(27, 139, 249, 0.4);
+    }
+}
+
+
+/*===== Loader4 =====*/
+
+.preloader4 {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    margin: 55px auto;
+}
+
+.double-bounce1,
+.double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: $primary-color;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-animation: bounce 2.0s infinite ease-in-out;
+    animation: bounce 2.0s infinite ease-in-out;
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+    0%,
+    100% {
+        -webkit-transform: scale(0.0)
+    }
+    50% {
+        -webkit-transform: scale(1.0)
+    }
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    }
+    50% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
+}
+
+
+/*===== Loader5 =====*/
+
+.preloader5 {
+    margin: 55px 0;
+    text-align: center;
+    .circle-5 {
+        display: inline-block;
+        padding: 11px;
+        margin: 0 0.6em;
+        background: $primary-color;
+        border-radius: 100%;
+    }
+    .l {
+        -webkit-animation: pulse 2s infinite linear;
+        animation: pulse 2s infinite linear;
+    }
+    .m {
+        -webkit-animation: pulse 2s infinite linear;
+        animation: pulse 2s infinite linear;
+        -webkit-animation-delay: 0.3s;
+        animation-delay: 0.3s;
+    }
+    .r {
+        -webkit-animation: pulse 2s infinite linear;
+        animation: pulse 2s infinite linear;
+        -webkit-animation-delay: 0.6s;
+        animation-delay: 0.6s;
+    }
+}
+
+@-webkit-keyframes pulse {
+    10% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    20% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    30% {
+        -webkit-transform: scale(1.7);
+        transform: scale(1.7);
+    }
+    50% {
+        -webkit-transform: scale(1.7);
+        transform: scale(1.7);
+    }
+    70% {
+        -webkit-transform: scale(1.7);
+        transform: scale(1.7);
+    }
+    80% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    90% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    10% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    20% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    30% {
+        -webkit-transform: scale(1.7);
+        transform: scale(1.7);
+    }
+    50% {
+        -webkit-transform: scale(1.7);
+        transform: scale(1.7);
+    }
+    70% {
+        -webkit-transform: scale(1.7);
+        transform: scale(1.7);
+    }
+    80% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    90% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+
+/*===== Loader6 =====*/
+
+.preloader6 {
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    background: inherit;
+    margin: 18px 0;
+}
+
+.preloader6 hr {
+    border: 0;
+    background: inherit;
+    width: 80%;
+    height: 80%;
+    margin: 10%;
+    border-radius: 100%;
+}
+
+.preloader6::before,
+.preloader6::after,
+.preloader6 hr::before,
+.preloader6 hr::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    left: 33px;
+    border: 17px solid transparent;
+    border-bottom: 50px solid $primary-color;
+    border-top: 50px solid $primary-color;
+    animation: rotateColor 1000ms infinite;
+}
+
+.preloader6::after {
+    transform: rotate(45deg);
+    animation-delay: 125ms;
+}
+
+.preloader6 hr::before {
+    transform: rotate(90deg);
+    animation-delay: 250ms;
+}
+
+.preloader6 hr::after {
+    transform: rotate(135deg);
+    animation-delay: 375ms;
+}
+
+.loader-block,
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes rotateColor {
+    0% {
+        border-top-color: rgba(26, 188, 156, 1)
+    }
+    12.5% {
+        border-bottom-color: rgba(26, 188, 156, 0.8)
+    }
+    25% {
+        border-bottom-color: rgba(26, 188, 156, 0.6)
+    }
+    37.5% {
+        border-bottom-color: rgba(26, 188, 156, 0.4)
+    }
+    50% {
+        border-bottom-color: rgba(26, 188, 156, 0.6)
+    }
+    50.00001% {
+        border-bottom-color: rgba(26, 188, 156, 1);
+    }
+    62.5% {
+        border-bottom-color: rgba(26, 188, 156, 0.8);
+    }
+    75% {
+        border-bottom-color: rgba(26, 188, 156, 0.6);
+    }
+    87.5% {
+        border-bottom-color: rgba(26, 188, 156, 0.4);
+    }
+}
+
+
+/*========= Pre-loader css end ============*/
+
+/*======= Loader-color css starts  ======= */
+
+$loader-name:primary,
+warning,
+default,
+danger,
+success,
+inverse,
+info;
+$loader-color:$primary-color,
+$warning-color,
+$default-color,
+$danger-color,
+$success-color,
+$inverse-color,
+$info-color;
+@each $var in $loader-name {
+    $i: index($loader-name, $var);
+    .loader-#{$var} {
+        background-color: nth($loader-color, $i) !important;
+    }
+}
+
+
+/*======= Loader-color css ends  ======= */

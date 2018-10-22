@@ -1,0 +1,468 @@
+/**  =====================
+      Generic-class css start
+========================== **/
+$element-color: 'primary' $primary-color, 'warning' $warning-color, 'default' $default-color,'danger' $danger-color, 'success' $success-color, 'inverse' $inverse-color, 'info' $info-color;
+
+.generic-card-block code {
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.generic-image-body {
+    li {
+        padding: 0 20px;
+        display: inline-block;
+    }
+
+    code {
+        display: block;
+    }
+
+    img {
+        display: block;
+        margin: 10px auto 20px;
+    }
+}
+/*====== Padding , Margin css starts ======*/
+$i: 0;
+@while $i<=50 {
+    .p {
+        &-#{$i} {
+            padding: #{$i}px;
+        }
+
+        &-t-#{$i} {
+            padding-top: #{$i}px;
+        }
+
+        &-b-#{$i} {
+            padding-bottom: #{$i}px;
+        }
+
+        &-l-#{$i} {
+            padding-left: #{$i}px;
+        }
+
+        &-r-#{$i} {
+            padding-right: #{$i}px;
+        }
+    }
+
+    .m {
+        &-#{$i} {
+            margin: #{$i}px;
+        }
+
+        &-t-#{$i} {
+            margin-top: #{$i}px;
+        }
+
+        &-b-#{$i} {
+            margin-bottom: #{$i}px;
+        }
+
+        &-l-#{$i} {
+            margin-left: #{$i}px;
+        }
+
+        &-r-#{$i} {
+            margin-right: #{$i}px;
+        }
+    }
+    $i: $i+5;
+}
+/*====== Padding , Margin css ends ======*/
+/*====== Display css starts ======*/
+.d {
+    &-none {
+        display: none;
+    }
+
+    &-inline-block {
+        display: inline-block;
+    }
+
+    &-inline-flex {
+        display: inline-flex;
+    }
+}
+/*====== display css ends ======*/
+/*====== Border-radius css starts ======*/
+$i: 0;
+@while $i<=10 {
+    .b-radius-#{$i} {
+        border-radius: #{$i}px;
+    }
+    $i: $i+5;
+}
+/*====== Border-radius css ends ======*/
+/*====== Font-size css starts ======*/
+$i: 10;
+@while $i<=80 {
+    .f-#{$i} {
+        font-size: #{$i}px;
+    }
+    $i: $i+2;
+}
+/*====== Font-size css ends ======*/
+/*====== Font-weight css starts ======*/
+$i: 100;
+@while $i<=900 {
+    .f-w-#{$i} {
+        font-weight: #{$i};
+    }
+    $i: $i+100;
+}
+/*====== Font-weight css ends ======*/
+/*====== Font-style css starts ======*/
+.f-s {
+    &-normal {
+        font-style: normal;
+    }
+
+    &-italic {
+        font-style: italic;
+    }
+
+    &-oblique {
+        font-style: oblique;
+    }
+
+    &-initial {
+        font-style: initial;
+    }
+
+    &-inherit {
+        font-style: inherit;
+    }
+}
+/*====== Font-style css ends ======*/
+
+.text {
+    /*====== Text-Transform css starts ======*/
+    &-capitalize {
+        text-transform: capitalize;
+    }
+
+    &-uppercase {
+        text-transform: uppercase;
+    }
+
+    &-lowercase {
+        text-transform: lowercase;
+    }
+    /*====== Text-Transform css ends ======*/
+    /*====== Text-Decoration css starts ======*/
+    &-overline {
+        text-decoration: overline;
+    }
+
+    &-line-through {
+        text-decoration: line-through;
+    }
+
+    &-underline {
+        text-decoration: underline;
+    }
+    /*====== Text-Decoration css ends ======*/
+}
+/*====== Vertical-Align css starts ======*/
+
+.baseline {
+    vertical-align: baseline;
+}
+
+.sub {
+    vertical-align: sub;
+}
+
+.super {
+    vertical-align: super;
+}
+
+.top {
+    vertical-align: top;
+}
+
+.text-top {
+    vertical-align: text-top;
+}
+
+.middle {
+    vertical-align: middle;
+}
+
+.bottom {
+    vertical-align: bottom;
+}
+
+.text-bottom {
+    vertical-align: text-bottom;
+}
+
+.initial {
+    vertical-align: initial;
+}
+
+.inherit {
+    vertical-align: inherit;
+}
+/*====== Vertical-Align css ends ======*/
+/*====== Position css starts ======*/
+.pos {
+    &-static {
+        position: static;
+    }
+
+    &-absolute {
+        position: absolute;
+    }
+
+    &-fixed {
+        position: fixed;
+    }
+
+    &-relative {
+        position: relative;
+    }
+
+    &-initial {
+        position: initial;
+    }
+
+    &-inherit {
+        position: inherit;
+    }
+}
+/*====== Position css ends ======*/
+/*====== Overflow css starts ======*/
+$i: hidden, visible, auto;
+@each $val in $i {
+    .o-#{$val} {
+        overflow: $val;
+    }
+}
+/*====== Overflow css ends ======*/
+/*====== Image-sizes css starts ======*/
+$i: 20;
+@while $i<=100 {
+    .img-#{$i} {
+        width: #{$i}px;
+    }
+    $i: $i+10;
+}
+/*====== Image-sizes css ends ======*/
+/*======= Text css starts ===========*/
+$custom-color: #64b0f2;
+$pink-color: #ff7aa3;
+$muted-color: #78909c;
+$dark-color: #2b3d51;
+$purple-color: #9261c6;
+$text-name: text-primary, text-warning, text-default, text-danger, text-success, text-inverse, text-info, text-custom, text-pink, text-dark, text-purple, text-muted;
+$text-color: $primary-color, $warning-color, $default-color, $danger-color, $success-color, $inverse-color, $info-color, $custom-color, $pink-color, $dark-color, $purple-color, $muted-color;
+@each $var in $text-name {
+    $i: index($text-name, $var);
+
+    .#{$var} {
+        color: nth($text-color, $i);
+    }
+}
+/*======= Text css ends ===========*/
+/*======= Label-color css starts  ======= */
+
+.label {
+    border-radius: 2px;
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
+    margin-bottom: 0;
+    text-transform: capitalize;
+}
+@each $value in $element-color {
+    .label-#{nth($value, 1)} {
+        background: nth($value, 2);
+    }
+}
+
+.label-warning {
+    color: #fff;
+}
+/*======= Label-color css starts  ======= */
+/*======= Badge-color css starts  ======= */
+@each $value in $element-color {
+    .badge-#{nth($value, 1)} {
+        background: nth($value, 2);
+    }
+}
+/*======= Badge-color css end  ======= */
+/*======= Background-color css starts  ======= */
+
+.bg-color-box {
+    text-align: center;
+    display: inline-block;
+    padding: 10px 20px;
+    box-shadow: 0 0 5px 0 rgba(128, 128, 128, 0.49);
+    font-weight: 600;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+
+    span {
+        color: #fff;
+    }
+}
+@each $value in $element-color {
+    .bg-#{nth($value, 1)} {
+        background-color: nth($value, 2);
+        color: #fff;
+    }
+}
+/*======= Background-color css end  ======= */
+/*======= Button-color css starts  ======= */
+@each $value in $element-color {
+    .color-#{nth($value, 1)} {
+        background-color: nth($value, 2);
+    }
+}
+/*======= Button-color css ends  ======= */
+/*======= Loader-color css starts  ======= */
+@each $value in $element-color {
+    .loader-#{nth($value, 1)} {
+        background-color: nth($value, 2);
+    }
+}
+/*======= Loader-color css ends  ======= */
+/*======= Nestable-color css starts  ======= */
+@each $value in $element-color {
+    .nestable-#{nth($value, 1)} {
+        background-color: nth($value, 2);
+        border-color: nth($value, 2);
+        color: #fff;
+    }
+}
+/*======= Nestable-color css ends  ======= */
+/*======= Table-Border-Bottom-color css starts  ======= */
+@each $value in $element-color {
+    table tbody .border-bottom-#{nth($value, 1)} td,
+    table tbody .border-bottom-#{nth($value, 1)} th,
+    table thead .border-bottom-#{nth($value, 1)} th {
+        border-bottom: 1px solid nth($value, 2);
+    }
+}
+/*======= Table-Border-Bottom-color css ends  ======= */
+/*======= Table styling css starts  ======= */
+@each $value in $element-color {
+    .table-styling .table-#{nth($value, 1)},
+    .table-styling.table-#{nth($value, 1)} {
+        background-color: nth($value, 2);
+        color: #fff;
+        border: 3px solid nth($value, 2);
+
+        thead {
+            background-color: darken(nth($value, 2), 10%);
+            border: 3px solid darken(nth($value, 2), 10%);
+        }
+    }
+}
+/*======= Table styling css ends  ======= */
+/*======= Toolbar css starts  ======= */
+$light: #bdc3c7;
+$dark: #34495e;
+$toolbar-name: primary, warning, light, danger, success, dark, info;
+$toolbar-color: $primary-color, $warning-color, $default-color, $danger-color, $success-color, $inverse-color, $info-color;
+@each $var in $toolbar-name {
+    $i: index($toolbar-name, $var);
+
+    .toolbar-#{$var} .tool-item {
+        background: nth($toolbar-color, $i);
+    }
+
+    .toolbar-#{$var} .tool-item.selected,
+    .toolbar-#{$var} .tool-item:hover {
+        background: darken(nth($toolbar-color, $i), 10%);
+    }
+
+    .toolbar-#{$var}.tool-top .arrow {
+        border-color: nth($toolbar-color, $i) transparent transparent;
+    }
+
+    .toolbar-#{$var}.tool-bottom .arrow {
+        border-color: transparent transparent nth($toolbar-color, $i);
+    }
+
+    .toolbar-#{$var}.tool-left .arrow {
+        border-color: transparent transparent transparent nth($toolbar-color, $i);
+    }
+
+    .toolbar-#{$var}.tool-right .arrow {
+        border-color: transparent nth($toolbar-color, $i) transparent transparent;
+    }
+
+    .btn-toolbar-#{$var}.pressed {
+        background-color: nth($toolbar-color, $i);
+    }
+}
+/*======= Toolbar css ends  ======= */
+/*======= Card-Border-Top-color css starts  ======= */
+@each $value in $element-color {
+    .card-border-#{nth($value, 1)} {
+        border-top: 4px solid nth($value, 2);
+    }
+}
+/*======= Card-Border-Top-color css ends  ======= */
+/*======= Card-color css starts  ======= */
+@each $value in $element-color {
+    .card-#{nth($value, 1)} {
+        background: nth($value, 2);
+    }
+}
+/*======= Card-color css ends  ======= */
+/*======= All-Borders-color css starts  ======= */
+@each $value in $element-color {
+    .b-t-#{nth($value, 1)} {
+        border-top: 1px solid #{nth($value, 2)};
+    }
+
+    .b-b-#{nth($value, 1)} {
+        border-bottom: 1px solid #{nth($value, 2)};
+    }
+
+    .b-l-#{nth($value, 1)} {
+        border-left: 1px solid #{nth($value, 2)};
+    }
+
+    .b-r-#{nth($value, 1)} {
+        border-right: 1px solid #{nth($value, 2)};
+    }
+
+    .b-#{nth($value, 1)} {
+        border: 1px solid #{nth($value, 2)};
+    }
+}
+/*======= All-Borders-color css ends  ======= */
+/*======= All-color css start  ======= */
+@each $value in $social-name {
+    $i: index($social-name, $value);
+
+    .bg-#{$value} {
+        background: nth($social-color,$i);
+    }
+
+    .text-#{$value} {
+        color: nth($social-color,$i);
+    }
+}
+@each $value in $color-name {
+    $i: index($color-name, $value);
+
+    .bg-#{$value} {
+        background: nth($color-color,$i),;
+    }
+
+    .text-#{$value} {
+        color: nth($color-color,$i);
+    }
+}
+/*======= All-color css ends  ======= */

@@ -1,0 +1,42 @@
+/**
+Template Name: Material Able Admin Template
+Author: #
+Email: #
+File: style.css
+=============
+  == Table of Contents==
+	- Custom Css
+	- General Elements
+		-	Modal, Nestable, List, Portlates, Preloader, Calender, To-Do, Materialize general elements, Lables
+	- Advance Form Elements
+	- Pages
+		-	Loader page, Invoice, Tasklist, Task detail, Range-slider, Counter, Maintenance, Color, FAQ,  Panels & wells, Contact card, Auth pages, Flag, Gallery, Products pages, Widget, Email, Social timeline, Datatable, Chat, Blog, Wizard, CRM dashboard, Task board, Issue list, Chartlist, X-editable
+============= */
+// General theme contents
+@import "partials/variables";
+@import "partials/mixins";
+// theme-elements
+@import "partials/theme-elements/box-shadow";
+// pages
+@import "partials/pages/icon-layout";
+@import "partials/pages/ready-to-use";
+@import "partials/pages/alert";
+@import "partials/pages/authentication";
+@import "partials/pages/breadcrumb";
+@import "partials/pages/charts";
+@import "partials/pages/color";
+@import "partials/pages/draggable";
+@import "partials/pages/e-payment";
+@import "partials/pages/editors";
+@import "partials/pages/fb-wall";
+@import "partials/pages/full-calender";
+@import "partials/pages/job-find";
+@import "partials/pages/mail-pages";
+@import "partials/pages/maps";
+@import "partials/pages/note";
+@import "partials/pages/prism";
+@import "partials/pages/pre-loader";
+@import "partials/pages/range-slider";
+@import "partials/pages/rating";
+@import "partials/pages/todo";
+@import "partials/pages/genral_pages";

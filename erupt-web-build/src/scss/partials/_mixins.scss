@@ -1,0 +1,95 @@
+// Button mixins start
+@mixin buttons($back-color,$border-color,$color:#fff,$cursor:pointer,$transition:all ease-in 0.3s){
+	background-color: $back-color;
+	border-color:$border-color;
+	color:$color;
+	cursor:$cursor;
+	transition: $transition;
+}
+
+@mixin buttons-hover($back-color,$border-color,$color:#fff){
+	background-color: $back-color;
+	border-color:$border-color;
+}
+
+@mixin animations-frame($name){
+	@-webkit-keyframes #{$name}{
+		@content;
+	}
+	@keyframes #{$name}{
+		@content;
+	}
+}
+
+@mixin buttons-active($back-color,$border-color,$color:#fff,$box-shadow:none){
+	background-color: $back-color;
+	border-color:$border-color;
+	box-shadow:$box-shadow;
+	color:$color;
+}
+
+@mixin labels-active($back-color,$border-color,$color:#fff,$box-shadow:none){
+	background-color: $back-color;
+	border-color:$border-color;
+	box-shadow:$box-shadow;
+	color:$color;
+}
+
+@mixin button-trans($back-color,$border-color){
+	background-color:$back-color;
+	border-color:$border-color;
+}
+
+@mixin buttons-focus($back-color,$color:#fff,$box-shadow:none){
+	box-shadow:$box-shadow;
+	color:$color;
+	background-color:$back-color;
+}
+
+@mixin buttons-borders($color,$back-color:#fff){
+	color:$color;
+	background-color:$back-color;
+}
+
+@mixin dropdown-hover($back-color,$color:#fff){
+	background-color:$back-color;
+	color:$color;
+}
+// Button mixins end
+
+// Label mixin start
+@mixin labels-inverse($border-color,$color){
+	border-color: $border-color;
+	color:$color;
+}
+
+@mixin labels-badge($back-color:#34495e,$color:#fff){
+	background-color: $back-color;
+	color:$color;
+}
+@mixin labels-badge-inverse($color,$back-color:#fff){
+	color:$color;
+	background-color: $back-color;
+}
+// Label mixin end
+
+
+@mixin width($width){
+	width:$width;
+}
+
+
+@mixin shadow($shadow...){
+	box-shadow:$shadow;
+
+}
+
+
+@mixin theme-keyframes($name) {
+	@-webkit-keyframes #{$name} {
+        @content;
+    }
+	@keyframes #{$name} {
+        @content;
+    }
+}

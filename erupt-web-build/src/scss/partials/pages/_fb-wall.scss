@@ -1,0 +1,272 @@
+/**  =====================
+      FB-wall css start
+==========================  **/
+.tab-pane form .md-add-on i{
+    font-size: 20px;
+}
+.wall-elips{
+    position: absolute;
+    right: 15px;
+}
+.social-wallpaper{
+    position: relative;
+}
+.social-profile {
+    position: relative;
+    padding-top: 15px;
+}
+.timeline-btn{
+    position: absolute;
+    bottom: 0;
+    right: 30px;
+}
+.nav-tabs.md-tabs.tab-timeline li a{
+    padding: 20px 0 10px;
+    color: $inverse-color;
+    font-size: 16px;
+}
+.social-timeline-left{
+    position: absolute;
+    top: -200px;
+    margin-right: 15px;
+}
+.post-input{
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    resize: none;
+}
+.user-box .media-object, .friend-box .media-object{
+    height:45px;
+    width: 45px;
+    display: inline-block;
+    cursor: pointer;
+}
+.friend-box img{
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.chat-header{
+    color: #222222;
+}
+.live-status{
+    height: 9px;
+    width: 9px;
+    position: absolute;
+    bottom: 0;
+    right: 17px;
+    border-radius: 100%;
+    border: 1px solid;
+    top: 5px;
+}
+.tab-timeline .slide{
+    bottom: -1px;
+}
+.image-upload input {
+    visibility:hidden;
+    max-width:0;
+    max-height:0
+}
+.file-upload-lbl{
+    max-width: 15px;
+    padding: 5px 0 0;
+}
+.ellipsis::after{
+    top: 15px;
+    border: none;
+    position: absolute;
+    content: '\f142';
+    font-family: FontAwesome;
+    right: 30px;
+}
+.elipsis-box{
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.11);
+    top: 40px;
+    right: -10px;
+    &:after{
+	    content: '';
+	    height: 13px;
+	    width: 13px;
+	    background: #fff;
+	    position: absolute;
+	    top: -5px;
+	    right: 10px;
+	    -webkit-transform: rotate(45deg);
+	    -moz-transform: rotate(45deg);
+	    transform: rotate(45deg);
+	    box-shadow: -3px -3px 11px 1px rgba(170, 170, 170, 0.22);
+	}
+}
+.friend-elipsis{
+    left: -10px;
+    top:-10px;
+}
+.social-profile,.social-wallpaper{
+	&:hover{
+		.profile-hvr{
+			opacity:1;
+   			transition: all ease-in-out 0.3s;
+		}
+	}
+}
+.profile-hvr{
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    font-size: 20px;
+    padding:10px;
+    top: 0;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.61);
+    transition: all ease-in-out 0.3s;
+}
+.social-profile{
+    margin: 0 15px;
+}
+.social-follower{
+    text-align: center;
+    h4{
+	    font-size: 18px;
+	    margin-bottom: 10px;
+	    font-style: normal;
+	}
+	h5{
+	    font-size: 14px;
+	}
+	.follower-counter{
+	    text-align: center;
+	    margin-top: 25px;
+	    margin-bottom: 25px;
+	    font-size: 13px;
+	    .txt-primary{
+		    font-size: 24px;
+		}
+	}
+
+}
+.timeline-icon{
+    height: 45px;
+    width: 45px;
+    display: block;
+    margin: 0 auto;
+    border: 4px #fff solid;
+}
+.social-timelines-left{
+    &:after{
+        height: 3px;
+        width: 20px;
+        position: absolute;
+        background: #cccccc;
+        top: 20px;
+        content: "";
+        right: -10px;
+        z-index: 0;
+    }
+}
+.social-timelines-left{
+    position: relative;
+    z-index: 3;
+}
+.social-timelines:before {
+    position: absolute;
+    content: ' ';
+    width: 3px;
+    background: #cccccc;
+    left: 48px;
+    height: 100%;
+    top:0;
+    z-index: 1;
+}
+.timeline-dot{
+	&:after,&:before{
+		content: "";
+	    position: absolute;
+	    height: 9px;
+	    width: 9px;
+	    background-color: #cccccc;
+	    left: 45px;
+	    border-radius: 100%;
+	}
+}
+
+.user-box .social-designation,.post-timelines .social-time{
+    font-size: 13px;
+}
+.user-box .f-right{
+	text-transform:capitalize;
+}
+.social-msg{
+	a{
+		display:inline-block;
+        span{
+    	    color: #666;
+    	    padding-left: 10px;
+    	    padding-right: 10px;
+    	    margin-right: 10px;
+    	}
+        &:hover{
+            color: $primary-color;
+            span,i{
+                color: $primary-color !important;
+            }
+        }
+	}
+}
+
+.view-info, .contact-info, .work-info{
+	.social-label{
+		font-size: 15px;
+	    padding-left: 0;
+	    padding-top: 0;
+	}
+	.social-user-name{
+		font-size: 14px;
+    	padding-left: 0;
+	}
+}
+
+.friend-elipsis .social-designation{
+    font-size: 13px;
+}
+.timeline-details p{
+    padding-top: 10px;
+    margin-bottom: 0;
+}
+.post-timelines{
+    cursor: pointer;
+}
+.timeline-details,.post-timelines{
+	.chat-header{
+		font-size: 16px;
+        font-weight: 500;
+	}
+}
+.social-client-description{
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    p{
+	    margin-top: 5px;
+	    margin-bottom: 0;
+	}
+	span{
+	    font-size: 12px;
+      margin-left: 10px;
+	}
+	.chat-header{
+	    font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+	}
+}
+.social-tabs a{
+    font-size: 18px;
+}
+.timeline-btn a{
+    margin-bottom: 20px;
+}
+.profile-hvr i{
+    cursor: pointer;
+}
+/*====== FB-wall css End ======*/
