@@ -7,7 +7,7 @@ import com.erupt.annotation.constant.DataLength;
  * Created by liyuepeng on 10/10/18.
  */
 public @interface InputType {
-    InputEnum type() default InputEnum.STRING;
+    InputEnum type() default InputEnum.TEXT;
 
     UiColor color() default UiColor.DEFAULT;
 

@@ -55,11 +55,26 @@ public class Mmo extends BaseModel {
             },
             edit = @Edit(
                     title = "名称",
-                    notNull = true
+                    notNull = true,
+                    inputType = @InputType(color = UiColor.success)
             ),
             search = @Search(isSearch = true)
     )
     private String input;
+
+
+    @EruptField(
+            views = {
+                    @View(title = "tag", column = "abc")
+            },
+            edit = @Edit(
+                    title = "名称",
+                    notNull = true,
+                    inputType = @InputType(type = InputEnum.TAG,color = UiColor.success)
+            ),
+            search = @Search(isSearch = true)
+    )
+    private String tag;
 
     @Column(name = "TEXT")
     @EruptField(
@@ -75,7 +90,7 @@ public class Mmo extends BaseModel {
                                             @VL(value = 234, label = "李四"),
                                             @VL(value = 456, label = "王五")
                                     },
-                                    type = ChoiceEnum.SINGLE
+                                    type = ChoiceEnum.SELECT
                             )
                     }
             ),
@@ -113,7 +128,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "颜色",
                     type = EditType.INPUT,
-                    inputType = @InputType(color = UiColor.danger,placeholder = "holder",defaultVal="2333")
+                    inputType = @InputType(color = UiColor.danger, placeholder = "holder", defaultVal = "2333", type = InputEnum.COLOR)
             )
     )
     private String color;

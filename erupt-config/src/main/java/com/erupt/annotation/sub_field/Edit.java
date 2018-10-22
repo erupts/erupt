@@ -37,4 +37,6 @@ public @interface Edit {
 
     TabType[] tabType() default {};
 
+    NumberType[] numberType() default {};
+
 }
