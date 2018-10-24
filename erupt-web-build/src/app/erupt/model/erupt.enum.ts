@@ -18,7 +18,8 @@ export enum EditType {
   IMAGE = 7,            //图片
   QRCODE = 8,           //二维码
   ATTACHMENT = 9,       //附件
-  TAB = 10              //TAB选项卡
+  TAB = 10,             //TAB选项卡
+  NUMBER = 11           //数字滑块
 }
 
 export enum DateEnum {

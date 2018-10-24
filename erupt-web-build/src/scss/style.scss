@@ -53,3 +53,9 @@ File: style.css
 @import '~ngx-bar-rating/themes/br-square-theme';
 // material
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "~ngx-ui-switch/ui-switch.component.css";
+@import "~ngx-bootstrap/datepicker/bs-datepicker.scss";
+//datatable
+@import "~@swimlane/ngx-datatable/release/index.css";
+@import "~@swimlane/ngx-datatable/release/themes/material.css";
+

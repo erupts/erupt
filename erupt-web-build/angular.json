@@ -31,7 +31,8 @@
               "src/scss/style.scss",
               "src/scss/widget.scss",
               "src/scss/pages.scss",
-              "src/assets/icon/feather/css/feather.css"
+              "src/assets/icon/feather/css/feather.css",
+              "src/assets/icon/ngx-datatable/icons.css"
             ],
             "scripts": []
           },

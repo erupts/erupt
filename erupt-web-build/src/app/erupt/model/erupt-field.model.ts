@@ -38,6 +38,7 @@ export interface Edit {
   choiceType: Array<ChoiceType>;
   dictType: Array<DictType>;
   dateType: Array<DateType>;
+  numberType: Array<NumberType>;
 }
 
 
@@ -81,6 +82,13 @@ interface DictType {
 
 interface DateType {
   type: DateEnum;
+  isRange: boolean;
+}
+
+interface NumberType {
+  defaultVal: number;
+  max: number;
+  min: number;
 }
 
 

@@ -8,6 +8,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {BrowserModule} from "@angular/platform-browser";
 import {MatCheckboxModule, MatPaginatorModule, MatTableModule, MatTabsModule} from "@angular/material";
 import { ListComponent } from './list/list.component';
+import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { ListComponent } from './list/list.component';
     BuildRoutingModule,
     EruptModule,
     MatTabsModule,
+    NgxDatatableModule
   ],
   declarations: [EditComponent, ListComponent]
 })

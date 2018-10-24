@@ -6,9 +6,13 @@ import {EditTypeComponent} from './edit-type/edit-type.component';
 import {TagInputModule} from "ngx-chips";
 import {FormsModule} from "@angular/forms";
 import {ColorPickerModule} from "ngx-color-picker";
-import {MatSelectModule, MatSlideToggleModule} from "@angular/material";
-import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {BrowserModule} from "@angular/platform-browser";
+import {MatSelectModule, MatSliderModule, MatSlideToggleModule} from "@angular/material";
+import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
+import {defineLocale} from 'ngx-bootstrap/chronos';
+import {zhCnLocale} from 'ngx-bootstrap/locale';
+import {UiSwitchModule} from "ngx-ui-switch";
+import { DataTableComponent } from './data-table/data-table.component';
+defineLocale('zh-cn', zhCnLocale)
 
 @NgModule({
   imports: [
@@ -18,7 +22,10 @@ import {BrowserModule} from "@angular/platform-browser";
     TagInputModule,
     ColorPickerModule,
     MatSlideToggleModule,
-    MatSelectModule
+    MatSelectModule,
+    BsDatepickerModule.forRoot(),
+    MatSliderModule,
+    UiSwitchModule
   ],
   providers: [
     DataService
@@ -26,7 +33,7 @@ import {BrowserModule} from "@angular/platform-browser";
   exports: [
     EditTypeComponent
   ],
-  declarations: [EditTypeComponent]
+  declarations: [EditTypeComponent, DataTableComponent]
 })
 export class EruptModule {
 }

@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Edit} from "../model/erupt-field.model";
 import {EditType} from "../model/erupt.enum";
+import {BsLocaleService, listLocales} from "ngx-bootstrap";
 
 
 @Component({
@@ -14,6 +15,7 @@ export class EditTypeComponent implements OnInit {
 
   editType = EditType;
 
+
   basicColor = "#fff";
 
   checkBoxChange = function ($event, val) {
@@ -26,13 +28,14 @@ export class EditTypeComponent implements OnInit {
     }
 
     console.log(this.edit.$value);
-  }
+  };
 
-  constructor() {
+  constructor(private localeService: BsLocaleService) {
+    this.localeService.use("zh-cn");
   }
 
   ngOnInit() {
-    // $('input[maxlength]').maxlength();
+
   }
 
 }
