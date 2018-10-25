@@ -39,4 +39,6 @@ public @interface Edit {
 
     NumberType[] numberType() default {};
 
+    LinkType[] linkType() default {};
+
 }

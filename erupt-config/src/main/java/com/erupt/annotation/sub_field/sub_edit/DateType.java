@@ -7,5 +7,5 @@ public @interface DateType {
 
     DateEnum type() default DateEnum.DATE;
 
-
+    boolean isRange() default false;
 }

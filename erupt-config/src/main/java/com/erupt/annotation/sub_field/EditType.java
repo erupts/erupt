@@ -15,4 +15,5 @@ public enum EditType {
     ATTACHMENT,       //附件
     TAB,              //TAB选项卡
     NUMBER,           //数字输入
+    LINK,             //链接
 }

@@ -9,17 +9,17 @@ export enum RgbColor {
 }
 
 export enum EditType {
-  INPUT = 1,            //输入框
-  CHOICE = 2,           //选择框
-  DATE = 3,             //日期
-  REFERENCE = 4,        //引用
-  BOOLEAN = 5,          //布尔
-  DICT = 6,             //字典
-  IMAGE = 7,            //图片
-  QRCODE = 8,           //二维码
-  ATTACHMENT = 9,       //附件
-  TAB = 10,             //TAB选项卡
-  NUMBER = 11           //数字滑块
+  INPUT = 'INPUT',            //输入框
+  CHOICE = 'CHOICE',           //选择框
+  DATE = 'DATE',             //日期
+  REFERENCE = 'REFERENCE',        //引用
+  BOOLEAN = 'BOOLEAN',          //布尔
+  DICT = 'DICT',             //字典
+  IMAGE = 'IMAGE',            //图片
+  QRCODE = 'QRCODE',           //二维码
+  ATTACHMENT = 'ATTACHMENT',       //附件
+  TAB = 'TAB',             //TAB选项卡
+  NUMBER = 'NUMBER'           //数字滑块
 }
 
 export enum DateEnum {

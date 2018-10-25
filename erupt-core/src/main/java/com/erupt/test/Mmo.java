@@ -50,8 +50,12 @@ public class Mmo extends BaseModel {
     @Column(name = "NAME")
     @EruptField(
             views = {
-                    @View(title = "张三", column = "abc"),
-                    @View(title = "张三", column = "def")
+                    @View(title = "张三", column = "name"),
+                    @View(title = "张三2", column = "name2"),
+                    @View(title = "张三3", column = "name3"),
+                    @View(title = "张三4", column = "name4"),
+                    @View(title = "张三5", column = "name5"),
+                    @View(title = "张三6", column = "name6"),
             },
             edit = @Edit(
                     title = "名称",
@@ -65,16 +69,31 @@ public class Mmo extends BaseModel {
 
     @EruptField(
             views = {
-                    @View(title = "tag", column = "abc")
+                    @View(title = "标签")
             },
             edit = @Edit(
                     title = "名称",
                     notNull = true,
-                    inputType = @InputType(type = InputEnum.TAG,color = UiColor.success)
+                    inputType = @InputType(type = InputEnum.TAG, color = UiColor.success)
             ),
             search = @Search(isSearch = true)
     )
-    private String tag;
+    private String gender;
+
+
+    @EruptField(
+            views = {
+                    @View(title = "number")
+            },
+            edit = @Edit(
+                    title = "数字",
+                    notNull = true,
+                    type = EditType.NUMBER,
+                    numberType = @NumberType(max = 999, defaultVal = 10)
+            ),
+            search = @Search(isSearch = true)
+    )
+    private String age;
 
     @Column(name = "TEXT")
     @EruptField(
@@ -99,6 +118,7 @@ public class Mmo extends BaseModel {
     private String choice;
 
     @EruptField(
+            views = @View(title = "布尔"),
             edit = @Edit(
                     title = "布尔",
                     type = EditType.BOOLEAN,

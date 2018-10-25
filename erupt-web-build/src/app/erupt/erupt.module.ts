@@ -6,12 +6,13 @@ import {EditTypeComponent} from './edit-type/edit-type.component';
 import {TagInputModule} from "ngx-chips";
 import {FormsModule} from "@angular/forms";
 import {ColorPickerModule} from "ngx-color-picker";
-import {MatSelectModule, MatSliderModule, MatSlideToggleModule} from "@angular/material";
+import {MatCheckboxModule, MatSelectModule, MatSliderModule, MatSlideToggleModule} from "@angular/material";
 import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {zhCnLocale} from 'ngx-bootstrap/locale';
 import {UiSwitchModule} from "ngx-ui-switch";
 import { DataTableComponent } from './data-table/data-table.component';
+import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 defineLocale('zh-cn', zhCnLocale)
 
 @NgModule({
@@ -25,13 +26,16 @@ defineLocale('zh-cn', zhCnLocale)
     MatSelectModule,
     BsDatepickerModule.forRoot(),
     MatSliderModule,
-    UiSwitchModule
+    UiSwitchModule,
+    NgxDatatableModule,
+    MatCheckboxModule
   ],
   providers: [
     DataService
   ],
   exports: [
-    EditTypeComponent
+    EditTypeComponent,
+    DataTableComponent
   ],
   declarations: [EditTypeComponent, DataTableComponent]
 })

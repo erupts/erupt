@@ -1,28 +1,3 @@
-<div class="page-body m-t-40">
-  <ngx-datatable
-    *ngIf="columns.length>0"
-    class="material"
-    [columns]="columns"
-    [columnMode]="'force'"
-    [headerHeight]="50"
-    [footerHeight]="50"
-    [rowHeight]="50"
-    [limit]="50"
-    [rows]="rows"
-    [selectAllRowsOnPage]="true"
-  >
-    <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false"
-                          [resizeable]="false">
-      <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
-        <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)"/>
-      </ng-template>
-      <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
-        <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)"/>
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop">
-    </ngx-datatable-column>
-  </ngx-datatable>
+<div class="page-body m-t-40 " style="background: #fff" >
+  <erupt-data-table [columns]="columns" [rows]="rows" height="600px" [page]="{total:100,pageSize:10,pageNumber:1}"></erupt-data-table>
 </div>
-
-

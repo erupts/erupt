@@ -1,7 +1,7 @@
 <ng-container *ngIf="edit.show">
   <ng-container [ngSwitch]="edit.type">
     <!--input-->
-    <ng-container *ngSwitchCase="editType[1]">
+    <ng-container *ngSwitchCase="editType.INPUT">
       {{edit.title}}
       <ng-container [ngSwitch]="edit.inputType[0].type">
         <ng-container *ngSwitchCase="'TEXT'">
@@ -24,7 +24,7 @@
         </ng-container>
         <ng-container *ngSwitchCase="'AREA'">
           <div class="form-group">
-            <label >文本框</label>
+            <label>文本框</label>
             <textarea class="form-control" rows="6"></textarea>
           </div>
         </ng-container>
@@ -35,7 +35,7 @@
       </ng-container>
     </ng-container>
     <!--choice-->
-    <ng-container *ngSwitchCase="editType[2]">
+    <ng-container *ngSwitchCase="editType.CHOICE">
       <!---->
       {{edit.$value}}
       <ng-container *ngIf="edit.choiceType[0].type=='MULTI'">
@@ -74,7 +74,7 @@
       </ng-container>
     </ng-container>
     <!--date-->
-    <ng-container *ngSwitchCase="editType[3]">
+    <ng-container *ngSwitchCase="editType.DATE">
       <ng-container *ngIf="!edit.dateType[0].isRange">
         <input type="text"
                placeholder="选择时间"
@@ -90,20 +90,21 @@
 
     </ng-container>
     <!--reference-->
-    <ng-container *ngSwitchCase="editType[4]">
+    <ng-container *ngSwitchCase="editType.REFERENCE">
       REFERENCE
     </ng-container>
     <!--bool-->
-    <ng-container *ngSwitchCase="editType[5]">
+    <ng-container *ngSwitchCase="editType.BOOLEAN">
       <ui-switch [checkedLabel]="edit.boolType[0].trueText" [uncheckedLabel]="edit.boolType[0].falseText"></ui-switch>
     </ng-container>
     <!--dict-->
-    <ng-container *ngSwitchCase="editType[6]">
+    <ng-container *ngSwitchCase="editType.DICT">
       DICT
     </ng-container>
     <!--number-->
-    <ng-container *ngSwitchCase="editType[11]">
-      <mat-slider thumbLabel [min]="edit.numberType[0].min" [max]="edit.numberType[0].max" tickInterval="auto" value="0"></mat-slider>
+    <ng-container *ngSwitchCase="editType.NUMBER">
+      <mat-slider thumbLabel [min]="edit.numberType[0].min" [max]="edit.numberType[0].max" tickInterval="auto"
+                  value="0"></mat-slider>
     </ng-container>
   </ng-container>
 </ng-container>
