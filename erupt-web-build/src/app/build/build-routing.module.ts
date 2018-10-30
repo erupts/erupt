@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {EditComponent} from './edit/edit.component';
-import {ListComponent} from "./list/list.component";
+import {ViewComponent} from "./view/view.component";
 
 const routes: Routes = [
   {
@@ -15,8 +15,8 @@ const routes: Routes = [
     }
   },
   {
-    path: 'list',
-    component: ListComponent,
+    path: 'view',
+    component: ViewComponent,
     data: {
       title: 'Erupt list',
       icon: 'icon-table',

@@ -46,16 +46,21 @@ public class CoreService implements InitializingBean {
                 eruptModel.setClazz(clazz);
                 eruptModel.setErupt(erupt);
                 System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a(ConfigUtil.annoStrToJsonStr(erupt.toString())));
+                eruptModel.setEruptName(eruptName);
                 eruptModel.setEruptJson(new JsonParser().parse(ConfigUtil.annoStrToJsonStr(erupt.toString())).getAsJsonObject());
             }
             // erupt field info to memory
             {
                 List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
+
                 for (Field field : clazz.getDeclaredFields()) {
                     EruptField eruptField = field.getAnnotation(EruptField.class);
                     if (null != eruptField) {
                         EruptFieldModel eruptFieldModel = new EruptFieldModel(eruptField, field);
                         eruptFieldModels.add(eruptFieldModel);
+                    }
+                    if (null != clazz.getSuperclass()) {
+
                     }
                 }
                 //super class erupt annotation

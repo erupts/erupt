@@ -6,19 +6,29 @@ import {EditTypeComponent} from './edit-type/edit-type.component';
 import {TagInputModule} from "ngx-chips";
 import {FormsModule} from "@angular/forms";
 import {ColorPickerModule} from "ngx-color-picker";
-import {MatCheckboxModule, MatSelectModule, MatSliderModule, MatSlideToggleModule} from "@angular/material";
+import {
+  MAT_DATE_LOCALE,
+  MatCheckboxModule, MatDatepickerModule, MatFormFieldModule, MatIconModule, MatInputModule,
+  MatNativeDateModule,
+  MatRadioModule,
+  MatSelectModule,
+  MatSliderModule,
+  MatSlideToggleModule, MatTableModule
+} from "@angular/material";
 import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {zhCnLocale} from 'ngx-bootstrap/locale';
 import {UiSwitchModule} from "ngx-ui-switch";
-import { DataTableComponent } from './data-table/data-table.component';
-import {NgxDatatableModule} from "@swimlane/ngx-datatable";
+import {DataTableComponent} from './data-table/data-table.component';
+import {SharedModule} from "../shared/shared.module";
 defineLocale('zh-cn', zhCnLocale)
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    SharedModule,
     HttpClientModule,
     TagInputModule,
     ColorPickerModule,
@@ -27,11 +37,20 @@ defineLocale('zh-cn', zhCnLocale)
     BsDatepickerModule.forRoot(),
     MatSliderModule,
     UiSwitchModule,
-    NgxDatatableModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+
+    MatDatepickerModule,
+    MatIconModule,
+    MatNativeDateModule,
+    MatTableModule,
+    MatRadioModule,
+
   ],
   providers: [
-    DataService
+    DataService,
+    {provide: MAT_DATE_LOCALE, useValue: 'zh'},
   ],
   exports: [
     EditTypeComponent,

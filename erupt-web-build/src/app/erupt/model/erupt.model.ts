@@ -6,6 +6,7 @@ import {RgbColor} from "./erupt.enum";
 export interface EruptModel {
   eruptFieldModels: Array<EruptFieldModel>;
   eruptJson: Erupt;
+  eruptName: string;
 }
 
 export interface Erupt {

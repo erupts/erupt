@@ -14,6 +14,7 @@ import com.erupt.annotation.sub_field.sub_edit.*;
 import com.erupt.model.BaseModel;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by liyuepeng on 9/28/18.
@@ -60,25 +61,11 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "名称",
                     notNull = true,
-                    inputType = @InputType(color = UiColor.success)
-            ),
-            search = @Search(isSearch = true)
+                    inputType = @InputType(color = UiColor.success),
+                    search = @Search(isSearch = true)
+            )
     )
     private String input;
-
-
-    @EruptField(
-            views = {
-                    @View(title = "标签")
-            },
-            edit = @Edit(
-                    title = "名称",
-                    notNull = true,
-                    inputType = @InputType(type = InputEnum.TAG, color = UiColor.success)
-            ),
-            search = @Search(isSearch = true)
-    )
-    private String gender;
 
 
     @EruptField(
@@ -88,12 +75,10 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "数字",
                     notNull = true,
-                    type = EditType.NUMBER,
-                    numberType = @NumberType(max = 999, defaultVal = 10)
-            ),
-            search = @Search(isSearch = true)
+                    search = @Search(isSearch = true)
+            )
     )
-    private String age;
+    private Integer age;
 
     @Column(name = "TEXT")
     @EruptField(
@@ -109,17 +94,44 @@ public class Mmo extends BaseModel {
                                             @VL(value = 234, label = "李四"),
                                             @VL(value = 456, label = "王五")
                                     },
-                                    type = ChoiceEnum.SELECT
+                                    type = ChoiceEnum.SELECT_SINGLE
                             )
-                    }
-            ),
-            search = @Search(isSearch = true)
+                    },
+                    search = @Search(isSearch = true)
+            )
+
     )
     private String choice;
+
+
+    @EruptField(
+            views = @View(title = "选择"),
+            edit = @Edit(
+                    title = "选择",
+                    notNull = true,
+                    type = EditType.CHOICE,
+                    choiceType = {
+                            @ChoiceType(
+                                    vl = {
+                                            @VL(value = 123, label = "张三"),
+                                            @VL(value = 234, label = "李四"),
+                                            @VL(value = 456, label = "王五"),
+                                            @VL(value = 2341, label = "李四"),
+                                            @VL(value = 2343, label = "李四"),
+                                            @VL(value = 2344, label = "李四"),
+                                    },
+                                    type = ChoiceEnum.SINGLE
+                            )
+                    },
+                    search = @Search(isSearch = true)
+            )
+    )
+    private String single;
 
     @EruptField(
             views = @View(title = "布尔"),
             edit = @Edit(
+                    notNull = true,
                     title = "布尔",
                     type = EditType.BOOLEAN,
                     boolType = @BoolType(trueText = "是的", falseText = "不行")
@@ -129,6 +141,7 @@ public class Mmo extends BaseModel {
 
     @EruptField(
             edit = @Edit(
+                    notNull = true,
                     title = "时间",
                     type = EditType.DATE,
                     dateType = @DateType
@@ -144,14 +157,6 @@ public class Mmo extends BaseModel {
     )
     private String image;
 
-    @EruptField(
-            edit = @Edit(
-                    title = "颜色",
-                    type = EditType.INPUT,
-                    inputType = @InputType(color = UiColor.danger, placeholder = "holder", defaultVal = "2333", type = InputEnum.COLOR)
-            )
-    )
-    private String color;
 
     @EruptField(
             edit = @Edit(
@@ -160,7 +165,8 @@ public class Mmo extends BaseModel {
                     tabType = @TabType(icon = "fa fa-table")
             )
     )
-    private String tab;
+    @OneToMany
+    private Set<SubMmo> sub;
 
     @EruptField(
             edit = @Edit(
@@ -171,4 +177,16 @@ public class Mmo extends BaseModel {
     )
     private String tab2;
 
+
+    @EruptField(
+            views = {
+                    @View(title = "标签")
+            },
+            edit = @Edit(
+                    title = "名称",
+                    notNull = true,
+                    inputType = @InputType(type = InputEnum.TEXTAREA, color = UiColor.success)
+            )
+    )
+    private String gender;
 }

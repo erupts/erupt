@@ -9,12 +9,12 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'data/edit',
+        redirectTo: 'list/view',
         pathMatch: 'full'
       },
 
       {
-        path: 'data',
+        path: 'list',
         loadChildren: './build/build.module#BuildModule'
       }
     ]

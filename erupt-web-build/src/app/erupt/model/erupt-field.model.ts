@@ -13,7 +13,6 @@ export interface EruptFieldModel {
 interface EruptField {
   views: Array<View>;
   edit: Edit;
-  search: Search;
 }
 
 interface View {
@@ -32,19 +31,26 @@ export interface Edit {
   readOnly: boolean;
   sort: number;
   group: string;
+  groupIcon: string;
+  col: number;
+  tabType: Array<TabType>;
   inputType: Array<InputType>;
   referenceType: Array<ReferenceType>;
   boolType: Array<BoolType>;
   choiceType: Array<ChoiceType>;
   dictType: Array<DictType>;
   dateType: Array<DateType>;
-  numberType: Array<NumberType>;
+  search: Search;
 }
 
 
 interface Search {
   isSearch: boolean;
   isFuzzy: boolean;
+}
+
+interface TabType {
+  icon: string;
 }
 
 
@@ -83,12 +89,6 @@ interface DictType {
 interface DateType {
   type: DateEnum;
   isRange: boolean;
-}
-
-interface NumberType {
-  defaultVal: number;
-  max: number;
-  min: number;
 }
 
 

@@ -13,11 +13,13 @@ import java.util.List;
 /**
  * Created by liyuepeng on 9/29/18.
  */
-public class EruptModel implements Serializable{
+public class EruptModel implements Serializable {
 
     private transient Class<?> clazz;
 
     private transient Erupt erupt;
+
+    private String eruptName;
 
     private JsonObject eruptJson;
 
@@ -54,5 +56,13 @@ public class EruptModel implements Serializable{
 
     public void setEruptFieldModels(List<EruptFieldModel> eruptFieldModels) {
         this.eruptFieldModels = eruptFieldModels;
+    }
+
+    public String getEruptName() {
+        return eruptName;
+    }
+
+    public void setEruptName(String eruptName) {
+        this.eruptName = eruptName;
     }
 }

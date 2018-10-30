@@ -1,47 +1,47 @@
-<ngx-datatable
-  *ngIf="columns.length>0"
-  class="material"
-  [columns]="columns"
-  [columnMode]="'force'"
-  [headerHeight]="50"
-  [footerHeight]="50"
-  [rowHeight]="50"
-  [rows]="rows"
-  [scrollbarH]="true"
-  [scrollbarV]="true"
-  [selectAllRowsOnPage]="true"
-  [selectCheck]="true"
-  [selectionType]="'multi'"
-  [style.height]="height"
-  [externalPaging]="true"
-  [count]="page.total"
-  [offset]="page.pageNumber"
-  [limit]="page.pageSize"
-  [loadingIndicator]="loadingIndicator"
-  [messages]="{
-    emptyMessage: '无数据',
-    totalMessage: 'total',
-    selectedMessage: 'selected'
-  }"
->
-  <ngx-datatable-column [width]="60" [sortable]="false" [canAutoResize]="false" [draggable]="false"
-                        [resizeable]="false" [checkboxable]="true" [headerCheckboxable]="true">
-    <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
-      <section class="example-section">
-        <mat-checkbox
-          class="example-margin"
-          [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)">
-        </mat-checkbox>
-      </section>
-    </ng-template>
-  </ngx-datatable-column>
+<!--<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">-->
 
-  <ngx-datatable-column [name]="'操作'">
-    <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
-      123456
-    </ng-template>
-  </ngx-datatable-column>
+  <!--&lt;!&ndash; Checkbox Column &ndash;&gt;-->
+  <!--<ng-container matColumnDef="select">-->
+    <!--<th mat-header-cell *matHeaderCellDef>-->
+      <!--<mat-checkbox (change)="$event ? masterToggle() : null"-->
+                    <!--[checked]="selection.hasValue() && isAllSelected()"-->
+                    <!--[indeterminate]="selection.hasValue() && !isAllSelected()">-->
+      <!--</mat-checkbox>-->
+    <!--</th>-->
+    <!--<td mat-cell *matCellDef="let row">-->
+      <!--<mat-checkbox (click)="$event.stopPropagation()"-->
+                    <!--(change)="$event ? selection.toggle(row) : null"-->
+                    <!--[checked]="selection.isSelected(row)">-->
+      <!--</mat-checkbox>-->
+    <!--</td>-->
+  <!--</ng-container>-->
 
-  <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop" [resizeable]="true">
-  </ngx-datatable-column>
-</ngx-datatable>
+  <!--&lt;!&ndash; Position Column &ndash;&gt;-->
+  <!--<ng-container matColumnDef="position">-->
+    <!--<th mat-header-cell *matHeaderCellDef> No.</th>-->
+    <!--<td mat-cell *matCellDef="let element"> {{element.position}}</td>-->
+  <!--</ng-container>-->
+
+  <!--&lt;!&ndash; Name Column &ndash;&gt;-->
+  <!--<ng-container matColumnDef="name">-->
+    <!--<th mat-header-cell *matHeaderCellDef> Name</th>-->
+    <!--<td mat-cell *matCellDef="let element"> {{element.name}}</td>-->
+  <!--</ng-container>-->
+
+  <!--&lt;!&ndash; Weight Column &ndash;&gt;-->
+  <!--<ng-container matColumnDef="weight">-->
+    <!--<th mat-header-cell *matHeaderCellDef> Weight</th>-->
+    <!--<td mat-cell *matCellDef="let element"> {{element.weight}}</td>-->
+  <!--</ng-container>-->
+
+  <!--&lt;!&ndash; Symbol Column &ndash;&gt;-->
+  <!--<ng-container matColumnDef="symbol">-->
+    <!--<th mat-header-cell *matHeaderCellDef> Symbol</th>-->
+    <!--<td mat-cell *matCellDef="let element"> {{element.symbol}}</td>-->
+  <!--</ng-container>-->
+
+  <!--<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+  <!--<tr mat-row *matRowDef="let row; columns: displayedColumns;"-->
+      <!--(click)="selection.toggle(row)">-->
+  <!--</tr>-->
+<!--</table>-->

@@ -23,7 +23,7 @@ export enum EditType {
 }
 
 export enum DateEnum {
-  DATE, DATE_TIME, MONTH
+  month, year, day
 }
 
 export enum InputEnum {
@@ -31,5 +31,7 @@ export enum InputEnum {
 }
 
 export enum ChoiceEnum {
-  SINGLE, MULTI
+  SINGLE = "SINGLE",
+  SELECT_SINGLE = "SELECT_SINGLE",
+  SELECT_MULTI = "SELECT_MULTI"
 }

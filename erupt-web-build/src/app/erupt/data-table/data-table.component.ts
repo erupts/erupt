@@ -1,29 +1,28 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {TableColumn} from "@swimlane/ngx-datatable";
-import {Page} from "../model/page";
+import {
+  AfterContentChecked, AfterContentInit, AfterViewInit, Component, ElementRef, Input,
+  OnInit
+} from '@angular/core';
 
 @Component({
   selector: 'erupt-data-table',
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss']
 })
-export class DataTableComponent implements OnInit {
+export class DataTableComponent implements OnInit, AfterViewInit {
 
-  @Input() columns: Array<TableColumn>;
+  constructor(private el: ElementRef) {
 
-  @Input() rows;
-
-  @Input() height;
-
-  @Input() page: Page;
-
-  @Input() theme: String = 'material';
-
-  constructor() {
-    console.log(this.theme);
   }
 
   ngOnInit() {
+
   }
 
+
+  ngAfterViewInit() {
+
+  }
+
+
 }
+

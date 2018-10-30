@@ -14,6 +14,8 @@ import {ModalBasicComponent} from './modal-basic/modal-basic.component';
 import {ModalAnimationComponent} from './modal-animation/modal-animation.component';
 import {SpinnerComponent} from './spinner/spinner.component';
 import {ClickOutsideModule} from 'ng-click-outside';
+import { DataTableDirective } from './date-table/data-table.directive';
+import { RangeSliderDirective } from './range-slider/range-slider.directive';
 // import {MDBBootstrapModule} from 'angular-bootstrap-md';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -44,6 +46,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ModalAnimationComponent,
     SpinnerComponent,
     ClickOutsideModule,
+    DataTableDirective
     // MDBBootstrapModule
   ],
   declarations: [
@@ -56,7 +59,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CardComponent,
     ModalBasicComponent,
     ModalAnimationComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    DataTableDirective,
+    RangeSliderDirective
   ],
   providers: [
     {

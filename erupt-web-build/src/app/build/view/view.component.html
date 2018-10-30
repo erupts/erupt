@@ -1,0 +1,103 @@
+<div class="page-body" *ngIf="eruptModel!=null">
+  <div class="row">
+    <div class="col-lg-3 col-md-6" *ngFor="let card of eruptModel.eruptJson.cards">
+      <div class="card">
+        <div class="card-block">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h4 class="text-c-{{card.color}}">{{card.value}}</h4>
+              <h6 class="text-muted m-b-0">{{card.desc}}</h6>
+            </div>
+            <div class="col-4 text-right">
+              <i class="{{card.icon}} f-30"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-c-{{card.color}}">
+          <div class="row align-items-center">
+            <div class="col-9">
+              <p class="text-white m-b-0">% change</p>
+            </div>
+            <!--<div class="col-3 text-right">-->
+            <!--<i class="feather icon-trending-up text-white f-16"></i>-->
+            <!--</div>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<button type="button" class="btn btn-primary" (click)="isSearchCollapsed = !isSearchCollapsed"
+        [attr.aria-expanded]="!isSearchCollapsed" aria-controls="collapseBasic">Toggle collapse
+</button>
+<hr>
+<div [collapse]="isSearchCollapsed" class="card card-block card-header" *ngIf="eruptSearchFields.length>0">
+  <erupt-edit-type [eruptFieldModels]="eruptSearchFields">
+
+  </erupt-edit-type>
+</div>
+
+<app-card>
+  <ngx-datatable
+    *ngIf="columns.length>0"
+    class="data-table scroll"
+    [columns]="columns"
+    [columnMode]="'force'"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="50"
+    [rows]="rows"
+    [scrollbarH]="true"
+    [scrollbarV]="true"
+    [selectAllRowsOnPage]="true"
+    [selectCheck]="true"
+    [selectionType]="'multi'"
+    [style.height]="height"
+    [externalPaging]="true"
+    [count]="page.total"
+    [offset]="page.pageNumber"
+    [limit]="page.pageSize"
+    [loadingIndicator]="loadingIndicator"
+    [messages]="{
+    emptyMessage: '无数据',
+    totalMessage: 'total',
+    selectedMessage: 'selected'
+  }"
+  >
+    <ngx-datatable-column [width]="60" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                          [resizeable]="false">
+      <ng-template class="datatable-checkbox" ngx-datatable-header-template let-value="value"
+                   let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
+        <div class="checkbox-fade fade-in-default datatable-header-cell-label">
+          <label>
+            <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)"/>
+            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+          </label>
+        </div>
+
+      </ng-template>
+      <ng-template class="datatable-checkbox" ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+                   let-onCheckboxChangeFn="onCheckboxChangeFn">
+        <div class="checkbox-fade fade-in-default datatable-header-cell-label">
+          <label>
+            <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)"/>
+            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+          </label>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column [name]="'操作'">
+      <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+                   let-onCheckboxChangeFn="onCheckboxChangeFn">
+        123456
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop" [resizeable]="true">
+    </ngx-datatable-column>
+  </ngx-datatable>
+
+</app-card>

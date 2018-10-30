@@ -19,7 +19,7 @@ public class ConfigUtil {
                 .replace("=", ":")
                 .replace("(", "{")
                 .replace(")", "}");
-        //如此不严谨的JSON串也就只有org.json可以解析的出来
+        //如此不严谨的JSON串也就只有org.json才可以解析的出来
         return new JSONObject(converVal).toString();
 
     }

@@ -19,8 +19,9 @@ public @interface Edit {
 
     int sort() default 0;
 
-    String group() default "";
+    String group() default "基本信息";
 
+    Search search() default @Search;
 
     //如下注解虽为数组形式但是实际使用中只取数组为第零个的值(这样做可以避免大量的默认值生成，由此减轻前端json串体积)
     InputType[] inputType() default @InputType;
@@ -36,8 +37,6 @@ public @interface Edit {
     DateType[] dateType() default {};
 
     TabType[] tabType() default {};
-
-    NumberType[] numberType() default {};
 
     LinkType[] linkType() default {};
 

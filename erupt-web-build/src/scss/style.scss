@@ -42,17 +42,8 @@ File: style.css
 @import "partials/dark";
 //angular custom
 @import "partials/custom";
-@import '~ngx-bar-rating/themes/br-default-theme';
-@import '~ngx-bar-rating/themes/br-bootstrap-theme';
-@import '~ngx-bar-rating/themes/br-fontawesome-theme';
-@import '~ngx-bar-rating/themes/br-fontawesome-o-theme';
-@import '~ngx-bar-rating/themes/br-horizontal-theme';
-@import '~ngx-bar-rating/themes/br-vertical-theme';
-@import '~ngx-bar-rating/themes/br-stars-theme';
-@import '~ngx-bar-rating/themes/br-movie-theme';
-@import '~ngx-bar-rating/themes/br-square-theme';
 // material
-@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 //plugin
 @import "~ngx-ui-switch/ui-switch.component.css";
 @import "~ngx-bootstrap/datepicker/bs-datepicker.scss";
