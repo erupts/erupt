@@ -2,6 +2,7 @@ package com.erupt.service;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
+import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.util.ConfigUtil;
 import com.erupt.model.EruptFieldModel;
 import com.erupt.model.EruptModel;
@@ -58,9 +59,6 @@ public class CoreService implements InitializingBean {
                     if (null != eruptField) {
                         EruptFieldModel eruptFieldModel = new EruptFieldModel(eruptField, field);
                         eruptFieldModels.add(eruptFieldModel);
-                    }
-                    if (null != clazz.getSuperclass()) {
-
                     }
                 }
                 //super class erupt annotation

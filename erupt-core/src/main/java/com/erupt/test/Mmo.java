@@ -5,6 +5,7 @@ import com.erupt.annotation.constant.UiColor;
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_erupt.Card;
+import com.erupt.annotation.sub_erupt.Power;
 import com.erupt.annotation.sub_erupt.RowOperation;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
@@ -21,8 +22,9 @@ import java.util.Set;
  */
 @Erupt(
         name = "测试",
+        power = @Power,
         rowOperation = @RowOperation(
-                icon = "fa fa-icon",
+                icon = "fa fa-terminal",
                 title = "执行",
                 operationHandler = OperationHandlerImpl.class,
                 edits = {
@@ -144,7 +146,8 @@ public class Mmo extends BaseModel {
                     notNull = true,
                     title = "时间",
                     type = EditType.DATE,
-                    dateType = @DateType
+                    dateType = @DateType,
+                    group = "分组2"
             )
     )
     private String date;
@@ -161,21 +164,20 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "tab1",
-                    type = EditType.TAB,
-                    tabType = @TabType(icon = "fa fa-table")
+                    type = EditType.TAB
             )
     )
     @OneToMany
     private Set<SubMmo> sub;
 
-    @EruptField(
-            edit = @Edit(
-                    title = "tab2",
-                    type = EditType.TAB,
-                    tabType = @TabType(icon = "fa fa-table")
-            )
-    )
-    private String tab2;
+//    @EruptField(
+//            edit = @Edit(
+//                    title = "tab2",
+//                    type = EditType.TAB,
+//                    tabType = @TabType(icon = "fa fa-table")
+//            )
+//    )
+//    private String tab2;
 
 
     @EruptField(
@@ -183,10 +185,12 @@ public class Mmo extends BaseModel {
                     @View(title = "标签")
             },
             edit = @Edit(
+                    group = "分组2",
                     title = "名称",
                     notNull = true,
                     inputType = @InputType(type = InputEnum.TEXTAREA, color = UiColor.success)
             )
     )
     private String gender;
+
 }

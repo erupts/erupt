@@ -21,7 +21,4 @@ public @interface EruptField {
     //编辑时的列信息
     Edit edit() default @Edit(title = "");
 
-    //可用于搜索的列信息
-    Search search() default @Search;
-
 }
