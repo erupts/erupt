@@ -14,7 +14,7 @@ public class Page {
 
     private String sort;
 
-    private List list;
+    private List<Object> list;
 
     public Page(int pageNumber, int pageSize) {
         this.pageNumber = pageNumber;
@@ -53,11 +53,11 @@ public class Page {
         this.sort = sort;
     }
 
-    public List getList() {
+    public List<Object> getList() {
         return list;
     }
 
-    public void setList(List list) {
+    public void setList(List<Object> list) {
         this.list = list;
     }
 }

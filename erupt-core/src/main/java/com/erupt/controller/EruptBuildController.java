@@ -2,6 +2,7 @@ package com.erupt.controller;
 
 
 import com.erupt.constant.RestPath;
+import com.erupt.model.EruptModel;
 import com.erupt.service.CoreService;
 import com.google.gson.Gson;
 import org.fusesource.jansi.Ansi;
@@ -25,10 +26,10 @@ public class EruptBuildController {
 
     @GetMapping("/list/{erupt}")
     @ResponseBody
-    public String getEruptTableView(@PathVariable("erupt") String eruptName) {
+    public EruptModel getEruptTableView(@PathVariable("erupt") String eruptName) {
         Gson gson = new Gson();
         System.out.println(ansi().fg(Ansi.Color.RED).a(gson.toJson(CoreService.ERUPTS.get(eruptName))));
-        return gson.toJson(CoreService.ERUPTS.get(eruptName));
+        return CoreService.ERUPTS.get(eruptName);
     }
 
     @GetMapping("/row/edit/{erupt}")

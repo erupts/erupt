@@ -13,9 +13,7 @@ import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.*;
 import com.erupt.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by liyuepeng on 9/28/18.
@@ -60,7 +58,7 @@ public class SubMmo extends BaseModel {
                     search = @Search(isSearch = true)
             )
     )
-    private String input;
+    private String name;
 
 
     @EruptField(
@@ -73,7 +71,7 @@ public class SubMmo extends BaseModel {
                     search = @Search(isSearch = true)
             )
     )
-    private Integer age;
+    private Integer number;
 
     @Column(name = "TEXT")
     @EruptField(
@@ -96,6 +94,21 @@ public class SubMmo extends BaseModel {
             )
     )
     private String choice;
+
+    @EruptField(
+            views = {
+                    @View(title = "input", column = "input"),
+                    @View(title = "年龄", column = "age"),
+            },
+            edit = @Edit(
+                    title = "tab1",
+                    type = EditType.REFERENCE,
+                    referenceType = @ReferenceType(id = "id", label = "name")
+            )
+    )
+    @ManyToOne
+    @JoinColumn(name = "MMO_ID")
+    private Mmo mmo;
 
 
 }

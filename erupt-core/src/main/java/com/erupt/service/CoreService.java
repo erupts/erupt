@@ -17,6 +17,7 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
+import javax.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,34 +40,18 @@ public class CoreService implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         ScannerUtil.scannerPackage(packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
-            String eruptName = clazz.getSimpleName().toLowerCase();
-            EruptModel eruptModel = new EruptModel();
             //erupt domain info to memory
-            {
-                Erupt erupt = clazz.getAnnotation(Erupt.class);
-                eruptModel.setClazz(clazz);
-                eruptModel.setErupt(erupt);
-                System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a(ConfigUtil.annoStrToJsonStr(erupt.toString())));
-                eruptModel.setEruptName(eruptName);
-                eruptModel.setEruptJson(new JsonParser().parse(ConfigUtil.annoStrToJsonStr(erupt.toString())).getAsJsonObject());
-            }
+            EruptModel eruptModel = new EruptModel(clazz);
             // erupt field info to memory
             {
                 List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
-
-                for (Field field : clazz.getDeclaredFields()) {
-                    EruptField eruptField = field.getAnnotation(EruptField.class);
-                    if (null != eruptField) {
-                        EruptFieldModel eruptFieldModel = new EruptFieldModel(eruptField, field);
-                        eruptFieldModels.add(eruptFieldModel);
-                    }
-                }
                 //super class erupt annotation
                 {
                     Class<?> superClass = clazz.getSuperclass();
                     if (null != clazz.getSuperclass()) {
                         for (Field field : superClass.getDeclaredFields()) {
                             EruptField eruptField = field.getAnnotation(EruptField.class);
+                            eruptModel.setPrimaryKeyCol(field);
                             if (null != eruptField) {
                                 EruptFieldModel eruptFieldModel = new EruptFieldModel(eruptField, field);
                                 eruptFieldModels.add(eruptFieldModel);
@@ -75,10 +60,19 @@ public class CoreService implements InitializingBean {
                     }
 
                 }
+                for (Field field : clazz.getDeclaredFields()) {
+                    EruptField eruptField = field.getAnnotation(EruptField.class);
+                    eruptModel.setPrimaryKeyCol(field);
+                    if (null != eruptField) {
+                        EruptFieldModel eruptFieldModel = new EruptFieldModel(eruptField, field);
+                        eruptFieldModels.add(eruptFieldModel);
+                    }
+                }
                 eruptModel.setEruptFieldModels(eruptFieldModels);
             }
+            System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a(eruptModel.getEruptJson().toString()));
             //other info to memory
-            ERUPTS.put(eruptName, eruptModel);
+            ERUPTS.put(eruptModel.getEruptName(), eruptModel);
         });
     }
 

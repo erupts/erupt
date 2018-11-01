@@ -25,40 +25,6 @@ public class EruptAnnoConver {
     }
 
 
-    public static void validateEruptFieldInfo(EruptFieldModel eruptFieldModel) {
-//        for (View view : eruptFieldModel.getEruptField().view()) {
-//            if ("".equals(view.column())) {
-//                throw new RuntimeException(eruptFieldModel.getField().getName() + "[" + view.title() + "]" + EruptConst.LOG_ARROWS_SYMBOL + "multiView请指定name值");
-//            }
-//        }
-
-        switch (eruptFieldModel.getEruptField().edit().type()) {
-            case DICT:
-                if (eruptFieldModel.getEruptField().edit().dictType().length == 0) {
-                    throw new RuntimeException(ansi().fg(Ansi.Color.RED).a(
-                            eruptFieldModel.getField().getName() + EruptConst.LOG_ARROWS_SYMBOL + "字典类型未指定注解@DictType值"
-                    ).toString());
-                }
-                break;
-            case CHOICE:
-                if (eruptFieldModel.getEruptField().edit().choiceType().length == 0) {
-                    throw new RuntimeException(ansi().fg(Ansi.Color.RED).a(
-                            eruptFieldModel.getField().getName() + EruptConst.LOG_ARROWS_SYMBOL + "单选/多选类型未指定注解@ChoiceType值"
-                    ).toString());
-                }
-                break;
-            case REFERENCE:
-                if (eruptFieldModel.getEruptField().edit().referenceType().length == 0) {
-                    throw new RuntimeException(ansi().fg(Ansi.Color.RED).a(
-                            eruptFieldModel.getField().getName() + EruptConst.LOG_ARROWS_SYMBOL + "引用类型未指定注解@ReferenceType值"
-                    ).toString());
-                }
-                break;
-            case BOOLEAN:
-
-                break;
-        }
-    }
 
 
 //    //生成展示列视图

@@ -32,8 +32,12 @@ public class JpaDao {
         return entityManager.find(entity, id);
     }
 
+    public Object queryByPage(Class<?> entity) {
+        return entityManager.createQuery("from " + entity.getSimpleName());
+    };
+
     public Page queryByPage(Class<?> entity, Page page) {
-        page.setList(entityManager.createQuery("from " + entity.getName())
+        page.setList(entityManager.createQuery("from " + entity.getSimpleName())
                 .setMaxResults(page.getPageSize())
                 .setFirstResult((page.getPageNumber() - 1) * page.getPageSize())
                 .getResultList());

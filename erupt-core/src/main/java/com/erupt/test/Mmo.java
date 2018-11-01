@@ -15,6 +15,7 @@ import com.erupt.annotation.sub_field.sub_edit.*;
 import com.erupt.model.BaseModel;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -53,12 +54,7 @@ public class Mmo extends BaseModel {
     @Column(name = "NAME")
     @EruptField(
             views = {
-                    @View(title = "张三", column = "name"),
-                    @View(title = "张三2", column = "name2"),
-                    @View(title = "张三3", column = "name3"),
-                    @View(title = "张三4", column = "name4"),
-                    @View(title = "张三5", column = "name5"),
-                    @View(title = "张三6", column = "name6"),
+                    @View(title = "名称")
             },
             edit = @Edit(
                     title = "名称",
@@ -150,7 +146,7 @@ public class Mmo extends BaseModel {
                     group = "分组2"
             )
     )
-    private String date;
+    private Date date;
 
     @EruptField(
             edit = @Edit(
@@ -162,12 +158,16 @@ public class Mmo extends BaseModel {
 
 
     @EruptField(
+            views = {
+                    @View(title = "input", column = "input"),
+                    @View(title = "年龄", column = "age"),
+            },
             edit = @Edit(
                     title = "tab1",
                     type = EditType.TAB
             )
     )
-    @OneToMany
+    @OneToMany(fetch=FetchType.EAGER)
     private Set<SubMmo> sub;
 
 //    @EruptField(

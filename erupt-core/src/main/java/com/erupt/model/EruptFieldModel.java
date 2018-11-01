@@ -3,6 +3,7 @@ package com.erupt.model;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.util.ConfigUtil;
+import com.erupt.exception.EruptFieldAnnotationException;
 import com.erupt.util.EruptAnnoConver;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -46,7 +47,8 @@ public class EruptFieldModel implements Serializable {
                 this.fieldReturnName = gArray[gArray.length - 1];
             }
         }
-        EruptAnnoConver.validateEruptFieldInfo(this);
+        //校验注解的正确性
+        EruptFieldAnnotationException.validateEruptFieldInfo(this);
     }
 
     public void setEruptField(EruptField eruptField) {

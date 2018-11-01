@@ -1,11 +1,13 @@
 package com.erupt.controller;
 
 import com.erupt.constant.RestPath;
+import com.erupt.dao.EruptJpaDao;
 import com.erupt.dao.JpaDao;
 import com.erupt.model.EruptModel;
 import com.erupt.model.Page;
 import com.erupt.service.CoreService;
 import com.erupt.service.DataService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,12 +29,16 @@ public class EruptDataController {
     @Autowired
     private JpaDao jpaDao;
 
+    @Autowired
+    private EruptJpaDao eruptJpaDao;
+
     @GetMapping("/{erupt}")
     @ResponseBody
-    public Object getErupt(@PathVariable("erupt") String eruptName) {
+    public Page getErupt(@PathVariable("erupt") String eruptName) throws JsonProcessingException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().query()) {
-            return jpaDao.queryByPage(eruptModel.getClazz(), new Page(1, 3));
+            Page page = eruptJpaDao.queryByPage(eruptModel, new Page(1, 3));
+            return page;
         } else {
             throw new RuntimeException("没有查询权限");
         }
@@ -54,7 +60,7 @@ public class EruptDataController {
     public void editErupt(@PathVariable("erupt") String erupt, @PathVariable("id") String id) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
-
+//            eruptJpaDao.findDataById(eruptModel, id);
         } else {
             throw new RuntimeException("没有修改权限");
         }
@@ -65,7 +71,7 @@ public class EruptDataController {
     public void deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") String id) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
-
+            eruptJpaDao.deleteEntity(eruptJpaDao.findDataById(eruptModel, id));
         } else {
             throw new RuntimeException("没有删除权限");
         }

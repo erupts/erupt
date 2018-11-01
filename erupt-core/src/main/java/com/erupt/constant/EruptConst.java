@@ -5,6 +5,6 @@ package com.erupt.constant;
  */
 public class EruptConst {
 
-    public static final String LOG_ARROWS_SYMBOL = "-->";
+
 
 }
