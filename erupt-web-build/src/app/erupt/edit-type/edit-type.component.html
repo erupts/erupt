@@ -14,6 +14,7 @@
                            [value]="field.eruptFieldJson.edit.inputType[0].defaultVal"
                            [(ngModel)]="field.eruptFieldJson.edit.$value"
                            class="text-right"
+                           autocomplete="false"
                            [readonly]="field.eruptFieldJson.edit.readOnly"
                            [required]="field.eruptFieldJson.edit.notNull"
                            type="number">
@@ -139,8 +140,35 @@
         <!--reference-->
         <ng-container *ngSwitchCase="editType.REFERENCE">
           <div class="input-style" [class]="colClass">
-            REFERENCE
+            <mat-form-field class="full-width">
+              <mat-label>{{field.eruptFieldJson.edit.title}}</mat-label>
+              <input matInput
+                     (click)="referenceModel.show()"
+                     [readonly]="true"
+                     [required]="field.eruptFieldJson.edit.notNull"
+                     [(ngModel)]="field.eruptFieldJson.edit.$value">
+              <mat-icon matSuffix (click)="clearValue(field,$event)"><i class="fa fa-close stander-icon"></i></mat-icon>
+            </mat-form-field>
           </div>
+
+
+          <app-modal-basic #referenceModel>
+            <div class="app-modal-header">
+              <h4 class="modal-title">请选择{{field.eruptFieldJson.edit.title}}</h4>
+              <button type="button" class="close basic-close" (click)="referenceModel.hide()">
+                <i class="fa fa-close"></i>
+              </button>
+            </div>
+            <div class="app-modal-body">
+
+            </div>
+            <div class="app-modal-footer">
+              <button type="button" class="btn btn-default" mdbRippleRadius (click)="referenceModel.hide()">Close
+              </button>
+              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Save changes</button>
+            </div>
+          </app-modal-basic>
+
         </ng-container>
         <!--bool-->
         <ng-container *ngSwitchCase="editType.BOOLEAN">

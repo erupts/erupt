@@ -1,5 +1,8 @@
 <div class="" *ngFor="let breadcrumb of breadcrumbs; let last = last">
-  <div class="page-header" *ngIf="breadcrumb.status && last">
+  <div class="page-header" *ngIf="breadcrumb.status && last"
+       matRipple
+       [matRippleRadius]="30"
+       [matRippleColor]="'rgba(255,255,255,.7)'">
     <div class="page-block" *ngIf="last">
       <div class="row align-items-center">
         <div class="col-md-8">

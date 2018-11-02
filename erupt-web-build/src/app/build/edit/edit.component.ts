@@ -23,7 +23,7 @@ export class EditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.data.getEruptBuild("mmo").subscribe(
+    this.data.getEruptBuild("submmo").subscribe(
       em => {
         //计算里面所有的字段信息
         for (let field of em.eruptFieldModels) {

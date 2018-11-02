@@ -20,6 +20,6 @@ export class ModalAnimationComponent implements OnInit {
   }
 
   close(event) {
-    document.querySelector('#' + event).classList.remove('md-show');
+    // document.querySelector('#' + event).classList.remove('md-show');
   }
 }

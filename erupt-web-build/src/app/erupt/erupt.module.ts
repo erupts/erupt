@@ -13,15 +13,12 @@ import {
   MatRadioModule,
   MatSelectModule,
   MatSliderModule,
-  MatSlideToggleModule, MatTableModule
+  MatSlideToggleModule, MatTableModule,
+  MatDialogModule
 } from "@angular/material";
-import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
-import {defineLocale} from 'ngx-bootstrap/chronos';
-import {zhCnLocale} from 'ngx-bootstrap/locale';
 import {UiSwitchModule} from "ngx-ui-switch";
 import {DataTableComponent} from './data-table/data-table.component';
 import {SharedModule} from "../shared/shared.module";
-defineLocale('zh-cn', zhCnLocale)
 
 
 @NgModule({
@@ -34,7 +31,6 @@ defineLocale('zh-cn', zhCnLocale)
     ColorPickerModule,
     MatSlideToggleModule,
     MatSelectModule,
-    BsDatepickerModule.forRoot(),
     MatSliderModule,
     UiSwitchModule,
     MatCheckboxModule,
@@ -46,7 +42,7 @@ defineLocale('zh-cn', zhCnLocale)
     MatNativeDateModule,
     MatTableModule,
     MatRadioModule,
-
+    MatDialogModule
   ],
   providers: [
     DataService,

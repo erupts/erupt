@@ -13,7 +13,8 @@ export class ModalBasicComponent implements OnInit {
   public visible = false;
   public visibleAnimate = false;
 
-  constructor() {}
+  constructor() {
+  }
 
   ngOnInit() {
 
@@ -31,6 +32,12 @@ export class ModalBasicComponent implements OnInit {
 
   public onContainerClicked(event: MouseEvent): void {
     if ((<HTMLElement>event.target).classList.contains('modal')) {
+      this.hide();
+    }
+  }
+
+  public downClose(event: any): void {
+    if (event.keyCode === 27) {
       this.hide();
     }
   }

@@ -44,8 +44,8 @@ export class TableComponent implements OnInit {
   ngOnInit() {
     this.page = {
       pageNumber: 1,
-      pageSize: 10,
-      total: 10
+      pageSize: 2,
+      total: 2
     };
     this.dataService.getEruptBuild("submmo").subscribe(
       em => {

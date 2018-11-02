@@ -9,7 +9,8 @@ import {BreadcrumbsComponent} from "./layout/admin/breadcrumbs/breadcrumbs.compo
 import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
 import {SharedModule} from "./shared/shared.module";
 import {MenuItems} from "./shared/menu-items/menu-items";
-import {MatTabsModule} from "@angular/material";
+import {MatRippleModule, MatTabsModule} from "@angular/material";
+import {AuthModule} from "./auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -22,8 +23,10 @@ import {MatTabsModule} from "@angular/material";
     BrowserAnimationsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    AuthModule,
     SharedModule,
-    MatTabsModule
+    MatTabsModule,
+    MatRippleModule
   ],
   exports: [
     BrowserAnimationsModule

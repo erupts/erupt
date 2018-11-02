@@ -54,6 +54,18 @@ const MENUITEMS = [
     ],
   },
   {
+    label: 'Auth',
+    main: [
+      {
+        state: 'auth/login/simple',
+        short_label: 'L',
+        name: 'auth',
+        type: 'link',
+        icon: 'feather icon-home'
+      }
+    ],
+  },
+  {
     label: 'Navigation',
     main: [
       {

@@ -1,0 +1,48 @@
+<section class="login-block">
+  <!-- Container-fluid starts -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <!-- Login card start -->
+        <form class="md-float-material form-material" action="javascript:">
+          <div class="text-center">
+            <img src="assets/images/logo.png" alt="logo.png">
+          </div>
+          <div class="auth-box card">
+            <div class="card-block">
+              <div class="row">
+                <div class="col-md-12">
+                  <h3 class="text-center"><i class="fa fa-lock text-primary f-80"></i></h3>
+                </div>
+              </div>
+              <div class="form-group form-primary">
+                <input type="text" name="email" class="form-control" required="">
+                <span class="form-bar"></span>
+                <label class="float-label">Your Email Address</label>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-primary btn-md btn-block waves-light text-center m-b-20" mdbRippleRadius><i class="fa fa-lock"></i> Lock Screen </button>
+                </div>
+              </div>
+              <p class="text-inverse text-right">Back to <a [routerLink]="['/auth/login/simple']">Login</a></p>
+              <div class="row">
+                <div class="col-md-10">
+                  <p class="text-inverse text-left m-b-0">Thank you.</p>
+                  <p class="text-inverse text-left"><a [routerLink]="['/dashboard/default']"><b>Back to website</b></a></p>
+                </div>
+                <div class="col-md-2">
+                  <img src="assets/images/auth/Logo-small-bottom.png" alt="small-logo.png">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- Login card end -->
+      </div>
+      <!-- end of col-sm-12 -->
+    </div>
+    <!-- end of row -->
+  </div>
+  <!-- end of container-fluid -->
+</section>
