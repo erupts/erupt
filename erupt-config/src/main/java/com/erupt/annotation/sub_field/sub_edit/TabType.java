@@ -5,4 +5,6 @@ package com.erupt.annotation.sub_field.sub_edit;
  */
 public @interface TabType {
     String icon() default "";
+
+    String filter() default "";
 }

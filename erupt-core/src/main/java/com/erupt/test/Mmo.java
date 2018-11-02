@@ -118,7 +118,7 @@ public class Mmo extends BaseModel {
                                             @VL(value = 2343, label = "李四"),
                                             @VL(value = 2344, label = "李四"),
                                     },
-                                    type = ChoiceEnum.SINGLE
+                                    type = ChoiceEnum.SELECT_MULTI
                             )
                     },
                     search = @Search(isSearch = true)
@@ -157,18 +157,18 @@ public class Mmo extends BaseModel {
     private String image;
 
 
-    @EruptField(
-            views = {
-                    @View(title = "input", column = "input"),
-                    @View(title = "年龄", column = "age"),
-            },
-            edit = @Edit(
-                    title = "tab1",
-                    type = EditType.TAB
-            )
-    )
-    @OneToMany(fetch=FetchType.EAGER)
-    private Set<SubMmo> sub;
+//    @EruptField(
+//            views = {
+//                    @View(title = "input", column = "input"),
+//                    @View(title = "年龄", column = "age"),
+//            },
+//            edit = @Edit(
+//                    title = "tab1",
+//                    type = EditType.TAB
+//            )
+//    )
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mmo")
+//    private Set<SubMmo> sub;
 
 //    @EruptField(
 //            edit = @Edit(

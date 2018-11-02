@@ -31,9 +31,9 @@ public class EruptFieldModel implements Serializable {
 
     private String fieldReturnName;
 
-    public EruptFieldModel(EruptField eruptField, Field field) {
-        this.eruptField = eruptField;
+    public EruptFieldModel(Field field) {
         this.field = field;
+        this.eruptField = field.getAnnotation(EruptField.class);
         this.eruptFieldJson = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(eruptField.toString())).getAsJsonObject();
         this.fieldName = field.getName();
         this.fieldReturnName = field.getType().getSimpleName();

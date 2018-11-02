@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 9/29/18.
@@ -31,11 +32,14 @@ public class EruptModel implements Serializable {
 
     private List<EruptFieldModel> eruptFieldModels;
 
+    private Map<String,EruptFieldModel> eruptFieldMap;
+
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.eruptName = eruptClazz.getSimpleName();
         this.eruptJson = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(erupt.toString())).getAsJsonObject();
+
     }
 
 
@@ -87,5 +91,17 @@ public class EruptModel implements Serializable {
         if (null != field.getAnnotation(Id.class)) {
             this.primaryKeyCol = field.getName();
         }
+    }
+
+    public void setPrimaryKeyCol(String primaryKeyCol) {
+        this.primaryKeyCol = primaryKeyCol;
+    }
+
+    public Map<String, EruptFieldModel> getEruptFieldMap() {
+        return eruptFieldMap;
+    }
+
+    public void setEruptFieldMap(Map<String, EruptFieldModel> eruptFieldMap) {
+        this.eruptFieldMap = eruptFieldMap;
     }
 }

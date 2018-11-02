@@ -1,6 +1,7 @@
 package com.erupt.model;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 10/12/18.
@@ -14,7 +15,7 @@ public class Page {
 
     private String sort;
 
-    private List<Object> list;
+    private List list;
 
     public Page(int pageNumber, int pageSize) {
         this.pageNumber = pageNumber;
@@ -53,11 +54,11 @@ public class Page {
         this.sort = sort;
     }
 
-    public List<Object> getList() {
+    public List getList() {
         return list;
     }
 
-    public void setList(List<Object> list) {
+    public void setList(List list) {
         this.list = list;
     }
 }

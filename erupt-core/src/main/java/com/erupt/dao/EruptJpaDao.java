@@ -22,6 +22,10 @@ public class EruptJpaDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    static {
+
+    }
+
     public void saveEntity(Object entity) {
         entityManager.persist(entity);
     }
@@ -37,30 +41,39 @@ public class EruptJpaDao {
     }
 
     public Object findDataById(EruptModel eruptModel, Serializable id) {
-        Object objectId = null;
-        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
-            if (field.getField().getAnnotation(Id.class) != null) {
-                objectId = TypeUtil.typeStrConvertObject(id, field.getField().getType().getSimpleName().toLowerCase());
-                break;
-            }
-        }
-        return entityManager.find(eruptModel.getClazz(), objectId);
+        //将参数id转换为主键标识类型
+//        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
+//            if (field.getField().getAnnotation(Id.class) != null) {
+//                id = TypeUtil.typeStrConvertObject(id, field.getField().getType().getSimpleName().toLowerCase());
+//                break;
+//            }
+//        }
+        return entityManager.find(eruptModel.getClazz(), id);
     }
 
-    public Object queryByPage(Class<?> entity) {
-        return entityManager.createQuery("from " + entity.getSimpleName());
-    }
 
-    ;
-
-    public Page queryByPage(EruptModel eruptModel, Page page) {
+    public Page queryEruptList(EruptModel eruptModel, Page page) {
         List<String> fieldNames = EruptUtil.getEruptFieldNames(eruptModel.getEruptFieldModels());
-        page.setList(entityManager.createQuery("from " + eruptModel.getClazz().getSimpleName())
+        List list = entityManager.createQuery("from " + eruptModel.getClazz().getSimpleName())
                 .setMaxResults(page.getPageSize())
                 .setFirstResult((page.getPageNumber() - 1) * page.getPageSize())
-                .getResultList());
+                .getResultList();
+        //将未使用erupt修饰的字段值置空
+        for (Object o : list) {
+            EruptUtil.converEruptFieldInfo(o);
+        }
+        page.setList(list);
+
         return page;
     }
 
+    /**
+     *
+     * @param modelName
+     * @param col 参数组成形式 {列名} as {别名}
+     */
+    public List getDataMap(String modelName, String... col) {
+        return entityManager.createQuery("select new map(" + String.join(",", col) + ") from " + modelName).getResultList();
+    }
 
 }

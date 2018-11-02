@@ -3,7 +3,7 @@ package com.erupt.model;
 /**
  * Created by liyuepeng on 10/9/18.
  */
-public class ResultModel {
+public class EruptApiModel {
 
     private Status status;
 

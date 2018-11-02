@@ -9,4 +9,6 @@ public @interface ReferenceType {
     String label();
 
     String filter() default "";
+
+    String depend() default "";
 }

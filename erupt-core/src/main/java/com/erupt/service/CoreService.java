@@ -20,6 +20,7 @@ import org.springframework.util.LinkedCaseInsensitiveMap;
 import javax.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,7 @@ public class CoreService implements InitializingBean {
             // erupt field info to memory
             {
                 List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
+                Map<String, EruptFieldModel> eruptFieldMap = new LinkedCaseInsensitiveMap<EruptFieldModel>();
                 //super class erupt annotation
                 {
                     Class<?> superClass = clazz.getSuperclass();
@@ -53,8 +55,9 @@ public class CoreService implements InitializingBean {
                             EruptField eruptField = field.getAnnotation(EruptField.class);
                             eruptModel.setPrimaryKeyCol(field);
                             if (null != eruptField) {
-                                EruptFieldModel eruptFieldModel = new EruptFieldModel(eruptField, field);
+                                EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
                                 eruptFieldModels.add(eruptFieldModel);
+                                eruptFieldMap.put(field.getName(), eruptFieldModel);
                             }
                         }
                     }
@@ -64,11 +67,13 @@ public class CoreService implements InitializingBean {
                     EruptField eruptField = field.getAnnotation(EruptField.class);
                     eruptModel.setPrimaryKeyCol(field);
                     if (null != eruptField) {
-                        EruptFieldModel eruptFieldModel = new EruptFieldModel(eruptField, field);
+                        EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
                         eruptFieldModels.add(eruptFieldModel);
+                        eruptFieldMap.put(field.getName(), eruptFieldModel);
                     }
                 }
                 eruptModel.setEruptFieldModels(eruptFieldModels);
+                eruptModel.setEruptFieldMap(eruptFieldMap);
             }
             System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a(eruptModel.getEruptJson().toString()));
             //other info to memory
