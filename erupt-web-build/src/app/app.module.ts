@@ -25,6 +25,9 @@ import {MatTabsModule} from "@angular/material";
     SharedModule,
     MatTabsModule
   ],
+  exports: [
+    BrowserAnimationsModule
+  ],
   providers: [MenuItems],
   bootstrap: [AppComponent]
 })

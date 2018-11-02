@@ -1,56 +1,64 @@
 <div class="page-body m-t-40" *ngIf="eruptModel==null">
   <h1 class="text-center">404</h1>
 </div>
-<div class="page-body" *ngIf="eruptModel!=null">
-  <app-card>
-    <div class="m-b-20">
-      <button class="btn btn-success btn-sm" matRipple>Primary</button>&nbsp;
-      <button class="btn btn-success btn-sm" matRipple>Primary</button>
-    </div>
+<div class="page-body" *ngIf="eruptModel!=null" style="margin-top: -17px;">
+  <div class="m-b-20">
+    <button mat-raised-button class="outline-none"><i class="fa fa-mail-reply"></i>&nbsp;返回</button>&nbsp;
 
-    <mat-accordion>
-      <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{eruptModel.eruptFieldModels[0].eruptFieldJson.edit.group}}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <erupt-edit-type [eruptFieldModels]="eruptModel.eruptFieldModels">
+    <button mat-raised-button class="outline-none"><i class="fa fa-save"></i>&nbsp;保存</button>&nbsp;
+  </div>
 
-        </erupt-edit-type>
-      </mat-expansion-panel>
-    </mat-accordion>
-    <br>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          基本信息
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <erupt-edit-type [eruptFieldModels]="eruptModel.eruptFieldModels" [colClass]="'col-sm-6 col-md-4 col-lg-4'">
 
-    <div class="card">
-      <mat-tab-group>
-        <ng-container *ngFor="let field of eruptModel.eruptFieldModels">
-          <ng-container *ngIf="field.eruptFieldJson.edit.type=='TAB'">
+      </erupt-edit-type>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <br>
+
+  <div class="card">
+    <mat-tab-group>
+      <ng-container *ngFor="let field of eruptModel.eruptFieldModels">
+
+        <ng-container *ngIf="field.eruptFieldJson.edit.type==editType.TAB">
+          <ng-container *ngIf="field.eruptFieldJson.edit.tabType[0].eruptFieldModels">
             <mat-tab>
               <ng-template mat-tab-label>
                 <i class="{{field.eruptFieldJson.edit.tabType[0].icon}}"></i>&nbsp;&nbsp;
                 {{field.eruptFieldJson.edit.title}}
               </ng-template>
               <ngx-datatable
-                class="data-table"
-                [columns]="[{name:'a'},{name:'b'},{name:'c'}]"
+                class="material"
                 [columnMode]="'force'"
                 [headerHeight]="50"
                 [footerHeight]="50"
                 [rowHeight]="50"
+                [style.height]="'400px'"
                 [scrollbarH]="true"
                 [scrollbarV]="true"
                 [selectAllRowsOnPage]="true"
                 [selectCheck]="true"
                 [selectionType]="'multi'"
-                [style.height]="height"
                 [externalPaging]="true"
               >
+                <ngx-datatable-column
+                  *ngFor="let view of field.eruptFieldJson.edit.tabType[0].views"
+                  [name]="view.title"
+                  [prop]="view.column"
+                  [resizeable]="true">
+                </ngx-datatable-column>
               </ngx-datatable>
             </mat-tab>
           </ng-container>
         </ng-container>
-      </mat-tab-group>
-    </div>
-  </app-card>
+      </ng-container>
+    </mat-tab-group>
+  </div>
 </div>

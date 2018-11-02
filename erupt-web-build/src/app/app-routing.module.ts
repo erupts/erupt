@@ -9,7 +9,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'list/view',
+        redirectTo: 'list/table',
         pathMatch: 'full'
       },
 

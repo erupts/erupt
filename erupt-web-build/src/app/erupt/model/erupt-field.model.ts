@@ -15,7 +15,7 @@ interface EruptField {
   edit: Edit;
 }
 
-interface View {
+export interface View {
   column: string;
   title: string;
   show: boolean;
@@ -33,7 +33,7 @@ export interface Edit {
   group: string;
   groupIcon: string;
   col: number;
-  tabType: Array<TabType>;
+  tabType: Array<TabType> | any;
   inputType: Array<InputType>;
   referenceType: Array<ReferenceType>;
   boolType: Array<BoolType>;
@@ -49,8 +49,10 @@ interface Search {
   isFuzzy: boolean;
 }
 
-interface TabType {
+export interface TabType {
   icon: string;
+  views: Array<View>;
+  eruptFieldModels: Array<EruptFieldModel>;
 }
 
 

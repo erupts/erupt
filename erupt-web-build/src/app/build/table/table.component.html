@@ -1,0 +1,150 @@
+<div class="page-body" *ngIf="eruptModel!=null" style="margin-top: -15px;">
+  <!--card start-->
+  <ng-container *ngIf="eruptModel.eruptJson.cards.length > 0">
+    <div class="row">
+      <div class="col-lg-3 col-md-6" *ngFor="let card of eruptModel.eruptJson.cards">
+        <div class="card">
+          <div class="card-block">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h4 class="text-c-{{card.color}}">{{card.value}}</h4>
+                <h6 class="text-muted m-b-0">{{card.desc}}</h6>
+              </div>
+              <div class="col-4 text-right">
+                <i class="{{card.icon}} f-30"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer bg-c-{{card.color}}">
+            <div class="row align-items-center">
+              <div class="col-9">
+                <p class="text-white m-b-0">% change</p>
+              </div>
+              <!--<div class="col-3 text-right">-->
+              <!--<i class="feather icon-trending-up text-white f-16"></i>-->
+              <!--</div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <!--card end-->
+
+  <!--operator start-->
+  <div class="m-b-10">
+    <ng-container *ngIf="eruptModel.eruptJson.power.add">
+      <button mat-raised-button class="view-muti-operator-btn"><i class="fa fa-plus"></i>&nbsp;新增</button>&nbsp;
+    </ng-container>
+
+    <ng-container *ngIf="eruptModel.eruptJson.power.del">
+      <button mat-raised-button class="view-muti-operator-btn" color="warn"><i class="fa fa-trash"></i>&nbsp;删除</button>&nbsp;
+    </ng-container>
+
+    <ng-container *ngIf="eruptModel.eruptJson.power.export">
+      <button mat-raised-button class="view-muti-operator-btn">
+        <i class="fa fa-download"></i>&nbsp;导出
+      </button>&nbsp;
+    </ng-container>
+
+    <ng-container *ngIf="eruptModel.eruptJson.power.importable">
+      <button mat-raised-button [matMenuTriggerFor]="exportoption" class="view-muti-operator-btn">
+        <i class="fa fa-upload"></i>&nbsp;导入
+      </button>&nbsp;
+      <mat-menu #exportoption="matMenu">
+        <button mat-menu-item class="view-muti-operator-btn"><i class="fa fa-upload"></i>&nbsp;导入</button>
+        <button mat-menu-item class="view-muti-operator-btn"><i class="fa fa-medium"></i>&nbsp;下载模板</button>
+      </mat-menu>
+    </ng-container>
+
+
+    <button mat-raised-button
+            *ngIf="eruptSearchFields.length>0"
+            class="view-muti-operator-btn"
+            (click)="isSearchCollapsed = !isSearchCollapsed"
+            [attr.aria-expanded]="isSearchCollapsed">
+      <i class="fa {{isSearchCollapsed?'fa-level-up':'fa-level-down'}}"></i>&nbsp;条件
+    </button>&nbsp;
+
+    <!--custom button-->
+    <ng-container *ngFor="let oper of eruptModel.eruptJson.rowOperation">
+      <ng-container *ngIf="oper.multi">
+        <button mat-raised-button color="accent" class="view-muti-operator-btn">
+          <i class="{{oper.icon}}"></i>&nbsp;{{oper.title}}
+        </button>&nbsp;
+      </ng-container>
+    </ng-container>
+  </div>
+  <!--operator end-->
+
+  <!--search block start-->
+  <mat-card [collapse]="!isSearchCollapsed" *ngIf="eruptSearchFields.length>0" class="view-muti-operator-btn">
+    <mat-card-header>
+      <mat-card-title>查询条件</mat-card-title>
+    </mat-card-header>
+
+    <div class="p-30">
+      <erupt-edit-type [eruptFieldModels]="eruptSearchFields" [colClass]="'col-sm-6'">
+
+      </erupt-edit-type>
+    </div>
+  </mat-card>
+  <!--search block end-->
+</div>
+
+<!--<app-modal-basic id="abc">-->
+  <!--13214213123-->
+<!--</app-modal-basic>-->
+
+
+<!--table start-->
+<div class="card">
+  <ngx-datatable
+    *ngIf="views.length>0"
+    class="data-table material"
+    [columnMode]="'force'"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="50"
+    [rows]="rows"
+    [scrollbarH]="true"
+    [scrollbarV]="true"
+    [selectAllRowsOnPage]="true"
+    [selectCheck]="true"
+    [selectionType]="'multi'"
+    [style.height]="'600px'"
+    [externalPaging]="true"
+    [count]="page.total"
+    [offset]="page.pageNumber"
+    [limit]="page.pageSize"
+    [loadingIndicator]="loadingIndicator"
+    [messages]="{
+    emptyMessage: '无数据',
+    totalMessage: 'total',
+    selectedMessage: 'selected'
+  }"
+  >
+    <ngx-datatable-column [width]="60" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                          [frozenLeft]="true"
+                          [resizeable]="false" [checkboxable]="true">
+    </ngx-datatable-column>
+
+    <ngx-datatable-column *ngFor="let view of views" [name]="view.title" [prop]="view.column" [resizeable]="true">
+    </ngx-datatable-column>
+
+    <ngx-datatable-column [name]="'操作'" [frozenRight]="true" [width]="140">
+      <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+                   let-onCheckboxChangeFn="onCheckboxChangeFn">
+        <div class="text-center">
+          <ng-container *ngIf="eruptModel.eruptJson.power.edit">
+            <i class="fa fa-pencil text-primary table-operator-btn" (click)="editRow($event,value)"></i>&nbsp;&nbsp;
+          </ng-container>
+          <ng-container *ngIf="eruptModel.eruptJson.power.del">
+            <i class="fa fa-trash text-danger table-operator-btn" (click)="delRow($event,value)"></i>&nbsp;&nbsp;
+          </ng-container>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>
+<!--table end-->

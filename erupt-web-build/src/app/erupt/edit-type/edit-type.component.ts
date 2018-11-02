@@ -14,6 +14,9 @@ export class EditTypeComponent implements OnInit {
 
   @Input() eruptFieldModels: Array<EruptFieldModel>;
 
+
+  @Input() colClass: string;
+
   editType = EditType;
 
   choiceEnum = ChoiceEnum;

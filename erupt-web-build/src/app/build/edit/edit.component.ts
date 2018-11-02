@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {EruptModel} from "../../erupt/model/erupt.model";
 import {DataService} from "../../erupt/service/DataService";
+import {EditType} from "../../erupt/model/erupt.enum";
+import {eruptModelConverViews} from "../../erupt/util/ConverUtil";
+import {EruptFieldModel, TabType} from "../../erupt/model/erupt-field.model";
 
 @Component({
   selector: 'erupt-edit',
@@ -9,7 +12,11 @@ import {DataService} from "../../erupt/service/DataService";
 })
 export class EditComponent implements OnInit {
 
-  public eruptModel: EruptModel;
+  eruptModel: EruptModel;
+
+  groups: Set<string> = new Set;
+
+  editType = EditType;
 
   constructor(private data: DataService) {
 
@@ -18,8 +25,27 @@ export class EditComponent implements OnInit {
   ngOnInit() {
     this.data.getEruptBuild("mmo").subscribe(
       em => {
+        //计算里面所有的字段信息
+        for (let field of em.eruptFieldModels) {
+          /**
+           * TAB control
+           */
+          if (field.eruptFieldJson.edit.type === EditType.TAB) {
+            if (!field.eruptFieldJson.edit.tabType) {
+              field.eruptFieldJson.edit.tabType = [];
+            }
+            field.eruptFieldJson.edit.tabType[0] = {};
+            console.log(field.eruptFieldJson.edit.tabType[0]);
+            this.data.getEruptBuild(field.fieldReturnName).subscribe(subErupt => {
+              field.eruptFieldJson.edit.tabType[0].eruptFieldModels = subErupt.eruptFieldModels;
+              field.eruptFieldJson.edit.tabType[0].views = eruptModelConverViews(subErupt);
+            });
+          }
+
+          this.groups.add(field.eruptFieldJson.edit.group);
+        }
         this.eruptModel = em;
-        console.log(this.eruptModel);
+
       },
       error => {
         console.log(error);

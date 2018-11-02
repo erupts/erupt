@@ -5,11 +5,12 @@ import {EditComponent} from "./edit/edit.component";
 import {SharedModule} from "../shared/shared.module";
 import {EruptModule} from "../erupt/erupt.module";
 import {
+  MatButtonModule,
   MatCardModule,
-  MatCheckboxModule, MatExpansionModule, MatRippleModule,
+  MatCheckboxModule, MatExpansionModule, MatMenuModule, MatRippleModule,
   MatTabsModule, MatToolbarModule
 } from "@angular/material";
-import {ViewComponent} from './view/view.component';
+import {TableComponent} from './table/table.component';
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 import {CollapseModule} from "ngx-bootstrap";
 
@@ -26,9 +27,12 @@ import {CollapseModule} from "ngx-bootstrap";
     MatCardModule,
     MatRippleModule,
     MatToolbarModule,
-    CollapseModule
+    CollapseModule,
+    MatRippleModule,
+    MatButtonModule,
+    MatMenuModule
   ],
-  declarations: [EditComponent, ViewComponent]
+  declarations: [EditComponent, TableComponent]
 })
 export class BuildModule {
 

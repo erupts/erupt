@@ -5,4 +5,5 @@ export interface Page {
   total: number;
   pageNumber: number;
   pageSize: number;
+  list?: Array<object>;
 }

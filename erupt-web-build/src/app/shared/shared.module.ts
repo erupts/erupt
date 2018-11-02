@@ -1,6 +1,5 @@
 import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ToggleFullScreenDirective} from './fullscreen/toggle-fullscreen.directive';
 import {AccordionAnchorDirective} from './accordion/accordionanchor.directive';
 import {AccordionLinkDirective} from './accordion/accordionlink.directive';
@@ -14,9 +13,7 @@ import {ModalBasicComponent} from './modal-basic/modal-basic.component';
 import {ModalAnimationComponent} from './modal-animation/modal-animation.component';
 import {SpinnerComponent} from './spinner/spinner.component';
 import {ClickOutsideModule} from 'ng-click-outside';
-import { DataTableDirective } from './date-table/data-table.directive';
 import { RangeSliderDirective } from './range-slider/range-slider.directive';
-// import {MDBBootstrapModule} from 'angular-bootstrap-md';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -46,7 +43,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ModalAnimationComponent,
     SpinnerComponent,
     ClickOutsideModule,
-    DataTableDirective
     // MDBBootstrapModule
   ],
   declarations: [
@@ -60,7 +56,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ModalBasicComponent,
     ModalAnimationComponent,
     SpinnerComponent,
-    DataTableDirective,
     RangeSliderDirective
   ],
   providers: [

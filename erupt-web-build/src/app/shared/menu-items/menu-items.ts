@@ -46,8 +46,8 @@ const MENUITEMS = [
             name: 'edit'
           },
           {
-            state: 'view',
-            name: 'view'
+            state: 'table',
+            name: 'table'
           }
         ]
       }

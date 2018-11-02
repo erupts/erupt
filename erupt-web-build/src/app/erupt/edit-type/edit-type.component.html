@@ -6,7 +6,7 @@
         <ng-container *ngSwitchCase="editType.INPUT">
           <ng-container [ngSwitch]="field.eruptFieldJson.edit.inputType[0].type">
             <ng-container *ngSwitchCase="'TEXT'">
-              <div class="col-sm-6 col-md-4 col-lg-4 input-style">
+              <div class="input-style" [class]="colClass">
                 <mat-form-field class="full-width">
                   <mat-label>{{field.eruptFieldJson.edit.title}}</mat-label>
                   <ng-container *ngIf="field.fieldReturnName=='Integer'||field.fieldReturnName=='int'">
@@ -52,13 +52,15 @@
 
                   </textarea>
                 </mat-form-field>
+
+                <mat-slider class="full-width"></mat-slider>
               </div>
             </ng-container>
           </ng-container>
         </ng-container>
         <!--choice-->
         <ng-container *ngSwitchCase="editType.CHOICE">
-          <div class="col-sm-6 col-md-4 col-lg-4 input-style">
+          <div class="input-style" [class]="colClass">
             <ng-container *ngIf="field.eruptFieldJson.edit.choiceType[0].type==choiceEnum.SINGLE">
               <div class="stander-line-height">
                 {{field.eruptFieldJson.edit.title}}
@@ -77,8 +79,12 @@
                 <mat-label>{{field.eruptFieldJson.edit.title}}</mat-label>
                 <mat-icon matSuffix (click)="clearValue(field,$event)"><i class="fa fa-close stander-icon"></i>
                 </mat-icon>
-                <mat-select [required]="field.eruptFieldJson.edit.notNull">
+                <mat-select [required]="field.eruptFieldJson.edit.notNull"
+                            [value]="field.eruptFieldJson.edit.$value"
+                            (selectionChange)="field.eruptFieldJson.edit.$value=$event.value"
+                >
                   <mat-option *ngFor="let vl of field.eruptFieldJson.edit.choiceType[0].vl" [value]="vl.value"
+
                               [disabled]="field.eruptFieldJson.edit.readOnly">
                     {{vl.label}}
                   </mat-option>
@@ -102,7 +108,7 @@
         </ng-container>
         <!--date-->
         <ng-container *ngSwitchCase="editType.DATE">
-          <div class="col-sm-6 col-md-4 col-lg-4 input-style">
+          <div class="input-style" [class]="colClass">
             <mat-form-field class="full-width">
               <mat-label>{{field.eruptFieldJson.edit.title}}</mat-label>
               <input matInput [matDatepicker]="dp" readonly="readonly" (click)="dp.open()"
@@ -132,13 +138,13 @@
         </ng-container>
         <!--reference-->
         <ng-container *ngSwitchCase="editType.REFERENCE">
-          <div class="col-sm-6 col-md-4 col-lg-4 input-style">
+          <div class="input-style" [class]="colClass">
             REFERENCE
           </div>
         </ng-container>
         <!--bool-->
         <ng-container *ngSwitchCase="editType.BOOLEAN">
-          <div class="col-sm-6 col-md-4 col-lg-4 input-style">
+          <div class="input-style" [class]="colClass">
             <div class="stander-line-height">
               {{field.eruptFieldJson.edit.title}}：
               <ui-switch [checkedLabel]="field.eruptFieldJson.edit.boolType[0].trueText"
@@ -149,10 +155,9 @@
         </ng-container>
         <!--dict-->
         <ng-container *ngSwitchCase="editType.DICT">
-          <div class="col-sm-6 col-md-4 col-lg-4">
+          <div class="input-style" [class]="colClass">
             DICT
           </div>
-
         </ng-container>
       </ng-container>
     </ng-container>
