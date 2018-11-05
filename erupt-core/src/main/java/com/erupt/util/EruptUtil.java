@@ -16,13 +16,6 @@ import java.util.function.Consumer;
  */
 public class EruptUtil {
 
-    public static List<String> getEruptFieldNames(List<EruptFieldModel> eruptFieldModels) {
-        List<String> fieldNames = new ArrayList<>();
-        eruptFieldModels.forEach(field -> fieldNames.add(field.getFieldName()));
-        return fieldNames;
-    }
-
-
 
     //过滤非展示项字段信息
     public static void filterNoEruptFieldValue(Object o, Consumer<Field> consumer) {
@@ -47,27 +40,7 @@ public class EruptUtil {
         filterNoEruptFieldValue(o, field -> {
             EruptField eruptField = field.getAnnotation(EruptField.class);
             if (!TypeUtil.isFieldSimpleType(field.getType().getSimpleName())) {
-//                Field[] subFields = field.getType().getFields();
-//                for (View view : eruptField.views()) {
-//                    for (Field subField : subFields) {
-//                        if (!subField.getName().equals(view.column())) {
-//                            field.setAccessible(true);
-//                            try {
-//                                field.set(o, null);
-//                            } catch (IllegalAccessException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                }
-//                switch (eruptField.edit().type()) {
-//                    case REFERENCE:
-//                        eruptField.edit().referenceType()[0].id();
-//                        eruptField.edit().referenceType()[0].label();
-//                        break;
-//                    case BOOLEAN:
-//                        break;
-//                }
+
             }
         });
     }

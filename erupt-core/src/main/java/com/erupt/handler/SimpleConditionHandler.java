@@ -1,0 +1,19 @@
+package com.erupt.handler;
+
+import com.erupt.annotation.fun.ConditionHandler;
+
+/**
+ * Created by liyuepeng on 11/5/18.
+ */
+public class SimpleConditionHandler implements ConditionHandler {
+
+    @Override
+    public String placeHolderStr() {
+        return "abc";
+    }
+
+    @Override
+    public Object placeHolderData() {
+        return 1;
+    }
+}

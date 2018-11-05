@@ -24,7 +24,7 @@ public @interface Erupt {
 
     RowOperation[] rowOperation() default {};
 
-    DataFilter dateFilter() default @DataFilter;
+    Filter filter() default @Filter;
 
     Class<? extends DataProxy> dateProxy()[] default {};
 }

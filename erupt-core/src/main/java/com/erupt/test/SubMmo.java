@@ -5,12 +5,14 @@ import com.erupt.annotation.EruptField;
 import com.erupt.annotation.constant.RgbColor;
 import com.erupt.annotation.constant.UiColor;
 import com.erupt.annotation.sub_erupt.Card;
+import com.erupt.annotation.sub_erupt.Filter;
 import com.erupt.annotation.sub_erupt.RowOperation;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.Search;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.*;
+import com.erupt.handler.SimpleConditionHandler;
 import com.erupt.model.BaseModel;
 
 import javax.persistence.*;
@@ -94,12 +96,13 @@ public class SubMmo extends BaseModel {
     @EruptField(
             views = {
                     @View(title = "input", column = "age"),
-                    @View(title = "年龄", column = "text"),
+                    @View(title = "年龄", column = "choice"),
             },
             edit = @Edit(
-                    title = "tab1",
+                    title = "mmo_table",
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType(id = "id", label = "name")
+                    referenceType = @ReferenceType(id = "id", label = "input",
+                            filter = @Filter(condition = "", conditionHandlers = SimpleConditionHandler.class))
             )
     )
     @ManyToOne

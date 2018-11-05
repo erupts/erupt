@@ -1,6 +1,11 @@
 package com.erupt.annotation.util;
 
+import com.erupt.annotation.fun.ConditionHandler;
+import com.erupt.annotation.sub_erupt.Filter;
 import org.json.JSONObject;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.regex.Matcher;
 
 /**
  * Created by liyuepeng on 10/10/18.
@@ -19,9 +24,33 @@ public class ConfigUtil {
                 .replace("=", ":")
                 .replace("(", "{")
                 .replace(")", "}");
-        //如此不严谨的JSON串也就只有org.json才可以解析的出来
         return new JSONObject(converVal).toString();
+    }
 
+    public static String switchFilterConditionToStr(Filter filter) {
+        String conditionStr = filter.condition();
+        if (filter.conditionHandlers().length > 0) {
+            for (Class<? extends ConditionHandler> conditionHandler : filter.conditionHandlers()) {
+                try {
+                    ConditionHandler ch = conditionHandler.newInstance();
+                    String placeHolderStr = Matcher.quoteReplacement(conditionHandler.getMethod("placeHolderStr").invoke(ch).toString());
+                    conditionStr = filter.condition().replaceAll("\\$" + placeHolderStr + "\\$",
+                            Matcher.quoteReplacement(conditionHandler.getMethod("placeHolderData").invoke(ch).toString()));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (conditionStr.startsWith("'")) {
+            conditionStr = conditionStr.substring(1, conditionStr.length() - 1);
+        }
+        return conditionStr;
     }
 
 

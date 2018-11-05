@@ -76,6 +76,7 @@ public class Mmo extends BaseModel {
                     search = @Search(isSearch = true)
             )
     )
+    @Column(name = "AGE")
     private Integer age;
 
     @Column(name = "TEXT")

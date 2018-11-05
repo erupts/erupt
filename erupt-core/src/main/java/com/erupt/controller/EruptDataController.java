@@ -99,12 +99,9 @@ public class EruptDataController {
 
     @GetMapping("/{erupt}/ref/{name}")
     @ResponseBody
-    public List getRefData(@PathVariable("erupt") String erupt, @RequestParam("name") String name) {
+    public List getRefData(@PathVariable("erupt") String erupt, @PathVariable("name") String name) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
-        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(name);
-        ReferenceType referenceType = eruptFieldModel.getEruptField().edit().referenceType()[0];
-        return eruptJpaDao.getDataMap(eruptFieldModel.getField().getType().getSimpleName(),
-                referenceType.id() + " as id", referenceType.label() + " as label");
+        return eruptJpaDao.getReferenceList(eruptModel, name);
     }
 
 
