@@ -2,13 +2,9 @@ package com.erupt.service;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
-import com.erupt.annotation.sub_field.EditType;
-import com.erupt.annotation.util.ConfigUtil;
 import com.erupt.model.EruptFieldModel;
 import com.erupt.model.EruptModel;
-import com.erupt.util.EruptAnnoConver;
 import com.erupt.util.ScannerUtil;
-import com.google.gson.JsonParser;
 import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,10 +13,8 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
-import javax.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,11 +41,11 @@ public class CoreService implements InitializingBean {
             {
                 List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
                 Map<String, EruptFieldModel> eruptFieldMap = new LinkedCaseInsensitiveMap<EruptFieldModel>();
-                //super class erupt annotation
+                //erupt class annotation
                 {
-                    Class<?> superClass = clazz.getSuperclass();
-                    if (null != clazz.getSuperclass()) {
-                        for (Field field : superClass.getDeclaredFields()) {
+                    Class tempClass = clazz;
+                    while (null != tempClass) {
+                        for (Field field : tempClass.getDeclaredFields()) {
                             EruptField eruptField = field.getAnnotation(EruptField.class);
                             eruptModel.setPrimaryKeyCol(field);
                             if (null != eruptField) {
@@ -60,16 +54,7 @@ public class CoreService implements InitializingBean {
                                 eruptFieldMap.put(field.getName(), eruptFieldModel);
                             }
                         }
-                    }
-
-                }
-                for (Field field : clazz.getDeclaredFields()) {
-                    EruptField eruptField = field.getAnnotation(EruptField.class);
-                    eruptModel.setPrimaryKeyCol(field);
-                    if (null != eruptField) {
-                        EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
-                        eruptFieldModels.add(eruptFieldModel);
-                        eruptFieldMap.put(field.getName(), eruptFieldModel);
+                        tempClass = tempClass.getSuperclass();
                     }
                 }
                 eruptModel.setEruptFieldModels(eruptFieldModels);

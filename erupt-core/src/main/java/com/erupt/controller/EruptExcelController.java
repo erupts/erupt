@@ -19,6 +19,7 @@ public class EruptExcelController {
     public Object exportData(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().export()) {
+
             return null;
         } else {
             throw new RuntimeException("没有导出权限");

@@ -20,6 +20,8 @@ public @interface Erupt {
 
     Card[] cards() default {};
 
+    Chart[] charts() default {};
+
     Power power() default @Power;
 
     RowOperation[] rowOperation() default {};

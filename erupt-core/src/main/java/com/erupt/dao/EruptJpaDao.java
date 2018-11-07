@@ -1,19 +1,19 @@
 package com.erupt.dao;
 
-import com.erupt.annotation.sub_field.View;
+import com.erupt.annotation.sub_erupt.Filter;
 import com.erupt.annotation.sub_field.sub_edit.ReferenceType;
 import com.erupt.annotation.util.ConfigUtil;
 import com.erupt.model.EruptFieldModel;
 import com.erupt.model.EruptModel;
 import com.erupt.model.Page;
-import com.erupt.service.CoreService;
-import com.erupt.util.EruptUtil;
+import com.erupt.util.ReflectUtil;
+import com.erupt.util.TypeUtil;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -29,7 +29,7 @@ public class EruptJpaDao {
     public static final String spaceSymRegex = "\\{\\{[a-z0-9A-Z_$]+\\}\\}";
 
 
-    public void saveEntity(Object entity) {
+    public void saveEntity(EruptModel eruptModel, Object entity) {
         entityManager.persist(entity);
     }
 
@@ -44,13 +44,9 @@ public class EruptJpaDao {
     }
 
     public Object findDataById(EruptModel eruptModel, Serializable id) {
-        //将参数id转换为主键标识类型
-//        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
-//            if (field.getField().getAnnotation(Id.class) != null) {
-//                id = TypeUtil.typeStrConvertObject(id, field.getField().getType().getSimpleName().toLowerCase());
-//                break;
-//            }
-//        }
+        Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(),
+                eruptModel.getPrimaryKeyCol());
+        id = TypeUtil.typeStrConvertObject(id,primaryField.getType().getSimpleName().toLowerCase());
         return entityManager.find(eruptModel.getClazz(), id);
     }
 
@@ -58,7 +54,9 @@ public class EruptJpaDao {
     public Page queryEruptList(EruptModel eruptModel, Page page) {
         String keys = String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel.getEruptFieldModels()));
         keys = "new map(" + keys + ")";
-        List list = entityManager.createQuery("select " + keys + " from " + eruptModel.getClazz().getSimpleName())
+        Filter filter = eruptModel.getErupt().filter();
+        List list = entityManager.createQuery("select " + keys + " from " + eruptModel.getClazz().getSimpleName()
+                + ("".equals(filter.condition()) ? "" : " where " + ConfigUtil.switchFilterConditionToStr(filter)))
                 .setMaxResults(page.getPageSize())
                 .setFirstResult((page.getPageNumber() - 1) * page.getPageSize())
                 .getResultList();

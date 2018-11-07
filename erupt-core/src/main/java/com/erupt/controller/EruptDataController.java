@@ -1,17 +1,15 @@
 package com.erupt.controller;
 
-import com.erupt.annotation.EruptField;
-import com.erupt.annotation.sub_field.Edit;
-import com.erupt.annotation.sub_field.sub_edit.ReferenceType;
 import com.erupt.constant.RestPath;
 import com.erupt.dao.EruptJpaDao;
 import com.erupt.dao.JpaDao;
-import com.erupt.model.EruptFieldModel;
 import com.erupt.model.EruptModel;
 import com.erupt.model.Page;
 import com.erupt.service.CoreService;
 import com.erupt.service.DataService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +26,6 @@ import java.util.List;
 @Transactional
 public class EruptDataController {
 
-
     @Autowired
     private DataService dataService;
 
@@ -40,7 +37,7 @@ public class EruptDataController {
 
     @GetMapping("/{erupt}")
     @ResponseBody
-    public Page getErupt(@PathVariable("erupt") String eruptName) throws JsonProcessingException {
+    public Page getEruptData(@PathVariable("erupt") String eruptName) throws JsonProcessingException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().query()) {
             Page page = eruptJpaDao.queryEruptList(eruptModel, new Page(1, 3));
@@ -52,10 +49,10 @@ public class EruptDataController {
 
     @PostMapping("/{erupt}")
     @ResponseBody
-    public void addErupt(@PathVariable("erupt") String erupt) {
+    public void addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
-
+            eruptJpaDao.saveEntity(eruptModel, new Gson().fromJson(data.toString(), eruptModel.getClazz()));
         } else {
             throw new RuntimeException("没有新增权限");
         }
@@ -63,7 +60,7 @@ public class EruptDataController {
 
     @PutMapping("/{erupt}/{id}")
     @ResponseBody
-    public void editErupt(@PathVariable("erupt") String erupt, @PathVariable("id") String id) {
+    public void editEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") String id) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
 //            eruptJpaDao.findDataById(eruptModel, id);
@@ -83,12 +80,13 @@ public class EruptDataController {
         }
     }
 
+    //为了事务性所以增加了批量删除功能
     @DeleteMapping("/{erupt}")
     @ResponseBody
-    public void deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") String[] ids) {
+    public void deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
-            for (String id : ids) {
+            for (Serializable id : ids) {
                 eruptJpaDao.deleteEntity(eruptJpaDao.findDataById(eruptModel, id));
             }
         } else {
