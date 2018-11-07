@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {MatTableDataSource} from "@angular/material";
-import {SelectionModel} from "@angular/cdk/collections";
 import {DataService} from "../../erupt/service/DataService";
-import {TableColumn} from "@swimlane/ngx-datatable";
 import {Page} from "../../erupt/model/page";
 import {EruptModel} from "../../erupt/model/erupt.model";
 import {EruptFieldModel, View} from "../../erupt/model/erupt-field.model";
-import {eruptModelConverViews} from "../../erupt/util/ConverUtil";
+import {eruptModelConverViewKeys} from "../../erupt/util/conver-util";
+import {MatDialog} from "@angular/material";
+import {EditTypeComponent} from "../../erupt/edit-type/edit-type.component";
 
 @Component({
   selector: 'app-list-view',
@@ -17,8 +16,11 @@ export class TableComponent implements OnInit {
 
   eruptSearchFields: Array<EruptFieldModel> = [];
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private dialog: MatDialog) {
+
   }
+
+  eruptName: string = "submmo";
 
   eruptModel: EruptModel;
 
@@ -32,6 +34,7 @@ export class TableComponent implements OnInit {
   views: Array<View> = [];
 
   editRow(event: Event, value) {
+    this.dialog.open(EditTypeComponent);
     event.stopPropagation();
     alert("修改");
     console.log(value);
@@ -39,19 +42,23 @@ export class TableComponent implements OnInit {
 
   delRow(event: Event, value) {
     event.stopPropagation();
+    console.log(value[this.eruptModel.primaryKeyCol]);
+    this.dataService.deleteEruptData(this.eruptName, value[this.eruptModel.primaryKeyCol]).subscribe(val => {
+      console.log(val);
+    });
   }
 
   ngOnInit() {
     this.page = {
       pageNumber: 1,
-      pageSize: 2,
-      total: 2
+      pageSize: 10,
+      total: 10
     };
-    this.dataService.getEruptBuild("submmo").subscribe(
+    this.dataService.getEruptBuild(this.eruptName).subscribe(
       em => {
         this.eruptModel = em;
         console.log(this.eruptModel);
-        this.views = eruptModelConverViews(em);
+        this.views = eruptModelConverViewKeys(em);
         em.eruptFieldModels.forEach((field, i) => {
           if (field.eruptFieldJson.edit.search.isSearch) {
             field.eruptFieldJson.edit.notNull = false;
@@ -64,7 +71,7 @@ export class TableComponent implements OnInit {
       }
     );
 
-    this.dataService.queryEruptData("submmo").subscribe(
+    this.dataService.queryEruptData(this.eruptName).subscribe(
       data => {
         console.log(data);
         this.rows = data.list;

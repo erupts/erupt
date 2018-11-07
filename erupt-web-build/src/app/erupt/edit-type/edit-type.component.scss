@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+.cdk-overlay-container {
+  z-index: 9999 !important;
+}
+
 .form-title {
   text-align: right;
   line-height: 38px;

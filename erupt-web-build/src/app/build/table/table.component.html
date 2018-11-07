@@ -58,13 +58,14 @@
     </ng-container>
 
 
-    <button mat-raised-button
-            *ngIf="eruptSearchFields.length>0"
-            class="view-muti-operator-btn"
-            (click)="isSearchCollapsed = !isSearchCollapsed"
-            [attr.aria-expanded]="isSearchCollapsed">
-      <i class="fa {{isSearchCollapsed?'fa-level-up':'fa-level-down'}}"></i>&nbsp;条件
-    </button>&nbsp;
+    <ng-container *ngIf="eruptSearchFields.length>0">
+      <button mat-raised-button
+              class="view-muti-operator-btn"
+              (click)="isSearchCollapsed = !isSearchCollapsed"
+              [attr.aria-expanded]="isSearchCollapsed">
+        <i class="fa {{isSearchCollapsed?'fa-level-up':'fa-level-down'}}"></i>&nbsp;条件
+      </button>&nbsp;
+    </ng-container>
 
     <!--custom button-->
     <ng-container *ngFor="let oper of eruptModel.eruptJson.rowOperation">
@@ -78,7 +79,9 @@
   <!--operator end-->
 
   <!--search block start-->
-  <mat-card [collapse]="!isSearchCollapsed" *ngIf="eruptSearchFields.length>0" class="view-muti-operator-btn">
+  <mat-card [collapse]="!isSearchCollapsed"
+            *ngIf="eruptSearchFields.length>0"
+            class="view-muti-operator-btn">
     <mat-card-header>
       <mat-card-title>查询条件</mat-card-title>
     </mat-card-header>
@@ -93,7 +96,7 @@
 </div>
 
 <!--<app-modal-basic id="abc">-->
-  <!--13214213123-->
+<!--13214213123-->
 <!--</app-modal-basic>-->
 
 
@@ -101,6 +104,7 @@
 <div class="card">
   <ngx-datatable
     *ngIf="views.length>0"
+    [style.height]="'500px'"
     class="data-table material"
     [columnMode]="'force'"
     [headerHeight]="50"

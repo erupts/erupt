@@ -14,7 +14,8 @@ import {ModalAnimationComponent} from './modal-animation/modal-animation.compone
 import {SpinnerComponent} from './spinner/spinner.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {RangeSliderDirective} from './range-slider/range-slider.directive';
-import { ListSelectComponent } from './list-select/list-select.component';
+import {MatDialogModule} from "@angular/material";
+import { PreloaderDirective } from './preloader/preloader.directive';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -27,6 +28,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HttpClientModule,
     PerfectScrollbarModule,
     ClickOutsideModule,
+    MatDialogModule,
     // MDBBootstrapModule.forRoot()
   ],
   exports: [
@@ -43,9 +45,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ModalBasicComponent,
     ModalAnimationComponent,
     SpinnerComponent,
-    ClickOutsideModule,
-    ListSelectComponent
-    // MDBBootstrapModule
+    ClickOutsideModule
   ],
   declarations: [
     ToggleFullScreenDirective,
@@ -59,7 +59,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ModalAnimationComponent,
     SpinnerComponent,
     RangeSliderDirective,
-    ListSelectComponent
+    PreloaderDirective,
   ],
   providers: [
     {

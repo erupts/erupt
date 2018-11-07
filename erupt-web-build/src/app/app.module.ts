@@ -11,6 +11,7 @@ import {SharedModule} from "./shared/shared.module";
 import {MenuItems} from "./shared/menu-items/menu-items";
 import {MatRippleModule, MatTabsModule} from "@angular/material";
 import {AuthModule} from "./auth/auth.module";
+import {HashLocationStrategy, LocationStrategy} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import {AuthModule} from "./auth/auth.module";
   exports: [
     BrowserAnimationsModule
   ],
-  providers: [MenuItems],
+  providers: [MenuItems, {provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule {

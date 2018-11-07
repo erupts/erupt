@@ -1,11 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Edit, EruptFieldModel} from "../model/erupt-field.model";
+import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Edit, EruptFieldModel, ReferenceType} from "../model/erupt-field.model";
 import {ChoiceEnum, EditType} from "../model/erupt.enum";
-import {BsLocaleService, listLocales} from "ngx-bootstrap";
-import {EruptModel} from "../model/erupt.model";
-import {MatDatepickerInputEvent, MatDialog} from "@angular/material";
+import {BsModalRef, BsModalService} from "ngx-bootstrap";
+import {MatDatepickerInputEvent, MatDialog, MatSnackBar} from "@angular/material";
 import * as moment from "moment";
-import {ListSelectComponent} from "../../shared/list-select/list-select.component";
+import {DataService} from "../service/DataService";
 @Component({
   selector: 'erupt-edit-type',
   templateUrl: './edit-type.component.html',
@@ -13,7 +12,7 @@ import {ListSelectComponent} from "../../shared/list-select/list-select.componen
 })
 export class EditTypeComponent implements OnInit {
 
-  @Input() eruptFieldModels: Array<EruptFieldModel>;
+  @Input() eruptFieldModels: EruptFieldModel;
 
 
   @Input() colClass: string;
@@ -24,14 +23,36 @@ export class EditTypeComponent implements OnInit {
 
   edit: Edit;
 
-  basicColor = "#fff";
+  referenceLists: Array<ReferenceType> = [];
+
+  modalRef: BsModalRef;
 
   zhDate = "YYYY-MM-DD";
   zhDateTime = "YYYY-MM-DD HH:mm:ss";
 
 
-  constructor(public dialog: MatDialog) {
+  constructor(private dataService: DataService, private modalService: BsModalService, public snackBar: MatSnackBar) {
 
+  }
+
+
+  checkRefValue(edit: Edit) {
+    if (!edit.referenceType[0].tempVal) {
+      this.snackBar.open("未选中数据项", "warning", {
+        duration: 2000
+      });
+      return;
+    }
+    edit.$value = edit.referenceType[0].tempVal.id;
+    edit.$viewValue = edit.referenceType[0].tempVal.label;
+    this.modalRef.hide();
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(
+      template,
+      // Object.assign({}, { class: 'gray modal-lg' })
+    );
   }
 
   ngOnInit() {
@@ -45,6 +66,12 @@ export class EditTypeComponent implements OnInit {
   }
 
 
+  queryReference(field: EruptFieldModel) {
+    field.eruptFieldJson.edit.referenceType[0].tempVal = null;
+    this.dataService.queryEruptReferenceData("submmo", field.fieldName).subscribe(data => {
+      this.referenceLists = data;
+    });
+  }
 
   addValue(value) {
     alert(value);
@@ -55,6 +82,7 @@ export class EditTypeComponent implements OnInit {
       event.stopPropagation();
     }
     field.eruptFieldJson.edit.$value = null;
+    field.eruptFieldJson.edit.$viewValue = null;
   }
 
   checkBoxChange = function ($event, val) {

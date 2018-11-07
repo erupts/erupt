@@ -14,12 +14,12 @@ import {
   MatSelectModule,
   MatSliderModule,
   MatSlideToggleModule, MatTableModule,
-  MatDialogModule
+  MatDialogModule, MatListModule, MatButtonModule, MatSnackBarModule
 } from "@angular/material";
 import {UiSwitchModule} from "ngx-ui-switch";
 import {DataTableComponent} from './data-table/data-table.component';
 import {SharedModule} from "../shared/shared.module";
-
+import {ModalModule} from "ngx-bootstrap";
 
 @NgModule({
   imports: [
@@ -36,13 +36,16 @@ import {SharedModule} from "../shared/shared.module";
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
-
     MatDatepickerModule,
     MatIconModule,
     MatNativeDateModule,
     MatTableModule,
     MatRadioModule,
-    MatDialogModule
+    MatDialogModule,
+    MatListModule,
+    ModalModule.forRoot(),
+    MatButtonModule,
+    MatSnackBarModule
   ],
   providers: [
     DataService,

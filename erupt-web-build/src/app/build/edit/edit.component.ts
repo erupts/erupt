@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EruptModel} from "../../erupt/model/erupt.model";
 import {DataService} from "../../erupt/service/DataService";
 import {EditType} from "../../erupt/model/erupt.enum";
-import {eruptModelConverViews} from "../../erupt/util/ConverUtil";
+import {eruptModelConverViewKeys, eruptValueToObject} from "../../erupt/util/conver-util";
 import {EruptFieldModel, TabType} from "../../erupt/model/erupt-field.model";
 
 @Component({
@@ -38,7 +38,7 @@ export class EditComponent implements OnInit {
             console.log(field.eruptFieldJson.edit.tabType[0]);
             this.data.getEruptBuild(field.fieldReturnName).subscribe(subErupt => {
               field.eruptFieldJson.edit.tabType[0].eruptFieldModels = subErupt.eruptFieldModels;
-              field.eruptFieldJson.edit.tabType[0].views = eruptModelConverViews(subErupt);
+              field.eruptFieldJson.edit.tabType[0].views = eruptModelConverViewKeys(subErupt);
             });
           }
 
@@ -52,6 +52,14 @@ export class EditComponent implements OnInit {
       }
     );
 
+  }
+
+  saveData() {
+    this.data.addEruptData("submmo", eruptValueToObject(this.eruptModel)).subscribe(result => {
+      console.log(result);
+    });
+    //TODO 主键信息
+    // eruptData[this.eruptModel.primaryKeyCol] = 0;
   }
 
 }

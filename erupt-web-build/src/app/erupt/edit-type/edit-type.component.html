@@ -143,31 +143,53 @@
             <mat-form-field class="full-width">
               <mat-label>{{field.eruptFieldJson.edit.title}}</mat-label>
               <input matInput
-                     (click)="referenceModel.show()"
+                     (click)="openModal(referenceModel);queryReference(field);"
                      [readonly]="true"
                      [required]="field.eruptFieldJson.edit.notNull"
-                     [(ngModel)]="field.eruptFieldJson.edit.$value">
+                     [ngModel]="field.eruptFieldJson.edit.$viewValue">
               <mat-icon matSuffix (click)="clearValue(field,$event)"><i class="fa fa-close stander-icon"></i></mat-icon>
             </mat-form-field>
           </div>
 
-
-          <app-modal-basic #referenceModel>
-            <div class="app-modal-header">
-              <h4 class="modal-title">请选择{{field.eruptFieldJson.edit.title}}</h4>
-              <button type="button" class="close basic-close" (click)="referenceModel.hide()">
-                <i class="fa fa-close"></i>
+          <ng-template #referenceModel>
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">请选择{{field.eruptFieldJson.edit.title}}</h4>
+              <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true" class="f-26">&times;</span>
               </button>
             </div>
-            <div class="app-modal-body">
+            <div class="modal-body" style="max-height: 400px;overflow: auto">
+              <ng-container *ngIf="referenceLists.length>0">
+                <mat-radio-group [(ngModel)]="field.eruptFieldJson.edit.referenceType[0].tempVal">
+                  <div class="row">
+                    <ng-container *ngFor="let reference of referenceLists">
+                      <div class="col-sm-6 col-md-4 col-lg-4">
+                        <mat-radio-button [value]="{id:reference.id,label:reference.label}">{{reference.label}}
+                        </mat-radio-button>
+                      </div>
+                    </ng-container>
+                  </div>
+                </mat-radio-group>
+              </ng-container>
+              <ng-container *ngIf="!referenceLists">
+                <div class="col-12">
+                  <div class="preloader3 loader-block">
+                    <div class="circ1 loader-info"></div>
+                    <div class="circ2 loader-info"></div>
+                    <div class="circ3 loader-info"></div>
+                    <div class="circ4 loader-info"></div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div class="modal-footer">
+              <button mat-raised-button class="outline-none" color="accent"
+                      (click)="checkRefValue(field.eruptFieldJson.edit)">确定
+              </button>&nbsp;&nbsp;
+              <button mat-raised-button class="outline-none" (click)="modalRef.hide()">取消（esc）</button>
+            </div>
+          </ng-template>
 
-            </div>
-            <div class="app-modal-footer">
-              <button type="button" class="btn btn-default" mdbRippleRadius (click)="referenceModel.hide()">Close
-              </button>
-              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius>Save changes</button>
-            </div>
-          </app-modal-basic>
 
         </ng-container>
         <!--bool-->

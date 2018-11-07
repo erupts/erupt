@@ -1,5 +1,6 @@
 <div (click)="onContainerClicked($event)" class="basic modal fade" tabindex="-1" [ngClass]="{'in': visibleAnimate}"
-     [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}" (keydown)="downClose($event)">
+     [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}"
+     (keydown)="downClose($event)">
   <div class="modal-dialog" [ngClass]="dialogClass">
     <div class="modal-content">
       <div *ngIf="!hideHeader" class="modal-header">

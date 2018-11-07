@@ -25,7 +25,8 @@ export interface View {
 export interface Edit {
   title: string;
   notNull: boolean;
-  $value: any;
+  $value: string | number | any;
+  $viewValue: any;
   type: EditType;
   show: boolean;
   readOnly: boolean;
@@ -66,10 +67,11 @@ interface InputType {
   icon: string;
 }
 
-interface ReferenceType {
+export interface ReferenceType {
   id: string;
   label: string;
-  filter: string;
+  filter?: string;
+  tempVal?: any;
 }
 
 interface BoolType {
