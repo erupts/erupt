@@ -49,10 +49,10 @@ public class EruptDataController {
 
     @PostMapping("/{erupt}")
     @ResponseBody
-    public void addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
+    public void addEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
-            eruptJpaDao.saveEntity(eruptModel, new Gson().fromJson(data.toString(), eruptModel.getClazz()));
+            eruptJpaDao.saveEntity(eruptModel, new Gson().fromJson(new Gson().toJson(data), eruptModel.getClazz()));
         } else {
             throw new RuntimeException("没有新增权限");
         }

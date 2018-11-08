@@ -8,13 +8,16 @@ import com.erupt.annotation.sub_field.Edit;
  * Created by liyuepeng on 10/9/18.
  */
 public @interface RowOperation {
+
+    String code();
+
     String icon();
 
     String title();
 
     boolean multi() default true;
 
-    Edit[] edits() default {};
+    CodeAndEdit[] edits() default {};
 
     Class<? extends OperationHandler> operationHandler();
 }

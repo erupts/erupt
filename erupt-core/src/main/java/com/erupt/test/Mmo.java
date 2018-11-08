@@ -5,6 +5,7 @@ import com.erupt.annotation.constant.UiColor;
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_erupt.Card;
+import com.erupt.annotation.sub_erupt.CodeAndEdit;
 import com.erupt.annotation.sub_erupt.Power;
 import com.erupt.annotation.sub_erupt.RowOperation;
 import com.erupt.annotation.sub_field.Edit;
@@ -25,17 +26,18 @@ import java.util.Set;
         name = "测试",
         power = @Power,
         rowOperation = @RowOperation(
+                code = "action",
                 icon = "fa fa-terminal",
                 title = "执行",
                 operationHandler = OperationHandlerImpl.class,
                 edits = {
-                        @Edit(
-                                title = "姓名",
-                                notNull = true
+                        @CodeAndEdit(
+                                code = "name",
+                                edit = @Edit(title = "姓名", notNull = true)
                         ),
-                        @Edit(
-                                title = "身份证号",
-                                notNull = true
+                        @CodeAndEdit(
+                                code = "idCard",
+                                edit = @Edit(title = "身份证号", notNull = true)
                         )
                 }
         ),
@@ -59,7 +61,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "名称",
                     notNull = true,
-                    inputType = @InputType(color = UiColor.success),
+                    inputType = @InputType(),
                     search = @Search(isSearch = true)
             )
     )
@@ -158,18 +160,14 @@ public class Mmo extends BaseModel {
     private String image;
 
 
-//    @EruptField(
-//            views = {
-//                    @View(title = "input", column = "input"),
-//                    @View(title = "年龄", column = "age"),
-//            },
-//            edit = @Edit(
-//                    title = "tab1",
-//                    type = EditType.TAB
-//            )
-//    )
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mmo")
-//    private Set<SubMmo> sub;
+    @EruptField(
+            edit = @Edit(
+                    title = "tab1",
+                    type = EditType.TAB
+            )
+    )
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "mmo")
+    private Set<SubMmo> sub;
 
 //    @EruptField(
 //            edit = @Edit(
@@ -189,7 +187,7 @@ public class Mmo extends BaseModel {
                     group = "分组2",
                     title = "名称",
                     notNull = true,
-                    inputType = @InputType(type = InputEnum.TEXTAREA, color = UiColor.success)
+                    inputType = @InputType(type = InputEnum.TEXTAREA)
             )
     )
     private String gender;

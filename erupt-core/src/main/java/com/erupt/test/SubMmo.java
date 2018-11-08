@@ -21,24 +21,7 @@ import java.util.Date;
 /**
  * Created by liyuepeng on 9/28/18.
  */
-@Erupt(
-        name = "sub test",
-        rowOperation = @RowOperation(
-                icon = "fa fa-icon",
-                title = "执行",
-                operationHandler = OperationHandlerImpl.class,
-                edits = {
-                        @Edit(
-                                title = "姓名",
-                                notNull = true
-                        ),
-                        @Edit(
-                                title = "身份证号",
-                                notNull = true
-                        )
-                }
-        )
-)
+@Erupt(name = "subTest")
 @Entity
 @Table(name = "ERUPT_SUB_TEST")
 public class SubMmo extends BaseModel {
@@ -52,7 +35,7 @@ public class SubMmo extends BaseModel {
             edit = @Edit(
                     title = "名称",
                     notNull = true,
-                    inputType = @InputType(color = UiColor.success),
+                    inputType = @InputType,
                     search = @Search(isSearch = true)
             )
     )

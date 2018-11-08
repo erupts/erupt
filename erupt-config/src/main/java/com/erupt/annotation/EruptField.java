@@ -15,8 +15,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface EruptField {
 
-    String title() default "";
-
     //表列信息
     View[] views() default {};
 

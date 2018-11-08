@@ -7,7 +7,7 @@ import com.erupt.annotation.fun.ConditionHandler;
  */
 public @interface Filter {
     //写表达式时要使用双引号包裹
-    String condition() default "";
+    String condition();
 
     Class<? extends ConditionHandler>[] conditionHandlers() default {};
 }

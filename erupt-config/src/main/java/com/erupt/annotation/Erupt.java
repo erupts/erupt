@@ -26,7 +26,7 @@ public @interface Erupt {
 
     RowOperation[] rowOperation() default {};
 
-    Filter filter() default @Filter;
+    Filter filter() default @Filter(condition = "");
 
     Class<? extends DataProxy> dateProxy()[] default {};
 }

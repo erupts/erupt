@@ -9,8 +9,6 @@ import com.erupt.annotation.constant.DataLength;
 public @interface InputType {
     InputEnum type() default InputEnum.TEXT;
 
-    UiColor color() default UiColor.DEFAULT;
-
     int length() default DataLength.NAME_LENGTH;
 
     String placeholder() default "";

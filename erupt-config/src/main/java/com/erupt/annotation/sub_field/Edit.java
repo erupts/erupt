@@ -21,7 +21,7 @@ public @interface Edit {
 
     String group() default "基本信息";
 
-    Search search() default @Search;
+    Search search() default @Search(isSearch = false);
 
     //如下注解虽为数组形式但是实际使用中只取数组为第零个的值(这样做可以避免大量的默认值生成，由此减轻前端json串体积)
     InputType[] inputType() default @InputType;
