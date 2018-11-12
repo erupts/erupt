@@ -10,6 +10,9 @@ import com.erupt.service.DataService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +38,21 @@ public class EruptDataController {
     @Autowired
     private EruptJpaDao eruptJpaDao;
 
-    @GetMapping("/{erupt}")
+    private Gson gson = new Gson();
+
+    @PostMapping("/query/{erupt}")
     @ResponseBody
-    public Page getEruptData(@PathVariable("erupt") String eruptName) throws JsonProcessingException {
+    public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject data) throws JsonProcessingException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        String dataStr = gson.toJson(data);
+        JsonObject conditionParam = null;
+        JsonObject pageJson = null;
+        if (StringUtils.isNotBlank(dataStr)) {
+            JsonObject jo = new JsonParser().parse(dataStr).getAsJsonObject();
+            conditionParam = jo.getAsJsonObject(EruptJpaDao.CONDITION_KEY);
+        }
         if (eruptModel.getErupt().power().query()) {
-            Page page = eruptJpaDao.queryEruptList(eruptModel, new Page(1, 3));
+            Page page = eruptJpaDao.queryEruptList(eruptModel, conditionParam, new Page(1, 3));
             return page;
         } else {
             throw new RuntimeException("没有查询权限");
@@ -52,7 +64,7 @@ public class EruptDataController {
     public void addEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
-            eruptJpaDao.saveEntity(eruptModel, new Gson().fromJson(new Gson().toJson(data), eruptModel.getClazz()));
+            eruptJpaDao.saveEntity(eruptModel, gson.fromJson(gson.toJson(data), eruptModel.getClazz()));
         } else {
             throw new RuntimeException("没有新增权限");
         }

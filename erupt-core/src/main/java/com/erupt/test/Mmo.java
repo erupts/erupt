@@ -1,7 +1,6 @@
 package com.erupt.test;
 
 import com.erupt.annotation.constant.RgbColor;
-import com.erupt.annotation.constant.UiColor;
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_erupt.Card;
@@ -10,7 +9,8 @@ import com.erupt.annotation.sub_erupt.Power;
 import com.erupt.annotation.sub_erupt.RowOperation;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
-import com.erupt.annotation.sub_field.Search;
+import com.erupt.annotation.sub_field.ViewType;
+import com.erupt.annotation.sub_field.sub_edit.Search;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.*;
 import com.erupt.model.BaseModel;
@@ -56,7 +56,7 @@ public class Mmo extends BaseModel {
     @Column(name = "NAME")
     @EruptField(
             views = {
-                    @View(title = "名称")
+                    @View(title = "名称", className = "bg-c-green",template = "名称：@txt@")
             },
             edit = @Edit(
                     title = "名称",
@@ -106,9 +106,9 @@ public class Mmo extends BaseModel {
 
 
     @EruptField(
-            views = @View(title = "选择"),
+            views = @View(title = "多选"),
             edit = @Edit(
-                    title = "选择",
+                    title = "多选",
                     notNull = true,
                     type = EditType.CHOICE,
                     choiceType = {
@@ -181,7 +181,7 @@ public class Mmo extends BaseModel {
 
     @EruptField(
             views = {
-                    @View(title = "标签")
+                    @View(title = "标签", viewType = ViewType.LINK)
             },
             edit = @Edit(
                     group = "分组2",

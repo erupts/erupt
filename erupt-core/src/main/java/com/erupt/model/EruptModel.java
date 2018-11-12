@@ -32,7 +32,7 @@ public class EruptModel implements Serializable {
 
     private List<EruptFieldModel> eruptFieldModels;
 
-    private Map<String,EruptFieldModel> eruptFieldMap;
+    private transient Map<String, EruptFieldModel> eruptFieldMap;
 
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;

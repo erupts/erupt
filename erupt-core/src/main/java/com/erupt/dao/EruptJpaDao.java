@@ -6,8 +6,11 @@ import com.erupt.annotation.util.ConfigUtil;
 import com.erupt.model.EruptFieldModel;
 import com.erupt.model.EruptModel;
 import com.erupt.model.Page;
+import com.erupt.util.EruptJapUtils;
 import com.erupt.util.ReflectUtil;
 import com.erupt.util.TypeUtil;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -25,8 +28,9 @@ public class EruptJpaDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public static final String AND = " and ";
 
-    public static final String spaceSymRegex = "\\{\\{[a-z0-9A-Z_$]+\\}\\}";
+    public static final String CONDITION_KEY = "condition";
 
 
     public void saveEntity(EruptModel eruptModel, Object entity) {
@@ -46,17 +50,29 @@ public class EruptJpaDao {
     public Object findDataById(EruptModel eruptModel, Serializable id) {
         Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(),
                 eruptModel.getPrimaryKeyCol());
-        id = TypeUtil.typeStrConvertObject(id,primaryField.getType().getSimpleName().toLowerCase());
+        id = TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
         return entityManager.find(eruptModel.getClazz(), id);
     }
 
 
-    public Page queryEruptList(EruptModel eruptModel, Page page) {
+    public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {
         String keys = String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel.getEruptFieldModels()));
         keys = "new map(" + keys + ")";
+
         Filter filter = eruptModel.getErupt().filter();
-        List list = entityManager.createQuery("select " + keys + " from " + eruptModel.getClazz().getSimpleName()
-                + ("".equals(filter.condition()) ? "" : " where " + ConfigUtil.switchFilterConditionToStr(filter)))
+        StringBuilder sql = new StringBuilder("select " + keys + " from " + eruptModel.getClazz().getSimpleName());
+        if (!"".equals(filter.condition()) || null != condition) {
+            sql.append(" where 1=1");
+        }
+        if (!"".equals(filter.condition())) {
+            sql.append(AND).append(ConfigUtil.switchFilterConditionToStr(filter));
+        }
+        if (null != condition) {
+            for (String key : condition.keySet()) {
+                sql.append(AND).append(key).append("=").append(condition.get(key));
+            }
+        }
+        List list = entityManager.createQuery(sql.toString())
                 .setMaxResults(page.getPageSize())
                 .setFirstResult((page.getPageNumber() - 1) * page.getPageSize())
                 .getResultList();

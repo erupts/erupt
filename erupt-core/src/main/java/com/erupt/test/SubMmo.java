@@ -2,14 +2,10 @@ package com.erupt.test;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
-import com.erupt.annotation.constant.RgbColor;
-import com.erupt.annotation.constant.UiColor;
-import com.erupt.annotation.sub_erupt.Card;
 import com.erupt.annotation.sub_erupt.Filter;
-import com.erupt.annotation.sub_erupt.RowOperation;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
-import com.erupt.annotation.sub_field.Search;
+import com.erupt.annotation.sub_field.sub_edit.Search;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.*;
 import com.erupt.handler.SimpleConditionHandler;
@@ -85,7 +81,7 @@ public class SubMmo extends BaseModel {
                     title = "mmo_table",
                     type = EditType.REFERENCE,
                     referenceType = @ReferenceType(id = "id", label = "input",
-                            filter = @Filter(condition = "", conditionHandlers = SimpleConditionHandler.class))
+                            filter = @Filter(condition = "'id=@abc@'", conditionHandlers = SimpleConditionHandler.class))
             )
     )
     @ManyToOne

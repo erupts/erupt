@@ -1,4 +1,4 @@
-package com.erupt.annotation.sub_field;
+package com.erupt.annotation.sub_field.sub_edit;
 
 /**
  * Created by liyuepeng on 9/28/18.

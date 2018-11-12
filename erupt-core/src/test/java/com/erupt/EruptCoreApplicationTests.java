@@ -38,7 +38,7 @@ public class EruptCoreApplicationTests {
 //        System.err.println(new Gson().toJson(entityManager.createQuery("select new map(id as id,name as name,number as number,choice as choice,mmo.age as mmo_age,mmo.choice as mmo_choice)" +
 //                " from SubMmo").getResultList()));
         EruptModel eruptModel = CoreService.ERUPTS.get("subMmo");
-        System.out.println(eruptJpaDao.queryEruptList(eruptModel, new Page(1, 3)));
+//        System.out.println(eruptJpaDao.queryEruptList(eruptModel, new Page(1, 3)));
 
     }
 

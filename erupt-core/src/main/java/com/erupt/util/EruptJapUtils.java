@@ -1,10 +1,9 @@
-package com.erupt.dao;
+package com.erupt.util;
 
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.ReferenceType;
 import com.erupt.model.EruptFieldModel;
-import com.erupt.util.TypeUtil;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,9 +30,11 @@ public class EruptJapUtils {
                 fieldKeys.add(fieldKey);
             }
             if (field.getEruptField().views().length == 0) {
-                if (TypeUtil.isFieldSimpleType(field.getField().getType().getSimpleName())) {
-                    fieldKey = field.getFieldName() + " as " + field.getFieldName();
-                    fieldKeys.add(fieldKey);
+                if (field.getEruptField().edit().type() != EditType.REFERENCE) {
+                    if (TypeUtil.isFieldSimpleType(field.getField().getType().getSimpleName())) {
+                        fieldKey = field.getFieldName() + " as " + field.getFieldName();
+                        fieldKeys.add(fieldKey);
+                    }
                 }
             }
             if (field.getEruptField().edit().type() == EditType.REFERENCE) {

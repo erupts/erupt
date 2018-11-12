@@ -13,8 +13,9 @@ import java.util.regex.Matcher;
 public class ConfigUtil {
 
     public static String annoStrToJsonStr(String annotationStr) {
-        String converVal = annotationStr
+        String convertStr = annotationStr
                 .replaceAll("@com\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
+                .replaceAll("@com\\.erupt\\.annotation\\.sub_field\\.sub_view\\.\\w+", "")
                 .replaceAll("@com\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
                 .replaceAll("@com\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
                 .replaceAll("@com\\.erupt\\.annotation\\.\\w+", "")
@@ -24,7 +25,7 @@ public class ConfigUtil {
                 .replace("=", ":")
                 .replace("(", "{")
                 .replace(")", "}");
-        return new JSONObject(converVal).toString();
+        return new JSONObject(convertStr).toString();
     }
 
     public static String switchFilterConditionToStr(Filter filter) {
@@ -34,7 +35,7 @@ public class ConfigUtil {
                 try {
                     ConditionHandler ch = conditionHandler.newInstance();
                     String placeHolderStr = Matcher.quoteReplacement(conditionHandler.getMethod("placeHolderStr").invoke(ch).toString());
-                    conditionStr = filter.condition().replaceAll("\\$" + placeHolderStr + "\\$",
+                    conditionStr = filter.condition().replaceAll("@" + placeHolderStr + "@",
                             Matcher.quoteReplacement(conditionHandler.getMethod("placeHolderData").invoke(ch).toString()));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();

@@ -4,7 +4,6 @@ import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.util.ConfigUtil;
 import com.erupt.exception.EruptFieldAnnotationException;
-import com.erupt.util.EruptAnnoConver;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
