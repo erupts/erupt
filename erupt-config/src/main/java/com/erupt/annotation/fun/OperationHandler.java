@@ -7,4 +7,6 @@ import javax.transaction.Transactional;
  */
 @Transactional
 public interface OperationHandler {
+
+    boolean exce(Object o);
 }

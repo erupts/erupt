@@ -60,7 +60,6 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fusesource.jansi</groupId>

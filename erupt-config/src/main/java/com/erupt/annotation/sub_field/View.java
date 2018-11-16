@@ -14,7 +14,7 @@ public @interface View {
     String title();
 
     /**
-     * demo : 名称@txt@名称
+     * demo : 网址：@txt@
      * @txt@: 为数据项占位符
      */
     String template() default "";

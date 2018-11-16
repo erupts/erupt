@@ -6,18 +6,18 @@ import com.erupt.annotation.util.ConfigUtil;
 import com.erupt.model.EruptFieldModel;
 import com.erupt.model.EruptModel;
 import com.erupt.model.Page;
-import com.erupt.util.EruptJapUtils;
 import com.erupt.util.ReflectUtil;
 import com.erupt.util.TypeUtil;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 10/11/18.
@@ -31,6 +31,10 @@ public class EruptJpaDao {
     public static final String AND = " and ";
 
     public static final String CONDITION_KEY = "condition";
+
+    public static final String NULL = "$null$";
+
+    public static final String NOT_NULL = "$notNull$";
 
 
     public void saveEntity(EruptModel eruptModel, Object entity) {
@@ -48,28 +52,47 @@ public class EruptJpaDao {
     }
 
     public Object findDataById(EruptModel eruptModel, Serializable id) {
-        Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(),
+        Field primaryField = ReflectUtil.findClassAllField(eruptModel.getClazz(),
                 eruptModel.getPrimaryKeyCol());
         id = TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
         return entityManager.find(eruptModel.getClazz(), id);
     }
 
 
-    public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {
-        String keys = String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel.getEruptFieldModels()));
-        keys = "new map(" + keys + ")";
-
-        Filter filter = eruptModel.getErupt().filter();
-        StringBuilder sql = new StringBuilder("select " + keys + " from " + eruptModel.getClazz().getSimpleName());
-        if (!"".equals(filter.condition()) || null != condition) {
-            sql.append(" where 1=1");
+    public Page queryEruptListByValidate(EruptModel eruptModel, JsonObject condition, Page page) {
+        boolean isPass = false;
+        for (String key : condition.keySet()) {
+            String _key = key.split("\\.")[0];
+            isPass = null != eruptModel.getEruptFieldMap().get(_key).toString() &&
+                    eruptModel.getEruptFieldMap().get(_key).getEruptField().edit().search().isSearch();
         }
+        if (isPass || condition.keySet().size() == 0) {
+            return queryEruptList(eruptModel, condition, page);
+        } else {
+            return new Page();
+        }
+    }
+
+    public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {
+        Filter filter = eruptModel.getErupt().filter();
+        StringBuilder sql = new StringBuilder(EruptJapUtils.generateEruptJpaHql(eruptModel));
+        sql.append("where 1=1");
         if (!"".equals(filter.condition())) {
             sql.append(AND).append(ConfigUtil.switchFilterConditionToStr(filter));
         }
         if (null != condition) {
             for (String key : condition.keySet()) {
-                sql.append(AND).append(key).append("=").append(condition.get(key));
+                String _key = key;
+                if (!_key.contains(".")) {
+                    _key = eruptModel.getEruptName() + "." + key;
+                }
+                if (condition.get(key).toString().contains(NULL)) {
+                    sql.append(AND).append(_key).append(" is null");
+                } else if (condition.get(key).toString().contains(NOT_NULL)) {
+                    sql.append(AND).append(_key).append(" is not null");
+                } else {
+                    sql.append(AND).append(_key).append("=").append(condition.get(key));
+                }
             }
         }
         List list = entityManager.createQuery(sql.toString())
@@ -80,13 +103,24 @@ public class EruptJpaDao {
         return page;
     }
 
+
+    public List getModelList(EruptModel eruptModel) {
+        List list = entityManager.createQuery("from " + eruptModel.getEruptName()).getResultList();
+        entityManager.clear();
+        return list;
+    }
+
     /**
-     * @param modelName
-     * @param col       参数组成形式 {列名} as {别名}
+     * @param col 参数组成形式 {列名} as {别名}
      */
-    public List getDataMap(String modelName, String... col) {
+    public List getDataMap(EruptModel eruptModel, String... col) {
         String keys = "new map(" + String.join(",", col) + ")";
-        return entityManager.createQuery("select " + keys + " from " + modelName)
+        String hql = "select " + keys + " from " + eruptModel.getEruptName() + " where 1=1 ";
+        Filter filter = eruptModel.getErupt().filter();
+        if (!"".equals(filter.condition())) {
+            hql += AND + ConfigUtil.switchFilterConditionToStr(filter);
+        }
+        return entityManager.createQuery(hql)
                 .getResultList();
     }
 
@@ -102,4 +136,7 @@ public class EruptJpaDao {
                 .getResultList();
     }
 
+    public static void main(String[] args) {
+        System.out.println(int.class);
+    }
 }

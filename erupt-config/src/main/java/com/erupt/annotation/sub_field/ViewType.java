@@ -5,6 +5,5 @@ package com.erupt.annotation.sub_field;
  */
 public enum ViewType {
     TEXT,
-    PROGRESS,
     LINK
 }

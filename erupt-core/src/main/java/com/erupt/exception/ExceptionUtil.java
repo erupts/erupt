@@ -11,8 +11,8 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 public class ExceptionUtil {
 
-    public static void styleEruptException(EruptFieldModel eruptFieldModel, String message) {
-        throw new EruptFieldAnnotationException(
+    public static EruptFieldAnnotationException styleEruptException(EruptFieldModel eruptFieldModel, String message) {
+        return new EruptFieldAnnotationException(
                 ansi().fg(Ansi.Color.RED).a(message)
                         + ansi().fgBright(Ansi.Color.BLUE).fg(Ansi.Color.BLUE).
                         a("(" + eruptFieldModel.getField().getDeclaringClass().getName() + "."

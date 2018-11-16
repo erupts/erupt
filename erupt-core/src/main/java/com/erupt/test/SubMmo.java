@@ -5,6 +5,7 @@ import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_erupt.Filter;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
+import com.erupt.annotation.sub_field.ViewType;
 import com.erupt.annotation.sub_field.sub_edit.Search;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.*;
@@ -80,8 +81,8 @@ public class SubMmo extends BaseModel {
             edit = @Edit(
                     title = "mmo_table",
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType(id = "id", label = "input",
-                            filter = @Filter(condition = "'id=@abc@'", conditionHandlers = SimpleConditionHandler.class))
+                    referenceType = @ReferenceType(id = "id", label = "name",
+                            filter = @Filter(condition = "'id=@abc@'", conditionHandlers = {SimpleConditionHandler.class}))
             )
     )
     @ManyToOne

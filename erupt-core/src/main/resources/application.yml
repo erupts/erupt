@@ -12,4 +12,3 @@ spring:
       ddl-auto: update
   gson:
     date-format: yyyy-MM-dd HH:mm:ss
-

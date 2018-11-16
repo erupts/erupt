@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 public class ReflectUtil {
 
     //递归查找类字段
-    public static Field findClassField(Class clazz, String fieldName) {
+    public static Field findClassAllField(Class clazz, String fieldName) {
         Field field = null;
         while (clazz != null) {
             try {

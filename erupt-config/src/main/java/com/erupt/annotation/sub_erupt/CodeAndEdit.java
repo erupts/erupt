@@ -8,5 +8,7 @@ import com.erupt.annotation.sub_field.Edit;
 public @interface CodeAndEdit {
     String code();
 
+    String codeType() default "";
+
     Edit edit();
 }

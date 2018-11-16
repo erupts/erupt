@@ -34,14 +34,11 @@ public class ConfigUtil {
             for (Class<? extends ConditionHandler> conditionHandler : filter.conditionHandlers()) {
                 try {
                     ConditionHandler ch = conditionHandler.newInstance();
-                    String placeHolderStr = Matcher.quoteReplacement(conditionHandler.getMethod("placeHolderStr").invoke(ch).toString());
+
+                    String placeHolderStr = Matcher.quoteReplacement(ch.placeHolderStr());
                     conditionStr = filter.condition().replaceAll("@" + placeHolderStr + "@",
-                            Matcher.quoteReplacement(conditionHandler.getMethod("placeHolderData").invoke(ch).toString()));
+                            Matcher.quoteReplacement(ch.placeHolderData()));
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 } catch (InstantiationException e) {
                     e.printStackTrace();

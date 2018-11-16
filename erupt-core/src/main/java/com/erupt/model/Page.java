@@ -22,6 +22,10 @@ public class Page {
         this.pageSize = pageSize;
     }
 
+    public Page() {
+
+    }
+
     public int getPageNumber() {
         return pageNumber;
     }

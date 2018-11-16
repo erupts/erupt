@@ -6,5 +6,5 @@ package com.erupt.annotation.fun;
 public interface ConditionHandler {
     String placeHolderStr();
 
-    Object placeHolderData();
+    String placeHolderData();
 }

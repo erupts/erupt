@@ -13,7 +13,7 @@ public class SimpleConditionHandler implements ConditionHandler {
     }
 
     @Override
-    public Object placeHolderData() {
-        return 1;
+    public String placeHolderData() {
+        return 1 + "";
     }
 }

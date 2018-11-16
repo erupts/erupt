@@ -28,5 +28,7 @@ public @interface Erupt {
 
     Filter filter() default @Filter(condition = "");
 
+    Tree tree() default @Tree(id = "id", label = "name", pid = "pid", children = "children");
+
     Class<? extends DataProxy> dateProxy()[] default {};
 }

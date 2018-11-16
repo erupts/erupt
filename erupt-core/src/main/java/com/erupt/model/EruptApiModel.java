@@ -10,6 +10,13 @@ public class EruptApiModel {
     private Object data;
 
     enum Status {
-        SUCCESS, ERROR, NO_LOGIN, NO_RIGHT
+        //200
+        SUCCESS,
+        //500
+        ERROR,
+        //
+        NO_LOGIN,
+        //401
+        NO_RIGHT
     }
 }

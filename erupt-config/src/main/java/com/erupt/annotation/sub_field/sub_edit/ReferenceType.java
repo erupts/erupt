@@ -10,7 +10,9 @@ public @interface ReferenceType {
 
     String label();
 
-    Filter filter() default @Filter;
+    String pid() default "";
+
+    Filter filter() default @Filter(condition = "");
 
     String depend() default "";
 }
