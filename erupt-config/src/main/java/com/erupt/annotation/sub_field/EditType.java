@@ -14,5 +14,6 @@ public enum EditType {
     QRCODE,           //二维码
     ATTACHMENT,       //附件
     TAB,              //TAB选项卡
+    MARK_DOWN,
     HIDDEN
 }

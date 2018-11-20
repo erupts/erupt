@@ -48,7 +48,7 @@ public class EruptUtil {
 
     //TODO 内存计算的方式生成树结构
     public static List<TreeModel> TreeModelToTree(List<TreeModel> treeModels, List<TreeModel> resultTreeModels) {
-        List<TreeModel> tempTreeModels = new ArrayList<>();
+        List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
         for (TreeModel treeModel : treeModels) {
             if (StringUtils.isBlank(treeModel.getPid())) {
@@ -64,7 +64,7 @@ public class EruptUtil {
 
     private static void recursionTree(List<TreeModel> treeModels, TreeModel ParentTreeModel) {
         List<TreeModel> childrenModel = new ArrayList<>();
-        List<TreeModel> tempTreeModels = new ArrayList<>();
+        List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
         for (TreeModel treeModel : treeModels) {
             if (treeModel.getPid().equals(ParentTreeModel.getId())) {

@@ -7,8 +7,7 @@ import com.erupt.annotation.fun.OperationHandler;
  */
 public class OperationHandlerImpl implements OperationHandler {
     @Override
-    public boolean exce(Object o) {
-        System.out.println(o);
-        return true;
+    public boolean exec(Object keys, Object param) {
+        return false;
     }
 }

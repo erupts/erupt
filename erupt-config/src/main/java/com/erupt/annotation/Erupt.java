@@ -16,7 +16,11 @@ public @interface Erupt {
 
     ShowType showType() default ShowType.TABLE;
 
+    boolean loginUse() default true;
+
     String name() default "";
+
+    String desc() default "";
 
     Card[] cards() default {};
 
@@ -28,7 +32,7 @@ public @interface Erupt {
 
     Filter filter() default @Filter(condition = "");
 
-    Tree tree() default @Tree(id = "id", label = "name", pid = "pid", children = "children");
+    Tree tree() default @Tree(id = "id", label = "name", pid = "pid");
 
     Class<? extends DataProxy> dateProxy()[] default {};
 }

@@ -15,6 +15,8 @@ import com.erupt.dao.EruptJapUtils;
 import com.erupt.util.EruptUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +55,7 @@ public class EruptDataController {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         JsonObject conditionParam = data.getAsJsonObject(EruptJpaDao.CONDITION_KEY);
         if (eruptModel.getErupt().power().query()) {
-            Page page = eruptJpaDao.queryEruptListByValidate(eruptModel, conditionParam, new Page(1, 3));
+            Page page = eruptJpaDao.queryEruptListByValidate(eruptModel, conditionParam, new Page(1, 99));
             return page;
         } else {
             throw new RuntimeException("没有查询权限");
@@ -86,10 +89,13 @@ public class EruptDataController {
                                      @RequestBody JsonObject data) throws JsonProcessingException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         try {
+            List<Object> oKeys = new ArrayList<>();
+            JsonArray keys = data.getAsJsonArray("keys");
+            JsonObject param = data.getAsJsonObject("param");
             for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
                 if (code.equals(rowOperation.code())) {
                     OperationHandler operationHandler = rowOperation.operationHandler().newInstance();
-                    return operationHandler.exce(data);
+                    return operationHandler.exec(keys,param);
                 }
             }
         } catch (InstantiationException e) {
@@ -133,7 +139,7 @@ public class EruptDataController {
         }
     }
 
-    //为了事务性所以增加了批量删除功能
+    //为了事务性考虑所以增加了批量删除功能
     @DeleteMapping("/{erupt}")
     @ResponseBody
     public void deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) {

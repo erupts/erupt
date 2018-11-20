@@ -11,7 +11,7 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 public class ExceptionUtil {
 
-    public static EruptFieldAnnotationException styleEruptException(EruptFieldModel eruptFieldModel, String message) {
+    public static EruptFieldAnnotationException styleEruptFieldException(EruptFieldModel eruptFieldModel, String message) {
         return new EruptFieldAnnotationException(
                 ansi().fg(Ansi.Color.RED).a(message)
                         + ansi().fgBright(Ansi.Color.BLUE).fg(Ansi.Color.BLUE).
@@ -21,11 +21,13 @@ public class ExceptionUtil {
         );
     }
 
-    public static String styleEruptException(EruptModel eruptModel, String message) {
-        throw new EruptAnnotationException(ansi().fg(Ansi.Color.RED).a(
-                eruptModel.getClazz().getName() +
-                        "---------->" + message
-        ).toString());
-
+    public static EruptAnnotationException styleEruptException(EruptModel eruptFieldModel, String message) {
+        return new EruptAnnotationException(
+                ansi().fg(Ansi.Color.RED).a(message)
+                        + ansi().fgBright(Ansi.Color.BLUE).fg(Ansi.Color.BLUE).
+                        a("(" + eruptFieldModel.getClazz().getName() + ")").toString()
+                        + ansi().fgBright(Ansi.Color.RED).a("")
+        );
     }
+
 }

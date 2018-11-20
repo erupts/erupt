@@ -2,6 +2,7 @@ package com.erupt.service;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
+import com.erupt.exception.EruptAnnotationException;
 import com.erupt.model.EruptFieldModel;
 import com.erupt.model.EruptModel;
 import com.erupt.util.ScannerUtil;
@@ -47,8 +48,8 @@ public class CoreService implements InitializingBean {
                     while (null != tempClass) {
                         for (Field field : tempClass.getDeclaredFields()) {
                             EruptField eruptField = field.getAnnotation(EruptField.class);
-                            eruptModel.setPrimaryKeyCol(field);
                             if (null != eruptField) {
+                                eruptModel.setPrimaryKeyCol(field);
                                 EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
                                 eruptFieldModels.add(eruptFieldModel);
                                 eruptFieldMap.put(field.getName(), eruptFieldModel);
@@ -61,6 +62,7 @@ public class CoreService implements InitializingBean {
                 eruptModel.setEruptFieldMap(eruptFieldMap);
             }
             System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a(eruptModel.getEruptJson().toString()));
+            EruptAnnotationException.validateEruptInfo(eruptModel);
             //other info to memory
             ERUPTS.put(eruptModel.getEruptName(), eruptModel);
         });

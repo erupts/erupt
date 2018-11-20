@@ -45,7 +45,7 @@ import java.util.Set;
                 @Card(icon = "fa fa-table", value = "300", desc = "第三个卡片", color = RgbColor.blue),
                 @Card(icon = "fa fa-table", value = "400", desc = "第四个卡片", color = RgbColor.yellow)
         },
-        tree = @Tree(id = "id", label = "name", pid = "parent.id", children = "children")
+        tree = @Tree(id = "id", label = "name", pid = "parent.id")
 )
 @Entity
 @Table(name = "ERUPT_TEST")
@@ -77,7 +77,7 @@ public class Mmo extends BaseModel {
                     notNull = true,
                     search = @Search(isSearch = true),
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType(id = "id", label = "name")
+                    referenceType = @ReferenceType(id = "id", label = "name", pid = "id", depend = "name")
             )
     )
     private Mmo parent;

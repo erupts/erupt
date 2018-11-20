@@ -5,5 +5,6 @@ package com.erupt.annotation.sub_field;
  */
 public enum ViewType {
     TEXT,
-    LINK
+    LINK,
+    QR_CODE,
 }

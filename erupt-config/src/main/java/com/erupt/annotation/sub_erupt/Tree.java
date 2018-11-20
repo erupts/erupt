@@ -11,5 +11,5 @@ public @interface Tree {
 
     String pid();
 
-    String children();
+    String children() default "";
 }

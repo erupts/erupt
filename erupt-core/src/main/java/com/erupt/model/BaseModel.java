@@ -16,8 +16,8 @@ public class BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     @EruptField(
-            views = @View(title = "id", show = false),
-            edit = @Edit(title = "id", show = false)
+            edit = @Edit(title = "", show = false),
+            views = @View(title = "", show = false)
     )
     private Long id;
 }
