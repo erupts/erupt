@@ -1,4 +1,4 @@
-package com.erupt.test;
+package com.erupt.entity.test;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
@@ -9,7 +9,7 @@ import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.ViewType;
 import com.erupt.annotation.sub_field.sub_edit.*;
-import com.erupt.model.BaseModel;
+import com.erupt.core.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -22,7 +22,7 @@ import java.util.Set;
 //        filter = @Filter(condition = "'id=1'"),
         name = "测试",
         power = @Power,
-        rowOperation = @RowOperation(
+        rowOperation = {@RowOperation(
                 code = "action",
                 icon = "fa fa-terminal",
                 title = "执行",
@@ -35,10 +35,13 @@ import java.util.Set;
                         ),
                         @CodeAndEdit(
                                 code = "idCard",
+                                codeType = "Integer",
                                 edit = @Edit(title = "身份证号", notNull = true)
                         )
                 }
-        ),
+        ), @RowOperation(code = "single", icon = "pic-left",
+                title = "单个执行", multi = false,
+                operationHandler = OperationHandlerImpl.class)},
         cards = {
                 @Card(icon = "fa fa-table", value = "100", desc = "第一个卡片", color = RgbColor.green),
                 @Card(icon = "fa fa-table", value = "200", desc = "第二个卡片", color = RgbColor.red),
@@ -54,9 +57,10 @@ public class Mmo extends BaseModel {
     @Column(name = "NAME")
     @EruptField(
             views = {
-                    @View(title = "名称", className = "bg-c-green", template = "名称：@txt@")
+                    @View(title = "名称", className = "red", template = "名称：@txt@")
             },
             edit = @Edit(
+                    desc = "名称",
                     title = "名称",
                     notNull = true,
                     inputType = @InputType(),
@@ -73,6 +77,7 @@ public class Mmo extends BaseModel {
                     @View(title = "pid", column = "id")
             },
             edit = @Edit(
+                    desc = "上级菜单",
                     title = "上级菜单",
                     notNull = true,
                     search = @Search(isSearch = true),
@@ -130,8 +135,9 @@ public class Mmo extends BaseModel {
 
 
     @EruptField(
-            views = @View(title = "多选"),
+            views = @View(title = "多选", viewType = ViewType.QR_CODE),
             edit = @Edit(
+                    desc = "多个选择",
                     title = "多选",
                     notNull = true,
                     type = EditType.CHOICE,
@@ -169,7 +175,7 @@ public class Mmo extends BaseModel {
                     notNull = true,
                     title = "时间",
                     type = EditType.DATE,
-                    dateType = @DateType,
+                    dateType = @DateType(type = DateEnum.WEEK),
                     group = "分组2"
             )
     )

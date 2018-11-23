@@ -1,12 +1,9 @@
-package com.erupt.model;
+package com.erupt.core.model;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.util.ConfigUtil;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.persistence.Id;
 import java.io.Serializable;

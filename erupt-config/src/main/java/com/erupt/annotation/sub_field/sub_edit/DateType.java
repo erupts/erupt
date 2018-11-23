@@ -5,7 +5,7 @@ package com.erupt.annotation.sub_field.sub_edit;
  */
 public @interface DateType {
 
-    DateEnum type() default DateEnum.day;
+    DateEnum type() default DateEnum.DAY;
 
     boolean isRange() default false;
 }

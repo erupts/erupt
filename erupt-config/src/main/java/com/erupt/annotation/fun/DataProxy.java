@@ -1,5 +1,7 @@
 package com.erupt.annotation.fun;
 
+import com.erupt.annotation.model.BoolAndReason;
+
 import javax.transaction.Transactional;
 
 /**
@@ -8,16 +10,16 @@ import javax.transaction.Transactional;
 @Transactional
 public interface DataProxy {
 
-    boolean beforeSave();
+    BoolAndReason beforeSave(Object o);
 
-    void afterSave();
+    void afterSave(Object o);
 
-    boolean beforeDelete();
+    BoolAndReason beforeDelete(Object o);
 
-    void afterDelete();
+    void afterDelete(Object o);
 
-    boolean beforeFetch();
+    BoolAndReason beforeFetch(Object o);
 
-    void afterFetch();
+    void afterFetch(Object o);
 
 }

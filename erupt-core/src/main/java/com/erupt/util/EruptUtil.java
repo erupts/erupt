@@ -1,21 +1,11 @@
 package com.erupt.util;
 
-import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_erupt.Tree;
-import com.erupt.annotation.sub_field.EditType;
-import com.erupt.annotation.sub_field.View;
-import com.erupt.model.EruptFieldModel;
-import com.erupt.model.EruptModel;
-import com.erupt.model.TreeModel;
-import com.erupt.service.GsonService;
-import com.google.gson.*;
+import com.erupt.core.model.TreeModel;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.swing.tree.TreeNode;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Created by liyuepeng on 11/1/18.

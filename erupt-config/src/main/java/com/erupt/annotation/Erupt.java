@@ -18,7 +18,7 @@ public @interface Erupt {
 
     boolean loginUse() default true;
 
-    String name() default "";
+    String name();
 
     String desc() default "";
 

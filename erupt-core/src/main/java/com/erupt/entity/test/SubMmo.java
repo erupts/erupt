@@ -1,16 +1,15 @@
-package com.erupt.test;
+package com.erupt.entity.test;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_erupt.Filter;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
-import com.erupt.annotation.sub_field.ViewType;
 import com.erupt.annotation.sub_field.sub_edit.Search;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.*;
 import com.erupt.handler.SimpleConditionHandler;
-import com.erupt.model.BaseModel;
+import com.erupt.core.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;

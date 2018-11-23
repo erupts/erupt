@@ -1,7 +1,7 @@
 package com.erupt.controller;
 
 import com.erupt.constant.RestPath;
-import com.erupt.model.EruptModel;
+import com.erupt.core.model.EruptModel;
 import com.erupt.service.CoreService;
 import org.springframework.web.bind.annotation.*;
 

@@ -11,6 +11,8 @@ public @interface Edit {
 
     boolean notNull() default false;
 
+    String desc() default "";
+
     EditType type() default EditType.INPUT;
 
     boolean show() default true;
