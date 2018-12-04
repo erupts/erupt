@@ -26,22 +26,28 @@ import java.util.Set;
                 code = "action",
                 icon = "fa fa-terminal",
                 title = "执行",
-                operationHandler = OperationHandlerImpl.class,
-                edits = {
-                        @CodeAndEdit(
-                                code = "name",
-                                codeType = "int",
-                                edit = @Edit(title = "姓名", notNull = true)
-                        ),
-                        @CodeAndEdit(
-                                code = "idCard",
-                                codeType = "Integer",
-                                edit = @Edit(title = "身份证号", notNull = true)
-                        )
-                }
+                operationHandler = OperationHandlerImpl.class
+//                edits = {
+//                        @CodeAndEdit(
+//                                code = "name",
+//                                codeType = "int",
+//                                edit = @Edit(title = "姓名", notNull = true)
+//                        ),
+//                        @CodeAndEdit(
+//                                code = "idCard",
+//                                codeType = "Integer",
+//                                edit = @Edit(title = "身份证号", notNull = true)
+//                        )
+//                }
         ), @RowOperation(code = "single", icon = "pic-left",
                 title = "单个执行", multi = false,
-                operationHandler = OperationHandlerImpl.class)},
+                operationHandler = OperationHandlerImpl.class
+//                edits = {
+//                        @CodeAndEdit(code = "idcard", edit = @Edit(title = "身份证号")),
+//                        @CodeAndEdit(code = "name", edit = @Edit(title = "姓名")),
+//                }
+        )
+        },
         cards = {
                 @Card(icon = "fa fa-table", value = "100", desc = "第一个卡片", color = RgbColor.green),
                 @Card(icon = "fa fa-table", value = "200", desc = "第二个卡片", color = RgbColor.red),
@@ -57,13 +63,13 @@ public class Mmo extends BaseModel {
     @Column(name = "NAME")
     @EruptField(
             views = {
-                    @View(title = "名称", className = "red", template = "名称：@txt@")
+                    @View(title = "名称", className = "text-lime", template = "名称：@txt@", sortable = true)
             },
             edit = @Edit(
                     desc = "名称",
                     title = "名称",
                     notNull = true,
-                    inputType = @InputType(),
+                    inputType = @InputType(length = 100),
                     search = @Search(isSearch = true)
             )
     )
@@ -171,6 +177,9 @@ public class Mmo extends BaseModel {
     private Boolean bool;
 
     @EruptField(
+            views = @View(
+                    title = "时间"
+            ),
             edit = @Edit(
                     notNull = true,
                     title = "时间",
@@ -200,6 +209,7 @@ public class Mmo extends BaseModel {
 //    private transient Set<SubMmo> sub;
 
 
+    @Column(name = "TAG")
     @EruptField(
             views = {
                     @View(title = "标签", viewType = ViewType.LINK)
@@ -212,6 +222,16 @@ public class Mmo extends BaseModel {
             )
     )
     private String gender;
+
+    @Column(name = "markDown")
+    @EruptField(
+            edit = @Edit(
+                    title = "markDown",
+                    notNull = true,
+                    type = EditType.MARK_DOWN
+            )
+    )
+    public String markDown;
 
 
     @Column(name = "KISS")

@@ -5,10 +5,13 @@ spring:
       username: root
       password: plkjplkj
       driver-class-name: com.mysql.jdbc.Driver
+
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
+#      naming:
+#        physical-strategy: cn.studyBoot.dao.strategy.UpperTableStrategy
   gson:
     date-format: yyyy-MM-dd HH:mm:ss

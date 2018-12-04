@@ -8,7 +8,7 @@ import com.erupt.annotation.constant.UiColor;
 public @interface ChoiceType {
     VL[] vl();
 
-    ChoiceEnum type() default ChoiceEnum.SINGLE;
+    ChoiceEnum type() default ChoiceEnum.SELECT_SINGLE;
 
     UiColor color() default UiColor.primary;
 }

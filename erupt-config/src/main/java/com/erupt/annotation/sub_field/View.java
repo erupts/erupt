@@ -8,13 +8,15 @@ public @interface View {
 
     ViewType viewType() default ViewType.TEXT;
 
+    boolean sortable() default false;
+
     //在修饰类型为实体类对象时指定列名
     String column() default "";
 
     String title();
 
     /**
-     * demo : 网址：@txt@
+     * demo : xx：@txt@
      * @txt@: 为数据项占位符
      */
     String template() default "";

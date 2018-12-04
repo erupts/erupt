@@ -79,12 +79,16 @@ public class EruptDataController {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().query()) {
             Tree tree = eruptModel.getErupt().tree();
-            List list = eruptJpaDao.getDataMap(eruptModel, tree.id() + " as id", tree.label() + " as label", tree.pid() + " as pid");
+
+            //预加载
+            List list = eruptJpaDao.queryEruptList(eruptModel, null, new Page(0, 999)).getList();
+            //懒加载
+//            List list = eruptJpaDao.getDataMap(eruptModel, tree.id() + " as id", tree.label() + " as label", tree.pid() + " as pid");
 
             List<TreeModel> treeModels = new ArrayList<>();
             for (Object o : list) {
                 Map<String, Object> map = (Map) o;
-                TreeModel treeModel = new TreeModel(map.get("id"), map.get("label"), map.get("pid"), null);
+                TreeModel treeModel = new TreeModel(map.get(tree.id()), map.get(tree.label()), map.get(tree.pid().replace(".", "_")), o);
                 treeModels.add(treeModel);
             }
             List<TreeModel> treeResultModels = new ArrayList<>();
