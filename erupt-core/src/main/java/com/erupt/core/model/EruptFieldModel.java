@@ -41,7 +41,6 @@ public class EruptFieldModel implements Serializable {
             Type gType = field.getGenericType();
             if (gType instanceof ParameterizedType) {
                 Type[] typeArguments = ((ParameterizedType) gType).getActualTypeArguments();
-                System.out.println(typeArguments[0].getTypeName());
                 String[] gArray = typeArguments[0].getTypeName().split("\\.");
                 this.fieldReturnName = gArray[gArray.length - 1];
             }

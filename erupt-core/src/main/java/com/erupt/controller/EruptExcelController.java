@@ -3,7 +3,11 @@ package com.erupt.controller;
 import com.erupt.constant.RestPath;
 import com.erupt.core.model.EruptModel;
 import com.erupt.service.CoreService;
+import com.erupt.service.DataFileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 对Excel数据的处理
@@ -13,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(RestPath.ERUPT_EXCEL)
 public class EruptExcelController {
 
+    @Autowired
+    private DataFileService dataFileService;
 
     @GetMapping("/export/{erupt}")
-    @ResponseBody
-    public Object exportData(@PathVariable("erupt") String eruptName) {
+    public void exportData(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().export()) {
-
-            return null;
+            dataFileService.exportExcel(eruptModel, response);
         } else {
             throw new RuntimeException("没有导出权限");
         }

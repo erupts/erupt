@@ -27,21 +27,7 @@ public class EruptBuildController {
     @GetMapping("/list/{erupt}")
     @ResponseBody
     public EruptModel getEruptTableView(@PathVariable("erupt") String eruptName) {
-        Gson gson = new Gson();
-        System.out.println(ansi().fg(Ansi.Color.RED).a(gson.toJson(CoreService.ERUPTS.get(eruptName))));
         return CoreService.ERUPTS.get(eruptName);
-    }
-
-    @GetMapping("/row/edit/{erupt}")
-    @ResponseBody
-    public void getEruptAddForms(@PathVariable("erupt") String erupt) {
-
-    }
-
-    @GetMapping("/row/edit/{erupt}/{id}")
-    @ResponseBody
-    public void getEruptEditForms(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) {
-
     }
 
 

@@ -5,6 +5,7 @@ import com.erupt.annotation.fun.OperationHandler;
 import com.erupt.annotation.model.BoolAndReason;
 import com.erupt.annotation.sub_erupt.RowOperation;
 import com.erupt.annotation.sub_erupt.Tree;
+import com.erupt.annotation.sub_erupt.TreeLoadType;
 import com.erupt.constant.RestPath;
 import com.erupt.dao.EruptJpaDao;
 import com.erupt.dao.JpaDao;
@@ -79,11 +80,14 @@ public class EruptDataController {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().query()) {
             Tree tree = eruptModel.getErupt().tree();
-
-            //预加载
-            List list = eruptJpaDao.queryEruptList(eruptModel, null, new Page(0, 999)).getList();
-            //懒加载
-//            List list = eruptJpaDao.getDataMap(eruptModel, tree.id() + " as id", tree.label() + " as label", tree.pid() + " as pid");
+            List list;
+            if (tree.loadType() == TreeLoadType.LAZY) {
+                list = eruptJpaDao.getDataMap(eruptModel, tree.id() + " as " + tree.id(),
+                        tree.label() + " as " + tree.label(),
+                        tree.pid() + " as " + tree.pid());
+            } else {
+                list = eruptJpaDao.queryEruptList(eruptModel, null, new Page(0, 9999)).getList();
+            }
 
             List<TreeModel> treeModels = new ArrayList<>();
             for (Object o : list) {
@@ -102,22 +106,16 @@ public class EruptDataController {
     @PostMapping("/{erupt}/operator/{code}")
     @ResponseBody
     public boolean execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
-                                     @RequestBody JsonObject data) throws JsonProcessingException {
+                                     @RequestBody JsonObject data) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        try {
-            List<Object> oKeys = new ArrayList<>();
-            JsonArray keys = data.getAsJsonArray("keys");
-            JsonObject param = data.getAsJsonObject("param");
-            for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
-                if (code.equals(rowOperation.code())) {
-                    OperationHandler operationHandler = rowOperation.operationHandler().newInstance();
-                    return operationHandler.exec(keys, param);
-                }
+        List<Object> oKeys = new ArrayList<>();
+        JsonArray keys = data.getAsJsonArray("keys");
+        JsonObject param = data.getAsJsonObject("param");
+        for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
+            if (code.equals(rowOperation.code())) {
+                OperationHandler operationHandler = rowOperation.operationHandler().newInstance();
+                return operationHandler.exec(keys, param);
             }
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
         return false;
     }
@@ -185,7 +183,6 @@ public class EruptDataController {
                     dataProxy.afterDelete(obj);
                 }
             }
-
         } else {
             throw new RuntimeException("没有删除权限");
         }

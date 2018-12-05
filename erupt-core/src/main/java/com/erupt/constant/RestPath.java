@@ -4,7 +4,7 @@ package com.erupt.constant;
  * Created by liyuepeng on 10/15/18.
  */
 public class RestPath {
-    private static final String ERUPT_API = "/erupt-api";
+    public static final String ERUPT_API = "/erupt-api";
 
     //界面构建
     public static final String ERUPT_BUILD = ERUPT_API + "/build";

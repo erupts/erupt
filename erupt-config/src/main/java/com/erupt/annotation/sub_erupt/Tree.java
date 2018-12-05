@@ -11,5 +11,7 @@ public @interface Tree {
 
     String pid();
 
+    TreeLoadType loadType() default TreeLoadType.EAGER;
+
     String children() default "";
 }

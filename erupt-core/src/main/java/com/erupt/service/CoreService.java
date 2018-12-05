@@ -61,7 +61,7 @@ public class CoreService implements InitializingBean {
                 eruptModel.setEruptFieldModels(eruptFieldModels);
                 eruptModel.setEruptFieldMap(eruptFieldMap);
             }
-            System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a(eruptModel.getEruptJson().toString()));
+//            System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a(eruptModel.getEruptJson().toString()));
             EruptAnnotationException.validateEruptInfo(eruptModel);
             //other info to memory
             ERUPTS.put(eruptModel.getEruptName(), eruptModel);

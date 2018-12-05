@@ -131,13 +131,10 @@ public class EruptJpaDao {
             hql += AND + ConfigUtil.switchFilterConditionToStr(referenceType.filter());
         }
         if (!"".equals(referenceType.pid())) {
-            hql += AND + "";
+//            hql += AND + referenceType.pid();
         }
         return entityManager.createQuery(hql)
                 .getResultList();
     }
 
-    public static void main(String[] args) {
-        System.out.println(int.class);
-    }
 }

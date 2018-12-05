@@ -65,7 +65,6 @@ public class EruptJapUtils {
             }
         });
         hql.append(" ");
-        System.out.println(hql.toString());
         return hql.toString();
     }
 
