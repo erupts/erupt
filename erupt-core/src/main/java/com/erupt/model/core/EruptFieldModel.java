@@ -1,4 +1,4 @@
-package com.erupt.core.model;
+package com.erupt.model.core;
 
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_field.EditType;

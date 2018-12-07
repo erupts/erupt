@@ -5,7 +5,7 @@ import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.BoolType;
-import com.erupt.core.model.BaseModel;
+import com.erupt.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -20,7 +20,7 @@ import javax.persistence.Table;
 )
 @Entity
 @Table(name = "E_USER")
-public class User extends BaseModel {
+public class EruptUser extends BaseModel {
 
     @EruptField(
             views = @View(title = "用户名"),
@@ -58,11 +58,15 @@ public class User extends BaseModel {
     )
     private Boolean isMD5;
 
+    @EruptField(
+            edit = @Edit(title = "所属角色")
+    )
+    private Role role;
+
     @Lob
     @EruptField(
             edit = @Edit(title = "ip白名单", desc = "ip与ip之间使用换行符间隔")
     )
     private String whiteIp;
-
 
 }

@@ -1,4 +1,4 @@
-package com.erupt.core.model;
+package com.erupt.model;
 
 /**
  * Created by liyuepeng on 10/9/18.

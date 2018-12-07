@@ -2,14 +2,10 @@ package com.erupt.controller;
 
 
 import com.erupt.constant.RestPath;
-import com.erupt.core.model.EruptModel;
+import com.erupt.model.core.EruptModel;
 import com.erupt.service.CoreService;
-import com.google.gson.Gson;
-import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.Serializable;
 
 import static org.fusesource.jansi.Ansi.ansi;
 

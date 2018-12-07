@@ -1,4 +1,4 @@
-package com.erupt.core.model;
+package com.erupt.model;
 
 import java.util.List;
 import java.util.Map;

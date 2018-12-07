@@ -1,6 +1,6 @@
 package com.erupt.entity;
 
-import com.erupt.core.model.BaseModel;
+import com.erupt.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

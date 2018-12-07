@@ -1,6 +1,6 @@
 package com.erupt.exception;
 
-import com.erupt.core.model.EruptModel;
+import com.erupt.model.core.EruptModel;
 import org.apache.commons.lang3.StringUtils;
 
 /**

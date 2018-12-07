@@ -1,6 +1,6 @@
 package com.erupt.dao;
 
-import com.erupt.core.model.Page;
+import com.erupt.model.Page;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

@@ -1,4 +1,4 @@
-package com.erupt.core.model;
+package com.erupt.model.core;
 
 import java.io.Serializable;
 import java.util.Collection;

@@ -1,6 +1,6 @@
 package com.erupt.interceptor;
 
-import com.erupt.core.model.EruptModel;
+import com.erupt.model.core.EruptModel;
 import com.erupt.service.CoreService;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.ModelAndView;

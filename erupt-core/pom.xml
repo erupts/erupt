@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 
 	<name>erupt-core</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Erupt Core</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

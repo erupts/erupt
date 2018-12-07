@@ -3,7 +3,7 @@ package com.erupt;
 import com.erupt.controller.EruptDataController;
 import com.erupt.dao.EruptJapUtils;
 import com.erupt.dao.EruptJpaDao;
-import com.erupt.core.model.EruptModel;
+import com.erupt.model.core.EruptModel;
 import com.erupt.service.CoreService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

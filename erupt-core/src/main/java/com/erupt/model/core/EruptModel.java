@@ -1,4 +1,4 @@
-package com.erupt.core.model;
+package com.erupt.model.core;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.util.ConfigUtil;
