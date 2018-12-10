@@ -1,6 +1,10 @@
 package com.erupt.entity;
 
+import com.erupt.model.BaseModel;
+
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -8,12 +12,14 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "E_DICT")
-public class EruptDict {
+public class EruptDict extends BaseModel {
 
     private String code;
 
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "PARENT_DICT_ID")
     private EruptDict eruptDict;
 
     private String sort;

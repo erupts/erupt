@@ -5,24 +5,25 @@ package com.erupt.model;
  */
 public class EruptApiModel {
 
-    private Status status;
+    private HttpStatus status;
+
+    private String message;
 
     private Object data;
 
-    public enum Status {
-        //200
-        SUCCESS(200),
-        //500
-        ERROR(500),
-        //403
-        NO_LOGIN(403),
-        //405
-        NO_RIGHT(405);
-
-        public int code;
-
-        Status(int code) {
-            this.code = code;
-        }
+    public EruptApiModel(HttpStatus status, String message, Object data) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
     }
+
+    public static EruptApiModel successApi(Object data) {
+        return new EruptApiModel(HttpStatus.SUCCESS, null, data);
+    }
+
+    public static EruptApiModel errorApi(String message) {
+        return new EruptApiModel(HttpStatus.ERROR, message, null);
+    }
+
+
 }

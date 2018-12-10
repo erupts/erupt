@@ -9,6 +9,8 @@ import com.erupt.annotation.sub_erupt.TreeLoadType;
 import com.erupt.constant.RestPath;
 import com.erupt.dao.EruptJpaDao;
 import com.erupt.dao.JpaDao;
+import com.erupt.model.EruptApiModel;
+import com.erupt.model.HttpStatus;
 import com.erupt.model.core.EruptModel;
 import com.erupt.model.Page;
 import com.erupt.model.core.TreeModel;
@@ -22,6 +24,8 @@ import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -82,9 +86,15 @@ public class EruptDataController {
             Tree tree = eruptModel.getErupt().tree();
             List list;
             if (tree.loadType() == TreeLoadType.LAZY) {
-                list = eruptJpaDao.getDataMap(eruptModel, tree.id() + " as " + tree.id(),
+                String cols[] = {
+                        tree.id() + " as " + tree.id(),
                         tree.label() + " as " + tree.label(),
-                        tree.pid() + " as " + tree.pid());
+                        tree.pid() + " as " + tree.pid()
+                };
+                if (!"".equals(tree.icon())) {
+                    cols[3] = tree.icon() + " as " + tree.icon();
+                }
+                list = eruptJpaDao.getDataMap(eruptModel, cols);
             } else {
                 list = eruptJpaDao.queryEruptList(eruptModel, null, new Page(0, 9999)).getList();
             }
@@ -167,21 +177,28 @@ public class EruptDataController {
 
     @DeleteMapping("/{erupt}/{id}")
     @ResponseBody
-    public void deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id, HttpServletResponse response) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
-            DataProxy dataProxy = null;
-            BoolAndReason boolAndReason = new BoolAndReason(true, null);
-            Object obj = eruptJpaDao.findDataById(eruptModel, id);
-            if (eruptModel.getErupt().dateProxy().length > 0) {
-                dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                boolAndReason = dataProxy.beforeDelete(obj);
-            }
-            if (boolAndReason.isBool()) {
-                eruptJpaDao.deleteEntity(obj);
-                if (null != dataProxy) {
-                    dataProxy.afterDelete(obj);
+            try {
+                DataProxy dataProxy = null;
+                BoolAndReason boolAndReason = new BoolAndReason(true, null);
+                Object obj = eruptJpaDao.findDataById(eruptModel, id);
+                if (eruptModel.getErupt().dateProxy().length > 0) {
+                    dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
+                    boolAndReason = dataProxy.beforeDelete(obj);
                 }
+                if (boolAndReason.isBool()) {
+                    eruptJpaDao.deleteEntity(obj);
+                    if (null != dataProxy) {
+                        dataProxy.afterDelete(obj);
+                    }
+                }
+                return EruptApiModel.successApi(true);
+            } catch (Exception e) {
+                response.setStatus(HttpStatus.ERROR.code);
+                //TODO 错误操作
+                return EruptApiModel.errorApi(e.getMessage());
             }
         } else {
             throw new RuntimeException("没有删除权限");

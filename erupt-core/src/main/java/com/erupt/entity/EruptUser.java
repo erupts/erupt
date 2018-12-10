@@ -5,11 +5,11 @@ import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.BoolType;
+import com.erupt.annotation.sub_field.sub_edit.InputEnum;
+import com.erupt.annotation.sub_field.sub_edit.InputType;
 import com.erupt.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by liyuepeng on 11/22/18.
@@ -58,14 +58,20 @@ public class EruptUser extends BaseModel {
     )
     private Boolean isMD5;
 
+    @ManyToOne
+    @JoinColumn(name = "ROLE_ID")
     @EruptField(
             edit = @Edit(title = "所属角色")
     )
     private Role role;
 
-    @Lob
     @EruptField(
-            edit = @Edit(title = "ip白名单", desc = "ip与ip之间使用换行符间隔")
+            edit = @Edit(
+                    title = "ip白名单",
+                    desc = "ip与ip之间使用换行符间隔",
+                    inputType = @InputType(type = InputEnum.TEXTAREA)
+            )
+
     )
     private String whiteIp;
 

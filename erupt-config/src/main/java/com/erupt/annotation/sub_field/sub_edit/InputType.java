@@ -14,6 +14,4 @@ public @interface InputType {
     String placeholder() default "";
 
     String defaultVal() default "";
-
-    String icon() default "";
 }
