@@ -30,7 +30,7 @@ public class LoginService {
     public LoginModel login(String account, String pwd, String verifyCode, HttpSession session) {
         if (loginErrorCount.get(account) >= 5) {
             if (StringUtils.isBlank(verifyCode)) {
-                return new LoginModel(false, "验证码必填");
+                return new LoginModel(false, "请填写验证码");
             }
             session.getAttribute(SessionKey.VERIFY_CODE);
             String oldStr = session.getAttribute(SessionKey.VERIFY_CODE).toString();

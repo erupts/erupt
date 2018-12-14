@@ -1,6 +1,9 @@
 package com.erupt.controller;
 
 import com.erupt.constant.RestPath;
+import com.erupt.constant.SessionKey;
+import com.erupt.entity.EruptMenu;
+import com.erupt.entity.EruptRole;
 import com.erupt.model.EruptApiModel;
 import com.erupt.model.LoginModel;
 import com.erupt.service.LoginService;
@@ -9,6 +12,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by liyuepeng on 2018-12-13.
@@ -23,14 +28,24 @@ public class EruptUserController {
     @PostMapping("/login")
     @ResponseBody
     public LoginModel getEruptTableView(@RequestParam("account") String account,
-                                           @RequestParam("pwd") String pwd,
-                                           @RequestParam(name = "verifyCode", required = false) String verifyCode,
-                                           HttpServletRequest request) {
-        LoginModel loginModel = loginService.login(account,pwd,verifyCode,request.getSession());
-        //加载菜单
-        if (loginModel.isPass()){
-
+                                        @RequestParam("pwd") String pwd,
+                                        @RequestParam(name = "verifyCode", required = false) String verifyCode,
+                                        HttpServletRequest request) {
+        LoginModel loginModel = loginService.login(account, pwd, verifyCode, request.getSession());
+        if (loginModel.isPass()) {
+            Set<EruptMenu> menus = new HashSet<>();
+            for (EruptRole role : loginModel.getEruptUser().getRoles()) {
+                menus.addAll(role.getMenus());
+            }
+            request.getSession().setAttribute(SessionKey.MENU, menus);
         }
         return loginModel;
+    }
+
+    @PostMapping("/menu")
+    @ResponseBody
+    public Object getMenu(HttpServletRequest request) {
+        //type -> Set<EruptMenu>
+        return request.getSession().getAttribute(SessionKey.MENU);
     }
 }

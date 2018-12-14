@@ -7,6 +7,7 @@ import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.*;
 import com.erupt.model.BaseModel;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "E_ROLE")
 @Erupt(name = "用户角色")
+@Data
 public class EruptRole extends BaseModel {
 
     @EruptField(
