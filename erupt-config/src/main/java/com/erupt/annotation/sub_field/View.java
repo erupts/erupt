@@ -17,6 +17,7 @@ public @interface View {
 
     /**
      * demo : xx：@txt@
+     *
      * @txt@: 为数据项占位符
      */
     String template() default "";
