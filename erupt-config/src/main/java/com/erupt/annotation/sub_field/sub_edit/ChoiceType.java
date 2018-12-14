@@ -9,6 +9,4 @@ public @interface ChoiceType {
     VL[] vl();
 
     ChoiceEnum type() default ChoiceEnum.SELECT_SINGLE;
-
-    UiColor color() default UiColor.primary;
 }

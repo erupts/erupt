@@ -1,7 +1,5 @@
 package com.erupt.service;
 
-import com.erupt.dao.JpaDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,8 +10,6 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 public class DataService {
-    @Autowired
-    private JpaDao jpaDao;
 
 
 }

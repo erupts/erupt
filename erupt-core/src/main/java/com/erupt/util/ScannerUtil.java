@@ -22,7 +22,7 @@ public class ScannerUtil {
      * @param typeFilters 匹配规则
      * @param consumer    consumer lambda
      */
-    public static void scannerPackage(List<String> packages, TypeFilter[] typeFilters, Consumer<Class<?>> consumer) {
+    public static void scannerPackage(String[] packages, TypeFilter[] typeFilters, Consumer<Class<?>> consumer) {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         for (TypeFilter filter : typeFilters) {
             scanner.addIncludeFilter(filter);

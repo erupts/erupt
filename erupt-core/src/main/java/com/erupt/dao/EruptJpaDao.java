@@ -26,7 +26,7 @@ public class EruptJpaDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public static final String AND = " and ";
+    private static final String AND = " and ";
 
     public static final String CONDITION_KEY = "condition";
 

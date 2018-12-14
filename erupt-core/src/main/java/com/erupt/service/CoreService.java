@@ -26,15 +26,14 @@ public class CoreService implements InitializingBean {
 
 
     @Value("#{'${erupt.scanner-package}'.split(',')}")
-    public List<String> packages;
+    private String[] packages;
 
-
-    public static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<EruptModel>();
+    public static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        ScannerUtil.scannerPackage(packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
+    public void afterPropertiesSet() {
+        ScannerUtil.scannerPackage(this.packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
             //erupt domain info to memory
             EruptModel eruptModel = new EruptModel(clazz);
             // erupt field info to memory

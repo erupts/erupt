@@ -44,8 +44,6 @@ public class EruptDataController {
     @Autowired
     private DataService dataService;
 
-    @Autowired
-    private JpaDao jpaDao;
 
     @Autowired
     private EruptJpaDao eruptJpaDao;
@@ -96,7 +94,7 @@ public class EruptDataController {
                 }
                 list = eruptJpaDao.getDataMap(eruptModel, cols);
             } else {
-                list = eruptJpaDao.queryEruptList(eruptModel, null, new Page(0, 9999)).getList();
+                list = eruptJpaDao.queryEruptList(eruptModel, null, new Page(1, 9999)).getList();
             }
 
             List<TreeModel> treeModels = new ArrayList<>();

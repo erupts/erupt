@@ -7,7 +7,7 @@
 	<artifactId>erupt-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<packaging>pom</packaging>
+	<packaging>war</packaging>
 
 	<name>erupt-core</name>
 	<description>Erupt Core</description>
@@ -46,13 +46,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -71,21 +64,10 @@
 			<artifactId>poi</artifactId>
 			<version>3.15</version>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>org.springframework</groupId>-->
-			<!--<artifactId>spring-jdbc</artifactId>-->
-			<!--<version>5.0.4.RELEASE</version>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
 
 </project>

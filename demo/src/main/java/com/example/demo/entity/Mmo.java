@@ -1,9 +1,12 @@
-package com.erupt.entity.test;
+package com.example.demo.entity;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.constant.RgbColor;
-import com.erupt.annotation.sub_erupt.*;
+import com.erupt.annotation.sub_erupt.Card;
+import com.erupt.annotation.sub_erupt.Power;
+import com.erupt.annotation.sub_erupt.RowOperation;
+import com.erupt.annotation.sub_erupt.Tree;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;

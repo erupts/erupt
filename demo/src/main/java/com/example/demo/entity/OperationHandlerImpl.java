@@ -1,4 +1,4 @@
-package com.erupt.entity.test;
+package com.example.demo.entity;
 
 import com.erupt.annotation.fun.OperationHandler;
 
