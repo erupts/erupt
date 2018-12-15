@@ -38,11 +38,12 @@ public class EruptUtil {
 
     /**
      * 内存计算的方式生成树结构
+     *
      * @param treeModels
-     * @param resultTreeModels
      * @return
      */
-    public static List<TreeModel> TreeModelToTree(List<TreeModel> treeModels, List<TreeModel> resultTreeModels) {
+    public static List<TreeModel> TreeModelToTree(List<TreeModel> treeModels) {
+        List<TreeModel> resultTreeModels = new ArrayList<>();
         List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
         for (TreeModel treeModel : treeModels) {

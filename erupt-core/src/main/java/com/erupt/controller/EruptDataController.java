@@ -101,9 +101,7 @@ public class EruptDataController {
                 TreeModel treeModel = new TreeModel(map.get(tree.id()), map.get(tree.label()), map.get(tree.pid().replace(".", "_")), o);
                 treeModels.add(treeModel);
             }
-            List<TreeModel> treeResultModels = new ArrayList<>();
-            EruptUtil.TreeModelToTree(treeModels, treeResultModels);
-            return treeResultModels;
+            return EruptUtil.TreeModelToTree(treeModels);
         } else {
             throw new RuntimeException("没有查询权限");
         }
