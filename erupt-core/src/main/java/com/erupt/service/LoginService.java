@@ -45,7 +45,7 @@ public class LoginService {
                 return new LoginModel(false, "账号已锁定");
             }
             if (eruptUser.getIsMD5()) {
-                if (MD5Utils.digest(pwd).equals(pwd)) {
+                if (MD5Utils.digestSalt(pwd).equals(pwd)) {
                     pass = true;
                 }
             } else {

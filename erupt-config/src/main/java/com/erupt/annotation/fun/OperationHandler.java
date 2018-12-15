@@ -1,5 +1,7 @@
 package com.erupt.annotation.fun;
 
+import com.erupt.annotation.model.BoolAndReason;
+
 import javax.transaction.Transactional;
 
 /**
@@ -8,5 +10,5 @@ import javax.transaction.Transactional;
 @Transactional
 public interface OperationHandler {
 
-    boolean exec(Object keys, Object param);
+    BoolAndReason exec(Object keys, Object param);
 }

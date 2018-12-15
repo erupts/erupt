@@ -13,6 +13,7 @@ import com.erupt.base.model.HttpStatus;
 import com.erupt.base.model.EruptModel;
 import com.erupt.base.model.Page;
 import com.erupt.base.model.TreeModel;
+import com.erupt.exception.EruptRuntimeException;
 import com.erupt.service.CoreService;
 import com.erupt.service.DataService;
 import com.erupt.util.EruptUtil;
@@ -42,11 +43,12 @@ public class EruptDataController {
     @Autowired
     private DataService dataService;
 
-
     @Autowired
     private EruptJpaDao eruptJpaDao;
 
     private Gson gson = new Gson();
+
+    public static final String PAGE_KEY = "page";
 
 
     @PostMapping("/table/{erupt}")
@@ -54,15 +56,21 @@ public class EruptDataController {
     public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject data) throws JsonProcessingException, IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         JsonObject conditionParam = data.getAsJsonObject(EruptJpaDao.CONDITION_KEY);
+        JsonObject conditionPage = data.getAsJsonObject(PAGE_KEY);
         if (eruptModel.getErupt().power().query()) {
             DataProxy dataProxy = null;
             BoolAndReason boolAndReason = new BoolAndReason(true, null);
             if (eruptModel.getErupt().dateProxy().length > 0) {
                 dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
+                //该参数为查询条件
                 boolAndReason = dataProxy.beforeFetch(data);
             }
             if (boolAndReason.isBool()) {
-                Page page = eruptJpaDao.queryEruptListByValidate(eruptModel, conditionParam, new Page(1, 99));
+                Page page = eruptJpaDao.queryEruptListByValidate(eruptModel, conditionParam,
+                        new Page(
+                                conditionPage.get(Page.PAGE_NUMBER_STR).getAsInt(),
+                                conditionPage.get(Page.PAGE_SIZE_STR).getAsInt())
+                );
                 if (null != dataProxy) {
                     dataProxy.afterFetch(page.getList());
                 }
@@ -70,7 +78,7 @@ public class EruptDataController {
             }
             return null;
         } else {
-            throw new RuntimeException("没有查询权限");
+            throw new EruptRuntimeException("没有查询权限");
         }
     }
 
@@ -103,14 +111,14 @@ public class EruptDataController {
             }
             return EruptUtil.TreeModelToTree(treeModels);
         } else {
-            throw new RuntimeException("没有查询权限");
+            throw new EruptRuntimeException("没有查询权限");
         }
     }
 
     @PostMapping("/{erupt}/operator/{code}")
     @ResponseBody
-    public boolean execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
-                                     @RequestBody JsonObject data) throws IllegalAccessException, InstantiationException {
+    public BoolAndReason execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
+                                           @RequestBody JsonObject data) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         List<Object> oKeys = new ArrayList<>();
         JsonArray keys = data.getAsJsonArray("keys");
@@ -121,12 +129,12 @@ public class EruptDataController {
                 return operationHandler.exec(keys, param);
             }
         }
-        return false;
+        return new BoolAndReason(false, "找不到这个编码");
     }
 
     @PostMapping("/{erupt}")
     @ResponseBody
-    public void addEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
@@ -141,76 +149,77 @@ public class EruptDataController {
                 if (null != dataProxy) {
                     dataProxy.afterSave(obj);
                 }
+                return EruptApiModel.successApi(null);
+            } else {
+                return EruptApiModel.errorApi(boolAndReason.getReason());
             }
         } else {
-            throw new RuntimeException("没有新增权限");
+            throw new EruptRuntimeException("没有新增权限");
         }
     }
 
     @PutMapping("/{erupt}/{id}")
     @ResponseBody
-    public void editEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") String id) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") String id) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             DataProxy dataProxy = null;
             BoolAndReason boolAndReason = new BoolAndReason(true, null);
             if (eruptModel.getErupt().dateProxy().length > 0) {
                 dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                boolAndReason = dataProxy.beforeSave(null);
+                boolAndReason = dataProxy.beforeSave(id);
             }
             if (boolAndReason.isBool()) {
                 if (null != dataProxy) {
                     dataProxy.afterSave(null);
                 }
+                return EruptApiModel.successApi(null);
+            } else {
+                return EruptApiModel.errorApi(boolAndReason.getReason());
             }
-
         } else {
-            throw new RuntimeException("没有修改权限");
+            throw new EruptRuntimeException("没有修改权限");
         }
     }
 
     @DeleteMapping("/{erupt}/{id}")
     @ResponseBody
-    public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id, HttpServletResponse response) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
-            try {
-                DataProxy dataProxy = null;
-                BoolAndReason boolAndReason = new BoolAndReason(true, null);
-                Object obj = eruptJpaDao.findDataById(eruptModel, id);
-                if (eruptModel.getErupt().dateProxy().length > 0) {
-                    dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                    boolAndReason = dataProxy.beforeDelete(obj);
+            DataProxy dataProxy = null;
+            BoolAndReason boolAndReason = new BoolAndReason(true, null);
+            Object obj = eruptJpaDao.findDataById(eruptModel, id);
+            if (eruptModel.getErupt().dateProxy().length > 0) {
+                dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
+                boolAndReason = dataProxy.beforeDelete(obj);
+            }
+            if (boolAndReason.isBool()) {
+                eruptJpaDao.deleteEntity(obj);
+                if (null != dataProxy) {
+                    dataProxy.afterDelete(obj);
                 }
-                if (boolAndReason.isBool()) {
-                    eruptJpaDao.deleteEntity(obj);
-                    if (null != dataProxy) {
-                        dataProxy.afterDelete(obj);
-                    }
-                }
-                return EruptApiModel.successApi(true);
-            } catch (Exception e) {
-                response.setStatus(HttpStatus.ERROR.code);
-                //TODO 错误操作
-                return EruptApiModel.errorApi(e.getMessage());
+                return EruptApiModel.successApi(null);
+            } else {
+                return EruptApiModel.errorApi(boolAndReason.getReason());
             }
         } else {
-            throw new RuntimeException("没有删除权限");
+            throw new EruptRuntimeException("没有删除权限");
         }
     }
 
     //为了事务性考虑所以增加了批量删除功能
     @DeleteMapping("/{erupt}")
     @ResponseBody
-    public void deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
-        if (eruptModel.getErupt().power().add()) {
-            for (Serializable id : ids) {
-                eruptJpaDao.deleteEntity(eruptJpaDao.findDataById(eruptModel, id));
+    public EruptApiModel deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) throws IllegalAccessException, InstantiationException {
+        EruptApiModel eruptApiModel = EruptApiModel.successApi(null);
+        for (Serializable id : ids) {
+            eruptApiModel = this.deleteEruptData(erupt, id);
+            if (!eruptApiModel.isSuccess()) {
+                break;
             }
-        } else {
-            throw new RuntimeException("没有删除权限");
         }
+        return eruptApiModel;
     }
 
 

@@ -1,6 +1,7 @@
 package com.erupt.interceptor;
 
 import com.erupt.base.model.EruptModel;
+import com.erupt.constant.SessionKey;
 import com.erupt.service.CoreService;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
-    public static final String ERUPT_HEADER_KEY = "eruptKey";
+    private static final String ERUPT_HEADER_KEY = "eruptKey";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -23,12 +24,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         if (null == eruptModel) {
             return false;
         } else if (eruptModel.getErupt().loginUse()) {
-//            response.setStatus(EruptApiModel.Status.NO_LOGIN.code);
-            return true;
+            return null != request.getSession().getAttribute(SessionKey.IS_LOGIN);
         } else {
             return true;
         }
-
     }
 
     @Override

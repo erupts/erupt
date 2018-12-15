@@ -6,5 +6,7 @@ package com.erupt.constant;
 public class SessionKey {
     public static final String VERIFY_CODE = "verifyCode";
 
+    public static final String IS_LOGIN = "isLogin";
+
     public static final String MENU = "menu";
 }

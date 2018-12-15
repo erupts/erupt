@@ -35,6 +35,7 @@ public class EruptUserController {
                                         HttpServletRequest request) {
         LoginModel loginModel = loginService.login(account, pwd, verifyCode, request.getSession());
         if (loginModel.isPass()) {
+            request.getSession().setAttribute(SessionKey.IS_LOGIN, true);
             Set<EruptMenu> menuSet = new HashSet<>();
             for (EruptRole role : loginModel.getEruptUser().getRoles()) {
                 menuSet.addAll(role.getMenus());

@@ -10,6 +10,7 @@ import com.erupt.annotation.sub_field.sub_edit.BoolType;
 import com.erupt.annotation.sub_field.sub_edit.InputEnum;
 import com.erupt.annotation.sub_field.sub_edit.InputType;
 import com.erupt.annotation.sub_field.sub_edit.TabType;
+import com.erupt.model.proxy.EruptUserProxy;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ import java.util.Set;
 @Erupt(
         name = "用户",
         desc = "用户配置",
+        dateProxy = EruptUserProxy.class,
         power = @Power(
                 export = false,
                 importable = false

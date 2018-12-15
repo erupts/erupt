@@ -16,6 +16,10 @@ public class Page {
 
     private List list;
 
+    public static final String PAGE_NUMBER_STR = "pageNumber";
+
+    public static final String PAGE_SIZE_STR = "pageSize";
+
     public Page(int pageNumber, int pageSize) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;

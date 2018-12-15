@@ -17,6 +17,7 @@ public class BoolAndReason {
         return bool;
     }
 
+
     public void setBool(boolean bool) {
         this.bool = bool;
     }
