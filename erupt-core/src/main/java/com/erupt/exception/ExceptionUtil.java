@@ -1,7 +1,7 @@
 package com.erupt.exception;
 
-import com.erupt.model.core.EruptFieldModel;
-import com.erupt.model.core.EruptModel;
+import com.erupt.base.model.EruptFieldModel;
+import com.erupt.base.model.EruptModel;
 import org.fusesource.jansi.Ansi;
 
 import static org.fusesource.jansi.Ansi.ansi;

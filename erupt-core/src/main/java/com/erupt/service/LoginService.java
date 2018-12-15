@@ -1,8 +1,8 @@
 package com.erupt.service;
 
 import com.erupt.constant.SessionKey;
-import com.erupt.entity.EruptUser;
-import com.erupt.model.LoginModel;
+import com.erupt.model.EruptUser;
+import com.erupt.base.model.LoginModel;
 import com.erupt.repository.UserRepository;
 import com.erupt.util.MD5Utils;
 import org.apache.commons.lang3.StringUtils;

@@ -3,8 +3,8 @@ package com.erupt.service;
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.exception.EruptAnnotationException;
-import com.erupt.model.core.EruptFieldModel;
-import com.erupt.model.core.EruptModel;
+import com.erupt.base.model.EruptFieldModel;
+import com.erupt.base.model.EruptModel;
 import com.erupt.util.ScannerUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +47,6 @@ public class CoreService implements InitializingBean {
                         for (Field field : tempClass.getDeclaredFields()) {
                             EruptField eruptField = field.getAnnotation(EruptField.class);
                             if (null != eruptField) {
-                                eruptModel.setPrimaryKeyCol(field);
                                 EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
                                 eruptFieldModels.add(eruptFieldModel);
                                 eruptFieldMap.put(field.getName(), eruptFieldModel);

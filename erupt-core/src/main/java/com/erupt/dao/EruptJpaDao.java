@@ -3,9 +3,9 @@ package com.erupt.dao;
 import com.erupt.annotation.sub_erupt.Filter;
 import com.erupt.annotation.sub_field.sub_edit.ReferenceType;
 import com.erupt.annotation.util.ConfigUtil;
-import com.erupt.model.core.EruptFieldModel;
-import com.erupt.model.core.EruptModel;
-import com.erupt.model.Page;
+import com.erupt.base.model.EruptFieldModel;
+import com.erupt.base.model.EruptModel;
+import com.erupt.base.model.Page;
 import com.erupt.util.ReflectUtil;
 import com.erupt.util.TypeUtil;
 import com.google.gson.JsonObject;
@@ -51,7 +51,7 @@ public class EruptJpaDao {
 
     public Object findDataById(EruptModel eruptModel, Serializable id) {
         Field primaryField = ReflectUtil.findClassAllField(eruptModel.getClazz(),
-                eruptModel.getPrimaryKeyCol());
+                eruptModel.getErupt().primaryKeyCol());
         id = TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
         return entityManager.find(eruptModel.getClazz(), id);
     }

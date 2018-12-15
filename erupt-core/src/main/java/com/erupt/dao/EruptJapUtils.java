@@ -3,7 +3,7 @@ package com.erupt.dao;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.ReferenceType;
-import com.erupt.model.core.EruptModel;
+import com.erupt.base.model.EruptModel;
 import com.erupt.util.TypeUtil;
 
 import javax.persistence.ManyToOne;

@@ -1,7 +1,7 @@
 package com.erupt.exception;
 
 import com.erupt.annotation.sub_field.View;
-import com.erupt.model.core.EruptFieldModel;
+import com.erupt.base.model.EruptFieldModel;
 
 import static org.fusesource.jansi.Ansi.ansi;
 

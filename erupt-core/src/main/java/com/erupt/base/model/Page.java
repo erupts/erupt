@@ -1,7 +1,6 @@
-package com.erupt.model;
+package com.erupt.base.model;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liyuepeng on 10/12/18.

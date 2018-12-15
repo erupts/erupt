@@ -1,4 +1,4 @@
-package com.erupt.entity;
+package com.erupt.model;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
@@ -10,7 +10,6 @@ import com.erupt.annotation.sub_field.sub_edit.BoolType;
 import com.erupt.annotation.sub_field.sub_edit.InputEnum;
 import com.erupt.annotation.sub_field.sub_edit.InputType;
 import com.erupt.annotation.sub_field.sub_edit.TabType;
-import com.erupt.model.BaseModel;
 import lombok.Data;
 
 import javax.persistence.*;

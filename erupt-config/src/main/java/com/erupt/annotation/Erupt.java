@@ -20,6 +20,8 @@ public @interface Erupt {
 
     String name();
 
+    String primaryKeyCol() default "id";
+
     String desc() default "";
 
     Card[] cards() default {};

@@ -1,13 +1,11 @@
-package com.erupt.model.core;
+package com.erupt.base.model;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.util.ConfigUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import javax.persistence.Id;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +21,6 @@ public class EruptModel implements Serializable {
     private String eruptName;
 
     private JsonObject eruptJson;
-
-    //标识主键列
-    private String primaryKeyCol;
 
     private List<EruptFieldModel> eruptFieldModels;
 
@@ -77,20 +72,6 @@ public class EruptModel implements Serializable {
 
     public void setEruptName(String eruptName) {
         this.eruptName = eruptName;
-    }
-
-    public String getPrimaryKeyCol() {
-        return primaryKeyCol;
-    }
-
-    public void setPrimaryKeyCol(Field field) {
-        if (null != field.getAnnotation(Id.class)) {
-            this.primaryKeyCol = field.getName();
-        }
-    }
-
-    public void setPrimaryKeyCol(String primaryKeyCol) {
-        this.primaryKeyCol = primaryKeyCol;
     }
 
     public Map<String, EruptFieldModel> getEruptFieldMap() {

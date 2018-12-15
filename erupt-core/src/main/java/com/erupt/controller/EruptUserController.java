@@ -2,13 +2,11 @@ package com.erupt.controller;
 
 import com.erupt.constant.RestPath;
 import com.erupt.constant.SessionKey;
-import com.erupt.entity.EruptMenu;
-import com.erupt.entity.EruptRole;
-import com.erupt.model.EruptApiModel;
-import com.erupt.model.LoginModel;
+import com.erupt.model.EruptMenu;
+import com.erupt.model.EruptRole;
+import com.erupt.base.model.LoginModel;
 import com.erupt.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;

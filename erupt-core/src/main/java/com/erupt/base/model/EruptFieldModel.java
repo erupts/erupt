@@ -1,19 +1,16 @@
-package com.erupt.model.core;
+package com.erupt.base.model;
 
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.util.ConfigUtil;
 import com.erupt.exception.EruptFieldAnnotationException;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Set;
 
 /**
  * Created by liyuepeng on 10/10/18.

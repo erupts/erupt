@@ -1,6 +1,6 @@
-package com.erupt.model;
+package com.erupt.base.model;
 
-import com.erupt.entity.EruptUser;
+import com.erupt.model.EruptUser;
 import lombok.Getter;
 
 /**

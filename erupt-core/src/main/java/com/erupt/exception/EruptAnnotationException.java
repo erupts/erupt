@@ -1,7 +1,6 @@
 package com.erupt.exception;
 
-import com.erupt.model.core.EruptModel;
-import org.apache.commons.lang3.StringUtils;
+import com.erupt.base.model.EruptModel;
 
 /**
  * Created by liyuepeng on 11/1/18.
@@ -14,11 +13,9 @@ public class EruptAnnotationException extends RuntimeException {
 
 
     public static void validateEruptInfo(EruptModel eruptModel) {
-        if (StringUtils.isBlank((eruptModel.getPrimaryKeyCol()))) {
-            throw ExceptionUtil.styleEruptException(eruptModel, "无法识别主键，请在主键制字段(@id)中使用@EruptField注解");
-        }
-        if (null == eruptModel.getEruptFieldMap().get(eruptModel.getPrimaryKeyCol())) {
-            throw ExceptionUtil.styleEruptException(eruptModel, "主键未找到erupt注解");
+        if (null == eruptModel.getEruptFieldMap().get(eruptModel.getErupt().primaryKeyCol())) {
+            throw ExceptionUtil.styleEruptException(eruptModel, "找不到主键id,请确认主键列名是否为id，" +
+                    "如果你不想将主键名定义为id则可以修改erupt注解中的primaryKeyCol属性来实现");
         }
     }
 }

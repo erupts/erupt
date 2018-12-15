@@ -1,6 +1,6 @@
 package com.erupt.repository;
 
-import com.erupt.entity.EruptUser;
+import com.erupt.model.EruptUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

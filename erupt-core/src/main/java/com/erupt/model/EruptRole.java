@@ -1,4 +1,4 @@
-package com.erupt.entity;
+package com.erupt.model;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
@@ -6,7 +6,6 @@ import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.*;
-import com.erupt.model.BaseModel;
 import lombok.Data;
 
 import javax.persistence.*;
