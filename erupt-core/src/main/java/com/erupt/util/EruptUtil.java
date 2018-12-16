@@ -133,7 +133,7 @@ public class EruptUtil {
                             }
                             break;
                         default:
-                            result.put(field.getName(), "");
+                            result.put(field.getName(), field.get(data));
                             break;
                     }
                 }

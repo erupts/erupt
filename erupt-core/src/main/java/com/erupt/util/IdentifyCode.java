@@ -9,6 +9,9 @@ import java.io.OutputStream;
 import java.util.Random;
 import javax.imageio.ImageIO;
 
+/**
+ * Created by liyuepeng on 12/15/18.
+ */
 public class IdentifyCode {
     // 图片的宽度。
     private int width = 160;

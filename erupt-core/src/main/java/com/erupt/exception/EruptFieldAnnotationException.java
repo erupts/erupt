@@ -17,11 +17,6 @@ public class EruptFieldAnnotationException extends RuntimeException {
 
     public static void validateEruptFieldInfo(EruptFieldModel eruptFieldModel) {
         switch (eruptFieldModel.getEruptField().edit().type()) {
-            case DICT:
-                if (eruptFieldModel.getEruptField().edit().dictType().length == 0) {
-                    throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "字典类型未使用@DictType注解修饰");
-                }
-                break;
             case CHOICE:
                 if (eruptFieldModel.getEruptField().edit().choiceType().length == 0) {
                     throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "字典类型未使用@DictType注解修饰");

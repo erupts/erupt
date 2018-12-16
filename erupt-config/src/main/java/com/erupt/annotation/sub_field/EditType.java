@@ -9,7 +9,6 @@ public enum EditType {
     DATE,             //日期
     REFERENCE,        //引用
     BOOLEAN,          //布尔
-    DICT,             //字典
     IMAGE,            //图片
     QRCODE,           //二维码
     ATTACHMENT,       //附件

@@ -1,5 +1,6 @@
 package com.erupt.controller;
 
+import com.erupt.annotation.model.BoolAndReason;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.base.model.EruptFieldModel;
 import com.erupt.constant.RestPath;
@@ -13,9 +14,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -29,6 +33,9 @@ public class EruptExcelController {
     @Autowired
     private DataFileService dataFileService;
 
+    @Value("erupt.uploadPath")
+    private String uploadPath;
+
     @GetMapping("/export/{erupt}")
     public void exportData(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
@@ -40,12 +47,26 @@ public class EruptExcelController {
     }
 
 
+
+    //上传文件
     @PostMapping("/import/{erupt}")
     @ResponseBody
-    public Object importData(@PathVariable("erupt") String eruptName) {
+    public BoolAndReason importData(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
-            return null;
+            if (file.isEmpty()) {
+                return new BoolAndReason(false, "上传失败，请选择文件");
+            }
+            String fileName = file.getOriginalFilename();
+            File dest = new File(this.uploadPath + fileName);
+            try {
+                file.transferTo(dest);
+                //TODO 读取上传后的文件做数据上传工作
+                return new BoolAndReason(true,null);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new BoolAndReason(false,e.getMessage());
+            }
         } else {
             throw new RuntimeException("没有导入权限");
         }
@@ -54,7 +75,7 @@ public class EruptExcelController {
 
     @GetMapping(value = "/import/template/{erupt}")
     @ResponseBody
-    public void importTemplate(@PathVariable("erupt") String eruptName,HttpServletResponse response) {
+    public void importTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
 

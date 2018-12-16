@@ -36,7 +36,7 @@ public class DataFileService {
         }
 
         try {
-            wb.write(HttpUtil.downLoadField(response, eruptModel.getErupt().name() + ".erupt.xls"));
+            wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + ".erupt.xls"));
         } catch (IOException e) {
             e.printStackTrace();
         }

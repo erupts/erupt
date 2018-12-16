@@ -9,7 +9,7 @@ import java.io.OutputStream;
  */
 public class HttpUtil {
 
-    public static OutputStream downLoadField(HttpServletResponse response, String fileName) {
+    public static OutputStream downLoadFile(HttpServletResponse response, String fileName) {
         try {
             String headStr = "attachment; filename=\"" + java.net.URLEncoder.encode(fileName, "UTF-8") + "\"";
             response.setContentType("application/x-download");
