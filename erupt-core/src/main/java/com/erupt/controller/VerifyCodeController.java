@@ -21,11 +21,6 @@ import javax.servlet.http.HttpSession;
 public class VerifyCodeController {
     /**
      * 生成验证码
-     *
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
      */
     @GetMapping
     @RequestMapping("/code-img")
