@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by liyuepeng on 12/4/18.
@@ -31,13 +32,17 @@ public class DataFileService {
                     Cell cell = row.createCell(colNum++);
                     cell.setCellValue(view.title());
                 }
-
             }
         }
+
         try {
             wb.write(HttpUtil.downLoadField(response, eruptModel.getErupt().name() + ".erupt.xls"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void exportExcelTemplate() {
+
     }
 }
