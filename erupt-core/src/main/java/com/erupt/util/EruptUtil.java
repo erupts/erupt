@@ -133,7 +133,7 @@ public class EruptUtil {
                             }
                             break;
                         default:
-                            result.put(field.getName(), field.get(data));
+                            result.put(field.getName(), "");
                             break;
                     }
                 }
@@ -143,7 +143,7 @@ public class EruptUtil {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
 }
