@@ -31,31 +31,32 @@ import java.util.Set;
 )
 @Entity
 @Table(name = "E_USER", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "accout")
+        @UniqueConstraint(columnNames = "account")
 })
 public class EruptUser extends BaseModel {
 
-    @Column(name = "account")
+    @Column(name = "ACCOUNT")
     @EruptField(
             views = @View(title = "用户名"),
             edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true)
     )
     private String account;
 
-    @Column(name = "name")
+    @Column(name = "NAME")
     @EruptField(
             views = @View(title = "姓名"),
             edit = @Edit(title = "姓名", notNull = true)
     )
     private String name;
 
-    @Column(name = "pwd")
+    @Column(name = "PWD")
     @EruptField(
             views = @View(title = "密码"),
             edit = @Edit(title = "密码", notNull = true)
     )
     private String password;
 
+    @Column(name = "PWD2")
     @EruptField(
             views = @View(title = "确认密码"),
             edit = @Edit(title = "确认密码", notNull = true)

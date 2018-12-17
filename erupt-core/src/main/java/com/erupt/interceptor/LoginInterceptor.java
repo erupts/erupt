@@ -1,6 +1,7 @@
 package com.erupt.interceptor;
 
 import com.erupt.base.model.EruptModel;
+import com.erupt.base.model.HttpStatus;
 import com.erupt.constant.SessionKey;
 import com.erupt.service.CoreService;
 import org.springframework.lang.Nullable;
@@ -22,9 +23,14 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String eruptKey = request.getHeader(ERUPT_HEADER_KEY);
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptKey);
         if (null == eruptModel) {
-            return false;
+            return true;
         } else if (eruptModel.getErupt().loginUse()) {
-            return null != request.getSession().getAttribute(SessionKey.IS_LOGIN);
+            if (null != request.getSession().getAttribute(SessionKey.IS_LOGIN)) {
+                return true;
+            } else {
+//                response.setStatus(HttpStatus.NO_LOGIN.code);
+                return true;
+            }
         } else {
             return true;
         }

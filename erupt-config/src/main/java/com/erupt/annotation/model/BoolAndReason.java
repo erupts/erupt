@@ -1,6 +1,7 @@
 package com.erupt.annotation.model;
 
 /**
+ * 用来描述bool值得的原因
  * Created by liyuepeng on 11/20/18.
  */
 public class BoolAndReason {

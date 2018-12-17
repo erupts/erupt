@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.erupt.example.demo.entity;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;

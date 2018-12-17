@@ -10,7 +10,8 @@ import com.erupt.util.MD5Utils;
  * @author: liyuepeng
  * @time:2018/12/15 22:49
  */
-public class EruptUserProxy implements DataProxy {
+public class EruptUserProxy extends DataProxy {
+
     @Override
     public BoolAndReason beforeSave(Object o) {
         EruptUser eruptUser = (EruptUser) o;
@@ -24,28 +25,4 @@ public class EruptUserProxy implements DataProxy {
         }
     }
 
-    @Override
-    public void afterSave(Object o) {
-
-    }
-
-    @Override
-    public BoolAndReason beforeDelete(Object o) {
-        return null;
-    }
-
-    @Override
-    public void afterDelete(Object o) {
-
-    }
-
-    @Override
-    public BoolAndReason beforeFetch(Object o) {
-        return null;
-    }
-
-    @Override
-    public void afterFetch(Object o) {
-
-    }
 }

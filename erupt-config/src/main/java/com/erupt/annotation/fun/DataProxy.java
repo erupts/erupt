@@ -8,18 +8,30 @@ import javax.transaction.Transactional;
  * Created by liyuepeng on 10/9/18.
  */
 @Transactional
-public interface DataProxy {
+public class DataProxy {
 
-    BoolAndReason beforeSave(Object o);
+    public BoolAndReason beforeSave(Object o) {
+        return new BoolAndReason(true, null);
+    }
 
-    void afterSave(Object o);
+    public void afterSave(Object o) {
 
-    BoolAndReason beforeDelete(Object o);
+    }
 
-    void afterDelete(Object o);
+    public BoolAndReason beforeDelete(Object o) {
+        return new BoolAndReason(true, null);
+    }
 
-    BoolAndReason beforeFetch(Object o);
+    public void afterDelete(Object o) {
 
-    void afterFetch(Object o);
+    }
+
+    public BoolAndReason beforeFetch(Object o) {
+        return new BoolAndReason(true, null);
+    }
+
+    public void afterFetch(Object o) {
+
+    }
 
 }

@@ -17,9 +17,6 @@ import static org.fusesource.jansi.Ansi.ansi;
 @RequestMapping(RestPath.ERUPT_BUILD)
 public class EruptBuildController {
 
-    @Autowired
-    private CoreService startService;
-
     @GetMapping("/list/{erupt}")
     @ResponseBody
     public EruptModel getEruptTableView(@PathVariable("erupt") String eruptName) {
