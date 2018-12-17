@@ -19,6 +19,7 @@ public class EruptFieldModel implements Serializable {
 
     private transient EruptField eruptField;
 
+
     private transient Field field;
 
     private JsonObject eruptFieldJson;
