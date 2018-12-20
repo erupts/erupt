@@ -1,4 +1,4 @@
-package com.erupt.constant;
+package com.erupt.eruptlimit.constant;
 
 /**
  * Created by liyuepeng on 2018-12-14.

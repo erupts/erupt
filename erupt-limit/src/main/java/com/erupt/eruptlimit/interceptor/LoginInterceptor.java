@@ -1,7 +1,7 @@
 package com.erupt.eruptlimit.interceptor;
 
 import com.erupt.base.model.EruptModel;
-import com.erupt.constant.SessionKey;
+import com.erupt.eruptlimit.constant.SessionKey;
 import com.erupt.service.CoreService;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.ModelAndView;

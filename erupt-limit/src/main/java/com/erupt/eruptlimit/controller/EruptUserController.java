@@ -3,9 +3,8 @@ package com.erupt.eruptlimit.controller;
 import com.erupt.annotation.sub_erupt.Tree;
 import com.erupt.base.model.EruptModel;
 import com.erupt.base.model.TreeModel;
-import com.erupt.constant.RestPath;
-import com.erupt.constant.SessionKey;
 import com.erupt.eruptlimit.base.LoginModel;
+import com.erupt.eruptlimit.constant.SessionKey;
 import com.erupt.eruptlimit.model.EruptMenu;
 import com.erupt.eruptlimit.model.EruptRole;
 import com.erupt.eruptlimit.service.LoginService;
@@ -21,7 +20,7 @@ import java.util.*;
  * Created by liyuepeng on 2018-12-13.
  */
 @RestController
-@RequestMapping(RestPath.ERUPT_USER)
+@RequestMapping("erupt-user")
 public class EruptUserController {
 
     @Autowired
@@ -29,10 +28,11 @@ public class EruptUserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public LoginModel getEruptTableView(@RequestParam("account") String account,
-                                        @RequestParam("pwd") String pwd,
-                                        @RequestParam(name = "verifyCode", required = false) String verifyCode,
-                                        HttpServletRequest request) {
+    public LoginModel login(@RequestParam("account") String account,
+                            @RequestParam("pwd") String pwd,
+                            @RequestParam(name = "verifyCode", required = false) String verifyCode,
+                            HttpServletRequest request) {
+        request.getSession().setAttribute("abc", 123123);
         LoginModel loginModel = loginService.login(account, pwd, verifyCode, request.getSession());
         if (loginModel.isPass()) {
             request.getSession().setAttribute(SessionKey.IS_LOGIN, true);

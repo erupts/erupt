@@ -3,10 +3,7 @@ package com.erupt.example.demo.entity;
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.constant.RgbColor;
-import com.erupt.annotation.sub_erupt.Card;
-import com.erupt.annotation.sub_erupt.Power;
-import com.erupt.annotation.sub_erupt.RowOperation;
-import com.erupt.annotation.sub_erupt.Tree;
+import com.erupt.annotation.sub_erupt.*;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;
@@ -29,19 +26,19 @@ import java.util.Set;
                 code = "action",
                 icon = "fa fa-terminal",
                 title = "执行",
-                operationHandler = OperationHandlerImpl.class
-//                edits = {
-//                        @CodeAndEdit(
-//                                code = "name",
-//                                codeType = "int",
-//                                edit = @Edit(title = "姓名", notNull = true)
-//                        ),
-//                        @CodeAndEdit(
-//                                code = "idCard",
-//                                codeType = "Integer",
-//                                edit = @Edit(title = "身份证号", notNull = true)
-//                        )
-//                }
+                operationHandler = OperationHandlerImpl.class,
+                edits = {
+                        @CodeAndEdit(
+                                code = "name",
+                                codeType = "int",
+                                edit = @Edit(title = "姓名", notNull = true)
+                        ),
+                        @CodeAndEdit(
+                                code = "idCard",
+                                codeType = "Integer",
+                                edit = @Edit(title = "身份证号", notNull = true)
+                        )
+                }
         ), @RowOperation(code = "single", icon = "pic-left",
                 title = "单个执行", multi = false,
                 operationHandler = OperationHandlerImpl.class

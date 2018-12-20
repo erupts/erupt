@@ -138,23 +138,27 @@ public class EruptDataController {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
             DataProxy dataProxy = null;
             BoolAndReason boolAndReason = new BoolAndReason(true, null);
-            if (eruptModel.getErupt().dateProxy().length > 0) {
-                dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                boolAndReason = dataProxy.beforeAdd(obj);
-            }
-            if (boolAndReason.isBool()) {
-                eruptJpaDao.saveEntity(eruptModel, obj);
+            try {
+                if (eruptModel.getErupt().dateProxy().length > 0) {
+                    dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
+                    boolAndReason = dataProxy.beforeAdd(obj);
+                }
+                if (boolAndReason.isBool()) {
+                    eruptJpaDao.saveEntity(eruptModel, obj);
 //                try{
 //                    eruptJpaDao.saveEntity(eruptModel, obj);
 //                }catch (SQLIntegrityConstraintViolationException e){
 //
 //                }
-                if (null != dataProxy) {
-                    dataProxy.afterAdd(obj);
+                    if (null != dataProxy) {
+                        dataProxy.afterAdd(obj);
+                    }
+                    return EruptApiModel.successApi(null);
+                } else {
+                    return EruptApiModel.errorApi(boolAndReason.getReason());
                 }
-                return EruptApiModel.successApi(null);
-            } else {
-                return EruptApiModel.errorApi(boolAndReason.getReason());
+            } catch (Exception e) {
+                return EruptApiModel.errorApi(e.getMessage());
             }
         } else {
             throw new EruptRuntimeException("没有新增权限");
@@ -166,19 +170,24 @@ public class EruptDataController {
     public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") String id) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
-            DataProxy dataProxy = null;
-            BoolAndReason boolAndReason = new BoolAndReason(true, null);
-            if (eruptModel.getErupt().dateProxy().length > 0) {
-                dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                boolAndReason = dataProxy.beforeEdit(id);
-            }
-            if (boolAndReason.isBool()) {
-                if (null != dataProxy) {
-                    dataProxy.afterEdit(null);
+            try {
+                DataProxy dataProxy = null;
+                BoolAndReason boolAndReason = new BoolAndReason(true, null);
+                if (eruptModel.getErupt().dateProxy().length > 0) {
+                    dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
+                    boolAndReason = dataProxy.beforeEdit(id);
                 }
-                return EruptApiModel.successApi(null);
-            } else {
-                return EruptApiModel.errorApi(boolAndReason.getReason());
+                if (boolAndReason.isBool()) {
+                    if (null != dataProxy) {
+                        dataProxy.afterEdit(null);
+                    }
+                    return EruptApiModel.successApi(null);
+                } else {
+                    return EruptApiModel.errorApi(boolAndReason.getReason());
+                }
+
+            } catch (Exception e) {
+                return EruptApiModel.errorApi(e.getMessage());
             }
         } else {
             throw new EruptRuntimeException("没有修改权限");
@@ -187,24 +196,28 @@ public class EruptDataController {
 
     @DeleteMapping("/{erupt}/{id}")
     @ResponseBody
-    public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             DataProxy dataProxy = null;
             BoolAndReason boolAndReason = new BoolAndReason(true, null);
-            Object obj = eruptJpaDao.findDataById(eruptModel, id);
-            if (eruptModel.getErupt().dateProxy().length > 0) {
-                dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                boolAndReason = dataProxy.beforeDelete(obj);
-            }
-            if (boolAndReason.isBool()) {
-                eruptJpaDao.deleteEntity(obj);
-                if (null != dataProxy) {
-                    dataProxy.afterDelete(obj);
+            try {
+                Object obj = eruptJpaDao.findDataById(eruptModel, id);
+                if (eruptModel.getErupt().dateProxy().length > 0) {
+                    dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
+                    boolAndReason = dataProxy.beforeDelete(obj);
                 }
-                return EruptApiModel.successApi(null);
-            } else {
-                return EruptApiModel.errorApi(boolAndReason.getReason());
+                if (boolAndReason.isBool()) {
+                    eruptJpaDao.deleteEntity(obj);
+                    if (null != dataProxy) {
+                        dataProxy.afterDelete(obj);
+                    }
+                    return EruptApiModel.successApi(null);
+                } else {
+                    return EruptApiModel.errorApi(boolAndReason.getReason());
+                }
+            } catch (Exception e) {
+                return EruptApiModel.errorApi(e.getMessage());
             }
         } else {
             throw new EruptRuntimeException("没有删除权限");
@@ -216,11 +229,15 @@ public class EruptDataController {
     @ResponseBody
     public EruptApiModel deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) throws IllegalAccessException, InstantiationException {
         EruptApiModel eruptApiModel = EruptApiModel.successApi(null);
-        for (Serializable id : ids) {
-            eruptApiModel = this.deleteEruptData(erupt, id);
-            if (!eruptApiModel.isSuccess()) {
-                break;
+        try {
+            for (Serializable id : ids) {
+                eruptApiModel = this.deleteEruptData(erupt, id);
+                if (!eruptApiModel.isSuccess()) {
+                    break;
+                }
             }
+        } catch (Exception e) {
+            return EruptApiModel.errorApi(e.getMessage());
         }
         return eruptApiModel;
     }

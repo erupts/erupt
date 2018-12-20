@@ -17,10 +17,4 @@ public class RestPath {
 
     //文件
     public static final String ERUPT_FILE = ERUPT_API + "/file";
-
-    //用户
-    public static final String ERUPT_USER = ERUPT_API + "/user";
-
-    //菜单
-    public static final String ERUPT_MENU = ERUPT_API + "/menu";
 }

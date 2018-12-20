@@ -5,7 +5,7 @@ package com.erupt.eruptlimit.controller;
  * 验证码
  */
 
-import com.erupt.constant.SessionKey;
+import com.erupt.eruptlimit.constant.SessionKey;
 import com.erupt.util.IdentifyCode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,9 +34,10 @@ public class VerifyCodeController {
         response.setDateHeader("Expires", 0);
 
         // 自定义宽、高、字数和干扰线的条数
-        IdentifyCode code = new IdentifyCode(100, 30, 4, 10);
+        IdentifyCode code = new IdentifyCode(100, 38, 4, 10);
         // 存入session
         HttpSession session = request.getSession();
+        System.out.println(session.getAttribute(SessionKey.VERIFY_CODE));
         session.setAttribute(SessionKey.VERIFY_CODE, code.getCode());
         // 响应图片
         ServletOutputStream out = response.getOutputStream();

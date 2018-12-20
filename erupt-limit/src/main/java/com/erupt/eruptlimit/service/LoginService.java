@@ -1,7 +1,7 @@
 package com.erupt.eruptlimit.service;
 
-import com.erupt.constant.SessionKey;
 import com.erupt.eruptlimit.base.LoginModel;
+import com.erupt.eruptlimit.constant.SessionKey;
 import com.erupt.eruptlimit.model.EruptUser;
 import com.erupt.eruptlimit.repository.UserRepository;
 import com.erupt.util.MD5Utils;
@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,25 +25,27 @@ public class LoginService {
 
 
     //TODO 分布式下计数会不准
-    private Map<String, Integer> loginErrorCount = new HashMap<>();
+    private static Map<String, Integer> loginErrorCount = new HashMap<>();
 
 
     public LoginModel login(String account, String pwd, String verifyCode, HttpSession session) {
+        if (null == loginErrorCount.get(account)) {
+            loginErrorCount.put(account, 0);
+        }
         if (loginErrorCount.get(account) >= 5) {
             if (StringUtils.isBlank(verifyCode)) {
-                return new LoginModel(false, "请填写验证码");
+                return new LoginModel(false, "请填写验证码", true);
             }
-            session.getAttribute(SessionKey.VERIFY_CODE);
-            String oldStr = session.getAttribute(SessionKey.VERIFY_CODE).toString();
-            if (!oldStr.equalsIgnoreCase(verifyCode)) {
-                return new LoginModel(false, "验证码不正确");
+            Object oldStr = session.getAttribute(SessionKey.VERIFY_CODE);
+            if (!oldStr.toString().equalsIgnoreCase(verifyCode)) {
+                return new LoginModel(false, "验证码不正确", true);
             }
         }
         EruptUser eruptUser = userRepository.findByAccount(account);
         boolean pass = false;
         if (null != eruptUser) {
             if (!eruptUser.getStatus()) {
-                return new LoginModel(false, "账号已锁定");
+                return new LoginModel(false, "账号已锁定!");
             }
             if (eruptUser.getIsMD5()) {
                 if (MD5Utils.digestSalt(pwd).equals(pwd)) {

@@ -6,6 +6,7 @@ import com.erupt.annotation.sub_erupt.Power;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;
+import com.erupt.annotation.sub_field.ViewType;
 import com.erupt.annotation.sub_field.sub_edit.BoolType;
 import com.erupt.annotation.sub_field.sub_edit.InputEnum;
 import com.erupt.annotation.sub_field.sub_edit.InputType;
@@ -58,7 +59,7 @@ public class EruptUser extends BaseModel {
 
     @Column(name = "PWD2")
     @EruptField(
-            views = @View(title = "确认密码"),
+            views = @View(title = "确认密码", show = false),
             edit = @Edit(title = "确认密码", notNull = true)
     )
     private String password2;
