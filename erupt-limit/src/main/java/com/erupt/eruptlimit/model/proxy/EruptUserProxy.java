@@ -1,8 +1,8 @@
-package com.erupt.model.proxy;
+package com.erupt.eruptlimit.model.proxy;
 
 import com.erupt.annotation.fun.DataProxy;
 import com.erupt.annotation.model.BoolAndReason;
-import com.erupt.model.EruptUser;
+import com.erupt.eruptlimit.model.EruptUser;
 import com.erupt.util.MD5Utils;
 
 /**
@@ -13,7 +13,7 @@ import com.erupt.util.MD5Utils;
 public class EruptUserProxy extends DataProxy {
 
     @Override
-    public BoolAndReason beforeSave(Object o) {
+    public BoolAndReason beforeAdd(Object o) {
         EruptUser eruptUser = (EruptUser) o;
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
             if (eruptUser.getIsMD5()) {
@@ -25,4 +25,8 @@ public class EruptUserProxy extends DataProxy {
         }
     }
 
+    @Override
+    public BoolAndReason beforeEdit(Object o) {
+        return this.beforeAdd(o);
+    }
 }

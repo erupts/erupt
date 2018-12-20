@@ -1,4 +1,4 @@
-package com.erupt.model;
+package com.erupt.eruptlimit.model;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
@@ -85,7 +85,7 @@ public class EruptMenu extends BaseModel {
                     choiceType = @ChoiceType(vl = {
                             @VL(value = 0, label = "_target"),
                             @VL(value = 1, label = "_self")
-                    },type=ChoiceEnum.RADIO)
+                    }, type = ChoiceEnum.RADIO)
             )
     )
     private String target;

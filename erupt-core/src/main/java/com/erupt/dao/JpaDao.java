@@ -34,7 +34,9 @@ public class JpaDao {
 
     public Object queryByPage(Class<?> entity) {
         return entityManager.createQuery("from " + entity.getSimpleName());
-    };
+    }
+
+    ;
 
     public Page queryByPage(Class<?> entity, Page page) {
         page.setList(entityManager.createQuery("from " + entity.getSimpleName())

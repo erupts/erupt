@@ -1,6 +1,6 @@
-package com.erupt.base.model;
+package com.erupt.eruptlimit.base;
 
-import com.erupt.model.EruptUser;
+import com.erupt.eruptlimit.model.EruptUser;
 import lombok.Getter;
 
 /**

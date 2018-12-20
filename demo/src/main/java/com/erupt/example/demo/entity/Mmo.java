@@ -12,7 +12,7 @@ import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.ViewType;
 import com.erupt.annotation.sub_field.sub_edit.*;
-import com.erupt.model.BaseModel;
+import com.erupt.eruptlimit.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;

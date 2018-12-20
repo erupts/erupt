@@ -1,11 +1,12 @@
-package com.erupt.model;
+package com.erupt.eruptlimit.model;
 
 import com.erupt.annotation.Erupt;
 import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
 import com.erupt.annotation.sub_field.View;
-import com.erupt.annotation.sub_field.sub_edit.*;
+import com.erupt.annotation.sub_field.sub_edit.BoolType;
+import com.erupt.annotation.sub_field.sub_edit.TabType;
 import lombok.Data;
 
 import javax.persistence.*;

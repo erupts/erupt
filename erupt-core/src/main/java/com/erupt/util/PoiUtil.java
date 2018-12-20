@@ -184,8 +184,8 @@ public class PoiUtil {
     }
 
     /*
-   * 列数据信息单元格样式
-   */
+     * 列数据信息单元格样式
+     */
     public HSSFCellStyle getStyle(HSSFWorkbook workbook) {
         // 设置字体
         HSSFFont font = workbook.createFont();

@@ -47,7 +47,6 @@ public class EruptExcelController {
     }
 
 
-
     //上传文件
     @PostMapping("/import/{erupt}")
     @ResponseBody
@@ -62,10 +61,10 @@ public class EruptExcelController {
             try {
                 file.transferTo(dest);
                 //TODO 读取上传后的文件做数据上传工作
-                return new BoolAndReason(true,null);
+                return new BoolAndReason(true, null);
             } catch (IOException e) {
                 e.printStackTrace();
-                return new BoolAndReason(false,e.getMessage());
+                return new BoolAndReason(false, e.getMessage());
             }
         } else {
             throw new RuntimeException("没有导入权限");

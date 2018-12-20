@@ -1,9 +1,9 @@
-package com.erupt.service;
+package com.erupt.eruptlimit.service;
 
 import com.erupt.constant.SessionKey;
-import com.erupt.model.EruptUser;
-import com.erupt.base.model.LoginModel;
-import com.erupt.repository.UserRepository;
+import com.erupt.eruptlimit.base.LoginModel;
+import com.erupt.eruptlimit.model.EruptUser;
+import com.erupt.eruptlimit.repository.UserRepository;
 import com.erupt.util.MD5Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,5 +6,4 @@ package com.erupt.constant;
 public class EruptConst {
 
 
-
 }

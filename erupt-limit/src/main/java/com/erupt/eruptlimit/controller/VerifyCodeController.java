@@ -1,4 +1,4 @@
-package com.erupt.controller;
+package com.erupt.eruptlimit.controller;
 
 /**
  * Created by liyuepeng on 2018-12-14.

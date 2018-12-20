@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.erupt</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>erupt-limit</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>Demo project for Spring Boot</description>
+    <name>erupt-limit</name>
+    <description>用户权限相关</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -29,11 +29,6 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
@@ -43,24 +38,16 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>com.erupt</groupId>
             <artifactId>erupt-annotation</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>com.erupt</groupId>
             <artifactId>erupt-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.erupt</groupId>
-            <artifactId>erupt-web</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.erupt</groupId>
-            <artifactId>erupt-limit</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

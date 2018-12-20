@@ -6,13 +6,12 @@ import com.erupt.annotation.model.BoolAndReason;
 import com.erupt.annotation.sub_erupt.RowOperation;
 import com.erupt.annotation.sub_erupt.Tree;
 import com.erupt.annotation.sub_erupt.TreeLoadType;
-import com.erupt.constant.RestPath;
-import com.erupt.dao.EruptJpaDao;
 import com.erupt.base.model.EruptApiModel;
-import com.erupt.base.model.HttpStatus;
 import com.erupt.base.model.EruptModel;
 import com.erupt.base.model.Page;
 import com.erupt.base.model.TreeModel;
+import com.erupt.constant.RestPath;
+import com.erupt.dao.EruptJpaDao;
 import com.erupt.exception.EruptRuntimeException;
 import com.erupt.service.CoreService;
 import com.erupt.service.DataService;
@@ -24,10 +23,8 @@ import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.Serializable;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +140,7 @@ public class EruptDataController {
             BoolAndReason boolAndReason = new BoolAndReason(true, null);
             if (eruptModel.getErupt().dateProxy().length > 0) {
                 dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                boolAndReason = dataProxy.beforeSave(obj);
+                boolAndReason = dataProxy.beforeAdd(obj);
             }
             if (boolAndReason.isBool()) {
                 eruptJpaDao.saveEntity(eruptModel, obj);
@@ -153,7 +150,7 @@ public class EruptDataController {
 //
 //                }
                 if (null != dataProxy) {
-                    dataProxy.afterSave(obj);
+                    dataProxy.afterAdd(obj);
                 }
                 return EruptApiModel.successApi(null);
             } else {
@@ -173,11 +170,11 @@ public class EruptDataController {
             BoolAndReason boolAndReason = new BoolAndReason(true, null);
             if (eruptModel.getErupt().dateProxy().length > 0) {
                 dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                boolAndReason = dataProxy.beforeSave(id);
+                boolAndReason = dataProxy.beforeEdit(id);
             }
             if (boolAndReason.isBool()) {
                 if (null != dataProxy) {
-                    dataProxy.afterSave(null);
+                    dataProxy.afterEdit(null);
                 }
                 return EruptApiModel.successApi(null);
             } else {

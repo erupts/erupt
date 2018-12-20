@@ -40,10 +40,10 @@ public class MD5Utils {
     }
 
     public static String digestSalt(String strObj) {
-        return digestSalt(strObj,ERUPT_MD5_SALT);
+        return digestSalt(strObj, ERUPT_MD5_SALT);
     }
 
-    public static String digestSalt(String strObj,String salt) {
+    public static String digestSalt(String strObj, String salt) {
         strObj += salt;
         return digest(strObj);
     }
