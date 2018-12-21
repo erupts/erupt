@@ -13,6 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -99,6 +102,11 @@ public class EruptJpaDao {
                 .getResultList();
         page.setList(list);
         return page;
+    }
+
+    public String eruptToHql(EruptModel eruptModel, JsonObject condition, String colsStr) {
+
+        return null;
     }
 
 

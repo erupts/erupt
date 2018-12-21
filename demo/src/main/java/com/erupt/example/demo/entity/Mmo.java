@@ -135,9 +135,8 @@ public class Mmo extends BaseModel {
                     },
                     search = @Search(isSearch = true)
             )
-
     )
-    private String choice;
+    private Integer choice;
 
 
     @EruptField(
@@ -163,7 +162,7 @@ public class Mmo extends BaseModel {
                     search = @Search(isSearch = true)
             )
     )
-    private String single;
+    private Integer single;
 
     @EruptField(
             views = @View(title = "布尔"),

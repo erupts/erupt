@@ -5,6 +5,7 @@ import com.erupt.annotation.EruptField;
 import com.erupt.annotation.sub_erupt.Tree;
 import com.erupt.annotation.sub_field.Edit;
 import com.erupt.annotation.sub_field.EditType;
+import com.erupt.annotation.sub_field.View;
 import com.erupt.annotation.sub_field.sub_edit.*;
 import lombok.Data;
 
@@ -24,6 +25,7 @@ public class EruptMenu extends BaseModel {
 
     @Column(name = "NAME")
     @EruptField(
+            views = @View(title = "名称"),
             edit = @Edit(
                     title = "名称",
                     notNull = true
@@ -88,7 +90,7 @@ public class EruptMenu extends BaseModel {
                     }, type = ChoiceEnum.RADIO)
             )
     )
-    private String target;
+    private Integer target;
 
     @Column(name = "REMARK")
     @EruptField(

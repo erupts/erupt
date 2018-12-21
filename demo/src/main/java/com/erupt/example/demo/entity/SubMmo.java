@@ -69,7 +69,7 @@ public class SubMmo extends BaseModel {
                     search = @Search(isSearch = true)
             )
     )
-    private String choice;
+    private Integer choice;
 
     @EruptField(
             views = {

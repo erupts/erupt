@@ -13,11 +13,10 @@ public class ExceptionUtil {
 
     public static EruptFieldAnnotationException styleEruptFieldException(EruptFieldModel eruptFieldModel, String message) {
         return new EruptFieldAnnotationException(
-                ansi().fg(Ansi.Color.RED).a(message)
-                        + ansi().fgBright(Ansi.Color.BLUE).fg(Ansi.Color.BLUE).
-                        a("(" + eruptFieldModel.getField().getDeclaringClass().getName() + "."
-                                + eruptFieldModel.getField().getName() + ")").toString()
-                        + ansi().fgBright(Ansi.Color.RED).a("")
+                ansi().fg(Ansi.Color.RED).a(message).fgBright(Ansi.Color.BLUE).fg(Ansi.Color.BLUE)
+                        .a("(" + eruptFieldModel.getField().getDeclaringClass().getName() + "."
+                                + eruptFieldModel.getField().getName() + ")").reset().toString()
+
         );
     }
 
@@ -25,8 +24,7 @@ public class ExceptionUtil {
         return new EruptAnnotationException(
                 ansi().fg(Ansi.Color.RED).a(message)
                         + ansi().fgBright(Ansi.Color.BLUE).fg(Ansi.Color.BLUE).
-                        a("(" + eruptFieldModel.getClazz().getName() + ")").toString()
-                        + ansi().fgBright(Ansi.Color.RED).a("")
+                        a("(" + eruptFieldModel.getClazz().getName() + ")").reset().toString()
         );
     }
 
