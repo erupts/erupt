@@ -11,3 +11,9 @@ spring:
       ddl-auto: update
   gson:
     date-format: yyyy-MM-dd HH:mm:ss
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    timeout: 10000
+    database: 0
