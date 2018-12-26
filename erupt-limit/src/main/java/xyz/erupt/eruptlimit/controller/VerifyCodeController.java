@@ -5,19 +5,17 @@ package xyz.erupt.eruptlimit.controller;
  * 验证码
  */
 
-import xyz.erupt.eruptcache.redis.RedisService;
-import xyz.erupt.eruptlimit.constant.RedisKey;
-import xyz.erupt.util.IdentifyCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.erupt.eruptcache.redis.RedisService;
+import xyz.erupt.eruptlimit.constant.RedisKey;
+import xyz.erupt.util.IdentifyCode;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/verify")
@@ -33,8 +31,8 @@ public class VerifyCodeController {
     @RequestMapping("/code-img")
     public void createCode(HttpServletRequest request,
                            HttpServletResponse response) throws Exception {
-//        redisService.put("");
-        Cookie[] cookies = request.getCookies();
+        redisService.put("a", "2333");
+        System.out.println(redisService.get("a"));
         // 设置响应的类型格式为图片格式
         response.setContentType("image/jpeg");
         // 禁止图像缓存。
@@ -44,10 +42,8 @@ public class VerifyCodeController {
 
         // 自定义宽、高、字数和干扰线的条数
         IdentifyCode code = new IdentifyCode(100, 38, 4, 10);
-        // 存入session
-        HttpSession session = request.getSession();
-        System.out.println(session.getAttribute(RedisKey.VERIFY_CODE));
-        session.setAttribute(RedisKey.VERIFY_CODE, code.getCode());
+
+        redisService.put(RedisKey.VERIFY_CODE + "admin", code.getCode(),5);
         // 响应图片
         ServletOutputStream out = response.getOutputStream();
         code.write(out);

@@ -2,6 +2,7 @@ package xyz.erupt.eruptlimit.service;
 
 import xyz.erupt.eruptcache.redis.RedisService;
 import xyz.erupt.eruptlimit.base.LoginModel;
+import xyz.erupt.eruptlimit.constant.LimitConst;
 import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.model.EruptUser;
 import xyz.erupt.eruptlimit.repository.UserRepository;
@@ -38,16 +39,14 @@ public class LoginService {
 
 
     public LoginModel login(String account, String pwd, String verifyCode, HttpSession session) {
-        if (null == loginErrorCount.get(account)) {
-            loginErrorCount.put(account, 0);
-        }
+        loginErrorCount.putIfAbsent(account, 0);
         if (loginErrorCount.get(account) >= 5) {
             if (StringUtils.isBlank(verifyCode)) {
                 return new LoginModel(false, "请填写验证码", true);
             }
             Object oldStr = session.getAttribute(RedisKey.VERIFY_CODE);
             if (null == oldStr) {
-                return new LoginModel(false, "验证那已过期", true);
+                return new LoginModel(false, "验证码已过期", true);
             } else {
                 if (!oldStr.toString().equalsIgnoreCase(verifyCode)) {
                     return new LoginModel(false, "验证码不正确", true);
@@ -62,7 +61,7 @@ public class LoginService {
                 return new LoginModel(false, "账号已锁定!");
             }
             if (eruptUser.getIsMD5()) {
-                if (MD5Utils.digestSalt(pwd).equals(pwd)) {
+                if (MD5Utils.digestSalt(pwd, LimitConst.ERUPT_MD5_SALT).equals(eruptUser.getPassword())) {
                     pass = true;
                 }
             } else {
@@ -93,7 +92,8 @@ public class LoginService {
 
     public void createToken(LoginModel loginModel) {
         loginModel.setToken(DESUtil.encode(loginModel.getEruptUser().getAccount(), userTokenDES));
-        redisService.put(RedisKey.USER_TOKEN, loginModel.getToken(), 60);
+        //TODO 限制登录时长一个小时
+        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), true, 60);
     }
 
     public String verifyToken(String token) {

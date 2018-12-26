@@ -56,7 +56,7 @@ public class EruptUser extends BaseModel {
     )
     private String password;
 
-    @Column(name = "PWD2")
+    @Transient
     @EruptField(
             views = @View(title = "确认密码", show = false),
             edit = @Edit(title = "确认密码", notNull = true)

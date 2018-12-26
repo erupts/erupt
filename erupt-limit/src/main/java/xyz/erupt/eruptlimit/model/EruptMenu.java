@@ -41,6 +41,7 @@ public class EruptMenu extends BaseModel {
     )
     private String sort;
 
+
     @Column(name = "IS_SHOW")
     @EruptField(
             edit = @Edit(
@@ -50,6 +51,15 @@ public class EruptMenu extends BaseModel {
             )
     )
     private boolean isShow;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(
+                    title = "分组1",
+                    type = EditType.DIVIDE
+            )
+    )
+    private String group1;
 
     @Column(name = "PATH")
     @EruptField(

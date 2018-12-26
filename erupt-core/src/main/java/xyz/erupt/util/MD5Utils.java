@@ -4,8 +4,6 @@ import java.security.MessageDigest;
 
 public class MD5Utils {
 
-    private final static String ERUPT_MD5_SALT = "_SALT_YUEPENG_ERUPT";
-
     private final static String[] strDigits = {"0", "1", "2", "3", "4", "5",
             "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
 
@@ -39,11 +37,10 @@ public class MD5Utils {
         return sBuffer.toString();
     }
 
-    public static String digestSalt(String strObj) {
-        return digestSalt(strObj, ERUPT_MD5_SALT);
-    }
 
+    // str -> md5str -> md5(md5str+salt )-> md5salt
     public static String digestSalt(String strObj, String salt) {
+        strObj = digest(strObj);
         strObj += salt;
         return digest(strObj);
     }

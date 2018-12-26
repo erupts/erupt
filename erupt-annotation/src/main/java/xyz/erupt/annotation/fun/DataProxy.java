@@ -9,13 +9,23 @@ import javax.transaction.Transactional;
  */
 @Transactional
 public class DataProxy {
-    //增
-    public BoolAndReason beforeAdd(Object o) {
+
+    //改
+    public BoolAndReason beforeEdit(Object o) {
         return new BoolAndReason(true, null);
     }
 
-    public void afterAdd(Object o) {
+    public void afterEdit(Object o) {
 
+    }
+
+    //增
+    public BoolAndReason beforeAdd(Object o) {
+        return this.beforeEdit(o);
+    }
+
+    public void afterAdd(Object o) {
+        this.afterEdit(o);
     }
 
     //删
@@ -24,15 +34,6 @@ public class DataProxy {
     }
 
     public void afterDelete(Object o) {
-
-    }
-
-    //改
-    public BoolAndReason beforeEdit(Object o) {
-        return new BoolAndReason(true, null);
-    }
-
-    public void afterEdit(Object o) {
 
     }
 

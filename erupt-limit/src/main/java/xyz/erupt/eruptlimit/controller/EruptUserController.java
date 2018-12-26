@@ -38,21 +38,22 @@ public class EruptUserController {
         if (loginModel.isPass()) {
             //生成token
             loginService.createToken(loginModel);
-            Set<EruptMenu> menuSet = new HashSet<>();
-            for (EruptRole role : loginModel.getEruptUser().getRoles()) {
-                menuSet.addAll(role.getMenus());
-            }
-            //生成tree结构数据
-            EruptModel eruptModel = CoreService.ERUPTS.get(EruptMenu.class.getSimpleName());
-            Tree tree = eruptModel.getErupt().tree();
-            List<TreeModel> treeModels = new ArrayList<>();
-            for (Object o : menuSet) {
-                Map<String, Object> map = (Map) o;
-                TreeModel treeModel = new TreeModel(map.get(tree.id()), map.get(tree.label()), map.get(tree.pid().replace(".", "_")), o);
-                treeModels.add(treeModel);
-            }
-            List<TreeModel> treeResultModels = EruptUtil.TreeModelToTree(treeModels);
-            request.getSession().setAttribute(RedisKey.MENU, treeResultModels);
+            loginModel.setUserName(loginModel.getEruptUser().getName());
+//            Set<EruptMenu> menuSet = new HashSet<>();
+//            for (EruptRole role : loginModel.getEruptUser().getRoles()) {
+//                menuSet.addAll(role.getMenus());
+//            }
+//            //生成tree结构数据
+//            EruptModel eruptModel = CoreService.ERUPTS.get(EruptMenu.class.getSimpleName());
+//            Tree tree = eruptModel.getErupt().tree();
+//            List<TreeModel> treeModels = new ArrayList<>();
+//            for (Object o : menuSet) {
+//                Map<String, Object> map = (Map) o;
+//                TreeModel treeModel = new TreeModel(map.get(tree.id()), map.get(tree.label()), map.get(tree.pid().replace(".", "_")), o);
+//                treeModels.add(treeModel);
+//            }
+//            List<TreeModel> treeResultModels = EruptUtil.TreeModelToTree(treeModels);
+//            request.getSession().setAttribute(RedisKey.MENU, treeResultModels);
         }
         return loginModel;
     }

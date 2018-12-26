@@ -8,15 +8,18 @@ import lombok.Data;
  */
 @Data
 public class LoginModel {
-    private boolean pass;
 
-    private EruptUser eruptUser;
-
-    private String reason;
+    private transient EruptUser eruptUser;
 
     private boolean useVerifyCode = false;
 
+    private boolean pass;
+
+    private String reason;
+
     private String token;
+
+    private String userName;
 
     public LoginModel(boolean pass, EruptUser eruptUser) {
         this.pass = pass;

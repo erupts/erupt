@@ -31,6 +31,7 @@ public class EruptDict extends BaseModel {
     @Column(name = "NAME")
     private String name;
 
+
     @EruptField(
             views = @View(title = "上级菜单", column = "name"),
             edit = @Edit(
@@ -56,4 +57,6 @@ public class EruptDict extends BaseModel {
     )
     @Column(name = "REMARK")
     private String remark;
+
+
 }

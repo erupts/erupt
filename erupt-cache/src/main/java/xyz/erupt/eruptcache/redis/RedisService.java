@@ -34,4 +34,8 @@ public class RedisService {
     public void put(String key, Object obj, int timeout, TimeUnit unit) {
         redisTemplate.opsForValue().set(key, GSON.toJson(obj), timeout, unit);
     }
+
+    public Object get(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
 }

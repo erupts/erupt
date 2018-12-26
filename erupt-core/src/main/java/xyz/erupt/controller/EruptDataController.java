@@ -11,6 +11,7 @@ import xyz.erupt.base.model.EruptModel;
 import xyz.erupt.base.model.Page;
 import xyz.erupt.base.model.TreeModel;
 import xyz.erupt.constant.RestPath;
+import xyz.erupt.dao.EruptJapUtils;
 import xyz.erupt.dao.EruptJpaDao;
 import xyz.erupt.exception.EruptRuntimeException;
 import xyz.erupt.service.CoreService;
@@ -53,7 +54,7 @@ public class EruptDataController {
     @ResponseBody
     public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject data) throws JsonProcessingException, IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        JsonObject conditionParam = data.getAsJsonObject(EruptJpaDao.CONDITION_KEY);
+        JsonObject conditionParam = data.getAsJsonObject(EruptJapUtils.CONDITION_KEY);
         JsonObject conditionPage = data.getAsJsonObject(PAGE_KEY);
         if (eruptModel.getErupt().power().query()) {
             DataProxy dataProxy = null;

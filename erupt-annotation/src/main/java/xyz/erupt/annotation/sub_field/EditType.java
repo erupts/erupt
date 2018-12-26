@@ -14,5 +14,6 @@ public enum EditType {
     ATTACHMENT,       //附件
     TAB,              //TAB选项卡
     MARK_DOWN,
+    DIVIDE,
     HIDDEN
 }
