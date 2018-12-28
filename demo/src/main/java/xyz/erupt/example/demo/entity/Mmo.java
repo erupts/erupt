@@ -149,14 +149,20 @@ public class Mmo extends BaseModel {
                     choiceType = {
                             @ChoiceType(
                                     vl = {
-                                            @VL(value = 123, label = "张三"),
-                                            @VL(value = 234, label = "李四"),
-                                            @VL(value = 456, label = "王五"),
-                                            @VL(value = 2341, label = "李四"),
-                                            @VL(value = 2343, label = "李四"),
-                                            @VL(value = 2344, label = "李四"),
+                                            @VL(value = 1, label = "张三"),
+                                            @VL(value = 2, label = "李四"),
+                                            @VL(value = 3, label = "王五"),
+                                            @VL(value = 4, label = "李四"),
+                                            @VL(value = 5, label = "李四"),
+                                            @VL(value = 6, label = "李四"),
+                                            @VL(value = 7, label = "张三"),
+                                            @VL(value = 8, label = "李四"),
+                                            @VL(value = 888, label = "王五"),
+                                            @VL(value = 999, label = "李四"),
+                                            @VL(value = 991, label = "李四"),
+                                            @VL(value = 992, label = "李四"),
                                     },
-                                    type = ChoiceEnum.SELECT_MULTI
+                                    type = ChoiceEnum.RADIO
                             )
                     },
                     search = @Search(isSearch = true)
@@ -234,6 +240,23 @@ public class Mmo extends BaseModel {
 
 
     @Column(name = "KISS")
-    private transient String kiss;
+    @EruptField(
+            edit = @Edit(
+                    title = "ATTACHMENT",
+                    notNull = true,
+                    type = EditType.ATTACHMENT
+            )
+    )
+    private String kiss;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(
+                    title = "ATTACHMENT",
+                    notNull = true,
+                    type = EditType.JSON_EDIT
+            )
+    )
+    private String json;
 
 }

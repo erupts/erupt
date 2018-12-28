@@ -10,10 +10,14 @@ public enum EditType {
     REFERENCE,        //引用
     BOOLEAN,          //布尔
     IMAGE,            //图片
-    QRCODE,           //二维码
     ATTACHMENT,       //附件
     TAB,              //TAB选项卡
     MARK_DOWN,
-    DIVIDE,
-    HIDDEN
+    DIVIDE,           //横向分割线
+    HIDDEN,           //隐藏
+    MAP,              //地图
+    VIDEO,            //视频
+    CODE,             //代码视图
+    HTML_EDIT,        //富文本编辑器
+    JSON_EDIT         //JSON格式编辑器
 }

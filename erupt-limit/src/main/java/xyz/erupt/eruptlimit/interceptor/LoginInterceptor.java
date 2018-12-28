@@ -1,6 +1,10 @@
 package xyz.erupt.eruptlimit.interceptor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import xyz.erupt.base.model.EruptModel;
+import xyz.erupt.eruptcache.redis.RedisService;
+import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.service.CoreService;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,7 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by liyuepeng on 12/5/18.
  */
+@Service
 public class LoginInterceptor extends HandlerInterceptorAdapter {
+
+    @Autowired
+    private RedisService redisService;
 
     private static final String ERUPT_HEADER_KEY = "eruptKey";
 
@@ -20,6 +28,13 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String eruptKey = request.getHeader(ERUPT_HEADER_KEY);
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptKey);
+        String token = request.getHeader("token");
+        if (null != token) {
+            Object o = redisService.get(RedisKey.USER_TOKEN + token);
+            if (o == null) {
+                return false;
+            }
+        }
         if (null == eruptModel) {
             return true;
         } else if (eruptModel.getErupt().loginUse()) {

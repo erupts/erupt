@@ -95,7 +95,7 @@ public class EruptJpaDao {
         //page Object
         List list = entityManager.createQuery(hql.toString())
                 .setMaxResults(page.getPageSize())
-                .setFirstResult((page.getPageNumber() - 1) * page.getPageSize())
+                .setFirstResult((page.getPageIndex() - 1) * page.getPageSize())
                 .getResultList();
         page.setTotal(total);
         page.setList(list);

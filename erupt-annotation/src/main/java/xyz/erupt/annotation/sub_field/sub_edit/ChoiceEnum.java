@@ -5,6 +5,7 @@ package xyz.erupt.annotation.sub_field.sub_edit;
  */
 public enum ChoiceEnum {
     RADIO,
+//    CHECKBOX,
     SELECT_SINGLE,
     SELECT_MULTI
 }
