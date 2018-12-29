@@ -63,7 +63,6 @@ public class CoreService implements InitializingBean {
             //other info to memory
             ERUPTS.put(eruptModel.getEruptName(), eruptModel);
         });
-        System.out.println(2333);
     }
 
 

@@ -1,5 +1,6 @@
 package xyz.erupt.base.model;
 
+import lombok.Data;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.util.ConfigUtil;
@@ -15,12 +16,14 @@ import java.lang.reflect.Type;
 /**
  * Created by liyuepeng on 10/10/18.
  */
+@Data
 public class EruptFieldModel implements Serializable {
 
     private transient EruptField eruptField;
 
-
     private transient Field field;
+
+    private EruptModel eruptModel;
 
     private JsonObject eruptFieldJson;
 
@@ -45,45 +48,5 @@ public class EruptFieldModel implements Serializable {
         }
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
-    }
-
-    public void setEruptField(EruptField eruptField) {
-        this.eruptField = eruptField;
-    }
-
-    public EruptField getEruptField() {
-        return eruptField;
-    }
-
-    public Field getField() {
-        return field;
-    }
-
-    public void setField(Field field) {
-        this.field = field;
-    }
-
-    public JsonObject getEruptFieldJson() {
-        return eruptFieldJson;
-    }
-
-    public void setEruptFieldJson(JsonObject eruptFieldJson) {
-        this.eruptFieldJson = eruptFieldJson;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-
-    public String getFieldReturnName() {
-        return fieldReturnName;
-    }
-
-    public void setFieldReturnName(String fieldReturnName) {
-        this.fieldReturnName = fieldReturnName;
     }
 }

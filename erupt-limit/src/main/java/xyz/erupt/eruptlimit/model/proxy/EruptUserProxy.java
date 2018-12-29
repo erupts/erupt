@@ -6,6 +6,10 @@ import xyz.erupt.eruptlimit.constant.LimitConst;
 import xyz.erupt.eruptlimit.model.EruptUser;
 import xyz.erupt.util.MD5Utils;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Description:
  * @author: liyuepeng
@@ -24,5 +28,14 @@ public class EruptUserProxy extends DataProxy {
         } else {
             return new BoolAndReason(false, "两次密码输入不一致");
         }
+    }
+
+    @Override
+    public void afterFetch(Object o) {
+        List<Map> lm = (List<Map>) o;
+        Map<String, String> map = new HashMap();
+        map.put("account", "2333");
+        lm.add(map);
+        super.afterFetch(o);
     }
 }
