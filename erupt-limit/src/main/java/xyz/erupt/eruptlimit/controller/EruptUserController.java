@@ -34,7 +34,7 @@ public class EruptUserController {
                             @RequestParam(name = "verifyCode", required = false) String verifyCode,
                             HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        LoginModel loginModel = loginService.login(account, pwd, verifyCode, request.getSession());
+        LoginModel loginModel = loginService.login(account, pwd, verifyCode, request);
         if (loginModel.isPass()) {
             //生成token
             loginService.createToken(loginModel);

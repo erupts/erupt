@@ -11,6 +11,7 @@ import xyz.erupt.service.CoreService;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.util.ReflectUtil;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,15 @@ public class EruptBuildController {
         EruptPageModel eruptPageModel = new EruptPageModel();
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (null != eruptModel) {
+            try {
+                for (EruptFieldModel fm : eruptModel.getEruptFieldModels()) {
+                    Field field = fm.getField();
+                    field.setAccessible(true);
+                    fm.setValue(field.get(eruptModel.getClazz()));
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
             eruptPageModel.setEruptModel(eruptModel);
             List<EruptAndEruptFieldModel> eruptAndEruptFieldModels = new ArrayList<>();
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {

@@ -40,7 +40,7 @@ public class EruptUser extends BaseModel {
             views = @View(title = "用户名"),
             edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true)
     )
-    private String account;
+    private String account = "xxxxxx";
 
     @Column(name = "NAME")
     @EruptField(

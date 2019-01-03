@@ -7,6 +7,7 @@ import xyz.erupt.annotation.util.ConfigUtil;
 import xyz.erupt.exception.EruptFieldAnnotationException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import xyz.erupt.util.ReflectUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -31,6 +32,8 @@ public class EruptFieldModel implements Serializable {
 
     private String fieldReturnName;
 
+    private Object value;
+
     public EruptFieldModel(Field field) {
         this.field = field;
         this.eruptField = field.getAnnotation(EruptField.class);
@@ -39,12 +42,7 @@ public class EruptFieldModel implements Serializable {
         this.fieldReturnName = field.getType().getSimpleName();
         //如果是Tab类型视图，数据必须为一对多关系管理，需要用泛型集合来存放，固！取出泛型的名称重新赋值到fieldReturnName中
         if (eruptField.edit().type() == EditType.TAB) {
-            Type gType = field.getGenericType();
-            if (gType instanceof ParameterizedType) {
-                Type[] typeArguments = ((ParameterizedType) gType).getActualTypeArguments();
-                String[] gArray = typeArguments[0].getTypeName().split("\\.");
-                this.fieldReturnName = gArray[gArray.length - 1];
-            }
+            this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
         }
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
