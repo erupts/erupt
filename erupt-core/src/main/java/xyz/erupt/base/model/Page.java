@@ -15,17 +15,26 @@ public class Page {
 
     private long total;
 
+    private long totalPage;
+
     private String sort;
 
     private List list;
 
-    public static final String PAGE_NUMBER_STR = "pageIndex";
+    public static final String PAGE_INDEX_STR = "pageIndex";
 
     public static final String PAGE_SIZE_STR = "pageSize";
 
-    public Page(int pageIndex, int pageSize) {
+    public static final String PAGE_SORT_STR = "sort";
+
+    public Page(int pageIndex, int pageSize, String sort) {
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
+        this.sort = sort;
+        //防止单页数据过大的情况
+        if (pageSize > 1000) {
+            this.pageSize = 1000;
+        }
     }
 
     public Page() {

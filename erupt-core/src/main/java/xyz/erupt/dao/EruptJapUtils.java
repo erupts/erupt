@@ -1,6 +1,7 @@
 package xyz.erupt.dao;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -69,7 +70,7 @@ public class EruptJapUtils {
     }
 
 
-    public static String generateEruptJpaHql(EruptModel eruptModel,HqlModel hqlModel) {
+    public static String generateEruptJpaHql(EruptModel eruptModel, HqlModel hqlModel, String sort) {
         StringBuilder hql = new StringBuilder("select ");
         hql.append(hqlModel.getCols());
         hql.append(" from ").
@@ -85,6 +86,9 @@ public class EruptJapUtils {
         Filter filter = eruptModel.getErupt().filter();
         if (!"".equals(filter.condition())) {
             hql.append(AND).append(ConfigUtil.switchFilterConditionToStr(filter));
+        }
+        if (StringUtils.isNotBlank(sort)) {
+            hql.append(" order by " + sort);
         }
         return hql.toString();
     }

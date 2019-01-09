@@ -70,7 +70,8 @@ public class EruptJpaDao {
 
     public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {
         StringBuilder hql = new StringBuilder(EruptJapUtils.generateEruptJpaHql(eruptModel,
-                new HqlModel("new map(" + String.join(",", getEruptColJapKeys(eruptModel)) + ")")));
+                new HqlModel("new map(" + String.join(",", getEruptColJapKeys(eruptModel)) + ")"),
+                page.getSort()));
         StringBuilder conditionStr = new StringBuilder();
         if (null != condition) {
             for (String key : condition.keySet()) {
@@ -89,7 +90,7 @@ public class EruptJpaDao {
         }
         hql.append(conditionStr);
         StringBuilder countHql = new StringBuilder(EruptJapUtils.generateEruptJpaHql(eruptModel,
-                new HqlModel("count(*)")));
+                new HqlModel("count(*)"), null));
         countHql.append(conditionStr);
         Long total = (Long) entityManager.createQuery(countHql.toString()).getSingleResult();
         //page Object
@@ -98,6 +99,7 @@ public class EruptJpaDao {
                 .setFirstResult((page.getPageIndex() - 1) * page.getPageSize())
                 .getResultList();
         page.setTotal(total);
+        page.setTotalPage(total / page.getPageSize());
         page.setList(list);
         return page;
     }
@@ -112,7 +114,7 @@ public class EruptJpaDao {
      * @param col 参数组成形式 {列名} as {别名}
      */
     public List getDataMap(EruptModel eruptModel, String... col) {
-        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", col) + ")"));
+        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", col) + ")"), null);
         return entityManager.createQuery(hql)
                 .getResultList();
     }

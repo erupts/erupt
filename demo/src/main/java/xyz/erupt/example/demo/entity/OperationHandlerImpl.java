@@ -8,7 +8,7 @@ import xyz.erupt.annotation.model.BoolAndReason;
  */
 public class OperationHandlerImpl implements OperationHandler {
     @Override
-    public BoolAndReason exec(Object keys, Object param) {
+    public BoolAndReason exec(Object data, Object param) {
         return null;
     }
 }

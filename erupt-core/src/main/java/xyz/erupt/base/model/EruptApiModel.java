@@ -1,6 +1,7 @@
 package xyz.erupt.base.model;
 
 import lombok.Data;
+import xyz.erupt.annotation.model.BoolAndReason;
 
 /**
  * Created by liyuepeng on 10/9/18.
@@ -18,6 +19,11 @@ public class EruptApiModel {
         this.success = success;
         this.message = message;
         this.data = data;
+    }
+
+    public EruptApiModel(BoolAndReason boolAndReason) {
+        this.success = boolAndReason.isBool();
+        this.message = boolAndReason.getReason();
     }
 
     public static EruptApiModel successApi(Object data) {

@@ -6,7 +6,7 @@ package xyz.erupt.annotation.sub_erupt;
 public @interface Power {
     boolean add() default true;
 
-    boolean del() default true;
+    boolean delete() default true;
 
     boolean edit() default true;
 

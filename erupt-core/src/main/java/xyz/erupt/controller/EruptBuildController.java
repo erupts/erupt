@@ -32,12 +32,13 @@ public class EruptBuildController {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (null != eruptModel) {
             try {
+                Object eruptInstance = eruptModel.getClazz().newInstance();
                 for (EruptFieldModel fm : eruptModel.getEruptFieldModels()) {
                     Field field = fm.getField();
                     field.setAccessible(true);
-                    fm.setValue(field.get(eruptModel.getClazz()));
+                    fm.setValue(field.get(eruptInstance));
                 }
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
             eruptPageModel.setEruptModel(eruptModel);

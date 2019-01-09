@@ -24,10 +24,7 @@ import java.util.Set;
         name = "用户",
         desc = "用户配置",
         dateProxy = EruptUserProxy.class,
-        power = @Power(
-                export = false,
-                importable = false
-        )
+        power = @Power(export = false, importable = false)
 )
 @Entity
 @Table(name = "E_USER", uniqueConstraints = {

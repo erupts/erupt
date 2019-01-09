@@ -1,5 +1,6 @@
 package xyz.erupt.controller;
 
+import com.google.gson.JsonElement;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
@@ -52,24 +53,25 @@ public class EruptDataController {
 
     @PostMapping("/table/{erupt}")
     @ResponseBody
-    public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject data) throws JsonProcessingException, IllegalAccessException, InstantiationException {
+    public Page getEruptData(@PathVariable("erupt") String eruptName,
+                             @RequestBody JsonObject condition) throws JsonProcessingException, IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        JsonObject conditionParam = data.getAsJsonObject(EruptJapUtils.CONDITION_KEY);
-        JsonObject conditionPage = data.getAsJsonObject(PAGE_KEY);
+        int pageIndex = condition.get(Page.PAGE_INDEX_STR).getAsInt();
+        int pageSize = condition.get(Page.PAGE_SIZE_STR).getAsInt();
+        String sort = condition.get(Page.PAGE_SORT_STR).getAsString();
+        condition.remove(Page.PAGE_INDEX_STR);
+        condition.remove(Page.PAGE_SIZE_STR);
+        condition.remove(Page.PAGE_SORT_STR);
         if (eruptModel.getErupt().power().query()) {
             DataProxy dataProxy = null;
             BoolAndReason boolAndReason = new BoolAndReason(true, null);
             if (eruptModel.getErupt().dateProxy().length > 0) {
                 dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
                 //该参数为查询条件
-                boolAndReason = dataProxy.beforeFetch(data);
+                boolAndReason = dataProxy.beforeFetch(condition);
             }
             if (boolAndReason.isBool()) {
-                Page page = eruptJpaDao.queryEruptListByValidate(eruptModel, conditionParam,
-                        new Page(
-                                conditionPage.get(Page.PAGE_NUMBER_STR).getAsInt(),
-                                conditionPage.get(Page.PAGE_SIZE_STR).getAsInt())
-                );
+                Page page = eruptJpaDao.queryEruptListByValidate(eruptModel, condition, new Page(pageIndex, pageSize, sort));
                 if (null != dataProxy) {
                     dataProxy.afterFetch(page.getList());
                 }
@@ -99,9 +101,8 @@ public class EruptDataController {
                 }
                 list = eruptJpaDao.getDataMap(eruptModel, cols);
             } else {
-                list = eruptJpaDao.queryEruptList(eruptModel, null, new Page(1, 9999)).getList();
+                list = eruptJpaDao.queryEruptList(eruptModel, null, new Page(1, 9999, null)).getList();
             }
-
             List<TreeModel> treeModels = new ArrayList<>();
             for (Object o : list) {
                 Map<String, Object> map = (Map) o;
@@ -116,19 +117,21 @@ public class EruptDataController {
 
     @PostMapping("/{erupt}/operator/{code}")
     @ResponseBody
-    public BoolAndReason execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
-                                           @RequestBody JsonObject data) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
+                                           @RequestBody JsonObject body) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         List<Object> oKeys = new ArrayList<>();
-        JsonArray keys = data.getAsJsonArray("keys");
-        JsonObject param = data.getAsJsonObject("param");
         for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
             if (code.equals(rowOperation.code())) {
+                JsonElement param = body.get("param");
+                if (param.isJsonNull()) {
+                    param = null;
+                }
                 OperationHandler operationHandler = rowOperation.operationHandler().newInstance();
-                return operationHandler.exec(keys, param);
+                return new EruptApiModel(operationHandler.exec(body.get("data"), param));
             }
         }
-        return new BoolAndReason(false, "找不到这个编码");
+        return new EruptApiModel(new BoolAndReason(false, "操作不存在"));
     }
 
     @PostMapping("/{erupt}")
@@ -199,7 +202,7 @@ public class EruptDataController {
     @ResponseBody
     public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
-        if (eruptModel.getErupt().power().add()) {
+        if (eruptModel.getErupt().power().delete()) {
             DataProxy dataProxy = null;
             BoolAndReason boolAndReason = new BoolAndReason(true, null);
             try {
