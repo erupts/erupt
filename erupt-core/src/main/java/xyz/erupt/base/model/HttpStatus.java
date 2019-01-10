@@ -8,9 +8,11 @@ public enum HttpStatus {
     //500
     ERROR(500),
     //403
-    NO_LOGIN(403),
+    NO_LOGIN(401),
     //405
-    NO_RIGHT(405);
+    NO_RIGHT(405),
+
+    NOT_FOUNT(404);
 
     public int code;
 

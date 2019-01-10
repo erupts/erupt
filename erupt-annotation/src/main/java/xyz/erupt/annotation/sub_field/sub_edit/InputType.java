@@ -11,6 +11,4 @@ public @interface InputType {
     int length() default DataLength.NAME_LENGTH;
 
     String placeholder() default "";
-
-    String defaultVal() default "";
 }

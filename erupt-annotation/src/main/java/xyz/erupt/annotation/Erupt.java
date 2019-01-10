@@ -19,11 +19,13 @@ public @interface Erupt {
 
     boolean loginUse() default true;
 
-    String name();
+    String name() default "";
 
     String primaryKeyCol() default "id";
 
     String desc() default "";
+
+    String sort() default "";
 
     Card[] cards() default {};
 

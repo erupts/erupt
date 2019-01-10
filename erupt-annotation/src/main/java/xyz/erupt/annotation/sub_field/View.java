@@ -4,16 +4,17 @@ package xyz.erupt.annotation.sub_field;
  * Created by liyuepeng on 9/28/18.
  */
 public @interface View {
-    String className() default "";
-
-    ViewType viewType() default ViewType.TEXT;
-
-    boolean sortable() default false;
 
     //在修饰类型为实体类对象时指定列名
     String column() default "";
 
     String title();
+
+    ViewType viewType() default ViewType.TEXT;
+
+    boolean sortable() default false;
+
+    String className() default "";
 
     /**
      * demo : xx：@txt@
@@ -23,7 +24,5 @@ public @interface View {
     String template() default "";
 
     boolean show() default true;
-
-    int sort() default 0;
 
 }

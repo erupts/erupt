@@ -88,7 +88,9 @@ public class EruptJapUtils {
             hql.append(AND).append(ConfigUtil.switchFilterConditionToStr(filter));
         }
         if (StringUtils.isNotBlank(sort)) {
-            hql.append(" order by " + sort);
+            hql.append("order by " + sort);
+        } else if (StringUtils.isNotBlank(eruptModel.getErupt().sort())) {
+            hql.append("order by " + eruptModel.getErupt().sort());
         }
         return hql.toString();
     }

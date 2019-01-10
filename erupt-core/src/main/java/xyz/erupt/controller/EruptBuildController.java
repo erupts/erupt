@@ -2,15 +2,13 @@ package xyz.erupt.controller;
 
 
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
-import xyz.erupt.base.model.EruptAndEruptFieldModel;
-import xyz.erupt.base.model.EruptFieldModel;
-import xyz.erupt.base.model.EruptPageModel;
+import xyz.erupt.base.model.*;
 import xyz.erupt.constant.RestPath;
-import xyz.erupt.base.model.EruptModel;
 import xyz.erupt.service.CoreService;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.util.ReflectUtil;
 
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ public class EruptBuildController {
 
     @GetMapping("/list/{erupt}")
     @ResponseBody
-    public EruptPageModel getEruptTableView(@PathVariable("erupt") String eruptName) {
+    public EruptPageModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptPageModel eruptPageModel = new EruptPageModel();
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (null != eruptModel) {
@@ -55,6 +53,8 @@ public class EruptBuildController {
                 }
             }
             eruptPageModel.setSubErupts(eruptAndEruptFieldModels);
+        } else {
+            response.setStatus(HttpStatus.NOT_FOUNT.code);
         }
         return eruptPageModel;
     }

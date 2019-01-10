@@ -63,17 +63,32 @@ public class Mmo extends BaseModel {
     @Column(name = "NAME")
     @EruptField(
             views = {
-                    @View(title = "名称", className = "text-lime", template = "名称：@txt@", sortable = true)
+                    @View(title = "名称", className = "volcano", template = "名称：@txt@", sortable = true)
             },
             edit = @Edit(
                     desc = "名称",
                     title = "名称",
                     notNull = true,
                     inputType = @InputType(length = 100),
-                    search = @Search(isSearch = true)
+                    search = @Search(search = true)
             )
     )
     private String name;
+
+    @Transient
+    @EruptField(
+            views = {
+                    @View(title = "数字滑块")
+            },
+            edit = @Edit(
+                    title = "数字滑块",
+                    notNull = true,
+                    type = EditType.SLIDER,
+                    sliderType = @SliderType(max = 1000, min = -1000),
+                    search = @Search(search = true, range = true, fuzzy = true)
+            )
+    )
+    private Number slider;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -86,7 +101,7 @@ public class Mmo extends BaseModel {
                     desc = "上级菜单",
                     title = "上级菜单",
                     notNull = true,
-                    search = @Search(isSearch = true),
+                    search = @Search(search = true),
                     type = EditType.REFERENCE,
                     referenceType = @ReferenceType(id = "id", label = "name", pid = "id", depend = "name")
             )
@@ -96,7 +111,8 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "子节点",
-                    type = EditType.TAB
+                    type = EditType.TAB,
+                    tabType = @TabType(type = TabEnum.TREE_SELECT)
             )
     )
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
@@ -110,7 +126,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "数字",
                     notNull = true,
-                    search = @Search(isSearch = true)
+                    search = @Search(search = true)
             )
     )
     @Column(name = "AGE")
@@ -133,7 +149,7 @@ public class Mmo extends BaseModel {
                                     type = ChoiceEnum.SELECT_SINGLE
                             )
                     },
-                    search = @Search(isSearch = true)
+                    search = @Search(search = true)
             )
     )
     private Integer choice;
@@ -165,7 +181,7 @@ public class Mmo extends BaseModel {
                                     type = ChoiceEnum.RADIO
                             )
                     },
-                    search = @Search(isSearch = true)
+                    search = @Search(search = true)
             )
     )
     private Integer single;
@@ -189,8 +205,7 @@ public class Mmo extends BaseModel {
                     notNull = true,
                     title = "时间",
                     type = EditType.DATE,
-                    dateType = @DateType(type = DateEnum.WEEK),
-                    group = "分组2"
+                    dateType = @DateType(type = DateEnum.WEEK)
             )
     )
     private Date date;
@@ -220,7 +235,6 @@ public class Mmo extends BaseModel {
                     @View(title = "标签", viewType = ViewType.LINK)
             },
             edit = @Edit(
-                    group = "分组2",
                     title = "名称",
                     notNull = true,
                     inputType = @InputType(type = InputEnum.TEXTAREA)

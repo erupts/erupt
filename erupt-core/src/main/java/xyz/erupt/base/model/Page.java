@@ -11,11 +11,11 @@ import java.util.List;
 public class Page {
     private int pageIndex = 1;
 
-    private int pageSize = 20;
+    private int pageSize = 10;
 
-    private long total;
+    private int totalPage;
 
-    private long totalPage;
+    private Long total;
 
     private String sort;
 
@@ -39,5 +39,14 @@ public class Page {
 
     public Page() {
 
+    }
+
+    public void setTotal(Long total) {
+        this.total = total;
+        if (total % pageSize == 0) {
+            totalPage = total.intValue() / pageSize;
+        } else {
+            totalPage = total.intValue() / pageSize + 1;
+        }
     }
 }

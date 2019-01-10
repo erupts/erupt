@@ -6,10 +6,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.InputEnum;
-import xyz.erupt.annotation.sub_field.sub_edit.InputType;
-import xyz.erupt.annotation.sub_field.sub_edit.TabType;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.eruptlimit.model.proxy.EruptUserProxy;
 import lombok.Data;
 
@@ -24,7 +21,8 @@ import java.util.Set;
         name = "用户",
         desc = "用户配置",
         dateProxy = EruptUserProxy.class,
-        power = @Power(export = false, importable = false)
+        power = @Power(export = false, importable = false),
+        sort = "account desc"
 )
 @Entity
 @Table(name = "E_USER", uniqueConstraints = {
@@ -34,15 +32,15 @@ public class EruptUser extends BaseModel {
 
     @Column(name = "ACCOUNT")
     @EruptField(
-            views = @View(title = "用户名"),
+            views = @View(title = "用户名", sortable = true),
             edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true)
     )
     private String account = "xxxxxx";
 
     @Column(name = "NAME")
     @EruptField(
-            views = @View(title = "姓名"),
-            edit = @Edit(title = "姓名", notNull = true)
+            views = @View(title = "姓名", sortable = true),
+            edit = @Edit(title = "姓名", notNull = true, search = @Search(search = true))
     )
     private String name;
 

@@ -7,4 +7,6 @@ public @interface TabType {
     String icon() default "";
 
     String filter() default "";
+
+    TabEnum type() default TabEnum.LIST_SELECT;
 }

@@ -59,7 +59,7 @@ public class EruptJpaDao {
         for (String key : condition.keySet()) {
             String _key = key.split("\\.")[0];
             isPass = null != eruptModel.getEruptFieldMap().get(_key).toString() &&
-                    eruptModel.getEruptFieldMap().get(_key).getEruptField().edit().search().isSearch();
+                    eruptModel.getEruptFieldMap().get(_key).getEruptField().edit().search().search();
         }
         if (isPass || condition.keySet().size() == 0) {
             return queryEruptList(eruptModel, condition, page);
@@ -99,10 +99,10 @@ public class EruptJpaDao {
                 .setFirstResult((page.getPageIndex() - 1) * page.getPageSize())
                 .getResultList();
         page.setTotal(total);
-        page.setTotalPage(total / page.getPageSize());
         page.setList(list);
         return page;
     }
+
 
     public List getModelList(EruptModel eruptModel) {
         List list = entityManager.createQuery("from " + eruptModel.getEruptName()).getResultList();
