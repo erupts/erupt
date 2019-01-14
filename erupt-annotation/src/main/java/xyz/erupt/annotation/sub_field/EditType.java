@@ -16,6 +16,8 @@ public enum EditType {
     STEPS,            //步骤条
     MARK_DOWN,
     DIVIDE,           //横向分割线
+    DEPEND_SWITCH, //表单依赖开关
+    EMPTY,
     HIDDEN,           //隐藏
     MAP,              //地图
     VIDEO,            //视频

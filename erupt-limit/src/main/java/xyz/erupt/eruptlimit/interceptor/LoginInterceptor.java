@@ -2,10 +2,10 @@ package xyz.erupt.eruptlimit.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import xyz.erupt.base.model.EruptModel;
+import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.eruptcache.redis.RedisService;
 import xyz.erupt.eruptlimit.constant.RedisKey;
-import xyz.erupt.service.CoreService;
+import xyz.erupt.core.service.CoreService;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

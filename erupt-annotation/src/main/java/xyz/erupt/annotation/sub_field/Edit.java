@@ -1,7 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
 
 /**
  * Created by liyuepeng on 9/28/18.
@@ -31,14 +30,14 @@ public @interface Edit {
 
     ChoiceType[] choiceType() default {};
 
-    DictType[] dictType() default {};
+    HqlType[] dictType() default {};
 
     DateType[] dateType() default {};
 
     TabType[] tabType() default {};
 
-    LinkType[] linkType() default {};
-
     SliderType[] sliderType() default {};
+
+    DependSwitchType[] dependSwitchType() default {};
 
 }

@@ -132,6 +132,15 @@ public class Mmo extends BaseModel {
     @Column(name = "AGE")
     private Integer age;
 
+    @Transient
+    @EruptField(
+            edit = @Edit(
+                    title = "",
+                    type = EditType.EMPTY
+            )
+    )
+    private String empty;
+
     @Column(name = "TEXT")
     @EruptField(
             views = @View(title = "选择"),
@@ -267,10 +276,26 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "ATTACHMENT",
-                    notNull = true,
                     type = EditType.JSON_EDIT
             )
     )
     private String json;
+
+
+    @Transient
+    @EruptField(
+            edit = @Edit(
+                    title = "DependSwitchType",
+                    type = EditType.DEPEND_SWITCH,
+                    dependSwitchType = @DependSwitchType(
+                            dependSwitchAttrs = {
+                                    @DependSwitchAttr(name = "显示markdown和gender", val = 1, dependEdits = {"markDown", "gender"}),
+                                    @DependSwitchAttr(name = "显示其他", val = 2, dependEdits = {"choice", "age", "parent", "name"})
+                            }
+                    )
+            )
+    )
+    private Integer DependSwitchType;
+
 
 }

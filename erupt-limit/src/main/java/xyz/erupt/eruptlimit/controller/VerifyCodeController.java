@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.eruptcache.redis.RedisService;
 import xyz.erupt.eruptlimit.constant.RedisKey;
-import xyz.erupt.util.IdentifyCode;
+import xyz.erupt.core.util.IdentifyCode;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;

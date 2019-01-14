@@ -1,6 +1,6 @@
 package xyz.erupt.eruptlimit.config;
 
-import xyz.erupt.constant.RestPath;
+import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.eruptlimit.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

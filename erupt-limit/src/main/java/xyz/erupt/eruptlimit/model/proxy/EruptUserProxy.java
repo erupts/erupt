@@ -4,7 +4,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.eruptlimit.constant.LimitConst;
 import xyz.erupt.eruptlimit.model.EruptUser;
-import xyz.erupt.util.MD5Utils;
+import xyz.erupt.core.util.MD5Utils;
 
 import java.util.HashMap;
 import java.util.List;

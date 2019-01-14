@@ -13,7 +13,7 @@ import xyz.erupt.eruptlimit.model.EruptUser;
 import xyz.erupt.eruptlimit.repository.UserRepository;
 import xyz.erupt.eruptlimit.util.DESUtil;
 import xyz.erupt.eruptlimit.util.IpUtil;
-import xyz.erupt.util.MD5Utils;
+import xyz.erupt.core.util.MD5Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;

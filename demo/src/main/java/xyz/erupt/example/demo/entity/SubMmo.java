@@ -7,7 +7,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.eruptlimit.model.BaseModel;
-import xyz.erupt.handler.SimpleConditionHandler;
+import xyz.erupt.core.handler.SimpleConditionHandler;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 
 import javax.persistence.*;

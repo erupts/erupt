@@ -18,7 +18,7 @@ import javax.persistence.*;
 @Table(name = "E_MENU")
 @Erupt(
         name = "菜单配置",
-        tree = @Tree(id = "id", label = "name", pid = "parentMenu", icon = "icon")
+        tree = @Tree(id = "id", label = "name", pid = "parentMenu.id")
 )
 @Data
 public class EruptMenu extends BaseModel {
@@ -39,7 +39,7 @@ public class EruptMenu extends BaseModel {
                     title = "顺序"
             )
     )
-    private String sort;
+    private Integer sort;
 
 
     @Column(name = "IS_SHOW")
