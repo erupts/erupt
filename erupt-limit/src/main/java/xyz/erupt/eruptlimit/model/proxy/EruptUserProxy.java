@@ -22,7 +22,7 @@ public class EruptUserProxy extends DataProxy {
         EruptUser eruptUser = (EruptUser) o;
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
             if (eruptUser.getIsMD5()) {
-                eruptUser.setPassword(MD5Utils.digestSalt(eruptUser.getPassword(), LimitConst.ERUPT_MD5_SALT));
+                eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
             }
             return new BoolAndReason(true, null);
         } else {

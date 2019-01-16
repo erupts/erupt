@@ -68,7 +68,7 @@ public class EruptJpaDao {
     }
 
     public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {
-        StringBuilder hql = new StringBuilder(xyz.erupt.core.dao.EruptJapUtils.generateEruptJpaHql(eruptModel,
+        StringBuilder hql = new StringBuilder(EruptJapUtils.generateEruptJpaHql(eruptModel,
                 new HqlModel("new map(" + String.join(",", getEruptColJapKeys(eruptModel)) + ")"),
                 page.getSort()));
         StringBuilder conditionStr = new StringBuilder();

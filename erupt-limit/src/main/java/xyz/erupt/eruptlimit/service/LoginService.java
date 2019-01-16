@@ -1,10 +1,10 @@
 package xyz.erupt.eruptlimit.service;
 
-import com.google.gson.Gson;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.util.MD5Utils;
 import xyz.erupt.eruptcache.redis.RedisService;
 import xyz.erupt.eruptlimit.base.LoginModel;
 import xyz.erupt.eruptlimit.constant.LimitConst;
@@ -13,7 +13,6 @@ import xyz.erupt.eruptlimit.model.EruptUser;
 import xyz.erupt.eruptlimit.repository.UserRepository;
 import xyz.erupt.eruptlimit.util.DESUtil;
 import xyz.erupt.eruptlimit.util.IpUtil;
-import xyz.erupt.core.util.MD5Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -45,13 +44,9 @@ public class LoginService {
             if (StringUtils.isBlank(verifyCode)) {
                 return new LoginModel(false, "请填写验证码", true);
             }
-            Object oldStr = request.getSession().getAttribute(RedisKey.VERIFY_CODE);
-            if (null == oldStr) {
-                return new LoginModel(false, "验证码已过期", true);
-            } else {
-                if (!oldStr.toString().equalsIgnoreCase(verifyCode)) {
-                    return new LoginModel(false, "验证码不正确", true);
-                }
+            Object vc = redisService.getStr(RedisKey.VERIFY_CODE + account);
+            if (vc == null || !vc.toString().equalsIgnoreCase(verifyCode)) {
+                return new LoginModel(false, "验证码不正确", true);
             }
         }
         EruptUser eruptUser = userRepository.findByAccount(account);
@@ -60,7 +55,7 @@ public class LoginService {
                 return new LoginModel(false, "账号已锁定!");
             }
             //校验IP
-            if (null != eruptUser.getWhiteIp()) {
+            if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
                 boolean isAllowIp = false;
                 for (String s : eruptUser.getWhiteIp().split("\n")) {
                     if (s.equals(IpUtil.getIpAddr(request))) {
@@ -75,7 +70,7 @@ public class LoginService {
             //校验密码
             boolean pass = false;
             if (eruptUser.getIsMD5()) {
-                if (MD5Utils.digestSalt(pwd, LimitConst.ERUPT_MD5_SALT).equals(eruptUser.getPassword())) {
+                if (MD5Utils.digest(pwd).equals(eruptUser.getPassword())) {
                     pass = true;
                 }
             } else {
@@ -95,7 +90,7 @@ public class LoginService {
                     eruptUser.setStatus(false);
                     return new LoginModel(false, "账号被锁定");
                 } else {
-                    return new LoginModel(false, "密码错误");
+                    return new LoginModel(false, "密码错误 -");
                 }
             }
         } else {
@@ -110,13 +105,16 @@ public class LoginService {
         redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), true, 60);
     }
 
-    public String verifyToken(String token) {
-
-        return null;
+    public boolean verifyToken(String token) {
+        if (null == redisService.get(RedisKey.USER_TOKEN + token)) {
+            return false;
+        }else{
+            return true;
+        }
     }
 
     public static void main(String[] args) {
-        System.out.println(new Gson().toJson("12312"));
+        System.out.println(LoginService.userTokenDES);
     }
 
 }

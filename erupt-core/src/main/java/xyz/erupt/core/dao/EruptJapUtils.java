@@ -87,11 +87,21 @@ public class EruptJapUtils {
             hql.append(AND).append(ConfigUtil.switchFilterConditionToStr(filter));
         }
         if (StringUtils.isNotBlank(sort)) {
-            hql.append("order by " + sort);
+            hql.append("order by " + compleHqlPath(eruptModel.getEruptName(), sort));
         } else if (StringUtils.isNotBlank(eruptModel.getErupt().sort())) {
-            hql.append("order by " + eruptModel.getErupt().sort());
+            hql.append("order by " + compleHqlPath(eruptModel.getEruptName(), eruptModel.getErupt().sort()));
         }
         return hql.toString();
+    }
+
+    //在left join的情况下要求必须指定表信息，通过此方法生成；
+    public static String compleHqlPath(String eruptName, String hqlPath) {
+        if (hqlPath.contains(".")) {
+            return hqlPath;
+        } else {
+            return eruptName + "." + hqlPath;
+        }
+
     }
 
     public static String generateEruptJapCondition(EruptModel eruptModel) {

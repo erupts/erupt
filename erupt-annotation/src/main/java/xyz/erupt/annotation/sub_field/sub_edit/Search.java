@@ -6,7 +6,5 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 public @interface Search {
     boolean search() default false;
 
-    boolean fuzzy() default false;
-
-    boolean range() default false;
+    boolean vague() default false;
 }

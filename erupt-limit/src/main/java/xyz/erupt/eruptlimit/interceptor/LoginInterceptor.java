@@ -1,14 +1,16 @@
 package xyz.erupt.eruptlimit.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.eruptcache.redis.RedisService;
-import xyz.erupt.eruptlimit.constant.RedisKey;
-import xyz.erupt.core.service.CoreService;
+import org.springframework.context.annotation.Bean;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import xyz.erupt.core.constant.HttpStatus;
+import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.service.CoreService;
+import xyz.erupt.eruptlimit.service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private RedisService redisService;
+    public LoginService loginService;
 
     private static final String ERUPT_HEADER_KEY = "eruptKey";
 
@@ -29,11 +31,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String eruptKey = request.getHeader(ERUPT_HEADER_KEY);
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptKey);
         String token = request.getHeader("token");
-        if (null != token) {
-            Object o = redisService.get(RedisKey.USER_TOKEN + token);
-            if (o == null) {
-                return false;
-            }
+        if (null == token || !loginService.verifyToken(token)) {
+            response.setStatus(HttpStatus.NO_LOGIN.code);
+            return false;
         }
         if (null == eruptModel) {
             return true;

@@ -1,4 +1,4 @@
-package xyz.erupt.core.model;
+package xyz.erupt.core.constant;
 
 /**
  * Created by liyuepeng on 12/10/18.

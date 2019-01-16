@@ -12,6 +12,7 @@ import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.dao.EruptJapUtils;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.exception.EruptRuntimeException;
 import xyz.erupt.core.model.EruptApiModel;
@@ -68,7 +69,7 @@ public class EruptDataController {
                 boolAndReason = dataProxy.beforeFetch(condition);
             }
             if (boolAndReason.isBool()) {
-                Page page = eruptJpaDao.queryEruptListByValidate(eruptModel, condition, new Page(pageIndex, pageSize, sort));
+                Page page = eruptJpaDao.queryEruptList(eruptModel, condition, new Page(pageIndex, pageSize, sort));
                 if (null != dataProxy) {
                     dataProxy.afterFetch(page.getList());
                 }
@@ -88,9 +89,9 @@ public class EruptDataController {
             Tree tree = eruptModel.getErupt().tree();
 
             String[] cols = {
-                    eruptModel.getEruptName() + "." + tree.id() + " as " + tree.id(),
-                    eruptModel.getEruptName() + "." + tree.label() + " as " + tree.label(),
-                    tree.pid() + " as " + tree.pid().replace(".", "_")
+                    EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + tree.id().replace(".", "_"),
+                    EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + tree.label().replace(".", "_"),
+                    EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + tree.pid().replace(".", "_")
             };
             List list = eruptJpaDao.getDataMap(eruptModel, cols);
             List<TreeModel> treeModels = new ArrayList<>();

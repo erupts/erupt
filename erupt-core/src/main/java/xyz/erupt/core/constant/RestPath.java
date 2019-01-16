@@ -4,6 +4,10 @@ package xyz.erupt.core.constant;
  * Created by liyuepeng on 10/15/18.
  */
 public class RestPath {
+
+    //不做拦截器
+    public static final String DONT_INTERCEPT = "/ws";
+
     public static final String ERUPT_API = "/erupt-api";
 
     //界面构建

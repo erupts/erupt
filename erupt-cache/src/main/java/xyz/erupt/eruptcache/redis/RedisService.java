@@ -19,10 +19,6 @@ public class RedisService {
 
     private Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-    public void put(String key, String str) {
-        redisTemplate.opsForValue().set(key, str);
-    }
-
     public void put(String key, Object obj) {
         redisTemplate.opsForValue().set(key, GSON.toJson(obj));
     }
@@ -33,6 +29,16 @@ public class RedisService {
 
     public void put(String key, Object obj, int timeout, TimeUnit unit) {
         redisTemplate.opsForValue().set(key, GSON.toJson(obj), timeout, unit);
+    }
+
+    public Object getStr(String key) {
+        Object val = redisTemplate.opsForValue().get(key);
+        if (null == val) {
+            return null;
+
+        } else {
+            return val.toString().replace("\"", "");
+        }
     }
 
     public Object get(String key) {

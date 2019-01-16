@@ -18,6 +18,7 @@ import javax.persistence.*;
 @Table(name = "E_MENU")
 @Erupt(
         name = "菜单配置",
+        sort = "sort",
         tree = @Tree(id = "id", label = "name", pid = "parentMenu.id")
 )
 @Data
@@ -33,6 +34,14 @@ public class EruptMenu extends BaseModel {
     )
     private String name;
 
+    @Column(name = "PATH")
+    @EruptField(
+            edit = @Edit(
+                    title = "地址"
+            )
+    )
+    private String path;
+
     @Column(name = "SORT")
     @EruptField(
             edit = @Edit(
@@ -45,29 +54,13 @@ public class EruptMenu extends BaseModel {
     @Column(name = "IS_SHOW")
     @EruptField(
             edit = @Edit(
-                    title = "是否展示",
+                    title = "是否显示",
                     type = EditType.BOOLEAN,
-                    boolType = @BoolType(trueText = "展示", falseText = "隐藏", defaultValue = true)
+                    boolType = @BoolType(trueText = "显示", falseText = "隐藏", defaultValue = true)
             )
     )
-    private boolean isShow;
+    private boolean show;
 
-    @Transient
-    @EruptField(
-            edit = @Edit(
-                    title = "分组1",
-                    type = EditType.DIVIDE
-            )
-    )
-    private String group1;
-
-    @Column(name = "PATH")
-    @EruptField(
-            edit = @Edit(
-                    title = "地址"
-            )
-    )
-    private String path;
 
     @ManyToOne
     @JoinColumn(name = "PARENT_MENU_ID")

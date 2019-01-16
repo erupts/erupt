@@ -1,5 +1,6 @@
 package xyz.erupt.eruptlimit.controller;
 
+import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.eruptlimit.base.LoginModel;
 import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.service.LoginService;
@@ -13,19 +14,17 @@ import javax.servlet.http.HttpServletRequest;
  * Created by liyuepeng on 2018-12-13.
  */
 @RestController
-@RequestMapping("erupt-user")
 public class EruptUserController {
 
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/login")
+    @PostMapping(RestPath.DONT_INTERCEPT + "/login")
     @ResponseBody
     public LoginModel login(@RequestParam("account") String account,
                             @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode,
                             HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
         LoginModel loginModel = loginService.login(account, pwd, verifyCode, request);
         if (loginModel.isPass()) {
             //生成token

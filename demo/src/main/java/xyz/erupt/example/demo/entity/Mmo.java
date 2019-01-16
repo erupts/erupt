@@ -21,7 +21,6 @@ import java.util.Set;
 @Erupt(
 //        filter = @Filter(condition = "'id=1'"),
         name = "测试",
-        power = @Power,
         rowOperation = {@RowOperation(
                 code = "action",
                 icon = "fa fa-terminal",
@@ -85,7 +84,7 @@ public class Mmo extends BaseModel {
                     notNull = true,
                     type = EditType.SLIDER,
                     sliderType = @SliderType(max = 1000, min = -1000),
-                    search = @Search(search = true, range = true, fuzzy = true)
+                    search = @Search(search = true, vague = true)
             )
     )
     private Number slider;
