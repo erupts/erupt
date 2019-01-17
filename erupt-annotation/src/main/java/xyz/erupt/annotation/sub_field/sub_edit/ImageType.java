@@ -8,8 +8,6 @@ public @interface ImageType {
 
     int height() default 0;
 
-    String[] types() default {};
-
     //单位KB
     long size() default 0;
 

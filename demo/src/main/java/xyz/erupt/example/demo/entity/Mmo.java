@@ -221,7 +221,8 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "图片",
-                    type = EditType.IMAGE
+                    type = EditType.IMAGE,
+                    imageType = @ImageType(width = 500)
             )
     )
     private String image;
