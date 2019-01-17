@@ -5,10 +5,10 @@ package xyz.erupt.core.constant;
  */
 public class RestPath {
 
-    //不做拦截器
+    //不做拦截URL前缀
     public static final String DONT_INTERCEPT = "/ws";
 
-    public static final String ERUPT_API = "/erupt-api";
+    private static final String ERUPT_API = "/erupt-api";
 
     //界面构建
     public static final String ERUPT_BUILD = ERUPT_API + "/build";
@@ -19,6 +19,6 @@ public class RestPath {
     //excel
     public static final String ERUPT_EXCEL = ERUPT_API + "/excel";
 
-    //文件
+    //文件上传
     public static final String ERUPT_FILE = ERUPT_API + "/file";
 }

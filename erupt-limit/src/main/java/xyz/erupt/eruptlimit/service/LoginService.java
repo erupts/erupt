@@ -3,6 +3,7 @@ package xyz.erupt.eruptlimit.service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.util.MD5Utils;
 import xyz.erupt.eruptcache.redis.RedisService;
@@ -29,6 +30,9 @@ public class LoginService {
 
     @Autowired
     private RedisService redisService;
+
+    @Value("${erupt.expireTimeByLogin}")
+    private Integer expireTimeByLogin;
 
     //每次服务器启动后内存中的tokenDES都会不一样，就连开发人员都查不到，杜绝了token被仿造的问题
     private static final String userTokenDES = RandomStringUtils.randomGraph(10);
@@ -101,14 +105,13 @@ public class LoginService {
 
     public void createToken(LoginModel loginModel) {
         loginModel.setToken(DESUtil.encode(loginModel.getEruptUser().getAccount(), userTokenDES));
-        //TODO 限制登录时长一个小时
-        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), true, 60);
+        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), true, expireTimeByLogin);
     }
 
     public boolean verifyToken(String token) {
         if (null == redisService.get(RedisKey.USER_TOKEN + token)) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }

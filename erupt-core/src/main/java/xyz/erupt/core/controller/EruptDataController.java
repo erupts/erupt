@@ -1,6 +1,5 @@
 package xyz.erupt.core.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -61,21 +60,15 @@ public class EruptDataController {
         condition.remove(Page.PAGE_SIZE_STR);
         condition.remove(Page.PAGE_SORT_STR);
         if (eruptModel.getErupt().power().query()) {
-            DataProxy dataProxy = null;
-            BoolAndReason boolAndReason = new BoolAndReason(true, null);
-            if (eruptModel.getErupt().dateProxy().length > 0) {
-                dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
+            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                 //该参数为查询条件
-                boolAndReason = dataProxy.beforeFetch(condition);
+                proxy.newInstance().beforeFetch(condition);
             }
-            if (boolAndReason.isBool()) {
-                Page page = eruptJpaDao.queryEruptList(eruptModel, condition, new Page(pageIndex, pageSize, sort));
-                if (null != dataProxy) {
-                    dataProxy.afterFetch(page.getList());
-                }
-                return page;
+            Page page = eruptJpaDao.queryEruptList(eruptModel, condition, new Page(pageIndex, pageSize, sort));
+            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                proxy.newInstance().afterFetch(page);
             }
-            return null;
+            return page;
         } else {
             throw new EruptRuntimeException("没有查询权限");
         }
@@ -142,27 +135,18 @@ public class EruptDataController {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
-            DataProxy dataProxy = null;
-            BoolAndReason boolAndReason = new BoolAndReason(true, null);
             try {
-                if (eruptModel.getErupt().dateProxy().length > 0) {
-                    dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                    boolAndReason = dataProxy.beforeAdd(obj);
-                }
-                if (boolAndReason.isBool()) {
-                    eruptJpaDao.saveEntity(eruptModel, obj);
-//                try{
-//                    eruptJpaDao.saveEntity(eruptModel, obj);
-//                }catch (SQLIntegrityConstraintViolationException e){
-//
-//                }
-                    if (null != dataProxy) {
-                        dataProxy.afterAdd(obj);
+                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                    BoolAndReason boolAndReason = proxy.newInstance().beforeAdd(obj);
+                    if (!boolAndReason.isBool()) {
+                        return new EruptApiModel(boolAndReason);
                     }
-                    return EruptApiModel.successApi(null);
-                } else {
-                    return EruptApiModel.errorApi(boolAndReason.getReason());
                 }
+                eruptJpaDao.saveEntity(eruptModel, obj);
+                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                    proxy.newInstance().afterAdd(obj);
+                }
+                return EruptApiModel.successApi(obj);
             } catch (Exception e) {
                 return EruptApiModel.errorApi(e.getMessage());
             }
@@ -173,25 +157,22 @@ public class EruptDataController {
 
     @PutMapping("/{erupt}/{id}")
     @ResponseBody
-    public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") String id) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             try {
-                DataProxy dataProxy = null;
-                BoolAndReason boolAndReason = new BoolAndReason(true, null);
-                if (eruptModel.getErupt().dateProxy().length > 0) {
-                    dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                    boolAndReason = dataProxy.beforeEdit(id);
-                }
-                if (boolAndReason.isBool()) {
-                    if (null != dataProxy) {
-                        dataProxy.afterEdit(null);
+                Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
+                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                    BoolAndReason boolAndReason = proxy.newInstance().beforeEdit(obj);
+                    if (!boolAndReason.isBool()) {
+                        return new EruptApiModel(boolAndReason);
                     }
-                    return EruptApiModel.successApi(null);
-                } else {
-                    return EruptApiModel.errorApi(boolAndReason.getReason());
                 }
-
+                eruptJpaDao.saveEntity(eruptModel, obj);
+                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                    proxy.newInstance().afterEdit(obj);
+                }
+                return EruptApiModel.successApi(null);
             } catch (Exception e) {
                 return EruptApiModel.errorApi(e.getMessage());
             }
@@ -205,23 +186,19 @@ public class EruptDataController {
     public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().delete()) {
-            DataProxy dataProxy = null;
-            BoolAndReason boolAndReason = new BoolAndReason(true, null);
             try {
                 Object obj = eruptJpaDao.findDataById(eruptModel, id);
-                if (eruptModel.getErupt().dateProxy().length > 0) {
-                    dataProxy = eruptModel.getErupt().dateProxy()[0].newInstance();
-                    boolAndReason = dataProxy.beforeDelete(obj);
-                }
-                if (boolAndReason.isBool()) {
-                    eruptJpaDao.deleteEntity(obj);
-                    if (null != dataProxy) {
-                        dataProxy.afterDelete(obj);
+                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                    BoolAndReason boolAndReason = proxy.newInstance().beforeDelete(obj);
+                    if (!boolAndReason.isBool()) {
+                        return new EruptApiModel(boolAndReason);
                     }
-                    return EruptApiModel.successApi(null);
-                } else {
-                    return EruptApiModel.errorApi(boolAndReason.getReason());
                 }
+                eruptJpaDao.deleteEntity(obj);
+                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                    proxy.newInstance().afterDelete(obj);
+                }
+                return EruptApiModel.successApi(null);
             } catch (Exception e) {
                 return EruptApiModel.errorApi(e.getMessage());
             }

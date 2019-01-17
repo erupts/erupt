@@ -38,6 +38,8 @@ public @interface Edit {
 
     SliderType[] sliderType() default {};
 
+    ImageType[] imageType() default {};
+
     DependSwitchType[] dependSwitchType() default {};
 
 }

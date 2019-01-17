@@ -3,6 +3,7 @@ package xyz.erupt.annotation.fun;
 import xyz.erupt.annotation.model.BoolAndReason;
 
 import javax.transaction.Transactional;
+import java.io.InputStream;
 
 /**
  * Created by liyuepeng on 10/9/18.
@@ -44,6 +45,11 @@ public class DataProxy {
 
     public void afterFetch(Object o) {
 
+    }
+
+    //文件上传
+    public BoolAndReason upLoadFile(InputStream inputStream, String fileName) {
+        return new BoolAndReason(true, null);
     }
 
 }

@@ -1,5 +1,7 @@
 package xyz.erupt.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.core.exception.EruptAnnotationException;
@@ -58,7 +60,6 @@ public class CoreService implements InitializingBean {
                 eruptModel.setEruptFieldModels(eruptFieldModels);
                 eruptModel.setEruptFieldMap(eruptFieldMap);
             }
-//            System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a(eruptModel.getEruptJson().toString()));
             EruptAnnotationException.validateEruptInfo(eruptModel);
             //other info to memory
             ERUPTS.put(eruptModel.getEruptName(), eruptModel);

@@ -1,15 +1,14 @@
-package xyz.erupt.core.util;
+package xyz.erupt.eruptlimit.util;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
-import javax.imageio.ImageIO;
 
 /**
+ * 生成验证码
  * Created by liyuepeng on 12/15/18.
  */
 public class IdentifyCode {

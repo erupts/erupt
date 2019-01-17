@@ -17,6 +17,7 @@ public enum EditType {
     MARK_DOWN,
     DIVIDE,           //横向分割线
     DEPEND_SWITCH,    //表单依赖开关
+    FILE,             //文件
     EMPTY,
     HIDDEN,           //隐藏
     MAP,              //地图

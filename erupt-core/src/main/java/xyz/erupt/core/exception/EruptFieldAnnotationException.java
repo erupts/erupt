@@ -43,6 +43,11 @@ public class EruptFieldAnnotationException extends RuntimeException {
                     throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "使用@BoolType注解，要求返回值必须为boolean类型");
                 }
                 break;
+            case IMAGE:
+                if (eruptFieldModel.getEruptField().edit().imageType().length == 0) {
+                    throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "图片类型未使用@ImageType注解修饰");
+                }
+                break;
         }
     }
 }
