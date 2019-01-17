@@ -13,6 +13,12 @@ public class HqlModel {
         this.cols = cols;
     }
 
+    public HqlModel(String cols, JsonObject condition, String orderBy) {
+        this.cols = cols;
+        this.condition = condition;
+        this.orderBy = orderBy;
+    }
+
     private String cols;
 
     private JsonObject condition;

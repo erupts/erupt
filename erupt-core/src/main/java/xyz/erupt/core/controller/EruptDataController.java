@@ -52,7 +52,7 @@ public class EruptDataController {
     @PostMapping("/table/{erupt}")
     @ResponseBody
     public Page getEruptData(@PathVariable("erupt") String eruptName,
-                             @RequestBody JsonObject condition) throws JsonProcessingException, IllegalAccessException, InstantiationException {
+                             @RequestBody JsonObject condition) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         int pageIndex = condition.get(Page.PAGE_INDEX_STR).getAsInt();
         int pageSize = condition.get(Page.PAGE_SIZE_STR).getAsInt();

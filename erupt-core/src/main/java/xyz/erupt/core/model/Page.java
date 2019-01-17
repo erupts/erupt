@@ -28,7 +28,7 @@ public class Page {
     public static final String PAGE_SORT_STR = "sort";
 
     public Page(int pageIndex, int pageSize, String sort) {
-        this.pageIndex = pageIndex;
+        this.pageIndex = pageIndex == 0 ? 1 : pageIndex;
         this.pageSize = pageSize;
         this.sort = sort;
         //防止单页数据过大的情况

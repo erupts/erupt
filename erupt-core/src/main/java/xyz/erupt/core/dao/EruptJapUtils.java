@@ -1,11 +1,14 @@
 package xyz.erupt.core.dao;
 
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceType;
 import xyz.erupt.annotation.util.ConfigUtil;
+import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
 import xyz.erupt.core.util.TypeUtil;
@@ -69,7 +72,7 @@ public class EruptJapUtils {
     }
 
 
-    public static String generateEruptJpaHql(EruptModel eruptModel, HqlModel hqlModel, String sort) {
+    public static String generateEruptJpaHql(EruptModel eruptModel, HqlModel hqlModel) {
         StringBuilder hql = new StringBuilder("select ");
         hql.append(hqlModel.getCols());
         hql.append(" from ").
@@ -81,15 +84,33 @@ public class EruptJapUtils {
                 hql.append(" left join ").append(eruptModel.getEruptName()).append(".").append(field.getFieldName()).append(" ").append(field.getFieldName());
             }
         });
-        hql.append(" where 1=1 ");
+        hql.append(" where 1=1");
         Filter filter = eruptModel.getErupt().filter();
         if (!"".equals(filter.condition())) {
             hql.append(AND).append(ConfigUtil.switchFilterConditionToStr(filter));
         }
-        if (StringUtils.isNotBlank(sort)) {
-            hql.append("order by " + compleHqlPath(eruptModel.getEruptName(), sort));
+        //condition
+        JsonObject condition = hqlModel.getCondition();
+        if (null != condition && condition.size() > 0) {
+            for (String key : hqlModel.getCondition().keySet()) {
+                EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
+                if (null != eruptFieldModel && eruptFieldModel.getEruptField().edit().search().search()) {
+                    String _key = EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), key);
+                    if (condition.get(key).toString().contains(EruptJapUtils.NULL)) {
+                        hql.append(EruptJapUtils.AND).append(_key).append(" is null");
+                    } else if (condition.get(key).toString().contains(EruptJapUtils.NOT_NULL)) {
+                        hql.append(EruptJapUtils.AND).append(_key).append(" is not null");
+                    } else {
+                        hql.append(EruptJapUtils.AND).append(_key).append("=").append("'" + condition.get(key) + "'");
+                    }
+                }
+            }
+        }
+        //sort
+        if (StringUtils.isNotBlank(hqlModel.getOrderBy())) {
+            hql.append(" order by " + compleHqlPath(eruptModel.getEruptName(), hqlModel.getOrderBy()));
         } else if (StringUtils.isNotBlank(eruptModel.getErupt().sort())) {
-            hql.append("order by " + compleHqlPath(eruptModel.getEruptName(), eruptModel.getErupt().sort()));
+            hql.append(" order by " + compleHqlPath(eruptModel.getEruptName(), eruptModel.getErupt().sort()));
         }
         return hql.toString();
     }

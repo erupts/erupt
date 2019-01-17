@@ -59,7 +59,7 @@ public class EruptMenu extends BaseModel {
                     boolType = @BoolType(trueText = "显示", falseText = "隐藏", defaultValue = true)
             )
     )
-    private boolean show;
+    private Boolean show;
 
 
     @ManyToOne

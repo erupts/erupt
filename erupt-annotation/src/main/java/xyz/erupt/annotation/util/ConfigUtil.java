@@ -37,9 +37,7 @@ public class ConfigUtil {
                     String placeHolderStr = Matcher.quoteReplacement(ch.placeHolderStr());
                     conditionStr = filter.condition().replaceAll("@" + placeHolderStr + "@",
                             Matcher.quoteReplacement(ch.placeHolderData()));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
+                } catch (IllegalAccessException | InstantiationException e) {
                     e.printStackTrace();
                 }
             }
