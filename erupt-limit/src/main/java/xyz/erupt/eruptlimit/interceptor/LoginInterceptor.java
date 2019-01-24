@@ -1,5 +1,6 @@
 package xyz.erupt.eruptlimit.interceptor;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.lang.Nullable;
@@ -47,5 +48,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
         super.postHandle(request, response, handler, modelAndView);
+    }
+
+
+    public static void main(String[] args) {
+
     }
 }

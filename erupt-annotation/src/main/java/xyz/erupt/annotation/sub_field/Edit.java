@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
 
 /**
  * Created by liyuepeng on 9/28/18.
@@ -38,7 +39,7 @@ public @interface Edit {
 
     SliderType[] sliderType() default {};
 
-    ImageType[] imageType() default {};
+    AttachmentType[] attachmentType() default {};
 
     DependSwitchType[] dependSwitchType() default {};
 

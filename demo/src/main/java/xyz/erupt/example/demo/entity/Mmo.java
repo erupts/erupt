@@ -8,6 +8,8 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
+import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
 import xyz.erupt.eruptlimit.model.BaseModel;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 
@@ -221,8 +223,17 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "图片",
-                    type = EditType.IMAGE,
-                    imageType = @ImageType(width = 500)
+                    type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType(
+                            type = AttachmentEnum.IMAGE,
+                            size = 1024,
+                            path = "abc",
+                            fileTypes = {"png", "jpg"},
+                            imageType = @ImageType(
+                                    width = {0, 2000},
+                                    height = {0, 2000}
+                            )
+                    )
             )
     )
     private String image;
@@ -267,7 +278,9 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "ATTACHMENT",
                     notNull = true,
-                    type = EditType.ATTACHMENT
+                    type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType
+
             )
     )
     private String kiss;

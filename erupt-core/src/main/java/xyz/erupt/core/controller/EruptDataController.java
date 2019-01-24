@@ -21,6 +21,7 @@ import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.SpringUtil;
 
 import javax.transaction.Transactional;
 import java.io.Serializable;
@@ -62,11 +63,11 @@ public class EruptDataController {
         if (eruptModel.getErupt().power().query()) {
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                 //该参数为查询条件
-                proxy.newInstance().beforeFetch(condition);
+                SpringUtil.getBean(proxy).beforeFetch(condition);
             }
             Page page = eruptJpaDao.queryEruptList(eruptModel, condition, new Page(pageIndex, pageSize, sort));
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                proxy.newInstance().afterFetch(page);
+                SpringUtil.getBean(proxy).afterFetch(page);
             }
             return page;
         } else {
@@ -137,14 +138,14 @@ public class EruptDataController {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
             try {
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    BoolAndReason boolAndReason = proxy.newInstance().beforeAdd(obj);
+                    BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeAdd(obj);
                     if (!boolAndReason.isBool()) {
                         return new EruptApiModel(boolAndReason);
                     }
                 }
                 eruptJpaDao.saveEntity(eruptModel, obj);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    proxy.newInstance().afterAdd(obj);
+                    SpringUtil.getBean(proxy).afterAdd(obj);
                 }
                 return EruptApiModel.successApi(obj);
             } catch (Exception e) {
@@ -163,14 +164,14 @@ public class EruptDataController {
             try {
                 Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    BoolAndReason boolAndReason = proxy.newInstance().beforeEdit(obj);
+                    BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeEdit(obj);
                     if (!boolAndReason.isBool()) {
                         return new EruptApiModel(boolAndReason);
                     }
                 }
                 eruptJpaDao.saveEntity(eruptModel, obj);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    proxy.newInstance().afterEdit(obj);
+                    SpringUtil.getBean(proxy).afterEdit(obj);
                 }
                 return EruptApiModel.successApi(null);
             } catch (Exception e) {
@@ -189,14 +190,14 @@ public class EruptDataController {
             try {
                 Object obj = eruptJpaDao.findDataById(eruptModel, id);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    BoolAndReason boolAndReason = proxy.newInstance().beforeDelete(obj);
+                    BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeDelete(obj);
                     if (!boolAndReason.isBool()) {
                         return new EruptApiModel(boolAndReason);
                     }
                 }
                 eruptJpaDao.deleteEntity(obj);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    proxy.newInstance().afterDelete(obj);
+                    SpringUtil.getBean(proxy).afterDelete(obj);
                 }
                 return EruptApiModel.successApi(null);
             } catch (Exception e) {

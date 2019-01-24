@@ -20,8 +20,9 @@ public class MvcInterceptor implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/**")
-                .excludePathPatterns(RestPath.DONT_INTERCEPT + "/**");
+        registry.addInterceptor(loginInterceptor)
+                .excludePathPatterns(RestPath.DONT_INTERCEPT + "/**")
+                .addPathPatterns("/**");
     }
 
 

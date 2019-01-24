@@ -1,5 +1,6 @@
 package xyz.erupt.eruptlimit.model;
 
+import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
@@ -61,6 +62,16 @@ public class EruptMenu extends BaseModel {
     )
     private Boolean show;
 
+    @Column(name = "STATUS")
+    @EruptField(
+            edit = @Edit(
+                    title = "菜单状态",
+                    type = EditType.BOOLEAN,
+                    boolType = @BoolType(trueText = "可用", falseText = "禁用", defaultValue = true)
+            )
+    )
+    private Boolean status;
+
 
     @ManyToOne
     @JoinColumn(name = "PARENT_MENU_ID")
@@ -98,8 +109,8 @@ public class EruptMenu extends BaseModel {
     @Column(name = "REMARK")
     @EruptField(
             edit = @Edit(
-                    title = "描述",
-                    inputType = @InputType(type = InputEnum.TEXTAREA)
+                    title = "功能描述",
+                    inputType = @InputType(type = InputEnum.TEXTAREA, length = 255)
             )
     )
     private String remark;

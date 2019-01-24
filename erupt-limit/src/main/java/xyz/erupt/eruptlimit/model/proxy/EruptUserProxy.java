@@ -1,10 +1,11 @@
 package xyz.erupt.eruptlimit.model.proxy;
 
+import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.model.BoolAndReason;
-import xyz.erupt.eruptlimit.constant.LimitConst;
-import xyz.erupt.eruptlimit.model.EruptUser;
+import xyz.erupt.core.model.Page;
 import xyz.erupt.core.util.MD5Utils;
+import xyz.erupt.eruptlimit.model.EruptUser;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
  * @author: liyuepeng
  * @time:2018/12/15 22:49
  */
+@Component
 public class EruptUserProxy extends DataProxy {
 
     @Override
@@ -32,7 +34,8 @@ public class EruptUserProxy extends DataProxy {
 
     @Override
     public void afterFetch(Object o) {
-        List<Map> lm = (List<Map>) o;
+        Page page = (Page) o;
+        List<Map> lm = page.getList();
         Map<String, String> map = new HashMap();
         map.put("account", "2333");
         lm.add(map);

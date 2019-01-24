@@ -1,6 +1,10 @@
 package xyz.erupt.eruptlimit.controller;
 
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.dao.EruptJpaDao;
+import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.model.Page;
+import xyz.erupt.core.service.CoreService;
 import xyz.erupt.eruptlimit.base.LoginModel;
 import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.service.LoginService;
@@ -14,12 +18,16 @@ import javax.servlet.http.HttpServletRequest;
  * Created by liyuepeng on 2018-12-13.
  */
 @RestController
+@RequestMapping(RestPath.DONT_INTERCEPT)
 public class EruptUserController {
 
     @Autowired
     private LoginService loginService;
 
-    @PostMapping(RestPath.DONT_INTERCEPT + "/login")
+    @Autowired
+    private EruptJpaDao eruptJpaDao;
+
+    @PostMapping("/login")
     @ResponseBody
     public LoginModel login(@RequestParam("account") String account,
                             @RequestParam("pwd") String pwd,
@@ -52,7 +60,8 @@ public class EruptUserController {
     @PostMapping("/menu")
     @ResponseBody
     public Object getMenu(HttpServletRequest request) {
-        //type -> Set<EruptMenu>
-        return request.getSession().getAttribute(RedisKey.MENU);
+//        type -> Set<EruptMenu>
+        EruptModel eruptModel = CoreService.ERUPTS.get("EruptMenu");
+        return eruptJpaDao.queryEruptList(eruptModel, null, new Page(0, 9999, "")).getList();
     }
 }
