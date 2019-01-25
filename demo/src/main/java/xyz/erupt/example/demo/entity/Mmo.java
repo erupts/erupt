@@ -226,11 +226,10 @@ public class Mmo extends BaseModel {
                     type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(
                             type = AttachmentEnum.IMAGE,
-                            size = 1024,
                             path = "abc",
                             fileTypes = {"png", "jpg"},
                             imageType = @ImageType(
-                                    width = {0, 2000},
+                                    width = {1000, 2000},
                                     height = {0, 2000}
                             )
                     )

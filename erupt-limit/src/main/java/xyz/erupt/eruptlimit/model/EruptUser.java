@@ -1,5 +1,7 @@
 package xyz.erupt.eruptlimit.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -16,7 +18,8 @@ import java.util.Set;
 /**
  * Created by liyuepeng on 11/22/18.
  */
-@Data
+@Getter
+@Setter
 @Erupt(
         name = "用户",
         desc = "用户配置",
@@ -68,7 +71,8 @@ public class EruptUser extends BaseModel {
                             trueText = "加密",
                             falseText = "不加密",
                             defaultValue = true
-                    )
+                    ),
+                    search = @Search(search = true)
             )
     )
     private Boolean isMD5;

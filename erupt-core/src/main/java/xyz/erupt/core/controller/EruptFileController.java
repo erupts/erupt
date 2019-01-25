@@ -1,6 +1,11 @@
 package xyz.erupt.core.controller;
 
+import org.aspectj.util.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -16,8 +21,11 @@ import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.SpringUtil;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by liyuepeng on 10/15/18.
@@ -109,6 +117,22 @@ public class EruptFileController {
             return EruptApiModel.successApi(path);
         } catch (Exception e) {
             return EruptApiModel.errorApi("上传失败，" + e.getMessage());
+        }
+    }
+
+    @GetMapping("/download-attachment")
+    public ResponseEntity<byte[]> downloadAttachment(@RequestParam("path") String path, HttpServletRequest request, HttpServletResponse response) {
+        String[] pathSplits = path.split("/");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        try {
+            headers.setContentDispositionFormData("attachment", java.net.URLEncoder.encode(pathSplits[pathSplits.length - 1], "UTF-8"));
+            File file = new File(this.uploadPath + File.separator + path);
+            return new ResponseEntity<byte[]>(FileUtil.readAsByteArray(file),
+                    headers, HttpStatus.CREATED);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
