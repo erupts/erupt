@@ -105,7 +105,7 @@ public class LoginService {
 
     public void createToken(LoginModel loginModel) {
         loginModel.setToken(DESUtil.encode(loginModel.getEruptUser().getAccount(), userTokenDES));
-        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), true, expireTimeByLogin);
+        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), expireTimeByLogin);
     }
 
     public boolean verifyToken(String token) {

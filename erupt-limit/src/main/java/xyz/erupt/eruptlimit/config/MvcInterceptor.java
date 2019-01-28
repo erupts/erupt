@@ -22,6 +22,7 @@ public class MvcInterceptor implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 .excludePathPatterns(RestPath.DONT_INTERCEPT + "/**")
+                .excludePathPatterns("/error")
                 .addPathPatterns("/**");
     }
 
