@@ -2,6 +2,7 @@ package xyz.erupt.eruptlimit.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.springframework.beans.factory.annotation.Value;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptJpaDao;
@@ -38,6 +39,9 @@ public class EruptUserController {
     @Autowired
     private RedisService redisService;
 
+    @Value("${erupt.expireTimeByLogin}")
+    private Integer expireTimeByLogin;
+
     @PostMapping(RestPath.DONT_INTERCEPT + "/login")
     @ResponseBody
     public LoginModel login(@RequestParam("account") String account,
@@ -51,7 +55,9 @@ public class EruptUserController {
             loginModel.setUserName(loginModel.getEruptUser().getName());
             Set<EruptMenu> menuSet = new HashSet<>();
             for (EruptRole role : loginModel.getEruptUser().getRoles()) {
-                menuSet.addAll(role.getMenus());
+                if (role.isStatus()) {
+                    menuSet.addAll(role.getMenus());
+                }
             }
             //生成tree结构数据
             EruptModel eruptModel = CoreService.ERUPTS.get(EruptMenu.class.getSimpleName());
@@ -66,17 +72,19 @@ public class EruptUserController {
                 treeModels.add(treeModel);
             }
             List<TreeModel> treeResultModels = EruptUtil.TreeModelToTree(treeModels);
-            redisService.put(RedisKey.MENU + loginModel.getToken(), treeResultModels);
+            redisService.put(RedisKey.MENU_TREE + loginModel.getToken(), treeResultModels, expireTimeByLogin);
+            redisService.put(RedisKey.MENU_LIST + loginModel.getToken(), menuSet, expireTimeByLogin);
         }
         return loginModel;
     }
 
     @GetMapping("/menu")
     @ResponseBody
-    public Object getMenu(HttpServletRequest request) {
+    public List<TreeModel> getMenu(HttpServletRequest request) {
 //        type -> Set<EruptMenu>
         EruptModel eruptModel = CoreService.ERUPTS.get("EruptMenu");
-        Object o = redisService.get(RedisKey.MENU + request.getHeader("token"));
-        return new Gson().fromJson(o.toString(),new TypeToken<List<TreeModel>>(){}.getType() );
+        Object o = redisService.get(RedisKey.MENU_TREE + request.getHeader("token"));
+        return new Gson().fromJson(o.toString(), new TypeToken<List<TreeModel>>() {
+        }.getType());
     }
 }

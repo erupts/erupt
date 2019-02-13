@@ -25,6 +25,16 @@ import javax.persistence.*;
 @Data
 public class EruptMenu extends BaseModel {
 
+    @Column(name = "CODE")
+    @EruptField(
+            views = @View(title = "编码"),
+            edit = @Edit(
+                    title = "编码",
+                    notNull = true
+            )
+    )
+    private String code;
+
     @Column(name = "NAME")
     @EruptField(
             views = @View(title = "名称"),

@@ -5,13 +5,8 @@ package xyz.erupt.core.constant;
  */
 public enum HttpStatus {
     SUCCESS(200),
-    //500
-    ERROR(500),
-    //403
     NO_LOGIN(401),
-    //405
-    NO_RIGHT(405),
-
+    NO_RIGHT(403),
     NOT_FOUNT(404);
 
     public int code;

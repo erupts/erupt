@@ -1,15 +1,18 @@
 package xyz.erupt.eruptlimit.service;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.MD5Utils;
 import xyz.erupt.eruptcache.redis.RedisService;
 import xyz.erupt.eruptlimit.base.LoginModel;
-import xyz.erupt.eruptlimit.constant.LimitConst;
 import xyz.erupt.eruptlimit.constant.RedisKey;
+import xyz.erupt.eruptlimit.model.EruptMenu;
 import xyz.erupt.eruptlimit.model.EruptUser;
 import xyz.erupt.eruptlimit.repository.UserRepository;
 import xyz.erupt.eruptlimit.util.DESUtil;
@@ -17,6 +20,7 @@ import xyz.erupt.eruptlimit.util.IpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -116,8 +120,17 @@ public class LoginService {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(LoginService.userTokenDES);
+    public boolean verifyMenuLimit(String token, String path) {
+        boolean result = false;
+        List<EruptMenu> menus = new Gson().fromJson(redisService.get(RedisKey.MENU_LIST + token).toString(), new TypeToken<List<EruptMenu>>() {
+        }.getType());
+        for (EruptMenu menu : menus) {
+            if (path.equals(menu.getPath())) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
 }
