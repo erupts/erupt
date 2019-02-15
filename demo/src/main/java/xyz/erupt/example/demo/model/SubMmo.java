@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo.entity;
+package xyz.erupt.example.demo.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -59,9 +59,8 @@ public class SubMmo extends BaseModel {
                     choiceType = {
                             @ChoiceType(
                                     vl = {
-                                            @VL(value = 123, label = "张三"),
-                                            @VL(value = 234, label = "李四"),
-                                            @VL(value = 456, label = "王五")
+                                            @VL(value = "123", label = "张三"),
+                                            @VL(value = "234", label = "李四")
                                     },
                                     type = ChoiceEnum.SELECT_SINGLE
                             )

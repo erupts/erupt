@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo.entity;
+package xyz.erupt.example.demo.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -152,9 +152,9 @@ public class Mmo extends BaseModel {
                     choiceType = {
                             @ChoiceType(
                                     vl = {
-                                            @VL(value = 123, label = "张三"),
-                                            @VL(value = 234, label = "李四"),
-                                            @VL(value = 456, label = "王五")
+                                            @VL(value = "123", label = "张三"),
+                                            @VL(value = "234", label = "李四"),
+                                            @VL(value = "456", label = "王五")
                                     },
                                     type = ChoiceEnum.SELECT_SINGLE
                             )
@@ -175,18 +175,18 @@ public class Mmo extends BaseModel {
                     choiceType = {
                             @ChoiceType(
                                     vl = {
-                                            @VL(value = 1, label = "张三"),
-                                            @VL(value = 2, label = "李四"),
-                                            @VL(value = 3, label = "王五"),
-                                            @VL(value = 4, label = "李四"),
-                                            @VL(value = 5, label = "李四"),
-                                            @VL(value = 6, label = "李四"),
-                                            @VL(value = 7, label = "张三"),
-                                            @VL(value = 8, label = "李四"),
-                                            @VL(value = 888, label = "王五"),
-                                            @VL(value = 999, label = "李四"),
-                                            @VL(value = 991, label = "李四"),
-                                            @VL(value = 992, label = "李四"),
+                                            @VL(value = "1", label = "张三"),
+                                            @VL(value = "2", label = "李四"),
+                                            @VL(value = "3", label = "王五"),
+                                            @VL(value = "4", label = "李四"),
+                                            @VL(value = "5", label = "李四"),
+                                            @VL(value = "6", label = "李四"),
+                                            @VL(value = "7", label = "张三"),
+                                            @VL(value = "8", label = "李四"),
+                                            @VL(value = "888", label = "王五"),
+                                            @VL(value = "999", label = "李四"),
+                                            @VL(value = "991", label = "李四"),
+                                            @VL(value = "992", label = "李四"),
                                     },
                                     type = ChoiceEnum.RADIO
                             )

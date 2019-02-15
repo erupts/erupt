@@ -5,6 +5,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.util.ConfigUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import xyz.erupt.core.exception.ExceptionUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,7 +33,11 @@ public class EruptModel implements Serializable {
         this.clazz = eruptClazz;
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.eruptName = eruptClazz.getSimpleName();
-        this.eruptJson = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(erupt.toString())).getAsJsonObject();
+        try {
+            this.eruptJson = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(erupt.toString())).getAsJsonObject();
+        } catch (Exception e) {
+            throw ExceptionUtil.styleEruptException(this, ExceptionUtil.ANNOTATION_PARSE_ERR_STR);
+        }
     }
 
     public EruptModel() {

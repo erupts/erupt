@@ -1,19 +1,17 @@
 package xyz.erupt.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import xyz.erupt.annotation.Erupt;
-import xyz.erupt.annotation.EruptField;
-import xyz.erupt.core.exception.EruptAnnotationException;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.util.ScannerUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
+import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.core.exception.EruptAnnotationException;
+import xyz.erupt.core.model.EruptFieldModel;
+import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.util.ScannerUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

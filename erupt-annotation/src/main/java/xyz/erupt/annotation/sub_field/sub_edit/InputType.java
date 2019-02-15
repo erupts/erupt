@@ -11,4 +11,8 @@ public @interface InputType {
     int length() default DataLength.NAME_LENGTH;
 
     String placeholder() default "";
+
+    VL[] prefix() default {};
+
+    VL[] suffix() default {};
 }

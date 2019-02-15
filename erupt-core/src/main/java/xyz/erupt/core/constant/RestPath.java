@@ -8,7 +8,7 @@ public class RestPath {
     //不做拦截URL前缀
     public static final String DONT_INTERCEPT = "/ws";
 
-    private static final String ERUPT_API = "/erupt-api";
+    public static final String ERUPT_API = "/erupt-api";
 
     //界面构建
     public static final String ERUPT_BUILD = ERUPT_API + "/build";

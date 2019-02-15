@@ -5,7 +5,7 @@ package xyz.erupt.annotation.sub_field.sub_edit;
  */
 public @interface VL {
 
-    int value();
+    String value();
 
     String label();
 }

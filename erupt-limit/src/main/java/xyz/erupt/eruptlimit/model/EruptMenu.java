@@ -1,13 +1,12 @@
 package xyz.erupt.eruptlimit.model;
 
-import org.hibernate.annotations.Type;
+import lombok.Data;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import lombok.Data;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 
 import javax.persistence.*;
@@ -25,16 +24,6 @@ import javax.persistence.*;
 @Data
 public class EruptMenu extends BaseModel {
 
-    @Column(name = "CODE")
-    @EruptField(
-            views = @View(title = "编码"),
-            edit = @Edit(
-                    title = "编码",
-                    notNull = true
-            )
-    )
-    private String code;
-
     @Column(name = "NAME")
     @EruptField(
             views = @View(title = "名称"),
@@ -48,7 +37,15 @@ public class EruptMenu extends BaseModel {
     @Column(name = "PATH")
     @EruptField(
             edit = @Edit(
-                    title = "地址"
+                    title = "地址",
+                    inputType = @InputType(
+                            prefix = {
+                                    @VL(value = "'/build/table/'", label = "TABLE"),
+                                    @VL(value = "'/build/tree/'", label = "TREE"),
+                                    @VL(value = "'/build/report/'", label = "REPORT"),
+                                    @VL(value = "'/'", label = "'/'"),
+                            }
+                    )
             )
     )
     private String path;
@@ -109,8 +106,8 @@ public class EruptMenu extends BaseModel {
                     title = "打开方式",
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(vl = {
-                            @VL(value = 0, label = "_target"),
-                            @VL(value = 1, label = "_self")
+                            @VL(value = "0", label = "_target"),
+                            @VL(value = "1", label = "_self")
                     }, type = ChoiceEnum.RADIO)
             )
     )
@@ -124,6 +121,5 @@ public class EruptMenu extends BaseModel {
             )
     )
     private String remark;
-
 
 }

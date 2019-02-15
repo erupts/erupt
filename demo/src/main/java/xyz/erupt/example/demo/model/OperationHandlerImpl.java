@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo.entity;
+package xyz.erupt.example.demo.model;
 
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
