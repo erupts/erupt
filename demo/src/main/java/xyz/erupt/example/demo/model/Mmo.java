@@ -104,7 +104,7 @@ public class Mmo extends BaseModel {
                     notNull = true,
                     search = @Search(search = true),
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType(id = "id", label = "name", pid = "id", depend = "name")
+                    referenceType = @ReferenceType(id = "id", label = "name", pid = "id", depends = "name")
             )
     )
     private Mmo parent;

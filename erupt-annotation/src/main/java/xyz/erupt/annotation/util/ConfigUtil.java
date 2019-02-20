@@ -1,9 +1,11 @@
 package xyz.erupt.annotation.util;
 
 import xyz.erupt.annotation.fun.ConditionHandler;
+import xyz.erupt.annotation.model.PlaceholderData;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 /**
@@ -34,10 +36,11 @@ public class ConfigUtil {
             for (Class<? extends ConditionHandler> conditionHandler : filter.conditionHandlers()) {
                 try {
                     ConditionHandler ch = conditionHandler.newInstance();
-
-                    String placeHolderStr = Matcher.quoteReplacement(ch.placeHolderStr());
-                    conditionStr = filter.condition().replaceAll("@" + placeHolderStr + "@",
-                            Matcher.quoteReplacement(ch.placeHolderData()));
+                    List<PlaceholderData> placeholderData = ch.handler();
+                    for (PlaceholderData data : placeholderData) {
+                        String placeHolderStr = Matcher.quoteReplacement(data.getPlaceholder());
+                        conditionStr = filter.condition().replaceAll("@" + placeHolderStr + "@", Matcher.quoteReplacement(data.getData()));
+                    }
                 } catch (IllegalAccessException | InstantiationException e) {
                     e.printStackTrace();
                 }

@@ -9,32 +9,32 @@ import java.io.InputStream;
  * Created by liyuepeng on 10/9/18.
  */
 @Transactional
-public class DataProxy {
+public abstract class DataProxy<MODEL> {
 
     //改
-    public BoolAndReason beforeEdit(Object o) {
+    public BoolAndReason beforeEdit(MODEL o) {
         return new BoolAndReason(true, null);
     }
 
-    public void afterEdit(Object o) {
+    public void afterEdit(MODEL o) {
 
     }
 
     //增
-    public BoolAndReason beforeAdd(Object o) {
+    public BoolAndReason beforeAdd(MODEL o) {
         return this.beforeEdit(o);
     }
 
-    public void afterAdd(Object o) {
+    public void afterAdd(MODEL o) {
         this.afterEdit(o);
     }
 
     //删
-    public BoolAndReason beforeDelete(Object o) {
+    public BoolAndReason beforeDelete(MODEL o) {
         return new BoolAndReason(true, null);
     }
 
-    public void afterDelete(Object o) {
+    public void afterDelete(MODEL o) {
 
     }
 

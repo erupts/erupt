@@ -9,6 +9,7 @@ public enum EditType {
     SLIDER,           //数字滑块
     DATE,             //日期
     REFERENCE,        //引用
+    CUSTOM_REFER,     //自定义引用类型
     BOOLEAN,          //布尔
     ATTACHMENT,       //附件
     TAB,              //TAB选项卡
@@ -21,5 +22,5 @@ public enum EditType {
     MAP,              //地图
     CODE,             //代码编辑器
     HTML_EDIT,        //富文本编辑器
-    JSON_EDIT         //JSON格式编辑器
+    JSON_EDIT,         //JSON格式编辑器
 }

@@ -17,11 +17,11 @@ import java.util.Map;
  * @time:2018/12/15 22:49
  */
 @Component
-public class EruptUserProxy extends DataProxy {
+public class EruptUserProxy extends DataProxy<EruptUser> {
+
 
     @Override
-    public BoolAndReason beforeAdd(Object o) {
-        EruptUser eruptUser = (EruptUser) o;
+    public BoolAndReason beforeAdd(EruptUser eruptUser) {
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
             if (eruptUser.getIsMD5()) {
                 eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
