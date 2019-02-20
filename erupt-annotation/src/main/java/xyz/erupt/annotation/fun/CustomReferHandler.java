@@ -10,5 +10,5 @@ import java.util.List;
 @Transactional
 public interface CustomReferHandler {
 
-    List refer(Field field, String param);
+    List<Object> refer(Field field, String param);
 }

@@ -95,7 +95,7 @@ public class EruptMenu extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "图标",
-                    desc = "图标请参考图标库font-awesome"
+                    desc = "请参考图标库font-awesome（图标仅会在最父级节点中展示）"
             )
     )
     private String icon;

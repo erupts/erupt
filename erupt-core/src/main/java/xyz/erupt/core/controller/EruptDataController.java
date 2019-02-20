@@ -127,7 +127,7 @@ public class EruptDataController {
                 return new EruptApiModel(operationHandler.exec(body.get("data"), param));
             }
         }
-        return new EruptApiModel(new BoolAndReason(false, "操作不存在"));
+        return new EruptApiModel(new BoolAndReason(false, "功能不存在"));
     }
 
     @PostMapping("/{erupt}")
@@ -156,7 +156,7 @@ public class EruptDataController {
         }
     }
 
-    @PutMapping("/{erupt}/{id}")
+    @PutMapping("/{erupt}")
     @ResponseBody
     public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) throws IllegalAccessException, InstantiationException {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);

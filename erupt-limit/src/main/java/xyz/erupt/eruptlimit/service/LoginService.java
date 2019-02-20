@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.MD5Utils;
 import xyz.erupt.eruptcache.redis.RedisService;
@@ -120,17 +121,43 @@ public class LoginService {
         }
     }
 
-    public boolean verifyMenuLimit(String token, String path) {
-        boolean result = false;
-        List<EruptMenu> menus = new Gson().fromJson(redisService.get(RedisKey.MENU_LIST + token).toString(), new TypeToken<List<EruptMenu>>() {
-        }.getType());
-        for (EruptMenu menu : menus) {
-            if (path.equals(menu.getPath())) {
-                result = true;
-                break;
+    public boolean verifyMenuLimit(String token, String servletPath, EruptModel eruptModel) {
+        //校验URL与请求头erupt信息是否匹配，来验证其合法性
+        {
+            boolean legalPath = false;
+            for (String sp : servletPath.split("/")) {
+                if (sp.equalsIgnoreCase(eruptModel.getEruptName())) {
+                    legalPath = true;
+                    break;
+                }
+            }
+            if (!legalPath) {
+                return false;
             }
         }
-        return result;
+        {
+            if (!eruptModel.getErupt().loginUse()) {
+                return true;
+            }
+        }
+        //校验菜单权限
+        {
+            List<EruptMenu> menus = new Gson().fromJson(redisService.get(RedisKey.MENU_LIST + token).toString(), new TypeToken<List<EruptMenu>>() {
+            }.getType());
+            boolean result = false;
+            for (EruptMenu menu : menus) {
+                if (StringUtils.isNotBlank(menu.getPath())) {
+                    String[] pathArr = menu.getPath().split("/");
+                    for (String pa : pathArr) {
+                        if (pa.equalsIgnoreCase(eruptModel.getEruptName())) {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
     }
 
 }

@@ -101,7 +101,7 @@ public class EruptJapUtils {
                     } else if (condition.get(key).toString().contains(EruptJapUtils.NOT_NULL)) {
                         hql.append(EruptJapUtils.AND).append(_key).append(" is not null");
                     } else {
-                        hql.append(EruptJapUtils.AND).append(_key).append("=").append("'" + condition.get(key) + "'");
+                        hql.append(EruptJapUtils.AND).append(_key).append("=").append(condition.get(key));
                     }
                 }
             }
