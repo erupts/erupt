@@ -7,9 +7,8 @@ import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.Page;
 import xyz.erupt.core.model.TreeModel;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.eruptcache.redis.RedisService;
 import xyz.erupt.eruptlimit.base.LoginModel;
@@ -20,7 +19,6 @@ import xyz.erupt.eruptlimit.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -60,7 +58,7 @@ public class EruptUserController {
                 }
             }
             //生成tree结构数据
-            EruptModel eruptModel = CoreService.ERUPTS.get(EruptMenu.class.getSimpleName());
+            EruptModel eruptModel = InitService.ERUPTS.get(EruptMenu.class.getSimpleName());
             Tree tree = eruptModel.getErupt().tree();
             List<TreeModel> treeModels = new ArrayList<>();
             for (EruptMenu eruptMenu : menuSet) {
@@ -82,7 +80,7 @@ public class EruptUserController {
     @ResponseBody
     public List<TreeModel> getMenu(HttpServletRequest request) {
 //        type -> Set<EruptMenu>
-        EruptModel eruptModel = CoreService.ERUPTS.get("EruptMenu");
+        EruptModel eruptModel = InitService.ERUPTS.get("EruptMenu");
         Object o = redisService.get(RedisKey.MENU_TREE + request.getHeader("token"));
         return new Gson().fromJson(o.toString(), new TypeToken<List<TreeModel>>() {
         }.getType());

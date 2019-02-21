@@ -5,7 +5,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import xyz.erupt.core.constant.HttpStatus;
 import xyz.erupt.core.model.*;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.InitService;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.util.ReflectUtil;
 
@@ -28,7 +28,7 @@ public class EruptBuildController {
     @ResponseBody
     public EruptPageModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptPageModel eruptPageModel = new EruptPageModel();
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (null != eruptModel) {
             try {
                 Object eruptInstance = eruptModel.getClazz().newInstance();
@@ -46,7 +46,7 @@ public class EruptBuildController {
                 TabType[] tabType = fieldModel.getEruptField().edit().tabType();
                 if (tabType.length > 0) {
                     String typeName = ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0);
-                    EruptModel subEruptModel = CoreService.ERUPTS.get(typeName);
+                    EruptModel subEruptModel = InitService.ERUPTS.get(typeName);
                     eruptAndEruptFieldModels.add(new EruptAndEruptFieldModel(fieldModel, subEruptModel));
                     if (null == subEruptModel) {
                         throw new RuntimeException("请使用Erupt注解管理" + typeName);

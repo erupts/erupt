@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by liyuepeng on 9/28/18.
  */
 @Service
-public class CoreService implements InitializingBean {
+public class InitService implements InitializingBean {
 
 
     @Value("#{'${erupt.scanner-package}'.split(',')}")

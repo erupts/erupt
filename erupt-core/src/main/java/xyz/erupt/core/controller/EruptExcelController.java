@@ -3,7 +3,7 @@ package xyz.erupt.core.controller;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.service.DataFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +30,7 @@ public class EruptExcelController {
 
     @GetMapping("/export/{erupt}")
     public void exportData(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().export()) {
             dataFileService.exportExcel(eruptModel, response);
         } else {
@@ -43,7 +43,7 @@ public class EruptExcelController {
     @PostMapping("/import/{erupt}")
     @ResponseBody
     public BoolAndReason importData(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             if (file.isEmpty()) {
                 return new BoolAndReason(false, "上传失败，请选择文件");
@@ -67,7 +67,7 @@ public class EruptExcelController {
     @GetMapping(value = "/import/template/{erupt}")
     @ResponseBody
     public void importTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
 
         } else {

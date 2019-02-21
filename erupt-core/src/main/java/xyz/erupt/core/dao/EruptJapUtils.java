@@ -72,6 +72,7 @@ public class EruptJapUtils {
     }
 
 
+    //erupt 注解信息映射成hql语句
     public static String generateEruptJpaHql(EruptModel eruptModel, HqlModel hqlModel) {
         StringBuilder hql = new StringBuilder("select ");
         hql.append(hqlModel.getCols());
@@ -91,8 +92,8 @@ public class EruptJapUtils {
         }
         //condition
         JsonObject condition = hqlModel.getCondition();
-        if (null != condition && condition.size() > 0) {
-            for (String key : hqlModel.getCondition().keySet()) {
+        if (null!=condition){
+            for (String key : condition.keySet()) {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
                 if (null != eruptFieldModel && eruptFieldModel.getEruptField().edit().search().search()) {
                     String _key = EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), key);
@@ -101,7 +102,7 @@ public class EruptJapUtils {
                     } else if (condition.get(key).toString().contains(EruptJapUtils.NOT_NULL)) {
                         hql.append(EruptJapUtils.AND).append(_key).append(" is not null");
                     } else {
-                        hql.append(EruptJapUtils.AND).append(_key).append("=").append(condition.get(key));
+                        hql.append(EruptJapUtils.AND).append(_key).append("=:").append(key);
                     }
                 }
             }

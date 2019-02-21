@@ -37,14 +37,6 @@ public class MD5Utils {
         return sBuffer.toString();
     }
 
-
-    // str -> md5str -> md5(md5str+salt )-> md5salt
-    public static String digestSalt(String strObj, String salt) {
-        strObj = digest(strObj);
-        strObj += salt;
-        return digest(strObj);
-    }
-
     public static String digest(String strObj) {
         return digest(strObj, "utf-8");
     }
@@ -59,6 +51,13 @@ public class MD5Utils {
             return strObj;
         }
         return resultString;
+    }
+
+    // str -> md5str -> md5(md5str+salt )-> md5salt
+    public static String digestSalt(String strObj, String salt) {
+        strObj = digest(strObj);
+        strObj += salt;
+        return digest(strObj);
     }
 
     /**

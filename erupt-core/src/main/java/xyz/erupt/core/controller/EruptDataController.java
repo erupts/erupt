@@ -18,7 +18,7 @@ import xyz.erupt.core.model.EruptApiModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.Page;
 import xyz.erupt.core.model.TreeModel;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.SpringUtil;
@@ -53,7 +53,7 @@ public class EruptDataController {
     @ResponseBody
     public Page getEruptData(@PathVariable("erupt") String eruptName,
                              @RequestBody JsonObject condition) throws IllegalAccessException, InstantiationException {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         int pageIndex = condition.get(Page.PAGE_INDEX_STR).getAsInt();
         int pageSize = condition.get(Page.PAGE_SIZE_STR).getAsInt();
         String sort = condition.get(Page.PAGE_SORT_STR).getAsString();
@@ -78,7 +78,7 @@ public class EruptDataController {
     @PostMapping("/tree/{erupt}")
     @ResponseBody
     public List<TreeModel> getTreeEruptData(@PathVariable("erupt") String eruptName) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().query()) {
             Tree tree = eruptModel.getErupt().tree();
 
@@ -103,7 +103,7 @@ public class EruptDataController {
     @GetMapping("/{erupt}/{id}")
     @ResponseBody
     public EruptApiModel getEruptSingleData(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         try {
             return EruptApiModel.successApi(eruptJpaDao.findDataById(eruptModel, id));
         } catch (Exception e) {
@@ -115,7 +115,7 @@ public class EruptDataController {
     @ResponseBody
     public EruptApiModel execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
                                            @RequestBody JsonObject body) throws IllegalAccessException, InstantiationException {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         List<Object> oKeys = new ArrayList<>();
         for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
             if (code.equals(rowOperation.code())) {
@@ -133,7 +133,7 @@ public class EruptDataController {
     @PostMapping("/{erupt}")
     @ResponseBody
     public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) throws IllegalAccessException, InstantiationException {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
+        EruptModel eruptModel = InitService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
             try {
@@ -159,7 +159,7 @@ public class EruptDataController {
     @PutMapping("/{erupt}")
     @ResponseBody
     public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) throws IllegalAccessException, InstantiationException {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
+        EruptModel eruptModel = InitService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             try {
                 Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
@@ -185,7 +185,7 @@ public class EruptDataController {
     @DeleteMapping("/{erupt}/{id}")
     @ResponseBody
     public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
+        EruptModel eruptModel = InitService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().delete()) {
             try {
                 Object obj = eruptJpaDao.findDataById(eruptModel, id);
@@ -230,7 +230,7 @@ public class EruptDataController {
     @GetMapping("/{erupt}/ref/{name}")
     @ResponseBody
     public List getRefData(@PathVariable("erupt") String erupt, @PathVariable("name") String name) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
+        EruptModel eruptModel = InitService.ERUPTS.get(erupt);
         return eruptJpaDao.getReferenceList(eruptModel, name);
     }
 

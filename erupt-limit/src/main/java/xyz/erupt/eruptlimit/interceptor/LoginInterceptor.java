@@ -9,7 +9,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import xyz.erupt.core.constant.HttpStatus;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.InitService;
 import xyz.erupt.eruptlimit.service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             if (StringUtils.isBlank(eruptName)) {
                 eruptName = request.getAttribute(URL_ERUPT_PARAM_KEY).toString();
             }
-            EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+            EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
             if (null == eruptModel) {
                 response.setStatus(HttpStatus.NOT_FOUNT.code);
                 return false;

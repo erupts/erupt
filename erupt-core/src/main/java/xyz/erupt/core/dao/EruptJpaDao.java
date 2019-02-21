@@ -1,11 +1,13 @@
 package xyz.erupt.core.dao;
 
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceType;
 import xyz.erupt.annotation.util.ConfigUtil;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
 import xyz.erupt.core.model.Page;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 import com.google.gson.JsonObject;
@@ -13,9 +15,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 10/11/18.
@@ -31,10 +35,6 @@ public class EruptJpaDao {
 
     public void saveEntity(EruptModel eruptModel, Object entity) {
         entityManager.persist(entity);
-    }
-
-    private void motifyData(Object ob) {
-
     }
 
     public void deleteEntity(Object entity) {
@@ -54,9 +54,25 @@ public class EruptJpaDao {
         StringBuilder conditionStr = new StringBuilder();
         String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel)) + ")", condition, page.getSort()));
         String countHql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("count(*)", condition, null));
-        List list = entityManager.createQuery(hql).setMaxResults(page.getPageSize())
+        Query query = entityManager.createQuery(hql);
+        Query countQuery = entityManager.createQuery(countHql);
+        Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
+        for (String key : condition.keySet()) {
+            Edit edit = eruptFieldMap.get(key).getEruptField().edit();
+            switch (edit.type()) {
+                case BOOLEAN:
+                    countQuery.setParameter(key, condition.get(key).getAsBoolean());
+                    query.setParameter(key, condition.get(key).getAsBoolean());
+                    break;
+                default:
+                    countQuery.setParameter(key, condition.get(key).getAsString());
+                    query.setParameter(key, condition.get(key).getAsString());
+            }
+
+        }
+        List list = query.setMaxResults(page.getPageSize())
                 .setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList();
-        page.setTotal((Long) entityManager.createQuery(countHql).getSingleResult());
+        page.setTotal((Long) countQuery.getSingleResult());
         page.setList(list);
         return page;
     }

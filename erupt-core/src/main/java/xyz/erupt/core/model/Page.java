@@ -31,14 +31,10 @@ public class Page {
         this.pageIndex = pageIndex == 0 ? 1 : pageIndex;
         this.pageSize = pageSize;
         this.sort = sort;
-        //防止单页数据过大的情况
-        if (pageSize > 1000) {
-            this.pageSize = 1000;
+        //防止单次数据过大的情况
+        if (pageSize > 10000) {
+            this.pageSize = 10000;
         }
-    }
-
-    public Page() {
-
     }
 
     public void setTotal(Long total) {

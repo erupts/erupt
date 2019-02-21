@@ -24,6 +24,7 @@ import java.util.Set;
 @Erupt(
 //        filter = @Filter(condition = "'id=1'"),
         name = "测试",
+        loginUse = false,
         rowOperation = {@RowOperation(
                 code = "action",
                 icon = "fa fa-terminal",

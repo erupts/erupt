@@ -1,8 +1,11 @@
 package xyz.erupt.core.util;
 
+import com.google.gson.JsonObject;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.core.model.EruptFieldModel;
+import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.TreeModel;
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,6 +46,7 @@ public class EruptUtil {
 
     /**
      * 内存计算的方式生成树结构
+     *
      * @param treeModels
      * @return
      */
@@ -79,7 +83,8 @@ public class EruptUtil {
     }
 
 
-    public Map<String, Object> EruptDataToViewData(Object data) {
+
+    public Map<String, Object> eruptDataToViewData(Object data) {
         Map<String, Object> result = new HashMap<>();
         try {
             for (Field field : data.getClass().getDeclaredFields()) {
