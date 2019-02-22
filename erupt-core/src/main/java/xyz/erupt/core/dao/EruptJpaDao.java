@@ -33,8 +33,12 @@ public class EruptJpaDao {
     public static final String COUNT_COL_NAME = "count";
 
 
-    public void saveEntity(EruptModel eruptModel, Object entity) {
+    public void addEntity(EruptModel eruptModel, Object entity) {
         entityManager.persist(entity);
+    }
+
+    public void editEntity(EruptModel eruptModel, Object entity) {
+        entityManager.merge(entity);
     }
 
     public void deleteEntity(Object entity) {

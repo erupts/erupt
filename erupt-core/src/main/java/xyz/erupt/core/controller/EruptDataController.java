@@ -143,7 +143,7 @@ public class EruptDataController {
                         return new EruptApiModel(boolAndReason);
                     }
                 }
-                eruptJpaDao.saveEntity(eruptModel, obj);
+                eruptJpaDao.addEntity(eruptModel, obj);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     SpringUtil.getBean(proxy).afterAdd(obj);
                 }
@@ -169,7 +169,7 @@ public class EruptDataController {
                         return new EruptApiModel(boolAndReason);
                     }
                 }
-                eruptJpaDao.saveEntity(eruptModel, obj);
+                eruptJpaDao.editEntity(eruptModel, obj);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     SpringUtil.getBean(proxy).afterEdit(obj);
                 }

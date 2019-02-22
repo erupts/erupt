@@ -8,7 +8,7 @@ import xyz.erupt.annotation.fun.CustomReferHandler;
 public @interface CustomReferType {
 
 
-    String param() default "";
+    String[] params() default "";
 
     Class<? extends CustomReferHandler> refer();
 
