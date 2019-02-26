@@ -15,8 +15,4 @@ public @interface ReferenceType {
     Filter filter() default @Filter(condition = "");
 
     String[] depends() default {};
-
-    Class<?> refClass() default void.class;
-
-
 }

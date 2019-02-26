@@ -145,13 +145,14 @@ public class LoginService {
             List<EruptMenu> menus = new Gson().fromJson(redisService.get(RedisKey.MENU_LIST + token).toString(), new TypeToken<List<EruptMenu>>() {
             }.getType());
             boolean result = false;
+            em:
             for (EruptMenu menu : menus) {
-                if (StringUtils.isNotBlank(menu.getPath())) {
+                if (StringUtils.isNotBlank(menu.getPath()) && menu.getPath().contains(eruptModel.getEruptName())) {
                     String[] pathArr = menu.getPath().split("/");
                     for (String pa : pathArr) {
                         if (pa.equalsIgnoreCase(eruptModel.getEruptName())) {
                             result = true;
-                            break;
+                            break em;
                         }
                     }
                 }

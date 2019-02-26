@@ -22,18 +22,18 @@ import java.util.Set;
 public class EruptRole extends BaseModel {
 
     @EruptField(
+            views = @View(title = "编码"),
+            edit = @Edit(title = "编码", notNull = true)
+    )
+    @Column(name = "CODE")
+    private String code;
+
+    @EruptField(
             views = @View(title = "名称"),
             edit = @Edit(title = "名称", notNull = true)
     )
     @Column(name = "NAME")
     private String name;
-
-    @EruptField(
-            views = @View(title = "描述"),
-            edit = @Edit(title = "描述")
-    )
-    @Column(name = "REMARK")
-    private String remark;
 
     @Column(name = "STATUS")
     @EruptField(
@@ -54,7 +54,9 @@ public class EruptRole extends BaseModel {
             edit = @Edit(
                     title = "菜单",
                     type = EditType.TAB,
-                    tabType = @TabType
+                    tabType = @TabType(
+
+                    )
             )
     )
     private Set<EruptMenu> menus;

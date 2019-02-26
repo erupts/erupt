@@ -92,20 +92,6 @@ public class EruptUser extends BaseModel {
     )
     private Boolean status;
 
-    @ManyToMany
-    @JoinTable(
-            name = "E_USER_ROLE",
-            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
-    @EruptField(
-            edit = @Edit(
-                    title = "所属角色",
-                    type = EditType.TAB,
-                    tabType = @TabType
-            )
-    )
-    private Set<EruptRole> roles;
-
     @Column(name = "WHITE_IP")
     @EruptField(
             edit = @Edit(
@@ -126,5 +112,20 @@ public class EruptUser extends BaseModel {
 
     )
     private String remark;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "E_USER_ROLE",
+            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
+    @EruptField(
+            edit = @Edit(
+                    title = "所属角色",
+                    type = EditType.TAB,
+                    tabType = @TabType
+            )
+    )
+    private Set<EruptRole> roles;
 
 }

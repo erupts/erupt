@@ -24,6 +24,13 @@ import javax.persistence.*;
 @Data
 public class EruptMenu extends BaseModel {
 
+    @EruptField(
+            views = @View(title = "编码"),
+            edit = @Edit(title = "编码", notNull = true)
+    )
+    @Column(name = "CODE")
+    private String code;
+
     @Column(name = "NAME")
     @EruptField(
             views = @View(title = "名称"),
@@ -59,6 +66,16 @@ public class EruptMenu extends BaseModel {
     private Integer sort;
 
 
+    @Column(name = "ICON")
+    @EruptField(
+            edit = @Edit(
+                    title = "图标",
+                    desc = "请参考图标库font-awesome（仅会在最父级节点中展示）"
+            )
+    )
+    private String icon;
+
+
     @Column(name = "IS_SHOW")
     @EruptField(
             edit = @Edit(
@@ -91,14 +108,6 @@ public class EruptMenu extends BaseModel {
     )
     private EruptMenu parentMenu;
 
-    @Column(name = "ICON")
-    @EruptField(
-            edit = @Edit(
-                    title = "图标",
-                    desc = "请参考图标库font-awesome（图标仅会在最父级节点中展示）"
-            )
-    )
-    private String icon;
 
     @Column(name = "TARGET")
     @EruptField(
@@ -108,7 +117,7 @@ public class EruptMenu extends BaseModel {
                     choiceType = @ChoiceType(vl = {
                             @VL(value = "0", label = "_target"),
                             @VL(value = "1", label = "_self")
-                    }, type = ChoiceEnum.RADIO)
+                    }, type = ChoiceEnum.SELECT_SINGLE)
             )
     )
     private Integer target;

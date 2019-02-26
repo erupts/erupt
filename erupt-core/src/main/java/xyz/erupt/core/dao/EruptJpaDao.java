@@ -99,6 +99,7 @@ public class EruptJpaDao {
         return entityManager.createQuery(hql).getResultList();
     }
 
+
     public List getReferenceList(EruptModel eruptModel, String refName) {
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(refName);
         ReferenceType referenceType = eruptFieldModel.getEruptField().edit().referenceType()[0];
