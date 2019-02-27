@@ -9,9 +9,9 @@ import java.util.List;
  */
 @Data
 public class Page {
-    private int pageIndex = 1;
+    private int pageIndex;
 
-    private int pageSize = 10;
+    private int pageSize;
 
     private int totalPage;
 
@@ -21,17 +21,17 @@ public class Page {
 
     private List list;
 
-    public static final String PAGE_INDEX_STR = "pageIndex";
+    public static final String PAGE_INDEX_STR = "_pageIndex";
 
-    public static final String PAGE_SIZE_STR = "pageSize";
+    public static final String PAGE_SIZE_STR = "_pageSize";
 
-    public static final String PAGE_SORT_STR = "sort";
+    public static final String PAGE_SORT_STR = "_sort";
 
     public Page(int pageIndex, int pageSize, String sort) {
         this.pageIndex = pageIndex == 0 ? 1 : pageIndex;
         this.pageSize = pageSize;
         this.sort = sort;
-        //防止单次数据过大的情况
+        //单页最大数据量10000
         if (pageSize > 10000) {
             this.pageSize = 10000;
         }

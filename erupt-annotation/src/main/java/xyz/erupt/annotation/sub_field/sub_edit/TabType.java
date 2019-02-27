@@ -7,6 +7,8 @@ import xyz.erupt.annotation.sub_erupt.Filter;
  */
 public @interface TabType {
 
+    String sort() default "";
+
     Filter filter() default @Filter(condition = "");
 
     TabEnum type() default TabEnum.LIST_SELECT;

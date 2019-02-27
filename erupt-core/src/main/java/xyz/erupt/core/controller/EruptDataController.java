@@ -10,14 +10,12 @@ import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tree;
+import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptJapUtils;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.exception.EruptRuntimeException;
-import xyz.erupt.core.model.EruptApiModel;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.Page;
-import xyz.erupt.core.model.TreeModel;
+import xyz.erupt.core.model.*;
 import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.util.EruptUtil;
@@ -52,7 +50,7 @@ public class EruptDataController {
     @PostMapping("/table/{erupt}")
     @ResponseBody
     public Page getEruptData(@PathVariable("erupt") String eruptName,
-                             @RequestBody JsonObject condition) throws IllegalAccessException, InstantiationException {
+                             @RequestBody JsonObject condition) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         int pageIndex = condition.get(Page.PAGE_INDEX_STR).getAsInt();
         int pageSize = condition.get(Page.PAGE_SIZE_STR).getAsInt();
@@ -73,6 +71,25 @@ public class EruptDataController {
         } else {
             throw new EruptRuntimeException("没有查询权限");
         }
+    }
+
+    @PostMapping("/table/{erupt}/{id}/{subErupt}")
+    @ResponseBody
+    public Object getSubEruptData(@PathVariable("erupt") String eruptName,
+                                  @PathVariable("id") String id,
+                                  @PathVariable("subErupt") String subErupt) {
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        if (eruptModel.getErupt().power().query()) {
+            EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(subErupt);
+            TabType tabType = eruptFieldModel.getEruptField().edit().tabType()[0];
+            EruptModel subEruptModel = InitService.ERUPTS.get(eruptFieldModel.getFieldReturnName());
+            Page page = eruptJpaDao.queryEruptList(subEruptModel, null, new Page(0, 9999, ""));
+
+            return null;
+        } else {
+            throw new EruptRuntimeException("没有查询权限");
+        }
+
     }
 
     @PostMapping("/tree/{erupt}")
@@ -114,7 +131,7 @@ public class EruptDataController {
     @PostMapping("/{erupt}/operator/{code}")
     @ResponseBody
     public EruptApiModel execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
-                                           @RequestBody JsonObject body) throws IllegalAccessException, InstantiationException {
+                                           @RequestBody JsonObject body) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         List<Object> oKeys = new ArrayList<>();
         for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
@@ -123,7 +140,7 @@ public class EruptDataController {
                 if (param.isJsonNull()) {
                     param = null;
                 }
-                OperationHandler operationHandler = rowOperation.operationHandler().newInstance();
+                OperationHandler operationHandler = SpringUtil.getBean(rowOperation.operationHandler());
                 return new EruptApiModel(operationHandler.exec(body.get("data"), param));
             }
         }
@@ -132,7 +149,7 @@ public class EruptDataController {
 
     @PostMapping("/{erupt}")
     @ResponseBody
-    public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
@@ -158,7 +175,7 @@ public class EruptDataController {
 
     @PutMapping("/{erupt}")
     @ResponseBody
-    public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             try {
@@ -211,7 +228,7 @@ public class EruptDataController {
     //为了事务性考虑所以增加了批量删除功能
     @DeleteMapping("/{erupt}")
     @ResponseBody
-    public EruptApiModel deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) throws IllegalAccessException, InstantiationException {
+    public EruptApiModel deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) {
         EruptApiModel eruptApiModel = EruptApiModel.successApi(null);
         try {
             for (Serializable id : ids) {
@@ -227,11 +244,11 @@ public class EruptDataController {
     }
 
 
-    @GetMapping("/{erupt}/ref/{name}")
+    @GetMapping("/{erupt}/ref/{fieldName}")
     @ResponseBody
-    public List getRefData(@PathVariable("erupt") String erupt, @PathVariable("name") String name) {
+    public List getRefData(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
-        return eruptJpaDao.getReferenceList(eruptModel, name);
+        return eruptJpaDao.getReferenceList(eruptModel, fieldName);
     }
 
 

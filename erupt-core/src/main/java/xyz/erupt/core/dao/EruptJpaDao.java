@@ -111,8 +111,7 @@ public class EruptJpaDao {
         if (!"".equals(referenceType.pid())) {
 //            hql += AND + referenceType.pid();
         }
-        return entityManager.createQuery(hql)
-                .getResultList();
+        return entityManager.createQuery(hql).getResultList();
     }
 
 }

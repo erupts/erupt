@@ -27,8 +27,6 @@ public @interface Erupt {
 
     String sort() default "";
 
-    Chart[] charts() default {};
-
     Power power() default @Power;
 
     RowOperation[] rowOperation() default {};

@@ -26,8 +26,6 @@ public class EruptJapUtils {
 
     public static final String AND = " and ";
 
-    public static final String CONDITION_KEY = "condition";
-
     public static final String NULL = "$null$";
 
     public static final String NOT_NULL = "$notNull$";
