@@ -1,8 +1,10 @@
 package xyz.erupt.eruptlimit.model;
 
 import lombok.Data;
+import lombok.Value;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.DataLength;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -57,6 +59,23 @@ public class EruptMenu extends BaseModel {
     )
     private String path;
 
+    @Column(name = "STATUS")
+    @EruptField(
+            edit = @Edit(
+                    notNull = true,
+                    title = "菜单状态",
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(
+                            vl = {
+                                    @VL(value = "1", label = "显示"),
+                                    @VL(value = "2", label = "隐藏"),
+                                    @VL(value = "3", label = "禁用"),
+                            }
+                    )
+            )
+    )
+    private Integer status;
+
     @Column(name = "SORT")
     @EruptField(
             edit = @Edit(
@@ -74,27 +93,6 @@ public class EruptMenu extends BaseModel {
             )
     )
     private String icon;
-
-
-    @Column(name = "IS_SHOW")
-    @EruptField(
-            edit = @Edit(
-                    title = "是否显示",
-                    type = EditType.BOOLEAN,
-                    boolType = @BoolType(trueText = "显示", falseText = "隐藏", defaultValue = true)
-            )
-    )
-    private Boolean show;
-
-    @Column(name = "STATUS")
-    @EruptField(
-            edit = @Edit(
-                    title = "菜单状态",
-                    type = EditType.BOOLEAN,
-                    boolType = @BoolType(trueText = "可用", falseText = "禁用", defaultValue = true)
-            )
-    )
-    private Boolean status;
 
 
     @ManyToOne
@@ -126,7 +124,7 @@ public class EruptMenu extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "功能描述",
-                    inputType = @InputType(type = InputEnum.TEXTAREA, length = 255)
+                    inputType = @InputType(type = InputEnum.TEXTAREA)
             )
     )
     private String remark;

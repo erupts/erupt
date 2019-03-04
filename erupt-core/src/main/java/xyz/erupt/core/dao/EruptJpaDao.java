@@ -7,6 +7,7 @@ import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
 import xyz.erupt.core.model.Page;
+import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
@@ -106,7 +107,7 @@ public class EruptJpaDao {
         String keys = "new map(" + referenceType.id() + " as id," + referenceType.label() + " as label)";
         String hql = "select " + keys + " from " + eruptFieldModel.getField().getType().getSimpleName() + " where 1=1 ";
         if (!"".equals(referenceType.filter().condition())) {
-            hql += EruptJapUtils.AND + ConfigUtil.switchFilterConditionToStr(referenceType.filter());
+            hql += EruptJapUtils.AND + AnnotationUtil.switchFilterConditionToStr(referenceType.filter());
         }
         if (!"".equals(referenceType.pid())) {
 //            hql += AND + referenceType.pid();

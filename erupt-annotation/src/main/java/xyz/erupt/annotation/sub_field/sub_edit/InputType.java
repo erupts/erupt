@@ -8,7 +8,7 @@ import xyz.erupt.annotation.constant.DataLength;
 public @interface InputType {
     InputEnum type() default InputEnum.TEXT;
 
-    int length() default DataLength.NAME_LENGTH;
+    int length() default DataLength.LONG_TEXT_LENGTH;
 
     String placeholder() default "";
 

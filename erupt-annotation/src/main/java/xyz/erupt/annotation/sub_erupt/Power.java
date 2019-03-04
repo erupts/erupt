@@ -12,7 +12,7 @@ public @interface Power {
 
     boolean query() default true;
 
-    boolean export() default true;
+    boolean export() default false;
 
-    boolean importable() default true;
+    boolean importable() default false;
 }

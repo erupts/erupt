@@ -16,9 +16,7 @@ public abstract class DataProxy<MODEL> {
         return new BoolAndReason(true, null);
     }
 
-    public void afterEdit(MODEL o) {
-
-    }
+    public void afterEdit(MODEL o) {}
 
     //增
     public BoolAndReason beforeAdd(MODEL o) {
@@ -34,18 +32,14 @@ public abstract class DataProxy<MODEL> {
         return new BoolAndReason(true, null);
     }
 
-    public void afterDelete(MODEL o) {
-
-    }
+    public void afterDelete(MODEL o) {}
 
     //查
     public BoolAndReason beforeFetch(Object o) {
         return new BoolAndReason(true, null);
     }
 
-    public void afterFetch(Object o) {
-
-    }
+    public void afterFetch(Object o) {}
 
     //文件上传
     public BoolAndReason upLoadFile(InputStream inputStream, String fileName) {

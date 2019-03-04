@@ -21,11 +21,11 @@ public @interface Erupt {
 
     String name() default "";
 
-    String primaryKeyCol() default "id";
-
     String desc() default "";
 
     String sort() default "";
+
+    String primaryKeyCol() default "id";
 
     Power power() default @Power;
 

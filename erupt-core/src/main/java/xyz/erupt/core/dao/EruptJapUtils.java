@@ -11,12 +11,14 @@ import xyz.erupt.annotation.util.ConfigUtil;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
+import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.TypeUtil;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -86,11 +88,11 @@ public class EruptJapUtils {
         hql.append(" where 1=1");
         Filter filter = eruptModel.getErupt().filter();
         if (!"".equals(filter.condition())) {
-            hql.append(AND).append(ConfigUtil.switchFilterConditionToStr(filter));
+            hql.append(AND).append(AnnotationUtil.switchFilterConditionToStr(filter));
         }
         //condition
         JsonObject condition = hqlModel.getCondition();
-        if (null!=condition){
+        if (null != condition) {
             for (String key : condition.keySet()) {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
                 if (null != eruptFieldModel && eruptFieldModel.getEruptField().edit().search().search()) {
@@ -104,6 +106,10 @@ public class EruptJapUtils {
                     }
                 }
             }
+        }
+        String customCondition = hqlModel.getCustomCondition();
+        if (StringUtils.isNotBlank(customCondition)) {
+            hql.append(EruptJapUtils.AND).append(customCondition);
         }
         //sort
         if (StringUtils.isNotBlank(hqlModel.getOrderBy())) {

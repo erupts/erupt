@@ -66,8 +66,9 @@ public class LoginService {
             //校验IP
             if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
                 boolean isAllowIp = false;
-                for (String s : eruptUser.getWhiteIp().split("\n")) {
-                    if (s.equals(IpUtil.getIpAddr(request))) {
+                String ipAddr = IpUtil.getIpAddr(request);
+                for (String ip : eruptUser.getWhiteIp().split("\n")) {
+                    if (ip.equals(ipAddr)) {
                         isAllowIp = true;
                         break;
                     }
@@ -88,18 +89,19 @@ public class LoginService {
                 }
             }
             if (pass) {
+                loginErrorCount.put(account, 0);
                 return new LoginModel(true, eruptUser);
             } else {
                 Integer count = loginErrorCount.get(account);
                 loginErrorCount.put(account, ++count);
-                //错误五次则开启验证码模式模式，错误50次锁定账号；
+                //错误五次要求使用验证码，错误50次锁定账号；
                 if (loginErrorCount.get(account) >= 5) {
                     return new LoginModel(false, "密码错误", true);
                 } else if (loginErrorCount.get(account) >= 50) {
                     eruptUser.setStatus(false);
                     return new LoginModel(false, "账号被锁定");
                 } else {
-                    return new LoginModel(false, "密码错误 -");
+                    return new LoginModel(false, "密码错误");
                 }
             }
         } else {
@@ -142,8 +144,9 @@ public class LoginService {
         }
         //校验菜单权限
         {
-            List<EruptMenu> menus = new Gson().fromJson(redisService.get(RedisKey.MENU_LIST + token).toString(), new TypeToken<List<EruptMenu>>() {
-            }.getType());
+            List<EruptMenu> menus = new Gson().fromJson(redisService.get(RedisKey.MENU_LIST + token).toString(),
+                    new TypeToken<List<EruptMenu>>() {
+                    }.getType());
             boolean result = false;
             em:
             for (EruptMenu menu : menus) {
@@ -151,8 +154,10 @@ public class LoginService {
                     String[] pathArr = menu.getPath().split("/");
                     for (String pa : pathArr) {
                         if (pa.equalsIgnoreCase(eruptModel.getEruptName())) {
-                            result = true;
-                            break em;
+                            if (menu.getStatus() != 3) {
+                                result = true;
+                                break em;
+                            }
                         }
                     }
                 }

@@ -6,6 +6,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.TabEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import lombok.Data;
 
@@ -55,7 +56,7 @@ public class EruptRole extends BaseModel {
                     title = "菜单",
                     type = EditType.TAB,
                     tabType = @TabType(
-
+                            type = TabEnum.TREE_SELECT
                     )
             )
     )

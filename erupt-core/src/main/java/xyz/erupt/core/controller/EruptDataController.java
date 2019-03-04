@@ -11,6 +11,7 @@ import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
+import xyz.erupt.annotation.util.ConfigUtil;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptJapUtils;
 import xyz.erupt.core.dao.EruptJpaDao;
@@ -18,9 +19,11 @@ import xyz.erupt.core.exception.EruptRuntimeException;
 import xyz.erupt.core.model.*;
 import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.service.DataService;
+import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.SpringUtil;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,7 +53,7 @@ public class EruptDataController {
     @PostMapping("/table/{erupt}")
     @ResponseBody
     public Page getEruptData(@PathVariable("erupt") String eruptName,
-                             @RequestBody JsonObject condition) {
+                             @RequestBody JsonObject condition, HttpServletResponse response) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         int pageIndex = condition.get(Page.PAGE_INDEX_STR).getAsInt();
         int pageSize = condition.get(Page.PAGE_SIZE_STR).getAsInt();
@@ -73,6 +76,7 @@ public class EruptDataController {
         }
     }
 
+
     @PostMapping("/table/{erupt}/{id}/{subErupt}")
     @ResponseBody
     public Object getSubEruptData(@PathVariable("erupt") String eruptName,
@@ -80,16 +84,39 @@ public class EruptDataController {
                                   @PathVariable("subErupt") String subErupt) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().query()) {
+            //TODO 这个方法中的代码转移到JAP_DAO中
             EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(subErupt);
             TabType tabType = eruptFieldModel.getEruptField().edit().tabType()[0];
             EruptModel subEruptModel = InitService.ERUPTS.get(eruptFieldModel.getFieldReturnName());
-            Page page = eruptJpaDao.queryEruptList(subEruptModel, null, new Page(0, 9999, ""));
+            String subCondition = subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + "=" + id;
+            if (!"".equals(tabType.filter().condition())) {
+                subCondition += " and " + AnnotationUtil.switchFilterConditionToStr(tabType.filter());
+            }
+            String hql = EruptJapUtils.generateEruptJpaHql(eruptModel,
+                    new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel)) + ")",
+                            subCondition, null, tabType.sort()));
 
             return null;
         } else {
             throw new EruptRuntimeException("没有查询权限");
         }
+    }
 
+    @PostMapping("/tree/{erupt}/{id}/{subErupt}")
+    @ResponseBody
+    public Object getSubEruptTree(@PathVariable("erupt") String eruptName,
+                                  @PathVariable("id") String id,
+                                  @PathVariable("subErupt") String subErupt) {
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        if (eruptModel.getErupt().power().query()) {
+            EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(subErupt);
+            TabType tabType = eruptFieldModel.getEruptField().edit().tabType()[0];
+
+
+            return null;
+        } else {
+            throw new EruptRuntimeException("没有查询权限");
+        }
     }
 
     @PostMapping("/tree/{erupt}")

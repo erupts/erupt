@@ -12,9 +12,7 @@ import java.util.List;
 public class SimpleConditionHandler implements ConditionHandler {
 
     @Override
-    public List<PlaceholderData> handler() {
-        List<PlaceholderData> placeholderDataList = new ArrayList<>();
-        placeholderDataList.add(new PlaceholderData("abc", "1"));
-        return placeholderDataList;
+    public String handler(String condition) {
+        return condition.replace("@abc@","7");
     }
 }

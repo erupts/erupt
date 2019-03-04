@@ -4,11 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.DataLength;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.core.handler.SimpleConditionHandler;
 import xyz.erupt.eruptlimit.model.proxy.EruptUserProxy;
 import lombok.Data;
 
@@ -24,8 +27,8 @@ import java.util.Set;
         name = "用户",
         desc = "用户配置",
         dateProxy = EruptUserProxy.class,
-        power = @Power(export = false, importable = false),
-        sort = "account desc"
+        sort = "account desc",
+        filter = @Filter(condition = "'id=@abc@'", conditionHandlers = {SimpleConditionHandler.class})
 )
 @Entity
 @Table(name = "E_USER", uniqueConstraints = {
@@ -47,20 +50,6 @@ public class EruptUser extends BaseModel {
     )
     private String name;
 
-    @Column(name = "PWD")
-    @EruptField(
-            views = @View(title = "密码"),
-            edit = @Edit(title = "密码", notNull = true)
-    )
-    private String password;
-
-    @Transient
-    @EruptField(
-            views = @View(title = "确认密码", show = false),
-            edit = @Edit(title = "确认密码", notNull = true)
-    )
-    private String password2;
-
     @Column(name = "IS_MD5")
     @EruptField(
             views = @View(title = "md5加密"),
@@ -77,6 +66,20 @@ public class EruptUser extends BaseModel {
     )
     private Boolean isMD5;
 
+    @Column(name = "PWD")
+    @EruptField(
+            views = @View(title = "密码"),
+            edit = @Edit(title = "密码", notNull = true)
+    )
+    private String password;
+
+    @Transient
+    @EruptField(
+            views = @View(title = "确认密码", show = false),
+            edit = @Edit(title = "确认密码", notNull = true)
+    )
+    private String password2;
+
     @Column(name = "STATUS")
     @EruptField(
             views = @View(title = "状态"),
@@ -92,22 +95,24 @@ public class EruptUser extends BaseModel {
     )
     private Boolean status;
 
+    @Lob
     @Column(name = "WHITE_IP")
     @EruptField(
             edit = @Edit(
                     title = "ip白名单",
-                    desc = "ip与ip之间使用换行符间隔，不填表示不对ip进行鉴权管理",
+                    desc = "ip与ip之间使用换行符间隔，不填表示不鉴权",
                     inputType = @InputType(type = InputEnum.TEXTAREA)
             )
 
     )
     private String whiteIp;
 
+    @Lob
     @Column(name = "REMARK")
     @EruptField(
             edit = @Edit(
                     title = "备注",
-                    inputType = @InputType(type = InputEnum.TEXTAREA)
+                    inputType = @InputType(type = InputEnum.TEXTAREA,length = DataLength.REMARK_LENGTH)
             )
 
     )

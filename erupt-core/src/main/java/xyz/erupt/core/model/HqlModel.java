@@ -17,8 +17,19 @@ public class HqlModel {
         this.orderBy = orderBy;
     }
 
+    public HqlModel(String cols, String customCondition, JsonObject condition, String orderBy) {
+        this.cols = cols;
+        this.customCondition = customCondition;
+        this.condition = condition;
+        this.orderBy = orderBy;
+    }
+
     private String cols;
 
+    //后台自定义参数
+    private String customCondition;
+
+    //接口参数
     private JsonObject condition;
 
     private String orderBy;
