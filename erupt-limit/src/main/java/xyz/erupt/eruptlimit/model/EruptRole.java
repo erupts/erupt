@@ -38,6 +38,7 @@ public class EruptRole extends BaseModel {
 
     @Column(name = "STATUS")
     @EruptField(
+            views = @View(title = "状态"),
             edit = @Edit(
                     title = "状态",
                     type = EditType.BOOLEAN,

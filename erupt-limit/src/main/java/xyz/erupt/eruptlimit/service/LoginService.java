@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.MD5Utils;
@@ -153,7 +154,7 @@ public class LoginService {
                 if (StringUtils.isNotBlank(menu.getPath()) && menu.getPath().contains(eruptModel.getEruptName())) {
                     String[] pathArr = menu.getPath().split("/");
                     for (String pa : pathArr) {
-                        if (pa.equalsIgnoreCase(eruptModel.getEruptName())) {
+                        if (pa.equalsIgnoreCase(eruptModel.getEruptName()) && !pa.startsWith(RestPath.NO_RIGHT_SYMBOL)) {
                             if (menu.getStatus() != 3) {
                                 result = true;
                                 break em;

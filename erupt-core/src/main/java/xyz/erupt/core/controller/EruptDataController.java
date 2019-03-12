@@ -9,16 +9,14 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
-import xyz.erupt.annotation.util.ConfigUtil;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptJapUtils;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.exception.EruptRuntimeException;
 import xyz.erupt.core.model.*;
+import xyz.erupt.core.service.DBService;
 import xyz.erupt.core.service.InitService;
-import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.SpringUtil;
@@ -26,9 +24,7 @@ import xyz.erupt.core.util.SpringUtil;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Erupt 对数据的增删改查
@@ -36,24 +32,17 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(RestPath.ERUPT_DATA)
-@Transactional
 public class EruptDataController {
 
     @Autowired
-    private DataService dataService;
+    private DBService dbService;
 
     @Autowired
-    private EruptJpaDao eruptJpaDao;
-
-    private Gson gson = new Gson();
-
-    public static final String PAGE_KEY = "page";
-
+    private Gson gson;
 
     @PostMapping("/table/{erupt}")
     @ResponseBody
-    public Page getEruptData(@PathVariable("erupt") String eruptName,
-                             @RequestBody JsonObject condition, HttpServletResponse response) {
+    public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject condition) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         int pageIndex = condition.get(Page.PAGE_INDEX_STR).getAsInt();
         int pageSize = condition.get(Page.PAGE_SIZE_STR).getAsInt();
@@ -66,7 +55,7 @@ public class EruptDataController {
                 //该参数为查询条件
                 SpringUtil.getBean(proxy).beforeFetch(condition);
             }
-            Page page = eruptJpaDao.queryEruptList(eruptModel, condition, new Page(pageIndex, pageSize, sort));
+            Page page = dbService.queryList(eruptModel, condition, new Page(pageIndex, pageSize, sort));
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                 SpringUtil.getBean(proxy).afterFetch(page);
             }
@@ -77,81 +66,60 @@ public class EruptDataController {
     }
 
 
-    @PostMapping("/table/{erupt}/{id}/{subErupt}")
+    @RequestMapping("/table/{erupt}/{tabFieldName}")
     @ResponseBody
-    public Object getSubEruptData(@PathVariable("erupt") String eruptName,
-                                  @PathVariable("id") String id,
-                                  @PathVariable("subErupt") String subErupt) {
-        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
-        if (eruptModel.getErupt().power().query()) {
-            //TODO 这个方法中的代码转移到JAP_DAO中
-            EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(subErupt);
-            TabType tabType = eruptFieldModel.getEruptField().edit().tabType()[0];
-            EruptModel subEruptModel = InitService.ERUPTS.get(eruptFieldModel.getFieldReturnName());
-            String subCondition = subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + "=" + id;
-            if (!"".equals(tabType.filter().condition())) {
-                subCondition += " and " + AnnotationUtil.switchFilterConditionToStr(tabType.filter());
-            }
-            String hql = EruptJapUtils.generateEruptJpaHql(eruptModel,
-                    new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel)) + ")",
-                            subCondition, null, tabType.sort()));
-
-            return null;
-        } else {
-            throw new EruptRuntimeException("没有查询权限");
-        }
+    public Object getSubEruptList(@PathVariable("erupt") String eruptName,
+                                  @PathVariable("tabFieldName") String tabFieldName) {
+        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
+        EruptFieldModel eruptFieldModel = InitService.ERUPTS.get(eruptName).getEruptFieldMap().get(tabFieldName);
+        return dbService.findTabList(eruptFieldModel);
     }
 
-    @PostMapping("/tree/{erupt}/{id}/{subErupt}")
+    @RequestMapping("/table/{erupt}/{id}/{tabFieldName}")
     @ResponseBody
-    public Object getSubEruptTree(@PathVariable("erupt") String eruptName,
-                                  @PathVariable("id") String id,
-                                  @PathVariable("subErupt") String subErupt) {
-        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
-        if (eruptModel.getErupt().power().query()) {
-            EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(subErupt);
-            TabType tabType = eruptFieldModel.getEruptField().edit().tabType()[0];
-
-
-            return null;
-        } else {
-            throw new EruptRuntimeException("没有查询权限");
-        }
+    public Object getSubEruptListById(@PathVariable("erupt") String eruptName,
+                                      @PathVariable("id") String id,
+                                      @PathVariable("tabFieldName") String tabFieldName) {
+        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
+        EruptFieldModel eruptFieldModel = InitService.ERUPTS.get(eruptName).getEruptFieldMap().get(tabFieldName);
+        return dbService.findTabListById(eruptFieldModel, id);
     }
 
-    @PostMapping("/tree/{erupt}")
+    @RequestMapping("/tree/{erupt}/{tabFieldName}")
+    @ResponseBody
+    public Object getSubEruptTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(tabFieldName);
+        return dbService.findTabTree(eruptFieldModel);
+    }
+
+    @RequestMapping("/tree/{erupt}/{id}/{tabFieldName}")
+    @ResponseBody
+    public Object getSubEruptTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(tabFieldName);
+        return dbService.findTabTreeById(eruptFieldModel, id);
+    }
+
+    @RequestMapping("/tree/{erupt}")
     @ResponseBody
     public List<TreeModel> getTreeEruptData(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().query()) {
-            Tree tree = eruptModel.getErupt().tree();
-
-            String[] cols = {
-                    EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + tree.id().replace(".", "_"),
-                    EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + tree.label().replace(".", "_"),
-                    EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + tree.pid().replace(".", "_")
-            };
-            List list = eruptJpaDao.getDataMap(eruptModel, cols);
-            List<TreeModel> treeModels = new ArrayList<>();
-            for (Object o : list) {
-                Map<String, Object> map = (Map) o;
-                TreeModel treeModel = new TreeModel(map.get(tree.id()), map.get(tree.label()), map.get(tree.pid().replace(".", "_")), null);
-                treeModels.add(treeModel);
-            }
-            return EruptUtil.TreeModelToTree(treeModels);
+            return dbService.treeData(eruptModel);
         } else {
             throw new EruptRuntimeException("没有查询权限");
         }
     }
 
-    @GetMapping("/{erupt}/{id}")
+    @RequestMapping("/{erupt}/{id}")
     @ResponseBody
-    public EruptApiModel getEruptSingleData(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
+    public EruptApiModel getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         try {
-            return EruptApiModel.successApi(eruptJpaDao.findDataById(eruptModel, id));
+            return EruptApiModel.successApi(dbService.findDataById(eruptModel, id));
         } catch (Exception e) {
-            return EruptApiModel.errorApi(e.getMessage());
+            return EruptApiModel.errorApi(e);
         }
     }
 
@@ -160,7 +128,6 @@ public class EruptDataController {
     public EruptApiModel execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
                                            @RequestBody JsonObject body) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
-        List<Object> oKeys = new ArrayList<>();
         for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
             if (code.equals(rowOperation.code())) {
                 JsonElement param = body.get("param");
@@ -187,13 +154,13 @@ public class EruptDataController {
                         return new EruptApiModel(boolAndReason);
                     }
                 }
-                eruptJpaDao.addEntity(eruptModel, obj);
+                dbService.addData(eruptModel, obj);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     SpringUtil.getBean(proxy).afterAdd(obj);
                 }
                 return EruptApiModel.successApi(obj);
             } catch (Exception e) {
-                return EruptApiModel.errorApi(e.getMessage());
+                return EruptApiModel.errorApi(e);
             }
         } else {
             throw new EruptRuntimeException("没有新增权限");
@@ -213,13 +180,13 @@ public class EruptDataController {
                         return new EruptApiModel(boolAndReason);
                     }
                 }
-                eruptJpaDao.editEntity(eruptModel, obj);
+                dbService.editData(eruptModel, obj);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     SpringUtil.getBean(proxy).afterEdit(obj);
                 }
                 return EruptApiModel.successApi(null);
             } catch (Exception e) {
-                return EruptApiModel.errorApi(e.getMessage());
+                return EruptApiModel.errorApi(e);
             }
         } else {
             throw new EruptRuntimeException("没有修改权限");
@@ -232,20 +199,19 @@ public class EruptDataController {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().delete()) {
             try {
-                Object obj = eruptJpaDao.findDataById(eruptModel, id);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeDelete(obj);
+                    BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeDelete(id);
                     if (!boolAndReason.isBool()) {
                         return new EruptApiModel(boolAndReason);
                     }
                 }
-                eruptJpaDao.deleteEntity(obj);
+                dbService.deleteData(eruptModel, id);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    SpringUtil.getBean(proxy).afterDelete(obj);
+                    SpringUtil.getBean(proxy).afterDelete(id);
                 }
                 return EruptApiModel.successApi(null);
             } catch (Exception e) {
-                return EruptApiModel.errorApi(e.getMessage());
+                return EruptApiModel.errorApi(e);
             }
         } else {
             throw new EruptRuntimeException("没有删除权限");
@@ -253,6 +219,7 @@ public class EruptDataController {
     }
 
     //为了事务性考虑所以增加了批量删除功能
+    @Transactional
     @DeleteMapping("/{erupt}")
     @ResponseBody
     public EruptApiModel deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) {
@@ -265,7 +232,7 @@ public class EruptDataController {
                 }
             }
         } catch (Exception e) {
-            return EruptApiModel.errorApi(e.getMessage());
+            return EruptApiModel.errorApi(e);
         }
         return eruptApiModel;
     }
@@ -275,7 +242,7 @@ public class EruptDataController {
     @ResponseBody
     public List getRefData(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
-        return eruptJpaDao.getReferenceList(eruptModel, fieldName);
+        return dbService.getReferenceList(eruptModel, fieldName);
     }
 
 

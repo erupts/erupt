@@ -18,9 +18,11 @@ public class DemoApplicationTests {
 
     @Test
     public void contextLoads() {
-        String hql = "select new map(EruptRole.id as id,EruptRole.name as name,EruptRole.remark as remark,EruptRole.status as status) from EruptRole EruptRole where 1=1";
-        List list = entityManager.createQuery(hql).getResultList();
+        List list = entityManager.createQuery("select name from SubMmo").getResultList();
         System.out.println(list);
+//        String hql = "select new map(EruptRole.id as id,EruptRole.name as name,EruptRole.remark as remark,EruptRole.status as status) from EruptRole EruptRole where 1=1";
+//        List list = entityManager.createQuery(hql).getResultList();
+//        System.out.println(list);
     }
 
 }

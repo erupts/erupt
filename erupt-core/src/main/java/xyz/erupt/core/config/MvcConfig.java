@@ -39,6 +39,11 @@ public class MvcConfig {
     }
 
     @Bean
+    public Gson gson() {
+        return new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+    }
+
+    @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         //  单个数据大小

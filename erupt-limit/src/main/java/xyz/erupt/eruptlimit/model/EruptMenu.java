@@ -20,7 +20,7 @@ import javax.persistence.*;
 @Table(name = "E_MENU")
 @Erupt(
         name = "菜单配置",
-        sort = "sort",
+        sorts = "sort",
         tree = @Tree(id = "id", label = "name", pid = "parentMenu.id")
 )
 @Data

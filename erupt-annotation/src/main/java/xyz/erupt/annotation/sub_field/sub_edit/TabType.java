@@ -11,5 +11,5 @@ public @interface TabType {
 
     Filter filter() default @Filter(condition = "");
 
-    TabEnum type() default TabEnum.LIST_SELECT;
+    TabEnum type() default TabEnum.TABLE;
 }

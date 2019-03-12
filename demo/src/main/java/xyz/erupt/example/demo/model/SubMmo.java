@@ -16,7 +16,11 @@ import java.util.Date;
 /**
  * Created by liyuepeng on 9/28/18.
  */
-@Erupt(name = "subTest")
+@Erupt(
+        name = "subTest",
+        loginUse = false,
+        sorts = "id"
+)
 @Entity
 @Table(name = "ERUPT_SUB_TEST")
 public class SubMmo extends BaseModel {

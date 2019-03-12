@@ -23,7 +23,7 @@ public @interface Erupt {
 
     String desc() default "";
 
-    String sort() default "";
+    String[] sorts() default {};
 
     String primaryKeyCol() default "id";
 

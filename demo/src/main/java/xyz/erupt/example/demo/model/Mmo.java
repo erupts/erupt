@@ -27,13 +27,13 @@ import java.util.Set;
         loginUse = false,
         rowOperation = {@RowOperation(
                 code = "action",
-                icon = "fa fa-terminal",
+                icon = "'fa fa-terminal'",
                 title = "执行",
                 operationHandler = OperationHandlerImpl.class,
                 edits = {
                         @CodeAndEdit(
                                 code = "name",
-                                codeType = "int",
+                                codeType = "Integer",
                                 edit = @Edit(title = "姓名", notNull = true)
                         ),
                         @CodeAndEdit(

@@ -7,6 +7,7 @@ import xyz.erupt.annotation.model.PlaceholderData;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.TreeModel;
@@ -86,6 +87,13 @@ public class EruptUtil {
         }
     }
 
+    public static String handleNoRightVariable(String pathVariable) {
+        if (pathVariable.startsWith(RestPath.NO_RIGHT_SYMBOL)) {
+            return pathVariable.substring(2, pathVariable.length());
+        } else {
+            throw new RuntimeException("数据参数异常");
+        }
+    }
 
 
     public Map<String, Object> eruptDataToViewData(Object data) {

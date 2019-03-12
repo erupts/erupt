@@ -27,7 +27,7 @@ import java.util.Set;
         name = "用户",
         desc = "用户配置",
         dateProxy = EruptUserProxy.class,
-        sort = "account desc",
+        sorts = "account desc",
         filter = @Filter(condition = "'id=@abc@'", conditionHandlers = {SimpleConditionHandler.class})
 )
 @Entity

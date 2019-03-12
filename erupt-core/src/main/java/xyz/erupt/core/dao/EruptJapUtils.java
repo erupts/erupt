@@ -113,9 +113,15 @@ public class EruptJapUtils {
         }
         //sort
         if (StringUtils.isNotBlank(hqlModel.getOrderBy())) {
-            hql.append(" order by " + compleHqlPath(eruptModel.getEruptName(), hqlModel.getOrderBy()));
-        } else if (StringUtils.isNotBlank(eruptModel.getErupt().sort())) {
-            hql.append(" order by " + compleHqlPath(eruptModel.getEruptName(), eruptModel.getErupt().sort()));
+            hql.append(" order by " + hqlModel.getOrderBy());
+        } else if (eruptModel.getErupt().sorts().length > 0) {
+            String[] sorts = eruptModel.getErupt().sorts();
+            for (int i = 0; i < sorts.length; i++) {
+                if (!sorts[i].contains(".")) {
+                    sorts[i] = eruptModel.getEruptName() + '.' + sorts[i];
+                }
+            }
+            hql.append(" order by " + String.join(",", sorts));
         }
         return hql.toString();
     }

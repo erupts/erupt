@@ -32,4 +32,12 @@ public class TreeModel {
         }
         this.data = data;
     }
+
+    public TreeModel(Collection<TreeModel> children, String id, String label, String pid, Object data) {
+        this.children = children;
+        this.id = id;
+        this.label = label;
+        this.pid = pid;
+        this.data = data;
+    }
 }

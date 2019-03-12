@@ -17,7 +17,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "E_DICT")
-@Erupt(name = "数据字典", sort = "sort")
+@Erupt(name = "数据字典", sorts = "sort")
 public class EruptDict extends BaseModel {
 
     @EruptField(

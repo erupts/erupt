@@ -34,5 +34,10 @@ public class EruptApiModel {
         return new EruptApiModel(false, message, null);
     }
 
+    public static EruptApiModel errorApi(Exception e) {
+        e.printStackTrace();
+        return new EruptApiModel(false, e.getMessage(), null);
+    }
+
 
 }

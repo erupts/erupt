@@ -21,4 +21,7 @@ public class RestPath {
 
     //文件上传
     public static final String ERUPT_FILE = ERUPT_API + "/file";
+
+
+    public static final String NO_RIGHT_SYMBOL = "__";
 }
