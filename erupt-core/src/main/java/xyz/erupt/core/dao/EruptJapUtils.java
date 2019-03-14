@@ -116,14 +116,18 @@ public class EruptJapUtils {
             hql.append(" order by " + hqlModel.getOrderBy());
         } else if (eruptModel.getErupt().sorts().length > 0) {
             String[] sorts = eruptModel.getErupt().sorts();
-            for (int i = 0; i < sorts.length; i++) {
-                if (!sorts[i].contains(".")) {
-                    sorts[i] = eruptModel.getEruptName() + '.' + sorts[i];
-                }
-            }
-            hql.append(" order by " + String.join(",", sorts));
+            hql.append(" order by " + convertSorts(eruptModel.getEruptName(), sorts));
         }
         return hql.toString();
+    }
+
+    public static String convertSorts(String eruptName, String[] sorts) {
+        for (int i = 0; i < sorts.length; i++) {
+            if (!sorts[i].contains(".")) {
+                sorts[i] = eruptName + '.' + sorts[i];
+            }
+        }
+        return String.join(",", sorts);
     }
 
     //在left join的情况下要求必须指定表信息，通过此方法生成；

@@ -7,7 +7,7 @@ import xyz.erupt.annotation.sub_erupt.Filter;
  */
 public @interface TabType {
 
-    String sort() default "";
+    String[] sorts() default "";
 
     Filter filter() default @Filter(condition = "");
 

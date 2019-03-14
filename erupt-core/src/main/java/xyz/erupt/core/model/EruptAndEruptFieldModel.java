@@ -11,6 +11,8 @@ public class EruptAndEruptFieldModel {
 
     private EruptModel eruptModel;
 
+    private Object viewValue;
+
     public EruptAndEruptFieldModel(EruptFieldModel eruptFieldModel, EruptModel eruptModel) {
         this.eruptFieldModel = eruptFieldModel;
         this.eruptModel = eruptModel;

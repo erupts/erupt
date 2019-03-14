@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by liyuepeng on 2019-03-06.
@@ -54,7 +55,7 @@ public class DBService implements DataService {
         }
         String hql = EruptJapUtils.generateEruptJpaHql(subEruptModel,
                 new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(subEruptModel)) + ")",
-                        subCondition, null, tabType.sort()));
+                        subCondition, null, null));
         return entityManager.createQuery(hql).getResultList();
     }
 
@@ -64,25 +65,37 @@ public class DBService implements DataService {
     }
 
     @Override
-    public List<TreeModel> findTabTreeById(EruptFieldModel eruptTabFieldModel, String id) {
-
-        return null;
+    public List findTabTreeById(EruptFieldModel eruptTabFieldModel, String id) {
+        EruptModel subEruptModel = InitService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
+        String condition = subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + "=" + id;
+        return eruptJpaDao.getDataList(subEruptModel, condition, null,
+                subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + " as " + subEruptModel.getErupt().primaryKeyCol());
     }
 
     @Override
     public List<TreeModel> findTabTree(EruptFieldModel eruptTabFieldModel) {
-        return null;
+        EruptModel subEruptModel = InitService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
+        TabType tabType = eruptTabFieldModel.getEruptField().edit().tabType()[0];
+        String condition = null;
+        if (!"".equals(tabType.filter().condition())) {
+            condition += AnnotationUtil.switchFilterConditionToStr(tabType.filter());
+        }
+        return treeDataUtil(subEruptModel, condition, null);
     }
 
     @Override
-    public List<TreeModel> treeData(EruptModel eruptModel) {
+    public List<TreeModel> queryTree(EruptModel eruptModel) {
+        return treeDataUtil(eruptModel, null, null);
+    }
+
+    private List<TreeModel> treeDataUtil(EruptModel eruptModel, String condition, String sort) {
         Tree tree = eruptModel.getErupt().tree();
         String[] cols = {
                 EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + tree.id().replace(".", "_"),
                 EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + tree.label().replace(".", "_"),
                 EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + tree.pid().replace(".", "_")
         };
-        List list = eruptJpaDao.getDataMap(eruptModel, cols);
+        List list = eruptJpaDao.getDataMap(eruptModel, condition, sort, cols);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Object o : list) {
             Map<String, Object> map = (Map) o;
@@ -92,7 +105,6 @@ public class DBService implements DataService {
         return EruptUtil.TreeModelToTree(treeModels);
     }
 
-    @Transactional
     @Override
     public Object findDataById(EruptModel eruptModel, Serializable id) {
         return eruptJpaDao.findDataById(eruptModel, id);

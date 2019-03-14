@@ -68,8 +68,7 @@ public class EruptDataController {
 
     @RequestMapping("/table/{erupt}/{tabFieldName}")
     @ResponseBody
-    public Object getSubEruptList(@PathVariable("erupt") String eruptName,
-                                  @PathVariable("tabFieldName") String tabFieldName) {
+    public Object findTabList(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptFieldModel eruptFieldModel = InitService.ERUPTS.get(eruptName).getEruptFieldMap().get(tabFieldName);
         return dbService.findTabList(eruptFieldModel);
@@ -77,9 +76,9 @@ public class EruptDataController {
 
     @RequestMapping("/table/{erupt}/{id}/{tabFieldName}")
     @ResponseBody
-    public Object getSubEruptListById(@PathVariable("erupt") String eruptName,
-                                      @PathVariable("id") String id,
-                                      @PathVariable("tabFieldName") String tabFieldName) {
+    public Object findTabListById(@PathVariable("erupt") String eruptName,
+                                  @PathVariable("id") String id,
+                                  @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptFieldModel eruptFieldModel = InitService.ERUPTS.get(eruptName).getEruptFieldMap().get(tabFieldName);
         return dbService.findTabListById(eruptFieldModel, id);
@@ -87,7 +86,8 @@ public class EruptDataController {
 
     @RequestMapping("/tree/{erupt}/{tabFieldName}")
     @ResponseBody
-    public Object getSubEruptTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
+    public Object findTabTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
+        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(tabFieldName);
         return dbService.findTabTree(eruptFieldModel);
@@ -95,7 +95,8 @@ public class EruptDataController {
 
     @RequestMapping("/tree/{erupt}/{id}/{tabFieldName}")
     @ResponseBody
-    public Object getSubEruptTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
+    public Object findTabTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
+        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(tabFieldName);
         return dbService.findTabTreeById(eruptFieldModel, id);
@@ -106,7 +107,7 @@ public class EruptDataController {
     public List<TreeModel> getTreeEruptData(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().query()) {
-            return dbService.treeData(eruptModel);
+            return dbService.queryTree(eruptModel);
         } else {
             throw new EruptRuntimeException("没有查询权限");
         }

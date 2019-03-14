@@ -20,17 +20,17 @@ public interface DataService {
 
     Page queryList(EruptModel eruptModel, JsonObject condition, Page page);
 
-    Object findDataById(EruptModel eruptModel, Serializable id);
+    List queryTree(EruptModel eruptModel);
 
-    List findTabListById(EruptFieldModel eruptTabFieldModel, String id);
+    Object findDataById(EruptModel eruptModel, Serializable id);
 
     List findTabList(EruptFieldModel eruptTabFieldModel);
 
-    List<TreeModel> findTabTreeById(EruptFieldModel eruptTabFieldModel, String id);
+    List findTabListById(EruptFieldModel eruptTabFieldModel, String id);
 
     List<TreeModel> findTabTree(EruptFieldModel eruptTabFieldModel);
 
-    List treeData(EruptModel eruptModel);
+    List findTabTreeById(EruptFieldModel eruptTabFieldModel, String id);
 
     List getReferenceList(EruptModel eruptModel, String fieldName);
 

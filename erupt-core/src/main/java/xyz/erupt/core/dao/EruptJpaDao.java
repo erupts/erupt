@@ -83,20 +83,19 @@ public class EruptJpaDao {
     }
 
 
-    public List getModelList(EruptModel eruptModel) {
-        List list = entityManager.createQuery("from " + eruptModel.getEruptName()).getResultList();
-        entityManager.clear();
-        return list;
-    }
-
-
     /**
      * @param eruptModel
      * @param cols       格式：name as alias
      * @return
      */
-    public List getDataMap(EruptModel eruptModel, String... cols) {
-        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", cols) + ")", null, null));
+    public List getDataMap(EruptModel eruptModel, String condition, String orderBy, String... cols) {
+        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", cols) + ")", condition, null, orderBy));
+        return entityManager.createQuery(hql).getResultList();
+    }
+
+
+    public List getDataList(EruptModel eruptModel, String condition, String orderBy, String... cols) {
+        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel(String.join(",", cols), condition, null, orderBy));
         return entityManager.createQuery(hql).getResultList();
     }
 
