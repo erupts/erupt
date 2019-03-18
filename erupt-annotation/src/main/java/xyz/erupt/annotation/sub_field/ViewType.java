@@ -7,4 +7,5 @@ public enum ViewType {
     TEXT,
     LINK,
     QR_CODE,
+    IMAGE,
 }

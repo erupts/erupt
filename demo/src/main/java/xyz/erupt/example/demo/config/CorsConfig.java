@@ -15,7 +15,7 @@ public class CorsConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("*"); // 允许域名使用
         corsConfiguration.addAllowedHeader("*"); // 允许头
-        corsConfiguration.addAllowedMethod("*"); // 允许方法（post、get等）
+        corsConfiguration.addAllowedMethod("*"); // 允许方法
         source.registerCorsConfiguration("/**", corsConfiguration); // 对接口配置跨域设置
         return new CorsFilter(source);
     }

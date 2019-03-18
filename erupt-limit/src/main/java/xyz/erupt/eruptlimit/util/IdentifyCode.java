@@ -24,7 +24,8 @@ public class IdentifyCode {
     private String code = null;
     // 验证码图片Buffer
     private BufferedImage buffImg = null;
-    Random random = new Random();
+
+    private Random random = new Random();
 
     // 生成默认定义的图片
     public IdentifyCode() {

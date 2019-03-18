@@ -42,11 +42,11 @@ import java.util.Set;
                                 edit = @Edit(title = "身份证号", notNull = true)
                         )
                 }
-        ), @RowOperation(code = "single", icon = "pic-left",
+        ), @RowOperation(code = "single", icon = "fa-star",
                 title = "单个执行", multi = false,
                 operationHandler = OperationHandlerImpl.class,
                 edits = {
-                        @CodeAndEdit(code = "idcard", edit = @Edit(title = "身份证号")),
+                        @CodeAndEdit(code = "idCard", edit = @Edit(title = "身份证号")),
                         @CodeAndEdit(code = "name", edit = @Edit(title = "姓名")),
                 }
         )

@@ -13,9 +13,9 @@ public @interface AttachmentType {
      */
     long size() default 0;
 
-    String[] fileTypes() default {};
-
     String path() default "";
+
+    String[] fileTypes() default {};
 
     AttachmentEnum type() default AttachmentEnum.OTHER;
 

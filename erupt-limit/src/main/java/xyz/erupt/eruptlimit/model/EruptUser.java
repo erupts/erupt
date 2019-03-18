@@ -10,7 +10,10 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
+import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
 import xyz.erupt.core.handler.SimpleConditionHandler;
 import xyz.erupt.eruptlimit.model.proxy.EruptUserProxy;
 import lombok.Data;
@@ -27,8 +30,8 @@ import java.util.Set;
         name = "用户",
         desc = "用户配置",
         dateProxy = EruptUserProxy.class,
-        sorts = "account desc",
-        filter = @Filter(condition = "'id=@abc@'", conditionHandlers = {SimpleConditionHandler.class})
+        sorts = "account desc"
+//        filter = @Filter(condition = "'id=@abc@'", conditionHandlers = {SimpleConditionHandler.class})
 )
 @Entity
 @Table(name = "E_USER", uniqueConstraints = {
@@ -66,17 +69,29 @@ public class EruptUser extends BaseModel {
     )
     private Boolean isMD5;
 
+
+    @Column(name = "HEAD_ICON")
+    @EruptField(
+            views = @View(title = "头像", viewType = ViewType.IMAGE),
+            edit = @Edit(
+                    title = "头像",
+                    type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType(
+                            type = AttachmentEnum.IMAGE
+                    )
+            )
+    )
+    private String headIcon;
+
     @Column(name = "PWD")
     @EruptField(
-            views = @View(title = "密码"),
             edit = @Edit(title = "密码", notNull = true)
     )
     private String password;
 
     @Transient
     @EruptField(
-            views = @View(title = "确认密码", show = false),
-            edit = @Edit(title = "确认密码", notNull = true)
+            edit = @Edit(title = "确认密码")
     )
     private String password2;
 
@@ -112,7 +127,7 @@ public class EruptUser extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "备注",
-                    inputType = @InputType(type = InputEnum.TEXTAREA,length = DataLength.REMARK_LENGTH)
+                    inputType = @InputType(type = InputEnum.TEXTAREA, length = DataLength.REMARK_LENGTH)
             )
 
     )

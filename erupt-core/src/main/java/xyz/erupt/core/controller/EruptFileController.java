@@ -1,7 +1,10 @@
 package xyz.erupt.core.controller;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.aspectj.util.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,8 +27,11 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Paths;
+import java.util.Random;
+
+import static java.util.Locale.ROOT;
 
 /**
  * Created by liyuepeng on 10/15/18.
@@ -63,9 +69,9 @@ public class EruptFileController {
                 }
             }
             //生成存储路径
-            String path = DateUtil.getFormatDate(DateUtil.DATE) + File.separator + file.getOriginalFilename();
+            String path = File.separator + DateUtil.getFormatDate(DateUtil.DATE) + File.separator + RandomUtils.nextInt(100, 9999) + "-" + file.getOriginalFilename();
             if (!"".equals(attachmentType.path())) {
-                path = attachmentType.path() + File.separator + path;
+                path = attachmentType.path() + path;
             }
             File dest = new File(uploadPath + File.separator + path);
             if (!dest.getParentFile().exists()) {
@@ -80,24 +86,23 @@ public class EruptFileController {
             switch (edit.attachmentType()[0].type()) {
                 case IMAGE:
                     ImageType imageType = edit.attachmentType()[0].imageType();
+                    BufferedImage bufferedImage = ImageIO.read(file.getInputStream()); // 通过MultipartFile得到InputStream，从而得到BufferedImage
+                    if (bufferedImage == null) {
+                        return EruptApiModel.errorApi("获取图片流失败，请确认上传文件为图片");
+                    }
                     if (imageType.width().length > 1 || imageType.height().length > 1) {
-                        BufferedImage bufferedImage = ImageIO.read(file.getInputStream()); // 通过MultipartFile得到InputStream，从而得到BufferedImage
-                        if (bufferedImage == null) {
-                            return EruptApiModel.errorApi("上传失败，获取图片流失败，请确认上传文件为图片");
-                        } else {
-                            int width = bufferedImage.getWidth();
-                            int height = bufferedImage.getHeight();
-                            if (imageType.width().length > 1) {
-                                if (imageType.width()[0] > width || imageType.width()[1] < width) {
-                                    return EruptApiModel.errorApi("上传失败，图片宽度不在["
-                                            + imageType.width()[0] + "," + imageType.width()[1] + "]范围内");
-                                }
+                        int width = bufferedImage.getWidth();
+                        int height = bufferedImage.getHeight();
+                        if (imageType.width().length > 1) {
+                            if (imageType.width()[0] > width || imageType.width()[1] < width) {
+                                return EruptApiModel.errorApi("上传失败，图片宽度不在["
+                                        + imageType.width()[0] + "," + imageType.width()[1] + "]范围内");
                             }
-                            if (imageType.height().length > 1) {
-                                if (imageType.height()[0] > height || imageType.height()[1] < height) {
-                                    return EruptApiModel.errorApi("上传失败，图片高度不在["
-                                            + imageType.height()[0] + "," + imageType.height()[1] + "]范围内");
-                                }
+                        }
+                        if (imageType.height().length > 1) {
+                            if (imageType.height()[0] > height || imageType.height()[1] < height) {
+                                return EruptApiModel.errorApi("上传失败，图片高度不在["
+                                        + imageType.height()[0] + "," + imageType.height()[1] + "]范围内");
                             }
                         }
                     }
@@ -108,7 +113,7 @@ public class EruptFileController {
             }
             //执行upload proxy
             for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dateProxy()) {
-                BoolAndReason boolAndReason = SpringUtil.getBean(clazz).upLoadFile(file.getInputStream(), file.getOriginalFilename());
+                BoolAndReason boolAndReason = SpringUtil.getBean(clazz).upLoadFile(file.getInputStream(), dest);
                 if (!boolAndReason.isBool()) {
                     return new EruptApiModel(boolAndReason);
                 }
@@ -120,21 +125,40 @@ public class EruptFileController {
         }
     }
 
-    @GetMapping("/download-attachment")
-    public ResponseEntity<byte[]> downloadAttachment(@RequestParam("path") String path, HttpServletRequest request, HttpServletResponse response) {
-        String[] pathSplits = path.split("/");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        try {
-            headers.setContentDispositionFormData("attachment", java.net.URLEncoder.encode(pathSplits[pathSplits.length - 1], "UTF-8"));
-            File file = new File(this.uploadPath + File.separator + path);
-            return new ResponseEntity<byte[]>(FileUtil.readAsByteArray(file),
-                    headers, HttpStatus.CREATED);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    @RequestMapping(value = "/{erupt}/preview-attachment",
+//            produces = {MediaType.IMAGE_JPEG_VALUE,MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
+//    @ResponseBody
+//    public byte[] preview(@RequestParam("path") String path, @PathVariable("erupt") String eruptName,
+//                          HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        if (!path.startsWith(File.separator)) {
+//            path = File.separator + path;
+//        }
+//        File file = new File(uploadPath + path);
+//        if (!file.exists()) {
+//            file = new File(this.getClass().getResource("not_img.png").getFile());
+//        }
+//        FileInputStream inputStream = new FileInputStream(file);
+//        byte[] bytes = new byte[inputStream.available()];
+//        inputStream.read(bytes, 0, inputStream.available());
+//        return bytes;
+//    }
+
+//    @GetMapping("/download-attachment")
+//    @ResponseBody
+//    public ResponseEntity<byte[]> downloadAttachment(@RequestParam("path") String path, HttpServletRequest request, HttpServletResponse response) {
+//        String[] pathSplits = path.split("/");
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//        try {
+//            headers.setContentDispositionFormData("attachment", java.net.URLEncoder.encode(pathSplits[pathSplits.length - 1], "UTF-8"));
+//            File file = new File(this.uploadPath + File.separator + path);
+//            return new ResponseEntity<byte[]>(FileUtil.readAsByteArray(file),
+//                    headers, HttpStatus.CREATED);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
 
 }
