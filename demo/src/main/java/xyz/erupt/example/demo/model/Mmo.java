@@ -27,7 +27,7 @@ import java.util.Set;
         loginUse = false,
         rowOperation = {@RowOperation(
                 code = "action",
-                icon = "'fa fa-terminal'",
+                icon = "fa-terminal",
                 title = "执行",
                 operationHandler = OperationHandlerImpl.class,
                 edits = {

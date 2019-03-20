@@ -1,21 +1,15 @@
 package xyz.erupt.core.util;
 
-import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.fun.ConditionHandler;
-import xyz.erupt.annotation.model.PlaceholderData;
-import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.TreeModel;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.regex.Matcher;
 
 /**
  * Created by liyuepeng on 11/1/18.
@@ -23,38 +17,9 @@ import java.util.regex.Matcher;
 public class EruptUtil {
 
     //数据项与erupt注解中描述不相符时使用
-    public static final String NOT_ERUPT_REF = "@NOT_REF@";
+    private static final String NOT_ERUPT_REF = "@NOT_REF@";
 
-//    FIXME 通过hibernate的OneToMany加载数据的特性生成树（执行sql的量比较大，影响性能！！！！）
-//    public static void generateTree(Collection collection, Tree tree) {
-//        try {
-//            for (Object o : collection) {
-//                for (Field field : o.getClass().getDeclaredFields()) {
-//                    field.setAccessible(true);
-//                    if (field.getName().equals(tree.children())) {
-//                        Collection fc = (Collection) field.get(o);
-//                        if (null != fc && fc.size() > 0) {
-//                            generateTree((Collection) field.get(o), tree);
-//                        }
-//                    } else {
-//                        if (!field.getName().equals(tree.id()) && !field.getName().equals(tree.label())) {
-//
-//                            field.set(o, null);
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    /**
-     * 内存计算的方式生成树结构
-     *
-     * @param treeModels
-     * @return
-     */
+    //内存计算的方式生成树结构
     public static List<TreeModel> TreeModelToTree(List<TreeModel> treeModels) {
         List<TreeModel> resultTreeModels = new ArrayList<>();
         List<TreeModel> tempTreeModels = new LinkedList<>();
@@ -92,6 +57,21 @@ public class EruptUtil {
             return pathVariable.substring(2, pathVariable.length());
         } else {
             throw new RuntimeException("数据参数异常");
+        }
+    }
+
+
+    public static void rinseEruptObj(Object eruptObj) throws IllegalAccessException {
+        for (Field field : eruptObj.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            EruptField eruptField = field.getAnnotation(EruptField.class);
+            if (null != eruptField) {
+                if (eruptField.edit().type() == EditType.TAB) {
+                    field.set(eruptObj, null);
+                }
+            } else {
+                field.set(eruptObj, null);
+            }
         }
     }
 

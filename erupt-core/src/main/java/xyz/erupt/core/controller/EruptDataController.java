@@ -80,8 +80,8 @@ public class EruptDataController {
                                   @PathVariable("id") String id,
                                   @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptFieldModel eruptFieldModel = InitService.ERUPTS.get(eruptName).getEruptFieldMap().get(tabFieldName);
-        return dbService.findTabListById(eruptFieldModel, id);
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        return dbService.findTabListById(eruptModel, tabFieldName, id);
     }
 
     @RequestMapping("/tree/{erupt}/{tabFieldName}")
@@ -98,8 +98,7 @@ public class EruptDataController {
     public Object findTabTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
-        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(tabFieldName);
-        return dbService.findTabTreeById(eruptFieldModel, id);
+        return dbService.findTabTreeById(eruptModel, tabFieldName, id);
     }
 
     @RequestMapping("/tree/{erupt}")

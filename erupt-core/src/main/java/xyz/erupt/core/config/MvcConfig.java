@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.util.unit.DataSize;
 
 import javax.servlet.MultipartConfigElement;
@@ -19,14 +20,6 @@ import java.util.Collection;
  */
 @Configuration
 public class MvcConfig {
-
-//    @Override
-//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-//        GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-//        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-//        gsonHttpMessageConverter.setGson(gson);
-//        converters.add(gsonHttpMessageConverter);
-//    }
 
     @Bean
     public HttpMessageConverters customConverters() {

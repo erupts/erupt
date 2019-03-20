@@ -10,6 +10,7 @@ import xyz.erupt.core.model.TreeModel;
 
 import javax.transaction.Transactional;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -20,19 +21,19 @@ public interface DataService {
 
     Page queryList(EruptModel eruptModel, JsonObject condition, Page page);
 
-    List queryTree(EruptModel eruptModel);
+    Collection queryTree(EruptModel eruptModel);
 
     Object findDataById(EruptModel eruptModel, Serializable id);
 
-    List findTabList(EruptFieldModel eruptTabFieldModel);
+    Collection findTabList(EruptFieldModel eruptTabFieldModel);
 
-    List findTabListById(EruptFieldModel eruptTabFieldModel, String id);
+    Collection findTabListById(EruptModel eruptModel, String tabFieldName, Serializable id);
 
-    List<TreeModel> findTabTree(EruptFieldModel eruptTabFieldModel);
+    Collection<TreeModel> findTabTree(EruptFieldModel eruptTabFieldModel);
 
-    List findTabTreeById(EruptFieldModel eruptTabFieldModel, String id);
+    Collection findTabTreeById(EruptModel eruptModel, String tabFieldName, Serializable id);
 
-    List getReferenceList(EruptModel eruptModel, String fieldName);
+    Collection getReferenceList(EruptModel eruptModel, String fieldName);
 
     void addData(EruptModel eruptModel, Object object);
 

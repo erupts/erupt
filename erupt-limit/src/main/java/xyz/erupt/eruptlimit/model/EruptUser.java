@@ -29,8 +29,8 @@ import java.util.Set;
 @Erupt(
         name = "用户",
         desc = "用户配置",
-        dateProxy = EruptUserProxy.class,
-        sorts = "account desc"
+        dateProxy = EruptUserProxy.class
+//        sorts = "account desc"
 //        filter = @Filter(condition = "'id=@abc@'", conditionHandlers = {SimpleConditionHandler.class})
 )
 @Entity
@@ -48,7 +48,7 @@ public class EruptUser extends BaseModel {
 
     @Column(name = "NAME")
     @EruptField(
-            views = @View(title = "姓名", sortable = true),
+            views = @View(title = "姓名", sortable = true,viewType = ViewType.TEXT),
             edit = @Edit(title = "姓名", notNull = true, search = @Search(search = true))
     )
     private String name;

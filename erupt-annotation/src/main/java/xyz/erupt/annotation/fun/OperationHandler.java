@@ -10,5 +10,5 @@ import javax.transaction.Transactional;
 @Transactional
 public interface OperationHandler {
 
-    BoolAndReason exec(Object date, Object param);
+    BoolAndReason exec(Object data, Object param);
 }

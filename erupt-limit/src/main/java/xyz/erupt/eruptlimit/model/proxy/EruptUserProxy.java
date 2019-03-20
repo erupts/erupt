@@ -7,6 +7,7 @@ import xyz.erupt.core.model.Page;
 import xyz.erupt.core.util.MD5Utils;
 import xyz.erupt.eruptlimit.model.EruptUser;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class EruptUserProxy extends DataProxy<EruptUser> {
     @Override
     public void afterFetch(Object o) {
         Page page = (Page) o;
-        List<Map> lm = page.getList();
+        Collection<Map> lm = page.getList();
         Map<String, String> map = new HashMap();
         map.put("account", "2333");
         lm.add(map);

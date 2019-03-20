@@ -7,7 +7,7 @@ import org.json.JSONObject;
  */
 public class ConfigUtil {
 
-    public static String annoStrToJsonStr(String annotationStr) {
+    public static String annotationToJson(String annotationStr) {
         String convertStr = annotationStr
                 .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.sub_attachment\\.\\w+", "")
                 .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")

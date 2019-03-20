@@ -43,6 +43,9 @@ public class LoginService {
     //每次服务器启动后内存中的tokenDES都会不一样，就连开发人员都查不到，杜绝了token被仿造的问题
     private static final String userTokenDES = RandomStringUtils.randomGraph(10);
 
+    @Autowired
+    private Gson gson;
+
 
     //TODO 分布式下计数会不准
     private static Map<String, Integer> loginErrorCount = new HashMap<>();
@@ -145,7 +148,7 @@ public class LoginService {
         }
         //校验菜单权限
         {
-            List<EruptMenu> menus = new Gson().fromJson(redisService.get(RedisKey.MENU_LIST + token).toString(),
+            List<EruptMenu> menus = gson.fromJson(redisService.get(RedisKey.MENU_LIST + token).toString(),
                     new TypeToken<List<EruptMenu>>() {
                     }.getType());
             boolean result = false;

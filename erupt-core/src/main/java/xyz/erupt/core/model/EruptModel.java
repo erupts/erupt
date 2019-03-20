@@ -1,5 +1,6 @@
 package xyz.erupt.core.model;
 
+import com.google.gson.Gson;
 import lombok.Data;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.util.ConfigUtil;
@@ -34,7 +35,7 @@ public class EruptModel implements Serializable {
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.eruptName = eruptClazz.getSimpleName();
         try {
-            this.eruptJson = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(erupt.toString())).getAsJsonObject();
+            this.eruptJson = new JsonParser().parse(ConfigUtil.annotationToJson(erupt.toString())).getAsJsonObject();
         } catch (Exception e) {
             throw ExceptionUtil.styleEruptException(this, ExceptionUtil.ANNOTATION_PARSE_ERR_STR);
         }

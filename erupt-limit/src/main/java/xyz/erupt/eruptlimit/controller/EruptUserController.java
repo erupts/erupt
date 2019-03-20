@@ -40,6 +40,9 @@ public class EruptUserController {
     @Value("${erupt.expireTimeByLogin}")
     private Integer expireTimeByLogin;
 
+    @Autowired
+    private Gson gson;
+
     @PostMapping(RestPath.DONT_INTERCEPT + "/login")
     @ResponseBody
     public LoginModel login(@RequestParam("account") String account,
@@ -82,7 +85,7 @@ public class EruptUserController {
 //        type -> Set<EruptMenu>
         EruptModel eruptModel = InitService.ERUPTS.get("EruptMenu");
         Object o = redisService.get(RedisKey.MENU_TREE + request.getHeader("token"));
-        return new Gson().fromJson(o.toString(), new TypeToken<List<TreeModel>>() {
+        return gson.fromJson(o.toString(), new TypeToken<List<TreeModel>>() {
         }.getType());
     }
 }

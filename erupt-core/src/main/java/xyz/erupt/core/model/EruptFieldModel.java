@@ -23,8 +23,6 @@ public class EruptFieldModel implements Serializable {
 
     private transient Field field;
 
-    private EruptModel eruptModel;
-
     private JsonObject eruptFieldJson;
 
     private String fieldName;
@@ -43,7 +41,7 @@ public class EruptFieldModel implements Serializable {
             this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
         }
         try {
-            this.eruptFieldJson = new JsonParser().parse(ConfigUtil.annoStrToJsonStr(eruptField.toString())).getAsJsonObject();
+            this.eruptFieldJson = new JsonParser().parse(ConfigUtil.annotationToJson(eruptField.toString())).getAsJsonObject();
         } catch (Exception e) {
             throw ExceptionUtil.styleEruptFieldException(this, ExceptionUtil.ANNOTATION_PARSE_ERR_STR);
         }

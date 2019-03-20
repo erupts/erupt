@@ -2,6 +2,7 @@ package xyz.erupt.core.model;
 
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class Page {
 
     private String sort;
 
-    private List list;
+    private Collection list;
 
     public static final String PAGE_INDEX_STR = "_pageIndex";
 

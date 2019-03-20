@@ -5,7 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import xyz.erupt.core.dao.EruptJapUtils;
 import xyz.erupt.core.dao.EruptJpaDao;
@@ -17,9 +19,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * Created by liyuepeng on 2019-03-06.
@@ -39,36 +40,35 @@ public class DBService implements DataService {
     }
 
     @Override
-    public List findTabListById(EruptFieldModel eruptTabFieldModel, String id) {
-        EruptModel subEruptModel = InitService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
-        String subCondition = null;
-        if (StringUtils.isNotBlank(id)) {
-            subCondition = subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + "=" + id;
-        }
-        TabType tabType = eruptTabFieldModel.getEruptField().edit().tabType()[0];
-        if (!"".equals(tabType.filter().condition())) {
-            if (StringUtils.isNotBlank(id)) {
-                subCondition += EruptJapUtils.AND;
+    public Collection findTabListById(EruptModel eruptModel, String tabFieldName, Serializable id) {
+        Object obj = eruptJpaDao.findDataById(eruptModel, id);
+        try {
+            Field tabField = obj.getClass().getDeclaredField(tabFieldName);
+            tabField.setAccessible(true);
+            Collection collection = (Collection) tabField.get(obj);
+            for (Object tabData : collection) {
+                EruptUtil.rinseEruptObj(tabData);
             }
-            subCondition += AnnotationUtil.switchFilterConditionToStr(tabType.filter());
+            return collection;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
         }
-        String hql = EruptJapUtils.generateEruptJpaHql(subEruptModel,
-                new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(subEruptModel)) + ")",
-                        subCondition, null, null));
-        return entityManager.createQuery(hql).getResultList();
     }
 
     @Override
     public List findTabList(EruptFieldModel eruptTabFieldModel) {
-        return this.findTabListById(eruptTabFieldModel, null);
+        return null;
+//        return this.findTabListById(eruptTabFieldModel, null);
     }
 
     @Override
-    public List findTabTreeById(EruptFieldModel eruptTabFieldModel, String id) {
-        EruptModel subEruptModel = InitService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
-        String condition = subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + "=" + id;
-        return eruptJpaDao.getDataList(subEruptModel, condition, null,
-                subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + " as " + subEruptModel.getErupt().primaryKeyCol());
+    public List findTabTreeById(EruptModel eruptModel, String tabFieldName, Serializable id) {
+//        EruptModel subEruptModel = InitService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
+//        String condition = subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + "=" + id;
+//        return eruptJpaDao.getDataList(subEruptModel, condition, null,
+//                subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + " as " + subEruptModel.getErupt().primaryKeyCol());
+        return null;
     }
 
     @Override
