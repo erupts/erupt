@@ -1,11 +1,13 @@
 package xyz.erupt.core.util;
 
 import org.apache.commons.lang3.StringUtils;
+import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.TreeModel;
 
 import java.lang.reflect.Field;
@@ -62,9 +64,13 @@ public class EruptUtil {
 
 
     public static void rinseEruptObj(Object eruptObj) throws IllegalAccessException {
+        Erupt erupt = eruptObj.getClass().getAnnotation(Erupt.class);
         for (Field field : eruptObj.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             EruptField eruptField = field.getAnnotation(EruptField.class);
+            if (field.getName().equalsIgnoreCase(erupt.primaryKeyCol())) {
+                continue;
+            }
             if (null != eruptField) {
                 if (eruptField.edit().type() == EditType.TAB) {
                     field.set(eruptObj, null);

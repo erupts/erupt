@@ -6,5 +6,5 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 public enum TabEnum {
     TABLE,
     LIST_SELECT,
-    TREE_SELECT
+    TREE
 }

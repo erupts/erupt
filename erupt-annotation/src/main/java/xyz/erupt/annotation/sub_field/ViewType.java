@@ -6,6 +6,7 @@ package xyz.erupt.annotation.sub_field;
 public enum ViewType {
     TEXT,
     LINK,
-    QR_CODE,
     IMAGE,
+    QR_CODE,
+    ATTACHMENT
 }

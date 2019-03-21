@@ -57,7 +57,7 @@ public class EruptRole extends BaseModel {
                     title = "菜单",
                     type = EditType.TAB,
                     tabType = @TabType(
-                            type = TabEnum.TREE_SELECT
+                            type = TabEnum.TREE
                     )
             )
     )

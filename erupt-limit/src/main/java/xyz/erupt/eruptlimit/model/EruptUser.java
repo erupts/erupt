@@ -48,7 +48,7 @@ public class EruptUser extends BaseModel {
 
     @Column(name = "NAME")
     @EruptField(
-            views = @View(title = "姓名", sortable = true,viewType = ViewType.TEXT),
+            views = @View(title = "姓名", sortable = true, viewType = ViewType.TEXT),
             edit = @Edit(title = "姓名", notNull = true, search = @Search(search = true))
     )
     private String name;
@@ -72,7 +72,7 @@ public class EruptUser extends BaseModel {
 
     @Column(name = "HEAD_ICON")
     @EruptField(
-            views = @View(title = "头像", viewType = ViewType.IMAGE),
+            views = @View(title = "头像", viewType = ViewType.ATTACHMENT),
             edit = @Edit(
                     title = "头像",
                     type = EditType.ATTACHMENT,

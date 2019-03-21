@@ -1,19 +1,20 @@
 package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
-import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import xyz.erupt.core.dao.EruptJapUtils;
 import xyz.erupt.core.dao.EruptJpaDao;
-import xyz.erupt.core.model.*;
+import xyz.erupt.core.model.EruptFieldModel;
+import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.model.Page;
+import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.ReflectUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -63,19 +64,26 @@ public class DBService implements DataService {
     }
 
     @Override
-    public List findTabTreeById(EruptModel eruptModel, String tabFieldName, Serializable id) {
-//        EruptModel subEruptModel = InitService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
-//        String condition = subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + "=" + id;
-//        return eruptJpaDao.getDataList(subEruptModel, condition, null,
-//                subEruptModel.getEruptName() + "." + subEruptModel.getErupt().primaryKeyCol() + " as " + subEruptModel.getErupt().primaryKeyCol());
-        return null;
+    public Set findTabTreeById(EruptModel eruptModel, String tabFieldName, Serializable id) {
+        Collection collection = findTabListById(eruptModel, tabFieldName, id);
+        Set<String> idSet = new HashSet<>();
+        for (Object o : collection) {
+            try {
+                Field field = ReflectUtil.findClassAllField(o.getClass(), eruptModel.getErupt().primaryKeyCol());
+                field.setAccessible(true);
+                idSet.add(field.get(o).toString());
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return idSet;
     }
 
     @Override
     public List<TreeModel> findTabTree(EruptFieldModel eruptTabFieldModel) {
         EruptModel subEruptModel = InitService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
         TabType tabType = eruptTabFieldModel.getEruptField().edit().tabType()[0];
-        String condition = null;
+        String condition = "";
         if (!"".equals(tabType.filter().condition())) {
             condition += AnnotationUtil.switchFilterConditionToStr(tabType.filter());
         }

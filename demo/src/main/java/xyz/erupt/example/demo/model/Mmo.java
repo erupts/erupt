@@ -124,7 +124,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "子节点",
                     type = EditType.TAB,
-                    tabType = @TabType(type = TabEnum.TREE_SELECT)
+                    tabType = @TabType(type = TabEnum.TABLE)
             )
     )
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
