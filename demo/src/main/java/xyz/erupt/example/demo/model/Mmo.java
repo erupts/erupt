@@ -100,7 +100,7 @@ public class Mmo extends BaseModel {
                     search = @Search(search = true, vague = true)
             )
     )
-    private Number slider;
+    private Integer slider;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -133,7 +133,7 @@ public class Mmo extends BaseModel {
 
     @EruptField(
             views = {
-                    @View(title = "number")
+                    @View(title = "数字",viewType = ViewType.QR_CODE)
             },
             edit = @Edit(
                     title = "数字",

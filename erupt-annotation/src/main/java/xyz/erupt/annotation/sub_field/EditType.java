@@ -14,7 +14,6 @@ public enum EditType {
     ATTACHMENT,       //附件
     TAB,              //TAB选项卡
     STEPS,            //步骤条
-    MARK_DOWN,
     DIVIDE,           //横向分割线
     DEPEND_SWITCH,    //表单依赖开关
     EMPTY,

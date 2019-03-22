@@ -72,7 +72,7 @@ public class EruptUser extends BaseModel {
 
     @Column(name = "HEAD_ICON")
     @EruptField(
-            views = @View(title = "头像", viewType = ViewType.ATTACHMENT),
+            views = @View(title = "头像", viewType = ViewType.IMAGE),
             edit = @Edit(
                     title = "头像",
                     type = EditType.ATTACHMENT,
@@ -127,9 +127,8 @@ public class EruptUser extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "备注",
-                    inputType = @InputType(type = InputEnum.TEXTAREA, length = DataLength.REMARK_LENGTH)
+                    inputType = @InputType(type = InputEnum.TEXTAREA)
             )
-
     )
     private String remark;
 

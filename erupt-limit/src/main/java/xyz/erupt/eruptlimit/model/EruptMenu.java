@@ -124,7 +124,8 @@ public class EruptMenu extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "功能描述",
-                    inputType = @InputType(type = InputEnum.TEXTAREA)
+                    type = EditType.HTML_EDIT
+//                    inputType = @InputType(type = InputEnum.TEXTAREA)
             )
     )
     private String remark;
