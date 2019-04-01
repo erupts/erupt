@@ -133,7 +133,7 @@ public class Mmo extends BaseModel {
 
     @EruptField(
             views = {
-                    @View(title = "数字",viewType = ViewType.QR_CODE)
+                    @View(title = "数字", viewType = ViewType.QR_CODE)
             },
             edit = @Edit(
                     title = "数字",
@@ -286,7 +286,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "markDown",
                     notNull = true,
-                    type = EditType.MARK_DOWN
+                    type = EditType.HTML_EDIT
             )
     )
     public String markDown;

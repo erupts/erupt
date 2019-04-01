@@ -48,7 +48,7 @@ public class EruptUser extends BaseModel {
 
     @Column(name = "NAME")
     @EruptField(
-            views = @View(title = "姓名", sortable = true, viewType = ViewType.TEXT),
+            views = @View(title = "姓名", sortable = true),
             edit = @Edit(title = "姓名", notNull = true, search = @Search(search = true))
     )
     private String name;

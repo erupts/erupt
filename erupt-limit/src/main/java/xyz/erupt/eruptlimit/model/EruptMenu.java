@@ -52,6 +52,7 @@ public class EruptMenu extends BaseModel {
                                     @VL(value = "'/build/table/'", label = "TABLE"),
                                     @VL(value = "'/build/tree/'", label = "TREE"),
                                     @VL(value = "'/build/report/'", label = "REPORT"),
+                                    @VL(value = "'/page/'", label = "PAGE"),
                                     @VL(value = "'/'", label = "'/'"),
                             }
                     )
