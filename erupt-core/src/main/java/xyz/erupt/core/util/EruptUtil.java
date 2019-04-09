@@ -1,5 +1,6 @@
 package xyz.erupt.core.util;
 
+import com.google.gson.JsonElement;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -7,6 +8,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.TreeModel;
 
@@ -141,6 +143,24 @@ public class EruptUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static Object gsonElementToObject(EruptFieldModel eruptFieldModel, JsonElement jsonElement) {
+        if ("Integer".equalsIgnoreCase(eruptFieldModel.getFieldReturnName()) || "int".equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
+            try {
+                return jsonElement.getAsInt();
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+        switch (eruptFieldModel.getEruptField().edit().type()) {
+            case SLIDER:
+                return jsonElement.getAsInt();
+            case BOOLEAN:
+                return jsonElement.getAsBoolean();
+            default:
+                return jsonElement.getAsString();
+        }
     }
 
 }

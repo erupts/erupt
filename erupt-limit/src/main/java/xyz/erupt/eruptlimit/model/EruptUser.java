@@ -69,6 +69,16 @@ public class EruptUser extends BaseModel {
     )
     private Boolean isMD5;
 
+    @Column(name = "AGE")
+    @EruptField(
+            views = @View(title = "年龄"),
+            edit = @Edit(
+                    title = "年龄",
+                    search = @Search(search = true, vague = true)
+            )
+    )
+    private Integer age;
+
 
     @Column(name = "HEAD_ICON")
     @EruptField(

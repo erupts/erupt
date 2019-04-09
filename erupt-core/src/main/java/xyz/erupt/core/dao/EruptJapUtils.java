@@ -28,6 +28,10 @@ public class EruptJapUtils {
 
     public static final String AND = " and ";
 
+    public static final String LVAL_KEY = "l_";
+
+    public static final String RVAL_KEY = "r_";
+
     public static final String NULL = "$null$";
 
     public static final String NOT_NULL = "$notNull$";
@@ -95,14 +99,22 @@ public class EruptJapUtils {
         if (null != condition) {
             for (String key : condition.keySet()) {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
-                if (null != eruptFieldModel && eruptFieldModel.getEruptField().edit().search().search()) {
+                EruptField eruptField = eruptFieldModel.getEruptField();
+                if (null != eruptFieldModel && eruptField.edit().search().search()) {
                     String _key = EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), key);
-                    if (condition.get(key).toString().contains(EruptJapUtils.NULL)) {
-                        hql.append(EruptJapUtils.AND).append(_key).append(" is null");
-                    } else if (condition.get(key).toString().contains(EruptJapUtils.NOT_NULL)) {
-                        hql.append(EruptJapUtils.AND).append(_key).append(" is not null");
+                    if (eruptField.edit().search().vague()) {
+                        hql.append(EruptJapUtils.AND).append(_key)
+                                .append(" >=:").append(LVAL_KEY + key)
+                                .append(EruptJapUtils.AND).append(_key)
+                                .append(" <=:").append(RVAL_KEY + key);
                     } else {
-                        hql.append(EruptJapUtils.AND).append(_key).append("=:").append(key);
+                        if (condition.get(key).toString().contains(EruptJapUtils.NULL)) {
+                            hql.append(EruptJapUtils.AND).append(_key).append(" is null");
+                        } else if (condition.get(key).toString().contains(EruptJapUtils.NOT_NULL)) {
+                            hql.append(EruptJapUtils.AND).append(_key).append(" is not null");
+                        } else {
+                            hql.append(EruptJapUtils.AND).append(_key).append("=:").append(key);
+                        }
                     }
                 }
             }

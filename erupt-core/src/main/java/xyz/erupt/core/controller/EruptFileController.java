@@ -1,20 +1,12 @@
 package xyz.erupt.core.controller;
 
 import org.apache.commons.lang3.RandomUtils;
-import org.aspectj.util.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
 import xyz.erupt.core.constant.RestPath;
@@ -25,14 +17,8 @@ import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.SpringUtil;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.Paths;
-import java.util.Random;
-
-import static java.util.Locale.ROOT;
+import java.io.File;
 
 /**
  * Created by liyuepeng on 10/15/18.

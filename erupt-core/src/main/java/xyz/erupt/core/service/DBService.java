@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import xyz.erupt.core.dao.EruptJapUtils;
@@ -18,6 +19,8 @@ import xyz.erupt.core.util.ReflectUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -129,7 +132,12 @@ public class DBService implements DataService {
             eruptJpaDao.addEntity(eruptModel, object);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
-            throw new RuntimeException("数据重复");
+            String str = "";
+            for (UniqueConstraint uniqueConstraint : eruptModel.getClazz().getAnnotation(Table.class).uniqueConstraints()) {
+                EruptField eruptField = eruptModel.getEruptFieldMap().get(uniqueConstraint.columnNames()[0]).getEruptField();
+                str += eruptField.views()[0].title() + " ";
+            }
+            throw new RuntimeException(str + "重复");
         }
 
     }

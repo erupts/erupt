@@ -1,5 +1,6 @@
 package xyz.erupt.core.dao;
 
+import com.google.gson.JsonArray;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceType;
 import xyz.erupt.annotation.util.ConfigUtil;
@@ -63,15 +64,34 @@ public class EruptJpaDao {
         Query countQuery = entityManager.createQuery(countHql);
         Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
         for (String key : condition.keySet()) {
-            Edit edit = eruptFieldMap.get(key).getEruptField().edit();
+            EruptFieldModel eruptFieldModel = eruptFieldMap.get(key);
+            Edit edit = eruptFieldModel.getEruptField().edit();
+            if (edit.search().vague()) {
+                JsonArray jsonArray = condition.get(key).getAsJsonArray();
+                countQuery.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.gsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                countQuery.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.gsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                query.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.gsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                query.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.gsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                continue;
+            }
+            if ("Integer".equalsIgnoreCase(eruptFieldMap.get(key).getFieldReturnName())) {
+                countQuery.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
+                query.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
+                continue;
+            }
             switch (edit.type()) {
                 case BOOLEAN:
-                    countQuery.setParameter(key, condition.get(key).getAsBoolean());
-                    query.setParameter(key, condition.get(key).getAsBoolean());
+                    countQuery.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
+                    query.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
+                    break;
+                case SLIDER:
+                    countQuery.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
+                    query.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
                     break;
                 default:
-                    countQuery.setParameter(key, condition.get(key).getAsString());
-                    query.setParameter(key, condition.get(key).getAsString());
+                    countQuery.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
+                    query.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
+                    break;
             }
 
         }
