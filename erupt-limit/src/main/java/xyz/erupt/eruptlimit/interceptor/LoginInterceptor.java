@@ -2,11 +2,11 @@ package xyz.erupt.eruptlimit.interceptor;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import xyz.erupt.core.constant.HttpStatus;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.InitService;
@@ -32,7 +32,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
         if (null == token || !loginService.verifyToken(token)) {
-            response.setStatus(HttpStatus.NO_LOGIN.code);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
         String path = request.getServletPath();
@@ -44,11 +44,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             }
             EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
             if (null == eruptModel) {
-                response.setStatus(HttpStatus.NOT_FOUNT.code);
+                response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
             if (!path.contains(eruptName) || !loginService.verifyMenuLimit(token, path, eruptModel)) {
-                response.setStatus(HttpStatus.NO_RIGHT.code);
+                response.setStatus(HttpStatus.FORBIDDEN.value());
                 return false;
             }
         }

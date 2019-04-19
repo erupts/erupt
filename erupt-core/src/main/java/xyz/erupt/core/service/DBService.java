@@ -112,7 +112,7 @@ public class DBService implements DataService {
             TreeModel treeModel = new TreeModel(map.get(tree.id()), map.get(tree.label()), map.get(tree.pid().replace(".", "_")), null);
             treeModels.add(treeModel);
         }
-        return EruptUtil.TreeModelToTree(treeModels);
+        return EruptUtil.treeModelToTree(treeModels);
     }
 
     @Override
@@ -132,10 +132,10 @@ public class DBService implements DataService {
             eruptJpaDao.addEntity(eruptModel, object);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
-            String str = "";
+            StringBuilder str = new StringBuilder();
             for (UniqueConstraint uniqueConstraint : eruptModel.getClazz().getAnnotation(Table.class).uniqueConstraints()) {
                 EruptField eruptField = eruptModel.getEruptFieldMap().get(uniqueConstraint.columnNames()[0]).getEruptField();
-                str += eruptField.views()[0].title() + " ";
+                str.append(eruptField.views()[0].title()).append(" ");
             }
             throw new RuntimeException(str + "重复");
         }

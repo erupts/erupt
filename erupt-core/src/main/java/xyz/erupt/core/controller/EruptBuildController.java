@@ -1,10 +1,9 @@
 package xyz.erupt.core.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.core.constant.HttpStatus;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptAndEruptFieldModel;
 import xyz.erupt.core.model.EruptFieldModel;
@@ -14,7 +13,6 @@ import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.SpringUtil;
 
-import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -58,7 +56,7 @@ public class EruptBuildController {
             }
             eruptPageModel.setSubErupts(eruptAndEruptFieldModels);
         } else {
-            response.setStatus(HttpStatus.NOT_FOUNT.code);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
         }
         return eruptPageModel;
     }

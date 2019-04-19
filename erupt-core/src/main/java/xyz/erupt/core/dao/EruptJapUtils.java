@@ -7,7 +7,6 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceType;
-import xyz.erupt.annotation.util.ConfigUtil;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -99,21 +97,23 @@ public class EruptJapUtils {
         if (null != condition) {
             for (String key : condition.keySet()) {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
-                EruptField eruptField = eruptFieldModel.getEruptField();
-                if (null != eruptFieldModel && eruptField.edit().search().search()) {
-                    String _key = EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), key);
-                    if (eruptField.edit().search().vague()) {
-                        hql.append(EruptJapUtils.AND).append(_key)
-                                .append(" >=:").append(LVAL_KEY + key)
-                                .append(EruptJapUtils.AND).append(_key)
-                                .append(" <=:").append(RVAL_KEY + key);
-                    } else {
-                        if (condition.get(key).toString().contains(EruptJapUtils.NULL)) {
-                            hql.append(EruptJapUtils.AND).append(_key).append(" is null");
-                        } else if (condition.get(key).toString().contains(EruptJapUtils.NOT_NULL)) {
-                            hql.append(EruptJapUtils.AND).append(_key).append(" is not null");
+                if (null != eruptFieldModel) {
+                    EruptField eruptField = eruptFieldModel.getEruptField();
+                    if (eruptField.edit().search().search()) {
+                        String _key = EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), key);
+                        if (eruptField.edit().search().vague()) {
+                            hql.append(EruptJapUtils.AND).append(_key)
+                                    .append(" >=:").append(LVAL_KEY + key)
+                                    .append(EruptJapUtils.AND).append(_key)
+                                    .append(" <=:").append(RVAL_KEY + key);
                         } else {
-                            hql.append(EruptJapUtils.AND).append(_key).append("=:").append(key);
+                            if (condition.get(key).toString().contains(EruptJapUtils.NULL)) {
+                                hql.append(EruptJapUtils.AND).append(_key).append(" is null");
+                            } else if (condition.get(key).toString().contains(EruptJapUtils.NOT_NULL)) {
+                                hql.append(EruptJapUtils.AND).append(_key).append(" is not null");
+                            } else {
+                                hql.append(EruptJapUtils.AND).append(_key).append("=:").append(key);
+                            }
                         }
                     }
                 }

@@ -24,7 +24,7 @@ public class EruptUtil {
     private static final String NOT_ERUPT_REF = "@NOT_REF@";
 
     //内存计算的方式生成树结构
-    public static List<TreeModel> TreeModelToTree(List<TreeModel> treeModels) {
+    public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels) {
         List<TreeModel> resultTreeModels = new ArrayList<>();
         List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
@@ -40,19 +40,19 @@ public class EruptUtil {
         return resultTreeModels;
     }
 
-    private static void recursionTree(List<TreeModel> treeModels, TreeModel ParentTreeModel) {
+    private static void recursionTree(List<TreeModel> treeModels, TreeModel parentTreeModel) {
         List<TreeModel> childrenModel = new ArrayList<>();
         List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
         for (TreeModel treeModel : treeModels) {
-            if (treeModel.getPid().equals(ParentTreeModel.getId())) {
+            if (treeModel.getPid().equals(parentTreeModel.getId())) {
                 childrenModel.add(treeModel);
                 tempTreeModels.remove(treeModel);
                 if (childrenModel.size() > 0) {
                     recursionTree(tempTreeModels, treeModel);
                 }
             }
-            ParentTreeModel.setChildren(childrenModel);
+            parentTreeModel.setChildren(childrenModel);
         }
     }
 
@@ -113,11 +113,11 @@ public class EruptUtil {
                             break;
                         case BOOLEAN:
                             if (StringUtils.isNotBlank(fieldData.toString())) {
-                                Boolean boolField = new Boolean(fieldData.toString());
+                                Boolean boolField = Boolean.valueOf(fieldData.toString());
                                 if (boolField) {
                                     result.put(field.getName(), eruptField.edit().boolType()[0].trueText());
                                 } else {
-                                    result.put(field.getName(), eruptField.edit().boolType()[0].trueText());
+                                    result.put(field.getName(), eruptField.edit().boolType()[0].falseText());
                                 }
                             } else {
                                 result.put(field.getName(), NOT_ERUPT_REF);

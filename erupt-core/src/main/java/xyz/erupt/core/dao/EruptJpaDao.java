@@ -1,9 +1,10 @@
 package xyz.erupt.core.dao;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceType;
-import xyz.erupt.annotation.util.ConfigUtil;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
@@ -12,8 +13,6 @@ import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
-import com.google.gson.JsonObject;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

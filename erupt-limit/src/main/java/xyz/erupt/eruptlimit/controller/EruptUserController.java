@@ -72,7 +72,7 @@ public class EruptUserController {
                 TreeModel treeModel = new TreeModel(eruptMenu.getId(), eruptMenu.getName(), pid, eruptMenu);
                 treeModels.add(treeModel);
             }
-            List<TreeModel> treeResultModels = EruptUtil.TreeModelToTree(treeModels);
+            List<TreeModel> treeResultModels = EruptUtil.treeModelToTree(treeModels);
             redisService.put(RedisKey.MENU_TREE + loginModel.getToken(), treeResultModels, expireTimeByLogin);
             redisService.put(RedisKey.MENU_LIST + loginModel.getToken(), menuSet, expireTimeByLogin);
         }

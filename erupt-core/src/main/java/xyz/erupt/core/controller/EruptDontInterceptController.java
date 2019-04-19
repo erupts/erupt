@@ -35,6 +35,7 @@ public class EruptDontInterceptController {
             InputStream inputStream = new FileInputStream(file);
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, inputStream.available());
+            inputStream.close();
             return bytes;
         } catch (IOException e) {
             return null;

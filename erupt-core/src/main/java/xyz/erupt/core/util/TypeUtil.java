@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class TypeUtil {
 
-    public static final String[] SIMPLE_JPA_TYPE = {
+    private static final String[] SIMPLE_JPA_TYPE = {
             "byte", "short", "int", "integer", "long", "float", "double", "boolean", "char", "string", "date"
     };
 
@@ -26,9 +26,9 @@ public class TypeUtil {
         } else if ("double".equals(targetType)) {
             o = new Double(serializable.toString());
         } else if ("long".equals(targetType)) {
-            o = new Long(serializable.toString());
+            o = Long.valueOf(serializable.toString());
         } else if ("int".equals(targetType) || "integer".equals(targetType)) {
-            o = new Long(serializable.toString());
+            o = Integer.valueOf(serializable.toString());
         } else {
             o = serializable.toString();
         }

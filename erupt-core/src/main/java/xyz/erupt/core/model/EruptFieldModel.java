@@ -1,13 +1,13 @@
 package xyz.erupt.core.model;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.Data;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.util.ConfigUtil;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import xyz.erupt.core.exception.ExceptionUtil;
+import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
 
 import java.io.Serializable;
@@ -17,7 +17,7 @@ import java.lang.reflect.Field;
  * Created by liyuepeng on 10/10/18.
  */
 @Data
-public class EruptFieldModel implements Serializable {
+public class EruptFieldModel{
 
     private transient EruptField eruptField;
 
@@ -41,7 +41,7 @@ public class EruptFieldModel implements Serializable {
             this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
         }
         try {
-            this.eruptFieldJson = new JsonParser().parse(ConfigUtil.annotationToJson(eruptField.toString())).getAsJsonObject();
+            this.eruptFieldJson = new JsonParser().parse(AnnotationUtil.annotationToJson(eruptField.toString())).getAsJsonObject();
         } catch (Exception e) {
             throw ExceptionUtil.styleEruptFieldException(this, ExceptionUtil.ANNOTATION_PARSE_ERR_STR);
         }
