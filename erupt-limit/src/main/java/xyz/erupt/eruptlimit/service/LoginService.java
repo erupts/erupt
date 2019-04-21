@@ -7,11 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.cache.EruptRedisService;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.MD5Utils;
-import xyz.erupt.eruptcache.redis.RedisService;
 import xyz.erupt.eruptlimit.base.LoginModel;
 import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.model.EruptMenu;
@@ -35,7 +34,7 @@ public class LoginService {
     private UserRepository userRepository;
 
     @Autowired
-    private RedisService redisService;
+    private EruptRedisService redisService;
 
     @Value("${erupt.expireTimeByLogin}")
     private Integer expireTimeByLogin;

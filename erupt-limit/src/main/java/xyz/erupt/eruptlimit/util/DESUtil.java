@@ -30,16 +30,16 @@ public final class DESUtil {
     }
 
     private static String byte2hex(byte[] b) {
-        String hs = "";
+        StringBuilder hs = new StringBuilder();
         String temp = "";
         for (int n = 0; n < b.length; n++) {
             temp = (java.lang.Integer.toHexString(b[n] & 0XFF));
             if (temp.length() == 1)
-                hs = hs + "0" + temp;
+                hs.append("0" + temp);
             else
-                hs = hs + temp;
+                hs.append(temp);
         }
-        return hs.toUpperCase();
+        return hs.toString().toUpperCase();
 
     }
 

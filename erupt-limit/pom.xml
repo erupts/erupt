@@ -50,12 +50,6 @@
             <artifactId>erupt-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.erupt</groupId>
-            <artifactId>erupt-cache</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>

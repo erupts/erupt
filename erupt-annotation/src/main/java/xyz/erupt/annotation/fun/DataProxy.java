@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.fun;
 
+import com.google.gson.JsonObject;
 import xyz.erupt.annotation.model.BoolAndReason;
 
 import javax.transaction.Transactional;
@@ -17,7 +18,8 @@ public abstract class DataProxy<MODEL> {
         return new BoolAndReason(true, null);
     }
 
-    public void afterEdit(MODEL o) {}
+    public void afterEdit(MODEL o) {
+    }
 
     //增
     public BoolAndReason beforeAdd(MODEL o) {
@@ -33,14 +35,16 @@ public abstract class DataProxy<MODEL> {
         return new BoolAndReason(true, null);
     }
 
-    public void afterDelete(MODEL o) {}
-
-    //查
-    public BoolAndReason beforeFetch(Object o) {
-        return new BoolAndReason(true, null);
+    public void afterDelete(MODEL o) {
     }
 
-    public void afterFetch(Object o) {}
+    //查
+    public void beforeFetch(JsonObject condtion) {
+
+    }
+
+    public void afterFetch(Object o) {
+    }
 
     //文件上传
     public BoolAndReason upLoadFile(InputStream inputStream, File file) {

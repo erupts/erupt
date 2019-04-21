@@ -2,25 +2,25 @@ package xyz.erupt.eruptlimit.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import xyz.erupt.annotation.sub_erupt.Tree;
+import org.springframework.web.bind.annotation.*;
+import xyz.erupt.core.cache.EruptRedisService;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptJpaDao;
-import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.TreeModel;
-import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.eruptcache.redis.RedisService;
 import xyz.erupt.eruptlimit.base.LoginModel;
 import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.model.EruptMenu;
 import xyz.erupt.eruptlimit.model.EruptRole;
 import xyz.erupt.eruptlimit.service.LoginService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by liyuepeng on 2018-12-13.
@@ -35,7 +35,7 @@ public class EruptUserController {
     private EruptJpaDao eruptJpaDao;
 
     @Autowired
-    private RedisService redisService;
+    private EruptRedisService redisService;
 
     @Value("${erupt.expireTimeByLogin}")
     private Integer expireTimeByLogin;
@@ -61,8 +61,6 @@ public class EruptUserController {
                 }
             }
             //生成tree结构数据
-            EruptModel eruptModel = InitService.ERUPTS.get(EruptMenu.class.getSimpleName());
-            Tree tree = eruptModel.getErupt().tree();
             List<TreeModel> treeModels = new ArrayList<>();
             for (EruptMenu eruptMenu : menuSet) {
                 Long pid = null;
@@ -83,7 +81,6 @@ public class EruptUserController {
     @ResponseBody
     public List<TreeModel> getMenu(HttpServletRequest request) {
 //        type -> Set<EruptMenu>
-        EruptModel eruptModel = InitService.ERUPTS.get("EruptMenu");
         Object o = redisService.get(RedisKey.MENU_TREE + request.getHeader("token"));
         return gson.fromJson(o.toString(), new TypeToken<List<TreeModel>>() {
         }.getType());

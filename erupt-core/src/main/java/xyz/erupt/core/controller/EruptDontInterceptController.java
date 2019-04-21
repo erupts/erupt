@@ -1,5 +1,6 @@
 package xyz.erupt.core.controller;
 
+import lombok.Cleanup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -32,7 +33,7 @@ public class EruptDontInterceptController {
         }
         File file = new File(uploadPath + path);
         try {
-            InputStream inputStream = new FileInputStream(file);
+            @Cleanup InputStream inputStream = new FileInputStream(file);
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, inputStream.available());
             inputStream.close();

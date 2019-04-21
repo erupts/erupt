@@ -1,4 +1,4 @@
-package xyz.erupt.eruptcache.redis;
+package xyz.erupt.core.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

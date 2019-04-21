@@ -2,7 +2,6 @@ package xyz.erupt.eruptlimit.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -15,6 +14,7 @@ import javax.persistence.*;
 /**
  * Created by liyuepeng on 12/7/18.
  */
+
 @Entity
 @Table(name = "E_DICT")
 @Erupt(name = "数据字典", sorts = "sort")

@@ -42,15 +42,12 @@ public class MD5Utils {
     }
 
     public static String digest(String strObj, String charset) {
-        String resultString = null;
         try {
-            resultString = new String(strObj);
             MessageDigest md = MessageDigest.getInstance("MD5");
-            resultString = byteToString(md.digest(strObj.getBytes(charset)));
+            return byteToString(md.digest(strObj.getBytes(charset)));
         } catch (Exception ex) {
             return strObj;
         }
-        return resultString;
     }
 
     // str -> md5str -> md5(md5str+salt )-> md5salt

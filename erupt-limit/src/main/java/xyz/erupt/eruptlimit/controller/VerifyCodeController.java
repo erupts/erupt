@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.erupt.core.cache.EruptRedisService;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.eruptcache.redis.RedisService;
 import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.util.IdentifyCode;
 
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class VerifyCodeController {
 
     @Autowired
-    private RedisService redisService;
+    private EruptRedisService redisService;
 
     /**
      * 生成验证码

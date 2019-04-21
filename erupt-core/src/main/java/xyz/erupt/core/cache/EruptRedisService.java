@@ -1,4 +1,4 @@
-package xyz.erupt.eruptcache.redis;
+package xyz.erupt.core.cache;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * Created by liyuepeng on 2018-12-24.
  */
 @Service
-public class RedisService {
+public class EruptRedisService {
 
     @Autowired
     private RedisTemplate redisTemplate;

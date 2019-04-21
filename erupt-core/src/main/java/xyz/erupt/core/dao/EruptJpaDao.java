@@ -49,6 +49,7 @@ public class EruptJpaDao {
     }
 
     public Object findDataById(EruptModel eruptModel, Serializable id) {
+
         Field primaryField = ReflectUtil.findClassAllField(eruptModel.getClazz(),
                 eruptModel.getErupt().primaryKeyCol());
         id = TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
@@ -56,7 +57,6 @@ public class EruptJpaDao {
     }
 
     public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {
-        StringBuilder conditionStr = new StringBuilder();
         String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel)) + ")", condition, page.getSort()));
         String countHql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("count(*)", condition, null));
         Query query = entityManager.createQuery(hql);
