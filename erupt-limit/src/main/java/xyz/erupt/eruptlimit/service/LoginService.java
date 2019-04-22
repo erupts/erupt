@@ -36,10 +36,10 @@ public class LoginService {
     @Autowired
     private EruptRedisService redisService;
 
-    @Value("${erupt.expireTimeByLogin}")
+    @Value("${erupt.expireTimeByLogin:60}")
     private Integer expireTimeByLogin;
 
-    //每次服务器启动后内存中的tokenDES都会不一样，就连开发人员都查不到，杜绝了token被仿造的问题
+    //服务器启动后内存中生成一个全新的tokenDES，就连开发人员都查不到，杜绝了token被仿造的问题
     private static final String userTokenDES = RandomStringUtils.randomGraph(10);
 
     @Autowired

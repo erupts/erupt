@@ -5,6 +5,6 @@ package xyz.erupt.annotation.sub_field.sub_edit.sub_attachment;
  */
 public enum AttachmentEnum {
     IMAGE,            //图片
-    VIDEO,            //视频
+    VIDEO,            //视频 ...暂未实现
     OTHER,            //*_*
 }

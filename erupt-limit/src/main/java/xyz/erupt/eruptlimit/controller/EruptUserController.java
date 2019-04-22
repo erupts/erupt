@@ -37,7 +37,7 @@ public class EruptUserController {
     @Autowired
     private EruptRedisService redisService;
 
-    @Value("${erupt.expireTimeByLogin}")
+    @Value("${erupt.expireTimeByLogin:60}")
     private Integer expireTimeByLogin;
 
     @Autowired

@@ -27,7 +27,7 @@ import java.io.File;
 @RequestMapping(RestPath.ERUPT_FILE)
 public class EruptFileController {
 
-    @Value("${erupt.uploadPath}")
+    @Value("${erupt.uploadPath:/opt/file}")
     private String uploadPath;
 
     @PostMapping("/upload/{erupt}/{field}")

@@ -22,7 +22,7 @@ import java.io.*;
 @RequestMapping(RestPath.DONT_INTERCEPT)
 public class EruptDontInterceptController {
 
-    @Value("${erupt.uploadPath}")
+    @Value("${erupt.uploadPath:/opt/file}")
     private String uploadPath;
 
     @RequestMapping(value = "/preview-attachment", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})

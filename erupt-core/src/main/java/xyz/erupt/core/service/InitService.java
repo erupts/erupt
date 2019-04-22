@@ -24,8 +24,7 @@ import java.util.Map;
 @Service
 public class InitService implements InitializingBean {
 
-
-    @Value("#{'${erupt.scanner-package}'.split(',')}")
+    @Value("#{'${erupt.scanner-package:xyz.erupt}'.split(',')}")
     private String[] packages;
 
     public static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();

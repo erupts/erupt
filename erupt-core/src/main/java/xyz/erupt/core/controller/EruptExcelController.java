@@ -25,7 +25,7 @@ public class EruptExcelController {
     @Autowired
     private DataFileService dataFileService;
 
-    @Value("erupt.uploadPath")
+    @Value("erupt.uploadPath:/opt/file")
     private String uploadPath;
 
     @GetMapping("/export/{erupt}")
