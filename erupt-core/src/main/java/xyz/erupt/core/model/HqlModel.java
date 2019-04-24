@@ -1,24 +1,26 @@
 package xyz.erupt.core.model;
 
 import com.google.gson.JsonObject;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by liyuepeng on 2018-12-26.
  */
-@Data
+@Getter
+@Setter
 public class HqlModel {
 
     public HqlModel(String cols, JsonObject condition, String orderBy) {
         this.cols = cols;
-        this.condition = condition;
+        this.eruptSearchCondition = condition;
         this.orderBy = orderBy;
     }
 
-    public HqlModel(String cols, String customCondition, JsonObject condition, String orderBy) {
+    public HqlModel(String cols, String customCondition, JsonObject eruptSearchCondition, String orderBy) {
         this.cols = cols;
         this.customCondition = customCondition;
-        this.condition = condition;
+        this.eruptSearchCondition = eruptSearchCondition;
         this.orderBy = orderBy;
     }
 
@@ -27,8 +29,8 @@ public class HqlModel {
     //后台自定义参数
     private String customCondition;
 
-    //接口参数
-    private JsonObject condition;
+    //Erupt注解所允许的查询条件
+    private JsonObject eruptSearchCondition;
 
     private String orderBy;
 

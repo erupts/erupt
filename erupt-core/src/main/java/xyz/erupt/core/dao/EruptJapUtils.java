@@ -93,13 +93,13 @@ public class EruptJapUtils {
             hql.append(AND).append(AnnotationUtil.switchFilterConditionToStr(filter));
         }
         //condition
-        JsonObject condition = hqlModel.getCondition();
+        JsonObject condition = hqlModel.getEruptSearchCondition();
         if (null != condition) {
             for (String key : condition.keySet()) {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
                 if (null != eruptFieldModel) {
                     EruptField eruptField = eruptFieldModel.getEruptField();
-                    if (eruptField.edit().search().search()) {
+                    if (eruptField.edit().search().value()) {
                         String _key = EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), key);
                         if (eruptField.edit().search().vague()) {
                             hql.append(EruptJapUtils.AND).append(_key)

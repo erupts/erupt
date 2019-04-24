@@ -49,7 +49,7 @@ public class EruptUser extends BaseModel {
     @Column(name = "NAME")
     @EruptField(
             views = @View(title = "姓名", sortable = true),
-            edit = @Edit(title = "姓名", notNull = true, search = @Search(search = true))
+            edit = @Edit(title = "姓名", notNull = true, search = @Search(true))
     )
     private String name;
 
@@ -64,7 +64,7 @@ public class EruptUser extends BaseModel {
                             falseText = "不加密",
                             defaultValue = true
                     ),
-                    search = @Search(search = true)
+                    search = @Search(true)
             )
     )
     private Boolean isMD5;
@@ -74,10 +74,10 @@ public class EruptUser extends BaseModel {
             views = @View(title = "年龄"),
             edit = @Edit(
                     title = "年龄",
-                    search = @Search(search = true, vague = true)
+                    search = @Search(value = true, vague = true)
             )
     )
-    private Integer age;
+    private Integer age = 18;
 
 
     @Column(name = "HEAD_ICON")

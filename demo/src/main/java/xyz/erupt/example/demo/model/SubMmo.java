@@ -35,7 +35,7 @@ public class SubMmo extends BaseModel {
                     title = "名称",
                     notNull = true,
                     inputType = @InputType,
-                    search = @Search(search = true)
+                    search = @Search(true)
             )
     )
     private String name;
@@ -48,7 +48,7 @@ public class SubMmo extends BaseModel {
             edit = @Edit(
                     title = "数字",
                     notNull = true,
-                    search = @Search(search = true)
+                    search = @Search(true)
             )
     )
     private Integer number;
@@ -69,7 +69,7 @@ public class SubMmo extends BaseModel {
                                     type = ChoiceEnum.SELECT_SINGLE
                             )
                     },
-                    search = @Search(search = true)
+                    search = @Search(true)
             )
     )
     private Integer choice;

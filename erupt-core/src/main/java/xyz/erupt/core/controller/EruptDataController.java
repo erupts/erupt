@@ -138,7 +138,7 @@ public class EruptDataController {
                 return new EruptApiModel(operationHandler.exec(body.get("data"), param));
             }
         }
-        return new EruptApiModel(new BoolAndReason(false, "功能不存在"));
+        return new EruptApiModel(new BoolAndReason(false, "Operate not found"));
     }
 
     @PostMapping("/{erupt}")

@@ -70,7 +70,7 @@ public class Mmo extends BaseModel {
                     )
             )
     )
-    private Integer DependSwitchType;
+    private Integer DependSwitchType = 2;
 
     @Column(name = "NAME")
     @EruptField(
@@ -82,7 +82,7 @@ public class Mmo extends BaseModel {
                     title = "名称",
                     notNull = true,
                     inputType = @InputType(length = 100),
-                    search = @Search(search = true)
+                    search = @Search(true)
             )
     )
     private String name;
@@ -97,10 +97,10 @@ public class Mmo extends BaseModel {
                     notNull = true,
                     type = EditType.SLIDER,
                     sliderType = @SliderType(max = 1000, min = -1000),
-                    search = @Search(search = true, vague = true)
+                    search = @Search(true)
             )
     )
-    private Integer slider;
+    private Integer slider = 200;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -113,9 +113,9 @@ public class Mmo extends BaseModel {
                     desc = "上级菜单",
                     title = "上级菜单",
                     notNull = true,
-                    search = @Search(search = true),
+                    search = @Search(true),
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType(id = "id", label = "name", pid = "id", depends = "name")
+                    referenceType = @ReferenceType
             )
     )
     private Mmo parent;
@@ -138,7 +138,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "数字",
                     notNull = true,
-                    search = @Search(search = true)
+                    search = @Search(true)
             )
     )
     @Column(name = "AGE")
@@ -179,10 +179,10 @@ public class Mmo extends BaseModel {
                                     type = ChoiceEnum.SELECT_SINGLE
                             )
                     },
-                    search = @Search(search = true)
+                    search = @Search(true)
             )
     )
-    private Integer choice;
+    private Integer choice = 234;
 
 
     @EruptField(
@@ -211,10 +211,10 @@ public class Mmo extends BaseModel {
                                     type = ChoiceEnum.RADIO
                             )
                     },
-                    search = @Search(search = true)
+                    search = @Search(true)
             )
     )
-    private Integer single;
+    private Integer single = 888;
 
     @EruptField(
             views = @View(title = "布尔"),
@@ -225,7 +225,7 @@ public class Mmo extends BaseModel {
                     boolType = @BoolType(trueText = "是的", falseText = "不行")
             )
     )
-    private Boolean bool;
+    private Boolean bool = false;
 
     @EruptField(
             views = @View(

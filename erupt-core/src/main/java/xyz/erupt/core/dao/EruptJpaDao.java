@@ -123,13 +123,11 @@ public class EruptJpaDao {
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(refName);
         ReferenceType referenceType = eruptFieldModel.getEruptField().edit().referenceType()[0];
         String keys = "new map(" + referenceType.id() + " as id," + referenceType.label() + " as label)";
-        String hql = "select " + keys + " from " + eruptFieldModel.getField().getType().getSimpleName() + " where 1=1 ";
+        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel(keys, null, null, null));
         if (!"".equals(referenceType.filter().condition())) {
             hql += EruptJapUtils.AND + AnnotationUtil.switchFilterConditionToStr(referenceType.filter());
         }
-        if (!"".equals(referenceType.pid())) {
-//            hql += AND + referenceType.pid();
-        }
+
         return entityManager.createQuery(hql).getResultList();
     }
 

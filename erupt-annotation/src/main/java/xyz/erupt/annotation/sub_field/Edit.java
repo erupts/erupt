@@ -37,6 +37,8 @@ public @interface Edit {
 
     TabType[] tabType() default {};
 
+//    StepsType[] stepsTyps() default {};
+
     SliderType[] sliderType() default {};
 
     AttachmentType[] attachmentType() default {};
