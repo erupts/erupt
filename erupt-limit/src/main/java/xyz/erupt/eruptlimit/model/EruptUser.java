@@ -19,6 +19,7 @@ import xyz.erupt.eruptlimit.model.proxy.EruptUserProxy;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -78,6 +79,19 @@ public class EruptUser extends BaseModel {
             )
     )
     private Integer age = 18;
+
+    @Column(name = "BIRTHDAY")
+    @EruptField(
+            views = @View(title = "生日"),
+            edit = @Edit(
+                    title = "生日",
+                    search = @Search(value = true, vague = true),
+                    type = EditType.DATE,
+                    dateType = @DateType
+
+            )
+    )
+    private Date birthday;
 
 
     @Column(name = "HEAD_ICON")

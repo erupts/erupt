@@ -31,9 +31,6 @@ public class EruptJpaDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public static final String COUNT_COL_NAME = "count";
-
-
     public void addEntity(EruptModel eruptModel, Object entity) {
         entityManager.persist(entity);
     }
@@ -49,7 +46,6 @@ public class EruptJpaDao {
     }
 
     public Object findDataById(EruptModel eruptModel, Serializable id) {
-
         Field primaryField = ReflectUtil.findClassAllField(eruptModel.getClazz(),
                 eruptModel.getErupt().primaryKeyCol());
         id = TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
@@ -127,7 +123,6 @@ public class EruptJpaDao {
         if (!"".equals(referenceType.filter().condition())) {
             hql += EruptJapUtils.AND + AnnotationUtil.switchFilterConditionToStr(referenceType.filter());
         }
-
         return entityManager.createQuery(hql).getResultList();
     }
 

@@ -100,7 +100,7 @@ public class EruptJapUtils {
                 if (null != eruptFieldModel) {
                     EruptField eruptField = eruptFieldModel.getEruptField();
                     if (eruptField.edit().search().value()) {
-                        String _key = EruptJapUtils.compleHqlPath(eruptModel.getEruptName(), key);
+                        String _key = EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), key);
                         if (eruptField.edit().search().vague()) {
                             hql.append(EruptJapUtils.AND).append(_key)
                                     .append(" >=:").append(LVAL_KEY + key)
@@ -125,15 +125,15 @@ public class EruptJapUtils {
         }
         //sort
         if (StringUtils.isNotBlank(hqlModel.getOrderBy())) {
-            hql.append(" order by " + hqlModel.getOrderBy());
+            hql.append(" order by ").append(hqlModel.getOrderBy());
         } else if (eruptModel.getErupt().sorts().length > 0) {
             String[] sorts = eruptModel.getErupt().sorts();
-            hql.append(" order by " + convertSorts(eruptModel.getEruptName(), sorts));
+            hql.append(" order by ").append(convertSorts(eruptModel.getEruptName(), sorts));
         }
         return hql.toString();
     }
 
-    public static String convertSorts(String eruptName, String[] sorts) {
+    private static String convertSorts(String eruptName, String[] sorts) {
         for (int i = 0; i < sorts.length; i++) {
             if (!sorts[i].contains(".")) {
                 sorts[i] = eruptName + '.' + sorts[i];
@@ -143,7 +143,7 @@ public class EruptJapUtils {
     }
 
     //在left join的情况下要求必须指定表信息，通过此方法生成；
-    public static String compleHqlPath(String eruptName, String hqlPath) {
+    public static String completeHqlPath(String eruptName, String hqlPath) {
         if (hqlPath.contains(".")) {
             return hqlPath;
         } else {

@@ -19,6 +19,8 @@ import xyz.erupt.core.util.SpringUtil;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by liyuepeng on 10/15/18.
@@ -123,6 +125,17 @@ public class EruptFileController {
         } catch (Exception e) {
             return EruptApiModel.errorApi("上传失败，" + e.getMessage());
         }
+    }
+
+    @PostMapping("/uploads/{erupt}/{field}")
+    @ResponseBody
+    public EruptApiModel uploads(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile[] files) {
+        List<String> paths = new ArrayList<>();
+        for (MultipartFile file : files) {
+            EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
+            paths.add(eruptApiModel.getMessage());
+        }
+        return EruptApiModel.successApi(String.join(",", paths));
     }
 
 //    @RequestMapping(value = "/{erupt}/preview-attachment",

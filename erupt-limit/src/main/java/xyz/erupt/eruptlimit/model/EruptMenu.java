@@ -2,6 +2,7 @@ package xyz.erupt.eruptlimit.model;
 
 import lombok.Data;
 import lombok.Value;
+import org.hibernate.validator.constraints.UniqueElements;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.DataLength;
@@ -30,7 +31,7 @@ public class EruptMenu extends BaseModel {
             views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true)
     )
-    @Column(name = "CODE")
+    @Column(name = "CODE", unique = true)
     private String code;
 
     @Column(name = "NAME")
