@@ -9,5 +9,5 @@ public @interface Tree {
 
     String label();
 
-    String pid();
+    String pid() default "";
 }

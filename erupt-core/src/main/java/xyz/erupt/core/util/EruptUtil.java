@@ -9,11 +9,10 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.TreeModel;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 11/1/18.
@@ -23,42 +22,10 @@ public class EruptUtil {
     //数据项与erupt注解中描述不相符时使用
     private static final String NOT_ERUPT_REF = "@NOT_REF@";
 
-    //内存计算的方式生成树结构
-    public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels) {
-        List<TreeModel> resultTreeModels = new ArrayList<>();
-        List<TreeModel> tempTreeModels = new LinkedList<>();
-        tempTreeModels.addAll(treeModels);
-        for (TreeModel treeModel : treeModels) {
-            if (StringUtils.isBlank(treeModel.getPid())) {
-                resultTreeModels.add(treeModel);
-                tempTreeModels.remove(treeModel);
-            }
-        }
-        for (TreeModel treeModel : resultTreeModels) {
-            recursionTree(tempTreeModels, treeModel);
-        }
-        return resultTreeModels;
-    }
-
-    private static void recursionTree(List<TreeModel> treeModels, TreeModel parentTreeModel) {
-        List<TreeModel> childrenModel = new ArrayList<>();
-        List<TreeModel> tempTreeModels = new LinkedList<>();
-        tempTreeModels.addAll(treeModels);
-        for (TreeModel treeModel : treeModels) {
-            if (treeModel.getPid().equals(parentTreeModel.getId())) {
-                childrenModel.add(treeModel);
-                tempTreeModels.remove(treeModel);
-                if (childrenModel.size() > 0) {
-                    recursionTree(tempTreeModels, treeModel);
-                }
-            }
-            parentTreeModel.setChildren(childrenModel);
-        }
-    }
 
     public static String handleNoRightVariable(String pathVariable) {
         if (pathVariable.startsWith(RestPath.NO_RIGHT_SYMBOL)) {
-            return pathVariable.substring(2, pathVariable.length());
+            return pathVariable.substring(2);
         } else {
             throw new RuntimeException("数据参数异常");
         }
@@ -80,6 +47,25 @@ public class EruptUtil {
             } else {
                 field.set(eruptObj, null);
             }
+        }
+    }
+
+    public static Object jsonElementToObject(EruptFieldModel eruptFieldModel, JsonElement jsonElement) {
+        if ("Integer".equalsIgnoreCase(eruptFieldModel.getFieldReturnName()) ||
+                "int".equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
+            try {
+                return jsonElement.getAsInt();
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+        switch (eruptFieldModel.getEruptField().edit().type()) {
+            case SLIDER:
+                return jsonElement.getAsInt();
+            case BOOLEAN:
+                return jsonElement.getAsBoolean();
+            default:
+                return jsonElement.getAsString();
         }
     }
 
@@ -145,22 +131,5 @@ public class EruptUtil {
         return result;
     }
 
-    public static Object gsonElementToObject(EruptFieldModel eruptFieldModel, JsonElement jsonElement) {
-        if ("Integer".equalsIgnoreCase(eruptFieldModel.getFieldReturnName()) || "int".equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
-            try {
-                return jsonElement.getAsInt();
-            } catch (Exception e) {
-                return 0;
-            }
-        }
-        switch (eruptFieldModel.getEruptField().edit().type()) {
-            case SLIDER:
-                return jsonElement.getAsInt();
-            case BOOLEAN:
-                return jsonElement.getAsBoolean();
-            default:
-                return jsonElement.getAsString();
-        }
-    }
 
 }

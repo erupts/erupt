@@ -22,11 +22,11 @@ public class ExceptionUtil {
         );
     }
 
-    public static EruptAnnotationException styleEruptException(EruptModel eruptFieldModel, String message) {
+    public static EruptAnnotationException styleEruptException(EruptModel eruptModel, String message) {
         return new EruptAnnotationException(
                 ansi().fg(Ansi.Color.RED).a(message)
                         + ansi().fg(Ansi.Color.BLUE).
-                        a("(" + eruptFieldModel.getClazz().getName() + ")").reset().toString()
+                        a("(" + eruptModel.getClazz().getName() + ")").reset().toString()
         );
     }
 

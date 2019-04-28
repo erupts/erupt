@@ -38,7 +38,7 @@ public class InitService implements InitializingBean {
             // erupt field info to memory
             {
                 List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
-                Map<String, EruptFieldModel> eruptFieldMap = new LinkedCaseInsensitiveMap<EruptFieldModel>();
+                Map<String, EruptFieldModel> eruptFieldMap = new LinkedCaseInsensitiveMap<>();
                 //erupt class annotation
                 {
                     Class tempClass = clazz;

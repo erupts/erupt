@@ -12,8 +12,8 @@ public class DateUtil {
 
     public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
-    public static String getFormatDate(String formatStr) {
+    public static String getFormatDate(Date date, String formatStr) {
         SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
-        return sdf.format(new Date());
+        return sdf.format(date);
     }
 }

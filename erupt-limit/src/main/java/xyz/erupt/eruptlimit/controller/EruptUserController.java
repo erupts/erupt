@@ -9,7 +9,7 @@ import xyz.erupt.core.cache.EruptRedisService;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.model.TreeModel;
-import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.eruptlimit.base.LoginModel;
 import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.model.EruptMenu;
@@ -70,7 +70,7 @@ public class EruptUserController {
                 TreeModel treeModel = new TreeModel(eruptMenu.getId(), eruptMenu.getName(), pid, eruptMenu);
                 treeModels.add(treeModel);
             }
-            List<TreeModel> treeResultModels = EruptUtil.treeModelToTree(treeModels);
+            List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels);
             redisService.put(RedisKey.MENU_TREE + loginModel.getToken(), treeResultModels, expireTimeByLogin);
             redisService.put(RedisKey.MENU_LIST + loginModel.getToken(), menuSet, expireTimeByLogin);
         }

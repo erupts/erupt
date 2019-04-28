@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class EruptFileController {
         }
         try {
             //生成存储路径
-            String path = File.separator + DateUtil.getFormatDate(DateUtil.DATE) + File.separator + RandomUtils.nextInt(100, 9999) + "-" + file.getOriginalFilename();
+            String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator + RandomUtils.nextInt(100, 9999) + "-" + file.getOriginalFilename();
             EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
             switch (edit.type()) {

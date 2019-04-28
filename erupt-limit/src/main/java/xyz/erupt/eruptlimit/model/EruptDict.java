@@ -8,6 +8,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.InputEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceType;
+import xyz.erupt.core.annotation.EruptDataProcessor;
 
 import javax.persistence.*;
 
@@ -40,7 +41,7 @@ public class EruptDict extends BaseModel {
             edit = @Edit(
                     title = "上级菜单",
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType(id = "id", label = "name")
+                    referenceType = @ReferenceType
             )
     )
     @ManyToOne

@@ -63,32 +63,14 @@ public class EruptJpaDao {
             Edit edit = eruptFieldModel.getEruptField().edit();
             if (edit.search().vague()) {
                 JsonArray jsonArray = condition.get(key).getAsJsonArray();
-                countQuery.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.gsonElementToObject(eruptFieldModel, jsonArray.get(0)));
-                countQuery.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.gsonElementToObject(eruptFieldModel, jsonArray.get(1)));
-                query.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.gsonElementToObject(eruptFieldModel, jsonArray.get(0)));
-                query.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.gsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                countQuery.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                countQuery.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                query.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                query.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
                 continue;
             }
-            if ("Integer".equalsIgnoreCase(eruptFieldMap.get(key).getFieldReturnName())) {
-                countQuery.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
-                query.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
-                continue;
-            }
-            switch (edit.type()) {
-                case BOOLEAN:
-                    countQuery.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
-                    query.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
-                    break;
-                case SLIDER:
-                    countQuery.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
-                    query.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
-                    break;
-                default:
-                    countQuery.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
-                    query.setParameter(key, EruptUtil.gsonElementToObject(eruptFieldModel, condition.get(key)));
-                    break;
-            }
-
+            countQuery.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, condition.get(key)));
+            query.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, condition.get(key)));
         }
         List list = query.setMaxResults(page.getPageSize())
                 .setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList();
@@ -103,7 +85,7 @@ public class EruptJpaDao {
      * @param cols       格式：name as alias
      * @return
      */
-    public List getDataMap(EruptModel eruptModel, String condition, String orderBy, String... cols) {
+    public List getDataMap(EruptModel eruptModel, String condition, String orderBy, List<String> cols) {
         String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", cols) + ")", condition, null, orderBy));
         return entityManager.createQuery(hql).getResultList();
     }

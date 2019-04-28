@@ -13,13 +13,13 @@ public enum EditType {
     BOOLEAN,          //布尔
     ATTACHMENT,       //附件
     TAB,              //TAB选项卡
-    STEPS,            //步骤条
     DIVIDE,           //横向分割线
     DEPEND_SWITCH,    //表单依赖开关
-    EMPTY,
     HIDDEN,           //隐藏
-    MAP,              //地图
-    CODE,             //代码编辑器
     HTML_EDIT,        //富文本编辑器
     JSON_EDIT,         //JSON格式编辑器
+    MAP,              //地图
+    CODE,             //代码编辑器
+    EMPTY,
+    STEPS,            //步骤条
 }

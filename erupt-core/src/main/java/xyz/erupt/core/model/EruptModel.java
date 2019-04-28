@@ -4,17 +4,20 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Data;
 import xyz.erupt.annotation.Erupt;
+import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.core.exception.ExceptionUtil;
+import xyz.erupt.core.service.DBService;
+import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.SpringUtil;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by liyuepeng on 9/29/18.
  */
 @Data
-public class EruptModel{
+public class EruptModel {
 
     private transient Class<?> clazz;
 
@@ -37,8 +40,5 @@ public class EruptModel{
         } catch (Exception e) {
             throw ExceptionUtil.styleEruptException(this, ExceptionUtil.ANNOTATION_PARSE_ERR_STR);
         }
-    }
-
-    public EruptModel() {
     }
 }

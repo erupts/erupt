@@ -3,6 +3,9 @@ package xyz.erupt.core.util;
 import org.json.JSONObject;
 import xyz.erupt.annotation.fun.ConditionHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.core.annotation.EruptDataProcessor;
+import xyz.erupt.core.service.DBService;
+import xyz.erupt.core.service.DataService;
 
 /**
  * Created by liyuepeng on 2019-02-28.
@@ -40,4 +43,14 @@ public class AnnotationUtil {
         return condition;
     }
 
+    public static DataService getEruptDataProcessor(Class<?> clazz) {
+        EruptDataProcessor eruptDataProcessor = clazz.getAnnotation(EruptDataProcessor.class);
+        DataService dataService;
+        if (null != eruptDataProcessor) {
+            dataService = SpringUtil.getBean(eruptDataProcessor.processors());
+        } else {
+            dataService = SpringUtil.getBean(DBService.class);
+        }
+        return dataService;
+    }
 }

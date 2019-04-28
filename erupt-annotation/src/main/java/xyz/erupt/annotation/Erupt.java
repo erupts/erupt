@@ -19,13 +19,13 @@ public @interface Erupt {
 
     boolean loginUse() default true;
 
+    String primaryKeyCol() default "id";
+
     String name() default "";
 
     String desc() default "";
 
     String[] sorts() default {};
-
-    String primaryKeyCol() default "id";
 
     Power power() default @Power;
 
@@ -33,7 +33,7 @@ public @interface Erupt {
 
     Filter filter() default @Filter(condition = "");
 
-    Tree tree() default @Tree(id = "id", label = "name", pid = "parent.id");
+    Tree tree() default @Tree(id = "id", label = "name");
 
     Class<? extends DataProxy>[] dateProxy() default {};
 }

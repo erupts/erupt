@@ -1,6 +1,7 @@
 package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,8 @@ import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.Page;
 import xyz.erupt.core.model.TreeModel;
-import xyz.erupt.core.util.AnnotationUtil;
-import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.util.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
@@ -34,9 +31,6 @@ public class DBService implements DataService {
 
     @Autowired
     private EruptJpaDao eruptJpaDao;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Override
     public Page queryList(EruptModel eruptModel, JsonObject condition, Page page) {
@@ -100,11 +94,12 @@ public class DBService implements DataService {
 
     private List<TreeModel> treeDataUtil(EruptModel eruptModel, String condition, String sort) {
         Tree tree = eruptModel.getErupt().tree();
-        String[] cols = {
-                EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + tree.id().replace(".", "_"),
-                EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + tree.label().replace(".", "_"),
-                EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + tree.pid().replace(".", "_")
-        };
+        List<String> cols = new ArrayList<>();
+        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + tree.id().replace(".", "_"));
+        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + tree.label().replace(".", "_"));
+        if (StringUtils.isNotBlank(tree.pid())) {
+            cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + tree.pid().replace(".", "_"));
+        }
         List list = eruptJpaDao.getDataMap(eruptModel, condition, sort, cols);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Object o : list) {
@@ -112,7 +107,11 @@ public class DBService implements DataService {
             TreeModel treeModel = new TreeModel(map.get(tree.id()), map.get(tree.label()), map.get(tree.pid().replace(".", "_")), null);
             treeModels.add(treeModel);
         }
-        return EruptUtil.treeModelToTree(treeModels);
+        if (StringUtils.isBlank(tree.pid())) {
+            return treeModels;
+        } else {
+            return DataHandlerUtil.treeModelToTree(treeModels);
+        }
     }
 
     @Override
