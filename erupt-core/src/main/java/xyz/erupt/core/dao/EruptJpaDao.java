@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
@@ -99,11 +99,11 @@ public class EruptJpaDao {
 
     public List getReferenceList(EruptModel eruptModel, String refName) {
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(refName);
-        ReferenceType referenceType = eruptFieldModel.getEruptField().edit().referenceType()[0];
-        String keys = "new map(" + referenceType.id() + " as id," + referenceType.label() + " as label)";
+        ReferenceTreeType referenceTreeType = eruptFieldModel.getEruptField().edit().referenceTreeType()[0];
+        String keys = "new map(" + referenceTreeType.id() + " as id," + referenceTreeType.label() + " as label)";
         String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel(keys, null, null, null));
-        if (!"".equals(referenceType.filter().condition())) {
-            hql += EruptJapUtils.AND + AnnotationUtil.switchFilterConditionToStr(referenceType.filter());
+        if (!"".equals(referenceTreeType.filter().condition())) {
+            hql += EruptJapUtils.AND + AnnotationUtil.switchFilterConditionToStr(referenceTreeType.filter());
         }
         return entityManager.createQuery(hql).getResultList();
     }

@@ -26,7 +26,7 @@ public class EruptFieldAnnotationException extends RuntimeException {
 //                }
                 break;
             case REFERENCE:
-                if (eruptFieldModel.getEruptField().edit().referenceType().length == 0) {
+                if (eruptFieldModel.getEruptField().edit().referenceTreeType().length == 0) {
                     throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "引用类型未使用@ReferenceType注解修饰");
                 }
                 if (eruptFieldModel.getEruptField().views().length > 0) {

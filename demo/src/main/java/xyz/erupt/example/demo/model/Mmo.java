@@ -115,7 +115,7 @@ public class Mmo extends BaseModel {
                     notNull = true,
                     search = @Search(true),
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType
+                    referenceTreeType = @ReferenceTreeType
             )
     )
     private Mmo parent;
@@ -276,7 +276,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "名称",
                     notNull = true,
-                    inputType = @InputType(type = InputEnum.TEXTAREA)
+                    type = EditType.TEXTAREA
             )
     )
     private String gender;

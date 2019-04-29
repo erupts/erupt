@@ -6,7 +6,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
@@ -55,10 +55,10 @@ public class EruptJapUtils {
                 fieldKeys.add(fieldKey);
             }
             if (field.getEruptField().edit().type() == EditType.REFERENCE) {
-                ReferenceType referenceType = field.getEruptField().edit().referenceType()[0];
-                fieldKey = eruptNameSymbol + field.getFieldName() + "." + referenceType.id() + " as " + field.getFieldName() + "_" + referenceType.id();
+                ReferenceTreeType referenceTreeType = field.getEruptField().edit().referenceTreeType()[0];
+                fieldKey = eruptNameSymbol + field.getFieldName() + "." + referenceTreeType.id() + " as " + field.getFieldName() + "_" + referenceTreeType.id();
                 fieldKeys.add(fieldKey);
-                fieldKey = eruptNameSymbol + field.getFieldName() + "." + referenceType.label() + " as " + field.getFieldName() + "_" + referenceType.label();
+                fieldKey = eruptNameSymbol + field.getFieldName() + "." + referenceTreeType.label() + " as " + field.getFieldName() + "_" + referenceTreeType.label();
                 fieldKeys.add(fieldKey);
             }
             if (field.getEruptField().views().length == 0) {

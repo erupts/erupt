@@ -5,6 +5,7 @@ package xyz.erupt.annotation.sub_field;
  */
 public enum EditType {
     INPUT,            //输入框
+    TEXTAREA,         //text area
     CHOICE,           //选择框
     SLIDER,           //数字滑块
     DATE,             //日期

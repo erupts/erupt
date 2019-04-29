@@ -7,8 +7,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.InputEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceType;
-import xyz.erupt.core.annotation.EruptDataProcessor;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 
 import javax.persistence.*;
 
@@ -41,7 +40,7 @@ public class EruptDict extends BaseModel {
             edit = @Edit(
                     title = "上级菜单",
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType
+                    referenceTreeType = @ReferenceTreeType
             )
     )
     @ManyToOne
@@ -58,7 +57,7 @@ public class EruptDict extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "备注",
-                    inputType = @InputType(type = InputEnum.TEXTAREA)
+                    type = EditType.TEXTAREA
             )
     )
     @Column(name = "REMARK")

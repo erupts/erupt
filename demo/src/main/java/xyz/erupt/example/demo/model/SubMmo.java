@@ -82,7 +82,7 @@ public class SubMmo extends BaseModel {
             edit = @Edit(
                     title = "mmo_table",
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType(id = "id", label = "name",
+                    referenceTreeType = @ReferenceTreeType(id = "id", label = "name",
                             filter = @Filter(condition = "'id=@abc@'", conditionHandlers = {SimpleConditionHandler.class}))
             )
     )

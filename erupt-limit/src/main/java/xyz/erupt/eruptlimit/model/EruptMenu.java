@@ -1,11 +1,8 @@
 package xyz.erupt.eruptlimit.model;
 
 import lombok.Data;
-import lombok.Value;
-import org.hibernate.validator.constraints.UniqueElements;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.constant.DataLength;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -103,7 +100,7 @@ public class EruptMenu extends BaseModel {
             edit = @Edit(
                     title = "上级菜单",
                     type = EditType.REFERENCE,
-                    referenceType = @ReferenceType(id = "id", label = "name")
+                    referenceTreeType = @ReferenceTreeType(id = "id", label = "name")
             )
     )
     private EruptMenu parentMenu;

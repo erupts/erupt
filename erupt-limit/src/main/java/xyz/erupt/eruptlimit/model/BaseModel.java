@@ -4,6 +4,7 @@ import lombok.Getter;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.core.annotation.EruptDataProcessor;
 
 import javax.persistence.*;
 

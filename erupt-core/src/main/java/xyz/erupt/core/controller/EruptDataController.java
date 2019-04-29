@@ -9,23 +9,17 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.dao.EruptJapUtils;
-import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.exception.EruptRuntimeException;
 import xyz.erupt.core.model.*;
-import xyz.erupt.core.service.DBService;
 import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.SpringUtil;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Erupt 对数据的增删改查
@@ -63,8 +57,19 @@ public class EruptDataController {
         }
     }
 
+    @RequestMapping("/tree/{erupt}")
+    @ResponseBody
+    public Collection<TreeModel> getEruptTreeData(@PathVariable("erupt") String eruptName) {
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        if (eruptModel.getErupt().power().query()) {
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryTree(eruptModel);
+        } else {
+            throw new EruptRuntimeException("没有查询权限");
+        }
+    }
 
-    @RequestMapping("/table/{erupt}/{tabFieldName}")
+
+    @RequestMapping("/tab/table/{erupt}/{tabFieldName}")
     @ResponseBody
     public Object findTabList(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
@@ -73,7 +78,7 @@ public class EruptDataController {
         return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabList(eruptFieldModel);
     }
 
-    @RequestMapping("/table/{erupt}/{id}/{tabFieldName}")
+    @RequestMapping("/tab/table/{erupt}/{id}/{tabFieldName}")
     @ResponseBody
     public Object findTabListById(@PathVariable("erupt") String eruptName,
                                   @PathVariable("id") String id,
@@ -83,7 +88,7 @@ public class EruptDataController {
         return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabListById(eruptModel, tabFieldName, id);
     }
 
-    @RequestMapping("/tree/{erupt}/{tabFieldName}")
+    @RequestMapping("/tab/tree/{erupt}/{tabFieldName}")
     @ResponseBody
     public Object findTabTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
@@ -92,23 +97,12 @@ public class EruptDataController {
         return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTree(eruptFieldModel);
     }
 
-    @RequestMapping("/tree/{erupt}/{id}/{tabFieldName}")
+    @RequestMapping("/tab/tree/{erupt}/{id}/{tabFieldName}")
     @ResponseBody
     public Object findTabTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTreeById(eruptModel, tabFieldName, id);
-    }
-
-    @RequestMapping("/tree/{erupt}")
-    @ResponseBody
-    public Collection<TreeModel> getTreeEruptData(@PathVariable("erupt") String eruptName) {
-        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
-        if (eruptModel.getErupt().power().query()) {
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryTree(eruptModel);
-        } else {
-            throw new EruptRuntimeException("没有查询权限");
-        }
     }
 
     @RequestMapping("/{erupt}/{id}")
@@ -239,7 +233,7 @@ public class EruptDataController {
 
     @GetMapping("/{erupt}/ref/{fieldName}")
     @ResponseBody
-    public Collection getRefData(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
+    public Collection getRefTreeData(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
         return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceList(eruptModel, fieldName);
     }

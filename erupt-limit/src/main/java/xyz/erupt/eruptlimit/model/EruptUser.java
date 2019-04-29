@@ -140,7 +140,7 @@ public class EruptUser extends BaseModel {
             edit = @Edit(
                     title = "ip白名单",
                     desc = "ip与ip之间使用换行符间隔，不填表示不鉴权",
-                    inputType = @InputType(type = InputEnum.TEXTAREA)
+                    type = EditType.TEXTAREA
             )
 
     )
@@ -151,7 +151,7 @@ public class EruptUser extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "备注",
-                    inputType = @InputType(type = InputEnum.TEXTAREA)
+                    type = EditType.TEXTAREA
             )
     )
     private String remark;

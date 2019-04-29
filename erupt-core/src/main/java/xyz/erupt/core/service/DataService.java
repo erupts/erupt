@@ -21,7 +21,7 @@ public interface DataService {
 
     Page queryList(EruptModel eruptModel, JsonObject condition, Page page);
 
-    Collection queryTree(EruptModel eruptModel);
+    Collection<TreeModel> queryTree(EruptModel eruptModel);
 
     Object findDataById(EruptModel eruptModel, Serializable id);
 
