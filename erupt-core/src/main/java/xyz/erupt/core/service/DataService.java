@@ -35,6 +35,10 @@ public interface DataService {
 
     Collection getReferenceList(EruptModel eruptModel, String fieldName);
 
+    Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName);
+
+    Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, String dependValue);
+
     void addData(EruptModel eruptModel, Object object);
 
     void editData(EruptModel eruptModel, Object object);

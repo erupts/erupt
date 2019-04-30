@@ -2,7 +2,9 @@ package xyz.erupt.core.dao;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.apache.poi.util.StringUtil;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.model.EruptFieldModel;
@@ -19,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 

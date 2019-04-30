@@ -231,12 +231,26 @@ public class EruptDataController {
     }
 
 
-    @GetMapping("/{erupt}/ref/{fieldName}")
+    @GetMapping("/{erupt}/reftree/{fieldName}")
     @ResponseBody
-    public Collection getRefTreeData(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
+    public Collection<TreeModel> getRefTreeData(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
-        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceList(eruptModel, fieldName);
+        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTree(eruptModel, fieldName);
     }
+
+    @GetMapping("/{erupt}/reftree/{fieldName}/{dependValue}")
+    @ResponseBody
+    public Collection<TreeModel> getRefTreeDataByDepend(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName, @PathVariable("dependValue") String dependValue) {
+        EruptModel eruptModel = InitService.ERUPTS.get(erupt);
+        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTree(eruptModel, fieldName);
+    }
+
+//    @GetMapping("/{erupt}/reftable/{fieldName}")
+//    @ResponseBody
+//    public Collection getRefTableData(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
+//        EruptModel eruptModel = InitService.ERUPTS.get(erupt);
+//        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceList(eruptModel, fieldName);
+//    }
 
 
 }

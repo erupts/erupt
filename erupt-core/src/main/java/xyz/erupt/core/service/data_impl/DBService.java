@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import xyz.erupt.core.dao.EruptJapUtils;
 import xyz.erupt.core.dao.EruptJpaDao;
@@ -124,6 +125,43 @@ public class DBService implements DataService {
     @Override
     public List getReferenceList(EruptModel eruptModel, String fieldName) {
         return eruptJpaDao.getReferenceList(eruptModel, fieldName);
+    }
+
+    @Override
+    public Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName) {
+        return getReferenceTreeByDepend(eruptModel, fieldName, null);
+    }
+
+    @Override
+    public Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, String dependValue) {
+        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
+        ReferenceTreeType refTree = eruptFieldModel.getEruptField().edit().referenceTreeType()[0];
+        List<String> cols = new ArrayList<>();
+        cols.add(EruptJapUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.id()) + " as " + refTree.id().replace(".", "_"));
+        cols.add(EruptJapUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.label()) + " as " + refTree.label().replace(".", "_"));
+        if (StringUtils.isNotBlank(refTree.pid())) {
+            cols.add(EruptJapUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.pid()) + " as " + refTree.pid().replace(".", "_"));
+        }
+        StringBuilder condition = new StringBuilder();
+        if (!"".equals(refTree.filter().condition())) {
+            condition.append(AnnotationUtil.switchFilterConditionToStr(refTree.filter()));
+        }
+        if (!"".equals(refTree.depend()) && null != dependValue) {
+            //TODO Depend value use function
+            condition.append(EruptJapUtils.AND).append("");
+        }
+        List list = eruptJpaDao.getDataMap(InitService.ERUPTS.get(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols);
+        List<TreeModel> treeModels = new ArrayList<>();
+        for (Object o : list) {
+            Map<String, Object> map = (Map) o;
+            TreeModel treeModel = new TreeModel(map.get(refTree.id()), map.get(refTree.label()), map.get(refTree.pid().replace(".", "_")), null);
+            treeModels.add(treeModel);
+        }
+        if (StringUtils.isBlank(refTree.pid())) {
+            return treeModels;
+        } else {
+            return DataHandlerUtil.treeModelToTree(treeModels);
+        }
     }
 
     @Transactional

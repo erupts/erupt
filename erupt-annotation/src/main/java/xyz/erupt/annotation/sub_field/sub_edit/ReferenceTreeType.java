@@ -13,8 +13,6 @@ public @interface ReferenceTreeType {
 
     String pid() default "";
 
-    Tree tree() default @Tree(id = "name", label = "name");
-
     String depend() default "";
 
     Filter filter() default @Filter(condition = "");
