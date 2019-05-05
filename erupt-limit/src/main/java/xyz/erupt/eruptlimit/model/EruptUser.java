@@ -4,23 +4,19 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.constant.DataLength;
-import xyz.erupt.annotation.sub_erupt.Filter;
-import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
-import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
-import xyz.erupt.core.handler.SimpleConditionHandler;
-import xyz.erupt.eruptlimit.model.proxy.EruptUserProxy;
-import lombok.Data;
+import xyz.erupt.core.model.Page;
+import xyz.erupt.core.util.MD5Utils;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by liyuepeng on 11/22/18.
@@ -30,15 +26,13 @@ import java.util.Set;
 @Erupt(
         name = "用户",
         desc = "用户配置",
-        dateProxy = EruptUserProxy.class
-//        sorts = "account desc"
-//        filter = @Filter(condition = "'id=@abc@'", conditionHandlers = {SimpleConditionHandler.class})
+        dateProxy = EruptUser.class
 )
 @Entity
 @Table(name = "E_USER", uniqueConstraints = {
         @UniqueConstraint(columnNames = "account")
 })
-public class EruptUser extends BaseModel {
+public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     @Column(name = "ACCOUNT")
     @EruptField(
@@ -172,4 +166,24 @@ public class EruptUser extends BaseModel {
     )
     private Set<EruptRole> roles;
 
+    @Override
+    public BoolAndReason beforeAdd(EruptUser eruptUser) {
+        if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
+            if (eruptUser.getIsMD5()) {
+                eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
+            }
+            return new BoolAndReason(true, null);
+        } else {
+            return new BoolAndReason(false, "两次密码输入不一致");
+        }
+    }
+
+    @Override
+    public void afterFetch(Object o) {
+        Page page = (Page) o;
+        Collection<Map> lm = page.getList();
+        Map<String, String> map = new HashMap();
+        map.put("account", "2333");
+        lm.add(map);
+    }
 }

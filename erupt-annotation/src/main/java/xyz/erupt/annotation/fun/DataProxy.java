@@ -11,43 +11,43 @@ import java.io.InputStream;
  * Created by liyuepeng on 10/9/18.
  */
 @Transactional
-public abstract class DataProxy<MODEL> {
+public interface DataProxy<MODEL> {
 
     //改
-    public BoolAndReason beforeEdit(MODEL o) {
+    default BoolAndReason beforeEdit(MODEL o) {
         return new BoolAndReason(true, null);
     }
 
-    public void afterEdit(MODEL o) {
+    default void afterEdit(MODEL o) {
     }
 
     //增
-    public BoolAndReason beforeAdd(MODEL o) {
+    default BoolAndReason beforeAdd(MODEL o) {
         return this.beforeEdit(o);
     }
 
-    public void afterAdd(MODEL o) {
+    default void afterAdd(MODEL o) {
         this.afterEdit(o);
     }
 
     //删
-    public BoolAndReason beforeDelete(MODEL o) {
+    default BoolAndReason beforeDelete(MODEL o) {
         return new BoolAndReason(true, null);
     }
 
-    public void afterDelete(MODEL o) {
+    default void afterDelete(MODEL o) {
     }
 
     //查
-    public void beforeFetch(JsonObject condtion) {
+    default void beforeFetch(JsonObject condtion) {
 
     }
 
-    public void afterFetch(Object o) {
+    default void afterFetch(Object o) {
     }
 
     //文件上传
-    public BoolAndReason upLoadFile(InputStream inputStream, File file) {
+    default BoolAndReason upLoadFile(InputStream inputStream, File file) {
         return new BoolAndReason(true, null);
     }
 
