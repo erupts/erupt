@@ -10,6 +10,8 @@ public @interface InputType {
 
     String placeholder() default "";
 
+    String pattern() default "";
+
     VL[] prefix() default {};
 
     VL[] suffix() default {};

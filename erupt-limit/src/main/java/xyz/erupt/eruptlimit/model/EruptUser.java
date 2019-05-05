@@ -75,7 +75,8 @@ public class EruptUser extends BaseModel {
             views = @View(title = "年龄"),
             edit = @Edit(
                     title = "年龄",
-                    search = @Search(value = true, vague = true)
+                    search = @Search(value = true, vague = true),
+                    inputType = @InputType(pattern = "")
             )
     )
     private Integer age = 18;

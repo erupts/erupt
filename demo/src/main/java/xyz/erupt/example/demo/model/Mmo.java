@@ -3,6 +3,7 @@ package xyz.erupt.example.demo.model;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.CodeAndEdit;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -25,33 +26,35 @@ import java.util.Set;
 //        filter = @Filter(condition = "'id=1'"),
         name = "测试",
         loginUse = false,
-        rowOperation = {@RowOperation(
-                code = "action",
-                icon = "fa-terminal",
-                title = "执行",
-                operationHandler = OperationHandlerImpl.class,
-                edits = {
-                        @CodeAndEdit(
-                                code = "name",
-                                codeType = "Integer",
-                                edit = @Edit(title = "姓名", notNull = true)
-                        ),
-                        @CodeAndEdit(
-                                code = "idCard",
-                                codeType = "Integer",
-                                edit = @Edit(title = "身份证号", notNull = true)
-                        )
-                }
-        ), @RowOperation(code = "single", icon = "fa-star",
-                title = "单个执行", multi = false,
-                operationHandler = OperationHandlerImpl.class,
-                edits = {
-                        @CodeAndEdit(code = "idCard", edit = @Edit(title = "身份证号")),
-                        @CodeAndEdit(code = "name", edit = @Edit(title = "姓名")),
-                }
-        )
+        rowOperation = {
+                @RowOperation(
+                        code = "action",
+                        icon = "fa-terminal",
+                        title = "执行",
+                        operationHandler = OperationHandlerImpl.class,
+                        edits = {
+                                @CodeAndEdit(
+                                        code = "name",
+                                        codeType = "Integer",
+                                        edit = @Edit(title = "姓名", notNull = true)
+                                ),
+                                @CodeAndEdit(
+                                        code = "idCard",
+                                        codeType = "Integer",
+                                        edit = @Edit(title = "身份证号", notNull = true)
+                                )
+                        }),
+                @RowOperation(code = "single", icon = "fa-star",
+                        title = "单个执行", multi = false,
+                        operationHandler = OperationHandlerImpl.class,
+                        edits = {
+                                @CodeAndEdit(code = "idCard", edit = @Edit(title = "身份证号")),
+                                @CodeAndEdit(code = "name", edit = @Edit(title = "姓名")),
+                        }
+                )
         },
-        tree = @Tree(id = "id", label = "name", pid = "parent.id")
+        tree = @Tree(id = "id", label = "name", pid = "parent.id"),
+        power = @Power(delete = false, edit = false)
 )
 @Entity
 @Table(name = "ERUPT_TEST")
@@ -81,7 +84,7 @@ public class Mmo extends BaseModel {
                     desc = "名称",
                     title = "名称",
                     notNull = true,
-                    inputType = @InputType(length = 100),
+                    inputType = @InputType(length = 100,placeholder = "请输入名称"),
                     search = @Search(true)
             )
     )
@@ -138,7 +141,8 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "数字",
                     notNull = true,
-                    search = @Search(true)
+                    search = @Search(true),
+                    inputType = @InputType(placeholder = "数字")
             )
     )
     @Column(name = "AGE")

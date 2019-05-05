@@ -171,12 +171,7 @@ public class DBService implements DataService {
             eruptJpaDao.addEntity(eruptModel, object);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
-            StringBuilder str = new StringBuilder();
-            for (UniqueConstraint uniqueConstraint : eruptModel.getClazz().getAnnotation(Table.class).uniqueConstraints()) {
-                EruptField eruptField = eruptModel.getEruptFieldMap().get(uniqueConstraint.columnNames()[0]).getEruptField();
-                str.append(eruptField.views()[0].title()).append(" ");
-            }
-            throw new RuntimeException(str + "重复");
+            throw new RuntimeException(gcRepeatHint(eruptModel));
         }
 
     }
@@ -184,7 +179,25 @@ public class DBService implements DataService {
     @Transactional
     @Override
     public void editData(EruptModel eruptModel, Object object) {
-        eruptJpaDao.editEntity(eruptModel, object);
+        try {
+            eruptJpaDao.editEntity(eruptModel, object);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new RuntimeException(gcRepeatHint(eruptModel));
+        }
+    }
+
+    //生成数据重复的提示字符串
+    private String gcRepeatHint(EruptModel eruptModel) {
+        StringBuilder str = new StringBuilder();
+        for (UniqueConstraint uniqueConstraint : eruptModel.getClazz().getAnnotation(Table.class).uniqueConstraints()) {
+            for (String columnName : uniqueConstraint.columnNames()) {
+                EruptField eruptField = eruptModel.getEruptFieldMap().get(columnName).getEruptField();
+                str.append(eruptField.views()[0].title()).append(" ");
+            }
+        }
+        str.append("重复");
+        return str.toString();
     }
 
     @Transactional
