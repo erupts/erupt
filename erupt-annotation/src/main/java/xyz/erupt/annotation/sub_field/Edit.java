@@ -29,7 +29,7 @@ public @interface Edit {
 
     ReferenceTreeType[] referenceTreeType() default {};
 
-    ReferenceTableType[] referenceTableType() default {};
+//    ReferenceTableType[] referenceTableType() default {};
 
     BoolType[] boolType() default {};
 

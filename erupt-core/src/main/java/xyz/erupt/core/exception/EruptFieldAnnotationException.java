@@ -37,11 +37,11 @@ public class EruptFieldAnnotationException extends RuntimeException {
                     }
                 }
                 break;
-            case CUSTOM_REFER:
-                if (eruptFieldModel.getEruptField().edit().customReferType().length == 0) {
-                    throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "自定义引用类型未使用@CustomReferType注解修饰");
-                }
-                break;
+//            case CUSTOM_REFER:
+//                if (eruptFieldModel.getEruptField().edit().customReferType().length == 0) {
+//                    throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "自定义引用类型未使用@CustomReferType注解修饰");
+//                }
+//                break;
             case BOOLEAN:
                 if (!eruptFieldModel.getField().getType().getSimpleName().toLowerCase().equals("boolean")) {
                     throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "使用@BoolType注解，要求返回值必须为boolean类型");

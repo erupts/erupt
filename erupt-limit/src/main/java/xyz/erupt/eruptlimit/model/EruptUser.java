@@ -12,7 +12,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
-import xyz.erupt.core.model.Page;
 import xyz.erupt.core.util.MD5Utils;
 
 import javax.persistence.*;
@@ -21,17 +20,17 @@ import java.util.*;
 /**
  * Created by liyuepeng on 11/22/18.
  */
-@Getter
-@Setter
+@Entity
+@Table(name = "E_USER", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "account")
+})
 @Erupt(
         name = "用户",
         desc = "用户配置",
         dateProxy = EruptUser.class
 )
-@Entity
-@Table(name = "E_USER", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "account")
-})
+@Getter
+@Setter
 public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     @Column(name = "ACCOUNT")
@@ -74,6 +73,22 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             )
     )
     private Integer age = 18;
+
+    @Column(name = "HOBBY")
+    @EruptField(
+            views = @View(title = "爱好"),
+            edit = @Edit(
+                    title = "爱好",
+                    type = EditType.CHOICE,
+                    search = @Search(value = true, vague = true),
+                    choiceType = @ChoiceType(vl = {
+//                            @VL(value = "ball",label = "篮球"),
+//                            @VL(value = "rap",label = "rap")
+                    }, type = ChoiceEnum.TAGS)
+            )
+    )
+    private String hobby;
+
 
     @Column(name = "BIRTHDAY")
     @EruptField(
@@ -179,11 +194,9 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     }
 
     @Override
-    public void afterFetch(Object o) {
-        Page page = (Page) o;
-        Collection<Map> lm = page.getList();
-        Map<String, String> map = new HashMap();
+    public void afterFetch(Collection list) {
+        Map<String, String> map = new HashMap<>();
         map.put("account", "2333");
-        lm.add(map);
+        list.add(map);
     }
 }

@@ -49,7 +49,7 @@ public class EruptDataController {
             }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryList(eruptModel, condition, new Page(pageIndex, pageSize, sort));
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                SpringUtil.getBean(proxy).afterFetch(page);
+                SpringUtil.getBean(proxy).afterFetch(page.getList());
             }
             return page;
         } else {

@@ -6,6 +6,8 @@ import xyz.erupt.annotation.model.BoolAndReason;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * Created by liyuepeng on 10/9/18.
@@ -23,32 +25,33 @@ public interface DataProxy<MODEL> {
 
     //增
     default BoolAndReason beforeAdd(MODEL o) {
-        return this.beforeEdit(o);
+        return new BoolAndReason(true, null);
     }
 
     default void afterAdd(MODEL o) {
-        this.afterEdit(o);
     }
 
     //删
-    default BoolAndReason beforeDelete(MODEL o) {
+    default BoolAndReason beforeDelete(Serializable id) {
         return new BoolAndReason(true, null);
     }
 
-    default void afterDelete(MODEL o) {
+    default void afterDelete(Serializable id) {
     }
 
     //查
-    default void beforeFetch(JsonObject condtion) {
-
+    default void beforeFetch(JsonObject condition) {
     }
 
-    default void afterFetch(Object o) {
+    default void afterFetch(Collection list) {
     }
 
     //文件上传
-    default BoolAndReason upLoadFile(InputStream inputStream, File file) {
+    default BoolAndReason beforeUpLoadFile(InputStream inputStream, File file) {
         return new BoolAndReason(true, null);
+    }
+
+    default void afterUpLoadFile(InputStream inputStream, File file, String relativePath) {
     }
 
 }

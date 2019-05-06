@@ -10,7 +10,7 @@ public enum EditType {
     SLIDER,           //数字滑块
     DATE,             //日期
     REFERENCE,        //引用
-    CUSTOM_REFER,     //自定义引用类型
+//    CUSTOM_REFER,     //自定义引用类型
     BOOLEAN,          //布尔
     ATTACHMENT,       //附件
     TAB,              //TAB选项卡

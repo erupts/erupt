@@ -170,7 +170,6 @@ public class DBService implements DataService {
         try {
             eruptJpaDao.addEntity(eruptModel, object);
         } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
             throw new RuntimeException(gcRepeatHint(eruptModel));
         }
 

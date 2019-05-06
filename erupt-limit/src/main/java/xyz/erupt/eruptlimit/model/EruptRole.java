@@ -1,5 +1,6 @@
 package xyz.erupt.eruptlimit.model;
 
+import lombok.Data;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -8,7 +9,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.TabEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
-import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Set;

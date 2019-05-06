@@ -83,8 +83,8 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     desc = "名称",
                     title = "名称",
-                    notNull = true,
-                    inputType = @InputType(length = 100,placeholder = "请输入名称"),
+
+                    inputType = @InputType(length = 100, placeholder = "请输入名称"),
                     search = @Search(true)
             )
     )
@@ -97,7 +97,7 @@ public class Mmo extends BaseModel {
             },
             edit = @Edit(
                     title = "数字滑块",
-                    notNull = true,
+
                     type = EditType.SLIDER,
                     sliderType = @SliderType(max = 1000, min = -1000),
                     search = @Search(true)
@@ -115,7 +115,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     desc = "上级菜单",
                     title = "上级菜单",
-                    notNull = true,
+
                     search = @Search(true),
                     type = EditType.REFERENCE,
                     referenceTreeType = @ReferenceTreeType
@@ -140,7 +140,7 @@ public class Mmo extends BaseModel {
             },
             edit = @Edit(
                     title = "数字",
-                    notNull = true,
+
                     search = @Search(true),
                     inputType = @InputType(placeholder = "数字")
             )
@@ -171,18 +171,16 @@ public class Mmo extends BaseModel {
             views = @View(title = "选择"),
             edit = @Edit(
                     title = "选择",
-                    notNull = true,
+
                     type = EditType.CHOICE,
-                    choiceType = {
-                            @ChoiceType(
-                                    vl = {
-                                            @VL(value = "123", label = "张三"),
-                                            @VL(value = "234", label = "李四"),
-                                            @VL(value = "456", label = "王五")
-                                    },
-                                    type = ChoiceEnum.SELECT_SINGLE
-                            )
-                    },
+                    choiceType = @ChoiceType(
+                            vl = {
+                                    @VL(value = "123", label = "张三"),
+                                    @VL(value = "234", label = "李四"),
+                                    @VL(value = "456", label = "王五")
+                            },
+                            type = ChoiceEnum.SELECT_SINGLE
+                    ),
                     search = @Search(true)
             )
     )
@@ -194,10 +192,11 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     desc = "多个选择",
                     title = "多选",
-                    notNull = true,
+
                     type = EditType.CHOICE,
                     choiceType = {
                             @ChoiceType(
+                                    joinSeparator = "'|'",
                                     vl = {
                                             @VL(value = "1", label = "张三"),
                                             @VL(value = "2", label = "李四"),
@@ -206,13 +205,25 @@ public class Mmo extends BaseModel {
                                             @VL(value = "5", label = "李四"),
                                             @VL(value = "6", label = "李四"),
                                             @VL(value = "7", label = "张三"),
-                                            @VL(value = "8", label = "李四"),
+                                            @VL(value = "8", label = "李四李四李"),
                                             @VL(value = "888", label = "王五"),
                                             @VL(value = "999", label = "李四"),
                                             @VL(value = "991", label = "李四"),
                                             @VL(value = "992", label = "李四"),
+                                            @VL(value = "1@", label = "张三"),
+                                            @VL(value = "2@", label = "李四"),
+                                            @VL(value = "3@", label = "王五"),
+                                            @VL(value = "4@", label = "李四"),
+                                            @VL(value = "5@", label = "李四"),
+                                            @VL(value = "6@", label = "李四"),
+                                            @VL(value = "7@", label = "张三"),
+                                            @VL(value = "8@", label = "yuepeng"),
+                                            @VL(value = "888@", label = "王五"),
+                                            @VL(value = "999@", label = "李四"),
+                                            @VL(value = "991@", label = "李四"),
+                                            @VL(value = "992@", label = "李四"),
                                     },
-                                    type = ChoiceEnum.RADIO
+                                    type = ChoiceEnum.SELECT_MULTI
                             )
                     },
                     search = @Search(true)
@@ -223,7 +234,6 @@ public class Mmo extends BaseModel {
     @EruptField(
             views = @View(title = "布尔"),
             edit = @Edit(
-                    notNull = true,
                     title = "布尔",
                     type = EditType.BOOLEAN,
                     boolType = @BoolType(trueText = "是的", falseText = "不行")
@@ -236,7 +246,7 @@ public class Mmo extends BaseModel {
                     title = "时间"
             ),
             edit = @Edit(
-                    notNull = true,
+
                     title = "时间",
                     type = EditType.DATE,
                     dateType = @DateType(type = DateEnum.WEEK)
@@ -279,7 +289,7 @@ public class Mmo extends BaseModel {
             },
             edit = @Edit(
                     title = "名称",
-                    notNull = true,
+
                     type = EditType.TEXTAREA
             )
     )
@@ -289,7 +299,7 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "markDown",
-                    notNull = true,
+
                     type = EditType.HTML_EDIT
             )
     )
@@ -300,7 +310,7 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "ATTACHMENT",
-                    notNull = true,
+
                     type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType
 

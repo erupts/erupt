@@ -30,7 +30,7 @@ import java.util.List;
 @RequestMapping(RestPath.ERUPT_FILE)
 public class EruptFileController {
 
-    @Value("${erupt.uploadPath:/opt/file}")
+    @Value("${erupt.uploadPath:/opt/eruptFiles}")
     private String uploadPath;
 
     @PostMapping("/upload/{erupt}/{field}")
@@ -116,12 +116,15 @@ public class EruptFileController {
             }
             //执行upload proxy
             for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dateProxy()) {
-                BoolAndReason boolAndReason = SpringUtil.getBean(clazz).upLoadFile(file.getInputStream(), dest);
+                BoolAndReason boolAndReason = SpringUtil.getBean(clazz).beforeUpLoadFile(file.getInputStream(), dest);
                 if (!boolAndReason.isBool()) {
                     return new EruptApiModel(boolAndReason);
                 }
             }
             file.transferTo(dest);
+            for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dateProxy()) {
+                SpringUtil.getBean(clazz).afterUpLoadFile(file.getInputStream(), dest, path);
+            }
             return EruptApiModel.successApi(path);
         } catch (Exception e) {
             return EruptApiModel.errorApi("上传失败，" + e.getMessage());
