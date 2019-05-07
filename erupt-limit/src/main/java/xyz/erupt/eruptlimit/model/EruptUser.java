@@ -176,7 +176,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             edit = @Edit(
                     title = "所属角色",
                     type = EditType.TAB,
-                    tabType = @TabType
+                    tabType = @TabType(type = TabEnum.TREE)
             )
     )
     private Set<EruptRole> roles;

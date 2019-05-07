@@ -68,7 +68,9 @@ public class EruptRole extends BaseModel {
             edit = @Edit(
                     title = "包含用户",
                     type = EditType.TAB,
-                    tabType = @TabType
+                    tabType = @TabType(
+                            type = TabEnum.TREE
+                    )
             )
     )
     private Set<EruptUser> users;
