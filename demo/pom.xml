@@ -7,7 +7,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
-    </parent>w
+    </parent>
     <groupId>xyz.erupt</groupId>
     <artifactId>demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>

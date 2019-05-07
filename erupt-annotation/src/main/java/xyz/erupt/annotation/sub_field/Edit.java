@@ -25,11 +25,11 @@ public @interface Edit {
 
     //如下注解虽为数组形式但是实际使用中只取数组为第零个的值(这样做可以避免大量的默认值生成，由此减轻前端json串体积)
 
-    CustomReferType[] customReferType() default {};
-
     ReferenceTreeType[] referenceTreeType() default {};
 
 //    ReferenceTableType[] referenceTableType() default {};
+
+//    CustomReferType[] customReferType() default {};
 
     BoolType[] boolType() default {};
 
