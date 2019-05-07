@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <base href="/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script>
+      //page config
+      window.domain = "http://192.168.1.133:8080";
+      // window.attachmentDomain = domain;
+      window.table = {
+        border: true
+      };
+      window.site = {
+        name: "通用数据管理框架",
+        description: "description"
+      };
+    </script>
+    <style type="text/css">
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #f9f9f9;
+            z-index: 9999;
+            transition: opacity 1s
+        }
+
+        .preloader-hidden-add {
+            opacity: 1;
+            display: block
+        }
+
+        .preloader-hidden-add-active {
+            opacity: 0
+        }
+
+        .preloader-hidden {
+            display: none
+        }
+
+        .cs-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%
+        }
+
+        .cs-loader-inner {
+            transform: translateY(-50%);
+            top: 45%;
+            position: absolute;
+            width: 100%;
+            color: #fff;
+            text-align: center
+        }
+    </style>
+<link rel="stylesheet" href="styles.99d0293bbe80cdef4092.css"></head>
+<body>
+<app-root></app-root>
+<div class="preloader">
+    <div class="cs-loader">
+        <div class="cs-loader-inner">
+            <img src="assets/image/loading.gif" alt="">
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="runtime.024e894a1f25778470a9.js"></script><script type="text/javascript" src="polyfills.cefb8395173f09fb4417.js"></script><script type="text/javascript" src="scripts.4f0243e03a04e4615742.js"></script><script type="text/javascript" src="main.cab95cc3c99cc93172b8.js"></script></body>
+</html>

@@ -27,7 +27,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.erupt</groupId>
+            <groupId>xyz.erupt</groupId>
             <artifactId>erupt-annotation</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
