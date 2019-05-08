@@ -12,6 +12,8 @@ public @interface Power {
 
     boolean query() default true;
 
+    boolean viewDetails() default true;
+
     boolean export() default false;
 
     boolean importable() default false;

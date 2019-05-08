@@ -10,7 +10,7 @@ import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.exception.EruptRuntimeException;
+import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.model.*;
 import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.util.AnnotationUtil;
@@ -53,7 +53,7 @@ public class EruptDataController {
             }
             return page;
         } else {
-            throw new EruptRuntimeException("没有查询权限");
+            throw new EruptNoLegalPowerException();
         }
     }
 
@@ -64,7 +64,7 @@ public class EruptDataController {
         if (eruptModel.getErupt().power().query()) {
             return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryTree(eruptModel);
         } else {
-            throw new EruptRuntimeException("没有查询权限");
+            throw new EruptNoLegalPowerException();
         }
     }
 
@@ -74,8 +74,12 @@ public class EruptDataController {
     public Object findTabList(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
-        EruptFieldModel eruptFieldModel = InitService.ERUPTS.get(eruptName).getEruptFieldMap().get(tabFieldName);
-        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabList(eruptFieldModel);
+        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
+            EruptFieldModel eruptFieldModel = InitService.ERUPTS.get(eruptName).getEruptFieldMap().get(tabFieldName);
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabList(eruptFieldModel);
+        } else {
+            throw new EruptNoLegalPowerException();
+        }
     }
 
     @RequestMapping("/tab/table/{erupt}/{id}/{tabFieldName}")
@@ -85,7 +89,11 @@ public class EruptDataController {
                                   @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
-        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabListById(eruptModel, tabFieldName, id);
+        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabListById(eruptModel, tabFieldName, id);
+        } else {
+            throw new EruptNoLegalPowerException();
+        }
     }
 
     @RequestMapping("/tab/tree/{erupt}/{tabFieldName}")
@@ -94,7 +102,12 @@ public class EruptDataController {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(tabFieldName);
-        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTree(eruptFieldModel);
+        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTree(eruptFieldModel);
+        } else {
+            throw new EruptNoLegalPowerException();
+        }
+
     }
 
     @RequestMapping("/tab/tree/{erupt}/{id}/{tabFieldName}")
@@ -102,7 +115,11 @@ public class EruptDataController {
     public Object findTabTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
-        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTreeById(eruptModel, tabFieldName, id);
+        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTreeById(eruptModel, tabFieldName, id);
+        } else {
+            throw new EruptNoLegalPowerException();
+        }
     }
 
     @RequestMapping("/{erupt}/{id}")
@@ -131,7 +148,7 @@ public class EruptDataController {
                 return new EruptApiModel(operationHandler.exec(body.get("data"), param));
             }
         }
-        return new EruptApiModel(new BoolAndReason(false, "Operate not found"));
+        throw new EruptNoLegalPowerException();
     }
 
     @PostMapping("/{erupt}")
@@ -156,7 +173,7 @@ public class EruptDataController {
                 return EruptApiModel.errorApi(e);
             }
         } else {
-            throw new EruptRuntimeException("没有新增权限");
+            throw new EruptNoLegalPowerException();
         }
     }
 
@@ -182,7 +199,7 @@ public class EruptDataController {
                 return EruptApiModel.errorApi(e);
             }
         } else {
-            throw new EruptRuntimeException("没有修改权限");
+            throw new EruptNoLegalPowerException();
         }
     }
 
@@ -207,7 +224,7 @@ public class EruptDataController {
                 return EruptApiModel.errorApi(e);
             }
         } else {
-            throw new EruptRuntimeException("没有删除权限");
+            throw new EruptNoLegalPowerException();
         }
     }
 

@@ -31,19 +31,20 @@ import java.util.Set;
                         code = "action",
                         icon = "fa-terminal",
                         title = "执行",
-                        operationHandler = OperationHandlerImpl.class,
-                        edits = {
-                                @CodeAndEdit(
-                                        code = "name",
-                                        codeType = "Integer",
-                                        edit = @Edit(title = "姓名", notNull = true)
-                                ),
-                                @CodeAndEdit(
-                                        code = "idCard",
-                                        codeType = "Integer",
-                                        edit = @Edit(title = "身份证号", notNull = true)
-                                )
-                        }),
+                        operationHandler = OperationHandlerImpl.class
+                ),
+                @RowOperation(
+                        code = "action2",
+                        icon = "fa-terminal",
+                        title = "执行2",
+                        operationHandler = OperationHandlerImpl.class
+                ),
+                @RowOperation(
+                        code = "action3",
+                        icon = "fa-terminal",
+                        title = "执行3",
+                        operationHandler = OperationHandlerImpl.class
+                ),
                 @RowOperation(code = "single", icon = "fa-star",
                         title = "单个执行", multi = false,
                         operationHandler = OperationHandlerImpl.class,
@@ -54,7 +55,7 @@ import java.util.Set;
                 )
         },
         tree = @Tree(id = "id", label = "name", pid = "parent.id"),
-        power = @Power(delete = false, edit = false)
+        power = @Power(edit = false)
 )
 @Entity
 @Table(name = "ERUPT_TEST")

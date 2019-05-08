@@ -7,6 +7,7 @@ package xyz.erupt.core.exception;
  */
 public class EruptRuntimeException extends RuntimeException {
 
+
     public EruptRuntimeException(String message) {
         //TODO 需要记录IP或者其他操作
         super(message);
