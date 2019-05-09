@@ -192,11 +192,10 @@ public class DBService implements DataService {
         for (UniqueConstraint uniqueConstraint : eruptModel.getClazz().getAnnotation(Table.class).uniqueConstraints()) {
             for (String columnName : uniqueConstraint.columnNames()) {
                 EruptField eruptField = eruptModel.getEruptFieldMap().get(columnName).getEruptField();
-                str.append(eruptField.views()[0].title()).append(" ");
+                str.append(eruptField.views()[0].title()).append("|");
             }
         }
-        str.append("重复");
-        return str.toString();
+        return str.substring(0, str.length() - 1) + "重复";
     }
 
     @Transactional

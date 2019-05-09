@@ -7,4 +7,8 @@ public @interface SliderType {
     int max();
 
     int min() default 0;
+
+    int step() default 1;
+
+    int[] markPoints() default {};
 }

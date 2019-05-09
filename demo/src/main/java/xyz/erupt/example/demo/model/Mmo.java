@@ -98,9 +98,8 @@ public class Mmo extends BaseModel {
             },
             edit = @Edit(
                     title = "数字滑块",
-
                     type = EditType.SLIDER,
-                    sliderType = @SliderType(max = 1000, min = -1000),
+                    sliderType = @SliderType(max = 24, min = 1,step = 10, markPoints = {2, 4, 6, 8, 12,24}),
                     search = @Search(true)
             )
     )

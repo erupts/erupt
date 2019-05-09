@@ -123,7 +123,7 @@ public class EruptFileController {
             }
             file.transferTo(dest);
             for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dateProxy()) {
-                SpringUtil.getBean(clazz).afterUpLoadFile(file.getInputStream(), dest, path);
+                SpringUtil.getBean(clazz).afterUpLoadFile(dest, path);
             }
             return EruptApiModel.successApi(path);
         } catch (Exception e) {

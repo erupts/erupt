@@ -87,7 +87,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     }, type = ChoiceEnum.TAGS)
             )
     )
-    private String hobby;
+    private String hobby = "篮球|RAP";
 
 
     @Column(name = "BIRTHDAY")

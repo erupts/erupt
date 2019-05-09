@@ -62,7 +62,11 @@ public class EruptDataController {
     public Collection<TreeModel> getEruptTreeData(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().query()) {
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryTree(eruptModel);
+            Collection<TreeModel> collection = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryTree(eruptModel);
+            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                SpringUtil.getBean(proxy).afterFetch(collection);
+            }
+            return collection;
         } else {
             throw new EruptNoLegalPowerException();
         }

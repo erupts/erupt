@@ -49,7 +49,7 @@ public interface DataProxy<MODEL> {
         return new BoolAndReason(true, null);
     }
 
-    default void afterUpLoadFile(InputStream inputStream, File file, String relativePath) {
+    default void afterUpLoadFile(File file, String relativePath) {
     }
 
 }
