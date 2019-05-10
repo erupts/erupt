@@ -154,7 +154,7 @@ public class LoginService {
             boolean result = false;
             em:
             for (EruptMenu menu : menus) {
-                if (StringUtils.isNotBlank(menu.getPath()) && menu.getPath().contains(eruptModel.getEruptName())) {
+                if (StringUtils.isNotBlank(menu.getPath()) && menu.getPath().toLowerCase().contains(eruptModel.getEruptName().toLowerCase())) {
                     String[] pathArr = menu.getPath().split("/");
                     for (String pa : pathArr) {
                         if (pa.equalsIgnoreCase(eruptModel.getEruptName()) && !pa.startsWith(RestPath.NO_RIGHT_SYMBOL)) {

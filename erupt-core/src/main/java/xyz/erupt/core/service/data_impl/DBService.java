@@ -140,7 +140,7 @@ public class DBService implements DataService {
         cols.add(EruptJapUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.id()) + " as " + refTree.id().replace(".", "_"));
         cols.add(EruptJapUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.label()) + " as " + refTree.label().replace(".", "_"));
         if (StringUtils.isNotBlank(refTree.pid())) {
-            cols.add(EruptJapUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.pid()) + " as " + refTree.pid().replace(".", "_"));
+            cols.add(EruptJapUtils.completeHqlPath(eruptFieldModel.getFieldName(), refTree.pid()) + " as " + eruptFieldModel.getFieldName() + "_" + refTree.pid());
         }
         StringBuilder condition = new StringBuilder();
         if (!"".equals(refTree.filter().condition())) {
@@ -154,7 +154,7 @@ public class DBService implements DataService {
         List<TreeModel> treeModels = new ArrayList<>();
         for (Object o : list) {
             Map<String, Object> map = (Map) o;
-            TreeModel treeModel = new TreeModel(map.get(refTree.id()), map.get(refTree.label()), map.get(refTree.pid().replace(".", "_")), null);
+            TreeModel treeModel = new TreeModel(map.get(refTree.id()), map.get(refTree.label()), map.get(eruptFieldModel.getFieldName() + "_" + refTree.pid()), null);
             treeModels.add(treeModel);
         }
         if (StringUtils.isBlank(refTree.pid())) {

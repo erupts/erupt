@@ -187,6 +187,7 @@ public class EruptDataController {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
         if (eruptModel.getErupt().power().add()) {
             try {
+                System.out.println(gson.toJson(data));
                 Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeEdit(obj);
