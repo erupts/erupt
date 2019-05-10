@@ -57,7 +57,7 @@ public class EruptDataController {
         }
     }
 
-    @RequestMapping("/tree/{erupt}")
+    @GetMapping("/tree/{erupt}")
     @ResponseBody
     public Collection<TreeModel> getEruptTreeData(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
@@ -73,7 +73,7 @@ public class EruptDataController {
     }
 
 
-    @RequestMapping("/tab/table/{erupt}/{tabFieldName}")
+    @GetMapping("/tab/table/{erupt}/{tabFieldName}")
     @ResponseBody
     public Object findTabList(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
@@ -86,7 +86,7 @@ public class EruptDataController {
         }
     }
 
-    @RequestMapping("/tab/table/{erupt}/{id}/{tabFieldName}")
+    @GetMapping("/tab/table/{erupt}/{id}/{tabFieldName}")
     @ResponseBody
     public Object findTabListById(@PathVariable("erupt") String eruptName,
                                   @PathVariable("id") String id,
@@ -100,7 +100,7 @@ public class EruptDataController {
         }
     }
 
-    @RequestMapping("/tab/tree/{erupt}/{tabFieldName}")
+    @GetMapping("/tab/tree/{erupt}/{tabFieldName}")
     @ResponseBody
     public Object findTabTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
@@ -114,7 +114,7 @@ public class EruptDataController {
 
     }
 
-    @RequestMapping("/tab/tree/{erupt}/{id}/{tabFieldName}")
+    @GetMapping("/tab/tree/{erupt}/{id}/{tabFieldName}")
     @ResponseBody
     public Object findTabTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
@@ -126,7 +126,7 @@ public class EruptDataController {
         }
     }
 
-    @RequestMapping("/{erupt}/{id}")
+    @GetMapping("/{erupt}/{id}")
     @ResponseBody
     public EruptApiModel getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
@@ -172,7 +172,7 @@ public class EruptDataController {
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     SpringUtil.getBean(proxy).afterAdd(obj);
                 }
-                return EruptApiModel.successApi(obj);
+                return EruptApiModel.successApi(null);
             } catch (Exception e) {
                 return EruptApiModel.errorApi(e);
             }

@@ -192,11 +192,4 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             return new BoolAndReason(false, "两次密码输入不一致");
         }
     }
-
-    @Override
-    public void afterFetch(Collection list) {
-        Map<String, String> map = new HashMap<>();
-        map.put("account", "2333");
-        list.add(map);
-    }
 }
