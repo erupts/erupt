@@ -3,6 +3,7 @@ package xyz.erupt.core.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -20,6 +21,7 @@ import xyz.erupt.core.util.SpringUtil;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Erupt 对数据的增删改查
@@ -157,8 +159,12 @@ public class EruptDataController {
 
     @PostMapping("/{erupt}")
     @ResponseBody
-    public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) {
+    public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
+        BoolAndReason br = EruptUtil.eruptDataToViewData(eruptModel, data);
+        if (!br.isBool()) {
+            return new EruptApiModel(br);
+        }
         if (eruptModel.getErupt().power().add()) {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
             try {
@@ -183,12 +189,15 @@ public class EruptDataController {
 
     @PutMapping("/{erupt}")
     @ResponseBody
-    public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody Object data) {
+    public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
+        BoolAndReason br = EruptUtil.eruptDataToViewData(eruptModel, data);
+        if (!br.isBool()) {
+            return new EruptApiModel(br);
+        }
         if (eruptModel.getErupt().power().add()) {
             try {
-                System.out.println(gson.toJson(data));
-                Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
+                Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeEdit(obj);
                     if (!boolAndReason.isBool()) {

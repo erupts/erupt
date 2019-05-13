@@ -1,6 +1,10 @@
 package xyz.erupt.core.util;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 11/1/18.
@@ -47,5 +51,19 @@ public class TypeUtil {
             }
         }
         return false;
+    }
+
+    public static Object mapToObject(Map<String, Object> map, Class<?> beanClass) {
+        if (map == null) {
+            return null;
+        }
+        Object obj = null;
+        try {
+            obj = beanClass.newInstance();
+            BeanUtils.populate(obj, map);
+        } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 }

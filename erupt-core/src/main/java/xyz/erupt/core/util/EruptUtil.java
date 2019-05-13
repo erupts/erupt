@@ -1,14 +1,17 @@
 package xyz.erupt.core.util;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptFieldModel;
+import xyz.erupt.core.model.EruptModel;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -31,7 +34,7 @@ public class EruptUtil {
         }
     }
 
-
+    //清空一对多关系数据，防止循环引用导致内存溢出
     public static void rinseEruptObj(Object eruptObj) throws IllegalAccessException {
         Erupt erupt = eruptObj.getClass().getAnnotation(Erupt.class);
         for (Field field : eruptObj.getClass().getDeclaredFields()) {
@@ -67,6 +70,28 @@ public class EruptUtil {
             default:
                 return jsonElement.getAsString();
         }
+    }
+
+    public static BoolAndReason eruptDataToViewData(EruptModel eruptModel, Map<String, Object> dataMap) {
+        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
+            if (field.getEruptField().edit().notNull()) {
+                if (!dataMap.containsKey(field.getFieldName())) {
+                    return new BoolAndReason(false, field.getEruptField().edit().title() + "必填");
+                }
+            }
+        }
+        return new BoolAndReason(true, "");
+    }
+
+    public static BoolAndReason eruptDataToViewData(EruptModel eruptModel, JsonObject data) {
+        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
+            if (field.getEruptField().edit().notNull()) {
+                if (!data.has(field.getFieldName())) {
+                    return new BoolAndReason(false, field.getEruptField().edit().title() + "必填");
+                }
+            }
+        }
+        return new BoolAndReason(true, "");
     }
 
 
