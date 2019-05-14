@@ -255,6 +255,7 @@ public class Mmo extends BaseModel {
     private Date date;
 
     @EruptField(
+            views = @View(title = "图片",viewType = ViewType.ATTACHMENT),
             edit = @Edit(
                     title = "图片",
                     type = EditType.ATTACHMENT,

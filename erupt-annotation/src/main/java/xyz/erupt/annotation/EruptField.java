@@ -20,4 +20,5 @@ public @interface EruptField {
     //编辑时的列信息
     Edit edit() default @Edit(title = "");
 
+    String[] params() default {};
 }

@@ -1,5 +1,6 @@
 package xyz.erupt.core.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,6 +18,7 @@ import xyz.erupt.core.service.InitService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.SpringUtil;
+import xyz.erupt.core.util.TypeUtil;
 
 import javax.transaction.Transactional;
 import java.io.Serializable;
@@ -33,6 +35,8 @@ public class EruptDataController {
 
     @Autowired
     private Gson gson;
+
+    private static ObjectMapper MAPPER = new ObjectMapper();
 
     @PostMapping("/table/{erupt}")
     @ResponseBody
@@ -195,9 +199,11 @@ public class EruptDataController {
         if (!br.isBool()) {
             return new EruptApiModel(br);
         }
-        if (eruptModel.getErupt().power().add()) {
+        if (eruptModel.getErupt().power().edit()) {
             try {
+                System.out.println(data.toString());
                 Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
+//                Object obj = TypeUtil.mapToObject(data,eruptModel.getClazz());
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeEdit(obj);
                     if (!boolAndReason.isBool()) {
@@ -273,7 +279,7 @@ public class EruptDataController {
     @ResponseBody
     public Collection<TreeModel> getRefTreeDataByDepend(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName, @PathVariable("dependValue") String dependValue) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
-        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTree(eruptModel, fieldName);
+        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTreeByDepend(eruptModel, fieldName,dependValue);
     }
 
 //    @GetMapping("/{erupt}/reftable/{fieldName}")

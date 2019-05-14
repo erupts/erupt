@@ -36,4 +36,6 @@ public @interface Erupt {
     Tree tree() default @Tree(id = "id", label = "name");
 
     Class<? extends DataProxy>[] dateProxy() default {};
+
+    String[] params() default {};
 }

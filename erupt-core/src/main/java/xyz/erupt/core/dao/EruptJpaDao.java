@@ -88,9 +88,15 @@ public class EruptJpaDao {
      * @param cols       格式：name as alias
      * @return
      */
-    public List getDataMap(EruptModel eruptModel, String condition, String orderBy, List<String> cols) {
+    public List getDataMap(EruptModel eruptModel, String condition, String orderBy, List<String> cols, Map<String, Object> conditionParameter) {
         String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", cols) + ")", condition, null, orderBy));
-        return entityManager.createQuery(hql).getResultList();
+        Query query = entityManager.createQuery(hql);
+        if (null != conditionParameter) {
+            for (String key : conditionParameter.keySet()) {
+                query.setParameter(key, conditionParameter.get(key));
+            }
+        }
+        return query.getResultList();
     }
 
 

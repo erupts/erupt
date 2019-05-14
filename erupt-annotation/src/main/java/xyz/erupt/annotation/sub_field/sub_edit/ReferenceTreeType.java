@@ -15,5 +15,7 @@ public @interface ReferenceTreeType {
 
     String depend() default "";
 
+    String dependColumn() default "id";
+
     Filter filter() default @Filter(condition = "");
 }
