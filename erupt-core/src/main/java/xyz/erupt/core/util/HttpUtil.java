@@ -15,8 +15,7 @@ public class HttpUtil {
             response.setContentType("application/x-download");
             response.setHeader("Content-Disposition", headStr);
             response.setCharacterEncoding("utf-8");
-            OutputStream out = response.getOutputStream();
-            return out;
+            return response.getOutputStream();
         } catch (IOException e) {
             e.printStackTrace();
             return null;

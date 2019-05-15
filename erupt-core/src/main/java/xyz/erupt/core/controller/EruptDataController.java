@@ -1,7 +1,9 @@
 package xyz.erupt.core.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
@@ -201,8 +203,7 @@ public class EruptDataController {
         }
         if (eruptModel.getErupt().power().edit()) {
             try {
-                System.out.println(data.toString());
-                Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
+                Object obj = this.gson.fromJson(data.toString(), eruptModel.getClazz());
 //                Object obj = TypeUtil.mapToObject(data,eruptModel.getClazz());
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeEdit(obj);
@@ -279,7 +280,7 @@ public class EruptDataController {
     @ResponseBody
     public Collection<TreeModel> getRefTreeDataByDepend(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName, @PathVariable("dependValue") String dependValue) {
         EruptModel eruptModel = InitService.ERUPTS.get(erupt);
-        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTreeByDepend(eruptModel, fieldName,dependValue);
+        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTreeByDepend(eruptModel, fieldName, dependValue);
     }
 
 //    @GetMapping("/{erupt}/reftable/{fieldName}")

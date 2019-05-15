@@ -29,7 +29,7 @@ public class EruptMenu extends BaseModel {
             edit = @Edit(title = "编码", notNull = true)
     )
     @Column(name = "CODE", unique = true)
-    private String code;
+    private String code = "233333333";
 
     @Column(name = "NAME")
     @EruptField(
@@ -39,7 +39,7 @@ public class EruptMenu extends BaseModel {
                     notNull = true
             )
     )
-    private String name;
+    private String name = "2344524";
 
     @Column(name = "PATH")
     @EruptField(

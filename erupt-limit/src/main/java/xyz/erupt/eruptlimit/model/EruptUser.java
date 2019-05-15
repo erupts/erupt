@@ -82,9 +82,9 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     type = EditType.CHOICE,
                     search = @Search(value = true, vague = true),
                     choiceType = @ChoiceType(vl = {
-//                            @VL(value = "ball",label = "篮球"),
-//                            @VL(value = "rap",label = "rap")
-                    }, type = ChoiceEnum.TAGS)
+                            @VL(value = "ball",label = "篮球"),
+                            @VL(value = "rap",label = "rap")
+                    }, type = ChoiceEnum.CHECKBOX)
             )
     )
     private String hobby = "篮球|RAP";

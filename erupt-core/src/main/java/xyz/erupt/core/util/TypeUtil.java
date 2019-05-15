@@ -15,6 +15,10 @@ public class TypeUtil {
             "byte", "short", "int", "integer", "long", "float", "double", "boolean", "char", "string", "date"
     };
 
+    private static final String[] NUMBER_TYPE = {
+            "short", "int", "integer", "long", "float", "double"
+    };
+
     /**
      * 将未知类型转换为目标类型（目标类型只支持基本数据类型）
      *
@@ -46,6 +50,15 @@ public class TypeUtil {
      */
     public static boolean isFieldSimpleType(String typeName) {
         for (String simpleType : SIMPLE_JPA_TYPE) {
+            if (simpleType.equals(typeName.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isNumberType(String typeName) {
+        for (String simpleType : NUMBER_TYPE) {
             if (simpleType.equals(typeName.toLowerCase())) {
                 return true;
             }

@@ -1,5 +1,8 @@
 package xyz.erupt.core.controller;
 
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
@@ -9,10 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.erupt.core.util.HttpUtil;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 对Excel数据的处理
@@ -28,6 +36,7 @@ public class EruptExcelController {
     @Value("erupt.uploadPath:/opt/file")
     private String uploadPath;
 
+    //导出
     @GetMapping("/export/{erupt}")
     public void exportData(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
@@ -38,8 +47,29 @@ public class EruptExcelController {
         }
     }
 
+    @GetMapping(value = "/template/{erupt}")
+    public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
+        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        if (eruptModel.getErupt().power().importable()) {
+            try {
+                OutputStream outputStream = HttpUtil.downLoadFile(response, "excel模板");
+                ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX, false);
+                Sheet sheet1 = new Sheet(1, 0);
+                sheet1.setSheetName("第一个sheet");
+                writer.finish();
+                outputStream.flush();
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new RuntimeException("没有导入权限");
+        }
+        return null;
+    }
 
-    //上传文件
+
+    //导入excel
     @PostMapping("/import/{erupt}")
     @ResponseBody
     public BoolAndReason importData(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
@@ -58,18 +88,6 @@ public class EruptExcelController {
                 e.printStackTrace();
                 return new BoolAndReason(false, e.getMessage());
             }
-        } else {
-            throw new RuntimeException("没有导入权限");
-        }
-    }
-
-
-    @GetMapping(value = "/import/template/{erupt}")
-    @ResponseBody
-    public void importTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
-        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
-        if (eruptModel.getErupt().power().importable()) {
-
         } else {
             throw new RuntimeException("没有导入权限");
         }

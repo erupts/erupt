@@ -28,9 +28,21 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private static final String URL_ERUPT_PARAM_KEY = "_erupt";
 
+    private static final String URL_ERUPT_PARAM_TOKEN = "_token";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
+        String eruptName = request.getHeader(ERUPT_HEADER_KEY);
+        {
+            if (StringUtils.isBlank(token)) {
+                //使用参数的形式携带token等信息
+                if (request.getServletPath().contains(RestPath.ERUPT_EXCEL)) {
+                    token = request.getParameter(URL_ERUPT_PARAM_TOKEN);
+                    eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
+                }
+            }
+        }
         if (null == token || !loginService.verifyToken(token)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return false;
@@ -38,10 +50,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String path = request.getServletPath();
         //权限校验
         if (path.startsWith(RestPath.ERUPT_API)) {
-            String eruptName = request.getHeader(ERUPT_HEADER_KEY);
-            if (StringUtils.isBlank(eruptName)) {
-                eruptName = request.getAttribute(URL_ERUPT_PARAM_KEY).toString();
-            }
             EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
             if (null == eruptModel) {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
