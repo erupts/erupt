@@ -21,11 +21,11 @@ public @interface AttachmentType {
 
     ImageType imageType() default @ImageType;
 
-    boolean muti() default false;
+    int maxLimit() default 1;
 
-    /**
-     * 与muti配合使用，muti为true时使用此属性来限制最大文件上传数
-     */
-    int maxLimit() default 5;
+    SaveMode saveMode() default SaveMode.SINGLE_COLUMN;
+
+    //当SaveMode为SINGLE_COLUMN使用
+    String fileSeparator() default "','";
 
 }

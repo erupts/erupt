@@ -2,7 +2,6 @@ package xyz.erupt.eruptlimit.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.model.EruptMenu;
 import xyz.erupt.eruptlimit.model.EruptUser;
 import xyz.erupt.eruptlimit.repository.UserRepository;
-import xyz.erupt.eruptlimit.util.DESUtil;
 import xyz.erupt.eruptlimit.util.IpUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -115,7 +113,8 @@ public class LoginService {
 
 
     public void createToken(LoginModel loginModel) {
-        loginModel.setToken(DESUtil.encode(loginModel.getEruptUser().getAccount(), userTokenDES));
+//        DESUtil.encode(loginModel.getEruptUser().getAccount(), userTokenDES)
+        loginModel.setToken(RandomStringUtils.randomPrint(20));
         redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), expireTimeByLogin);
     }
 

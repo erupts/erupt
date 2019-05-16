@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,13 +53,18 @@ public class EruptExcelController {
         EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             try {
-                OutputStream outputStream = HttpUtil.downLoadFile(response, "excel模板");
-                ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX, false);
+                OutputStream out = HttpUtil.downLoadFile(response, "excel模板");
+                response.setContentType("multipart/form-data");
+                ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX, false);
                 Sheet sheet1 = new Sheet(1, 0);
                 sheet1.setSheetName("第一个sheet");
+                List<List<String>> list = new ArrayList<>();
+                list.add(Arrays.asList("1", "2", "3", "4", "5"));
+                list.add(Arrays.asList("A", "B", "C", "D", "E"));
+                writer.write0(list, sheet1);
                 writer.finish();
-                outputStream.flush();
-                outputStream.close();
+                out.flush();
+                out.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

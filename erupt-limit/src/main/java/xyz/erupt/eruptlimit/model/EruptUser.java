@@ -38,7 +38,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             views = @View(title = "用户名", sortable = true),
             edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true)
     )
-    private String account = "xxxxxx";
+    private String account;
 
     @Column(name = "NAME")
     @EruptField(
@@ -111,7 +111,8 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     title = "头像",
                     type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(
-                            type = AttachmentEnum.IMAGE
+                            type = AttachmentEnum.OTHER,
+                            maxLimit = 5
                     )
             )
     )
