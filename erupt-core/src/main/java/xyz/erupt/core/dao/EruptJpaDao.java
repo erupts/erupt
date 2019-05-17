@@ -6,6 +6,7 @@ import org.apache.poi.util.StringUtil;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
@@ -62,18 +63,23 @@ public class EruptJpaDao {
         Query countQuery = entityManager.createQuery(countHql);
         Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
         for (String key : condition.keySet()) {
-            EruptFieldModel eruptFieldModel = eruptFieldMap.get(key);
-            Edit edit = eruptFieldModel.getEruptField().edit();
-            if (edit.search().vague()) {
-                JsonArray jsonArray = condition.get(key).getAsJsonArray();
-                countQuery.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
-                countQuery.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
-                query.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
-                query.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
-                continue;
+            if (!condition.get(key).isJsonNull()) {
+                EruptFieldModel eruptFieldModel = eruptFieldMap.get(key);
+                Edit edit = eruptFieldModel.getEruptField().edit();
+                if (edit.search().vague()) {
+                    if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(EruptFieldModel.NUMBER_TYPE))
+                            || edit.type() == EditType.DATE || edit.type() == EditType.SLIDER) {
+                        JsonArray jsonArray = condition.get(key).getAsJsonArray();
+                        countQuery.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                        countQuery.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                        query.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                        query.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                        continue;
+                    }
+                }
+                countQuery.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, condition.get(key)));
+                query.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, condition.get(key)));
             }
-            countQuery.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, condition.get(key)));
-            query.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, condition.get(key)));
         }
         List list = query.setMaxResults(page.getPageSize())
                 .setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList();

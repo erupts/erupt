@@ -43,7 +43,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     @Column(name = "NAME")
     @EruptField(
             views = @View(title = "姓名", sortable = true),
-            edit = @Edit(title = "姓名", notNull = true, search = @Search(true))
+            edit = @Edit(title = "姓名", notNull = true, search = @Search(value = true, vague = true))
     )
     private String name;
 
@@ -68,8 +68,9 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             views = @View(title = "年龄"),
             edit = @Edit(
                     title = "年龄",
-                    search = @Search(value = true, vague = true),
-                    inputType = @InputType(pattern = "")
+                    type = EditType.SLIDER,
+                    sliderType = @SliderType(max = 120),
+                    search = @Search(value = true,vague = true)
             )
     )
     private Integer age = 18;
@@ -82,8 +83,8 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     type = EditType.CHOICE,
                     search = @Search(value = true, vague = true),
                     choiceType = @ChoiceType(vl = {
-                            @VL(value = "ball",label = "篮球"),
-                            @VL(value = "rap",label = "rap")
+                            @VL(value = "ball", label = "篮球"),
+                            @VL(value = "rap", label = "rap")
                     }, type = ChoiceEnum.CHECKBOX)
             )
     )
@@ -95,7 +96,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             views = @View(title = "生日"),
             edit = @Edit(
                     title = "生日",
-                    search = @Search(value = true, vague = true),
+                    search = @Search(value = true),
                     type = EditType.DATE,
                     dateType = @DateType
 

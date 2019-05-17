@@ -54,8 +54,7 @@ public class EruptUtil {
     }
 
     public static Object jsonElementToObject(EruptFieldModel eruptFieldModel, JsonElement jsonElement) {
-        if ("Integer".equalsIgnoreCase(eruptFieldModel.getFieldReturnName()) ||
-                "int".equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
+        if (EruptFieldModel.NUMBER_TYPE.equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
             try {
                 return jsonElement.getAsInt();
             } catch (Exception e) {

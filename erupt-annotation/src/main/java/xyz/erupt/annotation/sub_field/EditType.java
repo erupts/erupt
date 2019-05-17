@@ -4,11 +4,11 @@ package xyz.erupt.annotation.sub_field;
  * Created by liyuepeng on 9/28/18.
  */
 public enum EditType {
-    INPUT,            //输入框
-    TEXTAREA,         //text area
-    CHOICE,           //选择框
-    SLIDER,           //数字滑块
-    DATE,             //日期
+    INPUT,            //输入框             string:vague the like|number:vague the range
+    TEXTAREA,         //text area         vague the like
+    CHOICE,           //选择框             vague the in
+    SLIDER,           //数字滑块           vague the range
+    DATE,             //日期               vague the range
     REFERENCE,        //引用
 //    CUSTOM_REFER,     //自定义引用类型
     BOOLEAN,          //布尔

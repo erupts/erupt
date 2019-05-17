@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -96,17 +97,30 @@ public class EruptJapUtils {
         JsonObject condition = hqlModel.getEruptSearchCondition();
         if (null != condition) {
             for (String key : condition.keySet()) {
-                EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
-                if (null != eruptFieldModel) {
-                    EruptField eruptField = eruptFieldModel.getEruptField();
-                    if (eruptField.edit().search().value()) {
-                        String _key = EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), key);
-                        if (eruptField.edit().search().vague()) {
-                            hql.append(EruptJapUtils.AND).append(_key)
-                                    .append(" >=:").append(LVAL_KEY + key)
-                                    .append(EruptJapUtils.AND).append(_key)
-                                    .append(" <=:").append(RVAL_KEY + key);
-                        } else {
+                if (!condition.get(key).isJsonNull()) {
+                    EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
+                    if (null != eruptFieldModel) {
+                        if (eruptFieldModel.getEruptField().edit().search().value()) {
+                            Edit edit = eruptFieldModel.getEruptField().edit();
+                            String _key = EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), key);
+                            if (edit.search().vague()) {
+                                if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(EruptFieldModel.NUMBER_TYPE))
+                                        || edit.type() == EditType.DATE
+                                        || edit.type() == EditType.SLIDER) {
+                                    hql.append(EruptJapUtils.AND).append(_key)
+                                            .append(" >=:").append(LVAL_KEY + key)
+                                            .append(EruptJapUtils.AND).append(_key)
+                                            .append(" <=:").append(RVAL_KEY + key);
+                                    continue;
+                                } else if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals("String"))
+                                        || edit.type() == EditType.TEXTAREA) {
+                                    hql.append(EruptJapUtils.AND).append(_key).append(" like :").append(key);
+                                    continue;
+                                } else if (edit.type() == EditType.CHOICE) {
+                                    hql.append(EruptJapUtils.AND).append(_key).append(" in :").append(key);
+                                    continue;
+                                }
+                            }
                             if (condition.get(key).toString().contains(EruptJapUtils.NULL)) {
                                 hql.append(EruptJapUtils.AND).append(_key).append(" is null");
                             } else if (condition.get(key).toString().contains(EruptJapUtils.NOT_NULL)) {
@@ -130,6 +144,8 @@ public class EruptJapUtils {
             String[] sorts = eruptModel.getErupt().sorts();
             hql.append(" order by ").append(convertSorts(eruptModel.getEruptName(), sorts));
         }
+        //TODO
+        System.err.println(hql.toString());
         return hql.toString();
     }
 

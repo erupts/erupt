@@ -17,7 +17,7 @@ public @interface Edit {
 
     boolean readOnly() default false;
 
-    Search search() default @Search;
+    Search search() default @Search(false);
 
     EditType type() default EditType.INPUT;
 
