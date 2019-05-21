@@ -2,7 +2,9 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.model.BoolAndReason;
@@ -14,6 +16,8 @@ import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 
 import java.lang.reflect.Field;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,6 +70,8 @@ public class EruptUtil {
                 return jsonElement.getAsInt();
             case BOOLEAN:
                 return jsonElement.getAsBoolean();
+            case DATE:
+                return DateUtil.getDate(jsonElement.getAsString());
             default:
                 return jsonElement.getAsString();
         }

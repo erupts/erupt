@@ -25,17 +25,16 @@ import java.util.Set;
 @Erupt(
 //        filter = @Filter(condition = "'id=1'"),
         name = "测试",
-        loginUse = false,
         rowOperation = {
                 @RowOperation(
                         code = "action",
-                        icon = "fa-terminal",
+                        icon = "'fa-terminal blue'",
                         title = "执行",
                         operationHandler = OperationHandlerImpl.class
                 ),
                 @RowOperation(
                         code = "action2",
-                        icon = "fa-terminal",
+                        icon = "'fa-terminal blue'",
                         title = "执行2",
                         operationHandler = OperationHandlerImpl.class
                 ),

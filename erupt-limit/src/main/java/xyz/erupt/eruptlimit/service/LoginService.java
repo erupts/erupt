@@ -39,7 +39,7 @@ public class LoginService {
     private Integer expireTimeByLogin;
 
     //服务器启动后内存中生成一个全新的tokenDES，就连开发人员都查不到，杜绝了token被仿造的问题
-    private static final String userTokenDES = RandomStringUtils.randomGraph(10);
+//    private static final String userTokenDES = RandomStringUtils.randomGraph(10);
 
     @Autowired
     private Gson gson;
@@ -113,8 +113,7 @@ public class LoginService {
 
 
     public void createToken(LoginModel loginModel) {
-//        DESUtil.encode(loginModel.getEruptUser().getAccount(), userTokenDES)
-        loginModel.setToken(RandomStringUtils.randomPrint(20));
+        loginModel.setToken(RandomStringUtils.random(20,true,true));
         redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), expireTimeByLogin);
     }
 
@@ -140,6 +139,7 @@ public class LoginService {
                 return false;
             }
         }
+        //检验注解
         {
             if (!eruptModel.getErupt().loginUse()) {
                 return true;

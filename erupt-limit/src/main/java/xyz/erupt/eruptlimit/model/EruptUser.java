@@ -12,9 +12,11 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
+import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.MD5Utils;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -68,9 +70,9 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             views = @View(title = "年龄"),
             edit = @Edit(
                     title = "年龄",
-                    type = EditType.SLIDER,
-                    sliderType = @SliderType(max = 120),
-                    search = @Search(value = true,vague = true)
+//                    type = EditType.SLIDER,
+//                    sliderType = @SliderType(max = 120, markPoints = {10, 20, 30, 40, 120}),
+                    search = @Search(value = true, vague = true)
             )
     )
     private Integer age = 18;
@@ -96,9 +98,9 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             views = @View(title = "生日"),
             edit = @Edit(
                     title = "生日",
-                    search = @Search(value = true),
+                    search = @Search(value = true,vague = true),
                     type = EditType.DATE,
-                    dateType = @DateType
+                    dateType = @DateType(type = DateEnum.DATE_TIME)
 
             )
     )
@@ -163,7 +165,8 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     @EruptField(
             edit = @Edit(
                     title = "备注",
-                    type = EditType.TEXTAREA
+                    type = EditType.TEXTAREA,
+                    search = @Search(value = true, vague = true)
             )
     )
     private String remark;
@@ -193,5 +196,9 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
         } else {
             return new BoolAndReason(false, "两次密码输入不一致");
         }
+    }
+
+    public static void main(String[] args) {
+
     }
 }

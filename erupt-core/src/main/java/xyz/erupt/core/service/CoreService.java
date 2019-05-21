@@ -11,7 +11,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.util.ScannerUtil;
+import xyz.erupt.core.util.SpringUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by liyuepeng on 9/28/18.
  */
 @Service
-public class InitService implements InitializingBean {
+public class CoreService implements InitializingBean {
 
     @Value("#{'${erupt.scanner-package:xyz.erupt}'.split(',')}")
     private String[] packages;
@@ -32,7 +32,7 @@ public class InitService implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        ScannerUtil.scannerPackage(this.packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
+        SpringUtil.scannerPackage(this.packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
             //erupt domain info to memory
             EruptModel eruptModel = new EruptModel(clazz);
             // erupt field info to memory

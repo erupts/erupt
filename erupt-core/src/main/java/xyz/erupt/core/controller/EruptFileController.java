@@ -12,7 +12,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptApiModel;
 import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.service.InitService;
+import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.SpringUtil;
 
@@ -42,7 +42,7 @@ public class EruptFileController {
         try {
             //生成存储路径
             String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator + RandomUtils.nextInt(100, 9999) + "-" + file.getOriginalFilename();
-            EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+            EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
             switch (edit.type()) {
                 case ATTACHMENT:

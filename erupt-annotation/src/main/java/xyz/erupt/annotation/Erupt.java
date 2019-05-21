@@ -21,7 +21,7 @@ public @interface Erupt {
 
     String primaryKeyCol() default "id";
 
-    String name() default "";
+    String name();
 
     String desc() default "";
 

@@ -8,6 +8,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.core.annotation.EruptDataProcessor;
+import xyz.erupt.core.service.data_impl.NonDataService;
 import xyz.erupt.eruptlimit.model.BaseModel;
 import xyz.erupt.eruptlimit.model.EruptRole;
 import xyz.erupt.eruptlimit.model.EruptUser;
@@ -19,11 +21,12 @@ import javax.persistence.*;
  */
 @Erupt(
         name = "测试",
-        loginUse = false,
-        params = {"66666666","23333333"}
+        loginUse = true,
+        params = {"66666666", "23333333"}
 )
 @Entity
 @Table(name = "TEST")
+@EruptDataProcessor(processors = NonDataService.class)
 public class Test extends BaseModel {
 
     @Column(name = "NAME")

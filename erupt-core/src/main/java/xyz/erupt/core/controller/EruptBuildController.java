@@ -9,7 +9,7 @@ import xyz.erupt.core.model.EruptAndEruptFieldModel;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.EruptPageModel;
-import xyz.erupt.core.service.InitService;
+import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.SpringUtil;
 
@@ -30,7 +30,7 @@ public class EruptBuildController {
     @ResponseBody
     public EruptPageModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptPageModel eruptPageModel = new EruptPageModel();
-        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (null != eruptModel) {
             try {
                 Object eruptInstance = SpringUtil.getBean(eruptModel.getClazz());
@@ -46,7 +46,7 @@ public class EruptBuildController {
             List<EruptAndEruptFieldModel> eruptAndEruptFieldModels = new ArrayList<>();
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
                 if (fieldModel.getEruptField().edit().type() == EditType.TAB) {
-                    EruptModel subEruptModel = InitService.ERUPTS.get(ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0));
+                    EruptModel subEruptModel = CoreService.ERUPTS.get(ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0));
                     if (null == subEruptModel) {
                         throw new RuntimeException("请使用Erupt注解管理：" + fieldModel.getField().getName());
                     }

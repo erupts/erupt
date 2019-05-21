@@ -2,9 +2,14 @@ package xyz.erupt.core.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
+
+import java.util.function.Consumer;
 
 /**
  * Created by liyuepeng on 1/24/19.
@@ -47,5 +52,30 @@ public class SpringUtil implements ApplicationContextAware {
     //通过name,以及Clazz返回指定的Bean
     public static <T> T getBean(String name, Class<T> clazz) {
         return getApplicationContext().getBean(name, clazz);
+    }
+
+    /**
+     * 扫描指定包下的所有匹配类
+     * 核心功能由Spring提供
+     *
+     * @param packages    包名
+     * @param typeFilters 匹配规则
+     * @param consumer    consumer lambda
+     */
+    public static void scannerPackage(String[] packages, TypeFilter[] typeFilters, Consumer<Class<?>> consumer) {
+        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+        for (TypeFilter filter : typeFilters) {
+            scanner.addIncludeFilter(filter);
+        }
+        for (String pack : packages) {
+            for (BeanDefinition bd : scanner.findCandidateComponents(pack)) {
+                try {
+                    Class<?> clazz = Class.forName(bd.getBeanClassName());
+                    consumer.accept(clazz);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

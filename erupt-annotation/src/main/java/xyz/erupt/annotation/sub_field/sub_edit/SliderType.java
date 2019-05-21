@@ -10,5 +10,7 @@ public @interface SliderType {
 
     int step() default 1;
 
+    boolean dots() default false;
+
     int[] markPoints() default {};
 }

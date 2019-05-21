@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.service.InitService;
+import xyz.erupt.core.service.CoreService;
 import xyz.erupt.eruptlimit.service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +50,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String path = request.getServletPath();
         //权限校验
         if (path.startsWith(RestPath.ERUPT_API)) {
-            EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+            EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
             if (null == eruptModel) {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;

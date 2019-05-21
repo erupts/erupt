@@ -3,6 +3,7 @@ package xyz.erupt.eruptlimit.model;
 import lombok.Data;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -20,6 +21,7 @@ import javax.persistence.*;
         name = "菜单配置",
         sorts = "sort",
         tree = @Tree(id = "id", label = "name", pid = "parentMenu.id")
+//        power = @Power(edit = false,add = false,delete = false)
 )
 @Data
 public class EruptMenu extends BaseModel {
@@ -66,14 +68,14 @@ public class EruptMenu extends BaseModel {
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             vl = {
-                                    @VL(value = "1", label = "显示"),
+                                    @VL(value = "1", label = "启用"),
                                     @VL(value = "2", label = "隐藏"),
                                     @VL(value = "3", label = "禁用"),
                             }
                     )
             )
     )
-    private Integer status;
+    private Integer status = 1;
 
     @Column(name = "SORT")
     @EruptField(

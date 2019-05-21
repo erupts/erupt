@@ -6,7 +6,7 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.service.InitService;
+import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,13 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.core.util.HttpUtil;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,7 +38,7 @@ public class EruptExcelController {
     //导出
     @GetMapping("/export/{erupt}")
     public void exportData(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
-        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().export()) {
             dataFileService.exportExcel(eruptModel, response);
         } else {
@@ -50,18 +48,17 @@ public class EruptExcelController {
 
     @GetMapping(value = "/template/{erupt}")
     public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
-        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             try {
-                OutputStream out = HttpUtil.downLoadFile(response, "excel模板");
+                OutputStream out = HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + ".xlsx");
                 response.setContentType("multipart/form-data");
                 ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX, false);
                 Sheet sheet1 = new Sheet(1, 0);
                 sheet1.setSheetName("第一个sheet");
-                List<List<String>> list = new ArrayList<>();
-                list.add(Arrays.asList("1", "2", "3", "4", "5"));
-                list.add(Arrays.asList("A", "B", "C", "D", "E"));
-                writer.write0(list, sheet1);
+                sheet1.setAutoWidth(true);
+                List<List<String>> header = new ArrayList<>();
+
                 writer.finish();
                 out.flush();
                 out.close();
@@ -79,7 +76,7 @@ public class EruptExcelController {
     @PostMapping("/import/{erupt}")
     @ResponseBody
     public BoolAndReason importData(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
-        EruptModel eruptModel = InitService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             if (file.isEmpty()) {
                 return new BoolAndReason(false, "上传失败，请选择文件");

@@ -16,7 +16,7 @@ import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.Page;
 import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.service.DataService;
-import xyz.erupt.core.service.InitService;
+import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.*;
 
 import javax.persistence.Table;
@@ -81,7 +81,7 @@ public class DBService implements DataService {
 
     @Override
     public List<TreeModel> findTabTree(EruptFieldModel eruptTabFieldModel) {
-        EruptModel subEruptModel = InitService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
+        EruptModel subEruptModel = CoreService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
         TabType tabType = eruptTabFieldModel.getEruptField().edit().tabType()[0];
         String condition = "";
         if (!"".equals(tabType.filter().condition())) {
@@ -157,7 +157,7 @@ public class DBService implements DataService {
             condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType()[0].dependColumn() + "=:" + DEPEND_KEY);
             conditionParameter.put(DEPEND_KEY, dependValue);
         }
-        List list = eruptJpaDao.getDataMap(InitService.ERUPTS.get(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
+        List list = eruptJpaDao.getDataMap(CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Object o : list) {
             Map<String, Object> map = (Map) o;
