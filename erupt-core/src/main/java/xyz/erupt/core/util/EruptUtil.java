@@ -14,6 +14,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.service.CoreService;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;
@@ -57,6 +58,7 @@ public class EruptUtil {
         }
     }
 
+    //请求参数转换
     public static Object jsonElementToObject(EruptFieldModel eruptFieldModel, JsonElement jsonElement) {
         if (EruptFieldModel.NUMBER_TYPE.equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
             try {
@@ -72,6 +74,11 @@ public class EruptUtil {
                 return jsonElement.getAsBoolean();
             case DATE:
                 return DateUtil.getDate(jsonElement.getAsString());
+            case REFERENCE_TREE:
+                //TODO 类型转换太频繁,以后优化
+                String id = eruptFieldModel.getEruptField().edit().referenceTreeType()[0].id();
+                EruptFieldModel efm = CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
+                return TypeUtil.typeStrConvertObject(jsonElement.getAsJsonObject().get(id).getAsString(), efm.getField().getType().getSimpleName());
             default:
                 return jsonElement.getAsString();
         }
@@ -139,7 +146,7 @@ public class EruptUtil {
                                 result.put(field.getName(), NOT_ERUPT_REF);
                             }
                             break;
-                        case REFERENCE:
+                        case REFERENCE_TREE:
                             if (StringUtils.isNotBlank(fieldData.toString())) {
                                 for (View view : eruptField.views()) {
                                     result.put(field.getName() + "_" + view.column(),

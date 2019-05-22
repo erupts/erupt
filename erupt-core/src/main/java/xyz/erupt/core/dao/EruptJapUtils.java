@@ -55,7 +55,7 @@ public class EruptJapUtils {
                 }
                 fieldKeys.add(fieldKey);
             }
-            if (field.getEruptField().edit().type() == EditType.REFERENCE) {
+            if (field.getEruptField().edit().type() == EditType.REFERENCE_TREE) {
                 ReferenceTreeType referenceTreeType = field.getEruptField().edit().referenceTreeType()[0];
                 fieldKey = eruptNameSymbol + field.getFieldName() + "." + referenceTreeType.id() + " as " + field.getFieldName() + "_" + referenceTreeType.id();
                 fieldKeys.add(fieldKey);
@@ -63,7 +63,7 @@ public class EruptJapUtils {
                 fieldKeys.add(fieldKey);
             }
             if (field.getEruptField().views().length == 0) {
-                if (field.getEruptField().edit().type() != EditType.REFERENCE) {
+                if (field.getEruptField().edit().type() != EditType.REFERENCE_TREE) {
                     if (TypeUtil.isFieldSimpleType(field.getField().getType().getSimpleName())) {
                         fieldKey = eruptNameSymbol + field.getFieldName() + " as " + field.getFieldName();
                         fieldKeys.add(fieldKey);
@@ -120,6 +120,10 @@ public class EruptJapUtils {
                                     hql.append(EruptJapUtils.AND).append(_key).append(" in :").append(key);
                                     continue;
                                 }
+                            }
+                            if (edit.type() == EditType.REFERENCE_TREE) {
+                                hql.append(EruptJapUtils.AND).append(key + "." + edit.referenceTreeType()[0].id()).append("=:").append(key);
+                                continue;
                             }
                             if (condition.get(key).toString().contains(EruptJapUtils.NULL)) {
                                 hql.append(EruptJapUtils.AND).append(_key).append(" is null");

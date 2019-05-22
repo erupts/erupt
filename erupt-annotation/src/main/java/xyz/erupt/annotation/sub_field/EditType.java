@@ -9,7 +9,7 @@ public enum EditType {
     CHOICE,           //选择框             vague the in
     SLIDER,           //数字滑块           vague the range
     DATE,             //日期               vague the range
-    REFERENCE,        //引用
+    REFERENCE_TREE,        //引用
 //    CUSTOM_REFER,     //自定义引用类型
     BOOLEAN,          //布尔
     ATTACHMENT,       //附件

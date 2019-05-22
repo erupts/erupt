@@ -26,7 +26,7 @@ import javax.persistence.*;
 )
 @Entity
 @Table(name = "TEST")
-@EruptDataProcessor(processors = NonDataService.class)
+//@EruptDataProcessor(processors = NonDataService.class)
 public class Test extends BaseModel {
 
     @Column(name = "NAME")
@@ -73,7 +73,7 @@ public class Test extends BaseModel {
             edit = @Edit(
                     title = "用户",
                     search = @Search(value = true),
-                    type = EditType.REFERENCE,
+                    type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType
             )
     )
@@ -86,7 +86,7 @@ public class Test extends BaseModel {
             views = @View(title = "角色", column = "name"),
             edit = @Edit(
                     title = "角色",
-                    type = EditType.REFERENCE,
+                    type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(depend = "name", dependColumn = "name"),
                     search = @Search(value = true)
             )

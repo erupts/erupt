@@ -57,7 +57,7 @@ public class EruptExcelController {
                 Sheet sheet1 = new Sheet(1, 0);
                 sheet1.setSheetName("第一个sheet");
                 sheet1.setAutoWidth(true);
-                List<List<String>> header = new ArrayList<>();
+//                List<List<String>> header = new ArrayList<>();
 
                 writer.finish();
                 out.flush();

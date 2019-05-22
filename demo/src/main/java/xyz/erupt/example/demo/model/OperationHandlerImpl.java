@@ -10,7 +10,7 @@ import xyz.erupt.core.util.ProjectUtil;
 public class OperationHandlerImpl implements OperationHandler {
     @Override
     public BoolAndReason exec(Object data, Object param) {
-        new ProjectUtil().ProjectStartLoaded("text_mmo", (isFirst) -> {
+        new ProjectUtil().projectStartLoaded("text_mmo", (isFirst) -> {
             if (isFirst) {
                 System.out.println("first ");
             } else {
@@ -22,7 +22,7 @@ public class OperationHandlerImpl implements OperationHandler {
 
 
     public static void main(String[] args) {
-        new ProjectUtil().ProjectStartLoaded("demo", (bool) -> {
+        new ProjectUtil().projectStartLoaded("demo", (bool) -> {
             if (bool) {
                 System.out.println("first ");
             } else {

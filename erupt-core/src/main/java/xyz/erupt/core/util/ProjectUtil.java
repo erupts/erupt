@@ -16,7 +16,7 @@ public class ProjectUtil {
      * @param projectName 标识名
      * @param consumer    bool回调用来告之调用者函数是否为第一次调用
      */
-    public void ProjectStartLoaded(String projectName, Consumer<Boolean> consumer) {
+    public void projectStartLoaded(String projectName, Consumer<Boolean> consumer) {
         //创建 loaded文件夹
         File dirFile = new File(this.getClass().getClassLoader().getResource("").getPath() + "loaded");
         if (!dirFile.exists()) {

@@ -44,7 +44,7 @@ public class EruptDict extends BaseModel {
             views = @View(title = "上级菜单", column = "name"),
             edit = @Edit(
                     title = "上级菜单",
-                    type = EditType.REFERENCE,
+                    type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "id")
             )
     )

@@ -25,7 +25,7 @@ public class EruptFieldAnnotationException extends RuntimeException {
 //                    throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "@ChoiceType类型返回值必须使用Integer类型接收");
 //                }
                 break;
-            case REFERENCE:
+            case REFERENCE_TREE:
                 if (eruptFieldModel.getEruptField().edit().referenceTreeType().length == 0) {
                     throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "引用类型未使用@ReferenceType注解修饰");
                 }

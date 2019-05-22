@@ -101,7 +101,7 @@ public class EruptMenu extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "上级菜单",
-                    type = EditType.REFERENCE,
+                    type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(id = "id", label = "name", pid = "id")
             )
     )
