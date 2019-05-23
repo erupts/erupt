@@ -72,6 +72,7 @@ public class Test extends BaseModel {
                     type = EditType.MAP,
                     notNull = true
             )
+
     )
     private String map;
 
