@@ -56,7 +56,7 @@ public class EruptUserController {
             loginModel.setUserName(loginModel.getEruptUser().getName());
             Set<EruptMenu> menuSet = new HashSet<>();
             for (EruptRole role : loginModel.getEruptUser().getRoles()) {
-                if (role.isStatus()) {
+                if (role.getStatus()) {
                     menuSet.addAll(role.getMenus());
                 }
             }

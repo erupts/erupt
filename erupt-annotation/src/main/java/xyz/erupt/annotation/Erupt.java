@@ -37,5 +37,5 @@ public @interface Erupt {
 
     Class<? extends DataProxy>[] dateProxy() default {};
 
-    String[] params() default {};
+    KV[] params() default {};
 }

@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import org.apache.poi.util.StringUtil;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
+import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -50,10 +52,11 @@ public class EruptJpaDao {
     }
 
     public Object findDataById(EruptModel eruptModel, Serializable id) {
-        Field primaryField = ReflectUtil.findClassAllField(eruptModel.getClazz(),
-                eruptModel.getErupt().primaryKeyCol());
+        Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol());
         id = TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
-        return entityManager.find(eruptModel.getClazz(), id);
+        Object obj = entityManager.find(eruptModel.getClazz(), id);
+        EruptUtil.rinseEruptObj(obj);
+        return obj;
     }
 
     public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {

@@ -47,8 +47,10 @@ public class DBService implements DataService {
             Field tabField = obj.getClass().getDeclaredField(tabFieldName);
             tabField.setAccessible(true);
             Collection collection = (Collection) tabField.get(obj);
-            for (Object tabData : collection) {
-                EruptUtil.rinseEruptObj(tabData);
+            if (null != collection) {
+                for (Object tabData : collection) {
+                    EruptUtil.rinseEruptObj(tabData);
+                }
             }
             return collection;
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -67,13 +69,15 @@ public class DBService implements DataService {
     public Set findTabTreeById(EruptModel eruptModel, String tabFieldName, Serializable id) {
         Collection collection = findTabListById(eruptModel, tabFieldName, id);
         Set<String> idSet = new HashSet<>();
-        for (Object o : collection) {
-            try {
-                Field field = ReflectUtil.findClassAllField(o.getClass(), eruptModel.getErupt().primaryKeyCol());
-                field.setAccessible(true);
-                idSet.add(field.get(o).toString());
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+        if (null != collection) {
+            for (Object o : collection) {
+                try {
+                    Field field = ReflectUtil.findClassField(o.getClass(), eruptModel.getErupt().primaryKeyCol());
+                    field.setAccessible(true);
+                    idSet.add(field.get(o).toString());
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return idSet;

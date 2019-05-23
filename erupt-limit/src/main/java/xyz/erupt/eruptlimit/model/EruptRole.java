@@ -45,7 +45,7 @@ public class EruptRole extends BaseModel {
                     boolType = @BoolType(trueText = "启用", falseText = "禁用", defaultValue = true)
             )
     )
-    private boolean status;
+    private Boolean status;
 
     @ManyToMany
     @JoinTable(

@@ -2,6 +2,7 @@ package xyz.erupt.example.demo.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.KV;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -22,7 +23,9 @@ import javax.persistence.*;
 @Erupt(
         name = "测试",
         loginUse = true,
-        params = {"66666666", "23333333"}
+        params = {
+                @KV(key = "label", value = "1+1")
+        }
 )
 @Entity
 @Table(name = "TEST")
@@ -53,7 +56,7 @@ public class Test extends BaseModel {
                     title = "是否18岁",
                     type = EditType.BOOLEAN,
                     boolType = @BoolType(
-                            trueText = "是的",
+                            trueText = "是",
                             falseText = "还没有。。。。",
                             defaultValue = true
                     ),
@@ -61,6 +64,16 @@ public class Test extends BaseModel {
             )
     )
     private Boolean is18;
+
+    @Column(name = "MAP")
+    @EruptField(
+            views = @View(title = "地图", sortable = true),
+            edit = @Edit(title = "地图",
+                    type = EditType.MAP,
+                    notNull = true
+            )
+    )
+    private String map;
 
 
     @ManyToOne
@@ -86,11 +99,28 @@ public class Test extends BaseModel {
             views = @View(title = "角色", column = "name"),
             edit = @Edit(
                     title = "角色",
-                    type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(depend = "name", dependColumn = "name"),
+                    type = EditType.REFERENCE_TABLE,
+                    referenceTreeType = @ReferenceTreeType(depend = "eruptUser", dependColumn = "id"),
                     search = @Search(value = true)
             )
     )
     private EruptRole eruptRole;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "BOOK_EXTRA_ID")
+    @EruptField(
+            views = {
+                    @View(title = "是否加密", column = "isMD5"),
+                    @View(title = "周", column = "week")
+            }
+//            edit = @Edit(
+//                    title = "",
+//                    type = EditType.REFERENCE_TREE,
+//                    referenceTreeType = @ReferenceTreeType(depend = "name", dependColumn = "name"),
+//                    search = @Search(value = true)
+//            )
+    )
+    private TestExtra testExtra;
 
 }

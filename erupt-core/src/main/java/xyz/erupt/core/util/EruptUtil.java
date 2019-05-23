@@ -10,6 +10,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptFieldModel;
@@ -40,21 +41,46 @@ public class EruptUtil {
     }
 
     //清空一对多关系数据，防止循环引用导致内存溢出
-    public static void rinseEruptObj(Object eruptObj) throws IllegalAccessException {
-        Erupt erupt = eruptObj.getClass().getAnnotation(Erupt.class);
-        for (Field field : eruptObj.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            EruptField eruptField = field.getAnnotation(EruptField.class);
-            if (field.getName().equalsIgnoreCase(erupt.primaryKeyCol())) {
-                continue;
-            }
-            if (null != eruptField) {
-                if (eruptField.edit().type() == EditType.TAB) {
-                    field.set(eruptObj, null);
+    public static void rinseEruptObj(Object eruptObj) {
+        if (null != eruptObj) {
+            Erupt erupt = eruptObj.getClass().getAnnotation(Erupt.class);
+
+            ReflectUtil.findClassAllEruptFields(eruptObj, field -> {
+                field.setAccessible(true);
+                EruptField eruptField = field.getAnnotation(EruptField.class);
+                if (field.getName().equalsIgnoreCase(erupt.primaryKeyCol())) {
+                    return;
                 }
-            } else {
-                field.set(eruptObj, null);
-            }
+                try {
+                    if (null == eruptField || StringUtils.isBlank(eruptField.edit().title())) {
+                        field.set(eruptObj, null);
+                    } else {
+                        if (eruptField.edit().type() == EditType.TAB) {
+                            field.set(eruptObj, null);
+                        } else if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
+                            try {
+                                //仅保留id与label
+                                ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType()[0];
+                                Object obj = field.get(eruptObj);
+                                if (null != obj) {
+                                    Object newObj = obj.getClass().newInstance();
+                                    ReflectUtil.findClassField(newObj.getClass(), referenceTreeType.id()).set(newObj,
+                                            ReflectUtil.findClassField(obj.getClass(), referenceTreeType.id()).get(obj));
+                                    ReflectUtil.findClassField(newObj.getClass(), referenceTreeType.label()).set(newObj,
+                                            ReflectUtil.findClassField(obj.getClass(), referenceTreeType.label()).get(obj));
+                                    field.set(eruptObj, newObj);
+                                }
+                            } catch (InstantiationException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (eruptField.edit().type() == EditType.REFERENCE_TABLE) {
+                            rinseEruptObj(field.get(eruptObj));
+                        }
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 

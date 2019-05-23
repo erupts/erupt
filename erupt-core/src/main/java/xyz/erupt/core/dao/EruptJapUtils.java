@@ -7,6 +7,7 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
@@ -53,13 +54,6 @@ public class EruptJapUtils {
                     fieldKey = eruptNameSymbol + field.getFieldName() + "." + view.column() + " as " + field.getFieldName() + "_"
                             + view.column().replace(".", "_");
                 }
-                fieldKeys.add(fieldKey);
-            }
-            if (field.getEruptField().edit().type() == EditType.REFERENCE_TREE) {
-                ReferenceTreeType referenceTreeType = field.getEruptField().edit().referenceTreeType()[0];
-                fieldKey = eruptNameSymbol + field.getFieldName() + "." + referenceTreeType.id() + " as " + field.getFieldName() + "_" + referenceTreeType.id();
-                fieldKeys.add(fieldKey);
-                fieldKey = eruptNameSymbol + field.getFieldName() + "." + referenceTreeType.label() + " as " + field.getFieldName() + "_" + referenceTreeType.label();
                 fieldKeys.add(fieldKey);
             }
             if (field.getEruptField().views().length == 0) {

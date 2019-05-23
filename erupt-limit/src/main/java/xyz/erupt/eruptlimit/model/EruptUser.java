@@ -114,7 +114,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     title = "头像",
                     type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(
-                            type = AttachmentEnum.OTHER,
+                            type = AttachmentEnum.IMAGE,
                             maxLimit = 5
                     )
             )

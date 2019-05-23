@@ -44,6 +44,7 @@ public class EruptBuildController {
             }
             eruptPageModel.setEruptModel(eruptModel);
             List<EruptAndEruptFieldModel> eruptAndEruptFieldModels = new ArrayList<>();
+            List<EruptAndEruptFieldModel> siblingErupts = new ArrayList<>();
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
                 if (fieldModel.getEruptField().edit().type() == EditType.TAB) {
                     EruptModel subEruptModel = CoreService.ERUPTS.get(ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0));
@@ -54,6 +55,7 @@ public class EruptBuildController {
                     eruptAndEruptFieldModels.add(eruptAndEruptFieldModel);
                 }
             }
+
             eruptPageModel.setSubErupts(eruptAndEruptFieldModels);
         } else {
             response.setStatus(HttpStatus.NOT_FOUND.value());

@@ -10,7 +10,7 @@ public @interface InputType {
 
     String placeholder() default "";
 
-    String pattern() default "";
+    boolean textarea() default false;
 
     VL[] prefix() default {};
 

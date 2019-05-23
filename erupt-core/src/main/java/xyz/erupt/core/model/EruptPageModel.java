@@ -12,5 +12,7 @@ public class EruptPageModel {
 
     EruptModel eruptModel;
 
+    List<EruptAndEruptFieldModel> siblingErupts;
+
     List<EruptAndEruptFieldModel> subErupts;
 }
