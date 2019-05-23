@@ -75,6 +75,19 @@ public class EruptDataController {
         }
     }
 
+    @GetMapping("/{erupt}/{id}")
+    @ResponseBody
+    public Object getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        try {
+            Object obj = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, id);
+            EruptUtil.rinseEruptObj(obj);
+            return obj;
+        } catch (Exception e) {
+            return EruptApiModel.errorApi(e);
+        }
+    }
+
 
     @GetMapping("/tab/table/{erupt}/{tabFieldName}")
     @ResponseBody
@@ -126,17 +139,6 @@ public class EruptDataController {
             return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTreeById(eruptModel, tabFieldName, id);
         } else {
             throw new EruptNoLegalPowerException();
-        }
-    }
-
-    @GetMapping("/{erupt}/{id}")
-    @ResponseBody
-    public EruptApiModel getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        try {
-            return EruptApiModel.successApi(AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, id));
-        } catch (Exception e) {
-            return EruptApiModel.errorApi(e);
         }
     }
 

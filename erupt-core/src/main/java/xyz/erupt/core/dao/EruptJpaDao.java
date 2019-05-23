@@ -55,7 +55,6 @@ public class EruptJpaDao {
         Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol());
         id = TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
         Object obj = entityManager.find(eruptModel.getClazz(), id);
-        EruptUtil.rinseEruptObj(obj);
         return obj;
     }
 
