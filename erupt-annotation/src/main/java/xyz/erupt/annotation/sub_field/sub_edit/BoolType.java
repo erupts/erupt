@@ -8,6 +8,6 @@ public @interface BoolType {
 
     String falseText();
 
-    boolean defaultValue() default false;
+    boolean defaultValue() default true;
 
 }

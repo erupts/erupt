@@ -23,14 +23,21 @@ import javax.persistence.*;
 @Erupt(
         name = "测试",
         loginUse = true,
+        primaryKeyCol = "testId",
         params = {
-                @KV(key = "label", value = "1+1")
+                @KV(key = "label", value = "1+1", desc = "{balala 23333 +++ ,, []")
         }
 )
 @Entity
 @Table(name = "TEST")
 //@EruptDataProcessor(processors = NonDataService.class)
-public class Test extends BaseModel {
+public class Test {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    @EruptField
+    private Long testId;
 
     @Column(name = "NAME")
     @EruptField(

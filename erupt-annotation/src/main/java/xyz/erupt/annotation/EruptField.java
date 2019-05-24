@@ -4,6 +4,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 
+import java.beans.Transient;
 import java.lang.annotation.*;
 
 /**

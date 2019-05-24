@@ -6,7 +6,7 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 public @interface ChoiceType {
     VL[] vl();
 
-    String joinSeparator() default "|";
+    String joinSeparator() default ",";
 
     ChoiceEnum type() default ChoiceEnum.SELECT_SINGLE;
 }

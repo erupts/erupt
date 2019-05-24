@@ -31,10 +31,12 @@ public class EruptModel {
         this.clazz = eruptClazz;
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.eruptName = eruptClazz.getSimpleName();
-        try {
-            this.eruptJson = new JsonParser().parse(AnnotationUtil.annotationToJson(erupt.toString())).getAsJsonObject();
-        } catch (Exception e) {
-            throw ExceptionUtil.styleEruptException(this, ExceptionUtil.ANNOTATION_PARSE_ERR_STR);
-        }
+        this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
+//        try {
+////            this.eruptJson = new JsonParser().parse(AnnotationUtil.annotationToJson(erupt.toString())).getAsJsonObject();
+////            this.eruptJson = AnnotationUtil.annotationToJsonByReflect(eruptClazz, Erupt.class);
+//        } catch (Exception e) {
+//            throw ExceptionUtil.styleEruptException(this, ExceptionUtil.ANNOTATION_PARSE_ERR_STR);
+//        }
     }
 }

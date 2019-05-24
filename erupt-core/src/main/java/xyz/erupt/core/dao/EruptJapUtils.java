@@ -106,8 +106,7 @@ public class EruptJapUtils {
                                             .append(EruptJapUtils.AND).append(_key)
                                             .append(" <=:").append(RVAL_KEY + key);
                                     continue;
-                                } else if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals("String"))
-                                        || edit.type() == EditType.TEXTAREA) {
+                                } else if (edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals("String")) {
                                     hql.append(EruptJapUtils.AND).append(_key).append(" like :").append(key);
                                     continue;
                                 } else if (edit.type() == EditType.CHOICE) {

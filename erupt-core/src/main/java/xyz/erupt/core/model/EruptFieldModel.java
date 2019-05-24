@@ -46,11 +46,8 @@ public class EruptFieldModel {
         if (eruptField.edit().type() == EditType.TAB) {
             this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
         }
-        try {
-            this.eruptFieldJson = new JsonParser().parse(AnnotationUtil.annotationToJson(eruptField.toString())).getAsJsonObject();
-        } catch (Exception e) {
-            throw ExceptionUtil.styleEruptFieldException(this, ExceptionUtil.ANNOTATION_PARSE_ERR_STR);
-        }
+        this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
+        //this.eruptFieldJson = new JsonParser().parse(AnnotationUtil.annotationToJson(eruptField.toString())).getAsJsonObject();
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
     }

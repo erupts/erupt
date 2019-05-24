@@ -7,4 +7,6 @@ public @interface KV {
     String key();
 
     String value();
+
+    String desc() default "";
 }

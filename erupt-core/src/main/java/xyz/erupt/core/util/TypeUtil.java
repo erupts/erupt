@@ -4,7 +4,9 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Created by liyuepeng on 11/1/18.
@@ -43,27 +45,46 @@ public class TypeUtil {
         return o;
     }
 
+    public static void simpleNumberTypeArrayToObject(Object obj, String type, Consumer<Number> consumer) {
+        if ("int".equals(type)) {
+            int[] intArray = (int[]) obj;
+            for (Number i : intArray) {
+                consumer.accept(i);
+            }
+        } else if ("short".equals(type)) {
+            short[] intArray = (short[]) obj;
+            for (Number i : intArray) {
+                consumer.accept(i);
+            }
+        } else if ("long".equals(type)) {
+            long[] intArray = (long[]) obj;
+            for (Number i : intArray) {
+                consumer.accept(i);
+            }
+        } else if ("float".equals(type)) {
+            float[] intArray = (float[]) obj;
+            for (Number i : intArray) {
+                consumer.accept(i);
+            }
+        } else if ("double".equals(type)) {
+            double[] intArray = (double[]) obj;
+            for (Number i : intArray) {
+                consumer.accept(i);
+            }
+        }
+    }
+
     /**
      * 判断实体类字段返回值是否为基本类型（包括String与date）
      *
      * @return
      */
     public static boolean isFieldSimpleType(String typeName) {
-        for (String simpleType : SIMPLE_JPA_TYPE) {
-            if (simpleType.equals(typeName.toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.asList(SIMPLE_JPA_TYPE).contains(typeName.toLowerCase());
     }
 
     public static boolean isNumberType(String typeName) {
-        for (String simpleType : NUMBER_TYPE) {
-            if (simpleType.equals(typeName.toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.asList(NUMBER_TYPE).contains(typeName.toLowerCase());
     }
 
     public static Object mapToObject(Map<String, Object> map, Class<?> beanClass) {
