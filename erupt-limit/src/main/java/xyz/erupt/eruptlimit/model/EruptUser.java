@@ -57,8 +57,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     type = EditType.BOOLEAN,
                     boolType = @BoolType(
                             trueText = "加密",
-                            falseText = "不加密",
-                            defaultValue = true
+                            falseText = "不加密"
                     ),
                     search = @Search(true)
             )
@@ -99,8 +98,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             edit = @Edit(
                     title = "生日",
                     search = @Search(value = true,vague = true),
-                    type = EditType.DATE,
-                    dateType = @DateType(type = DateEnum.DATE_TIME)
+                    type = EditType.DATE
 
             )
     )
@@ -141,8 +139,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     type = EditType.BOOLEAN,
                     boolType = @BoolType(
                             trueText = "激活",
-                            falseText = "锁定",
-                            defaultValue = true
+                            falseText = "锁定"
                     )
             )
     )

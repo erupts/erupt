@@ -14,5 +14,5 @@ public @interface TabType {
 
     Filter filter() default @Filter(condition = "");
 
-    TabEnum type() default TabEnum.TABLE;
+    TabEnum type() default TabEnum.TREE;
 }

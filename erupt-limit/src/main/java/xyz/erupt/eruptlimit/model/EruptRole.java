@@ -42,7 +42,7 @@ public class EruptRole extends BaseModel {
             edit = @Edit(
                     title = "状态",
                     type = EditType.BOOLEAN,
-                    boolType = @BoolType(trueText = "启用", falseText = "禁用", defaultValue = true)
+                    boolType = @BoolType(trueText = "启用", falseText = "禁用")
             )
     )
     private Boolean status;
@@ -55,10 +55,7 @@ public class EruptRole extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "菜单",
-                    type = EditType.TAB,
-                    tabType = @TabType(
-                            type = TabEnum.TREE
-                    )
+                    type = EditType.TAB
             )
     )
     private Set<EruptMenu> menus;
@@ -67,10 +64,7 @@ public class EruptRole extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "包含用户",
-                    type = EditType.TAB,
-                    tabType = @TabType(
-                            type = TabEnum.TREE
-                    )
+                    type = EditType.TAB
             )
     )
     private Set<EruptUser> users;

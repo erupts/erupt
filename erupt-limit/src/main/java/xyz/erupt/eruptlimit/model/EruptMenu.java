@@ -102,7 +102,7 @@ public class EruptMenu extends BaseModel {
             edit = @Edit(
                     title = "上级菜单",
                     type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(id = "id", label = "name", pid = "id")
+                    referenceTreeType = @ReferenceTreeType(pid = "id")
             )
     )
     private EruptMenu parentMenu;
@@ -116,7 +116,7 @@ public class EruptMenu extends BaseModel {
                     choiceType = @ChoiceType(vl = {
                             @VL(value = "0", label = "_target"),
                             @VL(value = "1", label = "_self")
-                    }, type = ChoiceEnum.SELECT_SINGLE)
+                    })
             )
     )
     private Integer target;
