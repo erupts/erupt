@@ -60,15 +60,13 @@ public class SubMmo extends BaseModel {
                     title = "选择",
                     notNull = true,
                     type = EditType.CHOICE,
-                    choiceType = {
-                            @ChoiceType(
-                                    vl = {
-                                            @VL(value = "123", label = "张三"),
-                                            @VL(value = "234", label = "李四")
-                                    },
-                                    type = ChoiceEnum.SELECT_SINGLE
-                            )
-                    },
+                    choiceType = @ChoiceType(
+                            vl = {
+                                    @VL(value = "123", label = "张三"),
+                                    @VL(value = "234", label = "李四")
+                            },
+                            type = ChoiceEnum.SELECT_SINGLE
+                    ),
                     search = @Search(true)
             )
     )

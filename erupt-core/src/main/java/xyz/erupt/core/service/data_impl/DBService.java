@@ -86,7 +86,7 @@ public class DBService implements DataService {
     @Override
     public List<TreeModel> findTabTree(EruptFieldModel eruptTabFieldModel) {
         EruptModel subEruptModel = CoreService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
-        TabType tabType = eruptTabFieldModel.getEruptField().edit().tabType()[0];
+        TabType tabType = eruptTabFieldModel.getEruptField().edit().tabType();
         String condition = "";
         if (!"".equals(tabType.filter().condition())) {
             condition += AnnotationUtil.switchFilterConditionToStr(tabType.filter());
@@ -139,7 +139,7 @@ public class DBService implements DataService {
     @Override
     public Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, String dependValue) {
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
-        ReferenceTreeType refTree = eruptFieldModel.getEruptField().edit().referenceTreeType()[0];
+        ReferenceTreeType refTree = eruptFieldModel.getEruptField().edit().referenceTreeType();
         List<String> cols = new ArrayList<>();
         cols.add(EruptJapUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.id()) + " as " + refTree.id().replace(".", "_"));
         cols.add(EruptJapUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.label()) + " as " + refTree.label().replace(".", "_"));
@@ -158,7 +158,7 @@ public class DBService implements DataService {
             if (StringUtils.isNotBlank(refTree.filter().condition())) {
                 condition.append(EruptJapUtils.AND);
             }
-            condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType()[0].dependColumn() + "=:" + DEPEND_KEY);
+            condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn() + "=:" + DEPEND_KEY);
             conditionParameter.put(DEPEND_KEY, dependValue);
         }
         List list = eruptJpaDao.getDataMap(CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);

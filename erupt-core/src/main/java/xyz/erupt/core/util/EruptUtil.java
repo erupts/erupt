@@ -60,7 +60,7 @@ public class EruptUtil {
                         } else if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
                             try {
                                 //仅保留id与label
-                                ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType()[0];
+                                ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
                                 Object obj = field.get(eruptObj);
                                 if (null != obj) {
                                     Object newObj = obj.getClass().newInstance();
@@ -102,7 +102,7 @@ public class EruptUtil {
                 return DateUtil.getDate(jsonElement.getAsString());
             case REFERENCE_TREE:
                 //TODO 类型转换太频繁,以后优化
-                String id = eruptFieldModel.getEruptField().edit().referenceTreeType()[0].id();
+                String id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();
                 EruptFieldModel efm = CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
                 return TypeUtil.typeStrConvertObject(jsonElement.getAsJsonObject().get(id).getAsString(), efm.getField().getType().getSimpleName());
             default:
@@ -146,7 +146,7 @@ public class EruptUtil {
                             break;
                         case CHOICE:
                             if (StringUtils.isNotBlank(fieldData.toString())) {
-                                for (VL vl : eruptField.edit().choiceType()[0].vl()) {
+                                for (VL vl : eruptField.edit().choiceType().vl()) {
                                     if ((vl.value() + "").equals(fieldData.toString())) {
                                         result.put(field.getName(), fieldData);
                                         break;
@@ -164,9 +164,9 @@ public class EruptUtil {
                             if (StringUtils.isNotBlank(fieldData.toString())) {
                                 Boolean boolField = Boolean.valueOf(fieldData.toString());
                                 if (boolField) {
-                                    result.put(field.getName(), eruptField.edit().boolType()[0].trueText());
+                                    result.put(field.getName(), eruptField.edit().boolType().trueText());
                                 } else {
-                                    result.put(field.getName(), eruptField.edit().boolType()[0].falseText());
+                                    result.put(field.getName(), eruptField.edit().boolType().falseText());
                                 }
                             } else {
                                 result.put(field.getName(), NOT_ERUPT_REF);

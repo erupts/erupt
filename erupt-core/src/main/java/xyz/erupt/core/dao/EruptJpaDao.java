@@ -116,7 +116,7 @@ public class EruptJpaDao {
 
     public List getReferenceList(EruptModel eruptModel, String refName) {
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(refName);
-        ReferenceTreeType referenceTreeType = eruptFieldModel.getEruptField().edit().referenceTreeType()[0];
+        ReferenceTreeType referenceTreeType = eruptFieldModel.getEruptField().edit().referenceTreeType();
         String keys = "new map(" + referenceTreeType.id() + " as id," + referenceTreeType.label() + " as label)";
         String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel(keys, null, null, null));
         if (!"".equals(referenceTreeType.filter().condition())) {

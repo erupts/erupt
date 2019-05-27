@@ -193,38 +193,36 @@ public class Mmo extends BaseModel {
                     title = "多选",
 
                     type = EditType.CHOICE,
-                    choiceType = {
-                            @ChoiceType(
-                                    joinSeparator = "'|'",
-                                    vl = {
-                                            @VL(value = "1", label = "张三"),
-                                            @VL(value = "2", label = "李四"),
-                                            @VL(value = "3", label = "王五"),
-                                            @VL(value = "4", label = "李四"),
-                                            @VL(value = "5", label = "李四"),
-                                            @VL(value = "6", label = "李四"),
-                                            @VL(value = "7", label = "张三"),
-                                            @VL(value = "8", label = "李四李四李"),
-                                            @VL(value = "888", label = "王五"),
-                                            @VL(value = "999", label = "李四"),
-                                            @VL(value = "991", label = "李四"),
-                                            @VL(value = "992", label = "李四"),
-                                            @VL(value = "1@", label = "张三"),
-                                            @VL(value = "2@", label = "李四"),
-                                            @VL(value = "3@", label = "王五"),
-                                            @VL(value = "4@", label = "李四"),
-                                            @VL(value = "5@", label = "李四"),
-                                            @VL(value = "6@", label = "李四"),
-                                            @VL(value = "7@", label = "张三"),
-                                            @VL(value = "8@", label = "yuepeng"),
-                                            @VL(value = "888@", label = "王五"),
-                                            @VL(value = "999@", label = "李四"),
-                                            @VL(value = "991@", label = "李四"),
-                                            @VL(value = "992@", label = "李四"),
-                                    },
-                                    type = ChoiceEnum.SELECT_MULTI
-                            )
-                    },
+                    choiceType = @ChoiceType(
+                            joinSeparator = "'|'",
+                            vl = {
+                                    @VL(value = "1", label = "张三"),
+                                    @VL(value = "2", label = "李四"),
+                                    @VL(value = "3", label = "王五"),
+                                    @VL(value = "4", label = "李四"),
+                                    @VL(value = "5", label = "李四"),
+                                    @VL(value = "6", label = "李四"),
+                                    @VL(value = "7", label = "张三"),
+                                    @VL(value = "8", label = "李四李四李"),
+                                    @VL(value = "888", label = "王五"),
+                                    @VL(value = "999", label = "李四"),
+                                    @VL(value = "991", label = "李四"),
+                                    @VL(value = "992", label = "李四"),
+                                    @VL(value = "1@", label = "张三"),
+                                    @VL(value = "2@", label = "李四"),
+                                    @VL(value = "3@", label = "王五"),
+                                    @VL(value = "4@", label = "李四"),
+                                    @VL(value = "5@", label = "李四"),
+                                    @VL(value = "6@", label = "李四"),
+                                    @VL(value = "7@", label = "张三"),
+                                    @VL(value = "8@", label = "yuepeng"),
+                                    @VL(value = "888@", label = "王五"),
+                                    @VL(value = "999@", label = "李四"),
+                                    @VL(value = "991@", label = "李四"),
+                                    @VL(value = "992@", label = "李四"),
+                            },
+                            type = ChoiceEnum.SELECT_MULTI
+                    ),
                     search = @Search(true)
             )
     )

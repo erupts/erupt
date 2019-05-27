@@ -2,7 +2,10 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.util.StringUtil;
 import org.json.JSONObject;
+import xyz.erupt.annotation.NotBlank;
 import xyz.erupt.annotation.SerializeBy;
 import xyz.erupt.annotation.fun.ConditionHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
@@ -75,6 +78,12 @@ public class AnnotationUtil {
             }
             String returnType = method.getReturnType().getSimpleName();
             Object result = method.invoke(annotation);
+            NotBlank notBlank = method.getAnnotation(NotBlank.class);
+            if (null != notBlank && notBlank.value()) {
+                if (StringUtils.isBlank(result.toString())) {
+                    continue;
+                }
+            }
             if (returnType.endsWith("[]")) {
                 returnType = returnType.substring(0, returnType.length() - 2);
                 JsonArray jsonArray = new JsonArray();

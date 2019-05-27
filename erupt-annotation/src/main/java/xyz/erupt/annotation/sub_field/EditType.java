@@ -19,6 +19,8 @@ public enum EditType {
     REFERENCE_TREE,
     @EditTypeMapping(maping = "referenceTableType", desc = "表格引用", allowType = {JavaType.bool})
     REFERENCE_TABLE,
+    @EditTypeMapping(maping = "combineType", desc = "表格合并", allowType = {JavaType.object})
+    COMBINE,
     @EditTypeMapping(maping = "boolType", desc = "布尔", allowType = {JavaType.bool})
     BOOLEAN,
     @EditTypeMapping(maping = "attachmentType", search = @Search(false), desc = "附件", allowType = {JavaType.string})

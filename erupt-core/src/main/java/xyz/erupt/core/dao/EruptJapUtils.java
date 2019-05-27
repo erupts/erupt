@@ -115,7 +115,7 @@ public class EruptJapUtils {
                                 }
                             }
                             if (edit.type() == EditType.REFERENCE_TREE) {
-                                hql.append(EruptJapUtils.AND).append(key + "." + edit.referenceTreeType()[0].id()).append("=:").append(key);
+                                hql.append(EruptJapUtils.AND).append(key + "." + edit.referenceTreeType().id()).append("=:").append(key);
                                 continue;
                             }
                             if (condition.get(key).toString().contains(EruptJapUtils.NULL)) {

@@ -46,7 +46,7 @@ public class EruptFileController {
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
             switch (edit.type()) {
                 case ATTACHMENT:
-                    AttachmentType attachmentType = edit.attachmentType()[0];
+                    AttachmentType attachmentType = edit.attachmentType();
                     //校验扩展名
                     if (attachmentType.fileTypes().length > 0) {
                         String[] fileNameArr = file.getOriginalFilename().split("\\.");
@@ -74,9 +74,9 @@ public class EruptFileController {
                     if (attachmentType.size() > 0 && file.getSize() / 1000 > attachmentType.size()) {
                         return EruptApiModel.errorApi("上传失败，文件大小不能超过" + attachmentType.size() + "KB");
                     }
-                    switch (edit.attachmentType()[0].type()) {
+                    switch (edit.attachmentType().type()) {
                         case IMAGE:
-                            ImageType imageType = edit.attachmentType()[0].imageType();
+                            ImageType imageType = edit.attachmentType().imageType();
                             BufferedImage bufferedImage = ImageIO.read(file.getInputStream()); // 通过MultipartFile得到InputStream，从而得到BufferedImage
                             if (bufferedImage == null) {
                                 return EruptApiModel.errorApi("获取图片流失败，请确认上传文件为图片");
