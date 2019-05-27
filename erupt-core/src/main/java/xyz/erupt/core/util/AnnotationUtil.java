@@ -3,6 +3,7 @@ package xyz.erupt.core.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
+import xyz.erupt.annotation.SerializeBy;
 import xyz.erupt.annotation.fun.ConditionHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.annotation.EruptDataProcessor;
@@ -57,13 +58,21 @@ public class AnnotationUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.err.println(jsonObject.toString());
         return jsonObject;
     }
 
-    private static void annotationMethodToObject(Annotation annotation, JsonObject jsonObject) throws InvocationTargetException, IllegalAccessException {
+    private static void annotationMethodToObject(Annotation annotation, JsonObject jsonObject) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
             if (null != tran && tran.value()) continue;
+            SerializeBy serializeBy = method.getAnnotation(SerializeBy.class);
+            if (null != serializeBy) {
+                String type = annotation.getClass().getMethod(serializeBy.method()).invoke(annotation).toString();
+                if (!serializeBy.value().equals(type)) {
+                    continue;
+                }
+            }
             String returnType = method.getReturnType().getSimpleName();
             Object result = method.invoke(annotation);
             if (returnType.endsWith("[]")) {

@@ -5,7 +5,6 @@ import xyz.erupt.annotation.sub_erupt.*;
 
 import java.beans.Transient;
 import java.lang.annotation.*;
-import java.util.Date;
 
 /**
  * Created by liyuepeng on 9/28/18.
@@ -16,18 +15,7 @@ import java.util.Date;
 @Inherited
 public @interface Erupt {
 
-    String[] index5() default {"!14123", "!2411234", "1234134"};
-
-//    byte[] index() default {'A','C','B','%'};
-
-    byte index8() default 'A';
-
-    char[] index7() default {'A', 'C', 'A', 'B'};
-
-    double[] index2() default {2333.12312D, 132131.12312412D};
-
-    Class<? extends Annotation>[] annotation() default {Erupt.class};
-
+//    Class<? extends Annotation>[] annotation() default {Erupt.class};
 
     String primaryKeyCol() default "id";
 

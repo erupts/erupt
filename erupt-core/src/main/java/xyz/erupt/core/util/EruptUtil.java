@@ -164,9 +164,9 @@ public class EruptUtil {
                             if (StringUtils.isNotBlank(fieldData.toString())) {
                                 Boolean boolField = Boolean.valueOf(fieldData.toString());
                                 if (boolField) {
-                                    result.put(field.getName(), eruptField.edit().boolType().trueText());
+                                    result.put(field.getName(), eruptField.edit().boolType()[0].trueText());
                                 } else {
-                                    result.put(field.getName(), eruptField.edit().boolType().falseText());
+                                    result.put(field.getName(), eruptField.edit().boolType()[0].falseText());
                                 }
                             } else {
                                 result.put(field.getName(), NOT_ERUPT_REF);

@@ -1,4 +1,4 @@
-package xyz.erupt.annotation;
+package xyz.erupt.annotation.config;
 
 /**
  * Created by liyuepeng on 12/4/18.
