@@ -28,8 +28,7 @@ public class TestExtra extends BaseModel {
                     type = EditType.BOOLEAN,
                     boolType = @BoolType(
                             trueText = "加密",
-                            falseText = "不加密",
-                            defaultValue = true
+                            falseText = "不加密"
                     ),
                     search = @Search(true)
             )

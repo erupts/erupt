@@ -49,11 +49,11 @@ public class EruptMenu extends BaseModel {
                     title = "地址",
                     inputType = @InputType(
                             prefix = {
-                                    @VL(value = "'/build/table/'", label = "TABLE"),
-                                    @VL(value = "'/build/tree/'", label = "TREE"),
-                                    @VL(value = "'/build/report/'", label = "REPORT"),
-                                    @VL(value = "'/page/'", label = "PAGE"),
-                                    @VL(value = "'/'", label = "'/'"),
+                                    @VL(value = "/build/table/", label = "TABLE"),
+                                    @VL(value = "/build/tree/", label = "TREE"),
+                                    @VL(value = "/build/report/", label = "REPORT"),
+                                    @VL(value = "/page/", label = "PAGE"),
+                                    @VL(value = "/", label = "/"),
                             }
                     )
             )

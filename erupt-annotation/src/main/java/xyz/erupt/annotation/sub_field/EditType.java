@@ -19,13 +19,13 @@ public enum EditType {
     REFERENCE_TREE,
     @EditTypeMapping(maping = "referenceTableType", desc = "表格引用", allowType = {JavaType.bool})
     REFERENCE_TABLE,
-    @EditTypeMapping(maping = "combineType", desc = "表格合并", allowType = {JavaType.object})
+    @EditTypeMapping(maping = "combineType", desc = "表格合并", search = @Search(false), allowType = {JavaType.object})
     COMBINE,
     @EditTypeMapping(maping = "boolType", desc = "布尔", allowType = {JavaType.bool})
     BOOLEAN,
-    @EditTypeMapping(maping = "attachmentType", search = @Search(false), desc = "附件", allowType = {JavaType.string})
+    @EditTypeMapping(maping = "attachmentType", desc = "附件", search = @Search(false), allowType = {JavaType.string})
     ATTACHMENT,
-    @EditTypeMapping(maping = "tabType", search = @Search(false), desc = "TAB选项卡", allowType = {JavaType.array})
+    @EditTypeMapping(maping = "tabType", desc = "TAB选项卡", search = @Search(false),allowType= {JavaType.array})
     TAB,
     @EditTypeMapping(maping = "dependSwitchType", desc = "表单依赖开关", allowType = {JavaType.number})
     DEPEND_SWITCH,

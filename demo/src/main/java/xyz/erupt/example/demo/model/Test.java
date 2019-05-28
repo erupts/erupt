@@ -3,6 +3,7 @@ package xyz.erupt.example.demo.model;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.KV;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -21,6 +22,9 @@ import javax.persistence.*;
         name = "测试",
         loginUse = true,
         primaryKeyCol = "testId",
+        rowOperation = {
+                @RowOperation(code = "a", icon = "fa fa-user", title = "AAA", operationHandler = OperationHandlerImpl.class)
+        },
         params = {
                 @KV(key = "label", value = "1+1", desc = "{balala 23333 +++ ,, []")
         }
@@ -69,16 +73,16 @@ public class Test {
     )
     private Boolean is18;
 
-    @Column(name = "MAP")
-    @EruptField(
-            views = @View(title = "地图", sortable = true),
-            edit = @Edit(title = "地图",
-                    type = EditType.MAP,
-                    notNull = true
-            )
-
-    )
-    private String map;
+//    @Column(name = "MAP")
+//    @EruptField(
+//            views = @View(title = "地图", sortable = true),
+//            edit = @Edit(title = "地图",
+//                    type = EditType.MAP,
+//                    notNull = true
+//            )
+//
+//    )
+//    private String map;
 
 
     @ManyToOne
@@ -111,6 +115,18 @@ public class Test {
     )
     private EruptRole eruptRole;
 
+    @Transient
+    @EruptField(
+            edit = @Edit(
+                    title = "其他信息",
+
+                    type = EditType.DIVIDE,
+                    readOnly = true,
+                    search = @Search(value = true)
+            )
+    )
+    private String aaa;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "BOOK_EXTRA_ID")
@@ -118,14 +134,30 @@ public class Test {
             views = {
                     @View(title = "是否加密", column = "isMD5"),
                     @View(title = "周", column = "week")
-            }
-//            edit = @Edit(
-//                    title = "",
-//                    type = EditType.REFERENCE_TREE,
-//                    referenceTreeType = @ReferenceTreeType(depend = "name", dependColumn = "name"),
-//                    search = @Search(value = true)
-//            )
+            },
+            edit = @Edit(
+                    title = "其他信息",
+                    type = EditType.COMBINE,
+                    referenceTreeType = @ReferenceTreeType(depend = "name", dependColumn = "name"),
+                    search = @Search(value = true)
+            )
     )
     private TestExtra testExtra;
+
+    @Transient
+    @EruptField(
+            views = {
+                    @View(title = "是否加密", column = "isMD5"),
+                    @View(title = "周", column = "week")
+            },
+            edit = @Edit(
+                    title = "其他信息23333",
+                    desc = "23333333",
+                    type = EditType.COMBINE,
+                    referenceTreeType = @ReferenceTreeType(depend = "name", dependColumn = "name"),
+                    search = @Search(value = true)
+            )
+    )
+    private TestExtra testExtra2;
 
 }

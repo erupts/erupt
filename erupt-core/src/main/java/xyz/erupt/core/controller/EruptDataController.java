@@ -164,7 +164,7 @@ public class EruptDataController {
     @ResponseBody
     public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
-        BoolAndReason br = EruptUtil.eruptDataToViewData(eruptModel, data);
+        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
         if (!br.isBool()) {
             return new EruptApiModel(br);
         }
@@ -194,7 +194,7 @@ public class EruptDataController {
     @ResponseBody
     public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
-        BoolAndReason br = EruptUtil.eruptDataToViewData(eruptModel, data);
+        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
         if (!br.isBool()) {
             return new EruptApiModel(br);
         }

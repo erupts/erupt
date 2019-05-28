@@ -44,7 +44,7 @@ public class EruptBuildController {
             }
             eruptPageModel.setEruptModel(eruptModel);
             List<EruptAndEruptFieldModel> eruptAndEruptFieldModels = new ArrayList<>();
-            List<EruptAndEruptFieldModel> siblingErupts = new ArrayList<>();
+            List<EruptAndEruptFieldModel> combineErupts = new ArrayList<>();
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
                 if (fieldModel.getEruptField().edit().type() == EditType.TAB) {
                     EruptModel subEruptModel = CoreService.ERUPTS.get(ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0));
@@ -53,9 +53,15 @@ public class EruptBuildController {
                     }
                     EruptAndEruptFieldModel eruptAndEruptFieldModel = new EruptAndEruptFieldModel(fieldModel, subEruptModel);
                     eruptAndEruptFieldModels.add(eruptAndEruptFieldModel);
+                } else if (fieldModel.getEruptField().edit().type() == EditType.COMBINE) {
+                    EruptModel combineEruptModel = CoreService.ERUPTS.get(fieldModel.getFieldReturnName());
+                    if (null == combineEruptModel) {
+                        throw new RuntimeException("请使用Erupt注解管理：" + fieldModel.getField().getName());
+                    }
+                    combineErupts.add(new EruptAndEruptFieldModel(fieldModel, combineEruptModel));
                 }
             }
-
+            eruptPageModel.setCombineErupts(combineErupts);
             eruptPageModel.setSubErupts(eruptAndEruptFieldModels);
         } else {
             response.setStatus(HttpStatus.NOT_FOUND.value());

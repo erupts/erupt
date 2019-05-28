@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Created by liyuepeng on 11/1/18.
@@ -31,7 +32,7 @@ public class EruptUtil {
     //数据项与erupt注解中描述不相符时使用
     private static final String NOT_ERUPT_REF = "@NOT_REF@";
 
-
+    //请求地址权限校验
     public static String handleNoRightVariable(String pathVariable) {
         if (pathVariable.startsWith(RestPath.NO_RIGHT_SYMBOL)) {
             return pathVariable.substring(2);
@@ -40,12 +41,21 @@ public class EruptUtil {
         }
     }
 
-    //清空一对多关系数据，防止循环引用导致内存溢出
+    //清空一对多关系数据，防止循环引用导致内存溢出  TODO 代码还需要优化
     public static void rinseEruptObj(Object eruptObj) {
         if (null != eruptObj) {
             Erupt erupt = eruptObj.getClass().getAnnotation(Erupt.class);
-
-            ReflectUtil.findClassAllEruptFields(eruptObj, field -> {
+            try {
+                for (Field field : eruptObj.getClass().getFields()) {
+                    if (null == field.getAnnotation(EruptField.class)) {
+                        field.setAccessible(true);
+                        field.set(eruptObj, null);
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            findClassAllEruptFields(eruptObj, field -> {
                 field.setAccessible(true);
                 EruptField eruptField = field.getAnnotation(EruptField.class);
                 if (field.getName().equalsIgnoreCase(erupt.primaryKeyCol())) {
@@ -75,12 +85,31 @@ public class EruptUtil {
                             }
                         } else if (eruptField.edit().type() == EditType.REFERENCE_TABLE) {
                             rinseEruptObj(field.get(eruptObj));
+                        } else if (eruptField.edit().type() == EditType.COMBINE) {
+                            rinseEruptObj(field.get(eruptObj));
                         }
                     }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
             });
+
+        }
+    }
+
+    //递归查找类字段
+    private static void findClassAllEruptFields(Object obj, Consumer<Field> consumer) {
+        if (null != obj) {
+            for (Field field : obj.getClass().getDeclaredFields()) {
+                EruptField eruptField = field.getAnnotation(EruptField.class);
+                if (null != eruptField) {
+                    consumer.accept(field);
+                }
+            }
+            Class superClass = obj.getClass().getSuperclass();
+            if (null != superClass && !superClass.getSimpleName().equals("Object")) {
+                findClassAllEruptFields(superClass, consumer);
+            }
         }
     }
 
@@ -110,18 +139,8 @@ public class EruptUtil {
         }
     }
 
-    public static BoolAndReason eruptDataToViewData(EruptModel eruptModel, Map<String, Object> dataMap) {
-        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
-            if (field.getEruptField().edit().notNull()) {
-                if (!dataMap.containsKey(field.getFieldName())) {
-                    return new BoolAndReason(false, field.getEruptField().edit().title() + "必填");
-                }
-            }
-        }
-        return new BoolAndReason(true, "");
-    }
 
-    public static BoolAndReason eruptDataToViewData(EruptModel eruptModel, JsonObject data) {
+    public static BoolAndReason validateEruptNotNull(EruptModel eruptModel, JsonObject data) {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             if (field.getEruptField().edit().notNull()) {
                 if (!data.has(field.getFieldName())) {

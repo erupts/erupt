@@ -81,7 +81,7 @@ public class SubMmo extends BaseModel {
                     title = "mmo_table",
                     type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(id = "id", label = "name",
-                            filter = @Filter(condition = "'id=@abc@'", conditionHandlers = {SimpleConditionHandler.class}))
+                            filter = @Filter(condition = "id=@abc@", conditionHandlers = {SimpleConditionHandler.class}))
             )
     )
     @ManyToOne

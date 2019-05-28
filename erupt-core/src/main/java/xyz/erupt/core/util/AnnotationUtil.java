@@ -3,10 +3,10 @@ package xyz.erupt.core.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.util.StringUtil;
 import org.json.JSONObject;
 import xyz.erupt.annotation.NotBlank;
-import xyz.erupt.annotation.SerializeBy;
+import xyz.erupt.annotation.config.SerializeBy;
+import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.fun.ConditionHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.annotation.EruptDataProcessor;
@@ -14,7 +14,6 @@ import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.service.data_impl.DBService;
 
 import java.beans.Transient;
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,7 +56,7 @@ public class AnnotationUtil {
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
         JsonObject jsonObject = new JsonObject();
         try {
-            annotationMethodToObject(annotation, jsonObject);
+            annotationToJson(annotation, jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,7 +64,7 @@ public class AnnotationUtil {
         return jsonObject;
     }
 
-    private static void annotationMethodToObject(Annotation annotation, JsonObject jsonObject) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    private static void annotationToJson(Annotation annotation, JsonObject jsonObject) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
             if (null != tran && tran.value()) continue;
@@ -87,6 +86,8 @@ public class AnnotationUtil {
             if (returnType.endsWith("[]")) {
                 returnType = returnType.substring(0, returnType.length() - 2);
                 JsonArray jsonArray = new JsonArray();
+                ToMap toMap = method.getAnnotation(ToMap.class);
+                JsonObject jsonMap = new JsonObject();
                 //基本类型无法强转成Object类型数组，所以使用下面的方法进行处理
                 if (Arrays.asList(ANNOTATION_NUMBER_TYPE).contains(returnType)) {
                     TypeUtil.simpleNumberTypeArrayToObject(result, returnType, (number) -> jsonArray.add(number));
@@ -112,13 +113,29 @@ public class AnnotationUtil {
                         } else if (res.getClass().isEnum()) {
                             jsonArray.add(res.toString());
                         } else {
-                            JsonObject subJsonObject = new JsonObject();
-                            annotationMethodToObject((Annotation) res, subJsonObject);
-                            jsonArray.add(subJsonObject);
+                            Annotation ann = (Annotation) res;
+                            if (null != toMap) {
+                                JsonObject jo = new JsonObject();
+                                annotationToJson((Annotation) res, jo);
+                                String key = ann.annotationType().getMethod(toMap.key()).invoke(res).toString();
+                                jsonMap.add(key, jo);
+                            } else {
+                                JsonObject subJsonObject = new JsonObject();
+                                annotationToJson(ann, subJsonObject);
+                                jsonArray.add(subJsonObject);
+                            }
                         }
                     }
                 }
-                jsonObject.add(method.getName(), jsonArray);
+                if (null == toMap) {
+                    jsonObject.add(method.getName(), jsonArray);
+                } else {
+                    if (jsonMap.size() > 0) {
+                        jsonObject.add(method.getName(), jsonMap);
+                    }
+
+                }
+
             } else {
                 if (Arrays.asList(ANNOTATION_STRING_TYPE).contains(returnType)) {
                     jsonObject.addProperty(method.getName(), result.toString());
@@ -132,7 +149,7 @@ public class AnnotationUtil {
                     jsonObject.addProperty(method.getName(), result.toString());
                 } else if (method.getReturnType().isAnnotation()) {
                     JsonObject subJsonObject = new JsonObject();
-                    annotationMethodToObject((Annotation) result, subJsonObject);
+                    annotationToJson((Annotation) result, subJsonObject);
                     jsonObject.add(method.getName(), subJsonObject);
                 }
             }

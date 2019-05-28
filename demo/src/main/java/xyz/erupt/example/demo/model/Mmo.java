@@ -23,18 +23,18 @@ import java.util.Set;
  * Created by liyuepeng on 9/28/18.
  */
 @Erupt(
-//        filter = @Filter(condition = "'id=1'"),
+//        filter = @Filter(condition = "id=1"),
         name = "测试",
         rowOperation = {
                 @RowOperation(
                         code = "action",
-                        icon = "'fa-terminal blue'",
+                        icon = "fa-terminal blue",
                         title = "执行",
                         operationHandler = OperationHandlerImpl.class
                 ),
                 @RowOperation(
                         code = "action2",
-                        icon = "'fa-terminal blue'",
+                        icon = "fa-terminal blue",
                         title = "执行2",
                         operationHandler = OperationHandlerImpl.class
                 ),
@@ -194,7 +194,7 @@ public class Mmo extends BaseModel {
 
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
-                            joinSeparator = "'|'",
+                            joinSeparator = "|",
                             vl = {
                                     @VL(value = "1", label = "张三"),
                                     @VL(value = "2", label = "李四"),

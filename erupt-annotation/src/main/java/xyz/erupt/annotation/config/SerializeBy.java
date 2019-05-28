@@ -1,4 +1,4 @@
-package xyz.erupt.annotation;
+package xyz.erupt.annotation.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

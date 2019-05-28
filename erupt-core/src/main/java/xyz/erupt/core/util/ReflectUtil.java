@@ -36,23 +36,6 @@ public class ReflectUtil {
         return field;
     }
 
-
-    //递归查找类字段
-    public static void findClassAllEruptFields(Object obj, Consumer<Field> consumer) {
-        if (null != obj) {
-            for (Field field : obj.getClass().getDeclaredFields()) {
-                EruptField eruptField = field.getAnnotation(EruptField.class);
-                if (null != eruptField) {
-                    consumer.accept(field);
-                }
-            }
-            Class superClass = obj.getClass().getSuperclass();
-            if (null != superClass && !superClass.getSimpleName().equals("Object")) {
-                findClassAllEruptFields(superClass, consumer);
-            }
-        }
-    }
-
     //获取字段泛型名
     public static List<String> getFieldGenericName(Field field) {
         List<String> names = new ArrayList<>();

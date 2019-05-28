@@ -1,7 +1,11 @@
 package xyz.erupt.annotation;
 
+import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.sub_erupt.*;
+import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_erupt.Tree;
 
 import java.beans.Transient;
 import java.lang.annotation.*;
@@ -33,6 +37,7 @@ public @interface Erupt {
 
     Power power() default @Power;
 
+//    @ToMap(key = "code")
     RowOperation[] rowOperation() default {};
 
     Filter filter() default @Filter(condition = "");

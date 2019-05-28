@@ -1,6 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
-import xyz.erupt.annotation.SerializeBy;
+import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
 
