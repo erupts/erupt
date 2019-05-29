@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -81,10 +82,9 @@ public class EruptDataController {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         try {
             Object obj = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, id);
-            EruptUtil.rinseEruptObj(obj);
-            return obj;
+            return EruptUtil.generateEruptDataMap(obj);
         } catch (Exception e) {
-            return EruptApiModel.errorApi(e);
+            throw new RuntimeException(e);
         }
     }
 

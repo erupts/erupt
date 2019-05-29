@@ -54,8 +54,7 @@ public class EruptJpaDao {
     public Object findDataById(EruptModel eruptModel, Serializable id) {
         Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol());
         id = TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
-        Object obj = entityManager.find(eruptModel.getClazz(), id);
-        return obj;
+        return entityManager.find(eruptModel.getClazz(), id);
     }
 
     public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {

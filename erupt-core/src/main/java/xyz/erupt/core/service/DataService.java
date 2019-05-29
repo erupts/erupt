@@ -19,11 +19,11 @@ import java.util.List;
 @Service
 public interface DataService {
 
+    Object findDataById(EruptModel eruptModel, Serializable id);
+
     Page queryList(EruptModel eruptModel, JsonObject condition, Page page);
 
     Collection<TreeModel> queryTree(EruptModel eruptModel);
-
-    Object findDataById(EruptModel eruptModel, Serializable id);
 
     Collection findTabList(EruptFieldModel eruptTabFieldModel);
 

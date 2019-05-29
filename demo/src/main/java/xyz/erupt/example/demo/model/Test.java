@@ -144,20 +144,4 @@ public class Test {
     )
     private TestExtra testExtra;
 
-    @Transient
-    @EruptField(
-            views = {
-                    @View(title = "是否加密", column = "isMD5"),
-                    @View(title = "周", column = "week")
-            },
-            edit = @Edit(
-                    title = "其他信息23333",
-                    desc = "23333333",
-                    type = EditType.COMBINE,
-                    referenceTreeType = @ReferenceTreeType(depend = "name", dependColumn = "name"),
-                    search = @Search(value = true)
-            )
-    )
-    private TestExtra testExtra2;
-
 }

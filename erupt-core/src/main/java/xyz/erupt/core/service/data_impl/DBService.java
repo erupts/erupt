@@ -36,6 +36,11 @@ public class DBService implements DataService {
     private EruptJpaDao eruptJpaDao;
 
     @Override
+    public Object findDataById(EruptModel eruptModel, Serializable id) {
+        return eruptJpaDao.findDataById(eruptModel, id);
+    }
+
+    @Override
     public Page queryList(EruptModel eruptModel, JsonObject condition, Page page) {
         return eruptJpaDao.queryEruptList(eruptModel, condition, page);
     }
@@ -49,7 +54,7 @@ public class DBService implements DataService {
             Collection collection = (Collection) tabField.get(obj);
             if (null != collection) {
                 for (Object tabData : collection) {
-                    EruptUtil.rinseEruptObj(tabData);
+                    EruptUtil.generateEruptDataMap(tabData);
                 }
             }
             return collection;
@@ -67,20 +72,27 @@ public class DBService implements DataService {
 
     @Override
     public Set findTabTreeById(EruptModel eruptModel, String tabFieldName, Serializable id) {
-        Collection collection = findTabListById(eruptModel, tabFieldName, id);
-        Set<String> idSet = new HashSet<>();
-        if (null != collection) {
-            for (Object o : collection) {
-                try {
-                    Field field = ReflectUtil.findClassField(o.getClass(), eruptModel.getErupt().primaryKeyCol());
-                    field.setAccessible(true);
-                    idSet.add(field.get(o).toString());
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+        Object obj = eruptJpaDao.findDataById(eruptModel, id);
+        try {
+            Field tabField = obj.getClass().getDeclaredField(tabFieldName);
+            tabField.setAccessible(true);
+            Collection collection = (Collection) tabField.get(obj);
+            Set<String> idSet = new HashSet<>();
+            if (null != collection) {
+                for (Object o : collection) {
+                    try {
+                        Field field = ReflectUtil.findClassField(o.getClass(), eruptModel.getErupt().primaryKeyCol());
+                        field.setAccessible(true);
+                        idSet.add(field.get(o).toString());
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+            return idSet;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return idSet;
     }
 
     @Override
@@ -119,11 +131,6 @@ public class DBService implements DataService {
         } else {
             return DataHandlerUtil.treeModelToTree(treeModels);
         }
-    }
-
-    @Override
-    public Object findDataById(EruptModel eruptModel, Serializable id) {
-        return eruptJpaDao.findDataById(eruptModel, id);
     }
 
     @Override

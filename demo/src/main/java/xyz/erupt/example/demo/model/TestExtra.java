@@ -39,8 +39,9 @@ public class TestExtra extends BaseModel {
     @EruptField(
             views = @View(title = "周"),
             edit = @Edit(
+                    notNull = true,
                     title = "周",
-                    search = @Search(value = true,vague = true),
+                    search = @Search(value = true, vague = true),
                     type = EditType.DATE,
                     dateType = @DateType(type = DateEnum.WEEK)
 
@@ -48,6 +49,6 @@ public class TestExtra extends BaseModel {
     )
     private String week;
 
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "testExtra")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "testExtra")
     private Test book;
 }
