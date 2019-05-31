@@ -1,6 +1,8 @@
 package xyz.erupt.eruptlimit.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -21,9 +23,9 @@ import javax.persistence.*;
         name = "菜单配置",
         sorts = "sort",
         tree = @Tree(id = "id", label = "name", pid = "parentMenu.id")
-//        power = @Power(edit = false,add = false,delete = false)
 )
-@Data
+@Getter
+@Setter
 public class EruptMenu extends BaseModel {
 
     @EruptField(
@@ -31,7 +33,7 @@ public class EruptMenu extends BaseModel {
             edit = @Edit(title = "编码", notNull = true)
     )
     @Column(name = "CODE", unique = true)
-    private String code = "233333333";
+    private String code;
 
     @Column(name = "NAME")
     @EruptField(
@@ -41,7 +43,7 @@ public class EruptMenu extends BaseModel {
                     notNull = true
             )
     )
-    private String name = "2344524";
+    private String name;
 
     @Column(name = "PATH")
     @EruptField(
@@ -75,7 +77,7 @@ public class EruptMenu extends BaseModel {
                     )
             )
     )
-    private Integer status = 1;
+    private Integer status;
 
     @Column(name = "SORT")
     @EruptField(

@@ -195,7 +195,4 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
         }
     }
 
-    public static void main(String[] args) {
-
-    }
 }

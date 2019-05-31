@@ -56,7 +56,7 @@ public class EruptUtil {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            findClassAllEruptFields(eruptObj, field -> {
+            findClassAllEruptFields(eruptObj.getClass(), field -> {
                 field.setAccessible(true);
                 EruptField eruptField = field.getAnnotation(EruptField.class);
                 if (field.getName().equalsIgnoreCase(erupt.primaryKeyCol())) {
@@ -101,68 +101,54 @@ public class EruptUtil {
     //将object中erupt标识的字段抽取出来放到map中
     public static Map<String, Object> generateEruptDataMap(Object obj) {
         final Map<String, Object> map = new HashMap<>();
-        List<EruptFieldAndValue> eruptFieldAndValues = new ArrayList<>();
-        try {
-            findClassAllEruptFields(obj, eruptFieldAndValues);
-            for (EruptFieldAndValue eruptFieldAndValue : eruptFieldAndValues) {
-                Field field = eruptFieldAndValue.getField();
+        findClassAllEruptFields(obj.getClass(), field -> {
+            try {
+                if (field.getName().equals("id")) {
+                    System.out.println(123);
+                }
                 field.setAccessible(true);
-                EruptField eruptField = field.getAnnotation(EruptField.class);
-                if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
-                    ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
-                    Map<String, Object> treeMap = new HashMap<>();
-                    if (null != eruptFieldAndValue.getFieldValue()) {
+                Object fieldValue = field.get(obj);
+                if (null != fieldValue) {
+                    EruptField eruptField = field.getAnnotation(EruptField.class);
+                    if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
+                        ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
+                        Map<String, Object> treeMap = new HashMap<>();
                         treeMap.put(eruptField.edit().referenceTreeType().id(),
-                                ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.id()).get(eruptFieldAndValue.getFieldValue()));
+                                ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.id()).get(fieldValue));
                         treeMap.put(eruptField.edit().referenceTreeType().label(),
-                                ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.label()).get(eruptFieldAndValue.getFieldValue()));
-                    }
+                                ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.label()).get(fieldValue));
 //                    treeMap.put(eruptField.edit().referenceTreeType().pid(),
 //                            ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.pid()).get(field.get(obj)));
-                    map.put(field.getName(), treeMap);
-                } else if (eruptField.edit().type() == EditType.COMBINE
-                        || eruptField.edit().type() == EditType.REFERENCE_TABLE) {
-                    if (null != eruptFieldAndValue.getFieldValue()) {
-                        List<EruptFieldAndValue> subFieldList = new ArrayList<>();
-                        findClassAllEruptFields(field.get(obj), subFieldList, OBJECT_EDIT_TYPES);
+                        map.put(field.getName(), treeMap);
+                    } else if (eruptField.edit().type() == EditType.COMBINE
+                            || eruptField.edit().type() == EditType.REFERENCE_TABLE) {
                         Map<String, Object> subMap = new HashMap<>();
-                        for (EruptFieldAndValue subfield : subFieldList) {
-                            subMap.put(subfield.getField().getName(), subfield.getFieldValue());
-                        }
+                        Object refObj = field.get(obj);
+                        findClassAllEruptFields(refObj.getClass(), f -> {
+                            try {
+                                subMap.put(f.getName(), f.get(refObj));
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }, OBJECT_EDIT_TYPES);
                         map.put(field.getName(), subMap);
+                    } else if (eruptField.edit().type() == EditType.TAB) {
+                        return;
+                    } else {
+                        map.put(field.getName(), field.get(obj));
                     }
-                } else if (eruptField.edit().type() == EditType.TAB) {
-                    continue;
-                } else {
-                    map.put(field.getName(), field.get(obj));
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        });
         return map;
     }
 
     //递归查找类字段
-    private static void findClassAllEruptFields(Object obj, Consumer<Field> consumer) {
-        if (null != obj) {
-            for (Field field : obj.getClass().getDeclaredFields()) {
-                EruptField eruptField = field.getAnnotation(EruptField.class);
-                if (null != eruptField) {
-                    consumer.accept(field);
-                }
-            }
-            Class superClass = obj.getClass().getSuperclass();
-            if (null != superClass && !superClass.getSimpleName().equals("Object")) {
-                findClassAllEruptFields(superClass, consumer);
-            }
-        }
-    }
-
-    //递归查找类字段
-    private static void findClassAllEruptFields(Object obj, List<EruptFieldAndValue> fieldAndValueList, EditType... excludeEditType) throws IllegalAccessException {
-        if (null != obj) {
-            for (Field field : obj.getClass().getDeclaredFields()) {
+    private static void findClassAllEruptFields(Class clazz, Consumer<Field> consumer, EditType... excludeEditType) {
+        if (null != clazz) {
+            for (Field field : clazz.getDeclaredFields()) {
                 EruptField eruptField = field.getAnnotation(EruptField.class);
                 if (null != eruptField) {
                     boolean allow = true;
@@ -173,15 +159,13 @@ public class EruptUtil {
                         }
                     }
                     if (allow) {
-                        field.setAccessible(true);
-                        fieldAndValueList.add(new EruptFieldAndValue(field, field.get(obj)));
+                        consumer.accept(field);
                     }
-
                 }
             }
-            Class superClass = obj.getClass().getSuperclass();
+            Class superClass = clazz.getSuperclass();
             if (null != superClass && !superClass.getSimpleName().equals("Object")) {
-                findClassAllEruptFields(superClass, fieldAndValueList);
+                findClassAllEruptFields(superClass, consumer);
             }
         }
     }

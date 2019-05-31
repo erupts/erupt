@@ -20,9 +20,12 @@ public @interface View {
     String className() default "";
 
     /**
-     * demo : xx：@txt@
-     *
-     * @txt@: 为数据项占位符
+     * 该参数在前端使用eval方法解析
+     * 变量：
+     * 1、item（整行主数据）
+     * 2、item.xxx（数据中的某一列）
+     * demo:
+     * "姓名："+item.name
      */
     String template() default "";
 

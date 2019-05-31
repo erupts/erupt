@@ -1,14 +1,13 @@
 package xyz.erupt.eruptlimit.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.TabEnum;
-import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -19,7 +18,8 @@ import java.util.Set;
 @Entity
 @Table(name = "E_ROLE")
 @Erupt(name = "用户角色")
-@Data
+@Getter
+@Setter
 public class EruptRole extends BaseModel {
 
     @EruptField(
@@ -60,7 +60,11 @@ public class EruptRole extends BaseModel {
     )
     private Set<EruptMenu> menus;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany
+    @JoinTable(
+            name = "E_USER_ROLE",
+            joinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"))
     @EruptField(
             edit = @Edit(
                     title = "包含用户",

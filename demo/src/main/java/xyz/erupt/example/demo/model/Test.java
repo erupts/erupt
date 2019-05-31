@@ -42,7 +42,7 @@ public class Test {
 
     @Column(name = "NAME")
     @EruptField(
-            views = @View(title = "姓名", sortable = true),
+            views = @View(title = "姓名", sortable = true, template = "'姓名：'+item.name"),
             edit = @Edit(title = "姓名", notNull = true, search = @Search(true))
     )
     private String name;

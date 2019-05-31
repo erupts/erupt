@@ -34,8 +34,6 @@ public class EruptDataController {
     @Autowired
     private Gson gson;
 
-    private static ObjectMapper MAPPER = new ObjectMapper();
-
     @PostMapping("/table/{erupt}")
     @ResponseBody
     public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject condition) {
