@@ -1,8 +1,6 @@
 package xyz.erupt.example.demo;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
