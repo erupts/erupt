@@ -1,16 +1,17 @@
 package xyz.erupt.eruptlimit.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 
 import javax.persistence.*;
 
@@ -21,7 +22,7 @@ import javax.persistence.*;
 @Table(name = "E_MENU")
 @Erupt(
         name = "菜单配置",
-        sorts = "sort",
+        sorts = "sort asc",
         tree = @Tree(id = "id", label = "name", pid = "parentMenu.id")
 )
 @Getter

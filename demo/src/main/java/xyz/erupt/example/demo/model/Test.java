@@ -108,7 +108,7 @@ public class Test {
             views = @View(title = "角色", column = "name"),
             edit = @Edit(
                     title = "角色",
-                    type = EditType.REFERENCE_TABLE,
+                    type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(depend = "eruptUser", dependColumn = "id"),
                     search = @Search(value = true)
             )

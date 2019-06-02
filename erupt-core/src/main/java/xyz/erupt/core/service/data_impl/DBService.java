@@ -52,12 +52,13 @@ public class DBService implements DataService {
             Field tabField = obj.getClass().getDeclaredField(tabFieldName);
             tabField.setAccessible(true);
             Collection collection = (Collection) tabField.get(obj);
+            List<Object> arrayList = new ArrayList<>();
             if (null != collection) {
                 for (Object tabData : collection) {
-                    EruptUtil.generateEruptDataMap(tabData);
+                    arrayList.add(EruptUtil.generateEruptDataMap(tabData));
                 }
             }
-            return collection;
+            return arrayList;
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
             return null;

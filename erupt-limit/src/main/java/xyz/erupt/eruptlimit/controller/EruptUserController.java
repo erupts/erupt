@@ -2,6 +2,7 @@ package xyz.erupt.eruptlimit.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,7 @@ import xyz.erupt.eruptlimit.model.EruptRole;
 import xyz.erupt.eruptlimit.service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by liyuepeng on 2018-12-13.
@@ -54,7 +52,17 @@ public class EruptUserController {
             //生成token
             loginService.createToken(loginModel);
             loginModel.setUserName(loginModel.getEruptUser().getName());
-            Set<EruptMenu> menuSet = new HashSet<>();
+            Set<EruptMenu> menuSet = new TreeSet<>((m1, m2) -> {
+                Integer sort1 = m1.getSort();
+                Integer sort2 = m2.getSort();
+                if (null == sort1) {
+                    sort1 = Integer.MAX_VALUE;
+                }
+                if (null == sort2) {
+                    sort2 = Integer.MAX_VALUE;
+                }
+                return sort1 - sort2;
+            });
             for (EruptRole role : loginModel.getEruptUser().getRoles()) {
                 if (role.getStatus()) {
                     menuSet.addAll(role.getMenus());

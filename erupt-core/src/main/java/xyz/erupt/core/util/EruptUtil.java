@@ -103,9 +103,6 @@ public class EruptUtil {
         final Map<String, Object> map = new HashMap<>();
         findClassAllEruptFields(obj.getClass(), field -> {
             try {
-                if (field.getName().equals("id")) {
-                    System.out.println(123);
-                }
                 field.setAccessible(true);
                 Object fieldValue = field.get(obj);
                 if (null != fieldValue) {
@@ -117,8 +114,6 @@ public class EruptUtil {
                                 ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.id()).get(fieldValue));
                         treeMap.put(eruptField.edit().referenceTreeType().label(),
                                 ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.label()).get(fieldValue));
-//                    treeMap.put(eruptField.edit().referenceTreeType().pid(),
-//                            ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.pid()).get(field.get(obj)));
                         map.put(field.getName(), treeMap);
                     } else if (eruptField.edit().type() == EditType.COMBINE
                             || eruptField.edit().type() == EditType.REFERENCE_TABLE) {
