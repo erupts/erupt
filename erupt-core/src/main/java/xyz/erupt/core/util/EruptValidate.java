@@ -2,6 +2,7 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
@@ -11,16 +12,19 @@ import xyz.erupt.core.model.EruptModel;
  */
 public class EruptValidate {
 
-    public static void validate(EruptModel eruptModel, JsonObject jsonObject) {
-        for (EruptFieldModel model : eruptModel.getEruptFieldModels()) {
-            EditType editType = model.getEruptField().edit().type();
-            JsonElement jsonElement = jsonObject.get(model.getFieldName());
+    public static BoolAndReason validate(EruptModel eruptModel, JsonObject jsonObject) {
+        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
+            if (field.getEruptField().edit().notNull()) {
+                if (!jsonObject.has(field.getFieldName())) {
+                    return new BoolAndReason(false, field.getEruptField().edit().title() + "必填");
+                }
+            }
+            EditType editType = field.getEruptField().edit().type();
+            JsonElement jsonElement = jsonObject.get(field.getFieldName());
             if (null != jsonElement) {
                 switch (editType) {
                     case REFERENCE_TREE:
-                        jsonElement.getAsJsonObject().get(model.getEruptField().edit().referenceTreeType().id());
 
-                        int a = 1 + 1;
                         break;
                     default:
                         break;
@@ -28,6 +32,6 @@ public class EruptValidate {
             }
 
         }
-
+        return new BoolAndReason(true, "");
     }
 }

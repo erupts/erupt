@@ -4,10 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -16,7 +18,9 @@ import java.util.Set;
  * Created by liyuepeng on 11/22/18.
  */
 @Entity
-@Table(name = "E_ROLE")
+@Table(name = "E_ROLE", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "code")
+})
 @Erupt(name = "用户角色")
 @Getter
 @Setter
@@ -55,7 +59,10 @@ public class EruptRole extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "菜单",
-                    type = EditType.TAB
+                    type = EditType.TAB,
+                    tabType = @TabType(
+//                            filter = @Filter(condition = "EruptMenu.parentMenu.code='sys'")
+                    )
             )
     )
     private Set<EruptMenu> menus;

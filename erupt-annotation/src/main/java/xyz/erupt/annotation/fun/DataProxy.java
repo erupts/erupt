@@ -39,6 +39,7 @@ public interface DataProxy<MODEL> {
 
     //查
     default void beforeFetch(JsonObject condition) {
+
     }
 
     default void afterFetch(Collection list) {

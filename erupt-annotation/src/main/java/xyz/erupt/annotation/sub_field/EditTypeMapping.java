@@ -12,11 +12,13 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Documented
 public @interface EditTypeMapping {
-    String maping();
+    String mapping();
 
     String desc() default "";
 
     Search search() default @Search(value = true,vague = true);
 
     JavaType[] allowType() default {};
+
+    boolean excelOperator() default true;
 }

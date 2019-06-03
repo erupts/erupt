@@ -69,8 +69,8 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             views = @View(title = "年龄"),
             edit = @Edit(
                     title = "年龄",
-//                    type = EditType.SLIDER,
-//                    sliderType = @SliderType(max = 120, markPoints = {10, 20, 30, 40, 120}),
+                    type = EditType.SLIDER,
+                    sliderType = @SliderType(max = 120, markPoints = {10, 20, 30, 40, 120}),
                     search = @Search(value = true, vague = true)
             )
     )

@@ -55,7 +55,8 @@ public class EruptMenu extends BaseModel {
                                     @VL(value = "/build/table/", label = "TABLE"),
                                     @VL(value = "/build/tree/", label = "TREE"),
                                     @VL(value = "/build/report/", label = "REPORT"),
-                                    @VL(value = "/page/", label = "PAGE"),
+                                    @VL(value = "/page?file=", label = "PAGE"),
+                                    @VL(value = "/page?site=", label = "SITE"),
                                     @VL(value = "/", label = "/"),
                             }
                     )
@@ -96,7 +97,7 @@ public class EruptMenu extends BaseModel {
                     desc = "请参考图标库font-awesome（仅会在最父级节点中展示）"
             )
     )
-    private String icon;
+    private String icon = "xxxxxxxxxxxxx";
 
 
     @ManyToOne

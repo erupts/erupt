@@ -9,6 +9,8 @@ import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.fun.ConditionHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.EditTypeMapping;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.service.data_impl.DBService;
@@ -24,17 +26,9 @@ import java.util.Arrays;
  */
 public class AnnotationUtil {
 
-    private static final String[] ANNOTATION_NUMBER_TYPE = {
-            "short", "int", "long", "float", "double"
-    };
+    private static final String[] ANNOTATION_NUMBER_TYPE = {"short", "int", "long", "float", "double"};
 
-    private static final String[] ANNOTATION_STRING_TYPE = {
-            "String", "byte", "char"
-    };
-
-    private static final String[] SIMPLE_ANNOTATION_TYPE = {
-            "short", "int", "long", "float", "double", "byte", "char"
-    };
+    private static final String[] ANNOTATION_STRING_TYPE = {"String", "byte", "char"};
 
     public static String annotationToJson(String annotationStr) {
         String convertStr = annotationStr
@@ -165,6 +159,15 @@ public class AnnotationUtil {
             }
         }
         return condition;
+    }
+
+    public static EditTypeMapping getEditTypeMapping(EditType editType) {
+        try {
+            return EditType.class.getDeclaredField(editType.name()).getAnnotation(EditTypeMapping.class);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static DataService getEruptDataProcessor(Class<?> clazz) {

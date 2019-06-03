@@ -16,11 +16,13 @@ import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.model.*;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.SpringUtil;
 
 import javax.transaction.Transactional;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Collection;
 
 /**
@@ -162,12 +164,13 @@ public class EruptDataController {
     @ResponseBody
     public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
-        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
-        if (!br.isBool()) {
-            return new EruptApiModel(br);
-        }
+//        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
+//        if (!br.isBool()) {
+//            return new EruptApiModel(br);
+//        }
         if (eruptModel.getErupt().power().add()) {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
+            DataHandlerUtil.clearObjectDefaultValueByJson(obj, data);
             try {
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeAdd(obj);
@@ -192,14 +195,14 @@ public class EruptDataController {
     @ResponseBody
     public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
-        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
-        if (!br.isBool()) {
-            return new EruptApiModel(br);
-        }
+//        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
+//        if (!br.isBool()) {
+//            return new EruptApiModel(br);
+//        }
         if (eruptModel.getErupt().power().edit()) {
             try {
                 Object obj = this.gson.fromJson(data.toString(), eruptModel.getClazz());
-//                Object obj = TypeUtil.mapToObject(data,eruptModel.getClazz());
+                DataHandlerUtil.clearObjectDefaultValueByJson(obj, data);
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                     BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeEdit(obj);
                     if (!boolAndReason.isBool()) {

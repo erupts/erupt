@@ -1,11 +1,7 @@
 package xyz.erupt.core.util;
 
-import org.apache.commons.beanutils.BeanUtils;
-
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -87,17 +83,4 @@ public class TypeUtil {
         return Arrays.asList(NUMBER_TYPE).contains(typeName.toLowerCase());
     }
 
-    public static Object mapToObject(Map<String, Object> map, Class<?> beanClass) {
-        if (map == null) {
-            return null;
-        }
-        Object obj = null;
-        try {
-            obj = beanClass.newInstance();
-            BeanUtils.populate(obj, map);
-        } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return obj;
-    }
 }

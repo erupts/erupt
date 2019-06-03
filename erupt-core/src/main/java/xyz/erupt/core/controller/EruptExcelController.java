@@ -1,25 +1,18 @@
 package xyz.erupt.core.controller;
 
-import com.alibaba.excel.ExcelWriter;
-import com.alibaba.excel.metadata.Sheet;
-import com.alibaba.excel.support.ExcelTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import xyz.erupt.core.util.HttpUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 对Excel数据的处理
@@ -51,17 +44,7 @@ public class EruptExcelController {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             try {
-                OutputStream out = HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + ".xlsx");
-                response.setContentType("multipart/form-data");
-                ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX, false);
-                Sheet sheet1 = new Sheet(1, 0);
-                sheet1.setSheetName("第一个sheet");
-                sheet1.setAutoWidth(true);
-//                List<List<String>> header = new ArrayList<>();
-
-                writer.finish();
-                out.flush();
-                out.close();
+                dataFileService.createExcelTemplate(eruptModel, response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
