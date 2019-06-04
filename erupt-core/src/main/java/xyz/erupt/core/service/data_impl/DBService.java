@@ -82,13 +82,9 @@ public class DBService implements DataService {
             Set<String> idSet = new HashSet<>();
             if (null != collection) {
                 for (Object o : collection) {
-                    try {
-                        Field field = ReflectUtil.findClassField(o.getClass(), eruptModel.getErupt().primaryKeyCol());
-                        field.setAccessible(true);
-                        idSet.add(field.get(o).toString());
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+                    Field field = ReflectUtil.findClassField(o.getClass(), eruptModel.getErupt().primaryKeyCol());
+                    field.setAccessible(true);
+                    idSet.add(field.get(o).toString());
                 }
             }
             return idSet;
@@ -121,10 +117,9 @@ public class DBService implements DataService {
         if (StringUtils.isNotBlank(tree.pid())) {
             cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + EruptConst.PID);
         }
-        List list = eruptJpaDao.getDataMap(eruptModel, condition, sort, cols, null);
+        List<Map<String, Object>> list = eruptJpaDao.getDataMap(eruptModel, condition, sort, cols, null);
         List<TreeModel> treeModels = new ArrayList<>();
-        for (Object o : list) {
-            Map<String, Object> map = (Map<String, Object>) o;
+        for (Map map : list) {
             TreeModel treeModel = new TreeModel(map.get(EruptConst.ID), map.get(EruptConst.LABEL), map.get(EruptConst.PID), null);
             treeModels.add(treeModel);
         }
@@ -170,10 +165,9 @@ public class DBService implements DataService {
             condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn() + "=:" + DEPEND_KEY);
             conditionParameter.put(DEPEND_KEY, dependValue);
         }
-        List list = eruptJpaDao.getDataMap(CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
+        List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
         List<TreeModel> treeModels = new ArrayList<>();
-        for (Object o : list) {
-            Map<String, Object> map = (Map) o;
+        for (Map<String, Object> map : list) {
             TreeModel treeModel = new TreeModel(map.get(refTree.id()), map.get(refTree.label()), map.get(eruptFieldModel.getFieldName() + "_" + refTree.pid()), null);
             treeModels.add(treeModel);
         }
