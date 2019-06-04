@@ -9,6 +9,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.dao.EruptJapUtils;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.model.EruptFieldModel;
@@ -115,16 +116,16 @@ public class DBService implements DataService {
     private List<TreeModel> treeDataUtil(EruptModel eruptModel, String condition, String sort) {
         Tree tree = eruptModel.getErupt().tree();
         List<String> cols = new ArrayList<>();
-        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + tree.id().replace(".", "_"));
-        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + tree.label().replace(".", "_"));
+        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + EruptConst.ID);
+        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + EruptConst.LABEL);
         if (StringUtils.isNotBlank(tree.pid())) {
-            cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + tree.pid().replace(".", "_"));
+            cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + EruptConst.PID);
         }
         List list = eruptJpaDao.getDataMap(eruptModel, condition, sort, cols, null);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Object o : list) {
-            Map<String, Object> map = (Map) o;
-            TreeModel treeModel = new TreeModel(map.get(tree.id()), map.get(tree.label()), map.get(tree.pid().replace(".", "_")), null);
+            Map<String, Object> map = (Map<String, Object>) o;
+            TreeModel treeModel = new TreeModel(map.get(EruptConst.ID), map.get(EruptConst.LABEL), map.get(EruptConst.PID), null);
             treeModels.add(treeModel);
         }
         if (StringUtils.isBlank(tree.pid())) {

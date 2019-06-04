@@ -6,4 +6,10 @@ package xyz.erupt.core.constant;
 public class EruptConst {
     public static final String AppName = "Erupt";
 
+    public static final String ID = "id";
+
+    public static final String LABEL = "label";
+
+    public static final String PID = "pid";
+
 }

@@ -7,12 +7,15 @@ import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditTypeMapping;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.EruptConst;
+import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.util.AnnotationUtil;
@@ -30,6 +33,9 @@ import java.util.List;
  */
 @Service
 public class DataFileService {
+
+    @Autowired
+    private EruptJpaDao eruptJpaDao;
 
     public static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
 
@@ -108,6 +114,12 @@ public class DataFileService {
                             dw[vi] = edit.dependSwitchType().dependSwitchAttrs()[vi].label();
                         }
                         sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(dw)));
+                        break;
+                    case REFERENCE_TREE:
+                        ReferenceTreeType referenceTreeType = fieldModel.getEruptField().edit().referenceTreeType();
+                        eruptJpaDao.getDataMap(CoreService.ERUPTS.get(fieldModel.getFieldReturnName()), AnnotationUtil.switchFilterConditionToStr(referenceTreeType.filter()),
+                                null, Arrays.asList(referenceTreeType.id() + " as id", referenceTreeType.label() + " as label"), null);
+
                         break;
                 }
                 //单元格格式
