@@ -1,32 +1,27 @@
 package xyz.erupt.core.service;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hpsf.DocumentSummaryInformation;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.hssf.usermodel.DVConstraint;
+import org.apache.poi.hssf.usermodel.HSSFDataValidation;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditTypeMapping;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.core.constant.EruptConst;
-import xyz.erupt.core.dao.EruptJpaDao;
+import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.HttpUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by liyuepeng on 12/4/18.
@@ -35,7 +30,7 @@ import java.util.List;
 public class DataFileService {
 
     @Autowired
-    private EruptJpaDao eruptJpaDao;
+    private EruptDataController eruptDataController;
 
     public static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
 
@@ -119,7 +114,8 @@ public class DataFileService {
                         ReferenceTreeType referenceTreeType = fieldModel.getEruptField().edit().referenceTreeType();
 //                        eruptJpaDao.getDataMap(CoreService.ERUPTS.get(fieldModel.getFieldReturnName()), AnnotationUtil.switchFilterConditionToStr(referenceTreeType.filter()),
 //                                null, Arrays.asList(referenceTreeType.id() + " as id", referenceTreeType.label() + " as label"), null);
-
+                        Collection<TreeModel> collection = eruptDataController.getRefTreeData(eruptModel.getEruptName(), fieldModel.getFieldName());
+                        System.out.println(2233);
                         break;
                 }
                 //单元格格式
