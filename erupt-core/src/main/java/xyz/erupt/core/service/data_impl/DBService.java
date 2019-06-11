@@ -16,9 +16,12 @@ import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.Page;
 import xyz.erupt.core.model.TreeModel;
-import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.service.CoreService;
-import xyz.erupt.core.util.*;
+import xyz.erupt.core.service.DataService;
+import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.DataHandlerUtil;
+import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.ReflectUtil;
 
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -141,7 +144,7 @@ public class DBService implements DataService {
     }
 
     @Override
-    public Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, String dependValue) {
+    public Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, Serializable dependValue) {
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
         ReferenceTreeType refTree = eruptFieldModel.getEruptField().edit().referenceTreeType();
         List<String> cols = new ArrayList<>();

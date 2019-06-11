@@ -1,12 +1,15 @@
 package xyz.erupt.core.controller;
 
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.model.BoolAndReason;
+import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.model.Page;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
 
@@ -25,21 +28,30 @@ public class EruptExcelController {
     @Autowired
     private DataFileService dataFileService;
 
+
+    @Autowired
+    private EruptDataController eruptDataController;
+
     @Value("erupt.uploadPath:/opt/file")
     private String uploadPath;
 
     //导出
-    @GetMapping("/export/{erupt}")
-    public void exportData(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
+    @PostMapping("/export/{erupt}")
+    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public void exportData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject condition, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().export()) {
-            dataFileService.exportExcel(eruptModel, response);
+            condition.addProperty(Page.PAGE_INDEX_STR, 1);
+            condition.addProperty(Page.PAGE_SIZE_STR, Page.PAGE_MAX_DATA);
+            Page page = eruptDataController.getEruptData(eruptName, condition);
+            dataFileService.exportExcel(eruptModel, page, response);
         } else {
             throw new RuntimeException("没有导出权限");
         }
     }
 
     @GetMapping(value = "/template/{erupt}")
+    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
@@ -58,6 +70,7 @@ public class EruptExcelController {
     //导入excel
     @PostMapping("/import/{erupt}")
     @ResponseBody
+    @EruptRouter
     public BoolAndReason importData(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {

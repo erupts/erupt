@@ -54,10 +54,11 @@ public class EruptMenu extends BaseModel {
                             prefix = {
                                     @VL(value = "/build/table/", label = "TABLE"),
                                     @VL(value = "/build/tree/", label = "TREE"),
-                                    @VL(value = "/build/report/", label = "REPORT"),
-                                    @VL(value = "/page?file=", label = "PAGE"),
-                                    @VL(value = "/page?site=", label = "SITE"),
+                                    @VL(value = "/page?page=", label = "PAGE"),
+                                    @VL(value = "/page?&site=", label = "SITE"),
+                                    @VL(value = "/page?target=blank&site=", label = "NEW_SITE"),
                                     @VL(value = "/", label = "/"),
+//                                    @VL(value = "/build/report/", label = "REPORT"),
                             }
                     )
             )
@@ -97,7 +98,7 @@ public class EruptMenu extends BaseModel {
                     desc = "请参考图标库font-awesome（仅会在最父级节点中展示）"
             )
     )
-    private String icon = "xxxxxxxxxxxxx";
+    private String icon;
 
 
     @ManyToOne
@@ -110,20 +111,6 @@ public class EruptMenu extends BaseModel {
             )
     )
     private EruptMenu parentMenu;
-
-
-    @Column(name = "TARGET")
-    @EruptField(
-            edit = @Edit(
-                    title = "打开方式",
-                    type = EditType.CHOICE,
-                    choiceType = @ChoiceType(vl = {
-                            @VL(value = "0", label = "_target"),
-                            @VL(value = "1", label = "_self")
-                    })
-            )
-    )
-    private Integer target;
 
     @Column(name = "REMARK")
     @EruptField(

@@ -63,7 +63,7 @@ public class NonDataService implements DataService {
     }
 
     @Override
-    public Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, String dependValue) {
+    public Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, Serializable dependValue) {
         return null;
     }
 

@@ -4,6 +4,7 @@ package xyz.erupt.core.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptAndEruptFieldModel;
 import xyz.erupt.core.model.EruptFieldModel;
@@ -28,6 +29,7 @@ public class EruptBuildController {
 
     @GetMapping("/list/{erupt}")
     @ResponseBody
+    @EruptRouter(base64 = true)
     public EruptPageModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptPageModel eruptPageModel = new EruptPageModel();
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);

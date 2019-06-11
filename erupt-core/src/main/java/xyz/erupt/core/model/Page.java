@@ -3,7 +3,7 @@ package xyz.erupt.core.model;
 import lombok.Data;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 10/12/18.
@@ -20,21 +20,22 @@ public class Page {
 
     private String sort;
 
-    private Collection list;
+    public static final int PAGE_MAX_DATA = 1000000;
 
     public static final String PAGE_INDEX_STR = "_pageIndex";
 
     public static final String PAGE_SIZE_STR = "_pageSize";
 
     public static final String PAGE_SORT_STR = "_sort";
+    private Collection<Map<String, Object>> list;
 
     public Page(int pageIndex, int pageSize, String sort) {
         this.pageIndex = pageIndex == 0 ? 1 : pageIndex;
         this.pageSize = pageSize;
         this.sort = sort;
-        //单页最大数据量10000
-        if (pageSize > 10000) {
-            this.pageSize = 10000;
+        //支持最大数据量100万
+        if (pageSize > PAGE_MAX_DATA) {
+            this.pageSize = PAGE_MAX_DATA;
         }
     }
 

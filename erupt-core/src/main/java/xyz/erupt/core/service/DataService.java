@@ -2,16 +2,13 @@ package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.Page;
 import xyz.erupt.core.model.TreeModel;
 
-import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by liyuepeng on 10/10/18.
@@ -37,7 +34,7 @@ public interface DataService {
 
     Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName);
 
-    Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, String dependValue);
+    Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, Serializable dependValue);
 
     void addData(EruptModel eruptModel, Object object);
 

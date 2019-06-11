@@ -15,6 +15,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.model.Page;
 import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.HttpUtil;
@@ -36,7 +37,7 @@ public class DataFileService {
 
     //展示的格式和view表格一致
     //excel导出
-    public void exportExcel(EruptModel eruptModel, HttpServletResponse response) {
+    public void exportExcel(EruptModel eruptModel, Page Page, HttpServletResponse response) {
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         sheet.createFreezePane(0, 1, 1, 1);
@@ -55,6 +56,9 @@ public class DataFileService {
                     colNum++;
                 }
             }
+        }
+        for (Object o : Page.getList()) {
+
         }
         try {
             wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + ".xls"));
@@ -95,13 +99,13 @@ public class DataFileService {
                         break;
                     case SLIDER:
                         sheet.addValidationData(generateValidation(cellNum,
-                                "数值区间：" + edit.sliderType().min() + "——" + edit.sliderType().min(), dvHelper.createNumericConstraint(
+                                "请选择或输入有效的选项，区间：" + edit.sliderType().min() + " - " + edit.sliderType().max(), dvHelper.createNumericConstraint(
                                         DataValidationConstraint.ValidationType.INTEGER, DataValidationConstraint.OperatorType.BETWEEN,
-                                        Integer.valueOf(edit.sliderType().min()).toString(), Integer.valueOf(edit.sliderType().max()).toString())));
+                                        Integer.toString(edit.sliderType().min()), Integer.toString(edit.sliderType().max()))));
                         break;
                     case DATE:
                         sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间，或下载最新模版重试！", dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN,
-                                "1000-01-01", "2999-12-31", "yyyy-MM-dd")));
+                                "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
                         break;
                     case DEPEND_SWITCH:
                         String[] dw = new String[edit.dependSwitchType().dependSwitchAttrs().length];
@@ -115,7 +119,8 @@ public class DataFileService {
 //                        eruptJpaDao.getDataMap(CoreService.ERUPTS.get(fieldModel.getFieldReturnName()), AnnotationUtil.switchFilterConditionToStr(referenceTreeType.filter()),
 //                                null, Arrays.asList(referenceTreeType.id() + " as id", referenceTreeType.label() + " as label"), null);
                         Collection<TreeModel> collection = eruptDataController.getRefTreeData(eruptModel.getEruptName(), fieldModel.getFieldName());
-                        System.out.println(2233);
+                        break;
+                    default:
                         break;
                 }
                 //单元格格式
@@ -153,7 +158,7 @@ public class DataFileService {
         // 四个参数分别是：起始行、终止行、起始列、终止列
         CellRangeAddressList regions = new CellRangeAddressList(1, 999, colIndex, colIndex);
         DataValidation dataValidationList = new HSSFDataValidation(regions, constraint);
-        dataValidationList.createErrorBox("Error", errHint);
+        dataValidationList.createErrorBox("错误", errHint);
         return dataValidationList;
     }
 }

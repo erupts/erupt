@@ -2,13 +2,11 @@ package xyz.erupt.eruptlimit.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.cache.EruptRedisService;
-import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.eruptlimit.base.LoginModel;
@@ -18,7 +16,10 @@ import xyz.erupt.eruptlimit.model.EruptRole;
 import xyz.erupt.eruptlimit.service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by liyuepeng on 2018-12-13.
@@ -30,9 +31,6 @@ public class EruptUserController {
     private LoginService loginService;
 
     @Autowired
-    private EruptJpaDao eruptJpaDao;
-
-    @Autowired
     private EruptRedisService redisService;
 
     @Value("${erupt.expireTimeByLogin:60}")
@@ -41,8 +39,9 @@ public class EruptUserController {
     @Autowired
     private Gson gson;
 
-    @PostMapping(RestPath.DONT_INTERCEPT + "/login")
+    @PostMapping("/login")
     @ResponseBody
+    @EruptRouter(loginVerify = false)
     public LoginModel login(@RequestParam("account") String account,
                             @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode,
@@ -61,7 +60,7 @@ public class EruptUserController {
                 if (null == sort2) {
                     sort2 = Integer.MAX_VALUE;
                 }
-                return sort1 - sort2;
+                return sort1.compareTo(sort2);
             });
             for (EruptRole role : loginModel.getEruptUser().getRoles()) {
                 if (role.getStatus()) {
@@ -87,6 +86,7 @@ public class EruptUserController {
 
     @GetMapping("/menu")
     @ResponseBody
+    @EruptRouter
     public List<TreeModel> getMenu(HttpServletRequest request) {
 //        type -> Set<EruptMenu>
         Object o = redisService.get(RedisKey.MENU_TREE + request.getHeader("token"));

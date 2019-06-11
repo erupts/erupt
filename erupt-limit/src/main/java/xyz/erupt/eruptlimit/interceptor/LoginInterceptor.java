@@ -1,12 +1,13 @@
 package xyz.erupt.eruptlimit.interceptor;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.CoreService;
@@ -26,46 +27,61 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private static final String ERUPT_HEADER_KEY = "erupt";
 
+    private static final String ERUPT_HEADER_TOKEN = "token";
+
     private static final String URL_ERUPT_PARAM_KEY = "_erupt";
 
     private static final String URL_ERUPT_PARAM_TOKEN = "_token";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token = request.getHeader("token");
-        String eruptName = request.getHeader(ERUPT_HEADER_KEY);
-        {
-            if (StringUtils.isBlank(token)) {
-                //使用参数的形式携带token等信息
-                if (request.getServletPath().contains(RestPath.ERUPT_EXCEL)) {
-                    token = request.getParameter(URL_ERUPT_PARAM_TOKEN);
-                    eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
-                }
-            }
-        }
-        if (null == token || !loginService.verifyToken(token)) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        EruptRouter eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
+        if (null == eruptRouter) {
+            response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
             return false;
         }
-        String path = request.getServletPath();
-        //权限校验
-        if (path.startsWith(RestPath.ERUPT_API)) {
-            EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-            if (null == eruptModel) {
-                response.setStatus(HttpStatus.NOT_FOUND.value());
+        if (eruptRouter.loginVerify()) {
+            String token = null;
+            String eruptName = null;
+            if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
+                token = request.getHeader(ERUPT_HEADER_TOKEN);
+                eruptName = request.getHeader(ERUPT_HEADER_KEY);
+            } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
+                token = request.getParameter(URL_ERUPT_PARAM_TOKEN);
+                eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
+            }
+            if (null == token || !loginService.verifyToken(token)) {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 return false;
             }
-            if (!path.contains(eruptName) || !loginService.verifyMenuLimit(token, path, eruptModel)) {
-                response.setStatus(HttpStatus.FORBIDDEN.value());
-                return false;
+            String path = request.getServletPath();
+            //权限校验
+            if (path.startsWith(RestPath.ERUPT_API)) {
+                EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+                if (null == eruptModel) {
+                    response.setStatus(HttpStatus.NOT_FOUND.value());
+                    return false;
+                }
+                if (!path.contains(eruptName) || !loginService.verifyMenuLimit(token, path, eruptModel)) {
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    return false;
+                }
             }
+            return true;
+        } else {
+            return true;
         }
-        return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
-
+        EruptRouter eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
+        if (null != eruptRouter) {
+            if (eruptRouter.base64()) {
+//                new BASE64Encoder().encode();
+            }
+        }
         super.postHandle(request, response, handler, modelAndView);
     }
+
 }
