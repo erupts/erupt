@@ -3,19 +3,11 @@ package xyz.erupt.core.model;
 import com.google.gson.JsonObject;
 import lombok.Data;
 
-import java.util.Map;
-
 /**
  * Created by liyuepeng on 2018-12-26.
  */
 @Data
 public class HqlModel {
-
-    public HqlModel(String cols, JsonObject condition, String orderBy) {
-        this.cols = cols;
-        this.eruptSearchCondition = condition;
-        this.orderBy = orderBy;
-    }
 
     public HqlModel(String cols, String customCondition, JsonObject eruptSearchCondition, String orderBy) {
         this.cols = cols;
@@ -33,4 +25,5 @@ public class HqlModel {
     private JsonObject eruptSearchCondition;
 
     private String orderBy;
+
 }

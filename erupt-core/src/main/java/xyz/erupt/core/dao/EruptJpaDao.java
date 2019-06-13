@@ -2,11 +2,7 @@ package xyz.erupt.core.dao;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.apache.poi.util.StringUtil;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
-import xyz.erupt.annotation.Erupt;
-import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -24,7 +20,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -58,8 +53,8 @@ public class EruptJpaDao {
     }
 
     public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {
-        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel)) + ")", condition, page.getSort()));
-        String countHql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("count(*)", condition, null));
+        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel)) + ")", null, condition, page.getSort()));
+        String countHql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("count(*)", null, condition, null));
         Query query = entityManager.createQuery(hql);
         Query countQuery = entityManager.createQuery(countHql);
         Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
@@ -99,8 +94,8 @@ public class EruptJpaDao {
         String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", cols) + ")", condition, null, orderBy));
         Query query = entityManager.createQuery(hql);
         if (null != conditionParameter) {
-            for (String key : conditionParameter.keySet()) {
-                query.setParameter(key, conditionParameter.get(key));
+            for (Map.Entry<String, Object> entry : conditionParameter.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
             }
         }
         return query.getResultList();

@@ -1,6 +1,10 @@
 package xyz.erupt.core.controller;
 
 import com.google.gson.JsonObject;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.FileMagic;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +16,14 @@ import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.Page;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
+import xyz.erupt.core.util.DataHandlerUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 对Excel数据的处理
@@ -38,28 +46,33 @@ public class EruptExcelController {
     //导出
     @PostMapping("/export/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void exportData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject condition, HttpServletResponse response) {
+    public void exportData(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().export()) {
+            JsonObject condition = new JsonObject();
             condition.addProperty(Page.PAGE_INDEX_STR, 1);
             condition.addProperty(Page.PAGE_SIZE_STR, Page.PAGE_MAX_DATA);
+            condition.addProperty(Page.PAGE_SORT_STR, "");
+//            Enumeration<String> en = request.getParameterNames();
+//            while (en.hasMoreElements()) {
+//                condition.addProperty(en.nextElement().toString(), request.getParameter(en.nextElement()));
+//            }
             Page page = eruptDataController.getEruptData(eruptName, condition);
+            for (Map<String, Object> map : page.getList()) {
+                DataHandlerUtil.convertDataToEruptView(eruptModel, map);
+            }
             dataFileService.exportExcel(eruptModel, page, response);
         } else {
             throw new RuntimeException("没有导出权限");
         }
     }
 
-    @GetMapping(value = "/template/{erupt}")
+    @RequestMapping(value = "/template/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
-            try {
-                dataFileService.createExcelTemplate(eruptModel, response);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            dataFileService.createExcelTemplate(eruptModel, response);
         } else {
             throw new RuntimeException("没有导入权限");
         }
@@ -70,22 +83,26 @@ public class EruptExcelController {
     //导入excel
     @PostMapping("/import/{erupt}")
     @ResponseBody
-    @EruptRouter
-    public BoolAndReason importData(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
+    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public BoolAndReason importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) throws IOException {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             if (file.isEmpty()) {
                 return new BoolAndReason(false, "上传失败，请选择文件");
             }
             String fileName = file.getOriginalFilename();
-            File dest = new File(this.uploadPath + fileName);
-            try {
-                file.transferTo(dest);
-                //TODO 读取上传后的文件做数据上传工作
-                return new BoolAndReason(true, null);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return new BoolAndReason(false, e.getMessage());
+            InputStream is = file.getInputStream();
+            FileMagic fileMagic = FileMagic.valueOf(is);
+            if (Objects.equals(fileMagic, FileMagic.OOXML) || Objects.equals(fileMagic, FileMagic.OLE2)) {
+                Workbook workbook = null;
+                if (fileName.endsWith(DataFileService.XLS_FORMAT)) {
+                    workbook = new HSSFWorkbook(is);
+                } else if (fileName.endsWith(DataFileService.XLSX_FORMAT)) {
+                    workbook = new XSSFWorkbook(is);
+                }
+                return dataFileService.importExcel(eruptModel, workbook);
+            } else {
+                return new BoolAndReason(false, "上传失败，请选择Excel文件上传");
             }
         } else {
             throw new RuntimeException("没有导入权限");

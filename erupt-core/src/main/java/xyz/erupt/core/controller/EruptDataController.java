@@ -9,7 +9,6 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
@@ -20,7 +19,6 @@ import xyz.erupt.core.util.*;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * Erupt 对数据的增删改查
@@ -50,24 +48,6 @@ public class EruptDataController {
                 SpringUtil.getBean(proxy).beforeFetch(condition);
             }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryList(eruptModel, condition, new Page(pageIndex, pageSize, sort));
-            if (page.getList() != null && page.getList().size() > 0) {
-                for (String key : page.getList().iterator().next().keySet()) {
-                    EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
-                    for (View view : eruptFieldModel.getEruptField().views()) {
-//                        if (view)
-                    }
-                }
-            }
-            for (Map<String, Object> map : page.getList()) {
-                for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
-                    for (View view : field.getEruptField().views()) {
-                        if (view.show() && view.export()) {
-                            map.get(field.getFieldName());
-                        }
-                    }
-                }
-            }
-
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                 SpringUtil.getBean(proxy).afterFetch(page.getList());
             }

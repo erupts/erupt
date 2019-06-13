@@ -2,9 +2,7 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.model.BoolAndReason;
@@ -13,14 +11,14 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.model.EruptFieldAndValue;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.CoreService;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -121,6 +119,7 @@ public class EruptUtil {
                         Object refObj = field.get(obj);
                         findClassAllEruptFields(refObj.getClass(), f -> {
                             try {
+                                f.setAccessible(true);
                                 subMap.put(f.getName(), f.get(refObj));
                             } catch (IllegalAccessException e) {
                                 e.printStackTrace();
@@ -179,8 +178,6 @@ public class EruptUtil {
                 return jsonElement.getAsInt();
             case BOOLEAN:
                 return jsonElement.getAsBoolean();
-            case DATE:
-                return DateUtil.getDate(jsonElement.getAsString());
             case REFERENCE_TREE:
                 //TODO 类型转换太频繁,以后优化
                 String id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();

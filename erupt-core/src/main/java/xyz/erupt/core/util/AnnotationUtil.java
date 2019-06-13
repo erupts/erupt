@@ -99,7 +99,7 @@ public class AnnotationUtil {
                         if ("String".equals(returnType)) {
                             jsonArray.add(res.toString());
                         } else if ("boolean".equals(returnType)) {
-                            jsonArray.add((boolean) res);
+                            jsonArray.add((Boolean) res);
                         } else if ("Class".equals(returnType)) {
                             break;
                         } else if (res.getClass().isEnum()) {
@@ -136,7 +136,7 @@ public class AnnotationUtil {
                 } else if ("Class".equals(returnType)) {
                     continue;
                 } else if ("boolean".equals(returnType)) {
-                    jsonObject.addProperty(method.getName(), (boolean) result);
+                    jsonObject.addProperty(method.getName(), (Boolean) result);
                 } else if (method.getReturnType().isEnum()) {
                     jsonObject.addProperty(method.getName(), result.toString());
                 } else if (method.getReturnType().isAnnotation()) {

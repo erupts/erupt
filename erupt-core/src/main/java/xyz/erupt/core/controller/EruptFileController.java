@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -51,14 +52,7 @@ public class EruptFileController {
                     if (attachmentType.fileTypes().length > 0) {
                         String[] fileNameArr = file.getOriginalFilename().split("\\.");
                         String extensionName = fileNameArr[fileNameArr.length - 1];
-                        boolean legalExtension = false;
-                        for (String s : attachmentType.fileTypes()) {
-                            if (s.equals(extensionName)) {
-                                legalExtension = true;
-                                break;
-                            }
-                        }
-                        if (!legalExtension) {
+                        if (!Arrays.asList(attachmentType.fileTypes()).contains(extensionName)) {
                             return EruptApiModel.errorApi("上传失败，文件格式不允许为：" + extensionName);
                         }
                     }

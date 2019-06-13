@@ -12,12 +12,11 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
-import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.MD5Utils;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by liyuepeng on 11/22/18.
@@ -107,7 +106,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     @Column(name = "HEAD_ICON")
     @EruptField(
-            views = @View(title = "头像", viewType = ViewType.IMAGE),
+            views = @View(title = "头像", viewType = ViewType.IMAGE, export = false),
             edit = @Edit(
                     title = "头像",
                     type = EditType.ATTACHMENT,

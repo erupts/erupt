@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -23,12 +24,17 @@ import xyz.erupt.core.util.HttpUtil;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 12/4/18.
  */
 @Service
 public class DataFileService {
+
+    public static final String XLS_FORMAT = ".xls";
+
+    public static final String XLSX_FORMAT = ".xlsx";
 
     @Autowired
     private EruptDataController eruptDataController;
@@ -40,12 +46,14 @@ public class DataFileService {
     public void exportExcel(EruptModel eruptModel, Page Page, HttpServletResponse response) {
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
+        //冻结首行
         sheet.createFreezePane(0, 1, 1, 1);
-        Row row = sheet.createRow(0);
+        int rowIndex = 0;
         int colNum = 0;
+        Row row = sheet.createRow(rowIndex);
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             for (View view : fieldModel.getEruptField().views()) {
-                if (view.show()) {
+                if (view.show() && view.export()) {
                     Cell cell = row.createCell(colNum);
                     CellStyle style = wb.createCellStyle();
                     Font font = wb.createFont();
@@ -57,14 +65,36 @@ public class DataFileService {
                 }
             }
         }
-        for (Object o : Page.getList()) {
-
+        for (Map<String, Object> map : Page.getList()) {
+            int dataColNum = 0;
+            row = sheet.createRow(++rowIndex);
+            for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+                for (View view : fieldModel.getEruptField().views()) {
+                    if (view.show() && view.export()) {
+                        Cell cell = row.createCell(dataColNum);
+                        Object val = null;
+                        if (StringUtils.isNotBlank(view.column())) {
+                            val = map.get(fieldModel.getFieldName() + "_" + view.column());
+                        } else {
+                            val = map.get(fieldModel.getFieldName());
+                        }
+                        if (null != val) {
+                            cell.setCellValue(val.toString());
+                        }
+                        dataColNum++;
+                    }
+                }
+            }
         }
         try {
-            wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + ".xls"));
+            wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + XLS_FORMAT));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public BoolAndReason importExcel(EruptModel eruptModel, Workbook workbook) {
+        return null;
     }
 
     //模板的格式和edit输入框一致
@@ -146,7 +176,7 @@ public class DataFileService {
             }
         }
         try {
-            wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + "_导入模板" + ".xls"));
+            wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + "_导入模板" + XLS_FORMAT));
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

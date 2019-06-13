@@ -1,7 +1,7 @@
 package xyz.erupt.annotation.model;
 
 /**
- * 用来描述bool值得的原因
+ * 用来描述bool值所产生的的原因
  * Created by liyuepeng on 11/20/18.
  */
 public class BoolAndReason {
@@ -17,7 +17,6 @@ public class BoolAndReason {
     public boolean isBool() {
         return bool;
     }
-
 
     public void setBool(boolean bool) {
         this.bool = bool;

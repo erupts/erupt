@@ -2,18 +2,14 @@ package xyz.erupt.core.dao;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
 import xyz.erupt.core.util.AnnotationUtil;
-import xyz.erupt.core.util.TypeUtil;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -37,8 +33,9 @@ public class EruptJapUtils {
     public static final String NOT_NULL = "$notNull$";
 
     public static Set<String> getEruptColJapKeys(EruptModel eruptModel) {
-        Set<String> fieldKeys = new HashSet<>();
+        Set<String> cols = new HashSet<>();
         String eruptNameSymbol = eruptModel.getEruptName() + ".";
+        cols.add(eruptNameSymbol + eruptModel.getErupt().primaryKeyCol() + " as " + eruptModel.getErupt().primaryKeyCol());
         eruptModel.getEruptFieldModels().forEach(field -> {
             if (field.getEruptField().edit().type() == EditType.TAB) {
                 return;
@@ -54,34 +51,31 @@ public class EruptJapUtils {
                     fieldKey = eruptNameSymbol + field.getFieldName() + "." + view.column() + " as " + field.getFieldName() + "_"
                             + view.column().replace(".", "_");
                 }
-                fieldKeys.add(fieldKey);
-            }
-            if (field.getEruptField().views().length == 0) {
-                if (field.getEruptField().edit().type() != EditType.REFERENCE_TREE) {
-                    if (TypeUtil.isFieldSimpleType(field.getField().getType().getSimpleName())) {
-                        fieldKey = eruptNameSymbol + field.getFieldName() + " as " + field.getFieldName();
-                        fieldKeys.add(fieldKey);
-                    }
-                }
+                cols.add(fieldKey);
             }
         });
-        return fieldKeys;
+        return cols;
     }
 
 
     //erupt 注解信息映射成hql语句
     public static String generateEruptJpaHql(EruptModel eruptModel, HqlModel hqlModel) {
-        StringBuilder hql = new StringBuilder("select ");
-        hql.append(hqlModel.getCols());
-        hql.append(" from ").
-                append(eruptModel.getEruptName()).
-                append(" ").
-                append(eruptModel.getEruptName());
-        eruptModel.getEruptFieldModels().forEach(field -> {
-            if (null != field.getField().getAnnotation(ManyToOne.class) || null != field.getField().getAnnotation(OneToOne.class)) {
-                hql.append(" left join ").append(eruptModel.getEruptName()).append(".").append(field.getFieldName()).append(" ").append(field.getFieldName());
-            }
-        });
+        StringBuilder hql = new StringBuilder();
+        if (StringUtils.isNotBlank(hqlModel.getCols())) {
+            hql.append("select ");
+            hql.append(hqlModel.getCols());
+            hql.append(" from ").
+                    append(eruptModel.getEruptName()).
+                    append(" ").
+                    append(eruptModel.getEruptName());
+            eruptModel.getEruptFieldModels().forEach(field -> {
+                if (null != field.getField().getAnnotation(ManyToOne.class) || null != field.getField().getAnnotation(OneToOne.class)) {
+                    hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".").append(field.getFieldName()).append(" ").append(field.getFieldName());
+                }
+            });
+        } else {
+            hql.append("from " + eruptModel.getEruptName());
+        }
         hql.append(" where 1=1");
         Filter filter = eruptModel.getErupt().filter();
         if (!"".equals(filter.condition())) {

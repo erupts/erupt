@@ -55,8 +55,7 @@ public class SpringUtil implements ApplicationContextAware {
     }
 
     /**
-     * 扫描指定包下的所有匹配类
-     * 核心功能由Spring提供
+     * 按照相对应的规则查找所有匹配类
      *
      * @param packages    包名
      * @param typeFilters 匹配规则

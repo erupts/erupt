@@ -7,9 +7,7 @@ import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.eruptlimit.model.EruptRole;
 import xyz.erupt.eruptlimit.model.EruptUser;
 
@@ -20,7 +18,7 @@ import javax.persistence.*;
  */
 @Erupt(
         name = "测试",
-        loginUse = true,
+        loginUse = false,
         primaryKeyCol = "testId",
         rowOperation = {
                 @RowOperation(code = "a", icon = "fa fa-user", title = "AAA", operationHandler = OperationHandlerImpl.class)
@@ -73,6 +71,19 @@ public class Test {
     )
     private Boolean is18;
 
+    @Column(name = "DATE")
+    @EruptField(
+            views = @View(title = "时间"),
+            edit = @Edit(
+                    notNull = true,
+                    title = "时间",
+                    search = @Search(value = true),
+                    type = EditType.DATE,
+                    dateType = @DateType(type = DateEnum.DATE_TIME)
+            )
+    )
+    private String date;
+
 //    @Column(name = "MAP")
 //    @EruptField(
 //            views = @View(title = "地图", sortable = true),
@@ -89,8 +100,8 @@ public class Test {
     @JoinColumn(name = "USER_ID")
     @EruptField(
             views = {
-                    @View(title = "用户名", column = "name"),
-                    @View(title = "账户", column = "account")
+                    @View(title = "姓名", column = "name"),
+                    @View(title = "用户名", column = "account")
             },
             edit = @Edit(
                     title = "用户",
