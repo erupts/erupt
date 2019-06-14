@@ -121,5 +121,4 @@ public class EruptMenu extends BaseModel {
             )
     )
     private String remark;
-
 }

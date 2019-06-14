@@ -20,6 +20,8 @@ public @interface Edit {
 
     boolean readOnly() default false;
 
+    String placeHolder() default "";
+
     Search search() default @Search(false);
 
     EditType type() default EditType.INPUT;
@@ -53,7 +55,5 @@ public @interface Edit {
 
     @SerializeBy(method = "type", value = "DEPEND_SWITCH")
     DependSwitchType dependSwitchType() default @DependSwitchType(dependSwitchAttrs = {});
-
-//    StepsType[] stepsTyps() default {};
 
 }

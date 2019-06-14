@@ -13,6 +13,8 @@ public @interface EruptRouter {
 
     boolean loginVerify() default true;
 
+    String verifyStr() default "";
+
     //权限数据传值方式，默认为放到请求头中
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;
 

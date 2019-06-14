@@ -17,9 +17,9 @@ import xyz.erupt.eruptlimit.service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Created by liyuepeng on 2018-12-13.
@@ -51,7 +51,15 @@ public class EruptUserController {
             //生成token
             loginService.createToken(loginModel);
             loginModel.setUserName(loginModel.getEruptUser().getName());
-            Set<EruptMenu> menuSet = new TreeSet<>((m1, m2) -> {
+
+            Set<EruptMenu> menuSet = new HashSet<>();
+            for (EruptRole role : loginModel.getEruptUser().getRoles()) {
+                if (role.getStatus()) {
+                    menuSet.addAll(role.getMenus());
+                }
+            }
+            List<EruptMenu> menuList = new ArrayList<>(menuSet);
+            menuList.sort((m1, m2) -> {
                 Integer sort1 = m1.getSort();
                 Integer sort2 = m2.getSort();
                 if (null == sort1) {
@@ -62,14 +70,9 @@ public class EruptUserController {
                 }
                 return sort1.compareTo(sort2);
             });
-            for (EruptRole role : loginModel.getEruptUser().getRoles()) {
-                if (role.getStatus()) {
-                    menuSet.addAll(role.getMenus());
-                }
-            }
             //生成tree结构数据
             List<TreeModel> treeModels = new ArrayList<>();
-            for (EruptMenu eruptMenu : menuSet) {
+            for (EruptMenu eruptMenu : menuList) {
                 Long pid = null;
                 if (null != eruptMenu.getParentMenu()) {
                     pid = eruptMenu.getParentMenu().getId();
@@ -79,7 +82,7 @@ public class EruptUserController {
             }
             List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels);
             redisService.put(RedisKey.MENU_TREE + loginModel.getToken(), treeResultModels, expireTimeByLogin);
-            redisService.put(RedisKey.MENU_LIST + loginModel.getToken(), menuSet, expireTimeByLogin);
+            redisService.put(RedisKey.MENU_LIST + loginModel.getToken(), menuList, expireTimeByLogin);
         }
         return loginModel;
     }

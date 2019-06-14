@@ -84,7 +84,7 @@ public class Mmo extends BaseModel {
                     desc = "名称",
                     title = "名称",
 
-                    inputType = @InputType(length = 100, placeholder = "请输入名称"),
+                    inputType = @InputType(length = 100),
                     search = @Search(true)
             )
     )
@@ -140,8 +140,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "数字",
 
-                    search = @Search(true),
-                    inputType = @InputType(placeholder = "数字")
+                    search = @Search(true)
             )
     )
     @Column(name = "AGE")
@@ -308,7 +307,7 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "ATTACHMENT",
-
+                    placeHolder = "附件。。。",
                     type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType
 

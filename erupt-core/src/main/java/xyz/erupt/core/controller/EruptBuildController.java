@@ -29,7 +29,7 @@ public class EruptBuildController {
 
     @GetMapping("/list/{erupt}")
     @ResponseBody
-    @EruptRouter(base64 = true)
+    @EruptRouter(base64 = true, verifyStr = "{erupt}")
     public EruptPageModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptPageModel eruptPageModel = new EruptPageModel();
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
@@ -70,6 +70,5 @@ public class EruptBuildController {
         }
         return eruptPageModel;
     }
-
 
 }

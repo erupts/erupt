@@ -8,6 +8,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
@@ -178,6 +179,13 @@ public class EruptUtil {
                 return jsonElement.getAsInt();
             case BOOLEAN:
                 return jsonElement.getAsBoolean();
+            case DATE:
+                DateEnum dateEnum = eruptFieldModel.getEruptField().edit().dateType().type();
+                if (dateEnum == DateEnum.DATE || dateEnum == DateEnum.DATE_TIME) {
+                    return DateUtil.getDate(jsonElement.getAsString());
+                } else {
+                    return jsonElement.getAsString();
+                }
             case REFERENCE_TREE:
                 //TODO 类型转换太频繁,以后优化
                 String id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();

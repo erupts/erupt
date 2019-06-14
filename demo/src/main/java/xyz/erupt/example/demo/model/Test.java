@@ -50,7 +50,8 @@ public class Test {
             views = @View(title = "年龄"),
             edit = @Edit(
                     title = "年龄",
-                    search = @Search(value = true, vague = true)
+                    search = @Search(value = true, vague = true),
+                    placeHolder = "请输入年龄"
             )
     )
     private Integer age = 18;
@@ -77,6 +78,7 @@ public class Test {
             edit = @Edit(
                     notNull = true,
                     title = "时间",
+                    placeHolder = "时间",
                     search = @Search(value = true),
                     type = EditType.DATE,
                     dateType = @DateType(type = DateEnum.DATE_TIME)
@@ -120,6 +122,7 @@ public class Test {
             edit = @Edit(
                     title = "角色",
                     type = EditType.REFERENCE_TREE,
+                    placeHolder = "角色",
                     referenceTreeType = @ReferenceTreeType(depend = "eruptUser", dependColumn = "id"),
                     search = @Search(value = true)
             )
