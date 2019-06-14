@@ -114,7 +114,6 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     desc = "上级菜单",
                     title = "上级菜单",
-
                     search = @Search(true),
                     type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType
