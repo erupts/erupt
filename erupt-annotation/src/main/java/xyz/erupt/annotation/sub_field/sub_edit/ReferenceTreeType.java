@@ -1,7 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
 import xyz.erupt.annotation.sub_erupt.Filter;
-import xyz.erupt.annotation.sub_erupt.Tree;
 
 import java.beans.Transient;
 
@@ -19,6 +18,9 @@ public @interface ReferenceTreeType {
 
     @Transient
     String dependColumn() default "id";
+
+    @Transient
+    String[] sorts() default "";
 
     Filter filter() default @Filter(condition = "");
 }

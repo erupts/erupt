@@ -22,6 +22,7 @@ import xyz.erupt.eruptlimit.util.IpUtil;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,9 +44,6 @@ public class UserService {
 
     @Value("${erupt.expireTimeByLogin:60}")
     private Integer expireTimeByLogin;
-
-    //服务器启动后内存中生成一个全新的tokenDES，就连开发人员都查不到，杜绝了token被仿造的问题
-//    private static final String userTokenDES = RandomStringUtils.randomGraph(10);
 
     @Autowired
     private Gson gson;
@@ -117,14 +115,16 @@ public class UserService {
         }
     }
 
+    @Transactional
     public EruptApiModel changePwd(String account, String pwd, String newPwd, String newPwd2) {
-        if (newPwd.equals(newPwd2)) {
-            return EruptApiModel.errorNoInterceptApi("修改失败，新密码与确认密码不一致");
-        } else if (pwd.equals(newPwd)) {
-            return EruptApiModel.errorNoInterceptApi("修改失败，原始密码与新密码一致");
+        if (!newPwd.equals(newPwd2)) {
+            return EruptApiModel.errorNoInterceptApi("修改失败，新密码与确认密码不匹配");
         }
         EruptUser eruptUser = userRepository.findByAccount(account);
         if (eruptUser.getPassword().equals(pwd)) {
+            if (newPwd.equals(eruptUser.getPassword())) {
+                return EruptApiModel.errorNoInterceptApi("修改失败，新密码不能和原始密码一样");
+            }
             String finalPwd = newPwd;
             if (eruptUser.getIsMD5()) {
                 finalPwd = MD5Utils.digest(finalPwd);
@@ -140,8 +140,8 @@ public class UserService {
 
     public void createToken(LoginModel loginModel) {
         loginModel.setToken(RandomStringUtils.random(20, true, true));
-        loginModel.getEruptUser().setRoles(null);
-        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser(), expireTimeByLogin);
+//        loginModel.getEruptUser().setRoles(null);
+        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), expireTimeByLogin);
     }
 
     public boolean verifyToken(String token) {

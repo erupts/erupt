@@ -8,7 +8,5 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 public @interface ReferenceTableType {
     String id() default "id";
 
-    String[] labels() default {};
-
     Filter filter() default @Filter(condition = "");
 }

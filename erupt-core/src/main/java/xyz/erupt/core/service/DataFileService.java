@@ -148,7 +148,7 @@ public class DataFileService {
                         ReferenceTreeType referenceTreeType = fieldModel.getEruptField().edit().referenceTreeType();
 //                        eruptJpaDao.getDataMap(CoreService.ERUPTS.get(fieldModel.getFieldReturnName()), AnnotationUtil.switchFilterConditionToStr(referenceTreeType.filter()),
 //                                null, Arrays.asList(referenceTreeType.id() + " as id", referenceTreeType.label() + " as label"), null);
-                        Collection<TreeModel> collection = eruptDataController.getRefTreeData(eruptModel.getEruptName(), fieldModel.getFieldName());
+                        Collection<TreeModel> collection = eruptDataController.getReferenceTree(eruptModel.getEruptName(), fieldModel.getFieldName());
                         break;
                     default:
                         break;

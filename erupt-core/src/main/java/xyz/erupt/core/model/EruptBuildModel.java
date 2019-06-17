@@ -8,9 +8,11 @@ import java.util.List;
  * Created by liyuepeng on 9/29/18.
  */
 @Data
-public class EruptPageModel {
+public class EruptBuildModel {
 
     EruptModel eruptModel;
+
+//    List<EruptAndEruptFieldModel> referenceErupt;
 
     List<EruptAndEruptFieldModel> combineErupts;
 

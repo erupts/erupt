@@ -108,7 +108,7 @@ public class Test {
             edit = @Edit(
                     title = "用户",
                     search = @Search(value = true),
-                    type = EditType.REFERENCE_TREE,
+                    type = EditType.REFERENCE_TABLE,
                     referenceTreeType = @ReferenceTreeType
             )
     )

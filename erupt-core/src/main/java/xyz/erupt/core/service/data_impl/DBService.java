@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import xyz.erupt.core.constant.EruptConst;
@@ -45,8 +46,8 @@ public class DBService implements DataService {
     }
 
     @Override
-    public Page queryList(EruptModel eruptModel, JsonObject condition, Page page) {
-        return eruptJpaDao.queryEruptList(eruptModel, condition, page);
+    public Page queryList(EruptModel eruptModel, String customerCondition, JsonObject searchCondition, Page page) {
+        return eruptJpaDao.queryEruptList(eruptModel, customerCondition, searchCondition, page);
     }
 
     @Override
@@ -70,9 +71,9 @@ public class DBService implements DataService {
     }
 
     @Override
-    public List findTabList(EruptFieldModel eruptTabFieldModel) {
+    public List findTabList(EruptModel eruptModel, String tabFieldName) {
+
         return null;
-//        return this.findTabListById(eruptTabFieldModel, null);
     }
 
     @Override
@@ -97,8 +98,9 @@ public class DBService implements DataService {
     }
 
     @Override
-    public List<TreeModel> findTabTree(EruptFieldModel eruptTabFieldModel) {
-        EruptModel subEruptModel = CoreService.ERUPTS.get(eruptTabFieldModel.getFieldReturnName());
+    public List<TreeModel> findTabTree(EruptModel eruptModel, String fieldName) {
+        EruptFieldModel eruptTabFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
+        EruptModel subEruptModel = CoreService.ERUPTS.get(eruptModel.getEruptFieldMap().get(fieldName).getFieldReturnName());
         TabType tabType = eruptTabFieldModel.getEruptField().edit().tabType();
         String condition = "";
         if (!"".equals(tabType.filter().condition())) {
@@ -134,8 +136,14 @@ public class DBService implements DataService {
     }
 
     @Override
-    public List getReferenceList(EruptModel eruptModel, String fieldName) {
-        return eruptJpaDao.getReferenceList(eruptModel, fieldName);
+    public List getReferenceTable(EruptModel eruptModel, String fieldName) {
+//        , int pageIndex, int pageSize, String sort,JsonObject condition
+        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
+        ReferenceTableType referenceTableType = eruptFieldModel.getEruptField().edit().referenceTableType();
+        EruptModel refErupt = CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName());
+//        eruptJpaDao.queryEruptList(refErupt, AnnotationUtil.switchFilterConditionToStr(referenceTableType.filter()),
+//                condition, new Page(0, 0, sort));
+        return null;
     }
 
     @Override

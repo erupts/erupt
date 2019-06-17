@@ -7,9 +7,9 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptAndEruptFieldModel;
+import xyz.erupt.core.model.EruptBuildModel;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.EruptPageModel;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.SpringUtil;
@@ -30,8 +30,8 @@ public class EruptBuildController {
     @GetMapping("/list/{erupt}")
     @ResponseBody
     @EruptRouter(base64 = true, verifyIndex = 1)
-    public EruptPageModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
-        EruptPageModel eruptPageModel = new EruptPageModel();
+    public EruptBuildModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
+        EruptBuildModel eruptBuildModel = new EruptBuildModel();
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (null != eruptModel) {
             try {
@@ -44,7 +44,7 @@ public class EruptBuildController {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            eruptPageModel.setEruptModel(eruptModel);
+            eruptBuildModel.setEruptModel(eruptModel);
             List<EruptAndEruptFieldModel> eruptAndEruptFieldModels = new ArrayList<>();
             List<EruptAndEruptFieldModel> combineErupts = new ArrayList<>();
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
@@ -63,12 +63,12 @@ public class EruptBuildController {
                     combineErupts.add(new EruptAndEruptFieldModel(fieldModel, combineEruptModel));
                 }
             }
-            eruptPageModel.setCombineErupts(combineErupts);
-            eruptPageModel.setSubErupts(eruptAndEruptFieldModels);
+            eruptBuildModel.setCombineErupts(combineErupts);
+            eruptBuildModel.setSubErupts(eruptAndEruptFieldModels);
         } else {
             response.setStatus(HttpStatus.NOT_FOUND.value());
         }
-        return eruptPageModel;
+        return eruptBuildModel;
     }
 
 }

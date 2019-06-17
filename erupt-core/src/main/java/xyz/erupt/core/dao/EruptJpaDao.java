@@ -52,9 +52,9 @@ public class EruptJpaDao {
         return entityManager.find(eruptModel.getClazz(), id);
     }
 
-    public Page queryEruptList(EruptModel eruptModel, JsonObject condition, Page page) {
+    public Page queryEruptList(EruptModel eruptModel, String customCondition, JsonObject condition, Page page) {
         String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel)) + ")", null, condition, page.getSort()));
-        String countHql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("count(*)", null, condition, null));
+        String countHql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("count(*)", customCondition, condition, null));
         Query query = entityManager.createQuery(hql);
         Query countQuery = entityManager.createQuery(countHql);
         Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
@@ -102,10 +102,10 @@ public class EruptJpaDao {
     }
 
 
-    public List getDataList(EruptModel eruptModel, String condition, String orderBy, String... cols) {
-        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel(String.join(",", cols), condition, null, orderBy));
-        return entityManager.createQuery(hql).getResultList();
-    }
+//    public List getDataList(EruptModel eruptModel, String condition, String orderBy, String... cols) {
+//        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel(String.join(",", cols), condition, null, orderBy));
+//        return entityManager.createQuery(hql).getResultList();
+//    }
 
 
     public List getReferenceList(EruptModel eruptModel, String refName) {

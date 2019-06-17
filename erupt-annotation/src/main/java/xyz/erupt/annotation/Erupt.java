@@ -1,6 +1,5 @@
 package xyz.erupt.annotation;
 
-import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -37,7 +36,7 @@ public @interface Erupt {
 
     Power power() default @Power;
 
-//    @ToMap(key = "code")
+    //@ToMap(key = "code")
     RowOperation[] rowOperation() default {};
 
     Filter filter() default @Filter(condition = "");

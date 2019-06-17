@@ -34,20 +34,21 @@ public class EruptDataController {
     @PostMapping("/table/{erupt}")
     @EruptRouter
     @ResponseBody
-    public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject condition) {
+    public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject searchCondition) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        int pageIndex = condition.get(Page.PAGE_INDEX_STR).getAsInt();
-        int pageSize = condition.get(Page.PAGE_SIZE_STR).getAsInt();
-        String sort = condition.get(Page.PAGE_SORT_STR).getAsString();
-        condition.remove(Page.PAGE_INDEX_STR);
-        condition.remove(Page.PAGE_SIZE_STR);
-        condition.remove(Page.PAGE_SORT_STR);
+        int pageIndex = searchCondition.get(Page.PAGE_INDEX_STR).getAsInt();
+        int pageSize = searchCondition.get(Page.PAGE_SIZE_STR).getAsInt();
+        String sort = searchCondition.get(Page.PAGE_SORT_STR).getAsString();
+        searchCondition.remove(Page.PAGE_INDEX_STR);
+        searchCondition.remove(Page.PAGE_SIZE_STR);
+        searchCondition.remove(Page.PAGE_SORT_STR);
         if (eruptModel.getErupt().power().query()) {
+            String customerCondition = null;
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                 //该参数为查询条件
-                SpringUtil.getBean(proxy).beforeFetch(condition);
+                customerCondition = SpringUtil.getBean(proxy).beforeFetch(searchCondition);
             }
-            Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryList(eruptModel, condition, new Page(pageIndex, pageSize, sort));
+            Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryList(eruptModel, customerCondition, searchCondition, new Page(pageIndex, pageSize, sort));
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                 SpringUtil.getBean(proxy).afterFetch(page.getList());
             }
@@ -83,64 +84,6 @@ public class EruptDataController {
             return EruptUtil.generateEruptDataMap(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-
-    @GetMapping("/tab/table/{erupt}/{tabFieldName}")
-    @ResponseBody
-    @EruptRouter
-    public Object findTabList(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
-        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
-            EruptFieldModel eruptFieldModel = CoreService.ERUPTS.get(eruptName).getEruptFieldMap().get(tabFieldName);
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabList(eruptFieldModel);
-        } else {
-            throw new EruptNoLegalPowerException();
-        }
-    }
-
-    @GetMapping("/tab/table/{erupt}/{id}/{tabFieldName}")
-    @ResponseBody
-    @EruptRouter
-    public Object findTabListById(@PathVariable("erupt") String eruptName,
-                                  @PathVariable("id") String id,
-                                  @PathVariable("tabFieldName") String tabFieldName) {
-        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabListById(eruptModel, tabFieldName, id);
-        } else {
-            throw new EruptNoLegalPowerException();
-        }
-    }
-
-    @GetMapping("/tab/tree/{erupt}/{tabFieldName}")
-    @ResponseBody
-    @EruptRouter
-    public Object findTabTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
-        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(tabFieldName);
-        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTree(eruptFieldModel);
-        } else {
-            throw new EruptNoLegalPowerException();
-        }
-
-    }
-
-    @GetMapping("/tab/tree/{erupt}/{id}/{tabFieldName}")
-    @ResponseBody
-    @EruptRouter
-    public Object findTabTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
-        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTreeById(eruptModel, tabFieldName, id);
-        } else {
-            throw new EruptNoLegalPowerException();
         }
     }
 
@@ -273,19 +216,92 @@ public class EruptDataController {
         return eruptApiModel;
     }
 
-
-    @GetMapping("/{erupt}/reftree/{fieldName}")
+    //TAB API
+    @GetMapping("/tab/table/{erupt}/{tabFieldName}")
     @ResponseBody
     @EruptRouter
-    public Collection<TreeModel> getRefTreeData(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
+    public Collection findTabList(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
+        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabList(eruptModel, tabFieldName);
+        } else {
+            throw new EruptNoLegalPowerException();
+        }
+    }
+
+    @GetMapping("/tab/table/{erupt}/{id}/{tabFieldName}")
+    @ResponseBody
+    @EruptRouter
+    public Collection findTabListById(@PathVariable("erupt") String eruptName,
+                                      @PathVariable("id") String id,
+                                      @PathVariable("tabFieldName") String tabFieldName) {
+        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+
+        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabListById(eruptModel, tabFieldName, id);
+        } else {
+            throw new EruptNoLegalPowerException();
+        }
+    }
+
+    @GetMapping("/tab/tree/{erupt}/{tabFieldName}")
+    @ResponseBody
+    @EruptRouter
+    public Collection<TreeModel> findTabTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
+        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTree(eruptModel, tabFieldName);
+        } else {
+            throw new EruptNoLegalPowerException();
+        }
+
+    }
+
+    @GetMapping("/tab/tree/{erupt}/{id}/{tabFieldName}")
+    @ResponseBody
+    @EruptRouter
+    public Collection findTabTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
+        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTreeById(eruptModel, tabFieldName, id);
+        } else {
+            throw new EruptNoLegalPowerException();
+        }
+    }
+    //TAB API END
+
+    // REFERENCE API
+    @GetMapping("/{erupt}/reference-table/{fieldName}")
+    @ResponseBody
+    @EruptRouter
+    public Collection getReferenceTable(@PathVariable("erupt") String eruptName, @PathVariable("fieldName") String fieldName) {
+        fieldName = EruptUtil.handleNoRightVariable(fieldName);
+        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        if (eruptModel.getErupt().power().edit()) {
+            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTable(eruptModel, fieldName);
+        } else {
+            throw new EruptNoLegalPowerException();
+        }
+    }
+
+
+    @GetMapping("/{erupt}/reference-tree/{fieldName}")
+    @ResponseBody
+    @EruptRouter
+    public Collection<TreeModel> getReferenceTree(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTree(eruptModel, fieldName);
     }
 
-    @GetMapping("/{erupt}/reftree/{fieldName}/{dependValue}")
+
+    @GetMapping("/{erupt}/reference-tree/{fieldName}/{dependValue}")
     @ResponseBody
     @EruptRouter
-    public Collection<TreeModel> getRefTreeDataByDepend(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName, @PathVariable("dependValue") Serializable dependValue) {
+    public Collection<TreeModel> getReferenceTreeByDepend(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName, @PathVariable("dependValue") Serializable dependValue) {
         EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
         //TODO 代码过长，应该做优化
@@ -294,13 +310,7 @@ public class EruptDataController {
                         CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(eruptFieldModel.getEruptField().
                                 edit().referenceTreeType().dependColumn()).getField().getType().getSimpleName()));
     }
-
-//    @GetMapping("/{erupt}/reftable/{fieldName}")
-//    @ResponseBody
-//    public Collection getRefTableData(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
-//        EruptModel eruptModel = InitService.ERUPTS.get(erupt);
-//        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceList(eruptModel, fieldName);
-//    }
+    // REFERENCE API END
 
 
 }
