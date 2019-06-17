@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.cache.EruptRedisService;
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.model.EruptApiModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.util.MD5Utils;
 import xyz.erupt.eruptlimit.base.LoginModel;
@@ -18,6 +19,8 @@ import xyz.erupt.eruptlimit.model.EruptUser;
 import xyz.erupt.eruptlimit.repository.UserRepository;
 import xyz.erupt.eruptlimit.util.IpUtil;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -27,13 +30,16 @@ import java.util.Map;
  * Created by liyuepeng on 2018-12-13.
  */
 @Service
-public class LoginService {
+public class UserService {
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private EruptRedisService redisService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Value("${erupt.expireTimeByLogin:60}")
     private Integer expireTimeByLogin;
@@ -111,10 +117,31 @@ public class LoginService {
         }
     }
 
+    public EruptApiModel changePwd(String account, String pwd, String newPwd, String newPwd2) {
+        if (newPwd.equals(newPwd2)) {
+            return EruptApiModel.errorNoInterceptApi("修改失败，新密码与确认密码不一致");
+        } else if (pwd.equals(newPwd)) {
+            return EruptApiModel.errorNoInterceptApi("修改失败，原始密码与新密码一致");
+        }
+        EruptUser eruptUser = userRepository.findByAccount(account);
+        if (eruptUser.getPassword().equals(pwd)) {
+            String finalPwd = newPwd;
+            if (eruptUser.getIsMD5()) {
+                finalPwd = MD5Utils.digest(finalPwd);
+            }
+            eruptUser.setPassword(finalPwd);
+            entityManager.merge(eruptUser);
+            return EruptApiModel.successApi(null);
+        } else {
+            return EruptApiModel.errorNoInterceptApi("密码错误");
+        }
+    }
+
 
     public void createToken(LoginModel loginModel) {
-        loginModel.setToken(RandomStringUtils.random(20,true,true));
-        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), expireTimeByLogin);
+        loginModel.setToken(RandomStringUtils.random(20, true, true));
+        loginModel.getEruptUser().setRoles(null);
+        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser(), expireTimeByLogin);
     }
 
     public boolean verifyToken(String token) {

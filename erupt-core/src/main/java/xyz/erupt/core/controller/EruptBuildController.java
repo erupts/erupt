@@ -29,7 +29,7 @@ public class EruptBuildController {
 
     @GetMapping("/list/{erupt}")
     @ResponseBody
-    @EruptRouter(base64 = true, verifyStr = "{erupt}")
+    @EruptRouter(base64 = true, verifyIndex = 1)
     public EruptPageModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptPageModel eruptPageModel = new EruptPageModel();
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);

@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.cache.EruptRedisService;
+import xyz.erupt.core.model.EruptApiModel;
 import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.eruptlimit.base.LoginModel;
 import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.model.EruptMenu;
 import xyz.erupt.eruptlimit.model.EruptRole;
-import xyz.erupt.eruptlimit.service.LoginService;
+import xyz.erupt.eruptlimit.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import java.util.Set;
 public class EruptUserController {
 
     @Autowired
-    private LoginService loginService;
+    private UserService userService;
 
     @Autowired
     private EruptRedisService redisService;
@@ -46,10 +47,10 @@ public class EruptUserController {
                             @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode,
                             HttpServletRequest request) {
-        LoginModel loginModel = loginService.login(account, pwd, verifyCode, request);
+        LoginModel loginModel = userService.login(account, pwd, verifyCode, request);
         if (loginModel.isPass()) {
             //生成token
-            loginService.createToken(loginModel);
+            userService.createToken(loginModel);
             loginModel.setUserName(loginModel.getEruptUser().getName());
 
             Set<EruptMenu> menuSet = new HashSet<>();
@@ -85,6 +86,16 @@ public class EruptUserController {
             redisService.put(RedisKey.MENU_LIST + loginModel.getToken(), menuList, expireTimeByLogin);
         }
         return loginModel;
+    }
+
+    @PostMapping("/change-pwd")
+    @ResponseBody
+    @EruptRouter
+    public EruptApiModel changePwd(@RequestParam("account") String account,
+                                   @RequestParam("pwd") String pwd,
+                                   @RequestParam("newPwd") String newPwd,
+                                   @RequestParam("newPwd2") String newPwd2) {
+        return userService.changePwd(account, pwd, newPwd, newPwd2);
     }
 
     @GetMapping("/menu")

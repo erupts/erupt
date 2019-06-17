@@ -11,7 +11,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.CoreService;
-import xyz.erupt.eruptlimit.service.LoginService;
+import xyz.erupt.eruptlimit.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    public LoginService loginService;
+    public UserService userService;
 
     private static final String ERUPT_HEADER_KEY = "erupt";
 
@@ -50,7 +50,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 token = request.getParameter(URL_ERUPT_PARAM_TOKEN);
                 eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
             }
-            if (null == token || !loginService.verifyToken(token)) {
+            if (null == token || !userService.verifyToken(token)) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 return false;
             }
@@ -62,7 +62,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
-                if (!path.contains(eruptName) || !loginService.verifyMenuLimit(token, path, eruptModel)) {
+                if (!path.contains(eruptName) || !userService.verifyMenuLimit(token, path, eruptModel)) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     return false;
                 }
