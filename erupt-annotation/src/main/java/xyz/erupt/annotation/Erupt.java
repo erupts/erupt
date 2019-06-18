@@ -1,5 +1,6 @@
 package xyz.erupt.annotation;
 
+import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -45,5 +46,6 @@ public @interface Erupt {
 
     Class<? extends DataProxy>[] dateProxy() default {};
 
+    @ToMap(key = "key")
     KV[] params() default {};
 }

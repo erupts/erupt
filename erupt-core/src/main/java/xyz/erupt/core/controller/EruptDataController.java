@@ -35,17 +35,17 @@ public class EruptDataController {
     @EruptRouter
     @ResponseBody
     public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject searchCondition) {
+        return this.getEruptData(eruptName,
+                searchCondition.remove(Page.PAGE_INDEX_STR).getAsInt(),
+                searchCondition.remove(Page.PAGE_SIZE_STR).getAsInt(),
+                searchCondition.remove(Page.PAGE_SORT_STR).getAsString(), searchCondition);
+    }
+
+    public Page getEruptData(String eruptName, int pageIndex, int pageSize, String sort, JsonObject searchCondition) {
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        int pageIndex = searchCondition.get(Page.PAGE_INDEX_STR).getAsInt();
-        int pageSize = searchCondition.get(Page.PAGE_SIZE_STR).getAsInt();
-        String sort = searchCondition.get(Page.PAGE_SORT_STR).getAsString();
-        searchCondition.remove(Page.PAGE_INDEX_STR);
-        searchCondition.remove(Page.PAGE_SIZE_STR);
-        searchCondition.remove(Page.PAGE_SORT_STR);
         if (eruptModel.getErupt().power().query()) {
             String customerCondition = null;
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                //该参数为查询条件
                 customerCondition = SpringUtil.getBean(proxy).beforeFetch(searchCondition);
             }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryList(eruptModel, customerCondition, searchCondition, new Page(pageIndex, pageSize, sort));
@@ -275,14 +275,22 @@ public class EruptDataController {
     //TAB API END
 
     // REFERENCE API
-    @GetMapping("/{erupt}/reference-table/{fieldName}")
+    @PostMapping("/{erupt}/reference-table/{fieldName}")
     @ResponseBody
     @EruptRouter
-    public Collection getReferenceTable(@PathVariable("erupt") String eruptName, @PathVariable("fieldName") String fieldName) {
-        fieldName = EruptUtil.handleNoRightVariable(fieldName);
+    public Page getReferenceTable(@PathVariable("erupt") String eruptName, @PathVariable("fieldName") String fieldName,
+                                  @RequestBody JsonObject searchCondition) {
+//        fieldName = EruptUtil.handleNoRightVariable(fieldName);
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
         if (eruptModel.getErupt().power().edit()) {
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTable(eruptModel, fieldName);
+            int pageIndex = searchCondition.remove(Page.PAGE_INDEX_STR).getAsInt();
+            int pageSize = searchCondition.remove(Page.PAGE_SIZE_STR).getAsInt();
+            String sort = searchCondition.remove(Page.PAGE_SORT_STR).getAsString();
+            EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
+            EruptModel eruptReferenceModel = CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName());
+            return AnnotationUtil.getEruptDataProcessor(eruptReferenceModel.getClazz()).queryList(
+                    eruptReferenceModel, AnnotationUtil.switchFilterConditionToStr(eruptFieldModel.getEruptField().edit().referenceTableType().filter())
+                    , searchCondition, new Page(pageIndex, pageSize, sort));
         } else {
             throw new EruptNoLegalPowerException();
         }

@@ -3,7 +3,6 @@ package xyz.erupt.core.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptAndEruptFieldModel;
@@ -12,12 +11,8 @@ import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.ReflectUtil;
-import xyz.erupt.core.util.SpringUtil;
 
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Erupt 页面结构构建信息
@@ -31,44 +26,32 @@ public class EruptBuildController {
     @ResponseBody
     @EruptRouter(base64 = true, verifyIndex = 1)
     public EruptBuildModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
-        EruptBuildModel eruptBuildModel = new EruptBuildModel();
         EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
-        if (null != eruptModel) {
-            try {
-                Object eruptInstance = SpringUtil.getBean(eruptModel.getClazz());
-                for (EruptFieldModel fm : eruptModel.getEruptFieldModels()) {
-                    Field field = fm.getField();
-                    field.setAccessible(true);
-                    fm.setValue(field.get(eruptInstance));
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            eruptBuildModel.setEruptModel(eruptModel);
-            List<EruptAndEruptFieldModel> eruptAndEruptFieldModels = new ArrayList<>();
-            List<EruptAndEruptFieldModel> combineErupts = new ArrayList<>();
-            for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
-                if (fieldModel.getEruptField().edit().type() == EditType.TAB) {
-                    EruptModel subEruptModel = CoreService.ERUPTS.get(ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0));
-                    if (null == subEruptModel) {
-                        throw new RuntimeException("请使用Erupt注解管理：" + fieldModel.getField().getName());
-                    }
-                    EruptAndEruptFieldModel eruptAndEruptFieldModel = new EruptAndEruptFieldModel(fieldModel, subEruptModel);
-                    eruptAndEruptFieldModels.add(eruptAndEruptFieldModel);
-                } else if (fieldModel.getEruptField().edit().type() == EditType.COMBINE) {
-                    EruptModel combineEruptModel = CoreService.ERUPTS.get(fieldModel.getFieldReturnName());
-                    if (null == combineEruptModel) {
-                        throw new RuntimeException("请使用Erupt注解管理：" + fieldModel.getField().getName());
-                    }
-                    combineErupts.add(new EruptAndEruptFieldModel(fieldModel, combineEruptModel));
-                }
-            }
-            eruptBuildModel.setCombineErupts(combineErupts);
-            eruptBuildModel.setSubErupts(eruptAndEruptFieldModels);
-        } else {
+        if (null == eruptModel) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        } else {
+            EruptBuildModel eruptBuildModel = new EruptBuildModel();
+            eruptBuildModel.setEruptModel(eruptModel);
+            for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+                EruptModel em;
+                switch (fieldModel.getEruptField().edit().type()) {
+                    case TAB:
+                        em = CoreService.ERUPTS.get(ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0));
+                        eruptBuildModel.getSubErupts().add(new EruptAndEruptFieldModel(fieldModel, em));
+                        break;
+                    case COMBINE:
+                        em = CoreService.ERUPTS.get(fieldModel.getFieldReturnName());
+                        eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), em);
+                        break;
+                    case REFERENCE_TABLE:
+                        em = CoreService.ERUPTS.get(fieldModel.getFieldReturnName());
+                        eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), em);
+                        break;
+                }
+            }
+            return eruptBuildModel;
         }
-        return eruptBuildModel;
     }
 
 }

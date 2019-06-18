@@ -7,7 +7,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TabType;
 import xyz.erupt.core.constant.EruptConst;
@@ -49,6 +48,75 @@ public class DBService implements DataService {
     public Page queryList(EruptModel eruptModel, String customerCondition, JsonObject searchCondition, Page page) {
         return eruptJpaDao.queryEruptList(eruptModel, customerCondition, searchCondition, page);
     }
+
+    @Override
+    public List<TreeModel> queryTree(EruptModel eruptModel) {
+        return treeDataUtil(eruptModel, null, null);
+    }
+
+    private List<TreeModel> treeDataUtil(EruptModel eruptModel, String condition, String sort) {
+        Tree tree = eruptModel.getErupt().tree();
+        List<String> cols = new ArrayList<>();
+        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + EruptConst.ID);
+        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + EruptConst.LABEL);
+        if (StringUtils.isNotBlank(tree.pid())) {
+            cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + EruptConst.PID);
+        }
+        List<Map<String, Object>> list = eruptJpaDao.getDataMap(eruptModel, condition, sort, cols, null);
+        List<TreeModel> treeModels = new ArrayList<>();
+        for (Map map : list) {
+            TreeModel treeModel = new TreeModel(map.get(EruptConst.ID), map.get(EruptConst.LABEL), map.get(EruptConst.PID), null);
+            treeModels.add(treeModel);
+        }
+        if (StringUtils.isBlank(tree.pid())) {
+            return treeModels;
+        } else {
+            return DataHandlerUtil.treeModelToTree(treeModels);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void addData(EruptModel eruptModel, Object object) {
+        try {
+            eruptJpaDao.addEntity(eruptModel, object);
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException(gcRepeatHint(eruptModel));
+        }
+
+    }
+
+    @Transactional
+    @Override
+    public void editData(EruptModel eruptModel, Object object) {
+        try {
+            eruptJpaDao.editEntity(eruptModel, object);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new RuntimeException(gcRepeatHint(eruptModel));
+        }
+    }
+
+    //生成数据重复的提示字符串
+    private String gcRepeatHint(EruptModel eruptModel) {
+        StringBuilder str = new StringBuilder();
+        for (UniqueConstraint uniqueConstraint : eruptModel.getClazz().getAnnotation(Table.class).uniqueConstraints()) {
+            for (String columnName : uniqueConstraint.columnNames()) {
+                EruptField eruptField = eruptModel.getEruptFieldMap().get(columnName).getEruptField();
+                str.append(eruptField.views()[0].title()).append("|");
+            }
+        }
+        return str.substring(0, str.length() - 1) + "重复";
+    }
+
+    @Transactional
+    @Override
+    public void deleteData(EruptModel eruptModel, Serializable id) {
+        Object obj = eruptJpaDao.findDataById(eruptModel, id);
+        eruptJpaDao.deleteEntity(obj);
+    }
+
+    //tab
 
     @Override
     public Collection findTabListById(EruptModel eruptModel, String tabFieldName, Serializable id) {
@@ -109,43 +177,8 @@ public class DBService implements DataService {
         return treeDataUtil(subEruptModel, condition, null);
     }
 
-    @Override
-    public List<TreeModel> queryTree(EruptModel eruptModel) {
-        return treeDataUtil(eruptModel, null, null);
-    }
 
-    private List<TreeModel> treeDataUtil(EruptModel eruptModel, String condition, String sort) {
-        Tree tree = eruptModel.getErupt().tree();
-        List<String> cols = new ArrayList<>();
-        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + EruptConst.ID);
-        cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + EruptConst.LABEL);
-        if (StringUtils.isNotBlank(tree.pid())) {
-            cols.add(EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + EruptConst.PID);
-        }
-        List<Map<String, Object>> list = eruptJpaDao.getDataMap(eruptModel, condition, sort, cols, null);
-        List<TreeModel> treeModels = new ArrayList<>();
-        for (Map map : list) {
-            TreeModel treeModel = new TreeModel(map.get(EruptConst.ID), map.get(EruptConst.LABEL), map.get(EruptConst.PID), null);
-            treeModels.add(treeModel);
-        }
-        if (StringUtils.isBlank(tree.pid())) {
-            return treeModels;
-        } else {
-            return DataHandlerUtil.treeModelToTree(treeModels);
-        }
-    }
-
-    @Override
-    public List getReferenceTable(EruptModel eruptModel, String fieldName) {
-//        , int pageIndex, int pageSize, String sort,JsonObject condition
-        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
-        ReferenceTableType referenceTableType = eruptFieldModel.getEruptField().edit().referenceTableType();
-        EruptModel refErupt = CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName());
-//        eruptJpaDao.queryEruptList(refErupt, AnnotationUtil.switchFilterConditionToStr(referenceTableType.filter()),
-//                condition, new Page(0, 0, sort));
-        return null;
-    }
-
+    //reference
     @Override
     public Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName) {
         return getReferenceTreeByDepend(eruptModel, fieldName, null);
@@ -187,46 +220,5 @@ public class DBService implements DataService {
         } else {
             return DataHandlerUtil.treeModelToTree(treeModels);
         }
-    }
-
-    @Transactional
-    @Override
-    public void addData(EruptModel eruptModel, Object object) {
-        try {
-            eruptJpaDao.addEntity(eruptModel, object);
-        } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException(gcRepeatHint(eruptModel));
-        }
-
-    }
-
-    @Transactional
-    @Override
-    public void editData(EruptModel eruptModel, Object object) {
-        try {
-            eruptJpaDao.editEntity(eruptModel, object);
-        } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
-            throw new RuntimeException(gcRepeatHint(eruptModel));
-        }
-    }
-
-    //生成数据重复的提示字符串
-    private String gcRepeatHint(EruptModel eruptModel) {
-        StringBuilder str = new StringBuilder();
-        for (UniqueConstraint uniqueConstraint : eruptModel.getClazz().getAnnotation(Table.class).uniqueConstraints()) {
-            for (String columnName : uniqueConstraint.columnNames()) {
-                EruptField eruptField = eruptModel.getEruptFieldMap().get(columnName).getEruptField();
-                str.append(eruptField.views()[0].title()).append("|");
-            }
-        }
-        return str.substring(0, str.length() - 1) + "重复";
-    }
-
-    @Transactional
-    @Override
-    public void deleteData(EruptModel eruptModel, Serializable id) {
-        Object obj = eruptJpaDao.findDataById(eruptModel, id);
-        eruptJpaDao.deleteEntity(obj);
     }
 }

@@ -38,7 +38,6 @@ public interface DataService {
 
 
     //Reference Service
-    Collection getReferenceTable(EruptModel eruptModel, String fieldName);
 
     Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName);
 
