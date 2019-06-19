@@ -9,6 +9,7 @@ import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.constant.RestPath;
@@ -41,7 +42,7 @@ public class EruptUtil {
         }
     }
 
-    //清空一对多关系数据，防止循环引用导致内存溢出  TODO 代码还需要优化  使用 generateEruptDataMap方法代替
+    //清空一对多关系数据，防止循环引用导致内存溢出  TODO 使用 generateEruptDataMap方法代替
     public static void rinseEruptObj(Object eruptObj) {
         if (null != eruptObj) {
             Erupt erupt = eruptObj.getClass().getAnnotation(Erupt.class);
@@ -106,31 +107,43 @@ public class EruptUtil {
                 Object fieldValue = field.get(obj);
                 if (null != fieldValue) {
                     EruptField eruptField = field.getAnnotation(EruptField.class);
-                    if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
-                        ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
-                        Map<String, Object> treeMap = new HashMap<>();
-                        treeMap.put(eruptField.edit().referenceTreeType().id(),
-                                ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.id()).get(fieldValue));
-                        treeMap.put(eruptField.edit().referenceTreeType().label(),
-                                ReflectUtil.findClassField(field.get(obj).getClass(), referenceTreeType.label()).get(fieldValue));
-                        map.put(field.getName(), treeMap);
-                    } else if (eruptField.edit().type() == EditType.COMBINE
-                            || eruptField.edit().type() == EditType.REFERENCE_TABLE) {
-                        Map<String, Object> subMap = new HashMap<>();
-                        Object refObj = field.get(obj);
-                        findClassAllEruptFields(refObj.getClass(), f -> {
-                            try {
-                                f.setAccessible(true);
-                                subMap.put(f.getName(), f.get(refObj));
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
+                    switch (eruptField.edit().type()) {
+                        case REFERENCE_TREE:
+                        case REFERENCE_TABLE:
+                            String id = null;
+                            String label = null;
+                            if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
+                                ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
+                                id = referenceTreeType.id();
+                                label = referenceTreeType.label();
+                            } else if (eruptField.edit().type() == EditType.REFERENCE_TABLE) {
+                                ReferenceTableType referenceTableType = eruptField.edit().referenceTableType();
+                                id = referenceTableType.id();
+                                label = referenceTableType.label();
                             }
-                        }, OBJECT_EDIT_TYPES);
-                        map.put(field.getName(), subMap);
-                    } else if (eruptField.edit().type() == EditType.TAB) {
-                        return;
-                    } else {
-                        map.put(field.getName(), field.get(obj));
+                            Map<String, Object> referMap = new HashMap<>();
+                            referMap.put(id, ReflectUtil.findClassField(field.get(obj).getClass(), id).get(fieldValue));
+                            referMap.put(label, ReflectUtil.findClassField(field.get(obj).getClass(), label).get(fieldValue));
+                            map.put(field.getName(), referMap);
+                            break;
+                        case COMBINE:
+                            Map<String, Object> subMap = new HashMap<>();
+                            Object refObj = field.get(obj);
+                            findClassAllEruptFields(refObj.getClass(), f -> {
+                                try {
+                                    f.setAccessible(true);
+                                    subMap.put(f.getName(), f.get(refObj));
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                }
+                            }, OBJECT_EDIT_TYPES);
+                            map.put(field.getName(), subMap);
+                            break;
+                        case TAB:
+                            break;
+                        default:
+                            map.put(field.getName(), field.get(obj));
+                            break;
                     }
                 }
             } catch (Exception e) {

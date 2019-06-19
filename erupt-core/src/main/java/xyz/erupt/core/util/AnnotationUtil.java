@@ -52,7 +52,6 @@ public class AnnotationUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.err.println(jsonObject.toString());
         return jsonObject;
     }
 
@@ -110,6 +109,7 @@ public class AnnotationUtil {
                                 JsonObject jo = new JsonObject();
                                 annotationToJson((Annotation) res, jo);
                                 String key = ann.annotationType().getMethod(toMap.key()).invoke(res).toString();
+                                jo.remove(toMap.key());
                                 jsonMap.add(key, jo);
                             } else {
                                 JsonObject subJsonObject = new JsonObject();
@@ -125,9 +125,7 @@ public class AnnotationUtil {
                     if (jsonMap.size() > 0) {
                         jsonObject.add(method.getName(), jsonMap);
                     }
-
                 }
-
             } else {
                 if (Arrays.asList(ANNOTATION_STRING_TYPE).contains(returnType)) {
                     jsonObject.addProperty(method.getName(), result.toString());

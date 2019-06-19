@@ -29,6 +29,7 @@ public enum EditType {
     TAB,
     @EditTypeMapping(mapping = "dependSwitchType", desc = "表单依赖开关", allowType = {JavaType.number})
     DEPEND_SWITCH,
+
     @EditTypeMapping(mapping = "", desc = "横向分割线与描述", allowType = {JavaType.not_know}, excelOperator = false)
     DIVIDE,
     @EditTypeMapping(mapping = "", desc = "隐藏", allowType = {JavaType.not_know}, excelOperator = false)

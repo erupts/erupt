@@ -23,7 +23,7 @@ import javax.persistence.*;
         rowOperation = {
                 @RowOperation(code = "a", icon = "fa fa-user", title = "AAA", operationHandler = OperationHandlerImpl.class)
         },
-        params = {
+        param = {
                 @KV(key = "label", value = "1+1", desc = "{balala 23333 +++ ,, []")
         }
 )
@@ -107,9 +107,8 @@ public class Test {
             },
             edit = @Edit(
                     title = "用户",
-                    search = @Search(value = true),
                     type = EditType.REFERENCE_TABLE,
-                    referenceTreeType = @ReferenceTreeType
+                    search = @Search(value = true)
             )
     )
     private EruptUser eruptUser;

@@ -244,7 +244,7 @@ public class Mmo extends BaseModel {
 
                     title = "时间",
                     type = EditType.DATE,
-                    dateType = @DateType(type = DateEnum.WEEK)
+                    dateType = @DateType(type = DateEnum.DATE_TIME)
             )
     )
     private Date date;

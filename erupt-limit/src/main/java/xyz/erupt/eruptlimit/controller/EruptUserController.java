@@ -29,6 +29,9 @@ import java.util.Set;
 public class EruptUserController {
 
     @Autowired
+    private Gson gson;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -36,9 +39,6 @@ public class EruptUserController {
 
     @Value("${erupt.expireTimeByLogin:60}")
     private Integer expireTimeByLogin;
-
-    @Autowired
-    private Gson gson;
 
     @PostMapping("/login")
     @ResponseBody
@@ -102,7 +102,7 @@ public class EruptUserController {
     @ResponseBody
     @EruptRouter
     public List<TreeModel> getMenu(HttpServletRequest request) {
-//        type -> Set<EruptMenu>
+        // type -> Set<EruptMenu>
         Object o = redisService.get(RedisKey.MENU_TREE + request.getHeader("token"));
         return gson.fromJson(o.toString(), new TypeToken<List<TreeModel>>() {
         }.getType());

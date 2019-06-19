@@ -19,8 +19,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Erupt {
 
-//    Class<? extends Annotation>[] annotation() default {Erupt.class};
-
     String primaryKeyCol() default "id";
 
     @Transient
@@ -47,5 +45,5 @@ public @interface Erupt {
     Class<? extends DataProxy>[] dateProxy() default {};
 
     @ToMap(key = "key")
-    KV[] params() default {};
+    KV[] param() default {};
 }

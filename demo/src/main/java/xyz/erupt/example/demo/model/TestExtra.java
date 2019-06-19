@@ -43,7 +43,7 @@ public class TestExtra extends BaseModel {
                     title = "周",
                     search = @Search(value = true, vague = true),
                     type = EditType.DATE,
-                    dateType = @DateType(type = DateEnum.WEEK)
+                    dateType = @DateType(type = DateEnum.MONTH)
             )
     )
     private String week;
