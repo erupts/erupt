@@ -40,7 +40,6 @@ public enum EditType {
     @EditTypeMapping(mapping = "", desc = "大文本域", allowType = {JavaType.string})
     TEXTAREA,         //text area         vague the like
 
-
     JSON_EDIT,         //JSON格式编辑器
     MAP,              //地图
     CODE,             //代码编辑器

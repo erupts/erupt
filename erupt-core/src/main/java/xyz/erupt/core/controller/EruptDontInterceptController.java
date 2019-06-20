@@ -25,7 +25,7 @@ public class EruptDontInterceptController {
     @Value("${erupt.uploadPath:/opt/file}")
     private String uploadPath;
 
-    @RequestMapping(value = "/preview-attachment", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @RequestMapping(value = "/preview-attachment", produces = {MediaType.APPLICATION_PDF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
     @EruptRouter(loginVerify = false)
     public byte[] preview(@RequestParam("path") String path) {

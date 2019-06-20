@@ -7,7 +7,9 @@ import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
 import xyz.erupt.eruptlimit.model.EruptRole;
 import xyz.erupt.eruptlimit.model.EruptUser;
 
@@ -24,7 +26,7 @@ import javax.persistence.*;
                 @RowOperation(code = "a", icon = "fa fa-user", title = "AAA", operationHandler = OperationHandlerImpl.class)
         },
         param = {
-                @KV(key = "label", value = "1+1", desc = "{balala 23333 +++ ,, []")
+                @KV(key = "label", value = "1+1", desc = "{balala 223333 []")
         }
 )
 @Entity
@@ -40,10 +42,40 @@ public class Test {
 
     @Column(name = "NAME")
     @EruptField(
-            views = @View(title = "姓名", sortable = true, template = "'姓名：'+item.name"),
+            views = @View(title = "姓名", sortable = true, template = "'姓名：'+item.name", viewType = ViewType.HTML),
             edit = @Edit(title = "姓名", notNull = true, search = @Search(true))
     )
     private String name;
+
+
+    @Column(name = "SWF_FILE")
+    @EruptField(
+            views = @View(title = "头像", viewType = ViewType.SWF, export = false),
+            edit = @Edit(
+                    title = "头像",
+                    type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType(
+                            type = AttachmentEnum.OTHER,
+                            maxLimit = 5,
+                            fileTypes = "swf"
+                    )
+            )
+    )
+    private String swf;
+
+    @Column(name = "PDF")
+    @EruptField(
+            views = @View(title = "PDF", viewType = ViewType.PDF, export = false),
+            edit = @Edit(
+                    title = "PDF",
+                    type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType(
+                            type = AttachmentEnum.OTHER,
+                            maxLimit = 5
+                    )
+            )
+    )
+    private String pdf;
 
     @Column(name = "AGE")
     @EruptField(
@@ -156,5 +188,17 @@ public class Test {
             )
     )
     private TestExtra testExtra;
+
+
+    @Lob
+    @Column(name = "REMARK")
+    @EruptField(
+            views = @View(title = "描述", viewType = ViewType.HTML),
+            edit = @Edit(
+                    title = "描述",
+                    type = EditType.HTML_EDIT
+            )
+    )
+    private String remark;
 
 }

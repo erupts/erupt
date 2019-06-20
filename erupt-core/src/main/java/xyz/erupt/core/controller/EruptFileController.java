@@ -9,6 +9,7 @@ import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
+import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptApiModel;
 import xyz.erupt.core.model.EruptModel;
@@ -36,6 +37,7 @@ public class EruptFileController {
 
     @PostMapping("/upload/{erupt}/{field}")
     @ResponseBody
+    @EruptRouter
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return EruptApiModel.errorApi("上传失败，请选择文件");
