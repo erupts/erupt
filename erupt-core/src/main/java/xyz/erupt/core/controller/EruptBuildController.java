@@ -26,7 +26,7 @@ public class EruptBuildController {
     @ResponseBody
     @EruptRouter(base64 = true, verifyIndex = 1)
     public EruptBuildModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (null == eruptModel) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
@@ -37,15 +37,15 @@ public class EruptBuildController {
                 EruptModel em;
                 switch (fieldModel.getEruptField().edit().type()) {
                     case TAB:
-                        em = CoreService.ERUPTS.get(ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0));
+                        em = CoreService.getErupt(ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0));
                         eruptBuildModel.getSubErupts().add(new EruptAndEruptFieldModel(fieldModel, em));
                         break;
                     case COMBINE:
-                        em = CoreService.ERUPTS.get(fieldModel.getFieldReturnName());
+                        em = CoreService.getErupt(fieldModel.getFieldReturnName());
                         eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), em);
                         break;
                     case REFERENCE_TABLE:
-                        em = CoreService.ERUPTS.get(fieldModel.getFieldReturnName());
+                        em = CoreService.getErupt(fieldModel.getFieldReturnName());
                         eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), em);
                         break;
                 }

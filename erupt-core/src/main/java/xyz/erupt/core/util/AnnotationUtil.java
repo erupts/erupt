@@ -28,7 +28,7 @@ public class AnnotationUtil {
 
     private static final String[] ANNOTATION_STRING_TYPE = {"String", "byte", "char"};
 
-    public static String annotationToJson(String annotationStr) {
+    public static String annotationToJsonByReplace(String annotationStr) {
         String convertStr = annotationStr
                 .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.sub_attachment\\.\\w+", "")
                 .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
@@ -68,12 +68,6 @@ public class AnnotationUtil {
             }
             String returnType = method.getReturnType().getSimpleName();
             Object result = method.invoke(annotation);
-//            NotBlank notBlank = method.getAnnotation(NotBlank.class);
-//            if (null != notBlank && notBlank.value()) {
-//                if (StringUtils.isBlank(result.toString())) {
-//                    continue;
-//                }
-//            }
             if (returnType.endsWith("[]")) {
                 returnType = returnType.substring(0, returnType.length() - 2);
                 JsonArray jsonArray = new JsonArray();

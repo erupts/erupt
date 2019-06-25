@@ -168,7 +168,7 @@ public class DBService implements DataService {
     @Override
     public List<TreeModel> findTabTree(EruptModel eruptModel, String fieldName) {
         EruptFieldModel eruptTabFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
-        EruptModel subEruptModel = CoreService.ERUPTS.get(eruptModel.getEruptFieldMap().get(fieldName).getFieldReturnName());
+        EruptModel subEruptModel = CoreService.getErupt(eruptModel.getEruptFieldMap().get(fieldName).getFieldReturnName());
         TabType tabType = eruptTabFieldModel.getEruptField().edit().tabType();
         String condition = "";
         if (!"".equals(tabType.filter().condition())) {
@@ -209,7 +209,7 @@ public class DBService implements DataService {
             condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn() + "=:" + DEPEND_KEY);
             conditionParameter.put(DEPEND_KEY, dependValue);
         }
-        List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
+        List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.getErupt(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : list) {
             TreeModel treeModel = new TreeModel(map.get(refTree.id()), map.get(refTree.label()), map.get(eruptFieldModel.getFieldName() + "_" + refTree.pid()), null);

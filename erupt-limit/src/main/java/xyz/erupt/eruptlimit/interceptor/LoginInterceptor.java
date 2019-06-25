@@ -57,7 +57,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             String path = request.getServletPath();
             //权限校验
             if (path.startsWith(RestPath.ERUPT_API)) {
-                EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+                EruptModel eruptModel = CoreService.getErupt(eruptName);
                 if (null == eruptModel) {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;

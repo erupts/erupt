@@ -47,7 +47,7 @@ public class EruptExcelController {
     @PostMapping("/export/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void exportData(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().export()) {
             JsonObject condition = new JsonObject();
             condition.addProperty(Page.PAGE_INDEX_STR, 1);
@@ -70,7 +70,7 @@ public class EruptExcelController {
     @RequestMapping(value = "/template/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             dataFileService.createExcelTemplate(eruptModel, response);
         } else {
@@ -85,7 +85,7 @@ public class EruptExcelController {
     @ResponseBody
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public BoolAndReason importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) throws IOException {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             if (file.isEmpty()) {
                 return new BoolAndReason(false, "上传失败，请选择文件");

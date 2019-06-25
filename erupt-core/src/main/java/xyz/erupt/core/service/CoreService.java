@@ -27,8 +27,11 @@ public class CoreService implements InitializingBean {
     @Value("#{'${erupt.scanner-package:xyz.erupt}'.split(',')}")
     private String[] packages;
 
-    public static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
+    private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
+    public static EruptModel getErupt(String eruptName) {
+        return ERUPTS.get(eruptName);
+    }
 
     @Override
     public void afterPropertiesSet() {

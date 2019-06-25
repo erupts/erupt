@@ -42,7 +42,7 @@ public class EruptDataController {
     }
 
     public Page getEruptData(String eruptName, int pageIndex, int pageSize, String sort, JsonObject searchCondition) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().query()) {
             String customerCondition = null;
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
@@ -62,7 +62,7 @@ public class EruptDataController {
     @ResponseBody
     @EruptRouter
     public Collection<TreeModel> getEruptTreeData(@PathVariable("erupt") String eruptName) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().query()) {
             Collection<TreeModel> collection = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryTree(eruptModel);
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
@@ -78,7 +78,7 @@ public class EruptDataController {
     @ResponseBody
     @EruptRouter
     public Object getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         try {
             Object obj = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, id);
             return EruptUtil.generateEruptDataMap(obj);
@@ -92,7 +92,7 @@ public class EruptDataController {
     @EruptRouter
     public EruptApiModel execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
                                            @RequestBody JsonObject body) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
             if (code.equals(rowOperation.code())) {
                 JsonElement param = body.get("param");
@@ -110,7 +110,7 @@ public class EruptDataController {
     @ResponseBody
     @EruptRouter
     public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
+        EruptModel eruptModel = CoreService.getErupt(erupt);
 //        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
 //        if (!br.isBool()) {
 //            return new EruptApiModel(br);
@@ -142,7 +142,7 @@ public class EruptDataController {
     @ResponseBody
     @EruptRouter
     public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
+        EruptModel eruptModel = CoreService.getErupt(erupt);
 //        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
 //        if (!br.isBool()) {
 //            return new EruptApiModel(br);
@@ -174,7 +174,7 @@ public class EruptDataController {
     @ResponseBody
     @EruptRouter
     public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
+        EruptModel eruptModel = CoreService.getErupt(erupt);
         if (eruptModel.getErupt().power().delete()) {
             try {
                 for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
@@ -222,7 +222,7 @@ public class EruptDataController {
     @EruptRouter
     public Collection findTabList(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
             return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabList(eruptModel, tabFieldName);
         } else {
@@ -237,7 +237,7 @@ public class EruptDataController {
                                       @PathVariable("id") String id,
                                       @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
 
         if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
             return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabListById(eruptModel, tabFieldName, id);
@@ -251,7 +251,7 @@ public class EruptDataController {
     @EruptRouter
     public Collection<TreeModel> findTabTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
             return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTree(eruptModel, tabFieldName);
         } else {
@@ -265,7 +265,7 @@ public class EruptDataController {
     @EruptRouter
     public Collection findTabTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
         tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
             return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTreeById(eruptModel, tabFieldName, id);
         } else {
@@ -281,13 +281,13 @@ public class EruptDataController {
     public Page getReferenceTable(@PathVariable("erupt") String eruptName, @PathVariable("fieldName") String fieldName,
                                   @RequestBody JsonObject searchCondition) {
 //        fieldName = EruptUtil.handleNoRightVariable(fieldName);
-        EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().edit()) {
             int pageIndex = searchCondition.remove(Page.PAGE_INDEX_STR).getAsInt();
             int pageSize = searchCondition.remove(Page.PAGE_SIZE_STR).getAsInt();
             String sort = searchCondition.remove(Page.PAGE_SORT_STR).getAsString();
             EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
-            EruptModel eruptReferenceModel = CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName());
+            EruptModel eruptReferenceModel = CoreService.getErupt(eruptFieldModel.getFieldReturnName());
             return AnnotationUtil.getEruptDataProcessor(eruptReferenceModel.getClazz()).queryList(
                     eruptReferenceModel, AnnotationUtil.switchFilterConditionToStr(eruptFieldModel.getEruptField().edit().referenceTableType().filter())
                     , searchCondition, new Page(pageIndex, pageSize, sort));
@@ -301,7 +301,7 @@ public class EruptDataController {
     @ResponseBody
     @EruptRouter
     public Collection<TreeModel> getReferenceTree(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
+        EruptModel eruptModel = CoreService.getErupt(erupt);
         return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTree(eruptModel, fieldName);
     }
 
@@ -310,12 +310,12 @@ public class EruptDataController {
     @ResponseBody
     @EruptRouter
     public Collection<TreeModel> getReferenceTreeByDepend(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName, @PathVariable("dependValue") Serializable dependValue) {
-        EruptModel eruptModel = CoreService.ERUPTS.get(erupt);
+        EruptModel eruptModel = CoreService.getErupt(erupt);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
         //TODO 代码过长，应该做优化
         return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTreeByDepend(eruptModel, fieldName,
                 TypeUtil.typeStrConvertObject(dependValue,
-                        CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(eruptFieldModel.getEruptField().
+                        CoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(eruptFieldModel.getEruptField().
                                 edit().referenceTreeType().dependColumn()).getField().getType().getSimpleName()));
     }
     // REFERENCE API END

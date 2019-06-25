@@ -45,7 +45,7 @@ public class EruptFileController {
         try {
             //生成存储路径
             String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator + RandomUtils.nextInt(100, 9999) + "-" + file.getOriginalFilename();
-            EruptModel eruptModel = CoreService.ERUPTS.get(eruptName);
+            EruptModel eruptModel = CoreService.getErupt(eruptName);
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
             switch (edit.type()) {
                 case ATTACHMENT:

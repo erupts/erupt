@@ -202,7 +202,7 @@ public class EruptUtil {
             case REFERENCE_TREE:
                 //TODO 类型转换太频繁,以后优化
                 String id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();
-                EruptFieldModel efm = CoreService.ERUPTS.get(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
+                EruptFieldModel efm = CoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
                 return TypeUtil.typeStrConvertObject(jsonElement.getAsJsonObject().get(id).getAsString(), efm.getField().getType().getSimpleName());
             default:
                 return jsonElement.getAsString();
