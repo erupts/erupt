@@ -98,7 +98,7 @@ public class Mmo extends BaseModel {
             edit = @Edit(
                     title = "数字滑块",
                     type = EditType.SLIDER,
-                    sliderType = @SliderType(max = 24, min = 1, step = 2, markPoints = {1, 2, 3 ,4, 6, 8, 12, 24}),
+                    sliderType = @SliderType(max = 24, min = 1, step = 2, markPoints = {1, 2, 3, 4, 6, 8, 12, 24}),
                     search = @Search(true)
             )
     )
@@ -250,7 +250,7 @@ public class Mmo extends BaseModel {
     private Date date;
 
     @EruptField(
-            views = @View(title = "图片",viewType = ViewType.ATTACHMENT),
+            views = @View(title = "图片", viewType = ViewType.IMAGE),
             edit = @Edit(
                     title = "图片",
                     type = EditType.ATTACHMENT,

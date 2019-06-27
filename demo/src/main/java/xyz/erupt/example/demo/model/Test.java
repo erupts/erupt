@@ -65,7 +65,7 @@ public class Test {
 
     @Column(name = "PDF")
     @EruptField(
-            views = @View(title = "PDF", viewType = ViewType.PDF, export = false),
+            views = @View(title = "PDF", viewType = ViewType.ATTACHMENT, export = false),
             edit = @Edit(
                     title = "PDF",
                     type = EditType.ATTACHMENT,

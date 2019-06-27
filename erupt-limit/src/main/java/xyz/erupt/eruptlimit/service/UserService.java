@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.method.HandlerMethod;
 import xyz.erupt.core.cache.EruptRedisService;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.model.EruptApiModel;
@@ -23,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,6 +153,20 @@ public class UserService {
         } else {
             return true;
         }
+    }
+
+    public String getRequestPath(HandlerMethod handlerMethod) {
+        try {
+            for (Annotation annotation : handlerMethod.getMethod().getAnnotations()) {
+                if (null != annotation.annotationType().getAnnotation(RequestMapping.class)) {
+                    String[] path = (String[]) annotation.getClass().getDeclaredMethod("value").invoke(annotation);
+                    System.out.println(path[0]);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean verifyMenuLimit(String token, String servletPath, EruptModel eruptModel) {

@@ -35,6 +35,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//        userService.getRequestPath(((HandlerMethod) handler));
         EruptRouter eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
         if (null == eruptRouter) {
             response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());

@@ -5,11 +5,13 @@ package xyz.erupt.annotation.sub_field;
  */
 public enum ViewType {
     TEXT, //普通文字
-    LINK,//链接
-    ATTACHMENT,//附件下载
     IMAGE,//图片
     SWF,//flash文件
-    PDF, //框架方式展示 如pdf
+    LINK,//链接
+    //    IFRAME_LINK,
+    DOWNLOAD,//下载
+    IFRAME, //框架方式展示 如pdf
+    ATTACHMENT,//在新标签页中查看，不同于下载，特殊文件可以在网页中预览，如：video,png等
     HTML,//HTML
     QR_CODE,//二维码
 }

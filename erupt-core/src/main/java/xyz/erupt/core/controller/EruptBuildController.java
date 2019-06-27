@@ -48,6 +48,8 @@ public class EruptBuildController {
                         em = CoreService.getErupt(fieldModel.getFieldReturnName());
                         eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), em);
                         break;
+                    default:
+                        break;
                 }
             }
             return eruptBuildModel;

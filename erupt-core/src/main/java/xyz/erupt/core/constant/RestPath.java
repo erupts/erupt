@@ -6,7 +6,7 @@ package xyz.erupt.core.constant;
 public class RestPath {
 
     //不做拦截URL前缀
-    public static final String DONT_INTERCEPT = "/ws";
+    public static final String WS = "/ws";
 
     public static final String ERUPT_API = "/erupt-api";
 

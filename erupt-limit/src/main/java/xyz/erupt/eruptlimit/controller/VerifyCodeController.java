@@ -16,7 +16,6 @@ import xyz.erupt.eruptlimit.constant.RedisKey;
 import xyz.erupt.eruptlimit.util.IdentifyCode;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -29,9 +28,8 @@ public class VerifyCodeController {
      * 生成验证码
      */
     @GetMapping
-    @RequestMapping(RestPath.DONT_INTERCEPT + "/code-img")
-    public void createCode(@RequestParam("account") String account, HttpServletRequest request,
-                           HttpServletResponse response) throws Exception {
+    @RequestMapping(RestPath.WS + "/code-img")
+    public void createCode(@RequestParam("account") String account, HttpServletResponse response) throws Exception {
         // 设置响应的类型格式为图片格式
         response.setContentType("image/jpeg");
         // 禁止图像缓存。

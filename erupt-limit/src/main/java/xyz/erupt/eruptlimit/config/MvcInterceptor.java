@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.eruptlimit.interceptor.LoginInterceptor;
 
 import javax.annotation.Resource;
@@ -35,7 +34,6 @@ public class MvcInterceptor implements WebMvcConfigurer {
             types.add("/**/**." + s);
         }
         registry.addInterceptor(loginInterceptor)
-                .excludePathPatterns(RestPath.DONT_INTERCEPT + "/**")
                 .excludePathPatterns("/error")
                 .excludePathPatterns(types.toArray(new String[0]))
                 .addPathPatterns("/**");

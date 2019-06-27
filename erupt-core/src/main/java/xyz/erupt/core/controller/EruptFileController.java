@@ -1,7 +1,10 @@
 package xyz.erupt.core.controller;
 
+import lombok.Cleanup;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -18,8 +21,11 @@ import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.SpringUtil;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.*;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -138,40 +144,50 @@ public class EruptFileController {
         return EruptApiModel.successApi(String.join(",", paths));
     }
 
-//    @RequestMapping(value = "/{erupt}/preview-attachment",
-//            produces = {MediaType.IMAGE_JPEG_VALUE,MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
-//    @ResponseBody
-//    public byte[] preview(@RequestParam("path") String path, @PathVariable("erupt") String eruptName,
-//                          HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        if (!path.startsWith(File.separator)) {
-//            path = File.separator + path;
-//        }
-//        File file = new File(uploadPath + path);
-//        if (!file.exists()) {
-//            file = new File(this.getClass().getResource("not_img.png").getFile());
-//        }
-//        FileInputStream inputStream = new FileInputStream(file);
-//        byte[] bytes = new byte[inputStream.available()];
-//        inputStream.read(bytes, 0, inputStream.available());
-//        return bytes;
-//    }
 
-//    @GetMapping("/download-attachment")
-//    @ResponseBody
-//    public ResponseEntity<byte[]> downloadAttachment(@RequestParam("path") String path, HttpServletRequest request, HttpServletResponse response) {
-//        String[] pathSplits = path.split("/");
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//        try {
-//            headers.setContentDispositionFormData("attachment", java.net.URLEncoder.encode(pathSplits[pathSplits.length - 1], "UTF-8"));
-//            File file = new File(this.uploadPath + File.separator + path);
-//            return new ResponseEntity<byte[]>(FileUtil.readAsByteArray(file),
-//                    headers, HttpStatus.CREATED);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    public byte[] mappingFileToByte(@RequestParam("path") String path) {
+        if (!path.startsWith(File.separator)) {
+            path = File.separator + path;
+        }
+        File file = new File(uploadPath + path);
+        try {
+            @Cleanup InputStream inputStream = new FileInputStream(file);
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes, 0, inputStream.available());
+            inputStream.close();
+            return bytes;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/download-attachment", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @ResponseBody
+    @EruptRouter(loginVerify = false)
+    public byte[] downloadAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
+        String[] split = path.split("/");
+        response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(split[split.length - 1], "UTF-8"));
+        return mappingFileToByte(path);
+    }
+
+
+    @RequestMapping(value = "/preview-attachment")
+    @ResponseBody
+    @EruptRouter(loginVerify = false)
+    public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) {
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String type = fileNameMap.getContentTypeFor(path);
+        if (null == type) {
+            type = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+        }
+        response.setContentType(type);
+        try (OutputStream ros = response.getOutputStream()) {
+            IOUtils.write(mappingFileToByte(path), ros);
+            ros.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }
