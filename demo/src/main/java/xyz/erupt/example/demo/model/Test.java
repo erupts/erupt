@@ -48,6 +48,18 @@ public class Test {
     private String name;
 
 
+    @Column(name = "LINK")
+    @EruptField(
+            views = @View(title = "网址", viewType = ViewType.LINK_DIALOG),
+            edit = @Edit(
+                    title = "网址",
+                    placeHolder = "网址",
+                    search = @Search(value = true)
+            )
+    )
+    private String link;
+
+
     @Column(name = "SWF_FILE")
     @EruptField(
             views = @View(title = "头像", viewType = ViewType.SWF, export = false),

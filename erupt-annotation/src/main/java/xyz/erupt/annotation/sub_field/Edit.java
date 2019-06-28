@@ -1,6 +1,5 @@
 package xyz.erupt.annotation.sub_field;
 
-import xyz.erupt.annotation.NotBlank;
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 
@@ -9,7 +8,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
  */
 public @interface Edit {
 
-    @NotBlank
     String title();
 
     String desc() default "";

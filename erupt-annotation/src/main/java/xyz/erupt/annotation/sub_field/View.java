@@ -5,10 +5,10 @@ package xyz.erupt.annotation.sub_field;
  */
 public @interface View {
 
+    String title();
+
     //在修饰类型为实体类对象时必须指定列名
     String column() default "";
-
-    String title();
 
     ViewType viewType() default ViewType.TEXT;
 
