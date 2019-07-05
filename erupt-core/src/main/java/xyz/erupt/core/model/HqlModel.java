@@ -1,29 +1,33 @@
 package xyz.erupt.core.model;
 
 import com.google.gson.JsonObject;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by liyuepeng on 2018-12-26.
  */
-@Data
+@Getter
+@Setter
 public class HqlModel {
 
-    public HqlModel(String cols, String customCondition, JsonObject eruptSearchCondition, String orderBy) {
-        this.cols = cols;
-        this.customCondition = customCondition;
-        this.eruptSearchCondition = eruptSearchCondition;
-        this.orderBy = orderBy;
-    }
+    //后台自定义参数
+    private String customerCondition;
+    //前台条件参数（仅注解声明为查询条件时条件才有效）
+    private JsonObject searchCondition;
 
     private String cols;
 
-    //后台自定义参数
-    private String customCondition;
+    public HqlModel(String cols, String customerCondition, JsonObject searchCondition, String orderBy) {
+        this.cols = cols;
+        this.customerCondition = customerCondition;
+        this.searchCondition = searchCondition;
+        this.orderBy = orderBy;
+    }
 
-    //Erupt注解所允许的查询条件
-    private JsonObject eruptSearchCondition;
+    public HqlModel(String cols) {
+        this.cols = cols;
+    }
 
     private String orderBy;
-
 }

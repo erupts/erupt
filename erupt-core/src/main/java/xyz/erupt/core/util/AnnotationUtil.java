@@ -28,6 +28,7 @@ public class AnnotationUtil {
 
     private static final String[] ANNOTATION_STRING_TYPE = {"String", "byte", "char"};
 
+    @Deprecated
     public static String annotationToJsonByReplace(String annotationStr) {
         String convertStr = annotationStr
                 .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.sub_attachment\\.\\w+", "")

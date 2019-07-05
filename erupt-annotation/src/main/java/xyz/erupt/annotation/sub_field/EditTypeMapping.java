@@ -9,14 +9,14 @@ import java.lang.annotation.*;
  * Created by liyuepeng on 2019-05-24.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Documented
 public @interface EditTypeMapping {
-    String mapping();
+    String mapping() default "";
 
     String desc() default "";
 
-    Search search() default @Search(value = true,vague = true);
+    Search search() default @Search(value = true, vague = true);
 
     JavaType[] allowType() default {};
 

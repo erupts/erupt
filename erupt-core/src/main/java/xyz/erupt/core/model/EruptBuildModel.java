@@ -13,11 +13,13 @@ import java.util.Map;
 @Data
 public class EruptBuildModel {
 
-    EruptModel eruptModel;
+    private EruptModel eruptModel;
 
-    Map<String, EruptModel> referenceErupts = new HashMap<>();
+    private Map<String, EruptModel> tabErupts = new HashMap<>();
 
-    Map<String, EruptModel> combineErupts = new HashMap<>();
+    private Map<String, EruptModel> referenceErupts = new HashMap<>();
 
-    List<EruptAndEruptFieldModel> subErupts = new ArrayList<>();
+    private Map<String, EruptModel> combineErupts = new HashMap<>();
+
+    private List<EruptAndEruptFieldModel> subErupts = new ArrayList<>();
 }

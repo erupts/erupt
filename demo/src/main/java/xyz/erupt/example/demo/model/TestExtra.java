@@ -48,6 +48,13 @@ public class TestExtra extends BaseModel {
     )
     private String week;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "testExtra")
-    private Test book;
+
+    @ManyToOne
+    @JoinColumn(name = "EXTRA_LEFT_ID")
+    @EruptField(
+            views = {
+                    @View(title = "姓名", column = "name"),
+            }
+    )
+    private TestExtraLeft testExtraLeft;
 }

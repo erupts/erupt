@@ -25,20 +25,26 @@ public enum EditType {
     BOOLEAN,
     @EditTypeMapping(mapping = "attachmentType", desc = "附件", search = @Search(false), allowType = {JavaType.string}, excelOperator = false)
     ATTACHMENT,
-    @EditTypeMapping(mapping = "tabType", desc = "TAB选项卡", search = @Search(false), allowType = {JavaType.array}, excelOperator = false)
-    TAB,
     @EditTypeMapping(mapping = "dependSwitchType", desc = "表单依赖开关", allowType = {JavaType.number})
     DEPEND_SWITCH,
 
-    @EditTypeMapping(mapping = "", desc = "横向分割线与描述", allowType = {JavaType.not_know}, excelOperator = false)
+    @EditTypeMapping(desc = "横向分割线与描述", allowType = {JavaType.not_know}, excelOperator = false)
     DIVIDE,
-    @EditTypeMapping(mapping = "", desc = "隐藏", allowType = {JavaType.not_know}, excelOperator = false)
+    @EditTypeMapping(desc = "隐藏", allowType = {JavaType.not_know}, excelOperator = false)
     HIDDEN,
-    @EditTypeMapping(mapping = "", desc = "富文本编辑器", allowType = {JavaType.string})
+    @EditTypeMapping(desc = "富文本编辑器", allowType = {JavaType.string})
     HTML_EDIT,
 
-    @EditTypeMapping(mapping = "", desc = "大文本域", allowType = {JavaType.string})
+    @EditTypeMapping(desc = "大文本域", allowType = {JavaType.string})
     TEXTAREA,         //text area         vague the like
+
+    @EditTypeMapping(desc = "树引用", allowType = {JavaType.object})
+    TAB_TREE,
+
+    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object})
+    TAB_TABLE_ADD,
+    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object})
+    TAB_TABLE_REFER,
 
     JSON_EDIT,         //JSON格式编辑器
     MAP,              //地图

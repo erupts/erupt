@@ -2,13 +2,11 @@ package xyz.erupt.example.demo.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.eruptlimit.model.BaseModel;
-import xyz.erupt.core.handler.SimpleConditionHandler;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.eruptlimit.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,8 +16,7 @@ import java.util.Date;
  */
 @Erupt(
         name = "subTest",
-        loginUse = false,
-        sorts = "id"
+        loginUse = false
 )
 @Entity
 @Table(name = "ERUPT_SUB_TEST")
@@ -79,9 +76,7 @@ public class SubMmo extends BaseModel {
             },
             edit = @Edit(
                     title = "mmo_table",
-                    type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(id = "id", label = "name",
-                            filter = @Filter(condition = "id=@abc@", conditionHandlers = {SimpleConditionHandler.class}))
+                    type = EditType.REFERENCE_TREE
             )
     )
     @ManyToOne

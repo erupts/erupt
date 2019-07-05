@@ -19,7 +19,7 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Erupt {
 
-    String primaryKeyCol() default "id";
+    String primaryKeyCol() default EruptConst.ID;
 
     @Transient
     boolean loginUse() default true;
@@ -30,17 +30,17 @@ public @interface Erupt {
     @Transient
     String desc() default "";
 
-    @Transient
-    String[] sorts() default {};
-
     Power power() default @Power;
 
     //@ToMap(key = "code")
     RowOperation[] rowOperation() default {};
 
-    Filter filter() default @Filter(condition = "");
+    Filter filter() default @Filter;
 
-    Tree tree() default @Tree(id = "id", label = "name");
+    @Transient
+    String orderBy() default "";
+
+    Tree tree() default @Tree(id = EruptConst.ID, label = EruptConst.LABEL);
 
     Class<? extends DataProxy>[] dateProxy() default {};
 

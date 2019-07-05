@@ -96,7 +96,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             views = @View(title = "生日"),
             edit = @Edit(
                     title = "生日",
-                    search = @Search(value = true,vague = true),
+                    search = @Search(value = true, vague = true),
                     type = EditType.DATE
 
             )
@@ -176,8 +176,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     @EruptField(
             edit = @Edit(
                     title = "所属角色",
-                    type = EditType.TAB,
-                    tabType = @TabType(type = TabEnum.TREE)
+                    type = EditType.TAB_TREE
             )
     )
     private Set<EruptRole> roles;

@@ -19,6 +19,7 @@ import xyz.erupt.core.util.*;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Erupt 对数据的增删改查
@@ -48,7 +49,7 @@ public class EruptDataController {
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                 customerCondition = SpringUtil.getBean(proxy).beforeFetch(searchCondition);
             }
-            Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryList(eruptModel, customerCondition, searchCondition, new Page(pageIndex, pageSize, sort));
+            Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryList(eruptModel, new Page(pageIndex, pageSize, sort), searchCondition, customerCondition);
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                 SpringUtil.getBean(proxy).afterFetch(page.getList());
             }
@@ -77,33 +78,14 @@ public class EruptDataController {
     @GetMapping("/{erupt}/{id}")
     @ResponseBody
     @EruptRouter
-    public Object getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
+    public Map<String, Object> getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
-        try {
-            Object obj = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, id);
-            return EruptUtil.generateEruptDataMap(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (eruptModel.getErupt().power().edit() || eruptModel.getErupt().power().viewDetails()) {
+            Object data = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, id);
+            return EruptUtil.generateEruptDataMap(eruptModel, data);
+        } else {
+            throw new EruptNoLegalPowerException();
         }
-    }
-
-    @PostMapping("/{erupt}/operator/{code}")
-    @ResponseBody
-    @EruptRouter
-    public EruptApiModel execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
-                                           @RequestBody JsonObject body) {
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
-        for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
-            if (code.equals(rowOperation.code())) {
-                JsonElement param = body.get("param");
-                if (param.isJsonNull()) {
-                    param = null;
-                }
-                OperationHandler operationHandler = SpringUtil.getBean(rowOperation.operationHandler());
-                return new EruptApiModel(operationHandler.exec(body.get("data"), param));
-            }
-        }
-        throw new EruptNoLegalPowerException();
     }
 
     @PostMapping("/{erupt}")
@@ -143,7 +125,7 @@ public class EruptDataController {
     @EruptRouter
     public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.getErupt(erupt);
-//        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
+//        BoolAndReason br = EruptValidate.validate(eruptModel,data);
 //        if (!br.isBool()) {
 //            return new EruptApiModel(br);
 //        }
@@ -176,21 +158,17 @@ public class EruptDataController {
     public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) {
         EruptModel eruptModel = CoreService.getErupt(erupt);
         if (eruptModel.getErupt().power().delete()) {
-            try {
-                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeDelete(id);
-                    if (!boolAndReason.isBool()) {
-                        return new EruptApiModel(boolAndReason);
-                    }
+            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeDelete(id);
+                if (!boolAndReason.isBool()) {
+                    return new EruptApiModel(boolAndReason);
                 }
-                AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).deleteData(eruptModel, id);
-                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    SpringUtil.getBean(proxy).afterDelete(id);
-                }
-                return EruptApiModel.successApi(null);
-            } catch (Exception e) {
-                return EruptApiModel.errorApi(e);
             }
+            AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).deleteData(eruptModel, id);
+            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                SpringUtil.getBean(proxy).afterDelete(id);
+            }
+            return EruptApiModel.successApi(null);
         } else {
             throw new EruptNoLegalPowerException();
         }
@@ -201,49 +179,34 @@ public class EruptDataController {
     @DeleteMapping("/{erupt}")
     @ResponseBody
     @EruptRouter
-    public EruptApiModel deleteEruptDatas(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) {
+    public EruptApiModel deleteEruptDataList(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) {
         EruptApiModel eruptApiModel = EruptApiModel.successApi(null);
-        try {
-            for (Serializable id : ids) {
-                eruptApiModel = this.deleteEruptData(erupt, id);
-                if (!eruptApiModel.isSuccess()) {
-                    break;
-                }
+        for (Serializable id : ids) {
+            eruptApiModel = this.deleteEruptData(erupt, id);
+            if (!eruptApiModel.isSuccess()) {
+                break;
             }
-        } catch (Exception e) {
-            return EruptApiModel.errorApi(e);
         }
         return eruptApiModel;
     }
 
-    //TAB API
-    @GetMapping("/tab/table/{erupt}/{tabFieldName}")
+    @PostMapping("/{erupt}/operator/{code}")
     @ResponseBody
     @EruptRouter
-    public Collection findTabList(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
-        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
+    public EruptApiModel execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
+                                           @RequestBody JsonObject body) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
-        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabList(eruptModel, tabFieldName);
-        } else {
-            throw new EruptNoLegalPowerException();
+        for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
+            if (code.equals(rowOperation.code())) {
+                JsonElement param = body.get("param");
+                if (param.isJsonNull()) {
+                    param = null;
+                }
+                OperationHandler operationHandler = SpringUtil.getBean(rowOperation.operationHandler());
+                return new EruptApiModel(operationHandler.exec(body.get("data"), param));
+            }
         }
-    }
-
-    @GetMapping("/tab/table/{erupt}/{id}/{tabFieldName}")
-    @ResponseBody
-    @EruptRouter
-    public Collection findTabListById(@PathVariable("erupt") String eruptName,
-                                      @PathVariable("id") String id,
-                                      @PathVariable("tabFieldName") String tabFieldName) {
-        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
-
-        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabListById(eruptModel, tabFieldName, id);
-        } else {
-            throw new EruptNoLegalPowerException();
-        }
+        throw new EruptNoLegalPowerException();
     }
 
     @GetMapping("/tab/tree/{erupt}/{tabFieldName}")
@@ -257,29 +220,13 @@ public class EruptDataController {
         } else {
             throw new EruptNoLegalPowerException();
         }
-
     }
 
-    @GetMapping("/tab/tree/{erupt}/{id}/{tabFieldName}")
+    @PostMapping("/{erupt}/refer-table/{fieldName}")
     @ResponseBody
     @EruptRouter
-    public Collection findTabTreeById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id, @PathVariable("tabFieldName") String tabFieldName) {
-        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
-        if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
-            return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTreeById(eruptModel, tabFieldName, id);
-        } else {
-            throw new EruptNoLegalPowerException();
-        }
-    }
-    //TAB API END
-
-    // REFERENCE API
-    @PostMapping("/{erupt}/reference-table/{fieldName}")
-    @ResponseBody
-    @EruptRouter
-    public Page getReferenceTable(@PathVariable("erupt") String eruptName, @PathVariable("fieldName") String fieldName,
-                                  @RequestBody JsonObject searchCondition) {
+    public Page getReferTable(@PathVariable("erupt") String eruptName, @PathVariable("fieldName") String fieldName,
+                              @RequestBody JsonObject searchCondition) {
 //        fieldName = EruptUtil.handleNoRightVariable(fieldName);
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().edit()) {
@@ -289,14 +236,15 @@ public class EruptDataController {
             EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
             EruptModel eruptReferenceModel = CoreService.getErupt(eruptFieldModel.getFieldReturnName());
             return AnnotationUtil.getEruptDataProcessor(eruptReferenceModel.getClazz()).queryList(
-                    eruptReferenceModel, AnnotationUtil.switchFilterConditionToStr(eruptFieldModel.getEruptField().edit().referenceTableType().filter())
-                    , searchCondition, new Page(pageIndex, pageSize, sort));
+                    eruptReferenceModel, new Page(pageIndex, pageSize, sort),
+                    searchCondition,
+                    AnnotationUtil.switchFilterConditionToStr(eruptFieldModel.getEruptField().edit().filter()));
         } else {
             throw new EruptNoLegalPowerException();
         }
     }
 
-
+    // REFERENCE API
     @GetMapping("/{erupt}/reference-tree/{fieldName}")
     @ResponseBody
     @EruptRouter
@@ -319,6 +267,15 @@ public class EruptDataController {
                                 edit().referenceTreeType().dependColumn()).getField().getType().getSimpleName()));
     }
     // REFERENCE API END
+
+    @PostMapping("/validate-erupt/{erupt}")
+    @ResponseBody
+    @EruptRouter
+    public EruptApiModel validateErupt(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
+        EruptModel eruptModel = CoreService.getErupt(erupt);
+
+        return new EruptApiModel(true, null, null);
+    }
 
 
 }

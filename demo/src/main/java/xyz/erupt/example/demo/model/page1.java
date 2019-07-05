@@ -21,7 +21,7 @@ import java.util.Date;
 @Erupt(
         name = "事例页面",
         loginUse = false,
-        sorts = "id"
+        orderBy = "id"
 )
 @Entity
 @Table(name = "PAEG1")

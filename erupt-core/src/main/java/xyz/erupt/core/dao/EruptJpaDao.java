@@ -5,12 +5,10 @@ import com.google.gson.JsonObject;
 import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
 import xyz.erupt.core.model.Page;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
@@ -52,31 +50,35 @@ public class EruptJpaDao {
         return entityManager.find(eruptModel.getClazz(), id);
     }
 
-    public Page queryEruptList(EruptModel eruptModel, String customCondition, JsonObject condition, Page page) {
-        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", EruptJapUtils.getEruptColJapKeys(eruptModel)) + ")", null, condition, page.getSort()));
-        String countHql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("count(*)", customCondition, condition, null));
+    public Page queryEruptList(EruptModel eruptModel, Page page, JsonObject searchCondition, String customCondition) {
+        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")",
+                customCondition, searchCondition, page.getSort()));
+        String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlModel("count(*)", customCondition, searchCondition, null));
         Query query = entityManager.createQuery(hql);
         Query countQuery = entityManager.createQuery(countHql);
         Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
-        for (String key : condition.keySet()) {
-            if (!condition.get(key).isJsonNull()) {
-                EruptFieldModel eruptFieldModel = eruptFieldMap.get(key);
-                Edit edit = eruptFieldModel.getEruptField().edit();
-                if (edit.search().vague()) {
-                    if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(EruptFieldModel.NUMBER_TYPE))
-                            || edit.type() == EditType.DATE || edit.type() == EditType.SLIDER) {
-                        JsonArray jsonArray = condition.get(key).getAsJsonArray();
-                        countQuery.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
-                        countQuery.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
-                        query.setParameter(EruptJapUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
-                        query.setParameter(EruptJapUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
-                        continue;
+        if (null != searchCondition) {
+            for (String key : searchCondition.keySet()) {
+                if (!searchCondition.get(key).isJsonNull()) {
+                    EruptFieldModel eruptFieldModel = eruptFieldMap.get(key);
+                    Edit edit = eruptFieldModel.getEruptField().edit();
+                    if (edit.search().vague()) {
+                        if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(EruptFieldModel.NUMBER_TYPE))
+                                || edit.type() == EditType.DATE || edit.type() == EditType.SLIDER) {
+                            JsonArray jsonArray = searchCondition.get(key).getAsJsonArray();
+                            countQuery.setParameter(EruptJpaUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                            countQuery.setParameter(EruptJpaUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                            query.setParameter(EruptJpaUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                            query.setParameter(EruptJpaUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                            continue;
+                        }
                     }
+                    countQuery.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)));
+                    query.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)));
                 }
-                countQuery.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, condition.get(key)));
-                query.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, condition.get(key)));
             }
         }
+        System.err.println(hql);
         List list = query.setMaxResults(page.getPageSize())
                 .setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList();
         page.setTotal((Long) countQuery.getSingleResult());
@@ -90,8 +92,10 @@ public class EruptJpaDao {
      * @param cols       格式：name as alias
      * @return
      */
-    public List<Map<String, Object>> getDataMap(EruptModel eruptModel, String condition, String orderBy, List<String> cols, Map<String, Object> conditionParameter) {
-        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", cols) + ")", condition, null, orderBy));
+    public List<Map<String, Object>> getDataMap(EruptModel eruptModel, String condition,
+                                                String orderBy, List<String> cols,
+                                                Map<String, Object> conditionParameter) {
+        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", cols) + ")", condition, null, orderBy));
         Query query = entityManager.createQuery(hql);
         if (null != conditionParameter) {
             for (Map.Entry<String, Object> entry : conditionParameter.entrySet()) {
@@ -106,17 +110,5 @@ public class EruptJpaDao {
 //        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel(String.join(",", cols), condition, null, orderBy));
 //        return entityManager.createQuery(hql).getResultList();
 //    }
-
-
-    public List getReferenceList(EruptModel eruptModel, String refName) {
-        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(refName);
-        ReferenceTreeType referenceTreeType = eruptFieldModel.getEruptField().edit().referenceTreeType();
-        String keys = "new map(" + referenceTreeType.id() + " as id," + referenceTreeType.label() + " as label)";
-        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel(keys, null, null, null));
-        if (!"".equals(referenceTreeType.filter().condition())) {
-            hql += EruptJapUtils.AND + AnnotationUtil.switchFilterConditionToStr(referenceTreeType.filter());
-        }
-        return entityManager.createQuery(hql).getResultList();
-    }
 
 }

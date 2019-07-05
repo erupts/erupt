@@ -1,8 +1,5 @@
 package xyz.erupt.core.util;
 
-import xyz.erupt.annotation.EruptField;
-import xyz.erupt.core.exception.ExceptionUtil;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -21,19 +18,26 @@ public class ReflectUtil {
         while (clazz != null) {
             try {
                 field = clazz.getDeclaredField(fieldName);
-                if (null != field) {
-                    field.setAccessible(true);
-                    break;
-                }
+                field.setAccessible(true);
+                return field;
             } catch (NoSuchFieldException e) {
                 clazz = clazz.getSuperclass();
                 if (clazz.getSimpleName().equals("Object")) {
-                    e.printStackTrace();
                     break;
                 }
             }
         }
         return field;
+    }
+
+    public static void findClassAllFields(Class clazz, Consumer<Field> fieldConsumer) {
+        Class tempClass = clazz;
+        while (null != tempClass) {
+            for (Field field : tempClass.getDeclaredFields()) {
+                fieldConsumer.accept(field);
+            }
+            tempClass = tempClass.getSuperclass();
+        }
     }
 
     //获取字段泛型名

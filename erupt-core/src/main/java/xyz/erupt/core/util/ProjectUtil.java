@@ -21,7 +21,7 @@ public class ProjectUtil {
         File dirFile = new File(this.getClass().getClassLoader().getResource("").getPath() + "loaded");
         if (!dirFile.exists()) {
             if (!dirFile.mkdirs()) {
-                log.warning("项目加载标识文件无法创建，可能造成数据多次加载等问题");
+                log.severe("项目加载标识文件无法创建，可能造成数据多次加载等问题");
             }
         }
         File file = new File(dirFile.getPath(), projectName + ".loaded");
@@ -29,7 +29,7 @@ public class ProjectUtil {
             consumer.accept(true);
             try {
                 if (!file.createNewFile()) {
-                    log.warning("项目加载标识文件无法创建，可能造成数据多次加载等问题");
+                    log.severe("项目加载标识文件无法创建，可能造成数据多次加载等问题");
                 }
             } catch (IOException e) {
                 e.printStackTrace();

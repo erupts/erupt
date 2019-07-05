@@ -1,13 +1,12 @@
 package xyz.erupt.core.model;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import lombok.Data;
 import xyz.erupt.annotation.Erupt;
-import xyz.erupt.core.exception.ExceptionUtil;
 import xyz.erupt.core.util.AnnotationUtil;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 9/29/18.
@@ -32,11 +31,8 @@ public class EruptModel {
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.eruptName = eruptClazz.getSimpleName();
         this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
-//        try {
-////            this.eruptJson = new JsonParser().parse(AnnotationUtil.annotationToJson(erupt.toString())).getAsJsonObject();
-////            this.eruptJson = AnnotationUtil.annotationToJsonByReflect(eruptClazz, Erupt.class);
-//        } catch (Exception e) {
-//            throw ExceptionUtil.styleEruptException(this, ExceptionUtil.ANNOTATION_PARSE_ERR_STR);
-//        }
+    }
+
+    public EruptModel() {
     }
 }

@@ -17,7 +17,7 @@ public interface DataService {
 
     Object findDataById(EruptModel eruptModel, Serializable id);
 
-    Page queryList(EruptModel eruptModel, String customerCondition, JsonObject searchCondition, Page page);
+    Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String customerCondition);
 
     Collection<TreeModel> queryTree(EruptModel eruptModel);
 
@@ -27,17 +27,7 @@ public interface DataService {
 
     void deleteData(EruptModel eruptModel, Serializable id);
 
-    // TAB Service
-    Collection findTabList(EruptModel eruptModel, String fieldName);
-
-    Collection findTabListById(EruptModel eruptModel, String fieldName, Serializable id);
-
     Collection<TreeModel> findTabTree(EruptModel eruptModel, String fieldName);
-
-    Collection findTabTreeById(EruptModel eruptModel, String fieldName, Serializable id);
-
-
-    //Reference Service
 
     Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName);
 

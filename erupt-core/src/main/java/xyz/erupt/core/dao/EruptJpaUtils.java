@@ -9,9 +9,12 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.model.HqlModel;
+import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.ReflectUtil;
 
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -20,7 +23,7 @@ import java.util.Set;
 /**
  * Created by liyuepeng on 11/5/18.
  */
-public class EruptJapUtils {
+public class EruptJpaUtils {
 
     public static final String AND = " and ";
 
@@ -37,7 +40,7 @@ public class EruptJapUtils {
         String eruptNameSymbol = eruptModel.getEruptName() + ".";
         cols.add(eruptNameSymbol + eruptModel.getErupt().primaryKeyCol() + " as " + eruptModel.getErupt().primaryKeyCol());
         eruptModel.getEruptFieldModels().forEach(field -> {
-            if (field.getEruptField().edit().type() == EditType.TAB) {
+            if (null != field.getField().getAnnotation(OneToMany.class)) {
                 return;
             }
             if (null != field.getField().getAnnotation(Transient.class)) {
@@ -66,87 +69,107 @@ public class EruptJapUtils {
             hql.append(hqlModel.getCols());
             hql.append(" from ").
                     append(eruptModel.getEruptName()).
-                    append(" ").
+                    append(" as ").
                     append(eruptModel.getEruptName());
-            eruptModel.getEruptFieldModels().forEach(field -> {
-                if (null != field.getField().getAnnotation(ManyToOne.class) || null != field.getField().getAnnotation(OneToOne.class)) {
-                    hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".").append(field.getFieldName()).append(" ").append(field.getFieldName());
+            ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
+                if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
+                    hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".")
+                            .append(field.getName()).append(" as ").append(field.getName());
                 }
             });
+
         } else {
             hql.append("from " + eruptModel.getEruptName());
         }
+        hql.append(generateEruptConditionHql(eruptModel, hqlModel.getSearchCondition(), hqlModel.getCustomerCondition()));
+        hql.append(generateEruptOrderHql(eruptModel, hqlModel.getOrderBy()));
+        return hql.toString();
+    }
+
+
+    public static String generateEruptJoinHql(EruptModel eruptModel) {
+        StringBuilder sb = new StringBuilder();
+        ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
+            if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
+                sb.append(" left outer join ")
+                        .append(eruptModel.getEruptName()).append(".").append(field.getName()).append(" as ").append(field.getName());
+                try {
+                    Object obj = field.get(eruptModel.getClazz());
+                    String join = generateEruptJoinHql(CoreService.getErupt(obj.getClass().getSimpleName()));
+                    sb.append(join);
+                    obj.getClass();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return sb.toString();
+    }
+
+    public static String generateEruptConditionHql(EruptModel eruptModel, JsonObject clientSearchCondition, String customCondition) {
+        StringBuilder hql = new StringBuilder();
         hql.append(" where 1=1");
         Filter filter = eruptModel.getErupt().filter();
-        if (!"".equals(filter.condition())) {
+        if (StringUtils.isNotBlank(filter.condition())) {
             hql.append(AND).append(AnnotationUtil.switchFilterConditionToStr(filter));
         }
         //condition
-        JsonObject condition = hqlModel.getEruptSearchCondition();
-        if (null != condition) {
-            for (String key : condition.keySet()) {
-                if (!condition.get(key).isJsonNull()) {
+        if (null != clientSearchCondition) {
+            for (String key : clientSearchCondition.keySet()) {
+                if (!clientSearchCondition.get(key).isJsonNull()) {
                     EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
                     if (null != eruptFieldModel) {
                         if (eruptFieldModel.getEruptField().edit().search().value()) {
                             Edit edit = eruptFieldModel.getEruptField().edit();
-                            String _key = EruptJapUtils.completeHqlPath(eruptModel.getEruptName(), key);
+                            String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
                             if (edit.search().vague()) {
                                 if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(EruptFieldModel.NUMBER_TYPE))
                                         || edit.type() == EditType.DATE
                                         || edit.type() == EditType.SLIDER) {
-                                    hql.append(EruptJapUtils.AND).append(_key)
+                                    hql.append(EruptJpaUtils.AND).append(_key)
                                             .append(" >=:").append(LVAL_KEY + key)
-                                            .append(EruptJapUtils.AND).append(_key)
+                                            .append(EruptJpaUtils.AND).append(_key)
                                             .append(" <=:").append(RVAL_KEY + key);
                                     continue;
                                 } else if (edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals("String")) {
-                                    hql.append(EruptJapUtils.AND).append(_key).append(" like :").append(key);
+                                    hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(key);
                                     continue;
                                 } else if (edit.type() == EditType.CHOICE) {
-                                    hql.append(EruptJapUtils.AND).append(_key).append(" in :").append(key);
+                                    hql.append(EruptJpaUtils.AND).append(_key).append(" in :").append(key);
                                     continue;
                                 }
                             }
                             if (edit.type() == EditType.REFERENCE_TREE) {
-                                hql.append(EruptJapUtils.AND).append(key + "." + edit.referenceTreeType().id()).append("=:").append(key);
+                                hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTreeType().id()).append("=:").append(key);
                                 continue;
                             }
-                            if (condition.get(key).toString().contains(EruptJapUtils.NULL)) {
-                                hql.append(EruptJapUtils.AND).append(_key).append(" is null");
-                            } else if (condition.get(key).toString().contains(EruptJapUtils.NOT_NULL)) {
-                                hql.append(EruptJapUtils.AND).append(_key).append(" is not null");
+                            if (clientSearchCondition.get(key).toString().contains(EruptJpaUtils.NULL)) {
+                                hql.append(EruptJpaUtils.AND).append(_key).append(" is null");
+                            } else if (clientSearchCondition.get(key).toString().contains(EruptJpaUtils.NOT_NULL)) {
+                                hql.append(EruptJpaUtils.AND).append(_key).append(" is not null");
                             } else {
-                                hql.append(EruptJapUtils.AND).append(_key).append("=:").append(key);
+                                hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(key);
                             }
                         }
                     }
                 }
             }
         }
-        String customCondition = hqlModel.getCustomCondition();
         if (StringUtils.isNotBlank(customCondition)) {
-            hql.append(EruptJapUtils.AND).append(customCondition);
+            hql.append(EruptJpaUtils.AND).append(customCondition);
         }
-        //sort
-        if (StringUtils.isNotBlank(hqlModel.getOrderBy())) {
-            hql.append(" order by ").append(hqlModel.getOrderBy());
-        } else if (eruptModel.getErupt().sorts().length > 0) {
-            String[] sorts = eruptModel.getErupt().sorts();
-            hql.append(" order by ").append(convertSorts(eruptModel.getEruptName(), sorts));
-        }
-        //TODO
-        System.err.println(hql.toString());
         return hql.toString();
     }
 
-    private static String convertSorts(String eruptName, String[] sorts) {
-        for (int i = 0; i < sorts.length; i++) {
-            if (!sorts[i].contains(".")) {
-                sorts[i] = eruptName + '.' + sorts[i];
-            }
+
+    public static String generateEruptOrderHql(EruptModel eruptModel, String orderBy) {
+        if (StringUtils.isNotBlank(orderBy)) {
+            return " order by " + orderBy;
+        } else if (StringUtils.isNotBlank(eruptModel.getErupt().orderBy())) {
+            return " order by " + eruptModel.getErupt().orderBy();
+        } else {
+            return "";
         }
-        return String.join(",", sorts);
     }
 
     //在left join的情况下要求必须指定表信息，通过此方法生成；
@@ -157,11 +180,6 @@ public class EruptJapUtils {
             return eruptName + "." + hqlPath;
         }
 
-    }
-
-    public static String generateEruptJapCondition(EruptModel eruptModel) {
-
-        return null;
     }
 
 

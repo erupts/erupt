@@ -1,7 +1,11 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.JavaType;
 import xyz.erupt.annotation.config.SerializeBy;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+
+import java.beans.Transient;
 
 /**
  * Created by liyuepeng on 9/28/18.
@@ -24,14 +28,14 @@ public @interface Edit {
 
     EditType type() default EditType.INPUT;
 
+    @Transient
+    String orderBy() default "";
+
+    @EditTypeMapping(allowType = JavaType.object)
+    Filter filter() default @Filter;
+
     @SerializeBy(method = "type", value = "INPUT")
     InputType inputType() default @InputType;
-
-    @SerializeBy(method = "type", value = "REFERENCE_TREE")
-    ReferenceTreeType referenceTreeType() default @ReferenceTreeType;
-
-    @SerializeBy(method = "type", value = "REFERENCE_TABLE")
-    ReferenceTableType referenceTableType() default @ReferenceTableType;
 
     @SerializeBy(method = "type", value = "BOOLEAN")
     BoolType boolType() default @BoolType(trueText = "是", falseText = "否");
@@ -42,9 +46,6 @@ public @interface Edit {
     @SerializeBy(method = "type", value = "DATE")
     DateType dateType() default @DateType;
 
-    @SerializeBy(method = "type", value = "TAB")
-    TabType tabType() default @TabType;
-
     @SerializeBy(method = "type", value = "SLIDER")
     SliderType sliderType() default @SliderType(max = 999);
 
@@ -53,5 +54,11 @@ public @interface Edit {
 
     @SerializeBy(method = "type", value = "DEPEND_SWITCH")
     DependSwitchType dependSwitchType() default @DependSwitchType(dependSwitchAttrs = {});
+
+    @SerializeBy(method = "type", value = "REFERENCE_TREE")
+    ReferenceTreeType referenceTreeType() default @ReferenceTreeType;
+
+    @SerializeBy(method = "type", value = "REFERENCE_TABLE")
+    ReferenceTableType referenceTableType() default @ReferenceTableType;
 
 }

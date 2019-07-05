@@ -124,8 +124,7 @@ public class Mmo extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "子节点",
-                    type = EditType.TAB,
-                    tabType = @TabType(type = TabEnum.TABLE)
+                    type = EditType.TAB_TABLE_REFER
             )
     )
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)

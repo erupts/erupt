@@ -46,7 +46,9 @@ public class EruptFieldModel {
             this.fieldReturnName = field.getType().getSimpleName();
         }
         //如果是Tab类型视图，数据必须为一对多关系管理，需要用泛型集合来存放，固！取出泛型的名称重新赋值到fieldReturnName中
-        if (eruptField.edit().type() == EditType.TAB) {
+        if (eruptField.edit().type() == EditType.TAB_TREE
+                || eruptField.edit().type() == EditType.TAB_TABLE_ADD
+                || eruptField.edit().type() == EditType.TAB_TABLE_REFER) {
             this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
         } else if (eruptField.edit().type() == EditType.CHOICE) {
             choiceMap = new HashMap<>();

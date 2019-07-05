@@ -1,6 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
-import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.EruptConst;
 
 import java.beans.Transient;
 
@@ -8,19 +8,14 @@ import java.beans.Transient;
  * Created by liyuepeng on 9/28/18.
  */
 public @interface ReferenceTreeType {
-    String id() default "id";
+    String id() default EruptConst.ID;
 
-    String label() default "name";
+    String label() default EruptConst.LABEL;
 
     String pid() default "";
 
     String depend() default "";
 
     @Transient
-    String dependColumn() default "id";
-
-    @Transient
-    String[] sorts() default "";
-
-    Filter filter() default @Filter(condition = "");
+    String dependColumn() default EruptConst.ID;
 }

@@ -11,9 +11,9 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.SpringUtil;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,18 +44,13 @@ public class CoreService implements InitializingBean {
                 Map<String, EruptFieldModel> eruptFieldMap = new LinkedCaseInsensitiveMap<>();
                 //erupt class annotation
                 {
-                    Class tempClass = clazz;
-                    while (null != tempClass) {
-                        for (Field field : tempClass.getDeclaredFields()) {
-                            EruptField eruptField = field.getAnnotation(EruptField.class);
-                            if (null != eruptField) {
-                                EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
-                                eruptFieldModels.add(eruptFieldModel);
-                                eruptFieldMap.put(field.getName(), eruptFieldModel);
-                            }
+                    ReflectUtil.findClassAllFields(clazz, field -> {
+                        if (null != field.getAnnotation(EruptField.class)) {
+                            EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
+                            eruptFieldModels.add(eruptFieldModel);
+                            eruptFieldMap.put(field.getName(), eruptFieldModel);
                         }
-                        tempClass = tempClass.getSuperclass();
-                    }
+                    });
                 }
                 eruptModel.setEruptFieldModels(eruptFieldModels);
                 eruptModel.setEruptFieldMap(eruptFieldMap);

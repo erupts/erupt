@@ -10,7 +10,6 @@ import xyz.erupt.core.model.EruptBuildModel;
 import xyz.erupt.core.model.EruptFieldModel;
 import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.CoreService;
-import xyz.erupt.core.util.ReflectUtil;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,10 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(RestPath.ERUPT_BUILD)
 public class EruptBuildController {
 
-    @GetMapping("/list/{erupt}")
+    @GetMapping("/{erupt}")
     @ResponseBody
     @EruptRouter(base64 = true, verifyIndex = 1)
-    public EruptBuildModel getEruptTableView(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
+    public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (null == eruptModel) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -34,19 +33,18 @@ public class EruptBuildController {
             EruptBuildModel eruptBuildModel = new EruptBuildModel();
             eruptBuildModel.setEruptModel(eruptModel);
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
-                EruptModel em;
                 switch (fieldModel.getEruptField().edit().type()) {
-                    case TAB:
-                        em = CoreService.getErupt(ReflectUtil.getFieldGenericName(fieldModel.getField()).get(0));
-                        eruptBuildModel.getSubErupts().add(new EruptAndEruptFieldModel(fieldModel, em));
+                    case TAB_TABLE_ADD:
+                    case TAB_TABLE_REFER:
+                        eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
+                        //TODO 该数据结构不准备使用了
+                        eruptBuildModel.getSubErupts().add(new EruptAndEruptFieldModel(fieldModel, CoreService.getErupt(fieldModel.getFieldReturnName())));
                         break;
                     case COMBINE:
-                        em = CoreService.getErupt(fieldModel.getFieldReturnName());
-                        eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), em);
+                        eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
                         break;
                     case REFERENCE_TABLE:
-                        em = CoreService.getErupt(fieldModel.getFieldReturnName());
-                        eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), em);
+                        eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
                         break;
                     default:
                         break;
