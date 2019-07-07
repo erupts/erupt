@@ -21,4 +21,7 @@ public @interface EditTypeMapping {
     JavaType[] allowType() default {};
 
     boolean excelOperator() default true;
+
+    //TODO 重要的组件依据
+    Class<?> component() default void.class;
 }

@@ -13,11 +13,11 @@ import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.core.bean.EruptFieldModel;
+import xyz.erupt.core.bean.EruptModel;
+import xyz.erupt.core.bean.Page;
+import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.controller.EruptDataController;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.Page;
-import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.HttpUtil;
 
@@ -148,7 +148,7 @@ public class DataFileService {
                         ReferenceTreeType referenceTreeType = fieldModel.getEruptField().edit().referenceTreeType();
 //                        eruptJpaDao.getDataMap(CoreService.ERUPTS.get(fieldModel.getFieldReturnName()), AnnotationUtil.switchFilterConditionToStr(referenceTreeType.filter()),
 //                                null, Arrays.asList(referenceTreeType.id() + " as id", referenceTreeType.label() + " as label"), null);
-                        Collection<TreeModel> collection = eruptDataController.getReferenceTree(eruptModel.getEruptName(), fieldModel.getFieldName());
+                        Collection<TreeModel> collection = eruptDataController.getReferenceTree(eruptModel.getEruptName(), fieldModel.getFieldName(), null);
                         break;
                     default:
                         break;

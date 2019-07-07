@@ -32,17 +32,19 @@ public @interface Erupt {
 
     Power power() default @Power;
 
-    //@ToMap(key = "code")
+    @ToMap(key = "code")
     RowOperation[] rowOperation() default {};
 
-    Filter filter() default @Filter;
+    @Transient
+    Filter filter() default @Filter(condition = "");
 
     @Transient
     String orderBy() default "";
 
-    Tree tree() default @Tree(id = EruptConst.ID, label = EruptConst.LABEL);
-
+    @Transient
     Class<? extends DataProxy>[] dateProxy() default {};
+
+    Tree tree() default @Tree(id = EruptConst.ID, label = EruptConst.LABEL);
 
     @ToMap(key = "key")
     KV[] param() default {};

@@ -8,8 +8,8 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.eruptlimit.service.UserService;
 

@@ -2,9 +2,9 @@ package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.Page;
-import xyz.erupt.core.model.TreeModel;
+import xyz.erupt.core.bean.EruptModel;
+import xyz.erupt.core.bean.Page;
+import xyz.erupt.core.bean.TreeModel;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -29,8 +29,6 @@ public interface DataService {
 
     Collection<TreeModel> findTabTree(EruptModel eruptModel, String fieldName);
 
-    Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName);
-
-    Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, Serializable dependValue);
+    Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName, Serializable dependValue);
 
 }

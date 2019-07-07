@@ -1,9 +1,7 @@
 package xyz.erupt.core.exception;
 
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.core.model.EruptFieldModel;
-
-import static org.fusesource.jansi.Ansi.ansi;
+import xyz.erupt.core.bean.EruptFieldModel;
 
 /**
  * Created by liyuepeng on 11/1/18.

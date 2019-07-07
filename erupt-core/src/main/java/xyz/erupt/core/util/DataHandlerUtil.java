@@ -4,9 +4,9 @@ import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.TreeModel;
+import xyz.erupt.core.bean.EruptFieldModel;
+import xyz.erupt.core.bean.EruptModel;
+import xyz.erupt.core.bean.TreeModel;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

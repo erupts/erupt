@@ -1,14 +1,16 @@
 package xyz.erupt.core.util;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.core.bean.EruptApiModel;
+import xyz.erupt.core.bean.EruptFieldModel;
+import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.CoreService;
 
 import java.lang.reflect.Field;
@@ -131,6 +133,17 @@ public class EruptUtil {
             default:
                 return jsonElement.getAsString();
         }
+    }
+
+    public static EruptApiModel validateEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
+        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
+            if (field.getEruptField().edit().notNull()) {
+                if (!jsonObject.has(field.getFieldName())) {
+                    return EruptApiModel.errorApi(field.getEruptField().edit().title() + "必填");
+                }
+            }
+        }
+        return EruptApiModel.successApi();
     }
 
 

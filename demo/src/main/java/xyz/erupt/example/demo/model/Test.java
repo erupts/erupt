@@ -166,7 +166,7 @@ public class Test {
                     title = "角色",
                     type = EditType.REFERENCE_TREE,
                     placeHolder = "角色",
-                    referenceTreeType = @ReferenceTreeType(depend = "eruptUser", dependColumn = "id"),
+                    referenceTreeType = @ReferenceTreeType(dependField = "eruptUser", dependColumn = "id"),
                     search = @Search(value = true)
             )
     )
@@ -195,7 +195,7 @@ public class Test {
             edit = @Edit(
                     title = "其他信息",
                     type = EditType.COMBINE,
-                    referenceTreeType = @ReferenceTreeType(depend = "name", dependColumn = "name"),
+                    referenceTreeType = @ReferenceTreeType(dependField = "name", dependColumn = "name"),
                     search = @Search(value = true)
             )
     )

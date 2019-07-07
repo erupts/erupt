@@ -10,12 +10,12 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.core.bean.EruptFieldModel;
+import xyz.erupt.core.bean.EruptModel;
+import xyz.erupt.core.bean.Page;
+import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.dao.EruptJpaUtils;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.Page;
-import xyz.erupt.core.model.TreeModel;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.util.AnnotationUtil;
@@ -118,18 +118,12 @@ public class DBService implements DataService {
         EruptFieldModel eruptTabFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
         EruptModel subEruptModel = CoreService.getErupt(eruptModel.getEruptFieldMap().get(fieldName).getFieldReturnName());
         String condition = AnnotationUtil.switchFilterConditionToStr(eruptTabFieldModel.getEruptField().edit().filter());
-        return treeDataUtil(subEruptModel, condition, null);
+        return treeDataUtil(subEruptModel, condition, eruptTabFieldModel.getEruptField().edit().orderBy());
     }
 
 
-    //reference
     @Override
-    public Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName) {
-        return getReferenceTreeByDepend(eruptModel, fieldName, null);
-    }
-
-    @Override
-    public Collection<TreeModel> getReferenceTreeByDepend(EruptModel eruptModel, String fieldName, Serializable dependValue) {
+    public Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName, Serializable dependValue) {
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
         Edit edit = eruptFieldModel.getEruptField().edit();
         ReferenceTreeType refTree = edit.referenceTreeType();
@@ -145,7 +139,7 @@ public class DBService implements DataService {
         }
         //处理depend参数代码
         Map<String, Object> conditionParameter = null;
-        if (StringUtils.isNotBlank(refTree.depend()) && null != dependValue) {
+        if (StringUtils.isNotBlank(refTree.dependField()) && null != dependValue) {
             String DEPEND_KEY = "dependVal";
             conditionParameter = new HashMap<>();
             if (StringUtils.isNotBlank(edit.filter().condition())) {

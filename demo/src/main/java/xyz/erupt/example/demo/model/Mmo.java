@@ -2,10 +2,7 @@ package xyz.erupt.example.demo.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.CodeAndEdit;
-import xyz.erupt.annotation.sub_erupt.Power;
-import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_erupt.Tree;
+import xyz.erupt.annotation.sub_erupt.*;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -23,7 +20,7 @@ import java.util.Set;
  * Created by liyuepeng on 9/28/18.
  */
 @Erupt(
-//        filter = @Filter(condition = "id=1"),
+        filter = @Filter(condition = "id=1"),
         name = "测试",
         rowOperation = {
                 @RowOperation(

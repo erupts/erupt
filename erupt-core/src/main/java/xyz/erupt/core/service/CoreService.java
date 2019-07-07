@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.core.bean.EruptFieldModel;
+import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.exception.EruptAnnotationException;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.SpringUtil;
 

@@ -6,9 +6,9 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.HqlModel;
+import xyz.erupt.core.bean.EruptFieldModel;
+import xyz.erupt.core.bean.EruptModel;
+import xyz.erupt.core.bean.HqlBean;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -62,7 +62,7 @@ public class EruptJpaUtils {
 
 
     //erupt 注解信息映射成hql语句
-    public static String generateEruptJpaHql(EruptModel eruptModel, HqlModel hqlModel) {
+    public static String generateEruptJpaHql(EruptModel eruptModel, HqlBean hqlModel) {
         StringBuilder hql = new StringBuilder();
         if (StringUtils.isNotBlank(hqlModel.getCols())) {
             hql.append("select ");

@@ -1,10 +1,8 @@
-package xyz.erupt.core.model;
+package xyz.erupt.core.bean;
 
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,6 +18,4 @@ public class EruptBuildModel {
     private Map<String, EruptModel> referenceErupts = new HashMap<>();
 
     private Map<String, EruptModel> combineErupts = new HashMap<>();
-
-    private List<EruptAndEruptFieldModel> subErupts = new ArrayList<>();
 }

@@ -4,11 +4,10 @@ package xyz.erupt.core.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.bean.EruptBuildModel;
+import xyz.erupt.core.bean.EruptFieldModel;
+import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.model.EruptAndEruptFieldModel;
-import xyz.erupt.core.model.EruptBuildModel;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
 import xyz.erupt.core.service.CoreService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +36,9 @@ public class EruptBuildController {
                     case TAB_TABLE_ADD:
                     case TAB_TABLE_REFER:
                         eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
-                        //TODO 该数据结构不准备使用了
-                        eruptBuildModel.getSubErupts().add(new EruptAndEruptFieldModel(fieldModel, CoreService.getErupt(fieldModel.getFieldReturnName())));
                         break;
+                    case TAB_TREE:
+                        eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), new EruptModel());
                     case COMBINE:
                         eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
                         break;

@@ -1,6 +1,5 @@
 package xyz.erupt.annotation.sub_field;
 
-import xyz.erupt.annotation.config.JavaType;
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
@@ -31,8 +30,8 @@ public @interface Edit {
     @Transient
     String orderBy() default "";
 
-    @EditTypeMapping(allowType = JavaType.object)
-    Filter filter() default @Filter;
+    @Transient
+    Filter filter() default @Filter(condition = "");
 
     @SerializeBy(method = "type", value = "INPUT")
     InputType inputType() default @InputType;

@@ -10,9 +10,9 @@ import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.bean.*;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
-import xyz.erupt.core.model.*;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.*;
 
@@ -42,7 +42,7 @@ public class EruptDataController {
                 searchCondition.remove(Page.PAGE_SORT_STR).getAsString(), searchCondition);
     }
 
-    public Page getEruptData(String eruptName, int pageIndex, int pageSize, String sort, JsonObject searchCondition) {
+    private Page getEruptData(String eruptName, int pageIndex, int pageSize, String sort, JsonObject searchCondition) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().query()) {
             String customerCondition = null;
@@ -93,10 +93,8 @@ public class EruptDataController {
     @EruptRouter
     public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.getErupt(erupt);
-//        BoolAndReason br = EruptUtil.validateEruptNotNull(eruptModel, data);
-//        if (!br.isBool()) {
-//            return new EruptApiModel(br);
-//        }
+        EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
+        if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) return eruptApiModel;
         if (eruptModel.getErupt().power().add()) {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
             DataHandlerUtil.clearObjectDefaultValueByJson(obj, data);
@@ -125,10 +123,8 @@ public class EruptDataController {
     @EruptRouter
     public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.getErupt(erupt);
-//        BoolAndReason br = EruptValidate.validate(eruptModel,data);
-//        if (!br.isBool()) {
-//            return new EruptApiModel(br);
-//        }
+        EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
+        if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) return eruptApiModel;
         if (eruptModel.getErupt().power().edit()) {
             try {
                 Object obj = this.gson.fromJson(data.toString(), eruptModel.getClazz());
@@ -183,7 +179,7 @@ public class EruptDataController {
         EruptApiModel eruptApiModel = EruptApiModel.successApi(null);
         for (Serializable id : ids) {
             eruptApiModel = this.deleteEruptData(erupt, id);
-            if (!eruptApiModel.isSuccess()) {
+            if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
                 break;
             }
         }
@@ -222,11 +218,13 @@ public class EruptDataController {
         }
     }
 
-    @PostMapping("/{erupt}/refer-table/{fieldName}")
+    // REFERENCE API
+    @PostMapping("/{erupt}/reference-table/{fieldName}")
     @ResponseBody
     @EruptRouter
-    public Page getReferTable(@PathVariable("erupt") String eruptName, @PathVariable("fieldName") String fieldName,
-                              @RequestBody JsonObject searchCondition) {
+    public Page getReferenceTable(@PathVariable("erupt") String eruptName,
+                                  @PathVariable("fieldName") String fieldName,
+                                  @RequestBody JsonObject searchCondition) {
 //        fieldName = EruptUtil.handleNoRightVariable(fieldName);
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().edit()) {
@@ -244,37 +242,36 @@ public class EruptDataController {
         }
     }
 
-    // REFERENCE API
     @GetMapping("/{erupt}/reference-tree/{fieldName}")
     @ResponseBody
     @EruptRouter
-    public Collection<TreeModel> getReferenceTree(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName) {
-        EruptModel eruptModel = CoreService.getErupt(erupt);
-        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTree(eruptModel, fieldName);
-    }
-
-
-    @GetMapping("/{erupt}/reference-tree/{fieldName}/{dependValue}")
-    @ResponseBody
-    @EruptRouter
-    public Collection<TreeModel> getReferenceTreeByDepend(@PathVariable("erupt") String erupt, @PathVariable("fieldName") String fieldName, @PathVariable("dependValue") Serializable dependValue) {
+    public Collection<TreeModel> getReferenceTree(@PathVariable("erupt") String erupt,
+                                                  @PathVariable("fieldName") String fieldName,
+                                                  @RequestParam(value = "dependValue", required = false) Serializable dependValue) {
         EruptModel eruptModel = CoreService.getErupt(erupt);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
-        //TODO 代码过长，应该做优化
-        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTreeByDepend(eruptModel, fieldName,
-                TypeUtil.typeStrConvertObject(dependValue,
+        String dependField = eruptFieldModel.getEruptField().edit().referenceTreeType().dependField();
+        if (!"".equals(dependField)) {
+            if (null == dependValue) {
+                throw new RuntimeException("请先输入" + eruptModel.getEruptFieldMap().get(dependField).getEruptField().edit().title() + "值");
+            } else {
+                //TODO 代码过长，应该做优化
+                dependValue = TypeUtil.typeStrConvertObject(dependValue,
                         CoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(eruptFieldModel.getEruptField().
-                                edit().referenceTreeType().dependColumn()).getField().getType().getSimpleName()));
+                                edit().referenceTreeType().dependColumn()).getField().getType().getSimpleName());
+            }
+        }
+        return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).getReferenceTree(eruptModel, fieldName, dependValue);
     }
-    // REFERENCE API END
 
     @PostMapping("/validate-erupt/{erupt}")
     @ResponseBody
     @EruptRouter
     public EruptApiModel validateErupt(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
-        EruptModel eruptModel = CoreService.getErupt(erupt);
-
-        return new EruptApiModel(true, null, null);
+        EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(CoreService.getErupt(erupt), data);
+        eruptApiModel.setErrorIntercept(false);
+        eruptApiModel.setPromptWay(EruptApiModel.PromptWay.NOTIFY);
+        return eruptApiModel;
     }
 
 

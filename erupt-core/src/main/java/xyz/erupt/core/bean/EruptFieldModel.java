@@ -1,4 +1,4 @@
-package xyz.erupt.core.model;
+package xyz.erupt.core.bean;
 
 import com.google.gson.JsonObject;
 import lombok.Data;
@@ -28,11 +28,11 @@ public class EruptFieldModel {
 
     private transient Map<String, String> choiceMap;
 
-    private JsonObject eruptFieldJson;
-
     private String fieldName;
 
     private String fieldReturnName;
+
+    private JsonObject eruptFieldJson;
 
     private Object value;
 

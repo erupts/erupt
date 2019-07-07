@@ -1,6 +1,6 @@
 package xyz.erupt.core.exception;
 
-import xyz.erupt.core.model.EruptModel;
+import xyz.erupt.core.bean.EruptModel;
 
 /**
  * Created by liyuepeng on 11/1/18.

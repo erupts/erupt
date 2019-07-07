@@ -5,10 +5,10 @@ import com.google.gson.JsonObject;
 import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.core.model.EruptFieldModel;
-import xyz.erupt.core.model.EruptModel;
-import xyz.erupt.core.model.HqlModel;
-import xyz.erupt.core.model.Page;
+import xyz.erupt.core.bean.EruptFieldModel;
+import xyz.erupt.core.bean.EruptModel;
+import xyz.erupt.core.bean.HqlBean;
+import xyz.erupt.core.bean.Page;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
@@ -51,9 +51,9 @@ public class EruptJpaDao {
     }
 
     public Page queryEruptList(EruptModel eruptModel, Page page, JsonObject searchCondition, String customCondition) {
-        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")",
+        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")",
                 customCondition, searchCondition, page.getSort()));
-        String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlModel("count(*)", customCondition, searchCondition, null));
+        String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("count(*)", customCondition, searchCondition, null));
         Query query = entityManager.createQuery(hql);
         Query countQuery = entityManager.createQuery(countHql);
         Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
@@ -95,7 +95,7 @@ public class EruptJpaDao {
     public List<Map<String, Object>> getDataMap(EruptModel eruptModel, String condition,
                                                 String orderBy, List<String> cols,
                                                 Map<String, Object> conditionParameter) {
-        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlModel("new map(" + String.join(",", cols) + ")", condition, null, orderBy));
+        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("new map(" + String.join(",", cols) + ")", condition, null, orderBy));
         Query query = entityManager.createQuery(hql);
         if (null != conditionParameter) {
             for (Map.Entry<String, Object> entry : conditionParameter.entrySet()) {

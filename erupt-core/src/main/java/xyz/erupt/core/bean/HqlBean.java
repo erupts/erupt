@@ -1,4 +1,4 @@
-package xyz.erupt.core.model;
+package xyz.erupt.core.bean;
 
 import com.google.gson.JsonObject;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class HqlModel {
+public class HqlBean {
 
     //后台自定义参数
     private String customerCondition;
@@ -18,14 +18,14 @@ public class HqlModel {
 
     private String cols;
 
-    public HqlModel(String cols, String customerCondition, JsonObject searchCondition, String orderBy) {
+    public HqlBean(String cols, String customerCondition, JsonObject searchCondition, String orderBy) {
         this.cols = cols;
         this.customerCondition = customerCondition;
         this.searchCondition = searchCondition;
         this.orderBy = orderBy;
     }
 
-    public HqlModel(String cols) {
+    public HqlBean(String cols) {
         this.cols = cols;
     }
 

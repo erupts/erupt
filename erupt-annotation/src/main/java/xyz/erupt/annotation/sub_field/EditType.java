@@ -27,23 +27,19 @@ public enum EditType {
     ATTACHMENT,
     @EditTypeMapping(mapping = "dependSwitchType", desc = "表单依赖开关", allowType = {JavaType.number})
     DEPEND_SWITCH,
-
     @EditTypeMapping(desc = "横向分割线与描述", allowType = {JavaType.not_know}, excelOperator = false)
     DIVIDE,
     @EditTypeMapping(desc = "隐藏", allowType = {JavaType.not_know}, excelOperator = false)
     HIDDEN,
     @EditTypeMapping(desc = "富文本编辑器", allowType = {JavaType.string})
     HTML_EDIT,
-
     @EditTypeMapping(desc = "大文本域", allowType = {JavaType.string})
-    TEXTAREA,         //text area         vague the like
-
-    @EditTypeMapping(desc = "树引用", allowType = {JavaType.object})
+    TEXTAREA,
+    @EditTypeMapping(desc = "树引用", allowType = {JavaType.object}, excelOperator = false)
     TAB_TREE,
-
-    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object})
+    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object}, excelOperator = false)
     TAB_TABLE_ADD,
-    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object})
+    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object}, excelOperator = false)
     TAB_TABLE_REFER,
 
     JSON_EDIT,         //JSON格式编辑器

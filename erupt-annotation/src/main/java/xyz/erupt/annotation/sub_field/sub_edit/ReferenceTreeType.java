@@ -14,7 +14,7 @@ public @interface ReferenceTreeType {
 
     String pid() default "";
 
-    String depend() default "";
+    String dependField() default "";
 
     @Transient
     String dependColumn() default EruptConst.ID;

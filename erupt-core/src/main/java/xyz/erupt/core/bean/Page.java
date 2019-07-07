@@ -1,4 +1,4 @@
-package xyz.erupt.core.model;
+package xyz.erupt.core.bean;
 
 import lombok.Data;
 
