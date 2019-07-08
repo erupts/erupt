@@ -1,6 +1,6 @@
 package xyz.erupt.core.annotation;
 
-import xyz.erupt.annotation.constant.EruptConst;
+import xyz.erupt.annotation.constant.AnnotationConst;
 
 import java.lang.annotation.*;
 
@@ -15,7 +15,7 @@ public @interface EruptRouter {
 
     boolean loginVerify() default true;
 
-    int authIndex() default EruptConst.NOT_LIMIT;
+    int authIndex() default AnnotationConst.NOT_LIMIT;
 
     int startAuthIndex() default 1;
 

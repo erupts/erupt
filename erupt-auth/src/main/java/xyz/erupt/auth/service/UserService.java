@@ -18,7 +18,6 @@ import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.cache.EruptRedisService;
-import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.util.MD5Utils;
 
 import javax.persistence.EntityManager;
@@ -191,9 +190,9 @@ public class UserService {
             em:
             for (EruptMenu menu : menus) {
                 if (StringUtils.isNotBlank(menu.getPath()) && menu.getPath().toLowerCase().contains(eruptModel.getEruptName().toLowerCase())) {
-                    String[] pathArr = menu.getPath().split("/");
+                    String[] pathArr = menu.getPath().split("\\?")[0].split("/");
                     for (String pa : pathArr) {
-                        if (pa.equalsIgnoreCase(eruptModel.getEruptName()) && !pa.startsWith(RestPath.NO_RIGHT_SYMBOL)) {
+                        if (pa.equalsIgnoreCase(eruptModel.getEruptName())) {
                             if (menu.getStatus() != 3) {
                                 result = true;
                                 break em;

@@ -3,7 +3,7 @@ package xyz.erupt.annotation.constant;
 /**
  * Created by liyuepeng on 2019-07-05.
  */
-public class EruptConst {
+public class AnnotationConst {
 
     public static final String ID = "id";
 
@@ -12,4 +12,6 @@ public class EruptConst {
     public static final String PID = "pid";
 
     public static final int NOT_LIMIT = -1;
+
+    public static final String EMPTY_STR = "";
 }

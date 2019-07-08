@@ -2,7 +2,7 @@ package xyz.erupt.annotation.constant;
 
 public class DataLength {
 
-    public static final int UNLIMITED = EruptConst.NOT_LIMIT;
+    public static final int UNLIMITED = AnnotationConst.NOT_LIMIT;
     public static final int SHORT_NAME_LENGTH = 16;
     public static final int CODE_LENGTH = 52;
     public static final int NAME_LENGTH = 52;

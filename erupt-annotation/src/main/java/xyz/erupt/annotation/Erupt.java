@@ -1,7 +1,7 @@
 package xyz.erupt.annotation;
 
 import xyz.erupt.annotation.config.ToMap;
-import xyz.erupt.annotation.constant.EruptConst;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -20,7 +20,7 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Erupt {
 
-    String primaryKeyCol() default EruptConst.ID;
+    String primaryKeyCol() default AnnotationConst.ID;
 
     @Transient
     boolean loginUse() default true;
@@ -29,7 +29,7 @@ public @interface Erupt {
     String name();
 
     @Transient
-    String desc() default "";
+    String desc() default AnnotationConst.EMPTY_STR;
 
     Power power() default @Power;
 
@@ -45,7 +45,7 @@ public @interface Erupt {
     @Transient
     Class<? extends DataProxy>[] dateProxy() default {};
 
-    Tree tree() default @Tree(id = EruptConst.ID, label = EruptConst.LABEL);
+    Tree tree() default @Tree(id = AnnotationConst.ID, label = AnnotationConst.LABEL);
 
     @ToMap(key = "key")
     KV[] param() default {};

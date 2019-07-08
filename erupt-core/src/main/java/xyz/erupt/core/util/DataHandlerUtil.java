@@ -3,10 +3,12 @@ package xyz.erupt.core.util;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
 import xyz.erupt.core.bean.EruptFieldModel;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.bean.TreeModel;
+import xyz.erupt.core.service.CoreService;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -71,28 +73,48 @@ public class DataHandlerUtil {
 
     public static void convertDataToEruptView(EruptModel eruptModel, Map<String, Object> map) {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            Object value = entry.getValue();
-            if (null != value) {
-                EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(entry.getKey());
-                if (null == fieldModel) {
-//                    map.put(key, null);
-                } else {
-                    Edit edit = fieldModel.getEruptField().edit();
-                    switch (edit.type()) {
-                        case CHOICE:
-                            if (edit.choiceType().type() == ChoiceEnum.SELECT_SINGLE || edit.choiceType().type() == ChoiceEnum.RADIO) {
-                                map.put(fieldModel.getFieldName(), fieldModel.getChoiceMap().get(value.toString()));
+            if (null != entry.getValue()) {
+                String key = entry.getKey();
+                if (entry.getKey().contains("_")) {
+                    key = entry.getKey().split("_")[0];
+                }
+                EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
+                Edit edit = fieldModel.getEruptField().edit();
+                switch (edit.type()) {
+                    case CHOICE:
+                        if (edit.choiceType().type() == ChoiceEnum.SELECT_SINGLE || edit.choiceType().type() == ChoiceEnum.RADIO) {
+                            map.put(entry.getKey(), fieldModel.getChoiceMap().get(entry.getValue().toString()));
+                        }
+                        break;
+                    case BOOLEAN:
+                        map.put(entry.getKey(), (Boolean) entry.getValue() ? edit.boolType().trueText() : edit.boolType().falseText());
+                        break;
+                    case REFERENCE_TREE:
+                    case REFERENCE_TABLE:
+                    case COMBINE:
+                        for (View view : fieldModel.getEruptField().views()) {
+                            String[] _keys = entry.getKey().split("_");
+                            if (view.column().equals(_keys[_keys.length - 1])) {
+                                EruptFieldModel vef = CoreService.getErupt(fieldModel.getFieldReturnName()).
+                                        getEruptFieldMap().get(view.column());
+                                switch (vef.getEruptField().edit().type()) {
+                                    case CHOICE:
+                                        if (vef.getEruptField().edit().choiceType().type() == ChoiceEnum.SELECT_SINGLE
+                                                || vef.getEruptField().edit().choiceType().type() == ChoiceEnum.RADIO) {
+                                            map.put(entry.getKey(), vef.getChoiceMap().get(entry.getValue().toString()));
+                                        }
+                                        break;
+                                    case BOOLEAN:
+                                        map.put(entry.getKey(), (Boolean) entry.getValue() ?
+                                                vef.getEruptField().edit().boolType().trueText() :
+                                                vef.getEruptField().edit().boolType().falseText());
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
-                            break;
-                        case BOOLEAN:
-                            map.put(fieldModel.getFieldName(), (Boolean) value ? edit.boolType().trueText() : edit.boolType().falseText());
-                            break;
-                        case REFERENCE_TREE:
-                        case REFERENCE_TABLE:
-                        case COMBINE:
-//                            convertDataToEruptView(CoreService.ERUPTS.get(fieldModel.getFieldReturnName()), (Map<String, Object>) value);
-                            break;
-                    }
+                        }
+                        break;
                 }
             }
         }

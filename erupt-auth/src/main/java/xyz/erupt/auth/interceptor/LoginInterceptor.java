@@ -63,12 +63,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             String path = request.getServletPath();
             //权限校验
             if (path.startsWith(RestPath.ERUPT_API)) {
-                String authStr = path.split("/")[eruptRouter.startAuthIndex() + eruptRouter.authIndex()];
                 EruptModel eruptModel = CoreService.getErupt(eruptName);
                 if (null == eruptModel) {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
+                String authStr = path.split("/")[eruptRouter.startAuthIndex() + eruptRouter.authIndex() + 1];
                 if (!path.contains(eruptName) || !userService.verifyMenuLimit(token, authStr, eruptModel)) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     return false;

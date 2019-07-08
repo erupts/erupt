@@ -27,6 +27,7 @@ public class Page {
     public static final String PAGE_SIZE_STR = "_pageSize";
 
     public static final String PAGE_SORT_STR = "_sort";
+
     private Collection<Map<String, Object>> list;
 
     public Page(int pageIndex, int pageSize, String sort) {

@@ -1,7 +1,6 @@
 package xyz.erupt.core.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +33,7 @@ public class EruptDataController {
     private Gson gson;
 
     @PostMapping("/table/{erupt}")
-    @EruptRouter
+    @EruptRouter(authIndex = 2)
     @ResponseBody
     public Page getEruptData(@PathVariable("erupt") String eruptName, @RequestBody JsonObject searchCondition) {
         return this.getEruptData(eruptName,
@@ -51,6 +50,9 @@ public class EruptDataController {
                 customerCondition = SpringUtil.getBean(proxy).beforeFetch(searchCondition);
             }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).queryList(eruptModel, new Page(pageIndex, pageSize, sort), searchCondition, customerCondition);
+            for (Map<String, Object> map : page.getList()) {
+                DataHandlerUtil.convertDataToEruptView(eruptModel, map);
+            }
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
                 SpringUtil.getBean(proxy).afterFetch(page.getList());
             }
@@ -62,7 +64,7 @@ public class EruptDataController {
 
     @GetMapping("/tree/{erupt}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 2)
     public Collection<TreeModel> getEruptTreeData(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().query()) {
@@ -78,7 +80,7 @@ public class EruptDataController {
 
     @GetMapping("/{erupt}/{id}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 1)
     public Map<String, Object> getEruptDataById(@PathVariable("erupt") String eruptName, @PathVariable("id") String id) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().edit() || eruptModel.getErupt().power().viewDetails()) {
@@ -91,7 +93,7 @@ public class EruptDataController {
 
     @PostMapping("/{erupt}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 1)
     public EruptApiModel addEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.getErupt(erupt);
         EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
@@ -121,7 +123,7 @@ public class EruptDataController {
 
     @PutMapping("/{erupt}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 1)
     public EruptApiModel editEruptData(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptModel eruptModel = CoreService.getErupt(erupt);
         EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
@@ -151,7 +153,7 @@ public class EruptDataController {
 
     @DeleteMapping("/{erupt}/{id}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 1)
     public EruptApiModel deleteEruptData(@PathVariable("erupt") String erupt, @PathVariable("id") Serializable id) {
         EruptModel eruptModel = CoreService.getErupt(erupt);
         if (eruptModel.getErupt().power().delete()) {
@@ -175,7 +177,7 @@ public class EruptDataController {
     @Transactional
     @DeleteMapping("/{erupt}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 1)
     public EruptApiModel deleteEruptDataList(@PathVariable("erupt") String erupt, @RequestParam("ids") Serializable[] ids) {
         EruptApiModel eruptApiModel = EruptApiModel.successApi(null);
         for (Serializable id : ids) {
@@ -189,19 +191,20 @@ public class EruptDataController {
 
     @PostMapping("/{erupt}/operator/{code}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 1)
     public EruptApiModel execEruptOperator(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
                                            @RequestBody JsonObject body) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
             if (code.equals(rowOperation.code())) {
-                for (CodeAndEdit codeAndEdit : rowOperation.edits()) {
-                    codeAndEdit.edit().notNull();
-                }
-
-                JsonElement param = body.get("param");
-                if (param.isJsonNull()) {
-                    param = null;
+                JsonObject param = null;
+                if (rowOperation.edits().length > 0) {
+                    param = body.getAsJsonObject("param");
+                    for (CodeAndEdit codeAndEdit : rowOperation.edits()) {
+                        if (codeAndEdit.edit().notNull() && param.get(codeAndEdit.code()).isJsonNull()) {
+                            return EruptApiModel.errorApi(codeAndEdit.edit().title() + "必填");
+                        }
+                    }
                 }
                 OperationHandler operationHandler = SpringUtil.getBean(rowOperation.operationHandler());
                 return new EruptApiModel(operationHandler.exec(body.get("data"), param));
@@ -212,9 +215,8 @@ public class EruptDataController {
 
     @GetMapping("/tab/tree/{erupt}/{tabFieldName}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 3)
     public Collection<TreeModel> findTabTree(@PathVariable("erupt") String eruptName, @PathVariable("tabFieldName") String tabFieldName) {
-        tabFieldName = EruptUtil.handleNoRightVariable(tabFieldName);
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().viewDetails() || eruptModel.getErupt().power().edit()) {
             return AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findTabTree(eruptModel, tabFieldName);
@@ -226,11 +228,10 @@ public class EruptDataController {
     // REFERENCE API
     @PostMapping("/{erupt}/reference-table/{fieldName}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 1)
     public Page getReferenceTable(@PathVariable("erupt") String eruptName,
                                   @PathVariable("fieldName") String fieldName,
                                   @RequestBody JsonObject searchCondition) {
-//        fieldName = EruptUtil.handleNoRightVariable(fieldName);
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().edit()) {
             int pageIndex = searchCondition.remove(Page.PAGE_INDEX_STR).getAsInt();
@@ -249,7 +250,7 @@ public class EruptDataController {
 
     @GetMapping("/{erupt}/reference-tree/{fieldName}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 1)
     public Collection<TreeModel> getReferenceTree(@PathVariable("erupt") String erupt,
                                                   @PathVariable("fieldName") String fieldName,
                                                   @RequestParam(value = "dependValue", required = false) Serializable dependValue) {
@@ -271,7 +272,7 @@ public class EruptDataController {
 
     @PostMapping("/validate-erupt/{erupt}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 2)
     public EruptApiModel validateErupt(@PathVariable("erupt") String erupt, @RequestBody JsonObject data) {
         EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(CoreService.getErupt(erupt), data);
         eruptApiModel.setErrorIntercept(false);

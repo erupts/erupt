@@ -45,7 +45,7 @@ public class EruptExcelController {
 
     //导出
     @PostMapping("/export/{erupt}")
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
     public void exportData(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().export()) {
@@ -68,7 +68,7 @@ public class EruptExcelController {
     }
 
     @RequestMapping(value = "/template/{erupt}")
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
     public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
@@ -83,7 +83,7 @@ public class EruptExcelController {
     //导入excel
     @PostMapping("/import/{erupt}")
     @ResponseBody
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
     public BoolAndReason importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) throws IOException {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {

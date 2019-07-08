@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.constant.EruptConst;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -54,15 +54,15 @@ public class DBService implements DataService {
     private List<TreeModel> treeDataUtil(EruptModel eruptModel, String condition, String sort) {
         Tree tree = eruptModel.getErupt().tree();
         List<String> cols = new ArrayList<>();
-        cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + EruptConst.ID);
-        cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + EruptConst.LABEL);
+        cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + AnnotationConst.ID);
+        cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + AnnotationConst.LABEL);
         if (StringUtils.isNotBlank(tree.pid())) {
-            cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + EruptConst.PID);
+            cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + AnnotationConst.PID);
         }
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(eruptModel, condition, sort, cols, null);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map map : list) {
-            TreeModel treeModel = new TreeModel(map.get(EruptConst.ID), map.get(EruptConst.LABEL), map.get(EruptConst.PID), null);
+            TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null);
             treeModels.add(treeModel);
         }
         if (StringUtils.isBlank(tree.pid())) {

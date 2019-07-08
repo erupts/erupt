@@ -43,7 +43,7 @@ public class EruptFileController {
 
     @PostMapping("/upload/{erupt}/{field}")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(authIndex = 2)
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return EruptApiModel.errorApi("上传失败，请选择文件");
@@ -144,23 +144,6 @@ public class EruptFileController {
         return EruptApiModel.successApi(String.join(",", paths));
     }
 
-
-    public byte[] mappingFileToByte(@RequestParam("path") String path) {
-        if (!path.startsWith(File.separator)) {
-            path = File.separator + path;
-        }
-        File file = new File(uploadPath + path);
-        try {
-            @Cleanup InputStream inputStream = new FileInputStream(file);
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes, 0, inputStream.available());
-            inputStream.close();
-            return bytes;
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
     @RequestMapping(value = "/download-attachment", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     @EruptRouter(loginVerify = false)
@@ -189,5 +172,20 @@ public class EruptFileController {
         }
     }
 
+    private byte[] mappingFileToByte(String path) {
+        if (!path.startsWith(File.separator)) {
+            path = File.separator + path;
+        }
+        File file = new File(uploadPath + path);
+        try {
+            @Cleanup InputStream inputStream = new FileInputStream(file);
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes, 0, inputStream.available());
+            inputStream.close();
+            return bytes;
+        } catch (IOException e) {
+            return null;
+        }
+    }
 
 }

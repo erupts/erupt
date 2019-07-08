@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.auth.constant.RedisKey;
 import xyz.erupt.auth.util.IdentifyCode;
+import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.cache.EruptRedisService;
 import xyz.erupt.core.constant.RestPath;
 
@@ -29,6 +30,7 @@ public class VerifyCodeController {
      */
     @GetMapping
     @RequestMapping(RestPath.WS + "/code-img")
+    @EruptRouter(loginVerify = false)
     public void createCode(@RequestParam("account") String account, HttpServletResponse response) throws Exception {
         // 设置响应的类型格式为图片格式
         response.setContentType("image/jpeg");

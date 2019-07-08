@@ -37,7 +37,12 @@ public interface DataProxy<MODEL> {
     default void afterDelete(Serializable id) {
     }
 
-    //查  返回值为自定义查询条件
+    /**
+     * 查询
+     *
+     * @param condition
+     * @return 返回值为自定义查询条件
+     */
     default String beforeFetch(JsonObject condition) {
         return null;
     }

@@ -10,7 +10,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptFieldModel;
 import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 
 import java.lang.reflect.Field;
@@ -23,15 +22,6 @@ public class EruptUtil {
 
     private static final EditType[] OBJECT_EDIT_TYPES = {EditType.COMBINE, EditType.REFERENCE_TREE, EditType.REFERENCE_TABLE,
             EditType.TAB_TREE, EditType.TAB_TABLE_ADD, EditType.TAB_TABLE_REFER};
-
-    //请求地址权限校验
-    public static String handleNoRightVariable(String pathVariable) {
-        if (pathVariable.startsWith(RestPath.NO_RIGHT_SYMBOL)) {
-            return pathVariable.substring(2);
-        } else {
-            throw new RuntimeException("数据参数异常");
-        }
-    }
 
     //将object中erupt标识的字段抽取出来放到map中
     public static Map<String, Object> generateEruptDataMap(EruptModel eruptModel, Object obj) {
@@ -139,7 +129,9 @@ public class EruptUtil {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             if (field.getEruptField().edit().notNull()) {
                 if (!jsonObject.has(field.getFieldName())) {
-                    return EruptApiModel.errorApi(field.getEruptField().edit().title() + "必填");
+                    EruptApiModel eruptApiModel = EruptApiModel.errorApi(field.getEruptField().edit().title() + "必填");
+                    eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
+                    return eruptApiModel;
                 }
             }
         }

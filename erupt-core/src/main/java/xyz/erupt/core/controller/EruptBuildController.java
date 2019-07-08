@@ -35,10 +35,9 @@ public class EruptBuildController {
                 switch (fieldModel.getEruptField().edit().type()) {
                     case TAB_TABLE_ADD:
                     case TAB_TABLE_REFER:
+                    case TAB_TREE:
                         eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
                         break;
-                    case TAB_TREE:
-                        eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), new EruptModel());
                     case COMBINE:
                         eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
                         break;
