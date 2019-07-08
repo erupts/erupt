@@ -9,7 +9,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.eruptlimit.model.BaseModel;
+import xyz.erupt.auth.model.BaseModel;
 
 import javax.persistence.*;
 

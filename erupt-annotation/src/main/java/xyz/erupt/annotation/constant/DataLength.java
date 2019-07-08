@@ -1,7 +1,5 @@
 package xyz.erupt.annotation.constant;
 
-import xyz.erupt.annotation.EruptConst;
-
 public class DataLength {
 
     public static final int UNLIMITED = EruptConst.NOT_LIMIT;

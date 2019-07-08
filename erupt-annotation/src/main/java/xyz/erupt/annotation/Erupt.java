@@ -1,6 +1,7 @@
 package xyz.erupt.annotation;
 
 import xyz.erupt.annotation.config.ToMap;
+import xyz.erupt.annotation.constant.EruptConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Power;

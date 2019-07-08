@@ -1,7 +1,6 @@
 package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
-import org.springframework.stereotype.Service;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.bean.Page;
 import xyz.erupt.core.bean.TreeModel;
@@ -12,7 +11,6 @@ import java.util.Collection;
 /**
  * Created by liyuepeng on 10/10/18.
  */
-@Service
 public interface DataService {
 
     Object findDataById(EruptModel eruptModel, Serializable id);

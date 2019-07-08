@@ -1,6 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
-import xyz.erupt.annotation.EruptConst;
+import xyz.erupt.annotation.constant.EruptConst;
 
 import java.beans.Transient;
 

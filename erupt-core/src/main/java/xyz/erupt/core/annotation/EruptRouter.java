@@ -1,5 +1,7 @@
 package xyz.erupt.core.annotation;
 
+import xyz.erupt.annotation.constant.EruptConst;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,7 +15,9 @@ public @interface EruptRouter {
 
     boolean loginVerify() default true;
 
-    int verifyIndex() default -1;
+    int authIndex() default EruptConst.NOT_LIMIT;
+
+    int startAuthIndex() default 1;
 
     //权限数据传值方式，默认为放到请求头中
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;

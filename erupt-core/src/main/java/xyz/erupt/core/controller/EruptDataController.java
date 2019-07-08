@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
+import xyz.erupt.annotation.sub_erupt.CodeAndEdit;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.*;
@@ -194,6 +195,10 @@ public class EruptDataController {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
             if (code.equals(rowOperation.code())) {
+                for (CodeAndEdit codeAndEdit : rowOperation.edits()) {
+                    codeAndEdit.edit().notNull();
+                }
+
                 JsonElement param = body.get("param");
                 if (param.isJsonNull()) {
                     param = null;

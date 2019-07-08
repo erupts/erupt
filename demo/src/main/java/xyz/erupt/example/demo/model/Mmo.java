@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
-import xyz.erupt.eruptlimit.model.BaseModel;
+import xyz.erupt.auth.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;

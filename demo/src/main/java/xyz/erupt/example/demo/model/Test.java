@@ -10,8 +10,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
-import xyz.erupt.eruptlimit.model.EruptRole;
-import xyz.erupt.eruptlimit.model.EruptUser;
+import xyz.erupt.auth.model.EruptRole;
+import xyz.erupt.auth.model.EruptUser;
 
 import javax.persistence.*;
 

@@ -22,7 +22,7 @@ public class EruptBuildController {
 
     @GetMapping("/{erupt}")
     @ResponseBody
-    @EruptRouter(base64 = true, verifyIndex = 1)
+    @EruptRouter(base64 = true, authIndex = 1)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (null == eruptModel) {
