@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
-import xyz.erupt.annotation.sub_erupt.CodeAndEdit;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.*;
@@ -198,12 +197,13 @@ public class EruptDataController {
         for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
             if (code.equals(rowOperation.code())) {
                 JsonObject param = null;
-                if (rowOperation.edits().length > 0) {
-                    param = body.getAsJsonObject("param");
-                    for (CodeAndEdit codeAndEdit : rowOperation.edits()) {
-                        if (codeAndEdit.edit().notNull() && param.get(codeAndEdit.code()).isJsonNull()) {
-                            return EruptApiModel.errorApi(codeAndEdit.edit().title() + "必填");
-                        }
+                if (rowOperation.eruptClass() != void.class) {
+                    EruptModel erupt = CoreService.getErupt(rowOperation.eruptClass().getSimpleName());
+                    EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(erupt, body.getAsJsonObject("param"));
+                    if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
+                        eruptApiModel.setErrorIntercept(false);
+                        eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
+                        return eruptApiModel;
                     }
                 }
                 OperationHandler operationHandler = SpringUtil.getBean(rowOperation.operationHandler());

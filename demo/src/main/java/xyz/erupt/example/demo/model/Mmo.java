@@ -2,7 +2,10 @@ package xyz.erupt.example.demo.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.*;
+import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -40,14 +43,6 @@ import java.util.Set;
                         icon = "fa-terminal",
                         title = "执行3",
                         operationHandler = OperationHandlerImpl.class
-                ),
-                @RowOperation(code = "single", icon = "fa-star",
-                        title = "单个执行", multi = false,
-                        operationHandler = OperationHandlerImpl.class,
-                        edits = {
-                                @CodeAndEdit(code = "idCard", edit = @Edit(title = "身份证号")),
-                                @CodeAndEdit(code = "name", edit = @Edit(title = "姓名")),
-                        }
                 )
         },
         tree = @Tree(id = "id", label = "name", pid = "parent.id"),

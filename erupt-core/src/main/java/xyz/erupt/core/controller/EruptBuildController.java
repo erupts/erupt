@@ -3,6 +3,7 @@ package xyz.erupt.core.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptBuildModel;
 import xyz.erupt.core.bean.EruptFieldModel;
@@ -46,6 +47,11 @@ public class EruptBuildController {
                         break;
                     default:
                         break;
+                }
+            }
+            for (RowOperation operation : eruptBuildModel.getEruptModel().getErupt().rowOperation()) {
+                if (operation.eruptClass() != void.class) {
+                    eruptBuildModel.getOperationErupts().put(operation.code(), CoreService.getErupt(operation.eruptClass().getSimpleName()));
                 }
             }
             return eruptBuildModel;

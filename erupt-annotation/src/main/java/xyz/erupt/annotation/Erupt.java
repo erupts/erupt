@@ -23,13 +23,13 @@ public @interface Erupt {
     String primaryKeyCol() default AnnotationConst.ID;
 
     @Transient
-    boolean loginUse() default true;
-
-    @Transient
     String name();
 
     @Transient
     String desc() default AnnotationConst.EMPTY_STR;
+
+    @Transient
+    boolean loginUse() default true;
 
     Power power() default @Power;
 

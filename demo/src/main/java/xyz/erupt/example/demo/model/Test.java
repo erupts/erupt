@@ -23,7 +23,8 @@ import javax.persistence.*;
         loginUse = false,
         primaryKeyCol = "testId",
         rowOperation = {
-                @RowOperation(code = "a", icon = "fa fa-user", title = "AAA", operationHandler = OperationHandlerImpl.class)
+                @RowOperation(code = "a", icon = "fa fa-user", title = "AAA",
+                        operationHandler = OperationHandlerImpl.class, eruptClass = Mmo.class)
         },
         param = {
                 @KV(key = "label", value = "1+1", desc = "{balala 223333 []")

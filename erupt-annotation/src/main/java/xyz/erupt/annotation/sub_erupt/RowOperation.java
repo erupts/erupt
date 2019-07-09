@@ -16,7 +16,7 @@ public @interface RowOperation {
 
     boolean multi() default true;
 
-    CodeAndEdit[] edits() default {};
+    Class eruptClass() default void.class;
 
     Class<? extends OperationHandler> operationHandler();
 }
