@@ -24,7 +24,7 @@ import javax.persistence.*;
         primaryKeyCol = "testId",
         rowOperation = {
                 @RowOperation(code = "a", icon = "fa fa-user", title = "AAA",
-                        operationHandler = OperationHandlerImpl.class, eruptClass = Mmo.class)
+                        operationHandler = OperationHandlerImpl.class, eruptClass = TestExtra.class)
         },
         param = {
                 @KV(key = "label", value = "1+1", desc = "{balala 223333 []")

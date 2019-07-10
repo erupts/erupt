@@ -131,6 +131,7 @@ public class EruptUtil {
                 if (!jsonObject.has(field.getFieldName())) {
                     EruptApiModel eruptApiModel = EruptApiModel.errorApi(field.getEruptField().edit().title() + "必填");
                     eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
+                    eruptApiModel.setErrorIntercept(false);
                     return eruptApiModel;
                 }
             }

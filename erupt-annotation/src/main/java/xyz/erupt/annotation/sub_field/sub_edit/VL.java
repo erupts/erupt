@@ -8,4 +8,6 @@ public @interface VL {
     String value();
 
     String label();
+
+    String desc() default "";
 }

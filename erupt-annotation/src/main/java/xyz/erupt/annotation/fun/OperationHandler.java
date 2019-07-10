@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
  * Created by liyuepeng on 10/9/18.
  */
 @Transactional
-public interface OperationHandler<T> {
+public interface OperationHandler {
 
-    BoolAndReason exec(T data, JsonObject param);
+    BoolAndReason exec(Object data, JsonObject param);
 }

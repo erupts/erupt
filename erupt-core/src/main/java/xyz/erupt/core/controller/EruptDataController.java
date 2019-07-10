@@ -100,21 +100,17 @@ public class EruptDataController {
         if (eruptModel.getErupt().power().add()) {
             Object obj = gson.fromJson(gson.toJson(data), eruptModel.getClazz());
             DataHandlerUtil.clearObjectDefaultValueByJson(obj, data);
-            try {
-                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeAdd(obj);
-                    if (!boolAndReason.isBool()) {
-                        return new EruptApiModel(boolAndReason);
-                    }
+            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                BoolAndReason boolAndReason = SpringUtil.getBean(proxy).beforeAdd(obj);
+                if (!boolAndReason.isBool()) {
+                    return new EruptApiModel(boolAndReason);
                 }
-                AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).addData(eruptModel, obj);
-                for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
-                    SpringUtil.getBean(proxy).afterAdd(obj);
-                }
-                return EruptApiModel.successApi(null);
-            } catch (Exception e) {
-                return EruptApiModel.errorApi(e);
             }
+            AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).addData(eruptModel, obj);
+            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                SpringUtil.getBean(proxy).afterAdd(obj);
+            }
+            return EruptApiModel.successApi(null);
         } else {
             throw new EruptNoLegalPowerException();
         }
@@ -196,18 +192,13 @@ public class EruptDataController {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         for (RowOperation rowOperation : eruptModel.getErupt().rowOperation()) {
             if (code.equals(rowOperation.code())) {
-                JsonObject param = null;
                 if (rowOperation.eruptClass() != void.class) {
                     EruptModel erupt = CoreService.getErupt(rowOperation.eruptClass().getSimpleName());
                     EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(erupt, body.getAsJsonObject("param"));
-                    if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-                        eruptApiModel.setErrorIntercept(false);
-                        eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
-                        return eruptApiModel;
-                    }
+                    if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) return eruptApiModel;
                 }
                 OperationHandler operationHandler = SpringUtil.getBean(rowOperation.operationHandler());
-                return new EruptApiModel(operationHandler.exec(body.get("data"), param));
+                return new EruptApiModel(operationHandler.exec(body.get("data"), body.getAsJsonObject("param")));
             }
         }
         throw new EruptNoLegalPowerException();

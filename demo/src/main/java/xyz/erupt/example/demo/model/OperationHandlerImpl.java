@@ -5,14 +5,13 @@ import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.core.util.ProjectUtil;
 
-import java.util.List;
-
 /**
  * Created by liyuepeng on 10/10/18.
  */
-public class OperationHandlerImpl implements OperationHandler<List<Test>> {
+public class OperationHandlerImpl implements OperationHandler {
+
     @Override
-    public BoolAndReason exec(List<Test> data, JsonObject param) {
+    public BoolAndReason exec(Object data, JsonObject param) {
         new ProjectUtil().projectStartLoaded("text_mmo", (isFirst) -> {
             if (isFirst) {
                 System.out.println("first ");
@@ -20,7 +19,7 @@ public class OperationHandlerImpl implements OperationHandler<List<Test>> {
                 System.out.println("不是第一次调用");
             }
         });
-        return new BoolAndReason(false, "2333");
+        return new BoolAndReason(true, "2333");
     }
 
 
