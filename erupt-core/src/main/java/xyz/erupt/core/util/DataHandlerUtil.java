@@ -10,7 +10,6 @@ import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.service.CoreService;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,18 +56,18 @@ public class DataHandlerUtil {
 
     //清理序列化后对象所产生的默认值（通过json串进行校验）
     public static void clearObjectDefaultValueByJson(Object obj, JsonObject data) {
-        try {
-            for (Field field : obj.getClass().getDeclaredFields()) {
+        ReflectUtil.findClassAllFields(obj.getClass(), field -> {
+            try {
                 field.setAccessible(true);
                 if (null != field.get(obj)) {
                     if (!data.has(field.getName())) {
                         field.set(obj, null);
                     }
                 }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     public static void convertDataToEruptView(EruptModel eruptModel, Map<String, Object> map) {

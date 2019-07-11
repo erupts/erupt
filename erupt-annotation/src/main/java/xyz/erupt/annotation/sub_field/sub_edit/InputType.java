@@ -8,6 +8,8 @@ import xyz.erupt.annotation.constant.DataLength;
 public @interface InputType {
     int length() default DataLength.LONG_TEXT_LENGTH;
 
+    String regex() default "";
+
     VL[] prefix() default {};
 
     VL[] suffix() default {};

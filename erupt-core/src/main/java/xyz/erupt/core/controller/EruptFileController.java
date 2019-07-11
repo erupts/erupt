@@ -1,6 +1,5 @@
 package xyz.erupt.core.controller;
 
-import lombok.Cleanup;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,14 +17,13 @@ import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.DateUtil;
+import xyz.erupt.core.util.MimeUtil;
 import xyz.erupt.core.util.SpringUtil;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.FileNameMap;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -157,13 +155,10 @@ public class EruptFileController {
     @RequestMapping(value = "/preview-attachment")
     @ResponseBody
     @EruptRouter(loginVerify = false)
-    public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) {
-        FileNameMap fileNameMap = URLConnection.getFileNameMap();
-        String type = fileNameMap.getContentTypeFor(path);
-        if (null == type) {
-            type = MediaType.APPLICATION_OCTET_STREAM_VALUE;
-        }
-        response.setContentType(type);
+    public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
+        String[] splitPath = path.split("/");
+        response.setHeader("Content-Disposition", "filename=" + java.net.URLEncoder.encode(splitPath[splitPath.length - 1], "UTF-8"));
+        response.setContentType(MimeUtil.getMimeType(path));
         try (OutputStream ros = response.getOutputStream()) {
             IOUtils.write(mappingFileToByte(path), ros);
             ros.flush();
@@ -177,8 +172,7 @@ public class EruptFileController {
             path = File.separator + path;
         }
         File file = new File(uploadPath + path);
-        try {
-            @Cleanup InputStream inputStream = new FileInputStream(file);
+        try (InputStream inputStream = new FileInputStream(file)) {
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, inputStream.available());
             inputStream.close();

@@ -30,11 +30,11 @@ public class EruptJpaDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void addEntity(EruptModel eruptModel, Object entity) {
+    public void addEntity(Object entity) {
         entityManager.persist(entity);
     }
 
-    public void editEntity(EruptModel eruptModel, Object entity) {
+    public void editEntity(Object entity) {
         entityManager.merge(entity);
     }
 

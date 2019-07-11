@@ -49,6 +49,15 @@ public class Test {
     private String name;
 
 
+    @EruptField(
+            edit = @Edit(
+                    title = "手机号",
+                    inputType = @InputType(regex = "^1[3|4|5|7|8][0-9]\\d{8}$")
+            )
+    )
+    private String phone;
+
+
     @Column(name = "LINK")
     @EruptField(
             views = @View(title = "网址", viewType = ViewType.LINK_DIALOG),
@@ -75,6 +84,22 @@ public class Test {
             )
     )
     private String swf;
+
+
+    @Column(name = "SVG")
+    @EruptField(
+            views = @View(title = "SVG", viewType = ViewType.IMAGE, export = false),
+            edit = @Edit(
+                    title = "SVG",
+                    type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType(
+                            type = AttachmentEnum.OTHER,
+                            maxLimit = 5,
+                            fileTypes = "svg"
+                    )
+            )
+    )
+    private String svg;
 
     @Column(name = "PDF")
     @EruptField(

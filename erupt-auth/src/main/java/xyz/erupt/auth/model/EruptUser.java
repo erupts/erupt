@@ -10,12 +10,13 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
 import xyz.erupt.core.util.MD5Utils;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -63,46 +64,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     )
     private Boolean isMD5;
 
-    @Column(name = "AGE")
-    @EruptField(
-            views = @View(title = "年龄"),
-            edit = @Edit(
-                    title = "年龄",
-                    type = EditType.SLIDER,
-                    sliderType = @SliderType(max = 120, markPoints = {10, 20, 30, 40, 120}),
-                    search = @Search(value = true, vague = true)
-            )
-    )
-    private Integer age = 18;
-
-    @Column(name = "HOBBY")
-    @EruptField(
-            views = @View(title = "爱好"),
-            edit = @Edit(
-                    title = "爱好",
-                    type = EditType.CHOICE,
-                    search = @Search(value = true, vague = true),
-                    choiceType = @ChoiceType(vl = {
-                            @VL(value = "ball", label = "篮球"),
-                            @VL(value = "rap", label = "rap")
-                    }, type = ChoiceEnum.CHECKBOX)
-            )
-    )
-    private String hobby = "篮球|RAP";
-
-
-    @Column(name = "BIRTHDAY")
-    @EruptField(
-            views = @View(title = "生日"),
-            edit = @Edit(
-                    title = "生日",
-                    search = @Search(value = true, vague = true),
-                    type = EditType.DATE
-
-            )
-    )
-    private Date birthday;
-
 
     @Column(name = "HEAD_ICON")
     @EruptField(
@@ -122,7 +83,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     @EruptField(
             edit = @Edit(title = "密码", notNull = true)
     )
-    private String password;
+    private String password = "pwd";
 
     @Transient
     @EruptField(
@@ -165,7 +126,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     search = @Search(value = true, vague = true)
             )
     )
-    private String remark;
+    private String remark = "999999";
 
 
     @ManyToMany
@@ -180,6 +141,9 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             )
     )
     private Set<EruptRole> roles;
+
+    @Column(name = "IS_ADMIN")
+    private Boolean isAdmin;
 
     @Override
     public BoolAndReason beforeAdd(EruptUser eruptUser) {

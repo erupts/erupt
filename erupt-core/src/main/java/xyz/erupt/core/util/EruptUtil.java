@@ -2,7 +2,10 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
@@ -14,6 +17,7 @@ import xyz.erupt.core.service.CoreService;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by liyuepeng on 11/1/18.
@@ -135,71 +139,27 @@ public class EruptUtil {
                     return eruptApiModel;
                 }
             }
+            Edit edit = field.getEruptField().edit();
+            switch (edit.type()) {
+                case INPUT:
+                    if (!AnnotationConst.EMPTY_STR.equals(edit.inputType().regex())) {
+                        if (jsonObject.has(field.getFieldName())) {
+                            String content = jsonObject.get(field.getFieldName()).getAsString();
+                            if (StringUtils.isNotBlank(content)) {
+                                boolean isMatch = Pattern.matches(edit.inputType().regex(), content);
+                                if (!isMatch) {
+                                    EruptApiModel eruptApiModel = EruptApiModel.errorApi(field.getEruptField().edit().title() + "格式不正确");
+                                    eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
+                                    eruptApiModel.setErrorIntercept(false);
+                                    return eruptApiModel;
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+            }
         }
         return EruptApiModel.successApi();
     }
-
-
-//    public Map<String, Object> eruptDataToViewData(Object data) {
-//        Map<String, Object> result = new HashMap<>();
-//        try {
-//            for (Field field : data.getClass().getDeclaredFields()) {
-//                EruptField eruptField = field.getAnnotation(EruptField.class);
-//                Object fieldData = field.get(data);
-//                if (null != eruptField) {
-//                    switch (eruptField.edit().type()) {
-//                        case INPUT:
-//                            result.put(field.getName(), fieldData);
-//                            break;
-//                        case CHOICE:
-//                            if (StringUtils.isNotBlank(fieldData.toString())) {
-//                                for (VL vl : eruptField.edit().choiceType().vl()) {
-//                                    if ((vl.value() + "").equals(fieldData.toString())) {
-//                                        result.put(field.getName(), fieldData);
-//                                        break;
-//                                    }
-//                                }
-//                                //如果与VL注解无匹配项则注入该标识信息
-//                                if (StringUtils.isBlank(result.get(field.getName()).toString())) {
-//                                    result.put(field.getName(), NOT_ERUPT_REF);
-//                                }
-//                            } else {
-//                                result.put(field.getName(), NOT_ERUPT_REF);
-//                            }
-//                            break;
-//                        case BOOLEAN:
-//                            if (StringUtils.isNotBlank(fieldData.toString())) {
-//                                Boolean boolField = Boolean.valueOf(fieldData.toString());
-//                                if (boolField) {
-//                                    result.put(field.getName(), eruptField.edit().boolType().trueText());
-//                                } else {
-//                                    result.put(field.getName(), eruptField.edit().boolType().falseText());
-//                                }
-//                            } else {
-//                                result.put(field.getName(), NOT_ERUPT_REF);
-//                            }
-//                            break;
-//                        case REFERENCE_TREE:
-//                            if (StringUtils.isNotBlank(fieldData.toString())) {
-//                                for (View view : eruptField.views()) {
-//                                    result.put(field.getName() + "_" + view.column(),
-//                                            fieldData.getClass().getDeclaredField(view.column()).get(fieldData));
-//                                }
-//                            } else {
-//                                result.put(field.getName(), NOT_ERUPT_REF);
-//                            }
-//                            break;
-//                        default:
-//                            result.put(field.getName(), field.get(data));
-//                            break;
-//                    }
-//                }
-//            }
-//        } catch (IllegalAccessException | NoSuchFieldException e) {
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
-
-
 }

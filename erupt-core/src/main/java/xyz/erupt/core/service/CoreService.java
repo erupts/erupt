@@ -35,7 +35,7 @@ public class CoreService implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        SpringUtil.scannerPackage(this.packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
+        new SpringUtil().scannerPackage(this.packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
             //erupt domain info to memory
             EruptModel eruptModel = new EruptModel(clazz);
             // erupt field info to memory
@@ -44,13 +44,24 @@ public class CoreService implements InitializingBean {
                 Map<String, EruptFieldModel> eruptFieldMap = new LinkedCaseInsensitiveMap<>();
                 //erupt class annotation
                 {
-                    ReflectUtil.findClassAllFields(clazz, field -> {
-                        if (null != field.getAnnotation(EruptField.class)) {
-                            EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
-                            eruptFieldModels.add(eruptFieldModel);
-                            eruptFieldMap.put(field.getName(), eruptFieldModel);
-                        }
-                    });
+                    try {
+                        Object eruptObject = eruptModel.getClazz().newInstance();
+                        ReflectUtil.findClassAllFields(clazz, field -> {
+                            if (null != field.getAnnotation(EruptField.class)) {
+                                try {
+                                    EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
+                                    field.setAccessible(true);
+                                    eruptFieldModel.setValue(field.get(eruptObject));
+                                    eruptFieldModels.add(eruptFieldModel);
+                                    eruptFieldMap.put(field.getName(), eruptFieldModel);
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
                 eruptModel.setEruptFieldModels(eruptFieldModels);
                 eruptModel.setEruptFieldMap(eruptFieldMap);

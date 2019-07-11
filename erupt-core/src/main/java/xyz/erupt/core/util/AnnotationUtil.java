@@ -47,16 +47,15 @@ public class AnnotationUtil {
     }
 
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
-        JsonObject jsonObject = new JsonObject();
         try {
-            annotationToJson(annotation, jsonObject);
+            return annotationToJson(annotation);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return jsonObject;
     }
 
-    private static void annotationToJson(Annotation annotation, JsonObject jsonObject) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    private static JsonObject annotationToJson(Annotation annotation) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        JsonObject jsonObject = new JsonObject();
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
             if (null != tran && tran.value()) continue;
@@ -101,15 +100,12 @@ public class AnnotationUtil {
                         } else {
                             Annotation ann = (Annotation) res;
                             if (null != toMap) {
-                                JsonObject jo = new JsonObject();
-                                annotationToJson((Annotation) res, jo);
+                                JsonObject jo = annotationToJson((Annotation) res);
                                 String key = ann.annotationType().getMethod(toMap.key()).invoke(res).toString();
                                 jo.remove(toMap.key());
                                 jsonMap.add(key, jo);
                             } else {
-                                JsonObject subJsonObject = new JsonObject();
-                                annotationToJson(ann, subJsonObject);
-                                jsonArray.add(subJsonObject);
+                                jsonArray.add(annotationToJson(ann));
                             }
                         }
                     }
@@ -133,12 +129,11 @@ public class AnnotationUtil {
                 } else if (method.getReturnType().isEnum()) {
                     jsonObject.addProperty(method.getName(), result.toString());
                 } else if (method.getReturnType().isAnnotation()) {
-                    JsonObject subJsonObject = new JsonObject();
-                    annotationToJson((Annotation) result, subJsonObject);
-                    jsonObject.add(method.getName(), subJsonObject);
+                    jsonObject.add(method.getName(), annotationToJson((Annotation) result));
                 }
             }
         }
+        return jsonObject;
     }
 
     public static String switchFilterConditionToStr(Filter filter) {

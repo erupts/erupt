@@ -20,11 +20,15 @@ import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
+import xyz.erupt.core.util.ReflectUtil;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -35,6 +39,9 @@ public class DBService implements DataService {
 
     @Autowired
     private EruptJpaDao eruptJpaDao;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Object findDataById(EruptModel eruptModel, Serializable id) {
@@ -76,7 +83,7 @@ public class DBService implements DataService {
     @Override
     public void addData(EruptModel eruptModel, Object object) {
         try {
-            eruptJpaDao.addEntity(eruptModel, object);
+            eruptJpaDao.addEntity(object);
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException(gcRepeatHint(eruptModel));
         }
@@ -85,12 +92,29 @@ public class DBService implements DataService {
 
     @Transactional
     @Override
-    public void editData(EruptModel eruptModel, Object object) {
+    public void editData(EruptModel eruptModel, Object data) {
         try {
-            eruptJpaDao.editEntity(eruptModel, object);
+            //没有用eruptField修饰但是使用了hibernate管理的字段 设置为数据库原有存储值
+            Object dbObj = entityManager.find(eruptModel.getClazz(),
+                    ReflectUtil.findClassField(data.getClass(), eruptModel.getErupt().primaryKeyCol()).get(data));
+            ReflectUtil.findClassAllFields(dbObj.getClass(), field -> {
+                if (null == field.getAnnotation(EruptField.class)) {
+                    try {
+                        field.setAccessible(true);
+                        Field dataField = data.getClass().getDeclaredField(field.getName());
+                        dataField.setAccessible(true);
+                        dataField.set(data, field.get(dbObj));
+                    } catch (IllegalAccessException | NoSuchFieldException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            eruptJpaDao.editEntity(data);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             throw new RuntimeException(gcRepeatHint(eruptModel));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 

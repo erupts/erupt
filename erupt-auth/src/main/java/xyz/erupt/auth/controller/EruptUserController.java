@@ -16,6 +16,8 @@ import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.cache.EruptRedisService;
 import xyz.erupt.core.util.DataHandlerUtil;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,6 +39,9 @@ public class EruptUserController {
     @Autowired
     private EruptRedisService redisService;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Value("${erupt.expireTimeByLogin:60}")
     private Integer expireTimeByLogin;
 
@@ -53,24 +58,29 @@ public class EruptUserController {
             userService.createToken(loginModel);
             loginModel.setUserName(loginModel.getEruptUser().getName());
 
-            Set<EruptMenu> menuSet = new HashSet<>();
-            for (EruptRole role : loginModel.getEruptUser().getRoles()) {
-                if (role.getStatus()) {
-                    menuSet.addAll(role.getMenus());
+            List<EruptMenu> menuList;
+            if (null != loginModel.getEruptUser().getIsAdmin() && loginModel.getEruptUser().getIsAdmin()) {
+                menuList = entityManager.createQuery("from EruptMenu").getResultList();
+            } else {
+                Set<EruptMenu> menuSet = new HashSet<>();
+                for (EruptRole role : loginModel.getEruptUser().getRoles()) {
+                    if (role.getStatus()) {
+                        menuSet.addAll(role.getMenus());
+                    }
                 }
+                menuList = new ArrayList<>(menuSet);
+                menuList.sort((m1, m2) -> {
+                    Integer sort1 = m1.getSort();
+                    Integer sort2 = m2.getSort();
+                    if (null == sort1) {
+                        sort1 = Integer.MAX_VALUE;
+                    }
+                    if (null == sort2) {
+                        sort2 = Integer.MAX_VALUE;
+                    }
+                    return sort1.compareTo(sort2);
+                });
             }
-            List<EruptMenu> menuList = new ArrayList<>(menuSet);
-            menuList.sort((m1, m2) -> {
-                Integer sort1 = m1.getSort();
-                Integer sort2 = m2.getSort();
-                if (null == sort1) {
-                    sort1 = Integer.MAX_VALUE;
-                }
-                if (null == sort2) {
-                    sort2 = Integer.MAX_VALUE;
-                }
-                return sort1.compareTo(sort2);
-            });
             //生成tree结构数据
             List<TreeModel> treeModels = new ArrayList<>();
             for (EruptMenu eruptMenu : menuList) {

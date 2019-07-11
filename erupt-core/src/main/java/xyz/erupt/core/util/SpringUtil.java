@@ -27,13 +27,8 @@ public class SpringUtil implements ApplicationContextAware {
     }
 
     //获取applicationContext
-    public static ApplicationContext getApplicationContext() {
+    private static ApplicationContext getApplicationContext() {
         return applicationContext;
-    }
-
-    //通过name获取 Bean.
-    public static Object getBean(String name) {
-        return getApplicationContext().getBean(name);
     }
 
     //通过class获取Bean.
@@ -61,7 +56,7 @@ public class SpringUtil implements ApplicationContextAware {
      * @param typeFilters 匹配规则
      * @param consumer    consumer lambda
      */
-    public static void scannerPackage(String[] packages, TypeFilter[] typeFilters, Consumer<Class<?>> consumer) {
+    public void scannerPackage(String[] packages, TypeFilter[] typeFilters, Consumer<Class<?>> consumer) {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         for (TypeFilter filter : typeFilters) {
             scanner.addIncludeFilter(filter);
