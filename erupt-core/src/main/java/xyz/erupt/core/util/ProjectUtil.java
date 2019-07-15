@@ -14,9 +14,9 @@ public class ProjectUtil {
 
     /**
      * @param projectName 标识名
-     * @param consumer    bool回调用来告之调用者函数是否为第一次调用
+     * @param first    bool回调用来告之函数调用者是否为第一次调用
      */
-    public void projectStartLoaded(String projectName, Consumer<Boolean> consumer) {
+    public void projectStartLoaded(String projectName, Consumer<Boolean> first) throws IOException {
         //创建 loaded文件夹
         File dirFile = new File(this.getClass().getClassLoader().getResource("").getPath() + "loaded");
         if (!dirFile.exists()) {
@@ -25,17 +25,13 @@ public class ProjectUtil {
             }
         }
         File file = new File(dirFile.getPath(), projectName + ".loaded");
-        if (!file.exists()) {
-            consumer.accept(true);
-            try {
-                if (!file.createNewFile()) {
-                    log.severe("项目加载标识文件无法创建，可能造成数据多次加载等问题");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (file.exists()) {
+            first.accept(false);
         } else {
-            consumer.accept(false);
+            first.accept(true);
+            if (!file.createNewFile()) {
+                log.severe("项目加载标识文件无法创建，可能造成数据多次加载等问题");
+            }
         }
     }
 }

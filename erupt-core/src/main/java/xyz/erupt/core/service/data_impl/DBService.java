@@ -22,10 +22,7 @@ import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.ReflectUtil;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -95,15 +92,15 @@ public class DBService implements DataService {
     public void editData(EruptModel eruptModel, Object data) {
         try {
             //没有用eruptField修饰但是使用了hibernate管理的字段 设置为数据库原有存储值
-            Object dbObj = entityManager.find(eruptModel.getClazz(),
+            Object entity = entityManager.find(eruptModel.getClazz(),
                     ReflectUtil.findClassField(data.getClass(), eruptModel.getErupt().primaryKeyCol()).get(data));
-            ReflectUtil.findClassAllFields(dbObj.getClass(), field -> {
-                if (null == field.getAnnotation(EruptField.class)) {
+            ReflectUtil.findClassAllFields(entity.getClass(), field -> {
+                if (null == field.getAnnotation(EruptField.class) && null == field.getAnnotation(Transient.class)) {
                     try {
                         field.setAccessible(true);
                         Field dataField = data.getClass().getDeclaredField(field.getName());
                         dataField.setAccessible(true);
-                        dataField.set(data, field.get(dbObj));
+                        dataField.set(data, field.get(entity));
                     } catch (IllegalAccessException | NoSuchFieldException e) {
                         throw new RuntimeException(e);
                     }
@@ -127,7 +124,7 @@ public class DBService implements DataService {
                 str.append(eruptField.views()[0].title()).append("|");
             }
         }
-        return str.substring(0, str.length() - 1) + "重复";
+        return str.substring(0, str.length() - 1) + "数据重复";
     }
 
     @Transactional

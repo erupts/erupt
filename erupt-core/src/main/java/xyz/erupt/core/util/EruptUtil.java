@@ -65,13 +65,15 @@ public class EruptUtil {
                             EruptModel tabEruptModel = CoreService.getErupt(fieldModel.getFieldReturnName());
                             Collection collection = (Collection) value;
                             if (eruptField.edit().type() == EditType.TAB_TREE) {
-                                Set<String> idSet = new HashSet<>();
-                                Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
-                                        tabEruptModel.getErupt().primaryKeyCol());
-                                for (Object o : collection) {
-                                    idSet.add(primaryField.get(o).toString());
+                                if (collection.size() > 0) {
+                                    Set<String> idSet = new HashSet<>();
+                                    Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
+                                            tabEruptModel.getErupt().primaryKeyCol());
+                                    for (Object o : collection) {
+                                        idSet.add(primaryField.get(o).toString());
+                                    }
+                                    map.put(field.getName(), idSet);
                                 }
-                                map.put(field.getName(), idSet);
                             } else {
                                 List list = new ArrayList();
                                 for (Object o : collection) {
@@ -137,6 +139,12 @@ public class EruptUtil {
                     eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
                     eruptApiModel.setErrorIntercept(false);
                     return eruptApiModel;
+                }
+            }
+            if (field.getEruptField().edit().type() == EditType.COMBINE) {
+                EruptApiModel eam = validateEruptValue(CoreService.getErupt(field.getFieldReturnName()), jsonObject.getAsJsonObject(field.getFieldName()));
+                if (eam.getStatus() == EruptApiModel.Status.ERROR) {
+                    return eam;
                 }
             }
             Edit edit = field.getEruptField().edit();

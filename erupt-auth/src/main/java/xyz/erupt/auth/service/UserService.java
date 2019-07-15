@@ -88,7 +88,7 @@ public class UserService {
             //校验密码
             boolean pass = false;
             if (eruptUser.getIsMD5()) {
-                if (MD5Utils.digest(pwd).equals(eruptUser.getPassword())) {
+                if (MD5Utils.digest(pwd).equalsIgnoreCase(eruptUser.getPassword())) {
                     pass = true;
                 }
             } else {

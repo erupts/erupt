@@ -19,7 +19,7 @@ import javax.persistence.*;
  * Created by liyuepeng on 11/22/18.
  */
 @Entity
-@Table(name = "E_MENU")
+@Table(name = "E_MENU", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "菜单配置",
         orderBy = "EruptMenu.sort asc",
@@ -33,7 +33,7 @@ public class EruptMenu extends BaseModel {
             views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true)
     )
-    @Column(name = "CODE", unique = true)
+    @Column(name = "CODE")
     private String code;
 
     @Column(name = "NAME")
@@ -121,4 +121,18 @@ public class EruptMenu extends BaseModel {
             )
     )
     private String remark;
+
+
+    public EruptMenu(String code, String name, String path, Integer status, Integer sort, String icon, EruptMenu parentMenu) {
+        this.code = code;
+        this.name = name;
+        this.path = path;
+        this.status = status;
+        this.sort = sort;
+        this.icon = icon;
+        this.parentMenu = parentMenu;
+    }
+
+    public EruptMenu() {
+    }
 }
