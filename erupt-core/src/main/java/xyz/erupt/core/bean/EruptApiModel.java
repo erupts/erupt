@@ -37,6 +37,7 @@ public class EruptApiModel {
         } else {
             this.status = Status.ERROR;
         }
+        this.errorIntercept = false;
         this.message = boolAndReason.getReason();
     }
 

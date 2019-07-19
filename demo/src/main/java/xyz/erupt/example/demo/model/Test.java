@@ -10,10 +10,12 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
+import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by liyuepeng on 2019-05-14.
@@ -227,6 +229,15 @@ public class Test {
     )
     private TestExtra testExtra;
 
+    @OneToMany
+    @EruptField(
+            edit = @Edit(
+                    title = "所属角色",
+                    type = EditType.TAB_TABLE_ADD
+            )
+    )
+    private Set<EruptMenu> menus;
+
 
     @Lob
     @Column(name = "REMARK")
@@ -239,4 +250,13 @@ public class Test {
     )
     private String remark;
 
+
+    @OneToMany(mappedBy = "test")
+    @EruptField(
+            edit = @Edit(
+                    title = "MANY",
+                    type = EditType.TAB_TABLE_ADD
+            )
+    )
+    private Set<TestTestMany> testTestMany;
 }

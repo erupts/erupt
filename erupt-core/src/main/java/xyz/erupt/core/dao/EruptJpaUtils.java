@@ -2,6 +2,7 @@ package xyz.erupt.core.dao;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
+import xyz.erupt.annotation.constant.SimpleJavaType;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -116,41 +117,45 @@ public class EruptJpaUtils {
         //condition
         if (null != clientSearchCondition) {
             for (String key : clientSearchCondition.keySet()) {
-                if (!clientSearchCondition.get(key).isJsonNull()) {
-                    EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
-                    if (null != eruptFieldModel) {
-                        if (eruptFieldModel.getEruptField().edit().search().value()) {
-                            Edit edit = eruptFieldModel.getEruptField().edit();
-                            String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
-                            if (edit.search().vague()) {
-                                if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(EruptFieldModel.NUMBER_TYPE))
-                                        || edit.type() == EditType.DATE
-                                        || edit.type() == EditType.SLIDER) {
-                                    hql.append(EruptJpaUtils.AND).append(_key)
-                                            .append(" >=:").append(LVAL_KEY + key)
-                                            .append(EruptJpaUtils.AND).append(_key)
-                                            .append(" <=:").append(RVAL_KEY + key);
-                                    continue;
-                                } else if (edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals("String")) {
-                                    hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(key);
-                                    continue;
-                                } else if (edit.type() == EditType.CHOICE) {
-                                    hql.append(EruptJpaUtils.AND).append(_key).append(" in :").append(key);
-                                    continue;
-                                }
+                EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
+                if (null != eruptFieldModel) {
+                    Edit edit = eruptFieldModel.getEruptField().edit();
+                    if (edit.search().value()) {
+                        String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
+                        if (edit.search().vague()) {
+                            if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(EruptFieldModel.NUMBER_TYPE))
+                                    || edit.type() == EditType.DATE
+                                    || edit.type() == EditType.SLIDER) {
+                                hql.append(EruptJpaUtils.AND).append(_key)
+                                        .append(" >=:").append(LVAL_KEY + key)
+                                        .append(EruptJpaUtils.AND).append(_key)
+                                        .append(" <=:").append(RVAL_KEY + key);
+                                continue;
+                            } else if (edit.type() == EditType.CHOICE) {
+                                hql.append(EruptJpaUtils.AND).append(_key).append(" in :").append(key);
+                                continue;
+                            } else if (eruptFieldModel.getFieldReturnName().equals(SimpleJavaType.STRING)) {
+                                hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(key);
+                                continue;
                             }
+                        } else {
                             if (edit.type() == EditType.REFERENCE_TREE) {
                                 hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTreeType().id()).append("=:").append(key);
                                 continue;
-                            }
-                            if (clientSearchCondition.get(key).toString().contains(EruptJpaUtils.NULL)) {
-                                hql.append(EruptJpaUtils.AND).append(_key).append(" is null");
-                            } else if (clientSearchCondition.get(key).toString().contains(EruptJpaUtils.NOT_NULL)) {
-                                hql.append(EruptJpaUtils.AND).append(_key).append(" is not null");
+                            } else if (edit.type() == EditType.REFERENCE_TABLE) {
+                                hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTableType().id()).append("=:").append(key);
+                                continue;
                             } else {
                                 hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(key);
                             }
                         }
+//                        if (clientSearchCondition.get(key).toString().contains(EruptJpaUtils.NULL)) {
+//                            hql.append(EruptJpaUtils.AND).append(_key).append(" is null");
+//                        } else if (clientSearchCondition.get(key).toString().contains(EruptJpaUtils.NOT_NULL)) {
+//                            hql.append(EruptJpaUtils.AND).append(_key).append(" is not null");
+//                        } else {
+//
+//                        }
                     }
                 }
             }

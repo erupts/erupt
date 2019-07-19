@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.Objects;
 
 /**
@@ -52,10 +51,10 @@ public class EruptExcelController {
             condition.addProperty(Page.PAGE_INDEX_STR, 1);
             condition.addProperty(Page.PAGE_SIZE_STR, Page.PAGE_MAX_DATA);
             condition.addProperty(Page.PAGE_SORT_STR, "");
-            Enumeration<String> en = request.getParameterNames();
-            while (en.hasMoreElements()) {
-                condition.addProperty(en.nextElement(), request.getParameter(en.nextElement()));
-            }
+//            Enumeration<String> en = request.getParameterNames();
+//            while (en.hasMoreElements()) {
+//                condition.addProperty(en.nextElement(), request.getParameter(en.nextElement()));
+//            }
             Page page = eruptDataController.getEruptData(eruptName, condition);
             dataFileService.exportExcel(eruptModel, page, response);
         } else {

@@ -1,7 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.JavaType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
 
 import java.lang.annotation.*;
 
@@ -12,11 +11,14 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Documented
 public @interface EditTypeMapping {
+
     String mapping() default "";
 
     String desc() default "";
 
-    Search search() default @Search(value = true, vague = true);
+    boolean search() default true;
+
+    boolean searchVague() default true;
 
     JavaType[] allowType() default {};
 

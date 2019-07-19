@@ -1,7 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.JavaType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
 
 /**
  * Created by liyuepeng on 9/28/18.
@@ -15,31 +14,31 @@ public enum EditType {
     SLIDER,
     @EditTypeMapping(mapping = "dateType", desc = "日期 vague the range", allowType = {JavaType.string, JavaType.date})
     DATE,
-    @EditTypeMapping(mapping = "referenceTreeType", desc = "树引用", allowType = {JavaType.object})
-    REFERENCE_TREE,
-    @EditTypeMapping(mapping = "referenceTableType", desc = "表格引用", allowType = {JavaType.bool})
-    REFERENCE_TABLE,
-    @EditTypeMapping(mapping = "combineType", desc = "表格合并", search = @Search(false), allowType = {JavaType.object})
-    COMBINE,
-    @EditTypeMapping(mapping = "boolType", desc = "布尔", allowType = {JavaType.bool})
+    @EditTypeMapping(mapping = "boolType", desc = "布尔", searchVague = false, allowType = {JavaType.bool})
     BOOLEAN,
-    @EditTypeMapping(mapping = "attachmentType", desc = "附件", search = @Search(false), allowType = {JavaType.string}, excelOperator = false)
+    @EditTypeMapping(mapping = "attachmentType", desc = "附件", search = false, allowType = {JavaType.string}, excelOperator = false)
     ATTACHMENT,
-    @EditTypeMapping(mapping = "dependSwitchType", desc = "表单依赖开关", allowType = {JavaType.number})
+    @EditTypeMapping(mapping = "dependSwitchType", desc = "表单依赖开关", searchVague = false, allowType = {JavaType.number})
     DEPEND_SWITCH,
-    @EditTypeMapping(desc = "横向分割线与描述", allowType = {JavaType.not_know}, excelOperator = false)
+    @EditTypeMapping(desc = "横向分割线与描述", search = false, allowType = {JavaType.not_know}, excelOperator = false)
     DIVIDE,
-    @EditTypeMapping(desc = "隐藏", allowType = {JavaType.not_know}, excelOperator = false)
+    @EditTypeMapping(desc = "隐藏", search = false, allowType = {JavaType.not_know}, excelOperator = false)
     HIDDEN,
     @EditTypeMapping(desc = "富文本编辑器", allowType = {JavaType.string})
     HTML_EDIT,
     @EditTypeMapping(desc = "大文本域", allowType = {JavaType.string})
     TEXTAREA,
-    @EditTypeMapping(desc = "树引用", allowType = {JavaType.object}, excelOperator = false)
+    @EditTypeMapping(mapping = "combineType", desc = "表格合并", searchVague = false, allowType = {JavaType.object})
+    COMBINE,
+    @EditTypeMapping(mapping = "referenceTreeType", desc = "树引用", searchVague = false, allowType = {JavaType.object})
+    REFERENCE_TREE,
+    @EditTypeMapping(mapping = "referenceTableType", desc = "表格引用", searchVague = false, allowType = {JavaType.bool})
+    REFERENCE_TABLE,
+    @EditTypeMapping(desc = "树引用", allowType = {JavaType.object}, search = false, excelOperator = false)
     TAB_TREE,
-    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object}, excelOperator = false)
+    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object}, search = false, excelOperator = false)
     TAB_TABLE_ADD,
-    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object}, excelOperator = false)
+    @EditTypeMapping(desc = "表格引用", allowType = {JavaType.object}, search = false, excelOperator = false)
     TAB_TABLE_REFER,
 
     JSON_EDIT,         //JSON格式编辑器

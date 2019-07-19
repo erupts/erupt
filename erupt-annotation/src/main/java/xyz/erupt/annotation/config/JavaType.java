@@ -4,11 +4,14 @@ package xyz.erupt.annotation.config;
  * Created by liyuepeng on 2019-05-24.
  */
 public enum JavaType {
+    any,
     string,
     number,
-    object,
     date,
+    object,
     array,
     bool,
-    not_know
+    not_know,
+    StringNumber,
+    StringDate,
 }

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.constant.SimpleJavaType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
@@ -88,8 +89,8 @@ public class EruptUtil {
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
         return map;
     }
@@ -110,7 +111,7 @@ public class EruptUtil {
                 return jsonElement.getAsBoolean();
             case DATE:
                 DateEnum dateEnum = eruptFieldModel.getEruptField().edit().dateType().type();
-                if (dateEnum == DateEnum.DATE || dateEnum == DateEnum.DATE_TIME) {
+                if (SimpleJavaType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
                     return DateUtil.getDate(jsonElement.getAsString());
                 } else {
                     return jsonElement.getAsString();
@@ -131,6 +132,28 @@ public class EruptUtil {
         }
     }
 
+    //生成一个合法的searchContidion
+    public static JsonObject validattEruptSearchContion(EruptModel eruptModel, JsonObject searchCondition) {
+        JsonObject legalJsonObject = new JsonObject();
+        if (null != searchCondition) {
+            for (String key : searchCondition.keySet()) {
+                EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
+                Edit edit = eruptFieldModel.getEruptField().edit();
+                if (AnnotationUtil.getEditTypeMapping(edit.type()).search()) {
+                    if (edit.search().value() && !searchCondition.get(key).isJsonNull()) {
+                        if (SimpleJavaType.STRING.equals(eruptFieldModel.getFieldReturnName())) {
+                            if (StringUtils.isBlank(searchCondition.get(key).getAsString())) {
+                                continue;
+                            }
+                        }
+                        legalJsonObject.add(key, searchCondition.get(key));
+                    }
+                }
+            }
+        }
+        return legalJsonObject;
+    }
+
     public static EruptApiModel validateEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             if (field.getEruptField().edit().notNull()) {
@@ -139,6 +162,15 @@ public class EruptUtil {
                     eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
                     eruptApiModel.setErrorIntercept(false);
                     return eruptApiModel;
+                }
+                if (SimpleJavaType.STRING.equals(field.getFieldReturnName())) {
+                    String str = jsonObject.get(field.getFieldName()).getAsString();
+                    if (StringUtils.isBlank(str)) {
+                        EruptApiModel eruptApiModel = EruptApiModel.errorApi(field.getEruptField().edit().title() + "必填");
+                        eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
+                        eruptApiModel.setErrorIntercept(false);
+                        return eruptApiModel;
+                    }
                 }
             }
             if (field.getEruptField().edit().type() == EditType.COMBINE) {
