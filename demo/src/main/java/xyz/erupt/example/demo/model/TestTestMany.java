@@ -29,14 +29,14 @@ public class TestTestMany extends BaseModel {
             views = @View(title = "MANY", column = "name"),
             edit = @Edit(
                     title = "MANY",
-                    type = EditType.REFERENCE_TREE
+                    type = EditType.REFERENCE_TABLE
             )
     )
     private TestMany testMany;
 
     @Column(name = "PRICE")
     @EruptField(
-            views = @View(title = "价格", column = "name"),
+            views = @View(title = "价格"),
             edit = @Edit(
                     title = "价格"
             )

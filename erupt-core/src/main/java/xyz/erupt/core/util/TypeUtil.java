@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 public class TypeUtil {
 
     private static final String[] SIMPLE_JPA_TYPE = {
-            "byte", "short", "int", "integer", "long", "float", "double", "boolean", "char", "string", "date"
+            "byte", "short", "int", "integer", "long", "float", "double", "boolean", "char", "String", "date"
     };
 
     private static final String[] NUMBER_TYPE = {

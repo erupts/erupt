@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.constant.SimpleJavaType;
+import xyz.erupt.annotation.constant.JavaSimpleType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
@@ -111,7 +111,7 @@ public class EruptUtil {
                 return jsonElement.getAsBoolean();
             case DATE:
                 DateEnum dateEnum = eruptFieldModel.getEruptField().edit().dateType().type();
-                if (SimpleJavaType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
+                if (JavaSimpleType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
                     return DateUtil.getDate(jsonElement.getAsString());
                 } else {
                     return jsonElement.getAsString();
@@ -141,7 +141,7 @@ public class EruptUtil {
                 Edit edit = eruptFieldModel.getEruptField().edit();
                 if (AnnotationUtil.getEditTypeMapping(edit.type()).search()) {
                     if (edit.search().value() && !searchCondition.get(key).isJsonNull()) {
-                        if (SimpleJavaType.STRING.equals(eruptFieldModel.getFieldReturnName())) {
+                        if (JavaSimpleType.STRING.equals(eruptFieldModel.getFieldReturnName())) {
                             if (StringUtils.isBlank(searchCondition.get(key).getAsString())) {
                                 continue;
                             }
@@ -163,7 +163,7 @@ public class EruptUtil {
                     eruptApiModel.setErrorIntercept(false);
                     return eruptApiModel;
                 }
-                if (SimpleJavaType.STRING.equals(field.getFieldReturnName())) {
+                if (JavaSimpleType.STRING.equals(field.getFieldReturnName())) {
                     String str = jsonObject.get(field.getFieldName()).getAsString();
                     if (StringUtils.isBlank(str)) {
                         EruptApiModel eruptApiModel = EruptApiModel.errorApi(field.getEruptField().edit().title() + "必填");

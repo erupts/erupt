@@ -16,7 +16,7 @@ public class EruptFieldAnnotationException extends RuntimeException {
 //        EditTypeMapping editTypeMapping = AnnotationUtil.getEditTypeMapping(eruptFieldModel.getEruptField().edit().type());
 //        for (JavaType type : editTypeMapping.allowType()) {
 //            switch (type) {
-//                case string:
+//                case String:
 //                case date:
 //                case number:
 //                    if (type.name().equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {

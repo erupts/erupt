@@ -3,7 +3,6 @@ package xyz.erupt.core.bean;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,11 +14,11 @@ public class EruptBuildModel {
 
     private EruptModel eruptModel;
 
-    private Map<String, EruptModel> tabErupts = new HashMap<>();
+    private Map<String, EruptBuildModel> tabErupts;
 
-    private Map<String, EruptModel> referenceErupts = new HashMap<>();
+    private Map<String, EruptModel> referenceErupts;
 
-    private Map<String, EruptModel> combineErupts = new HashMap<>();
+    private Map<String, EruptModel> combineErupts;
 
-    private Map<String, EruptModel> operationErupts = new HashMap<>();
+    private Map<String, EruptModel> operationErupts;
 }

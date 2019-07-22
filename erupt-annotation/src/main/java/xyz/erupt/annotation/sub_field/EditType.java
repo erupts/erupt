@@ -6,17 +6,17 @@ import xyz.erupt.annotation.config.JavaType;
  * Created by liyuepeng on 9/28/18.
  */
 public enum EditType {
-    @EditTypeMapping(mapping = "inputType", desc = "输入框 string:vague the like|number:vague the range", allowType = {JavaType.string, JavaType.number})
+    @EditTypeMapping(mapping = "inputType", desc = "输入框 String:vague the like|number:vague the range", allowType = {JavaType.String, JavaType.number})
     INPUT,
-    @EditTypeMapping(mapping = "choiceType", desc = "选择框 vague the in", allowType = {JavaType.string, JavaType.number})
+    @EditTypeMapping(mapping = "choiceType", desc = "选择框 vague the in", allowType = {JavaType.String, JavaType.number})
     CHOICE,
     @EditTypeMapping(mapping = "sliderType", desc = "数字滑块 vague the range", allowType = {JavaType.number})
     SLIDER,
-    @EditTypeMapping(mapping = "dateType", desc = "日期 vague the range", allowType = {JavaType.string, JavaType.date})
+    @EditTypeMapping(mapping = "dateType", desc = "日期 vague the range", allowType = {JavaType.String, JavaType.date})
     DATE,
     @EditTypeMapping(mapping = "boolType", desc = "布尔", searchVague = false, allowType = {JavaType.bool})
     BOOLEAN,
-    @EditTypeMapping(mapping = "attachmentType", desc = "附件", search = false, allowType = {JavaType.string}, excelOperator = false)
+    @EditTypeMapping(mapping = "attachmentType", desc = "附件", search = false, allowType = {JavaType.String}, excelOperator = false)
     ATTACHMENT,
     @EditTypeMapping(mapping = "dependSwitchType", desc = "表单依赖开关", searchVague = false, allowType = {JavaType.number})
     DEPEND_SWITCH,
@@ -24,9 +24,9 @@ public enum EditType {
     DIVIDE,
     @EditTypeMapping(desc = "隐藏", search = false, allowType = {JavaType.not_know}, excelOperator = false)
     HIDDEN,
-    @EditTypeMapping(desc = "富文本编辑器", allowType = {JavaType.string})
+    @EditTypeMapping(desc = "富文本编辑器", allowType = {JavaType.String})
     HTML_EDIT,
-    @EditTypeMapping(desc = "大文本域", allowType = {JavaType.string})
+    @EditTypeMapping(desc = "大文本域", allowType = {JavaType.String})
     TEXTAREA,
     @EditTypeMapping(mapping = "combineType", desc = "表格合并", searchVague = false, allowType = {JavaType.object})
     COMBINE,

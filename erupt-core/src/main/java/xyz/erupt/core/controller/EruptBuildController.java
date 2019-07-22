@@ -12,6 +12,7 @@ import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 /**
  * Erupt 页面结构构建信息
@@ -34,15 +35,31 @@ public class EruptBuildController {
             eruptBuildModel.setEruptModel(eruptModel);
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
                 switch (fieldModel.getEruptField().edit().type()) {
+                    case TAB_TREE:
+                        if (eruptBuildModel.getTabErupts() == null) {
+                            eruptBuildModel.setTabErupts(new HashMap<>());
+                        }
+                        eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), new EruptBuildModel() {{
+                            setEruptModel(new EruptModel());
+                        }});
+                        break;
                     case TAB_TABLE_ADD:
                     case TAB_TABLE_REFER:
-                    case TAB_TREE:
-                        eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
+                        if (eruptBuildModel.getTabErupts() == null) {
+                            eruptBuildModel.setTabErupts(new HashMap<>());
+                        }
+                        eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), getEruptBuild(fieldModel.getFieldReturnName(), response));
                         break;
                     case COMBINE:
+                        if (eruptBuildModel.getCombineErupts() == null) {
+                            eruptBuildModel.setCombineErupts(new HashMap<>());
+                        }
                         eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
                         break;
                     case REFERENCE_TABLE:
+                        if (eruptBuildModel.getReferenceErupts() == null) {
+                            eruptBuildModel.setReferenceErupts(new HashMap<>());
+                        }
                         eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
                         break;
                     default:
@@ -51,6 +68,9 @@ public class EruptBuildController {
             }
             for (RowOperation operation : eruptBuildModel.getEruptModel().getErupt().rowOperation()) {
                 if (operation.eruptClass() != void.class) {
+                    if (eruptBuildModel.getOperationErupts() == null) {
+                        eruptBuildModel.setOperationErupts(new HashMap<>());
+                    }
                     eruptBuildModel.getOperationErupts().put(operation.code(), CoreService.getErupt(operation.eruptClass().getSimpleName()));
                 }
             }

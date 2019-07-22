@@ -5,7 +5,7 @@ package xyz.erupt.annotation.config;
  */
 public enum JavaType {
     any,
-    string,
+    String,
     number,
     date,
     object,

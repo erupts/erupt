@@ -2,7 +2,7 @@ package xyz.erupt.core.dao;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import xyz.erupt.annotation.constant.SimpleJavaType;
+import xyz.erupt.annotation.constant.JavaSimpleType;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -134,7 +134,7 @@ public class EruptJpaUtils {
                             } else if (edit.type() == EditType.CHOICE) {
                                 hql.append(EruptJpaUtils.AND).append(_key).append(" in :").append(key);
                                 continue;
-                            } else if (eruptFieldModel.getFieldReturnName().equals(SimpleJavaType.STRING)) {
+                            } else if (eruptFieldModel.getFieldReturnName().equals(JavaSimpleType.STRING)) {
                                 hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(key);
                                 continue;
                             }
