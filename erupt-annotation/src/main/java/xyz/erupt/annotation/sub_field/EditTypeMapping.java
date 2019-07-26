@@ -1,6 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
-import xyz.erupt.annotation.config.JavaType;
+import xyz.erupt.annotation.config.JavaTypeEnum;
 
 import java.lang.annotation.*;
 
@@ -20,7 +20,7 @@ public @interface EditTypeMapping {
 
     boolean searchVague() default true;
 
-    JavaType[] allowType() default {};
+    JavaTypeEnum[] allowType() default {};
 
     boolean excelOperator() default true;
 

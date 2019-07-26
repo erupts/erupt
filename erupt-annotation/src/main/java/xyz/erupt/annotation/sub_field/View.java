@@ -12,6 +12,8 @@ public @interface View {
 
     ViewType viewType() default ViewType.TEXT;
 
+    boolean show() default true;
+
     boolean sortable() default false;
 
     boolean export() default true;
@@ -21,12 +23,10 @@ public @interface View {
     /**
      * 该参数在前端使用eval方法解析
      * 支持变量：
-     * 1、item（整行主数据）
+     * 1、item（整行数据）
      * 2、item.xxx（数据中的某一列）
      * demo："姓名：" + item.name
      */
     String template() default "";
-
-    boolean show() default true;
 
 }

@@ -23,7 +23,8 @@ public @interface EruptRouter {
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;
 
     enum VerifyMethod {
-        HEADER, PARAM
+        HEADER, //校验内容必须放在请求头
+        PARAM   //检验内容必须放到URL参数中
     }
 
 }

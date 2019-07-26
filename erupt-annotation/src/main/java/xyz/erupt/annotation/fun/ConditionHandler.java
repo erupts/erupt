@@ -8,5 +8,5 @@ import javax.transaction.Transactional;
 @Transactional
 public interface ConditionHandler {
 
-    String handler(String condition);
+    String handler(String condition, String[] params);
 }

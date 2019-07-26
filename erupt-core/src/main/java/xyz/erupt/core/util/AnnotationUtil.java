@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import org.json.JSONObject;
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.config.ToMap;
+import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.ConditionHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -27,6 +28,8 @@ public class AnnotationUtil {
     private static final String[] ANNOTATION_NUMBER_TYPE = {"short", "int", "long", "float", "double"};
 
     private static final String[] ANNOTATION_STRING_TYPE = {"String", "byte", "char"};
+
+    private static final String EMPTY_ARRAY = "[]";
 
     @Deprecated
     public static String annotationToJsonByReplace(String annotationStr) {
@@ -68,7 +71,7 @@ public class AnnotationUtil {
             }
             String returnType = method.getReturnType().getSimpleName();
             Object result = method.invoke(annotation);
-            if (returnType.endsWith("[]")) {
+            if (returnType.endsWith(EMPTY_ARRAY)) {
                 returnType = returnType.substring(0, returnType.length() - 2);
                 JsonArray jsonArray = new JsonArray();
                 ToMap toMap = method.getAnnotation(ToMap.class);
@@ -76,12 +79,12 @@ public class AnnotationUtil {
                 //基本类型无法强转成Object类型数组，所以使用下面的方法进行处理
                 if (Arrays.asList(ANNOTATION_NUMBER_TYPE).contains(returnType)) {
                     TypeUtil.simpleNumberTypeArrayToObject(result, returnType, (number) -> jsonArray.add(number));
-                } else if ("char".equals(returnType)) {
+                } else if (JavaType.CHAR.equals(returnType)) {
                     char[] intArray = (char[]) result;
                     for (char i : intArray) {
                         jsonArray.add(i);
                     }
-                } else if ("byte".equals(returnType)) {
+                } else if (JavaType.BYTE.equals(returnType)) {
                     byte[] intArray = (byte[]) result;
                     for (byte i : intArray) {
                         jsonArray.add(i);
@@ -89,11 +92,11 @@ public class AnnotationUtil {
                 } else {
                     Object[] resultArray = (Object[]) result;
                     for (Object res : resultArray) {
-                        if ("String".equals(returnType)) {
+                        if (JavaType.STRING.equals(returnType)) {
                             jsonArray.add(res.toString());
-                        } else if ("boolean".equals(returnType)) {
+                        } else if (JavaType.BOOLEAN.equals(returnType)) {
                             jsonArray.add((Boolean) res);
-                        } else if ("Class".equals(returnType)) {
+                        } else if (JavaType.CLASS.equals(returnType)) {
                             break;
                         } else if (res.getClass().isEnum()) {
                             jsonArray.add(res.toString());
@@ -122,9 +125,9 @@ public class AnnotationUtil {
                     jsonObject.addProperty(method.getName(), result.toString());
                 } else if (Arrays.asList(ANNOTATION_NUMBER_TYPE).contains(returnType)) {
                     jsonObject.addProperty(method.getName(), (Number) result);
-                } else if ("Class".equals(returnType)) {
+                } else if (JavaType.CLASS.equals(returnType)) {
                     continue;
-                } else if ("boolean".equals(returnType)) {
+                } else if (JavaType.BOOLEAN.equals(returnType)) {
                     jsonObject.addProperty(method.getName(), (Boolean) result);
                 } else if (method.getReturnType().isEnum()) {
                     jsonObject.addProperty(method.getName(), result.toString());
@@ -141,7 +144,7 @@ public class AnnotationUtil {
         if (filter.conditionHandlers().length > 0) {
             for (Class<? extends ConditionHandler> conditionHandler : filter.conditionHandlers()) {
                 ConditionHandler ch = SpringUtil.getBean(conditionHandler);
-                condition = ch.handler(condition);
+                condition = ch.handler(condition, filter.params());
             }
         }
         return condition;

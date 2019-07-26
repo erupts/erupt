@@ -8,7 +8,8 @@ import xyz.erupt.annotation.fun.ConditionHandler;
 public class SimpleConditionHandler implements ConditionHandler {
 
     @Override
-    public String handler(String condition) {
+    public String handler(String condition, String... params) {
         return condition.replace("@abc@","7");
     }
+
 }

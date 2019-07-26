@@ -39,9 +39,9 @@ public class EruptBuildController {
                         if (eruptBuildModel.getTabErupts() == null) {
                             eruptBuildModel.setTabErupts(new HashMap<>());
                         }
-                        eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), new EruptBuildModel() {{
-                            setEruptModel(new EruptModel());
-                        }});
+                        EruptBuildModel eruptBuildModel1 = new EruptBuildModel();
+                        eruptBuildModel1.setEruptModel(CoreService.getErupt(fieldModel.getFieldReturnName()));
+                        eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), eruptBuildModel1);
                         break;
                     case TAB_TABLE_ADD:
                     case TAB_TABLE_REFER:

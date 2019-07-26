@@ -3,7 +3,7 @@ package xyz.erupt.annotation.config;
 /**
  * Created by liyuepeng on 2019-05-24.
  */
-public enum JavaType {
+public enum JavaTypeEnum {
     any,
     String,
     number,

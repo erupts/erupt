@@ -1,11 +1,12 @@
 package xyz.erupt.core.util;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.constant.JavaSimpleType;
+import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
@@ -97,12 +98,20 @@ public class EruptUtil {
 
     //请求参数转换
     public static Object jsonElementToObject(EruptFieldModel eruptFieldModel, JsonElement jsonElement) {
-        if (EruptFieldModel.NUMBER_TYPE.equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
-            try {
-                return jsonElement.getAsInt();
-            } catch (Exception e) {
-                return 0;
+        if (jsonElement.isJsonArray()) {
+            JsonArray jsonArray = jsonElement.getAsJsonArray();
+            List list = new ArrayList();
+            for (JsonElement element : jsonArray) {
+                if (EruptFieldModel.NUMBER_TYPE.equals(eruptFieldModel.getFieldReturnName())) {
+                    list.add(TypeUtil.typeStrConvertObject(jsonElement.getAsString(), eruptFieldModel.getFieldReturnName()));
+                } else {
+                    list.add(element.getAsString());
+                }
             }
+            return list;
+        }
+        if (EruptFieldModel.NUMBER_TYPE.equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
+            return TypeUtil.typeStrConvertObject(jsonElement.getAsString(), eruptFieldModel.getField().getType().getSimpleName());
         }
         switch (eruptFieldModel.getEruptField().edit().type()) {
             case SLIDER:
@@ -111,7 +120,7 @@ public class EruptUtil {
                 return jsonElement.getAsBoolean();
             case DATE:
                 DateEnum dateEnum = eruptFieldModel.getEruptField().edit().dateType().type();
-                if (JavaSimpleType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
+                if (JavaType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
                     return DateUtil.getDate(jsonElement.getAsString());
                 } else {
                     return jsonElement.getAsString();
@@ -121,11 +130,10 @@ public class EruptUtil {
                 String id = null;
                 if (eruptFieldModel.getEruptField().edit().type().equals(EditType.REFERENCE_TREE)) {
                     id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();
-                } else {
+                } else if (eruptFieldModel.getEruptField().edit().type().equals(EditType.REFERENCE_TABLE)) {
                     id = eruptFieldModel.getEruptField().edit().referenceTableType().id();
                 }
                 EruptFieldModel efm = CoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
-                //TODO 类型转换太频繁,以后优化
                 return TypeUtil.typeStrConvertObject(jsonElement.getAsJsonObject().get(id).getAsString(), efm.getField().getType().getSimpleName());
             default:
                 return jsonElement.getAsString();
@@ -141,8 +149,12 @@ public class EruptUtil {
                 Edit edit = eruptFieldModel.getEruptField().edit();
                 if (AnnotationUtil.getEditTypeMapping(edit.type()).search()) {
                     if (edit.search().value() && !searchCondition.get(key).isJsonNull()) {
-                        if (JavaSimpleType.STRING.equals(eruptFieldModel.getFieldReturnName())) {
-                            if (StringUtils.isBlank(searchCondition.get(key).getAsString())) {
+                        if (searchCondition.get(key).isJsonArray()) {
+                            if (searchCondition.get(key).getAsJsonArray().size() == 0) {
+                                continue;
+                            }
+                        } else if (JavaType.STRING.equals(eruptFieldModel.getFieldReturnName())) {
+                            if (StringUtils.isBlank(searchCondition.get(key).toString())) {
                                 continue;
                             }
                         }
@@ -163,7 +175,7 @@ public class EruptUtil {
                     eruptApiModel.setErrorIntercept(false);
                     return eruptApiModel;
                 }
-                if (JavaSimpleType.STRING.equals(field.getFieldReturnName())) {
+                if (JavaType.STRING.equals(field.getFieldReturnName())) {
                     String str = jsonObject.get(field.getFieldName()).getAsString();
                     if (StringUtils.isBlank(str)) {
                         EruptApiModel eruptApiModel = EruptApiModel.errorApi(field.getEruptField().edit().title() + "必填");

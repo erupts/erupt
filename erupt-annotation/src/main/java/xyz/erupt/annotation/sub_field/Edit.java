@@ -25,13 +25,13 @@ public @interface Edit {
 
     Search search() default @Search(false);
 
-    EditType type() default EditType.INPUT;
-
     @Transient
     String orderBy() default "";
 
     @Transient
     Filter filter() default @Filter(condition = "");
+
+    EditType type() default EditType.INPUT;
 
     @SerializeBy(method = "type", value = "INPUT")
     InputType inputType() default @InputType;
@@ -46,7 +46,7 @@ public @interface Edit {
     DateType dateType() default @DateType;
 
     @SerializeBy(method = "type", value = "SLIDER")
-    SliderType sliderType() default @SliderType(max = 999);
+    SliderType sliderType() default @SliderType(max = 9999);
 
     @SerializeBy(method = "type", value = "ATTACHMENT")
     AttachmentType attachmentType() default @AttachmentType;

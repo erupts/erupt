@@ -72,6 +72,9 @@ public class EruptJpaDao {
                             query.setParameter(EruptJpaUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
                             continue;
                         }
+//                        else if(edit.type() == EditType.CHOICE){
+////                            query.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+//                        }
                     }
                     countQuery.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)));
                     query.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)));

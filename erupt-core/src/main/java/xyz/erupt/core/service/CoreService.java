@@ -27,46 +27,61 @@ public class CoreService implements InitializingBean {
     @Value("#{'${erupt.scanner-package:xyz.erupt}'.split(',')}")
     private String[] packages;
 
+    private static boolean staticHotBuild;
+    @Value("${erupt.hotBuild:false}")
+    private boolean hotBuild;
+
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
     public static EruptModel getErupt(String eruptName) {
-        return ERUPTS.get(eruptName);
+        if (staticHotBuild) {
+            EruptModel eruptModel = ERUPTS.get(eruptName);
+            return initEruptModel(eruptModel.getClazz());
+        } else {
+            return ERUPTS.get(eruptName);
+        }
+    }
+
+    private static EruptModel initEruptModel(Class clazz) {
+        //erupt domain info to memory
+        EruptModel eruptModel = new EruptModel(clazz);
+        // erupt field info to memory
+        {
+            List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
+            Map<String, EruptFieldModel> eruptFieldMap = new LinkedCaseInsensitiveMap<>();
+            //erupt class annotation
+            {
+                try {
+                    Object eruptObject = eruptModel.getClazz().newInstance();
+                    ReflectUtil.findClassAllFields(clazz, field -> {
+                        if (null != field.getAnnotation(EruptField.class)) {
+                            try {
+                                EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
+                                field.setAccessible(true);
+                                eruptFieldModel.setValue(field.get(eruptObject));
+                                eruptFieldModels.add(eruptFieldModel);
+                                eruptFieldMap.put(field.getName(), eruptFieldModel);
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+            eruptModel.setEruptFieldModels(eruptFieldModels);
+            eruptModel.setEruptFieldMap(eruptFieldMap);
+        }
+        EruptAnnotationException.validateEruptInfo(eruptModel);
+        return eruptModel;
     }
 
     @Override
     public void afterPropertiesSet() {
+        CoreService.staticHotBuild = this.hotBuild;
         new SpringUtil().scannerPackage(this.packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
-            //erupt domain info to memory
-            EruptModel eruptModel = new EruptModel(clazz);
-            // erupt field info to memory
-            {
-                List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
-                Map<String, EruptFieldModel> eruptFieldMap = new LinkedCaseInsensitiveMap<>();
-                //erupt class annotation
-                {
-                    try {
-                        Object eruptObject = eruptModel.getClazz().newInstance();
-                        ReflectUtil.findClassAllFields(clazz, field -> {
-                            if (null != field.getAnnotation(EruptField.class)) {
-                                try {
-                                    EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
-                                    field.setAccessible(true);
-                                    eruptFieldModel.setValue(field.get(eruptObject));
-                                    eruptFieldModels.add(eruptFieldModel);
-                                    eruptFieldMap.put(field.getName(), eruptFieldModel);
-                                } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    } catch (InstantiationException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-                eruptModel.setEruptFieldModels(eruptFieldModels);
-                eruptModel.setEruptFieldMap(eruptFieldMap);
-            }
-            EruptAnnotationException.validateEruptInfo(eruptModel);
+            EruptModel eruptModel = initEruptModel(clazz);
             //other info to memory
             ERUPTS.put(eruptModel.getEruptName(), eruptModel);
         });

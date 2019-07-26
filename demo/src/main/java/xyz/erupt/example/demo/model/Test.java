@@ -10,7 +10,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
-import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
 
@@ -49,6 +48,68 @@ public class Test {
             edit = @Edit(title = "姓名", notNull = true, search = @Search(true))
     )
     private String name;
+
+    @Column(name = "PRICE")
+    @EruptField(
+            views = @View(title = "价格", sortable = true, viewType = ViewType.HTML),
+            edit = @Edit(title = "价格", notNull = true, search = @Search(true))
+    )
+    private Double price;
+
+
+    @Column(name = "RADIO")
+    @EruptField(
+            views = @View(
+                    title = "单选"
+            ),
+            edit = @Edit(
+                    title = "单选",
+                    type = EditType.CHOICE,
+                    search = @Search(value = true, vague = true),
+                    choiceType = @ChoiceType(vl = {
+                            @VL(label = "张A", value = "A"),
+                            @VL(label = "张B", value = "B"),
+                            @VL(label = "张C", value = "C"),
+                            @VL(label = "张D", value = "D"),
+                            @VL(label = "张E", value = "E"),
+                            @VL(label = "张F", value = "F")
+                    }, type = ChoiceEnum.RADIO)
+            )
+    )
+    private String radio;
+
+
+    @Column(name = "CHOICE")
+    @EruptField(
+            views = @View(
+                    title = "CHOICE View"
+            ),
+            edit = @Edit(
+                    title = "CHOICE",
+                    type = EditType.CHOICE,
+                    search = @Search(value = true, vague = true),
+                    choiceType = @ChoiceType(vl = {
+                            @VL(label = "A", value = "张三"),
+                            @VL(label = "李四", value = "李四")
+                    }, type = ChoiceEnum.TAGS)
+//                    inputType = @InputType(regex = "^1[3|4|5|7|8][0-9]\\d{8}$")
+            )
+    )
+    private String choice;
+
+    @Column(name = "CHECKBOX")
+    @EruptField(
+            edit = @Edit(
+                    title = "手机号",
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(vl = {
+                            @VL(label = "A", value = "张三"),
+                            @VL(label = "李四", value = "李四")
+                    }, type = ChoiceEnum.SELECT_MULTI)
+
+            )
+    )
+    private String checkbox;
 
 
     @EruptField(
@@ -228,16 +289,6 @@ public class Test {
             )
     )
     private TestExtra testExtra;
-
-    @OneToMany
-    @EruptField(
-            edit = @Edit(
-                    title = "所属角色",
-                    type = EditType.TAB_TABLE_ADD
-            )
-    )
-    private Set<EruptMenu> menus;
-
 
     @Lob
     @Column(name = "REMARK")

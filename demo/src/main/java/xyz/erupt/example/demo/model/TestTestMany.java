@@ -43,5 +43,4 @@ public class TestTestMany extends BaseModel {
     )
     private Double price;
 
-
 }

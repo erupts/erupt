@@ -210,7 +210,7 @@ public class Mmo extends BaseModel {
                                     @VL(value = "991@", label = "李四"),
                                     @VL(value = "992@", label = "李四"),
                             },
-                            type = ChoiceEnum.SELECT_MULTI
+                            type = ChoiceEnum.SELECT_SINGLE
                     ),
                     search = @Search(true)
             )
