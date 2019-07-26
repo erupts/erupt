@@ -27,9 +27,10 @@ public class CoreService implements InitializingBean {
     @Value("#{'${erupt.scanner-package:xyz.erupt}'.split(',')}")
     private String[] packages;
 
-    private static boolean staticHotBuild;
     @Value("${erupt.hotBuild:false}")
     private boolean hotBuild;
+
+    private static boolean staticHotBuild;
 
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
@@ -40,6 +41,16 @@ public class CoreService implements InitializingBean {
         } else {
             return ERUPTS.get(eruptName);
         }
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        CoreService.staticHotBuild = this.hotBuild;
+        new SpringUtil().scannerPackage(this.packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
+            EruptModel eruptModel = initEruptModel(clazz);
+            //other info to memory
+            ERUPTS.put(eruptModel.getEruptName(), eruptModel);
+        });
     }
 
     private static EruptModel initEruptModel(Class clazz) {
@@ -76,16 +87,5 @@ public class CoreService implements InitializingBean {
         EruptAnnotationException.validateEruptInfo(eruptModel);
         return eruptModel;
     }
-
-    @Override
-    public void afterPropertiesSet() {
-        CoreService.staticHotBuild = this.hotBuild;
-        new SpringUtil().scannerPackage(this.packages, new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
-            EruptModel eruptModel = initEruptModel(clazz);
-            //other info to memory
-            ERUPTS.put(eruptModel.getEruptName(), eruptModel);
-        });
-    }
-
 
 }

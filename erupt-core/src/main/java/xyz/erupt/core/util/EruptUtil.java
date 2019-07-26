@@ -9,7 +9,6 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.bean.EruptApiModel;
@@ -119,7 +118,6 @@ public class EruptUtil {
             case BOOLEAN:
                 return jsonElement.getAsBoolean();
             case DATE:
-                DateEnum dateEnum = eruptFieldModel.getEruptField().edit().dateType().type();
                 if (JavaType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
                     return DateUtil.getDate(jsonElement.getAsString());
                 } else {
