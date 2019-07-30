@@ -30,6 +30,12 @@ public class ReflectUtil {
         return field;
     }
 
+    public static Object getFieldValue(Object obj, String fieldName) throws IllegalAccessException, NoSuchFieldException {
+        Field field = obj.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.get(obj);
+    }
+
     public static void findClassAllFields(Class clazz, Consumer<Field> fieldConsumer) {
         Class tempClass = clazz;
         while (null != tempClass) {

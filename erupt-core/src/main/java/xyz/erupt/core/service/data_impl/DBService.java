@@ -9,6 +9,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.bean.EruptFieldModel;
 import xyz.erupt.core.bean.EruptModel;
@@ -80,9 +81,14 @@ public class DBService implements DataService {
     @Override
     public void addData(EruptModel eruptModel, Object object) {
         try {
+            jpaManyToOneConvert(eruptModel, object);
             eruptJpaDao.addEntity(object);
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException(gcRepeatHint(eruptModel));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
         }
 
     }
@@ -95,23 +101,53 @@ public class DBService implements DataService {
             Object entity = entityManager.find(eruptModel.getClazz(),
                     ReflectUtil.findClassField(data.getClass(), eruptModel.getErupt().primaryKeyCol()).get(data));
             ReflectUtil.findClassAllFields(entity.getClass(), field -> {
-                if (null == field.getAnnotation(EruptField.class) && null == field.getAnnotation(Transient.class)) {
-                    try {
+                try {
+                    if (null == field.getAnnotation(EruptField.class) && null == field.getAnnotation(Transient.class)) {
                         field.setAccessible(true);
                         Field dataField = data.getClass().getDeclaredField(field.getName());
                         dataField.setAccessible(true);
                         dataField.set(data, field.get(entity));
-                    } catch (IllegalAccessException | NoSuchFieldException e) {
-                        throw new RuntimeException(e);
                     }
+                    //删除原始一对多数据
+                    if (null != field.getAnnotation(OneToMany.class) && null != field.getAnnotation(EruptField.class)) {
+                        field.setAccessible(true);
+                        Collection collection = (Collection) field.get(entity);
+                        for (Object o : collection) {
+                            entityManager.remove(o);
+                        }
+                    }
+                } catch (IllegalAccessException | NoSuchFieldException e) {
+                    throw new RuntimeException(e);
                 }
             });
+            jpaManyToOneConvert(eruptModel, data);
             eruptJpaDao.editEntity(data);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             throw new RuntimeException(gcRepeatHint(eruptModel));
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void jpaManyToOneConvert(EruptModel eruptModel, Object object) throws NoSuchFieldException, IllegalAccessException {
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            if (fieldModel.getEruptField().edit().type() == EditType.TAB_TABLE_ADD) {
+                Field field = object.getClass().getDeclaredField(fieldModel.getFieldName());
+                field.setAccessible(true);
+                Collection collection = (Collection) field.get(object);
+                OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+                for (Object o : collection) {
+                    Field ff = o.getClass().getDeclaredField(oneToMany.mappedBy());
+                    ff.setAccessible(true);
+                    ff.set(o, object);
+
+                    Field pk = o.getClass().getDeclaredField(CoreService
+                            .getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol());
+                    pk.setAccessible(true);
+                    pk.set(o, null);
+                }
+            }
         }
     }
 

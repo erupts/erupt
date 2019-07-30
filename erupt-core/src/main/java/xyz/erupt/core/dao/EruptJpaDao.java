@@ -3,6 +3,7 @@ package xyz.erupt.core.dao;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Repository;
+import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.bean.EruptFieldModel;
@@ -56,6 +57,7 @@ public class EruptJpaDao {
         String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("count(*)", customCondition, searchCondition, null));
         Query query = entityManager.createQuery(hql);
         Query countQuery = entityManager.createQuery(countHql);
+
         Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
         if (null != searchCondition) {
             for (String key : searchCondition.keySet()) {
@@ -63,7 +65,7 @@ public class EruptJpaDao {
                     EruptFieldModel eruptFieldModel = eruptFieldMap.get(key);
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     if (edit.search().vague()) {
-                        if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(EruptFieldModel.NUMBER_TYPE))
+                        if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(JavaType.NUMBER))
                                 || edit.type() == EditType.DATE || edit.type() == EditType.SLIDER) {
                             JsonArray jsonArray = searchCondition.get(key).getAsJsonArray();
                             countQuery.setParameter(EruptJpaUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
@@ -72,16 +74,12 @@ public class EruptJpaDao {
                             query.setParameter(EruptJpaUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
                             continue;
                         }
-//                        else if(edit.type() == EditType.CHOICE){
-////                            query.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
-//                        }
                     }
                     countQuery.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)));
                     query.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)));
                 }
             }
         }
-        System.err.println(hql);
         List list = query.setMaxResults(page.getPageSize())
                 .setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList();
         page.setTotal((Long) countQuery.getSingleResult());

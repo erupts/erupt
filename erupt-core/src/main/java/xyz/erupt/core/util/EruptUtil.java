@@ -101,7 +101,7 @@ public class EruptUtil {
             JsonArray jsonArray = jsonElement.getAsJsonArray();
             List list = new ArrayList();
             for (JsonElement element : jsonArray) {
-                if (EruptFieldModel.NUMBER_TYPE.equals(eruptFieldModel.getFieldReturnName())) {
+                if (JavaType.NUMBER.equals(eruptFieldModel.getFieldReturnName())) {
                     list.add(TypeUtil.typeStrConvertObject(jsonElement.getAsString(), eruptFieldModel.getFieldReturnName()));
                 } else {
                     list.add(element.getAsString());
@@ -109,7 +109,7 @@ public class EruptUtil {
             }
             return list;
         }
-        if (EruptFieldModel.NUMBER_TYPE.equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
+        if (JavaType.NUMBER.equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
             return TypeUtil.typeStrConvertObject(jsonElement.getAsString(), eruptFieldModel.getField().getType().getSimpleName());
         }
         switch (eruptFieldModel.getEruptField().edit().type()) {

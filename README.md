@@ -1,4 +1,5 @@
 # erupt
+
 ### 作者
 YuePeng
 
@@ -12,9 +13,13 @@ YuePeng
 3. Spring Boot
 4. JPA
 5. Redis
+6. Erupt
+7. Angular2+
+8. ng-zorro
 
 #### 安装教程
-1. 指定与redis信息，直接启动即可。
+1. 指定数据库与redis信息后，直接启动即可。
+2. 请确认数据库版本与jdbc.jar相兼容
 
 #### 使用说明
 实体类使用@Erupt注解，实体类字段上使用@EruptField注解
@@ -28,4 +33,4 @@ YuePeng
 6. 基于erupt注解完成任务调度功能
 7. 使用erupt注解完成基本的BI报表功能
 8. 持续优化阶段
-9. （开源|产品|私活）
+9. （开源|产品|公司核心技术|接一些小活）

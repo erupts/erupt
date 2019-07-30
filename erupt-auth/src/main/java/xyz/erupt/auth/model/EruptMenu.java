@@ -80,7 +80,7 @@ public class EruptMenu extends BaseModel {
                     )
             )
     )
-    private Integer status;
+    private Integer status = 1;
 
     @Column(name = "SORT")
     @EruptField(

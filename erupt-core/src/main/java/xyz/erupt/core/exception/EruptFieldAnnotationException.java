@@ -13,25 +13,6 @@ public class EruptFieldAnnotationException extends RuntimeException {
     }
 
     public static void validateEruptFieldInfo(EruptFieldModel eruptFieldModel) {
-//        EditTypeMapping editTypeMapping = AnnotationUtil.getEditTypeMapping(eruptFieldModel.getEruptField().edit().type());
-//        for (JavaType type : editTypeMapping.allowType()) {
-//            switch (type) {
-//                case String:
-//                case date:
-//                case number:
-//                    if (type.name().equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
-//                        return;
-//                    } else {
-//                        continue;
-//                    }
-//                case bool:
-//                    if ("boolean".equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
-//                        return;
-//                    }
-//                    break;
-//            }
-//        }
-
         switch (eruptFieldModel.getEruptField().edit().type()) {
             case REFERENCE_TREE:
             case REFERENCE_TABLE:

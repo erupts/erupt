@@ -3,6 +3,7 @@ package xyz.erupt.core.bean;
 import com.google.gson.JsonObject;
 import lombok.Data;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.util.AnnotationUtil;
@@ -18,8 +19,6 @@ import java.util.Map;
  */
 @Data
 public class EruptFieldModel {
-
-    public static final String NUMBER_TYPE = "number";
 
     private transient EruptField eruptField;
 
@@ -41,7 +40,7 @@ public class EruptFieldModel {
         this.fieldName = field.getName();
         //数字类型转换
         if (TypeUtil.isNumberType(field.getType().getSimpleName())) {
-            this.fieldReturnName = NUMBER_TYPE;
+            this.fieldReturnName = JavaType.NUMBER;
         } else {
             this.fieldReturnName = field.getType().getSimpleName();
         }

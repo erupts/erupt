@@ -34,12 +34,12 @@ public enum EditType {
     REFERENCE_TREE,
     @EditTypeMapping(mapping = "referenceTableType", desc = "表格引用", searchVague = false, allowType = {JavaTypeEnum.bool})
     REFERENCE_TABLE,
-    @EditTypeMapping(desc = "树引用", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
+    @EditTypeMapping(desc = "树引用（仅支持多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
     TAB_TREE,
+    @EditTypeMapping(desc = "表格引用（仅支持多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
+    TAB_TABLE_REFER,
     @EditTypeMapping(desc = "表格引用", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
     TAB_TABLE_ADD,
-    @EditTypeMapping(desc = "表格引用", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
-    TAB_TABLE_REFER,
 
     JSON_EDIT,         //JSON格式编辑器
     MAP,              //地图

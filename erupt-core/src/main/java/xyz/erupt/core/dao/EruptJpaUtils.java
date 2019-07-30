@@ -123,7 +123,7 @@ public class EruptJpaUtils {
                     if (edit.search().value()) {
                         String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
                         if (edit.search().vague()) {
-                            if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(EruptFieldModel.NUMBER_TYPE))
+                            if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(JavaType.NUMBER))
                                     || edit.type() == EditType.DATE
                                     || edit.type() == EditType.SLIDER) {
                                 hql.append(EruptJpaUtils.AND).append(_key)

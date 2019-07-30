@@ -47,11 +47,11 @@ public class Test {
             views = @View(title = "姓名", sortable = true, template = "'姓名：'+item.name", viewType = ViewType.HTML),
             edit = @Edit(title = "姓名", notNull = true, search = @Search(true))
     )
-    private String name;
+    private String name = "2333333";
 
     @Column(name = "PRICE")
     @EruptField(
-            views = @View(title = "价格", sortable = true, viewType = ViewType.HTML),
+            views = @View(title = "价格", sortable = true),
             edit = @Edit(title = "价格", notNull = true, search = @Search(true))
     )
     private Double price;
@@ -151,7 +151,7 @@ public class Test {
 
     @Column(name = "SVG")
     @EruptField(
-            views = @View(title = "SVG", viewType = ViewType.IMAGE, export = false),
+            views = @View(title = "SVG", viewType = ViewType.ATTACHMENT_DIALOG, export = false),
             edit = @Edit(
                     title = "SVG",
                     type = EditType.ATTACHMENT,

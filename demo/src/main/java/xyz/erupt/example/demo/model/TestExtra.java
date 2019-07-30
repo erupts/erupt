@@ -49,6 +49,17 @@ public class TestExtra extends BaseModel {
     private String week;
 
 
+    @Transient
+    @EruptField(
+            views = @View(title = "text"),
+            edit = @Edit(
+                    notNull = true,
+                    title = "text"
+            )
+    )
+    private String text = "23333";
+
+
     @ManyToOne
     @JoinColumn(name = "EXTRA_LEFT_ID")
     @EruptField(

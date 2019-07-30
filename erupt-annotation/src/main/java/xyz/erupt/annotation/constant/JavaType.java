@@ -5,6 +5,8 @@ package xyz.erupt.annotation.constant;
  */
 public class JavaType {
 
+    public static final String NUMBER = "number";
+
     public static final String CLASS = "Class";
 
     public static final String STRING = "String";
