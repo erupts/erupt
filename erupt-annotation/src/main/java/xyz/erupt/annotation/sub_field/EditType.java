@@ -38,7 +38,7 @@ public enum EditType {
     TAB_TREE,
     @EditTypeMapping(desc = "表格引用（仅支持多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
     TAB_TABLE_REFER,
-    @EditTypeMapping(desc = "表格引用", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
+    @EditTypeMapping(desc = "表格引用（仅支持一对多)", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
     TAB_TABLE_ADD,
 
     JSON_EDIT,         //JSON格式编辑器

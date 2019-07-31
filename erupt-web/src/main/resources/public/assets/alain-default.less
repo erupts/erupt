@@ -2487,6 +2487,83 @@ darker  @grey-9;
 // Forced to turn off Modal animation
 @forced-turn-off-nz-modal-animation-enabled: false;
 
+@avatar-list-prefix: ~'.avatar-list';
+@avatar-list-mini-wh: 20px;
+
+@se-prefix: ~'.se';
+@se-label-color: rgba(0, 0, 0, 0.5);
+@se-label-optional-color: rgba(0, 0, 0, 0.35);
+@se-compact-bottom: @layout-gutter;
+
+@ellipsis-prefix: ~'.ellipsis';
+
+@error-collect-prefix: ~'.error-collect';
+@error-collect-color: #f5222d;
+
+@exception-prefix: ~'.exception';
+
+@footer-toolbar-prefix: ~'.footer-toolbar';
+@footer-toolbar-height: 56px;
+@footer-toolbar-box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.03);
+@footer-toolbar-bg: #fff;
+@footer-toolbar-border-top: 1px solid @border-color-split;
+@footer-toolbar-padding: 0 24px;
+
+@full-content-prefix: ~'.full-content';
+
+@global-footer-prefix: ~'.global-footer';
+
+@notice-icon-prefix: ~'.notice-icon';
+
+@page-header-prefix: ~'.page-header';
+@page-header-bg: #fff;
+@page-header-wide: 1200px;
+
+@quick-menu-prefix: ~'.quick-menu';
+@quick-menu-border-width: 1px;
+@quick-menu-ctrl-hw: 50px;
+@quick-menu-border-color: #fff;
+
+@result-prefix: ~'.result';
+@result-extra-bg: #fafafa;
+
+@reuse-tab-prefix: ~'.reuse-tab';
+@reuse-tab-height: 52px;
+@reuse-tab-bg: #fff;
+@reuse-tab-padding: 8px;
+@reuse-tab-border-color: #d9d9d9;
+
+@st-prefix: ~'.st';
+@st-btn-disabled-color: rgba(0, 0, 0, .25);
+@sv-prefix: ~'.sv';
+@sv-label-color: rgba(0, 0, 0, 0.5);
+@sv-label-optional-color: rgba(0, 0, 0, 0.35);
+@sv-detail-color: @text-color;
+@sv-type-primary-color: @primary-color;
+@sv-type-success-color: @success-color;
+@sv-type-danger-color: @error-color;
+@sv-type-warning-color: @warning-color;
+@sv-bottom: @layout-gutter * 2;
+@sv-default-text: '-';
+@sv-unit-margin: 8px;
+@sv-unit-color: @grey-7;
+
+@g2-card-prefix: ~'.g2-card';
+
+@g2-gauge-prefix: ~'.g2-gauge';
+
+@g2-mini-progress-prefix: ~'.g2-mini-progress';
+
+@number-info-prefix: ~'.number-info';
+
+@g2-pie-prefix: ~'.g2-pie';
+
+@g2-radar-prefix: ~'.g2-radar';
+
+@trend-prefix: ~'.trend';
+
+@g2-water-wave-prefix: ~'.g2-water-wave';
+
 // antd
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
@@ -6525,7 +6602,7 @@ textarea.cdk-textarea-autosize-measuring {
   border-radius: @border-radius;
 }
 
-.button-disabled() {
+.button-disabled(@color: @btn-disable-color; @background: @btn-disable-bg; @border: @btn-disable-border) {
   &-disabled,
   &.disabled,
   &[disabled] {
@@ -6534,7 +6611,8 @@ textarea.cdk-textarea-autosize-measuring {
     &:focus,
     &:active,
     &.active {
-      .button-color(@btn-disable-color; @btn-disable-bg; @btn-disable-border);
+      .button-color(@color; @background; @border);
+
       text-shadow: none;
       box-shadow: none;
     }
@@ -6543,6 +6621,7 @@ textarea.cdk-textarea-autosize-measuring {
 
 .button-variant-primary(@color; @background) {
   .button-color(@color; @background; @background);
+
   text-shadow: @btn-text-shadow;
   box-shadow: @btn-primary-shadow;
 
@@ -6602,16 +6681,29 @@ textarea.cdk-textarea-autosize-measuring {
   }
   .button-disabled();
 }
-.button-variant-ghost(@color) {
-  .button-color(@color; transparent; @color);
+
+.button-variant-ghost(@color; @border: @color) {
+  .button-color(@color; transparent; @border);
   text-shadow: none;
   &:hover,
   &:focus {
-    .button-color(~`colorPalette('@{color}', 5) `; transparent; ~`colorPalette('@{color}', 5) `);
+    & when (@border = transparent) {
+      .button-color(~`colorPalette('@{color}', 5) `; transparent; transparent);
+    }
+
+    & when not(@border = transparent) {
+      .button-color(~`colorPalette('@{color}', 5) `; transparent; ~`colorPalette('@{color}', 5) `);
+    }
   }
   &:active,
   &.active {
-    .button-color(~`colorPalette('@{color}', 7) `; transparent; ~`colorPalette('@{color}', 7) `);
+    & when (@border = transparent) {
+      .button-color(~`colorPalette('@{color}', 7) `; transparent; transparent);
+    }
+
+    & when not(@border = transparent) {
+      .button-color(~`colorPalette('@{color}', 7) `; transparent; ~`colorPalette('@{color}', 7) `);
+    }
   }
   .button-disabled();
 }
@@ -6738,6 +6830,18 @@ textarea.cdk-textarea-autosize-measuring {
 .btn-danger() {
   .button-variant-danger(@btn-danger-color, @btn-danger-bg, @btn-danger-border);
 }
+
+// link button style
+.btn-link() {
+  .button-variant-other(@link-color, transparent, transparent);
+  box-shadow: none;
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: transparent;
+  }
+  .button-disabled(@disabled-color; transparent; transparent);
+}
 // round button
 .btn-round(@btnClassName: btn) {
   .button-size(@btn-circle-size; 0 @btn-circle-size / 2; @font-size-base + 2px; @btn-circle-size);
@@ -6765,7 +6869,8 @@ textarea.cdk-textarea-autosize-measuring {
     .button-size(@btn-circle-size-sm; 0; @font-size-base; 50%);
   }
 }
-// Horizontal button groups styl
+
+// Horizontal button groups style
 // --------------------------------------------------
 .btn-group(@btnClassName: btn) {
   .button-group-base(@btnClassName);
@@ -6909,6 +7014,10 @@ textarea.cdk-textarea-autosize-measuring {
     .btn-danger;
   }
 
+  &-link {
+    .btn-link;
+  }
+
   &-round {
     .btn-round(@btn-prefix-cls);
   }
@@ -6930,8 +7039,8 @@ textarea.cdk-textarea-autosize-measuring {
     border-radius: inherit;
     opacity: 0.35;
     transition: opacity 0.2s;
-    pointer-events: none;
     content: '';
+    pointer-events: none;
   }
 
   .@{iconfont-css-prefix} {
@@ -6947,14 +7056,17 @@ textarea.cdk-textarea-autosize-measuring {
     }
   }
 
+  &&-loading {
+    position: relative;
+    pointer-events: none;
+  }
+
   &&-loading::before {
     display: block;
   }
 
   &&-loading:not(&-circle):not(&-circle-outline):not(&-icon-only) {
-    position: relative;
     padding-left: 29px;
-    pointer-events: none;
     .@{iconfont-css-prefix}:not(:last-child) {
       margin-left: -14px;
     }
@@ -7000,6 +7112,12 @@ textarea.cdk-textarea-autosize-measuring {
 
   &-background-ghost&-danger {
     .button-variant-ghost(@btn-danger-color);
+  }
+
+  &-background-ghost&-link {
+    .button-variant-ghost(@link-color; transparent);
+
+    color: @component-background;
   }
 
   &-two-chinese-chars::first-letter {
@@ -10651,6 +10769,133 @@ a.@{btn-prefix-cls} {
   }
 
   .make-color-classes();
+}
+
+@descriptions-prefix-cls: ~'@{ant-prefix}-descriptions';
+
+@descriptions-default-padding: 16px 24px;
+@descriptions-middle-padding: 12px 24px;
+@descriptions-small-padding: 8px 16px;
+
+.@{descriptions-prefix-cls} {
+  &-title {
+    margin-bottom: 20px;
+    color: @heading-color;
+    font-weight: bold;
+    font-size: @font-size-lg;
+    line-height: @line-height-base;
+  }
+
+  &-view {
+    width: 100%;
+    overflow: hidden;
+    border-radius: @border-radius-base;
+
+    table {
+      width: 100%;
+    }
+  }
+
+  &-row {
+    > td {
+      padding-bottom: 16px;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &-item-label {
+    color: @heading-color;
+    font-size: @font-size-base;
+    line-height: @line-height-base;
+    white-space: nowrap;
+
+    &::after {
+      position: relative;
+      top: -0.5px;
+      margin: 0 8px 0 2px;
+      content: ':';
+    }
+  }
+
+  &-item-content {
+    display: table-cell;
+    color: @text-color;
+    font-size: @font-size-base;
+    line-height: @line-height-base;
+  }
+
+  &-item {
+    padding-bottom: 0;
+
+    > span {
+      display: inline-block;
+    }
+
+    .@{descriptions-prefix-cls}-item-label {
+      float: left;
+      padding: 0 !important;
+    }
+
+    .@{descriptions-prefix-cls}-item-content {
+      float: left;
+      padding: 0 !important;
+    }
+  }
+
+  // padding setting
+  .@{descriptions-prefix-cls}-item-label,
+  .@{descriptions-prefix-cls}-item-content {
+    padding: @descriptions-default-padding;
+  }
+
+  &.bordered.middle {
+    .@{descriptions-prefix-cls}-item-label,
+    .@{descriptions-prefix-cls}-item-content {
+      padding: @descriptions-middle-padding;
+    }
+  }
+
+  &.bordered.small {
+    .@{descriptions-prefix-cls}-item-label,
+    .@{descriptions-prefix-cls}-item-content {
+      padding: @descriptions-small-padding;
+    }
+  }
+
+  &.bordered {
+    .@{descriptions-prefix-cls}-view {
+      border: 1px solid @border-color-split;
+    }
+
+    .@{descriptions-prefix-cls}-item-label,
+    .@{descriptions-prefix-cls}-item-content {
+      border-right: 1px solid @border-color-split;
+    }
+
+    .@{descriptions-prefix-cls}-item-label:last-child,
+    .@{descriptions-prefix-cls}-item-content:last-child {
+      border-right: none;
+    }
+
+    .@{descriptions-prefix-cls}-row {
+      border-bottom: 1px solid @border-color-split;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .@{descriptions-prefix-cls}-item-label {
+      background-color: #fafafa;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
 }
 
 @divider-prefix-cls: ~'@{ant-prefix}-divider';
@@ -19550,36 +19795,18 @@ nz-table {
  * found in the LICENSE file at https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/LICENSE
  */
 
-.ant-tree {
-  &.ant-tree-show-line {
-    > nz-tree-node:not(:last-child), .ant-tree-child-tree > nz-tree-node:not(:last-child) {
-      > li:before {
-        content: ' ';
-        width: 1px;
-        border-left: 1px solid @border-color-base;
-        height: 100%;
-        position: absolute;
-        left: 12px;
-        margin: 22px 0;
-      }
-    }
+.ant-tree.ant-tree-show-line nz-tree-node:not(:last-child) > li::before {
+  content: ' ';
+  width: 1px;
+  border-left: 1px solid @border-color-base;
+  height: 100%;
+  position: absolute;
+  left: 12px;
+  margin: 22px 0;
+}
 
-    .ant-tree-child-tree > nz-tree-node:last-child {
-      > li:before {
-        content: ' ';
-        width: 1px;
-        border-left: 0px solid @border-color-base;
-        height: 100%;
-        position: absolute;
-        left: 12px;
-        margin: 22px 0;
-      }
-    }
-  }
-
-  .font-highlight {
-    color: @highlight-color;
-  }
+.font-highlight {
+  color: @highlight-color;
 }
 
 @select-prefix-cls: ~'@{ant-prefix}-select';
@@ -19770,6 +19997,15 @@ nz-table {
 
 // style dependencies
 // deps-lint-skip: select
+.ant-tree.ant-select-tree.ant-tree-show-line nz-tree-node:not(:last-child) > li::before {
+  content: ' ';
+  width: 1px;
+  border-left: 1px solid #d9d9d9;
+  height: calc(100% - 16px);
+  position: absolute;
+  left: 12px;
+  margin: 26px 0;
+}
 
 @full-calendar-prefix-cls: ~'@{ant-prefix}-fullcalendar';
 
@@ -20424,6 +20660,7 @@ a:focus {
   }
 }
 
+// 限定单元格的图像大小
 .@{ant-prefix}-table {
   td {
     > img,
@@ -20437,6 +20674,7 @@ a:focus {
   }
 }
 
+// 表格响应式
 .@{ant-prefix}-table-rep {
   &__title {
     display: none;
@@ -20450,45 +20688,49 @@ a:focus {
 }
 
 @media screen and (max-width: @nz-table-rep-max-width) {
-  .@{ant-prefix}-table {
-    &-rep {
-      &__title {
-        display: inline-block;
-        width: @nz-table-rep-column-name-width;
-        padding-right: @nz-table-rep-column-name-padding-right;
-        color: @nz-table-rep-column-name-color;
-        text-align: @nz-table-rep-column-name-text-align;
-      }
-      &__hide-header-footer {
-        .@{ant-prefix}-table-title,
-        .@{ant-prefix}-table-footer {
-          display: block;
-        }
-      }
+  .@{ant-prefix}-table-rep {
+    &__title {
+      display: inline-block;
+      width: @nz-table-rep-column-name-width;
+      padding-right: @nz-table-rep-column-name-padding-right;
+      color: @nz-table-rep-column-name-color;
+      text-align: @nz-table-rep-column-name-text-align;
     }
-    &-thead {
-      display: none;
-    }
-    &-title {
-      text-align: center;
-      background: @nz-table-rep-header-background;
-    }
-    &-tbody {
-      > tr {
-        &:nth-child(3n) {
-          background: @nz-table-rep-even-background;
-        }
-        > td {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          padding: @nz-table-rep-padding-vertical
-            @nz-table-rep-padding-horizontal;
-          text-align: left !important;
-          border-bottom: none;
 
-          .@{ant-prefix}-table-rep__title + *:not(.@{ant-prefix}-avatar) {
-            flex: 1;
+    &__hide-header-footer {
+      .@{ant-prefix}-table-title,
+      .@{ant-prefix}-table-footer {
+        display: block;
+      }
+    }
+
+    .@{ant-prefix}-table {
+      &-thead {
+        display: none;
+      }
+
+      &-title {
+        text-align: center;
+        background: @nz-table-rep-header-background;
+      }
+
+      &-tbody {
+        > tr {
+          &:nth-child(3n) {
+            background: @nz-table-rep-even-background;
+          }
+
+          > td {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: @nz-table-rep-padding-vertical @nz-table-rep-padding-horizontal;
+            text-align: left !important;
+            border-bottom: none;
+
+            .@{ant-prefix}-table-rep__title + *:not(.@{ant-prefix}-avatar) {
+              flex: 1;
+            }
           }
         }
       }
@@ -22392,8 +22634,6 @@ body {
 
 }
 
-@st-prefix: ~'.st';
-
 @{st-prefix} {
   display: block;
   &__selection {
@@ -22414,10 +22654,30 @@ body {
       text-align: center;
     }
   }
+
+  // 修复按钮block
+  &__btn {
+    &-disabled {
+      &,
+      > a {
+        color: @st-btn-disabled-color;
+        pointer-events: none;
+      }
+    }
+
+    &-sub {
+      .@{ant-prefix}-dropdown-menu-item {
+        > span {
+          display: block;
+        }
+      }
+    }
+  }
   // 清除页码底部间距，在大部分列表中会包裹 `nz-card` 导致底部间距过大，若有需求可自行使用 `mb-md` 来调整
-  .@{ant-prefix}-table-pagination.@{ant-prefix}-pagination {
+  .@{ant-prefix}-table ~ nz-pagination > .@{ant-prefix}-pagination {
     margin-bottom: 0;
   }
+
   @media screen and (min-width: @nz-table-rep-min-width) {
     &__width {
       &-strict {
@@ -22431,18 +22691,6 @@ body {
     }
   }
 }
-
-@sv-prefix: ~'.sv';
-@sv-label-color: rgba(0, 0, 0, 0.5);
-@sv-detail-color: @text-color;
-@sv-type-primary-color: @primary-color;
-@sv-type-success-color: @success-color;
-@sv-type-danger-color: @error-color;
-@sv-type-warning-color: @warning-color;
-@sv-bottom: @layout-gutter * 2;
-@sv-default-text: '-';
-@sv-unit-margin: 8px;
-@sv-unit-color: @grey-7;
 
 @{sv-prefix} {
   display: block;
@@ -22492,6 +22740,10 @@ body {
         margin: 0 8px 0 2px;
         content: ':';
       }
+    }
+
+    &-optional {
+      color: @sv-label-optional-color;
     }
   }
   &__detail {
@@ -22562,10 +22814,6 @@ body {
   }
 }
 
-@se-prefix: ~'.se';
-@se-label-color: rgba(0, 0, 0, 0.85);
-@se-compact-bottom: @layout-gutter;
-
 @{se-prefix} {
   &__title {
     display: block;
@@ -22598,7 +22846,7 @@ body {
     white-space: nowrap;
     text-align: right;
     &-optional {
-      color: rgba(0, 0, 0, 0.45);
+      color: @se-label-optional-color;
     }
   }
   &__control {
@@ -22673,8 +22921,6 @@ body {
   }
 }
 
-@avatar-list-prefix: ~'.avatar-list';
-
 @{avatar-list-prefix} {
   display: inline-block;
   &__wrap {
@@ -22703,12 +22949,12 @@ body {
     height: @avatar-size-sm;
   }
   &__mini {
-    width: 20px;
-    height: 20px;
+    width: @avatar-list-mini-wh;
+    height: @avatar-list-mini-wh;
     .@{ant-prefix}-avatar {
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
+      width: @avatar-list-mini-wh;
+      height: @avatar-list-mini-wh;
+      line-height: @avatar-list-mini-wh;
       &-string {
         font-size: 12px;
         line-height: 18px;
@@ -22721,7 +22967,7 @@ ellipsis {
   display: inline;
 }
 
-.ellipsis {
+@{ellipsis-prefix} {
   display: inline-block;
   width: 100%;
   overflow: hidden;
@@ -22744,13 +22990,12 @@ ellipsis {
   }
 }
 
-.error-collect {
+@{error-collect-prefix} {
   padding-right: 24px;
-  color: #f5222d;
+  color: @error-collect-color;
   cursor: pointer;
 }
 
-@exception-prefix: ~'.exception';
 @{exception-prefix} {
   display: flex;
   align-items: center;
@@ -22832,13 +23077,6 @@ ellipsis {
   }
 }
 
-@footer-toolbar-prefix: ~'.footer-toolbar';
-@footer-toolbar-height: 56px;
-@footer-toolbar-box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.03);
-@footer-toolbar-bg: #fff;
-@footer-toolbar-border-top: 1px solid @border-color-split;
-@footer-toolbar-padding: 0 24px;
-
 @{footer-toolbar-prefix} {
   position: fixed;
   right: 0;
@@ -22858,8 +23096,6 @@ ellipsis {
   }
 }
 
-@full-content-prefix: ~'.full-content';
-
 @{full-content-prefix} {
   display: block;
   height: 100%;
@@ -22872,8 +23108,6 @@ ellipsis {
   // &__hidden-title {
   // }
 }
-
-@global-footer-prefix: ~'.global-footer';
 
 @{global-footer-prefix} {
   display: block;
@@ -22899,8 +23133,6 @@ ellipsis {
     font-size: @font-size-base;
   }
 }
-
-@notice-icon-prefix: ~'.notice-icon';
 
 @{notice-icon-prefix} {
   width: 336px;
@@ -23007,10 +23239,6 @@ ellipsis {
     }
   }
 }
-
-@page-header-prefix: ~'.page-header';
-@page-header-bg: #fff;
-@page-header-wide: 1200px;
 
 @{page-header-prefix} {
   display: block;
@@ -23143,11 +23371,6 @@ ellipsis {
   }
 }
 
-@quick-menu-prefix: ~'.quick-menu';
-@quick-menu-border-width: 1px;
-@quick-menu-ctrl-hw: 50px;
-@quick-menu-border-color: #fff;
-
 @{quick-menu-prefix} {
   position: fixed;
   right: -@quick-menu-border-width;
@@ -23187,9 +23410,7 @@ ellipsis {
   }
 }
 
-@result-extra-bg: #fafafa;
-
-.result {
+@{result-prefix} {
   display: block;
   width: 72%;
   margin: 0 auto;
@@ -23244,12 +23465,6 @@ ellipsis {
     background: @result-extra-bg;
   }
 }
-
-@reuse-tab-prefix:          ~'.reuse-tab';
-@reuse-tab-height:          52px;
-@reuse-tab-bg:              #fff;
-@reuse-tab-padding:         8px;
-@reuse-tab-border-color:    #d9d9d9;
 
 @{reuse-tab-prefix} {
   display: block;
@@ -23339,8 +23554,6 @@ g2-tag-cloud {
   width: 100%;
 }
 
-@g2-card-prefix: ~'.g2-card';
-
 @{g2-card-prefix} {
   position: relative;
   &__top {
@@ -23406,8 +23619,6 @@ g2-tag-cloud {
   }
 }
 
-@g2-gauge-prefix: ~'.g2-gauge';
-
 @{g2-gauge-prefix} {
   &__desc {
     width: 300px;
@@ -23415,16 +23626,14 @@ g2-tag-cloud {
     text-align: center;
   }
   &__title {
-    color: rgba(0,0,0,0.43);
+    color: rgba(0, 0, 0, 0.43);
     font-size: 14px;
   }
   &__percent {
-    color: rgba(0,0,0,0.85);
+    color: rgba(0, 0, 0, 0.85);
     font-size: 24px;
   }
 }
-
-@g2-mini-progress-prefix: ~'.g2-mini-progress';
 
 @{g2-mini-progress-prefix} {
   position: relative;
@@ -23460,8 +23669,6 @@ g2-tag-cloud {
     }
   }
 }
-
-@g2-pie-prefix: ~'.g2-pie';
 
 @{g2-pie-prefix} {
   position: relative;
@@ -23556,8 +23763,6 @@ g2-tag-cloud {
   }
 }
 
-@g2-radar-prefix: ~'.g2-radar';
-
 @{g2-radar-prefix} {
   display: block;
   &__legend {
@@ -23601,8 +23806,6 @@ g2-tag-cloud {
   }
 }
 
-@g2-water-wave-prefix: ~'.g2-water-wave';
-
 @{g2-water-wave-prefix} {
   position: relative;
   display: inline-block;
@@ -23630,7 +23833,6 @@ g2-tag-cloud {
   }
 }
 
-@number-info-prefix: ~'.number-info';
 @{number-info-prefix} {
   display: block;
   &__title {
@@ -23694,8 +23896,6 @@ g2-tag-cloud {
     }
   }
 }
-
-@trend-prefix: ~'.trend';
 
 @{trend-prefix} {
   display: inline-block;
@@ -25572,7 +25772,7 @@ g2-tag-cloud {
 
 //修复st表格中checkbox显示bug
 .ant-table .ant-checkbox-checked .ant-checkbox-inner::after {
-  left: 4px;
+  left: 3px;
 }
 
 page-header .page-header {
@@ -25585,6 +25785,10 @@ page-header .page-header {
 
 .full-max-width {
   max-width: 100% !important;
+}
+
+.full-width {
+  width: 100% !important;
 }
 
 //.setting-drawer__handle-opened{
@@ -25611,12 +25815,8 @@ html {
 
 // 可以通过 https://ng-alain.github.io/ng-alain/ 获取主题参数代码
 // The theme paraments can be generated at https://ng-alain.github.io/ng-alain/
-//@primary-color: #4CAF50;
-//@alain-default-header-bg: #4CAF50;
-//@alain-default-aside-nav-text-hover-color: #4CAF50;
-//@alain-default-aside-nav-selected-text-color: #4CAF50;
 
-//@masonry-enabled: false;
-//@router-animation-name: antFadeIn;
-@router-animation-duration: 5s;
-//@scrollbar-table-enabled:true
+@primary-color: #2F54EB;
+@alain-default-header-bg: #262626;
+@alain-default-aside-nav-text-hover-color: @primary-color;
+@alain-default-aside-nav-selected-text-color: @primary-color;

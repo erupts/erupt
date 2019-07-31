@@ -17,3 +17,5 @@ spring:
     password:
     timeout: 10000
     database: 0
+server:
+  port: 8081

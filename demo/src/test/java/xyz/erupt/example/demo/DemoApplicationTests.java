@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.data_impl.DBService;
 import xyz.erupt.example.demo.model.Product;
 import xyz.erupt.example.demo.model.ProductParam;
@@ -28,8 +27,7 @@ public class DemoApplicationTests {
 
     @Test
     public void findEruptDataById() {
-        Object obj = dbService.findDataById(CoreService.getErupt("EruptRole"), 1);
-        System.out.println(obj);
+        System.out.println(123);
     }
 
     @Test

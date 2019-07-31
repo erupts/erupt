@@ -248,6 +248,32 @@ Apache-2.0
    limitations under the License.
 
 
+@ant-design/colors
+MIT
+MIT LICENSE
+
+Copyright (c) 2018-present Ant UED, https://xtech.antfin.com/
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
 @ant-design/icons-angular
 MIT
 
@@ -293,6 +319,8 @@ SOFTWARE.
 @delon/abc/sidebar-nav
 
 @delon/abc/table
+
+@delon/abc/tag-select
 
 @delon/acl
 MIT
@@ -394,31 +422,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@delon/form
-MIT
-MIT License
-
-Copyright (c) 2017-present 卡色<cipchk@qq.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-
 @delon/theme
 MIT
 MIT License
@@ -468,9 +471,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-
-ant-design-palettes
-MIT
 
 core-js
 MIT
@@ -544,8 +544,6 @@ ng-zorro-antd/affix
 
 ng-zorro-antd/alert
 
-ng-zorro-antd/auto-complete
-
 ng-zorro-antd/avatar
 
 ng-zorro-antd/back-top
@@ -558,9 +556,11 @@ ng-zorro-antd/button
 
 ng-zorro-antd/card
 
-ng-zorro-antd/cascader
+ng-zorro-antd/carousel
 
 ng-zorro-antd/checkbox
+
+ng-zorro-antd/collapse
 
 ng-zorro-antd/date-picker
 
@@ -578,8 +578,6 @@ ng-zorro-antd/input
 
 ng-zorro-antd/input-number
 
-ng-zorro-antd/mention
-
 ng-zorro-antd/message
 
 ng-zorro-antd/modal
@@ -596,8 +594,6 @@ ng-zorro-antd/progress
 
 ng-zorro-antd/radio
 
-ng-zorro-antd/rate
-
 ng-zorro-antd/select
 
 ng-zorro-antd/skeleton
@@ -610,8 +606,6 @@ ng-zorro-antd/switch
 
 ng-zorro-antd/table
 
-ng-zorro-antd/tabs
-
 ng-zorro-antd/tag
 
 ng-zorro-antd/time-picker
@@ -620,11 +614,7 @@ ng-zorro-antd/timeline
 
 ng-zorro-antd/tooltip
 
-ng-zorro-antd/transfer
-
 ng-zorro-antd/tree
-
-ng-zorro-antd/tree-select
 
 ng-zorro-antd/upload
 
@@ -860,6 +850,8 @@ Apache-2.0
 
 
 undefined
+
+ng-zorro-antd/tabs
 
 screenfull
 MIT

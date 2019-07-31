@@ -302,7 +302,7 @@ public class Test {
     private String remark;
 
 
-    @OneToMany(mappedBy = "test")
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
     @EruptField(
             edit = @Edit(
                     title = "MANY",

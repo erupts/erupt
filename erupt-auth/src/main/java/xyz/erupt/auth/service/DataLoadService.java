@@ -24,7 +24,7 @@ public class DataLoadService implements CommandLineRunner {
 
     @Transactional
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         new ProjectUtil().projectStartLoaded("auth", first -> {
             if (first) {
                 //用户
