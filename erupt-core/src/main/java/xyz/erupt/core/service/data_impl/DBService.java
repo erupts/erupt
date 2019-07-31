@@ -85,12 +85,9 @@ public class DBService implements DataService {
             eruptJpaDao.addEntity(object);
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException(gcRepeatHint(eruptModel));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
-
     }
 
     @Transactional
@@ -130,6 +127,7 @@ public class DBService implements DataService {
         }
     }
 
+    //@ManyToOne数据处理
     private void jpaManyToOneConvert(EruptModel eruptModel, Object object) throws NoSuchFieldException, IllegalAccessException {
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             if (fieldModel.getEruptField().edit().type() == EditType.TAB_TABLE_ADD) {
@@ -141,7 +139,7 @@ public class DBService implements DataService {
                     Field ff = o.getClass().getDeclaredField(oneToMany.mappedBy());
                     ff.setAccessible(true);
                     ff.set(o, object);
-
+                    //删除主键ID
                     Field pk = o.getClass().getDeclaredField(CoreService
                             .getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol());
                     pk.setAccessible(true);
