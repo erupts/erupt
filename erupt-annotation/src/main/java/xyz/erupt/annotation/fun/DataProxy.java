@@ -1,12 +1,14 @@
 package xyz.erupt.annotation.fun;
 
 import com.google.gson.JsonObject;
+import org.apache.poi.ss.usermodel.Workbook;
 import xyz.erupt.annotation.model.BoolAndReason;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by liyuepeng on 10/9/18.
@@ -40,14 +42,14 @@ public interface DataProxy<MODEL> {
     /**
      * 查询
      *
-     * @param condition
-     * @return 返回值为自定义查询条件
+     * @param condition 用户输入条件
+     * @return 自定义查询条件
      */
     default String beforeFetch(JsonObject condition) {
         return null;
     }
 
-    default void afterFetch(Collection list) {
+    default void afterFetch(Collection<Map<String, Object>> list) {
     }
 
     //文件上传
@@ -56,6 +58,13 @@ public interface DataProxy<MODEL> {
     }
 
     default void afterUpLoadFile(File file, String relativePath) {
+    }
+
+    //excel
+    default void excelExport(Workbook wb) {
+    }
+
+    default void excelImport(Collection<MODEL> collection) {
     }
 
 }

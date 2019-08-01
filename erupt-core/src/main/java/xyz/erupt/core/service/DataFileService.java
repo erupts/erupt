@@ -1,5 +1,6 @@
 package xyz.erupt.core.service;
 
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
@@ -9,10 +10,12 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.model.BoolAndReason;
+import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.bean.EruptFieldModel;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.bean.Page;
@@ -23,8 +26,7 @@ import xyz.erupt.core.util.HttpUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by liyuepeng on 12/4/18.
@@ -41,9 +43,43 @@ public class DataFileService {
 
     public static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
 
-    //展示的格式和view表格一致
-    //excel导出
-    public void exportExcel(EruptModel eruptModel, Page Page, HttpServletResponse response) {
+    public static Object getCellValue(Cell cell) {
+        Object cellValue;
+        switch (cell.getCellTypeEnum()) {
+            case NUMERIC: //数字
+                cellValue = cell.getNumericCellValue();
+                break;
+            case STRING: //字符串
+                cellValue = cell.getStringCellValue();
+                break;
+            case BOOLEAN: //Boolean
+                cellValue = cell.getBooleanCellValue();
+                break;
+            case FORMULA: //公式
+                cellValue = cell.getCellFormula();
+                break;
+            case BLANK: //空值
+                cellValue = null;
+                break;
+            case ERROR: //故障
+                cellValue = null;
+                break;
+            default:
+                cellValue = cell.getStringCellValue();
+                break;
+        }
+        return cellValue;
+    }
+
+    /**
+     * excel导出
+     * 展示的格式和view表格一致
+     *
+     * @param eruptModel
+     * @param Page
+     * @param response
+     */
+    public Workbook exportExcel(EruptModel eruptModel, Page Page) {
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         //冻结首行
@@ -86,15 +122,83 @@ public class DataFileService {
                 }
             }
         }
-        try {
-            wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + XLS_FORMAT));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return wb;
     }
 
-    public BoolAndReason importExcel(EruptModel eruptModel, Workbook workbook) {
-        return null;
+    public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) {
+        Sheet sheet = workbook.getSheetAt(0);
+        Row titleRow = sheet.getRow(0);
+        Map<Integer, EruptFieldModel> cellIndexMapping = new HashMap<>();
+        Map<Integer, Map<String, Object>> cellIndexJoinEruptMap = new HashMap<>();
+        for (int i = 0; i < titleRow.getPhysicalNumberOfCells(); i++) {
+            String comment = titleRow.getCell(i).getCellComment().getString().getString();
+            EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(comment);
+            cellIndexMapping.put(i, eruptFieldModel);
+            switch (eruptFieldModel.getEruptField().edit().type()) {
+                case CHOICE:
+                    Map<String, Object> choiceMap = new HashMap<>();
+                    for (VL vl : eruptFieldModel.getEruptField().edit().choiceType().vl()) {
+                        choiceMap.put(vl.label(), vl.value());
+                    }
+                    cellIndexJoinEruptMap.put(i, choiceMap);
+                    break;
+                case BOOLEAN:
+                    Map<String, Object> boolMap = new HashMap<>();
+                    BoolType boolType = eruptFieldModel.getEruptField().edit().boolType();
+                    boolMap.put(boolType.trueText(), true);
+                    boolMap.put(boolType.trueText(), true);
+                    cellIndexJoinEruptMap.put(i, boolMap);
+                    break;
+            }
+        }
+        List<JsonObject> listObject = new ArrayList<>();
+        for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
+            Row row = sheet.getRow(rowNum);
+            if (row.getPhysicalNumberOfCells() == 0) {
+                continue;
+            }
+            JsonObject jsonObject = new JsonObject();
+            for (int cellNum = 0; cellNum < row.getPhysicalNumberOfCells(); cellNum++) {
+                Cell cell = row.getCell(cellNum);
+                EruptFieldModel eruptFieldModel = cellIndexMapping.get(cellNum);
+                if (eruptFieldModel.getEruptField().edit().notNull() && CellType.BLANK == cell.getCellTypeEnum()) {
+                    throw new RuntimeException(eruptFieldModel.getEruptField().edit().title() + "不允许为空");
+                }
+                if (CellType.BLANK != cell.getCellTypeEnum()) {
+                    switch (eruptFieldModel.getEruptField().edit().type()) {
+                        case REFERENCE_TREE:
+                        case REFERENCE_TABLE:
+                            JsonObject ref = new JsonObject();
+                            //TODO
+                            ref.addProperty(CoreService.getErupt(eruptFieldModel.getFieldReturnName()).getErupt().primaryKeyCol(), "");
+                            jsonObject.add(eruptFieldModel.getFieldName(), ref);
+                            break;
+                        case CHOICE:
+                            jsonObject.addProperty(eruptFieldModel.getFieldName(), cellIndexJoinEruptMap.get(cellNum)
+                                    .get(cell.getStringCellValue()).toString());
+                            break;
+                        case BOOLEAN:
+                            Boolean bool = (Boolean) cellIndexJoinEruptMap.get(cellNum).get(cell.getStringCellValue());
+                            jsonObject.addProperty(eruptFieldModel.getFieldName(), bool);
+                            break;
+                        default:
+                            switch (eruptFieldModel.getFieldReturnName()) {
+                                case JavaType.STRING:
+                                case JavaType.DATE:
+                                    jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getStringCellValue());
+                                    break;
+                                case JavaType.NUMBER:
+                                    jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
+                                    break;
+                            }
+                            break;
+                    }
+                }
+            }
+            System.out.println(jsonObject);
+            listObject.add(jsonObject);
+        }
+        return listObject;
     }
 
     //模板的格式和edit输入框一致
@@ -115,6 +219,7 @@ public class DataFileService {
                 //256表格一个字节的宽度
                 sheet.setColumnWidth(cellNum, (edit.title().length() + 10) * 256);
                 DataValidationHelper dvHelper = sheet.getDataValidationHelper();
+
                 switch (edit.type()) {
                     case BOOLEAN:
                         sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(new String[]{edit.boolType().trueText(),

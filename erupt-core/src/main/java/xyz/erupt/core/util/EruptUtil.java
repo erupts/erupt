@@ -9,6 +9,7 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.bean.EruptApiModel;
@@ -55,6 +56,9 @@ public class EruptUtil {
                             Map<String, Object> referMap = new HashMap<>();
                             referMap.put(id, ReflectUtil.findClassField(value.getClass(), id).get(value));
                             referMap.put(label, ReflectUtil.findClassField(value.getClass(), label).get(value));
+                            for (View view : eruptField.views()) {
+                                referMap.put(view.column(), ReflectUtil.findClassField(value.getClass(), view.column()).get(value));
+                            }
                             map.put(field.getName(), referMap);
                             break;
                         case COMBINE:

@@ -1,27 +1,31 @@
 package xyz.erupt.core.controller;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.FileMagic;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.erupt.annotation.model.BoolAndReason;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.bean.Page;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
+import xyz.erupt.core.util.HttpUtil;
+import xyz.erupt.core.util.SpringUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Objects;
+import java.net.URLDecoder;
+import java.util.List;
 
 /**
  * 对Excel数据的处理
@@ -41,27 +45,6 @@ public class EruptExcelController {
     @Value("erupt.uploadPath:/opt/file")
     private String uploadPath;
 
-    //导出
-    @PostMapping("/export/{erupt}")
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
-    public void exportData(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
-        if (eruptModel.getErupt().power().export()) {
-            JsonObject condition = new JsonObject();
-            condition.addProperty(Page.PAGE_INDEX_STR, 1);
-            condition.addProperty(Page.PAGE_SIZE_STR, Page.PAGE_MAX_DATA);
-            condition.addProperty(Page.PAGE_SORT_STR, "");
-//            Enumeration<String> en = request.getParameterNames();
-//            while (en.hasMoreElements()) {
-//                condition.addProperty(en.nextElement(), request.getParameter(en.nextElement()));
-//            }
-            Page page = eruptDataController.getEruptData(eruptName, condition);
-            dataFileService.exportExcel(eruptModel, page, response);
-        } else {
-            throw new RuntimeException("没有导出权限");
-        }
-    }
-
     @RequestMapping(value = "/template/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
     public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
@@ -74,30 +57,60 @@ public class EruptExcelController {
         return null;
     }
 
+    //导出
+    @PostMapping("/export/{erupt}")
+    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
+    public void exportData(@PathVariable("erupt") String eruptName, @Param("condition") String condition,
+                           HttpServletResponse response) throws IOException {
+        EruptModel eruptModel = CoreService.getErupt(eruptName);
+        if (eruptModel.getErupt().power().export()) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(Page.PAGE_INDEX_STR, 1);
+            jsonObject.addProperty(Page.PAGE_SIZE_STR, Page.PAGE_MAX_DATA);
+            jsonObject.addProperty(Page.PAGE_SORT_STR, "");
+            JsonObject jsonCondition = new JsonParser().parse(URLDecoder.decode(condition, "utf-8")).getAsJsonObject();
+            for (String key : jsonCondition.keySet()) {
+                jsonObject.add(key, jsonCondition.get(key));
+            }
+            Page page = eruptDataController.getEruptData(eruptName, jsonObject);
+            Workbook wb = dataFileService.exportExcel(eruptModel, page);
+            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+                SpringUtil.getBean(proxy).excelExport(wb);
+            }
+            wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + DataFileService.XLS_FORMAT));
+        } else {
+            throw new RuntimeException("没有导出权限");
+        }
+    }
 
-    //导入excel
+    //导入
     @PostMapping("/import/{erupt}")
     @ResponseBody
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
-    public BoolAndReason importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) throws IOException {
+    @Transactional
+    public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             if (file.isEmpty()) {
-                return new BoolAndReason(false, "上传失败，请选择文件");
+                return EruptApiModel.errorApi("上传失败，请选择文件");
             }
-            String fileName = file.getOriginalFilename();
-            InputStream is = file.getInputStream();
-            FileMagic fileMagic = FileMagic.valueOf(is);
-            if (Objects.equals(fileMagic, FileMagic.OOXML) || Objects.equals(fileMagic, FileMagic.OLE2)) {
-                Workbook workbook = null;
+            try {
+                String fileName = file.getOriginalFilename();
+                List<JsonObject> list;
                 if (fileName.endsWith(DataFileService.XLS_FORMAT)) {
-                    workbook = new HSSFWorkbook(is);
+                    list = dataFileService.excelToEruptObject(eruptModel, new HSSFWorkbook(file.getInputStream()));
                 } else if (fileName.endsWith(DataFileService.XLSX_FORMAT)) {
-                    workbook = new XSSFWorkbook(is);
+                    list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
+                } else {
+                    return EruptApiModel.errorApi("上传文件格式必须为Excel");
                 }
-                return dataFileService.importExcel(eruptModel, workbook);
-            } else {
-                return new BoolAndReason(false, "上传失败，请选择Excel文件上传");
+                for (JsonObject jo : list) {
+                    eruptDataController.addEruptData(eruptModel.getEruptName(), jo);
+                }
+                return EruptApiModel.successApi();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return EruptApiModel.errorApi(e.getMessage());
             }
         } else {
             throw new RuntimeException("没有导入权限");
