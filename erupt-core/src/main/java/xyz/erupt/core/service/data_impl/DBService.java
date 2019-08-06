@@ -134,14 +134,16 @@ public class DBService implements DataService {
                 Field field = object.getClass().getDeclaredField(fieldModel.getFieldName());
                 field.setAccessible(true);
                 Collection collection = (Collection) field.get(object);
-                OneToMany oneToMany = field.getAnnotation(OneToMany.class);
-                for (Object o : collection) {
-                    Field ff = ReflectUtil.findClassField(o.getClass(), oneToMany.mappedBy());
-                    ff.set(o, object);
-                    //删除主键ID
-                    Field pk = ReflectUtil.findClassField(o.getClass(), CoreService
-                            .getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol());
-                    pk.set(o, null);
+                if (null != collection) {
+                    OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+                    for (Object o : collection) {
+                        Field ff = ReflectUtil.findClassField(o.getClass(), oneToMany.mappedBy());
+                        ff.set(o, object);
+                        //删除主键ID
+                        Field pk = ReflectUtil.findClassField(o.getClass(), CoreService
+                                .getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol());
+                        pk.set(o, null);
+                    }
                 }
             }
         }

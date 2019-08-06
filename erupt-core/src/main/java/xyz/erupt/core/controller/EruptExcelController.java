@@ -1,5 +1,6 @@
 package xyz.erupt.core.controller;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.lettuce.core.dynamic.annotation.Param;
@@ -41,6 +42,9 @@ public class EruptExcelController {
 
     @Autowired
     private EruptDataController eruptDataController;
+
+    @Autowired
+    private Gson gson;
 
     @Value("erupt.uploadPath:/opt/file")
     private String uploadPath;
@@ -87,31 +91,38 @@ public class EruptExcelController {
     @PostMapping("/import/{erupt}")
     @ResponseBody
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             if (file.isEmpty()) {
                 return EruptApiModel.errorApi("上传失败，请选择文件");
             }
+            String fileName = file.getOriginalFilename();
+            List<JsonObject> list;
             try {
-                String fileName = file.getOriginalFilename();
-                List<JsonObject> list;
                 if (fileName.endsWith(DataFileService.XLS_FORMAT)) {
                     list = dataFileService.excelToEruptObject(eruptModel, new HSSFWorkbook(file.getInputStream()));
                 } else if (fileName.endsWith(DataFileService.XLSX_FORMAT)) {
                     list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
                 } else {
-                    return EruptApiModel.errorApi("上传文件格式必须为Excel");
+                    return EruptApiModel.errorApi("上传文件必须为Excel");
                 }
-                for (JsonObject jo : list) {
-                    eruptDataController.addEruptData(eruptModel.getEruptName(), jo);
-                }
-                return EruptApiModel.successApi();
             } catch (Exception e) {
                 e.printStackTrace();
-                return EruptApiModel.errorApi(e.getMessage());
+                return EruptApiModel.errorApi("Excel解析异常，请确认上传文件与所提供模板一致");
             }
+
+            int i = 1;
+            for (JsonObject jo : list) {
+                i++;
+                EruptApiModel eruptApiModel = eruptDataController.addEruptData(eruptName, jo);
+                ;
+                if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
+                    throw new RuntimeException("第" + i + "行：" + eruptApiModel.getMessage());
+                }
+            }
+            return EruptApiModel.successApi();
         } else {
             throw new RuntimeException("没有导入权限");
         }

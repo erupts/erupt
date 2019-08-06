@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -125,14 +124,18 @@ public class DataFileService {
         return wb;
     }
 
-    public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) {
+    public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) throws Exception {
         Sheet sheet = workbook.getSheetAt(0);
         Row titleRow = sheet.getRow(0);
+        Map<String, EruptFieldModel> editTitleMapingEruptField = new HashMap<>();
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            editTitleMapingEruptField.put(fieldModel.getEruptField().edit().title(), fieldModel);
+        }
         Map<Integer, EruptFieldModel> cellIndexMapping = new HashMap<>();
         Map<Integer, Map<String, Object>> cellIndexJoinEruptMap = new HashMap<>();
         for (int i = 0; i < titleRow.getPhysicalNumberOfCells(); i++) {
-            String comment = titleRow.getCell(i).getCellComment().getString().getString();
-            EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(comment);
+            String titleName = titleRow.getCell(i).getStringCellValue();
+            EruptFieldModel eruptFieldModel = editTitleMapingEruptField.get(titleName);
             cellIndexMapping.put(i, eruptFieldModel);
             switch (eruptFieldModel.getEruptField().edit().type()) {
                 case CHOICE:
@@ -161,9 +164,6 @@ public class DataFileService {
             for (int cellNum = 0; cellNum < row.getPhysicalNumberOfCells(); cellNum++) {
                 Cell cell = row.getCell(cellNum);
                 EruptFieldModel eruptFieldModel = cellIndexMapping.get(cellNum);
-                if (eruptFieldModel.getEruptField().edit().notNull() && CellType.BLANK == cell.getCellTypeEnum()) {
-                    throw new RuntimeException(eruptFieldModel.getEruptField().edit().title() + "不允许为空");
-                }
                 if (CellType.BLANK != cell.getCellTypeEnum()) {
                     switch (eruptFieldModel.getEruptField().edit().type()) {
                         case REFERENCE_TREE:
@@ -195,7 +195,6 @@ public class DataFileService {
                     }
                 }
             }
-            System.out.println(jsonObject);
             listObject.add(jsonObject);
         }
         return listObject;
@@ -270,11 +269,6 @@ public class DataFileService {
                 }
                 style.setFont(font);
                 cell.setCellStyle(style);
-                //批注
-                ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 5, 1, 8, 3);
-                Comment comment = drawing.createCellComment(anchor);
-                comment.setString(new HSSFRichTextString(fieldModel.getFieldName()));
-                cell.setCellComment(comment);
                 //值
                 cell.setCellValue(fieldModel.getEruptField().edit().title());
                 cellNum++;

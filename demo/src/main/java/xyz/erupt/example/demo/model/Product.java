@@ -59,6 +59,13 @@ public class Product implements DataProxy {
     )
     private String name = "xxx";
 
+//    @Column(name = "REMARK")
+//    @EruptField(
+//            views = @View(title = "产品描述", sortable = true),
+//            edit = @Edit(title = "产品描述", notNull = true, search = @Search(true))
+//    )
+//    private String remark;
+
     @Column(name = "NUMBER")
     @EruptField(
             views = @View(title = "数字", sortable = true),

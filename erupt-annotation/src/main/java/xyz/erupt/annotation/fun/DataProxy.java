@@ -16,19 +16,19 @@ import java.util.Map;
 public interface DataProxy<MODEL> {
 
     //改
-    default BoolAndReason beforeEdit(MODEL o) {
+    default BoolAndReason beforeEdit(MODEL model) {
         return new BoolAndReason(true, null);
     }
 
-    default void afterEdit(MODEL o) {
+    default void afterEdit(MODEL model) {
     }
 
     //增
-    default BoolAndReason beforeAdd(MODEL o) {
+    default BoolAndReason beforeAdd(MODEL model) {
         return new BoolAndReason(true, null);
     }
 
-    default void afterAdd(MODEL o) {
+    default void afterAdd(MODEL model) {
     }
 
     //删
@@ -60,11 +60,21 @@ public interface DataProxy<MODEL> {
     default void afterUpLoadFile(File file, String relativePath) {
     }
 
-    //excel
+    /**
+     * excel导出
+     *
+     * @param wb POI文档对象
+     */
     default void excelExport(Workbook wb) {
     }
 
-    default void excelImport(Collection<MODEL> collection) {
+    /**
+     * excel导入
+     *
+     * @param model erupt对象模型
+     */
+    default BoolAndReason excelImport(MODEL model) {
+        return new BoolAndReason(true, null);
     }
 
 }
