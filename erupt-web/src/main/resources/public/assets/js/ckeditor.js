@@ -314,7 +314,7 @@ var __values = (this && this.__values) || function (o) {
                     try {
             var t = r && r.require && r.require("util").types;
             return t || s && s.binding && s.binding("util");
-        } catch (t) {
+                    } catch (t) {
                     }
                 }();
             e.a = a;
@@ -6243,7 +6243,9 @@ var __values = (this && this.__values) || function (o) {
                     var n_137 = i_69.allowAttributes;
                     (_j = t[e].allowAttributes).push.apply(_j, n_137);
                 }
-            } delete t[e].allowAttributesOf; }
+            }
+            delete t[e].allowAttributesOf;
+        }
         function ja(t, e) { var n = t[e]; for (var _j = 0, _k = n.inheritTypesFrom; _j < _k.length; _j++) {
             var e_137 = _k[_j];
             var i_70 = t[e_137];
@@ -7820,9 +7822,7 @@ var __values = (this && this.__values) || function (o) {
         function jc(t, e, n) {
             e instanceof sa ? t.setSelection(n) : e.setTo(n);
         }
-
         var Vc = ' ,.?!:;"-()';
-
         function zc(t, e, n) {
             if (n === void 0) { n = {}; }
             var i = t.schema, o = "backward" != n.direction, r = n.unit ? n.unit : "character", s = e.focus, a = new qs({ boundaries: function (t, e) { var n = t.root, i = $s._createAt(n, e ? "end" : 0); return e ? new Gs(t, i) : new Gs(i, t); }(s, o), singleCharacters: !0, direction: o ? "forward" : "backward" }), c = { walker: a, schema: i, isForward: o, unit: r };
@@ -7950,7 +7950,6 @@ var __values = (this && this.__values) || function (o) {
         function $c(t, e) {
             return t && e.isObject(t);
         }
-
         var Gc = /** @class */ (function () {
             function Gc() {
                 var _this = this;
@@ -8040,7 +8039,7 @@ var __values = (this && this.__values) || function (o) {
                         return !0;
                         if (-1 !== t_226.data.search(/\S/))
                         return !0;
-                } else if (this.schema.isObject(t_226))
+                    } else if (this.schema.isObject(t_226))
                     return !0;
             } return !1; };
             Gc.prototype.createPositionFromPath = function (t, e, n) {
@@ -8088,7 +8087,6 @@ var __values = (this && this.__values) || function (o) {
             function Qc() {
                 this._listener = Object.create(lr);
             }
-
             Qc.prototype.listenTo = function (t) {
                 var _this = this;
                 this._listener.listenTo(t, "keydown", function (t, e) { _this._listener.fire("_keydown:" + wo(e), e); });
@@ -8108,13 +8106,11 @@ var __values = (this && this.__values) || function (o) {
         }());
         var Kc = /** @class */ (function (_super) {
             __extends(Kc, _super);
-
             function Kc(t) {
                 var _this = this;
                 _this = _super.call(this) || this, _this.editor = t;
                 return _this;
             }
-
             Kc.prototype.set = function (t, e, n) {
                 var _this = this;
                 if (n === void 0) { n = {}; }
@@ -8243,12 +8239,10 @@ var __values = (this && this.__values) || function (o) {
         function nl(t) {
             return String(t).toLowerCase();
         }
-
         var il = /** @class */ (function () {
             function il() {
                 this.set("isFocused", !1), this.set("focusedElement", null), this._elements = new Set, this._nextEventLoopTimeout = null;
             }
-
             il.prototype.add = function (t) {
                 var _this = this;
                 if (this._elements.has(t))
@@ -8278,7 +8272,6 @@ var __values = (this && this.__values) || function (o) {
                     return _this.update();
                 });
             }
-
             Object.defineProperty(ol.prototype, "element", {
                 get: function () { return null; },
                 enumerable: true,
@@ -8339,10 +8332,8 @@ var __values = (this && this.__values) || function (o) {
                 return !e.hasClass("ck-placeholder") && (t.addClass("ck-placeholder", e), !0);
             }(t, r) && (s = !0), s);
         }
-
         var dl = /** @class */ (function (_super) {
             __extends(dl, _super);
-
             function dl(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.view = e, _this._toolbarConfig = function (t) { return Array.isArray(t) ? { items: t } : t ? Object.assign({ items: [] }, t) : { items: [] }; }(t.config.get("toolbar"));
@@ -8374,7 +8365,6 @@ var __values = (this && this.__values) || function (o) {
         }(ol));
         var ul = /** @class */ (function (_super) {
             __extends(ul, _super);
-
             function ul(t) {
                 var _this = this;
                 _this = _super.call(this, { idProperty: "viewUid" }) || this, _this.on("add", function (t, e, n) { e.isRendered || e.render(), e.element && _this._parentElement && _this._parentElement.insertBefore(e.element, _this._parentElement.children[n]); }), _this.on("remove", function (t, e) { e.element && _this._parentElement && e.element.remove(); }), _this.locale = t, _this._parentElement = null;
@@ -8574,7 +8564,7 @@ var __values = (this && this.__values) || function (o) {
                             n.appendChild(t_233.element);
                         }
                     }
-                } else if (Pl(r_27))
+                    } else if (Pl(r_27))
                     i || (r_27.isRendered || r_27.render(), n.appendChild(r_27.element));
                 else if (Zo(r_27))
                     n.appendChild(r_27);
@@ -8656,11 +8646,9 @@ var __values = (this && this.__values) || function (o) {
         }());
         var gl = /** @class */ (function (_super) {
             __extends(gl, _super);
-
             function gl() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             gl.prototype.activateDomEventListener = function (t, e, n) {
                 var _this = this;
                 var i = function (t, n) { e && !n.target.matches(e) || ("function" == typeof _this.eventNameOrFunction ? _this.eventNameOrFunction(n) : _this.observable.fire(_this.eventNameOrFunction, n)); };
@@ -8670,7 +8658,6 @@ var __values = (this && this.__values) || function (o) {
         }(ml));
         var pl = /** @class */ (function (_super) {
             __extends(pl, _super);
-
             function pl() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -8684,7 +8671,6 @@ var __values = (this && this.__values) || function (o) {
         function bl(t) {
             return !!t && (t.value && (t = t.value), Array.isArray(t) ? t.some(bl) : t instanceof ml);
         }
-
         function wl(t, e, _j) {
             var n = _j.node;
             var i = function (t, e) {
@@ -8779,13 +8765,11 @@ var __values = (this && this.__values) || function (o) {
         function Sl(t) {
             return "class" == t || "style" == t;
         }
-
         n(58);
         var Il = /** @class */ (function () {
             function Il(t) {
                 this.element = null, this.isRendered = !1, this.locale = t, this.t = t && t.t, this._viewCollections = new oo, this._unboundChildren = this.createCollection(), this._viewCollections.on("add", function (e, n) { n.locale = t; }), this.decorate("render");
             }
-
             Object.defineProperty(Il.prototype, "bindTemplate", {
                 get: function () {
                     return this._bindTemplate ? this._bindTemplate : this._bindTemplate = fl.bind(this, this);
@@ -8829,7 +8813,6 @@ var __values = (this && this.__values) || function (o) {
         n(60);
         var Nl = /** @class */ (function (_super) {
             __extends(Nl, _super);
-
             function Nl(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.body = _this.createCollection();
@@ -8862,7 +8845,6 @@ var __values = (this && this.__values) || function (o) {
                 }), _this.name = null, _this.set("isFocused", !1), _this._editableElement = n, _this._hasExternalElement = !!_this._editableElement, _this._editingView = e;
                 return _this;
             }
-
             Ol.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this), this._hasExternalElement ? this.template.apply(this.element = this._editableElement) : this._editableElement = this.element, this.on("change:isFocused", function () {
@@ -8892,13 +8874,11 @@ var __values = (this && this.__values) || function (o) {
         }(Il));
         var Rl = /** @class */ (function (_super) {
             __extends(Rl, _super);
-
             function Rl(t, e, n) {
                 var _this = this;
                 _this = _super.call(this, t, e, n) || this, _this.extendTemplate({ attributes: { role: "textbox", class: "ck-editor__editable_inline" } });
                 return _this;
             }
-
             Rl.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this);
@@ -8929,7 +8909,6 @@ var __values = (this && this.__values) || function (o) {
                     }
                 }
             }
-
             Object.defineProperty(Dl.prototype, "first", {
                 get: function () {
                     return this.focusables.find(Ll) || null;
@@ -8994,22 +8973,18 @@ var __values = (this && this.__values) || function (o) {
         function Ll(t) {
             return !(!t.focus || "none" == nr.window.getComputedStyle(t.element).display);
         }
-
         var jl = /** @class */ (function (_super) {
             __extends(jl, _super);
-
             function jl(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.setTemplate({ tag: "span", attributes: { class: ["ck", "ck-toolbar__separator"] } });
                 return _this;
             }
-
             return jl;
         }(Il));
         n(62);
         var Vl = /** @class */ (function (_super) {
             __extends(Vl, _super);
-
             function Vl(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.bindTemplate;
@@ -9032,7 +9007,6 @@ var __values = (this && this.__values) || function (o) {
                 });
                 return _this;
             }
-
             Vl.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this);
@@ -9058,7 +9032,6 @@ var __values = (this && this.__values) || function (o) {
         }(Il));
         var zl = /** @class */ (function (_super) {
             __extends(zl, _super);
-
             function zl(t, e, n) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.toolbar = new Vl(t), _this.editable = new Rl(t, e, n), fl.extend(_this.toolbar.template, {attributes: {class: ["ck-reset_all", "ck-rounded-corners"]}});
@@ -9072,7 +9045,6 @@ var __values = (this && this.__values) || function (o) {
         }(Nl));
         var Bl = /** @class */ (function (_super) {
             __extends(Bl, _super);
-
             function Bl(t, e) {
                 var _this = this;
                 _this = _super.call(this, e) || this, Wn(t) && (_this.sourceElement = t), _this.data.processor = new tl, _this.model.document.createRoot();
@@ -9080,7 +9052,6 @@ var __values = (this && this.__values) || function (o) {
                 _this.ui = new dl(_this, n);
                 return _this;
             }
-
             Bl.prototype.destroy = function () {
                 var _this = this;
                 var t = this.getData();
@@ -9130,7 +9101,6 @@ var __values = (this && this.__values) || function (o) {
                 this.files = function (t) { var e = t.files ? Array.from(t.files) : [], n = t.items ? Array.from(t.items) : []; if (e.length)
                     return e; return n.filter(function (t) { return "file" === t.kind; }).map(function (t) { return t.getAsFile(); }); }(t), this._native = t;
             }
-
             Object.defineProperty(Ul.prototype, "types", {
                 get: function () { return this._native.types; },
                 enumerable: true,
@@ -9146,7 +9116,6 @@ var __values = (this && this.__values) || function (o) {
         }());
         var Hl = /** @class */ (function (_super) {
             __extends(Hl, _super);
-
             function Hl(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.document;
@@ -9175,11 +9144,9 @@ var __values = (this && this.__values) || function (o) {
         var ql = ["figcaption", "li"];
         var Wl = /** @class */ (function (_super) {
             __extends(Wl, _super);
-
             function Wl() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(Wl, "pluginName", {
                 get: function () { return "Clipboard"; },
                 enumerable: true,
@@ -9259,15 +9226,12 @@ var __values = (this && this.__values) || function (o) {
         function $l(t) {
             t.return = !1, t.stop();
         }
-
         ci(Yl, Fi);
         var Gl = /** @class */ (function (_super) {
             __extends(Gl, _super);
-
             function Gl() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Gl.prototype.execute = function () {
                 var _this = this;
                 var t = this.editor.model, e = t.document;
@@ -9285,10 +9249,8 @@ var __values = (this && this.__values) || function (o) {
         function Ql(t, e) {
             t.split(e), t.setSelection(e.parent.nextSibling, 0);
         }
-
         var Kl = /** @class */ (function (_super) {
             __extends(Kl, _super);
-
             function Kl(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.document;
@@ -9305,11 +9267,9 @@ var __values = (this && this.__values) || function (o) {
         }(hr));
         var Jl = /** @class */ (function (_super) {
             __extends(Jl, _super);
-
             function Jl() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(Jl, "pluginName", {
                 get: function () { return "Enter"; },
                 enumerable: true,
@@ -9325,11 +9285,9 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var Zl = /** @class */ (function (_super) {
             __extends(Zl, _super);
-
             function Zl() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Zl.prototype.execute = function () {
                 var _this = this;
                 var t = this.editor.model, e = t.document;
@@ -9360,14 +9318,11 @@ var __values = (this && this.__values) || function (o) {
         function td(t, e) {
             return !t.is("rootElement") && (e.isLimit(t) || td(t.parent, e));
         }
-
         var ed = /** @class */ (function (_super) {
             __extends(ed, _super);
-
             function ed() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(ed, "pluginName", {
                 get: function () { return "ShiftEnter"; },
                 enumerable: true,
@@ -9397,7 +9352,6 @@ var __values = (this && this.__values) || function (o) {
                 var _this = this;
                 this.model = t, this.size = 0, this.limit = e, this.isLocked = !1, this._changeCallback = (function (t, e) { "transparent" != e.type && e !== _this._batch && _this._reset(!0); }), this._selectionChangeCallback = (function () { _this._reset(); }), this.model.document.on("change", this._changeCallback), this.model.document.selection.on("change:range", this._selectionChangeCallback), this.model.document.selection.on("change:attribute", this._selectionChangeCallback);
             }
-
             Object.defineProperty(nd.prototype, "batch", {
                 get: function () { return this._batch || (this._batch = this.model.createBatch()), this._batch; },
                 enumerable: true,
@@ -9422,13 +9376,11 @@ var __values = (this && this.__values) || function (o) {
         }());
         var id = /** @class */ (function (_super) {
             __extends(id, _super);
-
             function id(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this._buffer = new nd(t.model, e);
                 return _this;
             }
-
             Object.defineProperty(id.prototype, "buffer", {
                 get: function () { return this._buffer; },
                 enumerable: true,
@@ -9469,7 +9421,6 @@ var __values = (this && this.__values) || function (o) {
             return; if (!a && 229 === t.keyCode && c)
             return; r(); })(s); }, { priority: "lowest" }), i.document.on("compositionstart", function () { var t = n.document, e = 1 !== t.selection.rangeCount || t.selection.getFirstRange().isFlat; if (t.selection.isCollapsed || e)
             return; r(); }, { priority: "lowest" }), i.document.on("compositionend", function () { e = n.createSelection(n.document.selection); }, { priority: "lowest" }); }
-
         var rd = [wo("arrowUp"), wo("arrowRight"), wo("arrowDown"), wo("arrowLeft"), 9, 16, 17, 18, 19, 20, 27, 33, 34, 35, 36, 45, 91, 93, 144, 145, 173, 174, 175, 176, 177, 178, 179, 255];
         for (var t_240 = 112; t_240 <= 135; t_240++)
             rd.push(t_240);
@@ -9511,7 +9462,6 @@ var __values = (this && this.__values) || function (o) {
         function cd(t, e) {
             return t && t.is("text") && e && e.is("text") ? t.data === e.data : t === e;
         }
-
         var ld = /** @class */ (function () {
             function ld(t) {
                 this.editor = t, this.editing = this.editor.editing;
@@ -9586,14 +9536,11 @@ var __values = (this && this.__values) || function (o) {
             "equal" != t[i_107] && (e = null === e ? i_107 : e, n = i_107);
         } var i = 0, o = 0; for (var r_28 = e; r_28 <= n; r_28++)
             "insert" != t[r_28] && i++, "delete" != t[r_28] && o++; return { insertions: o, deletions: i, firstChangeAt: e }; }
-
         var hd = /** @class */ (function (_super) {
             __extends(hd, _super);
-
             function hd() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(hd, "pluginName", {
                 get: function () { return "Input"; },
                 enumerable: true,
@@ -9611,13 +9558,11 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var fd = /** @class */ (function (_super) {
             __extends(fd, _super);
-
             function fd(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.direction = e, _this._buffer = new nd(t.model, t.config.get("typing.undoStep"));
                 return _this;
             }
-
             Object.defineProperty(fd.prototype, "buffer", {
                 get: function () { return this._buffer; },
                 enumerable: true,
@@ -9645,7 +9590,6 @@ var __values = (this && this.__values) || function (o) {
         }(Yl));
         var md = /** @class */ (function (_super) {
             __extends(md, _super);
-
             function md(t) {
                 var _this = _super.call(this, t) || this;
                 var e = t.document;
@@ -9730,7 +9674,6 @@ var __values = (this && this.__values) || function (o) {
             function wd() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(wd, "requires", {
                 get: function () {
                     return [hd, bd];
@@ -9749,11 +9692,9 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var _d = /** @class */ (function (_super) {
             __extends(_d, _super);
-
             function _d() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(_d.prototype, "type", {
                 get: function () { return "noop"; },
                 enumerable: true,
@@ -9784,7 +9725,6 @@ var __values = (this && this.__values) || function (o) {
         function yd(t) {
             return [t];
         }
-
         function xd(t, e, n) {
             if (n === void 0) { n = {}; }
             var i = function (t, e) {
@@ -9835,13 +9775,11 @@ var __values = (this && this.__values) || function (o) {
             }
             return Td(t, o.nextBaseVersionB), Td(e, o.nextBaseVersionA), {operationsA: t, operationsB: e};
         }
-
         var Cd = /** @class */ (function () {
             function Cd(t, e, n) {
                 if (n === void 0) { n = !1; }
                 this._history = t.history, this._useRelations = e, this._forceWeakRemove = !!n, this._originalOperations = new Map, this._relations = new Map;
             }
-
             Cd.prototype.setOriginalOperations = function (t, e) {
                 if (e === void 0) { e = null; }
                 var n = e ? this._originalOperations.get(e) : null;
@@ -10237,7 +10175,6 @@ var __values = (this && this.__values) || function (o) {
         } return t.splitPosition.hasSameParentAs(e.splitPosition) && t.splitPosition.offset < e.splitPosition.offset && (t.howMany -= e.howMany), t.splitPosition = t.splitPosition._getTransformedBySplitOperation(e), t.insertionPosition = fc.getInsertionPosition(t.splitPosition), [t]; });
         var Id = /** @class */ (function (_super) {
             __extends(Id, _super);
-
             function Id(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this._stack = [], _this._createdBatches = new WeakSet, _this.refresh();
@@ -10297,14 +10234,11 @@ var __values = (this && this.__values) || function (o) {
                 var e_205 = n[t_255 - 1], i_129 = n[t_255];
                 e_205.end.isTouching(i_129.start) && (e_205.end = i_129.end, n.splice(t_255, 1), t_255--);
         } return n; }
-
         var Od = /** @class */ (function (_super) {
             __extends(Od, _super);
-
             function Od() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Od.prototype.execute = function (t) {
                 var _this = this;
                 if (t === void 0) { t = null; }
@@ -10315,11 +10249,9 @@ var __values = (this && this.__values) || function (o) {
         }(Id));
         var Rd = /** @class */ (function (_super) {
             __extends(Rd, _super);
-
             function Rd() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Rd.prototype.execute = function () {
                 var _this = this;
                 var t = this._stack.pop(), e = this.editor.model.createBatch();
@@ -10329,13 +10261,11 @@ var __values = (this && this.__values) || function (o) {
         }(Id));
         var Dd = /** @class */ (function (_super) {
             __extends(Dd, _super);
-
             function Dd(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this._batchRegistry = new WeakSet;
                 return _this;
             }
-
             Dd.prototype.init = function () {
                 var _this = this;
                 var t = this.editor;
@@ -10349,14 +10279,12 @@ var __values = (this && this.__values) || function (o) {
         n(64);
         var Ld = /** @class */ (function (_super) {
             __extends(Ld, _super);
-
             function Ld() {
                 var _this = _super.call(this) || this;
                 var t = _this.bindTemplate;
                 _this.set("content", ""), _this.set("viewBox", "0 0 20 20"), _this.set("fillColor", ""), _this.setTemplate({ tag: "svg", ns: "http://www.w3.org/2000/svg", attributes: { class: ["ck", "ck-icon"], viewBox: t.to("viewBox") } });
                 return _this;
             }
-
             Ld.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this), this._updateXMLContent(), this._colorFillPaths(), this.on("change:content", function () { _this._updateXMLContent(), _this._colorFillPaths(); }), this.on("change:fillColor", function () { _this._colorFillPaths(); });
@@ -10377,7 +10305,6 @@ var __values = (this && this.__values) || function (o) {
         n(66);
         var jd = /** @class */ (function (_super) {
             __extends(jd, _super);
-
             function jd(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.set("text", ""), _this.set("position", "s");
@@ -10385,13 +10312,11 @@ var __values = (this && this.__values) || function (o) {
                 _this.setTemplate({ tag: "span", attributes: { class: ["ck", "ck-tooltip", e.to("position", function (t) { return "ck-tooltip_" + t; }), e.if("text", "ck-hidden", function (t) { return !t.trim(); })] }, children: [{ tag: "span", attributes: { class: ["ck", "ck-tooltip__text"] }, children: [{ text: e.to("text") }] }] });
                 return _this;
             }
-
             return jd;
         }(Il));
         n(68);
         var Vd = /** @class */ (function (_super) {
             __extends(Vd, _super);
-
             function Vd(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.bindTemplate, n = Jn();
@@ -10463,7 +10388,6 @@ var __values = (this && this.__values) || function (o) {
         var zd = n(24), Bd = n.n(zd), Fd = n(25), Ud = n.n(Fd);
         var Hd = /** @class */ (function (_super) {
             __extends(Hd, _super);
-
             function Hd() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -10491,11 +10415,9 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var qd = /** @class */ (function (_super) {
             __extends(qd, _super);
-
             function qd() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(qd, "requires", {
                 get: function () {
                     return [Dd, Hd];
@@ -10515,7 +10437,6 @@ var __values = (this && this.__values) || function (o) {
             var e = t.next();
             return e.done ? null : e.value;
         }
-
         var Yd = ["left", "right", "center", "justify"];
 
         function $d(t) {
@@ -10525,11 +10446,9 @@ var __values = (this && this.__values) || function (o) {
         function Gd(t) {
             return "left" === t;
         }
-
         var Qd = "alignment";
         var Kd = /** @class */ (function (_super) {
             __extends(Kd, _super);
-
             function Kd() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -10589,7 +10508,6 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var Zd = /** @class */ (function (_super) {
             __extends(Zd, _super);
-
             function Zd(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.bindTemplate;
@@ -10604,11 +10522,11 @@ var __values = (this && this.__values) || function (o) {
                 if (this.children.length) {
                     var t_260 = this.children.last;
                     "function" == typeof t_260.focusLast ? t_260.focusLast() : t_260.focus();
-                } };
+                }
+            };
             return Zd;
         }(Il));
         n(70);
-
         function Xd(_j) {
             var t = _j.element, e = _j.target, n = _j.positions, i = _j.limiter, o = _j.fitInViewport;
             var _k, _q;
@@ -10657,16 +10575,13 @@ var __values = (this && this.__values) || function (o) {
             var _j = t(e, n), i = _j.left, o = _j.top, r = _j.name;
             return [r, n.clone().moveTo(i, o)];
         }
-
         function eu(_j) {
             var t = _j.left, e = _j.top;
             var _k = nr.window, n = _k.scrollX, i = _k.scrollY;
             return { left: t + n, top: e + i };
         }
-
         var nu = /** @class */ (function (_super) {
             __extends(nu, _super);
-
             function nu(t, e, n) {
                 var _this = _super.call(this, t) || this;
                 var i = _this.bindTemplate;
@@ -10681,7 +10596,6 @@ var __values = (this && this.__values) || function (o) {
                 }), e.extendTemplate({attributes: {class: ["ck-dropdown__button"]}});
                 return _this;
             }
-
             nu.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this), this.listenTo(this.buttonView, "open", function () { _this.isOpen = !_this.isOpen; }), this.panelView.bind("isVisible").to(this, "isOpen"), this.on("change:isOpen", function () { if (_this.isOpen)
@@ -10718,7 +10632,6 @@ var __values = (this && this.__values) || function (o) {
         var iu = n(11), ou = n.n(iu);
         var ru = /** @class */ (function (_super) {
             __extends(ru, _super);
-
             function ru(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.arrowView = _this._createArrowView(), _this.extendTemplate({ attributes: { "aria-haspopup": !0 } }), _this.delegate("execute").to(_this, "open");
@@ -10737,7 +10650,6 @@ var __values = (this && this.__values) || function (o) {
         n(72);
         var su = /** @class */ (function (_super) {
             __extends(su, _super);
-
             function su() {
                 var _this = this;
                 _this = _super.call(this) || this, _this.items = _this.createCollection(), _this.focusTracker = new il, _this.keystrokes = new Qc, _this._focusCycler = new Dl({
@@ -10752,7 +10664,6 @@ var __values = (this && this.__values) || function (o) {
                 });
                 return _this;
             }
-
             su.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this);
@@ -10797,13 +10708,11 @@ var __values = (this && this.__values) || function (o) {
                 });
                 return _this;
             }
-
             return cu;
         }(Il));
         n(74);
         var lu = /** @class */ (function (_super) {
             __extends(lu, _super);
-
             function lu(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.toggleSwitchView = _this._createToggleView(), _this.extendTemplate({ attributes: { class: "ck-switchbutton" } });
@@ -10823,7 +10732,6 @@ var __values = (this && this.__values) || function (o) {
             };
             return lu;
         }(Vd));
-
         function du(_j) {
             var t = _j.emitter, e = _j.activator, n = _j.callback, i = _j.contextElements;
             t.listenTo(document, "mousedown", function (t, _j) {
@@ -10838,9 +10746,7 @@ var __values = (this && this.__values) || function (o) {
                 }
             });
         }
-
         n(76), n(78);
-
         function uu(t, e) {
             if (e === void 0) {
                 e = ru;
@@ -10891,16 +10797,13 @@ var __values = (this && this.__values) || function (o) {
                 return (_k = (o_81 = "button" === t ? new Vd(n) : new lu(n))).bind.apply(_k, Object.keys(e)).to(e), o_81.delegate("execute").to(i_132), i_132.children.add(o_81), i_132;
             }
         }), t.panelView.children.add(i), i.items.delegate("execute").to(t); }
-
         var mu = n(15), gu = n.n(mu), pu = n(26), bu = n.n(pu), wu = n(27), _u = n.n(wu), ku = n(28), vu = n.n(ku);
         var yu = new Map([["left", gu.a], ["right", bu.a], ["center", _u.a], ["justify", vu.a]]);
         var xu = /** @class */ (function (_super) {
             __extends(xu, _super);
-
             function xu() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(xu.prototype, "localizedOptionTitles", {
                 get: function () {
                     var t = this.editor.t;
@@ -10963,7 +10866,6 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var Au = /** @class */ (function (_super) {
             __extends(Au, _super);
-
             function Au(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.attributeKey = e;
@@ -11007,7 +10909,6 @@ var __values = (this && this.__values) || function (o) {
             function Su(t) {
                 return _super.call(this, t, Pu) || this;
             }
-
             return Su;
         }(Au));
 
@@ -11036,10 +10937,8 @@ var __values = (this && this.__values) || function (o) {
                 return {title: String(t), model: t, view: {name: "span", styles: {"font-size": t + "px"}, priority: 5}};
             }(e);
         }
-
         var Ru = /** @class */ (function (_super) {
             __extends(Ru, _super);
-
             function Ru(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, t.config.define(Pu, {options: ["tiny", "small", "default", "big", "huge"]});
@@ -11060,7 +10959,6 @@ var __values = (this && this.__values) || function (o) {
             function Du(t, e) {
                 e && Li(this, e), t && this.set(t);
             }
-
             return Du;
         }());
         ci(Du, Fi);
@@ -11068,11 +10966,9 @@ var __values = (this && this.__values) || function (o) {
         n(84);
         var Vu = /** @class */ (function (_super) {
             __extends(Vu, _super);
-
             function Vu() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Vu.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.t, n = this._getLocalizedOptions(), i = t.commands.get(Pu);
@@ -11121,11 +11017,9 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var zu = /** @class */ (function (_super) {
             __extends(zu, _super);
-
             function zu(t) {
                 return _super.call(this, t, Mu) || this;
             }
-
             return zu;
         }(Au));
 
@@ -11150,7 +11044,6 @@ var __values = (this && this.__values) || function (o) {
         }
         var Hu = /** @class */ (function (_super) {
             __extends(Hu, _super);
-
             function Hu(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, t.config.define(Mu, {options: ["default", "Arial, Helvetica, sans-serif", "Courier New, Courier, monospace", "Georgia, serif", "Lucida Sans Unicode, Lucida Grande, sans-serif", "Tahoma, Geneva, sans-serif", "Times New Roman, Times, serif", "Trebuchet MS, Helvetica, sans-serif", "Verdana, Geneva, sans-serif"]});
@@ -11170,11 +11063,9 @@ var __values = (this && this.__values) || function (o) {
         var qu = n(31), Wu = n.n(qu);
         var Yu = /** @class */ (function (_super) {
             __extends(Yu, _super);
-
             function Yu() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Yu.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.t, n = this._getLocalizedOptions(), i = t.commands.get(Mu);
@@ -11220,7 +11111,6 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var $u = /** @class */ (function (_super) {
             __extends($u, _super);
-
             function $u() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -11255,7 +11145,6 @@ var __values = (this && this.__values) || function (o) {
         }(Yl));
         var Gu = /** @class */ (function (_super) {
             __extends(Gu, _super);
-
             function Gu(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, t.config.define("highlight", { options: [{ model: "yellowMarker", class: "marker-yellow", title: "Yellow marker", color: "var(--ck-highlight-marker-yellow)", type: "marker" }, { model: "greenMarker", class: "marker-green", title: "Green marker", color: "var(--ck-highlight-marker-green)", type: "marker" }, { model: "pinkMarker", class: "marker-pink", title: "Pink marker", color: "var(--ck-highlight-marker-pink)", type: "marker" }, { model: "blueMarker", class: "marker-blue", title: "Blue marker", color: "var(--ck-highlight-marker-blue)", type: "marker" }, { model: "redPen", class: "pen-red", title: "Red pen", color: "var(--ck-highlight-pen-red)", type: "pen" }, { model: "greenPen", class: "pen-green", title: "Green pen", color: "var(--ck-highlight-pen-green)", type: "pen" }] });
@@ -11281,7 +11170,6 @@ var __values = (this && this.__values) || function (o) {
         n(86);
         var Xu = /** @class */ (function (_super) {
             __extends(Xu, _super);
-
             function Xu(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.bindTemplate;
@@ -11296,7 +11184,6 @@ var __values = (this && this.__values) || function (o) {
                 });
                 return _this;
             }
-
             Xu.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this), this.children.add(this.actionView), this.children.add(this.arrowView), this.focusTracker.add(this.actionView.element), this.focusTracker.add(this.arrowView.element), this.keystrokes.listenTo(this.element), this.keystrokes.set("arrowright", function (t, e) { _this.focusTracker.focusedElement === _this.actionView.element && (_this.arrowView.focus(), e()); }), this.keystrokes.set("arrowleft", function (t, e) { _this.focusTracker.focusedElement === _this.arrowView.element && (_this.actionView.focus(), e()); });
@@ -11322,11 +11209,9 @@ var __values = (this && this.__values) || function (o) {
         n(88);
         var th = /** @class */ (function (_super) {
             __extends(th, _super);
-
             function th() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(th.prototype, "localizedOptionTitles", {
                 get: function () {
                     var t = this.editor.t;
@@ -11425,14 +11310,11 @@ var __values = (this && this.__values) || function (o) {
         function eh(t) {
             return "marker" === t ? Ku.a : Zu.a;
         }
-
         var nh = /** @class */ (function (_super) {
             __extends(nh, _super);
-
             function nh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(nh, "pluginName", {
                 get: function () { return "PendingActions"; },
                 enumerable: true,
@@ -11463,7 +11345,6 @@ var __values = (this && this.__values) || function (o) {
                 var t = new window.FileReader;
                 this._reader = t, this.set("loaded", 0), t.onprogress = (function (t) { _this.loaded = t.loaded; });
             }
-
             Object.defineProperty(ih.prototype, "error", {
                 get: function () { return this._reader.error; },
                 enumerable: true,
@@ -11482,11 +11363,9 @@ var __values = (this && this.__values) || function (o) {
         ci(ih, Fi);
         var oh = /** @class */ (function (_super) {
             __extends(oh, _super);
-
             function oh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(oh, "pluginName", {
                 get: function () { return "FileRepository"; },
                 enumerable: true,
@@ -11545,7 +11424,6 @@ var __values = (this && this.__values) || function (o) {
                     return e ? t / e * 100 : 0;
                 }), this.set("uploadResponse", null);
             }
-
             Object.defineProperty(rh.prototype, "file", {
                 get: function () {
                     var _this = this;
@@ -11615,14 +11493,11 @@ var __values = (this && this.__values) || function (o) {
                 document.cookie = encodeURIComponent(t) + "=" + encodeURIComponent(e) + ";path=/";
             }(sh, t)), t;
         }
-
         var dh = /** @class */ (function (_super) {
             __extends(dh, _super);
-
             function dh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(dh, "requires", {
                 get: function () {
                     return [oh];
@@ -11648,7 +11523,6 @@ var __values = (this && this.__values) || function (o) {
             function uh(t, e, n) {
                 this.loader = t, this.url = e, this.t = n;
             }
-
             uh.prototype.upload = function () {
                 var _this = this;
                 return this.loader.file.then(function (t) { return new Promise(function (e, n) { _this._initRequest(), _this._initListeners(e, n, t), _this._sendRequest(t); }); });
@@ -11685,7 +11559,6 @@ var __values = (this && this.__values) || function (o) {
                     return; var c = a.position.textNode || a.position.nodeAfter; if (!c.parent.is("paragraph"))
                     return; var l = e.exec(c.data); l && t.model.enqueueChange(function (t) { var e = t.createPositionAt(c.parent, 0), n = t.createPositionAt(c.parent, l[0].length), o = new oa(e, n); !1 !== i({ match: l }) && t.remove(o), o.detach(); }); });
             }
-
             return hh;
         }());
         var fh = /** @class */ (function () {
@@ -11715,7 +11588,6 @@ var __values = (this && this.__values) || function (o) {
                         t.remove(e_219);
                     } }); });
             }
-
             return fh;
         }());
 
@@ -11736,10 +11608,8 @@ var __values = (this && this.__values) || function (o) {
                     var t_277 = o_86[_j];
                     n.setAttribute(e, !0, t_277);
         } n.removeSelectionAttribute(e); }; }
-
         var ph = /** @class */ (function (_super) {
             __extends(ph, _super);
-
             function ph(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.attributeKey = e;
@@ -11780,7 +11650,6 @@ var __values = (this && this.__values) || function (o) {
         var bh = "bold";
         var wh = /** @class */ (function (_super) {
             __extends(wh, _super);
-
             function wh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -11799,11 +11668,9 @@ var __values = (this && this.__values) || function (o) {
         var vh = "bold";
         var yh = /** @class */ (function (_super) {
             __extends(yh, _super);
-
             function yh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             yh.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.t;
@@ -11824,7 +11691,6 @@ var __values = (this && this.__values) || function (o) {
         var xh = "italic";
         var Ah = /** @class */ (function (_super) {
             __extends(Ah, _super);
-
             function Ah() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -11843,11 +11709,9 @@ var __values = (this && this.__values) || function (o) {
         var Ph = "italic";
         var Mh = /** @class */ (function (_super) {
             __extends(Mh, _super);
-
             function Mh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Mh.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.t;
@@ -11868,7 +11732,6 @@ var __values = (this && this.__values) || function (o) {
         var Eh = "strikethrough";
         var Sh = /** @class */ (function (_super) {
             __extends(Sh, _super);
-
             function Sh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -11887,11 +11750,9 @@ var __values = (this && this.__values) || function (o) {
         var Oh = "strikethrough";
         var Rh = /** @class */ (function (_super) {
             __extends(Rh, _super);
-
             function Rh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Rh.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.t;
@@ -11912,7 +11773,6 @@ var __values = (this && this.__values) || function (o) {
         var Dh = "underline";
         var Lh = /** @class */ (function (_super) {
             __extends(Lh, _super);
-
             function Lh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -11931,11 +11791,9 @@ var __values = (this && this.__values) || function (o) {
         var zh = "underline";
         var Bh = /** @class */ (function (_super) {
             __extends(Bh, _super);
-
             function Bh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Bh.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.t;
@@ -11955,7 +11813,6 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var Fh = /** @class */ (function (_super) {
             __extends(Fh, _super);
-
             function Fh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -12021,10 +11878,8 @@ var __values = (this && this.__values) || function (o) {
             var n = t.checkChild(e.parent, "blockQuote"), i = t.checkChild(["$root", "blockQuote"], e);
             return n && i;
         }
-
         var Wh = /** @class */ (function (_super) {
             __extends(Wh, _super);
-
             function Wh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -12054,7 +11909,7 @@ var __values = (this && this.__values) || function (o) {
                                 return n.unwrap(i_141), !0;
                         }
                     }
-                } else if ("remove" == t_279.type) {
+                    } else if ("remove" == t_279.type) {
                         var e_221 = t_279.position.parent;
                         if (e_221.is("blockQuote") && e_221.isEmpty)
                             return n.remove(e_221), !0;
@@ -12071,11 +11926,9 @@ var __values = (this && this.__values) || function (o) {
         n(90);
         var Gh = /** @class */ (function (_super) {
             __extends(Gh, _super);
-
             function Gh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Gh.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.t;
@@ -12095,11 +11948,9 @@ var __values = (this && this.__values) || function (o) {
         var Qh = n(39), Kh = n.n(Qh);
         var Jh = /** @class */ (function (_super) {
             __extends(Jh, _super);
-
             function Jh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(Jh, "pluginName", {
                 get: function () { return "CKFinderUI"; },
                 enumerable: true,
@@ -12122,11 +11973,9 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var Zh = /** @class */ (function (_super) {
             __extends(Zh, _super);
-
             function Zh() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(Zh, "pluginName", {
                 get: function () { return "Notification"; },
                 enumerable: true,
@@ -12157,7 +12006,6 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var Xh = /** @class */ (function (_super) {
             __extends(Xh, _super);
-
             function Xh(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.stopListening(_this.editor.model.document, "change"), _this.listenTo(_this.editor.model.document, "change", function () { return _this.refresh(); }, { priority: "low" });
@@ -12209,14 +12057,11 @@ var __values = (this && this.__values) || function (o) {
                 var e_224 = t.plugins.get("Notification"), n_228 = t.locale.t;
                 e_224.showWarning(n_228("cs"), {title: n_228("ct"), namespace: "ckfinder"});
         } }
-
         var ef = /** @class */ (function (_super) {
             __extends(ef, _super);
-
             function ef() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(ef, "pluginName", {
                 get: function () { return "CKFinderEditing"; },
                 enumerable: true,
@@ -12334,7 +12179,6 @@ var __values = (this && this.__values) || function (o) {
                     })(t);
                 }, this._options = Object.assign({}, sf, e);
             }
-
             af.prototype.init = function () {
                 var _this = this;
                 return new Promise(function (t, e) { _this._options.autoRefresh && _this._startRefreshing(), _this.value ? t(_this) : _this._refreshToken().then(t).catch(e); });
@@ -12365,11 +12209,9 @@ var __values = (this && this.__values) || function (o) {
         var cf = af;
         var lf = /** @class */ (function (_super) {
             __extends(lf, _super);
-
             function lf() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(lf, "pluginName", {
                 get: function () { return "CloudServices"; },
                 enumerable: true,
@@ -12388,11 +12230,9 @@ var __values = (this && this.__values) || function (o) {
         lf.Token = cf;
         var df = /** @class */ (function (_super) {
             __extends(df, _super);
-
             function df() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(df, "requires", {
                 get: function () {
                     return [oh, lf];
@@ -12413,7 +12253,6 @@ var __values = (this && this.__values) || function (o) {
             function uf(t, e) {
                 this.uploadGateway = t, this.loader = e;
             }
-
             uf.prototype.upload = function () {
                 var _this = this;
                 return this.loader.file.then(function (t) { return (_this.fileUploader = _this.uploadGateway.upload(t), _this.fileUploader.on("progress", function (t, e) { _this.loader.uploadTotal = e.total, _this.loader.uploaded = e.uploaded; }), _this.fileUploader.send()); });
@@ -12439,13 +12278,11 @@ var __values = (this && this.__values) || function (o) {
         }());
         var hf = /** @class */ (function (_super) {
             __extends(hf, _super);
-
             function hf(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this._observedElements = new Set;
                 return _this;
             }
-
             hf.prototype.observe = function (t, e) {
                 var _this = this;
                 this.document.getRoot(e).on("change:children", function (e, n) { _this.view.once("render", function () { return _this._updateObservedElements(t, n); }); });
@@ -12485,7 +12322,6 @@ var __values = (this && this.__values) || function (o) {
             function e(t, e, n) {
                 if (!n.consumable.consume(e.item, t.name))
             return; var i = n.writer, o = n.mapper.toViewElement(e.item).getChild(0); null !== e.attributeNewValue ? i.setAttribute(e.attributeKey, e.attributeNewValue, o) : i.removeAttribute(e.attributeKey, o); } }
-
         var mf = /** @class */ (function () {
             function mf() {
                 this._stack = [];
@@ -12533,7 +12369,6 @@ var __values = (this && this.__values) || function (o) {
         function bf(t) {
             return Array.isArray(t) ? t.sort().join(",") : t;
         }
-
         ci(mf, ei);
         var wf = n(40), _f = n.n(wf);
         var kf = "ck-widget", vf = "ck-widget_selected";
@@ -12541,7 +12376,6 @@ var __values = (this && this.__values) || function (o) {
         function yf(t) {
             return !!t.is("element") && !!t.getCustomProperty("widget");
         }
-
         function xf(t, e, n) {
             if (n === void 0) { n = {}; }
             return mo.isEdge || e.setAttribute("contenteditable", "false", t), e.addClass(kf, t), e.setCustomProperty("widget", !0, t), t.getFillerOffset = Pf, n.label && function (t, e, n) {
@@ -12606,7 +12440,6 @@ var __values = (this && this.__values) || function (o) {
         function Ef(t) {
             return !!t && t.is("image");
         }
-
         function Sf(t, e, n) {
             if (n === void 0) { n = {}; }
             var i = t.createElement("image", n), o = Tf(e.document.selection, e);
@@ -12643,7 +12476,6 @@ var __values = (this && this.__values) || function (o) {
         }(Yl));
         var Of = /** @class */ (function (_super) {
             __extends(Of, _super);
-
             function Of() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -12699,10 +12531,8 @@ var __values = (this && this.__values) || function (o) {
             var e = t.createEmptyElement("img"), n = t.createContainerElement("figure", {class: "image"});
             return t.insert(t.createPositionAt(n, 0), e), n;
         }
-
         var Df = /** @class */ (function (_super) {
             __extends(Df, _super);
-
             function Df(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.domEventType = "mousedown";
@@ -12718,11 +12548,9 @@ var __values = (this && this.__values) || function (o) {
         var Lf = _o("Ctrl+A");
         var jf = /** @class */ (function (_super) {
             __extends(jf, _super);
-
             function jf() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(jf, "pluginName", {
                 get: function () { return "Widget"; },
                 enumerable: true,
@@ -12872,7 +12700,6 @@ var __values = (this && this.__values) || function (o) {
         }(Yl));
         var Bf = /** @class */ (function (_super) {
             __extends(Bf, _super);
-
             function Bf() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -12885,7 +12712,6 @@ var __values = (this && this.__values) || function (o) {
         n(94);
         var Ff = /** @class */ (function (_super) {
             __extends(Ff, _super);
-
             function Ff(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.set("text"), _this.set("for");
@@ -12893,13 +12719,11 @@ var __values = (this && this.__values) || function (o) {
                 _this.setTemplate({ tag: "label", attributes: { class: ["ck", "ck-label"], for: e.to("for") }, children: [{ text: e.to("text") }] });
                 return _this;
             }
-
             return Ff;
         }(Il));
         n(96);
         var Uf = /** @class */ (function (_super) {
             __extends(Uf, _super);
-
             function Uf(t, e) {
                 var _this = _super.call(this, t) || this;
                 var n = "ck-input-" + Jn(), i = "ck-status-" + Jn();
@@ -12941,7 +12765,6 @@ var __values = (this && this.__values) || function (o) {
         n(98);
         var Hf = /** @class */ (function (_super) {
             __extends(Hf, _super);
-
             function Hf(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.set("value"), _this.set("id"), _this.set("placeholder"), _this.set("isReadOnly", !1), _this.set("hasError", !1), _this.set("ariaDesribedById");
@@ -12949,7 +12772,6 @@ var __values = (this && this.__values) || function (o) {
                 _this.setTemplate({ tag: "input", attributes: { type: "text", class: ["ck", "ck-input", "ck-input-text", e.if("hasError", "ck-error")], id: e.to("id"), placeholder: e.to("placeholder"), readonly: e.to("isReadOnly"), "aria-invalid": e.if("hasError", !0), "aria-describedby": e.to("ariaDesribedById") }, on: { input: e.to("input") } });
                 return _this;
             }
-
             Hf.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this);
@@ -12964,17 +12786,14 @@ var __values = (this && this.__values) || function (o) {
             };
             return Hf;
         }(Il));
-
         function qf(_j) {
             var t = _j.view;
             t.listenTo(t.element, "submit", function (e, n) { n.preventDefault(), t.fire("submit"); }, { useCapture: !0 });
         }
-
         var Wf = n(7), Yf = n.n(Wf), $f = n(8), Gf = n.n($f);
         n(100);
         var Qf = /** @class */ (function (_super) {
             __extends(Qf, _super);
-
             function Qf(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.locale.t;
@@ -12990,7 +12809,6 @@ var __values = (this && this.__values) || function (o) {
                 });
                 return _this;
             }
-
             Qf.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this), this.keystrokes.listenTo(this.element), qf({view: this}), [this.labeledInput, this.saveButtonView, this.cancelButtonView].forEach(function (t) {
@@ -13019,7 +12837,6 @@ var __values = (this && this.__values) || function (o) {
         }("px"), Jf = nr.document.body;
         var Zf = /** @class */ (function (_super) {
             __extends(Zf, _super);
-
             function Zf(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.bindTemplate;
@@ -13132,11 +12949,9 @@ var __values = (this && this.__values) || function (o) {
         };
         var nm = /** @class */ (function (_super) {
             __extends(nm, _super);
-
             function nm() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(nm, "pluginName", {
                 get: function () { return "ContextualBalloon"; },
                 enumerable: true,
@@ -13191,14 +13006,11 @@ var __values = (this && this.__values) || function (o) {
                 positions: [n.northArrowSouth, n.northArrowSouthWest, n.northArrowSouthEast, n.southArrowNorth, n.southArrowNorthWest, n.southArrowNorthEast]
             };
         }
-
         var sm = /** @class */ (function (_super) {
             __extends(sm, _super);
-
             function sm() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(sm, "requires", {
                 get: function () {
                     return [nm];
@@ -13299,11 +13111,9 @@ var __values = (this && this.__values) || function (o) {
         n(104);
         var cm = /** @class */ (function (_super) {
             __extends(cm, _super);
-
             function cm() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(cm, "requires", {
                 get: function () {
                     return [Of, jf, am];
@@ -13341,7 +13151,6 @@ var __values = (this && this.__values) || function (o) {
         }(Il));
         var dm = /** @class */ (function (_super) {
             __extends(dm, _super);
-
             function dm(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.set("acceptedType"), _this.set("allowMultipleFiles", !1);
@@ -13376,10 +13185,8 @@ var __values = (this && this.__values) || function (o) {
         catch (t) {
             return null;
         } }(t, "image." + o.replace("image/", ""), o); r ? e(r) : n(); }).catch(n); }); }
-
         var gm = /** @class */ (function (_super) {
             __extends(gm, _super);
-
             function gm() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -13404,13 +13211,11 @@ var __values = (this && this.__values) || function (o) {
         n(106), n(108), n(110);
         var wm = /** @class */ (function (_super) {
             __extends(wm, _super);
-
             function wm(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.placeholder = "data:image/svg+xml;utf8," + encodeURIComponent(bm.a);
                 return _this;
             }
-
             wm.prototype.init = function () {
                 var _this = this;
                 this.editor.editing.downcastDispatcher.on("attribute:uploadStatus:image", function () {
@@ -13487,7 +13292,6 @@ var __values = (this && this.__values) || function (o) {
             var i = ym(t, n);
             i && e.remove(e.createRangeOn(i));
         }
-
         var Am = /** @class */ (function () {
             function Am() {
             }
@@ -13577,7 +13381,6 @@ var __values = (this && this.__values) || function (o) {
         }());
         var Cm = /** @class */ (function (_super) {
             __extends(Cm, _super);
-
             function Cm() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -13600,14 +13403,11 @@ var __values = (this && this.__values) || function (o) {
             var o = n.createLoader(i);
             o && Sf(t, e, {uploadId: o.id});
         }
-
         var Pm = /** @class */ (function (_super) {
             __extends(Pm, _super);
-
             function Pm() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(Pm, "requires", {
                 get: function () {
                     return [oh, Zh];
@@ -13697,11 +13497,9 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var Mm = /** @class */ (function (_super) {
             __extends(Mm, _super);
-
             function Mm() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(Mm, "pluginName", {
                 get: function () { return "ImageUpload"; },
                 enumerable: true,
@@ -13718,7 +13516,6 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var Em = /** @class */ (function (_super) {
             __extends(Em, _super);
-
             function Em() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -13743,14 +13540,11 @@ var __values = (this && this.__values) || function (o) {
         function Sm(t, e) {
             return e.checkChild(t.parent, "paragraph") && !e.isObject(t);
         }
-
         var Im = /** @class */ (function (_super) {
             __extends(Im, _super);
-
             function Im() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(Im, "pluginName", {
                 get: function () { return "Paragraph"; },
                 enumerable: true,
@@ -13798,17 +13592,14 @@ var __values = (this && this.__values) || function (o) {
             var i = n.createContext(e);
             return !!n.checkChild(i, "paragraph") && !!n.checkChild(i.push("paragraph"), t);
         }
-
         Im.paragraphLikeElements = new Set(["blockquote", "dd", "div", "dt", "h1", "h2", "h3", "h4", "h5", "h6", "li", "p", "td"]);
         var Rm = /** @class */ (function (_super) {
             __extends(Rm, _super);
-
             function Rm(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.modelElements = e;
                 return _this;
             }
-
             Rm.prototype.refresh = function () {
                 var _this = this;
                 var t = Wd(this.editor.model.document.selection.getSelectedBlocks());
@@ -13832,17 +13623,14 @@ var __values = (this && this.__values) || function (o) {
         function Dm(t, e, n) {
             return n.checkChild(t.parent, e) && !n.isObject(t);
         }
-
         var Lm = "paragraph";
         var jm = /** @class */ (function (_super) {
             __extends(jm, _super);
-
             function jm(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, t.config.define("heading", { options: [{ model: "paragraph", title: "Paragraph", class: "ck-heading_paragraph" }, { model: "heading1", view: "h2", title: "Heading 1", class: "ck-heading_heading1" }, { model: "heading2", view: "h3", title: "Heading 2", class: "ck-heading_heading2" }, { model: "heading3", view: "h4", title: "Heading 3", class: "ck-heading_heading3" }] });
                 return _this;
             }
-
             Object.defineProperty(jm, "requires", {
                 get: function () {
                     return [Im];
@@ -13879,11 +13667,9 @@ var __values = (this && this.__values) || function (o) {
         n(20);
         var Vm = /** @class */ (function (_super) {
             __extends(Vm, _super);
-
             function Vm() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Vm.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.t, n = function (t) {
@@ -13946,14 +13732,11 @@ var __values = (this && this.__values) || function (o) {
             var e = t.parent;
             return "figcaption" == t.name && e && "figure" == e.name && e.hasClass("image") ? {name: !0} : null;
         }
-
         var Fm = /** @class */ (function (_super) {
             __extends(Fm, _super);
-
             function Fm() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Fm.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.editing.view, n = t.model.schema, i = t.data, o = t.editing, r = t.t;
@@ -14023,7 +13806,6 @@ var __values = (this && this.__values) || function (o) {
             } return !!i.length; };
             return Fm;
         }(Fl));
-
         function Um(t, e) {
             if (e === void 0) { e = !0; }
             return function (n, i, o) {
@@ -14053,11 +13835,9 @@ var __values = (this && this.__values) || function (o) {
         function Wm(t, e) {
             return !!t.hasClass("ck-hidden") && (e.removeClass("ck-hidden", t), !0);
         }
-
         n(113);
         var Ym = /** @class */ (function (_super) {
             __extends(Ym, _super);
-
             function Ym(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this._defaultStyle = !1, _this.styles = e.reduce(function (t, e) { return (t[e.name] = e, e.isDefault && (_this._defaultStyle = e.name), t); }, {});
@@ -14089,7 +13869,6 @@ var __values = (this && this.__values) || function (o) {
                 if (n_240.name === t)
                     return n_240;
         } }
-
         var Gm = n(16), Qm = n.n(Gm), Km = n(17), Jm = n.n(Km), Zm = n(18), Xm = n.n(Zm), tg = n(13), eg = n.n(tg);
         var ng = {
             full: {name: "full", title: "Full size image", icon: Qm.a, isDefault: !0},
@@ -14113,7 +13892,6 @@ var __values = (this && this.__values) || function (o) {
                 className: "image-style-align-right"
             }
         }, ig = {full: Qm.a, left: Jm.a, right: eg.a, center: Xm.a};
-
         function og(t) {
             if (t === void 0) { t = []; }
             return t.map(rg);
@@ -14123,7 +13901,7 @@ var __values = (this && this.__values) || function (o) {
             if ("string" == typeof t) {
                 var e_242 = t;
                 ng[e_242] ? t = Object.assign({}, ng[e_242]) : (bs.a.warn("image-style-not-found: There is no such image style of given name.", {name: e_242}), t = {name: e_242});
-        } else if (ng[t.name]) {
+            } else if (ng[t.name]) {
                 var e_243 = ng[t.name], n_241 = Object.assign({}, t);
                 for (var i_151 in e_243)
                     t.hasOwnProperty(i_151) || (n_241[i_151] = e_243[i_151]);
@@ -14131,14 +13909,11 @@ var __values = (this && this.__values) || function (o) {
             }
             return "string" == typeof t.icon && ig[t.icon] && (t.icon = ig[t.icon]), t;
         }
-
         var sg = /** @class */ (function (_super) {
             __extends(sg, _super);
-
             function sg() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(sg, "pluginName", {
                 get: function () { return "ImageStyleEditing"; },
                 enumerable: true,
@@ -14179,11 +13954,9 @@ var __values = (this && this.__values) || function (o) {
         n(115);
         var ag = /** @class */ (function (_super) {
             __extends(ag, _super);
-
             function ag() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(ag, "pluginName", {
                 get: function () { return "ImageStyleUI"; },
                 enumerable: true,
@@ -14235,11 +14008,9 @@ var __values = (this && this.__values) || function (o) {
         }(Fl));
         var cg = /** @class */ (function (_super) {
             __extends(cg, _super);
-
             function cg() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(cg, "requires", {
                 get: function () {
                     return [nm];
@@ -14326,10 +14097,8 @@ var __values = (this && this.__values) || function (o) {
             var o = t.textNode || (n ? t.nodeBefore : t.nodeAfter), r = null;
             for (; o && o.getAttribute("linkHref") == e;)
             r = o, o = n ? o.previousSibling : o.nextSibling; return r ? i.createPositionAt(r, n ? "before" : "after") : t; }
-
         var hg = /** @class */ (function (_super) {
             __extends(hg, _super);
-
             function hg() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -14365,7 +14134,6 @@ var __values = (this && this.__values) || function (o) {
         }(Yl));
         var fg = /** @class */ (function (_super) {
             __extends(fg, _super);
-
             function fg() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -14396,7 +14164,6 @@ var __values = (this && this.__values) || function (o) {
                 return t.replace(mg, "").match(gg);
             }(t = String(t)) ? t : "#";
         }
-
         var wg = /** @class */ (function () {
             function wg(t, e, n) {
                 var _this = this;
@@ -14473,12 +14240,10 @@ var __values = (this && this.__values) || function (o) {
         function xg(t, e) {
             return _g(t.getShiftedBy(-1), e);
         }
-
         n(117);
         var Ag = "ck-link_selected";
         var Cg = /** @class */ (function (_super) {
             __extends(Cg, _super);
-
             function Cg() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -14539,7 +14304,6 @@ var __values = (this && this.__values) || function (o) {
         n(119);
         var Pg = /** @class */ (function (_super) {
             __extends(Pg, _super);
-
             function Pg(t) {
                 var _this = _super.call(this, t) || this;
                 var e = t.t;
@@ -14555,7 +14319,6 @@ var __values = (this && this.__values) || function (o) {
                 });
                 return _this;
             }
-
             Pg.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this), qf({view: this}), [this.urlInputView, this.saveButtonView, this.cancelButtonView].forEach(function (t) {
@@ -14583,7 +14346,6 @@ var __values = (this && this.__values) || function (o) {
         n(121);
         var Ng = /** @class */ (function (_super) {
             __extends(Ng, _super);
-
             function Ng(t) {
                 var _this = _super.call(this, t) || this;
                 var e = t.t;
@@ -14599,7 +14361,6 @@ var __values = (this && this.__values) || function (o) {
                 });
                 return _this;
             }
-
             Ng.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this), [this.previewButtonView, this.editButtonView, this.unlinkButtonView].forEach(function (t) { _this._focusables.add(t), _this.focusTracker.add(t.element); }), this.keystrokes.listenTo(this.element);
@@ -14636,11 +14397,9 @@ var __values = (this && this.__values) || function (o) {
         var Dg = "Ctrl+K";
         var Lg = /** @class */ (function (_super) {
             __extends(Lg, _super);
-
             function Lg() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(Lg, "requires", {
                 get: function () {
                     return [nm];
@@ -14779,10 +14538,8 @@ var __values = (this && this.__values) || function (o) {
                 })(t);
             });
         }
-
         var Vg = /** @class */ (function (_super) {
             __extends(Vg, _super);
-
             function Vg(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.type = "bulleted" == e ? "bulleted" : "numbered";
@@ -14851,10 +14608,8 @@ var __values = (this && this.__values) || function (o) {
         function Bg(t, e) {
             return e.checkChild(t.parent, "listItem") && !e.isObject(t);
         }
-
         var Fg = /** @class */ (function (_super) {
             __extends(Fg, _super);
-
             function Fg(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this._indentBy = "forward" == e ? 1 : -1;
@@ -15031,7 +14786,8 @@ var __values = (this && this.__values) || function (o) {
                     var e_262 = t_320[_j];
                     !n_251 || e_262.is("ul") || e_262.is("ol") || e_262._remove(), e_262.is("text") ? (i_159 && (e_262._data = e_262.data.replace(/^\s+/, "")), (!e_262.nextSibling || e_262.nextSibling.is("ul") || e_262.nextSibling.is("ol")) && (e_262._data = e_262.data.replace(/\s+$/, ""))) : (e_262.is("ul") || e_262.is("ol")) && (n_251 = !0), i_159 = !1;
                 }
-            } }
+            }
+        }
 
         function Zg(t) {
             return function (e, n) {
@@ -15052,7 +14808,6 @@ var __values = (this && this.__values) || function (o) {
                 }
             }
         } }; }
-
         function Xg(t, _j) {
             var e = _j[0], n = _j[1];
             var i, o = e.is("documentFragment") ? e.getChild(0) : e;
@@ -15158,14 +14913,11 @@ var __values = (this && this.__values) || function (o) {
                 return t.item.is("uiElement");
             });
         }
-
         var sp = /** @class */ (function (_super) {
             __extends(sp, _super);
-
             function sp() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(sp, "requires", {
                 get: function () {
                     return [Im];
@@ -15276,11 +15028,9 @@ var __values = (this && this.__values) || function (o) {
                         e += ap(t_334);
                 }
         } return e; }
-
         var cp = n(47), lp = n.n(cp), dp = n(48), up = n.n(dp);
         var hp = /** @class */ (function (_super) {
             __extends(hp, _super);
-
             function hp() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -15335,10 +15085,8 @@ var __values = (this && this.__values) || function (o) {
         function bp() {
             return null;
         }
-
         var wp = /** @class */ (function (_super) {
             __extends(wp, _super);
-
             function wp() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -15437,7 +15185,6 @@ var __values = (this && this.__values) || function (o) {
         n(123);
         var Ap = /** @class */ (function (_super) {
             __extends(Ap, _super);
-
             function Ap(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, t.config.define("mediaEmbed", {
@@ -15473,7 +15220,6 @@ var __values = (this && this.__values) || function (o) {
                 }), _this.registry = new yp(t.locale, t.config.get("mediaEmbed"));
                 return _this;
             }
-
             Object.defineProperty(Ap, "pluginName", {
                 get: function () { return "MediaEmbedEditing"; },
                 enumerable: true,
@@ -15511,13 +15257,11 @@ var __values = (this && this.__values) || function (o) {
         var Cp = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=]+$/;
         var Tp = /** @class */ (function (_super) {
             __extends(Tp, _super);
-
             function Tp(t) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this._timeoutId = null, _this._positionToInsert = null;
                 return _this;
             }
-
             Object.defineProperty(Tp, "requires", {
                 get: function () {
                     return [Wl, qd];
@@ -15569,7 +15313,6 @@ var __values = (this && this.__values) || function (o) {
         n(125);
         var Pp = /** @class */ (function (_super) {
             __extends(Pp, _super);
-
             function Pp(t, e) {
                 var _this = _super.call(this, e) || this;
                 var n = e.t;
@@ -15585,7 +15328,6 @@ var __values = (this && this.__values) || function (o) {
                 });
                 return _this;
             }
-
             Pp.prototype.render = function () {
                 var _this = this;
                 _super.prototype.render.call(this), qf({view: this}), [this.urlInputView, this.saveButtonView, this.cancelButtonView].forEach(function (t) {
@@ -15634,11 +15376,9 @@ var __values = (this && this.__values) || function (o) {
         var Mp = n(50), Ep = n.n(Mp);
         var Sp = /** @class */ (function (_super) {
             __extends(Sp, _super);
-
             function Sp() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(Sp, "requires", {
                 get: function () {
                     return [Ap];
@@ -15827,12 +15567,10 @@ var __values = (this && this.__values) || function (o) {
                 return n;
             n = n.parent;
         } }
-
         function Vp(t, e, n, i, o) {
             if (o === void 0) { o = 1; }
             e > o ? i.setAttribute(t, e, n) : i.removeAttribute(t, n);
         }
-
         function zp(t, e, n) {
             if (n === void 0) { n = {}; }
             var i = t.createElement("tableCell", n);
@@ -15889,7 +15627,6 @@ var __values = (this && this.__values) || function (o) {
                 var t_351 = i[n];
                 e += parseInt(t_351.getAttribute("colspan") || 1), n++;
         } return e; }
-
         var Hp = /** @class */ (function () {
             function Hp(t, e) {
                 if (e === void 0) { e = {}; }
@@ -15954,7 +15691,6 @@ var __values = (this && this.__values) || function (o) {
             var e = jp("table", t.getFirstPosition());
             return e && qp(e.parent) ? e.parent : null;
         }
-
         function $p(t) {
             if (t === void 0) { t = {}; }
             return function (e) { return e.on("insert:table", function (e, n, i) { var o = n.item; if (!i.consumable.consume(o, "insert"))
@@ -15977,7 +15713,6 @@ var __values = (this && this.__values) || function (o) {
                     u.set(n_269, l_5), i.consumable.consume(r_58, "insert"), tb(e_276, d, i.writer.createPositionAt(l_5, "end"), i, t);
             } var h = i.mapper.toViewPosition(n.range.start); i.mapper.bindElements(o, r ? c : s), i.writer.insert(h, r ? c : s); }); };
         }
-
         function Gp(t) {
             if (t === void 0) { t = {}; }
             return function (e) { return e.on("insert:tableRow", function (e, n, i) { var o = n.item; if (!i.consumable.consume(o, "insert"))
@@ -15993,7 +15728,6 @@ var __values = (this && this.__values) || function (o) {
                     d.set(a, r_59), i.consumable.consume(e_277.cell, "insert"), tb(e_277, l, i.writer.createPositionAt(r_59, "end"), i, t);
             } }); };
         }
-
         function Qp(t) {
             if (t === void 0) { t = {}; }
             return function (e) { return e.on("insert:tableCell", function (e, n, i) { var o = n.item; if (!i.consumable.consume(o, "insert"))
@@ -16010,7 +15744,6 @@ var __values = (this && this.__values) || function (o) {
                 }
             } }); };
         }
-
         function Kp(t) {
             if (t === void 0) { t = {}; }
             var e = !!t.asWidget;
@@ -16048,7 +15781,6 @@ var __values = (this && this.__values) || function (o) {
                     sb("thead", r, i);
             } function c(t, e, n) { return t > e && t < n; } }); };
         }
-
         function Jp(t) {
             if (t === void 0) { t = {}; }
             var e = !!t.asWidget;
@@ -16147,10 +15879,8 @@ var __values = (this && this.__values) || function (o) {
                 if ("table" === e_280.name)
                     return e_280;
         } }
-
         var lb = /** @class */ (function (_super) {
             __extends(lb, _super);
-
             function lb() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -16236,7 +15966,6 @@ var __values = (this && this.__values) || function (o) {
         }(Yl));
         var fb = /** @class */ (function (_super) {
             __extends(fb, _super);
-
             function fb(t, e) {
                 var _this = this;
                 _this = _super.call(this, t) || this, _this.direction = e.direction, _this.isHorizontal = "right" == _this.direction || "left" == _this.direction;
@@ -16265,33 +15994,51 @@ var __values = (this && this.__values) || function (o) {
                             var _q = _k[_j], t_363 = _q.cell, o_115 = _q.row, r_60 = _q.rowspan;
                             var n_276 = o_115 + r_60 - 1 >= i;
                             n_276 && Vp("rowspan", r_60 - 1, t_363, e);
-                        } e.remove(t); }(a, t); });
+                        }
+                        e.remove(t);
+                    }(a, t);
+                });
             };
             fb.prototype._getMergeableCell = function () {
                 var t = jp("tableCell", this.editor.model.document.selection.getFirstPosition());
                 if (!t)
-                    return; var e = this.editor.plugins.get("TableUtils"), n = this.isHorizontal ? function (t, e, n) { var i = "right" == e ? t.nextSibling : t.previousSibling; if (!i)
-                    return; var o = "right" == e ? t : i, r = "right" == e ? i : t, s = n.getCellLocation(o).column, a = n.getCellLocation(r).column, c = parseInt(o.getAttribute("colspan") || 1); return s + c === a ? i : void 0; }(t, this.direction, e) : function (t, e) { var n = t.parent, i = n.parent, o = i.getChildIndex(n); if ("down" == e && o === i.childCount - 1 || "up" == e && 0 === o)
-                    return; var r = parseInt(t.getAttribute("rowspan") || 1), s = i.getAttribute("headingRows") || 0; if (s && ("down" == e && o + r === s || "up" == e && o === s))
                     return;
+                var e = this.editor.plugins.get("TableUtils"), n = this.isHorizontal ? function (t, e, n) {
+                    var i = "right" == e ? t.nextSibling : t.previousSibling;
+                    if (!i)
+                        return;
+                    var o = "right" == e ? t : i, r = "right" == e ? i : t, s = n.getCellLocation(o).column,
+                        a = n.getCellLocation(r).column, c = parseInt(o.getAttribute("colspan") || 1);
+                    return s + c === a ? i : void 0;
+                }(t, this.direction, e) : function (t, e) {
+                    var n = t.parent, i = n.parent, o = i.getChildIndex(n);
+                    if ("down" == e && o === i.childCount - 1 || "up" == e && 0 === o)
+                        return;
+                    var r = parseInt(t.getAttribute("rowspan") || 1), s = i.getAttribute("headingRows") || 0;
+                    if (s && ("down" == e && o + r === s || "up" == e && o === s))
+                        return;
                     var a = parseInt(t.getAttribute("rowspan") || 1), c = "down" == e ? o + a : o,
                         l = new Hp(i, {endRow: c}).slice(), d = l.find(function (e) {
                             return e.cell === t;
                         }).column, u = l.find(function (_j) {
                             var t = _j.row, n = _j.rowspan, i = _j.column;
                             return i === d && ("down" == e ? t === c : c === t + n);
-                        }); return u && u.cell; }(t, this.direction); if (!n)
-                    return; var i = this.isHorizontal ? "rowspan" : "colspan", o = parseInt(t.getAttribute(i) || 1); return parseInt(n.getAttribute(i) || 1) === o ? n : void 0; };
+                        });
+                    return u && u.cell;
+                }(t, this.direction);
+                if (!n)
+                    return;
+                var i = this.isHorizontal ? "rowspan" : "colspan", o = parseInt(t.getAttribute(i) || 1);
+                return parseInt(n.getAttribute(i) || 1) === o ? n : void 0;
+            };
             return fb;
         }(Yl));
 
         function mb(t) {
             return 1 == t.childCount && t.getChild(0).is("paragraph") && t.getChild(0).isEmpty;
         }
-
         var gb = /** @class */ (function (_super) {
             __extends(gb, _super);
-
             function gb() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -16362,7 +16109,6 @@ var __values = (this && this.__values) || function (o) {
         }(Yl));
         var bb = /** @class */ (function (_super) {
             __extends(bb, _super);
-
             function bb() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
@@ -16442,11 +16188,9 @@ var __values = (this && this.__values) || function (o) {
         }(Yl));
         var kb = /** @class */ (function (_super) {
             __extends(kb, _super);
-
             function kb() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Object.defineProperty(kb, "pluginName", {
                 get: function () { return "TableUtils"; },
                 enumerable: true,
@@ -16570,7 +16314,6 @@ var __values = (this && this.__values) || function (o) {
             };
             return kb;
         }(Fl));
-
         function vb(t, e, n, i, o, r) {
             if (r === void 0) { r = {}; }
             for (var s_41 = 0; s_41 < i; s_41++) {
@@ -16578,7 +16321,6 @@ var __values = (this && this.__values) || function (o) {
                 t.insert(i_184, e, n), yb(o, t, t.createPositionAt(i_184, "end"), r);
             }
         }
-
         function yb(t, e, n, i) {
             if (i === void 0) { i = {}; }
             for (var o_121 = 0; o_121 < t; o_121++)
@@ -16722,15 +16464,12 @@ var __values = (this && this.__values) || function (o) {
         function Db(t) {
             return t.is("td") || t.is("th");
         }
-
         n(129);
         var Lb = /** @class */ (function (_super) {
             __extends(Lb, _super);
-
             function Lb() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             Lb.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = t.model, n = e.schema, i = t.conversion;
@@ -16804,7 +16543,6 @@ var __values = (this && this.__values) || function (o) {
         n(131);
         var jb = /** @class */ (function (_super) {
             __extends(jb, _super);
-
             function jb(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.bindTemplate;
@@ -16839,24 +16577,20 @@ var __values = (this && this.__values) || function (o) {
         }(Il));
         var Vb = /** @class */ (function (_super) {
             __extends(Vb, _super);
-
             function Vb(t) {
                 var _this = _super.call(this, t) || this;
                 var e = _this.bindTemplate;
                 _this.set("isOn", !1), _this.setTemplate({ tag: "div", attributes: { class: ["ck-insert-table-dropdown-grid-box", e.if("isOn", "ck-on")] }, on: { mouseover: e.to("over") } });
                 return _this;
             }
-
             return Vb;
         }(Il));
         var zb = n(51), Bb = n.n(zb), Fb = n(52), Ub = n.n(Fb), Hb = n(53), qb = n.n(Hb), Wb = n(54), Yb = n.n(Wb);
         var $b = /** @class */ (function (_super) {
             __extends($b, _super);
-
             function $b() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             $b.prototype.init = function () {
                 var _this = this;
                 var t = this.editor, e = this.editor.t;
@@ -16936,18 +16670,15 @@ var __values = (this && this.__values) || function (o) {
                 var t_381 = e.commands.get(r);
                 n.push(t_381), o.set({commandName: r}), o.bind("isEnabled").to(t_381), s && o.bind("isOn").to(t_381, "value");
         } o.set({ withText: !0 }), i.add(t); }
-
         n(133);
         n.d(e, "default", function () {
             return Qb;
         });
         var Qb = /** @class */ (function (_super) {
             __extends(Qb, _super);
-
             function Qb() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
-
             return Qb;
         }(Bl));
         Qb.builtinPlugins = [/** @class */ (function (_super) {

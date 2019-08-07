@@ -33,6 +33,9 @@ public class MvcInterceptor implements WebMvcConfigurer {
         for (String s : configAllowRequestFileType) {
             types.add("/**/**." + s);
         }
+        for (String s : configAllowRequestFileType) {
+            types.add("/#/**");
+        }
         registry.addInterceptor(loginInterceptor)
                 .excludePathPatterns("/error")
                 .excludePathPatterns(types.toArray(new String[0]))

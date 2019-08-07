@@ -1,6 +1,6 @@
 window.eruptSiteConfig = {
     //global config
-    // domain: "http://192.168.1.133:8080",
+    domain: "http://192.168.1.133:8081",
     title: "YuePeng Erupt",
     desc: "通用数据管理框架",
     routerReuse: false,
@@ -18,8 +18,6 @@ window.eruptSiteConfig = {
         icon: "fa-download",
         mobileHidden: true,
         click: function (event, token) {
-            console.log(event);
-            console.log(token);
         }
     }]
 };

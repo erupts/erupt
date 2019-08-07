@@ -209,12 +209,12 @@ public class DataFileService {
         sheet.createFreezePane(0, 1, 1, 1);
         //批注对象
         Drawing drawing = sheet.createDrawingPatriarch();
-        Row hearRow = sheet.createRow(0);
+        Row headRow = sheet.createRow(0);
         int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
             if (edit.show() && StringUtils.isNotBlank(edit.title()) && AnnotationUtil.getEditTypeMapping(edit.type()).excelOperator()) {
-                Cell cell = hearRow.createCell(cellNum);
+                Cell cell = headRow.createCell(cellNum);
                 //256表格一个字节的宽度
                 sheet.setColumnWidth(cellNum, (edit.title().length() + 10) * 256);
                 DataValidationHelper dvHelper = sheet.getDataValidationHelper();

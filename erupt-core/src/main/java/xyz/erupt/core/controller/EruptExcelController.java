@@ -100,20 +100,21 @@ public class EruptExcelController {
             }
             String fileName = file.getOriginalFilename();
             List<JsonObject> list;
+            int i = 1;
             try {
+                i++;
                 if (fileName.endsWith(DataFileService.XLS_FORMAT)) {
                     list = dataFileService.excelToEruptObject(eruptModel, new HSSFWorkbook(file.getInputStream()));
                 } else if (fileName.endsWith(DataFileService.XLSX_FORMAT)) {
                     list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
                 } else {
-                    return EruptApiModel.errorApi("上传文件必须为Excel");
+                    throw new RuntimeException("上传文件必须为Excel");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                return EruptApiModel.errorApi("Excel解析异常，请确认上传文件与所提供模板一致");
+                throw new RuntimeException("Excel解析异常" + "，出错行数：" + i);
             }
-
-            int i = 1;
+            i = 1;
             for (JsonObject jo : list) {
                 i++;
                 EruptApiModel eruptApiModel = eruptDataController.addEruptData(eruptName, jo);

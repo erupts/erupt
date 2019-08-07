@@ -6681,7 +6681,6 @@ textarea.cdk-textarea-autosize-measuring {
   }
   .button-disabled();
 }
-
 .button-variant-ghost(@color; @border: @color) {
   .button-color(@color; transparent; @border);
   text-shadow: none;
@@ -6690,7 +6689,6 @@ textarea.cdk-textarea-autosize-measuring {
     & when (@border = transparent) {
       .button-color(~`colorPalette('@{color}', 5) `; transparent; transparent);
     }
-
     & when not(@border = transparent) {
       .button-color(~`colorPalette('@{color}', 5) `; transparent; ~`colorPalette('@{color}', 5) `);
     }
@@ -6700,7 +6698,6 @@ textarea.cdk-textarea-autosize-measuring {
     & when (@border = transparent) {
       .button-color(~`colorPalette('@{color}', 7) `; transparent; transparent);
     }
-
     & when not(@border = transparent) {
       .button-color(~`colorPalette('@{color}', 7) `; transparent; ~`colorPalette('@{color}', 7) `);
     }
@@ -6830,7 +6827,6 @@ textarea.cdk-textarea-autosize-measuring {
 .btn-danger() {
   .button-variant-danger(@btn-danger-color, @btn-danger-bg, @btn-danger-border);
 }
-
 // link button style
 .btn-link() {
   .button-variant-other(@link-color, transparent, transparent);
@@ -6869,7 +6865,6 @@ textarea.cdk-textarea-autosize-measuring {
     .button-size(@btn-circle-size-sm; 0; @font-size-base; 50%);
   }
 }
-
 // Horizontal button groups style
 // --------------------------------------------------
 .btn-group(@btnClassName: btn) {
@@ -10790,7 +10785,6 @@ a.@{btn-prefix-cls} {
     width: 100%;
     overflow: hidden;
     border-radius: @border-radius-base;
-
     table {
       width: 100%;
     }
@@ -10800,7 +10794,6 @@ a.@{btn-prefix-cls} {
     > td {
       padding-bottom: 16px;
     }
-
     &:last-child {
       border-bottom: none;
     }
@@ -10811,7 +10804,6 @@ a.@{btn-prefix-cls} {
     font-size: @font-size-base;
     line-height: @line-height-base;
     white-space: nowrap;
-
     &::after {
       position: relative;
       top: -0.5px;
@@ -10829,16 +10821,13 @@ a.@{btn-prefix-cls} {
 
   &-item {
     padding-bottom: 0;
-
     > span {
       display: inline-block;
     }
-
     .@{descriptions-prefix-cls}-item-label {
       float: left;
       padding: 0 !important;
     }
-
     .@{descriptions-prefix-cls}-item-content {
       float: left;
       padding: 0 !important;
@@ -10857,19 +10846,16 @@ a.@{btn-prefix-cls} {
       padding: @descriptions-middle-padding;
     }
   }
-
   &.bordered.small {
     .@{descriptions-prefix-cls}-item-label,
     .@{descriptions-prefix-cls}-item-content {
       padding: @descriptions-small-padding;
     }
   }
-
   &.bordered {
     .@{descriptions-prefix-cls}-view {
       border: 1px solid @border-color-split;
     }
-
     .@{descriptions-prefix-cls}-item-label,
     .@{descriptions-prefix-cls}-item-content {
       border-right: 1px solid @border-color-split;
@@ -10882,7 +10868,6 @@ a.@{btn-prefix-cls} {
 
     .@{descriptions-prefix-cls}-row {
       border-bottom: 1px solid @border-color-split;
-
       &:last-child {
         border-bottom: none;
       }
@@ -10890,7 +10875,6 @@ a.@{btn-prefix-cls} {
 
     .@{descriptions-prefix-cls}-item-label {
       background-color: #fafafa;
-
       &::after {
         display: none;
       }
@@ -20696,30 +20680,25 @@ a:focus {
       color: @nz-table-rep-column-name-color;
       text-align: @nz-table-rep-column-name-text-align;
     }
-
     &__hide-header-footer {
       .@{ant-prefix}-table-title,
       .@{ant-prefix}-table-footer {
         display: block;
       }
     }
-
     .@{ant-prefix}-table {
       &-thead {
         display: none;
       }
-
       &-title {
         text-align: center;
         background: @nz-table-rep-header-background;
       }
-
       &-tbody {
         > tr {
           &:nth-child(3n) {
             background: @nz-table-rep-even-background;
           }
-
           > td {
             display: flex;
             align-items: center;
@@ -22654,7 +22633,6 @@ body {
       text-align: center;
     }
   }
-
   // 修复按钮block
   &__btn {
     &-disabled {
@@ -22664,7 +22642,6 @@ body {
         pointer-events: none;
       }
     }
-
     &-sub {
       .@{ant-prefix}-dropdown-menu-item {
         > span {
@@ -22741,7 +22718,6 @@ body {
         content: ':';
       }
     }
-
     &-optional {
       color: @sv-label-optional-color;
     }

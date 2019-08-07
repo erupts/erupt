@@ -49,6 +49,7 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <dependency>
+            
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-annotation</artifactId>
             <version>0.0.1-SNAPSHOT</version>
@@ -60,12 +61,12 @@
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-web</artifactId>
+            <artifactId>erupt-auth</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-auth</artifactId>
+            <artifactId>erupt-web</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
