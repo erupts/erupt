@@ -20,7 +20,7 @@ public @interface AttachmentType {
 
     AttachmentEnum type() default AttachmentEnum.OTHER;
 
-    @SerializeBy(method = "type",value = "IMAGE")
+    @SerializeBy(method = "type", value = "IMAGE")
     ImageType imageType() default @ImageType;
 
     int maxLimit() default 1;

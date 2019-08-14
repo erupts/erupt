@@ -2,10 +2,8 @@ package xyz.erupt.auth.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import xyz.erupt.auth.service.UserService;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -35,16 +33,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        EruptRouter eruptRouter;
+        EruptRouter eruptRouter = null;
         if (handler instanceof HandlerMethod) {
             eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
-        } else {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return false;
         }
         if (null == eruptRouter) {
-            response.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
-            return false;
+            return true;
         }
         if (eruptRouter.loginVerify()) {
             String token = null;
@@ -80,15 +74,5 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
     }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
-        EruptRouter eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
-        if (null != eruptRouter) {
-            if (eruptRouter.base64()) {
-//                new BASE64Encoder().encode();
-            }
-        }
-        super.postHandle(request, response, handler, modelAndView);
-    }
 
 }

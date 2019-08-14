@@ -37,7 +37,11 @@ public class CoreService implements InitializingBean {
     public static EruptModel getErupt(String eruptName) {
         if (staticHotBuild) {
             EruptModel eruptModel = ERUPTS.get(eruptName);
-            return initEruptModel(eruptModel.getClazz());
+            if (null != eruptModel) {
+                return initEruptModel(eruptModel.getClazz());
+            } else {
+                return null;
+            }
         } else {
             return ERUPTS.get(eruptName);
         }

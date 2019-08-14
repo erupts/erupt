@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.erupt.auth.constant.RedisKey;
+import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.util.IdentifyCode;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.cache.EruptRedisService;
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.session.SessionServiceImpl;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class VerifyCodeController {
 
     @Autowired
-    private EruptRedisService redisService;
+    private SessionServiceImpl sessionServiceImpl;
 
     /**
      * 生成验证码
@@ -41,7 +41,7 @@ public class VerifyCodeController {
         // 自定义宽、高、字数和干扰线的条数
         IdentifyCode code = new IdentifyCode(100, 38, 4, 20);
         // 验证码过期时间1分钟
-        redisService.put(RedisKey.VERIFY_CODE + account, code.getCode(), 1);
+        sessionServiceImpl.put(SessionKey.VERIFY_CODE + account, code.getCode(), 1);
         // 响应图片
         ServletOutputStream out = response.getOutputStream();
         code.write(out);

@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Documented
 public @interface EruptRouter {
-    boolean base64() default false;
+//    boolean base64() default false;
 
     boolean loginVerify() default true;
 

@@ -8,6 +8,8 @@ import xyz.erupt.annotation.config.JavaTypeEnum;
 public enum EditType {
     @EditTypeMapping(mapping = "inputType", desc = "输入框 String:vague the like|number:vague the range", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     INPUT,
+    @EditTypeMapping(mapping = "number", desc = "数字输入", allowType = {JavaTypeEnum.number})
+    NUMBER,
     @EditTypeMapping(mapping = "sliderType", desc = "数字滑块 vague the range", allowType = {JavaTypeEnum.number})
     SLIDER,
     @EditTypeMapping(mapping = "dateType", desc = "日期 vague the range", allowType = {JavaTypeEnum.String, JavaTypeEnum.date})

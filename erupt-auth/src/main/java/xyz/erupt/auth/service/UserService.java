@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.HandlerMethod;
 import xyz.erupt.auth.base.LoginModel;
-import xyz.erupt.auth.constant.RedisKey;
+import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.repository.UserRepository;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.cache.EruptRedisService;
+import xyz.erupt.core.session.SessionServiceImpl;
 import xyz.erupt.core.util.MD5Utils;
 
 import javax.persistence.EntityManager;
@@ -39,7 +39,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private EruptRedisService redisService;
+    private SessionServiceImpl sessionServiceImpl;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -61,7 +61,7 @@ public class UserService {
             if (StringUtils.isBlank(verifyCode)) {
                 return new LoginModel(false, "请填写验证码", true);
             }
-            Object vc = redisService.getStr(RedisKey.VERIFY_CODE + account);
+            Object vc = sessionServiceImpl.get(SessionKey.VERIFY_CODE + account, String.class);
             if (vc == null || !vc.toString().equalsIgnoreCase(verifyCode)) {
                 return new LoginModel(false, "验证码不正确", true);
             }
@@ -143,11 +143,11 @@ public class UserService {
     public void createToken(LoginModel loginModel) {
         loginModel.setToken(RandomStringUtils.random(20, true, true));
 //        loginModel.getEruptUser().setRoles(null);
-        redisService.put(RedisKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), expireTimeByLogin);
+        sessionServiceImpl.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), expireTimeByLogin);
     }
 
     public boolean verifyToken(String token) {
-        if (null == redisService.get(RedisKey.USER_TOKEN + token)) {
+        if (null == sessionServiceImpl.get(SessionKey.USER_TOKEN + token)) {
             return false;
         } else {
             return true;
@@ -183,9 +183,8 @@ public class UserService {
         }
         //校验菜单权限
         {
-            List<EruptMenu> menus = gson.fromJson(redisService.get(RedisKey.MENU_LIST + token).toString(),
-                    new TypeToken<List<EruptMenu>>() {
-                    }.getType());
+            List<EruptMenu> menus = sessionServiceImpl.get(SessionKey.MENU_LIST + token, new TypeToken<List<EruptMenu>>() {
+            }.getType());
             boolean result = false;
             em:
             for (EruptMenu menu : menus) {

@@ -22,6 +22,8 @@ public @interface Erupt {
 
     String primaryKeyCol() default AnnotationConst.ID;
 
+//    String alias() default "";
+
     @Transient
     String name();
 

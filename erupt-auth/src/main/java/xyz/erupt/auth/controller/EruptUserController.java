@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.auth.base.LoginModel;
-import xyz.erupt.auth.constant.RedisKey;
+import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.service.UserService;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.TreeModel;
-import xyz.erupt.core.cache.EruptRedisService;
+import xyz.erupt.core.session.SessionServiceImpl;
 import xyz.erupt.core.util.DataHandlerUtil;
 
 import javax.persistence.EntityManager;
@@ -37,7 +37,7 @@ public class EruptUserController {
     private UserService userService;
 
     @Autowired
-    private EruptRedisService redisService;
+    private SessionServiceImpl sessionServiceImpl;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -92,8 +92,8 @@ public class EruptUserController {
                 treeModels.add(treeModel);
             }
             List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels);
-            redisService.put(RedisKey.MENU_TREE + loginModel.getToken(), treeResultModels, expireTimeByLogin);
-            redisService.put(RedisKey.MENU_LIST + loginModel.getToken(), menuList, expireTimeByLogin);
+            sessionServiceImpl.put(SessionKey.MENU_TREE + loginModel.getToken(), treeResultModels, expireTimeByLogin);
+            sessionServiceImpl.put(SessionKey.MENU_LIST + loginModel.getToken(), menuList, expireTimeByLogin);
         }
         return loginModel;
     }
@@ -113,8 +113,7 @@ public class EruptUserController {
     @EruptRouter
     public List<TreeModel> getMenu(HttpServletRequest request) {
         // type -> Set<EruptMenu>
-        Object o = redisService.get(RedisKey.MENU_TREE + request.getHeader("token"));
-        return gson.fromJson(o.toString(), new TypeToken<List<TreeModel>>() {
+        return sessionServiceImpl.get(SessionKey.MENU_TREE + request.getHeader("token"), new TypeToken<List<TreeModel>>() {
         }.getType());
     }
 }

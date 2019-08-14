@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sql>
+    <get-user>
+        select * from e_user where name =:name
+    </get-user>
+    <update-user>
+        update e_user SET NAME=:name WHERE id = :id
+    </update-user>
+    <delete-user>
+        delete from test where id = :id
+    </delete-user>
+</sql>

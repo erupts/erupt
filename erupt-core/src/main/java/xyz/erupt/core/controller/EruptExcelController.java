@@ -49,6 +49,7 @@ public class EruptExcelController {
     @Value("erupt.uploadPath:/opt/file")
     private String uploadPath;
 
+    //模板下载
     @RequestMapping(value = "/template/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
     public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
@@ -90,7 +91,7 @@ public class EruptExcelController {
     //导入
     @PostMapping("/import/{erupt}")
     @ResponseBody
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
+    @EruptRouter(authIndex = 2)
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);

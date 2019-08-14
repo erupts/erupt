@@ -1,8 +1,8 @@
 window.eruptSiteConfig = {
     //global config
-    domain: "http://192.168.1.133:8081",
-    title: "YuePeng Erupt",
-    desc: "通用数据管理框架",
+    domain: "",
+    title: "xxxx",
+    desc: "xxxxxxxx",
     routerReuse: false,
     amapKey: "15bc4df0bd6758645308fa591f439799",
     r_tools: [{
@@ -13,7 +13,8 @@ window.eruptSiteConfig = {
             console.log(event);
             console.log(token);
         },
-        load: function (event, token) {
+        load: function () {
+
         }
     }, {
         text: "下载",
