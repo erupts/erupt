@@ -29,21 +29,32 @@ public class OpenSqlApiController {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * @param fileName   文件名称
+     * @param sqlElement xml中sql元素
+     * @param pageSize   页面大小
+     * @param pageIndex  索引开始值为1
+     * @param request
+     * @return 查询结果
+     */
     @RequestMapping("/query/{fileName}/{sqlElement}")
     @ResponseBody
     public List query(@PathVariable("fileName") String fileName,
                       @PathVariable("sqlElement") String sqlElement,
-                      @RequestParam("pageSize") Integer pageSize,
-                      @RequestParam("pageIndex") Integer pageIndex,
+                      @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                      @RequestParam(value = "pageIndex", required = false) Integer pageIndex,
                       HttpServletRequest request) {
-        if (pageSize > 100) {
+        if (pageSize == null || pageSize > 100) {
             pageSize = 100;
+        }
+        if (pageIndex == null) {
+            pageIndex = 1;
         }
         String sql = getSqlElement(fileName, sqlElement).getTextTrim();
         Query query = entityManager.createNativeQuery(sql);
         setSqlParam(request, query, sql);
         query.setMaxResults(pageSize);
-        query.setFirstResult(pageIndex);
+        query.setFirstResult(pageIndex - 1);
         query.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return query.getResultList();
     }
