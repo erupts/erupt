@@ -112,16 +112,6 @@ public class EruptMenu extends BaseModel {
     )
     private EruptMenu parentMenu;
 
-    @Column(name = "REMARK")
-    @EruptField(
-            edit = @Edit(
-                    title = "功能描述",
-                    type = EditType.HTML_EDIT
-//                    inputType = @InputType(type = InputEnum.TEXTAREA)
-            )
-    )
-    private String remark;
-
 
     public EruptMenu(String code, String name, String path, Integer status, Integer sort, String icon, EruptMenu parentMenu) {
         this.code = code;

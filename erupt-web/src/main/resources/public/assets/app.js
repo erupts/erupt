@@ -6,20 +6,20 @@ window.eruptSiteConfig = {
     routerReuse: false,
     amapKey: "15bc4df0bd6758645308fa591f439799",
     r_tools: [{
-        text: "下载",
-        icon: "fa-download",
-        mobileHidden: true,
-        click: function (event, token) {
-            console.log(event);
-            console.log(token);
-        },
-        load: function (event, token) {
-        }
-    }, {
-        text: "下载",
-        icon: "fa-download",
-        mobileHidden: true,
-        click: function (event, token) {
-        }
-    }]
+            text: "下载",
+            icon: "fa-download",
+            mobileHidden: true,
+            click: function (event, token) {
+                console.log(event);
+                console.log(token);
+            },
+            load: function (event, token) {
+            }
+        }, {
+            text: "下载",
+            icon: "fa-download",
+            mobileHidden: true,
+            click: function (event, token) {
+            }
+        }]
 };
