@@ -14,7 +14,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
-import xyz.erupt.core.util.MD5Utils;
+import xyz.erupt.eruptcommon.util.MD5Utils;
 
 import javax.persistence.*;
 import java.util.Set;

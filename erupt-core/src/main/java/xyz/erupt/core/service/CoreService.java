@@ -12,7 +12,7 @@ import xyz.erupt.core.bean.EruptFieldModel;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.util.ReflectUtil;
-import xyz.erupt.core.util.SpringUtil;
+import xyz.erupt.eruptcommon.util.SpringUtil;
 
 import java.util.ArrayList;
 import java.util.List;

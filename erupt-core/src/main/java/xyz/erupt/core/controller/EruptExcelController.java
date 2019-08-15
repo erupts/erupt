@@ -20,7 +20,7 @@ import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
 import xyz.erupt.core.util.HttpUtil;
-import xyz.erupt.core.util.SpringUtil;
+import xyz.erupt.eruptcommon.util.SpringUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;

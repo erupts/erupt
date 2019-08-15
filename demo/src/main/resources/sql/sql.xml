@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<sql>
+<sql allowIp="">
     <get-user>
         select * from e_user where name =:name
     </get-user>

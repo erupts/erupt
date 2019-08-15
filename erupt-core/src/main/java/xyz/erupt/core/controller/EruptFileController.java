@@ -18,7 +18,7 @@ import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.MimeUtil;
-import xyz.erupt.core.util.SpringUtil;
+import xyz.erupt.eruptcommon.util.SpringUtil;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
