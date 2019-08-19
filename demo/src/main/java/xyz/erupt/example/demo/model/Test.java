@@ -10,6 +10,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
+import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
 
@@ -77,6 +78,22 @@ public class Test {
             )
     )
     private String radio;
+
+
+    @ManyToOne
+    @JoinColumn(name = "MENU_ID")
+    @EruptField(
+            views = @View(title = "菜单", column = "name"),
+            edit = @Edit(
+                    title = "菜单",
+                    type = EditType.REFERENCE_TREE,
+                    placeHolder = "菜单",
+
+                    referenceTreeType = @ReferenceTreeType(rootLabel = "系统管理",pid = "parentMenu.id"),
+                    search = @Search(value = true)
+            )
+    )
+    private EruptMenu eruptMenu;
 
 
     @Column(name = "CHOICE")

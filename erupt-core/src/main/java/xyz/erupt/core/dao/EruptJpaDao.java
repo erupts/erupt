@@ -98,6 +98,7 @@ public class EruptJpaDao {
                                                 Map<String, Object> conditionParameter) {
         String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("new map(" + String.join(",", cols) + ")", condition, null, orderBy));
         Query query = entityManager.createQuery(hql);
+        System.err.println(hql);
         if (null != conditionParameter) {
             for (Map.Entry<String, Object> entry : conditionParameter.entrySet()) {
                 query.setParameter(entry.getKey(), entry.getValue());

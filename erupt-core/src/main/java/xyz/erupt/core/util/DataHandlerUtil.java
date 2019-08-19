@@ -20,14 +20,33 @@ import java.util.Map;
  */
 public class DataHandlerUtil {
     //内存计算的方式生成树结构
-    public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels) {
+    public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels, String rootLabel) {
         List<TreeModel> resultTreeModels = new ArrayList<>();
         List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
-        for (TreeModel treeModel : treeModels) {
-            if (StringUtils.isBlank(treeModel.getPid())) {
-                resultTreeModels.add(treeModel);
-                tempTreeModels.remove(treeModel);
+        if (StringUtils.isBlank(rootLabel)) {
+            for (TreeModel treeModel : treeModels) {
+                if (StringUtils.isBlank(treeModel.getPid())) {
+                    resultTreeModels.add(treeModel);
+                    tempTreeModels.remove(treeModel);
+                }
+            }
+        } else {
+            String labelId = null;
+            for (TreeModel treeModel : treeModels) {
+                if (rootLabel.equals(treeModel.getLabel())) {
+                    labelId = treeModel.getId();
+                    break;
+                }
+            }
+            if (labelId == null) {
+                return resultTreeModels;
+            }
+            for (TreeModel treeModel : treeModels) {
+                if (labelId.equals(treeModel.getPid())) {
+                    resultTreeModels.add(treeModel);
+                    tempTreeModels.remove(treeModel);
+                }
             }
         }
         for (TreeModel treeModel : resultTreeModels) {
@@ -42,14 +61,14 @@ public class DataHandlerUtil {
         List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
         for (TreeModel treeModel : treeModels) {
-            if (treeModel.getPid().equals(parentTreeModel.getId())) {
+            if (null != treeModel.getPid() && treeModel.getPid().equals(parentTreeModel.getId())) {
                 childrenModel.add(treeModel);
                 tempTreeModels.remove(treeModel);
                 if (childrenModel.size() > 0) {
                     recursionTree(tempTreeModels, treeModel);
                 }
+                parentTreeModel.setChildren(childrenModel);
             }
-            parentTreeModel.setChildren(childrenModel);
         }
     }
 

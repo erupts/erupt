@@ -73,7 +73,7 @@ public class DBService implements DataService {
         if (StringUtils.isBlank(tree.pid())) {
             return treeModels;
         } else {
-            return DataHandlerUtil.treeModelToTree(treeModels);
+            return DataHandlerUtil.treeModelToTree(treeModels, null);
         }
     }
 
@@ -183,10 +183,10 @@ public class DBService implements DataService {
         Edit edit = eruptFieldModel.getEruptField().edit();
         ReferenceTreeType refTree = edit.referenceTreeType();
         List<String> cols = new ArrayList<>();
-        cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.id()) + " as " + refTree.id().replace(".", "_"));
-        cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.label()) + " as " + refTree.label().replace(".", "_"));
+        cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.id()) + " as " + AnnotationConst.ID);
+        cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.label()) + " as " + AnnotationConst.LABEL);
         if (StringUtils.isNotBlank(refTree.pid())) {
-            cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldName(), refTree.pid()) + " as " + eruptFieldModel.getFieldName() + "_" + refTree.pid());
+            cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldName(), refTree.pid()) + " as " + AnnotationConst.PID);
         }
         StringBuilder condition = new StringBuilder();
         if (!"".equals(edit.filter().condition())) {
@@ -206,13 +206,12 @@ public class DBService implements DataService {
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.getErupt(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : list) {
-            TreeModel treeModel = new TreeModel(map.get(refTree.id()), map.get(refTree.label()), map.get(eruptFieldModel.getFieldName() + "_" + refTree.pid()), null);
-            treeModels.add(treeModel);
+            treeModels.add(new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null));
         }
         if (StringUtils.isBlank(refTree.pid())) {
             return treeModels;
         } else {
-            return DataHandlerUtil.treeModelToTree(treeModels);
+            return DataHandlerUtil.treeModelToTree(treeModels, refTree.rootLabel());
         }
     }
 }

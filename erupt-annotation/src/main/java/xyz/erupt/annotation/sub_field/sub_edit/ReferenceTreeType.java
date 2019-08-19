@@ -18,4 +18,7 @@ public @interface ReferenceTreeType {
 
     @Transient
     String dependColumn() default AnnotationConst.ID;
+
+    @Transient
+    String rootLabel() default "";
 }

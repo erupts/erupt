@@ -91,7 +91,7 @@ public class EruptUserController {
                 TreeModel treeModel = new TreeModel(eruptMenu.getId(), eruptMenu.getName(), pid, eruptMenu);
                 treeModels.add(treeModel);
             }
-            List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels);
+            List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels, null);
             sessionServiceImpl.put(SessionKey.MENU_TREE + loginModel.getToken(), treeResultModels, expireTimeByLogin);
             sessionServiceImpl.put(SessionKey.MENU_LIST + loginModel.getToken(), menuList, expireTimeByLogin);
         }
