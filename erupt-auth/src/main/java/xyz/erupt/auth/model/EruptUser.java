@@ -110,7 +110,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     )
     private String remark;
 
-
     @ManyToMany
     @JoinTable(
             name = "E_USER_ROLE",
