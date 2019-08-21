@@ -65,7 +65,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     @EruptField(
             edit = @Edit(title = "密码", notNull = true)
     )
-    private String password = "pwd";
+    private String password;
 
     @Transient
     @EruptField(
@@ -108,7 +108,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     search = @Search(value = true, vague = true)
             )
     )
-    private String remark = "999999";
+    private String remark;
 
 
     @ManyToMany
