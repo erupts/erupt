@@ -29,8 +29,7 @@ public class VerifyCodeController {
      * 生成验证码
      */
     @GetMapping
-    @RequestMapping(RestPath.WS + "/code-img")
-    @EruptRouter(loginVerify = false)
+    @RequestMapping(RestPath.ERUPT_API + "/code-img")
     public void createCode(@RequestParam("account") String account, HttpServletResponse response) throws Exception {
         // 设置响应的类型格式为图片格式
         response.setContentType("image/jpeg");

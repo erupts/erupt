@@ -13,6 +13,8 @@ import xyz.erupt.auth.service.UserService;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.TreeModel;
+import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.controller.EruptFileController;
 import xyz.erupt.core.session.SessionServiceImpl;
 import xyz.erupt.core.util.DataHandlerUtil;
 
@@ -28,6 +30,7 @@ import java.util.Set;
  * Created by liyuepeng on 2018-12-13.
  */
 @RestController
+@RequestMapping(RestPath.ERUPT_API)
 public class EruptUserController {
 
     @Autowired
@@ -47,7 +50,6 @@ public class EruptUserController {
 
     @PostMapping("/login")
     @ResponseBody
-    @EruptRouter(loginVerify = false)
     public LoginModel login(@RequestParam("account") String account,
                             @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode,
@@ -110,7 +112,7 @@ public class EruptUserController {
 
     @GetMapping("/menu")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(verifyErupt = false)
     public List<TreeModel> getMenu(HttpServletRequest request) {
         // type -> Set<EruptMenu>
         return sessionServiceImpl.get(SessionKey.MENU_TREE + request.getHeader("token"), new TypeToken<List<TreeModel>>() {

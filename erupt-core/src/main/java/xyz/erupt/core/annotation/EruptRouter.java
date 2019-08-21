@@ -15,6 +15,8 @@ public @interface EruptRouter {
 
     boolean loginVerify() default true;
 
+    boolean verifyErupt() default true;
+
     int authIndex() default AnnotationConst.NOT_LIMIT;
 
     int startAuthIndex() default 1;

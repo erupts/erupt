@@ -40,38 +40,34 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         if (null == eruptRouter) {
             return true;
         }
-        if (eruptRouter.loginVerify()) {
-            String token = null;
-            String eruptName = null;
-            if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
-                token = request.getHeader(ERUPT_HEADER_TOKEN);
-                eruptName = request.getHeader(ERUPT_HEADER_KEY);
-            } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
-                token = request.getParameter(URL_ERUPT_PARAM_TOKEN);
-                eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
-            }
-            if (null == token || !userService.verifyToken(token)) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        String token = null;
+        String eruptName = null;
+        if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
+            token = request.getHeader(ERUPT_HEADER_TOKEN);
+            eruptName = request.getHeader(ERUPT_HEADER_KEY);
+        } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
+            token = request.getParameter(URL_ERUPT_PARAM_TOKEN);
+            eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
+        }
+        if (null == token || !userService.verifyToken(token)) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return false;
+        }
+        String path = request.getServletPath();
+        //权限校验
+        if (eruptRouter.verifyErupt()){
+            EruptModel eruptModel = CoreService.getErupt(eruptName);
+            if (null == eruptModel) {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
-            String path = request.getServletPath();
-            //权限校验
-            if (path.startsWith(RestPath.ERUPT_API)) {
-                EruptModel eruptModel = CoreService.getErupt(eruptName);
-                if (null == eruptModel) {
-                    response.setStatus(HttpStatus.NOT_FOUND.value());
-                    return false;
-                }
-                String authStr = path.split("/")[eruptRouter.startAuthIndex() + eruptRouter.authIndex() + 1];
-                if (!path.contains(eruptName) || !userService.verifyMenuLimit(token, authStr, eruptModel)) {
-                    response.setStatus(HttpStatus.FORBIDDEN.value());
-                    return false;
-                }
+            String authStr = path.split("/")[eruptRouter.startAuthIndex() + eruptRouter.authIndex() + 1];
+            if (!path.contains(eruptName) || !userService.verifyMenuLimit(token, authStr, eruptModel)) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                return false;
             }
-            return true;
-        } else {
-            return true;
         }
+        return true;
     }
 
 

@@ -143,7 +143,7 @@ public class EruptUtil {
     }
 
     //生成一个合法的searchContidion
-    public static JsonObject validattEruptSearchContion(EruptModel eruptModel, JsonObject searchCondition) {
+    public static JsonObject geneEruptSearchCondition(EruptModel eruptModel, JsonObject searchCondition) {
         JsonObject legalJsonObject = new JsonObject();
         if (null != searchCondition) {
             for (String key : searchCondition.keySet()) {

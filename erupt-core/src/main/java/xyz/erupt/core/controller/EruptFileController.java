@@ -10,7 +10,6 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
-import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptModel;
@@ -76,7 +75,7 @@ public class EruptFileController {
                     }
                     switch (edit.attachmentType().type()) {
                         case IMAGE:
-                            ImageType imageType = edit.attachmentType().imageType();
+                            AttachmentType.ImageType imageType = edit.attachmentType().imageType();
                             BufferedImage bufferedImage = ImageIO.read(file.getInputStream()); // 通过MultipartFile得到InputStream，从而得到BufferedImage
                             if (bufferedImage == null) {
                                 return EruptApiModel.errorApi("获取图片流失败，请确认上传文件为图片");
@@ -98,7 +97,7 @@ public class EruptFileController {
                                 }
                             }
                             break;
-                        case VIDEO:
+                        case OTHER:
 
                             break;
                     }
@@ -133,6 +132,7 @@ public class EruptFileController {
 
     @PostMapping("/uploads/{erupt}/{field}")
     @ResponseBody
+    @EruptRouter(authIndex = 2)
     public EruptApiModel uploads(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile[] files) {
         List<String> paths = new ArrayList<>();
         for (MultipartFile file : files) {
@@ -144,7 +144,6 @@ public class EruptFileController {
 
     @RequestMapping(value = "/download-attachment", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
-    @EruptRouter(loginVerify = false)
     public byte[] downloadAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
         String[] split = path.split("/");
         response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(split[split.length - 1], "UTF-8"));
@@ -154,7 +153,6 @@ public class EruptFileController {
 
     @RequestMapping(value = "/preview-attachment")
     @ResponseBody
-    @EruptRouter(loginVerify = false)
     public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
         String[] splitPath = path.split("/");
         response.setHeader("Content-Disposition", "filename=" + java.net.URLEncoder.encode(splitPath[splitPath.length - 1], "UTF-8"));

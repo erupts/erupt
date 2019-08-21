@@ -242,9 +242,9 @@ public class DataFileService {
                                 "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
                         break;
                     case DEPEND_SWITCH:
-                        String[] dw = new String[edit.dependSwitchType().dependSwitchAttrs().length];
-                        for (int vi = 0; vi < edit.dependSwitchType().dependSwitchAttrs().length; vi++) {
-                            dw[vi] = edit.dependSwitchType().dependSwitchAttrs()[vi].label();
+                        String[] dw = new String[edit.dependSwitchType().attr().length];
+                        for (int vi = 0; vi < edit.dependSwitchType().attr().length; vi++) {
+                            dw[vi] = edit.dependSwitchType().attr()[vi].label();
                         }
                         sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(dw)));
                         break;

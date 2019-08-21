@@ -52,7 +52,7 @@ public @interface Edit {
     AttachmentType attachmentType() default @AttachmentType;
 
     @SerializeBy(method = "type", value = "DEPEND_SWITCH")
-    DependSwitchType dependSwitchType() default @DependSwitchType(dependSwitchAttrs = {});
+    DependSwitchType dependSwitchType() default @DependSwitchType(attr = {});
 
     @SerializeBy(method = "type", value = "REFERENCE_TREE")
     ReferenceTreeType referenceTreeType() default @ReferenceTreeType;

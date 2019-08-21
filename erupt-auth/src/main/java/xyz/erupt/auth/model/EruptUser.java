@@ -9,11 +9,8 @@ import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.ViewType;
-import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
 import xyz.erupt.eruptcommon.util.MD5Utils;
 
 import javax.persistence.*;
@@ -63,21 +60,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             )
     )
     private Boolean isMD5;
-
-
-    @Column(name = "HEAD_ICON")
-    @EruptField(
-            views = @View(title = "头像", viewType = ViewType.IMAGE, export = false),
-            edit = @Edit(
-                    title = "头像",
-                    type = EditType.ATTACHMENT,
-                    attachmentType = @AttachmentType(
-                            type = AttachmentEnum.IMAGE,
-                            maxLimit = 5
-                    )
-            )
-    )
-    private String headIcon;
 
     @Column(name = "PWD")
     @EruptField(

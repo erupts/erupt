@@ -9,7 +9,6 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
@@ -89,7 +88,7 @@ public class Test {
                     type = EditType.REFERENCE_TREE,
                     placeHolder = "菜单",
 
-                    referenceTreeType = @ReferenceTreeType(rootLabel = "系统管理",pid = "parentMenu.id"),
+                    referenceTreeType = @ReferenceTreeType(rootLabel = "系统管理", pid = "parentMenu.id"),
                     search = @Search(value = true)
             )
     )
@@ -157,7 +156,7 @@ public class Test {
                     title = "头像",
                     type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(
-                            type = AttachmentEnum.OTHER,
+                            type = AttachmentType.Type.OTHER,
                             maxLimit = 5,
                             fileTypes = "swf"
                     )
@@ -173,7 +172,7 @@ public class Test {
                     title = "SVG",
                     type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(
-                            type = AttachmentEnum.OTHER,
+                            type = AttachmentType.Type.OTHER,
                             maxLimit = 5,
                             fileTypes = "svg"
                     )
@@ -188,7 +187,7 @@ public class Test {
                     title = "PDF",
                     type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(
-                            type = AttachmentEnum.OTHER,
+                            type = AttachmentType.Type.OTHER,
                             maxLimit = 5
                     )
             )
@@ -231,7 +230,7 @@ public class Test {
                     placeHolder = "时间",
                     search = @Search(value = true),
                     type = EditType.DATE,
-                    dateType = @DateType(type = DateEnum.DATE_TIME)
+                    dateType = @DateType(type = DateType.Type.DATE_TIME)
             )
     )
     private String date;

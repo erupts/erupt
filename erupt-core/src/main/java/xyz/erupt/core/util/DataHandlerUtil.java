@@ -32,18 +32,18 @@ public class DataHandlerUtil {
                 }
             }
         } else {
-            String labelId = null;
+            String id = null;
             for (TreeModel treeModel : treeModels) {
                 if (rootLabel.equals(treeModel.getLabel())) {
-                    labelId = treeModel.getId();
+                    id = treeModel.getId();
                     break;
                 }
             }
-            if (labelId == null) {
+            if (id == null) {
                 return resultTreeModels;
             }
             for (TreeModel treeModel : treeModels) {
-                if (labelId.equals(treeModel.getPid())) {
+                if (id.equals(treeModel.getPid())) {
                     resultTreeModels.add(treeModel);
                     tempTreeModels.remove(treeModel);
                 }

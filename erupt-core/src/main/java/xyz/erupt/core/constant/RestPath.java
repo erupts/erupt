@@ -5,8 +5,6 @@ package xyz.erupt.core.constant;
  */
 public class RestPath {
 
-    public static final String WS = "/ws";
-
     public static final String ERUPT_API = "/erupt-api";
 
     //界面构建

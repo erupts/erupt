@@ -52,7 +52,7 @@ public class DataLoadService implements CommandLineRunner {
                             "role", "角色维护", "/build/table/EruptRole", 1, 20, "fa fa-users", eruptMenu
                     ));
                     entityManager.persist(new EruptMenu(
-                            "dict", "字典维护", "/build/table/EruptDict", 1, 30, "fa fa-book", eruptMenu
+                            "dict", "字典维护", "/build/tree/EruptDict", 1, 30, "fa fa-book", eruptMenu
                     ));
                 } catch (Exception e) {
                     log.severe("初始化用户角色数据失败：" + e.getMessage());

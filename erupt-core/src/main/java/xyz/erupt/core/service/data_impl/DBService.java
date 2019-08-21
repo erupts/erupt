@@ -70,7 +70,7 @@ public class DBService implements DataService {
             TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null);
             treeModels.add(treeModel);
         }
-        if (StringUtils.isBlank(tree.pid())) {
+        if (StringUtils.isBlank(tree.pid())&&StringUtils.isBlank(tree.pid())) {
             return treeModels;
         } else {
             return DataHandlerUtil.treeModelToTree(treeModels, null);

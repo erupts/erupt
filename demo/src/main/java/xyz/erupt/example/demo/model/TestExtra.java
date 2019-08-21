@@ -6,7 +6,6 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.DateEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.BaseModel;
@@ -43,7 +42,7 @@ public class TestExtra extends BaseModel {
                     title = "周",
                     search = @Search(value = true, vague = true),
                     type = EditType.DATE,
-                    dateType = @DateType(type = DateEnum.MONTH)
+                    dateType = @DateType(type = DateType.Type.MONTH)
             )
     )
     private String week;

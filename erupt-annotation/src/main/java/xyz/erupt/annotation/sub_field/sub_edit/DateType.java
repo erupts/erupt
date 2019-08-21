@@ -5,5 +5,9 @@ package xyz.erupt.annotation.sub_field.sub_edit;
  */
 public @interface DateType {
 
-    DateEnum type() default DateEnum.DATE;
+    Type type() default Type.DATE;
+
+    enum Type {
+        DATE_TIME, DATE, MONTH, YEAR
+    }
 }

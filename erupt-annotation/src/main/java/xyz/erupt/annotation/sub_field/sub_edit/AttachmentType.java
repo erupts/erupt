@@ -1,8 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
-import xyz.erupt.annotation.config.SerializeBy;
-import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.AttachmentEnum;
-import xyz.erupt.annotation.sub_field.sub_edit.sub_attachment.ImageType;
+import java.beans.Transient;
 
 /**
  * Created by liyuepeng on 2019-01-23.
@@ -18,16 +16,28 @@ public @interface AttachmentType {
 
     String[] fileTypes() default {};
 
-    AttachmentEnum type() default AttachmentEnum.OTHER;
-
-    @SerializeBy(method = "type", value = "IMAGE")
-    ImageType imageType() default @ImageType;
+    Type type() default Type.OTHER;
 
     int maxLimit() default 1;
+
+    @Transient
+    ImageType imageType() default @ImageType;
 
     SaveMode saveMode() default SaveMode.SINGLE_COLUMN;
 
     //当maxLimit大于1且SaveMode为SINGLE_COLUMN使用
     String fileSeparator() default ",";
+
+    enum Type {
+        IMAGE,
+        OTHER,
+    }
+
+    @interface ImageType {
+        //宽高使用长度为2的数组，第一位是最小宽高限制，第二位是最大宽高限制
+        int[] width() default {};
+
+        int[] height() default {};
+    }
 
 }
