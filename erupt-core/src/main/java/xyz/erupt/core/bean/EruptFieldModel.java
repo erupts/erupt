@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.Data;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.JavaType;
+import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.util.AnnotationUtil;
@@ -54,6 +55,12 @@ public class EruptFieldModel {
             case CHOICE:
                 choiceMap = new HashMap<>();
                 for (VL vl : eruptField.edit().choiceType().vl()) {
+                    choiceMap.put(vl.value(), vl.label());
+                }
+                break;
+            case DEPEND_SWITCH:
+                choiceMap = new HashMap<>();
+                for (DependSwitchType.Attr vl : eruptField.edit().dependSwitchType().attr()) {
                     choiceMap.put(vl.value(), vl.label());
                 }
                 break;

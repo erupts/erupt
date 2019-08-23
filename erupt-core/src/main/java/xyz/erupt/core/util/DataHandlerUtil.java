@@ -99,6 +99,9 @@ public class DataHandlerUtil {
                 EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
                 Edit edit = fieldModel.getEruptField().edit();
                 switch (edit.type()) {
+                    case DEPEND_SWITCH:
+                        map.put(entry.getKey(), fieldModel.getChoiceMap().get(entry.getValue().toString()));
+                        break;
                     case CHOICE:
                         if (edit.choiceType().type() == ChoiceEnum.SELECT_SINGLE || edit.choiceType().type() == ChoiceEnum.RADIO) {
                             map.put(entry.getKey(), fieldModel.getChoiceMap().get(entry.getValue().toString()));
@@ -126,6 +129,9 @@ public class DataHandlerUtil {
                                         map.put(entry.getKey(), (Boolean) entry.getValue() ?
                                                 vef.getEruptField().edit().boolType().trueText() :
                                                 vef.getEruptField().edit().boolType().falseText());
+                                        break;
+                                    case DEPEND_SWITCH:
+                                        map.put(entry.getKey(), fieldModel.getChoiceMap().get(entry.getValue().toString()));
                                         break;
                                     default:
                                         break;

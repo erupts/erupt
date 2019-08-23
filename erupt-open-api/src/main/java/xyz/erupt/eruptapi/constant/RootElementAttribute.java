@@ -5,4 +5,6 @@ package xyz.erupt.eruptapi.constant;
  */
 public class RootElementAttribute {
     public static final String allowIp = "allowIp";
+
+    public static final String HANDLER = "handler";
 }

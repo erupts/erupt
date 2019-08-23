@@ -1,5 +1,6 @@
 package xyz.erupt.eruptapi.controller;
 
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -10,7 +11,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.eruptapi.constant.RootElementAttribute;
-import xyz.erupt.eruptcommon.util.IpUtil;
+import xyz.erupt.eruptapi.handler.SqlHandler;
+import xyz.erupt.eruptcommon.util.SpringUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,7 +27,7 @@ import java.util.List;
  * Created by liyuepeng on 2019-08-14.
  */
 @RestController
-@RequestMapping("/open-sql-api")
+@RequestMapping("/open-api/sql")
 public class OpenSqlApiController {
 
     @PersistenceContext
@@ -75,22 +77,12 @@ public class OpenSqlApiController {
             SAXReader saxReader = new SAXReader();
             Document document = saxReader.read(resource.getFile());
             Element rootElement = document.getRootElement();
-            if (null != rootElement.attribute(RootElementAttribute.allowIp)) {
-                String[] ips = rootElement.attribute(RootElementAttribute.allowIp).getValue().split(",");
-                String ipAddr = IpUtil.getIpAddr(request);
-                boolean isAllowIp = false;
-                for (String ip : ips) {
-                    if (ip.equals(ipAddr)) {
-                        isAllowIp = true;
-                        break;
-                    }
-                }
-                if (!isAllowIp) {
-                    throw new RuntimeException("ip error");
-                }
-            }
             Element element = rootElement.element(sqlElement);
             String sql = element.getTextTrim();
+            SqlHandler sqlHandler = getSqlHandler(rootElement);
+            if (null != sqlHandler) {
+                sql = sqlHandler.handler(element, sql);
+            }
             Query query = entityManager.createNativeQuery(sql);
             {
                 Enumeration<String> parameterNames = request.getParameterNames();
@@ -106,6 +98,19 @@ public class OpenSqlApiController {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+
+    private SqlHandler getSqlHandler(Element element) {
+        Attribute handlerAttr = element.attribute(RootElementAttribute.HANDLER);
+        if (null != handlerAttr) {
+            try {
+                return (SqlHandler) SpringUtil.getBean(Class.forName(handlerAttr.getValue()));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 

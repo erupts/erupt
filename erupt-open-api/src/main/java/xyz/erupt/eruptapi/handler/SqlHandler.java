@@ -7,7 +7,5 @@ import org.dom4j.Element;
  */
 public interface SqlHandler {
 
-    void beforeQuery(Element element, String sql);
-
-    Object afterQuery(Object result);
+    String handler(Element element, String sql);
 }

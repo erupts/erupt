@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<sql allowIp="">
+<sql handler="xyz.erupt.example.demo.handler.SqlParseHandler">
     <get-user>
-        select * from e_user where name =:name
+        select * from e_user where name =:name and id = @uid
     </get-user>
     <update-user>
         update e_user SET NAME=:name WHERE id = :id
