@@ -124,7 +124,7 @@ public class EruptFileController {
             for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dateProxy()) {
                 SpringUtil.getBean(clazz).afterUpLoadFile(dest, path);
             }
-            return EruptApiModel.successApi(path.replaceAll("\\", "/"));
+            return EruptApiModel.successApi(path.replace("\\", "/"));
         } catch (Exception e) {
             return EruptApiModel.errorApi("上传失败，" + e.getMessage());
         }
