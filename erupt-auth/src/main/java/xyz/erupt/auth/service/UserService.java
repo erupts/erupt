@@ -14,10 +14,10 @@ import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.repository.UserRepository;
-import xyz.erupt.eruptcommon.util.IpUtil;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.session.SessionServiceImpl;
+import xyz.erupt.eruptcommon.util.IpUtil;
 import xyz.erupt.eruptcommon.util.MD5Utils;
 
 import javax.persistence.EntityManager;
@@ -46,6 +46,9 @@ public class UserService {
 
     @Value("${erupt.expireTimeByLogin:60}")
     private Integer expireTimeByLogin;
+
+    @Autowired
+    private HttpServletRequest request;
 
     @Autowired
     private Gson gson;
@@ -144,6 +147,11 @@ public class UserService {
         loginModel.setToken(RandomStringUtils.random(20, true, true));
 //        loginModel.getEruptUser().setRoles(null);
         sessionServiceImpl.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), expireTimeByLogin);
+    }
+
+    public Long getCurrUserId() {
+        String token = request.getHeader("token");
+        return (Long) sessionServiceImpl.get(SessionKey.USER_TOKEN + token);
     }
 
     public boolean verifyToken(String token) {

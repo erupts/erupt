@@ -36,6 +36,8 @@ public class EruptJpaUtils {
 
     public static final String NOT_NULL = "$notNull$";
 
+    public static final String PERCENT = "%";
+
     public static Set<String> getEruptColJapKeys(EruptModel eruptModel) {
         Set<String> cols = new HashSet<>();
         String eruptNameSymbol = eruptModel.getEruptName() + ".";

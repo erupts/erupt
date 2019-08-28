@@ -66,7 +66,7 @@ public class EruptFileController {
                         if (attachmentType.path().startsWith(File.separator)) {
                             path = attachmentType.path() + path;
                         } else {
-                            path = "/" + attachmentType.path() + path;
+                            path = File.separator + attachmentType.path() + path;
                         }
                     }
                     //校验文件大小
@@ -124,7 +124,7 @@ public class EruptFileController {
             for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dateProxy()) {
                 SpringUtil.getBean(clazz).afterUpLoadFile(dest, path);
             }
-            return EruptApiModel.successApi(path);
+            return EruptApiModel.successApi(path.replaceAll("\\", "/"));
         } catch (Exception e) {
             return EruptApiModel.errorApi("上传失败，" + e.getMessage());
         }
@@ -145,7 +145,7 @@ public class EruptFileController {
     @RequestMapping(value = "/download-attachment", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     public byte[] downloadAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
-        String[] split = path.split("/");
+        String[] split = path.split(File.separator);
         response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(split[split.length - 1], "UTF-8"));
         return mappingFileToByte(path);
     }
@@ -154,7 +154,7 @@ public class EruptFileController {
     @RequestMapping(value = "/preview-attachment")
     @ResponseBody
     public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
-        String[] splitPath = path.split("/");
+        String[] splitPath = path.split(File.separator);
         response.setHeader("Content-Disposition", "filename=" + java.net.URLEncoder.encode(splitPath[splitPath.length - 1], "UTF-8"));
         response.setContentType(MimeUtil.getMimeType(path));
         try (OutputStream ros = response.getOutputStream()) {

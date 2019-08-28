@@ -1,5 +1,6 @@
 package xyz.erupt.eruptapi.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -89,7 +90,11 @@ public class OpenSqlApiController {
                 while (parameterNames.hasMoreElements()) {
                     String parameterName = parameterNames.nextElement();
                     if (sql.contains(":" + parameterName)) {
-                        query.setParameter(parameterName, request.getParameter(parameterName));
+                        String val = request.getParameter(parameterName);
+                        if (StringUtils.isBlank(val)) {
+                            val = "";
+                        }
+                        query.setParameter(parameterName, val);
                     }
                 }
             }

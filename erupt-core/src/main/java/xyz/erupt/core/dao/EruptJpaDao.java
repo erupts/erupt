@@ -73,6 +73,10 @@ public class EruptJpaDao {
                             query.setParameter(EruptJpaUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
                             query.setParameter(EruptJpaUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
                             continue;
+                        } else if (edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(JavaType.STRING)) {
+                            countQuery.setParameter(key, EruptJpaUtils.PERCENT + EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)) + EruptJpaUtils.PERCENT);
+                            query.setParameter(key, EruptJpaUtils.PERCENT + EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)) + EruptJpaUtils.PERCENT);
+                            continue;
                         }
                     }
                     countQuery.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)));

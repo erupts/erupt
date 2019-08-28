@@ -14,7 +14,6 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.controller.EruptFileController;
 import xyz.erupt.core.session.SessionServiceImpl;
 import xyz.erupt.core.util.DataHandlerUtil;
 
@@ -102,7 +101,7 @@ public class EruptUserController {
 
     @PostMapping("/change-pwd")
     @ResponseBody
-    @EruptRouter
+    @EruptRouter(verifyErupt = false)
     public EruptApiModel changePwd(@RequestParam("account") String account,
                                    @RequestParam("pwd") String pwd,
                                    @RequestParam("newPwd") String newPwd,
@@ -118,4 +117,5 @@ public class EruptUserController {
         return sessionServiceImpl.get(SessionKey.MENU_TREE + request.getHeader("token"), new TypeToken<List<TreeModel>>() {
         }.getType());
     }
+
 }
