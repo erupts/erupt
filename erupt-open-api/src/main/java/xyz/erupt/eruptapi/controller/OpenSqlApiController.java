@@ -8,6 +8,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Created by liyuepeng on 2019-08-14.
@@ -34,74 +37,94 @@ public class OpenSqlApiController {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Value("${openApi.hotReadSqlXml:false}")
+    private boolean hotReadSqlXml;
+
+    private Map<String, Document> xmlDocuments = new HashMap<>();
+
     /**
      * @param fileName   文件名称
      * @param sqlElement xml中sql元素
-     * @param pageSize   页面大小
-     * @param pageIndex  索引开始值为1
-     * @param request
      * @return 查询结果
      */
     @RequestMapping("/query/{fileName}/{sqlElement}")
     @ResponseBody
-    public List query(@PathVariable("fileName") String fileName,
-                      @PathVariable("sqlElement") String sqlElement,
-                      @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                      @RequestParam(value = "pageIndex", required = false) Integer pageIndex,
-                      HttpServletRequest request) {
+    public Object query(@PathVariable("fileName") String fileName,
+                        @PathVariable("sqlElement") String sqlElement,
+                        @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                        @RequestParam(value = "pageIndex", required = false) Integer pageIndex,
+                        HttpServletRequest request) {
         if (pageSize == null || pageSize > 100) {
             pageSize = 100;
         }
         if (pageIndex == null) {
             pageIndex = 1;
         }
-        Query query = xmlToQuery(fileName, sqlElement, request);
-        query.setMaxResults(pageSize);
-        query.setFirstResult(pageIndex - 1);
-        query.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        return query.getResultList();
+        final int ps = pageSize;
+        final int pi = pageIndex;
+        return xmlToQuery(fileName, sqlElement, request, (query) -> {
+            query.setMaxResults(ps);
+            query.setFirstResult(pi - 1);
+            query.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+            return query.getResultList();
+        });
     }
 
     @RequestMapping("/modify/{fileName}/{sqlElement}")
     @ResponseBody
     @Transactional
-    public boolean update(@PathVariable("fileName") String fileName,
-                          @PathVariable("sqlElement") String sqlElement,
-                          HttpServletRequest request) {
-        Query query = xmlToQuery(fileName, sqlElement, request);
-        return query.executeUpdate() != 0;
+    public Object modify(@PathVariable("fileName") String fileName,
+                         @PathVariable("sqlElement") String sqlElement,
+                         HttpServletRequest request) {
+        return xmlToQuery(fileName, sqlElement, request, query -> query.executeUpdate() != 0);
     }
 
-    private Query xmlToQuery(String fileName, String sqlElement, HttpServletRequest request) {
+    private Document getXmlDocument(String fileName) {
         try {
-            Resource resource = new ClassPathResource("sql/" + fileName + ".xml");
-            SAXReader saxReader = new SAXReader();
-            Document document = saxReader.read(resource.getFile());
-            Element rootElement = document.getRootElement();
-            Element element = rootElement.element(sqlElement);
-            String sql = element.getTextTrim();
-            SqlHandler sqlHandler = getSqlHandler(rootElement);
-            if (null != sqlHandler) {
-                sql = sqlHandler.handler(element, sql);
-            }
-            Query query = entityManager.createNativeQuery(sql);
-            {
-                Enumeration<String> parameterNames = request.getParameterNames();
-                while (parameterNames.hasMoreElements()) {
-                    String parameterName = parameterNames.nextElement();
-                    if (sql.contains(":" + parameterName)) {
-                        String val = request.getParameter(parameterName);
-                        if (StringUtils.isBlank(val)) {
-                            val = "";
-                        }
-                        query.setParameter(parameterName, val);
-                    }
+            if (hotReadSqlXml) {
+                Resource resource = new ClassPathResource("sql/" + fileName + ".xml");
+                return new SAXReader().read(resource.getFile());
+            } else {
+                if (xmlDocuments.containsKey(fileName)) {
+                    return xmlDocuments.get(fileName);
+                } else {
+                    Resource resource = new ClassPathResource("sql/" + fileName + ".xml");
+                    return xmlDocuments.put(fileName, new SAXReader().read(resource.getFile()));
                 }
             }
-            return query;
         } catch (DocumentException | IOException e) {
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException("sql read exception");
+        }
+    }
+
+    private Object xmlToQuery(String fileName, String sqlElement, HttpServletRequest request, Function<Query, Object> function) {
+        Element rootElement = getXmlDocument(fileName).getRootElement();
+        Element element = rootElement.element(sqlElement);
+        String sql = element.getTextTrim();
+        SqlHandler sqlHandler = getSqlHandler(rootElement);
+        if (null != sqlHandler) {
+            sql = sqlHandler.handler(element, sql);
+        }
+        Query query = entityManager.createNativeQuery(sql);
+        {
+            Enumeration<String> parameterNames = request.getParameterNames();
+            while (parameterNames.hasMoreElements()) {
+                String parameterName = parameterNames.nextElement();
+                if (sql.contains(":" + parameterName)) {
+                    String val = request.getParameter(parameterName);
+                    if (StringUtils.isBlank(val)) {
+                        val = "";
+                    }
+                    query.setParameter(parameterName, val);
+                }
+            }
+        }
+        Object result = function.apply(query);
+        if (null != sqlHandler) {
+            return sqlHandler.handlerResult(element, query, result);
+        } else {
+            return result;
         }
     }
 

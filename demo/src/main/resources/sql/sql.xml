@@ -9,4 +9,7 @@
     <delete-user>
         delete from test where id = :id
     </delete-user>
+    <add>
+        insert into test(name) value (:name)
+    </add>
 </sql>

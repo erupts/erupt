@@ -38,6 +38,8 @@ public class EruptFileController {
     @Value("${erupt.uploadPath:/opt/eruptFiles}")
     private String uploadPath;
 
+    public static final String FS_SEP = "/";
+
     @PostMapping("/upload/{erupt}/{field}")
     @ResponseBody
     @EruptRouter(authIndex = 2)
@@ -145,7 +147,7 @@ public class EruptFileController {
     @RequestMapping(value = "/download-attachment", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     public byte[] downloadAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
-        String[] split = path.split(File.separator);
+        String[] split = path.split(FS_SEP);
         response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(split[split.length - 1], "UTF-8"));
         return mappingFileToByte(path);
     }
@@ -154,7 +156,7 @@ public class EruptFileController {
     @RequestMapping(value = "/preview-attachment")
     @ResponseBody
     public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
-        String[] splitPath = path.split(File.separator);
+        String[] splitPath = path.split(FS_SEP);
         response.setHeader("Content-Disposition", "filename=" + java.net.URLEncoder.encode(splitPath[splitPath.length - 1], "UTF-8"));
         response.setContentType(MimeUtil.getMimeType(path));
         try (OutputStream ros = response.getOutputStream()) {
@@ -166,8 +168,8 @@ public class EruptFileController {
     }
 
     private byte[] mappingFileToByte(String path) {
-        if (!path.startsWith(File.separator)) {
-            path = File.separator + path;
+        if (!path.startsWith(FS_SEP)) {
+            path = FS_SEP + path;
         }
         File file = new File(uploadPath + path);
         try (InputStream inputStream = new FileInputStream(file)) {

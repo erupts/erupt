@@ -10,7 +10,7 @@
     </parent>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-open-api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>erupt-open-api</name>
     <description>erupt开放式api</description>
 

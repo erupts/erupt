@@ -8,10 +8,7 @@ import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.InputType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 
 import javax.persistence.*;
 
@@ -85,7 +82,9 @@ public class EruptMenu extends BaseModel {
     @Column(name = "SORT")
     @EruptField(
             edit = @Edit(
-                    title = "顺序"
+                    title = "顺序",
+                    type = EditType.SLIDER,
+                    sliderType = @SliderType(max = 500)
             )
     )
     private Integer sort;
