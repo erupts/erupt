@@ -168,6 +168,9 @@ public class EruptFileController {
     }
 
     private byte[] mappingFileToByte(String path) {
+//        if (path.startsWith("http://") || path.startsWith("https://")) {
+//
+//        }
         if (!path.startsWith(FS_SEP)) {
             path = FS_SEP + path;
         }

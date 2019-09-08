@@ -1,4 +1,4 @@
-package xyz.erupt.eruptapi.controller;
+package xyz.erupt.erupt_open_api.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Attribute;
@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
-import xyz.erupt.eruptapi.constant.RootElementAttribute;
-import xyz.erupt.eruptapi.handler.SqlHandler;
+import xyz.erupt.erupt_open_api.constant.RootElementAttribute;
+import xyz.erupt.erupt_open_api.handler.SqlHandler;
 import xyz.erupt.eruptcommon.util.SpringUtil;
 
 import javax.persistence.EntityManager;
@@ -93,8 +93,7 @@ public class OpenSqlApiController {
                 }
             }
         } catch (DocumentException | IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("sql read exception");
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -103,8 +102,10 @@ public class OpenSqlApiController {
         Element element = rootElement.element(sqlElement);
         String sql = element.getTextTrim();
         SqlHandler sqlHandler = getSqlHandler(rootElement);
+        Map<String, Object> param = null;
         if (null != sqlHandler) {
-            sql = sqlHandler.handler(element, sql);
+            param = new HashMap<>();
+            sql = sqlHandler.handler(element, sql, param);
         }
         Query query = entityManager.createNativeQuery(sql);
         {
@@ -122,7 +123,7 @@ public class OpenSqlApiController {
         }
         Object result = function.apply(query);
         if (null != sqlHandler) {
-            return sqlHandler.handlerResult(element, query, result);
+            return sqlHandler.handlerResult(element, result, param);
         } else {
             return result;
         }
