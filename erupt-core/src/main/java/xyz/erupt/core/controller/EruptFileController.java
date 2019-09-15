@@ -23,10 +23,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by liyuepeng on 10/15/18.
@@ -131,6 +128,23 @@ public class EruptFileController {
             return EruptApiModel.errorApi("上传失败，" + e.getMessage());
         }
     }
+
+    @PostMapping("/upload-html-editor/{erupt}/{field}")
+    @ResponseBody
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("upload") MultipartFile file) {
+        EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
+        Map<String, Object> map = new HashMap<>();
+        // ["uploaded":"true", "url":"image-path..."]
+        if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
+            map.put("uploaded", true);
+            map.put("url", RestPath.ERUPT_FILE + "/preview-attachment?path=" + eruptApiModel.getData());
+        } else {
+            map.put("uploaded", false);
+        }
+        return map;
+    }
+
 
     @PostMapping("/uploads/{erupt}/{field}")
     @ResponseBody

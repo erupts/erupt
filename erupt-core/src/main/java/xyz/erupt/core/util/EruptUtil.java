@@ -84,6 +84,9 @@ public class EruptUtil {
                                 for (Object o : collection) {
                                     list.add(generateEruptDataMap(tabEruptModel, o));
                                 }
+//                                for (Class<? extends DataProxy> proxy : tabEruptModel.getErupt().dateProxy()) {
+//                                    SpringUtil.getBean(proxy).afterFetch(list);
+//                                }
                                 map.put(field.getName(), list);
                             }
                             break;

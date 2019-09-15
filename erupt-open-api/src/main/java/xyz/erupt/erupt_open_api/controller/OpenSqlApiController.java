@@ -54,17 +54,18 @@ public class OpenSqlApiController {
                         @RequestParam(value = "pageSize", required = false) Integer pageSize,
                         @RequestParam(value = "pageIndex", required = false) Integer pageIndex,
                         HttpServletRequest request) {
-        if (pageSize == null || pageSize > 100) {
+        if (pageSize != null && pageSize > 100) {
             pageSize = 100;
         }
-        if (pageIndex == null) {
-            pageIndex = 1;
-        }
-        final int ps = pageSize;
-        final int pi = pageIndex;
+        final Integer ps = pageSize;
+        final Integer pi = pageIndex;
         return xmlToQuery(fileName, sqlElement, request, (query) -> {
-            query.setMaxResults(ps);
-            query.setFirstResult(pi - 1);
+            if (null != pi) {
+                query.setFirstResult(pi - 1);
+            }
+            if (null != ps) {
+                query.setMaxResults(ps);
+            }
             query.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
             return query.getResultList();
         });
