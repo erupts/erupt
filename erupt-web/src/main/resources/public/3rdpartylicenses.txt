@@ -627,15 +627,11 @@ ng-zorro-antd/skeleton
 
 ng-zorro-antd/slider
 
-ng-zorro-antd/switch
-
-undefined
-
 ng-zorro-antd/spin
 
-ng-zorro-antd/table
+ng-zorro-antd/switch
 
-ng-zorro-antd/tabs
+ng-zorro-antd/table
 
 ng-zorro-antd/tag
 
@@ -879,6 +875,10 @@ Apache-2.0
  limitations under the License.
  
 
+
+undefined
+
+ng-zorro-antd/tabs
 
 screenfull
 MIT
