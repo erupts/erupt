@@ -5867,7 +5867,6 @@ mark {
 // For common/openAnimation
 .ant-motion-collapse {
   overflow: hidden;
-
   &-active {
     transition: height 0.15s @ease-in-out, opacity 0.15s @ease-in-out !important;
   }
@@ -6662,7 +6661,6 @@ textarea.cdk-textarea-autosize-measuring {
   }
   .button-disabled();
 }
-
 .button-variant-danger(@color; @background; @border) {
   .button-color(@color; @background; @border);
   &:hover {
@@ -7817,7 +7815,6 @@ a.@{btn-prefix-cls} {
       padding: 0 !important;
       opacity: 0;
       pointer-events: none;
-
       input {
         visibility: hidden;
       }
@@ -7836,14 +7833,12 @@ a.@{btn-prefix-cls} {
   .@{tab-prefix-cls}-right-bar {
     height: 100%;
     border-bottom: 0;
-
     &-tab-prev,
     &-tab-next {
       width: @tabs-scrolling-size;
       height: 0;
       transition: height 0.3s @ease-in-out, opacity 0.3s @ease-in-out, color 0.3s @ease-in-out;
     }
-
     &-tab-prev.@{tab-prefix-cls}-tab-arrow-show,
     &-tab-next.@{tab-prefix-cls}-tab-arrow-show {
       width: 100%;
@@ -10829,12 +10824,10 @@ a.@{btn-prefix-cls} {
     > span {
       display: inline-block;
     }
-
     .@{descriptions-prefix-cls}-item-label {
       float: left;
       padding: 0 !important;
     }
-
     .@{descriptions-prefix-cls}-item-content {
       float: left;
       padding: 0 !important;
@@ -10853,14 +10846,12 @@ a.@{btn-prefix-cls} {
       padding: @descriptions-middle-padding;
     }
   }
-
   &.bordered.small {
     .@{descriptions-prefix-cls}-item-label,
     .@{descriptions-prefix-cls}-item-content {
       padding: @descriptions-small-padding;
     }
   }
-
   &.bordered {
     .@{descriptions-prefix-cls}-view {
       border: 1px solid @border-color-split;
@@ -10884,7 +10875,6 @@ a.@{btn-prefix-cls} {
 
     .@{descriptions-prefix-cls}-item-label {
       background-color: #fafafa;
-
       &::after {
         display: none;
       }
@@ -10979,7 +10969,6 @@ a.@{btn-prefix-cls} {
     background: none;
     border-top: 1px dashed @border-color-split;
   }
-
   &-horizontal&-with-text&-dashed,
   &-horizontal&-with-text-left&-dashed,
   &-horizontal&-with-text-right&-dashed {
@@ -12191,7 +12180,6 @@ form {
   .@{ant-prefix}-select-selection {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-
     &:hover {
       border-color: @border-color-base;
     }
@@ -12201,7 +12189,6 @@ form {
     height: @input-height-lg;
     margin-left: -1px;
     background-color: fade(@black, 7%);
-
     .@{ant-prefix}-select-selection__rendered {
       padding-right: 25px;
       padding-left: 8px;
@@ -14843,7 +14830,6 @@ form {
     font-size: 16px;
     line-height: 100%;
     cursor: pointer;
-
     i:hover {
       color: @primary-color;
     }
@@ -14889,7 +14875,6 @@ form {
       > * {
         margin-right: 8px;
       }
-
       > *:last-child {
         margin-right: 0;
       }
@@ -17623,7 +17608,6 @@ span.@{radio-prefix-cls} + * {
   &-thead > tr > th.@{table-prefix-cls}-selection-column,
   &-tbody > tr > td.@{table-prefix-cls}-selection-column {
     text-align: center;
-
     .@{ant-prefix}-radio-wrapper {
       margin-right: 0;
     }
@@ -17720,7 +17704,6 @@ span.@{radio-prefix-cls} + * {
     background: @component-background;
     border-bottom: @border-width-base @border-style-base @border-color-split;
     border-radius: 0 0 @border-radius-base @border-radius-base;
-
     .@{iconfont-css-prefix} {
       margin-right: 4px;
     }
@@ -19697,7 +19680,6 @@ nz-table {
   }
   &-child-tree {
     display: none;
-
     &-open {
       display: block;
     }
@@ -21094,7 +21076,6 @@ fieldset {
       &-container {
       nz-card {
         margin: 0 16px 0 0;
-
         .remove {
           position: absolute;
           top: -16px;
@@ -22634,7 +22615,6 @@ body {
 
 @{st-prefix} {
   display: block;
-
   &__selection {
     padding-left: 2px;
     cursor: pointer;
@@ -22662,7 +22642,6 @@ body {
         pointer-events: none;
       }
     }
-
     &-sub {
       .@{ant-prefix}-dropdown-menu-item {
         > span {
@@ -23470,20 +23449,16 @@ ellipsis {
   border-bottom: 1px solid @reuse-tab-border-color;
   outline: none;
   user-select: none;
-
   .@{ant-prefix}-tabs-bar {
     margin-bottom: 0;
     border-bottom: none;
   }
-
   .@{ant-prefix}-tabs-nav .@{ant-prefix}-tabs-tab {
     padding: 0;
-
     @{reuse-tab-prefix}__name {
       display: inline-block;
       padding: 8px 20px;
     }
-
     @{reuse-tab-prefix}__op {
       position: absolute;
       top: 14px;
@@ -23492,7 +23467,6 @@ ellipsis {
       margin: 0;
       font-size: 10px;
     }
-
     &:hover {
       @{reuse-tab-prefix}__op {
         display: block;

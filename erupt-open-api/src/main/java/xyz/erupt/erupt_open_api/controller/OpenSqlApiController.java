@@ -24,8 +24,9 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * Created by liyuepeng on 2019-08-14.
@@ -42,10 +43,13 @@ public class OpenSqlApiController {
 
     private Map<String, Document> xmlDocuments = new HashMap<>();
 
+
     /**
      * @param fileName   文件名称
      * @param sqlElement xml中sql元素
-     * @return 查询结果
+     * @param pageSize   数据量
+     * @param pageIndex  页码，索引从1开始
+     * @return
      */
     @RequestMapping("/query/{fileName}/{sqlElement}")
     @ResponseBody
@@ -53,21 +57,29 @@ public class OpenSqlApiController {
                         @PathVariable("sqlElement") String sqlElement,
                         @RequestParam(value = "pageSize", required = false) Integer pageSize,
                         @RequestParam(value = "pageIndex", required = false) Integer pageIndex,
+                        @RequestParam(value = "page", required = false) boolean page,
                         HttpServletRequest request) {
-        if (pageSize != null && pageSize > 100) {
-            pageSize = 100;
+        if (pageSize == null || pageSize > 1000) {
+            pageSize = 1000;
+        }
+        if (pageIndex == null || pageIndex == 0) {
+            pageIndex = 1;
         }
         final Integer ps = pageSize;
         final Integer pi = pageIndex;
-        return xmlToQuery(fileName, sqlElement, request, (query) -> {
-            if (null != pi) {
-                query.setFirstResult(pi - 1);
-            }
-            if (null != ps) {
-                query.setMaxResults(ps);
-            }
+        return xmlToQuery(fileName, sqlElement, request, (query, sql) -> {
+            query.setFirstResult((pi - 1) * ps);
+            query.setMaxResults(ps);
             query.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-            return query.getResultList();
+            List list = query.getResultList();
+            if (page) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("total", geneQuery("select count(*) from (" + sql + ") e", request).getSingleResult());
+                map.put("list", list);
+                return map;
+            } else {
+                return list;
+            }
         });
     }
 
@@ -77,7 +89,7 @@ public class OpenSqlApiController {
     public Object modify(@PathVariable("fileName") String fileName,
                          @PathVariable("sqlElement") String sqlElement,
                          HttpServletRequest request) {
-        return xmlToQuery(fileName, sqlElement, request, query -> query.executeUpdate() != 0);
+        return xmlToQuery(fileName, sqlElement, request, (query, sql) -> query.executeUpdate() != 0);
     }
 
     private Document getXmlDocument(String fileName) {
@@ -98,7 +110,7 @@ public class OpenSqlApiController {
         }
     }
 
-    private Object xmlToQuery(String fileName, String sqlElement, HttpServletRequest request, Function<Query, Object> function) {
+    private Object xmlToQuery(String fileName, String sqlElement, HttpServletRequest request, BiFunction<Query, String, Object> function) {
         Element rootElement = getXmlDocument(fileName).getRootElement();
         Element element = rootElement.element(sqlElement);
         String sql = element.getTextTrim();
@@ -108,6 +120,16 @@ public class OpenSqlApiController {
             param = new HashMap<>();
             sql = sqlHandler.handler(element, sql, param);
         }
+        Query query = geneQuery(sql, request);
+        Object result = function.apply(query, sql);
+        if (null != sqlHandler) {
+            return sqlHandler.handlerResult(element, result, param);
+        } else {
+            return result;
+        }
+    }
+
+    private Query geneQuery(String sql, HttpServletRequest request) {
         Query query = entityManager.createNativeQuery(sql);
         {
             Enumeration<String> parameterNames = request.getParameterNames();
@@ -122,12 +144,7 @@ public class OpenSqlApiController {
                 }
             }
         }
-        Object result = function.apply(query);
-        if (null != sqlHandler) {
-            return sqlHandler.handlerResult(element, result, param);
-        } else {
-            return result;
-        }
+        return query;
     }
 
 
