@@ -2,5 +2,11 @@
 <sql handler="xyz.erupt.">
     <demo>
         select 'demo'
+        <if test="1==2">
+
+        </if>
+        <script>
+
+        </script>
     </demo>
 </sql>

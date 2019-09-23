@@ -10,7 +10,7 @@
     </parent>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-open-api</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>0.0.2</version>
     <name>erupt-open-api</name>
     <description>erupt开放式api</description>
 
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

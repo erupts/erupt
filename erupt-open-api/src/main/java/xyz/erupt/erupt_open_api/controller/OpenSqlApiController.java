@@ -12,13 +12,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
-import xyz.erupt.erupt_open_api.constant.RootElementAttribute;
+import xyz.erupt.erupt_open_api.tag.IfTag;
+import xyz.erupt.erupt_open_api.tag.RootTag;
 import xyz.erupt.erupt_open_api.handler.SqlHandler;
 import xyz.erupt.eruptcommon.util.SpringUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -113,7 +117,7 @@ public class OpenSqlApiController {
     private Object xmlToQuery(String fileName, String sqlElement, HttpServletRequest request, BiFunction<Query, String, Object> function) {
         Element rootElement = getXmlDocument(fileName).getRootElement();
         Element element = rootElement.element(sqlElement);
-        String sql = element.getTextTrim();
+        String sql = parseElement(element, request);
         SqlHandler sqlHandler = getSqlHandler(rootElement);
         Map<String, Object> param = null;
         if (null != sqlHandler) {
@@ -147,9 +151,41 @@ public class OpenSqlApiController {
         return query;
     }
 
+    private String parseElement(Element element, HttpServletRequest request) {
+        String express = element.getTextTrim();
+        List<Element> list = element.elements();
+        if (list.size() > 0) {
+            StringBuilder sb = new StringBuilder(express);
+            for (Element ele : list) {
+                if (IfTag.NAME.equals(ele.getName())) {
+                    String value = ele.attribute(IfTag.ATTR_TEST).getValue();
+                    ScriptEngine js = new ScriptEngineManager().getEngineByName("JavaScript");
+                    try {
+                        Enumeration<String> parameterNames = request.getParameterNames();
+                        while (parameterNames.hasMoreElements()) {
+                            String parameterName = parameterNames.nextElement();
+                            if (value.contains(parameterName)) {
+                                value = value.replace(parameterName, request.getParameter(parameterName));
+                            }
+                        }
+                        Boolean bool = (Boolean) js.eval(value);
+                        if (bool) {
+                            sb.append(" ").append(ele.getTextTrim());
+                        }
+                    } catch (ScriptException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return sb.toString();
+        } else {
+            return express;
+        }
+    }
+
 
     private SqlHandler getSqlHandler(Element element) {
-        Attribute handlerAttr = element.attribute(RootElementAttribute.HANDLER);
+        Attribute handlerAttr = element.attribute(RootTag.HANDLER);
         if (null != handlerAttr) {
             try {
                 return (SqlHandler) SpringUtil.getBean(Class.forName(handlerAttr.getValue()));
@@ -158,6 +194,11 @@ public class OpenSqlApiController {
             }
         }
         return null;
+    }
+
+    @FunctionalInterface
+    public interface SqlQueryFunction {
+        Object apply(Query query, String sql, Element element);
     }
 
 

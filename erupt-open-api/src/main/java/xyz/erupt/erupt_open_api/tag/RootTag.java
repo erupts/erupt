@@ -1,8 +1,8 @@
-package xyz.erupt.erupt_open_api.constant;
+package xyz.erupt.erupt_open_api.tag;
 
 /**
  * Created by liyuepeng on 2019-08-15.
  */
-public class RootElementAttribute {
+public class RootTag {
     public static final String HANDLER = "handler";
 }
