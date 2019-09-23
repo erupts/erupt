@@ -79,7 +79,7 @@ public class EruptExcelController {
             }
             Page page = eruptDataController.getEruptData(eruptName, jsonObject);
             Workbook wb = dataFileService.exportExcel(eruptModel, page);
-            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dateProxy()) {
+            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
                 SpringUtil.getBean(proxy).excelExport(wb);
             }
             wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + DataFileService.XLS_FORMAT));

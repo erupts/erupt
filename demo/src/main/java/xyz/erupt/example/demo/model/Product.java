@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @Erupt(
         name = "产品",
-        dateProxy = Product.class
+        dataProxy = Product.class
 )
 @Entity
 @Table(name = "PRODUCT")

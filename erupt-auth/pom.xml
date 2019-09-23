@@ -2,17 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <groupId>xyz.erupt</groupId>
+    <artifactId>erupt-auth</artifactId>
+    <version>0.0.1</version>
+    <description>用户权限相关</description>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>xyz.erupt</groupId>
-    <artifactId>erupt-auth</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>erupt-auth</name>
-    <description>用户权限相关</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -42,18 +43,18 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-annotation</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>LATEST</version>
         </dependency>
     </dependencies>
 

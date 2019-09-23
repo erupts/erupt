@@ -10,8 +10,7 @@
     </parent>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-report</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>erupt-bi</name>
+    <version>0.0.1</version>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -39,19 +38,19 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-annotation</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-auth</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>

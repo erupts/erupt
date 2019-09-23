@@ -7,7 +7,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-annotation</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2</version>
 
     <packaging>jar</packaging>
 

@@ -26,7 +26,7 @@ import java.util.Set;
 @Erupt(
         name = "用户",
         desc = "用户配置",
-        dateProxy = EruptUser.class
+        dataProxy = EruptUser.class
 )
 @Getter
 @Setter
@@ -127,14 +127,13 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     private Boolean isAdmin;
 
     @Override
-    public BoolAndReason beforeAdd(EruptUser eruptUser) {
+    public void beforeAdd(EruptUser eruptUser) {
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
             if (eruptUser.getIsMD5()) {
                 eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
             }
-            return new BoolAndReason(true, null);
         } else {
-            return new BoolAndReason(false, "两次密码输入不一致");
+            throw new RuntimeException("两次密码输入不一致");
         }
     }
 

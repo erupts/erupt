@@ -45,7 +45,7 @@ public @interface Erupt {
     String orderBy() default "";
 
     @Transient
-    Class<? extends DataProxy>[] dateProxy() default {};
+    Class<? extends DataProxy>[] dataProxy() default {};
 
     Tree tree() default @Tree(id = AnnotationConst.ID, label = AnnotationConst.LABEL);
 

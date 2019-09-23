@@ -16,24 +16,23 @@ import java.util.Map;
 public interface DataProxy<MODEL> {
 
     //改
-    default BoolAndReason beforeEdit(MODEL model) {
-        return new BoolAndReason(true, null);
+    default void beforeEdit(MODEL model) {
     }
 
     default void afterEdit(MODEL model) {
     }
 
     //增
-    default BoolAndReason beforeAdd(MODEL model) {
-        return new BoolAndReason(true, null);
+    default void beforeAdd(MODEL model) {
+
     }
 
     default void afterAdd(MODEL model) {
     }
 
     //删
-    default BoolAndReason beforeDelete(Serializable id) {
-        return new BoolAndReason(true, null);
+    default void beforeDelete(Serializable id) {
+
     }
 
     default void afterDelete(Serializable id) {
@@ -53,8 +52,8 @@ public interface DataProxy<MODEL> {
     }
 
     //文件上传
-    default BoolAndReason beforeUpLoadFile(InputStream inputStream, File file) {
-        return new BoolAndReason(true, null);
+    default void beforeUpLoadFile(InputStream inputStream, File file) {
+
     }
 
     default void afterUpLoadFile(File file, String relativePath) {
@@ -73,8 +72,8 @@ public interface DataProxy<MODEL> {
      *
      * @param model erupt对象模型
      */
-    default BoolAndReason excelImport(MODEL model) {
-        return new BoolAndReason(true, null);
+    default void excelImport(MODEL model) {
+
     }
 
 }

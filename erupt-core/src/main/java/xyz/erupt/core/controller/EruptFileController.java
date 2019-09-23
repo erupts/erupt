@@ -113,14 +113,11 @@ public class EruptFileController {
                 }
             }
             //执行upload proxy
-            for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dateProxy()) {
-                BoolAndReason boolAndReason = SpringUtil.getBean(clazz).beforeUpLoadFile(file.getInputStream(), dest);
-                if (!boolAndReason.isBool()) {
-                    return new EruptApiModel(boolAndReason);
-                }
+            for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dataProxy()) {
+                SpringUtil.getBean(clazz).beforeUpLoadFile(file.getInputStream(), dest);
             }
             file.transferTo(dest);
-            for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dateProxy()) {
+            for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dataProxy()) {
                 SpringUtil.getBean(clazz).afterUpLoadFile(dest, path);
             }
             return EruptApiModel.successApi(path.replace("\\", "/"));
@@ -189,6 +186,9 @@ public class EruptFileController {
             path = FS_SEP + path;
         }
         File file = new File(uploadPath + path);
+//        if (!file.exists()) {
+//            throw new RuntimeException("图片不存在");
+//        }
         try (InputStream inputStream = new FileInputStream(file)) {
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, inputStream.available());
