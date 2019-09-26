@@ -63,8 +63,8 @@ public class OpenSqlApiController {
                         @RequestParam(value = "pageIndex", required = false) Integer pageIndex,
                         @RequestParam(value = "page", required = false) boolean page,
                         HttpServletRequest request) {
-        if (pageSize == null || pageSize > 1000) {
-            pageSize = 1000;
+        if (pageSize == null || pageSize > 100) {
+            pageSize = 100;
         }
         if (pageIndex == null || pageIndex == 0) {
             pageIndex = 1;
@@ -106,7 +106,9 @@ public class OpenSqlApiController {
                     return xmlDocuments.get(fileName);
                 } else {
                     Resource resource = new ClassPathResource("sql/" + fileName + ".xml");
-                    return xmlDocuments.put(fileName, new SAXReader().read(resource.getFile()));
+                    Document document = new SAXReader().read(resource.getFile());
+                    xmlDocuments.put(fileName, document);
+                    return document;
                 }
             }
         } catch (DocumentException | IOException e) {
@@ -165,10 +167,16 @@ public class OpenSqlApiController {
                         while (parameterNames.hasMoreElements()) {
                             String parameterName = parameterNames.nextElement();
                             if (value.contains(parameterName)) {
-                                value = value.replace(parameterName, request.getParameter(parameterName));
+                                String val = request.getParameter(parameterName);
+                                if (StringUtils.isBlank(val)) {
+                                    val = "null";
+                                } else {
+                                    val = "'" + val + "'";
+                                }
+                                value = value.replace(parameterName, val);
                             }
                         }
-                        Boolean bool = (Boolean) js.eval(value);
+                        Boolean bool = (Boolean) js.eval("!!(" + value + ")");
                         if (bool) {
                             sb.append(" ").append(ele.getTextTrim());
                         }
@@ -195,11 +203,5 @@ public class OpenSqlApiController {
         }
         return null;
     }
-
-    @FunctionalInterface
-    public interface SqlQueryFunction {
-        Object apply(Query query, String sql, Element element);
-    }
-
 
 }
