@@ -44,7 +44,7 @@ public class Test {
 
     @Column(name = "NAME")
     @EruptField(
-            views = @View(title = "姓名", sortable = true, template = "'姓名：'+item.name", viewType = ViewType.HTML),
+            views = @View(title = "姓名", sortable = true, template = "'姓名：'+item.name||''", viewType = ViewType.HTML),
             edit = @Edit(title = "姓名", notNull = true, search = @Search(true))
     )
     private String name = "2333333";

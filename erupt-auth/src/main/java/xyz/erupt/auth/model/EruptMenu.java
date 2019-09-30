@@ -84,7 +84,7 @@ public class EruptMenu extends BaseModel {
             edit = @Edit(
                     title = "顺序",
                     type = EditType.SLIDER,
-                    sliderType = @SliderType(max = 500)
+                    sliderType = @SliderType(max = 100)
             )
     )
     private Integer sort;

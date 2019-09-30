@@ -122,6 +122,7 @@ public class EruptFileController {
             }
             return EruptApiModel.successApi(path.replace("\\", "/"));
         } catch (Exception e) {
+            e.printStackTrace();
             return EruptApiModel.errorApi("上传失败，" + e.getMessage());
         }
     }

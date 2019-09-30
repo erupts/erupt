@@ -9,6 +9,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
@@ -28,13 +29,30 @@ import java.util.Set;
 @Table(name = "PRODUCT")
 @Getter
 @Setter
-public class Product implements DataProxy {
+public class Product implements DataProxy<Product> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     @EruptField
     private Long id;
+
+    @EruptField(
+            views = @View(title = "radio", sortable = true),
+            edit = @Edit(title = "radio",
+                    search = @Search(true),
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(
+                            type = ChoiceEnum.RADIO,
+                            vl = {
+                                    @VL(label = "a", value = "a"),
+                                    @VL(label = "b", value = "b"),
+                                    @VL(label = "c", value = "c"),
+                                    @VL(label = "d", value = "d")
+                            }
+                    ))
+    )
+    private String radio;
 
 
 //    @ManyToOne
@@ -114,5 +132,15 @@ public class Product implements DataProxy {
         Cell cell = sheet.getRow(2).getCell(1);
         cell.setCellValue("@@#####$$$$$$");
         cell.setCellStyle(style);
+    }
+
+    @Override
+    public void beforeEdit(Product o) {
+        throw new RuntimeException("xxxxx");
+    }
+
+    @Override
+    public void beforeAdd(Product o) {
+        throw new RuntimeException("xxxxx");
     }
 }

@@ -6,6 +6,8 @@ import xyz.erupt.annotation.config.JavaTypeEnum;
  * Created by liyuepeng on 9/28/18.
  */
 public enum EditType {
+    @EditTypeMapping(desc = "根据返回值类型自动处理", allowType = {JavaTypeEnum.any})
+    AUTO,
     @EditTypeMapping(mapping = "inputType", desc = "输入框 String:vague the like|number:vague the range", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     INPUT,
     @EditTypeMapping(mapping = "number", desc = "数字输入", allowType = {JavaTypeEnum.number})
