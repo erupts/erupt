@@ -59,8 +59,7 @@ public class EruptDict extends BaseModel {
 
     @EruptField(
             edit = @Edit(
-                    title = "备注",
-                    type = EditType.TEXTAREA
+                    title = "备注"
             )
     )
     @Column(name = "REMARK")

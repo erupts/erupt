@@ -2534,7 +2534,7 @@ darker  @grey-9;
 @reuse-tab-border-color: #d9d9d9;
 
 @st-prefix: ~'.st';
-@st-btn-disabled-color: rgba(0, 0, 0, .25);
+@st-btn-disabled-color: rgba(0,0,0,.25);
 @sv-prefix: ~'.sv';
 @sv-label-color: rgba(0, 0, 0, 0.5);
 @sv-label-optional-color: rgba(0, 0, 0, 0.35);
@@ -6665,18 +6665,18 @@ textarea.cdk-textarea-autosize-measuring {
   .button-color(@color; @background; @border);
   &:hover {
     .button-color(
-            @btn-primary-color; ~`colorPalette('@{color}', 5) `; ~`colorPalette('@{color}', 5) `
+      @btn-primary-color; ~`colorPalette('@{color}', 5) `; ~`colorPalette('@{color}', 5) `
     );
   }
   &:focus {
     .button-color(
-            ~`colorPalette('@{color}', 5) `; @component-background; ~`colorPalette('@{color}', 5) `
+      ~`colorPalette('@{color}', 5) `; @component-background; ~`colorPalette('@{color}', 5) `
     );
   }
   &:active,
   &.active {
     .button-color(
-            @btn-primary-color; ~`colorPalette('@{color}', 7) `; ~`colorPalette('@{color}', 7) `
+      @btn-primary-color; ~`colorPalette('@{color}', 7) `; ~`colorPalette('@{color}', 7) `
     );
   }
   .button-disabled();
@@ -10995,7 +10995,7 @@ a.@{btn-prefix-cls} {
 
   > * {
     transition: transform @animation-duration-slow @ease-base-in,
-    box-shadow @animation-duration-slow @ease-base-in;
+      box-shadow @animation-duration-slow @ease-base-in;
   }
 
   &-content-wrapper {
@@ -20408,7 +20408,7 @@ nz-table {
 
 // Angular
 // router ant
-@router-animation-name: antFadeIn;
+@router-animation-name:     antFadeIn;
 @router-animation-duration: 1s;
 
 // https://github.com/angular/angular/issues/9845
@@ -20416,7 +20416,7 @@ nz-table {
 app-layout router-outlet + * {
   display: block;
   // animation-fill-mode: both;
-  animation-name: @router-animation-name; // fadeIn;
+	animation-name: @router-animation-name; // fadeIn;
   animation-duration: @router-animation-duration;
 }
 
@@ -21732,44 +21732,44 @@ code {
 }
 .scrollbar-table-mixin(@scrollbar-table-enabled);
 
-@alain-default-prefix: ~'.alain-default';
-@alain-default-zindex: @zindex-base;
-@alain-default-ease: cubic-bezier(.25, 0, .15, 1);
-@alain-default-header-hg: 64px;
-@alain-default-header-bg: @primary-color;
-@alain-default-header-padding: @layout-gutter * 2;
+@alain-default-prefix:                ~'.alain-default';
+@alain-default-zindex:                @zindex-base;
+@alain-default-ease:                  cubic-bezier(.25, 0, .15, 1);
+@alain-default-header-hg:             64px;
+@alain-default-header-bg:             @primary-color;
+@alain-default-header-padding:        @layout-gutter * 2;
 @alain-default-header-search-enabled: true;
-@alain-default-header-search-height: 34px;
-@alain-default-header-icon-fs: 18px;
+@alain-default-header-search-height:  34px;
+@alain-default-header-icon-fs:        18px;
 
-@alain-default-aside-wd: 200px;
-@alain-default-aside-bg: #fff;
-@alain-default-aside-scrollbar-width: 0;
-@alain-default-aside-scrollbar-height: 0;
-@alain-default-aside-scrollbar-track-color: transparent;
-@alain-default-aside-scrollbar-thumb-color: transparent;
+@alain-default-aside-wd:                      200px;
+@alain-default-aside-bg:                      #fff;
+@alain-default-aside-scrollbar-width:         0;
+@alain-default-aside-scrollbar-height:        0;
+@alain-default-aside-scrollbar-track-color:   transparent;
+@alain-default-aside-scrollbar-thumb-color:   transparent;
 
-@alain-default-aside-nav-fs: 14px;
-@alain-default-aside-nav-icon-width: 14px;
-@alain-default-aside-nav-img-wh: 14px;
-@alain-default-aside-nav-padding-top-bottom: @layout-gutter;
-@alain-default-aside-nav-text-color: @text-color;
-@alain-default-aside-nav-text-hover-color: @primary-color;
-@alain-default-aside-nav-group-text-color: @text-color-secondary;
-@alain-default-aside-nav-selected-text-color: @primary-color;
-@alain-default-aside-nav-selected-bg: #fcfcfc;
-@alain-default-aside-nav-item-height: 38px;
-@alain-default-aside-collapsed-wd: @layout-gutter * 8;
-@alain-default-aside-collapsed-nav-fs: 24px;
-@alain-default-aside-collapsed-nav-img-wh: 24px;
+@alain-default-aside-nav-fs:                   14px;
+@alain-default-aside-nav-icon-width:           14px;
+@alain-default-aside-nav-img-wh:               14px;
+@alain-default-aside-nav-padding-top-bottom:   @layout-gutter;
+@alain-default-aside-nav-text-color:           @text-color;
+@alain-default-aside-nav-text-hover-color:     @primary-color;
+@alain-default-aside-nav-group-text-color:     @text-color-secondary;
+@alain-default-aside-nav-selected-text-color:  @primary-color;
+@alain-default-aside-nav-selected-bg:          #fcfcfc;
+@alain-default-aside-nav-item-height:          38px;
+@alain-default-aside-collapsed-wd:             @layout-gutter * 8;
+@alain-default-aside-collapsed-nav-fs:         24px;
+@alain-default-aside-collapsed-nav-img-wh:     24px;
 
-@alain-default-content-heading-bg: #fafbfc;
-@alain-default-content-heading-border: #efe3e5;
-@alain-default-content-padding: @layout-gutter * 3;
-@alain-default-content-bg: #f5f7fa;
+@alain-default-content-heading-bg:             #fafbfc;
+@alain-default-content-heading-border:         #efe3e5;
+@alain-default-content-padding:                @layout-gutter * 3;
+@alain-default-content-bg:                     #f5f7fa;
 
-@alain-default-widget-app-icons-enabled: true;
-@alain-default-aside-user-enabled: true;
+@alain-default-widget-app-icons-enabled:        true;
+@alain-default-aside-user-enabled:              true;
 
 html {
   height: 100%; // http://updates.html5rocks.com/2013/12/300ms-tap-delay-gone-away

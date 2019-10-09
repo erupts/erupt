@@ -18,11 +18,14 @@ public class HqlBean {
 
     private String cols;
 
-    public HqlBean(String cols, String customerCondition, JsonObject searchCondition, String orderBy) {
+    private boolean countSql;
+
+    public HqlBean(String cols, String customerCondition, JsonObject searchCondition, String orderBy, boolean countSql) {
         this.cols = cols;
         this.customerCondition = customerCondition;
         this.searchCondition = searchCondition;
         this.orderBy = orderBy;
+        this.countSql = countSql;
     }
 
     public HqlBean(String cols) {

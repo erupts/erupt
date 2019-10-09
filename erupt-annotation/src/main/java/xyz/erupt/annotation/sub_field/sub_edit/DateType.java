@@ -8,6 +8,6 @@ public @interface DateType {
     Type type() default Type.DATE;
 
     enum Type {
-        DATE_TIME, DATE, MONTH, YEAR
+        DATE, DATE_TIME, MONTH, YEAR
     }
 }

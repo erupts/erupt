@@ -1,6 +1,9 @@
 package xyz.erupt.annotation.sub_field;
 
+import com.sun.corba.se.spi.orbutil.fsm.Input;
+import xyz.erupt.annotation.config.Empty;
 import xyz.erupt.annotation.config.JavaTypeEnum;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 
 import java.lang.annotation.*;
 
@@ -12,7 +15,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface EditTypeMapping {
 
-    String mapping() default "";
+    Class<? extends Annotation> mapping() default Empty.class;
 
     String desc() default "";
 

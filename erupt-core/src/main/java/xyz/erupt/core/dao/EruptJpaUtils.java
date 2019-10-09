@@ -84,8 +84,10 @@ public class EruptJpaUtils {
         } else {
             hql.append("from " + eruptModel.getEruptName());
         }
-        hql.append(generateEruptConditionHql(eruptModel, hqlModel.getSearchCondition(), hqlModel.getCustomerCondition()));
-        hql.append(generateEruptOrderHql(eruptModel, hqlModel.getOrderBy()));
+        hql.append(geneEruptHqlCondition(eruptModel, hqlModel.getSearchCondition(), hqlModel.getCustomerCondition()));
+        if (!hqlModel.isCountSql()){
+            hql.append(geneEruptHqlOrderBy(eruptModel, hqlModel.getOrderBy()));
+        }
         return hql.toString();
     }
 
@@ -100,7 +102,6 @@ public class EruptJpaUtils {
                     Object obj = field.get(eruptModel.getClazz());
                     String join = generateEruptJoinHql(CoreService.getErupt(obj.getClass().getSimpleName()));
                     sb.append(join);
-                    obj.getClass();
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -109,7 +110,7 @@ public class EruptJpaUtils {
         return sb.toString();
     }
 
-    public static String generateEruptConditionHql(EruptModel eruptModel, JsonObject clientSearchCondition, String customCondition) {
+    public static String geneEruptHqlCondition(EruptModel eruptModel, JsonObject clientSearchCondition, String customCondition) {
         StringBuilder hql = new StringBuilder();
         hql.append(" where 1=1");
         Filter filter = eruptModel.getErupt().filter();
@@ -125,19 +126,21 @@ public class EruptJpaUtils {
                     if (edit.search().value()) {
                         String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
                         if (edit.search().vague()) {
-                            if ((edit.type() == EditType.INPUT && eruptFieldModel.getFieldReturnName().equals(JavaType.NUMBER))
+                            if ((edit.type() == EditType.NUMBER)
                                     || edit.type() == EditType.DATE
                                     || edit.type() == EditType.SLIDER) {
                                 hql.append(EruptJpaUtils.AND).append(_key)
-                                        .append(" >=:").append(LVAL_KEY + key)
-                                        .append(EruptJpaUtils.AND).append(_key)
-                                        .append(" <=:").append(RVAL_KEY + key);
+                                        .append(" between :").append(LVAL_KEY).append(key)
+                                        .append(" and :").append(RVAL_KEY).append(key);
                                 continue;
                             } else if (edit.type() == EditType.CHOICE) {
                                 hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(key).append(")");
                                 continue;
                             } else if (eruptFieldModel.getFieldReturnName().equals(JavaType.STRING)) {
                                 hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(key);
+                                continue;
+                            } else {
+                                hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(key);
                                 continue;
                             }
                         } else {
@@ -169,11 +172,11 @@ public class EruptJpaUtils {
     }
 
 
-    public static String generateEruptOrderHql(EruptModel eruptModel, String orderBy) {
+    public static String geneEruptHqlOrderBy(EruptModel eruptModel, String orderBy) {
         if (StringUtils.isNotBlank(orderBy)) {
-            return " order by " + orderBy;
+            return " order by " + EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), orderBy);
         } else if (StringUtils.isNotBlank(eruptModel.getErupt().orderBy())) {
-            return " order by " + eruptModel.getErupt().orderBy();
+            return " order by " + EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), eruptModel.getErupt().orderBy());
         } else {
             return "";
         }

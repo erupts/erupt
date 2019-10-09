@@ -31,10 +31,15 @@ public @interface Edit {
     @Transient
     Filter filter() default @Filter(condition = "");
 
-    EditType type() default EditType.INPUT;
+    EditType type() default EditType.AUTO;
 
     @SerializeBy(method = "type", value = "INPUT")
     InputType inputType() default @InputType;
+
+    @SerializeBy(method = "type", value = "INPUT")
+    NumberType numberType() default @NumberType();
+
+    ImageType imageType() default @ImageType();
 
     @SerializeBy(method = "type", value = "BOOLEAN")
     BoolType boolType() default @BoolType(trueText = "是", falseText = "否");

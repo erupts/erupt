@@ -9,10 +9,4 @@ public @interface ReferenceTableType {
     String id() default AnnotationConst.ID;
 
     String label() default AnnotationConst.LABEL;
-
-    boolean add() default true;
-
-    boolean delete() default true;
-
-    boolean modify() default true;
 }

@@ -8,13 +8,11 @@ import java.util.function.Consumer;
  * Created by liyuepeng on 11/1/18.
  */
 public class TypeUtil {
-
     private static final String[] SIMPLE_JPA_TYPE = {
-            "byte", "short", "int", "integer", "long", "float", "double", "boolean", "char", "String", "date"
+            "byte", "short", "int", "integer", "long", "float", "double", "boolean", "char", "String", "date", "character", "char"
     };
-
     private static final String[] NUMBER_TYPE = {
-            "short", "int", "integer", "long", "float", "double"
+            "short", "int", "integer", "long", "float", "double", "bigdecimal", "biginteger"
     };
 
     /**
