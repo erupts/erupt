@@ -39,13 +39,11 @@ public class EruptExcelController {
     @Autowired
     private DataFileService dataFileService;
 
-
     @Autowired
     private EruptDataController eruptDataController;
 
     @Autowired
     private Gson gson;
-
 
     @Value("erupt.uploadPath:/opt/file")
     private String uploadPath;
