@@ -34,11 +34,15 @@ public class EruptUtil {
         Map<String, Object> map = new HashMap<>();
         try {
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+                if (AnnotationConst.EMPTY_STR.equals(fieldModel.getEruptField().edit().title()) &&
+                        !eruptModel.getErupt().primaryKeyCol().equals(fieldModel.getFieldName())) {
+                    continue;
+                }
                 Field field = fieldModel.getField();
                 field.setAccessible(true);
                 Object value = field.get(obj);
                 if (null != value) {
-                    EruptField eruptField = field.getAnnotation(EruptField.class);
+                    EruptField eruptField = fieldModel.getEruptField();
                     switch (eruptField.edit().type()) {
                         case REFERENCE_TREE:
                         case REFERENCE_TABLE:

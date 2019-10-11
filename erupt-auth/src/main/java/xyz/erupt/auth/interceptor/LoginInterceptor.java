@@ -8,7 +8,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import xyz.erupt.auth.service.UserService;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +24,13 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private static final String ERUPT_HEADER_KEY = "erupt";
 
+    private static final String PARENT_ERUPT_HEADER_KEY = "parent_erupt";
+
     private static final String ERUPT_HEADER_TOKEN = "token";
 
     private static final String URL_ERUPT_PARAM_KEY = "_erupt";
+
+    private static final String PARENT_ERUPT_PARAM_KEY = "_parent_erupt";
 
     private static final String URL_ERUPT_PARAM_TOKEN = "_token";
 
@@ -42,12 +45,15 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
         String token = null;
         String eruptName = null;
+        String parentEruptName = null;
         if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
             token = request.getHeader(ERUPT_HEADER_TOKEN);
             eruptName = request.getHeader(ERUPT_HEADER_KEY);
+            parentEruptName = request.getHeader(PARENT_ERUPT_HEADER_KEY);
         } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
             token = request.getParameter(URL_ERUPT_PARAM_TOKEN);
             eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
+            parentEruptName = request.getHeader(PARENT_ERUPT_PARAM_KEY);
         }
         if (null == token || !userService.verifyToken(token)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -55,8 +61,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
         String path = request.getServletPath();
         //权限校验
-        if (eruptRouter.verifyErupt()){
+        if (eruptRouter.verifyErupt()) {
             EruptModel eruptModel = CoreService.getErupt(eruptName);
+            //TODO 通过请求头parent_erupt来控制权限
+//            if (StringUtils.isNotBlank(parentEruptName)){
+//                CoreService.getErupt(parentEruptName);
+//            }
             if (null == eruptModel) {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;

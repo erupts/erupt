@@ -58,8 +58,8 @@ public class ProductParam {
     private Double float1;
 
 
-    @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID")
-    private Product product;
+//    @ManyToOne
+//    @JoinColumn(name = "PRODUCT_ID")
+//    private Product product;
 
 }

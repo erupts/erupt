@@ -113,7 +113,8 @@ public class Product implements DataProxy<Product> {
     private Integer choice;
 
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "product_id")
     @EruptField(
             edit = @Edit(
                     title = "参数列表",
@@ -132,15 +133,5 @@ public class Product implements DataProxy<Product> {
         Cell cell = sheet.getRow(2).getCell(1);
         cell.setCellValue("@@#####$$$$$$");
         cell.setCellStyle(style);
-    }
-
-    @Override
-    public void beforeEdit(Product o) {
-        throw new RuntimeException("xxxxx");
-    }
-
-    @Override
-    public void beforeAdd(Product o) {
-        throw new RuntimeException("xxxxx");
     }
 }

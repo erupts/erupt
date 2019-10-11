@@ -70,7 +70,7 @@ public class DBService implements DataService {
             TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null);
             treeModels.add(treeModel);
         }
-        if (StringUtils.isBlank(tree.pid())&&StringUtils.isBlank(tree.pid())) {
+        if (StringUtils.isBlank(tree.pid()) && StringUtils.isBlank(tree.pid())) {
             return treeModels;
         } else {
             return DataHandlerUtil.treeModelToTree(treeModels, null);
@@ -81,6 +81,7 @@ public class DBService implements DataService {
     @Override
     public void addData(EruptModel eruptModel, Object object) {
         try {
+            //TODO 强制删除id的处理方式并不好
             jpaManyToOneConvert(eruptModel, object);
             eruptJpaDao.addEntity(object);
         } catch (DataIntegrityViolationException e) {
@@ -105,24 +106,15 @@ public class DBService implements DataService {
                         dataField.setAccessible(true);
                         dataField.set(data, field.get(entity));
                     }
-                    //删除原始一对多数据
-                    if (null != field.getAnnotation(OneToMany.class) && null != field.getAnnotation(EruptField.class)) {
-                        field.setAccessible(true);
-                        Collection collection = (Collection) field.get(entity);
-                        for (Object o : collection) {
-                            entityManager.remove(o);
-                        }
-                    }
                 } catch (IllegalAccessException | NoSuchFieldException e) {
                     throw new RuntimeException(e);
                 }
             });
-            jpaManyToOneConvert(eruptModel, data);
             eruptJpaDao.editEntity(data);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             throw new RuntimeException(gcRepeatHint(eruptModel));
-        } catch (IllegalAccessException | NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
@@ -135,10 +127,7 @@ public class DBService implements DataService {
                 field.setAccessible(true);
                 Collection collection = (Collection) field.get(object);
                 if (null != collection) {
-                    OneToMany oneToMany = field.getAnnotation(OneToMany.class);
                     for (Object o : collection) {
-                        Field ff = ReflectUtil.findClassField(o.getClass(), oneToMany.mappedBy());
-                        ff.set(o, object);
                         //删除主键ID
                         Field pk = ReflectUtil.findClassField(o.getClass(), CoreService
                                 .getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol());
