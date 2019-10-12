@@ -5,6 +5,8 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.BaseModel;
 
@@ -38,8 +40,8 @@ public class Demo extends BaseModel {
     private Boolean bool;
 
     @EruptField(
-            views = @View(title = "图片"),
-            edit = @Edit(title = "图片", search = @Search(value = true, vague = true))
+            views = @View(title = "图片", viewType = ViewType.IMAGE),
+            edit = @Edit(title = "图片", search = @Search(value = true, vague = true), attachmentType = @AttachmentType(maxLimit = 3))
     )
     private String image;
 
