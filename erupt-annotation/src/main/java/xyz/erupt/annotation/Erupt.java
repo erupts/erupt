@@ -3,10 +3,7 @@ package xyz.erupt.annotation;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.sub_erupt.Filter;
-import xyz.erupt.annotation.sub_erupt.Power;
-import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_erupt.Tree;
+import xyz.erupt.annotation.sub_erupt.*;
 
 import java.beans.Transient;
 import java.lang.annotation.*;
@@ -51,4 +48,10 @@ public @interface Erupt {
 
     @ToMap(key = "key")
     KV[] param() default {};
+
+    @Transient
+    Html beforeHtml() default @Html;
+
+    @Transient
+    Html afterHtml() default @Html;
 }

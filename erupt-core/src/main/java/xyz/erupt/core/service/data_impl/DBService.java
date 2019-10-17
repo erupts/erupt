@@ -100,13 +100,15 @@ public class DBService implements DataService {
                     ReflectUtil.findClassField(data.getClass(), eruptModel.getErupt().primaryKeyCol()).get(data));
             ReflectUtil.findClassAllFields(entity.getClass(), field -> {
                 try {
-                    if (null == field.getAnnotation(EruptField.class) && null == field.getAnnotation(Transient.class)) {
+                    EruptField eruptField = field.getAnnotation(EruptField.class);
+                    if ((null != eruptField && AnnotationConst.EMPTY_STR.equals(eruptField.edit().title()))
+                            || (null == eruptField && null == field.getAnnotation(Transient.class))) {
                         field.setAccessible(true);
-                        Field dataField = data.getClass().getDeclaredField(field.getName());
+                        Field dataField = ReflectUtil.findClassField(eruptModel.getClazz(), field.getName());
                         dataField.setAccessible(true);
                         dataField.set(data, field.get(entity));
                     }
-                } catch (IllegalAccessException | NoSuchFieldException e) {
+                } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
             });

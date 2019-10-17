@@ -2,6 +2,7 @@ package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.Html;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 
 import java.beans.Transient;
@@ -36,13 +37,14 @@ public @interface Edit {
     @SerializeBy(method = "type", value = "INPUT")
     InputType inputType() default @InputType;
 
-    @SerializeBy(method = "type", value = "INPUT")
+    @SerializeBy(method = "type", value = "NUMBER")
     NumberType numberType() default @NumberType();
-
-    ImageType imageType() default @ImageType();
 
     @SerializeBy(method = "type", value = "BOOLEAN")
     BoolType boolType() default @BoolType(trueText = "是", falseText = "否");
+
+    @Transient
+    Html htmlType() default @Html;
 
     @SerializeBy(method = "type", value = "CHOICE")
     ChoiceType choiceType() default @ChoiceType(vl = {});
