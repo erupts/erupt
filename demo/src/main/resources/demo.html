@@ -1,0 +1,78 @@
+<style>
+    #h1 {
+        text-align: center;
+        border: 1px dashed #09f;
+        padding: 100px;
+        transition: all .5s;
+    }
+
+    #h1:hover {
+        box-shadow: 1px 1px 5px #ddd;
+    }
+</style>
+<link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.css" rel="stylesheet">
+<template>
+    <div style="margin: 0 20px;">
+        <h1 id="h1" style="color: #09f" th:text="'ERUPT DEMO HTML '+${str}"></h1>
+        <h2>${str}</h2>
+        <div id="chart" style="height: 300px;border: 1px dashed #09f;">
+        </div>
+    </div>
+</template>
+<script src="http://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
+<script>
+    Highcharts.chart('chart', {
+        chart: {
+            type: 'area'
+        },
+        title: {
+            text: '全球各大洲人口占比'
+        },
+        subtitle: {
+            text: '数据来源: Wikipedia.org'
+        },
+        xAxis: {
+            categories: ['1750', '1800', '1850', '1900', '1950', '1999', '2050'],
+            tickmarkPlacement: 'on',
+            title: {
+                enabled: false
+            }
+        },
+        yAxis: {
+            title: {
+                text: '百分比'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y:,.0f} 百万)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            area: {
+                stacking: 'percent',
+                lineColor: '#ffffff',
+                lineWidth: 1,
+                marker: {
+                    lineWidth: 1,
+                    lineColor: '#ffffff'
+                }
+            }
+        },
+        series: [{
+            name: '亚洲',
+            data: [502, 635, 809, 947, 1402, 3634, 5268]
+        }, {
+            name: '非洲',
+            data: [106, 107, 111, 133, 221, 767, 1766]
+        }, {
+            name: '欧洲',
+            data: [163, 203, 276, 408, 547, 729, 628]
+        }, {
+            name: '美洲',
+            data: [18, 31, 54, 156, 339, 818, 1201]
+        }, {
+            name: '大洋洲',
+            data: [2, 2, 2, 6, 13, 30, 46]
+        }]
+    });
+</script>

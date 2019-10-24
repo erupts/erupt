@@ -7,8 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.method.HandlerMethod;
 import xyz.erupt.auth.base.LoginModel;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.model.EruptMenu;
@@ -24,7 +22,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +57,7 @@ public class UserService {
 
     public LoginModel login(String account, String pwd, String verifyCode, HttpServletRequest request) {
         loginErrorCount.putIfAbsent(account, 0);
-        if (loginErrorCount.get(account) >= 5) {
+        if (loginErrorCount.get(account) >= 3) {
             if (StringUtils.isBlank(verifyCode)) {
                 return new LoginModel(false, "请填写验证码", true);
             }
@@ -126,17 +123,17 @@ public class UserService {
             return EruptApiModel.errorNoInterceptApi("修改失败，新密码与确认密码不匹配");
         }
         EruptUser eruptUser = userRepository.findByAccount(account);
+        if (eruptUser.getIsMD5()) {
+            pwd = MD5Utils.digest(pwd);
+            newPwd = MD5Utils.digest(newPwd);
+        }
         if (eruptUser.getPassword().equals(pwd)) {
             if (newPwd.equals(eruptUser.getPassword())) {
                 return EruptApiModel.errorNoInterceptApi("修改失败，新密码不能和原始密码一样");
             }
-            String finalPwd = newPwd;
-            if (eruptUser.getIsMD5()) {
-                finalPwd = MD5Utils.digest(finalPwd);
-            }
-            eruptUser.setPassword(finalPwd);
+            eruptUser.setPassword(newPwd);
             entityManager.merge(eruptUser);
-            return EruptApiModel.successApi(null);
+            return EruptApiModel.successApi();
         } else {
             return EruptApiModel.errorNoInterceptApi("密码错误");
         }
@@ -160,20 +157,6 @@ public class UserService {
         } else {
             return true;
         }
-    }
-
-    public String getRequestPath(HandlerMethod handlerMethod) {
-        try {
-            for (Annotation annotation : handlerMethod.getMethod().getAnnotations()) {
-                if (null != annotation.annotationType().getAnnotation(RequestMapping.class)) {
-                    String[] path = (String[]) annotation.getClass().getDeclaredMethod("value").invoke(annotation);
-                    System.out.println(path[0]);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public boolean verifyMenuLimit(String token, String authStr, EruptModel eruptModel) {

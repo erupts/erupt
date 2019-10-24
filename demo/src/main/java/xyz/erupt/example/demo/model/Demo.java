@@ -55,7 +55,9 @@ public class Demo extends BaseModel {
 
     @EruptField(
             views = @View(title = "自定义HTML"),
-            edit = @Edit(title = "HTML", type = EditType.HTML, htmlType = @Html(path = "demo.html"), search = @Search(true))
+            edit = @Edit(title = "HTML", type = EditType.HTML,
+                    htmlType = @Html(path = "demo.html", htmlHandler = Html.HtmlHandler.class, params = {"123", "xxx"}),
+                    search = @Search(true))
     )
     private String html;
 }
