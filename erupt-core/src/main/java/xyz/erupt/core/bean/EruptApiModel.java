@@ -63,6 +63,13 @@ public class EruptApiModel {
         return eruptApiModel;
     }
 
+    public static EruptApiModel errorNoInterceptMessage(String message) {
+        EruptApiModel eruptApiModel = new EruptApiModel(Status.ERROR, message, null);
+        eruptApiModel.errorIntercept = false;
+        eruptApiModel.promptWay = PromptWay.MESSAGE;
+        return eruptApiModel;
+    }
+
     public static EruptApiModel errorApi(Exception e) {
         e.printStackTrace();
         return new EruptApiModel(Status.ERROR, e.getMessage(), null, PromptWay.DIALOG);

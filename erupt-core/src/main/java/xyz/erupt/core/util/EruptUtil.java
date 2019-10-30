@@ -177,20 +177,14 @@ public class EruptUtil {
 
     public static EruptApiModel validateEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
+            Edit edit = field.getEruptField().edit();
+            JsonElement value = jsonObject.get(field.getFieldName());
             if (field.getEruptField().edit().notNull()) {
-                if (!jsonObject.has(field.getFieldName())) {
-                    EruptApiModel eruptApiModel = EruptApiModel.errorApi(field.getEruptField().edit().title() + "必填");
-                    eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
-                    eruptApiModel.setErrorIntercept(false);
-                    return eruptApiModel;
-                }
-                if (JavaType.STRING.equals(field.getFieldReturnName())) {
-                    String str = jsonObject.get(field.getFieldName()).getAsString();
-                    if (StringUtils.isBlank(str)) {
-                        EruptApiModel eruptApiModel = EruptApiModel.errorApi(field.getEruptField().edit().title() + "必填");
-                        eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
-                        eruptApiModel.setErrorIntercept(false);
-                        return eruptApiModel;
+                if (null == value) {
+                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");
+                } else if (JavaType.STRING.equals(field.getFieldReturnName())) {
+                    if (StringUtils.isBlank(value.getAsString())) {
+                        return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");
                     }
                 }
             }
@@ -200,25 +194,35 @@ public class EruptUtil {
                     return eam;
                 }
             }
-            Edit edit = field.getEruptField().edit();
-            switch (edit.type()) {
-                case INPUT:
-                    if (!AnnotationConst.EMPTY_STR.equals(edit.inputType().regex())) {
-                        if (jsonObject.has(field.getFieldName())) {
-                            String content = jsonObject.get(field.getFieldName()).getAsString();
+
+            if (null != value) {
+                //xss 注入处理
+                if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
+                    if (SecurityUtil.xssInspect(value.getAsString())) {
+                        return EruptApiModel.errorNoInterceptApi(field.getEruptField().edit().title() + "检测到有恶意跨站脚本，请重新编辑！");
+                    }
+                }
+                //数据类型校验
+                switch (edit.type()) {
+                    case NUMBER:
+                    case SLIDER:
+                        if (!TypeUtil.isNumeric(value.getAsString())) {
+                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必须为数值");
+                        }
+                        break;
+                    case INPUT:
+                        if (!AnnotationConst.EMPTY_STR.equals(edit.inputType().regex())) {
+                            String content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 boolean isMatch = Pattern.matches(edit.inputType().regex(), content);
                                 if (!isMatch) {
-                                    EruptApiModel eruptApiModel = EruptApiModel.errorApi(field.getEruptField().edit().title() + "格式不正确");
-                                    eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
-                                    eruptApiModel.setErrorIntercept(false);
-                                    return eruptApiModel;
+                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "格式不正确");
                                 }
                             }
                         }
-                    }
-                    break;
+                        break;
 
+                }
             }
         }
         return EruptApiModel.successApi();

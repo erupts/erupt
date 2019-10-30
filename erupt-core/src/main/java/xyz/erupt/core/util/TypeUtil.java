@@ -3,6 +3,7 @@ package xyz.erupt.core.util;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 /**
  * Created by liyuepeng on 11/1/18.
@@ -79,6 +80,12 @@ public class TypeUtil {
 
     public static boolean isNumberType(String typeName) {
         return Arrays.asList(NUMBER_TYPE).contains(typeName.toLowerCase());
+    }
+
+
+    public static boolean isNumeric(String str) {
+        Pattern pattern = Pattern.compile("^[-+]?\\d+(\\.\\d+)?$");
+        return pattern.matcher(str).matches();
     }
 
 }
