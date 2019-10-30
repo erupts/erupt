@@ -57,7 +57,11 @@ public class SessionServiceImpl implements SessionService {
 
     public <T> T get(String key, Type type) {
         if (redisSession) {
-            return gson.fromJson(this.get(key).toString(), type);
+            if (null == this.get(key)) {
+                return null;
+            } else {
+                return gson.fromJson(this.get(key).toString(), type);
+            }
         } else {
             return (T) request.getSession().getAttribute(key);
         }

@@ -61,7 +61,8 @@ public class UserService {
             if (StringUtils.isBlank(verifyCode)) {
                 return new LoginModel(false, "请填写验证码", true);
             }
-            Object vc = sessionServiceImpl.get(SessionKey.VERIFY_CODE + account, String.class);
+            Object vc = sessionServiceImpl.get(SessionKey.VERIFY_CODE + account);
+            sessionServiceImpl.remove(SessionKey.VERIFY_CODE + account);
             if (vc == null || !vc.toString().equalsIgnoreCase(verifyCode)) {
                 return new LoginModel(false, "验证码不正确", true);
             }
