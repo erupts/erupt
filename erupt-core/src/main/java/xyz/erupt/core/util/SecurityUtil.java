@@ -2,6 +2,10 @@ package xyz.erupt.core.util;
 
 import org.apache.commons.lang3.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
 /**
@@ -79,6 +83,22 @@ public class SecurityUtil {
             if (scriptPattern.matcher(value).matches()) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    //检测 跨站请求伪造
+    public static boolean csrfInspect(HttpServletRequest request, HttpServletResponse response) {
+        String origin = request.getHeader("Origin");
+        if (null != origin && !origin.contains(request.getHeader("Host"))) {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/plain; charset=utf-8");
+            try (PrintWriter out = response.getWriter()) {
+                out.append("非法请求!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
         }
         return false;
     }

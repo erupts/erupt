@@ -8,7 +8,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -20,8 +19,10 @@ import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
 import xyz.erupt.core.util.HttpUtil;
+import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.eruptcommon.util.SpringUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -45,13 +46,13 @@ public class EruptExcelController {
     @Autowired
     private Gson gson;
 
-    @Value("erupt.uploadPath:/opt/file")
-    private String uploadPath;
-
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
-    public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletResponse response) {
+    public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
+        if (SecurityUtil.csrfInspect(request, response)) {
+            return "非法请求！";
+        }
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             dataFileService.createExcelTemplate(eruptModel, response);
@@ -65,7 +66,11 @@ public class EruptExcelController {
     @PostMapping("/export/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
     public void exportData(@PathVariable("erupt") String eruptName, @Param("condition") String condition,
+                           HttpServletRequest request,
                            HttpServletResponse response) throws IOException {
+        if (SecurityUtil.csrfInspect(request, response)) {
+            return;
+        }
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().export()) {
             JsonObject jsonObject = new JsonObject();

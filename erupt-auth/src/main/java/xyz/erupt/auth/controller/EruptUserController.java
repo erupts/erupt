@@ -3,9 +3,9 @@ package xyz.erupt.auth.controller;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.auth.base.LoginModel;
+import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
@@ -45,8 +45,8 @@ public class EruptUserController {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Value("${erupt.expireTimeByLogin:60}")
-    private Integer expireTimeByLogin;
+    @Autowired
+    private EruptAuthConfig eruptAuthConfig;
 
     @PostMapping("/login")
     @ResponseBody
@@ -94,13 +94,13 @@ public class EruptUserController {
                 treeModels.add(treeModel);
             }
             List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels, null);
-            sessionServiceImpl.put(SessionKey.MENU_TREE + loginModel.getToken(), treeResultModels, expireTimeByLogin);
-            sessionServiceImpl.put(SessionKey.MENU_LIST + loginModel.getToken(), menuList, expireTimeByLogin);
+            sessionServiceImpl.put(SessionKey.MENU_TREE + loginModel.getToken(), treeResultModels, eruptAuthConfig.getExpireTimeByLogin());
+            sessionServiceImpl.put(SessionKey.MENU_LIST + loginModel.getToken(), menuList, eruptAuthConfig.getExpireTimeByLogin());
         }
         return loginModel;
     }
 
-    @PostMapping("/logOut")
+    @PostMapping("/logout")
     @ResponseBody
     @EruptRouter(verifyErupt = false)
     public EruptApiModel logout(HttpServletRequest request) {

@@ -1,18 +1,19 @@
 package xyz.erupt.core.controller;
 
+import lombok.Cleanup;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptModel;
+import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.DateUtil;
@@ -32,8 +33,8 @@ import java.util.*;
 @RequestMapping(RestPath.ERUPT_FILE)
 public class EruptFileController {
 
-    @Value("${erupt.uploadPath:/opt/eruptFiles}")
-    private String uploadPath;
+    @Autowired
+    private EruptConfig eruptConfig;
 
     public static final String FS_SEP = "/";
 
@@ -106,7 +107,7 @@ public class EruptFileController {
                 default:
                     return EruptApiModel.errorApi("上传失败，非法类型!");
             }
-            File dest = new File(uploadPath + File.separator + path);
+            File dest = new File(eruptConfig.getUploadPath() + File.separator + path);
             if (!dest.getParentFile().exists()) {
                 if (!dest.getParentFile().mkdirs()) {
                     return EruptApiModel.errorApi("上传失败，文件目录无法创建");
@@ -186,11 +187,14 @@ public class EruptFileController {
         if (!path.startsWith(FS_SEP)) {
             path = FS_SEP + path;
         }
-        File file = new File(uploadPath + path);
-//        if (!file.exists()) {
-//            throw new RuntimeException("图片不存在");
-//        }
-        try (InputStream inputStream = new FileInputStream(file)) {
+        File file = new File(eruptConfig.getUploadPath() + path);
+        try {
+            @Cleanup InputStream inputStream;
+            if (file.exists()) {
+                inputStream = new FileInputStream(file);
+            } else {
+                inputStream = MimeUtil.class.getClassLoader().getResourceAsStream("empty.png");
+            }
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, inputStream.available());
             inputStream.close();

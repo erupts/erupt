@@ -3,6 +3,7 @@ package xyz.erupt.example.demo.model;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Html;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -17,7 +18,7 @@ import javax.persistence.Table;
 /**
  * Created by liyuepeng on 2019-10-08.
  */
-@Erupt(name = "demo", orderBy = "number desc")
+@Erupt(name = "demo", orderBy = "number desc", power = @Power(export = true))
 @Table(name = "DEMO")
 @Entity
 public class Demo extends BaseModel {

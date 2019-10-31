@@ -1,10 +1,11 @@
 package xyz.erupt.auth.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
+import xyz.erupt.core.config.EruptConfig;
 
 import javax.annotation.Resource;
 import java.util.HashSet;
@@ -20,20 +21,20 @@ public class MvcInterceptor implements WebMvcConfigurer {
     @Resource
     private LoginInterceptor loginInterceptor;
 
-    @Value("#{'${erupt.allowRequestFileType:html}'.split(',')}")
-    private String[] configAllowRequestFileType;
+    @Autowired
+    private EruptConfig eruptConfig;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        String[] allowFileType = {"html", "js", "css", "svg", "eot", "woff", "woff2", "ttf", "png", "jpg", "gif"};
+        String[] allowFileType = {"html", "js", "css", "svg", "eot", "woff", "woff2", "ttf", "png", "jpg", "gif", "pdf"};
         Set<String> types = new HashSet<>();
         for (String s : allowFileType) {
             types.add("/**/**." + s);
         }
-        for (String s : configAllowRequestFileType) {
+        for (String s : eruptConfig.getAllowRequestFileType()) {
             types.add("/**/**." + s);
         }
-        for (String s : configAllowRequestFileType) {
+        for (String s : eruptConfig.getAllowRequestFileType()) {
             types.add("/#/**");
         }
         registry.addInterceptor(loginInterceptor)

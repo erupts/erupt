@@ -2,9 +2,9 @@ package xyz.erupt.core.session;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import xyz.erupt.core.config.EruptConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class SessionServiceImpl implements SessionService {
 
-    @Value("${erupt.redisSession:false}")
-    private boolean redisSession;
+    @Autowired
+    private EruptConfig eruptConfig;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -30,7 +30,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void put(String key, Object obj, long timeout, TimeUnit unit) {
-        if (redisSession) {
+        if (eruptConfig.isRedisSession()) {
             redisTemplate.opsForValue().set(key, gson.toJson(obj), timeout, unit);
         } else {
             request.getSession().setAttribute(key, obj);
@@ -39,7 +39,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void remove(String key) {
-        if (redisSession) {
+        if (eruptConfig.isRedisSession()) {
             redisTemplate.delete(key);
         } else {
             request.getSession().removeAttribute(key);
@@ -48,7 +48,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Object get(String key) {
-        if (redisSession) {
+        if (eruptConfig.isRedisSession()) {
             return redisTemplate.opsForValue().get(key);
         } else {
             return request.getSession().getAttribute(key);
@@ -56,7 +56,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public <T> T get(String key, Type type) {
-        if (redisSession) {
+        if (eruptConfig.isRedisSession()) {
             if (null == this.get(key)) {
                 return null;
             } else {

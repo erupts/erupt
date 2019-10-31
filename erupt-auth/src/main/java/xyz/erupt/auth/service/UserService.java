@@ -5,9 +5,9 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import xyz.erupt.auth.base.LoginModel;
+import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
@@ -32,17 +32,17 @@ import java.util.Map;
 @Service
 public class UserService {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private SessionServiceImpl sessionServiceImpl;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Value("${erupt.expireTimeByLogin:60}")
-    private Integer expireTimeByLogin;
+    @Autowired
+    private EruptAuthConfig eruptAuthConfig;
 
     @Autowired
     private HttpServletRequest request;
@@ -144,7 +144,7 @@ public class UserService {
     public void createToken(LoginModel loginModel) {
         loginModel.setToken(RandomStringUtils.random(20, true, true));
 //        loginModel.getEruptUser().setRoles(null);
-        sessionServiceImpl.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), expireTimeByLogin);
+        sessionServiceImpl.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), eruptAuthConfig.getExpireTimeByLogin());
     }
 
     public Long getCurrUserId() {

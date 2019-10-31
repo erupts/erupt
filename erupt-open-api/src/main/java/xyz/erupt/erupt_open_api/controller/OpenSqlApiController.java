@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
+import xyz.erupt.erupt_open_api.handler.SqlHandler;
 import xyz.erupt.erupt_open_api.tag.IfTag;
 import xyz.erupt.erupt_open_api.tag.RootTag;
-import xyz.erupt.erupt_open_api.handler.SqlHandler;
 import xyz.erupt.eruptcommon.util.SpringUtil;
 
 import javax.persistence.EntityManager;
@@ -42,7 +42,7 @@ public class OpenSqlApiController {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Value("${openApi.hotReadSqlXml:false}")
+    @Value("${openApi.hotReadXml:false}")
     private boolean hotReadSqlXml;
 
     private Map<String, Document> xmlDocuments = new HashMap<>();
