@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.auth.base.LoginModel;
 import xyz.erupt.auth.constant.SessionKey;
+import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.service.UserService;
@@ -98,6 +99,18 @@ public class EruptUserController {
         }
         return loginModel;
     }
+
+    @PostMapping("/logOut")
+    @ResponseBody
+    @EruptRouter(verifyErupt = false)
+    public EruptApiModel logout(HttpServletRequest request) {
+        String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
+        sessionServiceImpl.remove(SessionKey.MENU_LIST + token);
+        sessionServiceImpl.remove(SessionKey.MENU_TREE + token);
+        sessionServiceImpl.remove(SessionKey.USER_TOKEN + token);
+        return EruptApiModel.successApi();
+    }
+
 
     @PostMapping("/change-pwd")
     @ResponseBody

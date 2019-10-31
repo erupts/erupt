@@ -24,9 +24,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private static final String ERUPT_HEADER_KEY = "erupt";
 
-    private static final String PARENT_ERUPT_HEADER_KEY = "parent_erupt";
+    public static final String ERUPT_HEADER_TOKEN = "token";
 
-    private static final String ERUPT_HEADER_TOKEN = "token";
+    private static final String PARENT_ERUPT_HEADER_KEY = "parent_erupt";
 
     private static final String URL_ERUPT_PARAM_KEY = "_erupt";
 

@@ -10,14 +10,8 @@ import xyz.erupt.annotation.model.BoolAndReason;
 public class EruptApiModel {
 
     private Status status;
-    private PromptWay promptWay = PromptWay.DIALOG;
 
-    public EruptApiModel(Status status, String message, Object data, PromptWay promptWay) {
-        this.status = status;
-        this.message = message;
-        this.data = data;
-        this.promptWay = promptWay;
-    }
+    private PromptWay promptWay = PromptWay.DIALOG;
 
     private String message;
 
@@ -25,10 +19,11 @@ public class EruptApiModel {
 
     private boolean errorIntercept = true;
 
-    public EruptApiModel(Status status, String message, Object data) {
+    public EruptApiModel(Status status, String message, Object data, PromptWay promptWay) {
         this.status = status;
         this.message = message;
         this.data = data;
+        this.promptWay = promptWay;
     }
 
     public EruptApiModel(BoolAndReason boolAndReason) {
@@ -49,24 +44,19 @@ public class EruptApiModel {
         return new EruptApiModel(Status.SUCCESS, null, data, PromptWay.MESSAGE);
     }
 
-    public static EruptApiModel successApi(String message, Object data) {
-        return new EruptApiModel(Status.SUCCESS, null, data, PromptWay.MESSAGE);
-    }
-
     public static EruptApiModel errorApi(String message) {
         return new EruptApiModel(Status.ERROR, message, null, PromptWay.DIALOG);
     }
 
     public static EruptApiModel errorNoInterceptApi(String message) {
-        EruptApiModel eruptApiModel = new EruptApiModel(Status.ERROR, message, null);
+        EruptApiModel eruptApiModel = new EruptApiModel(Status.ERROR, message, null, PromptWay.DIALOG);
         eruptApiModel.errorIntercept = false;
         return eruptApiModel;
     }
 
     public static EruptApiModel errorNoInterceptMessage(String message) {
-        EruptApiModel eruptApiModel = new EruptApiModel(Status.ERROR, message, null);
+        EruptApiModel eruptApiModel = new EruptApiModel(Status.ERROR, message, null, PromptWay.MESSAGE);
         eruptApiModel.errorIntercept = false;
-        eruptApiModel.promptWay = PromptWay.MESSAGE;
         return eruptApiModel;
     }
 
@@ -76,7 +66,7 @@ public class EruptApiModel {
     }
 
     public enum Status {
-        INFO, SUCCESS, WARNING, ERROR,
+        SUCCESS, ERROR, INFO, WARNING
     }
 
     public enum PromptWay {

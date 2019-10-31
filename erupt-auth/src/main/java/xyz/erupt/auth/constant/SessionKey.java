@@ -5,13 +5,13 @@ package xyz.erupt.auth.constant;
  */
 public class SessionKey {
 
-    private static final String AUTO_SPACE = "auth:";
+    private static final String AUTH_SPACE = "auth:";
 
-    public static final String VERIFY_CODE = AUTO_SPACE + "verifyCode:";
+    public static final String VERIFY_CODE = AUTH_SPACE + "verifyCode:";
 
-    public static final String MENU_TREE = AUTO_SPACE + "menu:";
+    public static final String MENU_TREE = AUTH_SPACE + "menu:";
 
-    public static final String MENU_LIST = AUTO_SPACE + "menuList:";
+    public static final String MENU_LIST = AUTH_SPACE + "menuList:";
 
-    public static final String USER_TOKEN = AUTO_SPACE + "token:";
+    public static final String USER_TOKEN = AUTH_SPACE + "token:";
 }
