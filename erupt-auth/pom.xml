@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-auth</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <description>用户权限相关</description>
 
     <parent>

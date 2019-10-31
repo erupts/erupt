@@ -189,7 +189,7 @@ public class EruptFileController {
         }
         File file = new File(eruptConfig.getUploadPath() + path);
         try {
-            @Cleanup InputStream inputStream;
+            @Cleanup InputStream inputStream = null;
             if (file.exists()) {
                 inputStream = new FileInputStream(file);
             } else {
