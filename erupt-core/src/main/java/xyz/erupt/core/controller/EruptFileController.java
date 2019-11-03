@@ -162,7 +162,7 @@ public class EruptFileController {
     public byte[] downloadAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
         String[] split = path.split(FS_SEP);
         response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(split[split.length - 1], "UTF-8"));
-        return mappingFileToByte(path);
+        return mappingFileToByte(path, response);
     }
 
 
@@ -173,14 +173,14 @@ public class EruptFileController {
         response.setHeader("Content-Disposition", "filename=" + java.net.URLEncoder.encode(splitPath[splitPath.length - 1], "UTF-8"));
         response.setContentType(MimeUtil.getMimeType(path));
         try (OutputStream ros = response.getOutputStream()) {
-            IOUtils.write(mappingFileToByte(path), ros);
+            IOUtils.write(mappingFileToByte(path, response), ros);
             ros.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private byte[] mappingFileToByte(String path) {
+    private byte[] mappingFileToByte(String path, HttpServletResponse response) {
 //        if (path.startsWith("http://") || path.startsWith("https://")) {
 //
 //        }
@@ -194,6 +194,8 @@ public class EruptFileController {
                 inputStream = new FileInputStream(file);
             } else {
                 inputStream = MimeUtil.class.getClassLoader().getResourceAsStream("empty.png");
+                response.setContentType("image/png");
+                response.setHeader("Content-Disposition", "filename=empty.png");
             }
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, inputStream.available());
