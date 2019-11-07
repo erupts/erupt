@@ -31,21 +31,29 @@ public class Demo extends BaseModel {
 
     @EruptField(
             views = @View(title = "数字输入"),
-            edit = @Edit(title = "数字输入", search = @Search(value = true))
+            edit = @Edit(title = "数字输入", search = @Search(value = true, vague = true))
     )
     private Integer number;
 
     @EruptField(
             views = @View(title = "布尔"),
-            edit = @Edit(title = "布尔", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "布尔", search = @Search(true))
     )
     private Boolean bool;
 
     @EruptField(
             views = @View(title = "图片", viewType = ViewType.IMAGE),
-            edit = @Edit(title = "图片", search = @Search(value = true, vague = true), attachmentType = @AttachmentType(maxLimit = 3))
+            edit = @Edit(title = "图片")
     )
     private String image;
+
+
+    @EruptField(
+            views = @View(title = "swf", viewType = ViewType.SWF),
+            edit = @Edit(title = "swf", search = @Search(value = true, vague = true), type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType(fileTypes = "swf"))
+    )
+    private String swf;
 
 
     @EruptField(

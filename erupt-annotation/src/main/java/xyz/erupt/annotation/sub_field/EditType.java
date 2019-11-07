@@ -50,7 +50,7 @@ public enum EditType {
 
     JSON_EDIT,         //JSON格式编辑器
     MAP,              //地图
-    CODE,             //代码编辑器
+    CODE_EDITOR,             //代码编辑器
     EMPTY,
     STEPS,            //步骤条
     CUSTOM_REFER,     //自定义引用类型
