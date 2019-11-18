@@ -13,6 +13,8 @@
     <version>0.0.2</version>
     <description>demo</description>
 
+    <packaging>war</packaging>
+
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -44,6 +46,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>

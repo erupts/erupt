@@ -14,6 +14,7 @@ import xyz.erupt.auth.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * Created by liyuepeng on 2019-10-08.
@@ -34,6 +35,13 @@ public class Demo extends BaseModel {
             edit = @Edit(title = "数字输入", search = @Search(value = true, vague = true))
     )
     private Integer number;
+
+
+    @EruptField(
+            views = @View(title = "时间")
+//            edit = @Edit(title = "数字输入", search = @Search(value = true, vague = true))
+    )
+    private Date date;
 
     @EruptField(
             views = @View(title = "布尔"),
