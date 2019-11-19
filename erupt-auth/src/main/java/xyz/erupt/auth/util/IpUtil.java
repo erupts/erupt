@@ -1,4 +1,4 @@
-package xyz.erupt.eruptcommon.util;
+package xyz.erupt.auth.util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;

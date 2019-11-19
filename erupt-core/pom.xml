@@ -3,9 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>xyz.erupt</groupId>
     <artifactId>erupt-core</artifactId>
-    <version>0.1.1</version>
+    <version>${erupt.version}</version>
 
     <packaging>jar</packaging>
 
@@ -13,10 +12,10 @@
     <description>Erupt Core</description>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.1.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>xyz.erupt</groupId>
+        <artifactId>erupt</artifactId>
+        <version>0.1.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
 
@@ -24,12 +23,12 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-annotation</artifactId>
-            <version>LATEST</version>
+            <version>${erupt.version}</version>
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-common</artifactId>
-            <version>LATEST</version>
+            <version>${erupt.version}</version>
         </dependency>
 
         <dependency>

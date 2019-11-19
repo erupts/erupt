@@ -12,11 +12,11 @@ import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.repository.UserRepository;
+import xyz.erupt.auth.util.IpUtil;
+import xyz.erupt.auth.util.MD5Utils;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.session.SessionServiceImpl;
-import xyz.erupt.eruptcommon.util.IpUtil;
-import xyz.erupt.eruptcommon.util.MD5Utils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

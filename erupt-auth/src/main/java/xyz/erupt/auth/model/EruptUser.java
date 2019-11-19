@@ -5,13 +5,12 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.eruptcommon.util.MD5Utils;
+import xyz.erupt.auth.util.MD5Utils;
 
 import javax.persistence.*;
 import java.util.Set;

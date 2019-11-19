@@ -20,7 +20,7 @@ import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
-import xyz.erupt.eruptcommon.util.SpringUtil;
+import xyz.erupt.core.util.SpringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

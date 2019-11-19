@@ -1,4 +1,4 @@
-package xyz.erupt.eruptcommon.util;
+package xyz.erupt.core.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

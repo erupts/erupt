@@ -1,4 +1,4 @@
-package xyz.erupt.eruptcommon.util;
+package xyz.erupt.auth.util;
 
 import java.security.MessageDigest;
 
