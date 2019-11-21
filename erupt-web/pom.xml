@@ -6,6 +6,8 @@
 
     <artifactId>erupt-web</artifactId>
     <version>${erupt.version}</version>
+    <name>erupt-web</name>
+    <description>erupt web</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>

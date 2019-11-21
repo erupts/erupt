@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>erupt-core</name>
-    <description>Erupt Core</description>
+    <description>Erupt core</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
@@ -18,16 +18,15 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-
     <dependencies>
         <dependency>
-            <groupId>xyz.erupt</groupId>
+            <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-annotation</artifactId>
             <version>${erupt.version}</version>
         </dependency>
         <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-common</artifactId>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-tool</artifactId>
             <version>${erupt.version}</version>
         </dependency>
 
@@ -89,11 +88,6 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>3.17</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf</artifactId>
         </dependency>
     </dependencies>
 

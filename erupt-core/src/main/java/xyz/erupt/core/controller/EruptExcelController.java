@@ -44,6 +44,9 @@ public class EruptExcelController {
     private EruptDataController eruptDataController;
 
     @Autowired
+    private EruptModifyController eruptModifyController;
+
+    @Autowired
     private Gson gson;
 
     //模板下载
@@ -122,8 +125,7 @@ public class EruptExcelController {
             i = 1;
             for (JsonObject jo : list) {
                 i++;
-                EruptApiModel eruptApiModel = eruptDataController.addEruptData(eruptName, jo);
-                ;
+                EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo);
                 if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
                     throw new RuntimeException("第" + i + "行：" + eruptApiModel.getMessage());
                 }

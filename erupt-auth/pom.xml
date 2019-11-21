@@ -40,19 +40,19 @@
         </dependency>
 
         <dependency>
-            <groupId>xyz.erupt</groupId>
+            <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-annotation</artifactId>
             <version>${erupt.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>xyz.erupt</groupId>
+            <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-core</artifactId>
             <version>${erupt.version}</version>
         </dependency>
         <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-common</artifactId>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-tool</artifactId>
             <version>${erupt.version}</version>
         </dependency>
     </dependencies>

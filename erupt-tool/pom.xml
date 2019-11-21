@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>erupt-common</artifactId>
+    <artifactId>erupt-tool</artifactId>
     <version>${erupt.version}</version>
     <name>erupt-tool</name>
     <description>Demo project for Spring Boot</description>

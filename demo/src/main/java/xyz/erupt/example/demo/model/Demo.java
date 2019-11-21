@@ -25,13 +25,13 @@ import java.util.Date;
 public class Demo extends BaseModel {
 
     @EruptField(
-            views = @View(title = "文本输入"),
+            views = @View(title = "文本"),
             edit = @Edit(title = "文本输入", search = @Search(value = true, vague = true))
     )
     private String input;
 
     @EruptField(
-            views = @View(title = "数字输入"),
+            views = @View(title = "数字"),
             edit = @Edit(title = "数字输入", search = @Search(value = true, vague = true))
     )
     private Integer number;
@@ -57,7 +57,7 @@ public class Demo extends BaseModel {
 
 
     @EruptField(
-            views = @View(title = "swf", viewType = ViewType.SWF),
+            views = @View(title = "flash动画", viewType = ViewType.SWF),
             edit = @Edit(title = "swf", search = @Search(value = true, vague = true), type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(fileTypes = "swf"))
     )

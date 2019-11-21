@@ -19,7 +19,7 @@ public @interface Erupt {
 
     String primaryKeyCol() default AnnotationConst.ID;
 
-//    String alias() default "";
+    String alias() default "";
 
     @Transient
     String name();
@@ -54,4 +54,6 @@ public @interface Erupt {
 
     @Transient
     Html afterHtml() default @Html;
+
+    Class<? extends Annotation> extra() default Annotation.class;
 }

@@ -3,30 +3,32 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>xyz.erupt</groupId>
+    <groupId>${erupt.groupId}</groupId>
     <artifactId>erupt</artifactId>
-    <version>0.1.1</version>
+    <version>${erupt.version}</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
     <description>erupt common data framework pom parent</description>
     <url>https://www.erupt.xyz</url>
 
-    <modules>
-        <module>erupt-annotation</module>
-        <module>erupt-tool</module>
-        <module>erupt-core</module>
-        <module>erupt-auth</module>
-        <module>erupt-web</module>
-        <module>erupt-report</module>
-    </modules>
-
     <properties>
+        <erupt.groupId>xyz.erupt</erupt.groupId>
         <erupt.version>0.1.1</erupt.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
+
+    <modules>
+        <module>erupt-annotation</module>
+        <module>erupt-tool</module>
+        <module>erupt-core</module>
+        <module>erupt-auth</module>
+        <module>erupt-tpl</module>
+        <module>erupt-web</module>
+        <module>erupt-report</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -49,6 +51,10 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

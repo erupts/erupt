@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.Alias;
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Html;
@@ -44,6 +45,7 @@ public @interface Edit {
     BoolType boolType() default @BoolType(trueText = "是", falseText = "否");
 
     @Transient
+    @Alias("html")
     Html htmlType() default @Html;
 
     @SerializeBy(method = "type", value = "CHOICE")

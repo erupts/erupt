@@ -1,4 +1,4 @@
-package xyz.erupt.core.config;
+package xyz.erupt.tpl.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,6 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
  */
 @Configuration
 public class TemplateConfig {
-
 
     @Bean
     public TemplateEngine templateEngine() {
