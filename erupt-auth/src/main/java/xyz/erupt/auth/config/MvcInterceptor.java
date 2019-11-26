@@ -43,5 +43,8 @@ public class MvcInterceptor implements WebMvcConfigurer {
                 .addPathPatterns("/**");
     }
 
-
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/erupt/**").addResourceLocations("classpath:/erupt-web/");
+//    }
 }
