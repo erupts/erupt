@@ -57,7 +57,6 @@ public class EruptUserController {
             //生成token
             userService.createToken(loginModel);
             loginModel.setUserName(loginModel.getEruptUser().getName());
-
             List<EruptMenu> menuList;
             if (null != loginModel.getEruptUser().getIsAdmin() && loginModel.getEruptUser().getIsAdmin()) {
                 menuList = entityManager.createQuery("from EruptMenu order by sort").getResultList();
@@ -83,6 +82,8 @@ public class EruptUserController {
             List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels, null);
             sessionServiceImpl.put(SessionKey.MENU_TREE + loginModel.getToken(), treeResultModels, eruptAuthConfig.getExpireTimeByLogin());
             sessionServiceImpl.put(SessionKey.MENU_LIST + loginModel.getToken(), menuList, eruptAuthConfig.getExpireTimeByLogin());
+            //记录登录日志
+            userService.saveLoginLog(loginModel.getEruptUser());
         }
         return loginModel;
     }

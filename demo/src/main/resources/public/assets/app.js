@@ -1,8 +1,8 @@
 window.eruptSiteConfig = {
     //global config
     domain: "",
-    title: "xxxx",
-    desc: "xxxxxxxx",
+    title: "DEMO",
+    desc: "ERUPT DEMO",
     routerReuse: false,
     amapKey: "15bc4df0bd6758645308fa591f439799",
     logoPath: "/assets/logo.svg",

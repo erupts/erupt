@@ -2,9 +2,13 @@ package xyz.erupt.auth.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.EruptField;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  * Created by liyuepeng on 10/11/18.
@@ -15,7 +19,8 @@ import javax.persistence.*;
 public class BaseModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
     @Column(name = "ID")
     @EruptField
     private Long id;

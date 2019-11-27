@@ -2,6 +2,7 @@ package xyz.erupt.auth.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
+import xyz.erupt.auth.model.EruptUserLoginLog;
 import xyz.erupt.auth.repository.UserRepository;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.auth.util.MD5Utils;
@@ -22,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +56,20 @@ public class UserService {
 
     //TODO 分布式下计数会不准
     private static Map<String, Integer> loginErrorCount = new HashMap<>();
+
+    @Transactional
+    public void saveLoginLog(EruptUser user) {
+        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+        EruptUserLoginLog loginLog = new EruptUserLoginLog();
+        loginLog.setEruptUser(user);
+        loginLog.setLoginTime(new Date());
+        loginLog.setIp(IpUtil.getIpAddr(request));
+        loginLog.setSystem(userAgent.getOperatingSystem().getName());
+        loginLog.setBrowser(userAgent.getBrowser().getName() + " "
+                + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
+        loginLog.setDeviceType(userAgent.getOperatingSystem().getDeviceType().getName());
+        entityManager.persist(loginLog);
+    }
 
 
     public LoginModel login(String account, String pwd, String verifyCode, HttpServletRequest request) {
