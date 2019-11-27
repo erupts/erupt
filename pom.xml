@@ -27,6 +27,7 @@
         <module>erupt-auth</module>
         <module>erupt-tpl</module>
         <module>erupt-web</module>
+        <module>erupt-scheduler</module>
         <module>erupt-report</module>
     </modules>
 
