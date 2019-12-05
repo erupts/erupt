@@ -16,6 +16,10 @@ public class TypeUtil {
             "short", "int", "integer", "long", "float", "double", "bigdecimal", "biginteger"
     };
 
+    private static Pattern NUMBER_PATTERN = Pattern.compile("^[-+]?\\d+(\\.\\d+)?$");
+
+
+
     /**
      * 将未知类型转换为目标类型（目标类型只支持基本数据类型）
      *
@@ -84,8 +88,7 @@ public class TypeUtil {
 
 
     public static boolean isNumeric(String str) {
-        Pattern pattern = Pattern.compile("^[-+]?\\d+(\\.\\d+)?$");
-        return pattern.matcher(str).matches();
+        return NUMBER_PATTERN.matcher(str).matches();
     }
 
 }

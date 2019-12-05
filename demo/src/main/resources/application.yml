@@ -12,7 +12,7 @@ spring:
   gson:
     date-format: yyyy-MM-dd HH:mm:ss
 server:
-  port: 9999
+  port: 8989
   compression:
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
     enabled: true

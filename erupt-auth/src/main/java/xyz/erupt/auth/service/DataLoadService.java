@@ -33,7 +33,7 @@ public class DataLoadService implements CommandLineRunner {
                     //用户
                     EruptUser eruptUser = new EruptUser();
                     eruptUser.setIsAdmin(true);
-                    eruptUser.setIsMD5(true);
+                    eruptUser.setIsMd5(true);
                     eruptUser.setStatus(true);
                     eruptUser.setAccount("erupt");
                     eruptUser.setPassword(MD5Utils.digest("erupt"));

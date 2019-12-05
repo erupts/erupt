@@ -1,6 +1,7 @@
 package xyz.erupt.annotation;
 
 import xyz.erupt.annotation.config.ToMap;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 
@@ -19,7 +20,7 @@ public @interface EruptField {
     View[] views() default {};
 
     //编辑时的列信息
-    Edit edit() default @Edit(title = "");
+    Edit edit() default @Edit(title = AnnotationConst.EMPTY_STR);
 
     @ToMap(key = "key")
     KV[] params() default {};

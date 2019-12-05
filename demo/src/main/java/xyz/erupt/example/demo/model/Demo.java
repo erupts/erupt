@@ -50,14 +50,14 @@ public class Demo extends BaseModel {
     private Boolean bool;
 
     @EruptField(
-            views = @View(title = "图片", viewType = ViewType.IMAGE),
+            views = @View(title = "图片", type = ViewType.IMAGE),
             edit = @Edit(title = "图片")
     )
     private String image;
 
 
     @EruptField(
-            views = @View(title = "flash动画", viewType = ViewType.SWF),
+            views = @View(title = "flash动画", type = ViewType.SWF),
             edit = @Edit(title = "swf", search = @Search(value = true, vague = true), type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(fileTypes = "swf"))
     )

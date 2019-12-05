@@ -30,7 +30,6 @@ public class EruptMenu extends BaseModel {
             views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true)
     )
-    @Column(name = "CODE")
     private String code;
 
     @Column(name = "NAME")
@@ -62,7 +61,6 @@ public class EruptMenu extends BaseModel {
     )
     private String path;
 
-    @Column(name = "STATUS")
     @EruptField(
             edit = @Edit(
                     notNull = true,
@@ -79,7 +77,6 @@ public class EruptMenu extends BaseModel {
     )
     private Integer status = 1;
 
-    @Column(name = "SORT")
     @EruptField(
             edit = @Edit(
                     title = "顺序",
@@ -90,7 +87,6 @@ public class EruptMenu extends BaseModel {
     private Integer sort;
 
 
-    @Column(name = "ICON")
     @EruptField(
             edit = @Edit(
                     title = "图标",

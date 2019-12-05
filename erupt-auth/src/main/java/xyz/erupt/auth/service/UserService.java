@@ -105,7 +105,7 @@ public class UserService {
             }
             //校验密码
             boolean pass = false;
-            if (eruptUser.getIsMD5()) {
+            if (eruptUser.getIsMd5()) {
                 if (MD5Utils.digest(pwd).equalsIgnoreCase(eruptUser.getPassword())) {
                     pass = true;
                 }
@@ -141,7 +141,7 @@ public class UserService {
             return EruptApiModel.errorNoInterceptApi("修改失败，新密码与确认密码不匹配");
         }
         EruptUser eruptUser = userRepository.findByAccount(account);
-        if (eruptUser.getIsMD5()) {
+        if (eruptUser.getIsMd5()) {
             pwd = MD5Utils.digest(pwd);
             newPwd = MD5Utils.digest(newPwd);
         }

@@ -40,7 +40,7 @@ public class CarManager extends BaseModel {
     private Boolean status;
 
     @EruptField(
-            views = @View(title = "车辆图片", viewType = ViewType.IMAGE),
+            views = @View(title = "车辆图片", type = ViewType.IMAGE),
             edit = @Edit(title = "车辆图片", notNull = true)
     )
     private String image;

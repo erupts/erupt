@@ -27,14 +27,12 @@ public class EruptDict extends BaseModel {
             views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true)
     )
-    @Column(name = "CODE")
     private String code;
 
     @EruptField(
             views = @View(title = "名称"),
             edit = @Edit(title = "名称", notNull = true)
     )
-    @Column(name = "NAME")
     private String name;
 
 
@@ -54,7 +52,6 @@ public class EruptDict extends BaseModel {
             views = @View(title = "排序"),
             edit = @Edit(title = "排序")
     )
-    @Column(name = "SORT")
     private Integer sort;
 
     @EruptField(
@@ -62,7 +59,6 @@ public class EruptDict extends BaseModel {
                     title = "备注"
             )
     )
-    @Column(name = "REMARK")
     private String remark;
 
 

@@ -28,14 +28,12 @@ public class EruptRole extends BaseModel {
             views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true)
     )
-    @Column(name = "CODE")
     private String code;
 
     @EruptField(
             views = @View(title = "名称"),
             edit = @Edit(title = "名称", notNull = true)
     )
-    @Column(name = "NAME")
     private String name;
 
     @Column(name = "STATUS")

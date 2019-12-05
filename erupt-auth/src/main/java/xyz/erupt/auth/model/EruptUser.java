@@ -31,21 +31,18 @@ import java.util.Set;
 @Setter
 public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
-    @Column(name = "ACCOUNT")
     @EruptField(
             views = @View(title = "用户名", sortable = true),
             edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true)
     )
     private String account;
 
-    @Column(name = "NAME")
     @EruptField(
             views = @View(title = "姓名", sortable = true),
             edit = @Edit(title = "姓名", notNull = true, search = @Search(value = true, vague = true))
     )
     private String name;
 
-    @Column(name = "IS_MD5")
     @EruptField(
             views = @View(title = "md5加密"),
             edit = @Edit(
@@ -58,7 +55,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                     search = @Search(true)
             )
     )
-    private Boolean isMD5;
+    private Boolean isMd5;
 
     @Column(name = "PWD")
     @EruptField(
@@ -72,7 +69,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     )
     private String password2;
 
-    @Column(name = "STATUS")
     @EruptField(
             views = @View(title = "状态"),
             edit = @Edit(
@@ -87,7 +83,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     private Boolean status;
 
     @Lob
-    @Column(name = "WHITE_IP")
     @EruptField(
             edit = @Edit(
                     title = "ip白名单",
@@ -99,7 +94,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     private String whiteIp;
 
     @Lob
-    @Column(name = "REMARK")
     @EruptField(
             edit = @Edit(
                     title = "备注",
@@ -122,13 +116,12 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     )
     private Set<EruptRole> roles;
 
-    @Column(name = "IS_ADMIN")
     private Boolean isAdmin;
 
     @Override
     public void beforeAdd(EruptUser eruptUser) {
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
-            if (eruptUser.getIsMD5()) {
+            if (eruptUser.getIsMd5()) {
                 eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
             }
         } else {

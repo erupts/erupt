@@ -24,11 +24,6 @@ public class EruptFieldAnnotationException extends RuntimeException {
                     }
                 }
                 break;
-            case BOOLEAN:
-                if (!eruptFieldModel.getField().getType().getSimpleName().toLowerCase().equals("boolean")) {
-                    throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "使用@BoolType注解，要求返回值必须为boolean类型");
-                }
-                break;
         }
 
 

@@ -138,7 +138,7 @@ public class IdentifyCode {
      */
     private Font getFont(int size) {
         Random random = new Random();
-        Font font[] = new Font[5];
+        Font[] font = new Font[5];
         font[0] = new Font("Ravie", Font.PLAIN, size);
         font[1] = new Font("Antique Olive Compact", Font.PLAIN, size);
         font[2] = new Font("Fixedsys", Font.PLAIN, size);

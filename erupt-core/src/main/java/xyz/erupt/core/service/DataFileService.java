@@ -127,15 +127,15 @@ public class DataFileService {
     public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) throws Exception {
         Sheet sheet = workbook.getSheetAt(0);
         Row titleRow = sheet.getRow(0);
-        Map<String, EruptFieldModel> editTitleMapingEruptField = new HashMap<>();
+        Map<String, EruptFieldModel> editTitleMappingEruptField = new HashMap<>();
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
-            editTitleMapingEruptField.put(fieldModel.getEruptField().edit().title(), fieldModel);
+            editTitleMappingEruptField.put(fieldModel.getEruptField().edit().title(), fieldModel);
         }
         Map<Integer, EruptFieldModel> cellIndexMapping = new HashMap<>();
         Map<Integer, Map<String, Object>> cellIndexJoinEruptMap = new HashMap<>();
         for (int i = 0; i < titleRow.getPhysicalNumberOfCells(); i++) {
             String titleName = titleRow.getCell(i).getStringCellValue();
-            EruptFieldModel eruptFieldModel = editTitleMapingEruptField.get(titleName);
+            EruptFieldModel eruptFieldModel = editTitleMappingEruptField.get(titleName);
             cellIndexMapping.put(i, eruptFieldModel);
             switch (eruptFieldModel.getEruptField().edit().type()) {
                 case CHOICE:

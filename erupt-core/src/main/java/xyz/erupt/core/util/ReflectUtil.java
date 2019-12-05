@@ -22,7 +22,7 @@ public class ReflectUtil {
                 return field;
             } catch (NoSuchFieldException e) {
                 clazz = clazz.getSuperclass();
-                if (clazz.getSimpleName().equals("Object")) {
+                if ("Object".equals(clazz.getSimpleName())) {
                     break;
                 }
             }

@@ -10,7 +10,7 @@ public @interface View {
     //在修饰类型为实体类对象时必须指定列名
     String column() default "";
 
-    ViewType viewType() default ViewType.TEXT;
+    ViewType type() default ViewType.AUTO;
 
     boolean show() default true;
 
