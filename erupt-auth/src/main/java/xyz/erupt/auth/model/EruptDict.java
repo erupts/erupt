@@ -2,7 +2,6 @@ package xyz.erupt.auth.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -18,8 +17,7 @@ import javax.persistence.*;
 @Table(name = "E_DICT", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "数据字典",
-        orderBy = "EruptDict.sort",
-        tree = @Tree(id = "id", label = "name", pid = "parent.id")
+        orderBy = "EruptDict.sort"
 )
 public class EruptDict extends BaseModel {
 
