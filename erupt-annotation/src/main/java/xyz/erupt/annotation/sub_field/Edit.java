@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.Alias;
+import xyz.erupt.annotation.config.NotBlank;
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Html;
@@ -11,6 +12,7 @@ import java.beans.Transient;
 /**
  * Created by liyuepeng on 9/28/18.
  */
+//@NotBlank("title")
 public @interface Edit {
 
     String title();

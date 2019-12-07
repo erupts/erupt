@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.Edit;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

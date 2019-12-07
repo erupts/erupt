@@ -2,7 +2,9 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
+import xyz.erupt.annotation.config.NotBlank;
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.JavaType;
@@ -59,6 +61,13 @@ public class AnnotationUtil {
 
     private static JsonObject annotationToJson(Annotation annotation) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         JsonObject jsonObject = new JsonObject();
+        NotBlank notBlank = annotation.annotationType().getAnnotation(NotBlank.class);
+        if (null != notBlank) {
+            String val = (String) annotation.annotationType().getDeclaredMethod(notBlank.value()).invoke(annotation);
+            if (StringUtils.isBlank(val)) {
+                return null;
+            }
+        }
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
             if (null != tran && tran.value()) continue;

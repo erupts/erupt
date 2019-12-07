@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "erupt", ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = "erupt")
 public class EruptConfig {
 
     //注解扫描根路径

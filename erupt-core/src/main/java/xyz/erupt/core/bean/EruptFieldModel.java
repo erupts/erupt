@@ -95,7 +95,7 @@ public class EruptFieldModel {
                 }
             }
             // edit auto
-            if (EditType.AUTO == this.eruptField.edit().type()) {
+            if (!AnnotationConst.EMPTY_STR.equals(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
                 Map<String, Object> editValues = getAnnotationMap(this.eruptField.edit());
                 if (JavaType.BOOLEAN.equals(this.fieldReturnName.toLowerCase())) {
                     editValues.put(TYPE, EditType.BOOLEAN);

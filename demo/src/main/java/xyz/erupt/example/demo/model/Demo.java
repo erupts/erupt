@@ -11,6 +11,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.example.demo.handler.HtmlHandler;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -39,7 +40,7 @@ public class Demo extends BaseModel {
 
     @EruptField(
             views = @View(title = "时间")
-//            edit = @Edit(title = "数字输入", search = @Search(value = true, vague = true))
+//            edit = @Edit(title = "时间输入", search = @Search(value = true, vague = true))
     )
     private Date date;
 
@@ -73,7 +74,7 @@ public class Demo extends BaseModel {
     @EruptField(
             views = @View(title = "自定义HTML"),
             edit = @Edit(title = "HTML", type = EditType.HTML,
-                    htmlType = @Html(path = "demo.html", htmlHandler = Html.HtmlHandler.class, params = {"123", "xxx"}),
+                    htmlType = @Html(path = "demo.html", htmlHandler = HtmlHandler.class, params = {"123", "xxx"}),
                     search = @Search(true))
     )
     private String html;

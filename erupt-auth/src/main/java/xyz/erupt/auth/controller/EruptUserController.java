@@ -15,7 +15,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.session.SessionServiceImpl;
+import xyz.erupt.core.service.SessionService;
 import xyz.erupt.core.util.DataHandlerUtil;
 
 import javax.persistence.EntityManager;
@@ -38,7 +38,7 @@ public class EruptUserController {
     private UserService userService;
 
     @Autowired
-    private SessionServiceImpl sessionServiceImpl;
+    private SessionService sessionService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -80,8 +80,8 @@ public class EruptUserController {
                 treeModels.add(treeModel);
             }
             List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels, null);
-            sessionServiceImpl.put(SessionKey.MENU_TREE + loginModel.getToken(), treeResultModels, eruptAuthConfig.getExpireTimeByLogin());
-            sessionServiceImpl.put(SessionKey.MENU_LIST + loginModel.getToken(), menuList, eruptAuthConfig.getExpireTimeByLogin());
+            sessionService.put(SessionKey.MENU_TREE + loginModel.getToken(), treeResultModels, eruptAuthConfig.getExpireTimeByLogin());
+            sessionService.put(SessionKey.MENU_LIST + loginModel.getToken(), menuList, eruptAuthConfig.getExpireTimeByLogin());
             //记录登录日志
             userService.saveLoginLog(loginModel.getEruptUser());
         }
@@ -93,9 +93,9 @@ public class EruptUserController {
     @EruptRouter(verifyErupt = false)
     public EruptApiModel logout(HttpServletRequest request) {
         String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
-        sessionServiceImpl.remove(SessionKey.MENU_LIST + token);
-        sessionServiceImpl.remove(SessionKey.MENU_TREE + token);
-        sessionServiceImpl.remove(SessionKey.USER_TOKEN + token);
+        sessionService.remove(SessionKey.MENU_LIST + token);
+        sessionService.remove(SessionKey.MENU_TREE + token);
+        sessionService.remove(SessionKey.USER_TOKEN + token);
         return EruptApiModel.successApi();
     }
 
@@ -115,7 +115,7 @@ public class EruptUserController {
     @EruptRouter(verifyErupt = false)
     public List<TreeModel> getMenu(HttpServletRequest request) {
         // type -> Set<EruptMenu>
-        return sessionServiceImpl.get(SessionKey.MENU_TREE + request.getHeader("token"), new TypeToken<List<TreeModel>>() {
+        return sessionService.get(SessionKey.MENU_TREE + request.getHeader("token"), new TypeToken<List<TreeModel>>() {
         }.getType());
     }
 

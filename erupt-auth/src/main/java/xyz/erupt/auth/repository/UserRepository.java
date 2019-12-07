@@ -10,7 +10,4 @@ public interface UserRepository extends JpaRepository<EruptUser, Long> {
 
     EruptUser findByAccount(String account);
 
-//    @Query("FROM EruptUser E WHERE E.account = :account AND E.password = :pwd AND ")
-//    EruptUser findUser(@Param("account") String account, @Param("pwd") String pwd);
-
 }

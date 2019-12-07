@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
  * Created by liyuepeng on 2019-11-19.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface NotNull {
+@Target(ElementType.ANNOTATION_TYPE)
+public @interface NotBlank {
+    String value();
 }

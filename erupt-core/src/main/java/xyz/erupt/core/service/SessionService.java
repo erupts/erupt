@@ -1,4 +1,4 @@
-package xyz.erupt.core.session;
+package xyz.erupt.core.service;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * Created by liyuepeng on 2019-08-13.
  */
 @Component
-public class SessionServiceImpl implements SessionService {
+public class SessionService {
 
     @Autowired
     private EruptConfig eruptConfig;
@@ -28,16 +28,14 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     private Gson gson = new Gson();
 
-    @Override
-    public void put(String key, Object obj, long timeout, TimeUnit unit) {
+    public void put(String key, Object obj, long timeout) {
         if (eruptConfig.isRedisSession()) {
-            redisTemplate.opsForValue().set(key, gson.toJson(obj), timeout, unit);
+            redisTemplate.opsForValue().set(key, gson.toJson(obj), timeout, TimeUnit.MINUTES);
         } else {
             request.getSession().setAttribute(key, obj);
         }
     }
 
-    @Override
     public void remove(String key) {
         if (eruptConfig.isRedisSession()) {
             redisTemplate.delete(key);
@@ -46,7 +44,6 @@ public class SessionServiceImpl implements SessionService {
         }
     }
 
-    @Override
     public Object get(String key) {
         if (eruptConfig.isRedisSession()) {
             return redisTemplate.opsForValue().get(key);

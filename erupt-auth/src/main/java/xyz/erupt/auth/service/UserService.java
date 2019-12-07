@@ -18,7 +18,7 @@ import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.auth.util.MD5Utils;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.session.SessionServiceImpl;
+import xyz.erupt.core.service.SessionService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,7 +42,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private SessionServiceImpl sessionServiceImpl;
+    private SessionService sessionService;
 
     @Autowired
     private EruptAuthConfig eruptAuthConfig;
@@ -78,8 +78,8 @@ public class UserService {
             if (StringUtils.isBlank(verifyCode)) {
                 return new LoginModel(false, "请填写验证码", true);
             }
-            Object vc = sessionServiceImpl.get(SessionKey.VERIFY_CODE + account);
-            sessionServiceImpl.remove(SessionKey.VERIFY_CODE + account);
+            Object vc = sessionService.get(SessionKey.VERIFY_CODE + account);
+            sessionService.remove(SessionKey.VERIFY_CODE + account);
             if (vc == null || !vc.toString().equalsIgnoreCase(verifyCode)) {
                 return new LoginModel(false, "验证码不正确", true);
             }
@@ -161,16 +161,16 @@ public class UserService {
     public void createToken(LoginModel loginModel) {
         loginModel.setToken(RandomStringUtils.random(20, true, true));
 //        loginModel.getEruptUser().setRoles(null);
-        sessionServiceImpl.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), eruptAuthConfig.getExpireTimeByLogin());
+        sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), eruptAuthConfig.getExpireTimeByLogin());
     }
 
     public Long getCurrUserId() {
         String token = request.getHeader("token");
-        return (Long) sessionServiceImpl.get(SessionKey.USER_TOKEN + token);
+        return (Long) sessionService.get(SessionKey.USER_TOKEN + token);
     }
 
     public boolean verifyToken(String token) {
-        if (null == sessionServiceImpl.get(SessionKey.USER_TOKEN + token)) {
+        if (null == sessionService.get(SessionKey.USER_TOKEN + token)) {
             return false;
         } else {
             return true;
@@ -192,7 +192,7 @@ public class UserService {
         }
         //校验菜单权限
         {
-            List<EruptMenu> menus = sessionServiceImpl.get(SessionKey.MENU_LIST + token, new TypeToken<List<EruptMenu>>() {
+            List<EruptMenu> menus = sessionService.get(SessionKey.MENU_LIST + token, new TypeToken<List<EruptMenu>>() {
             }.getType());
             boolean result = false;
             em:
