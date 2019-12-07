@@ -18,7 +18,7 @@ import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.MimeUtil;
-import xyz.erupt.core.util.SpringUtil;
+import xyz.erupt.core.util.EruptSpringUtil;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -115,11 +115,11 @@ public class EruptFileController {
             }
             //执行upload proxy
             for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dataProxy()) {
-                SpringUtil.getBean(clazz).beforeUpLoadFile(file.getInputStream(), dest);
+                EruptSpringUtil.getBean(clazz).beforeUpLoadFile(file.getInputStream(), dest);
             }
             file.transferTo(dest);
             for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dataProxy()) {
-                SpringUtil.getBean(clazz).afterUpLoadFile(dest, path);
+                EruptSpringUtil.getBean(clazz).afterUpLoadFile(dest, path);
             }
             return EruptApiModel.successApi(path.replace("\\", "/"));
         } catch (Exception e) {

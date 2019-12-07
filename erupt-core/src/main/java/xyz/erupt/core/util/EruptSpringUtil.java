@@ -15,14 +15,14 @@ import java.util.function.Consumer;
  * Created by liyuepeng on 1/24/19.
  */
 @Component
-public class SpringUtil implements ApplicationContextAware {
+public class EruptSpringUtil implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (SpringUtil.applicationContext == null) {
-            SpringUtil.applicationContext = applicationContext;
+        if (EruptSpringUtil.applicationContext == null) {
+            EruptSpringUtil.applicationContext = applicationContext;
         }
     }
 

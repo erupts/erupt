@@ -13,7 +13,7 @@ import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.util.ReflectUtil;
-import xyz.erupt.core.util.SpringUtil;
+import xyz.erupt.core.util.EruptSpringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class CoreService implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         CoreService.staticHotBuild = eruptConfig.isHotBuild();
-        new SpringUtil().scannerPackage(eruptConfig.getScannerPackage(), new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
+        new EruptSpringUtil().scannerPackage(eruptConfig.getScannerPackage(), new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
             EruptModel eruptModel = initEruptModel(clazz);
             //other info to memory
             ERUPTS.put(eruptModel.getEruptName(), eruptModel);

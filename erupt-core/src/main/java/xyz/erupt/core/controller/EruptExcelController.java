@@ -20,7 +20,7 @@ import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
-import xyz.erupt.core.util.SpringUtil;
+import xyz.erupt.core.util.EruptSpringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -87,7 +87,7 @@ public class EruptExcelController {
             Page page = eruptDataController.getEruptData(eruptName, jsonObject);
             Workbook wb = dataFileService.exportExcel(eruptModel, page);
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
-                SpringUtil.getBean(proxy).excelExport(wb);
+                EruptSpringUtil.getBean(proxy).excelExport(wb);
             }
             wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + DataFileService.XLS_FORMAT));
         } else {

@@ -11,8 +11,11 @@ spring:
       ddl-auto: update
   gson:
     date-format: yyyy-MM-dd HH:mm:ss
+  redis:
+    database: 0
+    timeout: 10000
 server:
-  port: 8989
+  port: 9999
   compression:
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
     enabled: true

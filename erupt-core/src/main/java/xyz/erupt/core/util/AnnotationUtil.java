@@ -143,7 +143,7 @@ public class AnnotationUtil {
         String condition = filter.condition();
         if (filter.conditionHandlers().length > 0) {
             for (Class<? extends ConditionHandler> conditionHandler : filter.conditionHandlers()) {
-                ConditionHandler ch = SpringUtil.getBean(conditionHandler);
+                ConditionHandler ch = EruptSpringUtil.getBean(conditionHandler);
                 condition = ch.handler(condition, filter.params());
             }
         }
@@ -163,9 +163,9 @@ public class AnnotationUtil {
         EruptDataProcessor eruptDataProcessor = clazz.getAnnotation(EruptDataProcessor.class);
         DataService dataService;
         if (null != eruptDataProcessor) {
-            dataService = SpringUtil.getBean(eruptDataProcessor.processors());
+            dataService = EruptSpringUtil.getBean(eruptDataProcessor.processors());
         } else {
-            dataService = SpringUtil.getBean(DBService.class);
+            dataService = EruptSpringUtil.getBean(DBService.class);
         }
         return dataService;
     }
