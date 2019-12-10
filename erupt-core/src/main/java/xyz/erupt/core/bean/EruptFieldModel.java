@@ -88,12 +88,12 @@ public class EruptFieldModel {
     private void eruptAutoConfig() {
         try {
             // view auto
-            for (View view : this.eruptField.views()) {
-                if (ViewType.AUTO == view.type()) {
-                    Map<String, Object> viewValues = getAnnotationMap(view);
-                    viewValues.put(TYPE, ViewType.TEXT);
-                }
-            }
+//            for (View view : this.eruptField.views()) {
+//                if (ViewType.AUTO == view.type()) {
+//                    Map<String, Object> viewValues = getAnnotationMap(view);
+//                    viewValues.put(TYPE, ViewType.TEXT);
+//                }
+//            }
             // edit auto
             if (!AnnotationConst.EMPTY_STR.equals(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
                 Map<String, Object> editValues = getAnnotationMap(this.eruptField.edit());

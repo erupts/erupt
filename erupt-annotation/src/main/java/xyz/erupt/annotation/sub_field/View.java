@@ -1,5 +1,7 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.EruptProperty;
+
 /**
  * Created by liyuepeng on 9/28/18.
  */
@@ -10,7 +12,8 @@ public @interface View {
     //在修饰类型为实体类对象时必须指定列名
     String column() default "";
 
-    ViewType type() default ViewType.AUTO;
+    @EruptProperty(alias = "viewType")
+    ViewType type() default ViewType.TEXT;
 
     boolean show() default true;
 
