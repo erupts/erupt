@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.util.MD5Utils;
 
@@ -43,6 +44,47 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     )
     private String name;
 
+//    @EruptField(
+//            views = @View(title = "联系电话", sortable = true),
+//            edit = @Edit(title = "联系电话", notNull = true, search = @Search(value = true, vague = true))
+//    )
+//    private String phone;
+//
+//    @EruptField(
+//            views = @View(title = "邮箱", sortable = true),
+//            edit = @Edit(title = "邮箱", notNull = true, search = @Search(value = true, vague = true))
+//    )
+//    private String email;
+//
+//    @EruptField(
+//            views = @View(title = "身份证号", sortable = true),
+//            edit = @Edit(title = "身份证号", notNull = true, search = @Search(value = true, vague = true))
+//    )
+//    private String identity;
+
+    @ManyToOne
+    @JoinColumn(name = "ERUPT_MENU_ID")
+    @EruptField(
+            views = @View(title = "首页地址", column = "name"),
+            edit = @Edit(
+                    title = "首页地址",
+                    type = EditType.REFERENCE_TREE,
+                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
+            )
+    )
+    private EruptMenu eruptMenu;
+
+    @EruptField(
+            edit = @Edit(title = "密码", notNull = true)
+    )
+    private String password;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "确认密码")
+    )
+    private String password2;
+
     @EruptField(
             views = @View(title = "md5加密"),
             edit = @Edit(
@@ -56,18 +98,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             )
     )
     private Boolean isMd5;
-
-    @Column(name = "PWD")
-    @EruptField(
-            edit = @Edit(title = "密码", notNull = true)
-    )
-    private String password;
-
-    @Transient
-    @EruptField(
-            edit = @Edit(title = "确认密码")
-    )
-    private String password2;
 
     @EruptField(
             views = @View(title = "状态"),

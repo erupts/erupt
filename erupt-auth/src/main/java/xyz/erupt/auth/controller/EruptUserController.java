@@ -10,6 +10,7 @@ import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
+import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.UserService;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptApiModel;
@@ -55,14 +56,18 @@ public class EruptUserController {
         LoginModel loginModel = userService.login(account, pwd, verifyCode, request);
         if (loginModel.isPass()) {
             //生成token
+            EruptUser eruptUser = loginModel.getEruptUser();
             userService.createToken(loginModel);
-            loginModel.setUserName(loginModel.getEruptUser().getName());
+            loginModel.setUserName(eruptUser.getName());
+            if (null != eruptUser.getEruptMenu()) {
+                loginModel.setIndexPath(eruptUser.getEruptMenu().getPath());
+            }
             List<EruptMenu> menuList;
-            if (null != loginModel.getEruptUser().getIsAdmin() && loginModel.getEruptUser().getIsAdmin()) {
+            if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
                 menuList = entityManager.createQuery("from EruptMenu order by sort").getResultList();
             } else {
                 Set<EruptMenu> menuSet = new HashSet<>();
-                for (EruptRole role : loginModel.getEruptUser().getRoles()) {
+                for (EruptRole role : eruptUser.getRoles()) {
                     if (role.getStatus()) {
                         menuSet.addAll(role.getMenus());
                     }
@@ -83,7 +88,7 @@ public class EruptUserController {
             sessionService.put(SessionKey.MENU_TREE + loginModel.getToken(), treeResultModels, eruptAuthConfig.getExpireTimeByLogin());
             sessionService.put(SessionKey.MENU_LIST + loginModel.getToken(), menuList, eruptAuthConfig.getExpireTimeByLogin());
             //记录登录日志
-            userService.saveLoginLog(loginModel.getEruptUser());
+            userService.saveLoginLog(eruptUser);
         }
         return loginModel;
     }

@@ -21,6 +21,8 @@ public class LoginModel {
 
     private String userName;
 
+    private String indexPath;
+
     public LoginModel(boolean pass, EruptUser eruptUser) {
         this.pass = pass;
         this.eruptUser = eruptUser;
