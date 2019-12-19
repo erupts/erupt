@@ -11,17 +11,20 @@ import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
-import xyz.erupt.auth.service.UserService;
+import xyz.erupt.auth.service.SessionService;
+import xyz.erupt.auth.service.EruptUserService;
+import xyz.erupt.auth.util.IdentifyCode;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.service.SessionService;
 import xyz.erupt.core.util.DataHandlerUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,20 +35,20 @@ import java.util.stream.Collectors;
 @RequestMapping(RestPath.ERUPT_API)
 public class EruptUserController {
 
-    @Autowired
-    private Gson gson;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private SessionService sessionService;
-
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
+    private EruptUserService eruptUserService;
+
+    @Autowired
+    private SessionService sessionService;
+
+    @Autowired
     private EruptAuthConfig eruptAuthConfig;
+
+    @Autowired
+    private Gson gson;
 
     @PostMapping("/login")
     @ResponseBody
@@ -53,11 +56,11 @@ public class EruptUserController {
                             @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode,
                             HttpServletRequest request) {
-        LoginModel loginModel = userService.login(account, pwd, verifyCode, request);
+        LoginModel loginModel = eruptUserService.login(account, pwd, verifyCode, request);
         if (loginModel.isPass()) {
             //生成token
             EruptUser eruptUser = loginModel.getEruptUser();
-            userService.createToken(loginModel);
+            eruptUserService.createToken(loginModel);
             loginModel.setUserName(eruptUser.getName());
             if (null != eruptUser.getEruptMenu()) {
                 loginModel.setIndexPath(eruptUser.getEruptMenu().getPath());
@@ -85,10 +88,10 @@ public class EruptUserController {
                 treeModels.add(treeModel);
             }
             List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels, null);
-            sessionService.put(SessionKey.MENU_TREE + loginModel.getToken(), treeResultModels, eruptAuthConfig.getExpireTimeByLogin());
-            sessionService.put(SessionKey.MENU_LIST + loginModel.getToken(), menuList, eruptAuthConfig.getExpireTimeByLogin());
+            sessionService.put(SessionKey.MENU_TREE + loginModel.getToken(), gson.toJson(treeResultModels), eruptAuthConfig.getExpireTimeByLogin());
+            sessionService.put(SessionKey.MENU_LIST + loginModel.getToken(), gson.toJson(menuList), eruptAuthConfig.getExpireTimeByLogin());
             //记录登录日志
-            userService.saveLoginLog(eruptUser);
+            eruptUserService.saveLoginLog(eruptUser);
         }
         return loginModel;
     }
@@ -112,7 +115,7 @@ public class EruptUserController {
                                    @RequestParam("pwd") String pwd,
                                    @RequestParam("newPwd") String newPwd,
                                    @RequestParam("newPwd2") String newPwd2) {
-        return userService.changePwd(account, pwd, newPwd, newPwd2);
+        return eruptUserService.changePwd(account, pwd, newPwd, newPwd2);
     }
 
     @GetMapping("/menu")
@@ -122,6 +125,33 @@ public class EruptUserController {
         // type -> Set<EruptMenu>
         return sessionService.get(SessionKey.MENU_TREE + request.getHeader("token"), new TypeToken<List<TreeModel>>() {
         }.getType());
+    }
+
+
+    /**
+     * 生成验证码
+     */
+    @GetMapping
+    @RequestMapping("/code-img")
+    public void createCode(@RequestParam("account") String account, HttpServletResponse response) throws Exception {
+        // 设置响应的类型格式为图片格式
+        response.setContentType("image/jpeg");
+        // 禁止图像缓存。
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        // 自定义宽、高、字数和干扰线的条数
+        IdentifyCode code = new IdentifyCode(100, 38, 4, 20);
+        // 验证码过期时间1分钟
+        sessionService.put(SessionKey.VERIFY_CODE + account, code.getCode(), 1);
+        // 响应图片
+        ServletOutputStream out = response.getOutputStream();
+        code.write(out);
+        try {
+            out.flush();
+        } finally {
+            out.close();
+        }
     }
 
 }

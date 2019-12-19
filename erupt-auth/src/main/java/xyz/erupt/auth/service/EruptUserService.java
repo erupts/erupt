@@ -12,13 +12,12 @@ import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
-import xyz.erupt.auth.model.EruptUserLoginLog;
+import xyz.erupt.auth.model.EruptLoginLog;
 import xyz.erupt.auth.repository.UserRepository;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.auth.util.MD5Utils;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.service.SessionService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,7 +32,7 @@ import java.util.Map;
  * Created by liyuepeng on 2018-12-13.
  */
 @Service
-public class UserService {
+public class EruptUserService {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -53,6 +52,8 @@ public class UserService {
     @Autowired
     private Gson gson;
 
+    public static final String USER_AGENT = "User-Agent";
+
 
     //TODO 分布式下计数会不准
     private static Map<String, Integer> loginErrorCount = new HashMap<>();
@@ -60,7 +61,7 @@ public class UserService {
     @Transactional
     public void saveLoginLog(EruptUser user) {
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
-        EruptUserLoginLog loginLog = new EruptUserLoginLog();
+        EruptLoginLog loginLog = new EruptLoginLog();
         loginLog.setEruptUser(user);
         loginLog.setLoginTime(new Date());
         loginLog.setIp(IpUtil.getIpAddr(request));
@@ -105,12 +106,16 @@ public class UserService {
             }
             //校验密码
             boolean pass = false;
-            if (eruptUser.getIsMd5()) {
-                if (MD5Utils.digest(pwd).equalsIgnoreCase(eruptUser.getPassword())) {
-                    pass = true;
+            {
+                String digestPwd;
+                if (eruptUser.getIsMd5()) {
+                    digestPwd = eruptUser.getPassword();
+                } else {
+                    digestPwd = MD5Utils.digest(eruptUser.getPassword());
                 }
-            } else {
-                if (eruptUser.getPassword().equals(pwd)) {
+                String calcPwd = MD5Utils.digest(digestPwd +
+                        request.getHeader(USER_AGENT) + account);
+                if (pwd.equalsIgnoreCase(calcPwd)) {
                     pass = true;
                 }
             }
@@ -160,13 +165,11 @@ public class UserService {
 
     public void createToken(LoginModel loginModel) {
         loginModel.setToken(RandomStringUtils.random(20, true, true));
-//        loginModel.getEruptUser().setRoles(null);
-        sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId(), eruptAuthConfig.getExpireTimeByLogin());
+        sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString(), eruptAuthConfig.getExpireTimeByLogin());
     }
 
-    public Long getCurrUserId() {
-        String token = request.getHeader("token");
-        return (Long) sessionService.get(SessionKey.USER_TOKEN + token);
+    public Long getCurrentUId() {
+        return Long.valueOf(sessionService.get(SessionKey.USER_TOKEN + request.getHeader("token")).toString());
     }
 
     public boolean verifyToken(String token) {

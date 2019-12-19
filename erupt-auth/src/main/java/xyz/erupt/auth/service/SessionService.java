@@ -1,4 +1,4 @@
-package xyz.erupt.core.service;
+package xyz.erupt.auth.service;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class SessionService {
     private EruptConfig eruptConfig;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     private HttpServletRequest request;
@@ -28,11 +28,11 @@ public class SessionService {
     @Autowired
     private Gson gson = new Gson();
 
-    public void put(String key, Object obj, long timeout) {
+    public void put(String key, String str, long timeout) {
         if (eruptConfig.isRedisSession()) {
-            redisTemplate.opsForValue().set(key, gson.toJson(obj), timeout, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(key, str, timeout, TimeUnit.MINUTES);
         } else {
-            request.getSession().setAttribute(key, obj);
+            request.getSession().setAttribute(key, str);
         }
     }
 
@@ -63,5 +63,4 @@ public class SessionService {
             return (T) request.getSession().getAttribute(key);
         }
     }
-
 }

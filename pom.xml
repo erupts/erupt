@@ -14,7 +14,7 @@
 
     <properties>
         <erupt.groupId>xyz.erupt</erupt.groupId>
-        <erupt.version>0.2.1</erupt.version>
+        <erupt.version>0.2.2</erupt.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>${java.version}</maven.compiler.target>

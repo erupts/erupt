@@ -1,7 +1,11 @@
 package xyz.erupt.example.demo.model;
 
+import com.google.gson.JsonObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Html;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -11,19 +15,26 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.example.demo.handler.HtmlHandler;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**
  * Created by liyuepeng on 2019-10-08.
  */
-@Erupt(name = "demo", orderBy = "number desc", power = @Power(export = true))
+@Erupt(name = "demo", orderBy = "number desc", power = @Power(export = true),dataProxy = Demo.class)
 @Table(name = "DEMO")
 @Entity
-public class Demo extends BaseModel {
+@Component
+public class Demo extends BaseModel implements DataProxy<Demo> {
+
+    @Transient
+    @Autowired
+    private EruptUserService eruptUserService;
 
     @EruptField(
             views = @View(title = "文本"),
@@ -78,4 +89,10 @@ public class Demo extends BaseModel {
                     search = @Search(true))
     )
     private String html;
+
+    @Override
+    public String beforeFetch(JsonObject condition) {
+        System.out.println(eruptUserService.getCurrentUId());
+        return null;
+    }
 }

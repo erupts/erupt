@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 @Service
 @Order(10)
 @Log
-public class DataLoadService implements CommandLineRunner {
+public class AuthDataLoadService implements CommandLineRunner {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -55,7 +55,10 @@ public class DataLoadService implements CommandLineRunner {
                             "dict", "字典维护", "/build/tree/EruptDict", 1, 30, "fa fa-book", eruptMenu
                     ));
                     entityManager.persist(new EruptMenu(
-                            "erupt", "Erupt通用数据管理框架", "/page?&site=https://www.erupt.xyz", 1, 10, "fa fa-book", null
+                            "dict", "登录日志", "/build/table/EruptLoginLog", 1, 40, "fa fa-book", eruptMenu
+                    ));
+                    entityManager.persist(new EruptMenu(
+                            "erupt", "Erupt通用数据管理框架", "/page?&site=https://www.erupt.xyz", 1, 50, "fa fa-book", null
                     ));
                 } catch (Exception e) {
                     log.severe("初始化用户角色数据失败：" + e.getMessage());

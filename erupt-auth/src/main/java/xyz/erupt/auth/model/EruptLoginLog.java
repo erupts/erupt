@@ -21,13 +21,13 @@ import java.util.Date;
 @Entity
 @Table(name = "E_USER_LOGIN_LOG")
 @Erupt(
-        name = "用户登录日志",
+        name = "登录日志",
         power = @Power(edit = false, viewDetails = false, delete = false, export = true),
         orderBy = "loginTime desc"
 )
 @Getter
 @Setter
-public class EruptUserLoginLog extends BaseModel {
+public class EruptLoginLog extends BaseModel {
 
     @ManyToOne
     @EruptField(

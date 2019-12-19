@@ -21,6 +21,7 @@ public class DemoApplicationTests {
     @Autowired
     private DBService dbService;
 
+
     @Test
     public void findEruptDataById() {
         System.out.println(123);

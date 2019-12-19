@@ -3,7 +3,6 @@ package xyz.erupt.core.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.lettuce.core.dynamic.annotation.Param;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -68,7 +67,7 @@ public class EruptExcelController {
     //导出
     @PostMapping("/export/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
-    public void exportData(@PathVariable("erupt") String eruptName, @Param("condition") String condition,
+    public void exportData(@PathVariable("erupt") String eruptName, @RequestParam("condition") String condition,
                            HttpServletRequest request,
                            HttpServletResponse response) throws IOException {
         if (SecurityUtil.csrfInspect(request, response)) {
