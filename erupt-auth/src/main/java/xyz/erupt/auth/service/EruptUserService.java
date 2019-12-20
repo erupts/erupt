@@ -180,7 +180,7 @@ public class EruptUserService {
         }
     }
 
-    public boolean verifyMenuLimit(String token, String authStr, EruptModel eruptModel) {
+    public boolean verifyMenuAuth(String token, String authStr, EruptModel eruptModel) {
         //校验authStr与请求头erupt信息是否匹配，来验证其合法性
         {
             if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
@@ -189,6 +189,7 @@ public class EruptUserService {
         }
         //检验注解
         {
+
             if (!eruptModel.getErupt().loginUse()) {
                 return true;
             }

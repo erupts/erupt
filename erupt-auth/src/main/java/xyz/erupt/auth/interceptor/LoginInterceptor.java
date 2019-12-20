@@ -65,24 +65,28 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         //权限校验
         if (eruptRouter.verifyErupt()) {
             EruptModel eruptModel = CoreService.getErupt(eruptName);
-            EruptModel eruptParentModel;
-            //TODO 通过请求头parent_erupt来控制权限
-            ff:
-            if (StringUtils.isNotBlank(parentEruptName)) {
-                eruptParentModel = CoreService.getErupt(parentEruptName);
-                for (EruptFieldModel model : eruptParentModel.getEruptFieldModels()) {
-                    if (eruptParentModel.getEruptName().equals(model.getFieldReturnName())) {
-                        break ff;
-                    }
-                }
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-            }
             if (null == eruptModel) {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
             String authStr = path.split("/")[eruptRouter.startAuthIndex() + eruptRouter.authIndex() + 1];
-            if (!path.contains(eruptName) || !eruptUserService.verifyMenuLimit(token, authStr, eruptModel)) {
+            //eruptParent logic
+            $ep:
+            if (StringUtils.isNotBlank(parentEruptName)) {
+                EruptModel eruptParentModel = CoreService.getErupt(parentEruptName);
+                for (EruptFieldModel model : eruptParentModel.getEruptFieldModels()) {
+                    if (eruptModel.getEruptName().equals(model.getFieldReturnName())) {
+                        if (authStr.equals(eruptModel.getEruptName())) {
+                            authStr = eruptParentModel.getEruptName();
+                        }
+                        eruptModel = eruptParentModel;
+                        break $ep;
+                    }
+                }
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                return false;
+            }
+            if (!path.contains(eruptName) || !eruptUserService.verifyMenuAuth(token, authStr, eruptModel)) {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 return false;
             }

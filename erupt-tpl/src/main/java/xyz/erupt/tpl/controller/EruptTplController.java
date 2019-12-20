@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import xyz.erupt.annotation.sub_erupt.Html;
+import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.service.CoreService;
 
@@ -34,7 +35,7 @@ public class EruptTplController {
 
     @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=utf-8"})
     @ResponseBody
-//    @EruptRouter(authIndex = 2)
+    @EruptRouter(authIndex = 2)
     public String getEruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         return execTemplate(eruptModel.getEruptFieldMap().get(field).getEruptField().edit().htmlType());

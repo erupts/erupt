@@ -18,15 +18,14 @@ import xyz.erupt.auth.model.BaseModel;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.example.demo.handler.HtmlHandler;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by liyuepeng on 2019-10-08.
  */
-@Erupt(name = "demo", orderBy = "number desc", power = @Power(export = true),dataProxy = Demo.class)
+@Erupt(name = "demo", orderBy = "number desc", power = @Power(export = true), dataProxy = Demo.class)
 @Table(name = "DEMO")
 @Entity
 @Component
@@ -89,6 +88,16 @@ public class Demo extends BaseModel implements DataProxy<Demo> {
                     search = @Search(true))
     )
     private String html;
+
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "demo_id")
+    @EruptField(
+            edit = @Edit(
+                    title = "subs",
+                    type = EditType.TAB_TABLE_ADD
+            )
+    )
+    private Set<DemoSub> demoSubs;
 
     @Override
     public String beforeFetch(JsonObject condition) {
