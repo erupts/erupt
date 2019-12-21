@@ -7,7 +7,7 @@ package xyz.erupt.core.exception;
  */
 public class EruptNoLegalPowerException extends RuntimeException {
 
-    public static final String NO_LEGAL_POWER = "@@ Have no legal power";
+    public static final String NO_LEGAL_POWER = "权限不足，该操作将被记录";
 
     public EruptNoLegalPowerException() {
         //TODO 需要记录IP或者其他操作

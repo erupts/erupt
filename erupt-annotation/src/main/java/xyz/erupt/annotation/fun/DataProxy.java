@@ -2,7 +2,6 @@ package xyz.erupt.annotation.fun;
 
 import com.google.gson.JsonObject;
 import org.apache.poi.ss.usermodel.Workbook;
-import xyz.erupt.annotation.model.BoolAndReason;
 
 import java.io.File;
 import java.io.InputStream;

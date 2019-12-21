@@ -48,7 +48,7 @@ public @interface Edit {
     Html htmlType() default @Html;
 
     @SerializeBy(method = "type", value = "CHOICE")
-    ChoiceType choiceType() default @ChoiceType(vl = {});
+    ChoiceType choiceType() default @ChoiceType;
 
     @SerializeBy(method = "type", value = "DATE")
     DateType dateType() default @DateType;

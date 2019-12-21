@@ -12,8 +12,8 @@ import xyz.erupt.core.bean.EruptFieldModel;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.exception.EruptAnnotationException;
-import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.ReflectUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,7 @@ public class CoreService implements InitializingBean {
                                 eruptFieldModel.setValue(field.get(eruptObject));
                                 eruptFieldModels.add(eruptFieldModel);
                                 eruptFieldMap.put(field.getName(), eruptFieldModel);
-                            } catch (IllegalAccessException e) {
+                            } catch (IllegalAccessException | InstantiationException e) {
                                 e.printStackTrace();
                             }
                         }

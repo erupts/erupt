@@ -11,6 +11,7 @@ public @interface Html {
 
     String[] params() default {};
 
+
     Class<? extends HtmlHandler> htmlHandler() default HtmlHandler.class;
 
     interface HtmlHandler {

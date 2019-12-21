@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Created by liyuepeng on 2019-07-25.
  */
-public interface FetchChoiceMapHandler {
+public interface ChoiceFetchHandler {
 
     Map<String, String> fetch(String[] params);
 }

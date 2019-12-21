@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Html;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -13,13 +14,18 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.example.demo.handler.HtmlHandler;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,7 +35,14 @@ import java.util.Set;
 @Table(name = "DEMO")
 @Entity
 @Component
-public class Demo extends BaseModel implements DataProxy<Demo> {
+public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandler {
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "多对一", column = "name"),
+            edit = @Edit(title = "多对一", type = EditType.REFERENCE_TREE, search = @Search(value = true))
+    )
+    private EruptUser eruptUser;
 
     @Transient
     @Autowired
@@ -65,6 +78,23 @@ public class Demo extends BaseModel implements DataProxy<Demo> {
             edit = @Edit(title = "图片")
     )
     private String image;
+
+    @EruptField(
+            views = @View(title = "选择"),
+            edit = @Edit(title = "选择", type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = Demo.class,
+                            vl = {
+                                    @VL(label = "xxxx", value = "xxxx")
+                            },
+                            fetchHandlerParams = {"param"}))
+    )
+    private String choice;
+
+    @EruptField(
+            views = @View(title = "选择"),
+            edit = @Edit(title = "选择", type = EditType.CHOICE)
+    )
+    private String choice2;
 
 
     @EruptField(
@@ -103,5 +133,15 @@ public class Demo extends BaseModel implements DataProxy<Demo> {
     public String beforeFetch(JsonObject condition) {
         System.out.println(eruptUserService.getCurrentUId());
         return null;
+    }
+
+    @Override
+    public Map<String, String> fetch(String[] params) {
+        System.out.println(params[0]);
+        Map<String, String> map = new HashMap<>();
+        map.put("key1", "value1");
+        map.put("key2", "value2");
+        map.put("key3", "value3");
+        return map;
     }
 }

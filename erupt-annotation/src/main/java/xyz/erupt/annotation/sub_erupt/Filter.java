@@ -14,5 +14,6 @@ public @interface Filter {
     @Transient
     String[] params() default {};
 
+
     Class<? extends ConditionHandler>[] conditionHandlers() default {};
 }

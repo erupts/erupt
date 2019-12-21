@@ -19,7 +19,7 @@ public @interface EruptField {
     //表列信息
     View[] views() default {};
 
-    //编辑时的列信息
+    //编辑信息
     Edit edit() default @Edit(title = AnnotationConst.EMPTY_STR);
 
     @ToMap(key = "key")

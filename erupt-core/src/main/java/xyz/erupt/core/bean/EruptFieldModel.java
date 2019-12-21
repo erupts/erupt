@@ -5,9 +5,9 @@ import lombok.Data;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
+import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
@@ -16,7 +16,6 @@ import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -33,7 +32,7 @@ public class EruptFieldModel {
 
     private transient Field field;
 
-    private transient Map<String, String> choiceMap;
+    private Map<String, String> choiceMap;
 
     private String fieldName;
 
@@ -43,9 +42,10 @@ public class EruptFieldModel {
 
     private Object value;
 
-    public EruptFieldModel(Field field) {
+    public EruptFieldModel(Field field) throws IllegalAccessException, InstantiationException {
         this.field = field;
         this.eruptField = field.getAnnotation(EruptField.class);
+        Edit edit = eruptField.edit();
         this.fieldName = field.getName();
         //数字类型转换
         if (TypeUtil.isNumberType(field.getType().getSimpleName())) {
@@ -54,7 +54,7 @@ public class EruptFieldModel {
             this.fieldReturnName = field.getType().getSimpleName();
         }
         //如果是Tab类型视图，数据必须为一对多关系管理，需要用泛型集合来存放，所以取出泛型的名称重新赋值到fieldReturnName中
-        switch (eruptField.edit().type()) {
+        switch (edit.type()) {
             case TAB_TREE:
             case TAB_TABLE_ADD:
             case TAB_TABLE_REFER:
@@ -62,13 +62,19 @@ public class EruptFieldModel {
                 break;
             case CHOICE:
                 choiceMap = new HashMap<>();
-                for (VL vl : eruptField.edit().choiceType().vl()) {
+                for (VL vl : edit.choiceType().vl()) {
                     choiceMap.put(vl.value(), vl.label());
+                }
+                for (Class<? extends ChoiceFetchHandler> cla : edit.choiceType().fetchHandler()) {
+                    Map map = cla.newInstance().fetch(edit.choiceType().fetchHandlerParams());
+                    if (null != map) {
+                        choiceMap.putAll(cla.newInstance().fetch(edit.choiceType().fetchHandlerParams()));
+                    }
                 }
                 break;
             case DEPEND_SWITCH:
                 choiceMap = new HashMap<>();
-                for (DependSwitchType.Attr vl : eruptField.edit().dependSwitchType().attr()) {
+                for (DependSwitchType.Attr vl : edit.dependSwitchType().attr()) {
                     choiceMap.put(vl.value(), vl.label());
                 }
                 break;
