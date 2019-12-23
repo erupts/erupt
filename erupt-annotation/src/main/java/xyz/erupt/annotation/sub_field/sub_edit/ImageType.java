@@ -15,4 +15,6 @@ public @interface ImageType {
 
     int maxHeight() default AnnotationConst.NOT_LIMIT;
 
+    AttachmentType attachment() default @AttachmentType;
+
 }

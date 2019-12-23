@@ -2,13 +2,13 @@ package xyz.erupt.core.bean;
 
 import com.google.gson.JsonObject;
 import lombok.Data;
+import org.apache.commons.lang3.ArrayUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
@@ -103,6 +103,7 @@ public class EruptFieldModel {
             // edit auto
             if (!AnnotationConst.EMPTY_STR.equals(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
                 Map<String, Object> editValues = getAnnotationMap(this.eruptField.edit());
+                //根据返回类型推断
                 if (JavaType.BOOLEAN.equals(this.fieldReturnName.toLowerCase())) {
                     editValues.put(TYPE, EditType.BOOLEAN);
                 } else if (JavaType.DATE.equals(this.fieldReturnName)) {
@@ -112,10 +113,8 @@ public class EruptFieldModel {
                 } else {
                     editValues.put(TYPE, EditType.INPUT);
                 }
-                if (this.fieldName.toLowerCase().contains("img") || this.fieldName.toLowerCase().contains("image")) {
-                    editValues.put(TYPE, EditType.ATTACHMENT);
-                    this.getAnnotationMap(this.eruptField.edit().attachmentType()).put(TYPE, AttachmentType.Type.IMAGE);
-                } else if (this.fieldName.toLowerCase().contains("remark") || this.fieldName.toLowerCase().contains("desc")) {
+                //根据属性名推断
+                if (ArrayUtils.contains(AnnotationUtil.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), this.fieldName.toLowerCase())) {
                     editValues.put(TYPE, EditType.TEXTAREA);
                 }
             }

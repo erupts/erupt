@@ -18,7 +18,8 @@ public class EruptDbFun {
 
     public void persistIfNotExist(Object obj, String field, String val) {
         List list = entityManager
-                .createQuery("from " + obj.getClass().getSimpleName() + " where " + field + " = '" + val + "'").getResultList();
+                .createQuery("from " + obj.getClass()
+                        .getSimpleName() + " where " + field + " = '" + val + "'").getResultList();
         if (list.isEmpty()) {
             entityManager.persist(obj);
         }

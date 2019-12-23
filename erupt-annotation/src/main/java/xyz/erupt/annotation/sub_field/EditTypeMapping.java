@@ -27,6 +27,5 @@ public @interface EditTypeMapping {
 
     boolean excelOperator() default true;
 
-    //TODO 重要的组件依据
-    Class<?> component() default void.class;
+    String[] nameInfer() default {};
 }
