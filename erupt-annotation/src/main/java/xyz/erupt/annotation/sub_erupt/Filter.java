@@ -1,6 +1,6 @@
 package xyz.erupt.annotation.sub_erupt;
 
-import xyz.erupt.annotation.fun.ConditionHandler;
+import xyz.erupt.annotation.fun.FilterHandler;
 
 import java.beans.Transient;
 
@@ -15,5 +15,5 @@ public @interface Filter {
     String[] params() default {};
 
 
-    Class<? extends ConditionHandler>[] conditionHandlers() default {};
+    Class<? extends FilterHandler>[] conditionHandlers() default {};
 }

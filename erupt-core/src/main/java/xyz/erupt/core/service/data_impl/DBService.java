@@ -179,10 +179,7 @@ public class DBService implements DataService {
         if (StringUtils.isNotBlank(refTree.pid())) {
             cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldName(), refTree.pid()) + " as " + AnnotationConst.PID);
         }
-        StringBuilder condition = new StringBuilder();
-        if (!"".equals(edit.filter().condition())) {
-            condition.append(AnnotationUtil.switchFilterConditionToStr(edit.filter()));
-        }
+        StringBuilder condition = new StringBuilder(AnnotationUtil.switchFilterConditionToStr(edit.filter()));
         //处理depend参数代码
         Map<String, Object> conditionParameter = null;
         if (StringUtils.isNotBlank(refTree.dependField()) && null != dependValue) {

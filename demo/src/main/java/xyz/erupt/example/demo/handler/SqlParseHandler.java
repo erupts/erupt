@@ -1,8 +1,8 @@
-//package xyz.erupt.example.demo.handler;
+//package xyz.erupt.example.demo.filter;
 //
 //import org.dom4j.Element;
 //import org.springframework.stereotype.Component;
-//import xyz.erupt.erupt_open_api.handler.SqlHandler;
+//import xyz.erupt.erupt_open_api.filter.SqlHandler;
 //
 //import java.util.Map;
 //
@@ -12,7 +12,7 @@
 //@Component
 //public class SqlParseHandler implements SqlHandler {
 //    @Override
-//    public String handler(Element element, String sql, Map<String, Object> param) {
+//    public String filter(Element element, String sql, Map<String, Object> param) {
 //        System.out.println(sql);
 //        param.put("xxx", 23333);
 //        return sql.replaceAll("@uid", "1");

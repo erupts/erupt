@@ -2,15 +2,13 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import xyz.erupt.annotation.config.EruptProperty;
-import xyz.erupt.annotation.config.NotBlank;
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
-import xyz.erupt.annotation.fun.ConditionHandler;
+import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeMapping;
@@ -161,9 +159,9 @@ public class AnnotationUtil {
     public static String switchFilterConditionToStr(Filter filter) {
         String condition = filter.condition();
         if (filter.conditionHandlers().length > 0) {
-            for (Class<? extends ConditionHandler> conditionHandler : filter.conditionHandlers()) {
-                ConditionHandler ch = EruptSpringUtil.getBean(conditionHandler);
-                condition = ch.handler(condition, filter.params());
+            for (Class<? extends FilterHandler> conditionHandler : filter.conditionHandlers()) {
+                FilterHandler ch = EruptSpringUtil.getBean(conditionHandler);
+                condition = ch.filter(condition, filter.params());
             }
         }
         return condition;

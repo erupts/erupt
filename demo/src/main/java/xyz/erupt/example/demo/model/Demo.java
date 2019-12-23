@@ -104,6 +104,13 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     )
     private String swf;
 
+    @EruptField(
+            views = @View(title = "图片", type = ViewType.IMAGE),
+            edit = @Edit(title = "图片", search = @Search(value = true, vague = true), type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE))
+    )
+    private String attachment;
+
 
     @EruptField(
             views = @View(title = "大文本域"),
