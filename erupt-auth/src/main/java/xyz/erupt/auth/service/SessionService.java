@@ -60,7 +60,7 @@ public class SessionService {
                 return gson.fromJson(this.get(key).toString(), type);
             }
         } else {
-            return (T) request.getSession().getAttribute(key);
+            return gson.fromJson(request.getSession().getAttribute(key).toString(), type);
         }
     }
 }
