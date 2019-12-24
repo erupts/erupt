@@ -150,6 +150,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     @Override
     public void beforeAdd(EruptUser eruptUser) {
+        eruptUser.setIsAdmin(false);
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
             if (eruptUser.getIsMd5()) {
                 eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
@@ -159,4 +160,8 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
         }
     }
 
+    @Override
+    public void beforeEdit(EruptUser eruptUser) {
+
+    }
 }

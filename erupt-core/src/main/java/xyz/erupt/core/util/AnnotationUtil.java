@@ -158,11 +158,9 @@ public class AnnotationUtil {
 
     public static String switchFilterConditionToStr(Filter filter) {
         String condition = filter.condition();
-        if (filter.conditionHandlers().length > 0) {
-            for (Class<? extends FilterHandler> conditionHandler : filter.conditionHandlers()) {
-                FilterHandler ch = EruptSpringUtil.getBean(conditionHandler);
-                condition = ch.filter(condition, filter.params());
-            }
+        for (Class<? extends FilterHandler> conditionHandler : filter.conditionHandlers()) {
+            FilterHandler ch = EruptSpringUtil.getBean(conditionHandler);
+            condition = ch.filter(condition, filter.params());
         }
         return condition;
     }

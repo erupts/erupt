@@ -114,8 +114,9 @@ public class EruptJpaUtils {
         StringBuilder hql = new StringBuilder();
         hql.append(" where 1=1 ");
         Filter filter = eruptModel.getErupt().filter();
-        if (StringUtils.isNotBlank(filter.condition()) || filter.conditionHandlers().length > 0) {
-            hql.append(AND).append(AnnotationUtil.switchFilterConditionToStr(filter));
+        String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
+        if (StringUtils.isNotBlank(filterStr)) {
+            hql.append(AND).append(filterStr);
         }
         //condition
         if (null != clientSearchCondition) {
