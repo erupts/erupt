@@ -34,7 +34,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private static final String ERUPT_PARENT_PARAM_KEY = "_eruptParent";
 
-    private static final String URL_ERUPT_PARAM_TOKEN = "_token";
+    public static final String URL_ERUPT_PARAM_TOKEN = "_token";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

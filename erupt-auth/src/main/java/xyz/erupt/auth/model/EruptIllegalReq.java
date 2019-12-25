@@ -2,6 +2,7 @@ package xyz.erupt.auth.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

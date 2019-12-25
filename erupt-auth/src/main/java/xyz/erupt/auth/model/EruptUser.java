@@ -2,6 +2,8 @@ package xyz.erupt.auth.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -12,6 +14,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.util.MD5Utils;
+import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -30,6 +33,7 @@ import java.util.Set;
 )
 @Getter
 @Setter
+@Component
 public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     @EruptField(
@@ -75,7 +79,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     private EruptMenu eruptMenu;
 
     @EruptField(
-            edit = @Edit(title = "密码", notNull = true)
+            edit = @Edit(title = "密码")
     )
     private String password;
 
@@ -100,9 +104,9 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     private Boolean isMd5;
 
     @EruptField(
-            views = @View(title = "状态"),
+            views = @View(title = "账户状态"),
             edit = @Edit(
-                    title = "状态",
+                    title = "账户状态",
                     type = EditType.BOOLEAN,
                     boolType = @BoolType(
                             trueText = "激活",
@@ -148,10 +152,22 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     private Boolean isAdmin;
 
+    @Transient
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Override
+    public void fetchById(EruptUser eruptUser) {
+        eruptUser.setPassword(null);
+    }
+
     @Override
     public void beforeAdd(EruptUser eruptUser) {
-        eruptUser.setIsAdmin(false);
+        if (StringUtils.isBlank(eruptUser.getPassword())) {
+            throw new RuntimeException("密码必填");
+        }
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
+            eruptUser.setIsAdmin(false);
             if (eruptUser.getIsMd5()) {
                 eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
             }
@@ -162,6 +178,17 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     @Override
     public void beforeEdit(EruptUser eruptUser) {
-
+        EruptUser eu = entityManager.find(EruptUser.class, eruptUser.getId());
+        if (StringUtils.isNotBlank(eruptUser.getPassword())) {
+            if (eruptUser.getIsMd5()) {
+                eruptUser.setPassword(MD5Utils.digest(eu.getPassword()));
+            } else {
+                eruptUser.setPassword(eu.getPassword());
+            }
+        } else {
+            eruptUser.setPassword(eu.getPassword());
+        }
     }
+
+
 }

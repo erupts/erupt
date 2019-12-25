@@ -17,7 +17,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <erupt.version>0.3.1</erupt.version>
+        <erupt.version>0.3.2</erupt.version>
     </properties>
 
     <dependencies>
@@ -75,19 +75,17 @@
             <version>${erupt.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>open-api</artifactId>
-            <version>0.0.3</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>xyz.erupt</groupId>-->
+        <!--<artifactId>open-api</artifactId>-->
+        <!--<version>0.0.3</version>-->
+        <!--</dependency>-->
 
         <!--<dependency>-->
         <!--<groupId>xyz.erupt</groupId>-->
         <!--<artifactId>erupt-open-api</artifactId>-->
         <!--<version>LATEST</version>-->
         <!--</dependency>-->
-
-
     </dependencies>
 
 </project>

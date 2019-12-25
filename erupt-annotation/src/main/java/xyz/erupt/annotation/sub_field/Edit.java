@@ -54,7 +54,7 @@ public @interface Edit {
     DateType dateType() default @DateType;
 
     @SerializeBy(method = "type", value = "SLIDER")
-    SliderType sliderType() default @SliderType(max = 9999);
+    SliderType sliderType() default @SliderType(max = 999);
 
     @SerializeBy(method = "type", value = "ATTACHMENT")
     AttachmentType attachmentType() default @AttachmentType;

@@ -8,7 +8,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

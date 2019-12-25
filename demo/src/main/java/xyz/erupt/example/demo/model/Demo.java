@@ -7,7 +7,6 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.sub_erupt.Html;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -17,10 +16,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.auth.model.BaseModel;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
-import xyz.erupt.example.demo.handler.HtmlHandler;
+import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -37,17 +35,6 @@ import java.util.Set;
 @Component
 public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandler {
 
-    @ManyToOne
-    @EruptField(
-            views = @View(title = "多对一", column = "name"),
-            edit = @Edit(title = "多对一", type = EditType.REFERENCE_TREE, search = @Search(value = true))
-    )
-    private EruptUser eruptUser;
-
-    @Transient
-    @Autowired
-    private EruptUserService eruptUserService;
-
     @EruptField(
             views = @View(title = "文本"),
             edit = @Edit(title = "文本输入", search = @Search(value = true, vague = true))
@@ -60,10 +47,9 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     )
     private Integer number;
 
-
     @EruptField(
-            views = @View(title = "时间")
-//            edit = @Edit(title = "时间输入", search = @Search(value = true, vague = true))
+            views = @View(title = "时间"),
+            edit = @Edit(title = "时间", search = @Search(value = true, vague = true))
     )
     private Date date;
 
@@ -72,12 +58,6 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
             edit = @Edit(title = "布尔", search = @Search(true))
     )
     private Boolean bool;
-
-    @EruptField(
-            views = @View(title = "图片", type = ViewType.IMAGE),
-            edit = @Edit(title = "图片")
-    )
-    private String image;
 
     @EruptField(
             views = @View(title = "选择"),
@@ -90,19 +70,12 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     )
     private String choice;
 
+    @ManyToOne
     @EruptField(
-            views = @View(title = "选择"),
-            edit = @Edit(title = "选择", type = EditType.CHOICE)
+            views = @View(title = "多对一", column = "name"),
+            edit = @Edit(title = "多对一", type = EditType.REFERENCE_TREE, search = @Search(value = true))
     )
-    private String choice2;
-
-
-    @EruptField(
-            views = @View(title = "flash动画", type = ViewType.SWF),
-            edit = @Edit(title = "swf", search = @Search(value = true, vague = true), type = EditType.ATTACHMENT,
-                    attachmentType = @AttachmentType(fileTypes = "swf"))
-    )
-    private String swf;
+    private EruptUser eruptUser;
 
     @EruptField(
             views = @View(title = "图片", type = ViewType.IMAGE),
@@ -113,28 +86,40 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
 
     @EruptField(
+            views = @View(title = "flash动画", type = ViewType.SWF),
+            edit = @Edit(title = "swf", search = @Search(value = true, vague = true), type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType(fileTypes = "swf"))
+    )
+    private String swf;
+
+
+    @EruptField(
             views = @View(title = "大文本域"),
             edit = @Edit(title = "大文本域", search = @Search(value = true, vague = true))
     )
     private String remark;
 
-    @EruptField(
-            views = @View(title = "自定义HTML"),
-            edit = @Edit(title = "HTML", type = EditType.HTML,
-                    htmlType = @Html(path = "demo.html", htmlHandler = HtmlHandler.class, params = {"123", "xxx"}),
-                    search = @Search(true))
-    )
-    private String html;
+//    @EruptField(
+//            views = @View(title = "自定义HTML"),
+//            edit = @Edit(title = "HTML", type = EditType.HTML,
+//                    htmlType = @Html(path = "demo.html", htmlHandler = HtmlHandler.class, params = {"123", "xxx"}),
+//                    search = @Search(true))
+//    )
+//    private String html;
 
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "demo_id")
     @EruptField(
             edit = @Edit(
-                    title = "subs",
+                    title = "一对多",
                     type = EditType.TAB_TABLE_ADD
             )
     )
     private Set<DemoSub> demoSubs;
+
+    @Transient
+    @Autowired
+    private EruptUserService eruptUserService;
 
     @Override
     public String beforeFetch(JsonObject condition) {

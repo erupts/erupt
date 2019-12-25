@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.auth.base.LoginModel;
 import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
+import xyz.erupt.auth.interceptor.LoginInterceptor;
+import xyz.erupt.auth.model.EruptLoginLog;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
-import xyz.erupt.auth.model.EruptLoginLog;
 import xyz.erupt.auth.repository.UserRepository;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.auth.util.MD5Utils;
@@ -169,7 +170,11 @@ public class EruptUserService {
     }
 
     public Long getCurrentUId() {
-        return Long.valueOf(sessionService.get(SessionKey.USER_TOKEN + request.getHeader("token")).toString());
+        String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
+        if (StringUtils.isBlank(token)) {
+            token = request.getParameter(LoginInterceptor.URL_ERUPT_PARAM_TOKEN);
+        }
+        return Long.valueOf(sessionService.get(SessionKey.USER_TOKEN + token).toString());
     }
 
     public boolean verifyToken(String token) {

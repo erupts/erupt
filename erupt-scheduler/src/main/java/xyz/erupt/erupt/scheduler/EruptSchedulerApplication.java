@@ -1,4 +1,4 @@
-package xyz.erupt.eruptscheduler;
+package xyz.erupt.erupt.scheduler;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

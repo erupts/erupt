@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-annotation</artifactId>
+            <version>${erupt.version}</version>
+        </dependency>
+        <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
         </dependency>

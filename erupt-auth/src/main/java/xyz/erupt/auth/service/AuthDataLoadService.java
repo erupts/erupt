@@ -9,7 +9,7 @@ import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.util.MD5Utils;
 import xyz.erupt.core.util.ProjectUtil;
-import xyz.erupt.tool.EruptDbFun;
+import xyz.erupt.tool.util.EruptDbFun;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

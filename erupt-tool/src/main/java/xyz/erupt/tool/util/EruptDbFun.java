@@ -1,4 +1,4 @@
-package xyz.erupt.tool;
+package xyz.erupt.tool.util;
 
 import org.springframework.stereotype.Component;
 

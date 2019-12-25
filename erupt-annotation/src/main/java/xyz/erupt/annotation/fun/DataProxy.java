@@ -37,6 +37,11 @@ public interface DataProxy<MODEL> {
     default void afterDelete(Serializable id) {
     }
 
+    //查看单条数据
+    default void fetchById(MODEL model) {
+
+    }
+
     /**
      * 查询
      *
@@ -66,11 +71,7 @@ public interface DataProxy<MODEL> {
     default void excelExport(Workbook wb) {
     }
 
-    /**
-     * excel导入
-     *
-     * @param model erupt对象模型
-     */
+    //excel导入
     default void excelImport(MODEL model) {
 
     }
