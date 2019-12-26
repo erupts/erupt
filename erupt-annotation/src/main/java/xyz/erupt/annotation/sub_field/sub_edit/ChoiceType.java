@@ -16,6 +16,8 @@ public @interface ChoiceType {
     @Transient
     VL[] vl() default {};
 
+    long cacheTime() default 0;
+
     @Transient
     String[] fetchHandlerParams() default {};
 

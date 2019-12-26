@@ -157,7 +157,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     private EntityManager entityManager;
 
     @Override
-    public void fetchById(EruptUser eruptUser) {
+    public void editBehavior(EruptUser eruptUser) {
         eruptUser.setPassword(null);
     }
 
@@ -177,7 +177,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     }
 
     @Override
-    public void beforeEdit(EruptUser eruptUser) {
+    public void beforeUpdate(EruptUser eruptUser) {
         EruptUser eu = entityManager.find(EruptUser.class, eruptUser.getId());
         if (StringUtils.isNotBlank(eruptUser.getPassword())) {
             if (eruptUser.getIsMd5()) {

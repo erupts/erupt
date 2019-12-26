@@ -75,6 +75,12 @@
             <version>${erupt.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-scheduler</artifactId>
+            <version>${erupt.version}</version>
+        </dependency>
+
         <!--<dependency>-->
         <!--<groupId>xyz.erupt</groupId>-->
         <!--<artifactId>open-api</artifactId>-->

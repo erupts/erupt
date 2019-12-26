@@ -61,12 +61,15 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "选择"),
-            edit = @Edit(title = "选择", type = EditType.CHOICE,
-                    choiceType = @ChoiceType(fetchHandler = Demo.class,
+            edit = @Edit(
+                    title = "选择", type = EditType.CHOICE,
+                    choiceType = @ChoiceType(
+                            fetchHandler = Demo.class,
                             vl = {
                                     @VL(label = "xxxx", value = "xxxx")
                             },
-                            fetchHandlerParams = {"param"}))
+                            fetchHandlerParams = {"param"}
+                    ))
     )
     private String choice;
 
@@ -79,7 +82,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "图片", type = ViewType.IMAGE),
-            edit = @Edit(title = "图片", search = @Search(value = true, vague = true), type = EditType.ATTACHMENT,
+            edit = @Edit(title = "图片", type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE))
     )
     private String attachment;

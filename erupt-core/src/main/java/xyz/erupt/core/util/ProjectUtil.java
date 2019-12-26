@@ -34,6 +34,7 @@ public class ProjectUtil {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("代码执行出错，位置：" + file.getPath() + "标识文件无法创建");
         }
     }

@@ -5,7 +5,8 @@
 
     <artifactId>erupt-auth</artifactId>
     <version>${erupt.version}</version>
-    <description>用户权限相关</description>
+    <name>erupt-auth</name>
+    <description>用户权限</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>

@@ -14,19 +14,19 @@ import java.util.Map;
  */
 public interface DataProxy<MODEL> {
 
-    //改
-    default void beforeEdit(MODEL model) {
-    }
-
-    default void afterEdit(MODEL model) {
-    }
-
     //增
     default void beforeAdd(MODEL model) {
 
     }
 
     default void afterAdd(MODEL model) {
+    }
+
+    //改
+    default void beforeUpdate(MODEL model) {
+    }
+
+    default void afterUpdate(MODEL model) {
     }
 
     //删
@@ -37,14 +37,8 @@ public interface DataProxy<MODEL> {
     default void afterDelete(Serializable id) {
     }
 
-    //查看单条数据
-    default void fetchById(MODEL model) {
-
-    }
-
     /**
      * 查询
-     *
      * @param condition 用户输入条件
      * @return 自定义查询条件
      */
@@ -53,6 +47,11 @@ public interface DataProxy<MODEL> {
     }
 
     default void afterFetch(Collection<Map<String, Object>> list) {
+    }
+
+    //编辑数据行为
+    default void editBehavior(MODEL model) {
+
     }
 
     //文件上传
