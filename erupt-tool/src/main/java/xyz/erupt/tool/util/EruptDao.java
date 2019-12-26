@@ -3,9 +3,7 @@ package xyz.erupt.tool.util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 
@@ -19,25 +17,30 @@ public class EruptDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public static final String SELECT = "select ";
+
     private static final String FROM = " from ";
+    public static final String NEW_MAP = "new map(";
 
     private static final String AND = " and ";
 
     private static final String AS = " as ";
+    public static final String EQU = " = ";
+    private static final String WHERE = " where ";
 
     public void persistIfNotExist(Object obj, String field, String val) {
-        Object[] o = queryObj(obj.getClass(), field + " = '" + val + "'", "id");
-        if (o == null) {
+        Object[] o = queryObject(obj.getClass(), field + EQU + "'" + val + "'", field);
+        if (null == o) {
             entityManager.persist(obj);
         }
     }
 
-    private Query simpleQuery(Class eruptClass, boolean isMap, String condition, String... cols) {
+    private Query simpleQuery(Class eruptClass, boolean isMap, String expr, String... cols) {
         StringBuilder sb = new StringBuilder();
         if (cols.length > 0) {
-            sb.append("select ");
+            sb.append(SELECT);
             if (isMap) {
-                sb.append("new map(");
+                sb.append(NEW_MAP);
                 for (int i = 0; i < cols.length; i++) {
                     sb.append(cols[i]).append(AS).append(cols[i]).append(i == cols.length - 1 ? "" : ",");
                 }
@@ -48,33 +51,33 @@ public class EruptDao {
                 }
             }
         }
-        condition = StringUtils.isBlank(condition) ? "" : AND + condition;
-        return entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() +
-                " where 1=1 " + condition);
+        expr = StringUtils.isBlank(expr) ? "" : WHERE + expr;
+        return entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() + expr);
     }
 
-    public List<Map<String, Object>> queryMapList(Class eruptClass, String condition, String... cols) {
-        return simpleQuery(eruptClass, true, condition, cols).getResultList();
+    //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
+    public List<Map<String, Object>> queryMapList(Class eruptClass, String expr, String... cols) {
+        return simpleQuery(eruptClass, true, expr, cols).getResultList();
     }
 
-    public List<Object[]> queryObjList(Class eruptClass, String condition, String... cols) {
-        return simpleQuery(eruptClass, false, condition, cols).getResultList();
+    public List<Object[]> queryObjectList(Class eruptClass, String expr, String... cols) {
+        return simpleQuery(eruptClass, false, expr, cols).getResultList();
     }
 
-    public <T> List<T> queryEntityList(Class<T> eruptClass, String condition) {
-        return simpleQuery(eruptClass, false, condition).getResultList();
+    public <T> List<T> queryEntityList(Class<T> eruptClass, String expr) {
+        return simpleQuery(eruptClass, false, expr).getResultList();
     }
 
-    public Map<String, Object> queryMap(Class eruptClass, String condition, String... cols) {
-        return (Map<String, Object>) simpleQuery(eruptClass, true, condition, cols).getSingleResult();
+    public Map<String, Object> queryMap(Class eruptClass, String expr, String... cols) throws NoResultException, NonUniqueResultException {
+        return (Map<String, Object>) simpleQuery(eruptClass, true, expr, cols).getSingleResult();
     }
 
-    public Object[] queryObj(Class eruptClass, String condition, String... cols) {
-        return (Object[]) simpleQuery(eruptClass, false, condition, cols).getSingleResult();
+    public Object[] queryObject(Class eruptClass, String expr, String... cols) throws NoResultException, NonUniqueResultException {
+        return (Object[]) simpleQuery(eruptClass, false, expr, cols).getSingleResult();
     }
 
-    public <T> T queryEntity(Class<T> eruptClass, String condition) {
-        return (T) simpleQuery(eruptClass, false, condition).getSingleResult();
+    public <T> T queryEntity(Class<T> eruptClass, String expr) throws NoResultException, NonUniqueResultException {
+        return (T) simpleQuery(eruptClass, false, expr).getSingleResult();
     }
 
 }

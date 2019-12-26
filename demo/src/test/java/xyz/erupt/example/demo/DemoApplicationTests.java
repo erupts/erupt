@@ -13,6 +13,7 @@ import xyz.erupt.job.service.EruptJobService;
 import xyz.erupt.tool.util.EruptDao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.text.ParseException;
 import java.util.List;
@@ -45,23 +46,27 @@ public class DemoApplicationTests {
 
     @Test
     public void eruptDaoObj() {
-        Object[] oo = eruptDao.queryObj(EruptUser.class, "account = 'erupt'", "id", "name");
+        Object[] oo = eruptDao.queryObject(EruptUser.class, "account = 'erupt'", "id", "name");
         System.out.println(oo[0] + ":" + oo[1]);
     }
 
     @Test
     public void eruptDaoMap() {
-        Map<String, Object> map = eruptDao.queryMap(EruptUser.class, "account = 'erupt'", "id", "name");
-        for (String s : map.keySet()) {
-            System.out.println(s + ":" + map.get(s));
+        try {
+            Map<String, Object> map = eruptDao.queryMap(EruptUser.class,
+                    "account = '2222'", "id", "name");
+            for (String s : map.keySet()) {
+                System.out.println(s + ":" + map.get(s));
+            }
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
         }
+
     }
 
     @Test
     public void eruptDao() {
-        EruptUser eruptUser = eruptDao.queryEntity(EruptUser.class, "account = 'erupt'");
-        System.out.println(eruptUser.getAccount());
-        List<EruptUser> list = eruptDao.queryEntityList(EruptUser.class, null);
+        List<EruptUser> list = eruptDao.queryEntityList(EruptUser.class, "1=1 order by account desc");
         for (EruptUser user : list) {
             System.out.println(user.getAccount());
         }

@@ -124,7 +124,7 @@ public class DataFileService {
         return wb;
     }
 
-    public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) throws Exception {
+    public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) {
         Sheet sheet = workbook.getSheetAt(0);
         Row titleRow = sheet.getRow(0);
         Map<String, EruptFieldModel> editTitleMappingEruptField = new HashMap<>();
