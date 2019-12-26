@@ -207,8 +207,6 @@ public class DataFileService {
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         //冻结首行
         sheet.createFreezePane(0, 1, 1, 1);
-        //批注对象
-        Drawing drawing = sheet.createDrawingPatriarch();
         Row headRow = sheet.createRow(0);
         int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
