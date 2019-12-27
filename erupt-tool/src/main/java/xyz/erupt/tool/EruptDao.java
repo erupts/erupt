@@ -1,4 +1,4 @@
-package xyz.erupt.tool.util;
+package xyz.erupt.tool;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -17,20 +17,39 @@ public class EruptDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public static final String SELECT = "select ";
+    private static final String SELECT = "select ";
 
     private static final String FROM = " from ";
-    public static final String NEW_MAP = "new map(";
+
+    private static final String NEW_MAP = "new map(";
 
     private static final String AND = " and ";
 
     private static final String AS = " as ";
-    public static final String EQU = " = ";
+
+    private static final String EQU = " = ";
+
     private static final String WHERE = " where ";
 
+    //修改
+    public <T> T merge(T t) {
+        return entityManager.merge(t);
+    }
+
+    //删除
+    public void delete(Object obj) {
+        entityManager.remove(obj);
+    }
+
+    //新增
+    public void persist(Object obj) {
+        entityManager.persist(obj);
+    }
+
+    //不存在则新增
     public void persistIfNotExist(Object obj, String field, String val) {
-        Object[] o = queryObject(obj.getClass(), field + EQU + "'" + val + "'", field);
-        if (null == o) {
+        List list = queryObjectList(obj.getClass(), field + EQU + "'" + val + "'", field);
+        if (list.isEmpty()) {
             entityManager.persist(obj);
         }
     }

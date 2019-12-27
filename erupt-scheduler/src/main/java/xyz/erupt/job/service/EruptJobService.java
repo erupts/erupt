@@ -1,15 +1,12 @@
 package xyz.erupt.job.service;
 
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
+import org.quartz.*;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.stereotype.Service;
-import xyz.erupt.job.model.EruptJobModel;
+import xyz.erupt.job.model.EruptJob;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -34,16 +31,12 @@ public class EruptJobService {
     private Map<String, StdSchedulerFactory> schedulerFactoryMap = new HashMap<>();
 
     public void triggerJob(String name) throws Exception {
-        try {
-            Scheduler scheduler = schedulerFactoryMap.get(name).getScheduler();
-            scheduler.triggerJob(new JobKey(name));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        Scheduler scheduler = schedulerFactoryMap.get(name).getScheduler();
+        scheduler.triggerJob(new JobKey(name));
     }
 
-    public void modifyJob(EruptJobModel eruptJobModel) throws SchedulerException, ParseException {
-        String code = eruptJobModel.getCode();
+    public void modifyJob(EruptJob eruptJob) throws SchedulerException, ParseException {
+        String code = eruptJob.getCode();
         if (schedulerFactoryMap.containsKey(code)) {
             StdSchedulerFactory sf = schedulerFactoryMap.get(code);
             Scheduler ler = sf.getScheduler();
@@ -51,29 +44,32 @@ public class EruptJobService {
                 ler.shutdown();
             }
         }
-        if (eruptJobModel.isStatus()) {
+        if (eruptJob.isStatus()) {
             StdSchedulerFactory ssf = new StdSchedulerFactory();
             ssf.initialize(getSchedulerProp(code));
             Scheduler scheduler = ssf.getScheduler();
             // job
             JobDetailImpl job = new JobDetailImpl();
+            JobDataMap jobDataMap = new JobDataMap();
+            jobDataMap.put(code, eruptJob);
+            job.setJobDataMap(jobDataMap);
             job.setName(code);
-            job.setJobClass(EruptJobCallBack.class);
+            job.setJobClass(EruptJobAction.class);
             // trigger
             CronTriggerImpl trigger = new CronTriggerImpl();
             trigger.setName(code);
-            trigger.setCronExpression(eruptJobModel.getCron());
+            trigger.setCronExpression(eruptJob.getCron());
             scheduler.scheduleJob(job, trigger);
             scheduler.start();
             schedulerFactoryMap.put(code, ssf);
         }
     }
 
-    private void deleteJob(EruptJobModel eruptJobModel) throws SchedulerException {
-        SchedulerFactory sf = schedulerFactoryMap.get(eruptJobModel.getCode());
+    private void deleteJob(EruptJob eruptJob) throws SchedulerException {
+        SchedulerFactory sf = schedulerFactoryMap.get(eruptJob.getCode());
         if (null != sf) {
             Scheduler scheduler = sf.getScheduler();
-            scheduler.deleteJob(new JobKey(eruptJobModel.getCode()));
+            scheduler.deleteJob(new JobKey(eruptJob.getCode()));
             if (!scheduler.isShutdown()) {
                 scheduler.shutdown();
             }

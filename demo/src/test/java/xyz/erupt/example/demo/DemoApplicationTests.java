@@ -1,5 +1,6 @@
 package xyz.erupt.example.demo;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.SchedulerException;
@@ -8,13 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.core.service.data_impl.DBService;
-import xyz.erupt.job.model.EruptJobModel;
+import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.service.EruptJobService;
-import xyz.erupt.tool.util.EruptDao;
+import xyz.erupt.tool.EruptDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -37,11 +39,11 @@ public class DemoApplicationTests {
 
     @Test
     public void testJob() throws ParseException, SchedulerException {
-        EruptJobModel eruptJobModel = new EruptJobModel();
-        eruptJobModel.setCode("aaa");
-        eruptJobModel.setCron("* * * * * ? *");
-        eruptJobModel.setStatus(true);
-        eruptJobService.modifyJob(eruptJobModel);
+        EruptJob eruptJob = new EruptJob();
+        eruptJob.setCode("aaa");
+        eruptJob.setCron("* * * * * ? *");
+        eruptJob.setStatus(true);
+        eruptJobService.modifyJob(eruptJob);
     }
 
     @Test
@@ -69,6 +71,16 @@ public class DemoApplicationTests {
         List<EruptUser> list = eruptDao.queryEntityList(EruptUser.class, "1=1 order by account desc");
         for (EruptUser user : list) {
             System.out.println(user.getAccount());
+        }
+    }
+
+    @Test
+    public void tt() {
+        try {
+            throw new IOException("xxxxxxxx");
+        } catch (Exception e) {
+            System.out.println(ExceptionUtils.getStackTrace(e));
+
         }
     }
 

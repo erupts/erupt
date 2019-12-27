@@ -1,36 +1,57 @@
 package xyz.erupt.job.model;
 
+import lombok.Data;
+import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.core.model.BaseModel;
 
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * @author liyuepeng
  * @date 2019-12-26
  */
-//@Erupt(
-//        name = "任务处理日志"
-//)
-public class EruptJobLog {
+@Erupt(
+        name = "任务日志",
+        power = @Power(export = true, add = false, delete = false, edit = false, viewDetails = false)
+)
+@Entity
+@Table(name = "E_JOB_LOG")
+@Data
+public class EruptJobLog extends BaseModel {
 
+    @ManyToOne
+    @JoinColumn(name = "JOB_ID")
     @EruptField(
-            views = @View(title = "任务名称"),
-            edit = @Edit(title = "任务名称", notNull = true, search = @Search(vague = true, value = true))
+            views = @View(title = "任务名称", column = "name"),
+            edit = @Edit(title = "任务名称", show = false, search = @Search(true), type = EditType.REFERENCE_TREE)
     )
-    private String name;
+    private EruptJob eruptJob;
 
     @EruptField(
-            views = @View(title = "任务参数"),
-            edit = @Edit(title = "任务参数")
+            views = @View(title = "任务参数")
     )
     private String handlerParam;
 
+    @EruptField(
+            views = @View(title = "任务状态")
+    )
+    private Boolean status;
+
+    @EruptField(
+            views = @View(title = "开始时间")
+    )
     private Date startTime;
 
+    @EruptField(
+            views = @View(title = "结束时间")
+    )
     private Date endTime;
 
     @Lob

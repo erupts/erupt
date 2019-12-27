@@ -6,7 +6,7 @@ import xyz.erupt.annotation.model.BoolAndReason;
 /**
  * Created by liyuepeng on 10/9/18.
  */
-public interface OperationHandler {
+public interface OperationHandler<T> {
 
-    BoolAndReason exec(Object data, JsonObject param);
+    BoolAndReason exec(T data, JsonObject param);
 }

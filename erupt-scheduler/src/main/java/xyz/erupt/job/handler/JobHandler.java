@@ -6,8 +6,8 @@ package xyz.erupt.job.handler;
  */
 public interface JobHandler {
 
-    void exec(String param);
+    void exec(String param) throws Exception;
 
-//    void afterHandler(String result, String param);
+    void complete(boolean success, String param);
 
 }
