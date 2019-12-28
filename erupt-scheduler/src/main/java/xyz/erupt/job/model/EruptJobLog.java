@@ -61,6 +61,13 @@ public class EruptJobLog extends BaseModel {
 
     @Lob
     @EruptField(
+            views = @View(title = "执行结果"),
+            edit = @Edit(title = "执行结果")
+    )
+    private String resultInfo;
+
+    @Lob
+    @EruptField(
             views = @View(title = "错误信息"),
             edit = @Edit(title = "错误信息")
     )

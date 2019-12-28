@@ -35,15 +35,16 @@ public class EruptJobAction implements Job {
             JobHandler jobHandler = null;
             try {
                 jobHandler = EruptSpringUtil.getBean(eruptJob.getHandler(), JobHandler.class);
-                jobHandler.exec(eruptJob.getHandlerParam());
+                String result = jobHandler.exec(eruptJob.getHandlerParam());
+                jobHandler.success(result, eruptJob.getHandlerParam());
+                eruptJobLog.setResultInfo(result);
                 eruptJobLog.setStatus(true);
-                jobHandler.complete(true, eruptJob.getHandlerParam());
             } catch (Exception e) {
                 e.printStackTrace();
                 eruptJobLog.setStatus(false);
                 eruptJobLog.setErrorInfo(ExceptionUtils.getStackTrace(e));
                 if (null != jobHandler) {
-                    jobHandler.complete(false, eruptJob.getHandlerParam());
+                    jobHandler.error(e, eruptJob.getHandlerParam());
                 }
             }
             eruptJobLog.setHandlerParam(eruptJob.getHandlerParam());

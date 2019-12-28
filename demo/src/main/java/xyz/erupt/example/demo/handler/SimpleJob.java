@@ -11,13 +11,13 @@ public class SimpleJob implements JobHandler {
     private static int i = 0;
 
     @Override
-    public void exec(String param) throws Exception {
+    public String exec(String param) throws Exception {
         Thread.sleep(10000);
-        System.out.println(++i);
+        return String.valueOf(i);
     }
 
     @Override
-    public void complete(boolean success, String param) {
-        System.out.println(param);
+    public void success(String result, String param) {
+        System.out.println(param + ":" + result);
     }
 }
