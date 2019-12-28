@@ -44,12 +44,8 @@ public class EruptSpringUtil implements ApplicationContextAware {
         }
     }
 
-    public static <T> T getBean(String path, Class<T> clazz) {
-        try {
-            return clazz.cast(getBean(Class.forName(path)));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public static <T> T getBean(String path, Class<T> clazz) throws ClassNotFoundException {
+        return clazz.cast(getBean(Class.forName(path)));
     }
 
     /**

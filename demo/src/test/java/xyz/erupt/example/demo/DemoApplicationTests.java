@@ -1,6 +1,5 @@
 package xyz.erupt.example.demo;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.SchedulerException;
@@ -16,7 +15,6 @@ import xyz.erupt.tool.EruptDao;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -76,12 +74,7 @@ public class DemoApplicationTests {
 
     @Test
     public void tt() {
-        try {
-            throw new IOException("xxxxxxxx");
-        } catch (Exception e) {
-            System.out.println(ExceptionUtils.getStackTrace(e));
-
-        }
+        entityManager.find(EruptUser.class, "2");
     }
 
 }

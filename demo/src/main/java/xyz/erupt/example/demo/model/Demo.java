@@ -8,6 +8,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -29,7 +30,12 @@ import java.util.Set;
 /**
  * Created by liyuepeng on 2019-10-08.
  */
-@Erupt(name = "demo", orderBy = "number desc", power = @Power(export = true), dataProxy = Demo.class)
+@Erupt(name = "demo", orderBy = "number desc",
+        power = @Power(export = true), dataProxy = Demo.class,
+        rowOperation = @RowOperation(operationHandler = OperationHandlerImpl.class,
+                eruptClass = DemoSub.class, title = "demo", icon = "fa fa-eercast", code = "demo")
+
+)
 @Table(name = "DEMO")
 @Entity
 @Component

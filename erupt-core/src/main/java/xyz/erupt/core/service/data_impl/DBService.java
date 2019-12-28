@@ -22,6 +22,7 @@ import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.tool.EruptDao;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -41,9 +42,12 @@ public class DBService implements DataService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private EruptDao eruptDao;
+
     @Override
-    public Object findDataById(EruptModel eruptModel, Serializable id) {
-        return eruptJpaDao.findDataById(eruptModel, id);
+    public Object findDataById(EruptModel eruptModel, Object id) {
+        return entityManager.find(eruptModel.getClazz(), id);
     }
 
     @Override
@@ -81,7 +85,6 @@ public class DBService implements DataService {
     @Override
     public void addData(EruptModel eruptModel, Object object) {
         try {
-            //TODO 强制删除id的处理方式并不好
             jpaManyToOneConvert(eruptModel, object);
             eruptJpaDao.addEntity(object);
         } catch (DataIntegrityViolationException e) {
@@ -131,6 +134,7 @@ public class DBService implements DataService {
                 if (null != collection) {
                     for (Object o : collection) {
                         //删除主键ID
+                        //TODO 强制删除id的处理方式并不好
                         Field pk = ReflectUtil.findClassField(o.getClass(), CoreService
                                 .getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol());
                         pk.set(o, null);
@@ -154,9 +158,8 @@ public class DBService implements DataService {
 
     @Transactional
     @Override
-    public void deleteData(EruptModel eruptModel, Serializable id) {
-        Object obj = eruptJpaDao.findDataById(eruptModel, id);
-        eruptJpaDao.deleteEntity(obj);
+    public void deleteData(EruptModel eruptModel, Object id) {
+        entityManager.remove(this.findDataById(eruptModel, id));
     }
 
     @Override
@@ -188,7 +191,7 @@ public class DBService implements DataService {
             if (StringUtils.isNotBlank(edit.filter().condition())) {
                 condition.append(EruptJpaUtils.AND);
             }
-            condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn() + "=:" + DEPEND_KEY);
+            condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn()).append("=:").append(DEPEND_KEY);
             conditionParameter.put(DEPEND_KEY, dependValue);
         }
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.getErupt(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);

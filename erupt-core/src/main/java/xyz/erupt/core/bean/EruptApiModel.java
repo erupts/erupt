@@ -40,6 +40,10 @@ public class EruptApiModel {
         return new EruptApiModel(Status.SUCCESS, null, null, PromptWay.MESSAGE);
     }
 
+    public static EruptApiModel successApi(String message, Object data) {
+        return new EruptApiModel(Status.SUCCESS, message, data, PromptWay.MESSAGE);
+    }
+
     public static EruptApiModel successApi(Object data) {
         return new EruptApiModel(Status.SUCCESS, null, data, PromptWay.MESSAGE);
     }

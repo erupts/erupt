@@ -9,7 +9,6 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
-import xyz.erupt.annotation.model.BoolAndReason;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -20,7 +19,6 @@ import xyz.erupt.core.model.BaseModel;
 import xyz.erupt.job.service.EruptJobService;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.text.ParseException;
 
 /**
@@ -31,7 +29,7 @@ import java.text.ParseException;
         name = "任务维护",
         dataProxy = EruptJob.class,
         rowOperation = @RowOperation(code = "action", icon = "fa fa-play",
-                title = "执行", multi = false, operationHandler = EruptJob.class)
+                title = "执行一次任务", multi = false, operationHandler = EruptJob.class)
 )
 @Entity
 @Table(name = "E_JOB", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
@@ -89,14 +87,6 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
     @Autowired
     private EruptJobService eruptJobService;
 
-    @Override
-    public void beforeUpdate(EruptJob eruptJob) {
-        try {
-            eruptJobService.modifyJob(eruptJob);
-        } catch (SchedulerException | ParseException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
 
     @Override
     public void beforeAdd(EruptJob eruptJob) {
@@ -107,22 +97,26 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
         }
     }
 
-
     @Override
-    public void afterDelete(Serializable id) {
-
+    public void beforeUpdate(EruptJob eruptJob) {
+        this.beforeAdd(eruptJob);
     }
 
     @Override
-    public BoolAndReason exec(EruptJob data, JsonObject param) {
+    public void beforeDelete(EruptJob eruptJob) {
         try {
-            if (!data.isStatus()) {
-                return new BoolAndReason(false, "任务停用状态，无法直接执行");
-            }
-            eruptJobService.triggerJob(data.getCode());
-            return null;
+            eruptJobService.deleteJob(eruptJob);
+        } catch (SchedulerException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void exec(EruptJob eruptJob, JsonObject param) {
+        try {
+            eruptJobService.triggerJob(eruptJob);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

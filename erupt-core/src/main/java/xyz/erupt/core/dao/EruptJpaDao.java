@@ -3,7 +3,6 @@ package xyz.erupt.core.dao;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Repository;
-import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.bean.EruptFieldModel;
@@ -11,14 +10,10 @@ import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.bean.HqlBean;
 import xyz.erupt.core.bean.Page;
 import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.util.ReflectUtil;
-import xyz.erupt.core.util.TypeUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -39,15 +34,7 @@ public class EruptJpaDao {
         entityManager.merge(entity);
     }
 
-    public void deleteEntity(Object entity) {
-        if (null != entity) {
-            entityManager.remove(entity);
-        }
-    }
-
-    public Object findDataById(EruptModel eruptModel, Serializable id) {
-        Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol());
-        id = TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
+    public Object findDataById(EruptModel eruptModel, Object id) {
         return entityManager.find(eruptModel.getClazz(), id);
     }
 

@@ -12,11 +12,12 @@ public class SimpleJob implements JobHandler {
 
     @Override
     public void exec(String param) throws Exception {
+        Thread.sleep(10000);
         System.out.println(++i);
     }
 
     @Override
     public void complete(boolean success, String param) {
-
+        System.out.println(param);
     }
 }

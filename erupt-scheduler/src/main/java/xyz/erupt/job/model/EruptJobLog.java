@@ -7,6 +7,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.model.BaseModel;
 
@@ -18,6 +19,7 @@ import java.util.Date;
  * @date 2019-12-26
  */
 @Erupt(
+        orderBy = "startTime desc",
         name = "任务日志",
         power = @Power(export = true, add = false, delete = false, edit = false, viewDetails = false)
 )
@@ -40,12 +42,15 @@ public class EruptJobLog extends BaseModel {
     private String handlerParam;
 
     @EruptField(
-            views = @View(title = "任务状态")
+            views = @View(title = "任务状态"),
+            edit = @Edit(title = "任务状态", search = @Search(true))
     )
     private Boolean status;
 
     @EruptField(
-            views = @View(title = "开始时间")
+            views = @View(title = "开始时间"),
+            edit = @Edit(title = "开始时间", search = @Search(value = true, vague = true),
+                    dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date startTime;
 

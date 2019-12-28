@@ -227,4 +227,10 @@ public class EruptUtil {
         }
         return EruptApiModel.successApi();
     }
+
+    public static Object toEruptId(EruptModel eruptModel, String id) {
+        Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz()
+                , eruptModel.getErupt().primaryKeyCol());
+        return TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
+    }
 }

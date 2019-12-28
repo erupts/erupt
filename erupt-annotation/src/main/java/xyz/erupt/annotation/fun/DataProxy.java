@@ -5,7 +5,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -30,11 +29,11 @@ public interface DataProxy<MODEL> {
     }
 
     //删
-    default void beforeDelete(Serializable id) {
+    default void beforeDelete(MODEL model) {
 
     }
 
-    default void afterDelete(Serializable id) {
+    default void afterDelete(MODEL model) {
     }
 
     /**

@@ -38,6 +38,12 @@ public class EruptLoginLog extends BaseModel {
     private EruptUser eruptUser;
 
     @EruptField(
+            views = @View(title = "登录时间", sortable = true),
+            edit = @Edit(title = "登录时间", search = @Search(vague = true, value = true))
+    )
+    private Date loginTime;
+
+    @EruptField(
             views = @View(title = "IP地址"),
             edit = @Edit(title = "IP地址", search = @Search(true))
     )
@@ -60,10 +66,4 @@ public class EruptLoginLog extends BaseModel {
             edit = @Edit(title = "设备类型", search = @Search(true))
     )
     private String deviceType;
-
-    @EruptField(
-            views = @View(title = "登录时间", sortable = true),
-            edit = @Edit(title = "登录时间", search = @Search(vague = true, value = true))
-    )
-    private Date loginTime;
 }

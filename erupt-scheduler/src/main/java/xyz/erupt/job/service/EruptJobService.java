@@ -5,9 +5,13 @@ import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.quartz.simpl.SimpleThreadPool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.job.model.EruptJob;
+import xyz.erupt.job.model.EruptJobLog;
+import xyz.erupt.tool.EruptDao;
 
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +24,9 @@ import java.util.Properties;
 @Service
 public class EruptJobService {
 
+    @Autowired
+    private EruptDao eruptDao;
+
     /**
      * 执行任务线程.
      */
@@ -30,19 +37,14 @@ public class EruptJobService {
     private static final int DEFAULT_THREAD_COUNT = 1;
     private Map<String, StdSchedulerFactory> schedulerFactoryMap = new HashMap<>();
 
-    public void triggerJob(String name) throws Exception {
-        Scheduler scheduler = schedulerFactoryMap.get(name).getScheduler();
-        scheduler.triggerJob(new JobKey(name));
+    public void triggerJob(EruptJob eruptJob) throws Exception {
+        new EruptJobAction().trigger(eruptJob);
     }
 
     public void modifyJob(EruptJob eruptJob) throws SchedulerException, ParseException {
         String code = eruptJob.getCode();
         if (schedulerFactoryMap.containsKey(code)) {
-            StdSchedulerFactory sf = schedulerFactoryMap.get(code);
-            Scheduler ler = sf.getScheduler();
-            if (!ler.isShutdown()) {
-                ler.shutdown();
-            }
+            deleteJob(eruptJob);
         }
         if (eruptJob.isStatus()) {
             StdSchedulerFactory ssf = new StdSchedulerFactory();
@@ -65,7 +67,7 @@ public class EruptJobService {
         }
     }
 
-    private void deleteJob(EruptJob eruptJob) throws SchedulerException {
+    public void deleteJob(EruptJob eruptJob) throws SchedulerException {
         SchedulerFactory sf = schedulerFactoryMap.get(eruptJob.getCode());
         if (null != sf) {
             Scheduler scheduler = sf.getScheduler();
@@ -73,6 +75,7 @@ public class EruptJobService {
             if (!scheduler.isShutdown()) {
                 scheduler.shutdown();
             }
+            schedulerFactoryMap.remove(eruptJob.getCode());
         }
     }
 
@@ -87,5 +90,10 @@ public class EruptJobService {
         props.setProperty(StdSchedulerFactory.PROP_SCHED_INSTANCE_ID, "AUTO");
         props.setProperty(StdSchedulerFactory.PROP_SCHED_INSTANCE_NAME, schedulerName);
         return props;
+    }
+
+    @Transactional
+    public void saveJobLog(EruptJobLog eruptJobLog) {
+        eruptDao.persist(eruptJobLog);
     }
 }

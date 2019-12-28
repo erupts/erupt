@@ -13,7 +13,7 @@ import java.util.Collection;
  */
 public interface DataService {
 
-    Object findDataById(EruptModel eruptModel, Serializable id);
+    Object findDataById(EruptModel eruptModel, Object id);
 
     Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String customerCondition);
 
@@ -23,7 +23,7 @@ public interface DataService {
 
     void editData(EruptModel eruptModel, Object object);
 
-    void deleteData(EruptModel eruptModel, Serializable id);
+    void deleteData(EruptModel eruptModel, Object id);
 
     Collection<TreeModel> findTabTree(EruptModel eruptModel, String fieldName);
 
