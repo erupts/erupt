@@ -13,8 +13,7 @@
 <link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.css" rel="stylesheet">
 <template>
     <div style="margin: 0 20px;">
-        <h1 id="h1" style="color: #09f" th:text="'ERUPT DEMO HTML '+${str}"></h1>
-        <h2>${str}</h2>
+        <h1 id="h1" style="color: #09f" th:text="${str}"></h1>
         <div id="chart" style="height: 300px;border: 1px dashed #09f;">
         </div>
     </div>

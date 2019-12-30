@@ -14,9 +14,9 @@ public class HtmlHandler implements Html.HtmlHandler {
     public Map<String, Object> getData(String[] params) {
         Map<String, Object> map = new HashMap<>();
         map.put("number", 123);
-        map.put("str", "xxxxxx");
+        map.put("str", "ERUPT DEMO HTML");
         map.put("arr", new String[]{
-                "xxxx", "xxxx2", "xxxx3"
+                "a1", "a2", "a3"
         });
         return map;
     }

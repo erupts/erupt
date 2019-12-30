@@ -7,6 +7,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.sub_erupt.Html;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -20,6 +21,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.core.model.BaseModel;
+import xyz.erupt.example.demo.handler.HtmlHandler;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -91,15 +93,15 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
             edit = @Edit(title = "图片", type = EditType.ATTACHMENT,
                     attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE))
     )
-    private String attachment;
+    private String img;
 
 
     @EruptField(
-            views = @View(title = "flash动画", type = ViewType.SWF),
-            edit = @Edit(title = "swf", search = @Search(value = true, vague = true), type = EditType.ATTACHMENT,
-                    attachmentType = @AttachmentType(fileTypes = "swf"))
+            views = @View(title = "附件上传", type = ViewType.DOWNLOAD),
+            edit = @Edit(title = "附件上传", type = EditType.ATTACHMENT,
+                    attachmentType = @AttachmentType, placeHolder = "xxxxx")
     )
-    private String swf;
+    private String attachment;
 
 
     @EruptField(
@@ -108,13 +110,12 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     )
     private String remark;
 
-//    @EruptField(
-//            views = @View(title = "自定义HTML"),
-//            edit = @Edit(title = "HTML", type = EditType.HTML,
-//                    htmlType = @Html(path = "demo.html", htmlHandler = HtmlHandler.class, params = {"123", "xxx"}),
-//                    search = @Search(true))
-//    )
-//    private String html;
+    @EruptField(
+            views = @View(title = "自定义HTML"),
+            edit = @Edit(title = "HTML", type = EditType.HTML,
+                    htmlType = @Html(path = "demo.html", htmlHandler = HtmlHandler.class, params = {"123", "xxx"}))
+    )
+    private String html;
 
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "demo_id")
