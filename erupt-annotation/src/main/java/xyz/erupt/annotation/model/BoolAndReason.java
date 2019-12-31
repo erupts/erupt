@@ -2,7 +2,8 @@ package xyz.erupt.annotation.model;
 
 /**
  * 用来描述bool值所产生的的原因
- * Created by liyuepeng on 11/20/18.
+ * @author liyuepeng
+ * @date 2018-11-20.
  */
 public class BoolAndReason {
     private boolean bool;

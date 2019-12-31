@@ -5,7 +5,8 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import java.lang.annotation.*;
 
 /**
- * Created by liyuepeng on 2019-06-11.
+ * @author liyuepeng
+ * @date 2019-06-11.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
@@ -25,8 +26,10 @@ public @interface EruptRouter {
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;
 
     enum VerifyMethod {
-        HEADER, //校验内容必须放在请求头
-        PARAM   //检验内容必须放到URL参数中
+        //校验内容必须放在请求头
+        HEADER,
+        //检验内容必须放到URL参数中
+        PARAM
     }
 
 }

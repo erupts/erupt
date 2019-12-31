@@ -15,13 +15,13 @@ import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.service.CoreService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 import static xyz.erupt.core.constant.RestPath.ERUPT_API;
 
 /**
  * Erupt 页面结构构建信息
- * Created by liyuepeng on 9/28/18.
+ * @author liyuepeng
+ * @date 2018-09-28.
  */
 @RestController
 @RequestMapping(ERUPT_API + "/tpl")

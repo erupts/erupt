@@ -11,7 +11,8 @@ import xyz.erupt.core.model.BaseModel;
 import javax.persistence.*;
 
 /**
- * Created by liyuepeng on 12/7/18.
+ * @author liyuepeng
+ * @date 2018-12-07.
  */
 
 @Entity

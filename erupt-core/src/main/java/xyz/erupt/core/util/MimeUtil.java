@@ -8,7 +8,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Created by liyuepeng on 2019-07-11.
+ * @author liyuepeng
+ * @date 2019-07-11.
  */
 public class MimeUtil {
 

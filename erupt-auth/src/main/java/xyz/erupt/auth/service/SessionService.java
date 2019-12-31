@@ -11,7 +11,8 @@ import java.lang.reflect.Type;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by liyuepeng on 2019-08-13.
+ * @author liyuepeng
+ * @date 2019-08-13.
  */
 @Component
 public class SessionService {

@@ -4,7 +4,8 @@ import xyz.erupt.annotation.config.JavaTypeEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 
 /**
- * Created by liyuepeng on 9/28/18.
+ * @author liyuepeng
+ * @date 2018-09-28.
  */
 public enum EditType {
     @EditTypeMapping(desc = "框架自动检测类型", allowType = {JavaTypeEnum.any})
@@ -47,11 +48,15 @@ public enum EditType {
     TAB_TABLE_ADD,
     @EditTypeMapping(desc = "自定义HTML", allowType = {JavaTypeEnum.String}, search = false, excelOperator = false)
     HTML,
-
-    JSON_EDIT,         //JSON格式编辑器
-    MAP,              //地图
-    CODE_EDITOR,             //代码编辑器
+    //JSON格式编辑器
+    JSON_EDIT,
+    //地图
+    MAP,
+    //代码编辑器
+    CODE_EDITOR,
+    //步骤条
     EMPTY,
-    STEPS,            //步骤条
-    CUSTOM_REFER,     //自定义引用类型
+    STEPS,
+    //自定义引用类型
+    CUSTOM_REFER,
 }

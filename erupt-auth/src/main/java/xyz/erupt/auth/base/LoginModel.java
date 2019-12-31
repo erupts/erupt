@@ -4,7 +4,8 @@ import lombok.Data;
 import xyz.erupt.auth.model.EruptUser;
 
 /**
- * Created by liyuepeng on 2018-12-14.
+ * @author liyuepeng
+ * @date 2018-12-14.
  */
 @Data
 public class LoginModel {

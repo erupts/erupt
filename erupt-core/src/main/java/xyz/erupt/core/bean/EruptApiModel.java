@@ -4,7 +4,8 @@ import lombok.Data;
 import xyz.erupt.annotation.model.BoolAndReason;
 
 /**
- * Created by liyuepeng on 10/9/18.
+ * @author liyuepeng
+ * @date 2018-10-09.
  */
 @Data
 public class EruptApiModel {

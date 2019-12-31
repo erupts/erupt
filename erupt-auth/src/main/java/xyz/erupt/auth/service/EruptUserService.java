@@ -30,7 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by liyuepeng on 2018-12-13.
+ * @author liyuepeng
+ * @date 2018-12-13.
  */
 @Service
 public class EruptUserService {
@@ -169,7 +170,7 @@ public class EruptUserService {
         sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString(), eruptAuthConfig.getExpireTimeByLogin());
     }
 
-    public Long getCurrentUId() {
+    public Long getCurrentUid() {
         String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
         if (StringUtils.isBlank(token)) {
             token = request.getParameter(LoginInterceptor.URL_ERUPT_PARAM_TOKEN);

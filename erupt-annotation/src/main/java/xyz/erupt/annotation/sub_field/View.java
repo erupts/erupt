@@ -3,7 +3,8 @@ package xyz.erupt.annotation.sub_field;
 import xyz.erupt.annotation.config.EruptProperty;
 
 /**
- * Created by liyuepeng on 9/28/18.
+ * @author liyuepeng
+ * @date 2018-09-28.
  */
 public @interface View {
 

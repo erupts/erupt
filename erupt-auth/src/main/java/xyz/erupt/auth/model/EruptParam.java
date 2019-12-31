@@ -7,7 +7,8 @@ import xyz.erupt.annotation.sub_field.View;
 import javax.persistence.Column;
 
 /**
- * Created by liyuepeng on 2019-11-27.
+ * @author liyuepeng
+ * @date 2019-11-27.
  */
 //@Erupt(
 //        name = "平台参数设置"

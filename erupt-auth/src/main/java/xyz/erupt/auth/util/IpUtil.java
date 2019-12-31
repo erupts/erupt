@@ -4,7 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 
 /**
- * Created by liyuepeng on 2018-12-24.
+ * @author liyuepeng
+ * @date 2018-12-24.
  */
 public class IpUtil {
     public static String getIpAddr(HttpServletRequest request) {
@@ -27,7 +28,8 @@ public class IpUtil {
                     ip = inet.getHostAddress();
 
                     // 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-                    if (ip != null && ip.length() > 15) { // "***.***.***.***".length()
+                    // "***.***.***.***".length()
+                    if (ip != null && ip.length() > 15) {
                         // = 15
                         if (ip.indexOf(",") > 0) {
                             ip = ip.substring(0, ip.indexOf(","));
@@ -35,7 +37,8 @@ public class IpUtil {
                     }
                 }
             }
-            if (ip != null && ip.length() > 15) { // "***.***.***.***".length()
+            // "***.***.***.***".length()
+            if (ip != null && ip.length() > 15) {
                 // = 15
                 if (ip.indexOf(",") > 0) {
                     ip = ip.substring(0, ip.indexOf(","));

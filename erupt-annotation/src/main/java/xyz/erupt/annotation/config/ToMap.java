@@ -7,7 +7,8 @@ import java.lang.annotation.Target;
 
 /**
  * 作用域：annotation[]
- * Created by liyuepeng on 2019-05-28.
+ * @author liyuepeng
+ * @date 2019-05-28.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

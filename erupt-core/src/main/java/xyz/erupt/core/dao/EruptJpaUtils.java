@@ -22,7 +22,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by liyuepeng on 11/5/18.
+ * @author liyuepeng
+ * @date 2018-11-05.
  */
 public class EruptJpaUtils {
 
@@ -132,23 +133,23 @@ public class EruptJpaUtils {
                             hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTableType().id()).append("=:").append(key);
                             continue;
                         }
-                        String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
+                        String $key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
                         if (edit.search().vague()) {
                             if ((edit.type() == EditType.NUMBER)
                                     || edit.type() == EditType.DATE
                                     || edit.type() == EditType.SLIDER) {
-                                hql.append(EruptJpaUtils.AND).append(_key)
+                                hql.append(EruptJpaUtils.AND).append($key)
                                         .append(" between :").append(LVAL_KEY).append(key)
                                         .append(" and :").append(RVAL_KEY).append(key);
                             } else if (edit.type() == EditType.CHOICE) {
-                                hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(key).append(")");
+                                hql.append(EruptJpaUtils.AND).append($key).append(" in (:").append(key).append(")");
                             } else if (eruptFieldModel.getFieldReturnName().equals(JavaType.STRING)) {
-                                hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(key);
+                                hql.append(EruptJpaUtils.AND).append($key).append(" like :").append(key);
                             } else {
-                                hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(key);
+                                hql.append(EruptJpaUtils.AND).append($key).append("=:").append(key);
                             }
                         } else {
-                            hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(key);
+                            hql.append(EruptJpaUtils.AND).append($key).append("=:").append(key);
                         }
 //                        if (clientSearchCondition.get(key).toString().contains(EruptJpaUtils.NULL)) {
 //                            hql.append(EruptJpaUtils.AND).append(_key).append(" is null");

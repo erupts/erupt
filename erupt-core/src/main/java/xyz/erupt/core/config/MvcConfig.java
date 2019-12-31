@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by liyuepeng on 10/31/18.
+ * @author liyuepeng
+ * @date 10/31/18.
  */
 @Configuration
 public class MvcConfig {

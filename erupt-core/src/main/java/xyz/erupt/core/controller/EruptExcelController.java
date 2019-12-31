@@ -17,9 +17,9 @@ import xyz.erupt.core.bean.Page;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
-import xyz.erupt.core.util.EruptSpringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +30,8 @@ import java.util.List;
 
 /**
  * 对Excel数据的处理
- * Created by liyuepeng on 10/15/18.
+ * @author liyuepeng
+ * @date 10/15/18.
  */
 @RestController
 @RequestMapping(RestPath.ERUPT_EXCEL)
@@ -99,7 +100,7 @@ public class EruptExcelController {
     @ResponseBody
     @EruptRouter(authIndex = 2)
     @Transactional(rollbackOn = Exception.class)
-    public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
+    public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) throws Exception {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             if (file.isEmpty()) {

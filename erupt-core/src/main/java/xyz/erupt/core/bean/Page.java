@@ -6,7 +6,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Created by liyuepeng on 10/12/18.
+ * @author liyuepeng
+ * @date 2018-10-12.
  */
 @Data
 public class Page {

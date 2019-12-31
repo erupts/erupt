@@ -4,8 +4,18 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.sub_erupt.Power;
 
+/**
+ * @author liyuepeng
+ * @date 2019-11-25.
+ */
 public interface PowerHandler {
 
+    /**
+     * erupt权限执行类
+     *
+     * @param power 注解
+     * @return power bean
+     */
     PowerBean handler(Power power);
 
     @Getter

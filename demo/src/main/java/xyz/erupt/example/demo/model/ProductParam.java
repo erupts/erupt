@@ -13,7 +13,8 @@ import xyz.erupt.auth.model.EruptUser;
 import javax.persistence.*;
 
 /**
- * Created by liyuepeng on 2019-07-29.
+ * @author liyuepeng
+ * @date 2019-07-29.
  */
 @Erupt(name = "产品参数")
 @Entity

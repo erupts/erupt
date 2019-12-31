@@ -9,7 +9,8 @@ import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
 /**
- * Created by liyuepeng on 2019-10-30.
+ * @author liyuepeng
+ * @date 2019-10-30.
  */
 public class SecurityUtil {
 

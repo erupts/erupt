@@ -9,6 +9,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
 
+/**
+ * @author liyuepeng
+ * @date 2019-12-10.
+ */
 @Entity
 @Table(name = "E_ILLEGAL_REQ")
 @Erupt(

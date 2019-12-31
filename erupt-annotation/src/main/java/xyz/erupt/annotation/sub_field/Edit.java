@@ -8,7 +8,8 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 import java.beans.Transient;
 
 /**
- * Created by liyuepeng on 9/28/18.
+ * @author liyuepeng
+ * @date 2018-09-28.
  */
 //@NotBlank("title")
 public @interface Edit {

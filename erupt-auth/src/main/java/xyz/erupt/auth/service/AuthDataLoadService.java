@@ -14,7 +14,8 @@ import xyz.erupt.tool.EruptDao;
 import javax.transaction.Transactional;
 
 /**
- * Created by liyuepeng on 2019-07-15.
+ * @author liyuepeng
+ * @date 2019-07-15.
  */
 @Service
 @Order(10)
@@ -26,7 +27,7 @@ public class AuthDataLoadService implements CommandLineRunner {
 
     @Transactional
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws Exception {
         new ProjectUtil().projectStartLoaded("auth", first -> {
             if (first) {
                 //用户

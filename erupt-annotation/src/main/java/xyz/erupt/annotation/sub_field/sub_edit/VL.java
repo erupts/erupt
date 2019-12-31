@@ -3,7 +3,8 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 import java.beans.Transient;
 
 /**
- * Created by liyuepeng on 10/11/18.
+ * @author liyuepeng
+ * @date 2018-10-11.
  */
 public @interface VL {
 

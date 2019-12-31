@@ -15,7 +15,7 @@ import java.util.Date;
 
 /**
  * @author liyuepeng
- * @date 2019-12-26
+ * @date 2019-12-26.
  */
 public class EruptJobAction implements Job {
 

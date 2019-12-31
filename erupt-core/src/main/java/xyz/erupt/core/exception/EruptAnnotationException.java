@@ -3,7 +3,8 @@ package xyz.erupt.core.exception;
 import xyz.erupt.core.bean.EruptModel;
 
 /**
- * Created by liyuepeng on 11/1/18.
+ * @author liyuepeng
+ * @date 11/1/18.
  */
 public class EruptAnnotationException extends RuntimeException {
 

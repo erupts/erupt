@@ -17,7 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * Created by liyuepeng on 2019-10-08.
+ * @author liyuepeng
+ * @date 2019-10-08.
  */
 @Erupt(name = "demo_sub")
 @Table(name = "DEMO")

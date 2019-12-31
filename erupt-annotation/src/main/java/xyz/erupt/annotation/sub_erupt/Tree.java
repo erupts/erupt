@@ -1,7 +1,8 @@
 package xyz.erupt.annotation.sub_erupt;
 
 /**
- * Created by liyuepeng on 11/13/18.
+ * @author liyuepeng
+ * @date 2019-11-13.
  */
 public @interface Tree {
 

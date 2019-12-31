@@ -14,7 +14,8 @@ import javax.persistence.OneToMany;
 import java.util.Set;
 
 /**
- * Created by liyuepeng on 2019-08-26.
+ * @author liyuepeng
+ * @date 2019-08-26.
  */
 public class Bi extends BaseModel {
 
@@ -58,11 +59,6 @@ public class Bi extends BaseModel {
             edit = @Edit(title = "总条数sql", type = EditType.TEXTAREA)
     )
     private String countSql;
-
-//    @EruptField(
-//            edit = @Edit(title = "合计sql", type = EditType.TEXTAREA)
-//    )
-//    private String totalSql;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "BI_ID")

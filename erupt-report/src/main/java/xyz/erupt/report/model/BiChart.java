@@ -12,7 +12,8 @@ import xyz.erupt.core.model.BaseModel;
 import javax.persistence.Lob;
 
 /**
- * Created by liyuepeng on 2019-12-24.
+ * @author liyuepeng
+ * @date 2019-12-24.
  */
 public class BiChart extends BaseModel {
 

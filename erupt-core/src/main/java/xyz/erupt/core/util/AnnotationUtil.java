@@ -23,7 +23,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * Created by liyuepeng on 2019-02-28.
+ * @author liyuepeng
+ * @date 2019-02-28.
  */
 public class AnnotationUtil {
 
@@ -42,7 +43,8 @@ public class AnnotationUtil {
                 .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
                 .replaceAll("@xyz\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
                 .replaceAll("@xyz\\.erupt\\.annotation\\.\\w+", "")
-                .replaceAll("class [a-zA-Z0-9.]+", "") //屏蔽类信息
+                //屏蔽类信息
+                .replaceAll("class [a-zA-Z0-9.]+", "")
                 .replace("=,", "='',")
                 .replace("=)", "='')")
                 .replace("=", ":")

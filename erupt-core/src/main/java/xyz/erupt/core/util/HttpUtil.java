@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Created by liyuepeng on 12/4/18.
+ * @author liyuepeng
+ * @date 12/4/18.
  */
 public class HttpUtil {
 

@@ -1,6 +1,5 @@
 package xyz.erupt.job.service;
 
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -11,11 +10,11 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.tool.EruptDao;
 
 import javax.transaction.Transactional;
-import java.text.ParseException;
 import java.util.List;
 
 /**
- * Created by liyuepeng on 2019-07-15.
+ * @author liyuepeng
+ * @date 2019-07-15.
  */
 @Service
 @Order(10)
@@ -29,7 +28,7 @@ public class JobDataLoadService implements CommandLineRunner {
 
     @Transactional
     @Override
-    public void run(String... args) throws ParseException, SchedulerException {
+    public void run(String... args) throws Exception {
         List<EruptJob> list = eruptDao.queryEntityList(EruptJob.class, "status = true");
         for (EruptJob job : list) {
             eruptJobService.modifyJob(job);

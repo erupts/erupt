@@ -1,7 +1,8 @@
 package xyz.erupt.core.constant;
 
 /**
- * Created by liyuepeng on 10/15/18.
+ * @author liyuepeng
+ * @date 10/15/18.
  */
 public class RestPath {
 

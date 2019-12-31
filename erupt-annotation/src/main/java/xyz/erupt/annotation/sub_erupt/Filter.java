@@ -5,7 +5,8 @@ import xyz.erupt.annotation.fun.FilterHandler;
 import java.beans.Transient;
 
 /**
- * Created by liyuepeng on 11/5/18.
+ * @author liyuepeng
+ * @date 2018-11-05.
  */
 public @interface Filter {
     @Transient

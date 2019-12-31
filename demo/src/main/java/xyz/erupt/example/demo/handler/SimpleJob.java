@@ -4,7 +4,7 @@ import xyz.erupt.job.handler.JobHandler;
 
 /**
  * @author liyuepeng
- * @date 2019-12-27
+ * @date 2019-12-27.
  */
 public class SimpleJob implements JobHandler {
 

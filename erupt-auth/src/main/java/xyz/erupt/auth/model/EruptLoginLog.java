@@ -17,7 +17,8 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * Created by liyuepeng on 2019-11-27.
+ * @author liyuepeng
+ * @date 2019-11-27.
  */
 @Entity
 @Table(name = "E_USER_LOGIN_LOG")

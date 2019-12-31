@@ -6,7 +6,8 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
- * Created by liyuepeng on 11/1/18.
+ * @author liyuepeng
+ * @date 2018-11-01.
  */
 public class TypeUtil {
     private static final String[] SIMPLE_JPA_TYPE = {

@@ -6,7 +6,8 @@ import java.beans.Transient;
 
 /**
  * 使用一列或者多列的数据执行特定代码
- * Created by liyuepeng on 10/9/18.
+ * @author liyuepeng
+ * @date 2018-10-09.
  */
 public @interface RowOperation {
 

@@ -3,7 +3,8 @@ package xyz.erupt.annotation;
 import java.lang.annotation.Annotation;
 
 /**
- * Created by liyuepeng on 2019-05-22.
+ * @author liyuepeng
+ * @date 2019-05-22.
  */
 public @interface KV {
     String key();

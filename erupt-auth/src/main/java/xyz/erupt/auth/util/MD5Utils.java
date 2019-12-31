@@ -2,6 +2,10 @@ package xyz.erupt.auth.util;
 
 import java.security.MessageDigest;
 
+/**
+ * @author liyuepeng
+ * @date 2018-10-10.
+ */
 public class MD5Utils {
 
     private final static String[] STR_DIGITS = {"0", "1", "2", "3", "4", "5",

@@ -11,8 +11,8 @@ import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
-import xyz.erupt.auth.service.SessionService;
 import xyz.erupt.auth.service.EruptUserService;
+import xyz.erupt.auth.service.SessionService;
 import xyz.erupt.auth.util.IdentifyCode;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.bean.EruptApiModel;
@@ -29,7 +29,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Created by liyuepeng on 2018-12-13.
+ * @author liyuepeng
+ * @date 2018-12-13.
  */
 @RestController
 @RequestMapping(RestPath.ERUPT_API)

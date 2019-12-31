@@ -7,7 +7,8 @@ import xyz.erupt.core.bean.EruptModel;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
- * Created by liyuepeng on 11/1/18.
+ * @author liyuepeng
+ * @date 11/1/18.
  */
 public class ExceptionUtil {
 

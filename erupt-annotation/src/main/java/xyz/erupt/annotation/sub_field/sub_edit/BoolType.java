@@ -1,7 +1,8 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
 /**
- * Created by liyuepeng on 10/9/18.
+ * @author liyuepeng
+ * @date 2018-09-18.
  */
 public @interface BoolType {
     String trueText();

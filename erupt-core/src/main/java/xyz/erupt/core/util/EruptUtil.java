@@ -22,7 +22,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * Created by liyuepeng on 11/1/18.
+ * @author liyuepeng
+ * @date 11/1/18.
  */
 public class EruptUtil {
 

@@ -8,7 +8,8 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * Created by liyuepeng on 2018-12-24.
+ * @author liyuepeng
+ * @date 2018-12-24.
  */
 @Configuration
 public class RedisConfig {

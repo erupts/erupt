@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by liyuepeng on 2019-04-28.
+ * @author liyuepeng
+ * @date 2019-04-28.
  */
 public class DataHandlerUtil {
     //内存计算的方式生成树结构
@@ -114,8 +115,8 @@ public class DataHandlerUtil {
                     case REFERENCE_TABLE:
                     case COMBINE:
                         for (View view : fieldModel.getEruptField().views()) {
-                            String[] _keys = entry.getKey().split("_");
-                            if (view.column().equals(_keys[_keys.length - 1])) {
+                            String[] $keys = entry.getKey().split("_");
+                            if (view.column().equals($keys[$keys.length - 1])) {
                                 EruptFieldModel vef = CoreService.getErupt(fieldModel.getFieldReturnName()).
                                         getEruptFieldMap().get(view.column());
                                 switch (vef.getEruptField().edit().type()) {

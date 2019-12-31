@@ -5,7 +5,8 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import java.beans.Transient;
 
 /**
- * Created by liyuepeng on 9/28/18.
+ * @author liyuepeng
+ * @date 2018-09-28.
  */
 public @interface ReferenceTreeType {
     String id() default AnnotationConst.ID;

@@ -14,7 +14,8 @@ import xyz.erupt.core.model.BaseModel;
 import javax.persistence.*;
 
 /**
- * Created by liyuepeng on 11/22/18.
+ * @author liyuepeng
+ * @date 2018-11-22.
  */
 @Entity
 @Table(name = "E_MENU", uniqueConstraints = @UniqueConstraint(columnNames = "code"))

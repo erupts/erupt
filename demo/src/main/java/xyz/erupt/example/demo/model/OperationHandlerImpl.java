@@ -4,7 +4,8 @@ import com.google.gson.JsonObject;
 import xyz.erupt.annotation.fun.OperationHandler;
 
 /**
- * Created by liyuepeng on 10/10/18.
+ * @author liyuepeng
+ * @date 2018-10-10.
  */
 public class OperationHandlerImpl implements OperationHandler {
 

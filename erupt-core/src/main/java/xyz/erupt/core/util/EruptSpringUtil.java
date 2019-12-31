@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.function.Consumer;
 
 /**
- * Created by liyuepeng on 1/24/19.
+ * @author liyuepeng
+ * @date 1/24/19.
  */
 @Component
 public class EruptSpringUtil implements ApplicationContextAware {

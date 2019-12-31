@@ -28,7 +28,8 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by liyuepeng on 12/4/18.
+ * @author liyuepeng
+ * @date 12/4/18.
  */
 @Service
 public class DataFileService {
@@ -42,43 +43,16 @@ public class DataFileService {
 
     public static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
 
-    public static Object getCellValue(Cell cell) {
-        Object cellValue;
-        switch (cell.getCellTypeEnum()) {
-            case NUMERIC: //数字
-                cellValue = cell.getNumericCellValue();
-                break;
-            case STRING: //字符串
-                cellValue = cell.getStringCellValue();
-                break;
-            case BOOLEAN: //Boolean
-                cellValue = cell.getBooleanCellValue();
-                break;
-            case FORMULA: //公式
-                cellValue = cell.getCellFormula();
-                break;
-            case BLANK: //空值
-                cellValue = null;
-                break;
-            case ERROR: //故障
-                cellValue = null;
-                break;
-            default:
-                cellValue = cell.getStringCellValue();
-                break;
-        }
-        return cellValue;
-    }
 
     /**
      * excel导出
      * 展示的格式和view表格一致
      *
      * @param eruptModel
-     * @param Page
-     * @param response
+     * @param page
+     * @return Workbook
      */
-    public Workbook exportExcel(EruptModel eruptModel, Page Page) {
+    public Workbook exportExcel(EruptModel eruptModel, Page page) {
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         //冻结首行
@@ -100,7 +74,7 @@ public class DataFileService {
                 }
             }
         }
-        for (Map<String, Object> map : Page.getList()) {
+        for (Map<String, Object> map : page.getList()) {
             int dataColNum = 0;
             row = sheet.createRow(++rowIndex);
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
@@ -127,11 +101,11 @@ public class DataFileService {
     public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) {
         Sheet sheet = workbook.getSheetAt(0);
         Row titleRow = sheet.getRow(0);
-        Map<String, EruptFieldModel> editTitleMappingEruptField = new HashMap<>();
+        Map<String, EruptFieldModel> editTitleMappingEruptField = new HashMap<>(eruptModel.getEruptFieldModels().size());
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             editTitleMappingEruptField.put(fieldModel.getEruptField().edit().title(), fieldModel);
         }
-        Map<Integer, EruptFieldModel> cellIndexMapping = new HashMap<>();
+        Map<Integer, EruptFieldModel> cellIndexMapping = new HashMap<>(titleRow.getPhysicalNumberOfCells());
         Map<Integer, Map<String, Object>> cellIndexJoinEruptMap = new HashMap<>();
         for (int i = 0; i < titleRow.getPhysicalNumberOfCells(); i++) {
             String titleName = titleRow.getCell(i).getStringCellValue();
@@ -146,7 +120,7 @@ public class DataFileService {
                     cellIndexJoinEruptMap.put(i, choiceMap);
                     break;
                 case BOOLEAN:
-                    Map<String, Object> boolMap = new HashMap<>();
+                    Map<String, Object> boolMap = new HashMap<>(2);
                     BoolType boolType = eruptFieldModel.getEruptField().edit().boolType();
                     boolMap.put(boolType.trueText(), true);
                     boolMap.put(boolType.trueText(), true);
@@ -248,8 +222,6 @@ public class DataFileService {
                         break;
                     case REFERENCE_TREE:
                         ReferenceTreeType referenceTreeType = fieldModel.getEruptField().edit().referenceTreeType();
-//                        eruptJpaDao.getDataMap(CoreService.ERUPTS.get(fieldModel.getFieldReturnName()), AnnotationUtil.switchFilterConditionToStr(referenceTreeType.filter()),
-//                                null, Arrays.asList(referenceTreeType.id() + " as id", referenceTreeType.label() + " as label"), null);
                         Collection<TreeModel> collection = eruptDataController.getReferenceTree(eruptModel.getEruptName(), fieldModel.getFieldName(), null);
                         break;
                     default:

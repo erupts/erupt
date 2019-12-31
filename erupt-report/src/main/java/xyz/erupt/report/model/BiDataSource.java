@@ -11,7 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Created by liyuepeng on 2019-08-26.
+ * @author liyuepeng
+ * @date 2019-08-26.
  */
 @Entity
 @Table(name = "E_BI_DATASOURCE")

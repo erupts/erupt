@@ -17,8 +17,8 @@ import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.DateUtil;
-import xyz.erupt.core.util.MimeUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.MimeUtil;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +27,8 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Created by liyuepeng on 10/15/18.
+ * @author liyuepeng
+ * @date 10/15/18.
  */
 @RestController
 @RequestMapping(RestPath.ERUPT_FILE)
@@ -70,13 +71,14 @@ public class EruptFileController {
                         }
                     }
                     //校验文件大小
-                    if (attachmentType.size() > 0 && file.getSize() / 1000 > attachmentType.size()) {
+                    if (attachmentType.size() > 0 && file.getSize() / 1024 > attachmentType.size()) {
                         return EruptApiModel.errorApi("上传失败，文件大小不能超过" + attachmentType.size() + "KB");
                     }
                     switch (edit.attachmentType().type()) {
                         case IMAGE:
                             AttachmentType.ImageType imageType = edit.attachmentType().imageType();
-                            BufferedImage bufferedImage = ImageIO.read(file.getInputStream()); // 通过MultipartFile得到InputStream，从而得到BufferedImage
+                            // 通过MultipartFile得到InputStream，从而得到BufferedImage
+                            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
                             if (bufferedImage == null) {
                                 return EruptApiModel.errorApi("获取图片流失败，请确认上传文件为图片");
                             }
@@ -131,9 +133,11 @@ public class EruptFileController {
     @PostMapping("/upload-html-editor/{erupt}/{field}")
     @ResponseBody
     @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("upload") MultipartFile file) {
+    public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
+                                                     @PathVariable("field") String fieldName,
+                                                     @RequestParam("upload") MultipartFile file) {
         EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(2);
         // ["uploaded":"true", "url":"image-path..."]
         if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
             map.put("uploaded", true);

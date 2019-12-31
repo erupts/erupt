@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Created by liyuepeng on 2018-12-26.
+ * @author liyuepeng
+ * @date 2018-12-26.
  */
 @Getter
 @Setter

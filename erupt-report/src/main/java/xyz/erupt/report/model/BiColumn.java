@@ -6,7 +6,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.model.BaseModel;
 
 /**
- * Created by liyuepeng on 2019-08-26.
+ * @author liyuepeng
+ * @date 2019-08-26.
  */
 public class BiColumn extends BaseModel {
 

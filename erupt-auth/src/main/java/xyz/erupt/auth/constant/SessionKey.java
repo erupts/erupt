@@ -1,7 +1,8 @@
 package xyz.erupt.auth.constant;
 
 /**
- * Created by liyuepeng on 2018-12-14.
+ * @author liyuepeng
+ * @date 2018-12-14.
  */
 public class SessionKey {
 

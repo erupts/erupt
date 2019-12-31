@@ -16,7 +16,8 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * Created by liyuepeng on 2019-08-12.
+ * @author liyuepeng
+ * @date 2019-08-12.
  */
 @Erupt(name = "进销存")
 @Entity

@@ -1,7 +1,8 @@
 package xyz.erupt.annotation.config;
 
 /**
- * Created by liyuepeng on 2019-05-24.
+ * @author liyuepeng
+ * @date 2019-05-24.
  */
 public enum JavaTypeEnum {
     any,

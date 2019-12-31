@@ -30,7 +30,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by liyuepeng on 2019-10-08.
+ * @author liyuepeng
+ * @date 2019-10-08.
  */
 @Erupt(name = "demo", orderBy = "number desc",
         power = @Power(export = true), dataProxy = Demo.class,
@@ -133,7 +134,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @Override
     public String beforeFetch(JsonObject condition) {
-        System.out.println(eruptUserService.getCurrentUId());
+        System.out.println(eruptUserService.getCurrentUid());
         return null;
     }
 

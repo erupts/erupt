@@ -8,7 +8,8 @@ import xyz.erupt.annotation.sub_field.View;
 import java.lang.annotation.*;
 
 /**
- * Created by liyuepeng on 9/28/18.
+ * @author liyuepeng
+ * @date 2018-09-28.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

@@ -1,7 +1,8 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
 /**
- * Created by liyuepeng on 10/9/18.
+ * @author liyuepeng
+ * @date 2018-10-09.
  */
 public enum ChoiceEnum {
     //选项少的情况下建议用RADIO,多的情况下建议使用SELECT

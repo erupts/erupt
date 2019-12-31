@@ -15,7 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Created by liyuepeng on 2019-09-18.
+ * @author liyuepeng
+ * @date 2019-09-18.
  */
 @Entity
 @Table(name = "t_public_mark")

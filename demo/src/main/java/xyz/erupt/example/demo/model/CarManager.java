@@ -14,7 +14,8 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * Created by liyuepeng on 2019-11-18.
+ * @author liyuepeng
+ * @date 2019-11-18.
  */
 @Erupt(name = "车辆管理")
 @Table(name = "CARD_MANAGER")

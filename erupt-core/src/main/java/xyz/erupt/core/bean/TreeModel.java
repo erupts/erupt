@@ -5,7 +5,8 @@ import lombok.Data;
 import java.util.Collection;
 
 /**
- * Created by liyuepeng on 11/15/18.
+ * @author liyuepeng
+ * @date 2018-11-15.
  */
 @Data
 public class TreeModel {

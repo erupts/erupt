@@ -7,7 +7,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 /**
- * Created by liyuepeng on 2019-10-18.
+ * @author liyuepeng
+ * @date 2019-10-18.
  */
 @Configuration
 public class TemplateConfig {

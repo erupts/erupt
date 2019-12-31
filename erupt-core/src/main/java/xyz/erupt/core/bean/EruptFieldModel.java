@@ -23,7 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by liyuepeng on 10/10/18.
+ * @author liyuepeng
+ * @date 2018-10-10.
  */
 @Data
 public class EruptFieldModel {

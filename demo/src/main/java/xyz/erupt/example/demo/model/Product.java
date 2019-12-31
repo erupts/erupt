@@ -19,7 +19,8 @@ import javax.persistence.*;
 import java.util.Set;
 
 /**
- * Created by liyuepeng on 2019-07-29.
+ * @author liyuepeng
+ * @date 2019-07-29.
  */
 @Erupt(
         name = "产品",

@@ -31,7 +31,8 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * Created by liyuepeng on 2019-03-06.
+ * @author liyuepeng
+ * @date 2019-03-06.
  */
 @Service
 public class DBService implements DataService {
@@ -83,20 +84,18 @@ public class DBService implements DataService {
 
     @Transactional
     @Override
-    public void addData(EruptModel eruptModel, Object object) {
+    public void addData(EruptModel eruptModel, Object object) throws Exception {
         try {
             jpaManyToOneConvert(eruptModel, object);
             eruptJpaDao.addEntity(object);
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException(gcRepeatHint(eruptModel));
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
         }
     }
 
     @Transactional
     @Override
-    public void editData(EruptModel eruptModel, Object data) {
+    public void editData(EruptModel eruptModel, Object data) throws Exception {
         try {
             //没有用eruptField修饰但是使用了hibernate管理的字段 设置为数据库原有存储值
             Object entity = entityManager.find(eruptModel.getClazz(),
@@ -119,8 +118,6 @@ public class DBService implements DataService {
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             throw new RuntimeException(gcRepeatHint(eruptModel));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
     }
 
@@ -158,7 +155,7 @@ public class DBService implements DataService {
 
     @Transactional
     @Override
-    public void deleteData(EruptModel eruptModel, Object id) {
+    public void deleteData(EruptModel eruptModel, Object id) throws Exception {
         entityManager.remove(this.findDataById(eruptModel, id));
     }
 
@@ -186,13 +183,13 @@ public class DBService implements DataService {
         //处理depend参数代码
         Map<String, Object> conditionParameter = null;
         if (StringUtils.isNotBlank(refTree.dependField()) && null != dependValue) {
-            String DEPEND_KEY = "dependVal";
-            conditionParameter = new HashMap<>();
+            String dependVal = "dependVal";
+            conditionParameter = new HashMap<>(1);
             if (StringUtils.isNotBlank(edit.filter().condition())) {
                 condition.append(EruptJpaUtils.AND);
             }
-            condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn()).append("=:").append(DEPEND_KEY);
-            conditionParameter.put(DEPEND_KEY, dependValue);
+            condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn()).append("=:").append(dependVal);
+            conditionParameter.put(dependVal, dependValue);
         }
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.getErupt(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
         List<TreeModel> treeModels = new ArrayList<>();

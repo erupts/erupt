@@ -4,7 +4,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.bean.EruptFieldModel;
 
 /**
- * Created by liyuepeng on 11/1/18.
+ * @author liyuepeng
+ * @date 11/1/18.
  */
 public class EruptFieldAnnotationException extends RuntimeException {
 

@@ -9,7 +9,8 @@ import java.util.Random;
 
 /**
  * 生成验证码
- * Created by liyuepeng on 12/15/18.
+ * @author liyuepeng
+ * @date 2018-12-15.
  */
 public class IdentifyCode {
     // 图片的宽度。
