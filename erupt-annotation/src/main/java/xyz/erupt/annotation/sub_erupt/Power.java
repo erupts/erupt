@@ -20,7 +20,7 @@ public @interface Power {
     boolean viewDetails() default true;
 
     @Transient
-    Class<? extends PowerHandler>[] powerHandler() default {};
+    Class<? extends PowerHandler> powerHandler() default PowerHandler.class;
 
     boolean export() default false;
 

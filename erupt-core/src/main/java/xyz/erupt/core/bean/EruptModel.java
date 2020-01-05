@@ -19,6 +19,8 @@ public class EruptModel {
 
     private transient Erupt erupt;
 
+    private boolean alwaysRebuild = false;
+
     private String eruptName;
 
     private JsonObject eruptJson;

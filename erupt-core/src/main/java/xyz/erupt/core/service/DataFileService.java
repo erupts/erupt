@@ -166,6 +166,8 @@ public class DataFileService {
                                 case JavaType.NUMBER:
                                     jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
                                     break;
+                                default:
+                                    break;
                             }
                             break;
                     }

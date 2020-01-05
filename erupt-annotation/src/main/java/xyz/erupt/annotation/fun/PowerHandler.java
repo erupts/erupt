@@ -16,7 +16,7 @@ public interface PowerHandler {
      * @param power 注解
      * @return power bean
      */
-    PowerBean handler(Power power);
+    void handler(PowerBean power);
 
     @Getter
     @Setter
@@ -34,6 +34,16 @@ public interface PowerHandler {
         private boolean export;
 
         private boolean importable;
+
+        public PowerBean(Power power) {
+            this.add = power.add();
+            this.delete = power.delete();
+            this.edit = power.edit();
+            this.query = power.query();
+            this.viewDetails = power.viewDetails();
+            this.export = power.export();
+            this.importable = power.importable();
+        }
     }
 
 }
