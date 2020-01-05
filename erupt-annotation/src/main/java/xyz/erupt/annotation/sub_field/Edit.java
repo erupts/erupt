@@ -11,7 +11,6 @@ import java.beans.Transient;
  * @author liyuepeng
  * @date 2018-09-28.
  */
-//@NotBlank("title")
 public @interface Edit {
 
     String title();

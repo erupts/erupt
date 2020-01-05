@@ -19,6 +19,8 @@ import java.util.Date;
  */
 public class EruptJobAction implements Job {
 
+    private static final int ERROR_STR_MAX_LENGTH = 2000;
+
     @Override
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
         JobDataMap jobDataMap = ctx.getJobDetail().getJobDataMap();
@@ -42,7 +44,11 @@ public class EruptJobAction implements Job {
             } catch (Exception e) {
                 e.printStackTrace();
                 eruptJobLog.setStatus(false);
-                eruptJobLog.setErrorInfo(ExceptionUtils.getStackTrace(e));
+                String exceptionTraceStr = ExceptionUtils.getStackTrace(e);
+                if (exceptionTraceStr.length() >= ERROR_STR_MAX_LENGTH) {
+                    exceptionTraceStr = exceptionTraceStr.substring(0, ERROR_STR_MAX_LENGTH) + "……";
+                }
+                eruptJobLog.setErrorInfo(exceptionTraceStr);
                 if (null != jobHandler) {
                     jobHandler.error(e, eruptJob.getHandlerParam());
                 }

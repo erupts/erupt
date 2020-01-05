@@ -1,6 +1,7 @@
 package xyz.erupt.job.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -25,7 +26,8 @@ import java.util.Date;
 )
 @Entity
 @Table(name = "E_JOB_LOG")
-@Data
+@Getter
+@Setter
 public class EruptJobLog extends BaseModel {
 
     @ManyToOne

@@ -1,5 +1,7 @@
 package xyz.erupt.report.model;
 
+import lombok.Getter;
+import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -7,16 +9,17 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.model.BaseModel;
 
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 /**
  * @author liyuepeng
  * @date 2019-08-26.
  */
+@Entity
+@Table(name = "E_BI")
+@Erupt(name = "报表配置")
+@Getter
 public class Bi extends BaseModel {
 
     @EruptField(
@@ -31,8 +34,10 @@ public class Bi extends BaseModel {
     )
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "DATASOURCE_ID")
     @EruptField(
-            views = @View(title = "数据源"),
+            views = @View(title = "数据源", column = "name"),
             edit = @Edit(title = "数据源", notNull = true, type = EditType.REFERENCE_TREE, search = @Search(value = true))
     )
     private BiDataSource dataSource;
@@ -50,7 +55,7 @@ public class Bi extends BaseModel {
 
     @Lob
     @EruptField(
-            edit = @Edit(title = "sql", type = EditType.TEXTAREA)
+            edit = @Edit(title = "sql", type = EditType.TEXTAREA, notNull = true)
     )
     private String sql;
 
@@ -63,15 +68,22 @@ public class Bi extends BaseModel {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "BI_ID")
     @EruptField(
-            edit = @Edit(title = "查询维度", type = EditType.TEXTAREA)
+            edit = @Edit(title = "查询维度", type = EditType.TAB_TABLE_ADD)
     )
     private Set<BiDimension> biDimension;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "BI_ID")
     @EruptField(
-            edit = @Edit(title = "表格列", type = EditType.TEXTAREA)
+            edit = @Edit(title = "数据列", type = EditType.TAB_TABLE_ADD)
     )
     private Set<BiColumn> biColumn;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "BI_ID")
+    @EruptField(
+            edit = @Edit(title = "图表", type = EditType.TAB_TABLE_ADD)
+    )
+    private Set<BiChart> biCharts;
 
 }

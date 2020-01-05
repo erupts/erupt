@@ -7,7 +7,7 @@ import xyz.erupt.annotation.constant.DataLength;
  * @date 2018-10-10.
  */
 public @interface InputType {
-    int length() default DataLength.LONG_TEXT_LENGTH;
+    int length() default DataLength.TEXT_LENGTH;
 
     String regex() default "";
 

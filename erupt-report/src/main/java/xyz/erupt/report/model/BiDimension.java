@@ -1,5 +1,6 @@
 package xyz.erupt.report.model;
 
+import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -7,10 +8,16 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.core.model.BaseModel;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  * @author liyuepeng
  * @date 2019-08-26.
  */
+@Entity
+@Table(name = "E_BI_DIMENSION")
+@Erupt(name = "数据列")
 public class BiDimension extends BaseModel {
 
     @EruptField(
@@ -65,13 +72,8 @@ public class BiDimension extends BaseModel {
     private Integer sort;
 
     @EruptField(
-            edit = @Edit(title = "参照sql")
+            edit = @Edit(title = "参照sql", type = EditType.TEXTAREA)
     )
     private String refSql;
-
-    @EruptField(
-            edit = @Edit(title = "参照数据源")
-    )
-    private BiDataSource refDataSource;
 
 }

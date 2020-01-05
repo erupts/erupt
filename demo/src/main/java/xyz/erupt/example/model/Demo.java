@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo.model;
+package xyz.erupt.example.model;
 
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.core.model.BaseModel;
-import xyz.erupt.example.demo.handler.HtmlHandler;
+import xyz.erupt.example.handler.HtmlHandler;
 
 import javax.persistence.*;
 import java.util.Date;

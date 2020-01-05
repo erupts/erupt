@@ -1,7 +1,7 @@
 package xyz.erupt.job.model;
 
 import com.google.gson.JsonObject;
-import lombok.Data;
+import lombok.Getter;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +25,7 @@ import java.text.ParseException;
  * @author liyuepeng
  * @date 2019-12-26
  */
+@Getter
 @Erupt(
         name = "任务维护",
         dataProxy = EruptJob.class,
@@ -33,7 +34,6 @@ import java.text.ParseException;
 )
 @Entity
 @Table(name = "E_JOB", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Data
 @Component
 public class EruptJob extends BaseModel implements DataProxy<EruptJob>, OperationHandler<EruptJob> {
 
@@ -57,7 +57,8 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
 
     @EruptField(
             views = @View(title = "JOB处理类"),
-            edit = @Edit(title = "JOB处理类", notNull = true, search = @Search(vague = true, value = true))
+            edit = @Edit(title = "JOB处理类", desc = "实现JobHandler接口"
+                    , notNull = true, search = @Search(vague = true, value = true))
     )
     private String handler;
 

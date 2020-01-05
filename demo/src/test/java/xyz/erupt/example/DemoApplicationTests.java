@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo;
+package xyz.erupt.example;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import xyz.erupt.auth.model.EruptUser;
+import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.data_impl.DBService;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.service.EruptJobService;
@@ -38,9 +39,6 @@ public class DemoApplicationTests {
     @Test
     public void testJob() throws ParseException, SchedulerException {
         EruptJob eruptJob = new EruptJob();
-        eruptJob.setCode("aaa");
-        eruptJob.setCron("* * * * * ? *");
-        eruptJob.setStatus(true);
         eruptJobService.modifyJob(eruptJob);
     }
 
@@ -73,8 +71,13 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void tt() {
-        entityManager.find(EruptUser.class, "2");
+    public void erupt() {
+
+        int i = 100000;
+        for (int i1 = 0; i1 < i; i1++) {
+            CoreService.getErupt("EruptUser");
+        }
+
     }
 
 }

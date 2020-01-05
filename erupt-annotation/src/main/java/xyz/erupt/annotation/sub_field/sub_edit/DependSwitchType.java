@@ -9,12 +9,6 @@ public @interface DependSwitchType {
 
     boolean reject() default true;
 
-    Type type() default Type.HIDDEN;
-
-    enum Type {
-        HIDDEN, DISABLE
-    }
-
     @interface Attr {
         String value();
 

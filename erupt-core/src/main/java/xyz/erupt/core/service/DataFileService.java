@@ -126,6 +126,8 @@ public class DataFileService {
                     boolMap.put(boolType.trueText(), true);
                     cellIndexJoinEruptMap.put(i, boolMap);
                     break;
+                default:
+                    break;
             }
         }
         List<JsonObject> listObject = new ArrayList<>();

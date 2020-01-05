@@ -33,27 +33,30 @@ public class CoreService implements InitializingBean {
 
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
+    private static final Map<String, Class<?>> ERUPT_CLASSES = new LinkedCaseInsensitiveMap<>();
+
     public static EruptModel getErupt(String eruptName) {
         if (staticHotBuild) {
-            EruptModel eruptModel = ERUPTS.get(eruptName);
-            if (null != eruptModel) {
-                return initEruptModel(eruptModel.getClazz());
-            } else {
-                return null;
+            Class clazz = ERUPT_CLASSES.get(eruptName);
+            if (null != clazz) {
+                return initEruptModel(ERUPT_CLASSES.get(eruptName));
             }
         } else {
             return ERUPTS.get(eruptName);
         }
+        return null;
     }
 
     @Override
     public void afterPropertiesSet() {
         CoreService.staticHotBuild = eruptConfig.isHotBuild();
         new EruptSpringUtil().scannerPackage(eruptConfig.getScannerPackage(), new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
+            ERUPT_CLASSES.put(clazz.getSimpleName(), clazz);
             EruptModel eruptModel = initEruptModel(clazz);
             //other info to memory
             ERUPTS.put(eruptModel.getEruptName(), eruptModel);
         });
+
     }
 
     private static EruptModel initEruptModel(Class clazz) {

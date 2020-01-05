@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo.handler;
+package xyz.erupt.example.handler;
 
 import xyz.erupt.annotation.sub_erupt.Html;
 

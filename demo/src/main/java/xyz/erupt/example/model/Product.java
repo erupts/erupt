@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo.model;
+package xyz.erupt.example.model;
 
 import lombok.Getter;
 import lombok.Setter;

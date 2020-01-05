@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo.model;
+package xyz.erupt.example.model;
 
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;

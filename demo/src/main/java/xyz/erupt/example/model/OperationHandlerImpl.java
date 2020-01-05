@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo.model;
+package xyz.erupt.example.model;
 
 import com.google.gson.JsonObject;
 import xyz.erupt.annotation.fun.OperationHandler;

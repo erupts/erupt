@@ -1,4 +1,4 @@
-package xyz.erupt.example.demo.config;
+package xyz.erupt.example.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

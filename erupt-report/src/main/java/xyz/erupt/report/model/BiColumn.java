@@ -1,14 +1,21 @@
 package xyz.erupt.report.model;
 
+import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.model.BaseModel;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  * @author liyuepeng
  * @date 2019-08-26.
  */
+@Entity
+@Table(name = "E_BI_COLUMN")
+@Erupt(name = "数据列")
 public class BiColumn extends BaseModel {
 
     @EruptField(
