@@ -19,7 +19,7 @@ public class EruptModel {
 
     private transient Erupt erupt;
 
-    private boolean alwaysRebuild = false;
+    private boolean alwaysRebuild = true;
 
     private String eruptName;
 

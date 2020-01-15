@@ -33,19 +33,17 @@ public class CoreService implements InitializingBean {
 
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
+    private static final Map<String, Class> ERUPT_CLASSES = new LinkedCaseInsensitiveMap<>();
+
     public static EruptModel getErupt(String eruptName) {
-        EruptModel eruptModel = ERUPTS.get(eruptName);
-        if (null != eruptModel) {
-            if (eruptModel.isAlwaysRebuild()) {
-                return initEruptModel(eruptModel.getClazz(), false);
-            } else {
-                return eruptModel;
-            }
+        Class clazz = ERUPT_CLASSES.get(eruptName);
+        if (null != clazz) {
+            return initEruptModel(clazz);
         }
         return null;
     }
 
-    private static EruptModel initEruptModel(Class clazz, boolean projectInit) {
+    private static EruptModel initEruptModel(Class clazz) {
         //erupt domain info to memory
         EruptModel eruptModel = new EruptModel(clazz);
         try {
@@ -93,10 +91,11 @@ public class CoreService implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        new EruptSpringUtil().scannerPackage(eruptConfig.getScannerPackage(), new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
-            EruptModel eruptModel = initEruptModel(clazz, true);
-            //other info to memory
-            ERUPTS.put(eruptModel.getEruptName(), eruptModel);
+        EruptSpringUtil.scannerPackage(eruptConfig.getScannerPackage(), new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
+            ERUPT_CLASSES.put(clazz.getSimpleName(), clazz);
+//            EruptModel eruptModel = initEruptModel(clazz, true);
+//            //other info to memory
+//            ERUPTS.put(eruptModel.getEruptName(), eruptModel);
         });
 
     }

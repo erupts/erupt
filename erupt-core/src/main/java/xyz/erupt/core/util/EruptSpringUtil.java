@@ -45,9 +45,42 @@ public class EruptSpringUtil implements ApplicationContextAware {
         }
     }
 
-    public static <T> T getBean(String path, Class<T> clazz) throws ClassNotFoundException {
+    //通过name,以及Clazz返回指定的Bean
+    public static <T> T getBean(String name, Class<T> clazz) {
+        return getApplicationContext().getBean(name, clazz);
+    }
+
+    //根据类路径获取bean
+    public static <T> T getBeanByPath(String path, Class<T> clazz) throws ClassNotFoundException {
         return clazz.cast(getBean(Class.forName(path)));
     }
+
+    //注册bean
+//    public static void registerBean(Class<?> clazz, String name, Map<String, String> refBeans, Map<String, Object> propertyValues) {
+//        //将applicationContext转换为ConfigurableApplicationContext
+//        ConfigurableApplicationContext configurableApplicationContext =
+//                (ConfigurableApplicationContext) applicationContext;
+//        // 获取bean工厂并转换为DefaultListableBeanFactory
+//        DefaultListableBeanFactory defaultListableBeanFactory =
+//                (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
+//        // 通过BeanDefinitionBuilder创建bean定义
+//        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
+//        // 设置依赖容器
+//        if (null != refBeans) {
+//            for (Map.Entry<String, String> entry : refBeans.entrySet()) {
+//                beanDefinitionBuilder.addPropertyReference(entry.getKey(), entry.getValue());
+//            }
+//        }
+//        if (null != propertyValues) {
+//            for (Map.Entry<String, Object> entry : propertyValues.entrySet()) {
+//                beanDefinitionBuilder.addPropertyValue(entry.getKey(), entry.getValue());
+//            }
+//        }
+//        //删除bean.
+//        //defaultListableBeanFactory.removeBeanDefinition("testService");
+//        // 注册bean
+//        defaultListableBeanFactory.registerBeanDefinition(name, beanDefinitionBuilder.getRawBeanDefinition());
+//    }
 
     /**
      * 按照相对应的规则查找所有匹配类
@@ -56,7 +89,7 @@ public class EruptSpringUtil implements ApplicationContextAware {
      * @param typeFilters 匹配规则
      * @param consumer    consumer lambda
      */
-    public void scannerPackage(String[] packages, TypeFilter[] typeFilters, Consumer<Class<?>> consumer) {
+    public static void scannerPackage(String[] packages, TypeFilter[] typeFilters, Consumer<Class<?>> consumer) {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         for (TypeFilter filter : typeFilters) {
             scanner.addIncludeFilter(filter);

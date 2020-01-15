@@ -36,7 +36,7 @@ public class EruptJobAction implements Job {
             eruptJobLog.setStartTime(new Date());
             JobHandler jobHandler = null;
             try {
-                jobHandler = EruptSpringUtil.getBean(eruptJob.getHandler(), JobHandler.class);
+                jobHandler = EruptSpringUtil.getBeanByPath(eruptJob.getHandler(), JobHandler.class);
                 String result = jobHandler.exec(eruptJob.getHandlerParam());
                 jobHandler.success(result, eruptJob.getHandlerParam());
                 eruptJobLog.setResultInfo(result);

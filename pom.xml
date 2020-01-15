@@ -14,7 +14,7 @@
 
     <properties>
         <erupt.groupId>xyz.erupt</erupt.groupId>
-        <erupt.version>0.3.2</erupt.version>
+        <erupt.version>0.3.3</erupt.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -105,4 +105,15 @@
             </activation>
         </profile>
     </profiles>
+
+
+    <distributionManagement>
+        <repository>
+            <id>wings-times</id>
+            <name>wings-times-releases</name>
+            <url>http://192.168.1.188:8081/artifactory/libs-release-local</url>
+        </repository>
+    </distributionManagement>
+
+
 </project>

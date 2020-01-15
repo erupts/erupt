@@ -17,6 +17,7 @@ import xyz.erupt.auth.util.MD5Utils;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -153,6 +154,8 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     private Boolean isAdmin;
 
+    private Date createTime;
+
     @Transient
     @PersistenceContext
     private EntityManager entityManager;
@@ -169,6 +172,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
         }
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
             eruptUser.setIsAdmin(false);
+            eruptUser.setCreateTime(new Date());
             if (eruptUser.getIsMd5()) {
                 eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
             }

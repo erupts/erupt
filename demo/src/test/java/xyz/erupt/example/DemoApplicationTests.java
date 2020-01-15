@@ -4,15 +4,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.test.context.junit4.SpringRunner;
 import xyz.erupt.auth.model.EruptUser;
+import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.data_impl.DBService;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.service.EruptJobService;
 import xyz.erupt.tool.EruptDao;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -27,12 +35,11 @@ public class DemoApplicationTests {
     @PersistenceContext
     private EntityManager entityManager;
 
-
     @Autowired
     private DBService dbService;
 
-    @Autowired
-    EruptJobService eruptJobService;
+    public static final String DATASOURCE_PREFIX = "spring.datasource.";
+
     @Autowired
     private EruptDao eruptDao;
 
@@ -80,5 +87,49 @@ public class DemoApplicationTests {
 
     }
 
+    @Autowired
+    private EruptJobService eruptJobService;
+    @Resource
+    private DataSourceProperties dataSourceProperties;
+    @Resource
+    private Environment env;
+
+    @Autowired
+    private EruptConfig eruptConfig;
+
+    @Test
+    public void getProperties() {
+        System.out.println(dataSourceProperties.getUrl());
+        System.out.println(env.getProperty("server.compression.mime-types"));
+        System.out.println(env.getProperty("spring.resources.datasource.url"));
+        System.out.println(env.getProperty("erupt.upload-path"));
+    }
+
+    @Test
+    public void craeteEntityManager() {
+        String sourceName = "one";
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        {
+            HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+            vendorAdapter.setGenerateDdl(false);
+            vendorAdapter.setDatabase(Database.SQL_SERVER);
+            vendorAdapter.setShowSql(true);
+            factory.setJpaVendorAdapter(vendorAdapter);
+        }
+        {
+            factory.setDataSource(DataSourceBuilder.create()
+                    .url(env.getProperty(DATASOURCE_PREFIX + sourceName + ".url"))
+                    .username(env.getProperty(DATASOURCE_PREFIX + sourceName + ".username"))
+                    .password(env.getProperty(DATASOURCE_PREFIX + sourceName + ".password"))
+                    .build());
+        }
+        factory.setPackagesToScan(eruptConfig.getScannerPackage());
+        factory.afterPropertiesSet();
+        EntityManager entityManager = factory.getObject().createEntityManager();
+        List list = entityManager.createNativeQuery("select * from t_xinwen").getResultList();
+        for (Object o : list) {
+            System.out.println(o);
+        }
+    }
 }
 

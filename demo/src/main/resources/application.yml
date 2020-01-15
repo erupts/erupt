@@ -1,9 +1,30 @@
-#jdbc
+erupt:
+  scanner-package:
+    - xyz.erupt
+    - com.xxxxx
+  allow-request-file-type: pdf
+  upload-path: /Users/liyuepeng/Pictures/temp
+  hot-build: true
+  redis-session: true
+  dataSources: one
+erupt-auth:
+  expireTimeByLogin: 60
+openApi:
+  #是否热读取xml配置，生产环境不要开启此功能
+  hotReadXml: true
 spring:
+  resources:
+    cache.period: 2592000
+    chain.cache: true
   datasource:
     url: jdbc:sqlserver://59.110.40.167:3434;DatabaseName=erupt
     username: sa
     password: msSQL2017
+    one:
+      url: jdbc:sqlserver://59.110.40.167:3434;DatabaseName=public-info-mark
+      username: sa
+      password: msSQL2017
+      database-platform: org.hibernate.dialect.SQLServer2008Dialect
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.SQLServer2008Dialect
@@ -17,5 +38,5 @@ spring:
 server:
   port: 9999
   compression:
-    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
     enabled: true

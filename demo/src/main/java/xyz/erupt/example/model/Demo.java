@@ -22,6 +22,7 @@ import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.core.model.BaseModel;
 import xyz.erupt.example.handler.HtmlHandler;
+import xyz.erupt.example.handler.PowerHandlerImpl;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -34,7 +35,7 @@ import java.util.Set;
  * @date 2019-10-08.
  */
 @Erupt(name = "demo", orderBy = "number desc",
-        power = @Power(export = true), dataProxy = Demo.class,
+        power = @Power(export = true, powerHandler = PowerHandlerImpl.class), dataProxy = Demo.class,
         rowOperation = @RowOperation(operationHandler = OperationHandlerImpl.class,
                 eruptClass = DemoSub.class, title = "demo", icon = "fa fa-eercast", code = "demo")
 

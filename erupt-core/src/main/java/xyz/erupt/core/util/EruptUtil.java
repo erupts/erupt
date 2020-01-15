@@ -234,4 +234,5 @@ public class EruptUtil {
                 , eruptModel.getErupt().primaryKeyCol());
         return TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
     }
+
 }

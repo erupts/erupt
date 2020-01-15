@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.config.ToMap;
+import xyz.erupt.annotation.config.Volatile;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.FilterHandler;
@@ -61,7 +62,8 @@ public class AnnotationUtil {
         }
     }
 
-    private static JsonObject annotationToJson(Annotation annotation) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    private static JsonObject annotationToJson(Annotation annotation)
+            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         JsonObject jsonObject = new JsonObject();
 //        NotBlank notBlank = annotation.annotationType().getAnnotation(NotBlank.class);
 //        if (null != notBlank) {
@@ -70,7 +72,6 @@ public class AnnotationUtil {
 //                return null;
 //            }
 //        }
-
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
             if (null != tran && tran.value()) {
@@ -90,7 +91,10 @@ public class AnnotationUtil {
             }
             String returnType = method.getReturnType().getSimpleName();
             Object result = method.invoke(annotation);
-            if (returnType.endsWith(EMPTY_ARRAY)) {
+            Volatile vol = method.getAnnotation(Volatile.class);
+            if (null != vol) {
+                jsonObject.add(methodName, vol.value().newInstance().exec(method.invoke(annotation)));
+            } else if (returnType.endsWith(EMPTY_ARRAY)) {
                 returnType = returnType.substring(0, returnType.length() - 2);
                 JsonArray jsonArray = new JsonArray();
                 ToMap toMap = method.getAnnotation(ToMap.class);
@@ -144,14 +148,14 @@ public class AnnotationUtil {
                     jsonObject.addProperty(methodName, result.toString());
                 } else if (Arrays.asList(ANNOTATION_NUMBER_TYPE).contains(returnType)) {
                     jsonObject.addProperty(methodName, (Number) result);
-                } else if (JavaType.CLASS.equals(returnType)) {
-                    continue;
                 } else if (JavaType.BOOLEAN.equals(returnType)) {
                     jsonObject.addProperty(methodName, (Boolean) result);
                 } else if (method.getReturnType().isEnum()) {
                     jsonObject.addProperty(methodName, result.toString());
                 } else if (method.getReturnType().isAnnotation()) {
                     jsonObject.add(methodName, annotationToJson((Annotation) result));
+                } else if (JavaType.CLASS.equals(returnType)) {
+                    continue;
                 }
             }
         }

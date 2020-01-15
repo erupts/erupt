@@ -5,7 +5,7 @@ package xyz.erupt.annotation.sub_field.sub_edit;
  * @date 2019-09-30.
  */
 public @interface NumberType {
-    long max() default Long.MAX_VALUE;
+    long max() default Integer.MAX_VALUE;
 
-    int min() default 0;
+    long min() default -Integer.MAX_VALUE;
 }

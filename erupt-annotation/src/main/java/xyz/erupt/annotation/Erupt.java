@@ -1,9 +1,11 @@
 package xyz.erupt.annotation;
 
 import xyz.erupt.annotation.config.ToMap;
+import xyz.erupt.annotation.config.Volatile;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.*;
+import xyz.erupt.annotation.vola.PowerVolatile;
 
 import java.beans.Transient;
 import java.lang.annotation.*;
@@ -20,8 +22,6 @@ public @interface Erupt {
 
     String primaryKeyCol() default AnnotationConst.ID;
 
-    String alias() default "";
-
     @Transient
     String name();
 
@@ -31,6 +31,7 @@ public @interface Erupt {
     @Transient
     boolean loginUse() default true;
 
+    @Volatile(PowerVolatile.class)
     Power power() default @Power;
 
     @ToMap(key = "code")

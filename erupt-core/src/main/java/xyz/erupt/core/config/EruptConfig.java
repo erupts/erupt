@@ -26,4 +26,6 @@ public class EruptConfig {
 
     //是否使用redis管理session
     private boolean redisSession = false;
+
+    private String[] dataSources = {};
 }

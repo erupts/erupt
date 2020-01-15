@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * @date 2019-06-11.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Documented
 public @interface EruptRouter {
 //    boolean base64() default false;
@@ -26,9 +26,9 @@ public @interface EruptRouter {
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;
 
     enum VerifyMethod {
-        //校验内容必须放在请求头
+        //token必须放在请求头
         HEADER,
-        //检验内容必须放到URL参数中
+        //token必须放到URL参数中
         PARAM
     }
 
