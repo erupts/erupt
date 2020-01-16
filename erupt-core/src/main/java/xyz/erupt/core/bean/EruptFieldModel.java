@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 
@@ -43,7 +44,7 @@ public class EruptFieldModel {
 
     private Object value;
 
-    public EruptFieldModel(Field field) throws IllegalAccessException, InstantiationException {
+    public EruptFieldModel(Field field) {
         this.field = field;
         this.eruptField = field.getAnnotation(EruptField.class);
         Edit edit = eruptField.edit();
@@ -54,8 +55,8 @@ public class EruptFieldModel {
         } else {
             this.fieldReturnName = field.getType().getSimpleName();
         }
-        //如果是Tab类型视图，数据必须为一对多关系管理，需要用泛型集合来存放，所以取出泛型的名称重新赋值到fieldReturnName中
         switch (edit.type()) {
+            //如果是Tab类型视图，数据必须为一对多关系管理，需要用泛型集合来存放，所以取出泛型的名称重新赋值到fieldReturnName中
             case TAB_TREE:
             case TAB_TABLE_ADD:
             case TAB_TABLE_REFER:
@@ -67,9 +68,9 @@ public class EruptFieldModel {
                     choiceMap.put(vl.value(), vl.label());
                 }
                 for (Class<? extends ChoiceFetchHandler> cla : edit.choiceType().fetchHandler()) {
-                    Map map = cla.newInstance().fetch(edit.choiceType().fetchHandlerParams());
+                    Map<String, String> map = EruptSpringUtil.getBean(cla).fetch(edit.choiceType().fetchHandlerParams());
                     if (null != map) {
-                        choiceMap.putAll(cla.newInstance().fetch(edit.choiceType().fetchHandlerParams()));
+                        choiceMap.putAll(map);
                     }
                 }
                 break;
@@ -82,7 +83,6 @@ public class EruptFieldModel {
         }
         this.eruptAutoConfig();
         this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
-        //this.eruptFieldJson = new JsonParser().parse(AnnotationUtil.annotationToJson(eruptField.toString())).getAsJsonObject();
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
     }

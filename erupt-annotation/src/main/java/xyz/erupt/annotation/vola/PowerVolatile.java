@@ -2,6 +2,7 @@ package xyz.erupt.annotation.vola;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.config.VolatileFun;
 import xyz.erupt.annotation.sub_erupt.Power;
 
@@ -9,7 +10,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
  * @author liyuepeng
  * @date 2020-01-07
  */
-public class PowerVolatile implements VolatileFun<Power> {
+public class PowerVolatile implements VolatileFun<Power, Erupt> {
 
     private static final String ADD = "add";
 
@@ -26,7 +27,8 @@ public class PowerVolatile implements VolatileFun<Power> {
     private static final String IMPORTABLE = "importable";
 
     @Override
-    public JsonElement exec(Power power) {
+    public JsonElement exec(Power power, Erupt erupt) {
+        System.err.println(erupt.name());
         JsonObject jsonElement = new JsonObject();
         xyz.erupt.annotation.fun.PowerHandler.PowerBean powerBean =
                 new xyz.erupt.annotation.fun.PowerHandler.PowerBean(power);

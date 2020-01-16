@@ -15,4 +15,6 @@ public interface ChoiceFetchHandler {
      * @return 前端显示的键值对
      */
     Map<String, String> fetch(String[] params);
+
+
 }

@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.fun.PowerHandler;
-import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.core.bean.EruptFieldModel;
 import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.config.EruptConfig;
@@ -46,17 +44,6 @@ public class CoreService implements InitializingBean {
     private static EruptModel initEruptModel(Class clazz) {
         //erupt domain info to memory
         EruptModel eruptModel = new EruptModel(clazz);
-        try {
-            Power power = eruptModel.getErupt().power();
-            if (!power.powerHandler().isInterface()) {
-                eruptModel.setAlwaysRebuild(true);
-                PowerHandler powerHandler = power.powerHandler().newInstance();
-                PowerHandler.PowerBean powerBean = new PowerHandler.PowerBean(power);
-                powerHandler.handler(powerBean);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         // erupt field info to memory
         {
             List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
@@ -73,7 +60,7 @@ public class CoreService implements InitializingBean {
                                 eruptFieldModel.setValue(field.get(eruptObject));
                                 eruptFieldModels.add(eruptFieldModel);
                                 eruptFieldMap.put(field.getName(), eruptFieldModel);
-                            } catch (IllegalAccessException | InstantiationException e) {
+                            } catch (IllegalAccessException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -93,9 +80,9 @@ public class CoreService implements InitializingBean {
     public void afterPropertiesSet() {
         EruptSpringUtil.scannerPackage(eruptConfig.getScannerPackage(), new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
             ERUPT_CLASSES.put(clazz.getSimpleName(), clazz);
-//            EruptModel eruptModel = initEruptModel(clazz, true);
-//            //other info to memory
-//            ERUPTS.put(eruptModel.getEruptName(), eruptModel);
+            //other info to memory
+            //EruptModel eruptModel = initEruptModel(clazz);
+            //ERUPTS.put(eruptModel.getEruptName(), eruptModel);
         });
 
     }

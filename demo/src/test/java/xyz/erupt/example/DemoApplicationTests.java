@@ -79,12 +79,10 @@ public class DemoApplicationTests {
 
     @Test
     public void erupt() {
-
-        int i = 100000;
+        int i = 10000;
         for (int i1 = 0; i1 < i; i1++) {
-            CoreService.getErupt("EruptUser");
+            CoreService.getErupt("Demo");
         }
-
     }
 
     @Autowired

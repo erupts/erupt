@@ -21,9 +21,6 @@ public class EruptConfig {
     //文件上传根路径
     private String uploadPath = "/opt/file";
 
-    //是否启动erupt热构建,启动后可以在服务启动时改erupt注解内容，建议生产环境关闭此功能
-//    private boolean hotBuild = false;
-
     //是否使用redis管理session
     private boolean redisSession = false;
 

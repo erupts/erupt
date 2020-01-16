@@ -1,8 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
-import xyz.erupt.annotation.config.Volatile;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
-import xyz.erupt.annotation.vola.ChoiceVolatile;
 
 import java.beans.Transient;
 
@@ -16,7 +14,7 @@ public @interface ChoiceType {
 
     ChoiceEnum type() default ChoiceEnum.SELECT_SINGLE;
 
-    @Volatile(ChoiceVolatile.class)
+    //@Volatile(ChoiceVolatile.class)
     VL[] vl() default {};
 
     long cacheTime() default 0;
