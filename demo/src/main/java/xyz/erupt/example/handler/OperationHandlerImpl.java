@@ -1,4 +1,4 @@
-package xyz.erupt.example.model;
+package xyz.erupt.example.handler;
 
 import com.google.gson.JsonObject;
 import xyz.erupt.annotation.fun.OperationHandler;
@@ -11,7 +11,7 @@ public class OperationHandlerImpl implements OperationHandler {
 
     @Override
     public void exec(Object data, JsonObject param) {
-        System.out.println(123);
+
     }
 
 

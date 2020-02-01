@@ -24,15 +24,6 @@ public class MD5Utils {
         return STR_DIGITS[iD1] + STR_DIGITS[iD2];
     }
 
-    private static String byteToNum(byte bByte) {
-        int iRet = bByte;
-        System.out.println("iRet1=" + iRet);
-        if (iRet < 0) {
-            iRet += 256;
-        }
-        return String.valueOf(iRet);
-    }
-
     private static String byteToString(byte[] bByte) {
         StringBuffer sBuffer = new StringBuffer();
         for (int i = 0; i < bByte.length; i++) {
@@ -59,19 +50,5 @@ public class MD5Utils {
         strObj = digest(strObj);
         strObj += salt;
         return digest(strObj);
-    }
-
-    /**
-     * 加密解密算法 执行一次加密，两次解密
-     */
-    public static String convertMD5(String inStr) {
-
-        char[] a = inStr.toCharArray();
-        for (int i = 0; i < a.length; i++) {
-            a[i] = (char) (a[i] ^ 't');
-        }
-        String s = new String(a);
-        return s;
-
     }
 }

@@ -6,7 +6,6 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.core.model.BaseModel;
@@ -44,11 +43,5 @@ public class DemoSub extends BaseModel {
             )
     )
     private EruptMenu eruptMenu;
-
-    @EruptField(
-            views = @View(title = "图片", type = ViewType.IMAGE),
-            edit = @Edit(title = "图片")
-    )
-    private String image;
 
 }

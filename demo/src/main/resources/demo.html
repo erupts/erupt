@@ -1,20 +1,14 @@
 <style>
     #h1 {
+        color: #09f;
         text-align: center;
-        border: 1px dashed #09f;
-        padding: 100px;
-        transition: all .5s;
-    }
-
-    #h1:hover {
-        box-shadow: 1px 1px 5px #ddd;
     }
 </style>
 <link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.css" rel="stylesheet">
 <template>
     <div style="margin: 0 20px;">
-        <h1 id="h1" style="color: #09f" th:text="${str}"></h1>
-        <div id="chart" style="height: 300px;border: 1px dashed #09f;">
+        <h1 id="h1" th:text="${str}"></h1>
+        <div id="chart" style="height: 260px;">
         </div>
     </div>
 </template>

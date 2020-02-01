@@ -38,7 +38,7 @@ public class Bi extends BaseModel {
     @JoinColumn(name = "DATASOURCE_ID")
     @EruptField(
             views = @View(title = "数据源", column = "name"),
-            edit = @Edit(title = "数据源", notNull = true, type = EditType.REFERENCE_TREE, search = @Search(value = true))
+            edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search(value = true))
     )
     private BiDataSource dataSource;
 

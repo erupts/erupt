@@ -28,7 +28,6 @@ public class PowerVolatile implements VolatileFun<Power, Erupt> {
 
     @Override
     public JsonElement exec(Power power, Erupt erupt) {
-        System.err.println(erupt.name());
         JsonObject jsonElement = new JsonObject();
         xyz.erupt.annotation.fun.PowerHandler.PowerBean powerBean =
                 new xyz.erupt.annotation.fun.PowerHandler.PowerBean(power);

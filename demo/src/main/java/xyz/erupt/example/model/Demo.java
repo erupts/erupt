@@ -22,6 +22,7 @@ import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.core.model.BaseModel;
 import xyz.erupt.example.handler.HtmlHandler;
+import xyz.erupt.example.handler.OperationHandlerImpl;
 import xyz.erupt.example.handler.PowerHandlerImpl;
 
 import javax.persistence.*;
@@ -47,13 +48,13 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "文本"),
-            edit = @Edit(title = "文本输入", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "文本", search = @Search(value = true, vague = true))
     )
     private String input;
 
     @EruptField(
             views = @View(title = "数字"),
-            edit = @Edit(title = "数字输入", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "数字", search = @Search(value = true, vague = true))
     )
     private Integer number;
 
@@ -113,7 +114,6 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     private String remark;
 
     @EruptField(
-            views = @View(title = "自定义HTML"),
             edit = @Edit(title = "HTML", type = EditType.HTML,
                     htmlType = @Html(path = "demo.html", htmlHandler = HtmlHandler.class, params = {"123", "xxx"}))
     )
@@ -141,8 +141,8 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @Override
     public Map<String, String> fetch(String[] params) {
-        System.out.println(params[0]);
         Map<String, String> map = new HashMap<>();
+        map.put(params[0], params[0]);
         map.put("key1", "value1");
         map.put("key2", "value2");
         map.put("key3", "value3");
