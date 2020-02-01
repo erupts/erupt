@@ -73,32 +73,12 @@ public class PublicMark extends BaseModel {
             views = @View(title = "解释"),
             edit = @Edit(title = "解释", type = EditType.TEXTAREA)
     )
-    private String explain;
+    private String explainDesc;
 
     @EruptField(
             views = @View(title = "使用场景"),
-            edit = @Edit(title = "使用场景", type = EditType.TEXTAREA, desc = "不同场景之间使用'/'符号隔开")
+            edit = @Edit(title = "使用场景", type = EditType.TEXTAREA, desc = "不同场景之间使用'、'符号隔开")
     )
     private String useScene;
-
-//    @EruptField(
-//            views = @View(title = "图标类别",column = "name"),
-//            edit = @Edit(title = "图标类别", type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "pid.id"))
-//    )
-//    @ManyToOne
-//    private PublicMarkCategory publicMarkCategory;
-
-
-//    @EruptField(
-//            views = @View(title = "lb")
-//    )
-//    private String lb;
-//
-//    @EruptField(
-//            views = @View(title = "标准分类"),
-//            edit = @Edit(title = "标准分类", type = EditType.TEXTAREA)
-//    )
-//    private String gbCategory;
-
 
 }

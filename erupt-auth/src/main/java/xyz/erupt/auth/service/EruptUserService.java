@@ -67,7 +67,7 @@ public class EruptUserService {
         loginLog.setEruptUser(user);
         loginLog.setLoginTime(new Date());
         loginLog.setIp(IpUtil.getIpAddr(request));
-        loginLog.setSystem(userAgent.getOperatingSystem().getName());
+        loginLog.setSystemName(userAgent.getOperatingSystem().getName());
         loginLog.setBrowser(userAgent.getBrowser().getName() + " "
                 + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
         loginLog.setDeviceType(userAgent.getOperatingSystem().getDeviceType().getName());

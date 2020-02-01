@@ -13,28 +13,28 @@ openApi:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
 spring:
-  resources:
-    cache.period: 2592000
-    chain.cache: true
   datasource:
-    url: jdbc:sqlserver://59.110.40.167:3434;DatabaseName=erupt
-    username: sa
-    password: msSQL2017
+    url: jdbc:mysql://39.104.174.237:3306/erupt?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: E3&$cBW#
     one:
-      url: jdbc:sqlserver://59.110.40.167:3434;DatabaseName=public-info-mark
+      url: jdbc:sqlserver://59.110.40.167:3434;DatabaseName=erupt
       username: sa
       password: msSQL2017
       database-platform: org.hibernate.dialect.SQLServer2008Dialect
   jpa:
     show-sql: true
-    database-platform: org.hibernate.dialect.SQLServer2008Dialect
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
-  gson:
-    date-format: yyyy-MM-dd HH:mm:ss
   redis:
     database: 0
     timeout: 10000
+  gson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  resources:
+    cache.period: 2592000
+    chain.cache: true
 server:
   port: 9999
   compression:

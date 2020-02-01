@@ -34,7 +34,6 @@ public class EruptMenu extends BaseModel {
     )
     private String code;
 
-    @Column(name = "NAME")
     @EruptField(
             views = @View(title = "名称"),
             edit = @Edit(
@@ -44,7 +43,6 @@ public class EruptMenu extends BaseModel {
     )
     private String name;
 
-    @Column(name = "PATH")
     @EruptField(
             edit = @Edit(
                     title = "地址",

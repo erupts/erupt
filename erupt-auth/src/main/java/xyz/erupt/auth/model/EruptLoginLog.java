@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
@@ -32,9 +33,11 @@ import java.util.Date;
 public class EruptLoginLog extends BaseModel {
 
     @ManyToOne
+    @JoinColumn(name = "USER_ID")
     @EruptField(
             views = @View(title = "用户名", column = "name"),
-            edit = @Edit(title = "用户名", type = EditType.REFERENCE_TABLE, search = @Search(vague = true, value = true))
+            edit = @Edit(title = "用户名", type = EditType.REFERENCE_TABLE
+                    , search = @Search(vague = true, value = true))
     )
     private EruptUser eruptUser;
 
@@ -54,7 +57,7 @@ public class EruptLoginLog extends BaseModel {
             views = @View(title = "操作系统"),
             edit = @Edit(title = "操作系统", search = @Search(true))
     )
-    private String system;
+    private String systemName;
 
     @EruptField(
             views = @View(title = "浏览器"),

@@ -57,7 +57,7 @@ public class Bi extends BaseModel {
     @EruptField(
             edit = @Edit(title = "sql", type = EditType.TEXTAREA, notNull = true)
     )
-    private String sql;
+    private String sqlStatement;
 
     @Lob
     @EruptField(

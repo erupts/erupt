@@ -69,6 +69,6 @@ public class BiChart extends BaseModel {
     @EruptField(
             edit = @Edit(title = "图表sql", type = EditType.TEXTAREA)
     )
-    private String sql;
+    private String sqlStatement;
 
 }
