@@ -46,7 +46,7 @@ public class EruptJobService {
         if (schedulerFactoryMap.containsKey(code)) {
             deleteJob(eruptJob);
         }
-        if (eruptJob.isStatus()) {
+        if (eruptJob.getStatus()) {
             StdSchedulerFactory ssf = new StdSchedulerFactory();
             ssf.initialize(getSchedulerProp(code));
             Scheduler scheduler = ssf.getScheduler();
