@@ -1,6 +1,10 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.Empty;
 import xyz.erupt.annotation.config.EruptProperty;
+import xyz.erupt.annotation.constant.AnnotationConst;
+
+import java.beans.Transient;
 
 /**
  * @author liyuepeng
@@ -20,6 +24,7 @@ public @interface View {
 
     boolean sortable() default false;
 
+    @Transient
     boolean export() default true;
 
     String className() default "";
@@ -29,8 +34,10 @@ public @interface View {
      * 支持变量：
      * 1、item（整行数据）
      * 2、item.xxx（数据中的某一列）
-     * demo："姓名：" + item.name
+     * demo："姓名：" + item.name  => 姓名xxxx
      */
     String template() default "";
+
+    Drill drill() default @Drill(eruptClass = Empty.class, joinColumn = AnnotationConst.EMPTY_STR);
 
 }

@@ -3,12 +3,13 @@ package xyz.erupt.auth.model;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.model.BaseModel;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * @author liyuepeng
@@ -35,18 +36,8 @@ public class EruptDictItem extends BaseModel {
     )
     private String name;
 
-
-    @EruptField(
-            views = @View(title = "上级菜单", column = "name"),
-            edit = @Edit(
-                    title = "上级菜单",
-                    type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "id")
-            )
-    )
     @ManyToOne
-    @JoinColumn(name = "PARENT_DICT_ID")
-    private EruptDictItem parent;
+    private EruptDict eruptDict;
 
     @EruptField(
             views = @View(title = "排序"),

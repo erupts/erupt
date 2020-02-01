@@ -45,6 +45,12 @@ public class BiChart extends BaseModel {
     private Integer grid = 24;
 
     @EruptField(
+            views = @View(title = "联动查询"),
+            edit = @Edit(title = "联动查询")
+    )
+    private Boolean linkage;
+
+    @EruptField(
             views = @View(title = "显示顺序"),
             edit = @Edit(title = "显示顺序")
     )

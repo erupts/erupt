@@ -2,6 +2,7 @@ package xyz.erupt.auth.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.Drill;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.model.BaseModel;
@@ -29,7 +30,7 @@ public class EruptDict extends BaseModel {
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
+            views = @View(title = "名称", drill = @Drill(eruptClass = EruptDictItem.class, joinColumn = "")),
             edit = @Edit(title = "名称", notNull = true)
     )
     private String name;

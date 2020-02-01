@@ -26,5 +26,5 @@ public enum ViewType {
     //在新标签页中查看，不同于下载，特殊mine类型可以在网页中直接预览，如：pdf,mp4,svg,png等
     ATTACHMENT,
     //对话框方式展示打开附件
-    ATTACHMENT_DIALOG,
+    ATTACHMENT_DIALOG
 }

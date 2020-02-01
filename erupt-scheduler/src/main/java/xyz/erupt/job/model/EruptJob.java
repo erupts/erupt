@@ -68,7 +68,7 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
                     trueText = "启用", falseText = "禁用"
             ), notNull = true, search = @Search(true))
     )
-    private boolean status;
+    private Boolean status;
 
     @Lob
     @EruptField(
