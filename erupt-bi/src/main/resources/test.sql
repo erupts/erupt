@@ -1,0 +1,1 @@
+select name '名称|{}' from demo ${}
