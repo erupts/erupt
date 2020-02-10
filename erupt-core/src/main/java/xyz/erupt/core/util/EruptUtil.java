@@ -132,7 +132,7 @@ public class EruptUtil {
                 return jsonElement.getAsBoolean();
             case DATE:
                 if (JavaType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
-                    return DateUtil.getDate(jsonElement.getAsString(), edit.dateType());
+                    return DateUtil.getDate(jsonElement.getAsString());
                 } else {
                     return jsonElement.getAsString();
                 }

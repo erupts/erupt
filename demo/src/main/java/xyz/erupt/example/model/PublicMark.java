@@ -56,7 +56,7 @@ public class PublicMark extends BaseModel {
             views = @View(title = "创建时间"),
             edit = @Edit(title = "创建时间", search = @Search(value = true, vague = true))
     )
-    public Date createTime;
+    private Date createTime;
 
     @EruptField(
             views = @View(title = "标准"),
