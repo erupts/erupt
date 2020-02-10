@@ -38,6 +38,6 @@ public @interface View {
      */
     String template() default "";
 
-    Drill drill() default @Drill(eruptClass = Empty.class, joinColumn = AnnotationConst.EMPTY_STR);
+    Drill drill() default @Drill(enable = false, eruptClass = Empty.class, joinColumn = AnnotationConst.EMPTY_STR);
 
 }

@@ -1,10 +1,13 @@
 package xyz.erupt.annotation.sub_field;
 
+import java.beans.Transient;
+
 public @interface Drill {
+
+    boolean enable() default true;
 
     Class<?> eruptClass();
 
-    String id() default "id";
-
+    @Transient
     String joinColumn();
 }

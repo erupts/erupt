@@ -1,5 +1,7 @@
 package xyz.erupt.core.util;
 
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,10 +21,12 @@ public class DateUtil {
         return sdf.format(date);
     }
 
-    public static Date getDate(String str) {
+    public static Date getDate(String str, DateType dateType) {
         SimpleDateFormat sdf;
-        if (str.length() == 10) {
+        if (dateType.type() == DateType.Type.DATE) {
             sdf = new SimpleDateFormat(DATE);
+        } else if (dateType.type() == DateType.Type.DATE_TIME) {
+            sdf = new SimpleDateFormat(DATE_TIME);
         } else {
             sdf = new SimpleDateFormat(DATE_TIME);
         }

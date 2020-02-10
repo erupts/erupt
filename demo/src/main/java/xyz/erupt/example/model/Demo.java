@@ -14,10 +14,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
-import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.core.model.BaseModel;
@@ -60,7 +57,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "时间"),
-            edit = @Edit(title = "时间", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "时间", search = @Search(value = true, vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date date;
 

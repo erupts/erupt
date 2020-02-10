@@ -13,6 +13,7 @@ import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @author liyuepeng
@@ -53,9 +54,9 @@ public class PublicMark extends BaseModel {
 
     @EruptField(
             views = @View(title = "创建时间"),
-            edit = @Edit(title = "创建时间", type = EditType.DATE, search = @Search(value = true, vague = true))
+            edit = @Edit(title = "创建时间", search = @Search(value = true, vague = true))
     )
-    public String createTime;
+    public Date createTime;
 
     @EruptField(
             views = @View(title = "标准"),

@@ -43,7 +43,7 @@ public class Bi extends BaseModel {
     private BiDataSource dataSource;
 
     @EruptField(
-            edit = @Edit(title = "handler", placeHolder = "处理类", desc = "需实现xyz.erupt.report.fun.ReportHandler接口")
+            edit = @Edit(title = "handler", placeHolder = "处理类", desc = "需实现xyz.erupt.report.fun.BiHandler接口")
     )
     private String handler;
 
@@ -71,13 +71,6 @@ public class Bi extends BaseModel {
             edit = @Edit(title = "查询维度", type = EditType.TAB_TABLE_ADD)
     )
     private Set<BiDimension> biDimension;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "BI_ID")
-    @EruptField(
-            edit = @Edit(title = "数据列", type = EditType.TAB_TABLE_ADD)
-    )
-    private Set<BiColumn> biColumn;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "BI_ID")

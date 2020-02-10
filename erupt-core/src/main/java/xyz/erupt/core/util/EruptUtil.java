@@ -124,24 +124,25 @@ public class EruptUtil {
         if (JavaType.NUMBER.equalsIgnoreCase(eruptFieldModel.getFieldReturnName())) {
             return TypeUtil.typeStrConvertObject(jsonElement.getAsString(), eruptFieldModel.getField().getType().getSimpleName());
         }
-        switch (eruptFieldModel.getEruptField().edit().type()) {
+        Edit edit = eruptFieldModel.getEruptField().edit();
+        switch (edit.type()) {
             case SLIDER:
                 return jsonElement.getAsInt();
             case BOOLEAN:
                 return jsonElement.getAsBoolean();
             case DATE:
                 if (JavaType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
-                    return DateUtil.getDate(jsonElement.getAsString());
+                    return DateUtil.getDate(jsonElement.getAsString(), edit.dateType());
                 } else {
                     return jsonElement.getAsString();
                 }
             case REFERENCE_TREE:
             case REFERENCE_TABLE:
                 String id = null;
-                if (eruptFieldModel.getEruptField().edit().type().equals(EditType.REFERENCE_TREE)) {
+                if (edit.type().equals(EditType.REFERENCE_TREE)) {
                     id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();
-                } else if (eruptFieldModel.getEruptField().edit().type().equals(EditType.REFERENCE_TABLE)) {
-                    id = eruptFieldModel.getEruptField().edit().referenceTableType().id();
+                } else if (edit.type().equals(EditType.REFERENCE_TABLE)) {
+                    id = edit.referenceTableType().id();
                 }
                 EruptFieldModel efm = CoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
                 return TypeUtil.typeStrConvertObject(jsonElement.getAsJsonObject().get(id).getAsString(), efm.getField().getType().getSimpleName());

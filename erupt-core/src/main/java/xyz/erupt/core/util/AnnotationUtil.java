@@ -120,7 +120,7 @@ public class AnnotationUtil {
                         } else if (JavaType.BOOLEAN.equals(returnType)) {
                             jsonArray.add((Boolean) res);
                         } else if (JavaType.CLASS.equals(returnType)) {
-                            break;
+                            jsonArray.add(((Class) res).getSimpleName());
                         } else if (res.getClass().isEnum()) {
                             jsonArray.add(res.toString());
                         } else {
@@ -155,7 +155,7 @@ public class AnnotationUtil {
                 } else if (method.getReturnType().isAnnotation()) {
                     jsonObject.add(methodName, annotationToJson((Annotation) result));
                 } else if (JavaType.CLASS.equals(returnType)) {
-                    continue;
+                    jsonObject.addProperty(methodName, ((Class) result).getSimpleName());
                 }
             }
         }

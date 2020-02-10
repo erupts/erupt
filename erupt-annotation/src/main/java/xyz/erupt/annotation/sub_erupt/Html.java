@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_erupt;
 
+import java.beans.Transient;
 import java.util.Map;
 
 /**
@@ -8,10 +9,13 @@ import java.util.Map;
  */
 public @interface Html {
 
+    @Transient
     String path() default "";
 
+    @Transient
     String[] params() default {};
 
+    @Transient
     Class<? extends HtmlHandler> htmlHandler() default HtmlHandler.class;
 
     interface HtmlHandler {
