@@ -1,4 +1,4 @@
-package xyz.erupt.report.fun;
+package xyz.erupt.bi.fun;
 
 /**
  * @author liyuepeng

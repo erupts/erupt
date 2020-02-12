@@ -1,4 +1,4 @@
-package xyz.erupt.report.model;
+package xyz.erupt.bi.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -9,15 +9,22 @@ import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * @author liyuepeng
  * @date 2019-08-26.
  */
 @Entity
-@Table(name = "E_BI_DATASOURCE")
+@Table(name = "E_BI_DATASOURCE", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "数据源")
 public class BiDataSource extends BaseModel {
+
+    @EruptField(
+            views = @View(title = "编码"),
+            edit = @Edit(title = "编码", notNull = true)
+    )
+    private String code;
 
     @EruptField(
             views = @View(title = "名称"),
@@ -32,8 +39,8 @@ public class BiDataSource extends BaseModel {
     private String driver;
 
     @EruptField(
-            views = @View(title = "链接字符串"),
-            edit = @Edit(title = "链接字符串", type = EditType.TEXTAREA, notNull = true)
+            views = @View(title = "连接字符串"),
+            edit = @Edit(title = "连接字符串", type = EditType.TEXTAREA, notNull = true)
     )
     private String url;
 

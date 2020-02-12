@@ -1,4 +1,4 @@
-package xyz.erupt.report.model;
+package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import xyz.erupt.annotation.Erupt;
@@ -43,7 +43,7 @@ public class Bi extends BaseModel {
     private BiDataSource dataSource;
 
     @EruptField(
-            edit = @Edit(title = "handler", placeHolder = "处理类", desc = "需实现xyz.erupt.report.fun.BiHandler接口")
+            edit = @Edit(title = "handler", placeHolder = "处理类", desc = "需实现xyz.erupt.bi.fun.BiHandler接口")
     )
     private String handler;
 

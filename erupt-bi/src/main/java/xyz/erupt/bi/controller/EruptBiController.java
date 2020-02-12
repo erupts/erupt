@@ -1,4 +1,4 @@
-package xyz.erupt.report.controller;
+package xyz.erupt.bi.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 

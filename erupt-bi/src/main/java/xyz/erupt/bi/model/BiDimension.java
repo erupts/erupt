@@ -1,4 +1,4 @@
-package xyz.erupt.report.model;
+package xyz.erupt.bi.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
