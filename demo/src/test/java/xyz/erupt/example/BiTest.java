@@ -9,7 +9,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import xyz.erupt.bi.service.BiService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,10 +26,6 @@ public class BiTest {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
-
-
-    @Autowired
-    private BiService biService;
 
     @Test
     public void biTest() throws IOException {
@@ -55,8 +50,12 @@ public class BiTest {
     public void processPlaceHolder() throws IOException {
         Resource resource = new ClassPathResource("test.sql");
         String sql = FileUtils.readFileToString(resource.getFile());
-        Map<String, Object> paramMap = new HashMap<>();
-
-        List<Map<String, Object>> lm = jdbcTemplate.queryForList(FileUtils.readFileToString(resource.getFile()), paramMap);
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "233");
+        map.put("kkkk", "313");
+        List list = jdbcTemplate.queryForList("select * from demo where name = :name", map);
+        System.out.println(list);
     }
+
+
 }

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.7.RELEASE</version>
+        <version>2.2.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>xyz.erupt</groupId>
@@ -17,7 +17,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <erupt.version>0.3.3</erupt.version>
+        <erupt.version>0.3.5</erupt.version>
     </properties>
 
     <dependencies>
@@ -60,38 +60,30 @@
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-web</artifactId>
+            <version>${erupt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
             <version>${erupt.version}</version>
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-web</artifactId>
-            <version>${erupt.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-report</artifactId>
-            <version>${erupt.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>xyz.erupt</groupId>
             <artifactId>erupt-scheduler</artifactId>
             <version>${erupt.version}</version>
         </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-bi</artifactId>
+            <version>${erupt.version}</version>
+        </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>xyz.erupt</groupId>-->
-        <!--<artifactId>open-api</artifactId>-->
-        <!--<version>0.0.3</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>xyz.erupt</groupId>-->
-        <!--<artifactId>erupt-open-api</artifactId>-->
-        <!--<version>LATEST</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>open-api</artifactId>
+            <version>0.1.1</version>
+        </dependency>
     </dependencies>
 
 </project>

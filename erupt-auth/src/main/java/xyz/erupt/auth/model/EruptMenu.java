@@ -8,7 +8,10 @@ import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.*;
@@ -54,7 +57,7 @@ public class EruptMenu extends BaseModel {
                                     @VL(value = "/page?&site=", label = "链接"),
                                     @VL(value = "/page?target=blank&site=", label = "新页签"),
                                     @VL(value = "/", label = "/", desc = "其他"),
-//                                    @VL(value = "/build/report/", label = "REPORT"),
+                                    @VL(value = "/build/bi/", label = "报表", desc = "此功能需要导入bi模块"),
                             }
                     )
             )
@@ -79,9 +82,7 @@ public class EruptMenu extends BaseModel {
 
     @EruptField(
             edit = @Edit(
-                    title = "顺序",
-                    type = EditType.SLIDER,
-                    sliderType = @SliderType(max = 100)
+                    title = "顺序"
             )
     )
     private Integer sort;

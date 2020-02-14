@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sql>
+    <demo cache="3000">
+        select 'demo' demo
+        <if test="a">
+            where 1=:a
+        </if>
+    </demo>
+</sql>

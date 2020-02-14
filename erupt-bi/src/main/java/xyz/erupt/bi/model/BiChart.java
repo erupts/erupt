@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.SliderType;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
@@ -39,10 +40,10 @@ public class BiChart extends BaseModel {
 
     @EruptField(
             views = @View(title = "栅格数"),
-            edit = @Edit(title = "栅格数", type = EditType.SLIDER,
-                    sliderType = @SliderType(max = 24, markPoints = {2, 3, 4, 6, 8, 12, 24}, dots = true))
+            edit = @Edit(title = "栅格数", type = EditType.SLIDER, desc = "单行可以显示的图表数量",
+                    sliderType = @SliderType(max = 24, markPoints = {1, 2, 3, 4, 6, 8, 12}, dots = true))
     )
-    private Integer grid = 24;
+    private Integer grid = 1;
 
     @EruptField(
             views = @View(title = "联动查询"),
@@ -67,7 +68,7 @@ public class BiChart extends BaseModel {
     @EruptField(
             views = @View(title = "图表类型"),
             edit = @Edit(title = "图表类型", notNull = true
-                    , type = EditType.CHOICE, choiceType = @ChoiceType)
+                    , type = EditType.CHOICE, choiceType = @ChoiceType(vl = @VL(label = "饼形图", value = "pie")))
     )
     private String type;
 
@@ -76,5 +77,11 @@ public class BiChart extends BaseModel {
             edit = @Edit(title = "图表sql", type = EditType.TEXTAREA)
     )
     private String sqlStatement;
+
+    @Lob
+    @EruptField(
+            edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照echarts", type = EditType.TEXTAREA)
+    )
+    private String chartOption;
 
 }

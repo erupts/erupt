@@ -1,6 +1,7 @@
 package xyz.erupt.bi.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -17,9 +18,10 @@ import java.util.Set;
  * @date 2019-08-26.
  */
 @Entity
-@Table(name = "E_BI")
+@Table(name = "E_BI", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "报表配置")
 @Getter
+@Setter
 public class Bi extends BaseModel {
 
     @EruptField(
@@ -55,7 +57,7 @@ public class Bi extends BaseModel {
 
     @Lob
     @EruptField(
-            edit = @Edit(title = "sql", type = EditType.TEXTAREA, notNull = true)
+            edit = @Edit(title = "SQL语句", type = EditType.TEXTAREA, notNull = true)
     )
     private String sqlStatement;
 
