@@ -48,7 +48,8 @@ public enum EditType {
     TAB_TABLE_ADD,
     @EditTypeMapping(desc = "自定义HTML", allowType = {JavaTypeEnum.String}, search = false, excelOperator = false)
     HTML,
-
+    @EditTypeMapping(desc = "代码编辑器", allowType = {JavaTypeEnum.String})
+    CODE_EDITOR,
     /**
      * not support
      */
@@ -56,8 +57,7 @@ public enum EditType {
     JSON_EDIT,
     //地图
     MAP,
-    //代码编辑器
-    CODE_EDITOR,
+
     //步骤条
     EMPTY,
     STEPS,

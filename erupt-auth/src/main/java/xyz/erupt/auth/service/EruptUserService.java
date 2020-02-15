@@ -7,6 +7,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.auth.base.LoginModel;
 import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
@@ -186,40 +188,49 @@ public class EruptUserService {
         }
     }
 
-    public boolean verifyMenuAuth(String token, String authStr, EruptModel eruptModel) {
-        //校验authStr与请求头erupt信息是否匹配，来验证其合法性
-        {
-            if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
-                return false;
+    private static VL[] VLS;
+
+    static {
+        try {
+            VLS = EruptMenu.class.getDeclaredField("path")
+                    .getAnnotation(EruptField.class).edit().inputType().prefix();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean verifyMenuAuth(String token, String name) {
+        List<EruptMenu> menus = sessionService.get(SessionKey.MENU_LIST + token, new TypeToken<List<EruptMenu>>() {
+        }.getType());
+        for (EruptMenu menu : menus) {
+            if (StringUtils.isNotBlank(menu.getPath()) && menu.getPath().toLowerCase().contains(name.toLowerCase())) {
+                String path = menu.getPath();
+                for (VL vl : VLS) {
+                    if (vl.value().length() > 2 && path.contains(vl.value())) {
+                        path = menu.getPath().replace(vl.value(), "");
+                        break;
+                    }
+                }
+                if (path.equalsIgnoreCase(name)) {
+                    return true;
+                }
             }
         }
-        //检验注解
-        {
+        return false;
+    }
 
-            if (!eruptModel.getErupt().loginUse()) {
-                return true;
-            }
+    public boolean verifyEruptMenuAuth(String token, String authStr, EruptModel eruptModel) {
+        //校验authStr与请求头erupt信息是否匹配，来验证其合法性
+        if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
+            return false;
+        }
+        //检验注解
+        if (!eruptModel.getErupt().loginUse()) {
+            return true;
         }
         //校验菜单权限
         {
-            List<EruptMenu> menus = sessionService.get(SessionKey.MENU_LIST + token, new TypeToken<List<EruptMenu>>() {
-            }.getType());
-            boolean result = false;
-            em:
-            for (EruptMenu menu : menus) {
-                if (StringUtils.isNotBlank(menu.getPath()) && menu.getPath().toLowerCase().contains(eruptModel.getEruptName().toLowerCase())) {
-                    String[] pathArr = menu.getPath().split("\\?")[0].split("/");
-                    for (String pa : pathArr) {
-                        if (pa.equalsIgnoreCase(eruptModel.getEruptName())) {
-                            if (menu.getStatus() != 3) {
-                                result = true;
-                                break em;
-                            }
-                        }
-                    }
-                }
-            }
-            return result;
+            return verifyMenuAuth(token, eruptModel.getEruptName());
         }
     }
 

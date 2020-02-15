@@ -1,6 +1,7 @@
 package xyz.erupt.bi.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -24,6 +25,7 @@ import javax.persistence.Table;
 @Table(name = "E_BI_CHART")
 @Erupt(name = "图表配置")
 @Getter
+@Setter
 public class BiChart extends BaseModel {
 
     @EruptField(

@@ -68,4 +68,7 @@ public @interface Edit {
     @SerializeBy(method = "type", value = "REFERENCE_TABLE")
     ReferenceTableType referenceTableType() default @ReferenceTableType;
 
+    @SerializeBy(method = "type", value = "CODE_EDITOR")
+    CodeEditorType codeEditType() default @CodeEditorType(language = "text");
+
 }

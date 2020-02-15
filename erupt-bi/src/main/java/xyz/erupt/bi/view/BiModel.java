@@ -5,7 +5,7 @@ import lombok.Setter;
 import xyz.erupt.bi.model.BiChart;
 import xyz.erupt.bi.model.BiDimension;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author liyuepeng
@@ -17,7 +17,7 @@ public class BiModel {
 
     private Boolean export;
 
-    private Set<BiDimension> dimensions;
+    private List<BiDimension> dimensions;
 
-    private Set<BiChart> charts;
+    private List<BiChart> charts;
 }

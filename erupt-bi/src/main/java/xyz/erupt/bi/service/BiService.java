@@ -2,7 +2,6 @@ package xyz.erupt.bi.service;
 
 import lombok.extern.java.Log;
 import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -17,7 +16,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.IOException;
+import java.sql.ResultSetMetaData;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -43,18 +44,26 @@ public class BiService {
         Resource resource = new ClassPathResource("test.sql");
         String sql = FileUtils.readFileToString(resource.getFile());
         Map<String, Object> map = new HashMap<>();
-        JSONObject jsonObject = new JSONObject("{name:['emmm','23333']}");
+//        JSONObject jsonObject = new JSONObject("{name:['emmm','23333']}");
         map.put("name", new String[]{"emmmmm", "233333"});
         new BiService().processPlaceHolder(sql, map);
     }
 
-    public List<Map<String, Object>> processBiSql(String code, Map<String, Object> query) {
+    public List<Map<String, Object>> startQuery(String code, Map<String, Object> query) {
         Bi bi = eruptDao.queryEntity(Bi.class, "code = '" + code + "'");
         try {
             String express = processPlaceHolder(bi.getSqlStatement(), query);
             log.info(bi.getName() + " -> " + express);
             NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate(bi.getDataSource());
-            return jdbcTemplate.queryForList(express, query);
+            return jdbcTemplate.query(express, query, (rs, i) -> {
+                Map<String, Object> map = new LinkedHashMap<>();
+                ResultSetMetaData metaData = rs.getMetaData();
+                int columnCount = metaData.getColumnCount();
+                for (int index = 1; index <= columnCount; index++) {
+                    map.put(metaData.getColumnLabel(index), rs.getObject(index));
+                }
+                return map;
+            });
         } catch (ScriptException e) {
             e.printStackTrace();
             return null;

@@ -1,7 +1,5 @@
 package xyz.erupt.core.annotation;
 
-import xyz.erupt.annotation.constant.AnnotationConst;
-
 import java.lang.annotation.*;
 
 /**
@@ -14,13 +12,11 @@ import java.lang.annotation.*;
 public @interface EruptRouter {
 //    boolean base64() default false;
 
-    boolean loginVerify() default true;
+    VerifyType verifyType() default VerifyType.ERUPT;
 
-    boolean verifyErupt() default true;
+    int authIndex();
 
-    int authIndex() default AnnotationConst.NOT_LIMIT;
-
-    int startAuthIndex() default 1;
+    int skipAuthIndex() default 1;
 
     //权限数据传值方式，默认为放到请求头中
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;
@@ -30,6 +26,15 @@ public @interface EruptRouter {
         HEADER,
         //token必须放到URL参数中
         PARAM
+    }
+
+    enum VerifyType {
+        //仅验证登录
+        LOGIN,
+        //验证erupt与登录
+        ERUPT,
+        //验证登录与菜单权限
+        MENU
     }
 
 }

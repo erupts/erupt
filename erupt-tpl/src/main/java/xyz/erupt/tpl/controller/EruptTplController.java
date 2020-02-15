@@ -27,15 +27,14 @@ import static xyz.erupt.core.constant.RestPath.ERUPT_API;
 @RequestMapping(ERUPT_API + "/tpl")
 public class EruptTplController {
 
-
     @Autowired
     private TemplateEngine templateEngine;
 
-    public static final String HTML = ".html";
+    private static final String HTML = ".html";
 
     @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=utf-8"})
     @ResponseBody
-    @EruptRouter(authIndex = 2)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU)
     public String getEruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         return execTemplate(eruptModel.getEruptFieldMap().get(field).getEruptField().edit().htmlType());
@@ -43,7 +42,7 @@ public class EruptTplController {
 
     @GetMapping(value = "/html/{name}", produces = {"text/html;charset=utf-8"})
     @ResponseBody
-//    @EruptRouter(authIndex = 2)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU)
     public String getEruptHtml(@PathVariable("name") String name, HttpServletResponse response) {
         try {
             if (!name.endsWith(HTML)) {

@@ -65,38 +65,49 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
         String path = request.getServletPath();
         //权限校验
-        if (eruptRouter.verifyErupt()) {
-            EruptModel eruptModel = CoreService.getErupt(eruptName);
-            if (null == eruptModel) {
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return false;
-            }
-            String authStr = path.split("/")[eruptRouter.startAuthIndex() + eruptRouter.authIndex() + 1];
-            //eruptParent logic
-            $ep:
-            if (StringUtils.isNotBlank(parentEruptName)) {
-                EruptModel eruptParentModel = CoreService.getErupt(parentEruptName);
-                for (EruptFieldModel model : eruptParentModel.getEruptFieldModels()) {
-                    if (eruptModel.getEruptName().equals(model.getFieldReturnName())) {
-                        if (authStr.equals(eruptModel.getEruptName())) {
-                            authStr = eruptParentModel.getEruptName();
+        switch (eruptRouter.verifyType()) {
+            case LOGIN:
+                break;
+            case MENU:
+                boolean bool = eruptUserService.verifyMenuAuth(token, eruptName);
+                if (!bool) {
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    return false;
+                }
+                break;
+            case ERUPT:
+                EruptModel eruptModel = CoreService.getErupt(eruptName);
+                if (null == eruptModel) {
+                    response.setStatus(HttpStatus.NOT_FOUND.value());
+                    return false;
+                }
+                String authStr = path.split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex() + 1];
+                //eruptParent logic
+                $ep:
+                if (StringUtils.isNotBlank(parentEruptName)) {
+                    EruptModel eruptParentModel = CoreService.getErupt(parentEruptName);
+                    for (EruptFieldModel model : eruptParentModel.getEruptFieldModels()) {
+                        if (eruptModel.getEruptName().equals(model.getFieldReturnName())) {
+                            if (authStr.equals(eruptModel.getEruptName())) {
+                                authStr = eruptParentModel.getEruptName();
+                            }
+                            eruptModel = eruptParentModel;
+                            break $ep;
                         }
-                        eruptModel = eruptParentModel;
-                        break $ep;
                     }
-                }
-                for (RowOperation operation : eruptParentModel.getErupt().rowOperation()) {
-                    if (operation.eruptClass().getSimpleName().equals(eruptModel.getEruptName())) {
-                        break $ep;
+                    for (RowOperation operation : eruptParentModel.getErupt().rowOperation()) {
+                        if (operation.eruptClass().getSimpleName().equals(eruptModel.getEruptName())) {
+                            break $ep;
+                        }
                     }
+                    response.setStatus(HttpStatus.NOT_FOUND.value());
+                    return false;
                 }
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return false;
-            }
-            if (!path.contains(eruptName) || !eruptUserService.verifyMenuAuth(token, authStr, eruptModel)) {
-                response.setStatus(HttpStatus.FORBIDDEN.value());
-                return false;
-            }
+                if (!path.contains(eruptName) || !eruptUserService.verifyEruptMenuAuth(token, authStr, eruptModel)) {
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    return false;
+                }
+                break;
         }
         return true;
     }
