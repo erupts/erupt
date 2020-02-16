@@ -18,8 +18,6 @@ public @interface EditTypeMapping {
 
     String desc() default "";
 
-//    String[] joinName() default {};
-
     boolean search() default true;
 
     boolean searchVague() default true;

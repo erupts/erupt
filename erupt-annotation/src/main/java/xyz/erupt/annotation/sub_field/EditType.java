@@ -57,7 +57,6 @@ public enum EditType {
     JSON_EDIT,
     //地图
     MAP,
-
     //步骤条
     EMPTY,
     STEPS,

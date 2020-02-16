@@ -37,6 +37,9 @@ public @interface Erupt {
     @ToMap(key = "code")
     RowOperation[] rowOperation() default {};
 
+    @ToMap(key = "code")
+    Drill[] drills() default {};
+
     @Transient
     Filter filter() default @Filter(condition = "");
 

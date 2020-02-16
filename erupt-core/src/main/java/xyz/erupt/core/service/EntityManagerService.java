@@ -22,10 +22,13 @@ import javax.persistence.PersistenceContext;
 public class EntityManagerService {
 
     private static final String DATASOURCE_PREFIX = "spring.datasource.";
+
     @PersistenceContext
     private EntityManager entityManager;
+
     @Resource
     private Environment env;
+
     @Autowired
     private EruptConfig eruptConfig;
 

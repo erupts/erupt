@@ -15,6 +15,8 @@ import java.util.List;
 @Setter
 public class BiModel {
 
+    private String code;
+
     private Boolean export;
 
     private List<BiDimension> dimensions;

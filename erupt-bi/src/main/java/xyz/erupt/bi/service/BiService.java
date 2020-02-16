@@ -1,10 +1,8 @@
 package xyz.erupt.bi.service;
 
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
@@ -14,10 +12,7 @@ import xyz.erupt.tool.EruptDao;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import java.io.IOException;
 import java.sql.ResultSetMetaData;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,42 +27,24 @@ import java.util.regex.Pattern;
 @Log
 public class BiService {
 
-    private static final String EXPRESS_PATTERN = "(?<=\\$\\{)(.+?)(?=\\})";
-
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
     private EruptDao eruptDao;
 
-    public static void main(String[] args) throws IOException, ScriptException {
-        Resource resource = new ClassPathResource("test.sql");
-        String sql = FileUtils.readFileToString(resource.getFile());
-        Map<String, Object> map = new HashMap<>();
-//        JSONObject jsonObject = new JSONObject("{name:['emmm','23333']}");
-        map.put("name", new String[]{"emmmmm", "233333"});
-        new BiService().processPlaceHolder(sql, map);
-    }
+    private static final String EXPRESS_PATTERN = "(?<=\\$\\{)(.+?)(?=\\})";
 
     public List<Map<String, Object>> startQuery(String code, Map<String, Object> query) {
-        Bi bi = eruptDao.queryEntity(Bi.class, "code = '" + code + "'");
-        try {
-            String express = processPlaceHolder(bi.getSqlStatement(), query);
-            log.info(bi.getName() + " -> " + express);
-            NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate(bi.getDataSource());
-            return jdbcTemplate.query(express, query, (rs, i) -> {
-                Map<String, Object> map = new LinkedHashMap<>();
-                ResultSetMetaData metaData = rs.getMetaData();
-                int columnCount = metaData.getColumnCount();
-                for (int index = 1; index <= columnCount; index++) {
-                    map.put(metaData.getColumnLabel(index), rs.getObject(index));
-                }
-                return map;
-            });
-        } catch (ScriptException e) {
-            e.printStackTrace();
-            return null;
-        }
+        Bi bi = eruptDao.queryEntity(Bi.class, String.format("code = '%s'", code));
+        String express = processPlaceHolder(bi.getSqlStatement(), query);
+        NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate(bi.getDataSource());
+        return jdbcQuery(jdbcTemplate, express, query);
+    }
+
+    public List<Map<String, Object>> startSqlQuery(String sql, Map<String, Object> query) {
+        String express = processPlaceHolder(sql, query);
+        return jdbcQuery(jdbcTemplate, express, query);
     }
 
     private NamedParameterJdbcTemplate getJdbcTemplate(BiDataSource biDataSource) {
@@ -83,11 +60,27 @@ public class BiService {
         }
     }
 
-    private String processPlaceHolder(String express, Map<String, Object> param) throws ScriptException {
+    private List<Map<String, Object>> jdbcQuery(NamedParameterJdbcTemplate jdbcTemplate, String express, Map<String, Object> query) {
+        log.info(express);
+        return jdbcTemplate.query(express, query, (rs, i) -> {
+            Map<String, Object> map = new LinkedHashMap<>();
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            for (int index = 1; index <= columnCount; index++) {
+                map.put(metaData.getColumnLabel(index), rs.getObject(index));
+            }
+            return map;
+        });
+    }
+
+    @SneakyThrows
+    private String processPlaceHolder(String express, Map<String, Object> param) {
         Matcher m = Pattern.compile(EXPRESS_PATTERN).matcher(express);
         ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("javascript");
-        for (Map.Entry<String, Object> entry : param.entrySet()) {
-            scriptEngine.put(entry.getKey(), param.get(entry.getKey()));
+        if (null != param) {
+            for (Map.Entry<String, Object> entry : param.entrySet()) {
+                scriptEngine.put(entry.getKey(), param.get(entry.getKey()));
+            }
         }
         while (m.find()) {
             String exp = m.group();

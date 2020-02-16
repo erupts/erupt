@@ -13,10 +13,10 @@ public @interface RowOperation {
 
     String code();
 
-    //请参考font awesome
-    String icon();
-
     String title();
+
+    //请参考font awesome
+    String icon() default "";
 
     boolean multi() default true;
 

@@ -13,9 +13,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.SliderType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author liyuepeng
@@ -85,5 +83,9 @@ public class BiChart extends BaseModel {
             edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照echarts", type = EditType.TEXTAREA)
     )
     private String chartOption;
+
+    @ManyToOne
+    @JoinColumn(name = "BI_ID")
+    private Bi bi;
 
 }

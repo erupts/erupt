@@ -1,10 +1,14 @@
-package xyz.erupt.annotation.sub_field;
+package xyz.erupt.annotation.sub_erupt;
 
 import java.beans.Transient;
 
 public @interface Drill {
 
-    boolean enable() default true;
+    String code();
+
+    String title();
+
+    String icon() default "";
 
     Class<?> eruptClass();
 

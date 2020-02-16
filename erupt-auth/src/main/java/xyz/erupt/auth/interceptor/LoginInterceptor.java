@@ -26,12 +26,14 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     public EruptUserService eruptUserService;
 
+    //header
     private static final String ERUPT_HEADER_KEY = "erupt";
 
     public static final String ERUPT_HEADER_TOKEN = "token";
 
     private static final String ERUPT_PARENT_HEADER_KEY = "eruptParent";
 
+    //param
     private static final String URL_ERUPT_PARAM_KEY = "_erupt";
 
     private static final String ERUPT_PARENT_PARAM_KEY = "_eruptParent";

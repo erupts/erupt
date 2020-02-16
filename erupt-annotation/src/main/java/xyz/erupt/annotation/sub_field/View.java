@@ -1,8 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
-import xyz.erupt.annotation.config.Empty;
 import xyz.erupt.annotation.config.EruptProperty;
-import xyz.erupt.annotation.constant.AnnotationConst;
 
 import java.beans.Transient;
 
@@ -37,7 +35,5 @@ public @interface View {
      * demo："姓名：" + item.name  => 姓名xxxx
      */
     String template() default "";
-
-    Drill drill() default @Drill(enable = false, eruptClass = Empty.class, joinColumn = AnnotationConst.EMPTY_STR);
 
 }
