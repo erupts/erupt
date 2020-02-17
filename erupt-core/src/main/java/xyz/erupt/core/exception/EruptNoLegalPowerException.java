@@ -13,4 +13,9 @@ public class EruptNoLegalPowerException extends RuntimeException {
         //TODO 需要记录IP或者其他操作
         super(NO_LEGAL_POWER);
     }
+
+    public EruptNoLegalPowerException(String message) {
+        //TODO 需要记录IP或者其他操作
+        super(message);
+    }
 }
