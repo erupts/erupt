@@ -34,8 +34,12 @@ import java.util.Set;
  */
 @Erupt(name = "demo", orderBy = "number desc",
         power = @Power(export = true, powerHandler = PowerHandlerImpl.class), dataProxy = Demo.class,
-        rowOperation = @RowOperation(operationHandler = OperationHandlerImpl.class,
-                eruptClass = DemoSub.class, title = "demo", icon = "fa fa-eercast", code = "demo")
+        rowOperation = {
+                @RowOperation(operationHandler = OperationHandlerImpl.class,
+                        eruptClass = DemoSub.class, title = "demo", icon = "fa fa-eercast", code = "demo"),
+                @RowOperation(operationHandler = OperationHandlerImpl.class,
+                        title = "demo2", icon = "fa fa-table", code = "demo2")
+        }
 
 )
 @Table(name = "DEMO")

@@ -20,21 +20,21 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "E_DICT_ITEM", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "字典项",
-        orderBy = "EruptDict.sort"
+        orderBy = "sort"
 )
 public class EruptDictItem extends BaseModel {
 
     @EruptField(
-            views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true)
+            views = @View(title = "键"),
+            edit = @Edit(title = "键", notNull = true)
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true)
+            views = @View(title = "值"),
+            edit = @Edit(title = "值", notNull = true)
     )
-    private String name;
+    private String value;
 
     @ManyToOne
     private EruptDict eruptDict;
@@ -46,6 +46,7 @@ public class EruptDictItem extends BaseModel {
     private Integer sort;
 
     @EruptField(
+            views = @View(title = "备注"),
             edit = @Edit(
                     title = "备注"
             )
