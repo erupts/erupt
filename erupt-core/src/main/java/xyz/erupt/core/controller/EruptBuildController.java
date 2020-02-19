@@ -33,7 +33,7 @@ public class EruptBuildController {
             switch (fieldModel.getEruptField().edit().type()) {
                 case TAB_TREE:
                     if (eruptBuildModel.getTabErupts() == null) {
-                        eruptBuildModel.setTabErupts(new LinkedHashMap<>(0));
+                        eruptBuildModel.setTabErupts(new LinkedHashMap<>());
                     }
                     EruptBuildModel eruptBuildModel1 = new EruptBuildModel();
                     eruptBuildModel1.setEruptModel(CoreService.getErupt(fieldModel.getFieldReturnName()));
@@ -42,19 +42,19 @@ public class EruptBuildController {
                 case TAB_TABLE_ADD:
                 case TAB_TABLE_REFER:
                     if (eruptBuildModel.getTabErupts() == null) {
-                        eruptBuildModel.setTabErupts(new LinkedHashMap<>(0));
+                        eruptBuildModel.setTabErupts(new LinkedHashMap<>());
                     }
                     eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), getEruptBuild(fieldModel.getFieldReturnName()));
                     break;
                 case COMBINE:
                     if (eruptBuildModel.getCombineErupts() == null) {
-                        eruptBuildModel.setCombineErupts(new LinkedHashMap<>(0));
+                        eruptBuildModel.setCombineErupts(new LinkedHashMap<>());
                     }
                     eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
                     break;
                 case REFERENCE_TABLE:
                     if (eruptBuildModel.getReferenceErupts() == null) {
-                        eruptBuildModel.setReferenceErupts(new LinkedHashMap<>(0));
+                        eruptBuildModel.setReferenceErupts(new LinkedHashMap<>());
                     }
                     eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
                     break;
@@ -65,11 +65,17 @@ public class EruptBuildController {
         for (RowOperation operation : eruptBuildModel.getEruptModel().getErupt().rowOperation()) {
             if (operation.eruptClass() != void.class) {
                 if (eruptBuildModel.getOperationErupts() == null) {
-                    eruptBuildModel.setOperationErupts(new LinkedHashMap<>(0));
+                    eruptBuildModel.setOperationErupts(new LinkedHashMap<>());
                 }
                 eruptBuildModel.getOperationErupts().put(operation.code(), CoreService.getErupt(operation.eruptClass().getSimpleName()));
             }
         }
+//        for (Drill drill : eruptBuildModel.getEruptModel().getErupt().drills()) {
+//            if (eruptBuildModel.getDrillErupts() == null) {
+//                eruptBuildModel.setOperationErupts(new LinkedHashMap<>());
+//            }
+//            eruptBuildModel.getDrillErupts().put(drill.code(), CoreService.getErupt(drill.eruptClass().getSimpleName()));
+//        }
         return eruptBuildModel;
     }
 

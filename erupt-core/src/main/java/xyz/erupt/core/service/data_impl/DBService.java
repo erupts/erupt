@@ -52,8 +52,8 @@ public class DBService implements DataService {
     }
 
     @Override
-    public Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String customerCondition) {
-        return eruptJpaDao.queryEruptList(eruptModel, page, searchCondition, customerCondition);
+    public Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String customCondition) {
+        return eruptJpaDao.queryEruptList(eruptModel, page, searchCondition, customCondition);
     }
 
     @Override

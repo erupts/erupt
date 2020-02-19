@@ -120,6 +120,12 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     )
     private String html;
 
+    @EruptField(
+            views = @View(title = "地图"),
+            edit = @Edit(title = "地图", type = EditType.MAP)
+    )
+    private String map;
+
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "demo_id")
     @EruptField(
@@ -135,9 +141,8 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     private EruptUserService eruptUserService;
 
     @Override
-    public String beforeFetch(JsonObject condition) {
+    public void beforeFetch(JsonObject condition) {
         System.out.println(eruptUserService.getCurrentUid());
-        return null;
     }
 
     @Override

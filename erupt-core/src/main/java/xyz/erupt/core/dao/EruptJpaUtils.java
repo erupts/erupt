@@ -85,7 +85,7 @@ public class EruptJpaUtils {
         } else {
             hql.append("from " + eruptModel.getEruptName());
         }
-        hql.append(geneEruptHqlCondition(eruptModel, hqlModel.getSearchCondition(), hqlModel.getCustomerCondition()));
+        hql.append(geneEruptHqlCondition(eruptModel, hqlModel.getSearchCondition(), hqlModel.getCustomCondition()));
         if (!hqlModel.isCountSql()) {
             hql.append(geneEruptHqlOrderBy(eruptModel, hqlModel.getOrderBy()));
         }

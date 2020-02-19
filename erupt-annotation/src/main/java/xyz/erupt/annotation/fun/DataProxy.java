@@ -70,8 +70,8 @@ public interface DataProxy<MODEL> {
      * @param condition 用户输入条件
      * @return 自定义查询条件
      */
-    default String beforeFetch(JsonObject condition) {
-        return null;
+    default void beforeFetch(JsonObject condition) {
+
     }
 
     /**

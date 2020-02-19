@@ -79,10 +79,12 @@ public class DemoApplicationTests {
 
     @Test
     public void erupt() {
-        int i = 10000;
+        int i = 1000;
+        long start = System.currentTimeMillis();
         for (int i1 = 0; i1 < i; i1++) {
             CoreService.getErupt("Demo");
         }
+        System.out.println(((System.currentTimeMillis() - start) / 1000) + 's');
     }
 
     @Autowired
