@@ -89,8 +89,10 @@ public class DemoApplicationTests {
 
     @Autowired
     private EruptJobService eruptJobService;
+
     @Resource
     private DataSourceProperties dataSourceProperties;
+
     @Resource
     private Environment env;
 

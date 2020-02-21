@@ -61,7 +61,13 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "时间"),
-            edit = @Edit(title = "时间", search = @Search(value = true, vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "时间", type = EditType.DATE, search = @Search(true), dateType = @DateType(type = DateType.Type.TIME))
+    )
+    private String time1;
+
+    @EruptField(
+            views = @View(title = "时间日期"),
+            edit = @Edit(title = "时间日期", search = @Search(value = true, vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date date;
 

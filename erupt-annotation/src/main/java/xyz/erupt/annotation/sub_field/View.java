@@ -16,7 +16,7 @@ public @interface View {
     String column() default "";
 
     @EruptProperty(alias = "viewType")
-    ViewType type() default ViewType.TEXT;
+    ViewType type() default ViewType.AUTO;
 
     boolean show() default true;
 

@@ -3,17 +3,19 @@ package xyz.erupt.core.bean;
 import com.google.gson.JsonObject;
 import lombok.Data;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
-import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.util.AnnotationUtil;
-import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 
@@ -34,17 +36,17 @@ public class EruptFieldModel {
 
     private transient Field field;
 
-    private Map<String, String> choiceMap;
+    private transient String fieldReturnName;
 
     private String fieldName;
 
-    private String fieldReturnName;
+    private Map<String, String> choiceMap;
 
     private JsonObject eruptFieldJson;
 
     private Object value;
 
-    public EruptFieldModel(Field field) {
+    public EruptFieldModel(Field field, boolean serialize) {
         this.field = field;
         this.eruptField = field.getAnnotation(EruptField.class);
         Edit edit = eruptField.edit();
@@ -62,27 +64,22 @@ public class EruptFieldModel {
             case TAB_TABLE_REFER:
                 this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
                 break;
-            case CHOICE:
-                choiceMap = new HashMap<>();
-                for (VL vl : edit.choiceType().vl()) {
-                    choiceMap.put(vl.value(), vl.label());
-                }
-                for (Class<? extends ChoiceFetchHandler> cla : edit.choiceType().fetchHandler()) {
-                    Map<String, String> map = EruptSpringUtil.getBean(cla).fetch(edit.choiceType().fetchHandlerParams());
-                    if (null != map) {
-                        choiceMap.putAll(map);
-                    }
-                }
-                break;
             case DEPEND_SWITCH:
                 choiceMap = new HashMap<>();
                 for (DependSwitchType.Attr vl : edit.dependSwitchType().attr()) {
                     choiceMap.put(vl.value(), vl.label());
                 }
                 break;
+            case CHOICE:
+                choiceMap = new HashMap<>();
+                this.choiceMap = EruptUtil.getChoiceMap(edit.choiceType());
+                break;
         }
-        this.eruptAutoConfig();
-        this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
+        if (serialize) {
+            this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
+        } else {
+            this.eruptAutoConfig();
+        }
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
     }
@@ -95,14 +92,36 @@ public class EruptFieldModel {
     private void eruptAutoConfig() {
         try {
             // view auto
-//            for (View view : this.eruptField.views()) {
-//                if (ViewType.AUTO == view.type()) {
-//                    Map<String, Object> viewValues = getAnnotationMap(view);
-//                    viewValues.put(TYPE, ViewType.TEXT);
-//                }
-//            }
+            for (View view : this.eruptField.views()) {
+                if (ViewType.AUTO == view.type()) {
+                    Map<String, Object> viewValues = getAnnotationMap(view);
+                    if (!AnnotationConst.EMPTY_STR.equals(this.eruptField.edit().title())) {
+                        switch (this.eruptField.edit().type()) {
+                            case ATTACHMENT:
+                                if (this.eruptField.edit().attachmentType().type() == AttachmentType.Type.IMAGE) {
+                                    viewValues.put(TYPE, ViewType.IMAGE);
+                                } else {
+                                    viewValues.put(TYPE, ViewType.ATTACHMENT);
+                                }
+                                continue;
+                            case HTML_EDIT:
+                                viewValues.put(TYPE, ViewType.HTML);
+                                continue;
+                        }
+                    }
+                    if (JavaType.BOOLEAN.equals(this.fieldReturnName.toLowerCase())) {
+                        viewValues.put(TYPE, ViewType.BOOLEAN);
+                    } else if (JavaType.DATE.equals(this.fieldReturnName)) {
+                        viewValues.put(TYPE, ViewType.DATE);
+                    } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
+                        viewValues.put(TYPE, ViewType.NUMBER);
+                    } else {
+                        viewValues.put(TYPE, ViewType.TEXT);
+                    }
+                }
+            }
             // edit auto
-            if (!AnnotationConst.EMPTY_STR.equals(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
+            if (StringUtils.isNotBlank(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
                 Map<String, Object> editValues = getAnnotationMap(this.eruptField.edit());
                 //根据返回类型推断
                 if (JavaType.BOOLEAN.equals(this.fieldReturnName.toLowerCase())) {

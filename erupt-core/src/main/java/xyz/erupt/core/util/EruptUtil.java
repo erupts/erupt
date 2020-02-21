@@ -7,11 +7,14 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
+import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.bean.EruptApiModel;
 import xyz.erupt.core.bean.EruptFieldModel;
 import xyz.erupt.core.bean.EruptModel;
@@ -105,6 +108,20 @@ public class EruptUtil {
             throw new RuntimeException(e);
         }
         return map;
+    }
+
+    public static Map<String, String> getChoiceMap(ChoiceType choiceType) {
+        Map<String, String> choiceMap = new HashMap<>();
+        for (VL vl : choiceType.vl()) {
+            choiceMap.put(vl.value(), vl.label());
+        }
+        for (Class<? extends ChoiceFetchHandler> cla : choiceType.fetchHandler()) {
+            Map<String, String> map = EruptSpringUtil.getBean(cla).fetch(choiceType.fetchHandlerParams());
+            if (null != map) {
+                choiceMap.putAll(map);
+            }
+        }
+        return choiceMap;
     }
 
     //请求参数转换

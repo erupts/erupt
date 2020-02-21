@@ -29,7 +29,7 @@ public class PublicMark extends BaseModel {
     private String rawId;
 
     @EruptField(
-            views = @View(title = "标志", type = ViewType.IMAGE),
+            views = @View(title = "标志"),
             edit = @Edit(title = "标志", type = EditType.ATTACHMENT, attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE))
     )
     private String img;

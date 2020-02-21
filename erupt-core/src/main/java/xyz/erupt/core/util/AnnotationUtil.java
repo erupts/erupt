@@ -3,10 +3,7 @@ package xyz.erupt.core.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
-import xyz.erupt.annotation.config.EruptProperty;
-import xyz.erupt.annotation.config.SerializeBy;
-import xyz.erupt.annotation.config.ToMap;
-import xyz.erupt.annotation.config.Volatile;
+import xyz.erupt.annotation.config.*;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.FilterHandler;
@@ -17,6 +14,9 @@ import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.service.data_impl.DBService;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -62,16 +62,16 @@ public class AnnotationUtil {
         }
     }
 
+    private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("js");
+
+    private static final String VALUE_VAR = "value";
+
+    private static final String ITEM_VAR = "item";
+
+    //耗时操作，勿频繁调用
     private static JsonObject annotationToJson(Annotation annotation)
-            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException, ScriptException {
         JsonObject jsonObject = new JsonObject();
-//        NotBlank notBlank = annotation.annotationType().getAnnotation(NotBlank.class);
-//        if (null != notBlank) {
-//            String val = (String) annotation.annotationType().getDeclaredMethod(notBlank.value()).invoke(annotation);
-//            if (StringUtils.isBlank(val)) {
-//                return null;
-//            }
-//        }
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
             if (null != tran && tran.value()) {
@@ -91,6 +91,18 @@ public class AnnotationUtil {
             }
             String returnType = method.getReturnType().getSimpleName();
             Object result = method.invoke(annotation);
+            Match match = method.getAnnotation(Match.class);
+            if (null != match) {
+                //创建ScriptEngine成本太高，所以设置为全局变量，同时保证线程安全
+                synchronized (engine) {
+                    engine.put(VALUE_VAR, result);
+                    engine.put(ITEM_VAR, annotation);
+                    Boolean bool = (Boolean) engine.eval(String.format("!!(%s)", match.value()));
+                    if (!bool) {
+                        continue;
+                    }
+                }
+            }
             Volatile vol = method.getAnnotation(Volatile.class);
             if (null != vol) {
                 jsonObject.add(methodName, vol.value().newInstance().exec(method.invoke(annotation), annotation));

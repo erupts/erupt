@@ -35,6 +35,7 @@ public @interface Edit {
 
     EditType type() default EditType.AUTO;
 
+    //@Match("item.type()=='INPUT'")
     @SerializeBy(method = "type", value = "INPUT")
     InputType inputType() default @InputType;
 
@@ -43,9 +44,6 @@ public @interface Edit {
 
     @SerializeBy(method = "type", value = "BOOLEAN")
     BoolType boolType() default @BoolType(trueText = "是", falseText = "否");
-
-    @Transient
-    Html htmlType() default @Html;
 
     @SerializeBy(method = "type", value = "CHOICE")
     ChoiceType choiceType() default @ChoiceType;
@@ -70,5 +68,8 @@ public @interface Edit {
 
     @SerializeBy(method = "type", value = "CODE_EDITOR")
     CodeEditorType codeEditType() default @CodeEditorType(language = "text");
+
+    @Transient
+    Html htmlType() default @Html;
 
 }

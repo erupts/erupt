@@ -4,6 +4,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
@@ -26,13 +27,13 @@ public class EruptDictItem extends BaseModel {
 
     @EruptField(
             views = @View(title = "键"),
-            edit = @Edit(title = "键", notNull = true)
+            edit = @Edit(title = "键", notNull = true, search = @Search(true))
     )
     private String code;
 
     @EruptField(
             views = @View(title = "值"),
-            edit = @Edit(title = "值", notNull = true)
+            edit = @Edit(title = "值", notNull = true, search = @Search(value = true, vague = true))
     )
     private String value;
 

@@ -26,7 +26,7 @@ public class EruptBuildController {
     @ResponseBody
     @EruptRouter(authIndex = 1)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName) {
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
+        EruptModel eruptModel = CoreService.getEruptView(eruptName);
         EruptBuildModel eruptBuildModel = new EruptBuildModel();
         eruptBuildModel.setEruptModel(eruptModel);
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
@@ -36,7 +36,7 @@ public class EruptBuildController {
                         eruptBuildModel.setTabErupts(new LinkedHashMap<>());
                     }
                     EruptBuildModel eruptBuildModel1 = new EruptBuildModel();
-                    eruptBuildModel1.setEruptModel(CoreService.getErupt(fieldModel.getFieldReturnName()));
+                    eruptBuildModel1.setEruptModel(CoreService.getEruptView(fieldModel.getFieldReturnName()));
                     eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), eruptBuildModel1);
                     break;
                 case TAB_TABLE_ADD:
@@ -50,13 +50,13 @@ public class EruptBuildController {
                     if (eruptBuildModel.getCombineErupts() == null) {
                         eruptBuildModel.setCombineErupts(new LinkedHashMap<>());
                     }
-                    eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
+                    eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), CoreService.getEruptView(fieldModel.getFieldReturnName()));
                     break;
                 case REFERENCE_TABLE:
                     if (eruptBuildModel.getReferenceErupts() == null) {
                         eruptBuildModel.setReferenceErupts(new LinkedHashMap<>());
                     }
-                    eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), CoreService.getErupt(fieldModel.getFieldReturnName()));
+                    eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), CoreService.getEruptView(fieldModel.getFieldReturnName()));
                     break;
                 default:
                     break;
@@ -67,7 +67,7 @@ public class EruptBuildController {
                 if (eruptBuildModel.getOperationErupts() == null) {
                     eruptBuildModel.setOperationErupts(new LinkedHashMap<>());
                 }
-                eruptBuildModel.getOperationErupts().put(operation.code(), CoreService.getErupt(operation.eruptClass().getSimpleName()));
+                eruptBuildModel.getOperationErupts().put(operation.code(), CoreService.getEruptView(operation.eruptClass().getSimpleName()));
             }
         }
 //        for (Drill drill : eruptBuildModel.getEruptModel().getErupt().drills()) {
@@ -78,5 +78,17 @@ public class EruptBuildController {
 //        }
         return eruptBuildModel;
     }
+
+    @GetMapping("/{erupt}/{subErupt}")
+    @ResponseBody
+    @EruptRouter(authIndex = 1)
+    public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName,
+                                         @PathVariable("subErupt") String subEruupt) {
+//        Class clazz = CoreService.getEruptClass(eruptName);
+
+
+        return null;
+    }
+
 
 }

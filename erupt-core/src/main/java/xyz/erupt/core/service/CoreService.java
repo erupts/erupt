@@ -1,7 +1,10 @@
 package xyz.erupt.core.service;
 
-import org.springframework.beans.factory.InitializingBean;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
@@ -23,27 +26,27 @@ import java.util.Map;
  * @author liyuepeng
  * @date 9/28/18.
  */
+@Order(1)
 @Service
-public class CoreService implements InitializingBean {
+@Log
+public class CoreService implements ApplicationRunner {
 
     @Autowired
     private EruptConfig eruptConfig;
 
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
-    private static final Map<String, Class> ERUPT_CLASSES = new LinkedCaseInsensitiveMap<>();
-
     public static EruptModel getErupt(String eruptName) {
-        Class clazz = ERUPT_CLASSES.get(eruptName);
-        if (null != clazz) {
-            return initEruptModel(clazz);
-        }
-        return null;
+        return ERUPTS.get(eruptName);
     }
 
-    private static EruptModel initEruptModel(Class clazz) {
+    public static EruptModel getEruptView(String eruptName) {
+        return initEruptModel(ERUPTS.get(eruptName).getClazz(), true);
+    }
+
+    private static EruptModel initEruptModel(Class clazz, boolean serialize) {
         //erupt domain info to memory
-        EruptModel eruptModel = new EruptModel(clazz);
+        EruptModel eruptModel = new EruptModel(clazz, serialize);
         // erupt field info to memory
         {
             List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
@@ -55,7 +58,7 @@ public class CoreService implements InitializingBean {
                     ReflectUtil.findClassAllFields(clazz, field -> {
                         if (null != field.getAnnotation(EruptField.class)) {
                             try {
-                                EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
+                                EruptFieldModel eruptFieldModel = new EruptFieldModel(field, serialize);
                                 field.setAccessible(true);
                                 eruptFieldModel.setValue(field.get(eruptObject));
                                 eruptFieldModels.add(eruptFieldModel);
@@ -77,14 +80,14 @@ public class CoreService implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() {
-        EruptSpringUtil.scannerPackage(eruptConfig.getScannerPackage(), new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)}, clazz -> {
-            ERUPT_CLASSES.put(clazz.getSimpleName(), clazz);
+    public void run(ApplicationArguments args) throws Exception {
+        EruptSpringUtil.scannerPackage(eruptConfig.getScannerPackage(), new TypeFilter[]{
+                new AnnotationTypeFilter(Erupt.class)
+        }, clazz -> {
             //other info to memory
-            //EruptModel eruptModel = initEruptModel(clazz);
-            //ERUPTS.put(eruptModel.getEruptName(), eruptModel);
+            EruptModel eruptModel = initEruptModel(clazz, false);
+            ERUPTS.put(eruptModel.getEruptName(), eruptModel);
         });
-
+        log.info("Erupt initialization complete");
     }
-
 }

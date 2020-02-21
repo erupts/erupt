@@ -27,13 +27,12 @@ public class EruptModel {
 
     private transient Map<String, EruptFieldModel> eruptFieldMap;
 
-    public EruptModel(Class<?> eruptClazz) {
+    public EruptModel(Class<?> eruptClazz, boolean serialize) {
         this.clazz = eruptClazz;
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.eruptName = eruptClazz.getSimpleName();
-        this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
-    }
-
-    public EruptModel() {
+        if (serialize) {
+            this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
+        }
     }
 }
