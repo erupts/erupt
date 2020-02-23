@@ -31,7 +31,7 @@ public @interface EruptRouter {
     enum VerifyType {
         //仅验证登录
         LOGIN,
-        //验证erupt与登录
+        //验证登录与erupt
         ERUPT,
         //验证登录与菜单权限
         MENU

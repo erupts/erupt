@@ -15,11 +15,13 @@ import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.service.CoreService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 import static xyz.erupt.core.constant.RestPath.ERUPT_API;
 
 /**
  * Erupt 页面结构构建信息
+ *
  * @author liyuepeng
  * @date 2018-09-28.
  */
@@ -32,28 +34,28 @@ public class EruptTplController {
 
     private static final String HTML = ".html";
 
+
+    @GetMapping(value = "/{tpl}", produces = {"text/html;charset=utf-8"})
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public String getEruptFieldHtml(@PathVariable("tpl") String tpl, HttpServletResponse response) {
+        try {
+            if (!tpl.endsWith(HTML)) {
+                tpl += HTML;
+            }
+            Resource resource = new ClassPathResource("tpl/" + tpl);
+            return FileUtils.readFileToString(resource.getFile());
+        } catch (IOException e) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        }
+    }
+
     @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=utf-8"})
     @ResponseBody
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU)
     public String getEruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         return execTemplate(eruptModel.getEruptFieldMap().get(field).getEruptField().edit().htmlType());
-    }
-
-    @GetMapping(value = "/html/{name}", produces = {"text/html;charset=utf-8"})
-    @ResponseBody
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU)
-    public String getEruptHtml(@PathVariable("name") String name, HttpServletResponse response) {
-        try {
-            if (!name.endsWith(HTML)) {
-                name += HTML;
-            }
-            Resource resource = new ClassPathResource("tpl/" + name);
-            return FileUtils.readFileToString(resource.getFile());
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
-        }
     }
 
 //    @GetMapping(value = "/html/{erupt}/{field}", produces = {"text/html;charset=utf-8"})

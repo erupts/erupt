@@ -52,10 +52,10 @@ public class EruptMenu extends BaseModel {
                     inputType = @InputType(
                             prefix = {
                                     @VL(value = "/build/table/", label = "表格"),
-                                    @VL(value = "/build/tree/", label = "树", desc = "-1"),
-                                    @VL(value = "/page?tpl=", label = "模板", desc = "使用此功能需要导入tpl模块"),
-                                    @VL(value = "/page?&site=", label = "链接"),
-                                    @VL(value = "/page?target=blank&site=", label = "新页签"),
+                                    @VL(value = "/build/tree/", label = "树"),
+                                    @VL(value = "/build/tpl/", label = "模板", desc = "使用此功能需要导入tpl模块"),
+                                    @VL(value = "/site?&url=", label = "链接"),
+                                    @VL(value = "/site?target=blank&url=", label = "新页签"),
                                     @VL(value = "/build/bi/", label = "报表", desc = "此功能需要导入bi模块"),
                                     @VL(value = "/", label = "/", desc = "其他"),
                             }
