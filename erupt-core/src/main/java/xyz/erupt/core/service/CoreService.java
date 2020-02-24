@@ -88,6 +88,6 @@ public class CoreService implements ApplicationRunner {
             EruptModel eruptModel = initEruptModel(clazz, false);
             ERUPTS.put(eruptModel.getEruptName(), eruptModel);
         });
-        log.info("Erupt initialization complete");
+        log.info("Erupt core initialization complete");
     }
 }

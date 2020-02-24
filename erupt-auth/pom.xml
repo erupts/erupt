@@ -24,24 +24,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>${erupt.groupId}</groupId>
-            <artifactId>erupt-annotation</artifactId>
-            <version>${erupt.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-core</artifactId>
             <version>${erupt.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${erupt.groupId}</groupId>
-            <artifactId>erupt-tool</artifactId>
-            <version>${erupt.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>

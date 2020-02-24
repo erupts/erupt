@@ -41,7 +41,7 @@ public class BiChart extends BaseModel {
     @EruptField(
             views = @View(title = "栅格数"),
             edit = @Edit(title = "栅格数", type = EditType.SLIDER, desc = "单行可以显示的图表数量",
-                    sliderType = @SliderType(max = 24, markPoints = {1, 2, 3, 4, 6, 8, 12}, dots = true))
+                    sliderType = @SliderType(max = 12, markPoints = {1, 2, 3, 4, 6, 8, 12}, dots = true))
     )
     private Integer grid = 1;
 
