@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,13 +49,17 @@ public class EruptDao {
 
     //不存在则新增
     public void persistIfNotExist(Object obj, String field, String val) {
-        List list = queryObjectList(obj.getClass(), field + EQU + "'" + val + "'", field);
+        List list = queryObjectList(obj.getClass(), field + EQU + " :val", new HashMap<String, Object>(1) {
+            {
+                this.put("val", val);
+            }
+        });
         if (list.isEmpty()) {
             entityManager.persist(obj);
         }
     }
 
-    private Query simpleQuery(Class eruptClass, boolean isMap, String expr, String... cols) {
+    private Query simpleQuery(Class eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
         StringBuilder sb = new StringBuilder();
         if (cols.length > 0) {
             sb.append(SELECT);
@@ -71,32 +76,38 @@ public class EruptDao {
             }
         }
         expr = StringUtils.isBlank(expr) ? "" : WHERE + expr;
-        return entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() + expr);
+        Query query = entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() + expr);
+        if (null != paramMap) {
+            for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+        }
+        return query;
     }
 
     //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
-    public List<Map<String, Object>> queryMapList(Class eruptClass, String expr, String... cols) {
-        return simpleQuery(eruptClass, true, expr, cols).getResultList();
+    public List<Map<String, Object>> queryMapList(Class eruptClass, String expr, Map<String, Object> param, String... cols) {
+        return simpleQuery(eruptClass, true, expr, param, cols).getResultList();
     }
 
-    public List<Object[]> queryObjectList(Class eruptClass, String expr, String... cols) {
-        return simpleQuery(eruptClass, false, expr, cols).getResultList();
+    public List<Object[]> queryObjectList(Class eruptClass, String expr, Map<String, Object> param, String... cols) {
+        return simpleQuery(eruptClass, false, expr, param, cols).getResultList();
     }
 
-    public <T> List<T> queryEntityList(Class<T> eruptClass, String expr) {
-        return simpleQuery(eruptClass, false, expr).getResultList();
+    public <T> List<T> queryEntityList(Class<T> eruptClass, String expr, Map<String, Object> param) {
+        return simpleQuery(eruptClass, false, expr, param).getResultList();
     }
 
-    public Map<String, Object> queryMap(Class eruptClass, String expr, String... cols) throws NoResultException, NonUniqueResultException {
-        return (Map<String, Object>) simpleQuery(eruptClass, true, expr, cols).getSingleResult();
+    public Map<String, Object> queryMap(Class eruptClass, String expr, Map<String, Object> param, String... cols) throws NoResultException, NonUniqueResultException {
+        return (Map<String, Object>) simpleQuery(eruptClass, true, expr, param, cols).getSingleResult();
     }
 
-    public Object[] queryObject(Class eruptClass, String expr, String... cols) throws NoResultException, NonUniqueResultException {
-        return (Object[]) simpleQuery(eruptClass, false, expr, cols).getSingleResult();
+    public Object[] queryObject(Class eruptClass, String expr, Map<String, Object> param, String... cols) throws NoResultException, NonUniqueResultException {
+        return (Object[]) simpleQuery(eruptClass, false, expr, param, cols).getSingleResult();
     }
 
-    public <T> T queryEntity(Class<T> eruptClass, String expr) throws NoResultException, NonUniqueResultException {
-        return (T) simpleQuery(eruptClass, false, expr).getSingleResult();
+    public <T> T queryEntity(Class<T> eruptClass, String expr, Map<String, Object> param) throws NoResultException, NonUniqueResultException {
+        return (T) simpleQuery(eruptClass, false, expr, param).getSingleResult();
     }
 
 }

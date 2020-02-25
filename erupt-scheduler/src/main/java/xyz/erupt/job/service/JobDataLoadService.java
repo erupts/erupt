@@ -29,7 +29,7 @@ public class JobDataLoadService implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-        List<EruptJob> list = eruptDao.queryEntityList(EruptJob.class, "status = true");
+        List<EruptJob> list = eruptDao.queryEntityList(EruptJob.class, "status = true", null);
         for (EruptJob job : list) {
             eruptJobService.modifyJob(job);
         }

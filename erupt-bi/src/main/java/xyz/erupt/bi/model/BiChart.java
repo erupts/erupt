@@ -13,14 +13,17 @@ import xyz.erupt.annotation.sub_field.sub_edit.SliderType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.model.BaseModel;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * @author liyuepeng
  * @date 2019-12-24.
  */
 @Entity
-@Table(name = "E_BI_CHART")
+@Table(name = "E_BI_CHART", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "图表配置")
 @Getter
 @Setter
@@ -67,14 +70,32 @@ public class BiChart extends BaseModel {
      */
     @EruptField(
             views = @View(title = "图表类型"),
-            edit = @Edit(title = "图表类型", notNull = true
-                    , type = EditType.CHOICE, choiceType = @ChoiceType(vl = @VL(label = "饼形图", value = "pie")))
+            edit = @Edit(title = "图表类型", notNull = true, desc = "图表参考：antv", type = EditType.CHOICE, choiceType = @ChoiceType(
+                    vl = {
+                            //------------
+                            @VL(label = "折线图", value = "Line"),
+                            @VL(label = "阶梯折线图", value = "StepLine"),
+                            @VL(label = "柱状图", value = "Column"),
+                            @VL(label = "面积图", value = "Area"),
+                            //------------
+                            @VL(label = "饼图", value = "Pie"),
+                            @VL(label = "环形图", value = "Ring"),
+                            @VL(label = "玫瑰图", value = "Rose"),
+                            //------------
+                            @VL(label = "漏斗图", value = "Funnel"),
+                            @VL(label = "雷达图", value = "Radar"),
+                            @VL(label = "词云", value = "WordCloud"),
+                            //------------
+                            @VL(label = "散点图", value = "Scatter"),
+                            @VL(label = "热力图", value = "Heatmap"),
+                    }
+            ))
     )
     private String type;
 
     @Lob
     @EruptField(
-            edit = @Edit(title = "图表sql", type = EditType.TEXTAREA)
+            edit = @Edit(title = "图表sql", type = EditType.TEXTAREA, notNull = true)
     )
     private String sqlStatement;
 
@@ -83,9 +104,5 @@ public class BiChart extends BaseModel {
             edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照echarts", type = EditType.TEXTAREA)
     )
     private String chartOption;
-
-    @ManyToOne
-    @JoinColumn(name = "BI_ID")
-    private Bi bi;
 
 }

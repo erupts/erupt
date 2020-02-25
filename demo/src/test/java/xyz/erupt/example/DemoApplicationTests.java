@@ -51,7 +51,7 @@ public class DemoApplicationTests {
 
     @Test
     public void eruptDaoObj() {
-        Object[] oo = eruptDao.queryObject(EruptUser.class, "account = 'erupt'", "id", "name");
+        Object[] oo = eruptDao.queryObject(EruptUser.class, "account = 'erupt'", null, "id", "name");
         System.out.println(oo[0] + ":" + oo[1]);
     }
 
@@ -59,7 +59,7 @@ public class DemoApplicationTests {
     public void eruptDaoMap() {
         try {
             Map<String, Object> map = eruptDao.queryMap(EruptUser.class,
-                    "account = '2222'", "id", "name");
+                    "account = '2222'", null, "id", "name");
             for (String s : map.keySet()) {
                 System.out.println(s + ":" + map.get(s));
             }
@@ -71,7 +71,7 @@ public class DemoApplicationTests {
 
     @Test
     public void eruptDao() {
-        List<EruptUser> list = eruptDao.queryEntityList(EruptUser.class, "1=1 order by account desc");
+        List<EruptUser> list = eruptDao.queryEntityList(EruptUser.class, "1=1 order by account desc", null);
         for (EruptUser user : list) {
             System.out.println(user.getAccount());
         }

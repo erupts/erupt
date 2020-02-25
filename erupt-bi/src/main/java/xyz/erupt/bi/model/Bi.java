@@ -57,15 +57,15 @@ public class Bi extends BaseModel {
 
     @Lob
     @EruptField(
-            edit = @Edit(title = "SQL语句", type = EditType.TEXTAREA, notNull = true)
+            edit = @Edit(title = "SQL语句", type = EditType.TEXTAREA)
     )
     private String sqlStatement;
 
-    @Lob
-    @EruptField(
-            edit = @Edit(title = "总条数sql", type = EditType.TEXTAREA)
-    )
-    private String countSql;
+//    @Lob
+//    @EruptField(
+//            edit = @Edit(title = "总条数sql", type = EditType.TEXTAREA)
+//    )
+//    private String countSql;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "BI_ID")

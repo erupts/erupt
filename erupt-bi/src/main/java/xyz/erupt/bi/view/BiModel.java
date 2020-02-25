@@ -17,7 +17,9 @@ public class BiModel {
 
     private String code;
 
-    private Boolean export;
+    private boolean export;
+
+    private boolean table = true;
 
     private List<BiDimension> dimensions;
 

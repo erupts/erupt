@@ -7,12 +7,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.bi.model.Bi;
+import xyz.erupt.bi.model.BiChart;
 import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.tool.EruptDao;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.sql.ResultSetMetaData;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +37,17 @@ public class BiService {
 
     private static final String EXPRESS_PATTERN = "(?<=\\$\\{)(.+?)(?=\\})";
 
+
+    public Bi findBi(String code) {
+        return eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {
+            {
+                this.put("code", code);
+            }
+        });
+    }
+
     public List<Map<String, Object>> startQuery(String code, Map<String, Object> query) {
-        Bi bi = eruptDao.queryEntity(Bi.class, String.format("code = '%s'", code));
+        Bi bi = findBi(code);
         String express = processPlaceHolder(bi.getSqlStatement(), query);
         NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate(bi.getDataSource());
         return jdbcQuery(jdbcTemplate, express, query);
@@ -73,10 +84,22 @@ public class BiService {
         });
     }
 
+    public List<Map<String, Object>> chartQuery(String code, String chartCode, Map<String, Object> param) {
+        Bi bi = findBi(code);
+        for (BiChart chart : bi.getBiCharts()) {
+            if (chartCode.equals(chart.getCode())) {
+                String exp = processPlaceHolder(chart.getSqlStatement(), param);
+                NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate(bi.getDataSource());
+                return jdbcQuery(jdbcTemplate, exp, param);
+            }
+        }
+        return null;
+    }
+
     @SneakyThrows
     private String processPlaceHolder(String express, Map<String, Object> param) {
         Matcher m = Pattern.compile(EXPRESS_PATTERN).matcher(express);
-        ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("javascript");
+        ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("js");
         if (null != param) {
             for (Map.Entry<String, Object> entry : param.entrySet()) {
                 scriptEngine.put(entry.getKey(), param.get(entry.getKey()));

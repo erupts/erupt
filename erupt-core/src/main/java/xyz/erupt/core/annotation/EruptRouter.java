@@ -10,13 +10,12 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Documented
 public @interface EruptRouter {
-//    boolean base64() default false;
-
-    VerifyType verifyType() default VerifyType.ERUPT;
 
     int authIndex();
 
     int skipAuthIndex() default 1;
+
+    VerifyType verifyType() default VerifyType.ERUPT;
 
     //权限数据传值方式，默认为放到请求头中
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;
@@ -24,7 +23,7 @@ public @interface EruptRouter {
     enum VerifyMethod {
         //token必须放在请求头
         HEADER,
-        //token必须放到URL参数中
+        //token必须放在URL参数中
         PARAM
     }
 
