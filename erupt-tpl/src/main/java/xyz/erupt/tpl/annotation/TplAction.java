@@ -14,6 +14,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface TplAction {
 
-    String mapping() default "";
+    String value();
 
 }

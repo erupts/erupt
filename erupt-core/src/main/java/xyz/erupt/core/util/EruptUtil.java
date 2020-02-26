@@ -111,7 +111,7 @@ public class EruptUtil {
     }
 
     public static Map<String, String> getChoiceMap(ChoiceType choiceType) {
-        Map<String, String> choiceMap = new HashMap<>();
+        Map<String, String> choiceMap = new LinkedHashMap<>();
         for (VL vl : choiceType.vl()) {
             choiceMap.put(vl.value(), vl.label());
         }

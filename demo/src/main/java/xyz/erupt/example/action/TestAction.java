@@ -12,11 +12,11 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2020-02-24
  */
-@EruptTpl(engine = EruptTpl.Tpl.FreeMarker)
+@EruptTpl(engine = EruptTpl.Engine.FreeMarker)
 @Service
 public class TestAction {
 
-    @TplAction
+    @TplAction("dashboard")
     public Map<String, Object> dashboard() {
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> mp = new LinkedHashMap<>();

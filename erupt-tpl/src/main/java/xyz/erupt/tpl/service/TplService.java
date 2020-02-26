@@ -57,7 +57,7 @@ public class TplService implements ApplicationRunner {
             for (Method method : clazz.getDeclaredMethods()) {
                 TplAction tplAction = method.getAnnotation(TplAction.class);
                 if (null != tplAction) {
-                    tplActions.put(method.getName(), clazz);
+                    tplActions.put(tplAction.value(), clazz);
                 }
             }
         });

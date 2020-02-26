@@ -55,6 +55,7 @@ public class EruptTplController {
         Resource resource = new ClassPathResource(TPL + "/" + fileName);
         String tpl = FileUtils.readFileToString(resource.getFile());
         Class clazz = tplService.getAction(name);
+        response.setCharacterEncoding("UTF-8");
         if (null != clazz) {
             Object obj = EruptSpringUtil.getBean(clazz);
             Map<String, Object> data = (Map<String, Object>) clazz.getMethod(name).invoke(obj);

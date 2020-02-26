@@ -12,9 +12,9 @@ import java.lang.annotation.*;
 @Inherited
 public @interface EruptTpl {
 
-    Tpl engine() default Tpl.Thymeleaf;
+    Engine engine() default Engine.Thymeleaf;
 
-    enum Tpl {
+    enum Engine {
         FreeMarker,
         Thymeleaf
     }
