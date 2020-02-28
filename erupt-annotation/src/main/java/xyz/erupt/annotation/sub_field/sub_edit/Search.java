@@ -7,6 +7,8 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 public @interface Search {
     boolean value();
 
+    boolean notNull() default false;
+
     //vague支持类型：INPUT CHOICE SLIDER DATE TEXTAREA
     boolean vague() default false;
 }

@@ -15,10 +15,10 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.core.bean.EruptApiModel;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -198,6 +198,11 @@ public class EruptUtil {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             Edit edit = field.getEruptField().edit();
             JsonElement value = jsonObject.get(field.getFieldName());
+            if (field.getEruptField().edit().readOnly()) {
+                if (null != value) {
+                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "只读");
+                }
+            }
             if (field.getEruptField().edit().notNull()) {
                 if (null == value) {
                     return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");

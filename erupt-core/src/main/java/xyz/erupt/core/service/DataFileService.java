@@ -15,13 +15,13 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.bean.Page;
-import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.HttpUtil;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.TreeModel;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

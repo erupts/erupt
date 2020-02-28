@@ -1,4 +1,4 @@
-package xyz.erupt.core.bean;
+package xyz.erupt.core.view;
 
 import lombok.Getter;
 import lombok.Setter;

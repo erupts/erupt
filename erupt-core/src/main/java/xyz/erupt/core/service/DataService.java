@@ -1,9 +1,9 @@
 package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
-import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.bean.Page;
-import xyz.erupt.core.bean.TreeModel;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.TreeModel;
 
 import java.io.Serializable;
 import java.util.Collection;

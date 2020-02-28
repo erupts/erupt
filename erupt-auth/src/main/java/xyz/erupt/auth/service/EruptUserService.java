@@ -19,8 +19,8 @@ import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.repository.UserRepository;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.auth.util.MD5Utils;
-import xyz.erupt.core.bean.EruptApiModel;
-import xyz.erupt.core.bean.EruptModel;
+import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.EruptModel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

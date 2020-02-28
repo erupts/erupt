@@ -15,10 +15,10 @@ import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.auth.service.SessionService;
 import xyz.erupt.auth.util.IdentifyCode;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.bean.EruptApiModel;
-import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.util.DataHandlerUtil;
+import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.TreeModel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

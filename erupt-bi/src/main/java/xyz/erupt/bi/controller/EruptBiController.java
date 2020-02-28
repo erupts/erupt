@@ -36,8 +36,6 @@ public class EruptBiController {
     @Autowired
     private BiService biService;
 
-    private static final Integer MAX_SORT = 9999;
-
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     public BiModel getBuilder(@PathVariable("code") String code) {
@@ -53,16 +51,17 @@ public class EruptBiController {
             biModel.setTable(true);
         }
         biModel.setExport(bi.getExport());
+        int maxSort = 9999;
         for (BiChart chart : bi.getBiCharts()) {
             chart.setSqlStatement(null);
             if (chart.getSort() == null) {
-                chart.setSort(MAX_SORT);
+                chart.setSort(++maxSort);
             }
         }
         for (BiDimension dimension : bi.getBiDimension()) {
             dimension.setRefSql(null);
             if (dimension.getSort() == null) {
-                dimension.setSort(MAX_SORT);
+                dimension.setSort(++maxSort);
             }
         }
         biModel.setCode(bi.getCode());

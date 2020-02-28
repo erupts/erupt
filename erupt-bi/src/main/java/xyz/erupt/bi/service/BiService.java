@@ -4,11 +4,9 @@ import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiChart;
-import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.tool.EruptDao;
 
 import javax.script.ScriptEngine;
@@ -33,6 +31,9 @@ public class BiService {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
+    private BiDataSourceService dataSourceService;
+
+    @Autowired
     private EruptDao eruptDao;
 
     private static final String EXPRESS_PATTERN = "(?<=\\$\\{)(.+?)(?=\\})";
@@ -49,7 +50,7 @@ public class BiService {
     public List<Map<String, Object>> startQuery(String code, Map<String, Object> query) {
         Bi bi = findBi(code);
         String express = processPlaceHolder(bi.getSqlStatement(), query);
-        NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate(bi.getDataSource());
+        NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
         return jdbcQuery(jdbcTemplate, express, query);
     }
 
@@ -58,18 +59,6 @@ public class BiService {
         return jdbcQuery(jdbcTemplate, express, query);
     }
 
-    private NamedParameterJdbcTemplate getJdbcTemplate(BiDataSource biDataSource) {
-        if (null == biDataSource) {
-            return jdbcTemplate;
-        } else {
-            DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setDriverClassName(biDataSource.getDriver());
-            dataSource.setUrl(biDataSource.getUrl());
-            dataSource.setPassword(biDataSource.getPassword());
-            dataSource.setUsername(biDataSource.getUserName());
-            return new NamedParameterJdbcTemplate(dataSource);
-        }
-    }
 
     private List<Map<String, Object>> jdbcQuery(NamedParameterJdbcTemplate jdbcTemplate, String express, Map<String, Object> query) {
         log.info(express);
@@ -89,7 +78,7 @@ public class BiService {
         for (BiChart chart : bi.getBiCharts()) {
             if (chartCode.equals(chart.getCode())) {
                 String exp = processPlaceHolder(chart.getSqlStatement(), param);
-                NamedParameterJdbcTemplate jdbcTemplate = getJdbcTemplate(bi.getDataSource());
+                NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
                 return jdbcQuery(jdbcTemplate, exp, param);
             }
         }

@@ -83,7 +83,7 @@
         <repository>
             <id>wings-times</id>
             <name>wings-times-releases</name>
-            <url>http://192.168.1.188:8081/artifactory/libs-release-local</url>
+            <url>http://192.168.1.189:8081/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
 </project>

@@ -11,10 +11,6 @@ import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.bean.Page;
-import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.dao.EruptJpaUtils;
 import xyz.erupt.core.service.CoreService;
@@ -22,9 +18,16 @@ import xyz.erupt.core.service.DataService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.TreeModel;
 import xyz.erupt.tool.EruptDao;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -97,23 +100,6 @@ public class DBService implements DataService {
     @Override
     public void editData(EruptModel eruptModel, Object data) throws Exception {
         try {
-            //没有用eruptField修饰但是使用了hibernate管理的字段 设置为数据库原有存储值
-            Object entity = entityManager.find(eruptModel.getClazz(),
-                    ReflectUtil.findClassField(data.getClass(), eruptModel.getErupt().primaryKeyCol()).get(data));
-            ReflectUtil.findClassAllFields(entity.getClass(), field -> {
-                try {
-                    EruptField eruptField = field.getAnnotation(EruptField.class);
-                    if ((null != eruptField && AnnotationConst.EMPTY_STR.equals(eruptField.edit().title()))
-                            || (null == eruptField && null == field.getAnnotation(Transient.class))) {
-                        field.setAccessible(true);
-                        Field dataField = ReflectUtil.findClassField(eruptModel.getClazz(), field.getName());
-                        dataField.setAccessible(true);
-                        dataField.set(data, field.get(entity));
-                    }
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            });
             eruptJpaDao.editEntity(data);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();

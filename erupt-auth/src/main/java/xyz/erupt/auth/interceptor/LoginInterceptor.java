@@ -10,9 +10,9 @@ import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

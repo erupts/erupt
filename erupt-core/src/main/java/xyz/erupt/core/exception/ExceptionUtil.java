@@ -1,8 +1,8 @@
 package xyz.erupt.core.exception;
 
 import org.fusesource.jansi.Ansi;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
 
 import static org.fusesource.jansi.Ansi.ansi;
 

@@ -5,11 +5,11 @@ import com.google.gson.JsonObject;
 import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.bean.HqlBean;
-import xyz.erupt.core.bean.Page;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.HqlBean;
+import xyz.erupt.core.view.Page;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

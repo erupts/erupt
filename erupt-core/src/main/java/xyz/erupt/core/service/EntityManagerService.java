@@ -7,8 +7,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.annotation.EruptDataSource;
-import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.config.EruptConfig;
+import xyz.erupt.core.view.EruptModel;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;

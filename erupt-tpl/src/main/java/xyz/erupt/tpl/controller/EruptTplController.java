@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.service.TplService;
 

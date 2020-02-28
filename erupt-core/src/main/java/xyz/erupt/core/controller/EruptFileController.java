@@ -11,14 +11,14 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.bean.EruptApiModel;
-import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.MimeUtil;
+import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.EruptModel;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;

@@ -6,6 +6,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.bi.service.BiDataSourceService;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "E_BI_DATASOURCE", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "数据源")
+@Erupt(name = "数据源", dataProxy = BiDataSourceService.class)
 @Data
 public class BiDataSource extends BaseModel {
 

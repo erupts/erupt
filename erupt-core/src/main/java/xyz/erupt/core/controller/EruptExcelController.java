@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.bean.EruptApiModel;
-import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.bean.Page;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.DataFileService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
+import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.Page;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

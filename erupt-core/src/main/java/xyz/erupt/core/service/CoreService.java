@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Map;
 @Order(1)
 @Service
 @Log
-public class CoreService implements ApplicationRunner {
+public final class CoreService implements ApplicationRunner {
 
     @Autowired
     private EruptConfig eruptConfig;

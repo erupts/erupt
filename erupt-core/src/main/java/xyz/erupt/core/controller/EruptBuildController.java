@@ -4,11 +4,11 @@ package xyz.erupt.core.controller;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.bean.EruptBuildModel;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.view.EruptBuildModel;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
 
 import java.util.LinkedHashMap;
 
@@ -78,17 +78,5 @@ public class EruptBuildController {
 //        }
         return eruptBuildModel;
     }
-
-    @GetMapping("/{erupt}/{subErupt}")
-    @ResponseBody
-    @EruptRouter(authIndex = 1)
-    public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName,
-                                         @PathVariable("subErupt") String subEruupt) {
-//        Class clazz = CoreService.getEruptClass(eruptName);
-
-
-        return null;
-    }
-
 
 }

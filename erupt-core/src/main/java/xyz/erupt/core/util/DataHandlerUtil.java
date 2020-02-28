@@ -1,14 +1,13 @@
 package xyz.erupt.core.util;
 
-import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.bean.TreeModel;
 import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.TreeModel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -71,23 +70,6 @@ public class DataHandlerUtil {
                 parentTreeModel.setChildren(childrenModel);
             }
         }
-    }
-
-
-    //清理序列化后对象所产生的默认值（通过json串进行校验）
-    public static void clearObjectDefaultValueByJson(Object obj, JsonObject data) {
-        ReflectUtil.findClassAllFields(obj.getClass(), field -> {
-            try {
-                field.setAccessible(true);
-                if (null != field.get(obj)) {
-                    if (!data.has(field.getName())) {
-                        field.set(obj, null);
-                    }
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     public static void convertDataToEruptView(EruptModel eruptModel, Map<String, Object> map) {

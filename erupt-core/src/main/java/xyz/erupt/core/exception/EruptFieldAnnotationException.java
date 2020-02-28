@@ -1,7 +1,7 @@
 package xyz.erupt.core.exception;
 
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.core.bean.EruptFieldModel;
+import xyz.erupt.core.view.EruptFieldModel;
 
 /**
  * @author liyuepeng

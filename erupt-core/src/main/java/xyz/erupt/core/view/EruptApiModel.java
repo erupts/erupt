@@ -1,4 +1,4 @@
-package xyz.erupt.core.bean;
+package xyz.erupt.core.view;
 
 import lombok.Data;
 import xyz.erupt.annotation.model.BoolAndReason;

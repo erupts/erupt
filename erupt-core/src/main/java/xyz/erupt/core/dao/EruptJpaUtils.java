@@ -7,12 +7,12 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.core.bean.EruptFieldModel;
-import xyz.erupt.core.bean.EruptModel;
-import xyz.erupt.core.bean.HqlBean;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.core.view.HqlBean;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
