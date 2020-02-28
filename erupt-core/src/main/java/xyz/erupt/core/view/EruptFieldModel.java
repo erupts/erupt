@@ -74,6 +74,8 @@ public class EruptFieldModel {
                 choiceMap = new HashMap<>();
                 this.choiceMap = EruptUtil.getChoiceMap(edit.choiceType());
                 break;
+            default:
+                break;
         }
         if (serialize) {
             this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
@@ -138,7 +140,7 @@ public class EruptFieldModel {
                     editValues.put(TYPE, EditType.TEXTAREA);
                 }
             }
-        } catch (Exception e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
