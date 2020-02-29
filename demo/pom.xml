@@ -3,11 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>xyz.erupt</groupId>
+        <artifactId>erupt</artifactId>
+        <version>0.1.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <groupId>xyz.erupt</groupId>
     <artifactId>demo</artifactId>
     <version>0.0.2</version>
@@ -17,7 +18,6 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <erupt.version>0.3.7</erupt.version>
     </properties>
 
     <dependencies>
@@ -26,12 +26,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>

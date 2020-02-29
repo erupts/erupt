@@ -39,6 +39,15 @@
             background: #333;
             color: #fff;
         }
+
+        @media screen and (max-width: 767px) {
+            .card {
+                float: left;
+                width: 50%;
+                box-sizing: border-box;
+            }
+        }
+
     </style>
 </head>
 <body>
