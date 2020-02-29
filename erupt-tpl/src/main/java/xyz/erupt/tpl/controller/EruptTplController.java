@@ -2,11 +2,9 @@ package xyz.erupt.tpl.controller;
 
 
 import freemarker.template.Configuration;
-import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -15,9 +13,11 @@ import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.tpl.annotation.EruptTpl;
+import xyz.erupt.tpl.config.TemplateConfig;
 import xyz.erupt.tpl.service.TplService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import static xyz.erupt.core.constant.RestPath.ERUPT_API;
@@ -31,54 +31,42 @@ import static xyz.erupt.core.constant.RestPath.ERUPT_API;
 @RestController
 @RequestMapping(ERUPT_API + "/tpl")
 public class EruptTplController {
-
-    private static final String TPL = "tpl";
     @Autowired
     private TplService tplService;
 
     @Autowired
-    private TemplateEngine templateEngine;
-    @Autowired
-    private Configuration freemarkerConfig;
+    private TemplateEngine thymeleafEngine;
 
-    private static final String HTML = ".html";
+    @Autowired
+    private Configuration freeMarkerEngine;
 
     @GetMapping(value = "/{name}", produces = {"text/html;charset=utf-8"})
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void getEruptFieldHtml(@PathVariable("name") String name, HttpServletResponse response) throws Exception {
-        String fileName = name;
-        if (name.endsWith(HTML)) {
-            name = name.replace(HTML, "");
-        } else {
-            fileName = name + HTML;
-        }
-        Resource resource = new ClassPathResource(TPL + "/" + fileName);
-        String tpl = FileUtils.readFileToString(resource.getFile());
-        Class clazz = tplService.getAction(name);
+    public void getEruptFieldHtml(@PathVariable("name") String fileName, HttpServletResponse response) throws Exception {
+        ClassPathResource resource = new ClassPathResource(TemplateConfig.TPL + "/" + fileName);
+        Method method = tplService.getAction(fileName);
         response.setCharacterEncoding("UTF-8");
-        if (null != clazz) {
+        if (null != method) {
+            Class<?> clazz = method.getDeclaringClass();
             Object obj = EruptSpringUtil.getBean(clazz);
-            Map<String, Object> data = (Map<String, Object>) clazz.getMethod(name).invoke(obj);
+            Map<String, Object> data = Map.class.cast(method.invoke(obj));
             if (null != data && data.size() > 0) {
                 EruptTpl eruptTpl = obj.getClass().getAnnotation(EruptTpl.class);
                 switch (eruptTpl.engine()) {
                     case FreeMarker:
-                        freemarkerConfig.setDefaultEncoding("utf-8");
-                        freemarkerConfig.setDirectoryForTemplateLoading(new ClassPathResource(TPL).getFile());
-                        Template template = freemarkerConfig.getTemplate(fileName);
-                        template.process(data, response.getWriter());
-                        response.setCharacterEncoding("utf-8");
+                        freeMarkerEngine.getTemplate(fileName).process(data, response.getWriter());
                         break;
                     case Thymeleaf:
                         Context ctx = new Context();
                         ctx.setVariables(data);
-                        response.getWriter().write(templateEngine.process(tpl, ctx));
+                        response.getWriter().write(thymeleafEngine.process(fileName, ctx));
+                        break;
                 }
             } else {
-                response.getWriter().write(tpl);
+                response.getWriter().write(FileUtils.readFileToString(resource.getFile()));
             }
         } else {
-            response.getWriter().write(tpl);
+            response.getWriter().write(FileUtils.readFileToString(resource.getFile()));
         }
     }
 
@@ -87,7 +75,7 @@ public class EruptTplController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU)
     public String getEruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
         EruptModel eruptModel = CoreService.getErupt(eruptName);
-        return tplService.execThymeleafTpl(eruptModel.getEruptFieldMap().get(field).getEruptField().edit().htmlType());
+        return tplService.execThymeleafTpl(eruptModel.getEruptFieldMap().get(field).getEruptField().edit().tplType());
     }
 
 //    @GetMapping(value = "/html/{erupt}/{field}", produces = {"text/html;charset=utf-8"})

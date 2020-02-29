@@ -111,7 +111,7 @@ public class EruptJpaUtils {
         return sb.toString();
     }
 
-    public static String geneEruptHqlCondition(EruptModel eruptModel, JsonObject clientSearchCondition, String customCondition) {
+    public static String geneEruptHqlCondition(EruptModel eruptModel, JsonObject clientSearchCondition, String[] customCondition) {
         StringBuilder hql = new StringBuilder();
         hql.append(" where 1=1 ");
         Filter filter = eruptModel.getErupt().filter();
@@ -125,45 +125,42 @@ public class EruptJpaUtils {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
-                    if (edit.search().value()) {
-                        if (edit.type() == EditType.REFERENCE_TREE) {
-                            hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTreeType().id()).append("=:").append(key);
-                            continue;
-                        } else if (edit.type() == EditType.REFERENCE_TABLE) {
-                            hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTableType().id()).append("=:").append(key);
-                            continue;
-                        }
-                        String $key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
-                        if (edit.search().vague()) {
-                            if ((edit.type() == EditType.NUMBER)
-                                    || edit.type() == EditType.DATE
-                                    || edit.type() == EditType.SLIDER) {
-                                hql.append(EruptJpaUtils.AND).append($key)
-                                        .append(" between :").append(LVAL_KEY).append(key)
-                                        .append(" and :").append(RVAL_KEY).append(key);
-                            } else if (edit.type() == EditType.CHOICE) {
-                                hql.append(EruptJpaUtils.AND).append($key).append(" in (:").append(key).append(")");
-                            } else if (eruptFieldModel.getFieldReturnName().equals(JavaType.STRING)) {
-                                hql.append(EruptJpaUtils.AND).append($key).append(" like :").append(key);
-                            } else {
-                                hql.append(EruptJpaUtils.AND).append($key).append("=:").append(key);
-                            }
+                    if (edit.type() == EditType.REFERENCE_TREE) {
+                        hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTreeType().id()).append("=:").append(key);
+                        continue;
+                    } else if (edit.type() == EditType.REFERENCE_TABLE) {
+                        hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTableType().id()).append("=:").append(key);
+                        continue;
+                    }
+                    String $key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
+                    if (edit.search().vague()) {
+                        if ((edit.type() == EditType.NUMBER)
+                                || edit.type() == EditType.DATE
+                                || edit.type() == EditType.SLIDER) {
+                            hql.append(EruptJpaUtils.AND).append($key)
+                                    .append(" between :").append(LVAL_KEY).append(key)
+                                    .append(" and :").append(RVAL_KEY).append(key);
+                        } else if (edit.type() == EditType.CHOICE) {
+                            hql.append(EruptJpaUtils.AND).append($key).append(" in (:").append(key).append(")");
+                        } else if (eruptFieldModel.getFieldReturnName().equals(JavaType.STRING)) {
+                            hql.append(EruptJpaUtils.AND).append($key).append(" like :").append(key);
                         } else {
                             hql.append(EruptJpaUtils.AND).append($key).append("=:").append(key);
                         }
-//                        if (clientSearchCondition.get(key).toString().contains(EruptJpaUtils.NULL)) {
-//                            hql.append(EruptJpaUtils.AND).append(_key).append(" is null");
-//                        } else if (clientSearchCondition.get(key).toString().contains(EruptJpaUtils.NOT_NULL)) {
-//                            hql.append(EruptJpaUtils.AND).append(_key).append(" is not null");
-//                        } else {
-//
-//                        }
+                    } else {
+                        hql.append(EruptJpaUtils.AND).append($key).append("=:").append(key);
                     }
+                } else {
+                    hql.append(EruptJpaUtils.AND).append(key).append("=:").append(key);
                 }
             }
         }
-        if (StringUtils.isNotBlank(customCondition)) {
-            hql.append(EruptJpaUtils.AND).append(customCondition);
+        if (null != customCondition) {
+            for (String s : customCondition) {
+                if (StringUtils.isNotBlank(s)) {
+                    hql.append(EruptJpaUtils.AND).append(s);
+                }
+            }
         }
         return hql.toString();
     }

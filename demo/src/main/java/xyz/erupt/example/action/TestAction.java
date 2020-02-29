@@ -16,7 +16,7 @@ import java.util.Map;
 @Service
 public class TestAction {
 
-    @TplAction("dashboard")
+    @TplAction("dashboard.ftl")
     public Map<String, Object> dashboard() {
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> mp = new LinkedHashMap<>();

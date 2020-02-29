@@ -26,13 +26,13 @@ public interface DataService {
     /**
      * 查询分页数据
      *
-     * @param eruptModel        erupt核心对象
-     * @param page              page 分页参数
-     * @param searchCondition   参数查询条件
+     * @param eruptModel      erupt核心对象
+     * @param page            page 分页参数
+     * @param searchCondition 参数查询条件
      * @param customCondition 自定义查询条件
      * @return 页面对象
      */
-    Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String customCondition);
+    Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition);
 
     /**
      * 查询树形结构数据

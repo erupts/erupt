@@ -43,19 +43,19 @@
 </head>
 <body>
 <div>
+    <#include "./header.ftl">
     <div style="margin:0 15px">
         <!--<h1 style="padding-left:10px;text-align: center">-->
         <!--<span style="font-size: 2em">Use Erupt tpl draw</span>-->
         <!--</h1>-->
         <#list map?keys as key>
-        <div class="card">
-            <div class="item">
-                <p class="title" style="background: ${color[key_index]}">${key}</p>
-                <p style="text-align: center;font-size: 2.2em;color: ${color[key_index]}">${map[key]}</p>
+            <div class="card">
+                <div class="item">
+                    <p class="title" style="background: ${color[key_index]}">${key}</p>
+                    <p style="text-align: center;font-size: 2.2em;color: ${color[key_index]}">${map[key]}</p>
+                </div>
             </div>
-        </div>
-    </
-    #list>
+        </#list>
 </div>
 </div>
 <script>

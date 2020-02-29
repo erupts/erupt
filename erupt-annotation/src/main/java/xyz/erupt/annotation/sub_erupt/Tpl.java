@@ -7,7 +7,7 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2019-10-16.
  */
-public @interface Html {
+public @interface Tpl {
 
     @Transient
     String path() default "";
@@ -16,9 +16,9 @@ public @interface Html {
     String[] params() default {};
 
     @Transient
-    Class<? extends HtmlHandler> htmlHandler() default HtmlHandler.class;
+    Class<? extends TplHandler> tplHandler() default TplHandler.class;
 
-    interface HtmlHandler {
+    interface TplHandler {
 
         /**
          * 获取模板绑定数据
@@ -26,7 +26,7 @@ public @interface Html {
          * @param params 注解参数
          * @return 页面绑定数据
          */
-        Map<String, Object> getData(String[] params);
+        Map<String, Object> tplAction(String[] params);
 
     }
 

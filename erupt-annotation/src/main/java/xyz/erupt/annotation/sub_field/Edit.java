@@ -2,7 +2,7 @@ package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.sub_erupt.Filter;
-import xyz.erupt.annotation.sub_erupt.Html;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 
 import java.beans.Transient;
@@ -70,6 +70,6 @@ public @interface Edit {
     CodeEditorType codeEditType() default @CodeEditorType(language = "text");
 
     @Transient
-    Html htmlType() default @Html;
+    Tpl tplType() default @Tpl;
 
 }

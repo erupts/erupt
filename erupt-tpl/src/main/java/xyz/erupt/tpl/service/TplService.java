@@ -1,8 +1,5 @@
 package xyz.erupt.tpl.service;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import lombok.extern.java.Log;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import xyz.erupt.annotation.sub_erupt.Html;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -37,15 +32,15 @@ import java.util.Map;
 @Log
 public class TplService implements ApplicationRunner {
 
-    private final Map<String, Class> tplActions = new LinkedCaseInsensitiveMap<>();
     @Autowired
     private EruptConfig eruptConfig;
+
     @Autowired
     private TemplateEngine templateEngine;
-    @Autowired
-    private Configuration freemarkerConfig;
 
-    public Class getAction(String name) {
+    private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
+
+    public Method getAction(String name) {
         return tplActions.get(name);
     }
 
@@ -57,27 +52,21 @@ public class TplService implements ApplicationRunner {
             for (Method method : clazz.getDeclaredMethods()) {
                 TplAction tplAction = method.getAnnotation(TplAction.class);
                 if (null != tplAction) {
-                    tplActions.put(tplAction.value(), clazz);
+                    tplActions.put(tplAction.value(), method);
                 }
             }
         });
         log.info("Erupt tpl initialization complete");
     }
 
-    public void execFreeMarkerTpl(String name, Map<String, Object> data, HttpServletResponse response) throws IOException, TemplateException {
-        freemarkerConfig.setDirectoryForTemplateLoading(new ClassPathResource("tpl").getFile());
-        Template template = freemarkerConfig.getTemplate(name, "utf-8");
-        template.process(data, response.getWriter());
-    }
 
-
-    public String execThymeleafTpl(Html html) {
+    public String execThymeleafTpl(Tpl html) {
         try {
             Resource resource = new ClassPathResource(html.path());
             String template = FileUtils.readFileToString(resource.getFile());
-            if (!html.htmlHandler().isInterface()) {
+            if (!html.tplHandler().isInterface()) {
                 Context ctx = new Context();
-                ctx.setVariables(html.htmlHandler().newInstance().getData(html.params()));
+                ctx.setVariables(html.tplHandler().newInstance().tplAction(html.params()));
                 return templateEngine.process(template, ctx);
             } else {
                 return template;

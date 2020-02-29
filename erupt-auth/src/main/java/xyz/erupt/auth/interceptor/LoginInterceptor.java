@@ -64,6 +64,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
         if (null == token || !eruptUserService.verifyToken(token)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendError(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
         String path = request.getServletPath();
@@ -75,6 +76,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 boolean bool = eruptUserService.verifyMenuAuth(token, eruptName);
                 if (!bool) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
+                    response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
                 }
                 break;
@@ -113,6 +115,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 }
                 if (!path.contains(eruptName) || !eruptUserService.verifyEruptMenuAuth(token, authStr, eruptModel)) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
+                    response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
                 }
                 break;

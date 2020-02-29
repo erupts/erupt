@@ -7,9 +7,9 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.sub_erupt.Html;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -51,7 +51,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
             views = @View(title = "文本"),
             edit = @Edit(title = "文本", search = @Search(value = true, vague = true))
     )
-    private String input;
+    private String input = "默认文本";
 
     @EruptField(
             views = @View(title = "数字"),
@@ -122,7 +122,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             edit = @Edit(title = "HTML", type = EditType.HTML,
-                    htmlType = @Html(path = "demo.html", htmlHandler = HtmlHandler.class, params = {"123", "xxx"}))
+                    tplType = @Tpl(path = "demo.html", tplHandler = HtmlHandler.class, params = {"123", "xxx"}))
     )
     private String html;
 

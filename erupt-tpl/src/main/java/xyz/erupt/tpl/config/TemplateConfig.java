@@ -1,25 +1,42 @@
 package xyz.erupt.tpl.config;
 
+import freemarker.template.Configuration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.StringTemplateResolver;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
+
+import java.io.IOException;
 
 /**
  * @author liyuepeng
  * @date 2019-10-18.
  */
-@Configuration
+@org.springframework.context.annotation.Configuration
 public class TemplateConfig {
 
+    public static final String TPL = "tpl";
+
+
     @Bean
-    public TemplateEngine templateEngine() {
-        StringTemplateResolver resolver = new StringTemplateResolver();
+    public TemplateEngine thymeleafEngine() throws IOException {
+        FileTemplateResolver resolver = new FileTemplateResolver();
         resolver.setCacheable(false);
+        resolver.setPrefix(new ClassPathResource(TPL).getFile().getPath() + "/");
         resolver.setTemplateMode(TemplateMode.HTML);
+        resolver.setCheckExistence(true);
+        resolver.setUseDecoupledLogic(true);
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.addTemplateResolver(resolver);
         return templateEngine;
+    }
+
+    @Bean
+    public Configuration freeMarkerEngine() throws IOException {
+        Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_29);
+        freemarkerConfig.setDefaultEncoding("utf-8");
+        freemarkerConfig.setDirectoryForTemplateLoading(new ClassPathResource(TemplateConfig.TPL).getFile());
+        return freemarkerConfig;
     }
 }

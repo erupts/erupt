@@ -55,10 +55,10 @@ public @interface Erupt {
     KV[] param() default {};
 
     @Transient
-    Html beforeHtml() default @Html;
+    Tpl beforeHtml() default @Tpl;
 
     @Transient
-    Html afterHtml() default @Html;
+    Tpl afterHtml() default @Tpl;
 
     Class<? extends Annotation> extra() default Annotation.class;
 }

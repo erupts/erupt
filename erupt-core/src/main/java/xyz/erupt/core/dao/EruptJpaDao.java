@@ -39,7 +39,7 @@ public class EruptJpaDao {
         return entityManager.find(eruptModel.getClazz(), id);
     }
 
-    public Page queryEruptList(EruptModel eruptModel, Page page, JsonObject searchCondition, String customCondition) {
+    public Page queryEruptList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition) {
         String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")",
                 customCondition, searchCondition, page.getSort(), false));
         String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("count(*)", customCondition, searchCondition, null, true));
@@ -87,7 +87,9 @@ public class EruptJpaDao {
     public List<Map<String, Object>> getDataMap(EruptModel eruptModel, String condition,
                                                 String orderBy, List<String> cols,
                                                 Map<String, Object> conditionParameter) {
-        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("new map(" + String.join(",", cols) + ")", condition, null, orderBy, false));
+        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel,
+                new HqlBean("new map(" + String.join(",", cols) + ")"
+                        , new String[]{condition}, null, orderBy, false));
         Query query = entityManager.createQuery(hql);
         if (null != conditionParameter) {
             for (Map.Entry<String, Object> entry : conditionParameter.entrySet()) {

@@ -15,7 +15,7 @@ import java.util.Map;
 @Service
 public class Test2Action {
 
-    @TplAction("dashboard2")
+    @TplAction("dashboard2.html")
     public Map<String, Object> dashboard2() {
         Map<String, Object> map = new HashMap<>();
         map.put("list", new String[]{
