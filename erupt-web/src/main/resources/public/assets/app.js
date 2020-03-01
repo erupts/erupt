@@ -6,7 +6,7 @@ window.eruptSiteConfig = {
   routerReuse: false,
   amapKey: "15bc4df0bd6758645308fa591f439799",
   // logoPath: "/assets/logo.png",
-    // registerPage:"http://www.baidu.com",
+  // registerPage:"http://www.baidu.com",
   r_tools: [{
     text: "下载",
     icon: "fa-download",
