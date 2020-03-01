@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ public class BiTest {
     public void biTest() throws IOException {
         Map<String, Object> paramMap = new HashMap<>();
         Resource resource = new ClassPathResource("test.sql");
-        List<String[]> list = new ArrayList<>();
         List<Map<String, Object>> lm = jdbcTemplate.queryForList(FileUtils.readFileToString(resource.getFile()), paramMap);
         System.out.println(lm);
 //        List o = jdbcTemplate.query(FileUtils.readFileToString(resource.getFile()), paramMap, (resultSet, num) -> {

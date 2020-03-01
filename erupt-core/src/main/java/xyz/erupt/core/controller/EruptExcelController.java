@@ -30,6 +30,7 @@ import java.util.List;
 
 /**
  * 对Excel数据的处理
+ *
  * @author liyuepeng
  * @date 10/15/18.
  */
@@ -80,7 +81,8 @@ public class EruptExcelController {
             jsonObject.addProperty(Page.PAGE_INDEX_STR, 1);
             jsonObject.addProperty(Page.PAGE_SIZE_STR, Page.PAGE_MAX_DATA);
             jsonObject.addProperty(Page.PAGE_SORT_STR, "");
-            JsonObject jsonCondition = new JsonParser().parse(URLDecoder.decode(condition, "utf-8")).getAsJsonObject();
+            JsonObject jsonCondition = JsonParser.parseString(
+                    URLDecoder.decode(condition, "utf-8")).getAsJsonObject();
             for (String key : jsonCondition.keySet()) {
                 jsonObject.add(key, jsonCondition.get(key));
             }
