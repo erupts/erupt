@@ -126,6 +126,9 @@ public class EruptUtil {
 
     //请求参数转换
     public static Object jsonElementToObject(EruptFieldModel eruptFieldModel, JsonElement jsonElement) {
+        if (null == eruptFieldModel) {
+            return jsonElement.toString();
+        }
         if (jsonElement.isJsonArray()) {
             JsonArray jsonArray = jsonElement.getAsJsonArray();
             List list = new ArrayList();

@@ -26,19 +26,16 @@ import javax.persistence.UniqueConstraint;
 public class EruptDictItem extends BaseModel {
 
     @EruptField(
-            views = @View(title = "键"),
-            edit = @Edit(title = "键", notNull = true, search = @Search(true))
+            views = @View(title = "编码"),
+            edit = @Edit(title = "编码", notNull = true, search = @Search(true))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "值"),
-            edit = @Edit(title = "值", notNull = true, search = @Search(value = true, vague = true))
+            views = @View(title = "名称"),
+            edit = @Edit(title = "名称", notNull = true, search = @Search(value = true, vague = true))
     )
-    private String value;
-
-    @ManyToOne
-    private EruptDict eruptDict;
+    private String name;
 
     @EruptField(
             views = @View(title = "排序"),
@@ -53,6 +50,9 @@ public class EruptDictItem extends BaseModel {
             )
     )
     private String remark;
+
+    @ManyToOne
+    private EruptDict eruptDict;
 
 
 }

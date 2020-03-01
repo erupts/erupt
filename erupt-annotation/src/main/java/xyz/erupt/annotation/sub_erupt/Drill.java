@@ -12,10 +12,11 @@ public @interface Drill {
 
     String title();
 
-    String icon() default "";
-
     Class<?> eruptClass();
 
+    String icon() default "";
+
+    @Transient
     String column() default "id";
 
     @Transient

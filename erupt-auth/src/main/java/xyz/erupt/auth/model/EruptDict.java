@@ -20,7 +20,8 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "E_DICT", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "数据字典",
-        drills = @Drill(code = "item", title = "字典项", eruptClass = EruptDictItem.class, joinColumn = "eruptDict.id")
+        drills = @Drill(code = "item", title = "字典项",
+                eruptClass = EruptDictItem.class, joinColumn = "eruptDict.id")
 )
 public class EruptDict extends BaseModel {
 

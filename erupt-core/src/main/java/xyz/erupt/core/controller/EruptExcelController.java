@@ -125,7 +125,7 @@ public class EruptExcelController {
             i = 1;
             for (JsonObject jo : list) {
                 i++;
-                EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo);
+                EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo, null);
                 if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
                     throw new RuntimeException("第" + i + "行：" + eruptApiModel.getMessage());
                 }

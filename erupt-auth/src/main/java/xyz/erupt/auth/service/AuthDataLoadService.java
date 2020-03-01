@@ -55,10 +55,13 @@ public class AuthDataLoadService implements CommandLineRunner {
                         "dict", "字典维护", "/build/tree/EruptDict", 1, 30, "fa fa-book", eruptMenu
                 ), "code", "dict");
                 eruptDao.persistIfNotExist(new EruptMenu(
+                        "dict", "字典项", "/build/tree/EruptDictItem", 2, 35, "fa fa-book", eruptMenu
+                ), "code", "dict");
+                eruptDao.persistIfNotExist(new EruptMenu(
                         "loginLog", "登录日志", "/build/table/EruptLoginLog", 1, 40, "fa fa-book", eruptMenu
                 ), "code", "loginLog");
                 eruptDao.persistIfNotExist(new EruptMenu(
-                        "erupt", "Erupt通用数据管理框架", "/site?url=https://www.erupt.xyz", 1, 50, "fa fa-book", null
+                        "erupt", "Erupt通用数据管理框架", "/site?url=https://www.erupt.xyz", 1, 100, "fa fa-book", null
                 ), "code", "erupt");
             }
         });

@@ -22,8 +22,18 @@ public class EruptService {
 
     private static final int maxPageSize = 500;
 
+    /**
+     * @param eruptModel
+     * @param pageIndex       index
+     * @param pageSize        size
+     * @param sort            sort
+     * @param searchCondition 客户端查询条件
+     * @param joCondition     后台自定义条件
+     * @param customCondition 后台自定义条件（字符串格式）
+     * @return
+     */
     Page getEruptData(EruptModel eruptModel, int pageIndex, int pageSize, String sort,
-                      JsonObject searchCondition, String... customCondition) {
+                      JsonObject searchCondition, JsonObject joCondition, String... customCondition) {
         if (eruptModel.getErupt().power().query()) {
             if (pageSize > maxPageSize) {
                 pageSize = maxPageSize;
@@ -32,9 +42,13 @@ public class EruptService {
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
                 EruptSpringUtil.getBean(proxy).beforeFetch(legalJsonObject);
             }
+            if (null != joCondition) {
+                for (String key : joCondition.keySet()) {
+                    legalJsonObject.add(key, joCondition.get(key));
+                }
+            }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
-                    .queryList(eruptModel, new Page(pageIndex, pageSize, sort),
-                            EruptUtil.geneEruptSearchCondition(eruptModel, legalJsonObject), customCondition);
+                    .queryList(eruptModel, new Page(pageIndex, pageSize, sort), legalJsonObject, customCondition);
             for (Map<String, Object> map : page.getList()) {
                 DataHandlerUtil.convertDataToEruptView(eruptModel, map);
             }
