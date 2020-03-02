@@ -41,7 +41,7 @@ public class DataFileService {
     @Autowired
     private EruptDataController eruptDataController;
 
-    public static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
+    private static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
 
 
     /**

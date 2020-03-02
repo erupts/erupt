@@ -35,11 +35,10 @@ public class JobDataLoadService implements CommandLineRunner {
         }
         new ProjectUtil().projectStartLoaded("job", first -> {
             if (first) {
-                EruptMenu eruptMenu = new EruptMenu("job", "任务管理", null, 1, 10, "fa fa-cubes", null);
-                eruptDao.persistIfNotExist(eruptMenu, "code", "job");
-                eruptDao.persistIfNotExist(new EruptMenu("EruptJob", "任务维护", "/build/table/EruptJob",
+                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("job", "任务管理", null, 1, 10, "fa fa-cubes", null), "code", "job");
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("EruptJob", "任务维护", "/build/table/EruptJob",
                         1, 0, "fa fa-tasks", eruptMenu), "code", "EruptJob");
-                eruptDao.persistIfNotExist(new EruptMenu("EruptJobLog", "任务日志", "/build/table/EruptJobLog",
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("EruptJobLog", "任务日志", "/build/table/EruptJobLog",
                         1, 10, "fa fa-file-text", eruptMenu), "code", "EruptJobLog");
             }
         });

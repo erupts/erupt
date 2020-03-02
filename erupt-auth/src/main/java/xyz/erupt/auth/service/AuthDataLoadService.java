@@ -38,29 +38,29 @@ public class AuthDataLoadService implements CommandLineRunner {
                 eruptUser.setAccount("erupt");
                 eruptUser.setPassword(MD5Utils.digest("erupt"));
                 eruptUser.setName("erupt");
-                eruptDao.persistIfNotExist(eruptUser, "account", eruptUser.getAccount());
+                eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
                 //菜单
-                EruptMenu eruptMenu = new EruptMenu("manager", "系统管理", null, 1, 0, "fa fa-cogs", null);
-                eruptDao.persistIfNotExist(eruptMenu, "code", "manager");
-                eruptDao.persistIfNotExist(new EruptMenu(
+                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("manager", "系统管理", null, 1, 0, "fa fa-cogs", null)
+                        , "code", "manager");
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         "menu", "菜单维护", "/build/tree/EruptMenu", 1, 0, "fa fa-list-ul", eruptMenu
                 ), "code", "menu");
-                eruptDao.persistIfNotExist(new EruptMenu(
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         "user", "用户维护", "/build/table/EruptUser", 1, 10, "fa fa-user", eruptMenu
                 ), "code", "user");
-                eruptDao.persistIfNotExist(new EruptMenu(
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         "role", "角色维护", "/build/table/EruptRole", 1, 20, "fa fa-users", eruptMenu
                 ), "code", "role");
-                eruptDao.persistIfNotExist(new EruptMenu(
-                        "dict", "字典维护", "/build/tree/EruptDict", 1, 30, "fa fa-book", eruptMenu
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                        "dict", "字典维护", "/build/table/EruptDict", 1, 30, "fa fa-book", eruptMenu
                 ), "code", "dict");
-                eruptDao.persistIfNotExist(new EruptMenu(
-                        "dict", "字典项", "/build/tree/EruptDictItem", 2, 35, "fa fa-book", eruptMenu
-                ), "code", "dict");
-                eruptDao.persistIfNotExist(new EruptMenu(
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                        "dictItem", "字典项", "/build/tree/EruptDictItem", 2, 35, "fa fa-book", eruptMenu
+                ), "code", "dictItem");
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         "loginLog", "登录日志", "/build/table/EruptLoginLog", 1, 40, "fa fa-book", eruptMenu
                 ), "code", "loginLog");
-                eruptDao.persistIfNotExist(new EruptMenu(
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         "erupt", "Erupt通用数据管理框架", "/site?url=https://www.erupt.xyz", 1, 100, "fa fa-book", null
                 ), "code", "erupt");
             }

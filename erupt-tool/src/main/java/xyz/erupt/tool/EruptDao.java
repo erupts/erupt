@@ -48,15 +48,16 @@ public class EruptDao {
     }
 
     //不存在则新增
-    public void persistIfNotExist(Object obj, String field, String val) {
-        List list = queryObjectList(obj.getClass(), field + EQU + " :val", new HashMap<String, Object>(1) {
+    public <T> T persistIfNotExist(Class<T> eruptClass, Object obj, String field, String val) throws NonUniqueResultException {
+        T t = (T) queryEntity(obj.getClass(), field + EQU + " :val", new HashMap<String, Object>(1) {
             {
                 this.put("val", val);
             }
         });
-        if (list.isEmpty()) {
+        if (null == t) {
             entityManager.persist(obj);
         }
+        return t;
     }
 
     private Query simpleQuery(Class eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
@@ -98,16 +99,29 @@ public class EruptDao {
         return simpleQuery(eruptClass, false, expr, param).getResultList();
     }
 
-    public Map<String, Object> queryMap(Class eruptClass, String expr, Map<String, Object> param, String... cols) throws NoResultException, NonUniqueResultException {
-        return (Map<String, Object>) simpleQuery(eruptClass, true, expr, param, cols).getSingleResult();
+    public Map<String, Object> queryMap(Class eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
+        try {
+            return (Map<String, Object>) simpleQuery(eruptClass, true, expr, param, cols).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
-    public Object[] queryObject(Class eruptClass, String expr, Map<String, Object> param, String... cols) throws NoResultException, NonUniqueResultException {
-        return (Object[]) simpleQuery(eruptClass, false, expr, param, cols).getSingleResult();
+    public Object[] queryObject(Class eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
+        try {
+            return (Object[]) simpleQuery(eruptClass, false, expr, param, cols).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
-    public <T> T queryEntity(Class<T> eruptClass, String expr, Map<String, Object> param) throws NoResultException, NonUniqueResultException {
-        return (T) simpleQuery(eruptClass, false, expr, param).getSingleResult();
+    public <T> T queryEntity(Class<T> eruptClass, String expr, Map<String, Object> param) throws NonUniqueResultException {
+        try {
+            return (T) simpleQuery(eruptClass, false, expr, param).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+
     }
 
 }
