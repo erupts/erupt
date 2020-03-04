@@ -91,6 +91,21 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     )
     private String choice;
 
+    @EruptField(
+            views = @View(title = "多选"),
+            edit = @Edit(
+                    title = "选择", type = EditType.CHOICE,
+                    choiceType = @ChoiceType(
+                            type = ChoiceEnum.SELECT_MULTI,
+                            fetchHandler = Demo.class,
+                            vl = {
+                                    @VL(label = "xxxx", value = "xxxx")
+                            },
+                            fetchHandlerParams = {"param"}
+                    ))
+    )
+    private String choiceCheckbox;
+
     @ManyToOne
     @EruptField(
             views = @View(title = "多对一", column = "name"),
@@ -121,10 +136,11 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     private String remark;
 
     @EruptField(
-            edit = @Edit(title = "HTML", type = EditType.HTML,
+            edit = @Edit(title = "HTML", type = EditType.TPL,
+                    search = @Search(true),
                     tplType = @Tpl(path = "demo.html", tplHandler = HtmlHandler.class, params = {"123", "xxx"}))
     )
-    private String html;
+    private String tpl;
 
     @EruptField(
             views = @View(title = "地图"),

@@ -13,10 +13,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.SliderType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 /**
  * @author liyuepeng
@@ -24,7 +21,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "E_BI_CHART", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "图表配置")
+@Erupt(name = "图表配置", orderBy = "sort")
 @Getter
 @Setter
 public class BiChart extends BaseModel {
@@ -104,5 +101,8 @@ public class BiChart extends BaseModel {
             edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照echarts", type = EditType.TEXTAREA)
     )
     private String chartOption;
+
+    @ManyToOne
+    private Bi bi;
 
 }

@@ -1,5 +1,7 @@
 package xyz.erupt.tpl.annotation;
 
+import xyz.erupt.annotation.sub_erupt.Tpl;
+
 import java.lang.annotation.*;
 
 /**
@@ -12,10 +14,5 @@ import java.lang.annotation.*;
 @Inherited
 public @interface EruptTpl {
 
-    Engine engine() default Engine.Thymeleaf;
-
-    enum Engine {
-        FreeMarker,
-        Thymeleaf
-    }
+    Tpl.Engine engine() default Tpl.Engine.Thymeleaf;
 }

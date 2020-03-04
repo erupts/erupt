@@ -1,21 +1,25 @@
-<style>
-    #h1 {
-        color: #09f;
-        text-align: center;
-    }
-</style>
-<link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.css" rel="stylesheet">
-<template>
-    <div style="margin: 0 20px;">
-        <h1 id="h1" th:text="${str}"></h1>
-        <div id="chart" style="height: 260px;">
-        </div>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        #h1 {
+            color: #09f;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div style="margin: 0 20px;">
+    <h1 id="h1" th:text="${str}"></h1>
+    <h2 style="text-align: center;">👌</h2>
+    <h3 style="text-align: center;">👌</h3>
+    <h4 style="text-align: center;">👌</h4>
+    <h5 style="text-align: center;">👌</h5>
+    <h6 style="text-align: center;">👌</h6>
+    <div id="chart" style="height: 260px;">
     </div>
-</template>
+</div>
 <script src="http://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
-<script rel="exit">
-    console.log("bye bye" + iii)
-</script>
 <script>
     var iii = 123123123;
     Highcharts.chart('chart', {
@@ -73,3 +77,5 @@
         }]
     });
 </script>
+</body>
+</html>

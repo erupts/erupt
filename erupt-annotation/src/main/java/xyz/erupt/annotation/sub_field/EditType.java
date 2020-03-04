@@ -46,8 +46,8 @@ public enum EditType {
     TAB_TABLE_REFER,
     @EditTypeMapping(desc = "表格引用（仅支持一对多)", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
     TAB_TABLE_ADD,
-    @EditTypeMapping(desc = "自定义HTML", allowType = {JavaTypeEnum.String}, search = false, excelOperator = false)
-    HTML,
+    @EditTypeMapping(desc = "自定义HTML模板", allowType = {JavaTypeEnum.String}, search = false, excelOperator = false)
+    TPL,
     @EditTypeMapping(desc = "代码编辑器", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
     /**

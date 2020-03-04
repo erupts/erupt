@@ -13,6 +13,7 @@ public enum ViewType {
     IMAGE,
     //flash文件
     SWF,
+    MAP,
     //HTML
     HTML,
     //二维码

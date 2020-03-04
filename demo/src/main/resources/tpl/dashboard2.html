@@ -51,14 +51,14 @@
 </head>
 <body>
 <div>
-    <div th:replace="./header.html :: header"></div>
+    <div th:replace="/tpl/header.html :: header"></div>
     <div style="margin:0 15px">
         <!--<h1 style="padding-left:10px;text-align: center">-->
         <!--<span style="font-size: 2em">Use Erupt tpl draw</span>-->
         <!--</h1>-->
-        <div class="card" th:each="li:${list}">
+        <div class="card" th:each="li,stat:${list}">
             <div class="item">
-                <p class="title" style="background: #eb776e" th:text="${li}"></p>
+                <p class="title" th:style="'background:'+${color[stat.index]}" th:text="${li}"></p>
                 <p style="text-align: center;font-size: 2.2em;">erupt.xyz</p>
             </div>
         </div>

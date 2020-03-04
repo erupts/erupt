@@ -27,7 +27,7 @@ public class MvcInterceptor implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        String[] allowFileType = {"html", "js", "css", "svg", "eot", "woff", "woff2", "ttf", "png", "jpg", "gif", "pdf"};
+        String[] allowFileType = {"js", "css", "svg", "eot", "woff", "woff2", "ttf", "png", "jpg", "gif", "pdf"};
         Set<String> types = new HashSet<>();
         for (String s : allowFileType) {
             types.add("/**/**." + s);

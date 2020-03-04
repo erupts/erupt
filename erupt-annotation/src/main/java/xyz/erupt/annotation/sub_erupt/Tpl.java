@@ -10,13 +10,20 @@ import java.util.Map;
 public @interface Tpl {
 
     @Transient
-    String path() default "";
+    String path();
 
     @Transient
     String[] params() default {};
 
     @Transient
     Class<? extends TplHandler> tplHandler() default TplHandler.class;
+
+    Engine engine() default Engine.Thymeleaf;
+
+    enum Engine {
+        FreeMarker,
+        Thymeleaf
+    }
 
     interface TplHandler {
 
@@ -27,7 +34,6 @@ public @interface Tpl {
          * @return 页面绑定数据
          */
         Map<String, Object> tplAction(String[] params);
-
     }
 
 }

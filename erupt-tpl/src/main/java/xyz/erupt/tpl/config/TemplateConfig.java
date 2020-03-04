@@ -16,14 +16,11 @@ import java.io.IOException;
 @org.springframework.context.annotation.Configuration
 public class TemplateConfig {
 
-    public static final String TPL = "tpl";
-
-
     @Bean
     public TemplateEngine thymeleafEngine() throws IOException {
         FileTemplateResolver resolver = new FileTemplateResolver();
         resolver.setCacheable(false);
-        resolver.setPrefix(new ClassPathResource(TPL).getFile().getPath() + "/");
+        resolver.setPrefix(new ClassPathResource("").getFile().getPath() + "/");
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCheckExistence(true);
         resolver.setUseDecoupledLogic(true);
@@ -36,7 +33,7 @@ public class TemplateConfig {
     public Configuration freeMarkerEngine() throws IOException {
         Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_29);
         freemarkerConfig.setDefaultEncoding("utf-8");
-        freemarkerConfig.setDirectoryForTemplateLoading(new ClassPathResource(TemplateConfig.TPL).getFile());
+        freemarkerConfig.setDirectoryForTemplateLoading(new ClassPathResource("").getFile());
         return freemarkerConfig;
     }
 }

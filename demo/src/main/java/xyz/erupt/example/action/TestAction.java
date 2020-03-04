@@ -1,6 +1,7 @@
 package xyz.erupt.example.action;
 
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2020-02-24
  */
-@EruptTpl(engine = EruptTpl.Engine.FreeMarker)
+@EruptTpl(engine = Tpl.Engine.FreeMarker)
 @Service
 public class TestAction {
 

@@ -2,6 +2,7 @@ package xyz.erupt.bi.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiChart;
@@ -38,12 +39,16 @@ public class EruptBiController {
 
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
-    public BiModel getBuilder(@PathVariable("code") String code) {
+    public BiModel getBuilder(@PathVariable("code") String code, HttpServletResponse response) {
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {
             {
                 this.put("code", code);
             }
         });
+        if (null == bi) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        }
         BiModel biModel = new BiModel();
         if (StringUtils.isBlank(bi.getSqlStatement())) {
             biModel.setTable(false);
@@ -54,6 +59,7 @@ public class EruptBiController {
         int maxSort = 9999;
         for (BiChart chart : bi.getBiCharts()) {
             chart.setSqlStatement(null);
+            chart.setBi(null);
             if (chart.getSort() == null) {
                 chart.setSort(++maxSort);
             }

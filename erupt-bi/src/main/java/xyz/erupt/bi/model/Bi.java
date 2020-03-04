@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -19,7 +20,8 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "E_BI", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "报表配置")
+@Erupt(name = "报表配置", drills = @Drill(code = "chart", title = "图表配置", icon = "fa fa-pie-chart"
+        , eruptClass = BiChart.class, joinColumn = "bi.id"))
 @Getter
 @Setter
 public class Bi extends BaseModel {

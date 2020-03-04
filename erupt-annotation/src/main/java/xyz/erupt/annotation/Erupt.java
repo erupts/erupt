@@ -54,11 +54,5 @@ public @interface Erupt {
     @ToMap(key = "key")
     KV[] param() default {};
 
-    @Transient
-    Tpl beforeHtml() default @Tpl;
-
-    @Transient
-    Tpl afterHtml() default @Tpl;
-
     Class<? extends Annotation> extra() default Annotation.class;
 }
