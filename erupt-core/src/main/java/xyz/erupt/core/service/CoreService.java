@@ -41,7 +41,9 @@ public final class CoreService implements ApplicationRunner {
     }
 
     public static EruptModel getEruptView(String eruptName) {
-        return initEruptModel(ERUPTS.get(eruptName).getClazz(), true);
+        EruptModel eruptModel = initEruptModel(ERUPTS.get(eruptName).getClazz(), true);
+        ERUPTS.put(eruptName, eruptModel);
+        return eruptModel;
     }
 
     private static EruptModel initEruptModel(Class clazz, boolean serialize) {

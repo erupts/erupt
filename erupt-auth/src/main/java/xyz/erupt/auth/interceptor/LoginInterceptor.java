@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -102,11 +101,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     }
                     for (RowOperation operation : eruptParentModel.getErupt().rowOperation()) {
                         if (operation.eruptClass().getSimpleName().equals(eruptModel.getEruptName())) {
-                            break $ep;
-                        }
-                    }
-                    for (Drill drill : eruptParentModel.getErupt().drills()) {
-                        if (drill.eruptClass().getSimpleName().equals(eruptModel.getEruptName())) {
                             break $ep;
                         }
                     }

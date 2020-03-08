@@ -49,7 +49,7 @@ public @interface Erupt {
     @Transient
     Class<? extends DataProxy>[] dataProxy() default {};
 
-    Tree tree() default @Tree(id = AnnotationConst.ID, label = AnnotationConst.LABEL);
+    Tree tree() default @Tree;
 
     @ToMap(key = "key")
     KV[] param() default {};

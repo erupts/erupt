@@ -3,6 +3,7 @@ package xyz.erupt.auth.model;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Drill;
+import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.model.BaseModel;
@@ -20,8 +21,13 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "E_DICT", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "数据字典",
-        drills = @Drill(code = "item", title = "字典项",
-                eruptClass = EruptDictItem.class, joinColumn = "eruptDict.id")
+        drills = @Drill(
+                code = "item",
+                title = "字典项",
+                link = @Link(
+                        eruptClass = EruptDictItem.class, joinColumn = "eruptDict.id"
+                )
+        )
 )
 public class EruptDict extends BaseModel {
 

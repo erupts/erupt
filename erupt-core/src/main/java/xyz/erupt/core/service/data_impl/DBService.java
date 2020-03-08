@@ -127,6 +127,8 @@ public class DBService implements DataService {
         }
     }
 
+    private static final String REPEAT_TXT = "数据重复";
+
     //生成数据重复的提示字符串
     private String gcRepeatHint(EruptModel eruptModel) {
         StringBuilder str = new StringBuilder();
@@ -136,7 +138,11 @@ public class DBService implements DataService {
                 str.append(eruptField.views()[0].title()).append("|");
             }
         }
-        return str.substring(0, str.length() - 1) + "数据重复";
+        if (StringUtils.isNotBlank(str)) {
+            return str.substring(0, str.length() - 1) + REPEAT_TXT;
+        } else {
+            return REPEAT_TXT;
+        }
     }
 
     @Transactional
