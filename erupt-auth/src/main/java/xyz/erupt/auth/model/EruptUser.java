@@ -50,24 +50,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     )
     private String name;
 
-//    @EruptField(
-//            views = @View(title = "联系电话", sortable = true),
-//            edit = @Edit(title = "联系电话", notNull = true, search = @Search(value = true, vague = true))
-//    )
-//    private String phone;
-//
-//    @EruptField(
-//            views = @View(title = "邮箱", sortable = true),
-//            edit = @Edit(title = "邮箱", notNull = true, search = @Search(value = true, vague = true))
-//    )
-//    private String email;
-//
-//    @EruptField(
-//            views = @View(title = "身份证号", sortable = true),
-//            edit = @Edit(title = "身份证号", notNull = true, search = @Search(value = true, vague = true))
-//    )
-//    private String identity;
-
     @ManyToOne
     @JoinColumn(name = "ERUPT_MENU_ID")
     @EruptField(
@@ -79,6 +61,12 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             )
     )
     private EruptMenu eruptMenu;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "密码", type = EditType.DIVIDE)
+    )
+    private String pwdDivide;
 
     @EruptField(
             edit = @Edit(title = "密码")
@@ -104,6 +92,24 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             )
     )
     private Boolean isMd5;
+
+//    @EruptField(
+//            views = @View(title = "联系电话", sortable = true),
+//            edit = @Edit(title = "联系电话", notNull = true, search = @Search(value = true, vague = true))
+//    )
+//    private String phone;
+//
+//    @EruptField(
+//            views = @View(title = "邮箱", sortable = true),
+//            edit = @Edit(title = "邮箱", notNull = true, search = @Search(value = true, vague = true))
+//    )
+//    private String email;
+//
+//    @EruptField(
+//            views = @View(title = "身份证号", sortable = true),
+//            edit = @Edit(title = "身份证号", notNull = true, search = @Search(value = true, vague = true))
+//    )
+//    private String identity;
 
     @EruptField(
             views = @View(title = "账户状态"),

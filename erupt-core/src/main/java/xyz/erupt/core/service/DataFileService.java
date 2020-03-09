@@ -55,6 +55,7 @@ public class DataFileService {
     public Workbook exportExcel(EruptModel eruptModel, Page page) {
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
+        sheet.setZoom(160);
         //冻结首行
         sheet.createFreezePane(0, 1, 1, 1);
         int rowIndex = 0;

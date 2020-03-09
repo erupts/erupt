@@ -31,7 +31,10 @@ import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author liyuepeng
@@ -175,13 +178,13 @@ public class DBService implements DataService {
         //处理depend参数代码
         Map<String, Object> conditionParameter = null;
         if (StringUtils.isNotBlank(refTree.dependField()) && null != dependValue) {
-            String dependVal = "dependVal";
-            conditionParameter = new HashMap<>(1);
+//            String dependVal = "dependVal";
+//            conditionParameter = new HashMap<>(1);
             if (StringUtils.isNotBlank(edit.filter().condition())) {
                 condition.append(EruptJpaUtils.AND);
             }
-            condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn()).append("=:").append(dependVal);
-            conditionParameter.put(dependVal, dependValue);
+            condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn()).append(String.format("='%s'", dependValue));
+//            conditionParameter.put(dependVal, dependValue);
         }
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.getErupt(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
         List<TreeModel> treeModels = new ArrayList<>();
