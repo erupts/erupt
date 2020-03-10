@@ -6,6 +6,7 @@ import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
@@ -32,14 +33,14 @@ import javax.persistence.UniqueConstraint;
 public class EruptDict extends BaseModel {
 
     @EruptField(
-            views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true)
+            views = @View(title = "编码", sortable = true),
+            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true, value = true))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true)
+            views = @View(title = "名称", sortable = true),
+            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true, value = true))
     )
     private String name;
 

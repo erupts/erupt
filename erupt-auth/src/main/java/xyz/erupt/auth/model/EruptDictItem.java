@@ -38,7 +38,7 @@ public class EruptDictItem extends BaseModel {
     private String name;
 
     @EruptField(
-            views = @View(title = "排序"),
+            views = @View(title = "排序", sortable = true),
             edit = @Edit(title = "排序")
     )
     private Integer sort;

@@ -65,14 +65,18 @@ public class EruptFieldModel {
                 this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
                 break;
             case DEPEND_SWITCH:
-                choiceMap = new HashMap<>();
-                for (DependSwitchType.Attr vl : edit.dependSwitchType().attr()) {
-                    choiceMap.put(vl.value(), vl.label());
+                if (serialize) {
+                    choiceMap = new HashMap<>();
+                    for (DependSwitchType.Attr vl : edit.dependSwitchType().attr()) {
+                        choiceMap.put(vl.value(), vl.label());
+                    }
                 }
                 break;
             case CHOICE:
-                choiceMap = new HashMap<>();
-                this.choiceMap = EruptUtil.getChoiceMap(edit.choiceType());
+                if (serialize) {
+                    choiceMap = new HashMap<>();
+                    this.choiceMap = EruptUtil.getChoiceMap(edit.choiceType());
+                }
                 break;
             default:
                 break;
