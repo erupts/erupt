@@ -31,6 +31,18 @@ public class ReflectUtil {
         return field;
     }
 
+    public static Object findFieldChain(String fieldName, Object obj)
+            throws IllegalAccessException {
+        String[] fields = fieldName.split("\\.");
+        for (String field : fields) {
+            obj = findClassField(obj.getClass(), field).get(obj);
+            if (null == obj) {
+                return null;
+            }
+        }
+        return obj;
+    }
+
     public static void findClassAllFields(Class clazz, Consumer<Field> fieldConsumer) {
         Class tempClass = clazz;
         while (null != tempClass) {

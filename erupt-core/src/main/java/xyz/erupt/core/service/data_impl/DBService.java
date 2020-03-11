@@ -29,6 +29,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -95,6 +96,7 @@ public class DBService implements DataService {
             jpaManyToOneConvert(eruptModel, object);
             eruptJpaDao.addEntity(object);
         } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
             throw new RuntimeException(gcRepeatHint(eruptModel));
         }
     }
@@ -151,7 +153,13 @@ public class DBService implements DataService {
     @Transactional
     @Override
     public void deleteData(EruptModel eruptModel, Object id) throws Exception {
-        entityManager.remove(this.findDataById(eruptModel, id));
+        try {
+            entityManager.remove(this.findDataById(eruptModel, id));
+        } catch (ConstraintViolationException e) {
+            e.printStackTrace();
+            throw new RuntimeException("删除失败，可能存在关联数据，无法直接删除！");
+        }
+
     }
 
     @Override

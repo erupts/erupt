@@ -62,10 +62,10 @@ public class EruptUtil {
                                 label = referenceTableType.label();
                             }
                             Map<String, Object> referMap = new HashMap<>();
-                            referMap.put(id, ReflectUtil.findClassField(value.getClass(), id).get(value));
-                            referMap.put(label, ReflectUtil.findClassField(value.getClass(), label).get(value));
+                            referMap.put(id, ReflectUtil.findFieldChain(id, value));
+                            referMap.put(label, ReflectUtil.findFieldChain(label, value));
                             for (View view : eruptField.views()) {
-                                referMap.put(view.column(), ReflectUtil.findClassField(value.getClass(), view.column()).get(value));
+                                referMap.put(view.column(), ReflectUtil.findFieldChain(view.column(), value));
                             }
                             map.put(field.getName(), referMap);
                             break;
