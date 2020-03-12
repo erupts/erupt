@@ -263,7 +263,7 @@ public class DataFileService {
     private DataValidation generateValidation(int colIndex, String errHint, DataValidationConstraint constraint) {
         // 设置数据有效性加载在哪个单元格上。
         // 四个参数分别是：起始行、终止行、起始列、终止列
-        CellRangeAddressList regions = new CellRangeAddressList(1, 999, colIndex, colIndex);
+        CellRangeAddressList regions = new CellRangeAddressList(1, 100, colIndex, colIndex);
         DataValidation dataValidationList = new HSSFDataValidation(regions, constraint);
         dataValidationList.createErrorBox("错误", errHint);
         return dataValidationList;
