@@ -195,16 +195,17 @@ public class DataFileService {
                 //256表格一个字节的宽度
                 sheet.setColumnWidth(cellNum, (edit.title().length() + 10) * 256);
                 DataValidationHelper dvHelper = sheet.getDataValidationHelper();
-
                 switch (edit.type()) {
                     case BOOLEAN:
                         sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(new String[]{edit.boolType().trueText(),
                                 edit.boolType().falseText()})));
                         break;
                     case CHOICE:
-                        String[] arr = new String[edit.choiceType().vl().length];
-                        for (int vi = 0; vi < edit.choiceType().vl().length; vi++) {
-                            arr[vi] = edit.choiceType().vl()[vi].label();
+                        String[] arr = new String[fieldModel.getChoiceMap().size()];
+                        int i = 0;
+                        for (String value : fieldModel.getChoiceMap().values()) {
+                            arr[i] = value;
+                            i++;
                         }
                         sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(arr)));
                         break;
@@ -220,8 +221,10 @@ public class DataFileService {
                         break;
                     case DEPEND_SWITCH:
                         String[] dw = new String[edit.dependSwitchType().attr().length];
-                        for (int vi = 0; vi < edit.dependSwitchType().attr().length; vi++) {
-                            dw[vi] = edit.dependSwitchType().attr()[vi].label();
+                        int ii = 0;
+                        for (String value : fieldModel.getChoiceMap().values()) {
+                            dw[ii] = value;
+                            ii++;
                         }
                         sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(dw)));
                         break;

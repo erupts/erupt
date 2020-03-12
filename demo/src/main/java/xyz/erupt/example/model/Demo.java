@@ -39,8 +39,8 @@ import java.util.Set;
                         eruptClass = DemoSub.class, title = "demo", icon = "fa fa-eercast", code = "demo"),
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
                         title = "demo2", icon = "fa fa-table", code = "demo2")
-        }
-
+        },
+        layoutTree = "eruptUserTree"
 )
 @Table(name = "DEMO")
 @Entity
@@ -109,6 +109,13 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     @ManyToOne
     @EruptField(
             views = @View(title = "多对一", column = "name"),
+            edit = @Edit(title = "多对一", type = EditType.REFERENCE_TREE)
+    )
+    private EruptUser eruptUserTree;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "多对一", column = "name"),
             edit = @Edit(title = "多对一", type = EditType.REFERENCE_TABLE,
                     referenceTableType = @ReferenceTableType(label = "eruptMenu.name"),
                     search = @Search(value = true))
@@ -139,7 +146,6 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             edit = @Edit(title = "HTML", type = EditType.TPL,
-                    search = @Search(true),
                     tplType = @Tpl(path = "demo.html", tplHandler = HtmlHandler.class, params = {"123", "xxx"}))
     )
     private String tpl;

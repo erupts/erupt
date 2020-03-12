@@ -1,6 +1,7 @@
 package xyz.erupt.core.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -47,7 +48,10 @@ public class ReflectUtil {
         Class tempClass = clazz;
         while (null != tempClass) {
             for (Field field : tempClass.getDeclaredFields()) {
-                fieldConsumer.accept(field);
+                int mod = field.getModifiers();
+                if (!Modifier.isStatic(mod) && !Modifier.isInterface(mod)) {
+                    fieldConsumer.accept(field);
+                }
             }
             tempClass = tempClass.getSuperclass();
         }

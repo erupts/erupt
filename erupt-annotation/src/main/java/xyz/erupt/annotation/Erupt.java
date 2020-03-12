@@ -51,6 +51,8 @@ public @interface Erupt {
 
     Tree tree() default @Tree;
 
+    String layoutTree() default "";
+
     @ToMap(key = "key")
     KV[] param() default {};
 

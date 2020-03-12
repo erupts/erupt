@@ -88,7 +88,7 @@ public class EruptUtil {
                                     map.put(field.getName(), idSet);
                                 }
                             } else {
-                                List list = new ArrayList();
+                                List<Object> list = new ArrayList<>();
                                 for (Object o : collection) {
                                     list.add(generateEruptDataMap(tabEruptModel, o));
                                 }
@@ -190,6 +190,10 @@ public class EruptUtil {
                             }
                         }
                         legalJsonObject.add(key, searchCondition.get(key));
+                    } else {
+                        if (key.equals(eruptModel.getErupt().layoutTree())) {
+                            legalJsonObject.add(key, searchCondition.get(key));
+                        }
                     }
                 }
             }

@@ -1,6 +1,5 @@
 package xyz.erupt.core.controller;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -47,8 +46,6 @@ public class EruptExcelController {
     @Autowired
     private EruptModifyController eruptModifyController;
 
-    @Autowired
-    private Gson gson;
 
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
