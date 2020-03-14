@@ -25614,7 +25614,37 @@ g2-tag-cloud {
 }
 
 /* You can add global styles to this file, and also import other style files */
-//@fa-font-path: "~font-awesome/fonts"
+// 可以通过 https://ng-alain.github.io/ng-alain/ 获取主题参数代码
+// The theme paraments can be generated at https://ng-alain.github.io/ng-alain/
+
+//#52C41A; 绿
+//#2196f3; 蓝
+@primary-color: #1a81ff;
+@alain-default-header-bg: @primary-color;
+@alain-default-aside-nav-text-hover-color: @primary-color;
+@alain-default-aside-nav-selected-text-color: @primary-color;
+@alain-default-header-hg: 54px;
+
+@alain-default-aside-bg: #fff;
+//@alain-default-aside-nav-selected-bg:#fff;
+@alain-default-aside-nav-text-color: rgba(0, 0, 0, 0.65);
+//暗黑模式
+.dark {
+  .alain-default__content, .alain-default__aside, .ant-modal-content {
+    filter: invert(80%);
+  }
+
+  .alain-default__content, .ant-modal-content {
+    img, canvas, .page-container, .fa, bi-chart {
+      filter: invert(90%);
+    }
+  }
+
+  .alain-default__header, .alain-default {
+    background: #333;
+  }
+
+}
 //修复st表格中checkbox显示bug
 .ant-table .ant-checkbox-checked .ant-checkbox-inner::after {
   left: 3px;
@@ -25673,13 +25703,13 @@ reuse-tab ~ app-page {
   position: absolute;
   left: 200px;
   right: 0;
-  top: 64px;
+  top: @alain-default-header-hg;
   bottom: 0;
 }
 
 @media screen and (max-width: 767px) {
   .page-container {
-    height: calc(100vh - 64px);
+    height: calc(100vh - @alain-default-header-hg);
     left: 0 !important;
     top: 0 !important;
     margin: 0 -25px;
@@ -25687,20 +25717,20 @@ reuse-tab ~ app-page {
 }
 
 //iframe page-container style end
+
 html {
   background: #fff;
 }
 
 .alain-default {
-  background: #fff;
+  background: #f5f7fa;
 }
 
-// 可以通过 https://ng-alain.github.io/ng-alain/ 获取主题参数代码
-// The theme paraments can be generated at https://ng-alain.github.io/ng-alain/
+.page-header {
+  margin-bottom: 16px !important;
+  //box-shadow: 0 10px 30px 0 rgba(82, 63, 105, .08);
 
-//#52C41A; 绿
-//#2196f3; 蓝
-@primary-color: #2196f3;
-@alain-default-header-bg: #262626;
-@alain-default-aside-nav-text-hover-color: @primary-color;
-@alain-default-aside-nav-selected-text-color: @primary-color;
+  .ant-breadcrumb {
+    margin-bottom: 12px;
+  }
+}

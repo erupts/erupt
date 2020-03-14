@@ -20,8 +20,7 @@ public class Test2Action {
         Map<String, Object> map = new HashMap<>();
         map.put("list", new String[]{
                 "E", "R", "U", "P", "T", "-", "-", "-"
-                , "-", "-", "-", "-",
-                "-", "-", "-", "-"
+                , "-", "-", "-"
         });
         map.put("color", new String[]{
                 "#eb776e", "#56aad6", "#69d5e7", "#f686e5", "#29ae94", "#fbd364",

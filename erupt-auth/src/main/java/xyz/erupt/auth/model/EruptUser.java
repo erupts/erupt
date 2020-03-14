@@ -191,10 +191,13 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     public void beforeUpdate(EruptUser eruptUser) {
         EruptUser eu = entityManager.find(EruptUser.class, eruptUser.getId());
         if (StringUtils.isNotBlank(eruptUser.getPassword())) {
+            if (!eruptUser.getPassword().equals(eruptUser.getPassword2())) {
+                throw new RuntimeException("两次密码输入不一致");
+            }
             if (eruptUser.getIsMd5()) {
                 eruptUser.setPassword(MD5Utils.digest(eu.getPassword()));
             } else {
-                eruptUser.setPassword(eu.getPassword());
+                eruptUser.setPassword(eruptUser.getPassword());
             }
         } else {
             eruptUser.setPassword(eu.getPassword());

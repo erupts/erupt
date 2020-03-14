@@ -82,7 +82,7 @@ public class EruptMenu extends BaseModel {
                     title = "顺序"
             )
     )
-    private Integer sort;
+    private Integer sort = 0;
 
 
     @EruptField(

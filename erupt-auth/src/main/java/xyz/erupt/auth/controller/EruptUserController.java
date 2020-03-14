@@ -76,7 +76,7 @@ public class EruptUserController {
                         menuSet.addAll(role.getMenus());
                     }
                 }
-                menuList = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort)).collect(Collectors.toList());
+                menuList = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
             }
             //生成tree结构数据
             List<TreeModel> treeModels = new ArrayList<>();

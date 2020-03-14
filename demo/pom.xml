@@ -9,9 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>xyz.erupt</groupId>
     <artifactId>demo</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <description>demo</description>
 
     <packaging>war</packaging>

@@ -71,8 +71,8 @@ public class EruptBiController {
             }
         }
         biModel.setCode(bi.getCode());
-        biModel.setCharts(bi.getBiCharts().stream().sorted(Comparator.comparing(BiChart::getSort)).collect(Collectors.toList()));
-        biModel.setDimensions(bi.getBiDimension().stream().sorted(Comparator.comparing(BiDimension::getSort)).collect(Collectors.toList()));
+        biModel.setCharts(bi.getBiCharts().stream().sorted(Comparator.comparing(BiChart::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
+        biModel.setDimensions(bi.getBiDimension().stream().sorted(Comparator.comparing(BiDimension::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
         return biModel;
     }
 
