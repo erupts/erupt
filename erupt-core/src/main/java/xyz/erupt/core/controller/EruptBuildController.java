@@ -52,12 +52,6 @@ public class EruptBuildController {
                     }
                     eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), CoreService.getEruptView(fieldModel.getFieldReturnName()));
                     break;
-                case REFERENCE_TABLE:
-                    if (eruptBuildModel.getReferenceErupts() == null) {
-                        eruptBuildModel.setReferenceErupts(new LinkedHashMap<>());
-                    }
-                    eruptBuildModel.getReferenceErupts().put(fieldModel.getFieldName(), CoreService.getEruptView(fieldModel.getFieldReturnName()));
-                    break;
                 default:
                     break;
             }
@@ -70,13 +64,19 @@ public class EruptBuildController {
                 eruptBuildModel.getOperationErupts().put(operation.code(), CoreService.getEruptView(operation.eruptClass().getSimpleName()));
             }
         }
-//        for (Drill drill : eruptBuildModel.getEruptModel().getErupt().drills()) {
-//            if (eruptBuildModel.getDrillErupts() == null) {
-//                eruptBuildModel.setOperationErupts(new LinkedHashMap<>());
-//            }
-//            eruptBuildModel.getDrillErupts().put(drill.code(), CoreService.getErupt(drill.eruptClass().getSimpleName()));
-//        }
         return eruptBuildModel;
+    }
+
+    @GetMapping("/{erupt}/{field}")
+    @ResponseBody
+    @EruptRouter(authIndex = 1)
+    public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
+        EruptModel eruptModel = CoreService.getEruptView(eruptName);
+        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(field);
+        if (null != eruptFieldModel) {
+            return this.getEruptBuild(eruptFieldModel.getFieldReturnName());
+        }
+        return null;
     }
 
 }

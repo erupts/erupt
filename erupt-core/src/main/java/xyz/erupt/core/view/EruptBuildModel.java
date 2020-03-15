@@ -17,8 +17,6 @@ public class EruptBuildModel {
 
     private Map<String, EruptBuildModel> tabErupts;
 
-    private Map<String, EruptModel> referenceErupts;
-
     private Map<String, EruptModel> combineErupts;
 
     private Map<String, EruptModel> operationErupts;
