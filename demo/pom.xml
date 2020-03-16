@@ -2,22 +2,45 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <groupId>xyz.erupt</groupId>
-        <artifactId>erupt</artifactId>
-        <version>0.1.1</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.4.RELEASE</version>
+        <relativePath/>
     </parent>
 
     <artifactId>demo</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <description>demo</description>
 
     <packaging>war</packaging>
 
     <properties>
         <java.version>1.8</java.version>
+        <erupt.version>0.5.3</erupt.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <environment>dev</environment>
+            </properties>
+        </profile>
+        <profile>
+            <id>prd</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <environment>prd</environment>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -60,7 +83,6 @@
             <artifactId>erupt-bi</artifactId>
             <version>${erupt.version}</version>
         </dependency>
-
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>open-api</artifactId>

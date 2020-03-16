@@ -205,11 +205,11 @@ public class EruptUtil {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             Edit edit = field.getEruptField().edit();
             JsonElement value = jsonObject.get(field.getFieldName());
-            if (field.getEruptField().edit().readOnly()) {
-                if (null != value) {
-                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "只读");
-                }
-            }
+//            if (field.getEruptField().edit().readOnly()) {
+//                if (null != value) {
+//                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "只读");
+//                }
+//            }
             if (field.getEruptField().edit().notNull()) {
                 if (null == value) {
                     return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");

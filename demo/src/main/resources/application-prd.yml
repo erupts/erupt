@@ -1,0 +1,5 @@
+erupt:
+  redis-session: false
+  upload-path: C:\yuepeng\img
+openApi:
+  hotReadXml: false

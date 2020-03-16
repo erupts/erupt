@@ -1,5 +1,7 @@
 package xyz.erupt.auth.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -23,6 +25,8 @@ import javax.persistence.UniqueConstraint;
         name = "字典项",
         orderBy = "sort"
 )
+@Getter
+@Setter
 public class EruptDictItem extends BaseModel {
 
     @EruptField(

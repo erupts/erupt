@@ -1,5 +1,7 @@
 package xyz.erupt.auth.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Drill;
@@ -30,6 +32,8 @@ import javax.persistence.UniqueConstraint;
                 )
         )
 )
+@Getter
+@Setter
 public class EruptDict extends BaseModel {
 
     @EruptField(

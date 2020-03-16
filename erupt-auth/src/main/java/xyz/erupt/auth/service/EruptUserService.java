@@ -26,10 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liyuepeng
@@ -118,7 +115,7 @@ public class EruptUserService {
                     digestPwd = MD5Utils.digest(eruptUser.getPassword());
                 }
                 String calcPwd = MD5Utils.digest(digestPwd +
-                        request.getHeader(USER_AGENT) + account);
+                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + account);
                 if (pwd.equalsIgnoreCase(calcPwd)) {
                     pass = true;
                 }
