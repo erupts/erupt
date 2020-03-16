@@ -35,10 +35,6 @@ public class EruptJpaDao {
         entityManager.merge(entity);
     }
 
-    public Object findDataById(EruptModel eruptModel, Object id) {
-        return entityManager.find(eruptModel.getClazz(), id);
-    }
-
     public Page queryEruptList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition) {
         String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")",
                 customCondition, searchCondition, page.getSort(), false));

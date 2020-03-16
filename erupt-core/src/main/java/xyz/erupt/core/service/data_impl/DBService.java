@@ -2,10 +2,10 @@ package xyz.erupt.core.service.data_impl;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -29,7 +29,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
-import javax.validation.ConstraintViolationException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -139,8 +138,10 @@ public class DBService implements DataService {
         StringBuilder str = new StringBuilder();
         for (UniqueConstraint uniqueConstraint : eruptModel.getClazz().getAnnotation(Table.class).uniqueConstraints()) {
             for (String columnName : uniqueConstraint.columnNames()) {
-                EruptField eruptField = eruptModel.getEruptFieldMap().get(columnName).getEruptField();
-                str.append(eruptField.views()[0].title()).append("|");
+                EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(columnName);
+                if (null != eruptFieldModel) {
+                    str.append(eruptFieldModel.getEruptField().views()[0].title()).append(",");
+                }
             }
         }
         if (StringUtils.isNotBlank(str)) {
@@ -152,12 +153,15 @@ public class DBService implements DataService {
 
     @Transactional
     @Override
-    public void deleteData(EruptModel eruptModel, Object id) throws Exception {
+    public void deleteData(EruptModel eruptModel, Object object) {
         try {
-            entityManager.remove(this.findDataById(eruptModel, id));
-        } catch (ConstraintViolationException e) {
+            entityManager.remove(object);
+        } catch (DataIntegrityViolationException | ConstraintViolationException e) {
             e.printStackTrace();
             throw new RuntimeException("删除失败，可能存在关联数据，无法直接删除！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("删除失败");
         }
 
     }

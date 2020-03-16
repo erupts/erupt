@@ -64,7 +64,7 @@ public interface DataService {
      * @param eruptModel erupt核心对象
      * @param id         数据id
      */
-    void deleteData(EruptModel eruptModel, Object id) throws Exception;
+    void deleteData(EruptModel eruptModel, Object object);
 
     /**
      * 获取tab栏参照的树
