@@ -140,7 +140,7 @@ public class DBService implements DataService {
             for (String columnName : uniqueConstraint.columnNames()) {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(columnName);
                 if (null != eruptFieldModel) {
-                    str.append(eruptFieldModel.getEruptField().views()[0].title()).append(",");
+                    str.append(eruptFieldModel.getEruptField().views()[0].title()).append("、");
                 }
             }
         }
