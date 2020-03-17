@@ -1,5 +1,7 @@
 package xyz.erupt.auth.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -26,6 +28,8 @@ import java.util.Date;
         power = @Power(add = false, edit = false, viewDetails = false, delete = false, export = true),
         orderBy = "loginTime desc"
 )
+@Getter
+@Setter
 public class EruptLoginLog extends BaseModel {
 
     @ManyToOne
