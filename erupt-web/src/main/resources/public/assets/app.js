@@ -5,6 +5,7 @@ window.eruptSiteConfig = {
     desc: "通用数据管理框架",
     routerReuse: false,
     amapKey: "15bc4df0bd6758645308fa591f439799",
+    dialogLogin: true,
     // logoPath: "/assets/logo.png",
     // registerPage:"http://www.baidu.com",
     r_tools: [{
@@ -21,10 +22,10 @@ window.eruptSiteConfig = {
 };
 window.eruptEvent = {
     Router: {
-        load(url, token) {
+        load: function (url, token) {
 
         },
-        unload(url, token) {
+        unload: function (url, token) {
         }
     }
 

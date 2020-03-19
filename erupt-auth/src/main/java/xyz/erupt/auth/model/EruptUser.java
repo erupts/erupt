@@ -145,7 +145,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     )
     private String remark;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "E_USER_ROLE",
             joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
@@ -189,13 +189,14 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     @Override
     public void beforeUpdate(EruptUser eruptUser) {
+        entityManager.clear();
         EruptUser eu = entityManager.find(EruptUser.class, eruptUser.getId());
         if (StringUtils.isNotBlank(eruptUser.getPassword())) {
             if (!eruptUser.getPassword().equals(eruptUser.getPassword2())) {
                 throw new RuntimeException("两次密码输入不一致");
             }
             if (eruptUser.getIsMd5()) {
-                eruptUser.setPassword(MD5Utils.digest(eu.getPassword()));
+                eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
             } else {
                 eruptUser.setPassword(eruptUser.getPassword());
             }

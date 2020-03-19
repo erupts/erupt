@@ -1,3 +1,3 @@
-function exp(n) {
+function and(dimsion) {
     return 'print:' + n
 }

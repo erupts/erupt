@@ -1,5 +1,6 @@
 package xyz.erupt.job.service;
 
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Service
 @Order(10)
+@Log
 public class JobDataLoadService implements CommandLineRunner {
 
     @Autowired
@@ -33,6 +35,7 @@ public class JobDataLoadService implements CommandLineRunner {
         for (EruptJob job : list) {
             eruptJobService.modifyJob(job);
         }
+        log.info("Erupt scheduler initialization complete");
         new ProjectUtil().projectStartLoaded("job", first -> {
             if (first) {
                 EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("job", "任务管理", null, 1, 10, "fa fa-cubes", null), "code", "job");

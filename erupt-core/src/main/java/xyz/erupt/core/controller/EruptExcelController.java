@@ -119,7 +119,7 @@ public class EruptExcelController {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new RuntimeException("Excel解析异常" + "，出错行数：" + i);
+                throw new RuntimeException("Excel解析异常" + "，出错行数：" + i + "，原因：" + e.getMessage());
             }
             i = 1;
             for (JsonObject jo : list) {

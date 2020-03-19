@@ -54,12 +54,11 @@ public enum EditType {
      * not support
      */
     //JSON编辑器
+    @EditTypeMapping(desc = "json编辑区", allowType = {JavaTypeEnum.String})
     JSON_EDIT,
     //地图
+    @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, excelOperator = false)
     MAP,
-    //步骤条
+    @EditTypeMapping(desc = "EMPTY", allowType = {JavaTypeEnum.String}, excelOperator = false)
     EMPTY,
-    STEPS,
-    //自定义引用类型
-    CUSTOM_REFER,
 }

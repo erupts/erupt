@@ -49,9 +49,10 @@ public class ReflectUtil {
         while (null != tempClass) {
             for (Field field : tempClass.getDeclaredFields()) {
                 int mod = field.getModifiers();
-                if (!Modifier.isStatic(mod) && !Modifier.isInterface(mod)) {
-                    fieldConsumer.accept(field);
+                if (Modifier.isStatic(mod) || Modifier.isInterface(mod)) {
+                    continue;
                 }
+                fieldConsumer.accept(field);
             }
             tempClass = tempClass.getSuperclass();
         }

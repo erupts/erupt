@@ -2,7 +2,6 @@ package xyz.erupt.core.service.data_impl;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -54,7 +53,8 @@ public class DBService implements DataService {
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        return entityManager.find(eruptModel.getClazz(), id);
+        Object o = entityManager.find(eruptModel.getClazz(), id);
+        return o;
     }
 
     @Override
@@ -154,16 +154,7 @@ public class DBService implements DataService {
     @Transactional
     @Override
     public void deleteData(EruptModel eruptModel, Object object) {
-        try {
-            entityManager.remove(object);
-        } catch (DataIntegrityViolationException | ConstraintViolationException e) {
-            e.printStackTrace();
-            throw new RuntimeException("删除失败，可能存在关联数据，无法直接删除！");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("删除失败");
-        }
-
+        entityManager.remove(object);
     }
 
     @Override

@@ -11,6 +11,7 @@ import xyz.erupt.tool.EruptDao;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.sql.ResultSetMetaData;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -89,6 +90,13 @@ public class BiService {
     private String processPlaceHolder(String express, Map<String, Object> param) {
         Matcher m = Pattern.compile(EXPRESS_PATTERN).matcher(express);
         ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("js");
+        try {
+            for (String s : BiDataLoadService.functions) {
+                scriptEngine.eval(s);
+            }
+        } catch (ScriptException e) {
+            throw new RuntimeException("函数脚本解析异常：" + e.getMessage());
+        }
         if (null != param) {
             for (Map.Entry<String, Object> entry : param.entrySet()) {
                 scriptEngine.put(entry.getKey(), param.get(entry.getKey()));

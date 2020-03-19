@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -48,8 +49,13 @@ public class EruptFileController {
         }
         try {
             //生成存储路径
-            String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator + RandomUtils.nextInt(100, 9999) + "-" + file.getOriginalFilename();
+            String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
+                    file.getOriginalFilename().replace("&", "") + "-" +
+                    RandomUtils.nextInt(100, 9999);
             EruptModel eruptModel = CoreService.getErupt(eruptName);
+            if (!eruptModel.getErupt().power().edit() && !eruptModel.getErupt().power().add()) {
+                throw new EruptNoLegalPowerException();
+            }
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
             switch (edit.type()) {
                 case ATTACHMENT:

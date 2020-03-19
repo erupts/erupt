@@ -6,10 +6,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import xyz.erupt.auth.model.EruptMenu;
+import xyz.erupt.bi.model.BiFunction;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.tool.EruptDao;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * @author liyuepeng
@@ -22,6 +24,8 @@ public class BiDataLoadService implements CommandLineRunner {
 
     @Autowired
     private EruptDao eruptDao;
+
+    static String[] functions = {};
 
     @Transactional
     @Override
@@ -40,6 +44,16 @@ public class BiDataLoadService implements CommandLineRunner {
                         , 2, 100, null, eruptMenu), "code", "BiChart");
             }
         });
+        flushFunction();
+        log.info("Erupt bi initialization complete");
+    }
+
+    public void flushFunction() {
+        List<Object[]> list = eruptDao.queryObjectList(BiFunction.class, null, null, "jsFunction");
+        functions = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            functions[i] = ((Object) list.get(i)).toString();
+        }
     }
 
 }

@@ -9,23 +9,26 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.core.view.TreeModel;
+import xyz.erupt.tool.EruptDao;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author liyuepeng
@@ -39,7 +42,7 @@ public class DataFileService {
     public static final String XLSX_FORMAT = ".xlsx";
 
     @Autowired
-    private EruptDataController eruptDataController;
+    private EruptDao eruptDao;
 
     private static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
 
@@ -99,7 +102,7 @@ public class DataFileService {
         return wb;
     }
 
-    public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) {
+    public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) throws Exception {
         Sheet sheet = workbook.getSheetAt(0);
         Row titleRow = sheet.getRow(0);
         Map<String, EruptFieldModel> editTitleMappingEruptField = new HashMap<>(eruptModel.getEruptFieldModels().size());
@@ -112,11 +115,13 @@ public class DataFileService {
             String titleName = titleRow.getCell(i).getStringCellValue();
             EruptFieldModel eruptFieldModel = editTitleMappingEruptField.get(titleName);
             cellIndexMapping.put(i, eruptFieldModel);
+            Edit edit = eruptFieldModel.getEruptField().edit();
             switch (eruptFieldModel.getEruptField().edit().type()) {
                 case CHOICE:
-                    Map<String, Object> choiceMap = new HashMap<>();
-                    for (VL vl : eruptFieldModel.getEruptField().edit().choiceType().vl()) {
-                        choiceMap.put(vl.label(), vl.value());
+                    Map<String, String> map = EruptUtil.getChoiceMap(edit.choiceType());
+                    Map<String, Object> choiceMap = new HashMap<>(map.size());
+                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                        choiceMap.put(entry.getValue(), entry.getKey());
                     }
                     cellIndexJoinEruptMap.put(i, choiceMap);
                     break;
@@ -124,9 +129,26 @@ public class DataFileService {
                     Map<String, Object> boolMap = new HashMap<>(2);
                     BoolType boolType = eruptFieldModel.getEruptField().edit().boolType();
                     boolMap.put(boolType.trueText(), true);
-                    boolMap.put(boolType.trueText(), true);
+                    boolMap.put(boolType.falseText(), false);
                     cellIndexJoinEruptMap.put(i, boolMap);
                     break;
+                case REFERENCE_TREE:
+                    List<Object[]> list = eruptDao.queryObjectList(eruptFieldModel.getField().getType(), "",
+                            null, edit.referenceTreeType().id(), edit.referenceTreeType().label());
+                    Map<String, Object> refTreeMap = new HashMap<>(list.size());
+                    for (Object[] obj : list) {
+                        refTreeMap.put(obj[1] == null ? null : obj[1].toString(), obj[0]);
+                    }
+                    cellIndexJoinEruptMap.put(i, refTreeMap);
+                    break;
+                case REFERENCE_TABLE:
+                    list = eruptDao.queryObjectList(eruptFieldModel.getField().getType(), "",
+                            null, edit.referenceTableType().id(), edit.referenceTableType().label());
+                    refTreeMap = new HashMap<>(list.size());
+                    for (Object[] obj : list) {
+                        refTreeMap.put(obj[1] == null ? null : obj[1].toString(), obj[0]);
+                    }
+                    cellIndexJoinEruptMap.put(i, refTreeMap);
                 default:
                     break;
             }
@@ -138,21 +160,34 @@ public class DataFileService {
                 continue;
             }
             JsonObject jsonObject = new JsonObject();
-            for (int cellNum = 0; cellNum < row.getPhysicalNumberOfCells(); cellNum++) {
+            for (int cellNum = 0; cellNum < titleRow.getPhysicalNumberOfCells(); cellNum++) {
                 Cell cell = row.getCell(cellNum);
                 EruptFieldModel eruptFieldModel = cellIndexMapping.get(cellNum);
-                if (CellType.BLANK != cell.getCellTypeEnum()) {
-                    switch (eruptFieldModel.getEruptField().edit().type()) {
-                        case REFERENCE_TREE:
+                if (null != cell && CellType.BLANK != cell.getCellTypeEnum()) {
+                    Edit edit = eruptFieldModel.getEruptField().edit();
+                    switch (edit.type()) {
                         case REFERENCE_TABLE:
-                            JsonObject ref = new JsonObject();
-                            //TODO
-                            ref.addProperty(CoreService.getErupt(eruptFieldModel.getFieldReturnName()).getErupt().primaryKeyCol(), "");
-                            jsonObject.add(eruptFieldModel.getFieldName(), ref);
+                            JsonObject jo = new JsonObject();
+                            try {
+                                if (edit.type() == EditType.REFERENCE_TREE) {
+                                    jo.addProperty(edit.referenceTreeType().id(),
+                                            cellIndexJoinEruptMap.get(cellNum).get(cell.getStringCellValue()).toString());
+                                } else if (edit.type() == EditType.REFERENCE_TABLE) {
+                                    jo.addProperty(edit.referenceTableType().id(),
+                                            cellIndexJoinEruptMap.get(cellNum).get(cell.getStringCellValue()).toString());
+                                }
+                            } catch (Exception e) {
+                                throw new Exception(edit.title() + " -> " + cell.getStringCellValue() + "数据不存在");
+                            }
+                            jsonObject.add(eruptFieldModel.getFieldName(), jo);
                             break;
                         case CHOICE:
-                            jsonObject.addProperty(eruptFieldModel.getFieldName(), cellIndexJoinEruptMap.get(cellNum)
-                                    .get(cell.getStringCellValue()).toString());
+                            try {
+                                jsonObject.addProperty(eruptFieldModel.getFieldName(), cellIndexJoinEruptMap.get(cellNum)
+                                        .get(cell.getStringCellValue()).toString());
+                            } catch (Exception e) {
+                                throw new Exception(edit.title() + " -> " + cell.getStringCellValue() + "数据不存在");
+                            }
                             break;
                         case BOOLEAN:
                             Boolean bool = (Boolean) cellIndexJoinEruptMap.get(cellNum).get(cell.getStringCellValue());
@@ -207,7 +242,9 @@ public class DataFileService {
                             arr[i] = value;
                             i++;
                         }
-                        sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(arr)));
+                        if (arr.length <= 25) {
+                            sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(arr)));
+                        }
                         break;
                     case SLIDER:
                         sheet.addValidationData(generateValidation(cellNum,
@@ -229,8 +266,8 @@ public class DataFileService {
                         sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(dw)));
                         break;
                     case REFERENCE_TREE:
-                        ReferenceTreeType referenceTreeType = fieldModel.getEruptField().edit().referenceTreeType();
-                        Collection<TreeModel> collection = eruptDataController.getReferenceTree(eruptModel.getEruptName(), fieldModel.getFieldName(), null);
+                    case REFERENCE_TABLE:
+
                         break;
                     default:
                         break;
@@ -242,8 +279,12 @@ public class DataFileService {
                 style.setVerticalAlignment(VerticalAlignment.CENTER);
                 style.setAlignment(HorizontalAlignment.CENTER);
                 font.setBold(true);
-                if (fieldModel.getEruptField().edit().notNull()) {
+                if (edit.notNull()) {
                     font.setColor(Font.COLOR_RED);
+                }
+                if (edit.type() == EditType.REFERENCE_TREE || edit.type() == EditType.REFERENCE_TABLE) {
+                    style.setFillForegroundColor(IndexedColors.YELLOW1.index);
+                    style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
                 }
                 style.setFont(font);
                 cell.setCellStyle(style);
@@ -263,9 +304,31 @@ public class DataFileService {
     private DataValidation generateValidation(int colIndex, String errHint, DataValidationConstraint constraint) {
         // 设置数据有效性加载在哪个单元格上。
         // 四个参数分别是：起始行、终止行、起始列、终止列
-        CellRangeAddressList regions = new CellRangeAddressList(1, 100, colIndex, colIndex);
+        CellRangeAddressList regions = new CellRangeAddressList(1, 1000, colIndex, colIndex);
         DataValidation dataValidationList = new HSSFDataValidation(regions, constraint);
         dataValidationList.createErrorBox("错误", errHint);
         return dataValidationList;
+    }
+
+    private void createHiddenChoiceSheet(int colIndex, EruptField eruptField, Workbook wb, String[] list) {
+//        Sheet sheet = wb.createSheet(eruptField.edit().title());
+//        Row row;
+//        //写入下拉数据到新的sheet页中
+//        for (int i = 0; i < list.length; i++) {
+//            row = sheet.createRow(i);
+//            Cell cell = row.createCell(0);
+//            cell.setCellValue(list[i]);
+//        }
+//        //获取新sheet页内容
+//        String strFormula = eruptField.edit().title() + "!$A$1:$A$65535";
+//        XSSFDataValidationConstraint constraint = new XSSFDataValidationConstraint(DataValidationConstraint.ValidationType.LIST, strFormula2);
+//        // 设置数据有效性加载在哪个单元格上,四个参数分别是：起始行、终止行、起始列、终止列
+//        CellRangeAddressList regions = new CellRangeAddressList(0, 1000, colIndex, colIndex);
+//        // 数据有效性对象
+//        DataValidationHelper help = new HSSFDataValidationHelper((HSSFSheet) sheet);
+//        DataValidation validation = help.createValidation(constraint, regions);
+//        sheet.addValidationData(validation);
+//        //将新建的sheet页隐藏掉
+//        wb.setSheetHidden(sheet.getNumMergedRegions(), true);
     }
 }

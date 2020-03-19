@@ -1,16 +1,21 @@
 package xyz.erupt.bi.model;
 
 import lombok.Getter;
+import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.bi.service.BiDataLoadService;
 import xyz.erupt.core.model.BaseModel;
 
+import javax.annotation.Resource;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author liyuepeng
@@ -18,9 +23,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "E_BI_FUNCTION")
-@Erupt(name = "报表函数")
+@Erupt(name = "报表函数", dataProxy = BiFunction.class)
 @Getter
-public class BiFunction extends BaseModel {
+@Service
+public class BiFunction extends BaseModel implements DataProxy<BiFunction> {
 
     @EruptField(
             views = @View(title = "编码"),
@@ -39,4 +45,22 @@ public class BiFunction extends BaseModel {
     )
     private String jsFunction;
 
+    @Resource
+    @Transient
+    private BiDataLoadService biDataLoadService;
+
+    @Override
+    public void afterAdd(BiFunction biFunction) {
+        biDataLoadService.flushFunction();
+    }
+
+    @Override
+    public void afterUpdate(BiFunction biFunction) {
+        biDataLoadService.flushFunction();
+    }
+
+    @Override
+    public void afterDelete(BiFunction biFunction) {
+        biDataLoadService.flushFunction();
+    }
 }

@@ -33,7 +33,7 @@ import java.util.Set;
  * @date 2019-10-08.
  */
 @Erupt(name = "demo", orderBy = "number desc",
-        power = @Power(export = true, powerHandler = PowerHandlerImpl.class), dataProxy = Demo.class,
+        power = @Power(export = true, importable = true, powerHandler = PowerHandlerImpl.class), dataProxy = Demo.class,
         rowOperation = {
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
                         eruptClass = DemoSub.class, title = "demo", icon = "fa fa-eercast", code = "demo"),
@@ -49,7 +49,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "文本"),
-            edit = @Edit(title = "文本", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "文本", search = @Search(value = true, vague = true), notNull = true)
     )
     private String input = "默认文本";
 

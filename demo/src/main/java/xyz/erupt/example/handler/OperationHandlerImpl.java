@@ -11,7 +11,7 @@ public class OperationHandlerImpl implements OperationHandler {
 
     @Override
     public void exec(Object data, JsonObject param) {
-
+        System.out.println(123);
     }
 
 
