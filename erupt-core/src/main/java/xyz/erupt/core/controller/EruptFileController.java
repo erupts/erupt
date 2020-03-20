@@ -49,14 +49,14 @@ public class EruptFileController {
         }
         try {
             //生成存储路径
-            String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
-                    file.getOriginalFilename().replace("&", "") + "-" +
-                    RandomUtils.nextInt(100, 9999);
             EruptModel eruptModel = CoreService.getErupt(eruptName);
             if (!eruptModel.getErupt().power().edit() && !eruptModel.getErupt().power().add()) {
                 throw new EruptNoLegalPowerException();
             }
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
+            String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
+                    file.getOriginalFilename().replace("&", "").replace(edit.attachmentType().fileSeparator(), "") +
+                    "-" + RandomUtils.nextInt(100, 9999);
             switch (edit.type()) {
                 case ATTACHMENT:
                     AttachmentType attachmentType = edit.attachmentType();
