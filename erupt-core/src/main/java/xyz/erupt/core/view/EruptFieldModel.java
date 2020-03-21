@@ -19,6 +19,7 @@ import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -82,9 +83,8 @@ public class EruptFieldModel {
                 break;
         }
         if (serialize) {
-            this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
-        } else {
             this.eruptAutoConfig();
+            this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
         }
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
@@ -149,10 +149,10 @@ public class EruptFieldModel {
         }
     }
 
-    private Map<String, Object> getAnnotationMap(Object obj) throws NoSuchFieldException, IllegalAccessException {
-        InvocationHandler invocationHandler = Proxy.getInvocationHandler(obj);
-        Field value = invocationHandler.getClass().getDeclaredField("memberValues");
-        value.setAccessible(true);
-        return (Map<String, Object>) value.get(invocationHandler);
+    private Map<String, Object> getAnnotationMap(Annotation annotation) throws NoSuchFieldException, IllegalAccessException {
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
+        Field field = invocationHandler.getClass().getDeclaredField("memberValues");
+        field.setAccessible(true);
+        return Map.class.cast(field.get(invocationHandler));
     }
 }
