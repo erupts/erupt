@@ -34,6 +34,9 @@ MIT
 @angular/core
 MIT
 
+@angular/router
+MIT
+
 @angularclass/hmr
 Apache-2.0
                                  Apache License
@@ -495,9 +498,6 @@ SOFTWARE.
 MIT
 
 @angular/platform-browser
-MIT
-
-@angular/router
 MIT
 
 @antv/adjust
