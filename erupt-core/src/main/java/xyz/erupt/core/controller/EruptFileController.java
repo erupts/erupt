@@ -55,8 +55,10 @@ public class EruptFileController {
             }
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
             String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
-                    file.getOriginalFilename().replace("&", "").replace(edit.attachmentType().fileSeparator(), "") +
-                    "-" + RandomUtils.nextInt(100, 9999);
+                    RandomUtils.nextInt(100, 9999) + "-" +
+                    file.getOriginalFilename()
+                            .replace("&", "")
+                            .replace(edit.attachmentType().fileSeparator(), "");
             switch (edit.type()) {
                 case ATTACHMENT:
                     AttachmentType attachmentType = edit.attachmentType();
