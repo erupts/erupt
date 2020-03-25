@@ -2,11 +2,11 @@ package xyz.erupt.tpl.config;
 
 import freemarker.template.Configuration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -20,7 +20,7 @@ public class TemplateConfig {
     public TemplateEngine thymeleafEngine() throws IOException {
         FileTemplateResolver resolver = new FileTemplateResolver();
         resolver.setCacheable(false);
-        resolver.setPrefix(new ClassPathResource("").getFile().getPath() + "/");
+        resolver.setPrefix(this.getClass().getResource("/").getPath());
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCheckExistence(true);
         resolver.setUseDecoupledLogic(true);
@@ -33,7 +33,7 @@ public class TemplateConfig {
     public Configuration freeMarkerEngine() throws IOException {
         Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_29);
         freemarkerConfig.setDefaultEncoding("utf-8");
-        freemarkerConfig.setDirectoryForTemplateLoading(new ClassPathResource("").getFile());
+        freemarkerConfig.setDirectoryForTemplateLoading(new File(this.getClass().getResource("/").getFile()));
         return freemarkerConfig;
     }
 }

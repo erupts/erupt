@@ -10,10 +10,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author liyuepeng
@@ -78,5 +77,12 @@ public class EntersSellsSaves extends BaseModel {
     )
     @Column(name = "SALE_PRICE")
     private Double salePrice;
+
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "sell_id")
+    @EruptField(
+            edit = @Edit(title = "Demos", type = EditType.TAB_TABLE_ADD)
+    )
+    private Set<Demo> demos;
 
 }

@@ -21,7 +21,6 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TreeModel;
-import xyz.erupt.tool.EruptDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -48,13 +47,9 @@ public class DBService implements DataService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private EruptDao eruptDao;
-
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        Object o = entityManager.find(eruptModel.getClazz(), id);
-        return o;
+        return entityManager.find(eruptModel.getClazz(), id);
     }
 
     @Override

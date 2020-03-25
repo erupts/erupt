@@ -3,10 +3,8 @@ package xyz.erupt.tpl.controller;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +21,9 @@ import xyz.erupt.tpl.service.TplService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import static xyz.erupt.core.constant.RestPath.ERUPT_API;
@@ -52,7 +52,7 @@ public class EruptTplController {
     @GetMapping(value = "/{name}", produces = {"text/html;charset=utf-8"})
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void getEruptFieldHtml(@PathVariable("name") String fileName, HttpServletResponse response) throws Exception {
-        ClassPathResource resource = new ClassPathResource(TPL + "/" + fileName);
+        InputStream inputStream = this.getClass().getResourceAsStream("/" + TPL + "/" + fileName);
         Method method = tplService.getAction(fileName);
         response.setCharacterEncoding("UTF-8");
         if (null != method) {
@@ -72,10 +72,10 @@ public class EruptTplController {
                         break;
                 }
             } else {
-                response.getWriter().write(FileUtils.readFileToString(resource.getFile()));
+                response.getWriter().write(StreamUtils.copyToString(inputStream, Charset.forName("utf-8")));
             }
         } else {
-            response.getWriter().write(FileUtils.readFileToString(resource.getFile()));
+            response.getWriter().write(StreamUtils.copyToString(inputStream, Charset.forName("utf-8")));
         }
     }
 
@@ -88,8 +88,8 @@ public class EruptTplController {
         response.setCharacterEncoding("utf-8");
         Tpl tpl = eruptModel.getEruptFieldMap().get(field).getEruptField().edit().tplType();
         if (tpl.tplHandler().isInterface()) {
-            Resource resource = new ClassPathResource(tpl.path());
-            response.getWriter().write(FileUtils.readFileToString(resource.getFile()));
+            response.getWriter().write(StreamUtils
+                    .copyToString(this.getClass().getResourceAsStream(tpl.path()), Charset.forName("utf-8")));
         } else {
             Map<String, Object> data = EruptSpringUtil.getBean(tpl.tplHandler()).tplAction(tpl.params());
             switch (tpl.engine()) {
