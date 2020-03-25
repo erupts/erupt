@@ -10,7 +10,7 @@ import java.beans.Transient;
  */
 public @interface ChoiceType {
 
-    String joinSeparator() default ",";
+    String joinSeparator() default "|";
 
     ChoiceEnum type() default ChoiceEnum.SELECT_SINGLE;
 
