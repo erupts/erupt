@@ -34,6 +34,9 @@ MIT
 @angular/core
 MIT
 
+@angular/platform-browser
+MIT
+
 @angular/router
 MIT
 
@@ -495,9 +498,6 @@ SOFTWARE.
 
 
 @angular/forms
-MIT
-
-@angular/platform-browser
 MIT
 
 @antv/adjust
@@ -1015,6 +1015,8 @@ States and other countries. All third party trademarks referenced herein are
 the property of their respective owners.
 
 
+
+ng-zorro-antd/auto-complete
 
 ng-zorro-antd/avatar
 

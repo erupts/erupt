@@ -10,6 +10,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
+import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -36,11 +37,12 @@ import java.util.Set;
         power = @Power(export = true, importable = true, powerHandler = PowerHandlerImpl.class), dataProxy = Demo.class,
         rowOperation = {
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
-                        eruptClass = DemoSub.class, title = "demo", icon = "fa fa-eercast", code = "demo"),
+                        eruptClass = DemoSub.class, title = "操作一", icon = "fa fa-eercast", code = "d1"),
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
-                        title = "demo2", icon = "fa fa-table", code = "demo2")
+                        title = "操作文本", icon = "fa fa-table", code = "d2")
         },
-        layoutTree = "eruptUserTree"
+        layoutTree = "eruptUserTree",
+        tree = @Tree(label = "input")
 )
 @Table(name = "DEMO")
 @Entity
@@ -151,13 +153,13 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     private String tpl;
 
     @EruptField(
-            views = @View(title = "地图"),
+            views = @View(title = "地图", type = ViewType.MAP),
             edit = @Edit(title = "地图", type = EditType.MAP)
     )
     private String map;
 
     @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "demo_id")
+    @JoinColumn(name = "demo_sub_id")
     @EruptField(
             edit = @Edit(
                     title = "一对多",

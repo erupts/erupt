@@ -4,7 +4,7 @@ window.eruptSiteConfig = {
     title: "Erupt Framework", //通用数据管理框架
     desc: "通用数据管理框架",
     routerReuse: false,
-    amapKey: "15bc4df0bd6758645308fa591f439799",
+    amapKey: "6ba79a8db11b51aeb1176bd4cfa049f4",
     dialogLogin: true,
     // logoPath: "/assets/logo.png",
     // registerPage:"http://www.baidu.com",
