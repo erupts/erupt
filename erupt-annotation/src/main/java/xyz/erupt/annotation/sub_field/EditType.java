@@ -50,15 +50,14 @@ public enum EditType {
     TPL,
     @EditTypeMapping(desc = "代码编辑器", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
+    @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, excelOperator = false)
+    MAP,
     /**
      * not support
      */
     //JSON编辑器
     @EditTypeMapping(desc = "json编辑区", allowType = {JavaTypeEnum.String})
     JSON_EDIT,
-    //地图
-    @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, excelOperator = false)
-    MAP,
     @EditTypeMapping(desc = "EMPTY", allowType = {JavaTypeEnum.String}, excelOperator = false)
     EMPTY,
 }

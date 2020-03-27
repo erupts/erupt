@@ -8,6 +8,8 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.service.BiDataLoadService;
 import xyz.erupt.core.model.BaseModel;
@@ -41,7 +43,9 @@ public class BiFunction extends BaseModel implements DataProxy<BiFunction> {
     private String name;
 
     @EruptField(
-            edit = @Edit(title = "函数表达式", desc = "参照JavaScript function写法", notNull = true, type = EditType.TEXTAREA)
+            views = @View(title = "函数表达式", type = ViewType.CODE_EDITOR),
+            edit = @Edit(title = "函数表达式", desc = "参照JavaScript function写法",
+                    codeEditType = @CodeEditorType(language = "javascript", darkTheme = false), notNull = true, type = EditType.CODE_EDITOR)
     )
     private String jsFunction;
 

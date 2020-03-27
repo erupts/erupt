@@ -1024,6 +1024,8 @@ ng-zorro-antd/back-top
 
 ng-zorro-antd/carousel
 
+ng-zorro-antd/code-editor
+
 ng-zorro-antd/collapse
 
 ng-zorro-antd/form

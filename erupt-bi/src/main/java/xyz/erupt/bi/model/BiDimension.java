@@ -89,7 +89,7 @@ public class BiDimension extends BaseModel {
     private String dependDimension;
 
     @EruptField(
-            edit = @Edit(title = "参照sql", type = EditType.TEXTAREA)
+            edit = @Edit(title = "参照维度", type = EditType.TEXTAREA)
     )
     private String refSql;
 

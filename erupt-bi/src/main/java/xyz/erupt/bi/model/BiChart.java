@@ -7,10 +7,8 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.annotation.sub_field.sub_edit.SliderType;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.*;
@@ -92,7 +90,8 @@ public class BiChart extends BaseModel {
 
     @Lob
     @EruptField(
-            edit = @Edit(title = "图表sql", type = EditType.TEXTAREA, notNull = true)
+            views = @View(title = "图表sql", type = ViewType.CODE_EDITOR),
+            edit = @Edit(title = "图表sql", type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 

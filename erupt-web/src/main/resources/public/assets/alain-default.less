@@ -25614,6 +25614,52 @@ g2-tag-cloud {
 }
 
 /* You can add global styles to this file, and also import other style files */
+
+@code-editor-prefix-cls: ~'@{ant-prefix}-code-editor';
+
+.@{code-editor-prefix-cls} {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: @component-background;
+
+  .@{code-editor-prefix-cls}-loading {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+    background-color: @component-background;
+  }
+
+  .@{code-editor-prefix-cls}-toolkit {
+    top: 20px;
+    right: 160px;
+    position: absolute;
+    height: 24px;
+    z-index: 2;
+    min-width: 100px;
+    background: transparent;
+    text-align: right;
+
+    i {
+      position: relative;
+      right: 4px;
+      cursor: pointer;
+
+      &:not(:last-child) {
+        padding-right: 4px;
+      }
+
+      &.active {
+        color: @primary-color
+      }
+    }
+  }
+}
+
 // 可以通过 https://ng-alain.github.io/ng-alain/ 获取主题参数代码
 // The theme paraments can be generated at https://ng-alain.github.io/ng-alain/
 

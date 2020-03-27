@@ -13,7 +13,6 @@ public enum ViewType {
     IMAGE,
     //flash文件
     SWF,
-    MAP,
     //HTML
     HTML,
     //二维码
@@ -30,5 +29,7 @@ public enum ViewType {
     ATTACHMENT_DIALOG,
     DATE,
     BOOLEAN,
-    NUMBER
+    NUMBER,
+    MAP,
+    CODE_EDITOR,
 }

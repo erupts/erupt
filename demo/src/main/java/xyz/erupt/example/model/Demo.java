@@ -49,6 +49,7 @@ import java.util.Set;
 @Component
 public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandler {
 
+
     @EruptField(
             views = @View(title = "文本"),
             edit = @Edit(title = "文本", search = @Search(value = true, vague = true), notNull = true)
@@ -66,6 +67,13 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
             edit = @Edit(title = "时间", type = EditType.DATE, search = @Search(true), dateType = @DateType(type = DateType.Type.TIME))
     )
     private String time1;
+
+    @Lob
+    @EruptField(
+            views = @View(title = "代码编辑器", type = ViewType.DOWNLOAD),
+            edit = @Edit(title = "代码编辑器", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "css"))
+    )
+    private String code;
 
     @EruptField(
             views = @View(title = "时间日期"),

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -82,6 +83,13 @@ public class DataHandlerUtil {
                 EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
                 Edit edit = fieldModel.getEruptField().edit();
                 switch (edit.type()) {
+                    case DATE:
+                        if (edit.dateType().type() == DateType.Type.DATE) {
+                            if (null != entry.getValue() && StringUtils.isNotBlank(entry.getValue().toString())) {
+                                map.put(entry.getKey(), entry.getValue().toString().substring(0, 10));
+                            }
+                        }
+                        break;
                     case DEPEND_SWITCH:
                         map.put(entry.getKey(), fieldModel.getChoiceMap().get(entry.getValue().toString()));
                         break;

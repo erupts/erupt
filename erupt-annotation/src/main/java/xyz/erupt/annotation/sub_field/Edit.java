@@ -67,9 +67,8 @@ public @interface Edit {
     ReferenceTableType referenceTableType() default @ReferenceTableType;
 
     @SerializeBy(method = "type", value = "CODE_EDITOR")
-    CodeEditorType codeEditType() default @CodeEditorType(language = "text");
+    CodeEditorType codeEditType() default @CodeEditorType(language = "sql");
 
-    //@SerializeBy(method = "type", value = "TPL")
     @Transient
     Tpl tplType() default @Tpl(path = "");
 
