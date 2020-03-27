@@ -38,7 +38,7 @@ public class News extends BaseModel implements DataProxy<News> {
 
     @Lob
     @EruptField(
-            views = @View(title = "简介", type = ViewType.HTML),
+            views = @View(title = "简介"),
             edit = @Edit(title = "简介", type = EditType.TEXTAREA, notNull = true)
     )
     private String hint;

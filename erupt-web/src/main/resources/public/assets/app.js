@@ -27,6 +27,12 @@ window.eruptEvent = {
         },
         unload: function (url, token) {
         }
-    }
+    },
+    $: {
+        load: function (url, token) {
 
+        },
+        unload: function (url, token) {
+        }
+    }
 };
