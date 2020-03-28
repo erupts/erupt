@@ -118,17 +118,17 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "多对一", column = "name"),
-            edit = @Edit(title = "多对一", type = EditType.REFERENCE_TREE)
+            views = @View(title = "多对一树", column = "name"),
+            edit = @Edit(title = "多对一树", type = EditType.REFERENCE_TREE)
     )
     private EruptUser eruptUserTree;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "多对一", column = "name"),
-            edit = @Edit(title = "多对一", type = EditType.REFERENCE_TABLE,
-                    referenceTableType = @ReferenceTableType(label = "eruptMenu.name"),
-                    search = @Search(value = true))
+            views = @View(title = "多对一表格", column = "name"),
+            edit = @Edit(title = "多对一表格", type = EditType.REFERENCE_TABLE,
+                    referenceTableType = @ReferenceTableType(dependField = "eruptUserTree"),
+                    search = @Search)
     )
     private EruptUser eruptUser;
 

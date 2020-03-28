@@ -25756,6 +25756,20 @@ html {
   background: #f5f7fa;
 }
 
+.alain-default__progress-bar {
+  height: 8px;
+}
+
+.erupt-global__progress {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 999;
+  background: rgba(35, 35, 35, 0.4);
+}
+
 .page-header {
   margin-bottom: 16px !important;
   //box-shadow: 0 10px 30px 0 rgba(82, 63, 105, .08);
@@ -25767,17 +25781,39 @@ html {
 
 //暗黑模式
 .dark {
-  .alain-default__content, .alain-default__aside, .ant-modal-content {
-    filter: invert(85%);
+
+  .alain-default__content, .ant-modal-content, .alain-default__aside {
+    filter: invert(88%);
+  }
+
+  .ant-modal-content {
+    border: 1px solid #999;
+    box-shadow: none;
   }
 
   .alain-default__content, .ant-modal-content {
-    img, canvas, .page-container, .fa, bi-chart {
+    img, canvas,
+    .page-container, .fa, .exception__img,
+    bi-chart {
       filter: invert(100%);
     }
+
+    st .ant-table {
+      box-shadow: none;
+    }
+
+    //[class*='primary']{
+    //  color: #888;
+    //}
   }
 
-  .alain-default__header, .alain-default {
-    background: #292929;
+  .alain-default {
+    background: #222;
   }
+
+  .alain-default__header {
+    border-bottom: 1px solid #333;
+    background: #222;
+  }
+
 }
