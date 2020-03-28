@@ -7,7 +7,6 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.model.BaseModel;
 
@@ -90,7 +89,7 @@ public class BiChart extends BaseModel {
 
     @Lob
     @EruptField(
-            views = @View(title = "图表sql", type = ViewType.CODE_EDITOR),
+            views = @View(title = "图表sql"),
             edit = @Edit(title = "图表sql", type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;

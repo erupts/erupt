@@ -8,6 +8,8 @@ public @interface DateType {
 
     Type type() default Type.DATE;
 
+    boolean limit() default true;
+
     enum Type {
         DATE, TIME, DATE_TIME, MONTH, YEAR
     }

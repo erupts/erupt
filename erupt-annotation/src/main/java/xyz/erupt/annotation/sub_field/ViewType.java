@@ -31,5 +31,5 @@ public enum ViewType {
     BOOLEAN,
     NUMBER,
     MAP,
-    CODE_EDITOR,
+    CODE,
 }

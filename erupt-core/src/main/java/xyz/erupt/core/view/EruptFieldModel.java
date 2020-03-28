@@ -113,6 +113,12 @@ public class EruptFieldModel {
                             case HTML_EDIT:
                                 viewValues.put(TYPE, ViewType.HTML);
                                 continue;
+                            case CODE_EDITOR:
+                                viewValues.put(TYPE, ViewType.CODE);
+                                continue;
+                            case MAP:
+                                viewValues.put(TYPE, ViewType.MAP);
+                                continue;
                         }
                     }
                     if (JavaType.BOOLEAN.equals(this.fieldReturnName.toLowerCase())) {

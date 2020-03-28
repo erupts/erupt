@@ -10,9 +10,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 public enum EditType {
     @EditTypeMapping(desc = "框架自动检测类型", allowType = {JavaTypeEnum.any})
     AUTO,
-    @EditTypeMapping(mapping = InputType.class, desc = "输入框 String:vague the like|number:vague the range", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
+    @EditTypeMapping(mapping = InputType.class, desc = "输入框 vague the like", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     INPUT,
-    @EditTypeMapping(mapping = NumberType.class, desc = "数字输入", allowType = {JavaTypeEnum.number})
+    @EditTypeMapping(mapping = NumberType.class, desc = "数字输入 vague the rang", allowType = {JavaTypeEnum.number})
     NUMBER,
     @EditTypeMapping(mapping = SliderType.class, desc = "数字滑块 vague the range", allowType = {JavaTypeEnum.number})
     SLIDER,
@@ -48,16 +48,13 @@ public enum EditType {
     TAB_TABLE_ADD,
     @EditTypeMapping(desc = "自定义HTML模板", allowType = {JavaTypeEnum.String}, search = false, excelOperator = false)
     TPL,
-    @EditTypeMapping(desc = "代码编辑器", allowType = {JavaTypeEnum.String})
-    CODE_EDITOR,
     @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, excelOperator = false)
     MAP,
+    @EditTypeMapping(desc = "代码编辑器", allowType = {JavaTypeEnum.String})
+    CODE_EDITOR,
     /**
      * not support
      */
-    //JSON编辑器
-    @EditTypeMapping(desc = "json编辑区", allowType = {JavaTypeEnum.String})
-    JSON_EDIT,
     @EditTypeMapping(desc = "EMPTY", allowType = {JavaTypeEnum.String}, excelOperator = false)
     EMPTY,
 }

@@ -2,11 +2,11 @@ package xyz.erupt.example.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.model.BaseModel;
@@ -19,7 +19,7 @@ import java.util.Set;
  * @author liyuepeng
  * @date 2019-08-12.
  */
-@Erupt(name = "进销存")
+@Erupt(name = "进销存", power = @Power(importable = true, export = true))
 @Entity
 @Table(name = "Enters_Sells_Saves")
 public class EntersSellsSaves extends BaseModel {
@@ -40,7 +40,7 @@ public class EntersSellsSaves extends BaseModel {
 
     @EruptField(
             views = @View(title = "入库时间"),
-            edit = @Edit(search = @Search(value = true, vague = true), title = "入库时间", type = EditType.DATE, dateType = @DateType(type = DateType.Type.DATE))
+            edit = @Edit(search = @Search(value = true, vague = true), title = "入库时间", readOnly = true)
     )
     @Column(name = "DATE")
     private Date date;

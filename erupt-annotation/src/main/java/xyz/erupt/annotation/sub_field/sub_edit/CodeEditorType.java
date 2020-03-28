@@ -6,6 +6,4 @@ package xyz.erupt.annotation.sub_field.sub_edit;
  */
 public @interface CodeEditorType {
     String language();
-
-    boolean darkTheme() default false;
 }

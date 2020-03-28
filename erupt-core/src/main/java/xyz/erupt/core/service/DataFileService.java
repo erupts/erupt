@@ -225,7 +225,8 @@ public class DataFileService {
         int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
-            if (edit.show() && StringUtils.isNotBlank(edit.title()) && AnnotationUtil.getEditTypeMapping(edit.type()).excelOperator()) {
+            if (edit.show() && !edit.readOnly() && StringUtils.isNotBlank(edit.title())
+                    && AnnotationUtil.getEditTypeMapping(edit.type()).excelOperator()) {
                 Cell cell = headRow.createCell(cellNum);
                 //256表格一个字节的宽度
                 sheet.setColumnWidth(cellNum, (edit.title().length() + 10) * 256);
@@ -264,10 +265,6 @@ public class DataFileService {
                             ii++;
                         }
                         sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(dw)));
-                        break;
-                    case REFERENCE_TREE:
-                    case REFERENCE_TABLE:
-
                         break;
                     default:
                         break;

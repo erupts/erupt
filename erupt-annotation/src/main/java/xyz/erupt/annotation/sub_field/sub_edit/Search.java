@@ -5,7 +5,7 @@ package xyz.erupt.annotation.sub_field.sub_edit;
  * @date 2018-09-28.
  */
 public @interface Search {
-    boolean value();
+    boolean value() default true;
 
     boolean notNull() default false;
 

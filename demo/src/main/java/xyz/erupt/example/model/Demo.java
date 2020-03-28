@@ -52,32 +52,32 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "文本"),
-            edit = @Edit(title = "文本", search = @Search(value = true, vague = true), notNull = true)
+            edit = @Edit(title = "文本", search = @Search(vague = true), notNull = true)
     )
     private String input = "默认文本";
 
     @EruptField(
             views = @View(title = "数字"),
-            edit = @Edit(title = "数字", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "数字", search = @Search(vague = true))
     )
     private Integer number;
 
     @EruptField(
             views = @View(title = "时间"),
-            edit = @Edit(title = "时间", type = EditType.DATE, search = @Search(true), dateType = @DateType(type = DateType.Type.TIME))
+            edit = @Edit(title = "时间", type = EditType.DATE, search = @Search, dateType = @DateType(type = DateType.Type.TIME))
     )
     private String time1;
 
     @Lob
     @EruptField(
-            views = @View(title = "代码编辑器", type = ViewType.DOWNLOAD),
+            views = @View(title = "代码编辑器"),
             edit = @Edit(title = "代码编辑器", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "css"))
     )
     private String code;
 
     @EruptField(
             views = @View(title = "时间日期"),
-            edit = @Edit(title = "时间日期", search = @Search(value = true, vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "时间日期", search = @Search(value = true, vague = true), dateType = @DateType(limit = true))
     )
     private Date date;
 
@@ -161,7 +161,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     private String tpl;
 
     @EruptField(
-            views = @View(title = "地图", type = ViewType.MAP),
+            views = @View(title = "地图"),
             edit = @Edit(title = "地图", type = EditType.MAP)
     )
     private String map;
