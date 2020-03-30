@@ -25708,6 +25708,10 @@ g2-tag-cloud {
   }
 }
 
+nz-input-group {
+  width: 100%;
+}
+
 nz-picker, nz-picker .ant-calendar-picker {
   width: 100% !important;
 }
@@ -25770,6 +25774,12 @@ html {
   background: rgba(35, 35, 35, 0.4);
 }
 
+.alain-default__collapsed .alain-default__header-logo {
+  width: auto !important;
+  min-width: 64px;
+  margin: 0 6px;
+}
+
 .page-header {
   margin-bottom: 16px !important;
   //box-shadow: 0 10px 30px 0 rgba(82, 63, 105, .08);
@@ -25792,19 +25802,20 @@ html {
   }
 
   .alain-default__content, .ant-modal-content {
-    img, canvas,
-    .page-container, .fa, .exception__img,
-    bi-chart {
+    img, canvas, bi-chart,
+    .fa,
+    .page-container,
+    .exception__img {
       filter: invert(100%);
     }
 
     st .ant-table {
       box-shadow: none;
     }
+  }
 
-    //[class*='primary']{
-    //  color: #888;
-    //}
+  html {
+    background: #333;
   }
 
   .alain-default {
