@@ -58,7 +58,8 @@ public class EntersSellsSaves extends BaseModel {
                             @VL(value = "L", label = "L"),
                             @VL(value = "XL", label = "XL"),
                             @VL(value = "XXL", label = "XXL")
-                    })
+                    }, fetchHandler = Demo.class,
+                            fetchHandlerParams = {"param"})
             )
     )
     @Column(name = "GUIGE")

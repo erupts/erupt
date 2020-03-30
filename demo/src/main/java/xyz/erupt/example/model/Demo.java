@@ -93,10 +93,10 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
                     title = "选择", type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             fetchHandler = Demo.class,
+                            fetchHandlerParams = {"param"},
                             vl = {
                                     @VL(label = "xxxx", value = "xxxx")
-                            },
-                            fetchHandlerParams = {"param"}
+                            }
                     ))
     )
     private String choice;

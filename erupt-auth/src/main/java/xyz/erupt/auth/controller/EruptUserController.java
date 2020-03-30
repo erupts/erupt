@@ -2,6 +2,7 @@ package xyz.erupt.auth.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.auth.base.LoginModel;
@@ -125,6 +126,23 @@ public class EruptUserController {
         // type -> Set<EruptMenu>
         return sessionService.get(SessionKey.MENU_TREE + request.getHeader("token"), new TypeToken<List<TreeModel>>() {
         }.getType());
+    }
+
+    @GetMapping("/menu-list")
+    @ResponseBody
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = -1)
+    public List<EruptMenu> getMenuList(HttpServletRequest request) {
+        List<EruptMenu> eruptMenu = sessionService.get(SessionKey.MENU_LIST + request.getHeader("token"), new TypeToken<List<EruptMenu>>() {
+        }.getType());
+        return eruptMenu.stream()
+                .filter(em -> StringUtils.isNotBlank(em.getPath()))
+                .filter(em -> em.getStatus() == 1)
+                .peek(em -> {
+                    em.setParam(null);
+                    em.setParentMenu(null);
+                    em.setId(null);
+                    em.setStatus(null);
+                }).collect(Collectors.toList());
     }
 
 
