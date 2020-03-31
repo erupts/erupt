@@ -109,8 +109,8 @@ public class EruptBiController {
                         Object obj = map.values().iterator().next();
                         references.add(new Reference(obj, obj));
                     } else if (map.keySet().size() > 1) {
-                        references.add(new Reference(map.values().iterator().next(),
-                                map.values().iterator().next()));
+                        Iterator iterator = map.values().iterator();
+                        references.add(new Reference(iterator.next(), iterator.next()));
                     }
                 }
                 return references;

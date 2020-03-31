@@ -74,16 +74,16 @@ public class Bi extends BaseModel {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "BI_ID")
-    @EruptField(
-            edit = @Edit(title = "查询维度", type = EditType.TAB_TABLE_ADD)
-    )
-    private Set<BiDimension> biDimension;
+//    @EruptField(
+//            edit = @Edit(title = "图表", type = EditType.TAB_TABLE_ADD, orderBy = "sort")
+//    )
+    private Set<BiChart> biCharts;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "BI_ID")
     @EruptField(
-            edit = @Edit(title = "图表", type = EditType.TAB_TABLE_ADD, orderBy = "sort")
+            edit = @Edit(title = "查询维度", type = EditType.TAB_TABLE_ADD)
     )
-    private Set<BiChart> biCharts;
+    private Set<BiDimension> biDimension;
 
 }

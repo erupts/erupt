@@ -49,7 +49,7 @@ public class BiChart extends BaseModel {
     private Boolean linkage;
 
     @EruptField(
-            views = @View(title = "显示顺序"),
+            views = @View(title = "显示顺序", sortable = true),
             edit = @Edit(title = "显示顺序")
     )
     private Integer sort;

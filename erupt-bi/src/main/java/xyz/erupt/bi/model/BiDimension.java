@@ -7,6 +7,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.core.model.BaseModel;
 
@@ -37,18 +38,28 @@ public class BiDimension extends BaseModel {
     private String title;
 
     @EruptField(
+            views = @View(title = "显示顺序", sortable = true),
+            edit = @Edit(title = "显示顺序")
+    )
+    private Integer sort;
+
+    @EruptField(
             views = @View(title = "维度类型"),
             edit = @Edit(
                     title = "维度类型",
                     type = EditType.DEPEND_SWITCH,
                     dependSwitchType = @DependSwitchType(
+                            view = DependSwitchType.View.RADIO,
                             attr = {
                                     @DependSwitchType.Attr(value = "INPUT", label = "字符", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "NUMBER", label = "数值", dependEdits = ""),
+                                    @DependSwitchType.Attr(value = "NUMBER_RANGE", label = "数值区间", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "REFERENCE", label = "SQL参照", dependEdits = {"refSql", "dependDimension"}),
                                     @DependSwitchType.Attr(value = "DATE", label = "日期", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "TIME", label = "时间", dependEdits = ""),
+                                    @DependSwitchType.Attr(value = "DATE_RANGE", label = "日期区间", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "DATETIME", label = "日期时间", dependEdits = ""),
+                                    @DependSwitchType.Attr(value = "DATETIME_RANGE", label = "日期时间区间", dependEdits = ""),
+                                    @DependSwitchType.Attr(value = "TIME", label = "时间", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "WEEK", label = "周", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "MONTH", label = "月", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "YEAR", label = "年", dependEdits = ""),
@@ -65,31 +76,19 @@ public class BiDimension extends BaseModel {
     private String defaultVal;
 
     @EruptField(
-            views = @View(title = "区间查询"),
-            edit = @Edit(title = "区间查询")
-    )
-    private Boolean vague;
-
-    @EruptField(
             views = @View(title = "是否必填"),
             edit = @Edit(title = "是否必填")
     )
     private Boolean notNull;
 
-    @EruptField(
-            views = @View(title = "显示顺序"),
-            edit = @Edit(title = "显示顺序")
-    )
-    private Integer sort;
+//    @EruptField(
+//            views = @View(title = "依赖维度"),
+//            edit = @Edit(title = "依赖维度")
+//    )
+//    private String dependDimension;
 
     @EruptField(
-            views = @View(title = "依赖维度"),
-            edit = @Edit(title = "依赖维度")
-    )
-    private String dependDimension;
-
-    @EruptField(
-            edit = @Edit(title = "参照维度", type = EditType.TEXTAREA)
+            edit = @Edit(title = "参照SQL", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String refSql;
 

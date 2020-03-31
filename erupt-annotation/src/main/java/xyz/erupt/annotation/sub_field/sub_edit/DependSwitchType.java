@@ -7,6 +7,8 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 public @interface DependSwitchType {
     Attr[] attr();
 
+    View view() default View.SELECT;
+
     boolean reject() default true;
 
     @interface Attr {
@@ -15,5 +17,10 @@ public @interface DependSwitchType {
         String label();
 
         String[] dependEdits();
+    }
+
+    enum View {
+        RADIO,
+        SELECT
     }
 }
