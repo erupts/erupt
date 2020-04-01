@@ -15,6 +15,7 @@ import xyz.erupt.core.model.BaseModel;
 
 import javax.annotation.Resource;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -41,6 +42,7 @@ public class BiFunction extends BaseModel implements DataProxy<BiFunction> {
     )
     private String name;
 
+    @Lob
     @EruptField(
             views = @View(title = "函数表达式"),
             edit = @Edit(title = "函数表达式", desc = "参照JavaScript function写法",

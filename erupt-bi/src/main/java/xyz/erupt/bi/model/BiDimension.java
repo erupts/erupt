@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 /**
@@ -88,6 +89,7 @@ public class BiDimension extends BaseModel {
 //    )
 //    private String dependDimension;
 
+    @Lob
     @EruptField(
             edit = @Edit(title = "参照SQL", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )

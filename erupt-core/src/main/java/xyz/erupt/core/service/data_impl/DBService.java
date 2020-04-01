@@ -2,6 +2,7 @@ package xyz.erupt.core.service.data_impl;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -89,20 +90,41 @@ public class DBService implements DataService {
         try {
             jpaManyToOneConvert(eruptModel, object);
             eruptJpaDao.addEntity(object);
-        } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
-            throw new RuntimeException(gcRepeatHint(eruptModel));
+        } catch (Exception e) {
+            handlerException(e, eruptModel);
         }
     }
 
     @Transactional
     @Override
-    public void editData(EruptModel eruptModel, Object data) throws Exception {
+    public void editData(EruptModel eruptModel, Object data) {
         try {
             eruptJpaDao.editEntity(data);
-        } catch (DataIntegrityViolationException e) {
+        } catch (Exception e) {
+            handlerException(e, eruptModel);
+        }
+    }
+
+    //优化异常提示类
+    private void handlerException(Exception e, EruptModel eruptModel) {
+        e.printStackTrace();
+        if (e instanceof DataIntegrityViolationException) {
+            if (e.getMessage().contains("ConstraintViolationException")) {
+                throw new RuntimeException(gcRepeatHint(eruptModel));
+            } else if (e.getMessage().contains("DataException")) {
+                throw new RuntimeException("输入内容过长！");
+            }
+        }
+    }
+
+    @Transactional
+    @Override
+    public void deleteData(EruptModel eruptModel, Object object) {
+        try {
+            eruptJpaDao.removeEntity(object);
+        } catch (DataIntegrityViolationException | ConstraintViolationException e) {
             e.printStackTrace();
-            throw new RuntimeException(gcRepeatHint(eruptModel));
+            throw new RuntimeException("删除失败，可能存在关联数据，无法直接删除！");
         }
     }
 
@@ -144,12 +166,6 @@ public class DBService implements DataService {
         } else {
             return REPEAT_TXT;
         }
-    }
-
-    @Transactional
-    @Override
-    public void deleteData(EruptModel eruptModel, Object object) {
-        entityManager.remove(object);
     }
 
     @Override

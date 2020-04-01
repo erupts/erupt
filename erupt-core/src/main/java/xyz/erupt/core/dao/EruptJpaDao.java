@@ -29,10 +29,17 @@ public class EruptJpaDao {
 
     public void addEntity(Object entity) {
         entityManager.persist(entity);
+        entityManager.flush();
     }
 
     public void editEntity(Object entity) {
         entityManager.merge(entity);
+        entityManager.flush();
+    }
+
+    public void removeEntity(Object entity) {
+        entityManager.remove(entity);
+        entityManager.flush();
     }
 
     public Page queryEruptList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition) {
