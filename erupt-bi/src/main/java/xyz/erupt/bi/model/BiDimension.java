@@ -27,13 +27,13 @@ public class BiDimension extends BaseModel {
 
     @EruptField(
             views = @View(title = "维度编码"),
-            edit = @Edit(title = "维度编码")
+            edit = @Edit(title = "维度编码", notNull = true)
     )
     private String code;
 
     @EruptField(
             views = @View(title = "名称"),
-            edit = @Edit(title = "名称")
+            edit = @Edit(title = "名称", notNull = true)
     )
     private String title;
 
@@ -47,11 +47,12 @@ public class BiDimension extends BaseModel {
             views = @View(title = "维度类型"),
             edit = @Edit(
                     title = "维度类型",
+                    notNull = true,
                     type = EditType.DEPEND_SWITCH,
                     dependSwitchType = @DependSwitchType(
                             view = DependSwitchType.View.RADIO,
                             attr = {
-                                    @DependSwitchType.Attr(value = "INPUT", label = "字符", dependEdits = ""),
+                                    @DependSwitchType.Attr(value = "INPUT", label = "文本", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "NUMBER", label = "数值", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "NUMBER_RANGE", label = "数值区间", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "REFERENCE", label = "SQL参照", dependEdits = {"refSql", "dependDimension"}),

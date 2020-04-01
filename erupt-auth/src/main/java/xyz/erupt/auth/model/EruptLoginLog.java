@@ -8,6 +8,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.model.BaseModel;
 
@@ -43,7 +44,7 @@ public class EruptLoginLog extends BaseModel {
 
     @EruptField(
             views = @View(title = "登录时间", sortable = true),
-            edit = @Edit(title = "登录时间", search = @Search(vague = true, value = true))
+            edit = @Edit(title = "登录时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date loginTime;
 
