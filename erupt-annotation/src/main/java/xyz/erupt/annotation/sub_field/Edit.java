@@ -31,7 +31,7 @@ public @interface Edit {
     String orderBy() default "";
 
     @Transient
-    Filter filter() default @Filter(condition = "");
+    Filter[] filter() default {};
 
     EditType type() default EditType.AUTO;
 

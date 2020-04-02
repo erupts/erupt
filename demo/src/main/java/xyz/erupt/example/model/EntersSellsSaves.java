@@ -2,6 +2,7 @@ package xyz.erupt.example.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -19,7 +20,7 @@ import java.util.Set;
  * @author liyuepeng
  * @date 2019-08-12.
  */
-@Erupt(name = "进销存", power = @Power(importable = true, export = true))
+@Erupt(name = "进销存", power = @Power(importable = true, export = true), filter = @Filter(condition = "1=1"))
 @Entity
 @Table(name = "Enters_Sells_Saves")
 public class EntersSellsSaves extends BaseModel {

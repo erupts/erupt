@@ -11,6 +11,9 @@ import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,8 +42,13 @@ public class EruptService {
                 pageSize = maxPageSize;
             }
             JsonObject legalJsonObject = EruptUtil.geneEruptSearchCondition(eruptModel, searchCondition);
+            List<String> conditionList = new ArrayList<>();
+            conditionList.addAll(Arrays.asList(customCondition));
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
-                EruptSpringUtil.getBean(proxy).beforeFetch(legalJsonObject);
+                String condition = EruptSpringUtil.getBean(proxy).beforeFetch();
+                if (null != condition) {
+                    conditionList.add(condition);
+                }
             }
             if (null != joCondition) {
                 for (String key : joCondition.keySet()) {
@@ -48,7 +56,8 @@ public class EruptService {
                 }
             }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
-                    .queryList(eruptModel, new Page(pageIndex, pageSize, sort), legalJsonObject, customCondition);
+                    .queryList(eruptModel, new Page(pageIndex, pageSize, sort),
+                            legalJsonObject, conditionList.toArray(new String[conditionList.size()]));
             for (Map<String, Object> map : page.getList()) {
                 DataHandlerUtil.convertDataToEruptView(eruptModel, map);
             }

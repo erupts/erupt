@@ -10,11 +10,11 @@ import java.beans.Transient;
  */
 public @interface Filter {
     @Transient
-    String condition();
+    String condition() default "";
 
     @Transient
     String[] params() default {};
 
     @Transient
-    Class<? extends FilterHandler>[] conditionHandlers() default {};
+    Class<? extends FilterHandler> conditionHandler() default FilterHandler.class;
 }

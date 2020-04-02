@@ -114,11 +114,6 @@ public class EruptJpaUtils {
     public static String geneEruptHqlCondition(EruptModel eruptModel, JsonObject clientSearchCondition, String[] customCondition) {
         StringBuilder hql = new StringBuilder();
         hql.append(" where 1=1 ");
-        Filter filter = eruptModel.getErupt().filter();
-        String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
-        if (StringUtils.isNotBlank(filterStr)) {
-            hql.append(AND).append(filterStr);
-        }
         //condition
         if (null != clientSearchCondition) {
             for (String key : clientSearchCondition.keySet()) {
@@ -153,6 +148,12 @@ public class EruptJpaUtils {
                 } else {
                     hql.append(EruptJpaUtils.AND).append(key).append("=:").append(key);
                 }
+            }
+        }
+        for (Filter filter : eruptModel.getErupt().filter()) {
+            String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
+            if (StringUtils.isNotBlank(filterStr)) {
+                hql.append(AND).append(filterStr);
             }
         }
         if (null != customCondition) {

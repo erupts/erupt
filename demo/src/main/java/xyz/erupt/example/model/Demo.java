@@ -1,16 +1,12 @@
 package xyz.erupt.example.model;
 
-import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.sub_erupt.Power;
-import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_erupt.Tpl;
-import xyz.erupt.annotation.sub_erupt.Tree;
+import xyz.erupt.annotation.sub_erupt.*;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -42,7 +38,8 @@ import java.util.Set;
                         title = "操作文本", icon = "fa fa-table", code = "d2")
         },
         layoutTree = "eruptUserTree",
-        tree = @Tree(label = "input")
+        tree = @Tree(label = "input"),
+        filter = @Filter(condition = "2 = 2")
 )
 @Table(name = "DEMO")
 @Entity
@@ -119,9 +116,9 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     @ManyToOne
     @EruptField(
             views = @View(title = "多对一树", column = "name"),
-            edit = @Edit(title = "多对一树", type = EditType.REFERENCE_TREE)
+            edit = @Edit(title = "多对一树", type = EditType.REFERENCE_TREE, filter = @Filter(condition = "9=9"))
     )
-    private EruptUser eruptUserTree;
+    private EntersSellsSaves eruptUserTree;
 
     @ManyToOne
     @EruptField(
@@ -181,8 +178,8 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     private EruptUserService eruptUserService;
 
     @Override
-    public void beforeFetch(JsonObject condition) {
-        System.out.println(eruptUserService.getCurrentUid());
+    public String beforeFetch() {
+        return null;
     }
 
     @Override
@@ -194,4 +191,6 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
         map.put("key3", "value3");
         return map;
     }
+
+
 }

@@ -41,7 +41,7 @@ public @interface Erupt {
     Drill[] drills() default {};
 
     @Transient
-    Filter filter() default @Filter(condition = "");
+    Filter[] filter() default {};
 
     @Transient
     String orderBy() default "";

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -59,11 +60,11 @@ public class DBService implements DataService {
     }
 
     @Override
-    public List<TreeModel> queryTree(EruptModel eruptModel) {
-        return treeDataUtil(eruptModel, null, null);
+    public List<TreeModel> queryTree(EruptModel eruptModel, String... customCondition) {
+        return treeDataUtil(eruptModel, null, customCondition);
     }
 
-    private List<TreeModel> treeDataUtil(EruptModel eruptModel, String condition, String sort) {
+    private List<TreeModel> treeDataUtil(EruptModel eruptModel, String sort, String... condition) {
         Tree tree = eruptModel.getErupt().tree();
         List<String> cols = new ArrayList<>();
         cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + AnnotationConst.ID);
@@ -71,7 +72,7 @@ public class DBService implements DataService {
         if (StringUtils.isNotBlank(tree.pid())) {
             cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + AnnotationConst.PID);
         }
-        List<Map<String, Object>> list = eruptJpaDao.getDataMap(eruptModel, condition, sort, cols, null);
+        List<Map<String, Object>> list = eruptJpaDao.getDataMap(eruptModel, cols, sort, condition);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map map : list) {
             TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null);
@@ -172,8 +173,8 @@ public class DBService implements DataService {
     public List<TreeModel> findTabTree(EruptModel eruptModel, String fieldName) {
         EruptFieldModel eruptTabFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
         EruptModel subEruptModel = CoreService.getErupt(eruptModel.getEruptFieldMap().get(fieldName).getFieldReturnName());
-        String condition = AnnotationUtil.switchFilterConditionToStr(eruptTabFieldModel.getEruptField().edit().filter());
-        return treeDataUtil(subEruptModel, condition, eruptTabFieldModel.getEruptField().edit().orderBy());
+//        String condition = AnnotationUtil.switchFilterConditionToStr(eruptTabFieldModel.getEruptField().edit().filter());
+        return treeDataUtil(subEruptModel, eruptTabFieldModel.getEruptField().edit().orderBy(), eruptTabFieldModel.getEruptField().edit().orderBy());
     }
 
 
@@ -188,19 +189,19 @@ public class DBService implements DataService {
         if (StringUtils.isNotBlank(refTree.pid())) {
             cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldName(), refTree.pid()) + " as " + AnnotationConst.PID);
         }
-        StringBuilder condition = new StringBuilder(AnnotationUtil.switchFilterConditionToStr(edit.filter()));
-        //处理depend参数代码
-        Map<String, Object> conditionParameter = null;
-        if (StringUtils.isNotBlank(refTree.dependField()) && null != dependValue) {
-//            String dependVal = "dependVal";
-//            conditionParameter = new HashMap<>(1);
-            if (StringUtils.isNotBlank(edit.filter().condition())) {
-                condition.append(EruptJpaUtils.AND);
+        List<String> conditions = new ArrayList<>();
+        for (Filter filter : edit.filter()) {
+            String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
+            if (StringUtils.isNotBlank(filterStr)) {
+                conditions.add(filterStr);
             }
-            condition.append(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn()).append(String.format("='%s'", dependValue));
-//            conditionParameter.put(dependVal, dependValue);
         }
-        List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.getErupt(eruptFieldModel.getFieldReturnName()), condition.toString(), null, cols, conditionParameter);
+        //处理depend参数代码
+        if (StringUtils.isNotBlank(refTree.dependField()) && null != dependValue) {
+            conditions.add(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn() + String.format("='%s'", dependValue));
+        }
+        List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.getErupt(eruptFieldModel.getFieldReturnName())
+                , cols, null, conditions.toArray(new String[conditions.size()]));
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : list) {
             treeModels.add(new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null));

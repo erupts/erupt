@@ -2,9 +2,12 @@ package xyz.erupt.core.dao;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -87,18 +90,24 @@ public class EruptJpaDao {
      * @param cols       格式：name as alias
      * @return
      */
-    public List<Map<String, Object>> getDataMap(EruptModel eruptModel, String condition,
-                                                String orderBy, List<String> cols,
-                                                Map<String, Object> conditionParameter) {
-        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel,
-                new HqlBean("new map(" + String.join(",", cols) + ")"
-                        , new String[]{condition}, null, orderBy, false));
-        Query query = entityManager.createQuery(hql);
-        if (null != conditionParameter) {
-            for (Map.Entry<String, Object> entry : conditionParameter.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
+    public List<Map<String, Object>> getDataMap(EruptModel eruptModel, List<String> cols, String sort, String... condition) {
+        StringBuilder hql = new StringBuilder();
+        hql.append("select new map(").append(String.join(", ", cols)).append(") from ")
+                .append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName())
+                .append(" where 1=1 ");
+        for (String s : condition) {
+            hql.append(EruptJpaUtils.AND).append(s);
+        }
+        for (Filter filter : eruptModel.getErupt().filter()) {
+            String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
+            if (StringUtils.isNotBlank(filterStr)) {
+                hql.append(EruptJpaUtils.AND).append(filterStr);
             }
         }
+        if (StringUtils.isNotBlank(sort)) {
+            hql.append(" ").append(sort);
+        }
+        Query query = entityManager.createQuery(hql.toString());
         return query.getResultList();
     }
 

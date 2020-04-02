@@ -40,7 +40,7 @@ public interface DataService {
      * @param eruptModel erupt核心对象
      * @return list tree数据
      */
-    Collection<TreeModel> queryTree(EruptModel eruptModel);
+    Collection<TreeModel> queryTree(EruptModel eruptModel, String... customCondition);
 
     /**
      * 添加数据
@@ -62,7 +62,7 @@ public interface DataService {
      * 删除数据
      *
      * @param eruptModel erupt核心对象
-     * @param id         数据id
+     * @param object     数据对象
      */
     void deleteData(EruptModel eruptModel, Object object);
 
