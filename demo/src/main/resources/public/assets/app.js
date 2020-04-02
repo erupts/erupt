@@ -4,7 +4,7 @@ eruptSiteConfig = {
     title: "DEMO",
     desc: "ERUPT 演示系统",
     routerReuse: false,
-    amapKey: "15bc4df0bd6758645308fa591f439799",
+    amapKey: "6ba79a8db11b51aeb1176bd4cfa049f4",
     logoPath: "/assets/logo.png",
     r_tools: [{
         text: "功能按钮",
