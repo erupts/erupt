@@ -173,8 +173,12 @@ public class DBService implements DataService {
     public List<TreeModel> findTabTree(EruptModel eruptModel, String fieldName) {
         EruptFieldModel eruptTabFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
         EruptModel subEruptModel = CoreService.getErupt(eruptModel.getEruptFieldMap().get(fieldName).getFieldReturnName());
-//        String condition = AnnotationUtil.switchFilterConditionToStr(eruptTabFieldModel.getEruptField().edit().filter());
-        return treeDataUtil(subEruptModel, eruptTabFieldModel.getEruptField().edit().orderBy(), eruptTabFieldModel.getEruptField().edit().orderBy());
+        Filter[] filters = eruptTabFieldModel.getEruptField().edit().filter();
+        String[] conditions = new String[filters.length];
+        for (int i = 0; i < filters.length; i++) {
+            conditions[i] = AnnotationUtil.switchFilterConditionToStr(filters[i]);
+        }
+        return treeDataUtil(subEruptModel, eruptTabFieldModel.getEruptField().edit().orderBy(), conditions);
     }
 
 

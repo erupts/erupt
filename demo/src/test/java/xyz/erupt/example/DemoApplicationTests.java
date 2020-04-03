@@ -133,5 +133,10 @@ public class DemoApplicationTests {
             System.out.println(o);
         }
     }
+
+    @Test
+    public void joinTest() {
+        entityManager.createQuery("select eruptUserTree.name from Demo where choice='xxx'").getResultList();
+    }
 }
 

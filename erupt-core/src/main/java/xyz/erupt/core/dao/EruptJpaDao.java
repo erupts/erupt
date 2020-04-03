@@ -96,7 +96,9 @@ public class EruptJpaDao {
                 .append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName())
                 .append(" where 1=1 ");
         for (String s : condition) {
-            hql.append(EruptJpaUtils.AND).append(s);
+            if (StringUtils.isNotBlank(s)) {
+                hql.append(EruptJpaUtils.AND).append(s);
+            }
         }
         for (Filter filter : eruptModel.getErupt().filter()) {
             String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
