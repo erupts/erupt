@@ -7,6 +7,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.core.model.BaseModel;
@@ -79,7 +80,7 @@ public class BiDimension extends BaseModel {
 
     @EruptField(
             views = @View(title = "是否必填"),
-            edit = @Edit(title = "是否必填")
+            edit = @Edit(title = "是否必填", boolType = @BoolType(defaultValue = false))
     )
     private Boolean notNull;
 

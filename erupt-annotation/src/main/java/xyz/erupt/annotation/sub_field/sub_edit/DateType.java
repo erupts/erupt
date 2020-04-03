@@ -11,6 +11,6 @@ public @interface DateType {
     boolean limit() default true;
 
     enum Type {
-        DATE, TIME, DATE_TIME, MONTH, YEAR
+        DATE, TIME, DATE_TIME, MONTH, WEEK, YEAR
     }
 }

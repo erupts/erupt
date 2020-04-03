@@ -5,9 +5,9 @@ package xyz.erupt.annotation.sub_field.sub_edit;
  * @date 2018-09-18.
  */
 public @interface BoolType {
-    String trueText();
+    String trueText() default "是";
 
-    String falseText();
+    String falseText() default "否";
 
     boolean defaultValue() default true;
 

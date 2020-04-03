@@ -177,6 +177,7 @@ public class EruptUtil {
         if (null != searchCondition) {
             for (String key : searchCondition.keySet()) {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
+
                 Edit edit = eruptFieldModel.getEruptField().edit();
                 if (AnnotationUtil.getEditTypeMapping(edit.type()).search()) {
                     if (edit.search().value() && !searchCondition.get(key).isJsonNull()) {

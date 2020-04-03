@@ -40,10 +40,10 @@ public @interface Edit {
     InputType inputType() default @InputType;
 
     @SerializeBy(method = "type", value = "NUMBER")
-    NumberType numberType() default @NumberType();
+    NumberType numberType() default @NumberType;
 
     @SerializeBy(method = "type", value = "BOOLEAN")
-    BoolType boolType() default @BoolType(trueText = "是", falseText = "否");
+    BoolType boolType() default @BoolType;
 
     @SerializeBy(method = "type", value = "CHOICE")
     ChoiceType choiceType() default @ChoiceType;

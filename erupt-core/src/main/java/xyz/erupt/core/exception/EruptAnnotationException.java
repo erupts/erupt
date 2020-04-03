@@ -27,6 +27,9 @@ public class EruptAnnotationException extends RuntimeException {
             if (null == eruptFieldModel) {
                 throw ExceptionUtil.styleEruptException(eruptModel, "找不到layoutTree所指定字段");
             }
+//            if(!eruptFieldModel.getEruptField().edit().search().value()){
+//                throw ExceptionUtil.styleEruptException(eruptModel, "layoutTree所指定的edit类型必须开启搜索项");
+//            }
             if (eruptFieldModel.getEruptField().edit().type() != EditType.REFERENCE_TREE) {
                 throw ExceptionUtil.styleEruptException(eruptModel, "layoutTree所指定的edit类型必须为" + EditType.REFERENCE_TREE);
             }

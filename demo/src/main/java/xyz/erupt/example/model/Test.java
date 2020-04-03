@@ -4,18 +4,24 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.Date;
 
 /**
  * @author liyuepeng
  * @date 2020-02-29
  */
-@Erupt(name = "demo", orderBy = "number desc", filter = @Filter(condition = "number = 11"))
+@Erupt(name = "demo", orderBy = "number desc")
 @Table(name = "TEST")
 @Entity
 public class Test extends BaseModel {
@@ -31,4 +37,94 @@ public class Test extends BaseModel {
             edit = @Edit(title = "数字", search = @Search(value = true, vague = true))
     )
     private Integer number;
+
+    @EruptField(
+            views = @View(title = "date"),
+            edit = @Edit(title = "date", type = EditType.DATE, dateType = @DateType(type = DateType.Type.DATE))
+    )
+    private Date date;
+
+    @EruptField(
+            views = @View(title = "dateTime"),
+            edit = @Edit(title = "dateTime", type = EditType.DATE, dateType = @DateType(type = DateType.Type.DATE_TIME))
+    )
+    private Date dateTime;
+
+    @EruptField(
+            views = @View(title = "time"),
+            edit = @Edit(title = "time", type = EditType.DATE, dateType = @DateType(type = DateType.Type.TIME))
+    )
+    private String time;
+
+    @EruptField(
+            views = @View(title = "month"),
+            edit = @Edit(title = "month", type = EditType.DATE, dateType = @DateType(type = DateType.Type.MONTH))
+    )
+    private String month;
+
+    @EruptField(
+            views = @View(title = "week"),
+            edit = @Edit(title = "week", type = EditType.DATE, dateType = @DateType(type = DateType.Type.WEEK))
+    )
+    private String week;
+
+    @EruptField(
+            views = @View(title = "year"),
+            edit = @Edit(title = "year", type = EditType.DATE, dateType = @DateType(type = DateType.Type.YEAR))
+    )
+    private String year;
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "地区选择 TEST", type = EditType.DIVIDE)
+    )
+    private String region;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "省份", column = "name"),
+            edit = @Edit(title = "省份", notNull = true, type = EditType.REFERENCE_TREE,
+                    filter = @Filter(condition = "BaseArea.level = 1"))
+    )
+    private BaseArea province;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "市", column = "name"),
+            edit = @Edit(title = "市", notNull = true, type = EditType.REFERENCE_TREE,
+                    filter = @Filter(condition = "BaseArea.level = 2"),
+                    referenceTreeType = @ReferenceTreeType(dependField = "province", dependColumn = "pid.id")
+            )
+    )
+    private BaseArea city;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "区", column = "name"),
+            edit = @Edit(title = "区", notNull = true, type = EditType.REFERENCE_TREE,
+                    filter = @Filter(condition = "BaseArea.level = 3"),
+                    referenceTreeType = @ReferenceTreeType(dependField = "city", dependColumn = "pid.id")
+            )
+    )
+    private BaseArea area;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "街道", column = "name"),
+            edit = @Edit(title = "街道", notNull = true, type = EditType.REFERENCE_TREE,
+                    filter = @Filter(condition = "BaseArea.level = 4"),
+                    referenceTreeType = @ReferenceTreeType(dependField = "area", dependColumn = "pid.id")
+            )
+    )
+    private BaseArea street;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "社区", column = "name"),
+            edit = @Edit(title = "社区", type = EditType.REFERENCE_TREE,
+                    filter = @Filter(condition = "BaseArea.level = 5"),
+                    referenceTreeType = @ReferenceTreeType(dependField = "street", dependColumn = "pid.id")
+            )
+    )
+    private BaseArea community;
 }
