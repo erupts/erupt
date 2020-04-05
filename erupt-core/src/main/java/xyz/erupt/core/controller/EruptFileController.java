@@ -2,6 +2,7 @@ package xyz.erupt.core.controller;
 
 import lombok.Cleanup;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,6 +23,7 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -138,23 +140,7 @@ public class EruptFileController {
         }
     }
 
-    @PostMapping("/upload-html-editor/{erupt}/{field}")
-    @ResponseBody
-    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
-                                                     @PathVariable("field") String fieldName,
-                                                     @RequestParam("upload") MultipartFile file) {
-        EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
-        Map<String, Object> map = new HashMap<>(2);
-        // ["uploaded":"true", "url":"image-path..."]
-        if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
-            map.put("uploaded", true);
-            map.put("url", RestPath.ERUPT_FILE + "/preview-attachment?path=" + eruptApiModel.getData());
-        } else {
-            map.put("uploaded", false);
-        }
-        return map;
-    }
+    private static final String DOWNLOAD_PATH = "/download-attachment";
 
 
     @PostMapping("/uploads/{erupt}/{field}")
@@ -169,20 +155,49 @@ public class EruptFileController {
         return EruptApiModel.successApi(String.join(",", paths));
     }
 
-    @RequestMapping(value = "/download-attachment", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    private static final String PREVIEW_PATH = "/preview-attachment";
+
+    @PostMapping("/upload-html-editor/{erupt}/{field}")
     @ResponseBody
-    public byte[] downloadAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
-        String[] split = path.split(FS_SEP);
-        response.setHeader("Content-Disposition", "attachment; filename=" + java.net.URLEncoder.encode(split[split.length - 1], "UTF-8"));
-        return mappingFileToByte(path, response);
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
+                                                     @PathVariable("field") String fieldName,
+                                                     @RequestParam("upload") MultipartFile file) {
+        EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
+        Map<String, Object> map = new HashMap<>(2);
+        // ["uploaded":"true", "url":"image-path..."]
+        if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
+            map.put("uploaded", true);
+            map.put("url", RestPath.ERUPT_FILE + PREVIEW_PATH + eruptApiModel.getData());
+        } else {
+            map.put("uploaded", false);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = DOWNLOAD_PATH + "/**", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @ResponseBody
+    public byte[] downloadAttachment(HttpServletRequest request, HttpServletResponse response) {
+        return mappingFileToByte(request.getServletPath().replace(RestPath.ERUPT_FILE + DOWNLOAD_PATH, ""), response);
     }
 
 
-    @RequestMapping(value = "/preview-attachment")
+    @RequestMapping(value = {PREVIEW_PATH + "/**"})
+    @ResponseBody
+    public void previewAttachment(HttpServletResponse response, HttpServletRequest request) throws UnsupportedEncodingException {
+        previewAttachment(request.getServletPath().replace(RestPath.ERUPT_FILE + PREVIEW_PATH, ""), response);
+    }
+
+
+    @RequestMapping(value = PREVIEW_PATH)
     @ResponseBody
     public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
-        String[] splitPath = path.split(FS_SEP);
-        response.setHeader("Content-Disposition", "filename=" + java.net.URLEncoder.encode(splitPath[splitPath.length - 1], "UTF-8"));
+        int cacheTime = 60 * 60 * 24 * 10 * 1000;
+        response.addHeader("cache-control", "max-age=" + cacheTime);
+        response.setDateHeader("expires", (System.currentTimeMillis() + cacheTime));
+        response.setDateHeader("date", System.currentTimeMillis());
+        response.setHeader("etag", RandomStringUtils.randomAlphabetic(10));
+        response.setDateHeader("Last-Modified", System.currentTimeMillis() - 1000 * 60);
         response.setContentType(MimeUtil.getMimeType(path));
         try (OutputStream ros = response.getOutputStream()) {
             IOUtils.write(mappingFileToByte(path, response), ros);
