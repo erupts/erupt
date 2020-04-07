@@ -74,13 +74,13 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "时间日期"),
-            edit = @Edit(title = "时间日期", search = @Search(value = true, vague = true), dateType = @DateType(limit = true))
+            edit = @Edit(title = "时间日期", search = @Search(vague = true), dateType = @DateType(limit = true))
     )
     private Date date;
 
     @EruptField(
             views = @View(title = "布尔"),
-            edit = @Edit(title = "布尔", search = @Search(true))
+            edit = @Edit(title = "布尔", search = @Search)
     )
     private Boolean bool;
 
@@ -147,7 +147,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "大文本域"),
-            edit = @Edit(title = "大文本域", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "大文本域", search = @Search(vague = true))
     )
     private String remark;
 
