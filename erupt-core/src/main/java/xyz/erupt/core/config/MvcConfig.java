@@ -1,5 +1,7 @@
 package xyz.erupt.core.config;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.util.unit.DataSize;
+import xyz.erupt.annotation.config.SkipSerialize;
 
 import javax.servlet.MultipartConfigElement;
 import java.util.ArrayList;
@@ -34,7 +37,18 @@ public class MvcConfig {
 
     @Bean
     public Gson gson() {
-        return new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        return new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                SkipSerialize skip = f.getAnnotation(SkipSerialize.class);
+                return null != skip;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> incomingClass) {
+                return false;
+            }
+        }).setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     }
 
     @Bean

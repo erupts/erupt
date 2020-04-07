@@ -27,7 +27,7 @@ public class SessionService {
     private HttpServletRequest request;
 
     @Autowired
-    private Gson gson = new Gson();
+    private Gson gson;
 
     public void put(String key, String str, long timeout) {
         if (eruptConfig.isRedisSession()) {
