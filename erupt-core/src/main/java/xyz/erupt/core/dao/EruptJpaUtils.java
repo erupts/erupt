@@ -76,9 +76,10 @@ public class EruptJpaUtils {
                     append(" as ").
                     append(eruptModel.getEruptName());
             ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
-                if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
+                if (null != field.getAnnotation(ManyToOne.class) ||
+                        null != field.getAnnotation(OneToOne.class)) {
                     hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".")
-                            .append(field.getName()).append(" as ").append(field.getName());
+                            .append(field.getName() + " as " + field.getName());
                 }
             });
 

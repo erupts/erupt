@@ -149,6 +149,7 @@ public class DataFileService {
                         refTreeMap.put(obj[1] == null ? null : obj[1].toString(), obj[0]);
                     }
                     cellIndexJoinEruptMap.put(i, refTreeMap);
+                    break;
                 default:
                     break;
             }

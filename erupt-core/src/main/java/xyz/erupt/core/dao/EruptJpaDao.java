@@ -9,14 +9,13 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.HqlBean;
 import xyz.erupt.core.view.Page;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 
@@ -93,8 +92,14 @@ public class EruptJpaDao {
     public List<Map<String, Object>> getDataMap(EruptModel eruptModel, List<String> cols, String sort, String... condition) {
         StringBuilder hql = new StringBuilder();
         hql.append("select new map(").append(String.join(", ", cols)).append(") from ")
-                .append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName())
-                .append(" where 1=1 ");
+                .append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
+        ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
+            if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
+                hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".")
+                        .append(field.getName()).append(" as ").append(field.getName());
+            }
+        });
+        hql.append(" where 1=1 ");
         for (String s : condition) {
             if (StringUtils.isNotBlank(s)) {
                 hql.append(EruptJpaUtils.AND).append(s);
@@ -106,9 +111,7 @@ public class EruptJpaDao {
                 hql.append(EruptJpaUtils.AND).append(filterStr);
             }
         }
-        if (StringUtils.isNotBlank(sort)) {
-            hql.append(" ").append(sort);
-        }
+        hql.append(EruptJpaUtils.geneEruptHqlOrderBy(eruptModel, sort));
         Query query = entityManager.createQuery(hql.toString());
         return query.getResultList();
     }

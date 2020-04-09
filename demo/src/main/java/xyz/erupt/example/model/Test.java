@@ -84,7 +84,7 @@ public class Test extends BaseModel {
     @EruptField(
             views = @View(title = "省份", column = "name"),
             edit = @Edit(title = "省份", notNull = true, type = EditType.REFERENCE_TREE,
-                    filter = @Filter(condition = "BaseArea.level = 1"))
+                    filter = @Filter("BaseArea.level = 1"))
     )
     private BaseArea province;
 
@@ -92,7 +92,7 @@ public class Test extends BaseModel {
     @EruptField(
             views = @View(title = "市", column = "name"),
             edit = @Edit(title = "市", notNull = true, type = EditType.REFERENCE_TREE,
-                    filter = @Filter(condition = "BaseArea.level = 2"),
+                    filter = @Filter("BaseArea.level = 2"),
                     referenceTreeType = @ReferenceTreeType(dependField = "province", dependColumn = "pid.id")
             )
     )
@@ -102,7 +102,7 @@ public class Test extends BaseModel {
     @EruptField(
             views = @View(title = "区", column = "name"),
             edit = @Edit(title = "区", notNull = true, type = EditType.REFERENCE_TREE,
-                    filter = @Filter(condition = "BaseArea.level = 3"),
+                    filter = @Filter("BaseArea.level = 3"),
                     referenceTreeType = @ReferenceTreeType(dependField = "city", dependColumn = "pid.id")
             )
     )
@@ -112,7 +112,7 @@ public class Test extends BaseModel {
     @EruptField(
             views = @View(title = "街道", column = "name"),
             edit = @Edit(title = "街道", notNull = true, type = EditType.REFERENCE_TREE,
-                    filter = @Filter(condition = "BaseArea.level = 4"),
+                    filter = @Filter("BaseArea.level = 4"),
                     referenceTreeType = @ReferenceTreeType(dependField = "area", dependColumn = "pid.id")
             )
     )
@@ -122,7 +122,7 @@ public class Test extends BaseModel {
     @EruptField(
             views = @View(title = "社区", column = "name"),
             edit = @Edit(title = "社区", type = EditType.REFERENCE_TREE,
-                    filter = @Filter(condition = "BaseArea.level = 5"),
+                    filter = @Filter("BaseArea.level = 5"),
                     referenceTreeType = @ReferenceTreeType(dependField = "street", dependColumn = "pid.id")
             )
     )

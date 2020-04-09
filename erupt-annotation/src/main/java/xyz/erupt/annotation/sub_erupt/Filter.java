@@ -10,7 +10,7 @@ import java.beans.Transient;
  */
 public @interface Filter {
     @Transient
-    String condition() default "";
+    String value() default "";
 
     @Transient
     String[] params() default {};

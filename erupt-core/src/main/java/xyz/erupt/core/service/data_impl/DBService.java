@@ -193,6 +193,9 @@ public class DBService implements DataService {
         if (StringUtils.isNotBlank(refTree.pid())) {
             cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldName(), refTree.pid()) + " as " + AnnotationConst.PID);
         }
+        if (StringUtils.isNotBlank(refTree.rootRefer())) {
+            cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.rootRefer()) + " as " + AnnotationConst.ROOT);
+        }
         List<String> conditions = new ArrayList<>();
         for (Filter filter : edit.filter()) {
             String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
@@ -208,12 +211,14 @@ public class DBService implements DataService {
                 , cols, null, conditions.toArray(new String[conditions.size()]));
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : list) {
-            treeModels.add(new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null));
+            TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null);
+            treeModel.setRootTag(map.get(AnnotationConst.ROOT));
+            treeModels.add(treeModel);
         }
         if (StringUtils.isBlank(refTree.pid())) {
             return treeModels;
         } else {
-            return DataHandlerUtil.treeModelToTree(treeModels, refTree.rootLabel());
+            return DataHandlerUtil.treeModelToTree(treeModels, AnnotationUtil.getExpr(refTree.rootValue()));
         }
     }
 }

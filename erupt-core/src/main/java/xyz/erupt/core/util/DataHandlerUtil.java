@@ -21,11 +21,11 @@ import java.util.Map;
  */
 public class DataHandlerUtil {
     //内存计算的方式生成树结构
-    public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels, String rootLabel) {
+    public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels, String rootValue) {
         List<TreeModel> resultTreeModels = new ArrayList<>();
         List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
-        if (StringUtils.isBlank(rootLabel)) {
+        if (StringUtils.isBlank(rootValue)) {
             for (TreeModel treeModel : treeModels) {
                 if (StringUtils.isBlank(treeModel.getPid())) {
                     resultTreeModels.add(treeModel);
@@ -35,7 +35,7 @@ public class DataHandlerUtil {
         } else {
             String id = null;
             for (TreeModel treeModel : treeModels) {
-                if (rootLabel.equals(treeModel.getLabel())) {
+                if (rootValue.equals(treeModel.getRootTag())) {
                     id = treeModel.getId();
                     break;
                 }

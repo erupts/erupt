@@ -20,7 +20,7 @@ import java.util.Set;
  * @author liyuepeng
  * @date 2019-08-12.
  */
-@Erupt(name = "进销存", power = @Power(importable = true, export = true), filter = @Filter(condition = "1=1"))
+@Erupt(name = "进销存", power = @Power(importable = true, export = true), filter = @Filter("1=1"))
 @Entity
 @Table(name = "Enters_Sells_Saves")
 public class EntersSellsSaves extends BaseModel {

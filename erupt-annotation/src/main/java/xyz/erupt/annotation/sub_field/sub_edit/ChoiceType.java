@@ -14,10 +14,9 @@ public @interface ChoiceType {
 
     ChoiceEnum type() default ChoiceEnum.SELECT_SINGLE;
 
-    //@Volatile(ChoiceVolatile.class)
     VL[] vl() default {};
 
-    long cacheTime() default 0;
+//    Class<? extends VLEnum> vlEnum() default VLEnum.class;
 
     @Transient
     String[] fetchHandlerParams() default {};

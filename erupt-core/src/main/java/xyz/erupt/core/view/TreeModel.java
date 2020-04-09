@@ -21,6 +21,8 @@ public class TreeModel {
 
     private Object data;
 
+    private transient Object rootTag;
+
     public TreeModel(Object id, Object label, Object pid, Object data) {
         if (id != null) {
             this.id = id.toString();

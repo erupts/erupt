@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.core.model.BaseModel;
@@ -37,9 +38,9 @@ import java.util.Set;
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
                         title = "操作文本", icon = "fa fa-table", code = "d2")
         },
-        layoutTree = "eruptUserTree",
+        layoutTree = "eruptMenu",
         tree = @Tree(label = "input"),
-        filter = @Filter(condition = "2 = 2")
+        filter = @Filter("2 = 2")
 )
 @Table(name = "DEMO")
 @Entity
@@ -116,15 +117,17 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     @ManyToOne
     @EruptField(
             views = @View(title = "多对一树", column = "name"),
-            edit = @Edit(title = "多对一树", type = EditType.REFERENCE_TREE, filter = @Filter(condition = "9=9"))
+            edit = @Edit(title = "多对一树", type = EditType.REFERENCE_TREE,
+                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
+                    , filter = @Filter("(parentMenu.name='报表维护' or EruptMenu.name = '报表维护')"))
     )
-    private EntersSellsSaves eruptUserTree;
+    private EruptMenu eruptMenu;
 
     @ManyToOne
     @EruptField(
             views = @View(title = "多对一表格", column = "name"),
             edit = @Edit(title = "多对一表格", type = EditType.REFERENCE_TABLE,
-                    referenceTableType = @ReferenceTableType(dependField = "eruptUserTree"),
+                    referenceTableType = @ReferenceTableType(dependField = "eruptMenu"),
                     search = @Search)
     )
     private EruptUser eruptUser;

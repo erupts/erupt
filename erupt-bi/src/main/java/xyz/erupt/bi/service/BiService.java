@@ -35,6 +35,9 @@ public class BiService {
     private BiDataSourceService dataSourceService;
 
     @Autowired
+    private BiDataLoadService biDataLoadService;
+
+    @Autowired
     private EruptDao eruptDao;
 
     private static final String EXPRESS_PATTERN = "(?<=\\$\\{)(.+?)(?=\\})";

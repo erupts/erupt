@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.expr.Expr;
 
 import java.beans.Transient;
 
@@ -21,5 +22,8 @@ public @interface ReferenceTreeType {
     String dependColumn() default AnnotationConst.ID;
 
     @Transient
-    String rootLabel() default "";
+    String rootRefer() default "";
+
+    @Transient
+    Expr rootValue() default @Expr;
 }

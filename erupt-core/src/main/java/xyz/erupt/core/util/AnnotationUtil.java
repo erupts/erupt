@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import xyz.erupt.annotation.config.*;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
+import xyz.erupt.annotation.expr.Expr;
 import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -175,12 +176,21 @@ public class AnnotationUtil {
     }
 
     public static String switchFilterConditionToStr(Filter filter) {
-        String condition = filter.condition();
+        String condition = filter.value();
         if (!filter.conditionHandler().isInterface()) {
             FilterHandler ch = EruptSpringUtil.getBean(filter.conditionHandler());
             condition = ch.filter(condition, filter.params());
         }
         return condition;
+    }
+
+    public static String getExpr(Expr expr) {
+        String value = expr.value();
+        if (!expr.exprHandler().isInterface()) {
+            Expr.ExprHandler eh = EruptSpringUtil.getBean(expr.exprHandler());
+            value = eh.handler(value, expr.params());
+        }
+        return value;
     }
 
     public static EditTypeMapping getEditTypeMapping(EditType editType) {

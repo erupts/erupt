@@ -12,6 +12,8 @@ public class AnnotationConst {
 
     public static final String PID = "pid";
 
+    public static final String ROOT = "root";
+
     public static final int NOT_LIMIT = -1;
 
     public static final String EMPTY_STR = "";

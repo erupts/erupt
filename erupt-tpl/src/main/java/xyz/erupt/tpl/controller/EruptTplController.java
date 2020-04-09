@@ -3,6 +3,7 @@ package xyz.erupt.tpl.controller;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import lombok.Cleanup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +53,7 @@ public class EruptTplController {
     @GetMapping(value = "/{name}", produces = {"text/html;charset=utf-8"})
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void getEruptFieldHtml(@PathVariable("name") String fileName, HttpServletResponse response) throws Exception {
-        InputStream inputStream = this.getClass().getResourceAsStream("/" + TPL + "/" + fileName);
+        @Cleanup InputStream inputStream = this.getClass().getResourceAsStream("/" + TPL + "/" + fileName);
         Method method = tplService.getAction(fileName);
         response.setCharacterEncoding("UTF-8");
         if (null != method) {

@@ -21,8 +21,8 @@ import javax.persistence.*;
 @Table(name = "E_MENU", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "菜单配置",
-        orderBy = "EruptMenu.sort asc",
-        tree = @Tree(id = "id", label = "name", pid = "parentMenu.id")
+        orderBy = "sort asc",
+        tree = @Tree(pid = "parentMenu.id")
 )
 @Getter
 @Setter
