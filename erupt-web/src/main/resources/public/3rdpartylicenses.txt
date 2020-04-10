@@ -525,6 +525,9 @@ MIT
 @angular/router
 MIT
 
+@angular/service-worker
+MIT
+
 @antv/adjust
 MIT
 MIT License

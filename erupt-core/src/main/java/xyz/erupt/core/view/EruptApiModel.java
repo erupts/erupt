@@ -27,6 +27,12 @@ public class EruptApiModel {
         this.promptWay = promptWay;
     }
 
+    public EruptApiModel(Status status, String message, PromptWay promptWay) {
+        this.status = status;
+        this.message = message;
+        this.promptWay = promptWay;
+    }
+
     public EruptApiModel(BoolAndReason boolAndReason) {
         if (boolAndReason.isBool()) {
             this.status = Status.SUCCESS;

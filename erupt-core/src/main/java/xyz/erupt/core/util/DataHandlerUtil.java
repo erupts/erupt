@@ -25,14 +25,7 @@ public class DataHandlerUtil {
         List<TreeModel> resultTreeModels = new ArrayList<>();
         List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
-        if (StringUtils.isBlank(rootValue)) {
-            for (TreeModel treeModel : treeModels) {
-                if (StringUtils.isBlank(treeModel.getPid())) {
-                    resultTreeModels.add(treeModel);
-                    tempTreeModels.remove(treeModel);
-                }
-            }
-        } else {
+        if (StringUtils.isNotBlank(rootValue)) {
             String id = null;
             for (TreeModel treeModel : treeModels) {
                 if (rootValue.equals(treeModel.getRootTag())) {
@@ -44,7 +37,14 @@ public class DataHandlerUtil {
                 return resultTreeModels;
             }
             for (TreeModel treeModel : treeModels) {
-                if (id.equals(treeModel.getPid())) {
+                if (id.equals(treeModel.getId())) {
+                    resultTreeModels.add(treeModel);
+                    tempTreeModels.remove(treeModel);
+                }
+            }
+        } else {
+            for (TreeModel treeModel : treeModels) {
+                if (StringUtils.isBlank(treeModel.getPid())) {
                     resultTreeModels.add(treeModel);
                     tempTreeModels.remove(treeModel);
                 }

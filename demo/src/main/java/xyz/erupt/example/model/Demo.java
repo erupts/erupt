@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.expr.Expr;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.*;
@@ -118,7 +119,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     @EruptField(
             views = @View(title = "多对一树", column = "name"),
             edit = @Edit(title = "多对一树", type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
+                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id", rootRefer = "name", rootValue = @Expr("报表维护"))
                     , filter = @Filter("(parentMenu.name='报表维护' or EruptMenu.name = '报表维护')"))
     )
     private EruptMenu eruptMenu;

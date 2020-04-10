@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
@@ -21,10 +22,10 @@ import javax.persistence.Table;
 )
 public class BaseArea extends BaseModel {
 
-    @EruptField
+    @EruptField(views = @View(title = "名称"))
     private String name;
 
-    @EruptField
+    @EruptField(views = @View(title = "层级"))
     private Integer level;
 
     @ManyToOne
