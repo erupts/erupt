@@ -1,6 +1,7 @@
 package xyz.erupt.core.view;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Collection;
 
@@ -8,7 +9,8 @@ import java.util.Collection;
  * @author liyuepeng
  * @date 2018-11-15.
  */
-@Data
+@Getter
+@Setter
 public class TreeModel {
 
     private Collection<TreeModel> children;
@@ -40,5 +42,12 @@ public class TreeModel {
             this.pid = pid.toString();
         }
         this.data = data;
+    }
+
+    public TreeModel(Object id, Object label, Object pid, Object data, Object rootTag) {
+        this(id, label, pid, data);
+        if (null != rootTag) {
+            this.rootTag = rootTag.toString();
+        }
     }
 }

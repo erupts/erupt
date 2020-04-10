@@ -8,7 +8,10 @@ import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.*;
@@ -109,8 +112,7 @@ public class EruptMenu extends BaseModel {
     @EruptField(
             edit = @Edit(
                     title = "菜单参数",
-                    type = EditType.TEXTAREA,
-                    search = @Search(value = true, vague = true)
+                    type = EditType.TEXTAREA
             )
     )
     private String param;

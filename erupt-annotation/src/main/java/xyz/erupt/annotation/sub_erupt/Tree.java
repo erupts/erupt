@@ -1,6 +1,9 @@
 package xyz.erupt.annotation.sub_erupt;
 
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.expr.Expr;
+
+import java.beans.Transient;
 
 /**
  * @author liyuepeng
@@ -15,5 +18,11 @@ public @interface Tree {
     String pid() default "";
 
     Link[] linkTable() default {};
+
+    @Transient
+    String rootRefer() default "";
+
+    @Transient
+    Expr rootValue() default @Expr;
 
 }

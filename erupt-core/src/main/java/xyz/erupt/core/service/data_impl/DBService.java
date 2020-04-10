@@ -72,16 +72,19 @@ public class DBService implements DataService {
         if (StringUtils.isNotBlank(tree.pid())) {
             cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + AnnotationConst.PID);
         }
+        if (StringUtils.isNotBlank(tree.rootRefer())) {
+            cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.rootRefer()) + " as " + AnnotationConst.ROOT);
+        }
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(eruptModel, cols, sort, condition);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map map : list) {
-            TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null);
+            TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null, map.get(AnnotationConst.ROOT));
             treeModels.add(treeModel);
         }
         if (StringUtils.isBlank(tree.pid()) && StringUtils.isBlank(tree.pid())) {
             return treeModels;
         } else {
-            return DataHandlerUtil.treeModelToTree(treeModels, null);
+            return DataHandlerUtil.treeModelToTree(treeModels, AnnotationUtil.getExpr(tree.rootValue()));
         }
     }
 
@@ -211,7 +214,7 @@ public class DBService implements DataService {
                 , cols, null, conditions.toArray(new String[conditions.size()]));
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : list) {
-            TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null);
+            TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null, map.get(AnnotationConst.ROOT));
             treeModel.setRootTag(map.get(AnnotationConst.ROOT));
             treeModels.add(treeModel);
         }

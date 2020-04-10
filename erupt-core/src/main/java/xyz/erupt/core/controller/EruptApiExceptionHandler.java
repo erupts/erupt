@@ -18,7 +18,7 @@ public class EruptApiExceptionHandler {
     @ExceptionHandler(EruptApiErrorTip.class)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public EruptApiModel handleInvalidRequestError(EruptApiErrorTip e) {
+    public EruptApiModel eruptApiErrorTip(EruptApiErrorTip e) {
         e.eruptApiModel.setErrorIntercept(false);
         return e.eruptApiModel;
     }
