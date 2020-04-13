@@ -25674,6 +25674,10 @@ g2-tag-cloud {
 @alain-default-aside-bg: #fff;
 //@alain-default-aside-nav-selected-bg:#fff;
 @alain-default-aside-nav-text-color: rgba(0, 0, 0, 0.65);
+//@alain-default-aside-nav-selected-bg: rgba(26, 129, 255, 0.11);
+//.sidebar-nav__selected > .sidebar-nav__item-link{
+//  background: rgba(164, 195, 255, 0.1);
+//}
 
 html {
   background: #ddd;
@@ -25756,6 +25760,27 @@ reuse-tab ~ app-page {
 
 //iframe page-container style end
 
+span.ripple {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: @primary-color;
+  opacity: .07;
+  width: 20px;
+  height: 20px;
+  border-radius: 1000px;
+  animation: ripple 1.5s;
+}
+
+@keyframes ripple {
+  100% {
+    transform: scale(40);
+  }
+}
+
 html {
   background: #ddd;
 }
@@ -25786,6 +25811,7 @@ html {
 
 .page-header {
   margin-bottom: 16px !important;
+
   .ant-breadcrumb {
     margin-bottom: 12px;
   }

@@ -186,7 +186,7 @@ public class DBService implements DataService {
 
 
     @Override
-    public Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName, Serializable dependValue) {
+    public Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName, Serializable dependValue, String... conditionStr) {
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
         Edit edit = eruptFieldModel.getEruptField().edit();
         ReferenceTreeType refTree = edit.referenceTreeType();
@@ -210,8 +210,11 @@ public class DBService implements DataService {
         if (StringUtils.isNotBlank(refTree.dependField()) && null != dependValue) {
             conditions.add(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn() + String.format("='%s'", dependValue));
         }
+        for (String s : conditionStr) {
+            conditions.add(s);
+        }
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.getErupt(eruptFieldModel.getFieldReturnName())
-                , cols, null, conditions.toArray(new String[conditions.size()]));
+                , cols, edit.orderBy(), conditions.toArray(new String[conditions.size()]));
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : list) {
             TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null, map.get(AnnotationConst.ROOT));

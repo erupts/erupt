@@ -10,23 +10,20 @@ import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
-import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
+import xyz.erupt.auth.service.MenuService;
 import xyz.erupt.auth.service.SessionService;
 import xyz.erupt.auth.util.IdentifyCode;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.TreeModel;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -37,8 +34,8 @@ import java.util.stream.Collectors;
 @RequestMapping(RestPath.ERUPT_API)
 public class EruptUserController {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private MenuService menuService;
 
     @Autowired
     private EruptUserService eruptUserService;
@@ -67,29 +64,8 @@ public class EruptUserController {
             if (null != eruptUser.getEruptMenu()) {
                 loginModel.setIndexPath(eruptUser.getEruptMenu().getPath());
             }
-            List<EruptMenu> menuList;
-            if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
-                menuList = entityManager.createQuery("from EruptMenu order by sort").getResultList();
-            } else {
-                Set<EruptMenu> menuSet = new HashSet<>();
-                for (EruptRole role : eruptUser.getRoles()) {
-                    if (role.getStatus()) {
-                        menuSet.addAll(role.getMenus());
-                    }
-                }
-                menuList = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
-            }
-            //生成tree结构数据
-            List<TreeModel> treeModels = new ArrayList<>();
-            for (EruptMenu eruptMenu : menuList) {
-                Long pid = null;
-                if (null != eruptMenu.getParentMenu()) {
-                    pid = eruptMenu.getParentMenu().getId();
-                }
-                TreeModel treeModel = new TreeModel(eruptMenu.getId(), eruptMenu.getName(), pid, eruptMenu);
-                treeModels.add(treeModel);
-            }
-            List<TreeModel> treeResultModels = DataHandlerUtil.treeModelToTree(treeModels, null);
+            List<EruptMenu> menuList = menuService.geneMenuList(loginModel.getEruptUser());
+            List<TreeModel> treeResultModels = menuService.geneMenuTree(menuList);
             sessionService.put(SessionKey.MENU_TREE + loginModel.getToken(), gson.toJson(treeResultModels), eruptAuthConfig.getExpireTimeByLogin());
             sessionService.put(SessionKey.MENU_LIST + loginModel.getToken(), gson.toJson(menuList), eruptAuthConfig.getExpireTimeByLogin());
             //记录登录日志

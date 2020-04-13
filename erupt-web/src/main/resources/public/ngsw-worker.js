@@ -21,19 +21,18 @@
             const baseHref = this.parseUrl(scope.registration.scope).path;
             this.cacheNamePrefix = 'ngsw:' + baseHref;
         }
+        /**
+         * Wrapper around the `Request` constructor.
+         */
+        newRequest(input, init) {
+            return new Request(input, init);
+        }
 
         /**
          * Read the current UNIX time in milliseconds.
          */
         get time() {
             return Date.now();
-        }
-
-        /**
-         * Wrapper around the `Request` constructor.
-         */
-        newRequest(input, init) {
-            return new Request(input, init);
         }
 
         /**
@@ -66,7 +65,6 @@
             const parsed = !relativeTo ? new URL(url) : new URL(url, relativeTo);
             return {origin: parsed.origin, path: parsed.pathname, search: parsed.search};
         }
-
         /**
          * Wait for a given amount of time before completing a Promise.
          */
@@ -111,18 +109,15 @@
             this.adapter = adapter;
             this.tables = new Map();
         }
-
         'delete'(name) {
             if (this.tables.has(name)) {
                 this.tables.delete(name);
             }
             return this.scope.caches.delete(`${this.adapter.cacheNamePrefix}:db:${name}`);
         }
-
         list() {
             return this.scope.caches.keys().then(keys => keys.filter(key => key.startsWith(`${this.adapter.cacheNamePrefix}:db:`)));
         }
-
         open(name) {
             if (!this.tables.has(name)) {
                 const table = this.scope.caches.open(`${this.adapter.cacheNamePrefix}:db:${name}`)
@@ -132,7 +127,6 @@
             return this.tables.get(name);
         }
     }
-
     /**
      * A `Table` backed by a `Cache`.
      */
@@ -150,11 +144,9 @@
         'delete'(key) {
             return this.cache.delete(this.request(key));
         }
-
         keys() {
             return this.cache.keys().then(requests => requests.map(req => req.url.substr(1)));
         }
-
         read(key) {
             return this.cache.match(this.request(key)).then(res => {
                 if (res === undefined) {
@@ -163,7 +155,6 @@
                 return res.json();
             });
         }
-
         write(key, value) {
             return this.cache.put(this.request(key), this.adapter.newResponse(JSON.stringify(value)));
         }
@@ -196,7 +187,6 @@
             this.isCritical = true;
         }
     }
-
     function errorToString(error) {
         if (error instanceof Error) {
             return `${error.message}\n${error.stack}`;
@@ -227,12 +217,10 @@
         const words32 = stringToWords32(utf8, Endian.Big);
         return _sha1(words32, utf8.length * 8);
     }
-
     function sha1Binary(buffer) {
         const words32 = arrayBufferToWords32(buffer, Endian.Big);
         return _sha1(words32, buffer.byteLength * 8);
     }
-
     function _sha1(words32, len) {
         const w = new Array(80);
         let [a, b, c, d, e] = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
@@ -254,28 +242,23 @@
         }
         return byteStringToHexString(words32ToByteString([a, b, c, d, e]));
     }
-
     function add32(a, b) {
         return add32to64(a, b)[1];
     }
-
     function add32to64(a, b) {
         const low = (a & 0xffff) + (b & 0xffff);
         const high = (a >>> 16) + (b >>> 16) + (low >>> 16);
         return [high >>> 16, (high << 16) | (low & 0xffff)];
     }
-
     // Rotate a 32b number left `count` position
     function rol32(a, count) {
         return (a << count) | (a >>> (32 - count));
     }
-
     var Endian;
     (function (Endian) {
         Endian[Endian["Little"] = 0] = "Little";
         Endian[Endian["Big"] = 1] = "Big";
     })(Endian || (Endian = {}));
-
     function fk(index, b, c, d) {
         if (index < 20) {
             return [(b & c) | (~b & d), 0x5a827999];
@@ -288,7 +271,6 @@
         }
         return [b ^ c ^ d, 0xca62c1d6];
     }
-
     function stringToWords32(str, endian) {
         const words32 = Array((str.length + 3) >>> 2);
         for (let i = 0; i < words32.length; i++) {
@@ -296,7 +278,6 @@
         }
         return words32;
     }
-
     function arrayBufferToWords32(buffer, endian) {
         const words32 = Array((buffer.byteLength + 3) >>> 2);
         const view = new Uint8Array(buffer);
@@ -305,7 +286,6 @@
         }
         return words32;
     }
-
     function byteAt(str, index) {
         if (typeof str === 'string') {
             return index >= str.length ? 0 : str.charCodeAt(index) & 0xff;
@@ -313,7 +293,6 @@
             return index >= str.byteLength ? 0 : str[index] & 0xff;
         }
     }
-
     function wordAt(str, index, endian) {
         let word = 0;
         if (endian === Endian.Big) {
@@ -327,11 +306,9 @@
         }
         return word;
     }
-
     function words32ToByteString(words32) {
         return words32.reduce((str, word) => str + word32ToByteString(word), '');
     }
-
     function word32ToByteString(word) {
         let str = '';
         for (let i = 0; i < 4; i++) {
@@ -339,7 +316,6 @@
         }
         return str;
     }
-
     function byteStringToHexString(str) {
         let hex = '';
         for (let i = 0; i < str.length; i++) {
@@ -379,11 +355,9 @@
                     resolve(result.value);
                 }).then(fulfilled, rejected);
             }
-
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
-
     /**
      * A group of assets that are cached in a `Cache` and managed by a given policy.
      *
@@ -421,7 +395,6 @@
             // relative and absolute URLs.
             this.origin = this.adapter.parseUrl(this.scope.registration.scope).origin;
         }
-
         cacheStatus(url) {
             return __awaiter(this, void 0, void 0, function* () {
                 const cache = yield this.cache;
@@ -441,7 +414,6 @@
                 return UpdateCacheStatus.CACHED;
             });
         }
-
         /**
          * Clean up all the cached data for this group.
          */
@@ -451,7 +423,6 @@
                 yield this.db.delete(`${this.prefix}:${this.config.name}:meta`);
             });
         }
-
         /**
          * Process a request for a given resource and return it, or return null if it's not available.
          */
@@ -500,7 +471,6 @@
                 }
             });
         }
-
         getConfigUrl(url) {
             // If the URL is relative to the SW's own origin, then only consider the path relative to
             // the domain root. Determine this by checking the URL's origin against the SW's.
@@ -512,7 +482,6 @@
                 return url;
             }
         }
-
         /**
          * Some resources are cached without a hash, meaning that their expiration is controlled
          * by HTTP caching headers. Check whether the given request/response pair is still valid
@@ -587,7 +556,6 @@
                 }
             });
         }
-
         /**
          * Fetch the complete state of a cached resource, or return null if it's not found.
          */
@@ -612,7 +580,6 @@
                 return {response, metadata};
             });
         }
-
         /**
          * Lookup all resources currently stored in the cache which have no associated hash.
          */
@@ -626,7 +593,6 @@
                     .filter(url => !this.hashes.has(url));
             });
         }
-
         /**
          * Fetch the given resource from the network, and cache it if able.
          */
@@ -684,7 +650,6 @@
                 }
             });
         }
-
         fetchFromNetwork(req, redirectLimit = 3) {
             return __awaiter(this, void 0, void 0, function* () {
                 // Make a cache-busted request for the resource.
@@ -701,7 +666,6 @@
                 return res;
             });
         }
-
         /**
          * Load a particular asset from the network, accounting for hash validation.
          */
@@ -771,7 +735,6 @@
                 }
             });
         }
-
         /**
          * Possibly update a resource, if it's expired and needs to be updated. A no-op otherwise.
          */
@@ -798,14 +761,12 @@
                 return false;
             });
         }
-
         /**
          * Construct a cache-busting URL for a given URL.
          */
         cacheBust(url) {
             return url + (url.indexOf('?') === -1 ? '?' : '&') + 'ngsw-cache-bust=' + Math.random();
         }
-
         safeFetch(req) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
@@ -819,7 +780,6 @@
             });
         }
     }
-
     /**
      * An `AssetGroup` that prefetches all of its resources during initialization.
      */
@@ -885,7 +845,6 @@
             });
         }
     }
-
     class LazyAssetGroup extends AssetGroup {
         initializeFully(updateFrom) {
             return __awaiter(this, void 0, void 0, function* () {
@@ -959,11 +918,9 @@
                     resolve(result.value);
                 }).then(fulfilled, rejected);
             }
-
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
-
     /**
      * Manages an instance of `LruState` and moves URLs to the head of the
      * chain when requested.
@@ -980,14 +937,12 @@
             }
             this.state = state;
         }
-
         /**
          * The current count of URLs in the list.
          */
         get size() {
             return this.state.count;
         }
-
         /**
          * Remove the tail.
          */
@@ -1001,7 +956,6 @@
             // This URL has been successfully evicted.
             return url;
         }
-
         remove(url) {
             const node = this.state.map[url];
             if (node === undefined) {
@@ -1049,7 +1003,6 @@
             this.state.count--;
             return true;
         }
-
         accessed(url) {
             // When a URL is accessed, its node needs to be moved to the head of the chain.
             // This is accomplished in two steps:
@@ -1091,7 +1044,6 @@
             this.state.count++;
         }
     }
-
     /**
      * A group of cached resources determined by a set of URL patterns which follow a LRU policy
      * for caching.
@@ -1113,7 +1065,6 @@
             this.lruTable = this.db.open(`${this.prefix}:dynamic:${this.config.name}:lru`);
             this.ageTable = this.db.open(`${this.prefix}:dynamic:${this.config.name}:age`);
         }
-
         /**
          * Lazily initialize/load the LRU chain.
          */
@@ -1130,7 +1081,6 @@
                 return this._lru;
             });
         }
-
         /**
          * Sync the LRU chain to non-volatile storage.
          */
@@ -1143,7 +1093,6 @@
                 return table.write('lru', this._lru.state);
             });
         }
-
         /**
          * Process a fetch event and return a `Response` if the resource is covered by this group,
          * or `null` otherwise.
@@ -1187,7 +1136,6 @@
                 }
             });
         }
-
         handleFetchWithPerformance(req, ctx, lru) {
             return __awaiter$1(this, void 0, void 0, function* () {
                 let res = null;
@@ -1221,7 +1169,6 @@
                 return res;
             });
         }
-
         handleFetchWithFreshness(req, ctx, lru) {
             return __awaiter$1(this, void 0, void 0, function* () {
                 // Start with a network fetch.
@@ -1252,7 +1199,6 @@
                 return networkFetch;
             });
         }
-
         networkFetchWithTimeout(req) {
             // If there is a timeout configured, race a timeout Promise with the network fetch.
             // Otherwise, just fetch from the network directly.
@@ -1286,7 +1232,6 @@
                 return [networkFetch, networkFetch];
             }
         }
-
         safeCacheResponse(req, resOrPromise, lru, okToCacheOpaque) {
             return __awaiter$1(this, void 0, void 0, function* () {
                 try {
@@ -1306,7 +1251,6 @@
                 }
             });
         }
-
         loadFromCache(req, lru) {
             return __awaiter$1(this, void 0, void 0, function* () {
                 // Look for a response in the cache. If one exists, return it.
@@ -1336,7 +1280,6 @@
                 return null;
             });
         }
-
         /**
          * Operation for caching the response from the server. This has to happen all
          * at once, so that the cache and LRU tracking remain in sync. If the network request
@@ -1373,7 +1316,6 @@
                 yield this.syncLru();
             });
         }
-
         /**
          * Delete all of the saved state which this group uses to track resources.
          */
@@ -1387,7 +1329,6 @@
                 ]);
             });
         }
-
         /**
          * Clear the state of the cache for a particular resource.
          *
@@ -1405,7 +1346,6 @@
                 ]);
             });
         }
-
         safeFetch(req) {
             return __awaiter$1(this, void 0, void 0, function* () {
                 try {
@@ -1450,7 +1390,6 @@
                     resolve(result.value);
                 }).then(fulfilled, rejected);
             }
-
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
@@ -1459,7 +1398,6 @@
         {positive: false, regex: '^/.*\\.[^/]*$'},
         {positive: false, regex: '^/.*__'},
     ];
-
     /**
      * A specific version of the application, identified by a unique manifest
      * as determined by its hash.
@@ -1530,33 +1468,6 @@
         get appData() {
             return this.manifest.appData || null;
         }
-
-        /**
-         * Fully initialize this version of the application. If this Promise resolves successfully, all
-         * required
-         * data has been safely downloaded.
-         */
-        initializeFully(updateFrom) {
-            return __awaiter$2(this, void 0, void 0, function* () {
-                try {
-                    // Fully initialize each asset group, in series. Starts with an empty Promise,
-                    // and waits for the previous groups to have been initialized before initializing
-                    // the next one in turn.
-                    yield this.assetGroups.reduce((previous, group) => __awaiter$2(this, void 0, void 0, function* () {
-                        // Wait for the previous groups to complete initialization. If there is a
-                        // failure, this will throw, and each subsequent group will throw, until the
-                        // whole sequence fails.
-                        yield previous;
-                        // Initialize this group.
-                        return group.initializeFully(updateFrom);
-                    }), Promise.resolve());
-                } catch (err) {
-                    this._okay = false;
-                    throw err;
-                }
-            });
-        }
-
         handleFetch(req, context) {
             return __awaiter$2(this, void 0, void 0, function* () {
                 // Check the request against each `AssetGroup` in sequence. If an `AssetGroup` can't handle the
@@ -1605,7 +1516,6 @@
                 return null;
             });
         }
-
         /**
          * Determine whether the request is a navigation request.
          * Takes into account: Request mode, `Accept` header, `navigationUrls` patterns.
@@ -1623,7 +1533,6 @@
             return this.navigationUrls.include.some(regex => regex.test(urlWithoutQueryOrHash)) &&
                 !this.navigationUrls.exclude.some(regex => regex.test(urlWithoutQueryOrHash));
         }
-
         /**
          * Check this version for a given resource with a particular hash.
          */
@@ -1643,7 +1552,6 @@
                 return cacheState && cacheState.response;
             });
         }
-
         /**
          * Check this version for a given resource regardless of its hash.
          */
@@ -1660,7 +1568,6 @@
                 return group.fetchFromCacheOnly(url);
             }), Promise.resolve(null));
         }
-
         /**
          * List all unhashed resources from all asset groups.
          */
@@ -1669,7 +1576,6 @@
                 return (yield resources).concat(yield group.unhashedResources());
             }), Promise.resolve([]));
         }
-
         recentCacheStatus(url) {
             return __awaiter$2(this, void 0, void 0, function* () {
                 return this.assetGroups.reduce((current, group) => __awaiter$2(this, void 0, void 0, function* () {
@@ -1685,7 +1591,6 @@
                 }), Promise.resolve(UpdateCacheStatus.NOT_CACHED));
             });
         }
-
         /**
          * Erase this application version, by cleaning up all the caches.
          */
@@ -1696,6 +1601,31 @@
             });
         }
 
+        /**
+         * Fully initialize this version of the application. If this Promise resolves successfully, all
+         * required
+         * data has been safely downloaded.
+         */
+        initializeFully(updateFrom) {
+            return __awaiter$2(this, void 0, void 0, function* () {
+                try {
+                    // Fully initialize each asset group, in series. Starts with an empty Promise,
+                    // and waits for the previous groups to have been initialized before initializing
+                    // the next one in turn.
+                    yield this.assetGroups.reduce((previous, group) => __awaiter$2(this, void 0, void 0, function* () {
+                        // Wait for the previous groups to complete initialization. If there is a
+                        // failure, this will throw, and each subsequent group will throw, until the
+                        // whole sequence fails.
+                        yield previous;
+                        // Initialize this group.
+                        return group.initializeFully(updateFrom);
+                    }), Promise.resolve());
+                } catch (err) {
+                    this._okay = false;
+                    throw err;
+                }
+            });
+        }
         /**
          * Check whether a request accepts `text/html` (based on the `Accept` header).
          */
@@ -1739,12 +1669,10 @@
                     resolve(result.value);
                 }).then(fulfilled, rejected);
             }
-
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
     const DEBUG_LOG_BUFFER_SIZE = 100;
-
     class DebugHandler {
         constructor(driver, adapter) {
             this.driver = driver;
@@ -1757,7 +1685,6 @@
             this.debugLogA = [];
             this.debugLogB = [];
         }
-
         handleFetch(req) {
             return __awaiter$3(this, void 0, void 0, function* () {
                 const [state, versions, idle] = yield Promise.all([
@@ -1792,7 +1719,6 @@ ${msgVersions}
 ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})});
             });
         }
-
         since(time) {
             if (time === null) {
                 return 'never';
@@ -1810,7 +1736,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 (minutes > 0 ? `${minutes}m` : '') + (seconds > 0 ? `${seconds}s` : '') +
                 (millis > 0 ? `${millis}u` : '');
         }
-
         log(value, context = '') {
             // Rotate the buffers if debugLogA has grown too large.
             if (this.debugLogA.length === DEBUG_LOG_BUFFER_SIZE) {
@@ -1828,7 +1753,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
         errorToString(err) {
             return `${err.name}(${err.message}, ${err.stack})`;
         }
-
         formatDebugLog(log) {
             return log.map(entry => `[${this.since(entry.time)}] ${entry.value} ${entry.context}`)
                 .join('\n');
@@ -1865,11 +1789,9 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     resolve(result.value);
                 }).then(fulfilled, rejected);
             }
-
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
-
     class IdleScheduler {
         constructor(adapter, threshold, debug) {
             this.adapter = adapter;
@@ -1882,15 +1804,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
             this.lastTrigger = null;
             this.lastRun = null;
         }
-
-        get size() {
-            return this.queue.length;
-        }
-
-        get taskDescriptions() {
-            return this.queue.map(task => task.desc);
-        }
-
         trigger() {
             return __awaiter$4(this, void 0, void 0, function* () {
                 this.lastTrigger = this.adapter.time;
@@ -1911,6 +1824,14 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 this.scheduled = null;
                 yield this.execute();
             });
+        }
+
+        get size() {
+            return this.queue.length;
+        }
+
+        get taskDescriptions() {
+            return this.queue.map(task => task.desc);
         }
 
         execute() {
@@ -1967,7 +1888,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
     function isMsgCheckForUpdates(msg) {
         return msg.action === 'CHECK_FOR_UPDATES';
     }
-
     function isMsgActivateUpdate(msg) {
         return msg.action === 'ACTIVATE_UPDATE';
     }
@@ -2002,7 +1922,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     resolve(result.value);
                 }).then(fulfilled, rejected);
             }
-
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
@@ -2024,7 +1943,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
         // handling until the next restart.
         DriverReadyState[DriverReadyState["SAFE_MODE"] = 2] = "SAFE_MODE";
     })(DriverReadyState || (DriverReadyState = {}));
-
     class Driver {
         constructor(scope, adapter, db) {
             // Set up all the event handlers that the SW needs.
@@ -2119,7 +2037,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
             // The IdleScheduler will execute idle tasks after a given delay.
             this.idle = new IdleScheduler(this.adapter, IDLE_THRESHOLD, this.debugger);
         }
-
         /**
          * The handler for fetch events.
          *
@@ -2179,7 +2096,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
             // SW will still deliver a response.
             event.respondWith(this.handleFetch(event));
         }
-
         /**
          * The handler for message events.
          */
@@ -2209,7 +2125,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 yield this.handleMessage(data, event.source);
             }))());
         }
-
         onPush(msg) {
             // Push notifications without data have no effect.
             if (!msg.data) {
@@ -2218,12 +2133,10 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
             // Handle the push and keep the SW alive until it's handled.
             msg.waitUntil(this.handlePush(msg.data.json()));
         }
-
         onClick(event) {
             // Handle the click event and keep the SW alive until it's handled.
             event.waitUntil(this.handleClick(event.notification, event.action));
         }
-
         ensureInitialized(event) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 // Since the SW may have just been started, it may or may not have been initialized already.
@@ -2249,7 +2162,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 }
             });
         }
-
         handleMessage(msg, from) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 if (isMsgCheckForUpdates(msg)) {
@@ -2262,7 +2174,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 }
             });
         }
-
         handlePush(data) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 yield this.broadcast({
@@ -2279,7 +2190,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 yield this.scope.registration.showNotification(desc['title'], options);
             });
         }
-
         handleClick(notification, action) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 notification.close();
@@ -2294,7 +2204,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 });
             });
         }
-
         reportStatus(client, promise, nonce) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 const response = {type: 'STATUS', nonce, status: true};
@@ -2306,7 +2215,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 }
             });
         }
-
         updateClient(client) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 // Figure out which version the client is on. If it's not on the latest,
@@ -2337,7 +2245,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 client.postMessage(notice);
             });
         }
-
         handleFetch(event) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 try {
@@ -2393,7 +2300,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 return res;
             });
         }
-
         /**
          * Attempt to quickly reach a state where it's safe to serve responses.
          */
@@ -2497,7 +2403,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 })));
             });
         }
-
         lookupVersionByHash(hash, debugName = 'lookupVersionByHash') {
             // The version should exist, but check just in case.
             if (!this.versions.has(hash)) {
@@ -2505,7 +2410,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
             }
             return this.versions.get(hash);
         }
-
         /**
          * Decide which version of the manifest to use for the event.
          */
@@ -2587,7 +2491,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 }
             });
         }
-
         fetchLatestManifest(ignoreOfflineError = false) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 const res = yield this.safeFetch(this.adapter.newRequest('ngsw.json?ngsw-cache-bust=' + Math.random()));
@@ -2604,7 +2507,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 return res.json();
             });
         }
-
         deleteAllCaches() {
             return __awaiter$5(this, void 0, void 0, function* () {
                 yield (yield this.scope.caches.keys())
@@ -2617,7 +2519,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     }), Promise.resolve());
             });
         }
-
         /**
          * Schedule the SW's attempt to reach a fully prefetched state for the given AppVersion
          * when the SW is not busy and has connectivity. This returns a Promise which must be
@@ -2640,7 +2541,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 this.idle.schedule(`initialization(${appVersion.manifestHash})`, initialize);
             });
         }
-
         versionFailed(appVersion, err, latest) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 // This particular AppVersion is broken. First, find the manifest hash.
@@ -2680,7 +2580,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 }
             });
         }
-
         setupUpdate(manifest, hash) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 const newVersion = new AppVersion(this.scope, this.adapter, this.db, this.idle, this.debugger, manifest, hash);
@@ -2701,7 +2600,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 yield this.notifyClientsAboutUpdate();
             });
         }
-
         checkForUpdate() {
             return __awaiter$5(this, void 0, void 0, function* () {
                 let hash = '(unknown)';
@@ -2728,7 +2626,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 }
             });
         }
-
         /**
          * Synchronize the existing state to the underlying database.
          */
@@ -2759,7 +2656,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 ]);
             });
         }
-
         cleanupCaches() {
             return __awaiter$5(this, void 0, void 0, function* () {
                 // Query for all currently active clients, and list the client ids. This may skip
@@ -2803,7 +2699,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 yield this.sync();
             });
         }
-
         /**
          * Delete caches that were used by older versions of `@angular/service-worker` to avoid running
          * into storage quota limitations imposed by browsers.
@@ -2816,7 +2711,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 yield Promise.all(oldSwCacheNames.map(name => this.scope.caches.delete(name)));
             });
         }
-
         /**
          * Determine if a specific version of the given resource is cached anywhere within the SW,
          * and fetch it if so.
@@ -2841,7 +2735,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     return version.lookupResourceWithHash(url, hash);
                 }), Promise.resolve(null));
         }
-
         lookupResourceWithoutHash(url) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 yield this.initialized;
@@ -2849,7 +2742,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 return version.lookupResourceWithoutHash(url);
             });
         }
-
         previouslyCachedResources() {
             return __awaiter$5(this, void 0, void 0, function* () {
                 yield this.initialized;
@@ -2857,19 +2749,16 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 return version.previouslyCachedResources();
             });
         }
-
         recentCacheStatus(url) {
             const version = this.versions.get(this.latestHash);
             return version.recentCacheStatus(url);
         }
-
         mergeHashWithAppData(manifest, hash) {
             return {
                 hash,
                 appData: manifest.appData,
             };
         }
-
         notifyClientsAboutUpdate() {
             return __awaiter$5(this, void 0, void 0, function* () {
                 yield this.initialized;
@@ -2898,7 +2787,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 }), Promise.resolve());
             });
         }
-
         broadcast(msg) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 const clients = yield this.scope.clients.matchAll();
@@ -2907,7 +2795,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 });
             });
         }
-
         debugState() {
             return __awaiter$5(this, void 0, void 0, function* () {
                 return {
@@ -2918,7 +2805,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 };
             });
         }
-
         debugVersions() {
             return __awaiter$5(this, void 0, void 0, function* () {
                 // Build list of versions.
@@ -2935,7 +2821,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 });
             });
         }
-
         debugIdleState() {
             return __awaiter$5(this, void 0, void 0, function* () {
                 return {
@@ -2945,7 +2830,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 };
             });
         }
-
         safeFetch(req) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 try {

@@ -38,7 +38,7 @@ public class EruptLoginLog extends BaseModel {
     @EruptField(
             views = @View(title = "用户名", column = "name"),
             edit = @Edit(title = "用户名", type = EditType.REFERENCE_TABLE
-                    , search = @Search(vague = true, value = true))
+                    , search = @Search(vague = true))
     )
     private EruptUser eruptUser;
 
@@ -50,25 +50,25 @@ public class EruptLoginLog extends BaseModel {
 
     @EruptField(
             views = @View(title = "IP地址"),
-            edit = @Edit(title = "IP地址", search = @Search(true))
+            edit = @Edit(title = "IP地址", search = @Search)
     )
     private String ip;
 
     @EruptField(
             views = @View(title = "操作系统"),
-            edit = @Edit(title = "操作系统", search = @Search(true))
+            edit = @Edit(title = "操作系统", search = @Search)
     )
     private String systemName;
 
     @EruptField(
             views = @View(title = "浏览器"),
-            edit = @Edit(title = "浏览器", search = @Search(true))
+            edit = @Edit(title = "浏览器", search = @Search)
     )
     private String browser;
 
     @EruptField(
             views = @View(title = "设备类型"),
-            edit = @Edit(title = "设备类型", search = @Search(true))
+            edit = @Edit(title = "设备类型", search = @Search)
     )
     private String deviceType;
 }

@@ -83,6 +83,6 @@ public interface DataService {
      * @param dependValue 参照值
      * @return
      */
-    Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName, Serializable dependValue);
+    Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName, Serializable dependValue, String... conditionStr);
 
 }

@@ -45,7 +45,7 @@ public class EruptService {
             List<String> conditionList = new ArrayList<>();
             conditionList.addAll(Arrays.asList(customCondition));
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
-                String condition = EruptSpringUtil.getBean(proxy).beforeFetch();
+                String condition = EruptSpringUtil.getBean(proxy).beforeFetch(legalJsonObject);
                 if (null != condition) {
                     conditionList.add(condition);
                 }

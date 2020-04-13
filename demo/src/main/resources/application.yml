@@ -13,8 +13,8 @@ spring:
     hikari:
       max-lifetime: 30000
     url: jdbc:mysql://39.104.174.237:3306/erupt?useUnicode=true&characterEncoding=UTF-8
-    username: root
-    password: E3&$cBW#
+    username: erupt
+    password: leLPvYbQQ!27st2FuxtO
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

@@ -181,10 +181,6 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     @Autowired
     private EruptUserService eruptUserService;
 
-    @Override
-    public String beforeFetch() {
-        return null;
-    }
 
     @Override
     public Map<String, String> fetch(String[] params) {
