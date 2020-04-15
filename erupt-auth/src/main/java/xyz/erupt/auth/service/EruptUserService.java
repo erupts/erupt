@@ -178,6 +178,11 @@ public class EruptUserService {
         return Long.valueOf(sessionService.get(SessionKey.USER_TOKEN + token).toString());
     }
 
+    public EruptUser getCurrentEruptUser() {
+        entityManager.clear();
+        return entityManager.find(EruptUser.class, getCurrentUid());
+    }
+
     public boolean verifyToken(String token) {
         if (null == sessionService.get(SessionKey.USER_TOKEN + token)) {
             return false;

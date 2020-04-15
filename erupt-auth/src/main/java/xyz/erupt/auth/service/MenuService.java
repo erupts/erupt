@@ -70,8 +70,7 @@ public class MenuService implements DataProxy<EruptMenu> {
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
         String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
-        entityManager.clear();
-        List<EruptMenu> menuList = geneMenuList(entityManager.find(EruptUser.class, eruptUserService.getCurrentUid()));
+        List<EruptMenu> menuList = geneMenuList(eruptUserService.getCurrentEruptUser());
         List<TreeModel> treeResultModels = geneMenuTree(menuList);
         sessionService.put(SessionKey.MENU_TREE + token, gson.toJson(treeResultModels), eruptAuthConfig.getExpireTimeByLogin());
         sessionService.put(SessionKey.MENU_LIST + token, gson.toJson(menuList), eruptAuthConfig.getExpireTimeByLogin());
