@@ -27,7 +27,6 @@
         newRequest(input, init) {
             return new Request(input, init);
         }
-
         /**
          * Read the current UNIX time in milliseconds.
          */

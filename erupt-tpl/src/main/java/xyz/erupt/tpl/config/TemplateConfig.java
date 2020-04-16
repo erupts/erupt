@@ -6,7 +6,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -15,6 +14,15 @@ import java.io.IOException;
  */
 @org.springframework.context.annotation.Configuration
 public class TemplateConfig {
+
+    @Bean
+    public Configuration freeMarkerEngine() throws IOException {
+        Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_29);
+        freemarkerConfig.setDefaultEncoding("utf-8");
+        freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/");
+//        freemarkerConfig.setDirectoryForTemplateLoading(new File(this.getClass().getResource("/").getPath()));
+        return freemarkerConfig;
+    }
 
     @Bean
     public TemplateEngine thymeleafEngine() throws IOException {
@@ -27,13 +35,5 @@ public class TemplateConfig {
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.addTemplateResolver(resolver);
         return templateEngine;
-    }
-
-    @Bean
-    public Configuration freeMarkerEngine() throws IOException {
-        Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_29);
-        freemarkerConfig.setDefaultEncoding("utf-8");
-        freemarkerConfig.setDirectoryForTemplateLoading(new File(this.getClass().getResource("/").getFile()));
-        return freemarkerConfig;
     }
 }
