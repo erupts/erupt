@@ -56,8 +56,11 @@ public class EruptDao {
         });
         if (null == t) {
             entityManager.persist(obj);
+            entityManager.flush();
+            return (T) obj;
+        } else {
+            return t;
         }
-        return t;
     }
 
     private Query simpleQuery(Class eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {

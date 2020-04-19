@@ -12,7 +12,7 @@ spring:
   datasource:
     hikari:
       max-lifetime: 30000
-    url: jdbc:mysql://39.104.174.237:3306/erupt?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://39.104.174.237:3306/erupt-test?useUnicode=true&characterEncoding=UTF-8
     username: erupt
     password: leLPvYbQQ!27st2FuxtO
   jpa:
