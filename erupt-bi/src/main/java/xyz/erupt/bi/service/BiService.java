@@ -5,8 +5,11 @@ import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import xyz.erupt.bi.fun.BiHandler;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiChart;
+import xyz.erupt.bi.model.BiClassHandler;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tool.EruptDao;
 
 import javax.script.ScriptEngine;
@@ -35,9 +38,6 @@ public class BiService {
     private BiDataSourceService dataSourceService;
 
     @Autowired
-    private BiDataLoadService biDataLoadService;
-
-    @Autowired
     private EruptDao eruptDao;
 
     private static final String EXPRESS_PATTERN = "(?<=\\$\\{)(.+?)(?=\\})";
@@ -51,11 +51,22 @@ public class BiService {
         });
     }
 
+    @SneakyThrows
     public List<Map<String, Object>> startQuery(String code, Map<String, Object> query) {
         Bi bi = findBi(code);
+        BiClassHandler classHandler = bi.getClassHandler();
         String express = processPlaceHolder(bi.getSqlStatement(), query);
+        BiHandler biHandler = null;
+        if (null != classHandler) {
+            biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), BiHandler.class);
+            express = biHandler.exprHandler(classHandler.getParam(), express);
+        }
         NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
-        return jdbcQuery(jdbcTemplate, express, query);
+        List<Map<String, Object>> list = jdbcQuery(jdbcTemplate, express, query);
+        if (null != biHandler) {
+            biHandler.resultHandler(classHandler.getParam(), list);
+        }
+        return list;
     }
 
     public List<Map<String, Object>> startSqlQuery(String sql, Map<String, Object> query) {

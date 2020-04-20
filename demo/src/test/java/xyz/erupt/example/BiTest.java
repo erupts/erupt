@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,9 @@ public class BiTest {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     public void biTest() throws IOException {
@@ -53,6 +57,11 @@ public class BiTest {
         map.put("kkkk", "313");
         List list = jdbcTemplate.queryForList("select * from demo where name = :name", map);
         System.out.println(list);
+    }
+
+    @Test
+    public void aa() {
+
     }
 
 

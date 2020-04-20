@@ -163,7 +163,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             views = @View(title = "地图"),
-            edit = @Edit(title = "地图", type = EditType.MAP)
+            edit = @Edit(title = "地图", type = EditType.MAP, mapType = @MapType)
     )
     private String map;
 

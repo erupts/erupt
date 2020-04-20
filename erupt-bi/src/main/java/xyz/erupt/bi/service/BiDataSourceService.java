@@ -20,12 +20,16 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
+
     private Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
 
     NamedParameterJdbcTemplate getJdbcTemplate(BiDataSource biDataSource) {
+//        entityManager.
         if (null == biDataSource) {
             return jdbcTemplate;
         } else {
+
+//            new EntityManagerFactoryBuilderImpl()
             NamedParameterJdbcTemplate jdbcTemplate = templateMap.get(biDataSource.getCode());
             if (null == jdbcTemplate) {
                 synchronized (this) {
@@ -42,6 +46,9 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
                         hikariDataSource.setPassword(biDataSource.getPassword());
                         hikariDataSource.setUsername(biDataSource.getUserName());
                         jdbcTemplate = new NamedParameterJdbcTemplate(hikariDataSource);
+//                        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+//                        factory.setDataSource(hikariDataSource);
+//                        factory.getNativeEntityManagerFactory().createEntityManager();
                         templateMap.put(biDataSource.getCode(), jdbcTemplate);
                     }
                 }

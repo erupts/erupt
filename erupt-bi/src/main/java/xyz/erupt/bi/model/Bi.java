@@ -48,10 +48,12 @@ public class Bi extends BaseModel {
     )
     private BiDataSource dataSource;
 
+    @ManyToOne
     @EruptField(
-            edit = @Edit(title = "handler", placeHolder = "处理类", desc = "需实现xyz.erupt.bi.fun.BiHandler接口")
+            edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
     )
-    private String handler;
+    private BiClassHandler classHandler;
+
 
     @EruptField(
             views = @View(title = "是否可导出"),

@@ -69,6 +69,9 @@ public @interface Edit {
     @SerializeBy(method = "type", value = "CODE_EDITOR")
     CodeEditorType codeEditType() default @CodeEditorType(language = "sql");
 
+    @SerializeBy(method = "type", value = "MAP")
+    MapType mapType() default @MapType;
+
     @Transient
     Tpl tplType() default @Tpl(path = "");
 

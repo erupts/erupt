@@ -36,6 +36,8 @@ public class BiDataLoadService implements CommandLineRunner {
                         null, 1, 20, "fa fa-table", null), "code", "mbi");
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("BiDataSource", "数据源管理", "/build/table/BiDataSource"
                         , 1, 10, null, eruptMenu), "code", "BiDataSource");
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("BiClassHandler", "报表处理类", "/build/table/BiClassHandler"
+                        , 1, 15, null, eruptMenu), "code", "BiClassHandler");
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("BiFunction", "函数管理", "/build/table/BiFunction"
                         , 1, 20, null, eruptMenu), "code", "BiFunction");
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("Bi", "报表配置", "/build/table/bi"
