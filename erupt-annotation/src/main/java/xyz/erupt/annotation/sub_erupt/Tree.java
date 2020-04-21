@@ -20,9 +20,6 @@ public @interface Tree {
     Link[] linkTable() default {};
 
     @Transient
-    String rootRefer() default "";
-
-    @Transient
-    Expr rootValue() default @Expr;
+    Expr rootTagExpr() default @Expr;
 
 }

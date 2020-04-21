@@ -70,10 +70,14 @@ public class DBService implements DataService {
         cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.id()) + " as " + AnnotationConst.ID);
         cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.label()) + " as " + AnnotationConst.LABEL);
         if (StringUtils.isNotBlank(tree.pid())) {
-            cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid()) + " as " + AnnotationConst.PID);
-        }
-        if (StringUtils.isNotBlank(tree.rootRefer())) {
-            cols.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.rootRefer()) + " as " + AnnotationConst.ROOT);
+            String pid = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), tree.pid());
+            String expr = AnnotationUtil.getExpr(tree.rootTagExpr());
+            cols.add(pid + " as " + AnnotationConst.PID);
+            if (StringUtils.isNotBlank(expr)) {
+                cols.add(String.format("(%s) as ", expr) + AnnotationConst.ROOT);
+            } else {
+                cols.add(String.format("(%s is null) as ", pid) + AnnotationConst.ROOT);
+            }
         }
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(eruptModel, cols, sort, condition);
         List<TreeModel> treeModels = new ArrayList<>();
@@ -84,7 +88,7 @@ public class DBService implements DataService {
         if (StringUtils.isBlank(tree.pid()) && StringUtils.isBlank(tree.pid())) {
             return treeModels;
         } else {
-            return DataHandlerUtil.treeModelToTree(treeModels, AnnotationUtil.getExpr(tree.rootValue()));
+            return DataHandlerUtil.treeModelToTree(treeModels);
         }
     }
 
@@ -194,10 +198,14 @@ public class DBService implements DataService {
         cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.id()) + " as " + AnnotationConst.ID);
         cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.label()) + " as " + AnnotationConst.LABEL);
         if (StringUtils.isNotBlank(refTree.pid())) {
-            cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldName(), refTree.pid()) + " as " + AnnotationConst.PID);
-        }
-        if (StringUtils.isNotBlank(refTree.rootRefer())) {
-            cols.add(EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldReturnName(), refTree.rootRefer()) + " as " + AnnotationConst.ROOT);
+            String pid = EruptJpaUtils.completeHqlPath(eruptFieldModel.getFieldName(), refTree.pid());
+            cols.add(pid + " as " + AnnotationConst.PID);
+            String expr = AnnotationUtil.getExpr(refTree.rootTagExpr());
+            if (StringUtils.isNotBlank(expr)) {
+                cols.add(String.format("(%s) as ", expr) + AnnotationConst.ROOT);
+            } else {
+                cols.add(String.format("(%s is null) as ", pid) + AnnotationConst.ROOT);
+            }
         }
         List<String> conditions = new ArrayList<>();
         for (Filter filter : edit.filter()) {
@@ -218,13 +226,13 @@ public class DBService implements DataService {
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : list) {
             TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null, map.get(AnnotationConst.ROOT));
-            treeModel.setRootTag(map.get(AnnotationConst.ROOT));
+            treeModel.setRoot(map.get(AnnotationConst.ROOT));
             treeModels.add(treeModel);
         }
         if (StringUtils.isBlank(refTree.pid())) {
             return treeModels;
         } else {
-            return DataHandlerUtil.treeModelToTree(treeModels, AnnotationUtil.getExpr(refTree.rootValue()));
+            return DataHandlerUtil.treeModelToTree(treeModels);
         }
     }
 }

@@ -1,5 +1,10 @@
 package xyz.erupt.example.handler;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import xyz.erupt.auth.service.EruptUserService;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +12,15 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2020-04-20
  */
+@Service
 public class BiHandler implements xyz.erupt.bi.fun.BiHandler {
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private EruptUserService eruptUserService;
+
     @Override
     public String exprHandler(String param, String expr) {
         return expr;

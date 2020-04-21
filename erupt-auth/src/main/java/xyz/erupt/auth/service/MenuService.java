@@ -62,9 +62,12 @@ public class MenuService implements DataProxy<EruptMenu> {
                 pid = eruptMenu.getParentMenu().getId();
             }
             TreeModel treeModel = new TreeModel(eruptMenu.getId(), eruptMenu.getName(), pid, eruptMenu);
+            if (null != pid) {
+                treeModel.setRoot(false);
+            }
             treeModels.add(treeModel);
         }
-        return DataHandlerUtil.treeModelToTree(treeModels, null);
+        return DataHandlerUtil.treeModelToTree(treeModels);
     }
 
     @Override

@@ -21,39 +21,19 @@ import java.util.Map;
  */
 public class DataHandlerUtil {
     //内存计算的方式生成树结构
-    public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels, String rootValue) {
+    public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels) {
         List<TreeModel> resultTreeModels = new ArrayList<>();
         List<TreeModel> tempTreeModels = new LinkedList<>();
         tempTreeModels.addAll(treeModels);
-        if (StringUtils.isNotBlank(rootValue)) {
-            String id = null;
-            for (TreeModel treeModel : treeModels) {
-                if (rootValue.equals(treeModel.getRootTag())) {
-                    id = treeModel.getId();
-                    break;
-                }
-            }
-            if (id == null) {
-                return resultTreeModels;
-            }
-            for (TreeModel treeModel : treeModels) {
-                if (id.equals(treeModel.getId())) {
-                    resultTreeModels.add(treeModel);
-                    tempTreeModels.remove(treeModel);
-                }
-            }
-        } else {
-            for (TreeModel treeModel : treeModels) {
-                if (StringUtils.isBlank(treeModel.getPid())) {
-                    resultTreeModels.add(treeModel);
-                    tempTreeModels.remove(treeModel);
-                }
+        for (TreeModel treeModel : treeModels) {
+            if (treeModel.isRoot()) {
+                resultTreeModels.add(treeModel);
+                tempTreeModels.remove(treeModel);
             }
         }
         for (TreeModel treeModel : resultTreeModels) {
             recursionTree(tempTreeModels, treeModel);
         }
-        //TODO 如果最终结果size为0则直接返回原有参数
         return resultTreeModels;
     }
 

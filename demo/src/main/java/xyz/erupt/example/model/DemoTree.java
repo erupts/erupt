@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.expr.Expr;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -23,7 +22,7 @@ import javax.persistence.Table;
 @Table(name = "demo_tree")
 @Erupt(
         name = "demo tree",
-        tree = @Tree(pid = "parent.id", rootRefer = "level", rootValue = @Expr("2"))
+        tree = @Tree(pid = "parent.id")
 )
 public class DemoTree extends BaseModel {
 

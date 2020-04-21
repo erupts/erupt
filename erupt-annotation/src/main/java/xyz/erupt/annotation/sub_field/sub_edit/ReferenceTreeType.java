@@ -22,8 +22,5 @@ public @interface ReferenceTreeType {
     String dependColumn() default AnnotationConst.ID;
 
     @Transient
-    String rootRefer() default "";
-
-    @Transient
-    Expr rootValue() default @Expr;
+    Expr rootTagExpr() default @Expr;
 }

@@ -23,11 +23,12 @@ public class TreeModel {
 
     private Object data;
 
-    private transient String rootTag;
+    private boolean root = true;
 
-    public void setRootTag(Object rootTag) {
+    public TreeModel(Object id, Object label, Object pid, Object data, Object rootTag) {
+        this(id, label, pid, data);
         if (null != rootTag) {
-            this.rootTag = rootTag.toString();
+            this.root = Boolean.valueOf(rootTag.toString());
         }
     }
 
@@ -44,10 +45,9 @@ public class TreeModel {
         this.data = data;
     }
 
-    public TreeModel(Object id, Object label, Object pid, Object data, Object rootTag) {
-        this(id, label, pid, data);
-        if (null != rootTag) {
-            this.rootTag = rootTag.toString();
+    public void setRoot(Object root) {
+        if (null != root) {
+            this.root = Boolean.valueOf(root.toString());
         }
     }
 }
