@@ -25720,6 +25720,14 @@ nz-input-group {
   width: 100%;
 }
 
+page-header .page-header {
+  padding: 8px 24px 0 !important;
+
+  .ant-breadcrumb {
+    margin-bottom: 8px !important;
+  }
+}
+
 nz-picker, nz-picker .ant-calendar-picker {
   width: 100% !important;
 }
@@ -25771,7 +25779,7 @@ span.ripple {
   opacity: .07;
   width: 20px;
   height: 20px;
-  border-radius: 1000px;
+  border-radius: 50%;
   animation: ripple 1.5s;
 }
 
@@ -25820,6 +25828,10 @@ html {
 
 //暗黑模式
 .dark {
+
+  .alain-default__header-logo {
+    border-right: 1px solid #333 !important;
+  }
 
   .alain-default__content, .ant-modal-content, .alain-default__aside {
     filter: invert(88%);
