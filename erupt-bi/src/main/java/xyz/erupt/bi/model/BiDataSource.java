@@ -54,8 +54,7 @@ public class BiDataSource extends BaseModel {
     private String userName;
 
     @EruptField(
-            views = @View(title = "密码"),
-            edit = @Edit(title = "密码", notNull = true)
+            edit = @Edit(title = "密码")
     )
     private String password;
 
