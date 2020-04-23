@@ -30,13 +30,13 @@ public class Bi extends BaseModel {
 
     @EruptField(
             views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true, value = true))
+            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
             views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true, value = true))
+            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
@@ -44,7 +44,7 @@ public class Bi extends BaseModel {
     @JoinColumn(name = "DATASOURCE_ID")
     @EruptField(
             views = @View(title = "数据源", column = "name"),
-            edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search(value = true))
+            edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private BiDataSource dataSource;
 
@@ -57,7 +57,7 @@ public class Bi extends BaseModel {
 
     @EruptField(
             views = @View(title = "是否可导出"),
-            edit = @Edit(title = "是否可导出", search = @Search(true))
+            edit = @Edit(title = "是否可导出", search = @Search)
     )
     private Boolean export;
 

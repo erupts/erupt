@@ -12,6 +12,7 @@ import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.view.TreeModel;
+import xyz.erupt.tool.EruptDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,12 +32,19 @@ public class MenuService implements DataProxy<EruptMenu> {
 
     @Autowired
     private SessionService sessionService;
+
     @Autowired
     private HttpServletRequest request;
+
     @Autowired
     private EruptAuthConfig eruptAuthConfig;
+
     @Autowired
     private Gson gson;
+
+    @Autowired
+    private EruptDao eruptDao;
+
     @Autowired
     private EruptUserService eruptUserService;
 
@@ -68,6 +76,12 @@ public class MenuService implements DataProxy<EruptMenu> {
             treeModels.add(treeModel);
         }
         return DataHandlerUtil.treeModelToTree(treeModels);
+    }
+
+    public void loadMenu(Class eruptClass, String name, String icon, int sort, EruptMenu parentMenu) {
+        eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(eruptClass.getSimpleName(), name,
+                "/build/tree/" + eruptClass.getSimpleName(), 1, sort, icon, parentMenu
+        ), "code", eruptClass.getSimpleName());
     }
 
     @Override

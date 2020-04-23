@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.bi.fun.BiHandler;
 import xyz.erupt.bi.model.Bi;
-import xyz.erupt.bi.model.BiChart;
 import xyz.erupt.bi.model.BiClassHandler;
+import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tool.EruptDao;
 
@@ -32,16 +32,12 @@ import java.util.regex.Pattern;
 public class BiService {
 
     @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
-
-    @Autowired
     private BiDataSourceService dataSourceService;
 
     @Autowired
     private EruptDao eruptDao;
 
     private static final String EXPRESS_PATTERN = "(?<=\\$\\{)(.+?)(?=\\})";
-
 
     public Bi findBi(String code) {
         return eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {
@@ -52,28 +48,20 @@ public class BiService {
     }
 
     @SneakyThrows
-    public List<Map<String, Object>> startQuery(String code, Map<String, Object> query) {
-        Bi bi = findBi(code);
-        BiClassHandler classHandler = bi.getClassHandler();
-        String express = processPlaceHolder(bi.getSqlStatement(), query);
+    public List<Map<String, Object>> startQuery(String express, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
         BiHandler biHandler = null;
+        express = processPlaceHolder(express, query);
         if (null != classHandler) {
             biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), BiHandler.class);
             express = biHandler.exprHandler(classHandler.getParam(), express);
         }
-        NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
+        NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(biDataSource);
         List<Map<String, Object>> list = jdbcQuery(jdbcTemplate, express, query);
         if (null != biHandler) {
             biHandler.resultHandler(classHandler.getParam(), list);
         }
         return list;
     }
-
-    public List<Map<String, Object>> startSqlQuery(String sql, Map<String, Object> query) {
-        String express = processPlaceHolder(sql, query);
-        return jdbcQuery(jdbcTemplate, express, query);
-    }
-
 
     private List<Map<String, Object>> jdbcQuery(NamedParameterJdbcTemplate jdbcTemplate, String express, Map<String, Object> query) {
         log.info(express);
@@ -86,18 +74,6 @@ public class BiService {
             }
             return map;
         });
-    }
-
-    public List<Map<String, Object>> chartQuery(String code, String chartCode, Map<String, Object> param) {
-        Bi bi = findBi(code);
-        for (BiChart chart : bi.getBiCharts()) {
-            if (chartCode.equals(chart.getCode())) {
-                String exp = processPlaceHolder(chart.getSqlStatement(), param);
-                NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
-                return jdbcQuery(jdbcTemplate, exp, param);
-            }
-        }
-        return null;
     }
 
     @SneakyThrows

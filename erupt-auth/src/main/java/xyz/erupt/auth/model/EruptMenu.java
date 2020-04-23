@@ -130,6 +130,16 @@ public class EruptMenu extends BaseModel {
         this.parentMenu = parentMenu;
     }
 
+    public EruptMenu(Class<?> eruptClass, String name, String path, Integer status, Integer sort, String icon, EruptMenu parentMenu) {
+        this.code = eruptClass.getSimpleName();
+        this.name = name;
+        this.path = path;
+        this.status = status;
+        this.sort = sort;
+        this.icon = icon;
+        this.parentMenu = parentMenu;
+    }
+
     public EruptMenu() {
     }
 

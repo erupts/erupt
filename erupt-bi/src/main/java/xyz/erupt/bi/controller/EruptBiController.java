@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiChart;
 import xyz.erupt.bi.model.BiDimension;
+import xyz.erupt.bi.model.BiDimensionReference;
 import xyz.erupt.bi.service.BiService;
 import xyz.erupt.bi.view.BiColumn;
 import xyz.erupt.bi.view.BiData;
@@ -65,7 +66,7 @@ public class EruptBiController {
             }
         }
         for (BiDimension dimension : bi.getBiDimension()) {
-            dimension.setRefSql(null);
+            dimension.setBiDimensionReference(null);
             if (dimension.getSort() == null) {
                 dimension.setSort(++maxSort);
             }
@@ -79,7 +80,8 @@ public class EruptBiController {
     @PostMapping("/{code}/data")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     public BiData getData(@PathVariable("code") String code, @RequestBody Map<String, Object> query) {
-        List<Map<String, Object>> list = biService.startQuery(code, query);
+        Bi bi = biService.findBi(code);
+        List<Map<String, Object>> list = biService.startQuery(bi.getSqlStatement(), bi.getClassHandler(), bi.getDataSource(), query);
         BiData biData = new BiData();
         biData.setList(list);
         if (null != list && list.size() > 0) {
@@ -102,7 +104,8 @@ public class EruptBiController {
         Bi bi = biService.findBi(code);
         for (BiDimension dimension : bi.getBiDimension()) {
             if (dim.equals(dimension.getCode())) {
-                List<Map<String, Object>> list = biService.startSqlQuery(dimension.getRefSql(), null);
+                BiDimensionReference reference = dimension.getBiDimensionReference();
+                List<Map<String, Object>> list = biService.startQuery(reference.getRefSql(), reference.getClassHandler(), reference.getDataSource(), null);
                 List<Reference> references = new ArrayList<>();
                 for (Map<String, Object> map : list) {
                     if (map.keySet().size() == 1) {
@@ -122,8 +125,14 @@ public class EruptBiController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @RequestMapping("{code}/chart/{chart_code}")
     public List<Map<String, Object>> biChart(@PathVariable("code") String code, @PathVariable("chart_code") String chartCode,
-                                             @RequestBody Map<String, Object> body) {
-        return biService.chartQuery(code, chartCode, body);
+                                             @RequestBody Map<String, Object> query) {
+        Bi bi = biService.findBi(code);
+        for (BiChart chart : bi.getBiCharts()) {
+            if (chartCode.equals(chart.getCode())) {
+                return biService.startQuery(chart.getSqlStatement(), chart.getClassHandler(), chart.getDataSource(), query);
+            }
+        }
+        throw new EruptNoLegalPowerException();
     }
 
 

@@ -8,12 +8,11 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -46,6 +45,12 @@ public class BiDimension extends BaseModel {
     private Integer sort;
 
     @EruptField(
+            views = @View(title = "是否必填"),
+            edit = @Edit(title = "是否必填", boolType = @BoolType(defaultValue = false))
+    )
+    private Boolean notNull;
+
+    @EruptField(
             views = @View(title = "维度类型"),
             edit = @Edit(
                     title = "维度类型",
@@ -57,7 +62,7 @@ public class BiDimension extends BaseModel {
                                     @DependSwitchType.Attr(value = "INPUT", label = "文本", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "NUMBER", label = "数值", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "NUMBER_RANGE", label = "数值区间", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "REFERENCE", label = "SQL参照", dependEdits = {"refSql", "dependDimension"}),
+                                    @DependSwitchType.Attr(value = "REFERENCE", label = "SQL参照", dependEdits = {"refSql", "biDimensionReference"}),
                                     @DependSwitchType.Attr(value = "DATE", label = "日期", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "DATE_RANGE", label = "日期区间", dependEdits = ""),
                                     @DependSwitchType.Attr(value = "DATETIME", label = "日期时间", dependEdits = ""),
@@ -72,29 +77,13 @@ public class BiDimension extends BaseModel {
     )
     private String type;
 
+    @ManyToOne
     @EruptField(
-            views = @View(title = "默认值"),
-            edit = @Edit(title = "默认值")
+            views = @View(title = "参照维度", column = "name"),
+            edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE)
     )
-    private String defaultVal;
+    private BiDimensionReference biDimensionReference;
 
-    @EruptField(
-            views = @View(title = "是否必填"),
-            edit = @Edit(title = "是否必填", boolType = @BoolType(defaultValue = false))
-    )
-    private Boolean notNull;
-
-//    @EruptField(
-//            views = @View(title = "依赖维度"),
-//            edit = @Edit(title = "依赖维度")
-//    )
-//    private String dependDimension;
-
-    @Lob
-    @EruptField(
-            edit = @Edit(title = "参照SQL", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
-    )
-    private String refSql;
 
 }
 

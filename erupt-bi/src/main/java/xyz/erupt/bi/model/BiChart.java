@@ -42,11 +42,24 @@ public class BiChart extends BaseModel {
     )
     private Integer grid = 1;
 
+    @ManyToOne
     @EruptField(
-            views = @View(title = "联动查询"),
-            edit = @Edit(title = "联动查询")
+            edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
     )
-    private Boolean linkage;
+    private BiClassHandler classHandler;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "数据源", column = "name"),
+            edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search)
+    )
+    private BiDataSource dataSource;
+
+//    @EruptField(
+//            views = @View(title = "联动查询"),
+//            edit = @Edit(title = "联动查询")
+//    )
+//    private Boolean linkage;
 
     @EruptField(
             views = @View(title = "显示顺序", sortable = true),
@@ -96,7 +109,7 @@ public class BiChart extends BaseModel {
 
     @Lob
     @EruptField(
-            edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照echarts", type = EditType.TEXTAREA)
+            edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照G2Plot", type = EditType.TEXTAREA)
     )
     private String chartOption;
 

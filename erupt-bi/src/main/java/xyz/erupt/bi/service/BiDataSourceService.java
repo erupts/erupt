@@ -24,12 +24,9 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
     private Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
 
     NamedParameterJdbcTemplate getJdbcTemplate(BiDataSource biDataSource) {
-//        entityManager.
         if (null == biDataSource) {
             return jdbcTemplate;
         } else {
-
-//            new EntityManagerFactoryBuilderImpl()
             NamedParameterJdbcTemplate jdbcTemplate = templateMap.get(biDataSource.getCode());
             if (null == jdbcTemplate) {
                 synchronized (this) {
@@ -39,7 +36,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
                     }
                     {
                         HikariDataSource hikariDataSource = new HikariDataSource();
-                        //报表数据源就不要做增删改的操作了！
+                        //报表数据源只读
                         hikariDataSource.setReadOnly(true);
                         hikariDataSource.setDriverClassName(biDataSource.getDriver());
                         hikariDataSource.setJdbcUrl(biDataSource.getUrl());
