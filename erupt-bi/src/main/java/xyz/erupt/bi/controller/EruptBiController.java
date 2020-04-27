@@ -79,7 +79,11 @@ public class EruptBiController {
 
     @PostMapping("/{code}/data")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
-    public BiData getData(@PathVariable("code") String code, @RequestBody Map<String, Object> query) {
+    public BiData getData(@PathVariable("code") String code,
+//                          @RequestParam(value = "index", required = false) int pageIndex,
+//                          @RequestParam(value = "size", required = false) int pageSize,
+//                          @RequestParam(value = "sort", required = false) String sort,
+                          @RequestBody Map<String, Object> query) {
         Bi bi = biService.findBi(code);
         List<Map<String, Object>> list = biService.startQuery(bi.getSqlStatement(), bi.getClassHandler(), bi.getDataSource(), query);
         BiData biData = new BiData();

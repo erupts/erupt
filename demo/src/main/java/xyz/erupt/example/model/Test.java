@@ -6,16 +6,10 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -38,6 +32,19 @@ public class Test extends BaseModel {
             edit = @Edit(title = "数字", search = @Search(value = true, vague = true))
     )
     private Integer number;
+
+    @ManyToOne
+    @EruptField(
+            edit = @Edit(title = "多对一表格", search = @Search(vague = true), type = EditType.REFERENCE_TABLE)
+    )
+    private Demo demo;
+
+    @Lob
+    @EruptField(
+            views = @View(title = "地图"),
+            edit = @Edit(title = "地图", type = EditType.MAP, mapType = @MapType(drawMaxLayer = 10))
+    )
+    private String map;
 
     @EruptField(
             views = @View(title = "date"),

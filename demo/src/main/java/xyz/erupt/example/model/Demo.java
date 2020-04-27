@@ -35,6 +35,7 @@ import java.util.Set;
         power = @Power(export = true, importable = true, powerHandler = PowerHandlerImpl.class), dataProxy = Demo.class,
         rowOperation = {
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
+                        ifExpr = "item.bool", tip = "执行操作一需要填写，名称与菜单信息",
                         eruptClass = DemoSub.class, title = "操作一", icon = "fa fa-eercast", code = "d1"),
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
                         title = "操作文本", icon = "fa fa-table", code = "d2")
@@ -69,7 +70,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @Lob
     @EruptField(
-            views = @View(title = "代码编辑器"),
+            views = @View(title = "代码编辑器", desc = "CSS代码编辑器"),
             edit = @Edit(title = "代码编辑器", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "css"))
     )
     private String code;

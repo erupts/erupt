@@ -2,6 +2,7 @@ package xyz.erupt.bi.view;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.core.view.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -18,4 +19,6 @@ public class BiData {
     Set<BiColumn> columns;
 
     List<Map<String, Object>> list;
+
+    Page page;
 }

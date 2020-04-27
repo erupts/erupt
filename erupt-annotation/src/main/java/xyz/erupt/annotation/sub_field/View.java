@@ -12,6 +12,8 @@ public @interface View {
 
     String title();
 
+    String desc() default "";
+
     //在修饰类型为实体类对象时必须指定列名
     String column() default "";
 
@@ -32,6 +34,7 @@ public @interface View {
      * 支持变量：
      * 1、item（整行数据）
      * 2、item.xxx（数据中的某一列）
+     * 3、value (当前数据)
      * demo："姓名：" + item.name  => 姓名xxxx
      */
     String template() default "";
