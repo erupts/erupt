@@ -42,7 +42,7 @@ public class Test extends BaseModel {
     @Lob
     @EruptField(
             views = @View(title = "地图"),
-            edit = @Edit(title = "地图", type = EditType.MAP, mapType = @MapType(drawMaxLayer = 10))
+            edit = @Edit(title = "地图", type = EditType.MAP, mapType = @MapType(draw = true))
     )
     private String map;
 
