@@ -91,9 +91,10 @@ public class DataHandlerUtil {
                                         getEruptFieldMap().get(view.column());
                                 switch (vef.getEruptField().edit().type()) {
                                     case CHOICE:
+                                        Map<String, String> cmp = EruptUtil.getChoiceMap(vef.getEruptField().edit().choiceType());
                                         if (vef.getEruptField().edit().choiceType().type() == ChoiceEnum.SELECT_SINGLE
                                                 || vef.getEruptField().edit().choiceType().type() == ChoiceEnum.RADIO) {
-                                            map.put(entry.getKey(), vef.getChoiceMap().get(entry.getValue().toString()));
+                                            map.put(entry.getKey(), cmp.get(entry.getValue().toString()));
                                         }
                                         break;
                                     case BOOLEAN:
