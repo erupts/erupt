@@ -168,6 +168,7 @@ public class DataFileService {
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     switch (edit.type()) {
                         case REFERENCE_TABLE:
+                        case REFERENCE_TREE:
                             JsonObject jo = new JsonObject();
                             try {
                                 if (edit.type() == EditType.REFERENCE_TREE) {

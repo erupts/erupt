@@ -35,7 +35,7 @@ import java.util.Set;
         power = @Power(export = true, importable = true, powerHandler = PowerHandlerImpl.class), dataProxy = Demo.class,
         rowOperation = {
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
-                        ifExpr = "item.bool", tip = "执行操作一需要填写，名称与菜单信息",
+                        ifExpr = "item.number", tip = "执行操作一需要填写，名称与菜单信息",
                         eruptClass = DemoSub.class, title = "操作一", icon = "fa fa-eercast", code = "d1"),
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
                         title = "操作文本", icon = "fa fa-table", code = "d2")
