@@ -50,9 +50,9 @@ public class EruptExcelController {
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
-    public String getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
+    public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
         if (SecurityUtil.csrfInspect(request, response)) {
-            return "非法请求！";
+            throw new RuntimeException("非法请求");
         }
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
@@ -60,7 +60,6 @@ public class EruptExcelController {
         } else {
             throw new RuntimeException("没有导入权限");
         }
-        return null;
     }
 
     //导出
@@ -70,7 +69,7 @@ public class EruptExcelController {
                            HttpServletRequest request,
                            HttpServletResponse response) throws IOException {
         if (SecurityUtil.csrfInspect(request, response)) {
-            return;
+            throw new RuntimeException("非法请求");
         }
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().export()) {

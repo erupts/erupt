@@ -9,6 +9,8 @@ import xyz.erupt.bi.fun.BiHandler;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiClassHandler;
 import xyz.erupt.bi.model.BiDataSource;
+import xyz.erupt.bi.view.BiColumn;
+import xyz.erupt.bi.view.BiData;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tool.EruptDao;
 
@@ -16,10 +18,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.sql.ResultSetMetaData;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +44,26 @@ public class BiService {
                 this.put("code", code);
             }
         });
+    }
+
+    public BiData queryBiData(String code, Map<String, Object> query) {
+        Bi bi = findBi(code);
+        List<Map<String, Object>> list = startQuery(bi.getSqlStatement(), bi.getClassHandler(), bi.getDataSource(), query);
+        BiData biData = new BiData();
+        biData.setList(list);
+        biData.setCode(bi.getCode());
+        biData.setName(bi.getName());
+        if (null != list && list.size() > 0) {
+            List<BiColumn> biColumns = new LinkedList<>();
+            Map<String, Object> map = list.get(0);
+            for (String key : map.keySet()) {
+                BiColumn biColumn = new BiColumn();
+                biColumn.setName(key);
+                biColumns.add(biColumn);
+            }
+            biData.setColumns(biColumns);
+        }
+        return biData;
     }
 
     @SneakyThrows

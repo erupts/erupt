@@ -6,7 +6,6 @@ import xyz.erupt.core.view.Page;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author liyuepeng
@@ -16,7 +15,11 @@ import java.util.Set;
 @Setter
 public class BiData {
 
-    Set<BiColumn> columns;
+    String code;
+
+    String name;
+
+    List<BiColumn> columns;
 
     List<Map<String, Object>> list;
 
