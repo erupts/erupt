@@ -56,7 +56,7 @@ public class EruptExcelController {
         }
         EruptModel eruptModel = CoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
-            dataFileService.createExcelTemplate(eruptModel, response);
+            dataFileService.createExcelTemplate(eruptModel, request, response);
         } else {
             throw new RuntimeException("没有导入权限");
         }
@@ -87,7 +87,7 @@ public class EruptExcelController {
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
                 EruptSpringUtil.getBean(proxy).excelExport(wb);
             }
-            wb.write(HttpUtil.downLoadFile(response, eruptModel.getErupt().name() + DataFileService.XLS_FORMAT));
+            wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + DataFileService.XLS_FORMAT));
         } else {
             throw new RuntimeException("没有导出权限");
         }

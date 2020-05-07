@@ -1,5 +1,7 @@
 package xyz.erupt.bi.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -9,6 +11,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import xyz.erupt.bi.fun.BiHandler;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiChart;
 import xyz.erupt.bi.model.BiDimension;
@@ -22,6 +25,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.DataFileService;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.tool.EruptDao;
@@ -29,6 +33,7 @@ import xyz.erupt.tool.EruptDao;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,14 +51,18 @@ public class EruptBiController {
     @Autowired
     private BiService biService;
 
+    @Autowired
+    private Gson gson;
+
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     public BiModel getBuilder(@PathVariable("code") String code, HttpServletResponse response) {
-        Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {
-            {
-                this.put("code", code);
-            }
-        });
+        Bi bi = eruptDao.queryEntity(Bi.class, "code = :code",
+                new HashMap<String, Object>(1) {
+                    {
+                        this.put("code", code);
+                    }
+                });
         if (null == bi) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
@@ -88,11 +97,14 @@ public class EruptBiController {
     @PostMapping("/{code}/data")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     public BiData getData(@PathVariable("code") String code,
-//                          @RequestParam(value = "index", required = false) int pageIndex,
-//                          @RequestParam(value = "size", required = false) int pageSize,
-//                          @RequestParam(value = "sort", required = false) String sort,
+                          @RequestParam("index") int pageIndex,
+                          @RequestParam("size") int pageSize,
+                          @RequestParam(value = "sort", required = false) String sort,
                           @RequestBody Map<String, Object> query) {
-        return biService.queryBiData(code, query);
+        if (pageSize > 100) {
+            pageSize = 100;
+        }
+        return biService.queryBiData(code, pageIndex, pageSize, query, false);
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
@@ -137,14 +149,25 @@ public class EruptBiController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU
             , verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 1)
     @RequestMapping("{code}/excel")
-    public void exportExcel(@PathVariable("code") String code, @RequestBody Map<String, Object> query, HttpServletRequest request, HttpServletResponse response) {
+    public void exportExcel(@PathVariable("code") String code,
+                            @RequestParam("condition") String conditionStr,
+                            HttpServletRequest request,
+                            HttpServletResponse response) throws ClassNotFoundException, IOException {
         if (SecurityUtil.csrfInspect(request, response)) {
             throw new RuntimeException("非法请求");
         }
-        BiData biData = biService.queryBiData(code, query);
+        Bi bi = biService.findBi(code);
+        if (!bi.getExport()) {
+            throw new RuntimeException(bi.getName() + "禁止导出！");
+        }
+        Map<String, Object> condition = gson.fromJson(
+                URLDecoder.decode(conditionStr, "utf-8"),
+                new TypeToken<Map<String, Object>>() {
+                }.getType());
+        BiData biData = biService.queryBiData(code, 1, 100000, condition, true);
         Workbook wb = new HSSFWorkbook();
         //基本信息
-        Sheet sheet = wb.createSheet(biData.getName());
+        Sheet sheet = wb.createSheet(bi.getName());
         sheet.createFreezePane(0, 1, 1, 1);
         Row headRow = sheet.createRow(0);
         for (int i = 0; i < biData.getColumns().size(); i++) {
@@ -154,20 +177,20 @@ public class EruptBiController {
             cell.setCellValue(biColumn.getName());
         }
         for (int i = 0; i < biData.getList().size(); i++) {
-            Row row = sheet.createRow(i);
+            Row row = sheet.createRow(i + 1);
             Map<String, Object> map = biData.getList().get(i);
-            for (Object value : map.values()) {
-                Cell cell = row.createCell(i);
+            for (int j = 0; j < biData.getColumns().size(); j++) {
+                Object value = map.get(biData.getColumns().get(j).getName());
                 if (null != value) {
+                    Cell cell = row.createCell(j);
                     cell.setCellValue(value.toString());
                 }
             }
         }
-        try {
-            wb.write(HttpUtil.downLoadFile(response, biData.getName() + DataFileService.XLS_FORMAT));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+        if (null != bi.getClassHandler()) {
+            BiHandler biHandler = EruptSpringUtil.getBeanByPath(bi.getClassHandler().getHandlerPath(), BiHandler.class);
+            biHandler.exportHandler(condition, wb);
         }
+        wb.write(HttpUtil.downLoadFile(request, response, bi.getName() + DataFileService.XLS_FORMAT));
     }
 }

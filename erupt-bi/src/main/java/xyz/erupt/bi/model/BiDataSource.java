@@ -47,6 +47,15 @@ public class BiDataSource extends BaseModel {
     )
     private String url;
 
+//    @EruptField(
+//            views = @View(title = "类型"),
+//            edit = @Edit(title = "类型", type = EditType.CHOICE, notNull = true,
+//                    choiceType = @ChoiceType(vl = {
+//                            @VL(value = "mysql", label = "mysql")
+//                    }))
+//    )
+//    private String dbType;
+
     @EruptField(
             views = @View(title = "用户名"),
             edit = @Edit(title = "用户名", notNull = true)

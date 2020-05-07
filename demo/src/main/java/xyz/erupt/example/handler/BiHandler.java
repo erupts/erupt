@@ -1,5 +1,6 @@
 package xyz.erupt.example.handler;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.auth.service.EruptUserService;
@@ -29,5 +30,10 @@ public class BiHandler implements xyz.erupt.bi.fun.BiHandler {
     @Override
     public void resultHandler(String param, List<Map<String, Object>> result) {
         System.out.println(result);
+    }
+
+    @Override
+    public void exportHandler(Map<String, Object> condition, Workbook workbook) {
+        System.out.println(condition);
     }
 }

@@ -36,6 +36,9 @@ public class BiService {
     @Autowired
     private EruptDao eruptDao;
 
+    //导出标识符
+    private static final String EXPORT_PLACEHOLDER = "$export";
+
     private static final String EXPRESS_PATTERN = "(?<=\\$\\{)(.+?)(?=\\})";
 
     public Bi findBi(String code) {
@@ -46,13 +49,20 @@ public class BiService {
         });
     }
 
-    public BiData queryBiData(String code, Map<String, Object> query) {
+    private static final String TOTAL_KEY = "count";
+
+    public BiData queryBiData(String code, int pageIndex, int pageSize,
+                              Map<String, Object> query, boolean export) {
         Bi bi = findBi(code);
-        List<Map<String, Object>> list = startQuery(bi.getSqlStatement(), bi.getClassHandler(), bi.getDataSource(), query);
+        query.put(EXPORT_PLACEHOLDER, export);
+        String sql = String.format("select * from (%s) _ limit %s,%s",
+                bi.getSqlStatement(), (pageIndex - 1) * pageSize, pageSize);
+        List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);
         BiData biData = new BiData();
         biData.setList(list);
-        biData.setCode(bi.getCode());
-        biData.setName(bi.getName());
+        if (!export) {
+            biData.setTotal(this.getTotal(bi, query));
+        }
         if (null != list && list.size() > 0) {
             List<BiColumn> biColumns = new LinkedList<>();
             Map<String, Object> map = list.get(0);
@@ -64,6 +74,19 @@ public class BiService {
             biData.setColumns(biColumns);
         }
         return biData;
+    }
+
+    @SneakyThrows
+    private Long getTotal(Bi bi, Map<String, Object> query) {
+        String express = processPlaceHolder(bi.getSqlStatement(), query);
+        BiClassHandler biDataSource = bi.getClassHandler();
+        if (null != biDataSource) {
+            express = EruptSpringUtil.getBeanByPath(biDataSource.getHandlerPath(), BiHandler.class)
+                    .exprHandler(biDataSource.getParam(), express);
+        }
+        express = String.format("select count(*) %s from (%s) _", TOTAL_KEY, express);
+        NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
+        return (Long) jdbcTemplate.queryForMap(express, query).get(TOTAL_KEY);
     }
 
     @SneakyThrows

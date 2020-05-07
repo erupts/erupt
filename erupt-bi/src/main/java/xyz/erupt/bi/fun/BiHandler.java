@@ -1,5 +1,7 @@
 package xyz.erupt.bi.fun;
 
+import org.apache.poi.ss.usermodel.Workbook;
+
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,16 @@ public interface BiHandler {
      * @param result 结果
      */
     default void resultHandler(String param, List<Map<String, Object>> result) {
+
+    }
+
+    /**
+     * 导出excel处理
+     *
+     * @param condition 查询条件
+     * @param workbook  poi对象
+     */
+    default void exportHandler(Map<String, Object> condition, Workbook workbook) {
 
     }
 }
