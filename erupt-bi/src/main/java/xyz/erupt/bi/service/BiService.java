@@ -2,6 +2,7 @@ package xyz.erupt.bi.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,9 @@ public class BiService {
     public BiData queryBiData(String code, int pageIndex, int pageSize,
                               Map<String, Object> query, boolean export) {
         Bi bi = findBi(code);
+        if (StringUtils.isBlank(bi.getSqlStatement())) {
+            throw new RuntimeException("express not found");
+        }
         query.put(EXPORT_PLACEHOLDER, export);
         String sql = String.format("select * from (%s) _ limit %s,%s",
                 bi.getSqlStatement(), (pageIndex - 1) * pageSize, pageSize);
