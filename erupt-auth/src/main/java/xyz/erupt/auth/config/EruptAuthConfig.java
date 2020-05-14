@@ -14,4 +14,5 @@ import org.springframework.stereotype.Component;
 public class EruptAuthConfig {
 
     private Integer expireTimeByLogin = 100;
+
 }

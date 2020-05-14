@@ -55,6 +55,12 @@ public class EruptLoginLog extends BaseModel {
     private String ip;
 
     @EruptField(
+            views = @View(title = "所在地理位置"),
+            edit = @Edit(title = "所在地理位置", search = @Search(vague = true))
+    )
+    private String region;
+
+    @EruptField(
             views = @View(title = "操作系统"),
             edit = @Edit(title = "操作系统", search = @Search)
     )

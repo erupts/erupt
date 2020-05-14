@@ -12,6 +12,7 @@ import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.tool.EruptDao;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 
 /**
  * @author liyuepeng
@@ -35,6 +36,7 @@ public class AuthDataLoadService implements CommandLineRunner {
                 eruptUser.setIsAdmin(true);
                 eruptUser.setIsMd5(true);
                 eruptUser.setStatus(true);
+                eruptUser.setCreateTime(new Date());
                 eruptUser.setAccount("erupt");
                 eruptUser.setPassword(MD5Utils.digest("erupt"));
                 eruptUser.setName("erupt");

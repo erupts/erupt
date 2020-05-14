@@ -6,7 +6,7 @@ package xyz.erupt.auth.constant;
  */
 public class SessionKey {
 
-    private static final String AUTH_SPACE = "auth:";
+    private static final String AUTH_SPACE = "eruptAuth:";
 
     public static final String VERIFY_CODE = AUTH_SPACE + "verifyCode:";
 
@@ -17,4 +17,6 @@ public class SessionKey {
     public static final String MENU_LIST = AUTH_SPACE + "menuList:";
 
     public static final String USER_TOKEN = AUTH_SPACE + "token:";
+
+    public static final String LOGIN_ERROR = AUTH_SPACE + "login-error:";
 }

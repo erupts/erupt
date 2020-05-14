@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.core.config.EruptConfig;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,9 @@ public class SessionService {
     private EruptConfig eruptConfig;
 
     @Autowired
+    private EruptAuthConfig eruptAuthConfig;
+
+    @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
@@ -31,7 +35,15 @@ public class SessionService {
 
     public void put(String key, String str, long timeout) {
         if (eruptConfig.isRedisSession()) {
-            redisTemplate.opsForValue().set(key, str, timeout, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(key, str, timeout, TimeUnit.SECONDS);
+        } else {
+            request.getSession().setAttribute(key, str);
+        }
+    }
+
+    public void put(String key, String str) {
+        if (eruptConfig.isRedisSession()) {
+            redisTemplate.opsForValue().set(key, str, eruptAuthConfig.getExpireTimeByLogin(), TimeUnit.MINUTES);
         } else {
             request.getSession().setAttribute(key, str);
         }

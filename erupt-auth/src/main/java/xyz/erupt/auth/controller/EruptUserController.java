@@ -2,11 +2,11 @@ package xyz.erupt.auth.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wf.captcha.ArithmeticCaptcha;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.auth.base.LoginModel;
-import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
@@ -14,13 +14,11 @@ import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.auth.service.MenuService;
 import xyz.erupt.auth.service.SessionService;
-import xyz.erupt.auth.util.IdentifyCode;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.TreeModel;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -44,9 +42,6 @@ public class EruptUserController {
     private SessionService sessionService;
 
     @Autowired
-    private EruptAuthConfig eruptAuthConfig;
-
-    @Autowired
     private Gson gson;
 
     @PostMapping("/login")
@@ -66,8 +61,8 @@ public class EruptUserController {
             }
             List<EruptMenu> menuList = menuService.geneMenuList(loginModel.getEruptUser());
             List<TreeModel> treeResultModels = menuService.geneMenuTree(menuList);
-            sessionService.put(SessionKey.MENU_TREE + loginModel.getToken(), gson.toJson(treeResultModels), eruptAuthConfig.getExpireTimeByLogin());
-            sessionService.put(SessionKey.MENU_LIST + loginModel.getToken(), gson.toJson(menuList), eruptAuthConfig.getExpireTimeByLogin());
+            sessionService.put(SessionKey.MENU_TREE + loginModel.getToken(), gson.toJson(treeResultModels));
+            sessionService.put(SessionKey.MENU_LIST + loginModel.getToken(), gson.toJson(menuList));
             //记录登录日志
             eruptUserService.saveLoginLog(eruptUser);
         }
@@ -134,18 +129,11 @@ public class EruptUserController {
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
-        // 自定义宽、高、字数和干扰线的条数
-        IdentifyCode code = new IdentifyCode(100, 38, 4, 20);
+        ArithmeticCaptcha captcha = new ArithmeticCaptcha(150, 38, 3);
         // 验证码过期时间1分钟
-        sessionService.put(SessionKey.VERIFY_CODE + account, code.getCode(), 1);
+        sessionService.put(SessionKey.VERIFY_CODE + account, captcha.text(), 60);
         // 响应图片
-        ServletOutputStream out = response.getOutputStream();
-        code.write(out);
-        try {
-            out.flush();
-        } finally {
-            out.close();
-        }
+        captcha.out(response.getOutputStream());
     }
 
 }

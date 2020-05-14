@@ -13,6 +13,7 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.test.context.junit4.SpringRunner;
 import xyz.erupt.auth.model.EruptUser;
+import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.data_impl.DBService;
@@ -24,6 +25,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -137,6 +139,14 @@ public class DemoApplicationTests {
     @Test
     public void joinTest() {
         entityManager.createQuery("select eruptUserTree.name from Demo where choice='xxx'").getResultList();
+    }
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @Test
+    public void ipCity() {
+        System.out.println(IpUtil.getCityInfo(IpUtil.getIpAddr(request)));
     }
 }
 

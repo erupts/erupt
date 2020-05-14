@@ -26,7 +26,10 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -184,14 +187,14 @@ public class EruptFileController {
 
     @RequestMapping(value = {PREVIEW_PATH + "/**"})
     @ResponseBody
-    public void previewAttachment(HttpServletResponse response, HttpServletRequest request) throws UnsupportedEncodingException {
+    public void previewAttachment(HttpServletResponse response, HttpServletRequest request) {
         previewAttachment(request.getServletPath().replace(RestPath.ERUPT_FILE + PREVIEW_PATH, ""), response);
     }
 
 
     @RequestMapping(value = PREVIEW_PATH)
     @ResponseBody
-    public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) throws UnsupportedEncodingException {
+    public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) {
         int cacheTime = 60 * 60 * 24 * 10 * 1000;
         response.addHeader("cache-control", "max-age=" + cacheTime);
         response.setDateHeader("expires", (System.currentTimeMillis() + cacheTime));
@@ -199,18 +202,14 @@ public class EruptFileController {
         response.setHeader("etag", RandomStringUtils.randomAlphabetic(10));
         response.setDateHeader("Last-Modified", System.currentTimeMillis() - 1000 * 60);
         response.setContentType(MimeUtil.getMimeType(path));
-        try (OutputStream ros = response.getOutputStream()) {
-            IOUtils.write(mappingFileToByte(path, response), ros);
-            ros.flush();
+        try {
+            IOUtils.write(mappingFileToByte(path, response), response.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private byte[] mappingFileToByte(String path, HttpServletResponse response) {
-//        if (path.startsWith("http://") || path.startsWith("https://")) {
-//
-//        }
         if (!path.startsWith(FS_SEP)) {
             path = FS_SEP + path;
         }

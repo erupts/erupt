@@ -1,6 +1,5 @@
 package xyz.erupt.auth.service;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.auth.base.LoginModel;
-import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptLoginLog;
@@ -26,7 +24,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author liyuepeng
@@ -45,19 +45,7 @@ public class EruptUserService {
     private SessionService sessionService;
 
     @Autowired
-    private EruptAuthConfig eruptAuthConfig;
-
-    @Autowired
     private HttpServletRequest request;
-
-    @Autowired
-    private Gson gson;
-
-    public static final String USER_AGENT = "User-Agent";
-
-
-    //TODO 分布式下计数会不准
-    private static Map<String, Integer> loginErrorCount = new HashMap<>();
 
     @Transactional
     public void saveLoginLog(EruptUser user) {
@@ -67,17 +55,23 @@ public class EruptUserService {
         loginLog.setLoginTime(new Date());
         loginLog.setIp(IpUtil.getIpAddr(request));
         loginLog.setSystemName(userAgent.getOperatingSystem().getName());
-        loginLog.setBrowser(userAgent.getBrowser().getName());
-        loginLog.setBrowser(userAgent.getBrowser().getName() + " "
-                + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
+        loginLog.setRegion(IpUtil.getCityInfo(loginLog.getIp())
+                .replace("|0", "")
+                .replace("0|", "")
+                .replace("|", " | "));
+        loginLog.setBrowser(userAgent.getBrowser().getName() + " " + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
         loginLog.setDeviceType(userAgent.getOperatingSystem().getDeviceType().getName());
         entityManager.persist(loginLog);
     }
 
 
     public LoginModel login(String account, String pwd, String verifyCode, HttpServletRequest request) {
-        loginErrorCount.putIfAbsent(account, 0);
-        if (loginErrorCount.get(account) >= 3) {
+        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + account);
+        long loginErrorCount = 0;
+        if (null != loginError) {
+            loginErrorCount = Long.parseLong(loginError.toString());
+        }
+        if (loginErrorCount >= 3) {
             if (StringUtils.isBlank(verifyCode)) {
                 return new LoginModel(false, "请填写验证码", true);
             }
@@ -122,17 +116,13 @@ public class EruptUserService {
                 }
             }
             if (pass) {
-                loginErrorCount.put(account, 0);
+                sessionService.put(SessionKey.LOGIN_ERROR + account, "0");
                 return new LoginModel(true, eruptUser);
             } else {
-                Integer count = loginErrorCount.get(account);
-                loginErrorCount.put(account, ++count);
-                //错误五次要求使用验证码，错误50次锁定账号；
-                if (loginErrorCount.get(account) >= 5) {
+                loginErrorCount += 1;
+                sessionService.put(SessionKey.LOGIN_ERROR + account, loginErrorCount + "");
+                if (loginErrorCount >= 3) {
                     return new LoginModel(false, "密码错误", true);
-                } else if (loginErrorCount.get(account) >= 50) {
-                    eruptUser.setStatus(false);
-                    return new LoginModel(false, "账号被锁定");
                 } else {
                     return new LoginModel(false, "密码错误");
                 }
@@ -167,7 +157,7 @@ public class EruptUserService {
 
     public void createToken(LoginModel loginModel) {
         loginModel.setToken(RandomStringUtils.random(20, true, true));
-        sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString(), eruptAuthConfig.getExpireTimeByLogin());
+        sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString());
     }
 
     public Long getCurrentUid() {

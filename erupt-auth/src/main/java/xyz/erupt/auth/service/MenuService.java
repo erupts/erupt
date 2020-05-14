@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
@@ -35,9 +34,6 @@ public class MenuService implements DataProxy<EruptMenu> {
 
     @Autowired
     private HttpServletRequest request;
-
-    @Autowired
-    private EruptAuthConfig eruptAuthConfig;
 
     @Autowired
     private Gson gson;
@@ -89,8 +85,8 @@ public class MenuService implements DataProxy<EruptMenu> {
         String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
         List<EruptMenu> menuList = geneMenuList(eruptUserService.getCurrentEruptUser());
         List<TreeModel> treeResultModels = geneMenuTree(menuList);
-        sessionService.put(SessionKey.MENU_TREE + token, gson.toJson(treeResultModels), eruptAuthConfig.getExpireTimeByLogin());
-        sessionService.put(SessionKey.MENU_LIST + token, gson.toJson(menuList), eruptAuthConfig.getExpireTimeByLogin());
+        sessionService.put(SessionKey.MENU_TREE + token, gson.toJson(treeResultModels));
+        sessionService.put(SessionKey.MENU_LIST + token, gson.toJson(menuList));
     }
 
     @Override

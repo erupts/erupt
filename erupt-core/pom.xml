@@ -88,6 +88,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>core.properties</include>
+                    <include>banner.txt</include>
                 </includes>
             </resource>
             <resource>
