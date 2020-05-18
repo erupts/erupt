@@ -2,7 +2,7 @@ eruptSiteConfig = {
     //global config
     domain: "",
     attachmentDomain: "http://qa5mh744r.bkt.clouddn.com/",
-    title: "Erupt  DEMO",
+    title: "Erupt DEMO",
     desc: "Erupt 演示系统",
     routerReuse: false,
     amapKey: "6ba79a8db11b51aeb1176bd4cfa049f4",
