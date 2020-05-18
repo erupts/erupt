@@ -4,7 +4,6 @@ import java.beans.Transient;
 
 public @interface Expr {
 
-    @Transient
     String value() default "";
 
     @Transient

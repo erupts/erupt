@@ -3,6 +3,7 @@ erupt:
     - xyz.erupt
     - com.xxxxx
   allow-request-file-type: pdf
+  attachmentProxy: xyz.erupt.example.handler.QiniuOosProxy
 erupt-auth:
   expireTimeByLogin: 60
 openApi:
@@ -18,8 +19,8 @@ spring:
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      ddl-auto: update
+  #    hibernate:
+  #      ddl-auto: update
   redis:
     database: 0
     timeout: 10000

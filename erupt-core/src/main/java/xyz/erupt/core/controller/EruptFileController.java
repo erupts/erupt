@@ -4,11 +4,12 @@ import lombok.Cleanup;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -43,13 +44,13 @@ public class EruptFileController {
     @Autowired
     private EruptConfig eruptConfig;
 
-    public static final String FS_SEP = "/";
+    private static final String FS_SEP = "/";
 
     @PostMapping("/upload/{erupt}/{field}")
     @ResponseBody
     @EruptRouter(authIndex = 2)
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
+        if (file.isEmpty() || StringUtils.isBlank(file.getOriginalFilename())) {
             return EruptApiModel.errorApi("上传失败，请选择文件");
         }
         try {
@@ -122,19 +123,21 @@ public class EruptFileController {
                 default:
                     return EruptApiModel.errorApi("上传失败，非法类型!");
             }
-            File dest = new File(eruptConfig.getUploadPath() + File.separator + path);
-            if (!dest.getParentFile().exists()) {
-                if (!dest.getParentFile().mkdirs()) {
-                    return EruptApiModel.errorApi("上传失败，文件目录无法创建");
+//            todo HTML_EDIT 所上传的图片也需要依赖AttachmentType注解配置来实现
+            boolean localSave = true;
+            if (StringUtils.isNotBlank(eruptConfig.getAttachmentProxy())) {
+                AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptConfig.getAttachmentProxy(), AttachmentProxy.class);
+                attachmentProxy.upLoad(file.getInputStream(), path);
+                localSave = attachmentProxy.isLocalSave();
+            }
+            if (localSave) {
+                File dest = new File(eruptConfig.getUploadPath() + File.separator + path);
+                if (!dest.getParentFile().exists()) {
+                    if (!dest.getParentFile().mkdirs()) {
+                        return EruptApiModel.errorApi("上传失败，文件目录无法创建");
+                    }
                 }
-            }
-            //执行upload proxy
-            for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dataProxy()) {
-                EruptSpringUtil.getBean(clazz).beforeUpLoadFile(file.getInputStream(), dest);
-            }
-            file.transferTo(dest);
-            for (Class<? extends DataProxy> clazz : eruptModel.getErupt().dataProxy()) {
-                EruptSpringUtil.getBean(clazz).afterUpLoadFile(dest, path);
+                file.transferTo(dest);
             }
             return EruptApiModel.successApi(path.replace("\\", "/"));
         } catch (Exception e) {
@@ -165,13 +168,20 @@ public class EruptFileController {
     @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
                                                      @PathVariable("field") String fieldName,
-                                                     @RequestParam("upload") MultipartFile file) {
+                                                     @RequestParam("upload") MultipartFile file,
+                                                     HttpServletRequest request) throws ClassNotFoundException {
         EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
         Map<String, Object> map = new HashMap<>(2);
-        // ["uploaded":"true", "url":"image-path..."]
+        //{"uploaded":"true", "url":"image-path..."}
         if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
+            if (StringUtils.isNotBlank(eruptConfig.getAttachmentProxy())) {
+                AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptConfig.getAttachmentProxy(), AttachmentProxy.class);
+                map.put("url", attachmentProxy.fileDomain() + eruptApiModel.getData());
+            } else {
+                map.put("url", request.getRequestURL().toString().split(RestPath.ERUPT_API)[0] +
+                        RestPath.ERUPT_FILE + PREVIEW_PATH + eruptApiModel.getData());
+            }
             map.put("uploaded", true);
-            map.put("url", RestPath.ERUPT_FILE + PREVIEW_PATH + eruptApiModel.getData());
         } else {
             map.put("uploaded", false);
         }

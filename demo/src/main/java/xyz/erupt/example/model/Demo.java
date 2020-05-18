@@ -137,7 +137,8 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     @EruptField(
             views = @View(title = "图片", type = ViewType.IMAGE),
             edit = @Edit(title = "图片", type = EditType.ATTACHMENT,
-                    attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE))
+                    attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE)
+            )
     )
     private String img;
 

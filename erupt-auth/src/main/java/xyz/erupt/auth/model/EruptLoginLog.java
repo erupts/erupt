@@ -55,7 +55,7 @@ public class EruptLoginLog extends BaseModel {
     private String ip;
 
     @EruptField(
-            views = @View(title = "所在地理位置"),
+            views = @View(title = "所在地理位置", desc = "格式：国家 | 大区 | 省份 | 城市 | 运营商", template = "value&&value.replace(/\\|/g,' | ')"),
             edit = @Edit(title = "所在地理位置", search = @Search(vague = true))
     )
     private String region;

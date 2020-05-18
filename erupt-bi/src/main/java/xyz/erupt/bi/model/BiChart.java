@@ -109,7 +109,9 @@ public class BiChart extends BaseModel {
 
     @Lob
     @EruptField(
-            edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照G2Plot", type = EditType.TEXTAREA)
+            edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照G2Plot",
+                    type = EditType.CODE_EDITOR,
+                    codeEditType = @CodeEditorType(language = "json"))
     )
     private String chartOption;
 

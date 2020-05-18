@@ -55,10 +55,7 @@ public class EruptUserService {
         loginLog.setLoginTime(new Date());
         loginLog.setIp(IpUtil.getIpAddr(request));
         loginLog.setSystemName(userAgent.getOperatingSystem().getName());
-        loginLog.setRegion(IpUtil.getCityInfo(loginLog.getIp())
-                .replace("|0", "")
-                .replace("0|", "")
-                .replace("|", " | "));
+        loginLog.setRegion(IpUtil.getCityInfo(loginLog.getIp()));
         loginLog.setBrowser(userAgent.getBrowser().getName() + " " + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
         loginLog.setDeviceType(userAgent.getOperatingSystem().getDeviceType().getName());
         entityManager.persist(loginLog);

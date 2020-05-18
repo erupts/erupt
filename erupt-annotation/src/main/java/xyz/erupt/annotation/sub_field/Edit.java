@@ -35,7 +35,7 @@ public @interface Edit {
 
     EditType type() default EditType.AUTO;
 
-    //@Match("item.type()=='INPUT'")
+    //    @Match("item.type()=='INPUT'")
     @SerializeBy(method = "type", value = "INPUT")
     InputType inputType() default @InputType;
 

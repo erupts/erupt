@@ -3,8 +3,6 @@ package xyz.erupt.annotation.fun;
 import com.google.gson.JsonObject;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 
@@ -90,24 +88,24 @@ public interface DataProxy<MODEL> {
 
     }
 
-    /**
-     * 待上传文件
-     *
-     * @param inputStream 数据流
-     * @param file        文件对象
-     */
-    default void beforeUpLoadFile(InputStream inputStream, File file) {
-
-    }
-
-    /**
-     * 已上传文件
-     *
-     * @param relativePath 文件上传路径
-     * @param file         文件对象
-     */
-    default void afterUpLoadFile(File file, String relativePath) {
-    }
+//    /**
+//     * 待上传文件
+//     *
+//     * @param inputStream 数据流
+//     * @param file        文件对象
+//     */
+//    default void beforeUpLoadFile(InputStream inputStream, File file) {
+//
+//    }
+//
+//    /**
+//     * 已上传文件
+//     *
+//     * @param relativePath 文件上传路径
+//     * @param file         文件对象
+//     */
+//    default void afterUpLoadFile(File file, String relativePath) {
+//    }
 
     /**
      * excel导出

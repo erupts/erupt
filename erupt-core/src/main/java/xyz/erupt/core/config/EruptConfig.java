@@ -18,6 +18,9 @@ public class EruptConfig {
 
     private String[] allowRequestFileType = {};
 
+    //类路径，需要实现xyz.erupt.annotation.fun.AttachmentProxy接口
+    private String attachmentProxy;
+
     //文件上传根路径
     private String uploadPath = "/opt/file";
 
