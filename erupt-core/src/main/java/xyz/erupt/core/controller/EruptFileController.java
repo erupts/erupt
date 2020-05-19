@@ -60,10 +60,13 @@ public class EruptFileController {
                 throw new EruptNoLegalPowerException();
             }
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
-            String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
+            String path = DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
                     RandomUtils.nextInt(100, 9999) + "-" +
                     file.getOriginalFilename()
                             .replace("&", "")
+                            .replace("?", "")
+                            .replace("#", "")
+                            .replace(" ", "")
                             .replace(edit.attachmentType().fileSeparator(), "");
             switch (edit.type()) {
                 case ATTACHMENT:
@@ -78,11 +81,7 @@ public class EruptFileController {
                     }
 
                     if (!"".equals(attachmentType.path())) {
-                        if (attachmentType.path().startsWith(File.separator)) {
-                            path = attachmentType.path() + path;
-                        } else {
-                            path = File.separator + attachmentType.path() + path;
-                        }
+                        path = attachmentType.path() + path;
                     }
                     //校验文件大小
                     if (attachmentType.size() > 0 && file.getSize() / 1024 > attachmentType.size()) {
@@ -123,11 +122,10 @@ public class EruptFileController {
                 default:
                     return EruptApiModel.errorApi("上传失败，非法类型!");
             }
-//            todo HTML_EDIT 所上传的图片也需要依赖AttachmentType注解配置来实现
             boolean localSave = true;
             if (StringUtils.isNotBlank(eruptConfig.getAttachmentProxy())) {
                 AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptConfig.getAttachmentProxy(), AttachmentProxy.class);
-                attachmentProxy.upLoad(file.getInputStream(), path);
+                attachmentProxy.upLoad(file.getInputStream(), path.replace("\\", "/"));
                 localSave = attachmentProxy.isLocalSave();
             }
             if (localSave) {
