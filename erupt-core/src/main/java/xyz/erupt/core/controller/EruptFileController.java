@@ -176,8 +176,8 @@ public class EruptFileController {
                 AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptConfig.getAttachmentProxy(), AttachmentProxy.class);
                 map.put("url", attachmentProxy.fileDomain() + eruptApiModel.getData());
             } else {
-                map.put("url", request.getRequestURL().toString().split(RestPath.ERUPT_API)[0] +
-                        RestPath.ERUPT_FILE + PREVIEW_PATH + eruptApiModel.getData());
+                //                request.getRequestURL().toString().split(RestPath.ERUPT_API)[0] +
+                map.put("url", RestPath.ERUPT_FILE + PREVIEW_PATH + eruptApiModel.getData());
             }
             map.put("uploaded", true);
         } else {
