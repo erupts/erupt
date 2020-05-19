@@ -5,8 +5,11 @@ import lombok.extern.java.Log;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
+import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 
 /**
@@ -58,6 +61,19 @@ public class IpUtil {
         }
     }
 
+    private static byte[] fileByte;
+
+    static {
+        InputStream input = IpUtil.class.getClassLoader().getResourceAsStream("ip2region.db");
+        if (null == input) {
+            throw new RuntimeException("ip2region.db not found");
+        }
+        try {
+            fileByte = StreamUtils.copyToByteArray(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @SneakyThrows
     public static String getCityInfo(String ip) {
@@ -65,9 +81,6 @@ public class IpUtil {
             log.warning("Error: Invalid ip address");
             return "";
         }
-        //格式：国家|大区|省份|城市|运营商
-        return new DbSearcher(new DbConfig(), IpUtil.class.getResource("/ip2region.db").getPath())
-                .btreeSearch(ip).getRegion();
+        return new DbSearcher(new DbConfig(), fileByte).memorySearch(ip).getRegion();
     }
-
 }

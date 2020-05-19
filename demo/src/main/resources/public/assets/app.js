@@ -1,7 +1,7 @@
 eruptSiteConfig = {
     //global config
     domain: "",
-    attachmentDomain: "http://qa5mh744r.bkt.clouddn.com/",
+    attachmentDomain: "http://oos.erupt.xyz//",
     title: "Erupt DEMO",
     desc: "Erupt 演示系统",
     routerReuse: false,

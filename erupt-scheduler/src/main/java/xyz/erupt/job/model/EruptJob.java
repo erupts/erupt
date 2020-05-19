@@ -113,7 +113,7 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
     }
 
     @Override
-    public void exec(EruptJob eruptJob, JsonObject param) {
+    public void exec(EruptJob eruptJob, JsonObject param, String[] operationParam) {
         try {
             eruptJobService.triggerJob(eruptJob);
         } catch (Exception e) {

@@ -12,7 +12,7 @@ import xyz.erupt.core.view.EruptApiModel;
 public class OperationHandlerImpl implements OperationHandler {
 
     @Override
-    public void exec(Object data, JsonObject param) {
+    public void exec(Object data, JsonObject inputValue, String... param) {
         throw new EruptApiErrorTip(new EruptApiModel(EruptApiModel.Status.SUCCESS,
                 "lalala", EruptApiModel.PromptWay.NOTIFY));
     }

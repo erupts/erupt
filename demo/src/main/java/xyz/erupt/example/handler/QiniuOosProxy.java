@@ -21,23 +21,27 @@ import java.io.InputStream;
 @Service
 public class QiniuOosProxy implements AttachmentProxy {
 
+
+    private static final String ACCESS_KEY = "hU85O3_YN6fRescdkbL2176ljf-R9zU_Lzbp94v5";
+
+    private static final String SECRET_KEY = "HAxZaX3-zn5cfz4ate4NagcHT0m8v_RSKwqnj7LF";
+
+    private static final String BUCKET = "erupt";
+
     @Override
     public void upLoad(InputStream inputStream, String path) {
         Configuration cfg = new Configuration(Region.huanan());
         UploadManager uploadManager = new UploadManager(cfg);
-        String accessKey = "hU85O3_YN6fRescdkbL2176ljf-R9zU_Lzbp94v5";
-        String secretKey = "HAxZaX3-zn5cfz4ate4NagcHT0m8v_RSKwqnj7LF";
-        String bucket = "erupt";
-        Auth auth = Auth.create(accessKey, secretKey);
-        String upToken = auth.uploadToken(bucket);
+        Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
+        String upToken = auth.uploadToken(BUCKET);
         try {
             Response response = uploadManager.put(inputStream, path, upToken, null, MimeUtil.getMimeType(path));
             if (!response.isOK()) {
-                throw new RuntimeException("七牛云存储空间上传失败");
+                throw new RuntimeException("上传七牛云存储空间失败");
             }
         } catch (QiniuException ex) {
             Response r = ex.response;
-            System.err.println(r.toString());
+            throw new RuntimeException(r.toString());
         }
     }
 
@@ -48,6 +52,6 @@ public class QiniuOosProxy implements AttachmentProxy {
 
     @Override
     public String fileDomain() {
-        return "http://qa5mh744r.bkt.clouddn.com/";
+        return "http://oos.erupt.xyz/";
     }
 }

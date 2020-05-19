@@ -24,14 +24,14 @@ public @interface RowOperation {
     /**
      * 控制按钮显示与隐藏（JS表达式）
      * 参考变量 -> item
-     *
-     * @return
      */
     String ifExpr() default "";
 
     boolean multi() default true;
 
     Class eruptClass() default void.class;
+
+    String[] operationParam() default {};
 
     @Transient
     Class<? extends OperationHandler> operationHandler();
