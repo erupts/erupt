@@ -10,9 +10,9 @@ public interface AttachmentProxy {
 
     void upLoad(InputStream inputStream, String path);
 
+    String fileDomain();
+
     default boolean isLocalSave() {
         return true;
     }
-
-    String fileDomain();
 }
