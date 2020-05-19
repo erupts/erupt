@@ -1,12 +1,12 @@
 package xyz.erupt.core.controller;
 
-import lombok.Cleanup;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.AttachmentProxy;
@@ -170,14 +170,14 @@ public class EruptFileController {
                                                      HttpServletRequest request) throws ClassNotFoundException {
         EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
         Map<String, Object> map = new HashMap<>(2);
-        //{"uploaded":"true", "url":"image-path..."}
         if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
+            //{"uploaded":"true", "url":"image-path..."}
             if (StringUtils.isNotBlank(eruptConfig.getAttachmentProxy())) {
                 AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptConfig.getAttachmentProxy(), AttachmentProxy.class);
-                map.put("url", attachmentProxy.fileDomain() + eruptApiModel.getData());
+                map.put("url", attachmentProxy.fileDomain() + "/" + eruptApiModel.getData());
             } else {
-                //                request.getRequestURL().toString().split(RestPath.ERUPT_API)[0] +
-                map.put("url", RestPath.ERUPT_FILE + PREVIEW_PATH + eruptApiModel.getData());
+                //request.getRequestURL().toString().split(RestPath.ERUPT_API)[0] +
+                map.put("url", RestPath.ERUPT_FILE + PREVIEW_PATH + "/" + eruptApiModel.getData());
             }
             map.put("uploaded", true);
         } else {
@@ -223,7 +223,7 @@ public class EruptFileController {
         }
         File file = new File(eruptConfig.getUploadPath() + path);
         try {
-            @Cleanup InputStream inputStream = null;
+            InputStream inputStream;
             if (file.exists()) {
                 inputStream = new FileInputStream(file);
             } else {
@@ -231,10 +231,7 @@ public class EruptFileController {
                 response.setContentType("image/png");
                 response.setHeader("Content-Disposition", "filename=empty.png");
             }
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes, 0, inputStream.available());
-            inputStream.close();
-            return bytes;
+            return StreamUtils.copyToByteArray(inputStream);
         } catch (IOException e) {
             return null;
         }

@@ -52,6 +52,6 @@ public class QiniuOosProxy implements AttachmentProxy {
 
     @Override
     public String fileDomain() {
-        return "http://oos.erupt.xyz/";
+        return "http://oos.erupt.xyz";
     }
 }
