@@ -1,7 +1,7 @@
 eruptSiteConfig = {
     //global config
     domain: "",
-    attachmentDomain: "http://oos.erupt.xyz/",
+    fileDomain: "http://oos.erupt.xyz/",
     title: "Erupt DEMO",
     desc: "Erupt 演示系统",
     routerReuse: false,
@@ -12,7 +12,7 @@ eruptSiteConfig = {
         text: "功能按钮",
         icon: "fa-eercast",
         mobileHidden: true,
-        click: function (event, token) {
+        click: function (event) {
             console.log(event);
             alert("test btn");
         },
