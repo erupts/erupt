@@ -7,9 +7,9 @@ import org.quartz.impl.triggers.CronTriggerImpl;
 import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
-import xyz.erupt.tool.EruptDao;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;

@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
@@ -20,6 +21,9 @@ public @interface Edit {
     boolean notNull() default false;
 
     boolean show() default true;
+
+    @Match("value.dependField()")
+    ShowBy showBy() default @ShowBy(dependField = "", expr = "");
 
     boolean readOnly() default false;
 
@@ -56,9 +60,6 @@ public @interface Edit {
 
     @SerializeBy(method = "type", value = "ATTACHMENT")
     AttachmentType attachmentType() default @AttachmentType;
-
-    @SerializeBy(method = "type", value = "DEPEND_SWITCH")
-    DependSwitchType dependSwitchType() default @DependSwitchType(attr = {});
 
     @SerializeBy(method = "type", value = "REFERENCE_TREE")
     ReferenceTreeType referenceTreeType() default @ReferenceTreeType;

@@ -16,10 +16,15 @@
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>1.8</java.version>
         <erupt.version>0.9.3</erupt.version>
-        <spring.boot.version>2.2.4.RELEASE</spring.boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.4.RELEASE</version>
+    </parent>
 
     <!--　
     在编译spring boot 等多模块项目的时候，往往出现
@@ -31,7 +36,6 @@
     -->
     <modules>
         <module>erupt-annotation</module>
-        <module>erupt-tool</module>
         <module>erupt-core</module>
         <module>erupt-auth</module>
         <module>erupt-tpl</module>
@@ -40,17 +44,17 @@
         <module>erupt-bi</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <!--<dependencyManagement>-->
+    <!--<dependencies>-->
+    <!--<dependency>-->
+    <!--<groupId>org.springframework.boot</groupId>-->
+    <!--<artifactId>spring-boot-starter-parent</artifactId>-->
+    <!--<version>${spring.boot.version}</version>-->
+    <!--<type>pom</type>-->
+    <!--<scope>import</scope>-->
+    <!--</dependency>-->
+    <!--</dependencies>-->
+    <!--</dependencyManagement>-->
 
     <dependencies>
         <dependency>

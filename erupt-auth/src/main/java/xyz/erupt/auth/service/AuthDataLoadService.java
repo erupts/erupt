@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.util.MD5Utils;
+import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.ProjectUtil;
-import xyz.erupt.tool.EruptDao;
 
 import javax.transaction.Transactional;
 import java.util.Date;

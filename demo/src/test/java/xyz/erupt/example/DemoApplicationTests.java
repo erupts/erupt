@@ -15,11 +15,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.core.config.EruptConfig;
+import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.service.CoreService;
 import xyz.erupt.core.service.data_impl.DBService;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.service.EruptJobService;
-import xyz.erupt.tool.EruptDao;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;

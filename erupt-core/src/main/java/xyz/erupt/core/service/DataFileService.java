@@ -15,13 +15,13 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.tool.EruptDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -259,15 +259,6 @@ public class DataFileService {
                     case DATE:
                         sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间，或下载最新模版重试！", dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN,
                                 "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
-                        break;
-                    case DEPEND_SWITCH:
-                        String[] dw = new String[edit.dependSwitchType().attr().length];
-                        int ii = 0;
-                        for (String value : fieldModel.getChoiceMap().values()) {
-                            dw[ii] = value;
-                            ii++;
-                        }
-                        sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(dw)));
                         break;
                     default:
                         break;

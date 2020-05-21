@@ -12,7 +12,6 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
-import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -23,7 +22,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,9 +40,11 @@ public class EruptFieldModel {
 
     private transient String fieldReturnName;
 
-    private String fieldName;
+    private transient Map<String, String> choiceMap;
 
-    private Map<String, String> choiceMap;
+    private List<VL> choiceList;
+
+    private String fieldName;
 
     private JsonObject eruptFieldJson;
 
@@ -65,18 +68,14 @@ public class EruptFieldModel {
             case TAB_TABLE_REFER:
                 this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
                 break;
-            case DEPEND_SWITCH:
-                choiceMap = new HashMap<>();
-                if (serialize) {
-                    for (DependSwitchType.Attr vl : edit.dependSwitchType().attr()) {
-                        choiceMap.put(vl.value(), vl.label());
-                    }
-                }
-                break;
             case CHOICE:
-                choiceMap = new HashMap<>();
                 if (serialize) {
+                    choiceMap = new HashMap<>();
+                    choiceList = new ArrayList<>();
                     this.choiceMap = EruptUtil.getChoiceMap(edit.choiceType());
+                    for (String value : this.choiceMap.keySet()) {
+                        this.choiceList.add(new VL(value, this.choiceMap.get(value)));
+                    }
                 }
                 break;
             default:

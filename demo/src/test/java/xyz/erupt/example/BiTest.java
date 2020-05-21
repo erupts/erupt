@@ -11,6 +11,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +65,17 @@ public class BiTest {
 
     @Test
     public void aa() {
-
+        ScriptEngineManager manager = new ScriptEngineManager();
+        for (ScriptEngineFactory factory : manager.getEngineFactories()) {
+            System.out.printf("language: %s, engine: %s%n", factory.getLanguageName(), factory.getEngineName());
+        }
+        ScriptEngine engine = manager.getEngineByName("SQL");
+        try {
+            Object result = engine.eval("SELECT 1+2;");
+            System.out.println(result);
+        } catch (ScriptException ex) {
+            System.out.println(ex);
+        }
     }
 
 

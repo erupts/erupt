@@ -9,9 +9,9 @@ import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
+import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.view.TreeModel;
-import xyz.erupt.tool.EruptDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

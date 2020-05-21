@@ -23,13 +23,13 @@ public class Test extends BaseModel {
 
     @EruptField(
             views = @View(title = "文本"),
-            edit = @Edit(title = "文本", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "文本", search = @Search(vague = true))
     )
     private String input = "默认文本";
 
     @EruptField(
             views = @View(title = "数字"),
-            edit = @Edit(title = "数字", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "数字", search = @Search(vague = true), showBy = @ShowBy(dependField = "input", expr = "fieldValue"))
     )
     private Integer number;
 

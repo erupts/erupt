@@ -7,8 +7,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.DependSwitchType;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
@@ -55,22 +54,22 @@ public class BiDimension extends BaseModel {
             edit = @Edit(
                     title = "维度类型",
                     notNull = true,
-                    type = EditType.DEPEND_SWITCH,
-                    dependSwitchType = @DependSwitchType(
-                            view = DependSwitchType.View.RADIO,
-                            attr = {
-                                    @DependSwitchType.Attr(value = "INPUT", label = "文本", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "NUMBER", label = "数值", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "NUMBER_RANGE", label = "数值区间", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "REFERENCE", label = "SQL参照", dependEdits = {"refSql", "biDimensionReference"}),
-                                    @DependSwitchType.Attr(value = "DATE", label = "日期", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "DATE_RANGE", label = "日期区间", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "DATETIME", label = "日期时间", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "DATETIME_RANGE", label = "日期时间区间", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "TIME", label = "时间", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "WEEK", label = "周", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "MONTH", label = "月", dependEdits = ""),
-                                    @DependSwitchType.Attr(value = "YEAR", label = "年", dependEdits = ""),
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(
+                            type = ChoiceEnum.RADIO,
+                            vl = {
+                                    @VL(value = "INPUT", label = "文本"),
+                                    @VL(value = "NUMBER", label = "数值"),
+                                    @VL(value = "NUMBER_RANGE", label = "数值区间"),
+                                    @VL(value = "REFERENCE", label = "SQL参照"),
+                                    @VL(value = "DATE", label = "日期"),
+                                    @VL(value = "DATE_RANGE", label = "日期区间"),
+                                    @VL(value = "DATETIME", label = "日期时间"),
+                                    @VL(value = "DATETIME_RANGE", label = "日期时间区间"),
+                                    @VL(value = "TIME", label = "时间"),
+                                    @VL(value = "WEEK", label = "周"),
+                                    @VL(value = "MONTH", label = "月"),
+                                    @VL(value = "YEAR", label = "年")
                             }
                     )
             )
@@ -80,7 +79,7 @@ public class BiDimension extends BaseModel {
     @ManyToOne
     @EruptField(
             views = @View(title = "参照维度", column = "name"),
-            edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE, showBy = @ShowBy(dependField = "type", expr = "fieldValue == 'REFERENCE'"))
     )
     private BiDimensionReference biDimensionReference;
 

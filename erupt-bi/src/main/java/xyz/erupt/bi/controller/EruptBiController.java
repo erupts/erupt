@@ -23,12 +23,12 @@ import xyz.erupt.bi.view.BiModel;
 import xyz.erupt.bi.view.Reference;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.DataFileService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
-import xyz.erupt.tool.EruptDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

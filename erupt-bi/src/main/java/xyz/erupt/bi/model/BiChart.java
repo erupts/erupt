@@ -77,7 +77,8 @@ public class BiChart extends BaseModel {
      */
     @EruptField(
             views = @View(title = "图表类型"),
-            edit = @Edit(title = "图表类型", notNull = true, desc = "图表参考：antv", type = EditType.CHOICE, choiceType = @ChoiceType(
+            edit = @Edit(title = "图表类型", notNull = true, desc = "图表参考：G2Plot", type = EditType.CHOICE, choiceType = @ChoiceType(
+                    type = ChoiceEnum.RADIO,
                     vl = {
                             //------------
                             @VL(label = "折线图", value = "Line"),
@@ -95,6 +96,9 @@ public class BiChart extends BaseModel {
                             //------------
                             @VL(label = "散点图", value = "Scatter"),
                             @VL(label = "热力图", value = "Heatmap"),
+                            //------------
+                            @VL(label = "HTML", value = "html"),
+                            @VL(label = "表格", value = "table"),
                     }
             ))
     )

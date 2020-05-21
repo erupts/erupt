@@ -1,6 +1,7 @@
 package xyz.erupt.bi.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -20,7 +21,8 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "E_BI_DATASOURCE", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "数据源", dataProxy = BiDataSourceService.class)
-@Data
+@Getter
+@Setter
 public class BiDataSource extends BaseModel {
 
     @EruptField(

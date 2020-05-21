@@ -1,4 +1,4 @@
-package xyz.erupt.tool;
+package xyz.erupt.core.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
