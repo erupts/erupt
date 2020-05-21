@@ -26,6 +26,7 @@ public class TemplateConfig {
     public TemplateEngine thymeleafEngine() {
         FileTemplateResolver resolver = new FileTemplateResolver();
         resolver.setCacheable(false);
+//        resolver.setPrefix("./templates/");
         resolver.setPrefix(this.getClass().getResource("/").getPath());
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCheckExistence(true);
