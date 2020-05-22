@@ -19,7 +19,7 @@ public class BiModel {
 
     private boolean export;
 
-    private boolean table = true;
+    private boolean table;
 
     private List<BiDimension> dimensions;
 

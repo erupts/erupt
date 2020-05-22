@@ -61,6 +61,7 @@ public class EruptUserService {
         entityManager.persist(loginLog);
     }
 
+    public static final String LOGIN_ERROR_HINT = "账号或密码错误";
 
     public LoginModel login(String account, String pwd, String verifyCode, HttpServletRequest request) {
         Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + account);
@@ -119,13 +120,13 @@ public class EruptUserService {
                 loginErrorCount += 1;
                 sessionService.put(SessionKey.LOGIN_ERROR + account, loginErrorCount + "");
                 if (loginErrorCount >= 3) {
-                    return new LoginModel(false, "密码错误", true);
+                    return new LoginModel(false, LOGIN_ERROR_HINT, true);
                 } else {
-                    return new LoginModel(false, "密码错误");
+                    return new LoginModel(false, LOGIN_ERROR_HINT);
                 }
             }
         } else {
-            return new LoginModel(false, "用户不存在");
+            return new LoginModel(false, LOGIN_ERROR_HINT);
         }
     }
 

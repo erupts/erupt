@@ -37,7 +37,7 @@ public class BiChart extends BaseModel {
 
     @EruptField(
             views = @View(title = "栅格数"),
-            edit = @Edit(title = "栅格数", type = EditType.SLIDER, desc = "单行可以显示的图表数量",
+            edit = @Edit(title = "栅格数", type = EditType.SLIDER, desc = "单行可以显示的图表数量", notNull = true,
                     sliderType = @SliderType(max = 12, markPoints = {1, 2, 3, 4, 6, 8, 12}, dots = true))
     )
     private Integer grid = 1;
@@ -60,6 +60,12 @@ public class BiChart extends BaseModel {
 //            edit = @Edit(title = "联动查询")
 //    )
 //    private Boolean linkage;
+
+    @EruptField(
+            views = @View(title = "高度(px)"),
+            edit = @Edit(title = "高度(px)", notNull = true)
+    )
+    private Integer height = 340;
 
     @EruptField(
             views = @View(title = "显示顺序", sortable = true),
@@ -97,8 +103,9 @@ public class BiChart extends BaseModel {
                             @VL(label = "散点图", value = "Scatter"),
                             @VL(label = "热力图", value = "Heatmap"),
                             //------------
-                            @VL(label = "HTML", value = "html"),
-                            @VL(label = "表格", value = "table"),
+                            @VL(label = "指标", value = "number"),
+//                            @VL(label = "HTML", value = "html"),
+//                            @VL(label = "表格", value = "table"),
                     }
             ))
     )

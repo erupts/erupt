@@ -70,10 +70,11 @@ public class EruptBiController {
         BiModel biModel = new BiModel();
         if (StringUtils.isBlank(bi.getSqlStatement())) {
             biModel.setTable(false);
+            biModel.setExport(false);
         } else {
             biModel.setTable(true);
+            biModel.setExport(bi.getExport());
         }
-        biModel.setExport(bi.getExport());
         int maxSort = 9999;
         for (BiChart chart : bi.getBiCharts()) {
             chart.setSqlStatement(null);
