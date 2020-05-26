@@ -46,7 +46,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     @EruptField(
             views = @View(title = "姓名", sortable = true),
-            edit = @Edit(title = "姓名", notNull = true, search = @Search(value = true, vague = true))
+            edit = @Edit(title = "姓名", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
@@ -88,7 +88,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
                             trueText = "加密",
                             falseText = "不加密"
                     ),
-                    search = @Search(true)
+                    search = @Search
             )
     )
     private Boolean isMd5;
@@ -140,7 +140,7 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
             edit = @Edit(
                     title = "备注",
                     type = EditType.TEXTAREA,
-                    search = @Search(value = true, vague = true)
+                    search = @Search(vague = true)
             )
     )
     private String remark;

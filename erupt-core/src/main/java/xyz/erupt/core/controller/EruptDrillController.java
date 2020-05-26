@@ -33,7 +33,7 @@ public class EruptDrillController {
     private EruptService eruptService;
 
     @PostMapping("{erupt}/drill/{code}/{id}")
-    @EruptRouter(authIndex = 1)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public Page drill(@PathVariable("erupt") String eruptName,
                       @PathVariable("code") String code,
                       @PathVariable("id") String id,
@@ -73,7 +73,7 @@ public class EruptDrillController {
 
     @PostMapping("/add/{erupt}/drill/{code}/{id}")
     @ResponseBody
-    @EruptRouter(authIndex = 2)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel drillAdd(@PathVariable("erupt") String erupt,
                                   @PathVariable("code") String code,
                                   @PathVariable("id") String id,

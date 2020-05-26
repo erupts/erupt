@@ -13,6 +13,10 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "erupt-auth", ignoreUnknownFields = false)
 public class EruptAuthConfig {
 
+    //    session时长
     private Integer expireTimeByLogin = 100;
+
+    //    是否记录操作日志
+    private boolean recordOperateLog = true;
 
 }

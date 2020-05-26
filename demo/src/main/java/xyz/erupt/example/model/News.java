@@ -28,7 +28,7 @@ public class News extends BaseModel implements DataProxy<News> {
 
     @EruptField(
             views = @View(title = "标题"),
-            edit = @Edit(title = "标题", search = @Search(value = true, vague = true), notNull = true)
+            edit = @Edit(title = "标题", search = @Search(vague = true), notNull = true)
     )
     private String title;
 

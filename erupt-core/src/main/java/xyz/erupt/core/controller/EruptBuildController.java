@@ -24,7 +24,7 @@ public class EruptBuildController {
 
     @GetMapping("/{erupt}")
     @ResponseBody
-    @EruptRouter(authIndex = 1)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName) {
         EruptModel eruptModel = CoreService.getEruptView(eruptName);
         EruptBuildModel eruptBuildModel = new EruptBuildModel();
@@ -69,7 +69,7 @@ public class EruptBuildController {
 
     @GetMapping("/{erupt}/{field}")
     @ResponseBody
-    @EruptRouter(authIndex = 1)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
         EruptModel eruptModel = CoreService.getEruptView(eruptName);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(field);

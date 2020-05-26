@@ -48,7 +48,7 @@ public class EruptFileController {
 
     @PostMapping("/upload/{erupt}/{field}")
     @ResponseBody
-    @EruptRouter(authIndex = 2)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty() || StringUtils.isBlank(file.getOriginalFilename())) {
             return EruptApiModel.errorApi("上传失败，请选择文件");
@@ -149,7 +149,7 @@ public class EruptFileController {
 
     @PostMapping("/uploads/{erupt}/{field}")
     @ResponseBody
-    @EruptRouter(authIndex = 2)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel uploads(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile[] files) {
         List<String> paths = new ArrayList<>();
         for (MultipartFile file : files) {
@@ -163,7 +163,7 @@ public class EruptFileController {
 
     @PostMapping("/upload-html-editor/{erupt}/{field}")
     @ResponseBody
-    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
                                                      @PathVariable("field") String fieldName,
                                                      @RequestParam("upload") MultipartFile file,

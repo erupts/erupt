@@ -27,14 +27,14 @@ public class EntersSellsSaves extends BaseModel {
 
     @EruptField(
             views = @View(title = "品名"),
-            edit = @Edit(title = "品名", search = @Search(true))
+            edit = @Edit(title = "品名", search = @Search)
     )
     @Column(name = "NAME")
     private String name;
 
     @EruptField(
             views = @View(title = "数量"),
-            edit = @Edit(search = @Search(value = true, vague = true), title = "数量", type = EditType.SLIDER)
+            edit = @Edit(search = @Search(vague = true), title = "数量", type = EditType.SLIDER)
     )
     @Column(name = "COUNT")
     private Integer count;

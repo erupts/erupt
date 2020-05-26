@@ -42,19 +42,19 @@ public class PublicMark extends BaseModel {
 
     @EruptField(
             views = @View(title = "中文含义"),
-            edit = @Edit(title = "中文含义", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "中文含义", search = @Search(vague = true))
     )
     private String mean;
 
     @EruptField(
             views = @View(title = "英文含义"),
-            edit = @Edit(title = "英文含义", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "英文含义", search = @Search(vague = true))
     )
     private String meanEn;
 
     @EruptField(
             views = @View(title = "创建时间"),
-            edit = @Edit(title = "创建时间", search = @Search(value = true, vague = true))
+            edit = @Edit(title = "创建时间", search = @Search(vague = true))
     )
     private Date createTime;
 

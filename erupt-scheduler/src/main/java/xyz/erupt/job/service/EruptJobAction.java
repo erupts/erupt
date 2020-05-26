@@ -5,7 +5,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.job.handler.JobHandler;
 import xyz.erupt.job.model.EruptJob;
@@ -19,10 +18,8 @@ import java.util.Date;
  */
 public class EruptJobAction implements Job {
 
-    private static final int ERROR_STR_MAX_LENGTH = 2000;
-
     @Override
-    public void execute(JobExecutionContext ctx) throws JobExecutionException {
+    public void execute(JobExecutionContext ctx) {
         JobDataMap jobDataMap = ctx.getJobDetail().getJobDataMap();
         EruptJob eruptJob = (EruptJob) jobDataMap.get(ctx.getJobDetail().getKey().getName());
         trigger(eruptJob);
@@ -45,9 +42,9 @@ public class EruptJobAction implements Job {
                 e.printStackTrace();
                 eruptJobLog.setStatus(false);
                 String exceptionTraceStr = ExceptionUtils.getStackTrace(e);
-                if (exceptionTraceStr.length() >= ERROR_STR_MAX_LENGTH) {
-                    exceptionTraceStr = exceptionTraceStr.substring(0, ERROR_STR_MAX_LENGTH) + "……";
-                }
+//                if (exceptionTraceStr.length() >= ERROR_STR_MAX_LENGTH) {
+//                    exceptionTraceStr = exceptionTraceStr.substring(0, ERROR_STR_MAX_LENGTH) + "……";
+//                }
                 eruptJobLog.setErrorInfo(exceptionTraceStr);
                 if (null != jobHandler) {
                     jobHandler.error(e, eruptJob.getHandlerParam());

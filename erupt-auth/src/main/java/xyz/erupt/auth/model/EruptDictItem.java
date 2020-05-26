@@ -31,13 +31,13 @@ public class EruptDictItem extends BaseModel {
 
     @EruptField(
             views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(true))
+            edit = @Edit(title = "编码", notNull = true, search = @Search)
     )
     private String code;
 
     @EruptField(
             views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(value = true, vague = true))
+            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
 

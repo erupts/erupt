@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.core.annotation.EruptApi;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.CoreService;
@@ -49,7 +50,7 @@ public class EruptExcelController {
 
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
+    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
         if (SecurityUtil.csrfInspect(request, response)) {
             throw new RuntimeException("非法请求");
@@ -64,7 +65,8 @@ public class EruptExcelController {
 
     //导出
     @PostMapping("/export/{erupt}")
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2)
+    @EruptApi(desc = "导出Excel")
+    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName, @RequestParam("condition") String condition,
                            HttpServletRequest request,
                            HttpServletResponse response) throws IOException {
@@ -95,8 +97,9 @@ public class EruptExcelController {
 
     //导入
     @PostMapping("/import/{erupt}")
+    @EruptApi(desc = "导入Excel")
     @ResponseBody
-    @EruptRouter(authIndex = 2)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) throws Exception {
         EruptModel eruptModel = CoreService.getErupt(eruptName);

@@ -6,6 +6,7 @@ erupt:
   attachmentProxy: xyz.erupt.example.handler.QiniuOosProxy
 erupt-auth:
   expireTimeByLogin: 60
+  recordOperateLog: true
 openApi:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
@@ -16,11 +17,24 @@ spring:
     url: jdbc:mysql://39.104.174.237:3306/erupt?useUnicode=true&characterEncoding=UTF-8
     username: erupt
     password: leLPvYbQQ!27st2FuxtO
+  #    url: jdbc:h2:file:./demo/src/main/resources/erupt_db
+  #    platform: h2
+  #    username: erupt
+  #    password: erupt_h2
+  #    driverClassName: org.h2.Driver
   jpa:
     show-sql: true
+    #    database-platform: org.hibernate.dialect.H2Dialect
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
+  h2:
+    console:
+      enabled: false
+      path: /h2_console
+      settings:
+        trace: false
+        web-allow-others: false
   redis:
     database: 0
     timeout: 10000

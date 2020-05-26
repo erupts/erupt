@@ -39,13 +39,13 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
 
     @EruptField(
             views = @View(title = "任务编码"),
-            edit = @Edit(title = "任务编码", notNull = true, search = @Search(true))
+            edit = @Edit(title = "任务编码", notNull = true, search = @Search)
     )
     private String code;
 
     @EruptField(
             views = @View(title = "任务名称"),
-            edit = @Edit(title = "任务名称", notNull = true, search = @Search(vague = true, value = true))
+            edit = @Edit(title = "任务名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
@@ -58,7 +58,7 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
     @EruptField(
             views = @View(title = "JOB处理类"),
             edit = @Edit(title = "JOB处理类", desc = "实现JobHandler接口"
-                    , notNull = true, search = @Search(vague = true, value = true))
+                    , notNull = true, search = @Search(vague = true))
     )
     private String handler;
 
@@ -66,7 +66,7 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
             views = @View(title = "任务状态"),
             edit = @Edit(title = "任务状态", boolType = @BoolType(
                     trueText = "启用", falseText = "禁用"
-            ), notNull = true, search = @Search(true))
+            ), notNull = true, search = @Search)
     )
     private Boolean status;
 

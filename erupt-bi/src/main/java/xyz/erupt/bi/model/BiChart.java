@@ -25,13 +25,13 @@ public class BiChart extends BaseModel {
 
     @EruptField(
             views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true, value = true))
+            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
             views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true, value = true))
+            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
 

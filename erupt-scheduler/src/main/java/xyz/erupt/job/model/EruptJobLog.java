@@ -8,6 +8,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.model.BaseModel;
@@ -34,7 +35,7 @@ public class EruptJobLog extends BaseModel {
     @JoinColumn(name = "JOB_ID")
     @EruptField(
             views = @View(title = "任务名称", column = "name"),
-            edit = @Edit(title = "任务名称", show = false, search = @Search(true), type = EditType.REFERENCE_TREE)
+            edit = @Edit(title = "任务名称", show = false, search = @Search, type = EditType.REFERENCE_TREE)
     )
     private EruptJob eruptJob;
 
@@ -45,13 +46,13 @@ public class EruptJobLog extends BaseModel {
 
     @EruptField(
             views = @View(title = "任务状态"),
-            edit = @Edit(title = "任务状态", search = @Search(true))
+            edit = @Edit(title = "任务状态", search = @Search)
     )
     private Boolean status;
 
     @EruptField(
             views = @View(title = "开始时间"),
-            edit = @Edit(title = "开始时间", search = @Search(value = true, vague = true),
+            edit = @Edit(title = "开始时间", search = @Search(vague = true),
                     dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date startTime;
@@ -70,7 +71,7 @@ public class EruptJobLog extends BaseModel {
 
     @Lob
     @EruptField(
-            views = @View(title = "错误信息"),
+            views = @View(title = "错误信息", type = ViewType.HTML),
             edit = @Edit(title = "错误信息")
     )
     private String errorInfo;

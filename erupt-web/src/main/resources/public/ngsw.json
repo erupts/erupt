@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1590136245212,
+  "timestamp": 1590380715774,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -1615,7 +1615,7 @@
     "/9-es2015.38698a9f96d72d96e535.js": "a75ae78d38f164422d1a7ee86dd298baf52dbf79",
     "/9-es5.38698a9f96d72d96e535.js": "d6c641f652dc6ae25b02253bec2d654a7fb913c4",
     "/app.css": "06e162dab694f692471a3e69b405f19bf8ec859f",
-    "/app.js": "2bd5e8d6dc8b11e63e0b91f29cb62745af16535a",
+    "/app.js": "33adc0514872a8ce2aeec1707f64ab5c79a9a907",
     "/assets/alain-default.less": "2132919ff751019bb1d47a156ec895feb29226e5",
     "/assets/animal/panda.js": "fec2868bb3053dd2da45f96bbcb86d5116ed72b1",
     "/assets/animal/panda.svg": "bebd302cdc601e0ead3a6d2710acf8753f3d83b1",

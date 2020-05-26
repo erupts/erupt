@@ -11,13 +11,14 @@ import java.lang.annotation.*;
 @Documented
 public @interface EruptRouter {
 
+
     int authIndex();
+
+    VerifyType verifyType();
 
     int skipAuthIndex() default 1;
 
-    VerifyType verifyType() default VerifyType.ERUPT;
-
-    //权限数据传值方式，默认为放到请求头中
+    //权限数据校验方式，请求头校验与参数校验可选
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;
 
     enum VerifyMethod {
@@ -30,7 +31,7 @@ public @interface EruptRouter {
     enum VerifyType {
         //仅验证登录
         LOGIN,
-        //验证登录与erupt
+        //验证登录与erupt权限
         ERUPT,
         //验证登录与菜单权限
         MENU
