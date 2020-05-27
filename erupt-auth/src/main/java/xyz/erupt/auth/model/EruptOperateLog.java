@@ -51,7 +51,7 @@ public class EruptOperateLog extends BaseModel {
             views = @View(title = "功能名称"),
             edit = @Edit(title = "功能名称", search = @Search)
     )
-    private String description;
+    private String apiName;
 
     @EruptField(
             views = @View(title = "是否成功"),
@@ -78,9 +78,9 @@ public class EruptOperateLog extends BaseModel {
     private String reqAddr;
 
     @Lob
-    @EruptField(
-            views = @View(title = "请求方法")
-    )
+//    @EruptField(
+//            views = @View(title = "请求方法")
+//    )
     private String reqMethod;
 
     @Lob

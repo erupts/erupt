@@ -157,9 +157,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                         } else {
                             eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
                         }
-                        operate.setDescription(eruptApi.desc() + " —— " + CoreService.getErupt(eruptName).getErupt().name());
+                        operate.setApiName(eruptApi.desc() + " —— " + CoreService.getErupt(eruptName).getErupt().name());
                     } else {
-                        operate.setDescription(eruptApi.desc());
+                        operate.setApiName(eruptApi.desc());
                     }
                     operate.setIp(IpUtil.getIpAddr(request));
                     operate.setStatus(true);
