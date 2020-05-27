@@ -48,8 +48,8 @@ public class EruptOperateLog extends BaseModel {
     private String ip;
 
     @EruptField(
-            views = @View(title = "描述"),
-            edit = @Edit(title = "描述", search = @Search)
+            views = @View(title = "功能名称"),
+            edit = @Edit(title = "功能名称", search = @Search)
     )
     private String description;
 
@@ -66,8 +66,8 @@ public class EruptOperateLog extends BaseModel {
     private Long totalTime;
 
     @EruptField(
-            views = @View(title = "创建日期"),
-            edit = @Edit(title = "创建日期", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "请求时间"),
+            edit = @Edit(title = "请求时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
 
@@ -76,6 +76,12 @@ public class EruptOperateLog extends BaseModel {
             views = @View(title = "请求地址")
     )
     private String reqAddr;
+
+    @Lob
+    @EruptField(
+            views = @View(title = "请求方法")
+    )
+    private String reqMethod;
 
     @Lob
 //    @EruptField(

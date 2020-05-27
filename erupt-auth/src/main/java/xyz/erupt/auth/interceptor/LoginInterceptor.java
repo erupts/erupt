@@ -163,7 +163,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     }
                     operate.setIp(IpUtil.getIpAddr(request));
                     operate.setStatus(true);
-//                    operate.setReqMethod(handlerMethod.toString());
+                    operate.setReqMethod(handlerMethod.toString());
 //                    operate.setReqParam(request.getAttribute(REQ_BODY).toString());
                     operate.setReqAddr(request.getRequestURL().toString());
                     operate.setEruptUser(new EruptUser() {{
@@ -181,6 +181,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             }
         }
     }
+
 
     @Override
     public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

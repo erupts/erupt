@@ -32,9 +32,6 @@ spring:
     console:
       enabled: false
       path: /h2_console
-      settings:
-        trace: false
-        web-allow-others: false
   redis:
     database: 0
     timeout: 10000
