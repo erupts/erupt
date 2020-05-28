@@ -39,9 +39,9 @@
         <module>erupt-annotation</module>
         <module>erupt-core</module>
         <module>erupt-auth</module>
-        <module>erupt-tpl</module>
         <module>erupt-web</module>
-        <module>erupt-scheduler</module>
+        <module>erupt-tpl</module>
+        <module>erupt-job</module>
         <module>erupt-bi</module>
     </modules>
 

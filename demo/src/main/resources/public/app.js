@@ -1,10 +1,11 @@
 eruptSiteConfig = {
-    //global config
+    //选填非空时启用
     domain: "",
-    fileDomain: "http://oos.erupt.xyz/",
+    //选填非空时启用
+    fileDomain: "http://oos.erupt.xyz",
     title: "Erupt DEMO",
     desc: "Erupt 演示系统",
-    routerReuse: false,
+    //选填非空时启用
     amapKey: "6ba79a8db11b51aeb1176bd4cfa049f4",
     logoPath: "/assets/logo.svg",
     logoText: "Demo",

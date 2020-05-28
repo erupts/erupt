@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>erupt-scheduler</artifactId>
+    <artifactId>erupt-job</artifactId>
     <version>${erupt.version}</version>
-    <name>erupt-scheduler</name>
+    <name>erupt-job</name>
     <description>任务调度包</description>
 
     <parent>

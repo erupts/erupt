@@ -24,9 +24,6 @@ import java.util.Properties;
 @Service
 public class EruptJobService {
 
-    @Autowired
-    private EruptDao eruptDao;
-
     /**
      * 执行任务线程.
      */
@@ -35,6 +32,8 @@ public class EruptJobService {
      * 执行任务线程数.
      */
     private static final int DEFAULT_THREAD_COUNT = 1;
+    @Autowired
+    private EruptDao eruptDao;
     private Map<String, StdSchedulerFactory> schedulerFactoryMap = new HashMap<>();
 
     public void triggerJob(EruptJob eruptJob) throws Exception {

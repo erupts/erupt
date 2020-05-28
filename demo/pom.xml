@@ -21,7 +21,6 @@
         <erupt.version>0.9.4</erupt.version>
     </properties>
 
-
     <profiles>
         <profile>
             <id>dev</id>
@@ -44,26 +43,7 @@
     </profiles>
 
     <dependencies>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.196</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+        <!--erupt-->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-auth</artifactId>
@@ -81,7 +61,7 @@
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-scheduler</artifactId>
+            <artifactId>erupt-job</artifactId>
             <version>${erupt.version}</version>
         </dependency>
         <dependency>
@@ -94,15 +74,39 @@
             <artifactId>open-api</artifactId>
             <version>0.1.4</version>
         </dependency>
+        <!--erupt end-->
+        <!--jdbc-->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.196</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--jdbc end-->
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
             <version>[7.2.0, 7.2.99]</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
