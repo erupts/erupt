@@ -31,7 +31,8 @@ import java.util.Set;
 @Erupt(
         name = "用户",
         desc = "用户配置",
-        dataProxy = EruptUser.class
+        dataProxy = EruptUser.class,
+        layoutTree = ""
 )
 @Getter
 @Setter

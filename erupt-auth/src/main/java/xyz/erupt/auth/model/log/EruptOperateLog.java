@@ -1,4 +1,4 @@
-package xyz.erupt.auth.model;
+package xyz.erupt.auth.model.log;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +11,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
@@ -46,6 +47,12 @@ public class EruptOperateLog extends BaseModel {
             edit = @Edit(title = "IP", search = @Search)
     )
     private String ip;
+
+    @EruptField(
+            views = @View(title = "IP来源", desc = "格式：国家 | 大区 | 省份 | 城市 | 运营商", template = "value&&value.replace(/\\|/g,' | ')"),
+            edit = @Edit(title = "IP来源", search = @Search(vague = true))
+    )
+    private String region;
 
     @EruptField(
             views = @View(title = "功能名称"),

@@ -6,7 +6,7 @@
     <artifactId>erupt-job</artifactId>
     <version>${erupt.version}</version>
     <name>erupt-job</name>
-    <description>任务调度包</description>
+    <description>任务调度模块</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>

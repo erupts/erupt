@@ -5,6 +5,7 @@
 
     <artifactId>erupt-bi</artifactId>
     <version>${erupt.version}</version>
+    <description>报表模块</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>

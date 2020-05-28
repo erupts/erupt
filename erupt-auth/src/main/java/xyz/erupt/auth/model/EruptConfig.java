@@ -19,22 +19,22 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "E_CONFIG", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
-        name = "系统参数",
+        name = "参数设置",
         orderBy = "sort"
 )
 public class EruptConfig extends BaseModel {
-
-    @EruptField(
-            views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true)
-    )
-    private String code;
 
     @EruptField(
             views = @View(title = "名称"),
             edit = @Edit(title = "名称", notNull = true)
     )
     private String name;
+
+    @EruptField(
+            views = @View(title = "键"),
+            edit = @Edit(title = "键", notNull = true)
+    )
+    private String key;
 
     @EruptField(
             views = @View(title = "值"),
@@ -49,8 +49,8 @@ public class EruptConfig extends BaseModel {
     private Integer cacheTime;
 
     @EruptField(
-            views = @View(title = "顺序"),
-            edit = @Edit(title = "顺序")
+            views = @View(title = "显示顺序"),
+            edit = @Edit(title = "显示顺序")
     )
     private Integer sort;
 

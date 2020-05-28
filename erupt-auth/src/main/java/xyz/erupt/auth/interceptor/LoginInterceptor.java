@@ -10,8 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.auth.config.EruptAuthConfig;
-import xyz.erupt.auth.model.EruptOperateLog;
 import xyz.erupt.auth.model.EruptUser;
+import xyz.erupt.auth.model.log.EruptOperateLog;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.core.annotation.EruptApi;
@@ -162,6 +162,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                         operate.setApiName(eruptApi.desc());
                     }
                     operate.setIp(IpUtil.getIpAddr(request));
+                    operate.setRegion(IpUtil.getCityInfo(operate.getIp()));
                     operate.setStatus(true);
                     operate.setReqMethod(handlerMethod.toString());
 //                    operate.setReqParam(request.getAttribute(REQ_BODY).toString());
