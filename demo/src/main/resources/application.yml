@@ -35,7 +35,7 @@ spring:
   redis:
     database: 0
     timeout: 10000
-    host: 192.168.6.190
+    host: 127.0.0.1
   gson:
     date-format: yyyy-MM-dd HH:mm:ss
   resources:

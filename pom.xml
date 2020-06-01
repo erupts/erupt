@@ -43,6 +43,8 @@
         <module>erupt-tpl</module>
         <module>erupt-job</module>
         <module>erupt-bi</module>
+        <module>erupt-ops</module>
+        <module>erupt-tool</module>
     </modules>
 
     <dependencyManagement>

@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 23.0.5, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="erupt_logo_svg" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
      x="0px" y="0px" viewBox="0 0 500 500" enable-background="new 0 0 500 500">
     <style>
         /*#p1{*/
-        /* fill:#014893;*/
+        /*	fill:#014893;*/
         /*}*/
         /*#p2{*/
-        /* fill:#0568B5;*/
+        /*	fill:#0568B5;*/
         /*}*/
         #p3 {
-        fill: #FF5722;
+            fill: #FF5722;
         }
 
         #p3:hover {
-        fill: #000;
+            fill: #000;
         }
 
         /*#p4{*/
-        /* fill:#0F0B5A;*/
+        /*	fill:#0F0B5A;*/
         /*}*/
         /*#p5{*/
-        /* fill: #06005a;*/
+        /*	fill: #06005a;*/
         /*}*/
 
         path {
-        transition: all 0.5s;
-        fill: #000;
+            transition: all 0.5s;
+            fill: #000;
         }
 
         path:hover {
-        fill: #FF5722;
+            fill: #FF5722;
         }
 
         polygon {
-        transition: all 0.5s;
-        fill: #FF5722;
+            transition: all 0.5s;
+            fill: #FF5722;
         }
 
         polygon:hover {
-        stroke: #000;
+            stroke: #000;
 
         }
     </style>

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.bi.fun.BiHandler;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiClassHandler;
@@ -51,6 +52,10 @@ public class BiService {
     }
 
     private static final String TOTAL_KEY = "count";
+    //用户ID
+    private static final String USER_ID_PLACEHOLDER = "$uid";
+    @Autowired
+    private EruptUserService eruptUserService;
 
     public BiData queryBiData(String code, int pageIndex, int pageSize,
                               Map<String, Object> query, boolean export) {
@@ -59,6 +64,7 @@ public class BiService {
             throw new RuntimeException("express not found");
         }
         query.put(EXPORT_PLACEHOLDER, export);
+        query.put(USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
         String sql = String.format("select * from (%s) _ limit %s,%s",
                 bi.getSqlStatement(), (pageIndex - 1) * pageSize, pageSize);
         List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);

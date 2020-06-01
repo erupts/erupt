@@ -89,8 +89,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             case LOGIN:
                 break;
             case MENU:
-                boolean bool = eruptUserService.verifyMenuAuth(token, eruptName);
-                if (!bool) {
+                if (!eruptUserService.verifyMenuAuth(token, eruptName)) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;

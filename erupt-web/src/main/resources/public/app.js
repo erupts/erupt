@@ -6,7 +6,7 @@ window.eruptSiteConfig = {
     desc: "通用数据管理框架",
     routerReuse: false,
     amapKey: "6ba79a8db11b51aeb1176bd4cfa049f4",
-    dialogLogin: false,
+    dialogLogin: true,
     logoPath: "/assets/logo.svg",
     logoText: "Erupt",
     // registerPage:"http://www.baidu.com",

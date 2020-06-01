@@ -48,6 +48,48 @@ public class EruptMenu extends BaseModel {
     )
     private String name;
 
+    public static final String OPEN = "1";
+
+    public static final String HIDE = "2";
+
+    public static final String DISABLE = "3";
+
+    @EruptField(
+            edit = @Edit(
+                    notNull = true,
+                    title = "菜单状态",
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(
+                            vl = {
+                                    @VL(value = OPEN, label = "启用"),
+                                    @VL(value = HIDE, label = "隐藏"),
+                                    @VL(value = DISABLE, label = "禁用"),
+                            }
+                    )
+            )
+    )
+    private Integer status;
+
+    @EruptField(
+            edit = @Edit(
+                    notNull = true,
+                    title = "菜单类型",
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(
+                            vl = {
+                                    @VL(value = "/build/table/", label = "表格"),
+                                    @VL(value = "/build/tree/", label = "树"),
+                                    @VL(value = "/bi/", label = "报表", desc = "此功能需要导入bi模块"),
+                                    @VL(value = "/tpl/", label = "模板", desc = "使用此功能需要导入tpl模块"),
+                                    @VL(value = "/site?url=", label = "链接"),
+                                    @VL(value = "/site?target=blank&url=", label = "新页签"),
+                                    @VL(value = "/", label = "/", desc = "其他"),
+                            }
+                    )
+            )
+    )
+    private String type;
+
     @EruptField(
             edit = @Edit(
                     title = "地址",
@@ -66,21 +108,6 @@ public class EruptMenu extends BaseModel {
     )
     private String path;
 
-    @EruptField(
-            edit = @Edit(
-                    notNull = true,
-                    title = "菜单状态",
-                    type = EditType.CHOICE,
-                    choiceType = @ChoiceType(
-                            vl = {
-                                    @VL(value = "1", label = "启用"),
-                                    @VL(value = "2", label = "隐藏"),
-                                    @VL(value = "3", label = "禁用"),
-                            }
-                    )
-            )
-    )
-    private Integer status = 1;
 
     @EruptField(
             edit = @Edit(

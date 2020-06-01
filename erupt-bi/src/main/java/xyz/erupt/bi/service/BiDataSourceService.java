@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.bi.model.BiDataSource;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,10 +19,6 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
 
     private Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
 

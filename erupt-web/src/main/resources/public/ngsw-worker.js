@@ -28,33 +28,21 @@
             return new Request(input, init);
         }
         /**
-         * Read the current UNIX time in milliseconds.
-         */
-        get time() {
-            return Date.now();
-        }
-
-        /**
          * Wrapper around the `Response` constructor.
          */
-        newResponse(body, init) {
-            return new Response(body, init);
-        }
-
+        newResponse(body, init) { return new Response(body, init); }
         /**
          * Wrapper around the `Headers` constructor.
          */
-        newHeaders(headers) {
-            return new Headers(headers);
-        }
-
+        newHeaders(headers) { return new Headers(headers); }
         /**
          * Test if a given object is an instance of `Client`.
          */
-        isClient(source) {
-            return (source instanceof Client);
-        }
-
+        isClient(source) { return (source instanceof Client); }
+        /**
+         * Read the current UNIX time in milliseconds.
+         */
+        get time() { return Date.now(); }
         /**
          * Extract the pathname of a URL.
          */
@@ -62,15 +50,13 @@
             // Workaround a Safari bug, see
             // https://github.com/angular/angular/issues/31061#issuecomment-503637978
             const parsed = !relativeTo ? new URL(url) : new URL(url, relativeTo);
-            return {origin: parsed.origin, path: parsed.pathname, search: parsed.search};
+            return { origin: parsed.origin, path: parsed.pathname, search: parsed.search };
         }
         /**
          * Wait for a given amount of time before completing a Promise.
          */
         timeout(ms) {
-            return new Promise(resolve => {
-                setTimeout(() => resolve(), ms);
-            });
+            return new Promise(resolve => { setTimeout(() => resolve(), ms); });
         }
     }
 
@@ -135,14 +121,8 @@
             this.cache = cache;
             this.adapter = adapter;
         }
-
-        request(key) {
-            return this.adapter.newRequest('/' + key);
-        }
-
-        'delete'(key) {
-            return this.cache.delete(this.request(key));
-        }
+        request(key) { return this.adapter.newRequest('/' + key); }
+        'delete'(key) { return this.cache.delete(this.request(key)); }
         keys() {
             return this.cache.keys().then(requests => requests.map(req => req.url.substr(1)));
         }
@@ -189,7 +169,8 @@
     function errorToString(error) {
         if (error instanceof Error) {
             return `${error.message}\n${error.stack}`;
-        } else {
+        }
+        else {
             return `${error}`;
         }
     }
@@ -230,7 +211,8 @@
             for (let j = 0; j < 80; j++) {
                 if (j < 16) {
                     w[j] = words32[i + j];
-                } else {
+                }
+                else {
                     w[j] = rol32(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
                 }
                 const [f, k] = fk(j, b, c, d);
@@ -288,7 +270,8 @@
     function byteAt(str, index) {
         if (typeof str === 'string') {
             return index >= str.length ? 0 : str.charCodeAt(index) & 0xff;
-        } else {
+        }
+        else {
             return index >= str.byteLength ? 0 : str[index] & 0xff;
         }
     }
@@ -298,7 +281,8 @@
             for (let i = 0; i < 4; i++) {
                 word += byteAt(str, index + i) << (24 - 8 * i);
             }
-        } else {
+        }
+        else {
             for (let i = 0; i < 4; i++) {
                 word += byteAt(str, index + i) << 8 * i;
             }
@@ -333,27 +317,9 @@
      */
     var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) {
-                try {
-                    step(generator.next(value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function rejected(value) {
-                try {
-                    step(generator["throw"](value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function step(result) {
-                result.done ? resolve(result.value) : new P(function (resolve) {
-                    resolve(result.value);
-                }).then(fulfilled, rejected);
-            }
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
@@ -407,7 +373,8 @@
                     if (!data.used) {
                         return UpdateCacheStatus.CACHED_BUT_UNUSED;
                     }
-                } catch (_) {
+                }
+                catch (_) {
                     // Error on the side of safety and assume cached.
                 }
                 return UpdateCacheStatus.CACHED;
@@ -446,13 +413,12 @@
                             // This resource has a hash, and thus is versioned by the manifest. It's safe to return
                             // the response.
                             return cachedResponse;
-                        } else {
+                        }
+                        else {
                             // This resource has no hash, and yet exists in the cache. Check how old this request is
                             // to make sure it's still usable.
                             if (yield this.needToRevalidate(req, cachedResponse)) {
-                                this.idle.schedule(`revalidate(${this.prefix}, ${this.config.name}): ${req.url}`, () => __awaiter(this, void 0, void 0, function* () {
-                                    yield this.fetchAndCacheOnce(req);
-                                }));
+                                this.idle.schedule(`revalidate(${this.prefix}, ${this.config.name}): ${req.url}`, () => __awaiter(this, void 0, void 0, function* () { yield this.fetchAndCacheOnce(req); }));
                             }
                             // In either case (revalidation or not), the cached response must be good.
                             return cachedResponse;
@@ -465,7 +431,8 @@
                     // If this is successful, the response needs to be cloned as it might be used to respond to
                     // multiple fetch operations at the same time.
                     return res.clone();
-                } else {
+                }
+                else {
                     return null;
                 }
             });
@@ -477,7 +444,8 @@
             if (parsed.origin === this.origin) {
                 // The URL is relative to the SW's origin domain.
                 return parsed.path;
-            } else {
+            }
+            else {
                 return url;
             }
         }
@@ -496,7 +464,7 @@
                     // Figure out if there is a max-age directive in the Cache-Control header.
                     const cacheControl = res.headers.get('Cache-Control');
                     const cacheDirectives = cacheControl
-                    // Directives are comma-separated within the Cache-Control header value.
+                        // Directives are comma-separated within the Cache-Control header value.
                         .split(',')
                         // Make sure each directive doesn't have extraneous whitespace.
                         .map(v => v.trim())
@@ -522,7 +490,8 @@
                             // Check the metadata table. If a timestamp is there, use it.
                             const metaTable = yield this.metadata;
                             ts = (yield metaTable.read(req.url)).ts;
-                        } catch (_a) {
+                        }
+                        catch (_a) {
                             // Otherwise, look for a Date header.
                             const date = res.headers.get('Date');
                             if (date === null) {
@@ -534,22 +503,26 @@
                         }
                         const age = this.adapter.time - ts;
                         return age < 0 || age > maxAge;
-                    } catch (_b) {
+                    }
+                    catch (_b) {
                         // Assume stale.
                         return true;
                     }
-                } else if (res.headers.has('Expires')) {
+                }
+                else if (res.headers.has('Expires')) {
                     // Determine if the expiration time has passed.
                     const expiresStr = res.headers.get('Expires');
                     try {
                         // The request needs to be revalidated if the current time is later than the expiration
                         // time, if it parses correctly.
                         return this.adapter.time > Date.parse(expiresStr);
-                    } catch (_c) {
+                    }
+                    catch (_c) {
                         // The expiration date failed to parse, so revalidate as a precaution.
                         return true;
                     }
-                } else {
+                }
+                else {
                     // No way to evaluate staleness, so assume the response is already stale.
                     return true;
                 }
@@ -572,11 +545,12 @@
                 let metadata = undefined;
                 try {
                     metadata = yield metaTable.read(url);
-                } catch (_a) {
+                }
+                catch (_a) {
                     // Do nothing, not found. This shouldn't happen, but it can be handled.
                 }
                 // Return both the response and any available metadata.
-                return {response, metadata};
+                return { response, metadata };
             });
         }
         /**
@@ -630,19 +604,21 @@
                         // needed for future determination of whether this cached response is stale or not.
                         if (!this.hashes.has(req.url)) {
                             // Metadata is tracked for requests that are unhashed.
-                            const meta = {ts: this.adapter.time, used};
+                            const meta = { ts: this.adapter.time, used };
                             const metaTable = yield this.metadata;
                             yield metaTable.write(req.url, meta);
                         }
                         return res;
-                    } catch (err) {
+                    }
+                    catch (err) {
                         // Among other cases, this can happen when the user clears all data through the DevTools,
                         // but the SW is still running and serving another tab. In that case, trying to write to the
                         // caches throws an `Entry was not found` error.
                         // If this happens the SW can no longer work correctly. This situation is unrecoverable.
                         throw new SwCriticalError(`Failed to update the caches for request to '${req.url}' (fetchAndCacheOnce): ${errorToString(err)}`);
                     }
-                } finally {
+                }
+                finally {
                     // Finally, it can be removed from `inFlightRequests`. This might result in a double-remove
                     // if some other chain was already making this request too, but that won't hurt anything.
                     this.inFlightRequests.delete(req.url);
@@ -728,7 +704,8 @@
                     // Excellent, the version from the network matched on the first try, with no need for
                     // cache-busting. Use it.
                     return networkResult;
-                } else {
+                }
+                else {
                     // This URL doesn't exist in our hash database, so it must be requested directly.
                     return this.safeFetch(req);
                 }
@@ -751,7 +728,7 @@
                     if (res !== null) {
                         // Copy to this cache.
                         yield cache.put(req, res);
-                        yield meta.write(req.url, {ts: this.adapter.time, used: false});
+                        yield meta.write(req.url, { ts: this.adapter.time, used: false });
                         // No need to do anything further with this resource, it's now cached properly.
                         return true;
                     }
@@ -770,7 +747,8 @@
             return __awaiter(this, void 0, void 0, function* () {
                 try {
                     return yield this.scope.fetch(req);
-                } catch (_a) {
+                }
+                catch (_a) {
                     return this.adapter.newResponse('', {
                         status: 504,
                         statusText: 'Gateway Timeout',
@@ -815,31 +793,31 @@
                     // Select all of the previously cached resources. These are cached unhashed resources
                     // from previous versions of the app, in any asset group.
                     yield (yield updateFrom.previouslyCachedResources())
-                    // First, narrow down the set of resources to those which are handled by this group.
-                    // Either it's a known URL, or it matches a given pattern.
+                        // First, narrow down the set of resources to those which are handled by this group.
+                        // Either it's a known URL, or it matches a given pattern.
                         .filter(url => this.config.urls.some(cacheUrl => cacheUrl === url) ||
-                            this.patterns.some(pattern => pattern.test(url)))
+                        this.patterns.some(pattern => pattern.test(url)))
                         // Finally, process each resource in turn.
                         .reduce((previous, url) => __awaiter(this, void 0, void 0, function* () {
-                            yield previous;
-                            const req = this.adapter.newRequest(url);
-                            // It's possible that the resource in question is already cached. If so,
-                            // continue to the next one.
-                            const alreadyCached = ((yield cache.match(req)) !== undefined);
-                            if (alreadyCached) {
-                                return;
-                            }
-                            // Get the most recent old version of the resource.
-                            const res = yield updateFrom.lookupResourceWithoutHash(url);
-                            if (res === null || res.metadata === undefined) {
-                                // Unexpected, but not harmful.
-                                return;
-                            }
-                            // Write it into the cache. It may already be expired, but it can still serve
-                            // traffic until it's updated (stale-while-revalidate approach).
-                            yield cache.put(req, res.response);
-                            yield metaTable.write(url, Object.assign({}, res.metadata, {used: false}));
-                        }), Promise.resolve());
+                        yield previous;
+                        const req = this.adapter.newRequest(url);
+                        // It's possible that the resource in question is already cached. If so,
+                        // continue to the next one.
+                        const alreadyCached = ((yield cache.match(req)) !== undefined);
+                        if (alreadyCached) {
+                            return;
+                        }
+                        // Get the most recent old version of the resource.
+                        const res = yield updateFrom.lookupResourceWithoutHash(url);
+                        if (res === null || res.metadata === undefined) {
+                            // Unexpected, but not harmful.
+                            return;
+                        }
+                        // Write it into the cache. It may already be expired, but it can still serve
+                        // traffic until it's updated (stale-while-revalidate approach).
+                        yield cache.put(req, res.response);
+                        yield metaTable.write(url, Object.assign({}, res.metadata, { used: false }));
+                    }), Promise.resolve());
                 }
             });
         }
@@ -896,27 +874,9 @@
      */
     var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) {
-                try {
-                    step(generator.next(value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function rejected(value) {
-                try {
-                    step(generator["throw"](value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function step(result) {
-                result.done ? resolve(result.value) : new P(function (resolve) {
-                    resolve(result.value);
-                }).then(fulfilled, rejected);
-            }
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
@@ -939,9 +899,7 @@
         /**
          * The current count of URLs in the list.
          */
-        get size() {
-            return this.state.count;
-        }
+        get size() { return this.state.count; }
         /**
          * Remove the tail.
          */
@@ -991,7 +949,8 @@
             if (node.next !== null) {
                 // There is a next node, fix its back pointer to skip this node.
                 this.state.map[node.next].previous = node.previous;
-            } else {
+            }
+            else {
                 // There is no next node - the accessed node must be the tail. Move the tail pointer.
                 this.state.tail = node.previous;
             }
@@ -1017,7 +976,7 @@
                 return;
             }
             // Look up the node in the map, and construct a new entry if it's
-            const node = this.state.map[url] || {url, next: null, previous: null};
+            const node = this.state.map[url] || { url, next: null, previous: null };
             // Step 1: remove the node from its position within the chain, if it is in the chain.
             if (this.state.map[url] !== undefined) {
                 this.remove(url);
@@ -1073,7 +1032,8 @@
                     const table = yield this.lruTable;
                     try {
                         this._lru = new LruList(yield table.read('lru'));
-                    } catch (_a) {
+                    }
+                    catch (_a) {
                         this._lru = new LruList();
                     }
                 }
@@ -1158,10 +1118,11 @@
                 // Since fetch() will always return a response, undefined indicates a timeout.
                 if (res === undefined) {
                     // The request timed out. Return a Gateway Timeout error.
-                    res = this.adapter.newResponse(null, {status: 504, statusText: 'Gateway Timeout'});
+                    res = this.adapter.newResponse(null, { status: 504, statusText: 'Gateway Timeout' });
                     // Cache the network response eventually.
                     ctx.waitUntil(this.safeCacheResponse(req, networkFetch, lru));
-                } else {
+                }
+                else {
                     // The request completed in time, so cache it inline with the response flow.
                     yield this.safeCacheResponse(req, res, lru);
                 }
@@ -1176,7 +1137,8 @@
                 // If that fetch errors, treat it as a timed out request.
                 try {
                     res = yield timeoutFetch;
-                } catch (_a) {
+                }
+                catch (_a) {
                     res = undefined;
                 }
                 // If the network fetch times out or errors, fall back on the cache.
@@ -1186,7 +1148,8 @@
                     // behavior of freshness.
                     const fromCache = yield this.loadFromCache(req, lru);
                     res = (fromCache !== null) ? fromCache.res : null;
-                } else {
+                }
+                else {
                     yield this.safeCacheResponse(req, res, lru, true);
                 }
                 // Either the network fetch didn't time out, or the cache yielded a usable response.
@@ -1206,7 +1169,8 @@
                 const safeNetworkFetch = (() => __awaiter$1(this, void 0, void 0, function* () {
                     try {
                         return yield networkFetch;
-                    } catch (_a) {
+                    }
+                    catch (_a) {
                         return this.adapter.newResponse(null, {
                             status: 504,
                             statusText: 'Gateway Timeout',
@@ -1216,7 +1180,8 @@
                 const networkFetchUndefinedError = (() => __awaiter$1(this, void 0, void 0, function* () {
                     try {
                         return yield networkFetch;
-                    } catch (_b) {
+                    }
+                    catch (_b) {
                         return undefined;
                     }
                 }))();
@@ -1225,7 +1190,8 @@
                 // Race that with the network fetch. This will either be a Response, or `undefined`
                 // in the event that the request errored or timed out.
                 return [Promise.race([networkFetchUndefinedError, timeout]), safeNetworkFetch];
-            } else {
+            }
+            else {
                 const networkFetch = this.safeFetch(req);
                 // Do a plain fetch.
                 return [networkFetch, networkFetch];
@@ -1237,14 +1203,16 @@
                     const res = yield resOrPromise;
                     try {
                         yield this.cacheResponse(req, res, lru, okToCacheOpaque);
-                    } catch (err) {
+                    }
+                    catch (err) {
                         // Saving the API response failed. This could be a result of a full storage.
                         // Since this data is cached lazily and temporarily, continue serving clients as usual.
                         this.debugHandler.log(err, `DataGroup(${this.config.name}@${this.config.version}).safeCacheResponse(${req.url}, status: ${res.status})`);
                         // TODO: Better detect/handle full storage; e.g. using
                         // [navigator.storage](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorStorage/storage).
                     }
-                } catch (_a) {
+                }
+                catch (_a) {
                     // Request failed
                     // TODO: Handle this error somehow?
                 }
@@ -1265,10 +1233,11 @@
                             // Successful match from the cache. Use the response, after marking it as having
                             // been accessed.
                             lru.accessed(req.url);
-                            return {res, age};
+                            return { res, age };
                         }
                         // Otherwise, or if there was an error, assume the response is expired, and evict it.
-                    } catch (_a) {
+                    }
+                    catch (_a) {
                         // Some error getting the age for the response. Assume it's expired.
                     }
                     lru.remove(req.url);
@@ -1310,7 +1279,7 @@
                 yield (yield this.cache).put(req, res.clone());
                 // Store the age of the cache.
                 const ageTable = yield this.ageTable;
-                yield ageTable.write(req.url, {age: this.adapter.time});
+                yield ageTable.write(req.url, { age: this.adapter.time });
                 // Sync the LRU chain to non-volatile storage.
                 yield this.syncLru();
             });
@@ -1339,8 +1308,8 @@
             return __awaiter$1(this, void 0, void 0, function* () {
                 const [cache, ageTable] = yield Promise.all([this.cache, this.ageTable]);
                 yield Promise.all([
-                    cache.delete(this.adapter.newRequest(url, {method: 'GET'})),
-                    cache.delete(this.adapter.newRequest(url, {method: 'HEAD'})),
+                    cache.delete(this.adapter.newRequest(url, { method: 'GET' })),
+                    cache.delete(this.adapter.newRequest(url, { method: 'HEAD' })),
                     ageTable.delete(url),
                 ]);
             });
@@ -1349,7 +1318,8 @@
             return __awaiter$1(this, void 0, void 0, function* () {
                 try {
                     return this.scope.fetch(req);
-                } catch (_a) {
+                }
+                catch (_a) {
                     return this.adapter.newResponse(null, {
                         status: 504,
                         statusText: 'Gateway Timeout',
@@ -1368,34 +1338,16 @@
      */
     var __awaiter$2 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) {
-                try {
-                    step(generator.next(value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function rejected(value) {
-                try {
-                    step(generator["throw"](value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function step(result) {
-                result.done ? resolve(result.value) : new P(function (resolve) {
-                    resolve(result.value);
-                }).then(fulfilled, rejected);
-            }
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
     const BACKWARDS_COMPATIBILITY_NAVIGATION_URLS = [
-        {positive: true, regex: '^/.*$'},
-        {positive: false, regex: '^/.*\\.[^/]*$'},
-        {positive: false, regex: '^/.*__'},
+        { positive: true, regex: '^/.*$' },
+        { positive: false, regex: '^/.*\\.[^/]*$' },
+        { positive: false, regex: '^/.*__' },
     ];
     /**
      * A specific version of the application, identified by a unique manifest
@@ -1456,16 +1408,32 @@
                 exclude: excludeUrls.map(spec => new RegExp(spec.regex)),
             };
         }
-
-        get okay() {
-            return this._okay;
-        }
-
+        get okay() { return this._okay; }
         /**
-         * Get the opaque application data which was provided with the manifest.
+         * Fully initialize this version of the application. If this Promise resolves successfully, all
+         * required
+         * data has been safely downloaded.
          */
-        get appData() {
-            return this.manifest.appData || null;
+        initializeFully(updateFrom) {
+            return __awaiter$2(this, void 0, void 0, function* () {
+                try {
+                    // Fully initialize each asset group, in series. Starts with an empty Promise,
+                    // and waits for the previous groups to have been initialized before initializing
+                    // the next one in turn.
+                    yield this.assetGroups.reduce((previous, group) => __awaiter$2(this, void 0, void 0, function* () {
+                        // Wait for the previous groups to complete initialization. If there is a
+                        // failure, this will throw, and each subsequent group will throw, until the
+                        // whole sequence fails.
+                        yield previous;
+                        // Initialize this group.
+                        return group.initializeFully(updateFrom);
+                    }), Promise.resolve());
+                }
+                catch (err) {
+                    this._okay = false;
+                    throw err;
+                }
+            });
         }
         handleFetch(req, context) {
             return __awaiter$2(this, void 0, void 0, function* () {
@@ -1599,32 +1567,10 @@
                 yield Promise.all(this.dataGroups.map(group => group.cleanup()));
             });
         }
-
         /**
-         * Fully initialize this version of the application. If this Promise resolves successfully, all
-         * required
-         * data has been safely downloaded.
+         * Get the opaque application data which was provided with the manifest.
          */
-        initializeFully(updateFrom) {
-            return __awaiter$2(this, void 0, void 0, function* () {
-                try {
-                    // Fully initialize each asset group, in series. Starts with an empty Promise,
-                    // and waits for the previous groups to have been initialized before initializing
-                    // the next one in turn.
-                    yield this.assetGroups.reduce((previous, group) => __awaiter$2(this, void 0, void 0, function* () {
-                        // Wait for the previous groups to complete initialization. If there is a
-                        // failure, this will throw, and each subsequent group will throw, until the
-                        // whole sequence fails.
-                        yield previous;
-                        // Initialize this group.
-                        return group.initializeFully(updateFrom);
-                    }), Promise.resolve());
-                } catch (err) {
-                    this._okay = false;
-                    throw err;
-                }
-            });
-        }
+        get appData() { return this.manifest.appData || null; }
         /**
          * Check whether a request accepts `text/html` (based on the `Accept` header).
          */
@@ -1647,27 +1593,9 @@
      */
     var __awaiter$3 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) {
-                try {
-                    step(generator.next(value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function rejected(value) {
-                try {
-                    step(generator["throw"](value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function step(result) {
-                result.done ? resolve(result.value) : new P(function (resolve) {
-                    resolve(result.value);
-                }).then(fulfilled, rejected);
-            }
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
@@ -1715,7 +1643,7 @@ ${this.formatDebugLog(this.debugLogA)}
 
 ${msgVersions}
 
-${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})});
+${msgIdle}`, { headers: this.adapter.newHeaders({ 'Content-Type': 'text/plain' }) });
             });
         }
         since(time) {
@@ -1746,12 +1674,9 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 value = this.errorToString(value);
             }
             // Log the message.
-            this.debugLogA.push({value, time: this.adapter.time, context});
+            this.debugLogA.push({ value, time: this.adapter.time, context });
         }
-
-        errorToString(err) {
-            return `${err.name}(${err.message}, ${err.stack})`;
-        }
+        errorToString(err) { return `${err.name}(${err.message}, ${err.stack})`; }
         formatDebugLog(log) {
             return log.map(entry => `[${this.since(entry.time)}] ${entry.value} ${entry.context}`)
                 .join('\n');
@@ -1767,27 +1692,9 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
      */
     var __awaiter$4 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) {
-                try {
-                    step(generator.next(value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function rejected(value) {
-                try {
-                    step(generator["throw"](value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function step(result) {
-                result.done ? resolve(result.value) : new P(function (resolve) {
-                    resolve(result.value);
-                }).then(fulfilled, rejected);
-            }
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
@@ -1824,15 +1731,6 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 yield this.execute();
             });
         }
-
-        get size() {
-            return this.queue.length;
-        }
-
-        get taskDescriptions() {
-            return this.queue.map(task => task.desc);
-        }
-
         execute() {
             return __awaiter$4(this, void 0, void 0, function* () {
                 this.lastRun = this.adapter.time;
@@ -1843,7 +1741,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                         yield previous;
                         try {
                             yield task.run();
-                        } catch (err) {
+                        }
+                        catch (err) {
                             this.debug.log(err, `while running idle task ${task.desc}`);
                         }
                     }), Promise.resolve());
@@ -1855,15 +1754,14 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 this.empty = Promise.resolve();
             });
         }
-
         schedule(desc, run) {
-            this.queue.push({desc, run});
+            this.queue.push({ desc, run });
             if (this.emptyResolve === null) {
-                this.empty = new Promise(resolve => {
-                    this.emptyResolve = resolve;
-                });
+                this.empty = new Promise(resolve => { this.emptyResolve = resolve; });
             }
         }
+        get size() { return this.queue.length; }
+        get taskDescriptions() { return this.queue.map(task => task.desc); }
     }
 
     /**
@@ -1900,27 +1798,9 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
      */
     var __awaiter$5 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) {
-                try {
-                    step(generator.next(value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function rejected(value) {
-                try {
-                    step(generator["throw"](value));
-                } catch (e) {
-                    reject(e);
-                }
-            }
-
-            function step(result) {
-                result.done ? resolve(result.value) : new P(function (resolve) {
-                    resolve(result.value);
-                }).then(fulfilled, rejected);
-            }
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
@@ -2006,7 +1886,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     this.idle.schedule('activate: cleanup-old-sw-caches', () => __awaiter$5(this, void 0, void 0, function* () {
                         try {
                             yield this.cleanupOldSwCaches();
-                        } catch (err) {
+                        }
+                        catch (err) {
                             // Nothing to do - cleanup failed. Just log it.
                             this.debugger.log(err, 'cleanupOldSwCaches @ activate: cleanup-old-sw-caches');
                         }
@@ -2023,7 +1904,7 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 // same time the activation event is allowed to resolve and traffic starts
                 // being served.
                 if (this.scope.registration.active !== null) {
-                    this.scope.registration.active.postMessage({action: 'INITIALIZE'});
+                    this.scope.registration.active.postMessage({ action: 'INITIALIZE' });
                 }
             });
             // Handle the fetch, message, and push events.
@@ -2149,13 +2030,15 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 try {
                     this.initialized = this.initialize();
                     yield this.initialized;
-                } catch (error) {
+                }
+                catch (error) {
                     // If initialization fails, the SW needs to enter a safe state, where it declines to respond
                     // to network requests.
                     this.state = DriverReadyState.SAFE_MODE;
                     this.stateMessage = `Initialization failed due to error: ${errorToString(error)}`;
                     throw error;
-                } finally {
+                }
+                finally {
                     // Regardless if initialization succeeded, background tasks still need to happen.
                     event.waitUntil(this.idle.trigger());
                 }
@@ -2164,11 +2047,10 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
         handleMessage(msg, from) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 if (isMsgCheckForUpdates(msg)) {
-                    const action = (() => __awaiter$5(this, void 0, void 0, function* () {
-                        yield this.checkForUpdate();
-                    }))();
+                    const action = (() => __awaiter$5(this, void 0, void 0, function* () { yield this.checkForUpdate(); }))();
                     yield this.reportStatus(from, action, msg.statusNonce);
-                } else if (isMsgActivateUpdate(msg)) {
+                }
+                else if (isMsgActivateUpdate(msg)) {
                     yield this.reportStatus(from, this.updateClient(from), msg.statusNonce);
                 }
             });
@@ -2199,18 +2081,19 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     .forEach(name => options[name] = notification[name]);
                 yield this.broadcast({
                     type: 'NOTIFICATION_CLICK',
-                    data: {action, notification: options},
+                    data: { action, notification: options },
                 });
             });
         }
         reportStatus(client, promise, nonce) {
             return __awaiter$5(this, void 0, void 0, function* () {
-                const response = {type: 'STATUS', nonce, status: true};
+                const response = { type: 'STATUS', nonce, status: true };
                 try {
                     yield promise;
                     client.postMessage(response);
-                } catch (e) {
-                    client.postMessage(Object.assign({}, response, {status: false, error: e.toString()}));
+                }
+                catch (e) {
+                    client.postMessage(Object.assign({}, response, { status: false, error: e.toString() }));
                 }
             });
         }
@@ -2249,7 +2132,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 try {
                     // Ensure the SW instance has been initialized.
                     yield this.ensureInitialized(event);
-                } catch (_a) {
+                }
+                catch (_a) {
                     // Since the SW is already committed to responding to the currently active request,
                     // respond with a network fetch.
                     return this.safeFetch(event.request);
@@ -2275,7 +2159,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     // Handle the request. First try the AppVersion. If that doesn't work, fall back on the
                     // network.
                     res = yield appVersion.handleFetch(event.request, event);
-                } catch (err) {
+                }
+                catch (err) {
                     if (err.isCritical) {
                         // Something went wrong with the activation of this version.
                         yield this.versionFailed(appVersion, err, this.latestHash === appVersion.manifestHash);
@@ -2331,12 +2216,14 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                         yield this.checkForUpdate();
                         try {
                             yield this.cleanupCaches();
-                        } catch (err) {
+                        }
+                        catch (err) {
                             // Nothing to do - cleanup failed. Just log it.
                             this.debugger.log(err, 'cleanupCaches @ init post-load');
                         }
                     }));
-                } catch (_) {
+                }
+                catch (_) {
                     // Something went wrong. Try to start over by fetching a new manifest from the
                     // server and building up an empty initial state.
                     const manifest = yield this.fetchLatestManifest();
@@ -2344,7 +2231,7 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     manifests = {};
                     manifests[hash] = manifest;
                     assignments = {};
-                    latest = {latest: hash};
+                    latest = { latest: hash };
                     // Save the initial state to the DB.
                     yield Promise.all([
                         table.write('manifests', manifests),
@@ -2372,7 +2259,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     const hash = assignments[clientId];
                     if (this.versions.has(hash)) {
                         this.clientVersionMap.set(clientId, hash);
-                    } else {
+                    }
+                    else {
                         this.clientVersionMap.set(clientId, latest.latest);
                         this.debugger.log(`Unknown version ${hash} mapped for client ${clientId}, using latest instead`, `initialize: map assignments`);
                     }
@@ -2395,7 +2283,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                         // successful, then initialization either succeeded or was scheduled. If
                         // it fails, then full initialization was attempted and failed.
                         yield this.scheduleInitialization(this.versions.get(hash), this.latestHash === hash);
-                    } catch (err) {
+                    }
+                    catch (err) {
                         this.debugger.log(err, `initialize: schedule init of ${hash}`);
                         return false;
                     }
@@ -2438,7 +2327,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                         }
                         // TODO: make sure the version is valid.
                         return appVersion;
-                    } else {
+                    }
+                    else {
                         // This is the first time this client ID has been seen. Whether the SW is in a
                         // state to handle new clients depends on the current readiness state, so check
                         // that first.
@@ -2473,7 +2363,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                         // Return the latest `AppVersion`.
                         return this.lookupVersionByHash(this.latestHash, 'assignVersion');
                     }
-                } else {
+                }
+                else {
                     // No client ID was associated with the request. This must be a navigation request
                     // for a new client. First check that the SW is accepting new clients.
                     if (this.state !== DriverReadyState.NORMAL) {
@@ -2497,7 +2388,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     if (res.status === 404) {
                         yield this.deleteAllCaches();
                         yield this.scope.registration.unregister();
-                    } else if (res.status === 504 && ignoreOfflineError) {
+                    }
+                    else if (res.status === 504 && ignoreOfflineError) {
                         return null;
                     }
                     throw new Error(`Manifest fetch failed! (status: ${res.status})`);
@@ -2511,11 +2403,11 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 yield (yield this.scope.caches.keys())
                     .filter(key => key.startsWith(`${this.adapter.cacheNamePrefix}:`))
                     .reduce((previous, key) => __awaiter$5(this, void 0, void 0, function* () {
-                        yield Promise.all([
-                            previous,
-                            this.scope.caches.delete(key),
-                        ]);
-                    }), Promise.resolve());
+                    yield Promise.all([
+                        previous,
+                        this.scope.caches.delete(key),
+                    ]);
+                }), Promise.resolve());
             });
         }
         /**
@@ -2528,7 +2420,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 const initialize = () => __awaiter$5(this, void 0, void 0, function* () {
                     try {
                         yield appVersion.initializeFully();
-                    } catch (err) {
+                    }
+                    catch (err) {
                         this.debugger.log(err, `initializeFully for ${appVersion.manifestHash}`);
                         yield this.versionFailed(appVersion, err, latest);
                     }
@@ -2561,7 +2454,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     // Cancel the binding for these clients.
                     Array.from(this.clientVersionMap.keys())
                         .forEach(clientId => this.clientVersionMap.delete(clientId));
-                } else {
+                }
+                else {
                     // The current version is viable, but this older version isn't. The only
                     // possible remedy is to stop serving the older version and go to the network.
                     // Figure out which clients are affected and put them on the latest.
@@ -2572,7 +2466,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 }
                 try {
                     yield this.sync();
-                } catch (err2) {
+                }
+                catch (err2) {
                     // We are already in a bad state. No need to make things worse.
                     // Just log the error and move on.
                     this.debugger.log(err2, `Driver.versionFailed(${err.message || err})`);
@@ -2617,7 +2512,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                     }
                     yield this.setupUpdate(manifest, hash);
                     return true;
-                } catch (err) {
+                }
+                catch (err) {
                     this.debugger.log(err, `Error occurred while updating to manifest ${hash}`);
                     this.state = DriverReadyState.EXISTING_CLIENTS_ONLY;
                     this.stateMessage = `Degraded due to failed initialization: ${errorToString(err)}`;
@@ -2634,14 +2530,10 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                 const table = yield this.db.open('control');
                 // Construct a serializable map of hashes to manifests.
                 const manifests = {};
-                this.versions.forEach((version, hash) => {
-                    manifests[hash] = version.manifest;
-                });
+                this.versions.forEach((version, hash) => { manifests[hash] = version.manifest; });
                 // Construct a serializable map of client ids to version hashes.
                 const assignments = {};
-                this.clientVersionMap.forEach((hash, clientId) => {
-                    assignments[clientId] = hash;
-                });
+                this.clientVersionMap.forEach((hash, clientId) => { assignments[clientId] = hash; });
                 // Record the latest entry. Since this is a sync which is necessarily happening after
                 // initialization, latestHash should always be valid.
                 const latest = {
@@ -2688,7 +2580,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
                         this.versions.delete(version);
                         // Clean it up.
                         yield instance.cleanup();
-                    } catch (err) {
+                    }
+                    catch (err) {
                         // Oh well? Not much that can be done here. These caches will be removed when
                         // the SW revs its format version, which happens from time to time.
                         this.debugger.log(err, `cleanupCaches - cleanup ${version}`);
@@ -2716,23 +2609,23 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
          */
         lookupResourceWithHash(url, hash) {
             return Array
-            // Scan through the set of all cached versions, valid or otherwise. It's safe to do such
-            // lookups even for invalid versions as the cached version of a resource will have the
-            // same hash regardless.
+                // Scan through the set of all cached versions, valid or otherwise. It's safe to do such
+                // lookups even for invalid versions as the cached version of a resource will have the
+                // same hash regardless.
                 .from(this.versions.values())
                 // Reduce the set of versions to a single potential result. At any point along the
                 // reduction, if a response has already been identified, then pass it through, as no
                 // future operation could change the response. If no response has been found yet, keep
                 // checking versions until one is or until all versions have been exhausted.
                 .reduce((prev, version) => __awaiter$5(this, void 0, void 0, function* () {
-                    // First, check the previous result. If a non-null result has been found already, just
-                    // return it.
-                    if ((yield prev) !== null) {
-                        return prev;
-                    }
-                    // No result has been found yet. Try the next `AppVersion`.
-                    return version.lookupResourceWithHash(url, hash);
-                }), Promise.resolve(null));
+                // First, check the previous result. If a non-null result has been found already, just
+                // return it.
+                if ((yield prev) !== null) {
+                    return prev;
+                }
+                // No result has been found yet. Try the next `AppVersion`.
+                return version.lookupResourceWithHash(url, hash);
+            }), Promise.resolve(null));
         }
         lookupResourceWithoutHash(url) {
             return __awaiter$5(this, void 0, void 0, function* () {
@@ -2789,9 +2682,7 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
         broadcast(msg) {
             return __awaiter$5(this, void 0, void 0, function* () {
                 const clients = yield this.scope.clients.matchAll();
-                clients.forEach(client => {
-                    client.postMessage(msg);
-                });
+                clients.forEach(client => { client.postMessage(msg); });
             });
         }
         debugState() {
@@ -2833,7 +2724,8 @@ ${msgIdle}`, {headers: this.adapter.newHeaders({'Content-Type': 'text/plain'})})
             return __awaiter$5(this, void 0, void 0, function* () {
                 try {
                     return yield this.scope.fetch(req);
-                } catch (err) {
+                }
+                catch (err) {
                     this.debugger.log(err, `Driver.fetch(${req.url})`);
                     return this.adapter.newResponse(null, {
                         status: 504,

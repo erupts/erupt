@@ -158,13 +158,7 @@ public class EruptUserService {
         sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString());
     }
 
-    public Long getCurrentUid() {
-        String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
-        if (StringUtils.isBlank(token)) {
-            token = request.getParameter(LoginInterceptor.URL_ERUPT_PARAM_TOKEN);
-        }
-        return Long.valueOf(sessionService.get(SessionKey.USER_TOKEN + token).toString());
-    }
+    private static VL[] VLS = {};
 
     public EruptUser getCurrentEruptUser() {
         entityManager.clear();
@@ -179,7 +173,18 @@ public class EruptUserService {
         }
     }
 
-    private static VL[] VLS;
+    public Long getCurrentUid() {
+        String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
+        if (StringUtils.isBlank(token)) {
+            token = request.getParameter(LoginInterceptor.URL_ERUPT_PARAM_TOKEN);
+        }
+        Object uid = sessionService.get(SessionKey.USER_TOKEN + token);
+        if (null != uid) {
+            return Long.valueOf(uid.toString());
+        } else {
+            throw new RuntimeException("登录过期请重新登录");
+        }
+    }
 
     static {
         try {
@@ -194,7 +199,9 @@ public class EruptUserService {
         List<EruptMenu> menus = sessionService.get(SessionKey.MENU_LIST + token, new TypeToken<List<EruptMenu>>() {
         }.getType());
         for (EruptMenu menu : menus) {
-            if (StringUtils.isNotBlank(menu.getPath()) && menu.getPath().toLowerCase().contains(name.toLowerCase())) {
+            if (StringUtils.isNotBlank(menu.getPath())
+                    && !EruptMenu.DISABLE.equals(menu.getStatus().toString())
+                    && menu.getPath().toLowerCase().contains(name.toLowerCase())) {
                 String path = menu.getPath();
                 for (VL vl : VLS) {
                     if (vl.value().length() > 2 && path.contains(vl.value())) {
