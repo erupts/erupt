@@ -14,9 +14,9 @@ import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.model.log.EruptLoginLog;
-import xyz.erupt.auth.repository.UserRepository;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.auth.util.MD5Utils;
+import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,13 +40,13 @@ public class EruptUserService {
     private EntityManager entityManager;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private SessionService sessionService;
 
     @Autowired
     private HttpServletRequest request;
+
+    @Autowired
+    private EruptDao eruptDao;
 
     @Transactional
     public void saveLoginLog(EruptUser user) {
@@ -79,7 +80,7 @@ public class EruptUserService {
                 return new LoginModel(false, "验证码不正确", true);
             }
         }
-        EruptUser eruptUser = userRepository.findByAccount(account);
+        EruptUser eruptUser = findEruptUserByAccount(account);
         if (null != eruptUser) {
             if (!eruptUser.getStatus()) {
                 return new LoginModel(false, "账号已锁定!");
@@ -135,7 +136,7 @@ public class EruptUserService {
         if (!newPwd.equals(newPwd2)) {
             return EruptApiModel.errorNoInterceptApi("修改失败，新密码与确认密码不匹配");
         }
-        EruptUser eruptUser = userRepository.findByAccount(account);
+        EruptUser eruptUser = findEruptUserByAccount(account);
         if (eruptUser.getIsMd5()) {
             pwd = MD5Utils.digest(pwd);
             newPwd = MD5Utils.digest(newPwd);
@@ -184,6 +185,15 @@ public class EruptUserService {
         } else {
             throw new RuntimeException("登录过期请重新登录");
         }
+    }
+
+    private EruptUser findEruptUserByAccount(String account) {
+        return eruptDao.queryEntity(EruptUser.class, "account = :account",
+                new HashMap<String, Object>(1) {
+                    {
+                        this.put("account", account);
+                    }
+                });
     }
 
     static {

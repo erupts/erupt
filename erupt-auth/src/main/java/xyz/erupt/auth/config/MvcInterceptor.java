@@ -35,9 +35,7 @@ public class MvcInterceptor implements WebMvcConfigurer {
         for (String s : eruptConfig.getAllowRequestFileType()) {
             types.add("/**/**." + s);
         }
-        for (String s : eruptConfig.getAllowRequestFileType()) {
-            types.add("/#/**");
-        }
+        types.add("/#/**");
         registry.addInterceptor(loginInterceptor)
                 .excludePathPatterns("/error")
                 .excludePathPatterns(types.toArray(new String[0]))

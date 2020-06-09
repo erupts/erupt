@@ -7,7 +7,6 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

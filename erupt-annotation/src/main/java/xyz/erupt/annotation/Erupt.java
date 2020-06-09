@@ -17,7 +17,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@Inherited
 public @interface Erupt {
 
     String primaryKeyCol() default AnnotationConst.ID;
@@ -52,6 +51,8 @@ public @interface Erupt {
     Tree tree() default @Tree;
 
     String layoutTree() default "";
+
+    Link[] linkTree() default {};
 
     @ToMap(key = "key")
     KV[] param() default {};

@@ -13,7 +13,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.auth.service.MenuService;
-import xyz.erupt.core.model.BaseModel;
 
 import javax.persistence.*;
 

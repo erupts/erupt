@@ -14,7 +14,8 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.util.MD5Utils;
-import xyz.erupt.core.model.BaseModel;
+import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.view.EruptApiModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -175,7 +176,8 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     @Override
     public void beforeAdd(EruptUser eruptUser) {
         if (StringUtils.isBlank(eruptUser.getPassword())) {
-            throw new RuntimeException("密码必填");
+            throw new EruptApiErrorTip(new EruptApiModel(EruptApiModel.Status.WARNING,
+                    "密码必填", EruptApiModel.PromptWay.MESSAGE));
         }
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
             eruptUser.setIsAdmin(false);
@@ -206,5 +208,8 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
         }
     }
 
-
+    @Override
+    public void addBehavior(EruptUser eruptUser) {
+        eruptUser.setName("test");
+    }
 }

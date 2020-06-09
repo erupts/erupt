@@ -79,6 +79,14 @@ public interface DataProxy<MODEL> {
     default void afterFetch(Collection<Map<String, Object>> list) {
     }
 
+
+    /**
+     * 新增数据行为操作，生成默认数据
+     */
+    default void addBehavior(MODEL model) {
+
+    }
+
     /**
      * 编辑数据行为操作
      *

@@ -15,7 +15,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.core.model.BaseModel;
+import xyz.erupt.auth.model.BaseModel;
 import xyz.erupt.job.service.EruptJobService;
 
 import javax.persistence.*;
