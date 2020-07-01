@@ -36,7 +36,7 @@ import java.util.Map;
  * @date 12/4/18.
  */
 @Service
-public class DataFileService {
+public class EruptExcelService {
 
     public static final String XLS_FORMAT = ".xls";
 

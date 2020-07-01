@@ -29,7 +29,7 @@ import java.util.Map;
 @Order(1)
 @Service
 @Log
-public final class CoreService implements ApplicationRunner {
+public final class EruptCoreService implements ApplicationRunner {
 
     @Autowired
     private EruptConfig eruptConfig;

@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
  * @date 2020-04-13
  */
 @Service
-public class MenuService implements DataProxy<EruptMenu> {
+public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    private SessionService sessionService;
+    private EruptSessionService sessionService;
 
     @Autowired
     private HttpServletRequest request;

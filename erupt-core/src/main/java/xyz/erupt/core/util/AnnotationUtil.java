@@ -12,8 +12,8 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeMapping;
 import xyz.erupt.core.annotation.EruptDataProcessor;
-import xyz.erupt.core.service.DataService;
-import xyz.erupt.core.service.data_impl.DBService;
+import xyz.erupt.core.service.EruptDataService;
+import xyz.erupt.core.service.data_impl.EruptDbService;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -202,13 +202,13 @@ public class AnnotationUtil {
         }
     }
 
-    public static DataService getEruptDataProcessor(Class<?> clazz) {
+    public static EruptDataService getEruptDataProcessor(Class<?> clazz) {
         EruptDataProcessor eruptDataProcessor = clazz.getAnnotation(EruptDataProcessor.class);
-        DataService dataService;
+        EruptDataService dataService;
         if (null != eruptDataProcessor) {
             dataService = EruptSpringUtil.getBean(eruptDataProcessor.processors());
         } else {
-            dataService = EruptSpringUtil.getBean(DBService.class);
+            dataService = EruptSpringUtil.getBean(EruptDbService.class);
         }
         return dataService;
     }

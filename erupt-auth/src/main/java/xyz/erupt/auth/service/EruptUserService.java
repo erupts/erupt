@@ -40,7 +40,7 @@ public class EruptUserService {
     private EntityManager entityManager;
 
     @Autowired
-    private SessionService sessionService;
+    private EruptSessionService sessionService;
 
     @Autowired
     private HttpServletRequest request;

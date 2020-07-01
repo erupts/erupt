@@ -9,7 +9,6 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
-import org.thymeleaf.TemplateEngine;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
@@ -25,13 +24,10 @@ import java.util.Map;
 @Order(1)
 @Service
 @Log
-public class TplService implements ApplicationRunner {
+public class EruptTplService implements ApplicationRunner {
 
     @Autowired
     private EruptConfig eruptConfig;
-
-    @Autowired
-    private TemplateEngine templateEngine;
 
     private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
 

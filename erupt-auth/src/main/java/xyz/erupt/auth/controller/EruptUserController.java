@@ -11,9 +11,9 @@ import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
+import xyz.erupt.auth.service.EruptMenuService;
+import xyz.erupt.auth.service.EruptSessionService;
 import xyz.erupt.auth.service.EruptUserService;
-import xyz.erupt.auth.service.MenuService;
-import xyz.erupt.auth.service.SessionService;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.view.EruptApiModel;
@@ -33,13 +33,13 @@ import java.util.stream.Collectors;
 public class EruptUserController {
 
     @Autowired
-    private MenuService menuService;
+    private EruptMenuService menuService;
 
     @Autowired
     private EruptUserService eruptUserService;
 
     @Autowired
-    private SessionService sessionService;
+    private EruptSessionService sessionService;
 
     @Autowired
     private Gson gson;

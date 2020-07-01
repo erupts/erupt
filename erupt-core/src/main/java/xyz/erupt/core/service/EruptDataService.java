@@ -12,7 +12,7 @@ import java.util.Collection;
  * @author liyuepeng
  * @date 10/10/18.
  */
-public interface DataService {
+public interface EruptDataService {
 
     /**
      * 根据主键id获取数据

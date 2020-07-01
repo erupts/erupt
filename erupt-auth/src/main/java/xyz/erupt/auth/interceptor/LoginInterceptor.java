@@ -16,7 +16,7 @@ import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.core.annotation.EruptApi;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
@@ -96,7 +96,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 }
                 break;
             case ERUPT:
-                EruptModel eruptModel = CoreService.getErupt(eruptName);
+                EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
                 if (null == eruptModel) {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
@@ -105,7 +105,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 //eruptParent logic
                 $ep:
                 if (StringUtils.isNotBlank(parentEruptName)) {
-                    EruptModel eruptParentModel = CoreService.getErupt(parentEruptName);
+                    EruptModel eruptParentModel = EruptCoreService.getErupt(parentEruptName);
                     for (EruptFieldModel model : eruptParentModel.getEruptFieldModels()) {
                         if (eruptModel.getEruptName().equals(model.getFieldReturnName())) {
                             if (authStr.equals(eruptModel.getEruptName())) {
@@ -156,7 +156,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                         } else {
                             eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
                         }
-                        operate.setApiName(eruptApi.desc() + " —— " + CoreService.getErupt(eruptName).getErupt().name());
+                        operate.setApiName(eruptApi.desc() + " —— " + EruptCoreService.getErupt(eruptName).getErupt().name());
                     } else {
                         operate.setApiName(eruptApi.desc());
                     }

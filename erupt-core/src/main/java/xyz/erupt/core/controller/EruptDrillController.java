@@ -8,7 +8,7 @@ import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -38,7 +38,7 @@ public class EruptDrillController {
                       @PathVariable("code") String code,
                       @PathVariable("id") String id,
                       @RequestBody JsonObject searchCondition) throws IllegalAccessException {
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Link link = null;
         for (Drill drill : eruptModel.getErupt().drills()) {
             if (drill.code().equals(code)) {
@@ -61,7 +61,7 @@ public class EruptDrillController {
                 return new Page();
             }
             return eruptService.getEruptData(
-                    CoreService.getErupt(link.eruptClass().getSimpleName()),
+                    EruptCoreService.getErupt(link.eruptClass().getSimpleName()),
                     searchCondition.remove(Page.PAGE_INDEX_STR).getAsInt(),
                     searchCondition.remove(Page.PAGE_SIZE_STR).getAsInt(),
                     searchCondition.remove(Page.PAGE_SORT_STR).getAsString(),
@@ -78,7 +78,7 @@ public class EruptDrillController {
                                   @PathVariable("code") String code,
                                   @PathVariable("id") String id,
                                   @RequestBody JsonObject data) throws Exception {
-        EruptModel eruptModel = CoreService.getErupt(erupt);
+        EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Link link = null;
         for (Drill drill : eruptModel.getErupt().drills()) {
             if (code.equals(drill.code())) {

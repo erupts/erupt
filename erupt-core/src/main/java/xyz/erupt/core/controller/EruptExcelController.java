@@ -12,8 +12,8 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.annotation.EruptApi;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.service.CoreService;
-import xyz.erupt.core.service.DataFileService;
+import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
@@ -39,7 +39,7 @@ import java.util.List;
 public class EruptExcelController {
 
     @Autowired
-    private DataFileService dataFileService;
+    private EruptExcelService dataFileService;
 
     @Autowired
     private EruptDataController eruptDataController;
@@ -55,7 +55,7 @@ public class EruptExcelController {
         if (SecurityUtil.csrfInspect(request, response)) {
             throw new RuntimeException("非法请求");
         }
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             dataFileService.createExcelTemplate(eruptModel, request, response);
         } else {
@@ -73,7 +73,7 @@ public class EruptExcelController {
         if (SecurityUtil.csrfInspect(request, response)) {
             throw new RuntimeException("非法请求");
         }
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().export()) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(Page.PAGE_INDEX_STR, 1);
@@ -89,7 +89,7 @@ public class EruptExcelController {
             for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
                 EruptSpringUtil.getBean(proxy).excelExport(wb);
             }
-            wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + DataFileService.XLS_FORMAT));
+            wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));
         } else {
             throw new RuntimeException("没有导出权限");
         }
@@ -102,7 +102,7 @@ public class EruptExcelController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) throws Exception {
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (eruptModel.getErupt().power().importable()) {
             if (file.isEmpty()) {
                 return EruptApiModel.errorApi("上传失败，请选择文件");
@@ -112,9 +112,9 @@ public class EruptExcelController {
             int i = 1;
             try {
                 i++;
-                if (fileName.endsWith(DataFileService.XLS_FORMAT)) {
+                if (fileName.endsWith(EruptExcelService.XLS_FORMAT)) {
                     list = dataFileService.excelToEruptObject(eruptModel, new HSSFWorkbook(file.getInputStream()));
-                } else if (fileName.endsWith(DataFileService.XLSX_FORMAT)) {
+                } else if (fileName.endsWith(EruptExcelService.XLSX_FORMAT)) {
                     list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
                 } else {
                     throw new RuntimeException("上传文件必须为Excel");

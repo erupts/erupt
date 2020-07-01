@@ -5,7 +5,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.TreeModel;
@@ -84,7 +84,7 @@ public class DataHandlerUtil {
                         for (View view : fieldModel.getEruptField().views()) {
                             String[] $keys = entry.getKey().split("_");
                             if (view.column().equals($keys[$keys.length - 1])) {
-                                EruptFieldModel vef = CoreService.getErupt(fieldModel.getFieldReturnName()).
+                                EruptFieldModel vef = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).
                                         getEruptFieldMap().get(view.column());
                                 switch (vef.getEruptField().edit().type()) {
                                     case CHOICE:

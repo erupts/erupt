@@ -15,7 +15,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -70,12 +70,12 @@ public class EruptUtil {
                             map.put(field.getName(), referMap);
                             break;
                         case COMBINE:
-                            map.put(field.getName(), generateEruptDataMap(CoreService.getErupt(fieldModel.getFieldReturnName()), value));
+                            map.put(field.getName(), generateEruptDataMap(EruptCoreService.getErupt(fieldModel.getFieldReturnName()), value));
                             break;
                         case TAB_TREE:
                         case TAB_TABLE_REFER:
                         case TAB_TABLE_ADD:
-                            EruptModel tabEruptModel = CoreService.getErupt(fieldModel.getFieldReturnName());
+                            EruptModel tabEruptModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
                             Collection collection = (Collection) value;
                             if (eruptField.edit().type() == EditType.TAB_TREE) {
                                 if (collection.size() > 0) {
@@ -164,7 +164,7 @@ public class EruptUtil {
                 } else if (edit.type().equals(EditType.REFERENCE_TABLE)) {
                     id = edit.referenceTableType().id();
                 }
-                EruptFieldModel efm = CoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
+                EruptFieldModel efm = EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
                 return TypeUtil.typeStrConvertObject(jsonElement.getAsJsonObject().get(id).getAsString(), efm.getField().getType().getSimpleName());
             default:
                 return jsonElement.getAsString();
@@ -221,7 +221,7 @@ public class EruptUtil {
                 }
             }
             if (field.getEruptField().edit().type() == EditType.COMBINE) {
-                EruptApiModel eam = validateEruptValue(CoreService.getErupt(field.getFieldReturnName()), jsonObject.getAsJsonObject(field.getFieldName()));
+                EruptApiModel eam = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), jsonObject.getAsJsonObject(field.getFieldName()));
                 if (eam.getStatus() == EruptApiModel.Status.ERROR) {
                     return eam;
                 }

@@ -12,7 +12,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.auth.service.MenuService;
+import xyz.erupt.auth.service.EruptMenuService;
 
 import javax.persistence.*;
 
@@ -26,7 +26,7 @@ import javax.persistence.*;
         name = "菜单配置",
         orderBy = "sort asc",
         tree = @Tree(pid = "parentMenu.id"),
-        dataProxy = MenuService.class
+        dataProxy = EruptMenuService.class
 )
 @Getter
 @Setter

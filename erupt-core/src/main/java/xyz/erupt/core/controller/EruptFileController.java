@@ -16,7 +16,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.MimeUtil;
@@ -55,7 +55,7 @@ public class EruptFileController {
         }
         try {
             //生成存储路径
-            EruptModel eruptModel = CoreService.getErupt(eruptName);
+            EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
             if (!eruptModel.getErupt().power().edit() && !eruptModel.getErupt().power().add()) {
                 throw new EruptNoLegalPowerException();
             }

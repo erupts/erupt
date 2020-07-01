@@ -7,7 +7,7 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -102,7 +102,7 @@ public class EruptJpaUtils {
                         .append(eruptModel.getEruptName()).append(".").append(field.getName()).append(" as ").append(field.getName());
                 try {
                     Object obj = field.get(eruptModel.getClazz());
-                    String join = generateEruptJoinHql(CoreService.getErupt(obj.getClass().getSimpleName()));
+                    String join = generateEruptJoinHql(EruptCoreService.getErupt(obj.getClass().getSimpleName()));
                     sb.append(join);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();

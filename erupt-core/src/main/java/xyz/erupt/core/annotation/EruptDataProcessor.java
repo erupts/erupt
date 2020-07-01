@@ -1,7 +1,7 @@
 package xyz.erupt.core.annotation;
 
-import xyz.erupt.core.service.DataService;
-import xyz.erupt.core.service.data_impl.DBService;
+import xyz.erupt.core.service.EruptDataService;
+import xyz.erupt.core.service.data_impl.EruptDbService;
 
 import java.lang.annotation.*;
 
@@ -14,5 +14,5 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface EruptDataProcessor {
-    Class<? extends DataService> processors() default DBService.class;
+    Class<? extends EruptDataService> processors() default EruptDbService.class;
 }

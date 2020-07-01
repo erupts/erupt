@@ -14,11 +14,11 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.tpl.annotation.EruptTpl;
-import xyz.erupt.tpl.service.TplService;
+import xyz.erupt.tpl.service.EruptTplService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -40,7 +40,7 @@ import static xyz.erupt.core.constant.RestPath.ERUPT_API;
 public class EruptTplController {
 
     @Autowired
-    private TplService tplService;
+    private EruptTplService tplService;
 
     @Autowired
     private TemplateEngine thymeleafEngine;
@@ -85,7 +85,7 @@ public class EruptTplController {
     public void getEruptFieldHtml(@PathVariable("erupt") String eruptName,
                                   @PathVariable("field") String field,
                                   HttpServletResponse response) throws IOException, TemplateException {
-        EruptModel eruptModel = CoreService.getErupt(eruptName);
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         response.setCharacterEncoding("utf-8");
         Tpl tpl = eruptModel.getEruptFieldMap().get(field).getEruptField().edit().tplType();
         if (tpl.tplHandler().isInterface()) {

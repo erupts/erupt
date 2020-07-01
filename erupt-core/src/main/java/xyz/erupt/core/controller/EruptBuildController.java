@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
-import xyz.erupt.core.service.CoreService;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -26,7 +26,7 @@ public class EruptBuildController {
     @ResponseBody
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName) {
-        EruptModel eruptModel = CoreService.getEruptView(eruptName);
+        EruptModel eruptModel = EruptCoreService.getEruptView(eruptName);
         EruptBuildModel eruptBuildModel = new EruptBuildModel();
         eruptBuildModel.setEruptModel(eruptModel);
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
@@ -36,7 +36,7 @@ public class EruptBuildController {
                         eruptBuildModel.setTabErupts(new LinkedHashMap<>());
                     }
                     EruptBuildModel eruptBuildModel1 = new EruptBuildModel();
-                    eruptBuildModel1.setEruptModel(CoreService.getEruptView(fieldModel.getFieldReturnName()));
+                    eruptBuildModel1.setEruptModel(EruptCoreService.getEruptView(fieldModel.getFieldReturnName()));
                     eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), eruptBuildModel1);
                     break;
                 case TAB_TABLE_ADD:
@@ -50,7 +50,7 @@ public class EruptBuildController {
                     if (eruptBuildModel.getCombineErupts() == null) {
                         eruptBuildModel.setCombineErupts(new LinkedHashMap<>());
                     }
-                    eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), CoreService.getEruptView(fieldModel.getFieldReturnName()));
+                    eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), EruptCoreService.getEruptView(fieldModel.getFieldReturnName()));
                     break;
                 default:
                     break;
@@ -61,7 +61,7 @@ public class EruptBuildController {
                 if (eruptBuildModel.getOperationErupts() == null) {
                     eruptBuildModel.setOperationErupts(new LinkedHashMap<>());
                 }
-                eruptBuildModel.getOperationErupts().put(operation.code(), CoreService.getEruptView(operation.eruptClass().getSimpleName()));
+                eruptBuildModel.getOperationErupts().put(operation.code(), EruptCoreService.getEruptView(operation.eruptClass().getSimpleName()));
             }
         }
         return eruptBuildModel;
@@ -71,7 +71,7 @@ public class EruptBuildController {
     @ResponseBody
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
-        EruptModel eruptModel = CoreService.getEruptView(eruptName);
+        EruptModel eruptModel = EruptCoreService.getEruptView(eruptName);
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(field);
         if (null != eruptFieldModel) {
             return this.getEruptBuild(eruptFieldModel.getFieldReturnName());

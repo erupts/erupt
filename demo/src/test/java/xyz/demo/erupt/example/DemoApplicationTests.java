@@ -16,8 +16,8 @@ import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.core.config.EruptConfig;
 import xyz.erupt.core.dao.EruptDao;
-import xyz.erupt.core.service.CoreService;
-import xyz.erupt.core.service.data_impl.DBService;
+import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.data_impl.EruptDbService;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.service.EruptJobService;
 
@@ -25,6 +25,9 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.List;
@@ -38,7 +41,7 @@ public class DemoApplicationTests {
     private EntityManager entityManager;
 
     @Autowired
-    private DBService dbService;
+    private EruptDbService dbService;
 
     public static final String DATASOURCE_PREFIX = "spring.datasource.";
 
@@ -84,7 +87,7 @@ public class DemoApplicationTests {
         int i = 1000;
         long start = System.currentTimeMillis();
         for (int i1 = 0; i1 < i; i1++) {
-            CoreService.getErupt("Demo");
+            EruptCoreService.getErupt("Demo");
         }
         System.out.println(((System.currentTimeMillis() - start) / 1000) + 's');
     }
@@ -147,6 +150,15 @@ public class DemoApplicationTests {
     @Test
     public void ipCity() {
         System.out.println(IpUtil.getCityInfo(IpUtil.getIpAddr(request)));
+    }
+
+    @org.junit.Test
+    public void testScriptengine() throws ScriptException {
+        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("JavaScript");
+        for (int i = 0; i < 1000; i++) {
+            System.out.println(scriptEngine.eval("1+1"));
+        }
     }
 }
 

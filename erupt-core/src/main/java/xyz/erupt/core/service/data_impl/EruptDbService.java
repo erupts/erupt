@@ -14,8 +14,8 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.dao.EruptJpaUtils;
-import xyz.erupt.core.service.CoreService;
-import xyz.erupt.core.service.DataService;
+import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.EruptDataService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -41,7 +41,7 @@ import java.util.Map;
  * @date 2019-03-06.
  */
 @Service
-public class DBService implements DataService {
+public class EruptDbService implements EruptDataService {
 
     @Autowired
     private EruptJpaDao eruptJpaDao;
@@ -147,7 +147,7 @@ public class DBService implements DataService {
                     for (Object o : collection) {
                         //删除主键ID
                         //TODO 强制删除id的处理方式并不好
-                        Field pk = ReflectUtil.findClassField(o.getClass(), CoreService
+                        Field pk = ReflectUtil.findClassField(o.getClass(), EruptCoreService
                                 .getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol());
                         pk.set(o, null);
                     }
@@ -179,7 +179,7 @@ public class DBService implements DataService {
     @Override
     public List<TreeModel> findTabTree(EruptModel eruptModel, String fieldName) {
         EruptFieldModel eruptTabFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
-        EruptModel subEruptModel = CoreService.getErupt(eruptModel.getEruptFieldMap().get(fieldName).getFieldReturnName());
+        EruptModel subEruptModel = EruptCoreService.getErupt(eruptModel.getEruptFieldMap().get(fieldName).getFieldReturnName());
         Filter[] filters = eruptTabFieldModel.getEruptField().edit().filter();
         String[] conditions = new String[filters.length];
         for (int i = 0; i < filters.length; i++) {
@@ -221,7 +221,7 @@ public class DBService implements DataService {
         for (String s : conditionStr) {
             conditions.add(s);
         }
-        List<Map<String, Object>> list = eruptJpaDao.getDataMap(CoreService.getErupt(eruptFieldModel.getFieldReturnName())
+        List<Map<String, Object>> list = eruptJpaDao.getDataMap(EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName())
                 , cols, edit.orderBy(), conditions.toArray(new String[conditions.size()]));
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : list) {

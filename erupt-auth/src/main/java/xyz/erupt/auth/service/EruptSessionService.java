@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2019-08-13.
  */
 @Component
-public class SessionService {
+public class EruptSessionService {
 
     @Autowired
     private EruptConfig eruptConfig;

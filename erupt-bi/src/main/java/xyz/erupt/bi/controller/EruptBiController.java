@@ -25,7 +25,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
-import xyz.erupt.core.service.DataFileService;
+import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
@@ -192,6 +192,6 @@ public class EruptBiController {
             BiHandler biHandler = EruptSpringUtil.getBeanByPath(bi.getClassHandler().getHandlerPath(), BiHandler.class);
             biHandler.exportHandler(condition, wb);
         }
-        wb.write(HttpUtil.downLoadFile(request, response, bi.getName() + DataFileService.XLS_FORMAT));
+        wb.write(HttpUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLS_FORMAT));
     }
 }
