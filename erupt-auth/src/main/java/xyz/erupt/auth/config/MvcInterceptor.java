@@ -1,6 +1,5 @@
 package xyz.erupt.auth.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -22,7 +21,7 @@ public class MvcInterceptor implements WebMvcConfigurer {
     @Resource
     private LoginInterceptor loginInterceptor;
 
-    @Autowired
+    @Resource
     private EruptConfig eruptConfig;
 
     @Override

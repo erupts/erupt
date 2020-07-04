@@ -1,7 +1,8 @@
 erupt:
   scanner-package:
     - xyz.demo
-  allow-request-file-type: pdf
+  allow-request-file-type:
+    - docx
   attachmentProxy: xyz.erupt.example.handler.QiniuOosProxy
 erupt-auth:
   expireTimeByLogin: 60

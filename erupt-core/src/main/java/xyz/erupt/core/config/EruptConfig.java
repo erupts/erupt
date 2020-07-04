@@ -17,9 +17,9 @@ import java.util.Arrays;
 public class EruptConfig {
 
     //注解扫描根路径
-    private String[] scannerPackage = {"xyz.erupt"};
+    private String[] scannerPackage;
 
-    private String[] allowRequestFileType = {};
+    private String[] allowRequestFileType;
 
     //类路径，需要实现xyz.erupt.annotation.fun.AttachmentProxy接口，可实现自定义附件存储策略
     private String attachmentProxy;
@@ -30,7 +30,7 @@ public class EruptConfig {
     //是否使用redis管理session
     private boolean redisSession = false;
 
-    private String[] dataSources = {};
+    private String[] dataSources;
 
     public void setScannerPackage(String[] scannerPackage) {
         this.scannerPackage = Arrays.copyOf(scannerPackage, scannerPackage.length + 1);

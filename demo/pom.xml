@@ -46,6 +46,16 @@
         <!--erupt-->
         <dependency>
             <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-annotation</artifactId>
+            <version>${erupt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-core</artifactId>
+            <version>${erupt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
             <artifactId>erupt-auth</artifactId>
             <version>${erupt.version}</version>
         </dependency>
