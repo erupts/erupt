@@ -2,12 +2,12 @@ window.eruptSiteConfig = {
     //选填非空时启用
     domain: "",
     //选填非空时启用
-    fileDomain: "http://oos.erupt.xyz",
+    fileDomain: "",
     title: "Erupt Demo",
     desc: "Erupt 演示系统",
     //选填非空时启用
     amapKey: "6ba79a8db11b51aeb1176bd4cfa049f4",
-    logoPath: "/assets/logo.svg",
+    logoPath: "assets/logo.svg",
     logoText: "Demo",
     r_tools: [{
         text: "功能按钮",

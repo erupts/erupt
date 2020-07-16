@@ -25759,10 +25759,11 @@ g2-tag-cloud {
 @alain-default-header-bg: @primary-color;
 @alain-default-aside-nav-text-hover-color: @primary-color;
 @alain-default-aside-nav-selected-text-color: @primary-color;
-@alain-default-header-hg: 54px;
+@alain-default-header-hg: 48px;
 @alain-default-content-padding: 16px;
 
 @alain-default-aside-bg: #fff;
+//@alain-default-aside-nav-selected-bg:#e3e8f0;
 @alain-default-aside-nav-text-color: rgba(0, 0, 0, 0.65);
 @alain-default-aside-collapsed-wd: 55px;
 //@router-animation-duration: 10s;
@@ -25880,6 +25881,11 @@ html {
 
 .alain-default {
   background: #f5f7fa;
+  //background: #fff;
+}
+
+.alain-default__header{
+  box-shadow: 0 1px #dadfe6;
 }
 
 .alain-default__progress-bar {
@@ -25949,7 +25955,7 @@ html {
   }
 
   .alain-default__header {
-    border-bottom: 1px solid #333;
+    box-shadow: 0 1px #454549;
     background: #222;
   }
 

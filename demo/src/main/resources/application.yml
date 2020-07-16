@@ -3,7 +3,7 @@ erupt:
     - xyz.demo
   allow-request-file-type:
     - docx
-  attachmentProxy: xyz.erupt.example.handler.QiniuOosProxy
+#  attachmentProxy: xyz.erupt.example.handler.QiniuOosProxy
 erupt-auth:
   expireTimeByLogin: 60
   recordOperateLog: true
@@ -48,3 +48,5 @@ server:
   compression:
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
     enabled: true
+  servlet:
+    context-path: /demo

@@ -76,7 +76,7 @@ public class EruptDbService implements EruptDataService {
             if (StringUtils.isNotBlank(expr)) {
                 cols.add(String.format("(%s) as ", expr) + AnnotationConst.ROOT);
             } else {
-                cols.add(String.format("(%s is null) as ", pid) + AnnotationConst.ROOT);
+                cols.add(pid + " as " + AnnotationConst.ROOT);
             }
         }
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(eruptModel, cols, sort, condition);
@@ -85,7 +85,7 @@ public class EruptDbService implements EruptDataService {
             TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null, map.get(AnnotationConst.ROOT));
             treeModels.add(treeModel);
         }
-        if (StringUtils.isBlank(tree.pid()) && StringUtils.isBlank(tree.pid())) {
+        if (StringUtils.isBlank(tree.pid())) {
             return treeModels;
         } else {
             return DataHandlerUtil.treeModelToTree(treeModels);

@@ -177,7 +177,7 @@ public class EruptFileController {
                 map.put("url", attachmentProxy.fileDomain() + "/" + eruptApiModel.getData());
             } else {
                 //request.getRequestURL().toString().split(RestPath.ERUPT_API)[0] +
-                map.put("url", RestPath.ERUPT_FILE + PREVIEW_PATH + "/" + eruptApiModel.getData());
+                map.put("url", RestPath.ERUPT_FILE.substring(1) + PREVIEW_PATH + "/" + eruptApiModel.getData());
             }
             map.put("uploaded", true);
         } else {
