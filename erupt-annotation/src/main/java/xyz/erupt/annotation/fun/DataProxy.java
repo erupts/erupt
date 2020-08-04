@@ -89,6 +89,7 @@ public interface DataProxy<MODEL> {
 
     /**
      * 编辑数据行为操作
+     * 可用于在前端隐藏密码等操作
      *
      * @param model 要编辑的数据
      */

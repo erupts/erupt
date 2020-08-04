@@ -14,12 +14,12 @@ public @interface RowOperation {
 
     String code();
 
-    String title();
+    String title() default "";
 
     String tip() default "";
 
     //请参考font awesome
-    String icon() default "";
+    String icon() default "fa fa-ravelry";
 
     /**
      * 控制按钮显示与隐藏（JS表达式）
@@ -27,12 +27,17 @@ public @interface RowOperation {
      */
     String ifExpr() default "";
 
-    boolean multi() default true;
+    Mode mode() default Mode.MULTI;
 
-    Class eruptClass() default void.class;
-
+    @Transient
     String[] operationParam() default {};
 
     @Transient
     Class<? extends OperationHandler> operationHandler();
+
+    Class eruptClass() default void.class;
+
+    enum Mode {
+        SINGLE, MULTI, BUTTON
+    }
 }

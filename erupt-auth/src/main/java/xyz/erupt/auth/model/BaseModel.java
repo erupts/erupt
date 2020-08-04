@@ -26,17 +26,4 @@ public class BaseModel {
     @EruptField
     private Long id;
 
-//    @SkipSerialize
-//    private Date createTime;
-//
-//    @SkipSerialize
-//    private Date updateTime;
-//
-//    @SkipSerialize
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private EruptUser createUser;
-//
-//    @SkipSerialize
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private EruptUser updateUser;
 }

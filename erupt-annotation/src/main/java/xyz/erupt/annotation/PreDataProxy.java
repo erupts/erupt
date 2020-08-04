@@ -1,11 +1,13 @@
 package xyz.erupt.annotation;
 
+import xyz.erupt.annotation.fun.DataProxy;
+
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
 @Inherited
-public @interface BaseDataProxy {
-    Class<? extends xyz.erupt.annotation.fun.DataProxy> value();
+public @interface PreDataProxy {
+    Class<? extends DataProxy> value();
 }

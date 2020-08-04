@@ -6,7 +6,7 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.job.handler.JobHandler;
+import xyz.erupt.job.handler.EruptJobHandler;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 
@@ -31,9 +31,9 @@ public class EruptJobAction implements Job {
         if (StringUtils.isNotBlank(handler)) {
             eruptJobLog.setEruptJob(eruptJob);
             eruptJobLog.setStartTime(new Date());
-            JobHandler jobHandler = null;
+            EruptJobHandler jobHandler = null;
             try {
-                jobHandler = EruptSpringUtil.getBeanByPath(eruptJob.getHandler(), JobHandler.class);
+                jobHandler = EruptSpringUtil.getBeanByPath(eruptJob.getHandler(), EruptJobHandler.class);
                 String result = jobHandler.exec(eruptJob.getHandlerParam());
                 jobHandler.success(result, eruptJob.getHandlerParam());
                 eruptJobLog.setResultInfo(result);

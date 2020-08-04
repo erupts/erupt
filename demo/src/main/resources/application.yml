@@ -48,5 +48,5 @@ server:
   compression:
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
     enabled: true
-  servlet:
-    context-path: /demo
+#  servlet:
+#    context-path: /demo

@@ -212,4 +212,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
     public void addBehavior(EruptUser eruptUser) {
         eruptUser.setName("test");
     }
+
+
 }

@@ -1,6 +1,5 @@
 package xyz.erupt.job.model;
 
-import com.google.gson.JsonObject;
 import lombok.Getter;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +29,12 @@ import java.text.ParseException;
         name = "任务维护",
         dataProxy = EruptJob.class,
         rowOperation = @RowOperation(code = "action", icon = "fa fa-play",
-                title = "执行一次任务", multi = false, operationHandler = EruptJob.class)
+                title = "执行一次任务", operationHandler = EruptJob.class)
 )
 @Entity
 @Table(name = "E_JOB", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Component
-public class EruptJob extends BaseModel implements DataProxy<EruptJob>, OperationHandler<EruptJob> {
+public class EruptJob extends BaseModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
 
     @EruptField(
             views = @View(title = "任务编码"),
@@ -57,7 +56,7 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
 
     @EruptField(
             views = @View(title = "JOB处理类"),
-            edit = @Edit(title = "JOB处理类", desc = "实现JobHandler接口"
+            edit = @Edit(title = "JOB处理类", desc = "需实现EruptJobHandler接口"
                     , notNull = true, search = @Search(vague = true))
     )
     private String handler;
@@ -113,7 +112,7 @@ public class EruptJob extends BaseModel implements DataProxy<EruptJob>, Operatio
     }
 
     @Override
-    public void exec(EruptJob eruptJob, JsonObject param, String[] operationParam) {
+    public void exec(EruptJob eruptJob, Void param, String[] operationParam) {
         try {
             eruptJobService.triggerJob(eruptJob);
         } catch (Exception e) {

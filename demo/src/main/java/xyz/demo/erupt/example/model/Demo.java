@@ -36,9 +36,14 @@ import java.util.Set;
         rowOperation = {
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
                         ifExpr = "item.number", tip = "执行操作一需要填写，名称与菜单信息",
-                        eruptClass = DemoSub.class, title = "操作一", icon = "fa fa-eercast", code = "d1"),
+                        mode = RowOperation.Mode.SINGLE, eruptClass = DemoSub.class,
+                        title = "SINGLE", code = "SINGLE"),
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
-                        title = "操作文本", icon = "fa fa-table", code = "d2")
+                        mode = RowOperation.Mode.MULTI,
+                        title = "MULTI", code = "MULTI"),
+                @RowOperation(operationHandler = OperationHandlerImpl.class,
+                        mode = RowOperation.Mode.BUTTON,
+                        title = "BUTTON", code = "BUTTON")
         },
         layoutTree = "eruptMenu",
         tree = @Tree(label = "input"),

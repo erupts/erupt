@@ -4,7 +4,7 @@ package xyz.erupt.job.handler;
  * @author liyuepeng
  * @date 2019-12-26
  */
-public interface JobHandler {
+public interface EruptJobHandler {
 
     /**
      * 任务处理类

@@ -1,25 +1,29 @@
 package xyz.demo.erupt.example.model;
 
+import com.google.gson.JsonObject;
+import org.apache.poi.ss.usermodel.Workbook;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.HyperModel;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
 
 /**
  * @author liyuepeng
  * @date 2020-02-29
  */
-@Erupt(name = "demo", orderBy = "number desc")
+@Erupt(name = "demo", orderBy = "number desc", dataProxy = Test.class)
 @Table(name = "TEST")
 @Entity
-public class Test extends BaseModel {
+public class Test extends HyperModel implements DataProxy {
 
     @EruptField(
             views = @View(title = "文本"),
@@ -137,57 +141,119 @@ public class Test extends BaseModel {
     private BaseArea community;
 
 
-    @Transient
-    @EruptField(
-            edit = @Edit(title = "地区选择 TABLE TEST", type = EditType.DIVIDE)
-    )
-    private String regiont;
+//    @Transient
+//    @EruptField(
+//            edit = @Edit(title = "地区选择 TABLE TEST", type = EditType.DIVIDE)
+//    )
+//    private String regiont;
+//
+//    @ManyToOne
+//    @EruptField(
+//            views = @View(title = "省份", column = "name"),
+//            edit = @Edit(title = "省份", notNull = true, type = EditType.REFERENCE_TABLE,
+//                    filter = @Filter("BaseArea.level = 1"))
+//    )
+//    private BaseArea provincet;
+//
+//    @ManyToOne
+//    @EruptField(
+//            views = @View(title = "市", column = "name"),
+//            edit = @Edit(title = "市", notNull = true, type = EditType.REFERENCE_TABLE,
+//                    filter = @Filter("BaseArea.level = 2"),
+//                    referenceTableType = @ReferenceTableType(dependField = "provincet", dependColumn = "pid.id")
+//            )
+//    )
+//    private BaseArea cityt;
+//
+//    @ManyToOne
+//    @EruptField(
+//            views = @View(title = "区", column = "name"),
+//            edit = @Edit(title = "区", notNull = true, type = EditType.REFERENCE_TABLE,
+//                    filter = @Filter("BaseArea.level = 3"),
+//                    referenceTableType = @ReferenceTableType(dependField = "cityt", dependColumn = "pid.id")
+//            )
+//    )
+//    private BaseArea areat;
+//
+//    @ManyToOne
+//    @EruptField(
+//            views = @View(title = "街道", column = "name"),
+//            edit = @Edit(title = "街道", notNull = true, type = EditType.REFERENCE_TABLE,
+//                    filter = @Filter("BaseArea.level = 4"),
+//                    referenceTableType = @ReferenceTableType(dependField = "areat", dependColumn = "pid.id")
+//            )
+//    )
+//    private BaseArea streett;
+//
+//    @ManyToOne
+//    @EruptField(
+//            views = @View(title = "社区", column = "name"),
+//            edit = @Edit(title = "社区", type = EditType.REFERENCE_TABLE,
+//                    filter = @Filter("BaseArea.level = 5"),
+//                    referenceTableType = @ReferenceTableType(dependField = "streett", dependColumn = "pid.id")
+//            )
+//    )
+//    private BaseArea communityt;
 
-    @ManyToOne
-    @EruptField(
-            views = @View(title = "省份", column = "name"),
-            edit = @Edit(title = "省份", notNull = true, type = EditType.REFERENCE_TABLE,
-                    filter = @Filter("BaseArea.level = 1"))
-    )
-    private BaseArea provincet;
 
-    @ManyToOne
-    @EruptField(
-            views = @View(title = "市", column = "name"),
-            edit = @Edit(title = "市", notNull = true, type = EditType.REFERENCE_TABLE,
-                    filter = @Filter("BaseArea.level = 2"),
-                    referenceTableType = @ReferenceTableType(dependField = "provincet", dependColumn = "pid.id")
-            )
-    )
-    private BaseArea cityt;
+    @Override
+    public void beforeAdd(Object o) {
+        System.err.println("beforeAdd");
+    }
 
-    @ManyToOne
-    @EruptField(
-            views = @View(title = "区", column = "name"),
-            edit = @Edit(title = "区", notNull = true, type = EditType.REFERENCE_TABLE,
-                    filter = @Filter("BaseArea.level = 3"),
-                    referenceTableType = @ReferenceTableType(dependField = "cityt", dependColumn = "pid.id")
-            )
-    )
-    private BaseArea areat;
+    @Override
+    public void afterAdd(Object o) {
+        System.err.println("afterAdd");
+    }
 
-    @ManyToOne
-    @EruptField(
-            views = @View(title = "街道", column = "name"),
-            edit = @Edit(title = "街道", notNull = true, type = EditType.REFERENCE_TABLE,
-                    filter = @Filter("BaseArea.level = 4"),
-                    referenceTableType = @ReferenceTableType(dependField = "areat", dependColumn = "pid.id")
-            )
-    )
-    private BaseArea streett;
+    @Override
+    public void beforeUpdate(Object o) {
+        System.err.println("beforeUpdate");
+    }
 
-    @ManyToOne
-    @EruptField(
-            views = @View(title = "社区", column = "name"),
-            edit = @Edit(title = "社区", type = EditType.REFERENCE_TABLE,
-                    filter = @Filter("BaseArea.level = 5"),
-                    referenceTableType = @ReferenceTableType(dependField = "streett", dependColumn = "pid.id")
-            )
-    )
-    private BaseArea communityt;
+    @Override
+    public void afterUpdate(Object o) {
+        System.err.println("afterUpdate");
+    }
+
+    @Override
+    public void beforeDelete(Object o) {
+        System.err.println("beforeDelete");
+    }
+
+    @Override
+    public void afterDelete(Object o) {
+        System.err.println("afterDelete");
+    }
+
+    @Override
+    public String beforeFetch(JsonObject condition) {
+        System.err.println("beforeFetch");
+        return null;
+    }
+
+    @Override
+    public void afterFetch(Collection list) {
+        System.err.println("afterFetch");
+    }
+
+    @Override
+    public void addBehavior(Object o) {
+        System.err.println("addBehavior");
+    }
+
+    @Override
+    public void editBehavior(Object o) {
+        System.err.println("editBehavior");
+    }
+
+    @Override
+    public void excelExport(Workbook wb) {
+        System.err.println("excelExport");
+    }
+
+    @Override
+    public void excelImport(Object o) {
+        System.err.println("excelImport");
+    }
 }

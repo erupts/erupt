@@ -2,11 +2,9 @@ package xyz.erupt.core.controller;
 
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
-import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
@@ -44,12 +42,12 @@ public class EruptService {
             JsonObject legalJsonObject = EruptUtil.geneEruptSearchCondition(eruptModel, searchCondition);
             List<String> conditionList = new ArrayList<>();
             conditionList.addAll(Arrays.asList(customCondition));
-            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
-                String condition = EruptSpringUtil.getBean(proxy).beforeFetch(legalJsonObject);
+            EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> {
+                String condition = dataProxy.beforeFetch(legalJsonObject);
                 if (null != condition) {
                     conditionList.add(condition);
                 }
-            }
+            }));
             if (null != joCondition) {
                 for (String key : joCondition.keySet()) {
                     legalJsonObject.add(key, joCondition.get(key));
@@ -61,9 +59,7 @@ public class EruptService {
             for (Map<String, Object> map : page.getList()) {
                 DataHandlerUtil.convertDataToEruptView(eruptModel, map);
             }
-            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
-                EruptSpringUtil.getBean(proxy).afterFetch(page.getList());
-            }
+            EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
             return page;
         } else {
             throw new EruptNoLegalPowerException();

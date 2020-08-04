@@ -8,13 +8,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.annotation.EruptApi;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
-import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
@@ -86,9 +85,7 @@ public class EruptExcelController {
             }
             Page page = eruptDataController.getEruptData(eruptName, jsonObject);
             Workbook wb = dataFileService.exportExcel(eruptModel, page);
-            for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
-                EruptSpringUtil.getBean(proxy).excelExport(wb);
-            }
+            EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
             wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));
         } else {
             throw new RuntimeException("没有导出权限");
