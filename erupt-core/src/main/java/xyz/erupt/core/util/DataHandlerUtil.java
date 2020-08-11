@@ -10,10 +10,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.TreeModel;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liyuepeng
@@ -54,6 +51,7 @@ public class DataHandlerUtil {
     }
 
     public static void convertDataToEruptView(EruptModel eruptModel, Map<String, Object> map) {
+        Map<String, Map<String, String>> choiceItems = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (null != entry.getValue()) {
                 String key = entry.getKey();
@@ -72,7 +70,12 @@ public class DataHandlerUtil {
                         break;
                     case CHOICE:
                         if (edit.choiceType().type() == ChoiceEnum.SELECT_SINGLE || edit.choiceType().type() == ChoiceEnum.RADIO) {
-                            map.put(entry.getKey(), fieldModel.getChoiceMap().get(entry.getValue().toString()));
+                            if (!choiceItems.containsKey(fieldModel.getFieldName())) {
+                                choiceItems.put(fieldModel.getFieldName(), EruptUtil.getChoiceMap(edit.choiceType()));
+                            }
+                            map.put(entry.getKey(),
+                                    choiceItems.get(fieldModel.getFieldName())
+                                            .get(entry.getValue().toString()));
                         }
                         break;
                     case BOOLEAN:

@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -27,7 +27,7 @@ import javax.persistence.Table;
 @Erupt(
         name = "Erupt文档菜单",
         orderBy = "sort",
-        tree = @Tree(pid = "parent.id", linkTable = @Link(eruptClass = EruptDocItem.class, joinColumn = "eruptDoc.id"))
+        tree = @Tree(pid = "parent.id", linkTable = @Link(linkErupt = EruptDocItem.class, joinColumn = "eruptDoc.id"))
 )
 public class EruptDocTable extends BaseModel {
 

@@ -2,11 +2,12 @@ package xyz.erupt.system.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -22,9 +23,10 @@ import javax.persistence.Table;
 @Table(name = "E_OPS_SERVER_GROUP")
 @Erupt(
         name = "服务器组别",
-        orderBy = "sort"
+        orderBy = "sort",
+        tree = @Tree(pid = "opsServerGroup.id")
 )
-public class OpsServerGroup extends BaseModel {
+public class OpsServerGroup extends HyperModel {
 
     @EruptField(
             views = @View(title = "编码"),

@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -22,11 +24,12 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "E_DICT_ITEM", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "字典项",
-        orderBy = "sort"
+        orderBy = "sort",
+        linkTree = @Link(linkErupt = EruptDict.class, joinColumn = "id", column = "eruptDict.id")
 )
 @Getter
 @Setter
-public class EruptDictItem extends BaseModel {
+public class EruptDictItem extends HyperModel {
 
     @EruptField(
             views = @View(title = "编码"),

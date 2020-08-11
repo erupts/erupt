@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -23,7 +24,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "E_DICT", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "字典项维护",
-        tree = @Tree(linkTable = @Link(eruptClass = EruptDictItem.class, joinColumn = "eruptDict.id"))
+        tree = @Tree(linkTable = @Link(linkErupt = EruptDictItem.class, joinColumn = "eruptDict.id"))
 )
 @Getter
 @Setter

@@ -11,6 +11,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

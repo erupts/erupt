@@ -16,7 +16,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.BaseModel;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptUserService;
@@ -35,11 +35,11 @@ import java.util.Set;
         power = @Power(export = true, importable = true, powerHandler = PowerHandlerImpl.class), dataProxy = Demo.class,
         rowOperation = {
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
-                        ifExpr = "item.number", tip = "执行操作一需要填写，名称与菜单信息",
+                        ifExpr = "item.number",
                         mode = RowOperation.Mode.SINGLE, eruptClass = DemoSub.class,
                         title = "SINGLE", code = "SINGLE"),
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
-                        mode = RowOperation.Mode.MULTI,
+                        mode = RowOperation.Mode.MULTI, tip = "执行操作一需要填写，名称与菜单信息",
                         title = "MULTI", code = "MULTI"),
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
                         mode = RowOperation.Mode.BUTTON,
@@ -47,7 +47,8 @@ import java.util.Set;
         },
         layoutTree = "eruptMenu",
         tree = @Tree(label = "input"),
-        filter = @Filter("2 = 2")
+        filter = @Filter("2 = 2"),
+        linkTree = @Link(linkErupt = EruptMenu.class, joinColumn = "id")
 )
 @Table(name = "DEMO")
 @Entity

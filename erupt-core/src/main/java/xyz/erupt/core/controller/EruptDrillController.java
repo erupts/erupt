@@ -61,12 +61,12 @@ public class EruptDrillController {
                 return new Page();
             }
             return eruptService.getEruptData(
-                    EruptCoreService.getErupt(link.eruptClass().getSimpleName()),
+                    EruptCoreService.getErupt(link.linkErupt().getSimpleName()),
                     searchCondition.remove(Page.PAGE_INDEX_STR).getAsInt(),
                     searchCondition.remove(Page.PAGE_SIZE_STR).getAsInt(),
                     searchCondition.remove(Page.PAGE_SORT_STR).getAsString(),
                     searchCondition, null, String.format("%s = '%s'",
-                            link.eruptClass().getSimpleName() + "." + link.joinColumn(), val));
+                            link.linkErupt().getSimpleName() + "." + link.joinColumn(), val));
         }
         throw new EruptNoLegalPowerException();
     }
@@ -106,7 +106,7 @@ public class EruptDrillController {
             } else {
                 jo.addProperty(joinColumn, val.toString());
             }
-            return eruptModifyController.addEruptData(link.eruptClass().getSimpleName(), data, jo);
+            return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, jo);
         }
         throw new EruptNoLegalPowerException();
     }

@@ -10,6 +10,8 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.fun.PowerObject;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -122,6 +124,22 @@ public class EruptUtil {
             }
         }
         return choiceMap;
+    }
+
+    public static List<xyz.erupt.core.view.VL> getChoiceList(ChoiceType choiceType) {
+        List<xyz.erupt.core.view.VL> vls = new ArrayList<>();
+        for (VL vl : choiceType.vl()) {
+            vls.add(new xyz.erupt.core.view.VL(vl.value(), vl.label()));
+        }
+        for (Class<? extends ChoiceFetchHandler> cla : choiceType.fetchHandler()) {
+            Map<String, String> map = EruptSpringUtil.getBean(cla).fetch(choiceType.fetchHandlerParams());
+            if (null != map) {
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    vls.add(new xyz.erupt.core.view.VL(entry.getKey(), entry.getValue()));
+                }
+            }
+        }
+        return vls;
     }
 
     //请求参数转换
@@ -260,6 +278,7 @@ public class EruptUtil {
         return EruptApiModel.successApi();
     }
 
+    //处理dataProxy回调对象
     public static void handlerDataProxy(EruptModel eruptModel, Consumer<DataProxy> consumer) {
         PreDataProxy preDataProxy = eruptModel.getClazz().getAnnotation(PreDataProxy.class);
         if (null != preDataProxy) {
@@ -268,6 +287,16 @@ public class EruptUtil {
         for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
             consumer.accept(EruptSpringUtil.getBean(proxy));
         }
+    }
+
+    //动态获取erupt power值
+    public static PowerObject getPowerObject(EruptModel eruptModel) {
+        Power power = eruptModel.getErupt().power();
+        PowerObject powerBean = new PowerObject(power);
+        if (!power.powerHandler().isInterface()) {
+            EruptSpringUtil.getBean(power.powerHandler()).handler(powerBean);
+        }
+        return powerBean;
     }
 
     public static Object toEruptId(EruptModel eruptModel, String id) {

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
-import xyz.erupt.core.config.EruptConfig;
+import xyz.erupt.core.config.EruptProp;
 
 import javax.annotation.Resource;
 import java.util.HashSet;
@@ -22,7 +22,7 @@ public class MvcInterceptor implements WebMvcConfigurer {
     private LoginInterceptor loginInterceptor;
 
     @Resource
-    private EruptConfig eruptConfig;
+    private EruptProp eruptProp;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -31,14 +31,14 @@ public class MvcInterceptor implements WebMvcConfigurer {
         for (String s : allowFileType) {
             types.add("/**/**." + s);
         }
-        for (String s : eruptConfig.getAllowRequestFileType()) {
-            types.add("/**/**." + s);
+        if (null != eruptProp.getAllowRequestFileType()) {
+            for (String s : eruptProp.getAllowRequestFileType()) {
+                types.add("/**/**." + s);
+            }
         }
         types.add("/#/**");
-        registry.addInterceptor(loginInterceptor)
-                .excludePathPatterns("/error")
-                .excludePathPatterns(types.toArray(new String[0]))
-                .addPathPatterns("/**");
+        registry.addInterceptor(loginInterceptor).excludePathPatterns("/error")
+                .excludePathPatterns(types.toArray(new String[0])).addPathPatterns("/**");
     }
 
 //    @Override

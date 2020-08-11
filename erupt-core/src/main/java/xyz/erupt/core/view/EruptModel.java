@@ -5,6 +5,7 @@ import lombok.Data;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.util.AnnotationUtil;
 
+import javax.persistence.Transient;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import java.util.Map;
  * @date 2018-09-29.
  */
 @Data
-public class EruptModel {
+public class EruptModel implements Cloneable {
 
     private transient Class<?> clazz;
 
@@ -27,12 +28,16 @@ public class EruptModel {
 
     private transient Map<String, EruptFieldModel> eruptFieldMap;
 
-    public EruptModel(Class<?> eruptClazz, boolean serialize) {
+    public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.eruptName = eruptClazz.getSimpleName();
-        if (serialize) {
-            this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
-        }
+        this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
     }
+
+    @Override
+    public EruptModel clone() throws CloneNotSupportedException {
+        return (EruptModel) super.clone();
+    }
+
 }

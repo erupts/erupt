@@ -40,17 +40,15 @@ public class EruptFieldModel {
 
     private transient String fieldReturnName;
 
-    private transient Map<String, String> choiceMap;
-
-    private List<VL> choiceList;
-
     private String fieldName;
 
     private JsonObject eruptFieldJson;
 
     private Object value;
 
-    public EruptFieldModel(Field field, boolean serialize) {
+    private List<VL> choiceList;
+
+    public EruptFieldModel(Field field) {
         this.field = field;
         this.eruptField = field.getAnnotation(EruptField.class);
         Edit edit = eruptField.edit();
@@ -68,23 +66,9 @@ public class EruptFieldModel {
             case TAB_TABLE_REFER:
                 this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
                 break;
-            case CHOICE:
-                if (serialize) {
-                    choiceMap = new HashMap<>();
-                    choiceList = new ArrayList<>();
-                    this.choiceMap = EruptUtil.getChoiceMap(edit.choiceType());
-                    for (String value : this.choiceMap.keySet()) {
-                        this.choiceList.add(new VL(value, this.choiceMap.get(value)));
-                    }
-                }
-                break;
-            default:
-                break;
         }
-        if (serialize) {
-            this.eruptAutoConfig();
-            this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
-        }
+        this.eruptAutoConfig();
+        this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
     }

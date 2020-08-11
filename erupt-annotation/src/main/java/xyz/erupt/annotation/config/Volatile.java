@@ -10,5 +10,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Volatile {
 
+    //类路径必须实现VolatileFun接口，Class<? extends VolatileFun>;
     Class<? extends VolatileFun> value();
+
 }

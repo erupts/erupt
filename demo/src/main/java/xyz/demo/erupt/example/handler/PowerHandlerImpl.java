@@ -1,6 +1,7 @@
 package xyz.demo.erupt.example.handler;
 
 import xyz.erupt.annotation.fun.PowerHandler;
+import xyz.erupt.annotation.fun.PowerObject;
 
 /**
  * @author liyuepeng
@@ -8,7 +9,8 @@ import xyz.erupt.annotation.fun.PowerHandler;
  */
 public class PowerHandlerImpl implements PowerHandler {
     @Override
-    public void handler(PowerBean power) {
+    public void handler(PowerObject power) {
+        power.setDelete(false);
 //        power.setDelete(false);
     }
 }

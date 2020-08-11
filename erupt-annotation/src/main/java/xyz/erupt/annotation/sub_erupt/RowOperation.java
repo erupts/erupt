@@ -14,7 +14,7 @@ public @interface RowOperation {
 
     String code();
 
-    String title() default "";
+    String title();
 
     String tip() default "";
 

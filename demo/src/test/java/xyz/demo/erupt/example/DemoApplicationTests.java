@@ -14,7 +14,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.test.context.junit4.SpringRunner;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.util.IpUtil;
-import xyz.erupt.core.config.EruptConfig;
+import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.data_impl.EruptDbService;
@@ -102,7 +102,7 @@ public class DemoApplicationTests {
     private Environment env;
 
     @Autowired
-    private EruptConfig eruptConfig;
+    private EruptProp eruptProp;
 
     @Test
     public void getProperties() {
@@ -130,7 +130,7 @@ public class DemoApplicationTests {
                     .password(env.getProperty(DATASOURCE_PREFIX + sourceName + ".password"))
                     .build());
         }
-        factory.setPackagesToScan(eruptConfig.getScannerPackage());
+        factory.setPackagesToScan(eruptProp.getScannerPackage());
         factory.afterPropertiesSet();
         EntityManager entityManager = factory.getObject().createEntityManager();
         List list = entityManager.createNativeQuery("select * from t_xinwen").getResultList();

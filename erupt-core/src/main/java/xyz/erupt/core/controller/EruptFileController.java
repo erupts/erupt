@@ -10,15 +10,17 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.AttachmentProxy;
+import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.config.EruptConfig;
+import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.MimeUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
@@ -42,7 +44,7 @@ import java.util.*;
 public class EruptFileController {
 
     @Autowired
-    private EruptConfig eruptConfig;
+    private EruptProp eruptProp;
 
     private static final String FS_SEP = "/";
 
@@ -55,8 +57,10 @@ public class EruptFileController {
         }
         try {
             //生成存储路径
+
             EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-            if (!eruptModel.getErupt().power().edit() && !eruptModel.getErupt().power().add()) {
+            PowerObject powerObject = EruptUtil.getPowerObject(eruptModel);
+            if (!powerObject.isEdit() && !powerObject.isAdd()) {
                 throw new EruptNoLegalPowerException();
             }
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
@@ -123,13 +127,13 @@ public class EruptFileController {
                     return EruptApiModel.errorApi("上传失败，非法类型!");
             }
             boolean localSave = true;
-            if (StringUtils.isNotBlank(eruptConfig.getAttachmentProxy())) {
-                AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptConfig.getAttachmentProxy(), AttachmentProxy.class);
+            if (StringUtils.isNotBlank(eruptProp.getAttachmentProxy())) {
+                AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptProp.getAttachmentProxy(), AttachmentProxy.class);
                 attachmentProxy.upLoad(file.getInputStream(), path.replace("\\", "/"));
                 localSave = attachmentProxy.isLocalSave();
             }
             if (localSave) {
-                File dest = new File(eruptConfig.getUploadPath() + File.separator + path);
+                File dest = new File(eruptProp.getUploadPath() + File.separator + path);
                 if (!dest.getParentFile().exists()) {
                     if (!dest.getParentFile().mkdirs()) {
                         return EruptApiModel.errorApi("上传失败，文件目录无法创建");
@@ -172,8 +176,8 @@ public class EruptFileController {
         Map<String, Object> map = new HashMap<>(2);
         if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
             //{"uploaded":"true", "url":"image-path..."}
-            if (StringUtils.isNotBlank(eruptConfig.getAttachmentProxy())) {
-                AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptConfig.getAttachmentProxy(), AttachmentProxy.class);
+            if (StringUtils.isNotBlank(eruptProp.getAttachmentProxy())) {
+                AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptProp.getAttachmentProxy(), AttachmentProxy.class);
                 map.put("url", attachmentProxy.fileDomain() + "/" + eruptApiModel.getData());
             } else {
                 //request.getRequestURL().toString().split(RestPath.ERUPT_API)[0] +
@@ -221,7 +225,7 @@ public class EruptFileController {
         if (!path.startsWith(FS_SEP)) {
             path = FS_SEP + path;
         }
-        File file = new File(eruptConfig.getUploadPath() + path);
+        File file = new File(eruptProp.getUploadPath() + path);
         try {
             InputStream inputStream;
             if (file.exists()) {

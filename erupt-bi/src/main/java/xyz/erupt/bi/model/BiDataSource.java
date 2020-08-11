@@ -7,7 +7,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.bi.service.BiDataSourceService;
 
 import javax.persistence.Entity;
@@ -23,7 +23,7 @@ import javax.persistence.UniqueConstraint;
 @Erupt(name = "数据源", dataProxy = BiDataSourceService.class)
 @Getter
 @Setter
-public class BiDataSource extends BaseModel {
+public class BiDataSource extends HyperModel {
 
     @EruptField(
             views = @View(title = "编码"),

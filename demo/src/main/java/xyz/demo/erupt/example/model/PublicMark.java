@@ -9,7 +9,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

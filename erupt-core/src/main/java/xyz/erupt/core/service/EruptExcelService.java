@@ -22,6 +22,7 @@ import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.VL;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -240,13 +241,12 @@ public class EruptExcelService {
                                 edit.boolType().falseText()})));
                         break;
                     case CHOICE:
-                        String[] arr = new String[fieldModel.getChoiceMap().size()];
-                        int i = 0;
-                        for (String value : fieldModel.getChoiceMap().values()) {
-                            arr[i] = value;
-                            i++;
+                        List<VL> vls = EruptUtil.getChoiceList(fieldModel.getEruptField().edit().choiceType());
+                        String[] arr = new String[vls.size()];
+                        for (int i = 0; i < vls.size(); i++) {
+                            arr[i] = vls.get(i).getLabel();
                         }
-                        if (arr.length <= 25) {
+                        if (arr.length <= 50) {
                             sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(arr)));
                         }
                         break;

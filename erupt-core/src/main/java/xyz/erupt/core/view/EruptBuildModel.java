@@ -2,6 +2,7 @@ package xyz.erupt.core.view;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.annotation.fun.PowerObject;
 
 import java.util.Map;
 
@@ -20,4 +21,6 @@ public class EruptBuildModel {
     private Map<String, EruptModel> combineErupts;
 
     private Map<String, EruptModel> operationErupts;
+
+    private PowerObject power;
 }

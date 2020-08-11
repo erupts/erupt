@@ -33,16 +33,6 @@ public class EruptApiModel {
         this.promptWay = promptWay;
     }
 
-    public EruptApiModel(BoolAndReason boolAndReason) {
-        if (boolAndReason.isBool()) {
-            this.status = Status.SUCCESS;
-        } else {
-            this.status = Status.ERROR;
-        }
-        this.errorIntercept = false;
-        this.message = boolAndReason.getReason();
-    }
-
     public static EruptApiModel successApi() {
         return new EruptApiModel(Status.SUCCESS, null, null, PromptWay.MESSAGE);
     }

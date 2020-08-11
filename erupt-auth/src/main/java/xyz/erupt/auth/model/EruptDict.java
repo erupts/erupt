@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -27,13 +28,13 @@ import javax.persistence.UniqueConstraint;
                 code = "item",
                 title = "字典项",
                 link = @Link(
-                        eruptClass = EruptDictItem.class, joinColumn = "eruptDict.id"
+                        linkErupt = EruptDictItem.class, joinColumn = "eruptDict.id"
                 )
         )
 )
 @Getter
 @Setter
-public class EruptDict extends BaseModel {
+public class EruptDict extends HyperModel {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),

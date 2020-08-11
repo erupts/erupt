@@ -8,7 +8,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.Transient;
 import java.util.Date;

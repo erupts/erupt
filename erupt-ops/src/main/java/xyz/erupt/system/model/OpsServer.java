@@ -4,12 +4,11 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 /**
  * @author liyuepeng
@@ -17,12 +16,14 @@ import javax.persistence.UniqueConstraint;
  */
 
 @Entity
-@Table(name = "E_OPS_SERVER", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "E_OPS_SERVER"
+//    uniqueConstraints = @UniqueConstraint(columnNames = "name")
+)
 @Erupt(
         name = "服务器管理",
         orderBy = "sort"
 )
-public class OpsServer extends BaseModel {
+public class OpsServer extends HyperModel {
 
     @EruptField(
             views = @View(title = "名称"),

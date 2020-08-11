@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.auth.util.MD5Utils;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.view.EruptApiModel;
@@ -38,7 +39,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Component
-public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
+public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 
     @EruptField(
             views = @View(title = "用户名", sortable = true),
@@ -162,8 +163,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
 
     private Boolean isAdmin;
 
-    private Date createTime;
-
     @Transient
     @PersistenceContext
     private EntityManager entityManager;
@@ -206,11 +205,6 @@ public class EruptUser extends BaseModel implements DataProxy<EruptUser> {
         } else {
             eruptUser.setPassword(eu.getPassword());
         }
-    }
-
-    @Override
-    public void addBehavior(EruptUser eruptUser) {
-        eruptUser.setName("test");
     }
 
 

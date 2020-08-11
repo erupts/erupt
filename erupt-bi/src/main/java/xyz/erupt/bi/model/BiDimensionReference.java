@@ -9,7 +9,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -25,7 +25,7 @@ import javax.persistence.Table;
 @Erupt(name = "参照维度")
 @Getter
 @Setter
-public class BiDimensionReference extends BaseModel {
+public class BiDimensionReference extends HyperModel {
 
     @EruptField(
             views = @View(title = "名称"),

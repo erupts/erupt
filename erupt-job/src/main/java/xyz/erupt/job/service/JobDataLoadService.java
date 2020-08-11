@@ -2,6 +2,7 @@ package xyz.erupt.job.service;
 
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -28,14 +29,21 @@ public class JobDataLoadService implements CommandLineRunner {
     @Autowired
     private EruptJobService eruptJobService;
 
+    @Value("${erupt.job.enable:true}")
+    private Boolean openJob;
+
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-        List<EruptJob> list = eruptDao.queryEntityList(EruptJob.class, "status = true", null);
-        for (EruptJob job : list) {
-            eruptJobService.modifyJob(job);
+        if (openJob) {
+            List<EruptJob> list = eruptDao.queryEntityList(EruptJob.class, "status = true", null);
+            for (EruptJob job : list) {
+                eruptJobService.modifyJob(job);
+            }
+            log.info("Erupt job initialization complete");
+        } else {
+            log.info("Erupt job disable");
         }
-        log.info("Erupt scheduler initialization complete");
         new ProjectUtil().projectStartLoaded("job", first -> {
             if (first) {
                 EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("job", "任务管理", null, 1, 10, "fa fa-cubes", null), "code", "job");

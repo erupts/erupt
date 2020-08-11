@@ -14,7 +14,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.job.service.EruptJobService;
 
 import javax.persistence.*;
@@ -34,7 +34,7 @@ import java.text.ParseException;
 @Entity
 @Table(name = "E_JOB", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Component
-public class EruptJob extends BaseModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
+public class EruptJob extends HyperModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
 
     @EruptField(
             views = @View(title = "任务编码"),

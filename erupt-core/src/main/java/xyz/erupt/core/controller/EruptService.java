@@ -35,7 +35,7 @@ public class EruptService {
      */
     Page getEruptData(EruptModel eruptModel, int pageIndex, int pageSize, String sort,
                       JsonObject searchCondition, JsonObject joCondition, String... customCondition) {
-        if (eruptModel.getErupt().power().query()) {
+        if (EruptUtil.getPowerObject(eruptModel).isQuery()) {
             if (pageSize > maxPageSize) {
                 pageSize = maxPageSize;
             }

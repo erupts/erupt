@@ -48,6 +48,9 @@ public class AuthDataLoadService implements CommandLineRunner {
                         "menu", "菜单维护", "/build/tree/EruptMenu", 1, 0, "fa fa-list-ul", eruptMenu
                 ), "code", "menu");
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                        "org", "组织维护", "/build/table/EruptOrg", 1, 5, "fa fa-users", eruptMenu
+                ), "code", "org");
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         "user", "用户维护", "/build/table/EruptUser", 1, 10, "fa fa-user", eruptMenu
                 ), "code", "user");
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(

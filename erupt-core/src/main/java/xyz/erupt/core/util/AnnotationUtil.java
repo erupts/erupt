@@ -104,10 +104,7 @@ public class AnnotationUtil {
                     }
                 }
             }
-            Volatile vol = method.getAnnotation(Volatile.class);
-            if (null != vol) {
-                jsonObject.add(methodName, vol.value().newInstance().exec(method.invoke(annotation), annotation));
-            } else if (returnType.endsWith(EMPTY_ARRAY)) {
+            if (returnType.endsWith(EMPTY_ARRAY)) {
                 returnType = returnType.substring(0, returnType.length() - 2);
                 JsonArray jsonArray = new JsonArray();
                 ToMap toMap = method.getAnnotation(ToMap.class);

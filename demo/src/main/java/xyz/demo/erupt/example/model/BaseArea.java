@@ -6,7 +6,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;

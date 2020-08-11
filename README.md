@@ -18,7 +18,7 @@ YuePeng
 4. Erupt
 
 前端
-1. Angular2+
+1. Angular 8
 2. ng-zorro
 3. ng-alain
 

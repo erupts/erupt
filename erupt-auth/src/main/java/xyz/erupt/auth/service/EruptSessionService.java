@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import xyz.erupt.auth.config.EruptAuthConfig;
-import xyz.erupt.core.config.EruptConfig;
+import xyz.erupt.core.config.EruptProp;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class EruptSessionService {
 
     @Autowired
-    private EruptConfig eruptConfig;
+    private EruptProp eruptProp;
 
     @Autowired
     private EruptAuthConfig eruptAuthConfig;
@@ -34,7 +34,7 @@ public class EruptSessionService {
     private Gson gson;
 
     public void put(String key, String str, long timeout) {
-        if (eruptConfig.isRedisSession()) {
+        if (eruptProp.isRedisSession()) {
             redisTemplate.opsForValue().set(key, str, timeout, TimeUnit.SECONDS);
         } else {
             request.getSession().setAttribute(key, str);
@@ -42,7 +42,7 @@ public class EruptSessionService {
     }
 
     public void put(String key, String str) {
-        if (eruptConfig.isRedisSession()) {
+        if (eruptProp.isRedisSession()) {
             redisTemplate.opsForValue().set(key, str, eruptAuthConfig.getExpireTimeByLogin(), TimeUnit.MINUTES);
         } else {
             request.getSession().setAttribute(key, str);
@@ -50,7 +50,7 @@ public class EruptSessionService {
     }
 
     public void remove(String key) {
-        if (eruptConfig.isRedisSession()) {
+        if (eruptProp.isRedisSession()) {
             redisTemplate.delete(key);
         } else {
             request.getSession().removeAttribute(key);
@@ -58,7 +58,7 @@ public class EruptSessionService {
     }
 
     public Object get(String key) {
-        if (eruptConfig.isRedisSession()) {
+        if (eruptProp.isRedisSession()) {
             return redisTemplate.opsForValue().get(key);
         } else {
             return request.getSession().getAttribute(key);
@@ -66,7 +66,7 @@ public class EruptSessionService {
     }
 
     public <T> T get(String key, Type type) {
-        if (eruptConfig.isRedisSession()) {
+        if (eruptProp.isRedisSession()) {
             if (null == this.get(key)) {
                 return null;
             } else {

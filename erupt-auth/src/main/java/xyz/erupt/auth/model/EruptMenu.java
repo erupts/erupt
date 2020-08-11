@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.auth.service.EruptMenuService;
 
 import javax.persistence.*;
@@ -30,7 +31,7 @@ import javax.persistence.*;
 )
 @Getter
 @Setter
-public class EruptMenu extends BaseModel {
+public class EruptMenu extends HyperModel {
 
     @EruptField(
             views = @View(title = "编码"),

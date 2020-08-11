@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -26,10 +28,11 @@ public class EruptBuildController {
     @ResponseBody
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName) {
-        EruptModel eruptModel = EruptCoreService.getEruptView(eruptName);
+        EruptModel eruptView = EruptCoreService.getEruptView(eruptName);
         EruptBuildModel eruptBuildModel = new EruptBuildModel();
-        eruptBuildModel.setEruptModel(eruptModel);
-        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+        eruptBuildModel.setPower(EruptUtil.getPowerObject(eruptView));
+        eruptBuildModel.setEruptModel(eruptView);
+        for (EruptFieldModel fieldModel : eruptView.getEruptFieldModels()) {
             switch (fieldModel.getEruptField().edit().type()) {
                 case TAB_TREE:
                     if (eruptBuildModel.getTabErupts() == null) {
@@ -76,7 +79,7 @@ public class EruptBuildController {
         if (null != eruptFieldModel) {
             return this.getEruptBuild(eruptFieldModel.getFieldReturnName());
         }
-        return null;
+        throw new EruptNoLegalPowerException();
     }
 
 //    @GetMapping("/find-init-data/{erupt}")

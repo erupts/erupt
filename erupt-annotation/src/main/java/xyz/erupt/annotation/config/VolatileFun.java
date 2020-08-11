@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
  * @param <A> statement annotation
  * @param <P> parent annotation
  */
-public interface VolatileFun<A, P extends Annotation> {
+public interface VolatileFun<A extends Annotation, P extends Annotation> {
 
     /**
      * @param a 当前注解

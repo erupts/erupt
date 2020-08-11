@@ -81,6 +81,11 @@
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ops</artifactId>
+            <version>${erupt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
             <artifactId>open-api</artifactId>
             <version>0.1.4</version>
         </dependency>

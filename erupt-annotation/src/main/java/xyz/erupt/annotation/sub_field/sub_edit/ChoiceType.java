@@ -14,7 +14,7 @@ public @interface ChoiceType {
 
     ChoiceEnum type() default ChoiceEnum.SELECT_SINGLE;
 
-    //    @Volatile(ChoiceVolatile.class)
+    @Transient
     VL[] vl() default {};
 
     @Transient

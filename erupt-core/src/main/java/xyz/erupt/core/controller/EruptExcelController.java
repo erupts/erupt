@@ -8,6 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.annotation.EruptApi;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
@@ -55,7 +56,7 @@ public class EruptExcelController {
             throw new RuntimeException("非法请求");
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (eruptModel.getErupt().power().importable()) {
+        if (EruptUtil.getPowerObject(eruptModel).isImportable()) {
             dataFileService.createExcelTemplate(eruptModel, request, response);
         } else {
             throw new RuntimeException("没有导入权限");
@@ -73,7 +74,7 @@ public class EruptExcelController {
             throw new RuntimeException("非法请求");
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (eruptModel.getErupt().power().export()) {
+        if (EruptUtil.getPowerObject(eruptModel).isExport()) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(Page.PAGE_INDEX_STR, 1);
             jsonObject.addProperty(Page.PAGE_SIZE_STR, Page.PAGE_MAX_DATA);
@@ -100,7 +101,7 @@ public class EruptExcelController {
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) throws Exception {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (eruptModel.getErupt().power().importable()) {
+        if (EruptUtil.getPowerObject(eruptModel).isImportable()) {
             if (file.isEmpty()) {
                 return EruptApiModel.errorApi("上传失败，请选择文件");
             }

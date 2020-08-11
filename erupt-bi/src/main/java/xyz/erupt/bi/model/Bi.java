@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -23,10 +23,10 @@ import java.util.Set;
 @Entity
 @Table(name = "E_BI", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "报表配置", drills = @Drill(code = "chart", title = "图表配置", icon = "fa fa-pie-chart"
-        , link = @Link(eruptClass = BiChart.class, joinColumn = "bi.id")))
+        , link = @Link(linkErupt = BiChart.class, joinColumn = "bi.id")))
 @Getter
 @Setter
-public class Bi extends BaseModel {
+public class Bi extends HyperModel {
 
     @EruptField(
             views = @View(title = "编码"),

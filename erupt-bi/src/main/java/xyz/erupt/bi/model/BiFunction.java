@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.bi.service.BiDataLoadService;
 
 import javax.annotation.Resource;
@@ -28,7 +28,7 @@ import javax.persistence.Transient;
 @Erupt(name = "报表函数", dataProxy = BiFunction.class)
 @Getter
 @Service
-public class BiFunction extends BaseModel implements DataProxy<BiFunction> {
+public class BiFunction extends HyperModel implements DataProxy<BiFunction> {
 
     @EruptField(
             views = @View(title = "编码"),

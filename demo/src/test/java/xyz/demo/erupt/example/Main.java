@@ -1,6 +1,10 @@
 package xyz.demo.erupt.example;
 
+import xyz.erupt.auth.model.EruptMenu;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 /**
  * @author liyuepeng
@@ -8,8 +12,14 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-//        System.out.println(StreamUtils.copyToString(Main.class.getResourceAsStream("/application.yml"), Charset.forName("utf-8")));
-//        System.out.println(new File(Main.class.getResource("/application.yml").getFile()).toString());
+        try (//创建一个ObjectOutputStream输出流
+             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("object.txt"))) {
+            //将对象序列化到文件s
+            EruptMenu eruptMenu = new EruptMenu();
+            oos.writeObject(eruptMenu);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

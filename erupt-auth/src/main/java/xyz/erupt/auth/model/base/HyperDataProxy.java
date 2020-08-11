@@ -1,4 +1,4 @@
-package xyz.erupt.auth;
+package xyz.erupt.auth.model.base;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

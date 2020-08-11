@@ -1,6 +1,7 @@
 package xyz.demo.erupt.example.model;
 
 import com.google.gson.JsonObject;
+import lombok.Data;
 import org.apache.poi.ss.usermodel.Workbook;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -10,7 +11,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.auth.HyperModel;
+import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -23,7 +24,8 @@ import java.util.Date;
 @Erupt(name = "demo", orderBy = "number desc", dataProxy = Test.class)
 @Table(name = "TEST")
 @Entity
-public class Test extends HyperModel implements DataProxy {
+@Data
+public class Test extends HyperModel implements DataProxy<Test> {
 
     @EruptField(
             views = @View(title = "文本"),
@@ -197,32 +199,32 @@ public class Test extends HyperModel implements DataProxy {
 
 
     @Override
-    public void beforeAdd(Object o) {
+    public void beforeAdd(Test o) {
         System.err.println("beforeAdd");
     }
 
     @Override
-    public void afterAdd(Object o) {
+    public void afterAdd(Test o) {
         System.err.println("afterAdd");
     }
 
     @Override
-    public void beforeUpdate(Object o) {
+    public void beforeUpdate(Test o) {
         System.err.println("beforeUpdate");
     }
 
     @Override
-    public void afterUpdate(Object o) {
+    public void afterUpdate(Test o) {
         System.err.println("afterUpdate");
     }
 
     @Override
-    public void beforeDelete(Object o) {
+    public void beforeDelete(Test o) {
         System.err.println("beforeDelete");
     }
 
     @Override
-    public void afterDelete(Object o) {
+    public void afterDelete(Test o) {
         System.err.println("afterDelete");
     }
 
@@ -238,12 +240,14 @@ public class Test extends HyperModel implements DataProxy {
     }
 
     @Override
-    public void addBehavior(Object o) {
+    public void addBehavior(Test o) {
+        o.setInput("美国🇺🇸");
+        o.setNumber(2333333);
         System.err.println("addBehavior");
     }
 
     @Override
-    public void editBehavior(Object o) {
+    public void editBehavior(Test o) {
         System.err.println("editBehavior");
     }
 
@@ -253,7 +257,7 @@ public class Test extends HyperModel implements DataProxy {
     }
 
     @Override
-    public void excelImport(Object o) {
+    public void excelImport(Test o) {
         System.err.println("excelImport");
     }
 }

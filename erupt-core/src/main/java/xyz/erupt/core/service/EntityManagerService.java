@@ -7,7 +7,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.annotation.EruptDataSource;
-import xyz.erupt.core.config.EruptConfig;
+import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.view.EruptModel;
 
 import javax.annotation.Resource;
@@ -30,7 +30,7 @@ public class EntityManagerService {
     private Environment env;
 
     @Autowired
-    private EruptConfig eruptConfig;
+    private EruptProp eruptProp;
 
     //TODO
     public EntityManager getEntityManager(EruptModel eruptModel) {
@@ -49,7 +49,7 @@ public class EntityManagerService {
                     .username(env.getProperty(DATASOURCE_PREFIX + eruptDataSource.sourceName() + ".username"))
                     .password(env.getProperty(DATASOURCE_PREFIX + eruptDataSource.sourceName() + ".password"))
                     .build());
-            factory.setPackagesToScan(eruptConfig.getScannerPackage());
+            factory.setPackagesToScan(eruptProp.getScannerPackage());
             factory.afterPropertiesSet();
             return factory.getObject().createEntityManager();
         } else {

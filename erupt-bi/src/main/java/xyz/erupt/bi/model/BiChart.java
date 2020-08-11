@@ -8,7 +8,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.auth.model.BaseModel;
+import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.*;
 
@@ -21,7 +21,7 @@ import javax.persistence.*;
 @Erupt(name = "图表配置", orderBy = "sort")
 @Getter
 @Setter
-public class BiChart extends BaseModel {
+public class BiChart extends HyperModel {
 
     @EruptField(
             views = @View(title = "编码"),

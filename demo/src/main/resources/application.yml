@@ -3,6 +3,7 @@ erupt:
     - xyz.demo
   allow-request-file-type:
     - docx
+  job.enable: true
 #  attachmentProxy: xyz.erupt.example.handler.QiniuOosProxy
 erupt-auth:
   expireTimeByLogin: 60

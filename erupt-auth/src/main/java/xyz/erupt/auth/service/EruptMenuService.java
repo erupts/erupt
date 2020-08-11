@@ -1,6 +1,7 @@
 package xyz.erupt.auth.service;
 
 import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -94,4 +95,14 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         this.afterAdd(eruptMenu);
     }
 
+    @Override
+    public void addBehavior(EruptMenu eruptMenu) {
+        Object obj = entityManager
+                .createQuery("select max(sort) from " + EruptMenu.class.getSimpleName())
+                .getSingleResult();
+        if (null != obj) {
+            eruptMenu.setSort(Integer.valueOf(obj.toString()) + 10);
+        }
+        eruptMenu.setStatus(Integer.valueOf(EruptMenu.OPEN));
+    }
 }

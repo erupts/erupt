@@ -7,7 +7,7 @@ import java.beans.Transient;
  * @date 2020-03-08
  */
 public @interface Link {
-    Class<?> eruptClass();
+    Class<?> linkErupt();
 
     @Transient
     String column() default "id";
