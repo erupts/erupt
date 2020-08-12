@@ -1,8 +1,11 @@
 package xyz.erupt.core.controller;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.sub_erupt.DependTree;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -39,8 +42,27 @@ public class EruptService {
             if (pageSize > maxPageSize) {
                 pageSize = maxPageSize;
             }
-            JsonObject legalJsonObject = EruptUtil.geneEruptSearchCondition(eruptModel, searchCondition);
             List<String> conditionList = new ArrayList<>();
+            JsonObject legalJsonObject = EruptUtil.geneEruptSearchCondition(eruptModel, searchCondition);
+            {
+                //DependTree逻辑
+                DependTree dependTree = eruptModel.getErupt().dependTree();
+                if (StringUtils.isNotBlank(dependTree.field())) {
+                    if (null == searchCondition.get(dependTree.field())) {
+                        if (dependTree.relyNode()) {
+                            throw new RuntimeException("请选择节点");
+                        }
+                    } else {
+                        EruptModel treeErupt = EruptCoreService.getErupt(dependTree.field());
+                        String pk = treeErupt.getErupt().primaryKeyCol();
+                        //TODO 存在sql注入的风险
+                        conditionList.add(dependTree.field() + "."
+                                + pk + "=" + EruptUtil.jsonElementToObject(
+                                treeErupt.getEruptFieldMap().get(pk), searchCondition.get(dependTree.field()))
+                        );
+                    }
+                }
+            }
             conditionList.addAll(Arrays.asList(customCondition));
             EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> {
                 String condition = dataProxy.beforeFetch(legalJsonObject);

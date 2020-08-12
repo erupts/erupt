@@ -33,8 +33,7 @@ import java.util.Set;
 @Erupt(
         name = "用户",
         desc = "用户配置",
-        dataProxy = EruptUser.class,
-        layoutTree = ""
+        dataProxy = EruptUser.class
 )
 @Getter
 @Setter
@@ -166,6 +165,14 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     @Transient
     @PersistenceContext
     private EntityManager entityManager;
+
+    public EruptUser() {
+    }
+
+    public EruptUser(Long id) {
+        this.setId(id);
+    }
+
 
     @Override
     public void editBehavior(EruptUser eruptUser) {

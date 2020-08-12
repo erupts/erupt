@@ -1,7 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.Match;
-import xyz.erupt.annotation.config.SerializeBy;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
@@ -39,38 +38,37 @@ public @interface Edit {
 
     EditType type() default EditType.AUTO;
 
-    //    @Match("item.type()=='INPUT'")
-    @SerializeBy(method = "type", value = "INPUT")
+    @Match("item.type()=='INPUT'")
     InputType inputType() default @InputType;
 
-    @SerializeBy(method = "type", value = "NUMBER")
+    @Match("item.type()=='NUMBER'")
     NumberType numberType() default @NumberType;
 
-    @SerializeBy(method = "type", value = "BOOLEAN")
+    @Match("item.type()=='BOOLEAN'")
     BoolType boolType() default @BoolType;
 
-    @SerializeBy(method = "type", value = "CHOICE")
+    @Match("item.type()=='CHOICE'")
     ChoiceType choiceType() default @ChoiceType;
 
-    @SerializeBy(method = "type", value = "DATE")
+    @Match("item.type()=='DATE'")
     DateType dateType() default @DateType;
 
-    @SerializeBy(method = "type", value = "SLIDER")
+    @Match("item.type()=='SLIDER'")
     SliderType sliderType() default @SliderType(max = 999);
 
-    @SerializeBy(method = "type", value = "ATTACHMENT")
+    @Match("item.type()=='ATTACHMENT'")
     AttachmentType attachmentType() default @AttachmentType;
 
-    @SerializeBy(method = "type", value = "REFERENCE_TREE")
+    @Match("item.type()=='REFERENCE_TREE'")
     ReferenceTreeType referenceTreeType() default @ReferenceTreeType;
 
-    @SerializeBy(method = "type", value = "REFERENCE_TABLE")
+    @Match("item.type()=='REFERENCE_TABLE'")
     ReferenceTableType referenceTableType() default @ReferenceTableType;
 
-    @SerializeBy(method = "type", value = "CODE_EDITOR")
+    @Match("item.type()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "sql");
 
-    @SerializeBy(method = "type", value = "MAP")
+    @Match("item.type()=='MAP'")
     MapType mapType() default @MapType;
 
     @Transient

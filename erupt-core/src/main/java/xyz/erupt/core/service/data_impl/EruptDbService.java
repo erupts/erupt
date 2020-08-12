@@ -31,10 +31,7 @@ import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liyuepeng
@@ -218,11 +215,9 @@ public class EruptDbService implements EruptDataService {
         if (StringUtils.isNotBlank(refTree.dependField()) && null != dependValue) {
             conditions.add(eruptFieldModel.getEruptField().edit().referenceTreeType().dependColumn() + String.format("='%s'", dependValue));
         }
-        for (String s : conditionStr) {
-            conditions.add(s);
-        }
+        conditions.addAll(Arrays.asList(conditionStr));
         List<Map<String, Object>> list = eruptJpaDao.getDataMap(EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName())
-                , cols, edit.orderBy(), conditions.toArray(new String[conditions.size()]));
+                , cols, edit.orderBy(), conditions.toArray(new String[0]));
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : list) {
             TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), null, map.get(AnnotationConst.ROOT));

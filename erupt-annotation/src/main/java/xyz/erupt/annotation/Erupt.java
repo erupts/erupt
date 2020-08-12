@@ -1,5 +1,6 @@
 package xyz.erupt.annotation;
 
+import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -48,9 +49,8 @@ public @interface Erupt {
 
     Tree tree() default @Tree;
 
-    String layoutTree() default "";
-
-    Link[] linkTree() default {};
+    @Match("value.field()")
+    DependTree dependTree() default @DependTree(field = AnnotationConst.EMPTY_STR);
 
     @ToMap(key = "key")
     KV[] param() default {};

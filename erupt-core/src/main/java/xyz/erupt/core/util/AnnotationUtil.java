@@ -3,7 +3,9 @@ package xyz.erupt.core.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
-import xyz.erupt.annotation.config.*;
+import xyz.erupt.annotation.config.EruptProperty;
+import xyz.erupt.annotation.config.Match;
+import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.expr.Expr;
@@ -78,13 +80,13 @@ public class AnnotationUtil {
             if (null != tran && tran.value()) {
                 continue;
             }
-            SerializeBy serializeBy = method.getAnnotation(SerializeBy.class);
-            if (null != serializeBy) {
-                String type = annotation.getClass().getMethod(serializeBy.method()).invoke(annotation).toString();
-                if (!serializeBy.value().equals(type)) {
-                    continue;
-                }
-            }
+//            SerializeBy serializeBy = method.getAnnotation(SerializeBy.class);
+//            if (null != serializeBy) {
+//                String type = annotation.getClass().getMethod(serializeBy.method()).invoke(annotation).toString();
+//                if (!serializeBy.value().equals(type)) {
+//                    continue;
+//                }
+//            }
             String methodName = method.getName();
             EruptProperty eruptProperty = method.getAnnotation(EruptProperty.class);
             if (null != eruptProperty && !AnnotationConst.EMPTY_STR.equals(eruptProperty.alias())) {
@@ -98,8 +100,7 @@ public class AnnotationUtil {
                 synchronized (engine) {
                     engine.put(VALUE_VAR, result);
                     engine.put(ITEM_VAR, annotation);
-                    Boolean bool = (Boolean) engine.eval(String.format("!!(%s)", match.value()));
-                    if (!bool) {
+                    if (!(Boolean) engine.eval(String.format("!!(%s)", match.value()))) {
                         continue;
                     }
                 }

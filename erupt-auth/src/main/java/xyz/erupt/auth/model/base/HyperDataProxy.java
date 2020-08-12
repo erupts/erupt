@@ -21,16 +21,12 @@ public class HyperDataProxy implements DataProxy<HyperModel> {
     @Override
     public void beforeAdd(HyperModel hyperModel) {
         hyperModel.setCreateTime(new Date());
-        EruptUser eruptUser = new EruptUser();
-        eruptUser.setId(eruptUserService.getCurrentUid());
-        hyperModel.setCreateUser(eruptUser);
+        hyperModel.setCreateUser(new EruptUser(eruptUserService.getCurrentUid()));
     }
 
     @Override
     public void beforeUpdate(HyperModel hyperModel) {
         hyperModel.setUpdateTime(new Date());
-        EruptUser eruptUser = new EruptUser();
-        eruptUser.setId(eruptUserService.getCurrentUid());
-        hyperModel.setUpdateUser(eruptUser);
+        hyperModel.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
     }
 }

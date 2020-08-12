@@ -17,7 +17,7 @@ public @interface Match {
 
     /**
      * 预注入变量值：
-     * this : 当前注解变量
+     * value : 当前注解变量
      * item :  父级注解变量
      *
      * @return 表达式

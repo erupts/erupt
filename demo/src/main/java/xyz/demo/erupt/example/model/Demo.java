@@ -1,7 +1,5 @@
 package xyz.demo.erupt.example.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import xyz.demo.erupt.example.handler.HtmlHandler;
 import xyz.demo.erupt.example.handler.OperationHandlerImpl;
 import xyz.demo.erupt.example.handler.PowerHandlerImpl;
@@ -16,10 +14,9 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.auth.model.base.BaseModel;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
-import xyz.erupt.auth.service.EruptUserService;
+import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -45,14 +42,11 @@ import java.util.Set;
                         mode = RowOperation.Mode.BUTTON,
                         title = "BUTTON", code = "BUTTON")
         },
-        layoutTree = "eruptMenu",
         tree = @Tree(label = "input"),
-        filter = @Filter("2 = 2"),
-        linkTree = @Link(linkErupt = EruptMenu.class, joinColumn = "id")
+        filter = @Filter("2 = 2")
 )
 @Table(name = "DEMO")
 @Entity
-@Component
 public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandler {
 
 
@@ -184,10 +178,6 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
             )
     )
     private Set<DemoSub> demoSubs;
-
-    @Transient
-    @Autowired
-    private EruptUserService eruptUserService;
 
 
     @Override

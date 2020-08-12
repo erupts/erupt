@@ -194,8 +194,10 @@ public class EruptUtil {
         JsonObject legalJsonObject = new JsonObject();
         if (null != searchCondition) {
             for (String key : searchCondition.keySet()) {
+                if (!eruptModel.getEruptFieldMap().containsKey(key)) {
+                    continue;
+                }
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
-
                 Edit edit = eruptFieldModel.getEruptField().edit();
                 if (AnnotationUtil.getEditTypeMapping(edit.type()).search()) {
                     if (edit.search().value() && !searchCondition.get(key).isJsonNull()) {
@@ -209,10 +211,6 @@ public class EruptUtil {
                             }
                         }
                         legalJsonObject.add(key, searchCondition.get(key));
-                    } else {
-                        if (key.equals(eruptModel.getErupt().layoutTree())) {
-                            legalJsonObject.add(key, searchCondition.get(key));
-                        }
                     }
                 }
             }

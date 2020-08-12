@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.Link;
+import xyz.erupt.annotation.sub_erupt.DependTree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
@@ -25,7 +25,7 @@ import javax.persistence.UniqueConstraint;
 @Erupt(
         name = "字典项",
         orderBy = "sort",
-        linkTree = @Link(linkErupt = EruptDict.class, joinColumn = "id", column = "eruptDict.id")
+        dependTree = @DependTree(field = "eruptDict")
 )
 @Getter
 @Setter
@@ -58,7 +58,7 @@ public class EruptDictItem extends HyperModel {
     private String remark;
 
     @ManyToOne
+    @EruptField
     private EruptDict eruptDict;
-
 
 }
