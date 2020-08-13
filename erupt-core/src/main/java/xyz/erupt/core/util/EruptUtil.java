@@ -145,7 +145,7 @@ public class EruptUtil {
     //请求参数转换
     public static Object jsonElementToObject(EruptFieldModel eruptFieldModel, JsonElement jsonElement) {
         if (null == eruptFieldModel) {
-            return jsonElement.toString();
+            return jsonElement.getAsString();
         }
         if (jsonElement.isJsonArray()) {
             JsonArray jsonArray = jsonElement.getAsJsonArray();
@@ -298,9 +298,16 @@ public class EruptUtil {
     }
 
     public static Object toEruptId(EruptModel eruptModel, String id) {
+//        eruptModel.getEruptFieldMap().get(eruptModel.getErupt().primaryKeyCol());
         Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz()
                 , eruptModel.getErupt().primaryKeyCol());
         return TypeUtil.typeStrConvertObject(id, primaryField.getType().getSimpleName().toLowerCase());
+    }
+
+    public static Object findEruptObjectFieldId(EruptModel eruptModel, String field, Object val) {
+        String fr = eruptModel.getEruptFieldMap().get(field).getFieldReturnName();
+        EruptModel em = EruptCoreService.getErupt(fr);
+        return toEruptId(em, val.toString());
     }
 
 }
