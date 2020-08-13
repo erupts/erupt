@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.DependTree;
+import xyz.erupt.annotation.sub_erupt.LinkTree;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
@@ -25,7 +26,8 @@ import javax.persistence.UniqueConstraint;
 @Erupt(
         name = "字典项",
         orderBy = "sort",
-        dependTree = @DependTree(field = "eruptDict")
+        power = @Power(export = true, importable = true),
+        linkTree = @LinkTree(field = "eruptDict")
 )
 @Getter
 @Setter

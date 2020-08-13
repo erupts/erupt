@@ -50,7 +50,7 @@ public @interface Erupt {
     Tree tree() default @Tree;
 
     @Match("value.field()")
-    DependTree dependTree() default @DependTree(field = AnnotationConst.EMPTY_STR);
+    LinkTree linkTree() default @LinkTree(field = AnnotationConst.EMPTY_STR);
 
     @ToMap(key = "key")
     KV[] param() default {};

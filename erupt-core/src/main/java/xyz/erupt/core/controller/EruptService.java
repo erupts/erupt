@@ -1,9 +1,11 @@
 package xyz.erupt.core.controller;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.sub_erupt.DependTree;
+import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.AnnotationUtil;
@@ -22,6 +24,7 @@ import java.util.Map;
  * @date 2020-02-29
  */
 @Service
+@Log
 public class EruptService {
 
     private static final int maxPageSize = 500;
@@ -46,23 +49,24 @@ public class EruptService {
             JsonObject legalJsonObject = EruptUtil.geneEruptSearchCondition(eruptModel, searchCondition);
             {
                 //DependTree逻辑
-                DependTree dependTree = eruptModel.getErupt().dependTree();
+                LinkTree dependTree = eruptModel.getErupt().linkTree();
                 if (StringUtils.isNotBlank(dependTree.field())) {
-                    if (null == searchCondition.get(dependTree.field())) {
-                        if (dependTree.relyNode()) {
-                            throw new RuntimeException("请选择节点");
+                    JsonElement je = searchCondition.get(dependTree.field());
+                    if (null == je) {
+                        //TODO 临时为前端做兼容用，按道理应该抛出异常
+                        if (dependTree.dependNode()) {
+                            return new Page();
                         }
                     } else {
                         EruptModel treeErupt = EruptCoreService.getErupt(dependTree.field());
                         String pk = treeErupt.getErupt().primaryKeyCol();
-                        //TODO 存在sql注入的风险
-                        conditionList.add(dependTree.field() + "."
-                                + pk + "=" + EruptUtil.jsonElementToObject(
-                                treeErupt.getEruptFieldMap().get(pk), searchCondition.get(dependTree.field()))
-                        );
+                        //TODO 存在sql注入风险
+                        conditionList.add(dependTree.field() + "." + pk + " = " + je.getAsString());
+//                        legalJsonObject.addProperty(linkTree.field() + "." + pk, Long.valueOf(je.getAsString()));
                     }
                 }
             }
+
             conditionList.addAll(Arrays.asList(customCondition));
             EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> {
                 String condition = dataProxy.beforeFetch(legalJsonObject);

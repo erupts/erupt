@@ -30,6 +30,8 @@ public class EruptProp {
     //是否使用redis管理session
     private boolean redisSession = false;
 
+    private boolean csrfInspect = true;
+
     private String[] dataSources;
 
     public void setScannerPackage(String[] scannerPackage) {

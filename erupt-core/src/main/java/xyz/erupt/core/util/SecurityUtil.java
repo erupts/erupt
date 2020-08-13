@@ -90,6 +90,7 @@ public class SecurityUtil {
 
     //检测 跨站请求伪造
     public static boolean csrfInspect(HttpServletRequest request, HttpServletResponse response) {
+//        if (1 == 1) return false;
         String origin = request.getHeader("Origin");
         if (null != origin && !origin.contains(request.getHeader("Host"))) {
             response.setCharacterEncoding("UTF-8");

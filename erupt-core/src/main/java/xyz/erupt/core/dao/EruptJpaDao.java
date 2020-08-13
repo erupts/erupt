@@ -56,19 +56,21 @@ public class EruptJpaDao {
             for (String key : searchCondition.keySet()) {
                 if (!searchCondition.get(key).isJsonNull()) {
                     EruptFieldModel eruptFieldModel = eruptFieldMap.get(key);
-                    Edit edit = eruptFieldModel.getEruptField().edit();
-                    if (edit.search().vague()) {
-                        if ((edit.type() == EditType.NUMBER) || edit.type() == EditType.DATE || edit.type() == EditType.SLIDER) {
-                            JsonArray jsonArray = searchCondition.get(key).getAsJsonArray();
-                            countQuery.setParameter(EruptJpaUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
-                            countQuery.setParameter(EruptJpaUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
-                            query.setParameter(EruptJpaUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
-                            query.setParameter(EruptJpaUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
-                            continue;
-                        } else if (edit.type() == EditType.INPUT) {
-                            countQuery.setParameter(key, EruptJpaUtils.PERCENT + EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)) + EruptJpaUtils.PERCENT);
-                            query.setParameter(key, EruptJpaUtils.PERCENT + EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)) + EruptJpaUtils.PERCENT);
-                            continue;
+                    if (null != eruptFieldModel) {
+                        Edit edit = eruptFieldModel.getEruptField().edit();
+                        if (edit.search().vague()) {
+                            if ((edit.type() == EditType.NUMBER) || edit.type() == EditType.DATE || edit.type() == EditType.SLIDER) {
+                                JsonArray jsonArray = searchCondition.get(key).getAsJsonArray();
+                                countQuery.setParameter(EruptJpaUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                                countQuery.setParameter(EruptJpaUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                                query.setParameter(EruptJpaUtils.LVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(0)));
+                                query.setParameter(EruptJpaUtils.RVAL_KEY + key, EruptUtil.jsonElementToObject(eruptFieldModel, jsonArray.get(1)));
+                                continue;
+                            } else if (edit.type() == EditType.INPUT) {
+                                countQuery.setParameter(key, EruptJpaUtils.PERCENT + EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)) + EruptJpaUtils.PERCENT);
+                                query.setParameter(key, EruptJpaUtils.PERCENT + EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)) + EruptJpaUtils.PERCENT);
+                                continue;
+                            }
                         }
                     }
                     countQuery.setParameter(key, EruptUtil.jsonElementToObject(eruptFieldModel, searchCondition.get(key)));
