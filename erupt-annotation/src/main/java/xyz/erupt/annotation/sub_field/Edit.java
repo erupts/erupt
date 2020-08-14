@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.Match;
+import xyz.erupt.annotation.fun.AutoCompleteHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
@@ -58,6 +59,9 @@ public @interface Edit {
 
     @Match("item.type()=='ATTACHMENT'")
     AttachmentType attachmentType() default @AttachmentType;
+
+    @Match("item.type()=='AUTO_COMPLETE'")
+    AutoCompleteType autoCompleteType() default @AutoCompleteType(handler = AutoCompleteHandler.class);
 
     @Match("item.type()=='REFERENCE_TREE'")
     ReferenceTreeType referenceTreeType() default @ReferenceTreeType;

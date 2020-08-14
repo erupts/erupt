@@ -3,6 +3,7 @@ package xyz.demo.erupt.example.model;
 import com.google.gson.JsonObject;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.Workbook;
+import xyz.demo.erupt.example.handler.AutoCompleteHandlerImpl;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -38,6 +39,13 @@ public class Test extends HyperModel implements DataProxy<Test> {
             edit = @Edit(title = "数字", search = @Search(vague = true), showBy = @ShowBy(dependField = "input", expr = "fieldValue"))
     )
     private Integer number;
+
+    @EruptField(
+            views = @View(title = "自动完成"),
+            edit = @Edit(title = "自动完成", search = @Search(vague = true), type = EditType.AUTO_COMPLETE,
+                    autoCompleteType = @AutoCompleteType(handler = AutoCompleteHandlerImpl.class))
+    )
+    private String autoComplete;
 
     @ManyToOne
     @EruptField(

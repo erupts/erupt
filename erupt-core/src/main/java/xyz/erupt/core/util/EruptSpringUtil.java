@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.function.Consumer;
 
@@ -41,6 +42,7 @@ public class EruptSpringUtil implements ApplicationContextAware {
         if (null != clazz.getDeclaredAnnotation(Component.class)
                 || null != clazz.getDeclaredAnnotation(Service.class)
                 || null != clazz.getDeclaredAnnotation(Repository.class)
+                || null != clazz.getDeclaredAnnotation(RestController.class)
                 || null != clazz.getDeclaredAnnotation(Controller.class)) {
             return getApplicationContext().getBean(clazz);
         } else {

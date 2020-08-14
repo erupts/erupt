@@ -14,6 +14,9 @@ public class RestPath {
     //数据
     public static final String ERUPT_DATA = ERUPT_API + "/data";
 
+    //组件
+    public static final String ERUPT_COMP = ERUPT_API + "/comp";
+
     //excel
     public static final String ERUPT_EXCEL = ERUPT_API + "/excel";
 

@@ -24,6 +24,8 @@ public enum EditType {
     CHOICE,
     @EditTypeMapping(mapping = AttachmentType.class, desc = "附件", search = false, allowType = {JavaTypeEnum.String}, excelOperator = false)
     ATTACHMENT,
+    @EditTypeMapping(mapping = AutoCompleteType.class, desc = "自动联想", allowType = {JavaTypeEnum.String})
+    AUTO_COMPLETE,
     @EditTypeMapping(desc = "横向分割线与描述", search = false, allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     DIVIDE,
     @EditTypeMapping(desc = "隐藏", search = false, allowType = {JavaTypeEnum.not_know}, excelOperator = false)
