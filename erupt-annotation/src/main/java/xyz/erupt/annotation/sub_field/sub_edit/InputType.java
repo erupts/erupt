@@ -11,6 +11,8 @@ import java.beans.Transient;
 public @interface InputType {
     int length() default DataLength.TEXT_LENGTH;
 
+    String type() default "text";
+
     @Transient
     String regex() default "";
 

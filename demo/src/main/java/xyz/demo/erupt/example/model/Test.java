@@ -47,6 +47,12 @@ public class Test extends HyperModel implements DataProxy<Test> {
     )
     private String autoComplete;
 
+    @EruptField(
+            views = @View(title = "颜色选择"),
+            edit = @Edit(title = "颜色选择", search = @Search(vague = true), inputType = @InputType(type = "color"))
+    )
+    private String color;
+
     @ManyToOne
     @EruptField(
             edit = @Edit(title = "多对一表格", search = @Search(vague = true), type = EditType.REFERENCE_TABLE)

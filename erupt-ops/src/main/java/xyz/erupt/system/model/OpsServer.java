@@ -2,12 +2,16 @@ package xyz.erupt.system.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -21,9 +25,13 @@ import javax.persistence.Table;
 )
 @Erupt(
         name = "服务器管理",
-        orderBy = "sort"
+        orderBy = "sort",
+        linkTree = @LinkTree(field = "opsServerGroup")
 )
 public class OpsServer extends HyperModel {
+
+    @ManyToOne
+    private OpsServerGroup opsServerGroup;
 
     @EruptField(
             views = @View(title = "名称"),
@@ -32,16 +40,10 @@ public class OpsServer extends HyperModel {
     private String name;
 
     @EruptField(
-            views = @View(title = "IP"),
-            edit = @Edit(title = "IP", notNull = true)
+            views = @View(title = "地址"),
+            edit = @Edit(title = "地址", notNull = true)
     )
-    private String ip;
-
-    @EruptField(
-            views = @View(title = "公网IP"),
-            edit = @Edit(title = "公网IP")
-    )
-    private String publicIp;
+    private String address;
 
     @EruptField(
             views = @View(title = "端口"),
@@ -50,14 +52,13 @@ public class OpsServer extends HyperModel {
     private Integer port;
 
     @EruptField(
-            views = @View(title = "账号"),
-            edit = @Edit(title = "账号", notNull = true)
+            views = @View(title = "用户名"),
+            edit = @Edit(title = "用户名", notNull = true)
     )
     private String username;
 
     @EruptField(
-            views = @View(title = "密码"),
-            edit = @Edit(title = "密码")
+            edit = @Edit(title = "密码", inputType = @InputType(type = "password"))
     )
     private String password;
 
@@ -69,7 +70,7 @@ public class OpsServer extends HyperModel {
 
     @Lob
     @EruptField(
-            views = @View(title = "备注"),
+            views = @View(title = "备注", type = ViewType.HTML),
             edit = @Edit(
                     title = "备注"
             )

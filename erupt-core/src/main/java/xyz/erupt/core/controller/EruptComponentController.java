@@ -25,9 +25,9 @@ public class EruptComponentController {
     @RequestMapping("/auto-complete/{erupt}/{field}/{val}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @ResponseBody
-    public List<Object> getAutoCompleteValue(@PathVariable("erupt") String eruptName,
-                                             @PathVariable("field") String field,
-                                             @PathVariable("val") String val) {
+    public List<Object> findAutoCompleteValue(@PathVariable("erupt") String eruptName,
+                                              @PathVariable("field") String field,
+                                              @PathVariable("val") String val) {
         EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
         if (null == fieldModel) {
             throw new EruptNoLegalPowerException();
