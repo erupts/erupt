@@ -105,7 +105,4 @@ public class EntityManagerService implements ApplicationRunner {
     }
 
 
-//    public EntityManager getEntityManager(String name) {
-//        return entityManagerMap.get(name);
-//    }
 }
