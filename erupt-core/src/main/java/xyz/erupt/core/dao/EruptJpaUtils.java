@@ -114,7 +114,7 @@ public class EruptJpaUtils {
 
     public static String geneEruptHqlCondition(EruptModel eruptModel, JsonObject clientSearchCondition, String[] customCondition) {
         StringBuilder hql = new StringBuilder();
-        hql.append(" where 1=1 ");
+        hql.append(" where 1 = 1 ");
         //condition
         if (null != clientSearchCondition) {
             for (String key : clientSearchCondition.keySet()) {

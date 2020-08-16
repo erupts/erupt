@@ -14,6 +14,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.dao.EruptJpaUtils;
+import xyz.erupt.core.service.EntityManagerService;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptDataService;
 import xyz.erupt.core.util.AnnotationUtil;
@@ -25,7 +26,6 @@ import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TreeModel;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
@@ -43,12 +43,15 @@ public class EruptDbService implements EruptDataService {
     @Autowired
     private EruptJpaDao eruptJpaDao;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private EntityManagerService entityManagerService;
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        return entityManager.find(eruptModel.getClazz(), id);
+        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel);
+        Object obj = entityManager.find(eruptModel.getClazz(), id);
+        entityManager.close();
+        return obj;
     }
 
     @Override
@@ -94,7 +97,7 @@ public class EruptDbService implements EruptDataService {
     public void addData(EruptModel eruptModel, Object object) throws Exception {
         try {
             jpaManyToOneConvert(eruptModel, object);
-            eruptJpaDao.addEntity(object);
+            eruptJpaDao.addEntity(eruptModel, object);
         } catch (Exception e) {
             handlerException(e, eruptModel);
         }
@@ -104,7 +107,7 @@ public class EruptDbService implements EruptDataService {
     @Override
     public void editData(EruptModel eruptModel, Object data) {
         try {
-            eruptJpaDao.editEntity(data);
+            eruptJpaDao.editEntity(eruptModel, data);
         } catch (Exception e) {
             handlerException(e, eruptModel);
         }
@@ -112,13 +115,16 @@ public class EruptDbService implements EruptDataService {
 
     //优化异常提示类
     private void handlerException(Exception e, EruptModel eruptModel) {
-        e.printStackTrace();
         if (e instanceof DataIntegrityViolationException) {
             if (e.getMessage().contains("ConstraintViolationException")) {
                 throw new RuntimeException(gcRepeatHint(eruptModel));
             } else if (e.getMessage().contains("DataException")) {
                 throw new RuntimeException("输入内容过长！");
+            } else {
+                throw new RuntimeException(e.getMessage());
             }
+        } else {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -126,10 +132,12 @@ public class EruptDbService implements EruptDataService {
     @Override
     public void deleteData(EruptModel eruptModel, Object object) {
         try {
-            eruptJpaDao.removeEntity(object);
+            eruptJpaDao.removeEntity(eruptModel, object);
         } catch (DataIntegrityViolationException | ConstraintViolationException e) {
             e.printStackTrace();
             throw new RuntimeException("删除失败，可能存在关联数据，无法直接删除！");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 

@@ -53,6 +53,12 @@ public class Test extends HyperModel implements DataProxy<Test> {
     )
     private String color;
 
+    @EruptField(
+            views = @View(title = "周选择器"),
+            edit = @Edit(title = "周选择器", search = @Search(vague = true), inputType = @InputType(type = "week"))
+    )
+    private String weekInput;
+
     @ManyToOne
     @EruptField(
             edit = @Edit(title = "多对一表格", search = @Search(vague = true), type = EditType.REFERENCE_TABLE)
@@ -65,6 +71,13 @@ public class Test extends HyperModel implements DataProxy<Test> {
             edit = @Edit(title = "地图", type = EditType.MAP, mapType = @MapType(draw = true))
     )
     private String map;
+
+
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "时间选择", type = EditType.DIVIDE)
+    )
+    private String dateDiv;
 
     @EruptField(
             views = @View(title = "date"),
@@ -104,14 +117,14 @@ public class Test extends HyperModel implements DataProxy<Test> {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "地区选择 TEST", type = EditType.DIVIDE)
+            edit = @Edit(title = "地区选择 TREE TEST", type = EditType.DIVIDE)
     )
-    private String region;
+    private String regionDiv;
 
     @ManyToOne
     @EruptField(
             views = @View(title = "省份", column = "name"),
-            edit = @Edit(title = "省份", notNull = true, type = EditType.REFERENCE_TREE,
+            edit = @Edit(title = "省份", type = EditType.REFERENCE_TREE,
                     filter = @Filter("BaseArea.level = 1"))
     )
     private BaseArea province;
@@ -119,7 +132,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
     @ManyToOne
     @EruptField(
             views = @View(title = "市", column = "name"),
-            edit = @Edit(title = "市", notNull = true, type = EditType.REFERENCE_TREE,
+            edit = @Edit(title = "市", type = EditType.REFERENCE_TREE,
                     filter = @Filter("BaseArea.level = 2"),
                     referenceTreeType = @ReferenceTreeType(dependField = "province", dependColumn = "pid.id")
             )
@@ -129,7 +142,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
     @ManyToOne
     @EruptField(
             views = @View(title = "区", column = "name"),
-            edit = @Edit(title = "区", notNull = true, type = EditType.REFERENCE_TREE,
+            edit = @Edit(title = "区", type = EditType.REFERENCE_TREE,
                     filter = @Filter("BaseArea.level = 3"),
                     referenceTreeType = @ReferenceTreeType(dependField = "city", dependColumn = "pid.id")
             )
@@ -139,7 +152,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
     @ManyToOne
     @EruptField(
             views = @View(title = "街道", column = "name"),
-            edit = @Edit(title = "街道", notNull = true, type = EditType.REFERENCE_TREE,
+            edit = @Edit(title = "街道", type = EditType.REFERENCE_TREE,
                     filter = @Filter("BaseArea.level = 4"),
                     referenceTreeType = @ReferenceTreeType(dependField = "area", dependColumn = "pid.id")
             )
@@ -157,59 +170,59 @@ public class Test extends HyperModel implements DataProxy<Test> {
     private BaseArea community;
 
 
-//    @Transient
-//    @EruptField(
-//            edit = @Edit(title = "地区选择 TABLE TEST", type = EditType.DIVIDE)
-//    )
-//    private String regiont;
-//
-//    @ManyToOne
-//    @EruptField(
-//            views = @View(title = "省份", column = "name"),
-//            edit = @Edit(title = "省份", notNull = true, type = EditType.REFERENCE_TABLE,
-//                    filter = @Filter("BaseArea.level = 1"))
-//    )
-//    private BaseArea provincet;
-//
-//    @ManyToOne
-//    @EruptField(
-//            views = @View(title = "市", column = "name"),
-//            edit = @Edit(title = "市", notNull = true, type = EditType.REFERENCE_TABLE,
-//                    filter = @Filter("BaseArea.level = 2"),
-//                    referenceTableType = @ReferenceTableType(dependField = "provincet", dependColumn = "pid.id")
-//            )
-//    )
-//    private BaseArea cityt;
-//
-//    @ManyToOne
-//    @EruptField(
-//            views = @View(title = "区", column = "name"),
-//            edit = @Edit(title = "区", notNull = true, type = EditType.REFERENCE_TABLE,
-//                    filter = @Filter("BaseArea.level = 3"),
-//                    referenceTableType = @ReferenceTableType(dependField = "cityt", dependColumn = "pid.id")
-//            )
-//    )
-//    private BaseArea areat;
-//
-//    @ManyToOne
-//    @EruptField(
-//            views = @View(title = "街道", column = "name"),
-//            edit = @Edit(title = "街道", notNull = true, type = EditType.REFERENCE_TABLE,
-//                    filter = @Filter("BaseArea.level = 4"),
-//                    referenceTableType = @ReferenceTableType(dependField = "areat", dependColumn = "pid.id")
-//            )
-//    )
-//    private BaseArea streett;
-//
-//    @ManyToOne
-//    @EruptField(
-//            views = @View(title = "社区", column = "name"),
-//            edit = @Edit(title = "社区", type = EditType.REFERENCE_TABLE,
-//                    filter = @Filter("BaseArea.level = 5"),
-//                    referenceTableType = @ReferenceTableType(dependField = "streett", dependColumn = "pid.id")
-//            )
-//    )
-//    private BaseArea communityt;
+    @Transient
+    @EruptField(
+            edit = @Edit(title = "地区选择 TABLE TEST", type = EditType.DIVIDE)
+    )
+    private String regiont;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "省份", column = "name"),
+            edit = @Edit(title = "省份", type = EditType.REFERENCE_TABLE,
+                    filter = @Filter("BaseArea.level = 1"))
+    )
+    private BaseArea provincet;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "市", column = "name"),
+            edit = @Edit(title = "市", type = EditType.REFERENCE_TABLE,
+                    filter = @Filter("BaseArea.level = 2"),
+                    referenceTableType = @ReferenceTableType(dependField = "provincet", dependColumn = "pid.id")
+            )
+    )
+    private BaseArea cityt;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "区", column = "name"),
+            edit = @Edit(title = "区", type = EditType.REFERENCE_TABLE,
+                    filter = @Filter("BaseArea.level = 3"),
+                    referenceTableType = @ReferenceTableType(dependField = "cityt", dependColumn = "pid.id")
+            )
+    )
+    private BaseArea areat;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "街道", column = "name"),
+            edit = @Edit(title = "街道", type = EditType.REFERENCE_TABLE,
+                    filter = @Filter("BaseArea.level = 4"),
+                    referenceTableType = @ReferenceTableType(dependField = "areat", dependColumn = "pid.id")
+            )
+    )
+    private BaseArea streett;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "社区", column = "name"),
+            edit = @Edit(title = "社区", type = EditType.REFERENCE_TABLE,
+                    filter = @Filter("BaseArea.level = 5"),
+                    referenceTableType = @ReferenceTableType(dependField = "streett", dependColumn = "pid.id")
+            )
+    )
+    private BaseArea communityt;
 
 
     @Override

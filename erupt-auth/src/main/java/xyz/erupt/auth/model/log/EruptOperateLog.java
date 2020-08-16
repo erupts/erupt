@@ -11,8 +11,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.base.BaseModel;
 import xyz.erupt.auth.model.EruptUser;
+import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -84,10 +84,9 @@ public class EruptOperateLog extends BaseModel {
     )
     private String reqAddr;
 
-    @Lob
-//    @EruptField(
-//            views = @View(title = "请求方法")
-//    )
+    @EruptField(
+            views = @View(title = "请求方法")
+    )
     private String reqMethod;
 
     @Lob

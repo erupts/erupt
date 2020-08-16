@@ -163,7 +163,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     operate.setIp(IpUtil.getIpAddr(request));
                     operate.setRegion(IpUtil.getCityInfo(operate.getIp()));
                     operate.setStatus(true);
-                    operate.setReqMethod(handlerMethod.toString());
+                    operate.setReqMethod(request.getMethod());
 //                    operate.setReqParam(request.getAttribute(REQ_BODY).toString());
                     operate.setReqAddr(request.getRequestURL().toString());
                     operate.setEruptUser(new EruptUser() {{

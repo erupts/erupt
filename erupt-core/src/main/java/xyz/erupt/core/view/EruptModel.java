@@ -5,7 +5,6 @@ import lombok.Data;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.util.AnnotationUtil;
 
-import javax.persistence.Transient;
 import java.util.List;
 import java.util.Map;
 

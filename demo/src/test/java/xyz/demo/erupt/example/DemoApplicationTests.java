@@ -139,6 +139,27 @@ public class DemoApplicationTests {
         }
     }
 
+
+//    @Test
+//    public void prop() throws IllegalAccessException, InstantiationException {
+//        for (DbConfig prop : multiDB.getProps()) {
+//            LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+//            {
+//                JpaProperties jpa = prop.getJpa();
+//                HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+//                vendorAdapter.setGenerateDdl(jpa.isGenerateDdl());
+//                vendorAdapter.setDatabase(jpa.getDatabase());
+//                vendorAdapter.setShowSql(jpa.isShowSql());
+//                vendorAdapter.setDatabasePlatform(jpa.getDatabasePlatform());
+//                factory.setJpaVendorAdapter(vendorAdapter);
+//            }
+//            factory.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
+//            factory.setPackagesToScan(eruptProp.getScannerPackage());
+//            factory.afterPropertiesSet();
+//            EntityManager entityManager = factory.getObject().createEntityManager();
+//        }
+//    }
+
     @Test
     public void joinTest() {
         entityManager.createQuery("select eruptUserTree.name from Demo where choice='xxx'").getResultList();

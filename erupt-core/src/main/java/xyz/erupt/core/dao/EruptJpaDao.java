@@ -3,10 +3,12 @@ package xyz.erupt.core.dao;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.core.service.EntityManagerService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -15,7 +17,10 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.HqlBean;
 import xyz.erupt.core.view.Page;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Map;
 
@@ -26,31 +31,37 @@ import java.util.Map;
 @Repository
 public class EruptJpaDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private EntityManagerService entityManagerService;
 
-    public void addEntity(Object entity) {
-        entityManager.persist(entity);
-        entityManager.flush();
+    public void addEntity(EruptModel eruptModel, Object entity) {
+        entityManagerService.getEntityManager(eruptModel, (em) -> {
+            em.persist(entity);
+            em.flush();
+        });
     }
 
-    public void editEntity(Object entity) {
-        entityManager.merge(entity);
-        entityManager.flush();
+    public void editEntity(EruptModel eruptModel, Object entity) {
+        entityManagerService.getEntityManager(eruptModel, (em) -> {
+            em.merge(entity);
+            em.flush();
+        });
     }
 
-    public void removeEntity(Object entity) {
-        entityManager.remove(entity);
-        entityManager.flush();
+    public void removeEntity(EruptModel eruptModel, Object entity) {
+        entityManagerService.getEntityManager(eruptModel, (em) -> {
+            em.remove(entity);
+            em.flush();
+        });
     }
 
     public Page queryEruptList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition) {
         String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")",
                 customCondition, searchCondition, page.getSort(), false));
         String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("count(*)", customCondition, searchCondition, null, true));
+        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel);
         Query query = entityManager.createQuery(hql);
         Query countQuery = entityManager.createQuery(countHql);
-
         Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
         if (null != searchCondition) {
             for (String key : searchCondition.keySet()) {
@@ -82,6 +93,7 @@ public class EruptJpaDao {
                 .setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList();
         page.setTotal((Long) countQuery.getSingleResult());
         page.setList(list);
+        entityManager.close();
         return page;
     }
 
@@ -101,7 +113,7 @@ public class EruptJpaDao {
                         .append(field.getName()).append(" as ").append(field.getName());
             }
         });
-        hql.append(" where 1=1 ");
+        hql.append(" where 1 = 1 ");
         for (String s : condition) {
             if (StringUtils.isNotBlank(s)) {
                 hql.append(EruptJpaUtils.AND).append(s);
@@ -114,14 +126,11 @@ public class EruptJpaDao {
             }
         }
         hql.append(EruptJpaUtils.geneEruptHqlOrderBy(eruptModel, sort));
+        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel);
         Query query = entityManager.createQuery(hql.toString());
-        return query.getResultList();
+        List list = query.getResultList();
+        entityManager.close();
+        return list;
     }
-
-
-//    public List getDataList(EruptModel eruptModel, String condition, String orderBy, String... cols) {
-//        String hql = EruptJapUtils.generateEruptJpaHql(eruptModel, new HqlModel(String.join(",", cols), condition, null, orderBy));
-//        return entityManager.createQuery(hql).getResultList();
-//    }
 
 }

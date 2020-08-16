@@ -1,60 +1,111 @@
 package xyz.erupt.core.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.core.env.Environment;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.annotation.EruptDataSource;
+import xyz.erupt.core.config.DatasourceProp;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author liyuepeng
  * @date 2020-01-13
  */
 @Service
-public class EntityManagerService {
-
-    private static final String DATASOURCE_PREFIX = "spring.datasource.";
+public class EntityManagerService implements ApplicationRunner {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Resource
-    private Environment env;
-
     @Autowired
     private EruptProp eruptProp;
 
-    //TODO
-    public EntityManager getEntityManager(EruptModel eruptModel) {
-        EruptDataSource eruptDataSource = eruptModel.getClazz().getAnnotation(EruptDataSource.class);
-        if (null != eruptDataSource) {
-            LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-            {
-                HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-                vendorAdapter.setGenerateDdl(false);
-                vendorAdapter.setDatabase(eruptDataSource.database());
-                vendorAdapter.setShowSql(true);
-                factory.setJpaVendorAdapter(vendorAdapter);
+    @Autowired
+    private DatasourceProp multiDB;
+
+    private Map<String, EntityManagerFactory> entityManagerMap;
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        if (null != multiDB.getList() && multiDB.isEnable()) {
+            if (null == entityManagerMap) {
+                entityManagerMap = new HashMap<>();
             }
-            factory.setDataSource(DataSourceBuilder.create()
-                    .url(env.getProperty(DATASOURCE_PREFIX + eruptDataSource.sourceName() + ".url"))
-                    .username(env.getProperty(DATASOURCE_PREFIX + eruptDataSource.sourceName() + ".username"))
-                    .password(env.getProperty(DATASOURCE_PREFIX + eruptDataSource.sourceName() + ".password"))
-                    .build());
-            factory.setPackagesToScan(eruptProp.getScannerPackage());
-            factory.afterPropertiesSet();
-            return factory.getObject().createEntityManager();
-        } else {
-            return entityManager;
+            for (DatasourceProp.DB prop : multiDB.getList()) {
+                LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+                {
+                    JpaProperties jpa = prop.getJpa();
+                    HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+                    vendorAdapter.setGenerateDdl(jpa.isGenerateDdl());
+                    vendorAdapter.setDatabase(jpa.getDatabase());
+                    vendorAdapter.setShowSql(jpa.isShowSql());
+                    vendorAdapter.setDatabasePlatform(jpa.getDatabasePlatform());
+                    factory.setJpaVendorAdapter(vendorAdapter);
+                }
+                {
+                    factory.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
+                    factory.setPackagesToScan(eruptProp.getScannerPackage());
+                    factory.afterPropertiesSet();
+                }
+//                JpaTransactionManager tm = new JpaTransactionManager();
+//                tm.setEntityManagerFactory(factory.getObject());
+//                tm.setPersistenceUnitName(prop.getDatasource().getName());
+                entityManagerMap.put(prop.getDatasource().getName(), factory.getObject());
+            }
         }
     }
 
+
+    /**
+     * 如果使用了@EruptDataSource多数据源，调用此方法必须手动关闭, close()
+     *
+     * @param eruptModel
+     * @return
+     */
+    public EntityManager getEntityManager(EruptModel eruptModel) {
+        EruptDataSource eruptDataSource = eruptModel.getClazz().getAnnotation(EruptDataSource.class);
+        if (null == eruptDataSource) {
+            return entityManager;
+        } else {
+            return entityManagerMap.get(eruptDataSource.value()).createEntityManager();
+        }
+    }
+
+
+    public void getEntityManager(EruptModel eruptModel, Consumer<EntityManager> consumer) {
+        EruptDataSource eruptDataSource = eruptModel.getClazz().getAnnotation(EruptDataSource.class);
+        if (null == eruptDataSource) {
+            consumer.accept(entityManager);
+        } else {
+            EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
+            try {
+                em.getTransaction().begin();
+                consumer.accept(em);
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                em.getTransaction().rollback();
+            } finally {
+                if (em.isOpen()) {
+                    em.close();
+                }
+            }
+        }
+    }
+
+
+//    public EntityManager getEntityManager(String name) {
+//        return entityManagerMap.get(name);
+//    }
 }

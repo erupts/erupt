@@ -2,7 +2,6 @@ package xyz.erupt.core.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -24,7 +23,6 @@ public class EruptComponentController {
 
     @RequestMapping("/auto-complete/{erupt}/{field}/{val}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    @ResponseBody
     public List<Object> findAutoCompleteValue(@PathVariable("erupt") String eruptName,
                                               @PathVariable("field") String field,
                                               @PathVariable("val") String val) {

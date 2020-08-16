@@ -81,7 +81,7 @@ public class EruptService {
             }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
                     .queryList(eruptModel, new Page(pageIndex, pageSize, sort),
-                            legalJsonObject, conditionList.toArray(new String[conditionList.size()]));
+                            legalJsonObject, conditionList.toArray(new String[0]));
             for (Map<String, Object> map : page.getList()) {
                 DataHandlerUtil.convertDataToEruptView(eruptModel, map);
             }

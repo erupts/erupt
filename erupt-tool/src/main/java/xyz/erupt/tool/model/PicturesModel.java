@@ -41,8 +41,8 @@ public class PicturesModel extends BaseModel implements DataProxy {
     private String thumbnail;
 
     @EruptField(
-            views = @View(title = "大小"),
-            edit = @Edit(title = "大小", show = false, search = @Search(vague = true))
+            views = @View(title = "大小（MB）"),
+            edit = @Edit(title = "大小(MB)", show = false, search = @Search(vague = true))
     )
     private String size;
 
