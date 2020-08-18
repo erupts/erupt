@@ -204,7 +204,7 @@ public class AnnotationUtil {
         EruptDataProcessor eruptDataProcessor = clazz.getAnnotation(EruptDataProcessor.class);
         EruptDataService dataService;
         if (null != eruptDataProcessor) {
-            dataService = EruptSpringUtil.getBean(eruptDataProcessor.processors());
+            dataService = EruptSpringUtil.getBean(eruptDataProcessor.value());
         } else {
             dataService = EruptSpringUtil.getBean(EruptDbService.class);
         }

@@ -1,7 +1,6 @@
 package xyz.erupt.auth.service;
 
 import com.google.gson.Gson;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -62,15 +61,17 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     public List<TreeModel> geneMenuTree(List<EruptMenu> menuList) {
         List<TreeModel> treeModels = new ArrayList<>();
         for (EruptMenu eruptMenu : menuList) {
-            Long pid = null;
-            if (null != eruptMenu.getParentMenu()) {
-                pid = eruptMenu.getParentMenu().getId();
+            if (EruptMenu.OPEN.equals(eruptMenu.getStatus().toString())) {
+                Long pid = null;
+                if (null != eruptMenu.getParentMenu()) {
+                    pid = eruptMenu.getParentMenu().getId();
+                }
+                TreeModel treeModel = new TreeModel(eruptMenu.getId(), eruptMenu.getName(), pid, eruptMenu);
+                if (null != pid) {
+                    treeModel.setRoot(false);
+                }
+                treeModels.add(treeModel);
             }
-            TreeModel treeModel = new TreeModel(eruptMenu.getId(), eruptMenu.getName(), pid, eruptMenu);
-            if (null != pid) {
-                treeModel.setRoot(false);
-            }
-            treeModels.add(treeModel);
         }
         return DataHandlerUtil.treeModelToTree(treeModels);
     }

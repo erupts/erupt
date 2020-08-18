@@ -14,5 +14,5 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface EruptDataProcessor {
-    Class<? extends EruptDataService> processors() default EruptDbService.class;
+    Class<? extends EruptDataService> value() default EruptDbService.class;
 }

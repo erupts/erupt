@@ -43,6 +43,7 @@
         <module>erupt-bi</module>
         <module>erupt-ops</module>
         <module>erupt-tool</module>
+        <module>erupt-mongodb</module>
     </modules>
 
     <dependencyManagement>
@@ -81,7 +82,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!-- 一键更新子模块版本号 -->
+            <!-- 一键更新子模块版本号 plugins -> versions -> version:set  -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
