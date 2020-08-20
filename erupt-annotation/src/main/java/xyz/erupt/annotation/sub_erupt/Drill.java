@@ -10,7 +10,7 @@ public @interface Drill {
 
     String title();
 
-    String icon() default "";
+    String icon() default "fa fa-sitemap";
 
     Link link();
 }

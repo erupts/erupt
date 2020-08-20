@@ -76,9 +76,6 @@ public class Bi extends HyperModel {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "BI_ID")
-//    @EruptField(
-//            edit = @Edit(title = "图表", type = EditType.TAB_TABLE_ADD, orderBy = "sort")
-//    )
     private Set<BiChart> biCharts;
 
     @OneToMany(cascade = CascadeType.ALL)

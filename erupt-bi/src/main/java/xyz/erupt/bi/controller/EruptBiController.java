@@ -79,12 +79,18 @@ public class EruptBiController {
         for (BiChart chart : bi.getBiCharts()) {
             chart.setSqlStatement(null);
             chart.setBi(null);
+            chart.setId(null);
+            chart.setCreateTime(null);
+            chart.setUpdateTime(null);
+            chart.setCreateUser(null);
+            chart.setUpdateUser(null);
             if (chart.getSort() == null) {
                 chart.setSort(++maxSort);
             }
         }
         for (BiDimension dimension : bi.getBiDimension()) {
             dimension.setBiDimensionReference(null);
+            dimension.setId(null);
             if (dimension.getSort() == null) {
                 dimension.setSort(++maxSort);
             }
