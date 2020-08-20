@@ -40,6 +40,8 @@ public enum EditType {
     REFERENCE_TREE,
     @EditTypeMapping(mapping = ReferenceTableType.class, desc = "表格引用", searchVague = false, allowType = {JavaTypeEnum.bool})
     REFERENCE_TABLE,
+    @EditTypeMapping(desc = "多选（仅支持多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
+    CHECKBOX,
     @EditTypeMapping(desc = "树引用（仅支持多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
     TAB_TREE,
     @EditTypeMapping(desc = "表格引用（仅支持多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)

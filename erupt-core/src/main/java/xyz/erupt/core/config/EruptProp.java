@@ -19,13 +19,11 @@ public class EruptProp {
     //注解扫描根路径
     private String[] scannerPackage;
 
-    private String[] allowRequestFileType;
-
     //类路径，需要实现xyz.erupt.annotation.fun.AttachmentProxy接口，可实现自定义附件存储策略
     private String attachmentProxy;
 
     //文件上传根路径
-    private String uploadPath = "/opt/file";
+    private String uploadPath = "/opt/erupt-attachment";
 
     //是否使用redis管理session
     private boolean redisSession = false;

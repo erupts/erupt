@@ -270,7 +270,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
     public void addBehavior(Test o) {
         o.setInput("美国🇺🇸");
         o.setNumber(2333333);
-        System.err.println("addBehavior");
+        o.setColor("#0099ff");
     }
 
     @Override

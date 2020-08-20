@@ -1,7 +1,5 @@
 package xyz.erupt.core.controller;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,29 +195,29 @@ public class EruptFileController {
     }
 
 
-    @RequestMapping(value = {PREVIEW_PATH + "/**"})
-    @ResponseBody
-    public void previewAttachment(HttpServletResponse response, HttpServletRequest request) {
-        previewAttachment(request.getServletPath().replace(RestPath.ERUPT_FILE + PREVIEW_PATH, ""), response);
-    }
-
-
-    @RequestMapping(value = PREVIEW_PATH)
-    @ResponseBody
-    public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) {
-        int cacheTime = 60 * 60 * 24 * 10 * 1000;
-        response.addHeader("cache-control", "max-age=" + cacheTime);
-        response.setDateHeader("expires", (System.currentTimeMillis() + cacheTime));
-        response.setDateHeader("date", System.currentTimeMillis());
-        response.setHeader("etag", RandomStringUtils.randomAlphabetic(10));
-        response.setDateHeader("Last-Modified", System.currentTimeMillis() - 1000 * 60);
-        response.setContentType(MimeUtil.getMimeType(path));
-        try {
-            IOUtils.write(mappingFileToByte(path, response), response.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    @RequestMapping(value = {PREVIEW_PATH + "/**"})
+//    @ResponseBody
+//    public void previewAttachment(HttpServletResponse response, HttpServletRequest request) {
+//        previewAttachment(request.getServletPath().replace(RestPath.ERUPT_FILE + PREVIEW_PATH, ""), response);
+//    }
+//
+//
+//    @RequestMapping(value = PREVIEW_PATH)
+//    @ResponseBody
+//    public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) {
+//        int cacheTime = 60 * 60 * 24 * 10 * 1000;
+//        response.addHeader("cache-control", "max-age=" + cacheTime);
+//        response.setDateHeader("expires", (System.currentTimeMillis() + cacheTime));
+//        response.setDateHeader("date", System.currentTimeMillis());
+//        response.setHeader("etag", RandomStringUtils.randomAlphabetic(10));
+//        response.setDateHeader("Last-Modified", System.currentTimeMillis() - 1000 * 60);
+//        response.setContentType(MimeUtil.getMimeType(path));
+//        try {
+//            IOUtils.write(mappingFileToByte(path, response), response.getOutputStream());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private byte[] mappingFileToByte(String path, HttpServletResponse response) {
         if (!path.startsWith(FS_SEP)) {
