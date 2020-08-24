@@ -1,5 +1,7 @@
 package xyz.erupt.core.controller;
 
+import com.google.gson.Gson;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -47,7 +50,6 @@ public class EruptFileController {
     private static final String FS_SEP = "/";
 
     @PostMapping("/upload/{erupt}/{field}")
-    @ResponseBody
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty() || StringUtils.isBlank(file.getOriginalFilename())) {
@@ -119,7 +121,7 @@ public class EruptFileController {
                             break;
                     }
                     break;
-                case HTML_EDIT:
+                case HTML_EDITOR:
                     break;
                 default:
                     return EruptApiModel.errorApi("上传失败，非法类型!");
@@ -150,7 +152,6 @@ public class EruptFileController {
 
 
     @PostMapping("/uploads/{erupt}/{field}")
-    @ResponseBody
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel uploads(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile[] files) {
         List<String> paths = new ArrayList<>();
@@ -161,15 +162,12 @@ public class EruptFileController {
         return EruptApiModel.successApi(String.join(",", paths));
     }
 
-    private static final String PREVIEW_PATH = "/preview-attachment";
 
     @PostMapping("/upload-html-editor/{erupt}/{field}")
-    @ResponseBody
     @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> uploadHtmlEditorImage(@PathVariable("erupt") String eruptName,
                                                      @PathVariable("field") String fieldName,
-                                                     @RequestParam("upload") MultipartFile file,
-                                                     HttpServletRequest request) throws ClassNotFoundException {
+                                                     @RequestParam("upload") MultipartFile file) throws ClassNotFoundException {
         EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
         Map<String, Object> map = new HashMap<>(2);
         if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
@@ -179,7 +177,7 @@ public class EruptFileController {
                 map.put("url", attachmentProxy.fileDomain() + "/" + eruptApiModel.getData());
             } else {
                 //request.getRequestURL().toString().split(RestPath.ERUPT_API)[0] +
-                map.put("url", RestPath.ERUPT_FILE.substring(1) + PREVIEW_PATH + "/" + eruptApiModel.getData());
+                map.put("url", RestPath.ERUPT_ATTACHMENT + "/" + eruptApiModel.getData());
             }
             map.put("uploaded", true);
         } else {
@@ -188,8 +186,34 @@ public class EruptFileController {
         return map;
     }
 
+
+    @RequestMapping("/upload-ueditor/{erupt}/{field}")
+    @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
+    public void uploadUEditorImage(@PathVariable("erupt") String eruptName,
+                                   @PathVariable("field") String fieldName,
+                                   @RequestParam(value = "callback", required = false) String callback,
+                                   @RequestParam(value = "file", required = false) MultipartFile file,
+                                   HttpServletResponse response, HttpServletRequest request) throws IOException, ClassNotFoundException {
+        if (null == file) {
+            InputStream stream = EruptFileController.class.getClassLoader().getResourceAsStream("ueditor.json");
+            String json = StreamUtils.copyToString(stream, Charset.forName("utf-8"));
+            if (null == callback) {
+                IOUtils.write(json, response.getOutputStream(), "UTF-8");
+            } else {
+                IOUtils.write(callback + "(" + json + ")", response.getOutputStream(), "UTF-8");
+            }
+
+        } else {
+            Map<String, Object> map = uploadHtmlEditorImage(eruptName, fieldName, file);
+            Boolean status = (Boolean) map.get("uploaded");
+            map.put("state", status ? "SUCCESS" : "ERROR");
+//            map.put("title", "a.png");
+//            map.put("original", "a.png");
+            IOUtils.write(new Gson().toJson(map), response.getOutputStream(), "UTF-8");
+        }
+    }
+
     @RequestMapping(value = DOWNLOAD_PATH + "/**", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    @ResponseBody
     public byte[] downloadAttachment(HttpServletRequest request, HttpServletResponse response) {
         return mappingFileToByte(request.getServletPath().replace(RestPath.ERUPT_FILE + DOWNLOAD_PATH, ""), response);
     }

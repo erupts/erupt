@@ -31,7 +31,7 @@ public enum EditType {
     @EditTypeMapping(desc = "隐藏", search = false, allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     HIDDEN,
     @EditTypeMapping(desc = "富文本编辑器", allowType = {JavaTypeEnum.String})
-    HTML_EDIT,
+    HTML_EDITOR,
     @EditTypeMapping(desc = "大文本域", allowType = {JavaTypeEnum.String}, nameInfer = {"desc", "remark"})
     TEXTAREA,
     @EditTypeMapping(desc = "表格合并", searchVague = false, allowType = {JavaTypeEnum.object})

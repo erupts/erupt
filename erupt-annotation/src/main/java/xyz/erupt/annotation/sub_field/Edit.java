@@ -69,6 +69,9 @@ public @interface Edit {
     @Match("item.type()=='REFERENCE_TABLE'")
     ReferenceTableType referenceTableType() default @ReferenceTableType;
 
+    @Match("item.type()=='HTML_EDITOR'")
+    HtmlEditorType htmlEditorType() default @HtmlEditorType(HtmlEditorType.Type.UEDITOR);
+
     @Match("item.type()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "sql");
 

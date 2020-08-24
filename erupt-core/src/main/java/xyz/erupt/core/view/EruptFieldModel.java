@@ -14,7 +14,6 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.util.AnnotationUtil;
-import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 
@@ -22,8 +21,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +90,7 @@ public class EruptFieldModel {
                                     viewValues.put(TYPE, ViewType.ATTACHMENT);
                                 }
                                 continue;
-                            case HTML_EDIT:
+                            case HTML_EDITOR:
                                 viewValues.put(TYPE, ViewType.HTML);
                                 continue;
                             case CODE_EDITOR:

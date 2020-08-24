@@ -8,7 +8,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
-import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
+import xyz.erupt.annotation.sub_field.sub_edit.HtmlEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.base.BaseModel;
 
@@ -47,10 +47,17 @@ public class News extends BaseModel implements DataProxy<News> {
     @Lob
     @EruptField(
             views = @View(title = "内容", type = ViewType.HTML),
-            edit = @Edit(title = "内容", type = EditType.HTML_EDIT, notNull = true,
-                    attachmentType = @AttachmentType)
+            edit = @Edit(title = "内容", type = EditType.HTML_EDITOR, notNull = true)
     )
     private String content;
+
+    @Lob
+    @EruptField(
+            views = @View(title = "内容2", type = ViewType.HTML),
+            edit = @Edit(title = "内容2", type = EditType.HTML_EDITOR,
+                    htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.CKEDITOR), notNull = true)
+    )
+    private String content2;
 
     @Override
     public void beforeAdd(News o) {

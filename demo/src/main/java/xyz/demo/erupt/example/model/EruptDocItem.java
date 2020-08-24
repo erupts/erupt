@@ -48,7 +48,7 @@ public class EruptDocItem extends BaseModel {
     @Lob
     @EruptField(
             views = @View(title = "内容"),
-            edit = @Edit(title = "内容", type = EditType.HTML_EDIT, notNull = true)
+            edit = @Edit(title = "内容", type = EditType.HTML_EDITOR, notNull = true)
     )
     private String content;
 
