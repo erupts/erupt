@@ -15,6 +15,8 @@ public enum ViewType {
     SWF,
     //HTML
     HTML,
+    //手机端方式展示
+    MOBILE_HTML,
     //二维码
     QR_CODE,
     //链接

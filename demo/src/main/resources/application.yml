@@ -24,7 +24,11 @@ erupt-auth:
 openApi:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
+
 spring:
+  data:
+    mongodb:
+      uri: mongodb://erupt:erupt@localhost/erupt
   datasource:
     hikari:
       max-lifetime: 30000
@@ -40,8 +44,8 @@ spring:
     show-sql: true
     #    database-platform: org.hibernate.dialect.H2Dialect
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-  #    hibernate:
-  #      ddl-auto: update
+    hibernate:
+      ddl-auto: update
   h2:
     console:
       enabled: false
