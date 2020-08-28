@@ -1,7 +1,7 @@
 {
   "imageActionName": "uploadimage",
   "imageFieldName": "file",
-  "imageMaxSize": 5242880,
+  "imageMaxSize": 1024000000,
   "imageAllowFiles": [
     ".png",
     ".jpg",
@@ -17,7 +17,7 @@
   "scrawlActionName": "uploadscrawl",
   "scrawlFieldName": "file",
   "scrawlPathFormat": "\/{yyyy}{mm}\/{time}{rand:6}",
-  "scrawlMaxSize": 2048000,
+  "scrawlMaxSize": 1024000000,
   "scrawlUrlPrefix": "",
   "scrawlInsertAlign": "none",
   "snapscreenActionName": "uploadimage",
@@ -33,7 +33,7 @@
   "catcherFieldName": "source",
   "catcherPathFormat": "\/{yyyy}{mm}\/{time}{rand:6}",
   "catcherUrlPrefix": "",
-  "catcherMaxSize": 2048000,
+  "catcherMaxSize": 1024000000,
   "catcherAllowFiles": [
     ".png",
     ".jpg",
@@ -45,7 +45,7 @@
   "videoFieldName": "file",
   "videoPathFormat": "\/Uploads\/Video\/{time}{rand:6}",
   "videoUrlPrefix": "",
-  "videoMaxSize": 102400000,
+  "videoMaxSize": 10240000000,
   "videoAllowFiles": [
     ".flv",
     ".swf",
@@ -69,7 +69,7 @@
   "fileFieldName": "file",
   "filePathFormat": "\/Uploads\/File\/{time}{rand:6}",
   "fileUrlPrefix": "",
-  "fileMaxSize": 51200000,
+  "fileMaxSize": 10240000000,
   "fileAllowFiles": [
     ".png",
     ".jpg",
@@ -114,7 +114,7 @@
   ],
   "imageManagerActionName": "listimage",
   "imageManagerListPath": "\/{yyyy}{mm}\/",
-  "imageManagerListSize": 20,
+  "imageManagerListSize": 200,
   "imageManagerUrlPrefix": "",
   "imageManagerInsertAlign": "none",
   "imageManagerAllowFiles": [
@@ -127,7 +127,7 @@
   "fileManagerActionName": "listfile",
   "fileManagerListPath": "\/Uploads\/File\/",
   "fileManagerUrlPrefix": "",
-  "fileManagerListSize": 20,
+  "fileManagerListSize": 200,
   "fileManagerAllowFiles": [
     ".png",
     ".jpg",
