@@ -212,10 +212,7 @@ public class EruptUserService {
             if (StringUtils.isNotBlank(menu.getPath())
                     && !EruptMenu.DISABLE.equals(menu.getStatus().toString())
                     && menu.getPath().toLowerCase().contains(name.toLowerCase())) {
-                String path = menu.getPath();
-                if (null != path) {
-                    path = path.trim();
-                }
+                String path = menu.getPath().trim();
                 for (VL vl : VLS) {
                     if (vl.value().length() > 2 && path.contains(vl.value())) {
                         path = menu.getPath().replace(vl.value(), "");
