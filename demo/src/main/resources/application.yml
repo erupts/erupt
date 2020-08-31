@@ -1,8 +1,6 @@
 erupt:
   scanner-package:
     - xyz.demo
-  allow-request-file-type:
-    - docx
   csrfInspect: false
   job.enable: true
   dbs:

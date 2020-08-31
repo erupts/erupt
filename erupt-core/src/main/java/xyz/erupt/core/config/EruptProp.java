@@ -30,10 +30,21 @@ public class EruptProp {
 
     private boolean csrfInspect = true;
 
-    private String[] dataSources;
+//    private List<DatasourceProp.DB> dbs;
 
     public void setScannerPackage(String[] scannerPackage) {
         this.scannerPackage = Arrays.copyOf(scannerPackage, scannerPackage.length + 1);
         this.scannerPackage[scannerPackage.length] = EruptConst.BASE_PACKAGE;
     }
+
+
+//    @Getter
+//    @Setter
+//    public static class DB {
+//
+//        private DataSourceProperties datasource;
+//
+//        private JpaProperties jpa;
+//
+//    }
 }
