@@ -23,7 +23,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +73,7 @@ public final class EruptCoreService implements ApplicationRunner {
                     eruptFieldMap.put(field.getName(), eruptFieldModel);
                 }
             });
+            eruptFieldModels.sort(Comparator.comparingInt((a) -> a.getEruptField().sort()));
             eruptModel.setEruptFieldModels(eruptFieldModels);
             eruptModel.setEruptFieldMap(eruptFieldMap);
         }

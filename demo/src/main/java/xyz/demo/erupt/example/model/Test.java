@@ -41,6 +41,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
     private Integer number;
 
     @EruptField(
+            sort = 1,
             views = @View(title = "自动完成"),
             edit = @Edit(title = "自动完成", search = @Search(vague = true), type = EditType.AUTO_COMPLETE,
                     autoCompleteType = @AutoCompleteType(handler = AutoCompleteHandlerImpl.class))

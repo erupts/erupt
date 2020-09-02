@@ -5,6 +5,7 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 
+import java.beans.Transient;
 import java.lang.annotation.*;
 
 /**
@@ -22,6 +23,9 @@ public @interface EruptField {
     //@Match("value.title()")
     //编辑信息
     Edit edit() default @Edit(title = AnnotationConst.EMPTY_STR);
+
+    @Transient
+    int sort() default 1000;
 
     @ToMap(key = "key")
     KV[] params() default {};
