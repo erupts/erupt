@@ -8,7 +8,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.annotation.EruptDataSource;
-import xyz.erupt.core.config.DatasourceProp;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.view.EruptModel;
 
@@ -32,18 +31,13 @@ public class EntityManagerService implements ApplicationRunner {
     @Autowired
     private EruptProp eruptProp;
 
-    @Autowired
-    private DatasourceProp multiDB;
-
     private Map<String, EntityManagerFactory> entityManagerMap;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if (null != multiDB.getList() && multiDB.isEnable()) {
-            if (null == entityManagerMap) {
-                entityManagerMap = new HashMap<>();
-            }
-            for (DatasourceProp.DB prop : multiDB.getList()) {
+        if (null != eruptProp.getDbs()) {
+            entityManagerMap = new HashMap<>();
+            for (EruptProp.DB prop : eruptProp.getDbs()) {
                 LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
                 {
                     JpaProperties jpa = prop.getJpa();
@@ -59,9 +53,6 @@ public class EntityManagerService implements ApplicationRunner {
                     factory.setPackagesToScan(eruptProp.getScannerPackage());
                     factory.afterPropertiesSet();
                 }
-//                JpaTransactionManager tm = new JpaTransactionManager();
-//                tm.setEntityManagerFactory(factory.getObject());
-//                tm.setPersistenceUnitName(prop.getDatasource().getName());
                 entityManagerMap.put(prop.getDatasource().getName(), factory.getObject());
             }
         }

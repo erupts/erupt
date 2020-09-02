@@ -4,17 +4,16 @@ erupt:
   csrfInspect: false
   job.enable: true
   dbs:
-    list:
-      - datasource:
-          name: mysql
-          url: jdbc:mysql://39.104.174.237:3306/mysql?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-          username: root2
-          password: B5xC&YccqyV
-        jpa:
-          show-sql: true
-          database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-          hibernate:
-            ddl-auto: update
+    - datasource:
+        name: mysql
+        url: jdbc:mysql://39.104.174.237:3306/mysql?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+        username: root2
+        password: B5xC&YccqyV
+      jpa:
+        show-sql: true
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+        hibernate:
+          ddl-auto: update
 #  attachmentProxy: xyz.erupt.example.handler.QiniuOosProxy
 erupt-auth:
   expireTimeByLogin: 60

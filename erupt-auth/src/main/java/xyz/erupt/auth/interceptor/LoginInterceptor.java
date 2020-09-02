@@ -35,6 +35,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private static final String REQ_DATE = "@req_date@";
     private static final String REQ_BODY = "@req_body@";
+
+
     @Autowired
     private EruptUserService eruptUserService;
 

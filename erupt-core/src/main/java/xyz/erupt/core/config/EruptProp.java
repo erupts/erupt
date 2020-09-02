@@ -1,11 +1,16 @@
 package xyz.erupt.core.config;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.constant.EruptConst;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author liyuepeng
@@ -30,7 +35,7 @@ public class EruptProp {
 
     private boolean csrfInspect = true;
 
-//    private List<DatasourceProp.DB> dbs;
+    private List<DB> dbs;
 
     public void setScannerPackage(String[] scannerPackage) {
         this.scannerPackage = Arrays.copyOf(scannerPackage, scannerPackage.length + 1);
@@ -38,13 +43,13 @@ public class EruptProp {
     }
 
 
-//    @Getter
-//    @Setter
-//    public static class DB {
-//
-//        private DataSourceProperties datasource;
-//
-//        private JpaProperties jpa;
-//
-//    }
+    @Getter
+    @Setter
+    public static class DB {
+
+        private DataSourceProperties datasource;
+
+        private JpaProperties jpa;
+
+    }
 }
