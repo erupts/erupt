@@ -22,7 +22,16 @@ openApi:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
 
+spring.mail.properties.mail.smtp.ssl.auth: true
+spring.mail.properties.mail.smtp.ssl.enable: true
+spring.mail.properties.mail.smtp.ssl.required: true
+
 spring:
+  mail:
+    username: lixin@wingstimes.com
+    password: Lx2159200
+    host: smtp.exmail.qq.com
+    port: 465
   data:
     mongodb:
       uri: mongodb://erupt:erupt@localhost/erupt
@@ -42,7 +51,7 @@ spring:
     #    database-platform: org.hibernate.dialect.H2Dialect
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+  #      ddl-auto: update
   h2:
     console:
       enabled: false

@@ -13,7 +13,7 @@ public interface EruptJobHandler {
      * @return 执行结果
      * @throws Exception ex
      */
-    String exec(String param) throws Exception;
+    String exec(String code, String param) throws Exception;
 
     /**
      * 成功事件回调函数

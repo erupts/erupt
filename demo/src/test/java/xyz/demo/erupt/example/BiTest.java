@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
@@ -78,5 +80,17 @@ public class BiTest {
         }
     }
 
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
+
+    @Test
+    public void sendMail() {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject("test");
+        message.setText("test");
+        message.setTo("122339792@qq.com");
+        message.setFrom(javaMailSender.getUsername());
+        javaMailSender.send(message);
+    }
 
 }

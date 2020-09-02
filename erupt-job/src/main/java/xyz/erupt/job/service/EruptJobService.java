@@ -6,6 +6,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.job.model.EruptJob;
@@ -32,12 +33,18 @@ public class EruptJobService {
      * 执行任务线程数.
      */
     private static final int DEFAULT_THREAD_COUNT = 1;
+
     @Autowired
     private EruptDao eruptDao;
+
+    public static final String MAIL_SENDER_KEY = "mailSensor";
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
+
     private Map<String, StdSchedulerFactory> schedulerFactoryMap = new HashMap<>();
 
-    public void triggerJob(EruptJob eruptJob) throws Exception {
-        new EruptJobAction().trigger(eruptJob);
+    public void triggerJob(EruptJob eruptJob) {
+        new EruptJobAction().trigger(eruptJob, javaMailSender);
     }
 
     public void modifyJob(EruptJob eruptJob) throws SchedulerException, ParseException {
@@ -53,6 +60,7 @@ public class EruptJobService {
             JobDetailImpl job = new JobDetailImpl();
             JobDataMap jobDataMap = new JobDataMap();
             jobDataMap.put(code, eruptJob);
+            jobDataMap.put(MAIL_SENDER_KEY, javaMailSender);
             job.setJobDataMap(jobDataMap);
             job.setName(code);
             job.setJobClass(EruptJobAction.class);
