@@ -11,6 +11,7 @@ import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.ProjectUtil;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class BiDataLoadService implements CommandLineRunner {
     @Autowired
     private EruptDao eruptDao;
 
-    static String[] functions = {};
+    static List<String> functions = new ArrayList<>();
 
     @Transactional
     @Override
@@ -56,9 +57,8 @@ public class BiDataLoadService implements CommandLineRunner {
 
     public void flushFunction() {
         List<Object[]> list = eruptDao.queryObjectList(BiFunction.class, null, null, "jsFunction");
-        functions = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            functions[i] = ((Object) list.get(i)).toString();
+        for (Object o : list) {
+            functions.add((String) o);
         }
     }
 
