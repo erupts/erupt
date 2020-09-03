@@ -234,6 +234,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
     @Override
     public void afterAdd(Test o) {
         System.err.println("afterAdd");
+        throw new RuntimeException("test add error");
     }
 
     @Override
