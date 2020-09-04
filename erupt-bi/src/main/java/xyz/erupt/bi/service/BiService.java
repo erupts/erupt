@@ -65,23 +65,27 @@ public class BiService {
         }
         query.put(EXPORT_PLACEHOLDER, export);
         query.put(USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
-        String sql = String.format("select * from (%s) _ limit %s,%s",
-                bi.getSqlStatement(), (pageIndex - 1) * pageSize, pageSize);
-        List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);
         BiData biData = new BiData();
-        biData.setList(list);
         if (!export) {
             biData.setTotal(this.getTotal(bi, query));
         }
-        if (null != list && list.size() > 0) {
-            List<BiColumn> biColumns = new LinkedList<>();
-            Map<String, Object> map = list.get(0);
-            for (String key : map.keySet()) {
-                BiColumn biColumn = new BiColumn();
-                biColumn.setName(key);
-                biColumns.add(biColumn);
+        if (null == biData.getTotal() || biData.getTotal() > 0) {
+            String sql = String.format("select * from (%s) _ limit %s,%s",
+                    bi.getSqlStatement(), (pageIndex - 1) * pageSize, pageSize);
+            List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);
+            biData.setList(list);
+            if (null != list && list.size() > 0) {
+                List<BiColumn> biColumns = new LinkedList<>();
+                Map<String, Object> map = list.get(0);
+                for (String key : map.keySet()) {
+                    BiColumn biColumn = new BiColumn();
+                    biColumn.setName(key);
+                    biColumns.add(biColumn);
+                }
+                biData.setColumns(biColumns);
             }
-            biData.setColumns(biColumns);
+        } else {
+            biData.setList(new ArrayList<>(0));
         }
         return biData;
     }

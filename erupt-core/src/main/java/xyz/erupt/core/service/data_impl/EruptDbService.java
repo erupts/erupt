@@ -50,7 +50,9 @@ public class EruptDbService implements EruptDataService {
     public Object findDataById(EruptModel eruptModel, Object id) {
         EntityManager entityManager = entityManagerService.getEntityManager(eruptModel);
         Object obj = entityManager.find(eruptModel.getClazz(), id);
-        entityManager.close();
+        if (entityManager.isOpen()) {
+            entityManager.close();
+        }
         return obj;
     }
 

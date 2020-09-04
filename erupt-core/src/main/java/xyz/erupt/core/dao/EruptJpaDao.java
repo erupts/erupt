@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -89,11 +90,17 @@ public class EruptJpaDao {
                 }
             }
         }
-        List list = query.setMaxResults(page.getPageSize())
-                .setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList();
         page.setTotal((Long) countQuery.getSingleResult());
-        page.setList(list);
-        entityManager.close();
+        if (page.getTotal() > 0) {
+            List list = query.setMaxResults(page.getPageSize())
+                    .setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList();
+            page.setList(list);
+        } else {
+            page.setList(new ArrayList<>(0));
+        }
+        if (entityManager.isOpen()) {
+            entityManager.close();
+        }
         return page;
     }
 
@@ -129,7 +136,9 @@ public class EruptJpaDao {
         EntityManager entityManager = entityManagerService.getEntityManager(eruptModel);
         Query query = entityManager.createQuery(hql.toString());
         List list = query.getResultList();
-        entityManager.close();
+        if (entityManager.isOpen()) {
+            entityManager.close();
+        }
         return list;
     }
 

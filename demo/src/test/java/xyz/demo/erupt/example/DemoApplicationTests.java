@@ -1,5 +1,6 @@
 package xyz.demo.erupt.example;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.quartz.SchedulerException;
@@ -57,6 +58,7 @@ public class DemoApplicationTests {
     @Test
     public void eruptDaoObj() {
         Object[] oo = eruptDao.queryObject(EruptUser.class, "account = 'erupt'", null, "id", "name");
+        Assert.assertEquals(oo.length, 2);
         System.out.println(oo[0] + ":" + oo[1]);
     }
 
