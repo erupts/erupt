@@ -42,7 +42,6 @@ public class EruptProp {
         this.scannerPackage[scannerPackage.length] = EruptConst.BASE_PACKAGE;
     }
 
-
     @Getter
     @Setter
     public static class DB {

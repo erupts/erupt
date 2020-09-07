@@ -22,16 +22,16 @@ openApi:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
 
-spring.mail.properties.mail.smtp.ssl.auth: true
-spring.mail.properties.mail.smtp.ssl.enable: true
-spring.mail.properties.mail.smtp.ssl.required: true
-
 spring:
   mail:
     username: lixin@wingstimes.com
     password: Lx2159200
     host: smtp.exmail.qq.com
     port: 465
+    properties:
+      mail.smtp.ssl.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.required: true
   data:
     mongodb:
       uri: mongodb://erupt:erupt@localhost/erupt
@@ -72,5 +72,5 @@ server:
   compression:
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
     enabled: true
-#  servlet:
-#    context-path: /demo
+  servlet:
+    context-path: /demo

@@ -38,6 +38,7 @@ public class EruptJobService {
     private EruptDao eruptDao;
 
     public static final String MAIL_SENDER_KEY = "mailSensor";
+
     @Autowired
     private JavaMailSenderImpl javaMailSender;
 
