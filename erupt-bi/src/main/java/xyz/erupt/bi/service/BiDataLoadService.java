@@ -33,22 +33,26 @@ public class BiDataLoadService implements CommandLineRunner {
     public void run(String... args) throws Exception {
         new ProjectUtil().projectStartLoaded("bi", first -> {
             if (first) {
-                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("mbi", "报表维护",
-                        null, 1, 20, "fa fa-table", null), "code", "mbi");
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiDataSource.class.getSimpleName(), "数据源管理", "/build/table/" + BiDataSource.class.getSimpleName()
-                        , 1, 10, null, eruptMenu), "code", BiDataSource.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiClassHandler.class.getSimpleName(), "报表处理类", "/build/table/" + BiClassHandler.class.getSimpleName()
-                        , 1, 15, null, eruptMenu), "code", BiClassHandler.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiDimensionReference.class.getSimpleName(), "参照维度", "/build/table/" + BiDimensionReference.class.getSimpleName()
-                        , 1, 18, null, eruptMenu), "code", BiDimensionReference.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiFunction.class.getSimpleName(), "函数管理", "/build/table/" + BiFunction.class.getSimpleName()
-                        , 1, 20, null, eruptMenu), "code", BiFunction.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(Bi.class.getSimpleName(), "报表配置", "/build/table/" + Bi.class.getSimpleName()
-                        , 1, 30, null, eruptMenu), "code", Bi.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiChart.class.getSimpleName(), "图表配置", "/build/table/" + BiChart.class.getSimpleName()
-                        , 2, 100, null, eruptMenu), "code", BiChart.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiDimension.class.getSimpleName(), "维度配置", "/build/table/" + BiDimension.class.getSimpleName()
-                        , 2, 120, null, eruptMenu), "code", BiDimension.class.getSimpleName());
+                String $code = "code";
+                String $mbi = "$mbi";
+                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu($mbi, "报表维护",
+                        null, new Integer(EruptMenu.OPEN), 20, "fa fa-table", null), $code, $mbi);
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiDataSource.class.getSimpleName(), "数据源管理", EruptMenu.PATH_TABLE + BiDataSource.class.getSimpleName()
+                        , new Integer(EruptMenu.OPEN), 10, null, eruptMenu), $code, BiDataSource.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiClassHandler.class.getSimpleName(), "报表处理类", EruptMenu.PATH_TABLE + BiClassHandler.class.getSimpleName()
+                        , new Integer(EruptMenu.OPEN), 20, null, eruptMenu), $code, BiClassHandler.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiDimensionReference.class.getSimpleName(), "参照维度", EruptMenu.PATH_TABLE + BiDimensionReference.class.getSimpleName()
+                        , new Integer(EruptMenu.OPEN), 30, null, eruptMenu), $code, BiDimensionReference.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiFunction.class.getSimpleName(), "函数管理", EruptMenu.PATH_TABLE + BiFunction.class.getSimpleName()
+                        , new Integer(EruptMenu.OPEN), 40, null, eruptMenu), $code, BiFunction.class.getSimpleName());
+                {
+                    EruptMenu eruptMenuBi = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(Bi.class.getSimpleName(), "报表配置", EruptMenu.PATH_TABLE + Bi.class.getSimpleName()
+                            , new Integer(EruptMenu.OPEN), 100, null, eruptMenu), $code, Bi.class.getSimpleName());
+                    eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiChart.class.getSimpleName(), "图表配置", EruptMenu.PATH_TABLE + BiChart.class.getSimpleName()
+                            , new Integer(EruptMenu.HIDE), 10, null, eruptMenuBi), $code, BiChart.class.getSimpleName());
+                    eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiHistory.class.getSimpleName(), "修改记录", EruptMenu.PATH_TABLE + BiHistory.class.getSimpleName()
+                            , new Integer(EruptMenu.HIDE), 20, null, eruptMenuBi), $code, BiHistory.class.getSimpleName());
+                }
             }
         });
         flushFunction();

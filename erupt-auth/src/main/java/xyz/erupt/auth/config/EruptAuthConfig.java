@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "erupt-auth", ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = "erupt.auth", ignoreUnknownFields = false)
 public class EruptAuthConfig {
 
     //    session时长

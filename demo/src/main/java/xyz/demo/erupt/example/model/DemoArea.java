@@ -16,11 +16,11 @@ import javax.persistence.Table;
 @Entity
 @Getter
 @Setter
-@Table(name = "base_area")
+@Table(name = "demo_area")
 @Erupt(
         name = "地区"
 )
-public class BaseArea extends BaseModel {
+public class DemoArea extends BaseModel {
 
     @EruptField(views = @View(title = "名称"))
     private String name;
@@ -30,6 +30,6 @@ public class BaseArea extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "pid")
-    private BaseArea pid;
+    private DemoArea pid;
 
 }

@@ -18,11 +18,13 @@ import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.model.base.BaseModel;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author liyuepeng
@@ -33,7 +35,7 @@ import java.util.Set;
         rowOperation = {
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
                         ifExpr = "item.number",
-                        mode = RowOperation.Mode.SINGLE, eruptClass = DemoSub.class,
+                        mode = RowOperation.Mode.SINGLE,
                         title = "SINGLE", code = "SINGLE"),
                 @RowOperation(operationHandler = OperationHandlerImpl.class,
                         mode = RowOperation.Mode.MULTI, tip = "执行操作一需要填写，名称与菜单信息",
@@ -45,7 +47,7 @@ import java.util.Set;
         tree = @Tree(label = "input"),
         filter = @Filter("2 = 2")
 )
-@Table(name = "DEMO")
+@Table(name = "demo_demo")
 @Entity
 public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandler {
 
@@ -169,15 +171,15 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
     )
     private String map;
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "demo_sub_id")
-    @EruptField(
-            edit = @Edit(
-                    title = "一对多",
-                    type = EditType.TAB_TABLE_ADD
-            )
-    )
-    private Set<DemoSub> demoSubs;
+//    @OneToMany(cascade = {CascadeType.ALL})
+//    @JoinColumn(name = "demo_sub_id")
+//    @EruptField(
+//            edit = @Edit(
+//                    title = "一对多",
+//                    type = EditType.TAB_TABLE_ADD
+//            )
+//    )
+//    private Set<DemoSub> demoSubs;
 
 
     @Override

@@ -10,6 +10,7 @@ import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.job.model.EruptJob;
+import xyz.erupt.job.model.EruptJobLog;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -46,11 +47,13 @@ public class JobDataLoadService implements CommandLineRunner {
         }
         new ProjectUtil().projectStartLoaded("job", first -> {
             if (first) {
-                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("job", "任务管理", null, 1, 10, "fa fa-cubes", null), "code", "job");
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("EruptJob", "任务维护", "/build/table/EruptJob",
-                        1, 0, "fa fa-tasks", eruptMenu), "code", "EruptJob");
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("EruptJobLog", "任务日志", "/build/table/EruptJobLog",
-                        1, 10, "fa fa-file-text", eruptMenu), "code", "EruptJobLog");
+                String $job = "$job";
+                String $code = "code";
+                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu($job, "任务管理", null, 1, 30, "fa fa-cubes", null), $code, $job);
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJob.class.getSimpleName(), "任务维护", EruptMenu.PATH_TABLE + EruptJob.class.getSimpleName(),
+                        new Integer(EruptMenu.OPEN), 0, "fa fa-tasks", eruptMenu), $code, EruptJob.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJobLog.class.getSimpleName(), "任务日志", EruptMenu.PATH_TABLE + EruptJobLog.class.getSimpleName(),
+                        new Integer(EruptMenu.OPEN), 10, "fa fa-file-text", eruptMenu), $code, EruptJobLog.class.getSimpleName());
             }
         });
     }

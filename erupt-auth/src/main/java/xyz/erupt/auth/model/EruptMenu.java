@@ -33,6 +33,21 @@ import javax.persistence.*;
 @Setter
 public class EruptMenu extends HyperModel {
 
+    public static final String OPEN = "1";
+
+    public static final String HIDE = "2";
+
+    public static final String DISABLE = "3";
+
+    //    path
+    public static final String PATH_TREE = "/build/tree/";
+
+    public static final String PATH_TABLE = "/build/table/";
+
+    public static final String PATH_BI = "/bi/";
+
+    public static final String PATH_TPL = "/tpl/";
+
     @EruptField(
             views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true)
@@ -47,12 +62,6 @@ public class EruptMenu extends HyperModel {
             )
     )
     private String name;
-
-    public static final String OPEN = "1";
-
-    public static final String HIDE = "2";
-
-    public static final String DISABLE = "3";
 
     @EruptField(
             edit = @Edit(
@@ -70,35 +79,15 @@ public class EruptMenu extends HyperModel {
     )
     private Integer status;
 
-//    @EruptField(
-//            edit = @Edit(
-//                    notNull = true,
-//                    title = "菜单类型",
-//                    type = EditType.CHOICE,
-//                    choiceType = @ChoiceType(
-//                            vl = {
-//                                    @VL(value = "/build/table/", label = "表格"),
-//                                    @VL(value = "/build/tree/", label = "树"),
-//                                    @VL(value = "/bi/", label = "报表", desc = "此功能需要导入bi模块"),
-//                                    @VL(value = "/tpl/", label = "模板", desc = "使用此功能需要导入tpl模块"),
-//                                    @VL(value = "/site?url=", label = "链接"),
-//                                    @VL(value = "/site?target=blank&url=", label = "新页签"),
-//                                    @VL(value = "/", label = "/", desc = "其他"),
-//                            }
-//                    )
-//            )
-//    )
-//    private String type;
-
     @EruptField(
             edit = @Edit(
                     title = "地址",
                     inputType = @InputType(
                             prefix = {
-                                    @VL(value = "/build/table/", label = "表格"),
-                                    @VL(value = "/build/tree/", label = "树"),
-                                    @VL(value = "/bi/", label = "报表", desc = "此功能需要导入bi模块"),
-                                    @VL(value = "/tpl/", label = "模板", desc = "使用此功能需要导入tpl模块"),
+                                    @VL(value = PATH_TABLE, label = "表格"),
+                                    @VL(value = PATH_TREE, label = "树"),
+                                    @VL(value = PATH_BI, label = "报表", desc = "此功能需要导入bi模块"),
+                                    @VL(value = PATH_TPL, label = "模板", desc = "使用此功能需要导入tpl模块"),
                                     @VL(value = "/site?url=", label = "链接"),
                                     @VL(value = "/site?target=blank&url=", label = "新页签"),
                                     @VL(value = "/", label = "/", desc = "其他"),

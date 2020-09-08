@@ -22,8 +22,8 @@ import java.util.Date;
  * @author liyuepeng
  * @date 2020-02-29
  */
-@Erupt(name = "demo", orderBy = "number desc", dataProxy = Test.class)
-@Table(name = "TEST")
+@Erupt(name = "test", orderBy = "number desc", dataProxy = Test.class)
+@Table(name = "demo_test")
 @Entity
 @Data
 public class Test extends HyperModel implements DataProxy<Test> {
@@ -128,7 +128,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
             edit = @Edit(title = "省份", type = EditType.REFERENCE_TREE,
                     filter = @Filter("BaseArea.level = 1"))
     )
-    private BaseArea province;
+    private DemoArea province;
 
     @ManyToOne
     @EruptField(
@@ -138,7 +138,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
                     referenceTreeType = @ReferenceTreeType(dependField = "province", dependColumn = "pid.id")
             )
     )
-    private BaseArea city;
+    private DemoArea city;
 
     @ManyToOne
     @EruptField(
@@ -148,7 +148,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
                     referenceTreeType = @ReferenceTreeType(dependField = "city", dependColumn = "pid.id")
             )
     )
-    private BaseArea area;
+    private DemoArea area;
 
     @ManyToOne
     @EruptField(
@@ -158,7 +158,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
                     referenceTreeType = @ReferenceTreeType(dependField = "area", dependColumn = "pid.id")
             )
     )
-    private BaseArea street;
+    private DemoArea street;
 
     @ManyToOne
     @EruptField(
@@ -168,7 +168,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
                     referenceTreeType = @ReferenceTreeType(dependField = "street", dependColumn = "pid.id")
             )
     )
-    private BaseArea community;
+    private DemoArea community;
 
 
     @Transient
@@ -183,7 +183,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
             edit = @Edit(title = "省份", type = EditType.REFERENCE_TABLE,
                     filter = @Filter("BaseArea.level = 1"))
     )
-    private BaseArea provincet;
+    private DemoArea provincet;
 
     @ManyToOne
     @EruptField(
@@ -193,7 +193,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
                     referenceTableType = @ReferenceTableType(dependField = "provincet", dependColumn = "pid.id")
             )
     )
-    private BaseArea cityt;
+    private DemoArea cityt;
 
     @ManyToOne
     @EruptField(
@@ -203,7 +203,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
                     referenceTableType = @ReferenceTableType(dependField = "cityt", dependColumn = "pid.id")
             )
     )
-    private BaseArea areat;
+    private DemoArea areat;
 
     @ManyToOne
     @EruptField(
@@ -213,7 +213,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
                     referenceTableType = @ReferenceTableType(dependField = "areat", dependColumn = "pid.id")
             )
     )
-    private BaseArea streett;
+    private DemoArea streett;
 
     @ManyToOne
     @EruptField(
@@ -223,7 +223,7 @@ public class Test extends HyperModel implements DataProxy<Test> {
                     referenceTableType = @ReferenceTableType(dependField = "streett", dependColumn = "pid.id")
             )
     )
-    private BaseArea communityt;
+    private DemoArea communityt;
 
 
     @Override

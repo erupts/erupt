@@ -14,7 +14,7 @@ import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.model.log.EruptOperateLog;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.auth.util.IpUtil;
-import xyz.erupt.core.annotation.EruptApi;
+import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -34,8 +34,8 @@ import java.util.Date;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private static final String REQ_DATE = "@req_date@";
-    private static final String REQ_BODY = "@req_body@";
 
+    static final String REQ_BODY = "@req_body@";
 
     @Autowired
     private EruptUserService eruptUserService;
@@ -53,6 +53,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     private static final String ERUPT_PARENT_PARAM_KEY = "_eruptParent";
 
     public static final String URL_ERUPT_PARAM_TOKEN = "_token";
+
     @Autowired
     private EruptAuthConfig eruptAuthConfig;
     @Autowired
@@ -147,9 +148,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         if (eruptAuthConfig.isRecordOperateLog()) {
             if (handler instanceof HandlerMethod) {
                 HandlerMethod handlerMethod = (HandlerMethod) handler;
-                EruptApi eruptApi = handlerMethod.getMethodAnnotation(EruptApi.class);
-                EruptRouter eruptRouter = handlerMethod.getMethodAnnotation(EruptRouter.class);
-                if (null != eruptApi && eruptApi.value()) {
+                EruptRecordOperate eruptOperate = handlerMethod.getMethodAnnotation(EruptRecordOperate.class);
+                if (null != eruptOperate) {
+                    EruptRouter eruptRouter = handlerMethod.getMethodAnnotation(EruptRouter.class);
                     EruptOperateLog operate = new EruptOperateLog();
                     if (null != eruptRouter && eruptRouter.verifyType() == EruptRouter.VerifyType.ERUPT) {
                         String eruptName;
@@ -158,9 +159,13 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                         } else {
                             eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
                         }
-                        operate.setApiName(eruptApi.desc() + " —— " + EruptCoreService.getErupt(eruptName).getErupt().name());
+                        operate.setApiName(eruptOperate.desc() + " | " + EruptCoreService.getErupt(eruptName).getErupt().name());
                     } else {
-                        operate.setApiName(eruptApi.desc());
+                        operate.setApiName(eruptOperate.desc());
+                    }
+                    Object param = request.getAttribute(REQ_BODY);
+                    if (null != param) {
+                        operate.setReqParam(param.toString());
                     }
                     operate.setIp(IpUtil.getIpAddr(request));
                     operate.setRegion(IpUtil.getCityInfo(operate.getIp()));

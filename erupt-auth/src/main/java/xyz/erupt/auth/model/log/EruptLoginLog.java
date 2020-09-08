@@ -10,8 +10,8 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.base.BaseModel;
 import xyz.erupt.auth.model.EruptUser;
+import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -37,8 +37,8 @@ public class EruptLoginLog extends BaseModel {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     @EruptField(
-            views = @View(title = "用户名", column = "name"),
-            edit = @Edit(title = "用户名", type = EditType.REFERENCE_TABLE
+            views = @View(title = "用户", column = "name"),
+            edit = @Edit(title = "用户", type = EditType.REFERENCE_TABLE
                     , search = @Search(vague = true))
     )
     private EruptUser eruptUser;

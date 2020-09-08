@@ -51,8 +51,8 @@ public class EruptService {
                 //DependTree逻辑
                 LinkTree dependTree = eruptModel.getErupt().linkTree();
                 if (StringUtils.isNotBlank(dependTree.field())) {
-                    JsonElement je = searchCondition.get(dependTree.field());
-                    if (null == je) {
+                    JsonElement je = searchCondition.get("$" + dependTree.field());
+                    if (null == je || je.isJsonNull()) {
                         //TODO 临时为前端做兼容用，按道理应该抛出异常
                         if (dependTree.dependNode()) {
                             return new Page();

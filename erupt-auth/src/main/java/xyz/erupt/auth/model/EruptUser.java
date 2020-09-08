@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -33,7 +34,8 @@ import java.util.Set;
 @Erupt(
         name = "用户",
         desc = "用户配置",
-        dataProxy = EruptUser.class
+        dataProxy = EruptUser.class,
+        linkTree = @LinkTree(field = "eruptOrg", dependNode = false)
 )
 @Getter
 @Setter
@@ -63,6 +65,26 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
             )
     )
     private EruptMenu eruptMenu;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "所属组织", column = "name"),
+            edit = @Edit(title = "所属组织", type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id"))
+    )
+    private EruptOrg eruptOrg;
+
+    @EruptField(
+            views = @View(title = "账户状态"),
+            edit = @Edit(
+                    title = "账户状态",
+                    type = EditType.BOOLEAN,
+                    boolType = @BoolType(
+                            trueText = "激活",
+                            falseText = "锁定"
+                    )
+            )
+    )
+    private Boolean status;
 
     @Transient
     @EruptField(
@@ -95,6 +117,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private Boolean isMd5;
 
+
 //    @EruptField(
 //            views = @View(title = "联系电话", sortable = true),
 //            edit = @Edit(title = "联系电话", notNull = true, search = @Search(value = true, vague = true))
@@ -112,19 +135,6 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 //            edit = @Edit(title = "身份证号", notNull = true, search = @Search(value = true, vague = true))
 //    )
 //    private String identity;
-
-    @EruptField(
-            views = @View(title = "账户状态"),
-            edit = @Edit(
-                    title = "账户状态",
-                    type = EditType.BOOLEAN,
-                    boolType = @BoolType(
-                            trueText = "激活",
-                            falseText = "锁定"
-                    )
-            )
-    )
-    private Boolean status;
 
     @Lob
     @EruptField(

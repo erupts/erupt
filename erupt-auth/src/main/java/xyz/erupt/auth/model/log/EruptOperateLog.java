@@ -54,17 +54,35 @@ public class EruptOperateLog extends BaseModel {
     )
     private String region;
 
+//    @EruptField(
+//            views = @View(title = "操作行为"),
+//            edit = @Edit(title = "操作行为", search = @Search)
+//    )
+//    private String behavior;
+
     @EruptField(
             views = @View(title = "功能名称"),
-            edit = @Edit(title = "功能名称", search = @Search)
+            edit = @Edit(title = "功能名称", search = @Search(vague = true))
     )
     private String apiName;
+
+    @Lob
+    @EruptField(
+            views = @View(title = "请求参数", type = ViewType.HTML)
+    )
+    private String reqParam;
 
     @EruptField(
             views = @View(title = "是否成功"),
             edit = @Edit(title = "是否成功", search = @Search)
     )
     private Boolean status;
+
+    @Lob
+    @EruptField(
+            views = @View(title = "错误信息", type = ViewType.HTML)
+    )
+    private String errorInfo;
 
     @EruptField(
             views = @View(title = "请求耗时", template = "value && value+'ms'"),
@@ -73,14 +91,14 @@ public class EruptOperateLog extends BaseModel {
     private Long totalTime;
 
     @EruptField(
-            views = @View(title = "请求时间"),
-            edit = @Edit(title = "请求时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "记录时间"),
+            edit = @Edit(title = "记录时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
 
     @Lob
     @EruptField(
-            views = @View(title = "请求地址")
+            views = @View(title = "请求地址", type = ViewType.HTML)
     )
     private String reqAddr;
 
@@ -88,17 +106,5 @@ public class EruptOperateLog extends BaseModel {
             views = @View(title = "请求方法")
     )
     private String reqMethod;
-
-    @Lob
-//    @EruptField(
-//            views = @View(title = "请求参数", type = ViewType.HTML)
-//    )
-    private String reqParam;
-
-    @Lob
-    @EruptField(
-            views = @View(title = "错误信息", type = ViewType.HTML)
-    )
-    private String errorInfo;
 
 }

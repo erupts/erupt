@@ -8,8 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.erupt.annotation.fun.PowerObject;
-import xyz.erupt.core.annotation.EruptApi;
+import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.EruptCoreService;
@@ -65,7 +64,7 @@ public class EruptExcelController {
 
     //导出
     @PostMapping("/export/{erupt}")
-    @EruptApi(desc = "导出Excel")
+    @EruptRecordOperate(desc = "导出Excel")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName, @RequestParam("condition") String condition,
                            HttpServletRequest request,
@@ -95,7 +94,7 @@ public class EruptExcelController {
 
     //导入
     @PostMapping("/import/{erupt}")
-    @EruptApi(desc = "导入Excel")
+    @EruptRecordOperate(desc = "导入Excel")
     @ResponseBody
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional(rollbackOn = Exception.class)

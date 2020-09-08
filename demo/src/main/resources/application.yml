@@ -3,6 +3,9 @@ erupt:
     - xyz.demo
   csrfInspect: false
   job.enable: true
+  auth:
+    expireTimeByLogin: 60
+    recordOperateLog: true
   dbs:
     - datasource:
         name: mysql
@@ -15,9 +18,6 @@ erupt:
         hibernate:
           ddl-auto: update
 #  attachmentProxy: xyz.erupt.example.handler.QiniuOosProxy
-erupt-auth:
-  expireTimeByLogin: 60
-  recordOperateLog: true
 openApi:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
@@ -51,7 +51,7 @@ spring:
     #    database-platform: org.hibernate.dialect.H2Dialect
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-  #      ddl-auto: update
+      ddl-auto: update
   h2:
     console:
       enabled: false
@@ -72,5 +72,5 @@ server:
   compression:
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
     enabled: true
-  servlet:
-    context-path: /demo
+#  servlet:
+#    context-path: /demo

@@ -22,7 +22,7 @@ import java.util.Date;
  */
 @Erupt(name = "新闻发布", dataProxy = News.class)
 @Entity
-@Table(name = "t_xinwen")
+@Table(name = "demo_xinwen")
 @Setter
 public class News extends BaseModel implements DataProxy<News> {
 
