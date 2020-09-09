@@ -23,6 +23,21 @@ window.eruptSiteConfig = {
     }]
 };
 
+//路由回调函数
+window.eruptRouterEvent = {
+    Router: {
+        load: function (e) {
+        },
+        unload: function (e) {
+        }
+    },
+    $: {
+        load: function (e) {
+        },
+        unload: function (e) {
+        }
+    }
+};
 
 window.eruptEvent = {
     startup: function () {

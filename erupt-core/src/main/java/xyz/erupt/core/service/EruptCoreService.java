@@ -2,7 +2,6 @@ package xyz.erupt.core.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -14,7 +13,6 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -36,16 +34,13 @@ import java.util.Map;
 @Log
 public final class EruptCoreService implements ApplicationRunner {
 
-    @Autowired
-    private EruptProp eruptProp;
-
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
     public static EruptModel getErupt(String eruptName) {
         return ERUPTS.get(eruptName);
     }
 
-    //    需要动态构建的EruptModel对象属性值，通过此方法暴露给外界使用
+    //需要动态构建的EruptModel对象属性值，通过此方法暴露给外界使用
     @SneakyThrows
     public static EruptModel getEruptView(String eruptName) {
         EruptModel em = getErupt(eruptName).clone();
@@ -81,15 +76,15 @@ public final class EruptCoreService implements ApplicationRunner {
         return eruptModel;
     }
 
+
     @Override
     public void run(ApplicationArguments args) {
-        EruptSpringUtil.scannerPackage(eruptProp.getScannerPackage(), new TypeFilter[]{
+        if (EruptApplication.scanPackage.length == 0) {
+            throw new RuntimeException("not found scanner package place check `EruptApplication.run()` Whether to call");
+        }
+        EruptSpringUtil.scannerPackage(EruptApplication.scanPackage, new TypeFilter[]{
                 new AnnotationTypeFilter(Erupt.class)
-        }, clazz -> {
-            //other info to memory
-            EruptModel eruptModel = initEruptModel(clazz);
-            ERUPTS.put(eruptModel.getEruptName(), eruptModel);
-        });
+        }, clazz -> ERUPTS.put(clazz.getSimpleName(), initEruptModel(clazz)));
         log.info("Erupt core initialization complete");
     }
 }

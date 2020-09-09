@@ -14,7 +14,7 @@
     <version>0.0.4</version>
     <description>demo</description>
 
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>1.8</java.version>
@@ -43,26 +43,25 @@
     </profiles>
 
     <dependencies>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-core</artifactId>
-            <version>${erupt.version}</version>
-        </dependency>
+        <!--Erupt核心代码-->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-auth</artifactId>
             <version>${erupt.version}</version>
         </dependency>
+        <!--web页面-->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-web</artifactId>
             <version>${erupt.version}</version>
         </dependency>
+        <!--模板-->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
             <version>${erupt.version}</version>
         </dependency>
+        <!--任务调度-->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-job</artifactId>

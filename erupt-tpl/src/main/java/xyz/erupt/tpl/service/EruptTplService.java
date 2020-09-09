@@ -10,6 +10,7 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.core.config.EruptProp;
+import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
@@ -37,7 +38,7 @@ public class EruptTplService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        EruptSpringUtil.scannerPackage(eruptProp.getScannerPackage(), new TypeFilter[]{
+        EruptSpringUtil.scannerPackage(EruptApplication.scanPackage, new TypeFilter[]{
                 new AnnotationTypeFilter(EruptTpl.class)
         }, clazz -> {
             for (Method method : clazz.getDeclaredMethods()) {

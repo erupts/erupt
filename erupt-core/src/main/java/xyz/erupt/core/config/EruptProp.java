@@ -7,9 +7,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-import xyz.erupt.core.constant.EruptConst;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,9 +18,6 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "erupt")
 public class EruptProp {
-
-    //注解扫描根路径
-    private String[] scannerPackage;
 
     //类路径，需要实现xyz.erupt.annotation.fun.AttachmentProxy接口，可实现自定义附件存储策略
     private String attachmentProxy;
@@ -36,11 +31,6 @@ public class EruptProp {
     private boolean csrfInspect = true;
 
     private List<DB> dbs;
-
-    public void setScannerPackage(String[] scannerPackage) {
-        this.scannerPackage = Arrays.copyOf(scannerPackage, scannerPackage.length + 1);
-        this.scannerPackage[scannerPackage.length] = EruptConst.BASE_PACKAGE;
-    }
 
     @Getter
     @Setter

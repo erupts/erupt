@@ -6,12 +6,8 @@ import org.junit.runner.RunWith;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.Database;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.test.context.junit4.SpringRunner;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.util.IpUtil;
@@ -114,32 +110,32 @@ public class DemoApplicationTests {
         System.out.println(env.getProperty("erupt.upload-path"));
     }
 
-    @Test
-    public void craeteEntityManager() {
-        String sourceName = "one";
-        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        {
-            HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-            vendorAdapter.setGenerateDdl(false);
-            vendorAdapter.setDatabase(Database.SQL_SERVER);
-            vendorAdapter.setShowSql(true);
-            factory.setJpaVendorAdapter(vendorAdapter);
-        }
-        {
-            factory.setDataSource(DataSourceBuilder.create()
-                    .url(env.getProperty(DATASOURCE_PREFIX + sourceName + ".url"))
-                    .username(env.getProperty(DATASOURCE_PREFIX + sourceName + ".username"))
-                    .password(env.getProperty(DATASOURCE_PREFIX + sourceName + ".password"))
-                    .build());
-        }
-        factory.setPackagesToScan(eruptProp.getScannerPackage());
-        factory.afterPropertiesSet();
-        EntityManager entityManager = factory.getObject().createEntityManager();
-        List list = entityManager.createNativeQuery("select * from t_xinwen").getResultList();
-        for (Object o : list) {
-            System.out.println(o);
-        }
-    }
+//    @Test
+//    public void craeteEntityManager() {
+//        String sourceName = "one";
+//        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+//        {
+//            HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+//            vendorAdapter.setGenerateDdl(false);
+//            vendorAdapter.setDatabase(Database.SQL_SERVER);
+//            vendorAdapter.setShowSql(true);
+//            factory.setJpaVendorAdapter(vendorAdapter);
+//        }
+//        {
+//            factory.setDataSource(DataSourceBuilder.create()
+//                    .url(env.getProperty(DATASOURCE_PREFIX + sourceName + ".url"))
+//                    .username(env.getProperty(DATASOURCE_PREFIX + sourceName + ".username"))
+//                    .password(env.getProperty(DATASOURCE_PREFIX + sourceName + ".password"))
+//                    .build());
+//        }
+//        factory.setPackagesToScan(eruptProp.getScannerPackage());
+//        factory.afterPropertiesSet();
+//        EntityManager entityManager = factory.getObject().createEntityManager();
+//        List list = entityManager.createNativeQuery("select * from t_xinwen").getResultList();
+//        for (Object o : list) {
+//            System.out.println(o);
+//        }
+//    }
 
 
 //    @Test
