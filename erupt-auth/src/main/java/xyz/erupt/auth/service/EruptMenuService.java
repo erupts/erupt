@@ -96,6 +96,12 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         this.afterAdd(eruptMenu);
     }
 
+
+    @Override
+    public void afterDelete(EruptMenu eruptMenu) {
+        this.afterAdd(eruptMenu);
+    }
+
     @Override
     public void addBehavior(EruptMenu eruptMenu) {
         Object obj = entityManager

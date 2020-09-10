@@ -61,11 +61,4 @@ public class EruptOrg extends BaseModel {
     )
     private Integer sort;
 
-    @EruptField(
-            edit = @Edit(
-                    title = "层级", readOnly = true
-            )
-    )
-    private Integer level;
-
 }

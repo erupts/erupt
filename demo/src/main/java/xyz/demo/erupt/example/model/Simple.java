@@ -7,6 +7,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author liyuepeng
@@ -29,5 +30,23 @@ public class Simple {
             edit = @Edit(title = "文本")
     )
     private String input;
+
+    @EruptField(
+            views = @View(title = "数值"),
+            edit = @Edit(title = "数值")
+    )
+    private Integer number;
+
+    @EruptField(
+            views = @View(title = "布尔"),
+            edit = @Edit(title = "布尔")
+    )
+    private Boolean bool;
+
+    @EruptField(
+            views = @View(title = "时间"),
+            edit = @Edit(title = "时间")
+    )
+    private Date date;
 
 }
