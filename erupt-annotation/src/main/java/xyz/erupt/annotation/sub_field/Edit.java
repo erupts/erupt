@@ -45,20 +45,23 @@ public @interface Edit {
     @Match("item.type()=='NUMBER'")
     NumberType numberType() default @NumberType;
 
+    @Match("item.type()=='SLIDER'")
+    SliderType sliderType() default @SliderType(max = 999);
+
+    @Match("item.type()=='DATE'")
+    DateType dateType() default @DateType;
+
     @Match("item.type()=='BOOLEAN'")
     BoolType boolType() default @BoolType;
 
     @Match("item.type()=='CHOICE'")
     ChoiceType choiceType() default @ChoiceType;
 
-    @Match("item.type()=='DATE'")
-    DateType dateType() default @DateType;
-
-    @Match("item.type()=='SLIDER'")
-    SliderType sliderType() default @SliderType(max = 999);
-
     @Match("item.type()=='ATTACHMENT'")
     AttachmentType attachmentType() default @AttachmentType;
+
+    @Match("item.type()=='HTML_EDITOR'")
+    HtmlEditorType htmlEditorType() default @HtmlEditorType(HtmlEditorType.Type.UEDITOR);
 
     @Match("item.type()=='AUTO_COMPLETE'")
     AutoCompleteType autoCompleteType() default @AutoCompleteType(handler = AutoCompleteHandler.class);
@@ -68,9 +71,6 @@ public @interface Edit {
 
     @Match("item.type()=='REFERENCE_TABLE'")
     ReferenceTableType referenceTableType() default @ReferenceTableType;
-
-    @Match("item.type()=='HTML_EDITOR'")
-    HtmlEditorType htmlEditorType() default @HtmlEditorType(HtmlEditorType.Type.UEDITOR);
 
     @Match("item.type()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "sql");

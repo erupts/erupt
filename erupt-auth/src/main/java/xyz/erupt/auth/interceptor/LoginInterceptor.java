@@ -146,6 +146,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Transactional
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         if (eruptAuthConfig.isRecordOperateLog()) {
+            //TODO 获取BODY存在一些问题，暂时关闭此功能
             if (handler instanceof HandlerMethod) {
                 HandlerMethod handlerMethod = (HandlerMethod) handler;
                 EruptRecordOperate eruptOperate = handlerMethod.getMethodAnnotation(EruptRecordOperate.class);

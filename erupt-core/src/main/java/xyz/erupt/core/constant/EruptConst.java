@@ -6,4 +6,6 @@ package xyz.erupt.core.constant;
  */
 public class EruptConst {
     public static final String BASE_PACKAGE = "xyz.erupt";
+
+    public static final String ERUPT_DIR = "erupt dir";
 }

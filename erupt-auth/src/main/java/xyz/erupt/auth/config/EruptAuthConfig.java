@@ -17,6 +17,6 @@ public class EruptAuthConfig {
     private Integer expireTimeByLogin = 100;
 
     //    是否记录操作日志
-    private boolean recordOperateLog = true;
+    private boolean recordOperateLog = false;
 
 }

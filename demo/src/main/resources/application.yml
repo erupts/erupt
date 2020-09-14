@@ -1,6 +1,7 @@
 erupt:
   csrfInspect: false
   job.enable: true
+  upload-path: /Users/liyuepeng/Pictures/temp
   auth:
     expireTimeByLogin: 60
     recordOperateLog: true
@@ -37,7 +38,7 @@ spring:
     #    database-platform: org.hibernate.dialect.H2Dialect
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+  #      ddl-auto: update
   mail:
     username: lixin@wingstimes.com
     password: Lx2159200

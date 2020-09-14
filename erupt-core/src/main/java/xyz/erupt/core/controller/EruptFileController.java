@@ -148,8 +148,6 @@ public class EruptFileController {
         }
     }
 
-    private static final String DOWNLOAD_PATH = "/download-attachment";
-
 
     @PostMapping("/uploads/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
@@ -212,6 +210,8 @@ public class EruptFileController {
             IOUtils.write(new Gson().toJson(map), response.getOutputStream(), "UTF-8");
         }
     }
+
+    private static final String DOWNLOAD_PATH = "/download-attachment";
 
     @RequestMapping(value = DOWNLOAD_PATH + "/**", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public byte[] downloadAttachment(HttpServletRequest request, HttpServletResponse response) {

@@ -43,6 +43,7 @@ public class Simple {
     )
     private Boolean bool;
 
+
     @EruptField(
             views = @View(title = "时间"),
             edit = @Edit(title = "时间")
