@@ -44,6 +44,8 @@ public class EruptMenu extends HyperModel {
 
     public static final String PATH_TABLE = "/build/table/";
 
+    public static final String PATH_LINK = "/site?url=";
+
     public static final String PATH_BI = "/bi/";
 
     public static final String PATH_TPL = "/tpl/";
@@ -88,7 +90,7 @@ public class EruptMenu extends HyperModel {
                                     @VL(value = PATH_TREE, label = "树"),
                                     @VL(value = PATH_BI, label = "报表", desc = "此功能需要导入bi模块"),
                                     @VL(value = PATH_TPL, label = "模板", desc = "使用此功能需要导入tpl模块"),
-                                    @VL(value = "/site?url=", label = "链接"),
+                                    @VL(value = PATH_LINK, label = "链接"),
                                     @VL(value = "/site?target=blank&url=", label = "新页签"),
                                     @VL(value = "/", label = "/", desc = "其他"),
                             }
@@ -138,16 +140,6 @@ public class EruptMenu extends HyperModel {
 
     public EruptMenu(String code, String name, String path, Integer status, Integer sort, String icon, EruptMenu parentMenu) {
         this.code = code;
-        this.name = name;
-        this.path = path;
-        this.status = status;
-        this.sort = sort;
-        this.icon = icon;
-        this.parentMenu = parentMenu;
-    }
-
-    public EruptMenu(Class<?> eruptClass, String name, String path, Integer status, Integer sort, String icon, EruptMenu parentMenu) {
-        this.code = eruptClass.getSimpleName();
         this.name = name;
         this.path = path;
         this.status = status;

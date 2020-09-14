@@ -19,7 +19,7 @@ VOLUME /tmp
 RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 
 #应用构建成功后的jar文件被复制到镜像内，名字也改成了app.jar
-ADD target/demo-0.0.4.jar app.jar
+ADD target/demo-0.0.1.jar app.jar
 
 #启动容器时的进程
 ENTRYPOINT ["java","-jar","/app.jar"]
