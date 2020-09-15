@@ -37,8 +37,7 @@ spring:
     show-sql: true
     #    database-platform: org.hibernate.dialect.H2Dialect
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-  #      ddl-auto: update
+  #    hibernate.ddl-auto: update
   mail:
     username: lixin@wingstimes.com
     password: Lx2159200
@@ -64,12 +63,8 @@ spring:
   resources:
     cache.period: 2592000
     chain.cache: true
-  profiles:
-    active: @environment@
 server:
   port: 9999
   compression:
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
     enabled: true
-#  servlet:
-#    context-path: /demo

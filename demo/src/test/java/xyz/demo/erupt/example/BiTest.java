@@ -10,7 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.test.context.junit4.SpringRunner;
+import xyz.erupt.core.test.EruptRunner;
 
 import javax.persistence.EntityManager;
 import javax.script.ScriptEngine;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2020-02-09
  */
-@RunWith(SpringRunner.class)
+@RunWith(EruptRunner.class)
 @SpringBootTest
 public class BiTest {
 

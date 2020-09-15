@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.auth.service.EruptUserService;
-import xyz.erupt.bi.fun.BiHandler;
+import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiClassHandler;
 import xyz.erupt.bi.model.BiDataSource;
@@ -95,7 +95,7 @@ public class BiService {
         String express = processPlaceHolder(bi.getSqlStatement(), query);
         BiClassHandler biDataSource = bi.getClassHandler();
         if (null != biDataSource) {
-            express = EruptSpringUtil.getBeanByPath(biDataSource.getHandlerPath(), BiHandler.class)
+            express = EruptSpringUtil.getBeanByPath(biDataSource.getHandlerPath(), EruptBiHandler.class)
                     .exprHandler(biDataSource.getParam(), express);
         }
         express = String.format("select count(*) %s from (%s) _", TOTAL_KEY, express);
@@ -105,10 +105,10 @@ public class BiService {
 
     @SneakyThrows
     public List<Map<String, Object>> startQuery(String express, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
-        BiHandler biHandler = null;
+        EruptBiHandler biHandler = null;
         express = processPlaceHolder(express, query);
         if (null != classHandler) {
-            biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), BiHandler.class);
+            biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), EruptBiHandler.class);
             express = biHandler.exprHandler(classHandler.getParam(), express);
         }
         NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(biDataSource);

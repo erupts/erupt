@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.auth.service.EruptUserService;
+import xyz.erupt.bi.fun.EruptBiHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Map;
  * @date 2020-04-20
  */
 @Service
-public class BiHandler implements xyz.erupt.bi.fun.BiHandler {
+public class BiHandler implements EruptBiHandler {
 
     @Autowired
     private HttpServletRequest request;

@@ -21,27 +21,6 @@
         <erupt.version>1.1.8</erupt.version>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <environment>dev</environment>
-            </properties>
-        </profile>
-        <profile>
-            <id>prd</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <environment>prd</environment>
-            </properties>
-        </profile>
-    </profiles>
-
     <dependencies>
         <!--Erupt核心代码-->
         <dependency>
@@ -81,11 +60,6 @@
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-ops</artifactId>
             <version>${erupt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>open-api</artifactId>
-            <version>0.1.4</version>
         </dependency>
         <!--erupt end-->
         <!--jdbc-->

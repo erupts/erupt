@@ -1,5 +1,0 @@
-erupt:
-  redis-session: true
-  upload-path: /Users/liyuepeng/Pictures/temp/
-openApi:
-  hotReadXml: true

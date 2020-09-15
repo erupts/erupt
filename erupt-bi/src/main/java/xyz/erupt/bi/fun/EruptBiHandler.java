@@ -9,7 +9,7 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2019-08-26.
  */
-public interface BiHandler {
+public interface EruptBiHandler {
 
     /**
      * 表达式处理

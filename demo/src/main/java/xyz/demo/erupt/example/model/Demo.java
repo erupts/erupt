@@ -161,7 +161,7 @@ public class Demo extends BaseModel implements DataProxy<Demo>, ChoiceFetchHandl
 
     @EruptField(
             edit = @Edit(title = "HTML", type = EditType.TPL,
-                    tplType = @Tpl(path = "demo.html", tplHandler = HtmlHandler.class, params = {"123", "xxx"}))
+                    tplType = @Tpl(path = "tpl/demo.html", tplHandler = HtmlHandler.class, params = {"123", "xxx"}))
     )
     private String tpl;
 
