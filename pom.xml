@@ -12,7 +12,6 @@
     <description>erupt common data framework pom parent</description>
     <url>https://www.erupt.xyz</url>
 
-
     <properties>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <erupt.version>1.1.8</erupt.version>
