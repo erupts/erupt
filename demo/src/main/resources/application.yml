@@ -1,7 +1,8 @@
 erupt:
   csrfInspect: false
   job.enable: true
-  upload-path: /Users/liyuepeng/Pictures/temp
+  redisSession: true
+  uploadPath: /Users/liyuepeng/Pictures/temp
   auth:
     expireTimeByLogin: 60
     recordOperateLog: true
@@ -39,8 +40,8 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   #    hibernate.ddl-auto: update
   mail:
-    username: lixin@wingstimes.com
-    password: Lx2159200
+    username: xxxxxx@erupt.com
+    password: xxxxxx
     host: smtp.exmail.qq.com
     port: 465
     properties:
