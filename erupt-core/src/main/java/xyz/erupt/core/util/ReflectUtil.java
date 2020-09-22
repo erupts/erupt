@@ -23,8 +23,7 @@ public class ReflectUtil {
                 field.setAccessible(true);
                 return field;
             } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();
-                if ("Object".equals(clazz.getSimpleName())) {
+                if (Object.class.equals(clazz = clazz.getSuperclass())) {
                     break;
                 }
             }

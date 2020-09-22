@@ -13,7 +13,7 @@ import java.util.Map;
  * @date 2018-09-29.
  */
 @Data
-public class EruptModel implements Cloneable {
+public final class EruptModel implements Cloneable {
 
     private transient Class<?> clazz;
 

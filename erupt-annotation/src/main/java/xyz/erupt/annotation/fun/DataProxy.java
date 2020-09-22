@@ -18,7 +18,6 @@ public interface DataProxy<MODEL> {
      * @param model 待新增对象数据
      */
     default void beforeAdd(MODEL model) {
-
     }
 
     /**
@@ -51,7 +50,6 @@ public interface DataProxy<MODEL> {
      * @param model 待删除对象数据
      */
     default void beforeDelete(MODEL model) {
-
     }
 
     /**
@@ -84,7 +82,6 @@ public interface DataProxy<MODEL> {
      * 新增数据行为操作，生成默认数据
      */
     default void addBehavior(MODEL model) {
-
     }
 
     /**
@@ -94,7 +91,6 @@ public interface DataProxy<MODEL> {
      * @param model 要编辑的数据
      */
     default void editBehavior(MODEL model) {
-
     }
 
 //    /**
@@ -130,7 +126,6 @@ public interface DataProxy<MODEL> {
      * @param model 待导入对象数据
      */
     default void excelImport(MODEL model) {
-
     }
 
 }

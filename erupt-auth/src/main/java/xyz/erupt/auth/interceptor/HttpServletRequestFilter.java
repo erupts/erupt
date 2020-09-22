@@ -1,7 +1,6 @@
 package xyz.erupt.auth.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.core.constant.RestPath;
@@ -17,15 +16,16 @@ import java.io.IOException;
  */
 @Component
 @WebFilter(urlPatterns = RestPath.ERUPT_API)
-@Order(10000)
 public class HttpServletRequestFilter implements Filter {
 
-    private static final String CONTENT_TYPE_JSON = "application/json";
     @Autowired
     private EruptAuthConfig eruptAuthConfig;
 
+    private static final String CONTENT_TYPE_JSON = "application/json";
+
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         if (eruptAuthConfig.isRecordOperateLog()) {
             if (servletRequest instanceof HttpServletRequest) {
                 HttpServletRequest request = (HttpServletRequest) servletRequest;

@@ -1,10 +1,12 @@
 package xyz.erupt.core.controller;
 
 import com.google.gson.Gson;
+import lombok.Cleanup;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,6 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.util.MimeUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
@@ -193,7 +194,7 @@ public class EruptFileController {
                                    @RequestParam(value = "file", required = false) MultipartFile file,
                                    HttpServletResponse response, HttpServletRequest request) throws IOException, ClassNotFoundException {
         if (null == file) {
-            InputStream stream = EruptFileController.class.getClassLoader().getResourceAsStream("ueditor.json");
+            @Cleanup InputStream stream = EruptFileController.class.getClassLoader().getResourceAsStream("ueditor.json");
             String json = StreamUtils.copyToString(stream, Charset.forName("utf-8"));
             if (null == callback) {
                 IOUtils.write(json, response.getOutputStream(), "UTF-8");
@@ -205,8 +206,6 @@ public class EruptFileController {
             Map<String, Object> map = uploadHtmlEditorImage(eruptName, fieldName, file);
             Boolean status = (Boolean) map.get("uploaded");
             map.put("state", status ? "SUCCESS" : "ERROR");
-//            map.put("title", "a.png");
-//            map.put("original", "a.png");
             IOUtils.write(new Gson().toJson(map), response.getOutputStream(), "UTF-8");
         }
     }
@@ -214,53 +213,19 @@ public class EruptFileController {
     private static final String DOWNLOAD_PATH = "/download-attachment";
 
     @RequestMapping(value = DOWNLOAD_PATH + "/**", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public byte[] downloadAttachment(HttpServletRequest request, HttpServletResponse response) {
-        return mappingFileToByte(request.getServletPath().replace(RestPath.ERUPT_FILE + DOWNLOAD_PATH, ""), response);
-    }
-
-
-//    @RequestMapping(value = {PREVIEW_PATH + "/**"})
-//    @ResponseBody
-//    public void previewAttachment(HttpServletResponse response, HttpServletRequest request) {
-//        previewAttachment(request.getServletPath().replace(RestPath.ERUPT_FILE + PREVIEW_PATH, ""), response);
-//    }
-//
-//
-//    @RequestMapping(value = PREVIEW_PATH)
-//    @ResponseBody
-//    public void previewAttachment(@RequestParam("path") String path, HttpServletResponse response) {
-//        int cacheTime = 60 * 60 * 24 * 10 * 1000;
-//        response.addHeader("cache-control", "max-age=" + cacheTime);
-//        response.setDateHeader("expires", (System.currentTimeMillis() + cacheTime));
-//        response.setDateHeader("date", System.currentTimeMillis());
-//        response.setHeader("etag", RandomStringUtils.randomAlphabetic(10));
-//        response.setDateHeader("Last-Modified", System.currentTimeMillis() - 1000 * 60);
-//        response.setContentType(MimeUtil.getMimeType(path));
-//        try {
-//            IOUtils.write(mappingFileToByte(path, response), response.getOutputStream());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    private byte[] mappingFileToByte(String path, HttpServletResponse response) {
+    public void downloadAttachment(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String path = request.getServletPath().replace(RestPath.ERUPT_FILE + DOWNLOAD_PATH, "");
         if (!path.startsWith(FS_SEP)) {
             path = FS_SEP + path;
         }
         File file = new File(eruptProp.getUploadPath() + path);
-        try {
-            InputStream inputStream;
-            if (file.exists()) {
-                inputStream = new FileInputStream(file);
-            } else {
-                inputStream = MimeUtil.class.getClassLoader().getResourceAsStream("empty.png");
-                response.setContentType("image/png");
-                response.setHeader("Content-Disposition", "filename=empty.png");
-            }
-            return StreamUtils.copyToByteArray(inputStream);
-        } catch (IOException e) {
-            return null;
+        if (!file.exists()) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.sendError(HttpStatus.NOT_FOUND.value());
+            return;
         }
+        @Cleanup InputStream inputStream = new FileInputStream(file);
+        response.getOutputStream().write(StreamUtils.copyToByteArray(inputStream));
     }
 
 }

@@ -21,12 +21,10 @@ public class EruptApi {
 
     static {
         String path = "/core.properties";
-        InputStream stream = EruptApi.class.getResourceAsStream(path);
         Properties props = new Properties();
-        try {
+        try (InputStream stream = EruptApi.class.getResourceAsStream(path)) {
             props.load(stream);
             EruptApi.props = props;
-            stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

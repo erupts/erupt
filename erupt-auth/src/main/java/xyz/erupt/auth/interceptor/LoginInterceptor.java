@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -56,11 +57,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private EruptAuthConfig eruptAuthConfig;
+
     @Autowired
     private EntityManager entityManager;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         request.setAttribute(REQ_DATE, System.currentTimeMillis());
         EruptRouter eruptRouter = null;
         if (handler instanceof HandlerMethod) {
@@ -146,7 +148,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Transactional
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         if (eruptAuthConfig.isRecordOperateLog()) {
-            //TODO 获取BODY存在一些问题，暂时关闭此功能
             if (handler instanceof HandlerMethod) {
                 HandlerMethod handlerMethod = (HandlerMethod) handler;
                 EruptRecordOperate eruptOperate = handlerMethod.getMethodAnnotation(EruptRecordOperate.class);
@@ -172,7 +173,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     operate.setRegion(IpUtil.getCityInfo(operate.getIp()));
                     operate.setStatus(true);
                     operate.setReqMethod(request.getMethod());
-//                    operate.setReqParam(request.getAttribute(REQ_BODY).toString());
                     operate.setReqAddr(request.getRequestURL().toString());
                     operate.setEruptUser(new EruptUser() {{
                         this.setId(eruptUserService.getCurrentUid());

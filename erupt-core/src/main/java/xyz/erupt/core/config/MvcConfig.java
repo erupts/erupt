@@ -48,7 +48,7 @@ public class MvcConfig {
             public boolean shouldSkipClass(Class<?> incomingClass) {
                 return false;
             }
-        }).setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        }).setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
     }
 
     @Bean

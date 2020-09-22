@@ -96,7 +96,7 @@ public class EruptDbService implements EruptDataService {
 
     @Transactional
     @Override
-    public void addData(EruptModel eruptModel, Object object) throws Exception {
+    public void addData(EruptModel eruptModel, Object object) {
         try {
             jpaManyToOneConvert(eruptModel, object);
             eruptJpaDao.addEntity(eruptModel, object);

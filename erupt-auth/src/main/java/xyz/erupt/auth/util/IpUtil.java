@@ -18,6 +18,7 @@ import java.net.InetAddress;
  */
 @Log
 public class IpUtil {
+
     public static String getIpAddr(HttpServletRequest request) {
         try {
             String ip = request.getHeader("x-forwarded-for");
@@ -64,11 +65,10 @@ public class IpUtil {
     private static byte[] fileByte;
 
     static {
-        InputStream input = IpUtil.class.getClassLoader().getResourceAsStream("ip2region.db");
-        if (null == input) {
-            throw new RuntimeException("ip2region.db not found");
-        }
-        try {
+        try (InputStream input = IpUtil.class.getClassLoader().getResourceAsStream("ip2region.db")) {
+            if (null == input) {
+                throw new RuntimeException("ip2region.db not found");
+            }
             fileByte = StreamUtils.copyToByteArray(input);
         } catch (IOException e) {
             e.printStackTrace();

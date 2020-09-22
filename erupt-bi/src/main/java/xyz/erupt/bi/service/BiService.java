@@ -73,7 +73,6 @@ public class BiService {
             String sql = String.format("select * from (%s) _ limit %s,%s",
                     bi.getSqlStatement(), (pageIndex - 1) * pageSize, pageSize);
             List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);
-            biData.setList(list);
             if (null != list && list.size() > 0) {
                 List<BiColumn> biColumns = new LinkedList<>();
                 Map<String, Object> map = list.get(0);
@@ -84,6 +83,7 @@ public class BiService {
                 }
                 biData.setColumns(biColumns);
             }
+            biData.setList(list);
         } else {
             biData.setList(new ArrayList<>(0));
         }

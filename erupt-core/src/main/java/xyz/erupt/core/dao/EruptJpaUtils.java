@@ -52,7 +52,7 @@ public class EruptJpaUtils {
             }
             String fieldKey;
             for (View view : field.getEruptField().views()) {
-                if ("".equals(view.column())) {
+                if (view.column().length() == 0) {
                     fieldKey = eruptNameSymbol + field.getFieldName() + " as " + field.getFieldName();
                 } else {
                     fieldKey = eruptNameSymbol + field.getFieldName() + "." + view.column() + " as " + field.getFieldName() + "_"

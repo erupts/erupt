@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.1.8</version>
+    <version>1.1.9</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -14,18 +14,12 @@
 
     <properties>
         <erupt.groupId>xyz.erupt</erupt.groupId>
-        <erupt.version>1.1.8</erupt.version>
+        <erupt.version>1.1.9</erupt.version>
         <java.version>1.8</java.version>
         <spring.boot.version>2.2.4.RELEASE</spring.boot.version>
     </properties>
 
-    <!--<parent>-->
-    <!--<groupId>org.springframework.boot</groupId>-->
-    <!--<artifactId>spring-boot-starter-parent</artifactId>-->
-    <!--<version>2.2.4.RELEASE</version>-->
-    <!--</parent>-->
-
-    <!--　
+    <!--
     在编译spring boot 等多模块项目的时候，往往出现
     Non-resolvable parent POM: Could not find artifact
     后面跟一串其它信息，网上大部分解决方案是修改relativePath配置项，
@@ -34,6 +28,7 @@
     让后编译并打包并安装，在提示成功后，再把原来注释活删除的配置项还原即可，然后再编译即可成功。
     -->
     <modules>
+        <!--complete-->
         <module>erupt-annotation</module>
         <module>erupt-core</module>
         <module>erupt-auth</module>
@@ -41,9 +36,11 @@
         <module>erupt-tpl</module>
         <module>erupt-job</module>
         <module>erupt-bi</module>
+        <!--coding-->
         <module>erupt-ops</module>
         <module>erupt-tool</module>
         <module>erupt-mongodb</module>
+        <module>erupt-blog</module>
     </modules>
 
     <dependencyManagement>

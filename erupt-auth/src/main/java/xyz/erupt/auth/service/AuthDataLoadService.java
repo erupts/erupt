@@ -44,37 +44,37 @@ public class AuthDataLoadService implements CommandLineRunner {
                 eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
 
                 //菜单
-                String $code = "code";
+                String code = "code";
                 String $manager = "$manager";
                 int open = new Integer(EruptMenu.OPEN);
                 EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu($manager, "系统管理", null, 1, 0, "fa fa-cogs", null)
-                        , $code, $manager);
+                        , code, $manager);
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptMenu.class.getSimpleName(), "菜单维护", EruptMenu.PATH_TREE + EruptMenu.class.getSimpleName(), open, 10, "fa fa-list-ul", eruptMenu
-                ), $code, EruptMenu.class.getSimpleName());
+                ), code, EruptMenu.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptOrg.class.getSimpleName(), "组织维护", EruptMenu.PATH_TREE + EruptOrg.class.getSimpleName(), open, 20, "fa fa-users", eruptMenu
-                ), $code, EruptOrg.class.getSimpleName());
+                ), code, EruptOrg.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptUser.class.getSimpleName(), "用户维护", EruptMenu.PATH_TABLE + EruptUser.class.getSimpleName(), open, 30, "fa fa-user", eruptMenu
-                ), $code, EruptUser.class.getSimpleName());
+                ), code, EruptUser.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptRole.class.getSimpleName(), "角色维护", EruptMenu.PATH_TABLE + EruptRole.class.getSimpleName(), open, 40, null, eruptMenu
-                ), $code, EruptRole.class.getSimpleName());
+                ), code, EruptRole.class.getSimpleName());
                 {
                     EruptMenu eruptMenuDict = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                             EruptDict.class.getSimpleName(), "字典维护", EruptMenu.PATH_TABLE + EruptDict.class.getSimpleName(), open, 50, null, eruptMenu
-                    ), $code, EruptDict.class.getSimpleName());
+                    ), code, EruptDict.class.getSimpleName());
                     eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                             EruptDictItem.class.getSimpleName(), "字典项", EruptMenu.PATH_TABLE + EruptDictItem.class.getSimpleName(), new Integer(EruptMenu.HIDE), 10, null, eruptMenuDict
-                    ), $code, EruptDictItem.class.getSimpleName());
+                    ), code, EruptDictItem.class.getSimpleName());
                 }
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptLoginLog.class.getSimpleName(), "登录日志", EruptMenu.PATH_TABLE + EruptLoginLog.class.getSimpleName(), open, 60, null, eruptMenu
-                ), $code, EruptLoginLog.class.getSimpleName());
+                ), code, EruptLoginLog.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptOperateLog.class, new EruptMenu(
                         EruptOperateLog.class.getSimpleName(), "操作日志", EruptMenu.PATH_TABLE + EruptOperateLog.class.getSimpleName(), open, 70, null, eruptMenu
-                ), $code, EruptOperateLog.class.getSimpleName());
+                ), code, EruptOperateLog.class.getSimpleName());
             }
         });
     }

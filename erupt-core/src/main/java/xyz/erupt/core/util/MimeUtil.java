@@ -16,8 +16,7 @@ public class MimeUtil {
     private static Properties mimes = new Properties();
 
     static {
-        try {
-            InputStream in = MimeUtil.class.getClassLoader().getResourceAsStream("mime.properties");
+        try (InputStream in = MimeUtil.class.getClassLoader().getResourceAsStream("mime.properties")) {
             mimes.load(in);
         } catch (IOException e) {
             e.printStackTrace();

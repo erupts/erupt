@@ -58,5 +58,4 @@ public class EruptDict extends HyperModel {
     )
     private String remark;
 
-
 }

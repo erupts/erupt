@@ -48,7 +48,7 @@ public interface EruptDataService {
      * @param eruptModel erupt核心对象
      * @param object
      */
-    void addData(EruptModel eruptModel, Object object) throws Exception;
+    void addData(EruptModel eruptModel, Object object);
 
     /**
      * 修改数据
@@ -56,7 +56,7 @@ public interface EruptDataService {
      * @param eruptModel erupt核心对象
      * @param object     数据对象
      */
-    void editData(EruptModel eruptModel, Object object) throws Exception;
+    void editData(EruptModel eruptModel, Object object);
 
     /**
      * 删除数据

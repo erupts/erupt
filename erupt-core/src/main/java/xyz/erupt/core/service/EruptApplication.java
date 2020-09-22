@@ -16,7 +16,7 @@ public class EruptApplication {
     public static void run(Class<?> primarySource, String... args) {
         EruptApplication.primarySource = primarySource;
         EruptScan eruptScan = primarySource.getAnnotation(EruptScan.class);
-        if (null == eruptScan) {
+        if (null == eruptScan || eruptScan.value().length == 0) {
             scanPackage = new String[2];
             scanPackage[0] = primarySource.getPackage().getName();
             scanPackage[1] = EruptConst.BASE_PACKAGE;

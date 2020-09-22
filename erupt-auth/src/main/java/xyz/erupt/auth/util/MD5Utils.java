@@ -25,11 +25,11 @@ public class MD5Utils {
     }
 
     private static String byteToString(byte[] bByte) {
-        StringBuffer sBuffer = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bByte.length; i++) {
-            sBuffer.append(byteToArrayString(bByte[i]));
+            sb.append(byteToArrayString(bByte[i]));
         }
-        return sBuffer.toString();
+        return sb.toString();
     }
 
     public static String digest(String strObj) {
