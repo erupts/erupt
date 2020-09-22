@@ -1,7 +1,7 @@
-# Erupt common data Framework
+## Erupt
 
 #### Author 
-YuePeng
+YuePeng<erupts@126.com>
 
 #### 设计理念
 对象视图映射 OVM(Object View Mapping)
@@ -12,10 +12,9 @@ YuePeng
 
 #### 软件架构
 后端
-1. JAVA Lambda/Annotation
+1. Java8
 2. Spring Boot
 3. JPA
-4. Erupt
 
 前端
 1. Angular 8
@@ -23,13 +22,8 @@ YuePeng
 3. ng-alain
 
 #### 安装教程
-1. 配置app.js
-2. 配置application.properties
-3. 配置application.yml
-4. 配置数据库连接信息
-5. 导入JDK
+详见：https://www.yuque.com/yuepeng/erupt
 
 #### 使用说明
-实体类使用@Erupt注解，
-实体类字段上使用@EruptField注解
+@Erupt & @EruptField
 

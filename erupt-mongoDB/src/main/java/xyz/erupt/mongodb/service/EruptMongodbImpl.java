@@ -72,7 +72,7 @@ public class EruptMongodbImpl implements EruptDataService {
     }
 
     @Override
-    public void addData(EruptModel eruptModel, Object object) throws Exception {
+    public void addData(EruptModel eruptModel, Object object) {
 //        Document document = eruptModel.getClazz().getAnnotation(Document.class);
 //        String value = document.value();
 //        if (StringUtils.isBlank(value)) {
@@ -82,7 +82,7 @@ public class EruptMongodbImpl implements EruptDataService {
     }
 
     @Override
-    public void editData(EruptModel eruptModel, Object object) throws Exception {
+    public void editData(EruptModel eruptModel, Object object) {
         mongoTemplate.save(object);
     }
 
