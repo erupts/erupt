@@ -1,7 +1,8 @@
 # erupt
 
 #### Author 
-YuePeng <erupts@126.com>
+YuePeng 
+erupts@126.com
 
 #### 设计理念
 对象视图模型 OVM(Object View Model)

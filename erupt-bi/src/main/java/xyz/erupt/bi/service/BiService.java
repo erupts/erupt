@@ -72,6 +72,7 @@ public class BiService {
         if (null == biData.getTotal() || biData.getTotal() > 0) {
             String sql = String.format("select * from (%s) _ limit %s,%s",
                     bi.getSqlStatement(), (pageIndex - 1) * pageSize, pageSize);
+            log.info(sql);
             List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);
             if (null != list && list.size() > 0) {
                 List<BiColumn> biColumns = new LinkedList<>();

@@ -56,11 +56,11 @@ public class AuthDataLoadService implements CommandLineRunner {
                         EruptOrg.class.getSimpleName(), "组织维护", EruptMenu.PATH_TREE + EruptOrg.class.getSimpleName(), open, 20, "fa fa-users", eruptMenu
                 ), code, EruptOrg.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                        EruptUser.class.getSimpleName(), "用户维护", EruptMenu.PATH_TABLE + EruptUser.class.getSimpleName(), open, 30, "fa fa-user", eruptMenu
-                ), code, EruptUser.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                        EruptRole.class.getSimpleName(), "角色维护", EruptMenu.PATH_TABLE + EruptRole.class.getSimpleName(), open, 40, null, eruptMenu
+                        EruptRole.class.getSimpleName(), "角色维护", EruptMenu.PATH_TABLE + EruptRole.class.getSimpleName(), open, 30, null, eruptMenu
                 ), code, EruptRole.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                        EruptUser.class.getSimpleName(), "用户维护", EruptMenu.PATH_TABLE + EruptUser.class.getSimpleName(), open, 40, "fa fa-user", eruptMenu
+                ), code, EruptUser.class.getSimpleName());
                 {
                     EruptMenu eruptMenuDict = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                             EruptDict.class.getSimpleName(), "字典维护", EruptMenu.PATH_TABLE + EruptDict.class.getSimpleName(), open, 50, null, eruptMenu

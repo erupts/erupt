@@ -59,9 +59,10 @@ public class BiDimension extends BaseModel {
                             type = ChoiceEnum.RADIO,
                             vl = {
                                     @VL(value = "INPUT", label = "文本"),
+                                    @VL(value = "TAG", label = "标签"),
                                     @VL(value = "NUMBER", label = "数值"),
                                     @VL(value = "NUMBER_RANGE", label = "数值区间"),
-                                    @VL(value = "REFERENCE", label = "SQL参照"),
+
                                     @VL(value = "DATE", label = "日期"),
                                     @VL(value = "DATE_RANGE", label = "日期区间"),
                                     @VL(value = "DATETIME", label = "日期时间"),
@@ -69,7 +70,12 @@ public class BiDimension extends BaseModel {
                                     @VL(value = "TIME", label = "时间"),
                                     @VL(value = "WEEK", label = "周"),
                                     @VL(value = "MONTH", label = "月"),
-                                    @VL(value = "YEAR", label = "年")
+                                    @VL(value = "YEAR", label = "年"),
+
+                                    @VL(value = "REFERENCE", label = "单选参照"),
+                                    @VL(value = "REFERENCE_MULTI", label = "多选参照"),
+                                    @VL(value = "REFERENCE_RADIO", label = "Radio参照"),
+                                    @VL(value = "REFERENCE_CHECKBOX", label = "Checkbox参照")
                             }
                     )
             )
@@ -79,7 +85,10 @@ public class BiDimension extends BaseModel {
     @ManyToOne
     @EruptField(
             views = @View(title = "参照维度", column = "name"),
-            edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE, showBy = @ShowBy(dependField = "type", expr = "fieldValue == 'REFERENCE'"))
+            edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE,
+                    showBy = @ShowBy(dependField = "type",
+                            expr = "fieldValue == 'REFERENCE'||fieldValue == 'REFERENCE_RADIO'" +
+                                    "||fieldValue == 'REFERENCE_MULTI'||fieldValue == 'REFERENCE_CHECKBOX'"))
     )
     private BiDimensionReference biDimensionReference;
 
