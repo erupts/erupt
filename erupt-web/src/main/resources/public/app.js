@@ -1,7 +1,7 @@
 window.eruptSiteConfig = {
     //global config
     domain: "http://localhost:9999",
-    fileDomain: "http://localhost:9999",
+    fileDomain: "",
     title: "Erupt Framework", //通用数据管理框架
     desc: "通用数据管理框架",
     routerReuse: false,
@@ -25,18 +25,16 @@ window.eruptSiteConfig = {
 
 //路由回调函数
 window.eruptRouterEvent = {
-    Router: {
-        load: function (url) {
-
+    Test: {
+        load: function (e) {
         },
-        unload: function (url) {
+        unload: function (e) {
         }
     },
     $: {
-        load: function (url) {
-
+        load: function (e) {
         },
-        unload: function (url) {
+        unload: function (e) {
         }
     }
 };
