@@ -22,6 +22,7 @@ import xyz.erupt.bi.view.BiData;
 import xyz.erupt.bi.view.BiModel;
 import xyz.erupt.bi.view.Reference;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
@@ -53,6 +54,9 @@ public class EruptBiController {
 
     @Autowired
     private Gson gson;
+
+    @Autowired
+    private EruptProp eruptProp;
 
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
@@ -94,6 +98,9 @@ public class EruptBiController {
             if (dimension.getSort() == null) {
                 dimension.setSort(++maxSort);
             }
+        }
+        if (null != bi.getRefreshTime() && bi.getRefreshTime() > 0) {
+            biModel.setRefreshTime(bi.getRefreshTime());
         }
         biModel.setCode(bi.getCode());
         biModel.setCharts(bi.getBiCharts().stream().sorted(Comparator.comparing(BiChart::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
@@ -160,8 +167,8 @@ public class EruptBiController {
                             @RequestParam("condition") String conditionStr,
                             HttpServletRequest request,
                             HttpServletResponse response) throws ClassNotFoundException, IOException {
-        if (SecurityUtil.csrfInspect(request, response)) {
-            throw new RuntimeException("非法请求");
+        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
+            return;
         }
         Bi bi = biService.findBi(code);
         if (!bi.getExport()) {

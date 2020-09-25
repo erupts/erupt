@@ -33,10 +33,13 @@ import java.util.regex.Pattern;
 public class BiService {
 
     @Autowired
-    private BiDataSourceService dataSourceService;
+    private EruptDao eruptDao;
 
     @Autowired
-    private EruptDao eruptDao;
+    private EruptUserService eruptUserService;
+
+    @Autowired
+    private BiDataSourceService dataSourceService;
 
     //导出标识符
     private static final String EXPORT_PLACEHOLDER = "$export";
@@ -52,10 +55,9 @@ public class BiService {
     }
 
     private static final String TOTAL_KEY = "count";
+
     //用户ID
     private static final String USER_ID_PLACEHOLDER = "$uid";
-    @Autowired
-    private EruptUserService eruptUserService;
 
     public BiData queryBiData(String code, int pageIndex, int pageSize,
                               Map<String, Object> query, boolean export) {
@@ -70,8 +72,9 @@ public class BiService {
             biData.setTotal(this.getTotal(bi, query));
         }
         if (null == biData.getTotal() || biData.getTotal() > 0) {
-            String sql = String.format("select * from (%s) _ limit %s,%s",
-                    bi.getSqlStatement(), (pageIndex - 1) * pageSize, pageSize);
+            // limit语句需要做数据库兼容
+            String sql = String.format("select * from (%s) _ limit %s offset %s",
+                    bi.getSqlStatement(), pageSize, (pageIndex - 1) * pageSize);
             log.info(sql);
             List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);
             if (null != list && list.size() > 0) {

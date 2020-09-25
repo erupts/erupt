@@ -90,13 +90,13 @@ public class SecurityUtil {
 
     //检测 跨站请求伪造
     public static boolean csrfInspect(HttpServletRequest request, HttpServletResponse response) {
-//        if (1 == 1) return false;
         String origin = request.getHeader("Origin");
         if (null != origin && !origin.contains(request.getHeader("Host"))) {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("text/plain; charset=utf-8");
             try (PrintWriter out = response.getWriter()) {
-                out.append("非法请求!");
+                out.append("非法跨站请求!");
+                throw new RuntimeException("非法跨站请求!");
             } catch (IOException e) {
                 e.printStackTrace();
             }

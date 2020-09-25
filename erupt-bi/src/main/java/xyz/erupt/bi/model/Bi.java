@@ -60,6 +60,11 @@ public class Bi extends HyperModel {
     )
     private BiClassHandler classHandler;
 
+    @EruptField(
+            edit = @Edit(title = "自动刷新时间，单位（秒）")
+    )
+    private Integer refreshTime;
+
 
     @EruptField(
             views = @View(title = "是否可导出"),

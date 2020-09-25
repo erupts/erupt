@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
@@ -37,6 +38,10 @@ import java.util.List;
 @RequestMapping(RestPath.ERUPT_EXCEL)
 public class EruptExcelController {
 
+
+    @Autowired
+    private EruptProp eruptProp;
+
     @Autowired
     private EruptExcelService dataFileService;
 
@@ -51,8 +56,8 @@ public class EruptExcelController {
     @RequestMapping(value = "/template/{erupt}")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
-        if (SecurityUtil.csrfInspect(request, response)) {
-            throw new RuntimeException("非法请求");
+        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
+            return;
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (EruptUtil.getPowerObject(eruptModel).isImportable()) {
@@ -69,8 +74,8 @@ public class EruptExcelController {
     public void exportData(@PathVariable("erupt") String eruptName, @RequestParam("condition") String condition,
                            HttpServletRequest request,
                            HttpServletResponse response) throws IOException {
-        if (SecurityUtil.csrfInspect(request, response)) {
-            throw new RuntimeException("非法请求");
+        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
+            return;
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (EruptUtil.getPowerObject(eruptModel).isExport()) {

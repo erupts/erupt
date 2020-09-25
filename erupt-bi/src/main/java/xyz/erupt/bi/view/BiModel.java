@@ -21,6 +21,8 @@ public class BiModel {
 
     private boolean table;
 
+    private int refreshTime;
+
     private List<BiDimension> dimensions;
 
     private List<BiChart> charts;
