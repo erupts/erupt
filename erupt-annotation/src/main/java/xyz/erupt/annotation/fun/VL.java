@@ -1,4 +1,4 @@
-package xyz.erupt.core.view;
+package xyz.erupt.annotation.fun;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +15,19 @@ public class VL {
 
     private String label;
 
+    private String desc;
+
     public VL(String value, String label) {
         this.value = value;
         this.label = label;
+    }
+
+    public VL(String value, String label, String desc) {
+        this.value = value;
+        this.label = label;
+        this.desc = desc;
+    }
+
+    public VL() {
     }
 }

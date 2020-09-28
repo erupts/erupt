@@ -14,6 +14,4 @@ public @interface VL {
 
     @Transient
     String desc() default "";
-
-//    String[] dependEdits() default {};
 }

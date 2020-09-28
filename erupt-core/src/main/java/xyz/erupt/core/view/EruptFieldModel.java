@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
+import xyz.erupt.annotation.fun.VL;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;

@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.EruptUser;
@@ -68,7 +69,8 @@ public class EruptOperateLog extends BaseModel {
 
     @Lob
     @EruptField(
-            views = @View(title = "请求参数", type = ViewType.HTML)
+            views = @View(title = "请求参数", type = ViewType.CODE),
+            edit = @Edit(title = "请求参数", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
     )
     private String reqParam;
 

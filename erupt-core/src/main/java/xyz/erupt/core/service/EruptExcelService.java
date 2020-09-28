@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.JavaType;
+import xyz.erupt.annotation.fun.VL;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -22,7 +23,6 @@ import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.core.view.VL;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

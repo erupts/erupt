@@ -42,24 +42,11 @@ public class BiChart extends HyperModel {
     )
     private Integer grid = 1;
 
-    @ManyToOne
-    @EruptField(
-            edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
-    )
-    private BiClassHandler classHandler;
-
-    @ManyToOne
-    @EruptField(
-            views = @View(title = "数据源", column = "name"),
-            edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search)
-    )
-    private BiDataSource dataSource;
-
 //    @EruptField(
-//            views = @View(title = "联动查询"),
-//            edit = @Edit(title = "联动查询")
+//            views = @View(title = "查询项依赖"),
+//            edit = @Edit(title = "查询项依赖")
 //    )
-//    private Boolean linkage;
+//    private Boolean dependSearch = false;
 
     @EruptField(
             views = @View(title = "高度(px)"),
@@ -72,6 +59,19 @@ public class BiChart extends HyperModel {
             edit = @Edit(title = "显示顺序")
     )
     private Integer sort;
+
+    @ManyToOne
+    @EruptField(
+            edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
+    )
+    private BiClassHandler classHandler;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "数据源", column = "name"),
+            edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search)
+    )
+    private BiDataSource dataSource;
 
     /**
      * 单数值
@@ -90,20 +90,23 @@ public class BiChart extends HyperModel {
                             @VL(label = "折线图", value = "Line"),
                             @VL(label = "阶梯折线图", value = "StepLine"),
                             @VL(label = "柱状图", value = "Column"),
+                            @VL(label = "堆叠柱状图", value = "StackedColumn"),
                             @VL(label = "面积图", value = "Area"),
+                            @VL(label = "百分比面积图", value = "PercentageArea"),
+                            @VL(label = "条形图", value = "Bar"),
+                            @VL(label = "百分比条形图", value = "PercentStackedBar"),
+                            @VL(label = "散点图", value = "Scatter"),
                             //------------
                             @VL(label = "饼图", value = "Pie"),
                             @VL(label = "环形图", value = "Ring"),
                             @VL(label = "玫瑰图", value = "Rose"),
-                            //------------
-                            @VL(label = "漏斗图", value = "Funnel"),
                             @VL(label = "雷达图", value = "Radar"),
-                            @VL(label = "词云", value = "WordCloud"),
                             //------------
-                            @VL(label = "散点图", value = "Scatter"),
-                            @VL(label = "热力图", value = "Heatmap"),
-                            //------------
-                            @VL(label = "指标", value = "number"),
+                            @VL(label = "气泡图", value = "Bubble", desc = "需要4个数据列：x / y / series / size"),
+                            @VL(label = "瀑布图", value = "Waterfall", desc = "需要2个数据列：x:名称 y:增加或减少的值"),
+                            @VL(label = "漏斗图", value = "Funnel"),
+//                            @VL(label = "词云", value = "WordCloud", desc = "需要2个数据列：x:名称 y:数值"),
+//                            @VL(label = "热力图", value = "Heatmap", desc = "最少需要3个数据列，size可选：x / y / value / [size]"),
 //                            @VL(label = "HTML", value = "html"),
 //                            @VL(label = "表格", value = "table"),
                     }
@@ -114,7 +117,7 @@ public class BiChart extends HyperModel {
     @Lob
     @EruptField(
             views = @View(title = "图表sql"),
-            edit = @Edit(title = "图表sql", type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
+            edit = @Edit(title = "图表sql", desc = "规则：二维切片，三维切片，维度顺序：X -> Y -> Series", type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
@@ -129,4 +132,17 @@ public class BiChart extends HyperModel {
     @ManyToOne
     private Bi bi;
 
+//    @Autowired
+//    @Transient
+//    private EruptDao eruptDao;
+//
+//    @Override
+//    public void addBehavior(BiChart biChart) {
+//        BiChart bc = eruptDao.queryEntity(BiChart.class, "bi.id = " + biChart.getBi().getId() + " order by sort desc  limit 1", null);
+//        if (bc == null) {
+//            biChart.setSort(10);
+//        } else {
+//            biChart.setSort(bc.getSort() + 10);
+//        }
+//    }
 }

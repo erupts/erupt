@@ -72,6 +72,8 @@ public class BiDimension extends BaseModel {
                                     @VL(value = "MONTH", label = "月"),
                                     @VL(value = "YEAR", label = "年"),
 
+                                    @VL(value = "REFERENCE_TREE_RADIO", label = "单选树参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
+                                    @VL(value = "REFERENCE_TREE_MULTI", label = "多选树参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
                                     @VL(value = "REFERENCE", label = "单选参照"),
                                     @VL(value = "REFERENCE_MULTI", label = "多选参照"),
                                     @VL(value = "REFERENCE_RADIO", label = "Radio参照"),
@@ -87,8 +89,7 @@ public class BiDimension extends BaseModel {
             views = @View(title = "参照维度", column = "name"),
             edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE,
                     showBy = @ShowBy(dependField = "type",
-                            expr = "fieldValue == 'REFERENCE'||fieldValue == 'REFERENCE_RADIO'" +
-                                    "||fieldValue == 'REFERENCE_MULTI'||fieldValue == 'REFERENCE_CHECKBOX'"))
+                            expr = "fieldValue && fieldValue.indexOf('REFERENCE') != -1"))
     )
     private BiDimensionReference biDimensionReference;
 

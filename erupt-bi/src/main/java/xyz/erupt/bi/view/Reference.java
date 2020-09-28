@@ -2,8 +2,6 @@ package xyz.erupt.bi.view;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * @author liyuepeng
  * @date 2020-02-16
@@ -11,15 +9,21 @@ import java.util.List;
 @Data
 public class Reference {
 
-    Object key;
+    Object id;
 
     Object title;
 
-    List<Reference> children;
+    Object pid;
 
-    public Reference(Object key, Object title) {
-        this.key = key;
+    public Reference(Object id, Object title) {
+        this.id = id;
         this.title = title;
+    }
+
+    public Reference(Object id, Object title, Object pid) {
+        this.id = id;
+        this.title = title;
+        this.pid = pid;
     }
 
     public Reference() {

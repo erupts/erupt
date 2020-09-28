@@ -5,6 +5,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.fun.VL;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -16,8 +17,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author liyuepeng
@@ -83,12 +84,9 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
     private String password;
 
     @Override
-    public Map<String, String> fetch(String[] params) {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("mysql", "mysql");
-//        for (Database value : Database.values()) {
-//            map.put(value.name(), value.name().toLowerCase());
-//        }
-        return map;
+    public List<VL> fetch(String[] params) {
+        List<VL> list = new ArrayList<>();
+        list.add(new VL("mysql", "mysql"));
+        return list;
     }
 }

@@ -8,7 +8,7 @@ import xyz.erupt.core.service.EruptApplication;
  * @author liyuepeng
  * @date 2020-09-15
  */
-public class EruptRunner extends SpringJUnit4ClassRunner {
+public final class EruptRunner extends SpringJUnit4ClassRunner {
 
     public EruptRunner(Class<?> clazz) throws InitializationError {
         super(clazz);

@@ -1,6 +1,6 @@
 package xyz.erupt.annotation.fun;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author liyuepeng
@@ -14,7 +14,7 @@ public interface ChoiceFetchHandler {
      * @param params 注解参数
      * @return 前端显示的键值对
      */
-    Map<String, String> fetch(String[] params);
+    List<VL> fetch(String[] params);
 
 
 }
