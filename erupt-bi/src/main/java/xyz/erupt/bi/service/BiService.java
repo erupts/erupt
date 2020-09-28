@@ -75,7 +75,6 @@ public class BiService {
             // limit语句需要做数据库兼容
             String sql = String.format("select * from (%s) _ limit %s offset %s",
                     bi.getSqlStatement(), pageSize, (pageIndex - 1) * pageSize);
-            log.info(sql);
             List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);
             if (null != list && list.size() > 0) {
                 List<BiColumn> biColumns = new LinkedList<>();
