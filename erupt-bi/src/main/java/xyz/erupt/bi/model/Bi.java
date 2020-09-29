@@ -61,7 +61,7 @@ public class Bi extends HyperModel {
     private BiClassHandler classHandler;
 
     @EruptField(
-            views = @View(title = "自动刷新周期（秒）", column = "name"),
+            views = @View(title = "自动刷新周期（秒）"),
             edit = @Edit(title = "自动刷新周期（秒）")
     )
     private Integer refreshTime;

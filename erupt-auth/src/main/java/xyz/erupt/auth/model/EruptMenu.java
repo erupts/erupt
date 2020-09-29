@@ -46,6 +46,8 @@ public class EruptMenu extends HyperModel {
 
     public static final String PATH_LINK = "/site?url=";
 
+    public static final String PATH_NEW_WINDOW = "/new_window?url=";
+
     public static final String PATH_BI = "/bi/";
 
     public static final String PATH_TPL = "/tpl/";
@@ -91,7 +93,7 @@ public class EruptMenu extends HyperModel {
                                     @VL(value = PATH_BI, label = "报表", desc = "此功能需要导入bi模块"),
                                     @VL(value = PATH_TPL, label = "模板", desc = "使用此功能需要导入tpl模块"),
                                     @VL(value = PATH_LINK, label = "链接"),
-                                    @VL(value = "/site?target=blank&url=", label = "新页签"),
+                                    @VL(value = PATH_NEW_WINDOW, label = "新页签"),
                                     @VL(value = "/", label = "/", desc = "其他"),
                             }
                     )
