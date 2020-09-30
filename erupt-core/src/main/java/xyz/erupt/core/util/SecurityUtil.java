@@ -1,6 +1,7 @@
 package xyz.erupt.core.util;
 
 import org.apache.commons.lang3.StringUtils;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -96,7 +97,7 @@ public class SecurityUtil {
             response.setContentType("text/plain; charset=utf-8");
             try (PrintWriter out = response.getWriter()) {
                 out.append("非法跨站请求!");
-                throw new RuntimeException("非法跨站请求!");
+                throw new EruptWebApiRuntimeException("非法跨站请求!");
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -17,6 +17,7 @@ import xyz.erupt.auth.model.log.EruptLoginLog;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.auth.util.MD5Utils;
 import xyz.erupt.core.dao.EruptDao;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
@@ -183,7 +184,7 @@ public class EruptUserService {
         if (null != uid) {
             return Long.valueOf(uid.toString());
         } else {
-            throw new RuntimeException("登录过期请重新登录");
+            throw new EruptWebApiRuntimeException("登录过期请重新登录");
         }
     }
 

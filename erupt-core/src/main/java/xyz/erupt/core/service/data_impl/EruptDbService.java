@@ -14,6 +14,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.dao.EruptJpaUtils;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EntityManagerService;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptDataService;
@@ -119,14 +120,14 @@ public class EruptDbService implements EruptDataService {
     private void handlerException(Exception e, EruptModel eruptModel) {
         if (e instanceof DataIntegrityViolationException) {
             if (e.getMessage().contains("ConstraintViolationException")) {
-                throw new RuntimeException(gcRepeatHint(eruptModel));
+                throw new EruptWebApiRuntimeException(gcRepeatHint(eruptModel));
             } else if (e.getMessage().contains("DataException")) {
-                throw new RuntimeException("输入内容过长！");
+                throw new EruptWebApiRuntimeException("内容超出数据库限制长度！");
             } else {
-                throw new RuntimeException(e.getMessage());
+                throw new EruptWebApiRuntimeException(e.getMessage());
             }
         } else {
-            throw new RuntimeException(e.getMessage());
+            throw new EruptWebApiRuntimeException(e.getMessage());
         }
     }
 
@@ -137,9 +138,9 @@ public class EruptDbService implements EruptDataService {
             eruptJpaDao.removeEntity(eruptModel, object);
         } catch (DataIntegrityViolationException | ConstraintViolationException e) {
             e.printStackTrace();
-            throw new RuntimeException("删除失败，可能存在关联数据，无法直接删除！");
+            throw new EruptWebApiRuntimeException("删除失败，可能存在关联数据，无法直接删除！");
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new EruptWebApiRuntimeException(e.getMessage());
         }
     }
 

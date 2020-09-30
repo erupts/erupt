@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class VL {
+public class VLModel {
 
     private String value;
 
@@ -17,17 +17,17 @@ public class VL {
 
     private String desc;
 
-    public VL(String value, String label) {
+    public VLModel(String value, String label) {
         this.value = value;
         this.label = label;
     }
 
-    public VL(String value, String label, String desc) {
+    public VLModel(String value, String label, String desc) {
         this.value = value;
         this.label = label;
         this.desc = desc;
     }
 
-    public VL() {
+    public VLModel() {
     }
 }

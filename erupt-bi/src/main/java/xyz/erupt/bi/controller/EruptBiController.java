@@ -26,6 +26,7 @@ import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.HttpUtil;
@@ -175,7 +176,7 @@ public class EruptBiController {
         }
         Bi bi = biService.findBi(code);
         if (!bi.getExport()) {
-            throw new RuntimeException(bi.getName() + "禁止导出！");
+            throw new EruptWebApiRuntimeException(bi.getName() + "禁止导出！");
         }
         Map<String, Object> condition = gson.fromJson(
                 URLDecoder.decode(conditionStr, "utf-8"),

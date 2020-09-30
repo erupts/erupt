@@ -5,11 +5,12 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
-import xyz.erupt.annotation.fun.VL;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.bi.service.BiDataSourceService;
 
@@ -79,14 +80,14 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
     private String userName;
 
     @EruptField(
-            edit = @Edit(title = "密码")
+            edit = @Edit(title = "密码", inputType = @InputType(type = "password"))
     )
     private String password;
 
     @Override
-    public List<VL> fetch(String[] params) {
-        List<VL> list = new ArrayList<>();
-        list.add(new VL("mysql", "mysql"));
+    public List<VLModel> fetch(String[] params) {
+        List<VLModel> list = new ArrayList<>();
+        list.add(new VLModel("mysql", "mysql"));
         return list;
     }
 }

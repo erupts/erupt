@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @Erupt(
         name = "服务器管理",
         orderBy = "sort",
-        linkTree = @LinkTree(field = "opsServerGroup")
+        linkTree = @LinkTree(field = "opsServerGroup", dependNode = true)
 )
 public class OpsServer extends HyperModel {
 

@@ -14,7 +14,7 @@ public interface ChoiceFetchHandler {
      * @param params 注解参数
      * @return 前端显示的键值对
      */
-    List<VL> fetch(String[] params);
+    List<VLModel> fetch(String[] params);
 
 
 }

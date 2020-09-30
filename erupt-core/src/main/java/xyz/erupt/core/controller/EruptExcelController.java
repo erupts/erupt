@@ -12,6 +12,7 @@ import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.util.EruptUtil;
@@ -63,7 +64,7 @@ public class EruptExcelController {
         if (EruptUtil.getPowerObject(eruptModel).isImportable()) {
             dataFileService.createExcelTemplate(eruptModel, request, response);
         } else {
-            throw new RuntimeException("没有导入权限");
+            throw new EruptWebApiRuntimeException("没有导入权限");
         }
     }
 
@@ -93,7 +94,7 @@ public class EruptExcelController {
             EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
             wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));
         } else {
-            throw new RuntimeException("没有导出权限");
+            throw new EruptWebApiRuntimeException("没有导出权限");
         }
     }
 
@@ -119,23 +120,23 @@ public class EruptExcelController {
                 } else if (fileName.endsWith(EruptExcelService.XLSX_FORMAT)) {
                     list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
                 } else {
-                    throw new RuntimeException("上传文件必须为Excel");
+                    throw new EruptWebApiRuntimeException("上传文件必须为Excel");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new RuntimeException("Excel解析异常" + "，出错行数：" + i + "，原因：" + e.getMessage());
+                throw new EruptWebApiRuntimeException("Excel解析异常" + "，出错行数：" + i + "，原因：" + e.getMessage());
             }
             i = 1;
             for (JsonObject jo : list) {
                 i++;
                 EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo, null);
                 if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-                    throw new RuntimeException("第" + i + "行：" + eruptApiModel.getMessage());
+                    throw new EruptWebApiRuntimeException("第" + i + "行：" + eruptApiModel.getMessage());
                 }
             }
             return EruptApiModel.successApi();
         } else {
-            throw new RuntimeException("没有导入权限");
+            throw new EruptWebApiRuntimeException("没有导入权限");
         }
     }
 

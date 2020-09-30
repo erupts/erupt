@@ -17,6 +17,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.auth.util.MD5Utils;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.view.EruptApiModel;
 
 import javax.persistence.*;
@@ -35,7 +36,7 @@ import java.util.Set;
         name = "用户",
         desc = "用户配置",
         dataProxy = EruptUser.class,
-        linkTree = @LinkTree(field = "eruptOrg", dependNode = false)
+        linkTree = @LinkTree(field = "eruptOrg")
 )
 @Getter
 @Setter
@@ -202,7 +203,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
                 eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
             }
         } else {
-            throw new RuntimeException("两次密码输入不一致");
+            throw new EruptWebApiRuntimeException("两次密码输入不一致");
         }
     }
 
@@ -212,7 +213,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
         EruptUser eu = entityManager.find(EruptUser.class, eruptUser.getId());
         if (StringUtils.isNotBlank(eruptUser.getPassword())) {
             if (!eruptUser.getPassword().equals(eruptUser.getPassword2())) {
-                throw new RuntimeException("两次密码输入不一致");
+                throw new EruptWebApiRuntimeException("两次密码输入不一致");
             }
             if (eruptUser.getIsMd5()) {
                 eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));

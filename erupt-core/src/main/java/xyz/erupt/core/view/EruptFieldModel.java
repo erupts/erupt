@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
-import xyz.erupt.annotation.fun.VL;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -44,7 +44,7 @@ public class EruptFieldModel {
 
     private Object value;
 
-    private List<VL> choiceList;
+    private List<VLModel> choiceList;
 
     public EruptFieldModel(Field field) {
         this.field = field;

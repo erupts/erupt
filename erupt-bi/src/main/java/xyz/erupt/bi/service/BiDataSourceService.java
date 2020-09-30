@@ -20,7 +20,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
+    private static final Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
 
     NamedParameterJdbcTemplate getJdbcTemplate(BiDataSource biDataSource) {
         if (null == biDataSource) {
@@ -33,20 +33,15 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
                     if (null != jdbcTemplate) {
                         return jdbcTemplate;
                     }
-                    {
-                        HikariDataSource hikariDataSource = new HikariDataSource();
-                        //报表数据源只读
-                        hikariDataSource.setReadOnly(true);
-                        hikariDataSource.setDriverClassName(biDataSource.getDriver());
-                        hikariDataSource.setJdbcUrl(biDataSource.getUrl());
-                        hikariDataSource.setPassword(biDataSource.getPassword());
-                        hikariDataSource.setUsername(biDataSource.getUserName());
-                        jdbcTemplate = new NamedParameterJdbcTemplate(hikariDataSource);
-//                        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-//                        factory.setDataSource(hikariDataSource);
-//                        factory.getNativeEntityManagerFactory().createEntityManager();
-                        templateMap.put(biDataSource.getCode(), jdbcTemplate);
-                    }
+                    HikariDataSource hikariDataSource = new HikariDataSource();
+                    //报表数据源只读
+                    hikariDataSource.setReadOnly(true);
+                    hikariDataSource.setDriverClassName(biDataSource.getDriver());
+                    hikariDataSource.setJdbcUrl(biDataSource.getUrl());
+                    hikariDataSource.setPassword(biDataSource.getPassword());
+                    hikariDataSource.setUsername(biDataSource.getUserName());
+                    jdbcTemplate = new NamedParameterJdbcTemplate(hikariDataSource);
+                    templateMap.put(biDataSource.getCode(), jdbcTemplate);
                 }
                 return jdbcTemplate;
             } else {

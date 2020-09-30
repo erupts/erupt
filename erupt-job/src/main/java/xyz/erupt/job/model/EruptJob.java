@@ -17,6 +17,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.base.HyperModel;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.job.service.EruptJobService;
 
 import javax.persistence.*;
@@ -102,7 +103,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
         try {
             eruptJobService.modifyJob(eruptJob);
         } catch (SchedulerException | ParseException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new EruptWebApiRuntimeException(e.getMessage());
         }
     }
 
@@ -116,7 +117,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
         try {
             eruptJobService.deleteJob(eruptJob);
         } catch (SchedulerException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new EruptWebApiRuntimeException(e.getMessage());
         }
     }
 
@@ -125,7 +126,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
         try {
             eruptJobService.triggerJob(eruptJob);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new EruptWebApiRuntimeException(e.getMessage());
         }
     }
 }

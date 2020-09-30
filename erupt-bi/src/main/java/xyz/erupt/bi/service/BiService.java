@@ -14,6 +14,7 @@ import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.bi.view.BiColumn;
 import xyz.erupt.bi.view.BiData;
 import xyz.erupt.core.dao.EruptDao;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
 
 import javax.script.ScriptEngine;
@@ -63,7 +64,7 @@ public class BiService {
                               Map<String, Object> query, boolean export) {
         Bi bi = findBi(code);
         if (StringUtils.isBlank(bi.getSqlStatement())) {
-            throw new RuntimeException("express not found");
+            throw new EruptWebApiRuntimeException("express not found");
         }
         query.put(EXPORT_PLACEHOLDER, export);
         query.put(USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
@@ -144,7 +145,7 @@ public class BiService {
                 scriptEngine.eval(s);
             }
         } catch (ScriptException e) {
-            throw new RuntimeException("函数脚本解析异常：" + e.getMessage());
+            throw new EruptWebApiRuntimeException("函数脚本解析异常：" + e.getMessage());
         }
         if (null != param) {
             for (Map.Entry<String, Object> entry : param.entrySet()) {

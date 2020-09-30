@@ -11,7 +11,7 @@ import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.PowerObject;
-import xyz.erupt.annotation.fun.VL;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -118,9 +118,9 @@ public class EruptUtil {
             choiceMap.put(vl.value(), vl.label());
         }
         for (Class<? extends ChoiceFetchHandler> cla : choiceType.fetchHandler()) {
-            List<VL> vls = EruptSpringUtil.getBean(cla).fetch(choiceType.fetchHandlerParams());
+            List<VLModel> vls = EruptSpringUtil.getBean(cla).fetch(choiceType.fetchHandlerParams());
             if (null != vls) {
-                for (VL vl : vls) {
+                for (VLModel vl : vls) {
                     choiceMap.put(vl.getValue(), vl.getLabel());
                 }
             }
@@ -129,13 +129,13 @@ public class EruptUtil {
         return choiceMap;
     }
 
-    public static List<VL> getChoiceList(ChoiceType choiceType) {
-        List<VL> vls = new ArrayList<>();
+    public static List<VLModel> getChoiceList(ChoiceType choiceType) {
+        List<VLModel> vls = new ArrayList<>();
         for (xyz.erupt.annotation.sub_field.sub_edit.VL vl : choiceType.vl()) {
-            vls.add(new VL(vl.value(), vl.label(), vl.desc()));
+            vls.add(new VLModel(vl.value(), vl.label(), vl.desc()));
         }
         for (Class<? extends ChoiceFetchHandler> cla : choiceType.fetchHandler()) {
-            List<VL> VL = EruptSpringUtil.getBean(cla).fetch(choiceType.fetchHandlerParams());
+            List<VLModel> VL = EruptSpringUtil.getBean(cla).fetch(choiceType.fetchHandlerParams());
             if (null != VL) {
                 vls.addAll(VL);
             }

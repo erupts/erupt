@@ -4,7 +4,7 @@ import freemarker.template.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.FileTemplateResolver;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 /**
  * @author liyuepeng
@@ -24,10 +24,9 @@ public class TemplateConfig {
 
     @Bean
     public TemplateEngine thymeleafEngine() {
-        FileTemplateResolver resolver = new FileTemplateResolver();
+        ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
         resolver.setCacheable(false);
-//        resolver.setPrefix("./templates/");
-        resolver.setPrefix(this.getClass().getResource("/").getPath());
+        resolver.setPrefix("/");
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCheckExistence(true);
         resolver.setUseDecoupledLogic(true);

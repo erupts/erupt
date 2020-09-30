@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.JavaType;
-import xyz.erupt.annotation.fun.VL;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -241,7 +241,7 @@ public class EruptExcelService {
                                 edit.boolType().falseText()})));
                         break;
                     case CHOICE:
-                        List<VL> vls = EruptUtil.getChoiceList(fieldModel.getEruptField().edit().choiceType());
+                        List<VLModel> vls = EruptUtil.getChoiceList(fieldModel.getEruptField().edit().choiceType());
                         String[] arr = new String[vls.size()];
                         for (int i = 0; i < vls.size(); i++) {
                             arr[i] = vls.get(i).getLabel();
