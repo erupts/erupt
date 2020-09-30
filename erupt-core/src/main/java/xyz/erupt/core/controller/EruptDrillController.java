@@ -46,9 +46,7 @@ public class EruptDrillController {
                 link = drill.link();
             }
         }
-        if (null == link) {
-            link = eruptModel.getErupt().tree().linkTable()[0];
-        }
+
         if (null != link) {
             if (!eruptService.verifyIdPermissions(eruptModel, id)) {
                 throw new EruptNoLegalPowerException();
@@ -86,9 +84,6 @@ public class EruptDrillController {
             if (code.equals(drill.code())) {
                 link = drill.link();
             }
-        }
-        if (null == link) {
-            link = eruptModel.getErupt().tree().linkTable()[0];
         }
         if (null != link) {
             if (!eruptService.verifyIdPermissions(eruptModel, id)) {

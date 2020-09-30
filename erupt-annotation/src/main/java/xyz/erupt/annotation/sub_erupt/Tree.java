@@ -17,8 +17,6 @@ public @interface Tree {
 
     String pid() default "";
 
-    Link[] linkTable() default {};
-
     @Transient
     Expr rootTagExpr() default @Expr;
 
