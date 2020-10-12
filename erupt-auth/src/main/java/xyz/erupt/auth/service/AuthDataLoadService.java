@@ -66,7 +66,7 @@ public class AuthDataLoadService implements CommandLineRunner {
                             EruptDict.class.getSimpleName(), "字典维护", EruptMenu.PATH_TABLE + EruptDict.class.getSimpleName(), open, 50, null, eruptMenu
                     ), code, EruptDict.class.getSimpleName());
                     eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                            EruptDictItem.class.getSimpleName(), "字典项", EruptMenu.PATH_TABLE + EruptDictItem.class.getSimpleName(), new Integer(EruptMenu.HIDE), 10, null, eruptMenuDict
+                            EruptDictItem.class.getSimpleName(), "字典项", EruptMenu.PATH_TABLE + EruptDictItem.class.getSimpleName(), Integer.valueOf(EruptMenu.HIDE), 10, null, eruptMenuDict
                     ), code, EruptDictItem.class.getSimpleName());
                 }
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(

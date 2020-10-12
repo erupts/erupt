@@ -50,7 +50,7 @@ public class EntityManagerService implements ApplicationRunner {
                 }
                 {
                     factory.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
-                    factory.setPackagesToScan(EruptApplication.scanPackage);
+                    factory.setPackagesToScan(EruptApplication.getScanPackage());
                     factory.afterPropertiesSet();
                 }
                 entityManagerMap.put(prop.getDatasource().getName(), factory.getObject());

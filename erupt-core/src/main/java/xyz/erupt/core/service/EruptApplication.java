@@ -11,7 +11,11 @@ public class EruptApplication {
 
     public static Class<?> primarySource;
 
-    public static String[] scanPackage = {};
+    private static String[] scanPackage = {};
+
+    public static String[] getScanPackage() {
+        return scanPackage;
+    }
 
     public static void run(Class<?> primarySource, String... args) {
         EruptApplication.primarySource = primarySource;

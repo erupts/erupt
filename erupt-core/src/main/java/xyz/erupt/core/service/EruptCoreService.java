@@ -79,10 +79,10 @@ public final class EruptCoreService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        if (EruptApplication.scanPackage.length == 0) {
+        if (EruptApplication.getScanPackage().length == 0) {
             throw new RuntimeException("not found scanner package place check `EruptApplication.run()` Whether to call");
         }
-        EruptSpringUtil.scannerPackage(EruptApplication.scanPackage, new TypeFilter[]{
+        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(Erupt.class)
         }, clazz -> ERUPTS.put(clazz.getSimpleName(), initEruptModel(clazz)));
         log.info("Erupt core initialization complete");

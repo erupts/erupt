@@ -10,11 +10,12 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class RequestWrapper extends HttpServletRequestWrapper {
     private final String body;
 
-    public RequestWrapper(HttpServletRequest request) {
+    RequestWrapper(HttpServletRequest request) {
         super(request);
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = null;
@@ -22,7 +23,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         try {
             inputStream = request.getInputStream();
             if (inputStream != null) {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                 char[] charBuffer = new char[128];
                 int bytesRead = -1;
                 while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
@@ -52,7 +53,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public ServletInputStream getInputStream() {
-        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
         return new ServletInputStream() {
             @Override
             public boolean isFinished() {
@@ -78,10 +79,10 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public BufferedReader getReader() {
-        return new BufferedReader(new InputStreamReader(this.getInputStream()));
+        return new BufferedReader(new InputStreamReader(this.getInputStream(), StandardCharsets.UTF_8));
     }
 
-    public String getBody() {
+    String getBody() {
         return this.body;
     }
 

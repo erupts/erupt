@@ -38,7 +38,7 @@ public class EruptTplService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        EruptSpringUtil.scannerPackage(EruptApplication.scanPackage, new TypeFilter[]{
+        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(EruptTpl.class)
         }, clazz -> {
             for (Method method : clazz.getDeclaredMethods()) {
