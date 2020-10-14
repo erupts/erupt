@@ -7,7 +7,7 @@ window.eruptSiteConfig = {
     routerReuse: false,
     amapKey: "6ba79a8db11b51aeb1176bd4cfa049f4",
     dialogLogin: false,
-    logoPath: "assets/logo.svg",
+    // logoPath: "assets/logo.svg",
     logoText: "Erupt",
     // registerPage:"http://www.baidu.com",
     r_tools: [{

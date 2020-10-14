@@ -25884,7 +25884,7 @@ html {
   //background: #fff;
 }
 
-.alain-default__header{
+.alain-default__header {
   box-shadow: 0 1px #dadfe6;
 }
 
@@ -25920,25 +25920,16 @@ html {
 //暗黑模式
 .dark {
 
-  .alain-default__header-logo{
-    border-right: 1px solid #333 !important;
-  }
-
   .alain-default__content, .ant-modal-content, .alain-default__aside {
-    filter: invert(88%);
-  }
-
-  .ant-modal-content {
-    border: 1px solid #999;
-    box-shadow: none;
+    filter: invert(.9) hue-rotate(180deg);
   }
 
   .alain-default__content, .ant-modal-content {
-    img, canvas, bi-chart,
-    .fa,
-    .page-container,
+    img,
+    picture,
+    video,
     .exception__img {
-      filter: invert(100%);
+      filter: invert(1) hue-rotate(180deg);
     }
 
     st .ant-table {
@@ -25954,9 +25945,18 @@ html {
     background: #222;
   }
 
+  .alain-default__header-logo {
+    border-right: 1px solid #333 !important;
+  }
+
+  .ant-modal-content {
+    border: 1px solid #999;
+    box-shadow: none;
+  }
+
   .alain-default__header {
     box-shadow: 0 1px #454549;
-    background: #222;
+    background: #191919;
   }
 
 }
