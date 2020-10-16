@@ -27,6 +27,7 @@ public class EruptMongodbImpl implements EruptDataService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
         Query query = new Query(Criteria.where(eruptModel.getErupt().primaryKeyCol()).is(id));
