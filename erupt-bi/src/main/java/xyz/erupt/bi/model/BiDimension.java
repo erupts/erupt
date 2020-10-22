@@ -89,7 +89,7 @@ public class BiDimension extends BaseModel {
             views = @View(title = "参照维度", column = "name"),
             edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE,
                     showBy = @ShowBy(dependField = "type",
-                            expr = "fieldValue && fieldValue.indexOf('REFERENCE') != -1"))
+                            expr = "value && value.indexOf('REFERENCE') != -1"))
     )
     private BiDimensionReference biDimensionReference;
 

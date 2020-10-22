@@ -22,7 +22,7 @@ import javax.persistence.UniqueConstraint;
  */
 
 @Entity
-@Table(name = "E_DICT", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_dict", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "数据字典",
         power = @Power(export = true),

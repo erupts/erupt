@@ -6,8 +6,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.auth.base.LoginModel;
 import xyz.erupt.auth.constant.SessionKey;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
@@ -160,8 +158,6 @@ public class EruptUserService {
         sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString());
     }
 
-    private static VL[] VLS = {};
-
     public EruptUser getCurrentEruptUser() {
         entityManager.clear();
         return entityManager.find(EruptUser.class, getCurrentUid());
@@ -197,32 +193,12 @@ public class EruptUserService {
                 });
     }
 
-    static {
-        try {
-            VLS = EruptMenu.class.getDeclaredField("path")
-                    .getAnnotation(EruptField.class).edit().inputType().prefix();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
-
     public boolean verifyMenuAuth(String token, String name) {
-        List<EruptMenu> menus = sessionService.get(SessionKey.MENU_LIST + token, new TypeToken<List<EruptMenu>>() {
+        List<EruptMenu> menus = sessionService.get(SessionKey.MENU + token, new TypeToken<List<EruptMenu>>() {
         }.getType());
         for (EruptMenu menu : menus) {
-            if (StringUtils.isNotBlank(menu.getPath())
-                    && !EruptMenu.DISABLE.equals(menu.getStatus().toString())
-                    && menu.getPath().toLowerCase().contains(name.toLowerCase())) {
-                String path = menu.getPath().trim();
-                for (VL vl : VLS) {
-                    if (vl.value().length() > 2 && path.contains(vl.value())) {
-                        path = menu.getPath().replace(vl.value(), "");
-                        break;
-                    }
-                }
-                if (path.equalsIgnoreCase(name)) {
-                    return true;
-                }
+            if (name.equalsIgnoreCase(menu.getValue())) {
+                return true;
             }
         }
         return false;
@@ -234,7 +210,7 @@ public class EruptUserService {
             return false;
         }
         //检验注解
-        if (!eruptModel.getErupt().loginUse()) {
+        if (!eruptModel.getErupt().loginVerify()) {
             return true;
         }
         //校验菜单权限

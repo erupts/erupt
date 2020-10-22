@@ -3,7 +3,6 @@ package xyz.erupt.auth.controller;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wf.captcha.ArithmeticCaptcha;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.auth.base.LoginModel;
@@ -14,15 +13,14 @@ import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.service.EruptMenuService;
 import xyz.erupt.auth.service.EruptSessionService;
 import xyz.erupt.auth.service.EruptUserService;
+import xyz.erupt.auth.vo.EruptMenuVo;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.view.EruptApiModel;
-import xyz.erupt.core.view.TreeModel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author liyuepeng
@@ -56,17 +54,25 @@ public class EruptUserController {
             EruptUser eruptUser = loginModel.getEruptUser();
             eruptUserService.createToken(loginModel);
             loginModel.setUserName(eruptUser.getName());
-            if (null != eruptUser.getEruptMenu()) {
-                loginModel.setIndexPath(eruptUser.getEruptMenu().getPath());
+            EruptMenu indexMenu = eruptUser.getEruptMenu();
+            if (null != indexMenu) {
+                loginModel.setIndexMenu(indexMenu.getType() + "||" + indexMenu.getValue());
             }
-            List<EruptMenu> menuList = menuService.geneMenuList(loginModel.getEruptUser());
-            List<TreeModel> treeResultModels = menuService.geneMenuTree(menuList);
-            sessionService.put(SessionKey.MENU_TREE + loginModel.getToken(), gson.toJson(treeResultModels));
-            sessionService.put(SessionKey.MENU_LIST + loginModel.getToken(), gson.toJson(menuList));
+            List<EruptMenu> eruptMenus = menuService.getMenuList(eruptUser);
+            sessionService.put(SessionKey.MENU + loginModel.getToken(), gson.toJson(eruptMenus));
+            sessionService.put(SessionKey.MENU_VIEW + loginModel.getToken(), gson.toJson(menuService.geneMenuListVo(eruptMenus)));
             //记录登录日志
             eruptUserService.saveLoginLog(eruptUser);
         }
         return loginModel;
+    }
+
+    @GetMapping("/menu")
+    @ResponseBody
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = -1)
+    public List<EruptMenuVo> getMenu(HttpServletRequest request) {
+        return sessionService.get(SessionKey.MENU_VIEW + request.getHeader("token"), new TypeToken<List<EruptMenuVo>>() {
+        }.getType());
     }
 
     @PostMapping("/logout")
@@ -74,8 +80,8 @@ public class EruptUserController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = -1)
     public EruptApiModel logout(HttpServletRequest request) {
         String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
-        sessionService.remove(SessionKey.MENU_LIST + token);
-        sessionService.remove(SessionKey.MENU_TREE + token);
+        sessionService.remove(SessionKey.MENU + token);
+        sessionService.remove(SessionKey.MENU_VIEW + token);
         sessionService.remove(SessionKey.USER_TOKEN + token);
         return EruptApiModel.successApi();
     }
@@ -88,32 +94,6 @@ public class EruptUserController {
                                    @RequestParam("newPwd") String newPwd,
                                    @RequestParam("newPwd2") String newPwd2) {
         return eruptUserService.changePwd(account, pwd, newPwd, newPwd2);
-    }
-
-    @GetMapping("/menu")
-    @ResponseBody
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = -1)
-    public List<TreeModel> getMenu(HttpServletRequest request) {
-        // type -> Set<EruptMenu>
-        return sessionService.get(SessionKey.MENU_TREE + request.getHeader("token"), new TypeToken<List<TreeModel>>() {
-        }.getType());
-    }
-
-    @GetMapping("/menu-list")
-    @ResponseBody
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = -1)
-    public List<EruptMenu> getMenuList(HttpServletRequest request) {
-        List<EruptMenu> eruptMenu = sessionService.get(SessionKey.MENU_LIST + request.getHeader("token"), new TypeToken<List<EruptMenu>>() {
-        }.getType());
-        return eruptMenu.stream()
-                .filter(em -> StringUtils.isNotBlank(em.getPath()))
-                .filter(em -> em.getStatus() == 1)
-                .peek(em -> {
-                    em.setParam(null);
-                    em.setParentMenu(null);
-                    em.setId(null);
-                    em.setStatus(null);
-                }).collect(Collectors.toList());
     }
 
 

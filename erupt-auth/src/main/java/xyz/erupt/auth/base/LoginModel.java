@@ -22,7 +22,7 @@ public class LoginModel {
 
     private String userName;
 
-    private String indexPath;
+    private String indexMenu;
 
     public LoginModel(boolean pass, EruptUser eruptUser) {
         this.pass = pass;

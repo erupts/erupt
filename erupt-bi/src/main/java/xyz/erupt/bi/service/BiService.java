@@ -141,7 +141,7 @@ public class BiService {
         Matcher m = Pattern.compile(EXPRESS_PATTERN).matcher(express);
         ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("js");
         try {
-            for (String s : BiDataLoadService.functions) {
+            for (String s : BiDataInitService.functions) {
                 scriptEngine.eval(s);
             }
         } catch (ScriptException e) {

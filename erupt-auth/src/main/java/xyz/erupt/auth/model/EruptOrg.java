@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * @date 2020-04-08
  */
 @Entity
-@Table(name = "E_ORG")
+@Table(name = "e_org")
 @Erupt(
         name = "组织维护",
         tree = @Tree(pid = "parentOrg.id")

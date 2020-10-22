@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.base.HyperModel;
-import xyz.erupt.bi.service.BiDataLoadService;
+import xyz.erupt.bi.service.BiDataInitService;
 
 import javax.annotation.Resource;
 import javax.persistence.Entity;
@@ -52,20 +52,20 @@ public class BiFunction extends HyperModel implements DataProxy<BiFunction> {
 
     @Resource
     @Transient
-    private BiDataLoadService biDataLoadService;
+    private BiDataInitService biDataInitService;
 
     @Override
     public void afterAdd(BiFunction biFunction) {
-        biDataLoadService.flushFunction();
+        biDataInitService.flushFunction();
     }
 
     @Override
     public void afterUpdate(BiFunction biFunction) {
-        biDataLoadService.flushFunction();
+        biDataInitService.flushFunction();
     }
 
     @Override
     public void afterDelete(BiFunction biFunction) {
-        biDataLoadService.flushFunction();
+        biDataInitService.flushFunction();
     }
 }

@@ -9,7 +9,7 @@ import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
-import xyz.erupt.core.dao.EruptDao;
+import xyz.erupt.auth.vo.EruptMenuVo;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.view.TreeModel;
 
@@ -39,14 +39,12 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     private Gson gson;
 
     @Autowired
-    private EruptDao eruptDao;
-
-    @Autowired
     private EruptUserService eruptUserService;
 
-    public List<EruptMenu> geneMenuList(EruptUser eruptUser) {
+    public List<EruptMenu> getMenuList(EruptUser eruptUser) {
+        List<EruptMenu> menus;
         if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
-            return entityManager.createQuery("from EruptMenu order by sort").getResultList();
+            menus = entityManager.createQuery("from EruptMenu order by sort").getResultList();
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
             for (EruptRole role : eruptUser.getRoles()) {
@@ -54,8 +52,24 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
                     menuSet.addAll(role.getMenus());
                 }
             }
-            return menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
+            menus = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
         }
+        return menus;
+    }
+
+
+    public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
+        List<EruptMenuVo> list = new ArrayList<>();
+        menus.forEach(menu -> {
+            if (Integer.valueOf(EruptMenu.OPEN).equals(menu.getStatus())) {
+                Long pid = null;
+                if (null != menu.getParentMenu()) {
+                    pid = menu.getParentMenu().getId();
+                }
+                list.add(new EruptMenuVo(menu.getId(), menu.getName(), menu.getType(), menu.getValue(), menu.getIcon(), pid));
+            }
+        });
+        return list;
     }
 
     public List<TreeModel> geneMenuTree(List<EruptMenu> menuList) {
@@ -76,19 +90,13 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         return DataHandlerUtil.treeModelToTree(treeModels);
     }
 
-    public void loadMenu(Class eruptClass, String name, String icon, int sort, EruptMenu parentMenu) {
-        eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(eruptClass.getSimpleName(), name,
-                "/build/tree/" + eruptClass.getSimpleName(), 1, sort, icon, parentMenu
-        ), "code", eruptClass.getSimpleName());
-    }
-
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
         String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
-        List<EruptMenu> menuList = geneMenuList(eruptUserService.getCurrentEruptUser());
-        List<TreeModel> treeResultModels = geneMenuTree(menuList);
-        sessionService.put(SessionKey.MENU_TREE + token, gson.toJson(treeResultModels));
-        sessionService.put(SessionKey.MENU_LIST + token, gson.toJson(menuList));
+        List<EruptMenu> eruptMenus = getMenuList(eruptUserService.getCurrentEruptUser());
+        List<EruptMenuVo> menuVoList = geneMenuListVo(eruptMenus);
+        sessionService.put(SessionKey.MENU + token, gson.toJson(eruptMenus));
+        sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(menuVoList));
     }
 
     @Override

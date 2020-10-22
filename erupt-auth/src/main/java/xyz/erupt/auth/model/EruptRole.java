@@ -18,7 +18,7 @@ import java.util.Set;
  * @date 2018-11-22.
  */
 @Entity
-@Table(name = "E_ROLE", uniqueConstraints = {
+@Table(name = "e_role", uniqueConstraints = {
         @UniqueConstraint(columnNames = "code")
 })
 @Erupt(name = "用户角色")
@@ -50,9 +50,9 @@ public class EruptRole extends BaseModel {
 
     @ManyToMany
     @JoinTable(
-            name = "E_ROLE_MENU",
-            joinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "MENU_ID", referencedColumnName = "ID"))
+            name = "e_role_menu",
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"))
     @EruptField(
             edit = @Edit(
                     title = "菜单",
@@ -63,9 +63,9 @@ public class EruptRole extends BaseModel {
 
     @ManyToMany
     @JoinTable(
-            name = "E_USER_ROLE",
-            joinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"))
+            name = "e_user_role",
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     @EruptField(
             edit = @Edit(
                     title = "包含用户",

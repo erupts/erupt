@@ -24,7 +24,7 @@ import java.util.Date;
  * @date 2019-11-27.
  */
 @Entity
-@Table(name = "E_USER_LOGIN_LOG")
+@Table(name = "e_user_login_log")
 @Erupt(
         name = "登录日志",
         power = @Power(add = false, edit = false, viewDetails = false, delete = false, export = true),

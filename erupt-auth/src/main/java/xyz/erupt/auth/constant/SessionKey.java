@@ -12,9 +12,9 @@ public class SessionKey {
 
     public static final String USER = AUTH_SPACE + "user:";
 
-    public static final String MENU_TREE = AUTH_SPACE + "menu:";
+    public static final String MENU = AUTH_SPACE + "menu:";
 
-    public static final String MENU_LIST = AUTH_SPACE + "menuList:";
+    public static final String MENU_VIEW = AUTH_SPACE + "menu-view:";
 
     public static final String USER_TOKEN = AUTH_SPACE + "token:";
 

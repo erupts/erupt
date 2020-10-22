@@ -4,25 +4,28 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.auth.service.EruptMenuService;
+import xyz.erupt.auth.util.MenuTool;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author liyuepeng
  * @date 2018-11-22.
  */
 @Entity
-@Table(name = "E_MENU", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_menu", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "菜单配置",
         orderBy = "sort asc",
@@ -31,26 +34,13 @@ import javax.persistence.*;
 )
 @Getter
 @Setter
-public class EruptMenu extends HyperModel {
+public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
 
     public static final String OPEN = "1";
 
     public static final String HIDE = "2";
 
     public static final String DISABLE = "3";
-
-    //    path
-    public static final String PATH_TREE = "/build/tree/";
-
-    public static final String PATH_TABLE = "/build/table/";
-
-    public static final String PATH_LINK = "/site?url=";
-
-    public static final String PATH_NEW_WINDOW = "/new_window?url=";
-
-    public static final String PATH_BI = "/bi/";
-
-    public static final String PATH_TPL = "/tpl/";
 
     @EruptField(
             views = @View(title = "编码"),
@@ -70,7 +60,7 @@ public class EruptMenu extends HyperModel {
     @EruptField(
             edit = @Edit(
                     notNull = true,
-                    title = "菜单状态",
+                    title = "状态",
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             vl = {
@@ -85,21 +75,19 @@ public class EruptMenu extends HyperModel {
 
     @EruptField(
             edit = @Edit(
-                    title = "地址",
-                    inputType = @InputType(
-                            prefix = {
-                                    @VL(value = PATH_TABLE, label = "表格"),
-                                    @VL(value = PATH_TREE, label = "树"),
-                                    @VL(value = PATH_BI, label = "报表", desc = "此功能需要导入bi模块"),
-                                    @VL(value = PATH_TPL, label = "模板", desc = "使用此功能需要导入tpl模块"),
-                                    @VL(value = PATH_LINK, label = "链接"),
-                                    @VL(value = PATH_NEW_WINDOW, label = "新页签"),
-                                    @VL(value = "/", label = "/", desc = "其他"),
-                            }
-                    )
+                    title = "菜单类型",
+                    type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = EruptMenu.class)
             )
     )
-    private String path;
+    private String type;
+
+    @EruptField(
+            edit = @Edit(
+                    title = "类型值"
+            )
+    )
+    private String value;
 
 
     @EruptField(
@@ -118,9 +106,7 @@ public class EruptMenu extends HyperModel {
     )
     private String icon;
 
-
     @ManyToOne
-    @JoinColumn(name = "PARENT_MENU_ID")
     @EruptField(
             edit = @Edit(
                     title = "上级菜单",
@@ -139,12 +125,12 @@ public class EruptMenu extends HyperModel {
     )
     private String param;
 
-
-    public EruptMenu(String code, String name, String path, Integer status, Integer sort, String icon, EruptMenu parentMenu) {
+    public EruptMenu(String code, String name, String type, String value, Integer status, Integer sort, String icon, EruptMenu parentMenu) {
         this.code = code;
         this.name = name;
-        this.path = path;
         this.status = status;
+        this.type = type;
+        this.value = value;
         this.sort = sort;
         this.icon = icon;
         this.parentMenu = parentMenu;
@@ -153,4 +139,8 @@ public class EruptMenu extends HyperModel {
     public EruptMenu() {
     }
 
+    @Override
+    public List<VLModel> fetch(String[] params) {
+        return MenuTool.getMenuTypes();
+    }
 }

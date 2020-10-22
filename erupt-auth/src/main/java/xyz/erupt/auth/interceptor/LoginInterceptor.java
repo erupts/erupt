@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.auth.config.EruptAuthConfig;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.model.log.EruptOperateLog;
@@ -83,12 +82,18 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
             parentEruptName = request.getHeader(ERUPT_PARENT_PARAM_KEY);
         }
+
+        if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
+            if (!EruptCoreService.getErupt(eruptName).getErupt().loginVerify()) {
+                return true;
+            }
+        }
+
         if (null == token || !eruptUserService.verifyToken(token)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.sendError(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
-        String path = request.getServletPath();
         //权限校验
         switch (eruptRouter.verifyType()) {
             case LOGIN:
@@ -106,6 +111,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
+                String path = request.getServletPath();
                 String authStr = path.split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex() + 1];
                 //eruptParent logic
                 $ep:
@@ -117,11 +123,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                                 authStr = eruptParentModel.getEruptName();
                             }
                             eruptModel = eruptParentModel;
-                            break $ep;
-                        }
-                    }
-                    for (RowOperation operation : eruptParentModel.getErupt().rowOperation()) {
-                        if (operation.eruptClass().getSimpleName().equals(eruptModel.getEruptName())) {
                             break $ep;
                         }
                     }

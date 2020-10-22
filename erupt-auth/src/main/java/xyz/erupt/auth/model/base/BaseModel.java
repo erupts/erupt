@@ -22,7 +22,7 @@ public class BaseModel {
     @Id
     @GeneratedValue(generator = "generator")
     @GenericGenerator(name = "generator", strategy = "native")
-    @Column(name = "ID")
+    @Column(name = "id")
     @EruptField
     private Long id;
 

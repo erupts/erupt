@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import xyz.erupt.auth.constant.MenuTypeEnum;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.ProjectUtil;
@@ -48,10 +49,10 @@ public class JobDataLoadService implements CommandLineRunner {
         new ProjectUtil().projectStartLoaded("job", first -> {
             if (first) {
                 String job = "$job", code = "code";
-                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(job, "任务管理", null, 1, 30, "fa fa-cubes", null), code, job);
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJob.class.getSimpleName(), "任务维护", EruptMenu.PATH_TABLE + EruptJob.class.getSimpleName(),
+                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(job, "任务管理", null, null, 1, 30, "fa fa-cubes", null), code, job);
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJob.class.getSimpleName(), "任务维护", MenuTypeEnum.TABLE.getCode(), EruptJob.class.getSimpleName(),
                         Integer.valueOf(EruptMenu.OPEN), 0, "fa fa-tasks", eruptMenu), code, EruptJob.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJobLog.class.getSimpleName(), "任务日志", EruptMenu.PATH_TABLE + EruptJobLog.class.getSimpleName(),
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJobLog.class.getSimpleName(), "任务日志", MenuTypeEnum.TABLE.getCode(), EruptJobLog.class.getSimpleName(),
                         Integer.valueOf(EruptMenu.OPEN), 10, "fa fa-file-text", eruptMenu), code, EruptJobLog.class.getSimpleName());
             }
         });
