@@ -44,7 +44,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     public List<EruptMenu> getMenuList(EruptUser eruptUser) {
         List<EruptMenu> menus;
         if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
-            menus = entityManager.createQuery("from EruptMenu order by sort").getResultList();
+            menus = entityManager.createQuery("from EruptMenu order by sort", EruptMenu.class).getResultList();
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
             for (EruptRole role : eruptUser.getRoles()) {

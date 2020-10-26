@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.auth.service.EruptUserService;
+import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiClassHandler;
@@ -73,9 +74,10 @@ public class BiService {
             biData.setTotal(this.getTotal(bi, query));
         }
         if (null == biData.getTotal() || biData.getTotal() > 0) {
-            // limit语句需要做数据库兼容
-            String sql = String.format("select * from (%s) _ limit %s offset %s",
-                    bi.getSqlStatement(), pageSize, (pageIndex - 1) * pageSize);
+            String sql = this.getLimitSql(bi.getDataSource())
+                    .replace(DBTypeEnum.$SQL, bi.getSqlStatement())
+                    .replace(DBTypeEnum.$SIZE, String.valueOf(pageSize))
+                    .replace(DBTypeEnum.$SKIP, String.valueOf((pageIndex - 1) * pageSize));
             List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);
             if (null != list && list.size() > 0) {
                 List<BiColumn> biColumns = new LinkedList<>();
@@ -94,6 +96,26 @@ public class BiService {
         return biData;
     }
 
+    private String getLimitSql(BiDataSource biDataSource) {
+        if (null == biDataSource) {
+            return DBTypeEnum.GENERAL_LIMIT;
+        }
+        if (StringUtils.isNotBlank(biDataSource.getLimitSql())) {
+            return biDataSource.getLimitSql();
+        } else {
+            for (DBTypeEnum value : DBTypeEnum.values()) {
+                if (value.name().equals(biDataSource.getType())) {
+                    if (null == value.getLimitSql()) {
+                        return DBTypeEnum.GENERAL_LIMIT;
+                    } else {
+                        return value.getLimitSql();
+                    }
+                }
+            }
+        }
+        return DBTypeEnum.GENERAL_LIMIT;
+    }
+
     @SneakyThrows
     private Long getTotal(Bi bi, Map<String, Object> query) {
         String express = processPlaceHolder(bi.getSqlStatement(), query);
@@ -102,9 +124,9 @@ public class BiService {
             express = EruptSpringUtil.getBeanByPath(biDataSource.getHandlerPath(), EruptBiHandler.class)
                     .exprHandler(biDataSource.getParam(), express);
         }
-        express = String.format("select count(*) %s from (%s) _", TOTAL_KEY, express);
+        express = String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express);
         NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
-        return (Long) jdbcTemplate.queryForMap(express, query).get(TOTAL_KEY);
+        return Long.valueOf(jdbcTemplate.queryForMap(express, query).get(TOTAL_KEY).toString());
     }
 
     @SneakyThrows

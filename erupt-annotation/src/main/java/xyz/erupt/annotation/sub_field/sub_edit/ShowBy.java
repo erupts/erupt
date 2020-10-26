@@ -10,7 +10,7 @@ public @interface ShowBy {
 
     /**
      * 使用eval解析的前端表达式
-     * 变量：fieldValue 表示field前端值
+     * 变量：value 表示field前端值
      */
     String expr();
 
