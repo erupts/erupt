@@ -84,7 +84,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
-            if (!EruptCoreService.getErupt(eruptName).getErupt().loginVerify()) {
+            EruptModel erupt = EruptCoreService.getErupt(eruptName);
+            if (null == erupt) {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                return false;
+            }
+            if (erupt.getErupt().loginVerify()) {
                 return true;
             }
         }
