@@ -65,7 +65,7 @@ public class EruptFileController {
                 throw new EruptNoLegalPowerException();
             }
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
-            String path = DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
+            String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
                     RandomUtils.nextInt(100, 9999) + "-" +
                     file.getOriginalFilename()
                             .replace("&", "")
@@ -134,7 +134,7 @@ public class EruptFileController {
                 localSave = attachmentProxy.isLocalSave();
             }
             if (localSave) {
-                File dest = new File(eruptProp.getUploadPath() + File.separator + path);
+                File dest = new File(eruptProp.getUploadPath() + path);
                 if (!dest.getParentFile().exists()) {
                     if (!dest.getParentFile().mkdirs()) {
                         return EruptApiModel.errorApi("上传失败，文件目录无法创建");
