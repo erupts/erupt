@@ -9,7 +9,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -19,6 +18,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.ExcelUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -66,20 +66,25 @@ public class EruptExcelService {
         int rowIndex = 0;
         int colNum = 0;
         Row row = sheet.createRow(rowIndex);
+        CellStyle headStyle = ExcelUtil.beautifyExcelStyle(wb);
+        Font headFont = wb.createFont();
+        headFont.setColor(IndexedColors.WHITE.index);
+        headStyle.setFont(headFont);
+        headStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
+        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headFont.setBold(true);
+        headStyle.setFont(headFont);
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             for (View view : fieldModel.getEruptField().views()) {
                 if (view.show() && view.export()) {
                     Cell cell = row.createCell(colNum);
-                    CellStyle style = wb.createCellStyle();
-                    Font font = wb.createFont();
-                    font.setBold(true);
-                    style.setFont(font);
-                    cell.setCellStyle(style);
+                    cell.setCellStyle(headStyle);
                     cell.setCellValue(view.title());
                     colNum++;
                 }
             }
         }
+        CellStyle style = ExcelUtil.beautifyExcelStyle(wb);
         for (Map<String, Object> map : page.getList()) {
             int dataColNum = 0;
             row = sheet.createRow(++rowIndex);
@@ -87,7 +92,8 @@ public class EruptExcelService {
                 for (View view : fieldModel.getEruptField().views()) {
                     if (view.show() && view.export()) {
                         Cell cell = row.createCell(dataColNum);
-                        Object val = null;
+                        cell.setCellStyle(style);
+                        Object val;
                         if (StringUtils.isNotBlank(view.column())) {
                             val = map.get(fieldModel.getFieldName() + "_" + view.column());
                         } else {
@@ -243,10 +249,13 @@ public class EruptExcelService {
                     case CHOICE:
                         List<VLModel> vls = EruptUtil.getChoiceList(fieldModel.getEruptField().edit().choiceType());
                         String[] arr = new String[vls.size()];
+                        long length = 0;
                         for (int i = 0; i < vls.size(); i++) {
                             arr[i] = vls.get(i).getLabel();
+                            length += arr[i].length();
                         }
-                        if (arr.length <= 50) {
+//                        超过255字节excel会报错
+                        if (length <= 255) {
                             sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(arr)));
                         }
                         break;
@@ -301,25 +310,4 @@ public class EruptExcelService {
         return dataValidationList;
     }
 
-    private void createHiddenChoiceSheet(int colIndex, EruptField eruptField, Workbook wb, String[] list) {
-//        Sheet sheet = wb.createSheet(eruptField.edit().title());
-//        Row row;
-//        //写入下拉数据到新的sheet页中
-//        for (int i = 0; i < list.length; i++) {
-//            row = sheet.createRow(i);
-//            Cell cell = row.createCell(0);
-//            cell.setCellValue(list[i]);
-//        }
-//        //获取新sheet页内容
-//        String strFormula = eruptField.edit().title() + "!$A$1:$A$65535";
-//        XSSFDataValidationConstraint constraint = new XSSFDataValidationConstraint(DataValidationConstraint.ValidationType.LIST, strFormula2);
-//        // 设置数据有效性加载在哪个单元格上,四个参数分别是：起始行、终止行、起始列、终止列
-//        CellRangeAddressList regions = new CellRangeAddressList(0, 1000, colIndex, colIndex);
-//        // 数据有效性对象
-//        DataValidationHelper help = new HSSFDataValidationHelper((HSSFSheet) sheet);
-//        DataValidation validation = help.createValidation(constraint, regions);
-//        sheet.addValidationData(validation);
-//        //将新建的sheet页隐藏掉
-//        wb.setSheetHidden(sheet.getNumMergedRegions(), true);
-    }
 }

@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +26,7 @@ import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.ExcelUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
 
@@ -188,12 +186,25 @@ public class EruptBiController {
         Sheet sheet = wb.createSheet(bi.getName());
         sheet.createFreezePane(0, 1, 1, 1);
         Row headRow = sheet.createRow(0);
+
+        CellStyle headStyle = ExcelUtil.beautifyExcelStyle(wb);
+        Font headFont = wb.createFont();
+        headFont.setColor(IndexedColors.WHITE.index);
+        headStyle.setFont(headFont);
+        headStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
+        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         for (int i = 0; i < biData.getColumns().size(); i++) {
             BiColumn biColumn = biData.getColumns().get(i);
             Cell cell = headRow.createCell(i);
+            cell.setCellStyle(headStyle);
             sheet.setColumnWidth(i, (biColumn.getName().length() + 10) * 256);
             cell.setCellValue(biColumn.getName());
         }
+
+        CellStyle style = ExcelUtil.beautifyExcelStyle(wb);
+        Font font = wb.createFont();
+        font.setColor(IndexedColors.BLACK1.index);
+        style.setFont(font);
         for (int i = 0; i < biData.getList().size(); i++) {
             Row row = sheet.createRow(i + 1);
             Map<String, Object> map = biData.getList().get(i);
@@ -201,6 +212,7 @@ public class EruptBiController {
                 Object value = map.get(biData.getColumns().get(j).getName());
                 if (null != value) {
                     Cell cell = row.createCell(j);
+                    cell.setCellStyle(style);
                     cell.setCellValue(value.toString());
                 }
             }
@@ -211,4 +223,5 @@ public class EruptBiController {
         }
         wb.write(HttpUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLS_FORMAT));
     }
+
 }
