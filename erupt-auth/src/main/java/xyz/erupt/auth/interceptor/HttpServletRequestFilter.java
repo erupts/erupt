@@ -33,6 +33,8 @@ public class HttpServletRequestFilter implements Filter {
                     if (null != request.getContentType() && CONTENT_TYPE_JSON.equals(request.getContentType())) {
                         RequestWrapper requestWrapper = new RequestWrapper(request);
                         servletRequest.setAttribute(LoginInterceptor.REQ_BODY, requestWrapper.getBody());
+                        filterChain.doFilter(requestWrapper, servletResponse);
+                        return;
                     }
                 }
             }

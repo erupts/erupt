@@ -254,7 +254,7 @@ public class EruptExcelService {
                             arr[i] = vls.get(i).getLabel();
                             length += arr[i].length();
                         }
-//                        超过255字节excel会报错
+                        //下拉框不允许超过255字节
                         if (length <= 255) {
                             sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(arr)));
                         }
@@ -266,7 +266,7 @@ public class EruptExcelService {
                                         Integer.toString(edit.sliderType().min()), Integer.toString(edit.sliderType().max()))));
                         break;
                     case DATE:
-                        sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间，或下载最新模版重试！", dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN,
+                        sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间！", dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN,
                                 "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
                         break;
                     default:
