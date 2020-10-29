@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.bi.model.BiDataSource;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +66,21 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
 //    public void editBehavior(BiDataSource biDataSource) {
 //        biDataSource.setPassword(null);
 //    }
+
+
+    @Override
+    public void beforeAdd(BiDataSource biDataSource) {
+        try {
+            Class.forName(biDataSource.getDriver());
+        } catch (ClassNotFoundException e) {
+            throw new EruptApiErrorTip("找不到驱动类，请确认jdbc包是否引入");
+        }
+    }
+
+    @Override
+    public void beforeUpdate(BiDataSource biDataSource) {
+        this.beforeAdd(biDataSource);
+    }
 
     @Override
     public void afterUpdate(BiDataSource biDataSource) {

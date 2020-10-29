@@ -2,7 +2,7 @@ package xyz.erupt.core.controller;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
@@ -24,7 +24,7 @@ import java.util.Map;
  * @date 2020-02-29
  */
 @Service
-@Log
+@Slf4j
 public class EruptService {
 
     private static final int maxPageSize = 500;

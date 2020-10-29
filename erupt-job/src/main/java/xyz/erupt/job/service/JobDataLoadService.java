@@ -1,6 +1,6 @@
 package xyz.erupt.job.service;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Service
 @Order(10)
-@Log
+@Slf4j
 public class JobDataLoadService implements CommandLineRunner {
 
     @Autowired

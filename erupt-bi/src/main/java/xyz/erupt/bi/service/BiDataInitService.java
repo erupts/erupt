@@ -1,6 +1,6 @@
 package xyz.erupt.bi.service;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Service
 @Order(10)
-@Log
+@Slf4j
 public class BiDataInitService implements CommandLineRunner {
 
     @Autowired

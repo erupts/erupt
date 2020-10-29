@@ -1,7 +1,7 @@
 package xyz.erupt.core.service;
 
 import lombok.SneakyThrows;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Order(1)
 @Service
-@Log
+@Slf4j
 public final class EruptCoreService implements ApplicationRunner {
 
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();

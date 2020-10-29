@@ -1,7 +1,7 @@
 package xyz.erupt.bi.service;
 
 import lombok.SneakyThrows;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * @date 2020-02-12
  */
 @Service
-@Log
+@Slf4j
 public class BiService {
 
     @Autowired

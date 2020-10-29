@@ -1,7 +1,7 @@
 package xyz.erupt.auth.util;
 
 import lombok.SneakyThrows;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
@@ -16,7 +16,7 @@ import java.net.InetAddress;
  * @author liyuepeng
  * @date 2018-12-24.
  */
-@Log
+@Slf4j
 public class IpUtil {
 
     public static String getIpAddr(HttpServletRequest request) {
@@ -78,7 +78,7 @@ public class IpUtil {
     @SneakyThrows
     public static String getCityInfo(String ip) {
         if (!Util.isIpAddress(ip)) {
-            log.warning("Error: Invalid ip address");
+            log.warn("Error: Invalid ip address");
             return "";
         }
         return new DbSearcher(new DbConfig(), fileByte).memorySearch(ip).getRegion();

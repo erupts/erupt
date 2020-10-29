@@ -1,6 +1,6 @@
 package xyz.erupt.auth.service;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -22,11 +22,13 @@ import java.util.Date;
  */
 @Service
 @Order(10)
-@Log
+@Slf4j
 public class AuthDataLoadService implements CommandLineRunner {
 
     @Autowired
     private EruptDao eruptDao;
+
+    public static final String DEFAULT_ACCOUNT = "erupt";
 
     @Transactional
     @Override
@@ -39,9 +41,9 @@ public class AuthDataLoadService implements CommandLineRunner {
                 eruptUser.setIsMd5(true);
                 eruptUser.setStatus(true);
                 eruptUser.setCreateTime(new Date());
-                eruptUser.setAccount("erupt");
-                eruptUser.setPassword(MD5Utils.digest("erupt"));
-                eruptUser.setName("erupt");
+                eruptUser.setAccount(DEFAULT_ACCOUNT);
+                eruptUser.setPassword(MD5Utils.digest(DEFAULT_ACCOUNT));
+                eruptUser.setName(DEFAULT_ACCOUNT);
                 eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
 
                 //菜单
@@ -76,6 +78,17 @@ public class AuthDataLoadService implements CommandLineRunner {
                 eruptDao.persistIfNotExist(EruptOperateLog.class, new EruptMenu(
                         EruptOperateLog.class.getSimpleName(), "操作日志", MenuTypeEnum.TABLE.getCode(), EruptOperateLog.class.getSimpleName(), open, 70, null, eruptMenu
                 ), code, EruptOperateLog.class.getSimpleName());
+            } else {
+                EruptUser eruptUser = eruptDao.queryEntity(EruptUser.class, "account = '" + DEFAULT_ACCOUNT + "'", null);
+                if (null != eruptUser) {
+                    String password = eruptUser.getPassword();
+                    if (!eruptUser.getIsMd5()) {
+                        password = MD5Utils.digest(eruptUser.getPassword());
+                    }
+                    if (MD5Utils.digest(DEFAULT_ACCOUNT).equals(password)) {
+                        log.warn("正在使用框架默认用户名密码，为了您的系统安全请尽快修改！");
+                    }
+                }
             }
         });
     }

@@ -1,6 +1,6 @@
 package xyz.erupt.tpl.service;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @Order(1)
 @Service
-@Log
+@Slf4j
 public class EruptTplService implements ApplicationRunner {
 
     private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
