@@ -89,7 +89,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
-            if (erupt.getErupt().loginVerify()) {
+            if (!erupt.getErupt().loginVerify()) {
                 return true;
             }
         }

@@ -8,10 +8,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
-import xyz.erupt.annotation.fun.ChoiceFetchHandler;
-import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.fun.PowerObject;
-import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.annotation.fun.*;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -19,6 +16,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.core.annotation.EruptAttachmentUpload;
+import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -309,6 +308,20 @@ public class EruptUtil {
         String fr = eruptModel.getEruptFieldMap().get(field).getFieldReturnName();
         EruptModel em = EruptCoreService.getErupt(fr);
         return toEruptId(em, val.toString());
+    }
+
+
+    /**
+     * 获取附件上传代理器
+     *
+     * @return
+     */
+    public static AttachmentProxy findAttachmentProxy() {
+        EruptAttachmentUpload eruptAttachmentUpload = EruptApplication.primarySource.getAnnotation(EruptAttachmentUpload.class);
+        if (null != eruptAttachmentUpload) {
+            return EruptSpringUtil.getBean(eruptAttachmentUpload.value());
+        }
+        return null;
     }
 
 }

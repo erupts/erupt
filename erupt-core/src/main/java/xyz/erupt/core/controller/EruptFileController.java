@@ -21,7 +21,6 @@ import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
-import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
@@ -128,8 +127,8 @@ public class EruptFileController {
                     return EruptApiModel.errorApi("上传失败，非法类型!");
             }
             boolean localSave = true;
-            if (StringUtils.isNotBlank(eruptProp.getAttachmentProxy())) {
-                AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptProp.getAttachmentProxy(), AttachmentProxy.class);
+            AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
+            if (null != attachmentProxy) {
                 attachmentProxy.upLoad(file.getInputStream(), path.replace("\\", "/"));
                 localSave = attachmentProxy.isLocalSave();
             }
@@ -171,12 +170,11 @@ public class EruptFileController {
         Map<String, Object> map = new HashMap<>(2);
         if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
             //{"uploaded":"true", "url":"image-path..."}
-            if (StringUtils.isNotBlank(eruptProp.getAttachmentProxy())) {
-                AttachmentProxy attachmentProxy = EruptSpringUtil.getBeanByPath(eruptProp.getAttachmentProxy(), AttachmentProxy.class);
-                map.put("url", attachmentProxy.fileDomain() + "/" + eruptApiModel.getData());
+            AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
+            if (null != attachmentProxy) {
+                map.put("url", attachmentProxy.fileDomain() + eruptApiModel.getData());
             } else {
-                //request.getRequestURL().toString().split(RestPath.ERUPT_API)[0] +
-                map.put("url", RestPath.ERUPT_ATTACHMENT + "/" + eruptApiModel.getData());
+                map.put("url", RestPath.ERUPT_ATTACHMENT + eruptApiModel.getData());
             }
             map.put("uploaded", true);
         } else {

@@ -19,9 +19,6 @@ import java.util.List;
 @ConfigurationProperties(prefix = "erupt")
 public class EruptProp {
 
-    //类路径，需要实现xyz.erupt.annotation.fun.AttachmentProxy接口，可实现自定义附件存储策略
-    private String attachmentProxy;
-
     //文件上传根路径
     private String uploadPath = "/opt/erupt-attachment";
 
