@@ -17,15 +17,15 @@ public enum DBTypeEnum {
     public static final String GENERAL_LIMIT = "select * from (" + $SQL + ") t limit " + $SIZE + " offset " + $SKIP;
 
     private static final String ORACLE_LIMIT = "SELECT t.* FROM (  \n" +
-            "SELECT temp.*,ROWNUM RN                              \n" +
-            "FROM(" + $SQL + ") temp                              \n" +
-            "WHERE ROWNUM < " + $SKIP + " + " + $SIZE + " + 1) t  \n" +
+            "SELECT ROWNUM RN,temp.*                               \n" +
+            "FROM(" + $SQL + ") temp                               \n" +
+            "WHERE ROWNUM < " + $SKIP + " + " + $SIZE + " + 1) t   \n" +
             "WHERE RN > " + $SKIP;
 
+    //    支持2012及以上版本
     private static final String SQL_SERVER_LIMIT = "SELECT * from (" + $SQL + ") t\n" +
             "OFFSET " + $SKIP + " ROWS\n" +
             "FETCH NEXT " + $SIZE + " ROWS ONLY";
-    ;
 
     private final String limitSql;
 

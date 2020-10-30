@@ -15,6 +15,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.dao.EruptJpaDao;
 import xyz.erupt.core.dao.EruptJpaUtils;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.query.Condition;
+import xyz.erupt.core.query.Order;
+import xyz.erupt.core.query.Query;
 import xyz.erupt.core.service.EntityManagerService;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptDataService;
@@ -26,9 +29,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TreeModel;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -164,8 +165,6 @@ public class EruptDbService implements EruptDataService {
         }
     }
 
-    private static final String REPEAT_TXT = "数据重复";
-
     //生成数据重复的提示字符串
     private String gcRepeatHint(EruptModel eruptModel) {
         StringBuilder str = new StringBuilder();
@@ -177,10 +176,11 @@ public class EruptDbService implements EruptDataService {
                 }
             }
         }
+        String repeatTxt = "数据重复";
         if (StringUtils.isNotBlank(str)) {
-            return str.substring(0, str.length() - 1) + REPEAT_TXT;
+            return str.substring(0, str.length() - 1) + repeatTxt;
         } else {
-            return REPEAT_TXT;
+            return repeatTxt;
         }
     }
 
@@ -240,5 +240,52 @@ public class EruptDbService implements EruptDataService {
         } else {
             return DataHandlerUtil.treeModelToTree(treeModels);
         }
+    }
+
+    /**
+     * 根据列获取相关数据
+     *
+     * @param eruptModel eruptModel
+     * @param columns    列
+     * @param query      查询对象
+     * @return
+     */
+    @Override
+    public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<String> columns, Query query) {
+        StringBuilder hql = new StringBuilder();
+        hql.append("select new map(").append(String.join(", ", columns)).append(") from ")
+                .append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
+
+        ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
+            if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
+                hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".")
+                        .append(field.getName()).append(" as ").append(field.getName());
+            }
+        });
+        hql.append(" where 1 = 1 ");
+        if (null != query.getConditions()) {
+            for (Condition condition : query.getConditions()) {
+                hql.append(EruptJpaUtils.AND).append(condition.getKey()).append("=").append(condition.getValue());
+            }
+        }
+        for (Filter filter : eruptModel.getErupt().filter()) {
+            String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
+            if (StringUtils.isNotBlank(filterStr)) {
+                hql.append(EruptJpaUtils.AND).append(filterStr);
+            }
+        }
+        if (null != query.getOrders()) {
+            hql.append(" order by ");
+            for (Order order : query.getOrders()) {
+                hql.append(order.getProperties()).append(" ").append(order.getDirection().name()).append(",");
+            }
+            hql.substring(0, hql.length() - 1);
+        }
+        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel);
+        List list = entityManager.createQuery(hql.toString()).getResultList();
+        if (entityManager.isOpen()) {
+            entityManager.close();
+        }
+        return list;
     }
 }

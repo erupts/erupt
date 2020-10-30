@@ -28,7 +28,7 @@ public class TreeModel {
     public TreeModel(Object id, Object label, Object pid, Object data, Object rootTag) {
         this(id, label, pid, data);
         if (null != rootTag) {
-            this.root = Boolean.valueOf(rootTag.toString());
+            this.root = Boolean.parseBoolean(rootTag.toString());
         }
     }
 
@@ -47,7 +47,7 @@ public class TreeModel {
 
     public void setRoot(Object root) {
         if (null != root) {
-            this.root = Boolean.valueOf(root.toString());
+            this.root = Boolean.parseBoolean(root.toString());
         }
     }
 }

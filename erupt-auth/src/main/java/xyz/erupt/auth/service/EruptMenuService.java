@@ -10,8 +10,6 @@ import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.model.EruptRole;
 import xyz.erupt.auth.model.EruptUser;
 import xyz.erupt.auth.vo.EruptMenuVo;
-import xyz.erupt.core.util.DataHandlerUtil;
-import xyz.erupt.core.view.TreeModel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -70,24 +68,6 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
             }
         });
         return list;
-    }
-
-    public List<TreeModel> geneMenuTree(List<EruptMenu> menuList) {
-        List<TreeModel> treeModels = new ArrayList<>();
-        for (EruptMenu eruptMenu : menuList) {
-            if (EruptMenu.OPEN.equals(eruptMenu.getStatus().toString())) {
-                Long pid = null;
-                if (null != eruptMenu.getParentMenu()) {
-                    pid = eruptMenu.getParentMenu().getId();
-                }
-                TreeModel treeModel = new TreeModel(eruptMenu.getId(), eruptMenu.getName(), pid, eruptMenu);
-                if (null != pid) {
-                    treeModel.setRoot(false);
-                }
-                treeModels.add(treeModel);
-            }
-        }
-        return DataHandlerUtil.treeModelToTree(treeModels);
     }
 
     @Override

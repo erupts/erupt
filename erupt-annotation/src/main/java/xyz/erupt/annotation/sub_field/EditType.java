@@ -26,37 +26,38 @@ public enum EditType {
     ATTACHMENT,
     @EditTypeMapping(mapping = AutoCompleteType.class, desc = "自动联想", allowType = {JavaTypeEnum.String})
     AUTO_COMPLETE,
-    @EditTypeMapping(desc = "横向分割线与描述", search = false, allowType = {JavaTypeEnum.not_know}, excelOperator = false)
-    DIVIDE,
-    @EditTypeMapping(desc = "隐藏", search = false, allowType = {JavaTypeEnum.not_know}, excelOperator = false)
-    HIDDEN,
     @EditTypeMapping(desc = "富文本编辑器", allowType = {JavaTypeEnum.String})
     HTML_EDITOR,
     @EditTypeMapping(desc = "大文本域", allowType = {JavaTypeEnum.String}, nameInfer = {"desc", "remark"})
     TEXTAREA,
-    @EditTypeMapping(desc = "表格合并", searchVague = false, allowType = {JavaTypeEnum.object})
-    COMBINE,
-    @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用", searchVague = false, allowType = {JavaTypeEnum.object})
-    REFERENCE_TREE,
-    @EditTypeMapping(mapping = ReferenceTableType.class, desc = "表格引用", searchVague = false, allowType = {JavaTypeEnum.bool})
-    REFERENCE_TABLE,
-    //    @EditTypeMapping(desc = "多选（仅支持多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
-//    CHECKBOX,
-    @EditTypeMapping(desc = "树引用（仅支持多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
-    TAB_TREE,
-    @EditTypeMapping(desc = "表格引用（仅支持多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
-    TAB_TABLE_REFER,
-    @EditTypeMapping(desc = "表格引用（仅支持一对多)", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
-    TAB_TABLE_ADD,
-    @EditTypeMapping(desc = "自定义HTML模板", allowType = {JavaTypeEnum.String}, search = false, excelOperator = false)
-    TPL,
     @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, excelOperator = false)
     MAP,
     @EditTypeMapping(desc = "代码编辑器", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
-    /**
-     * not support
-     */
-    @EditTypeMapping(desc = "EMPTY", allowType = {JavaTypeEnum.String}, excelOperator = false)
+
+
+    @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用（多对一)", searchVague = false, allowType = {JavaTypeEnum.object})
+    REFERENCE_TREE,
+    @EditTypeMapping(mapping = ReferenceTableType.class, desc = "表格引用（多对一)", searchVague = false, allowType = {JavaTypeEnum.bool})
+    REFERENCE_TABLE,
+    @EditTypeMapping(desc = "多选（多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
+    CHECKBOX,
+    @EditTypeMapping(desc = "树引用（多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
+    TAB_TREE,
+    @EditTypeMapping(desc = "表格引用（多对多）", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
+    TAB_TABLE_REFER,
+    @EditTypeMapping(desc = "表格引用（一对多)", allowType = {JavaTypeEnum.object}, search = false, excelOperator = false)
+    TAB_TABLE_ADD,
+    @EditTypeMapping(desc = "表格合并（一对一）", searchVague = false, allowType = {JavaTypeEnum.object})
+    COMBINE,
+
+
+    @EditTypeMapping(desc = "自定义HTML模板", allowType = {JavaTypeEnum.String}, search = false, excelOperator = false)
+    TPL,
+    @EditTypeMapping(desc = "横向分割线与描述", search = false, allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    DIVIDE,
+    @EditTypeMapping(desc = "隐藏", search = false, allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    HIDDEN,
+    @EditTypeMapping(desc = "空（仍占据组件位置）", allowType = {JavaTypeEnum.String}, excelOperator = false)
     EMPTY,
 }

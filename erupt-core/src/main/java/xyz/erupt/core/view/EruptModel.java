@@ -19,13 +19,13 @@ public final class EruptModel implements Cloneable {
 
     private transient Erupt erupt;
 
+    private transient Map<String, EruptFieldModel> eruptFieldMap;
+
     private String eruptName;
 
     private JsonObject eruptJson;
 
     private List<EruptFieldModel> eruptFieldModels;
-
-    private transient Map<String, EruptFieldModel> eruptFieldMap;
 
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;

@@ -14,9 +14,9 @@ public @interface EruptRouter {
 
     int authIndex();
 
-    VerifyType verifyType();
-
     int skipAuthIndex() default 1;
+
+    VerifyType verifyType();
 
     //权限数据校验方式，请求头校验与参数校验可选
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;

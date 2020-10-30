@@ -1,12 +1,15 @@
 package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
+import xyz.erupt.core.query.Query;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TreeModel;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author liyuepeng
@@ -34,13 +37,6 @@ public interface EruptDataService {
      */
     Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition);
 
-    /**
-     * 查询树形结构数据
-     *
-     * @param eruptModel erupt核心对象
-     * @return list tree数据
-     */
-    Collection<TreeModel> queryTree(EruptModel eruptModel, String... customCondition);
 
     /**
      * 添加数据
@@ -67,6 +63,14 @@ public interface EruptDataService {
     void deleteData(EruptModel eruptModel, Object object);
 
     /**
+     * 查询树形结构数据
+     *
+     * @param eruptModel erupt核心对象
+     * @return list tree数据
+     */
+    Collection<TreeModel> queryTree(EruptModel eruptModel, String... customCondition);
+
+    /**
      * 获取tab栏参照的树
      *
      * @param eruptModel erupt核心对象
@@ -84,5 +88,19 @@ public interface EruptDataService {
      * @return
      */
     Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName, Serializable dependValue, String... conditionStr);
+
+
+    /**
+     * 根据列查询相关数据
+     *
+     * @param eruptModel eruptModel
+     * @param columns    列
+     * @param query      查询对象
+     * @return
+     */
+    default Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<String> columns, Query query) {
+
+        return null;
+    }
 
 }

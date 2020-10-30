@@ -2,7 +2,9 @@ package xyz.erupt.mongodb.service;
 
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -27,7 +29,6 @@ public class EruptMongodbImpl implements EruptDataService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
         Query query = new Query(Criteria.where(eruptModel.getErupt().primaryKeyCol()).is(id));
@@ -38,12 +39,26 @@ public class EruptMongodbImpl implements EruptDataService {
     @Override
     public Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition) {
         Query query = new Query();
-        query.limit(page.getPageSize());
-        query.skip(page.getPageIndex() * page.getPageSize());
-        List list = mongoTemplate.findAll(eruptModel.getClazz());
-        {
+        page.setTotal(mongoTemplate.count(query, eruptModel.getClazz()));
+        if (page.getTotal() > 0) {
+            query.limit(page.getPageSize());
+            query.skip((page.getPageIndex() - 1) * page.getPageSize());
+//            排序
+            if (StringUtils.isNotBlank(page.getSort())) {
+                for (String s : page.getSort().split(",")) {
+                    if (s.split(" ")[1].contains("desc")) {
+                        query.with(Sort.by(Sort.Direction.DESC, s.split(" ")[0]));
+                    } else {
+                        query.with(Sort.by(Sort.Direction.ASC, s.split(" ")[0]));
+                    }
+                }
+            }
+//            筛选
+            for (String key : searchCondition.keySet()) {
+                query.addCriteria(Criteria.where(key).is(searchCondition.get(key)));
+            }
             List<Map<String, Object>> newList = new ArrayList<>();
-            for (Object obj : list) {
+            for (Object obj : mongoTemplate.find(query, eruptModel.getClazz())) {
                 newList.add(mongoObjectToMap(obj));
             }
             page.setList(newList);
@@ -68,17 +83,7 @@ public class EruptMongodbImpl implements EruptDataService {
     }
 
     @Override
-    public Collection<TreeModel> queryTree(EruptModel eruptModel, String... customCondition) {
-        return null;
-    }
-
-    @Override
     public void addData(EruptModel eruptModel, Object object) {
-//        Document document = eruptModel.getClazz().getAnnotation(Document.class);
-//        String value = document.value();
-//        if (StringUtils.isBlank(value)) {
-//            value = document.collection();
-//        }
         mongoTemplate.insert(object);
     }
 
@@ -90,6 +95,11 @@ public class EruptMongodbImpl implements EruptDataService {
     @Override
     public void deleteData(EruptModel eruptModel, Object object) {
         mongoTemplate.remove(object);
+    }
+
+    @Override
+    public Collection<TreeModel> queryTree(EruptModel eruptModel, String... customCondition) {
+        return null;
     }
 
     @Override
