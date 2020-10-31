@@ -62,6 +62,7 @@ public class EruptFieldModel {
             case TAB_TREE:
             case TAB_TABLE_ADD:
             case TAB_TABLE_REFER:
+            case CHECKBOX:
                 this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
                 break;
         }
@@ -140,6 +141,6 @@ public class EruptFieldModel {
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
         Field field = invocationHandler.getClass().getDeclaredField("memberValues");
         field.setAccessible(true);
-        return Map.class.cast(field.get(invocationHandler));
+        return (Map) field.get(invocationHandler);
     }
 }

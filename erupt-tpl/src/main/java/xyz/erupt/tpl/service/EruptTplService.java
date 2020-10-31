@@ -1,6 +1,9 @@
 package xyz.erupt.tpl.service;
 
+import freemarker.template.Configuration;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -8,14 +11,20 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
+import org.springframework.util.StreamUtils;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.auth.util.MenuTool;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -28,6 +37,12 @@ import java.util.Map;
 public class EruptTplService implements ApplicationRunner {
 
     private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
+
+    @Autowired
+    private TemplateEngine thymeleafEngine;
+
+    @Autowired
+    private Configuration freeMarkerEngine;
 
     public Method getAction(String name) {
         return tplActions.get(name);
@@ -48,4 +63,31 @@ public class EruptTplService implements ApplicationRunner {
         MenuTool.addMenuType(new VLModel("tpl", "模板", "tpl目录下文件名"));
         log.info("Erupt tpl initialization complete");
     }
+
+    @SneakyThrows
+    public void tplToResponse(Tpl tpl, HttpServletResponse response) {
+        response.setCharacterEncoding("utf-8");
+        Map<String, Object> data;
+        if (!tpl.tplHandler().isInterface()) {
+            data = EruptSpringUtil.getBean(tpl.tplHandler()).tplAction(tpl.params());
+        } else {
+            data = null;
+        }
+        switch (tpl.engine()) {
+            case FreeMarker:
+                freeMarkerEngine.getTemplate(tpl.path()).process(data, response.getWriter());
+                break;
+            case Thymeleaf:
+                Context ctx = new Context();
+                ctx.setVariables(data);
+                response.getWriter().write(thymeleafEngine.process(tpl.path(), ctx));
+                break;
+            case Native:
+                response.getWriter().write(StreamUtils
+                        .copyToString(this.getClass().getResourceAsStream(tpl.path()), StandardCharsets.UTF_8));
+                break;
+        }
+    }
+
+
 }

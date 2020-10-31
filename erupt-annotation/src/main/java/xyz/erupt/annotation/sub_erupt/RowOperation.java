@@ -29,15 +29,24 @@ public @interface RowOperation {
 
     Mode mode() default Mode.MULTI;
 
+    Type type() default Type.ERUPT;
+
+    Tpl tpl() default @Tpl(path = "");
+
     @Transient
     String[] operationParam() default {};
 
     @Transient
-    Class<? extends OperationHandler> operationHandler();
+    Class<? extends OperationHandler> operationHandler() default OperationHandler.class;
 
-    Class eruptClass() default void.class;
+    Class<?> eruptClass() default void.class;
+
 
     enum Mode {
         SINGLE, MULTI, BUTTON
+    }
+
+    enum Type {
+        ERUPT, TPL
     }
 }

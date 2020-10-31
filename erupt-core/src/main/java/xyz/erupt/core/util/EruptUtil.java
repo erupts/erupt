@@ -76,18 +76,20 @@ public class EruptUtil {
                         case COMBINE:
                             map.put(field.getName(), generateEruptDataMap(EruptCoreService.getErupt(fieldModel.getFieldReturnName()), value));
                             break;
+                        case CHECKBOX:
                         case TAB_TREE:
                         case TAB_TABLE_REFER:
                         case TAB_TABLE_ADD:
                             EruptModel tabEruptModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
                             Collection collection = (Collection) value;
-                            if (eruptField.edit().type() == EditType.TAB_TREE) {
+//                            TODO this is bad code
+                            if (eruptField.edit().type() == EditType.TAB_TREE || eruptField.edit().type() == EditType.CHECKBOX) {
                                 if (collection.size() > 0) {
-                                    Set<String> idSet = new HashSet<>();
+                                    Set<Object> idSet = new HashSet<>();
                                     Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
                                             tabEruptModel.getErupt().primaryKeyCol());
                                     for (Object o : collection) {
-                                        idSet.add(primaryField.get(o).toString());
+                                        idSet.add(primaryField.get(o));
                                     }
                                     map.put(field.getName(), idSet);
                                 }

@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.CheckboxType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.base.HyperModel;
@@ -117,6 +118,20 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private Boolean isMd5;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "E_USER_ROLE",
+            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
+    @EruptField(
+            edit = @Edit(
+                    title = "所属角色",
+                    type = EditType.CHECKBOX,
+                    checkboxType = @CheckboxType
+            )
+    )
+    private Set<EruptRole> roles;
+
     @Lob
     @EruptField(
             edit = @Edit(
@@ -127,19 +142,6 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 
     )
     private String whiteIp;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "E_USER_ROLE",
-            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
-    @EruptField(
-            edit = @Edit(
-                    title = "所属角色",
-                    type = EditType.CHECKBOX
-            )
-    )
-    private Set<EruptRole> roles;
 
     @Lob
     @EruptField(

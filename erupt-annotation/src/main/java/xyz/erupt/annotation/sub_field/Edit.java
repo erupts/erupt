@@ -72,6 +72,9 @@ public @interface Edit {
     @Match("item.type()=='REFERENCE_TABLE'")
     ReferenceTableType referenceTableType() default @ReferenceTableType;
 
+    @Match("item.type()=='CHECKBOX'")
+    CheckboxType checkboxType() default @CheckboxType;
+
     @Match("item.type()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "sql");
 

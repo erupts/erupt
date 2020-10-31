@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.service.EruptCoreService;
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static xyz.erupt.core.constant.RestPath.ERUPT_API;
@@ -48,6 +49,9 @@ public class EruptTplController {
     @Autowired
     private Configuration freeMarkerEngine;
 
+    @Autowired
+    private EruptTplService eruptTplService;
+
     private static final String TPL = "tpl";
 
     @GetMapping(value = "/{name}", produces = {"text/html;charset=utf-8"})
@@ -59,7 +63,7 @@ public class EruptTplController {
         if (null != method) {
             Class<?> clazz = method.getDeclaringClass();
             Object obj = EruptSpringUtil.getBean(clazz);
-            Map<String, Object> data = Map.class.cast(method.invoke(obj));
+            Map<String, Object> data = (Map) method.invoke(obj);
             if (null != data && data.size() > 0) {
                 EruptTpl eruptTpl = obj.getClass().getAnnotation(EruptTpl.class);
                 switch (eruptTpl.engine()) {
@@ -73,10 +77,10 @@ public class EruptTplController {
                         break;
                 }
             } else {
-                response.getWriter().write(StreamUtils.copyToString(inputStream, Charset.forName("utf-8")));
+                response.getWriter().write(StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8));
             }
         } else {
-            response.getWriter().write(StreamUtils.copyToString(inputStream, Charset.forName("utf-8")));
+            response.getWriter().write(StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8));
         }
     }
 
@@ -88,20 +92,20 @@ public class EruptTplController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         response.setCharacterEncoding("utf-8");
         Tpl tpl = eruptModel.getEruptFieldMap().get(field).getEruptField().edit().tplType();
-        if (tpl.tplHandler().isInterface()) {
-            response.getWriter().write(StreamUtils
-                    .copyToString(this.getClass().getResourceAsStream(tpl.path()), Charset.forName("utf-8")));
-        } else {
-            Map<String, Object> data = EruptSpringUtil.getBean(tpl.tplHandler()).tplAction(tpl.params());
-            switch (tpl.engine()) {
-                case FreeMarker:
-                    freeMarkerEngine.getTemplate(tpl.path()).process(data, response.getWriter());
-                    break;
-                case Thymeleaf:
-                    Context ctx = new Context();
-                    ctx.setVariables(data);
-                    response.getWriter().write(thymeleafEngine.process(tpl.path(), ctx));
-                    break;
+        eruptTplService.tplToResponse(tpl, response);
+    }
+
+
+    @GetMapping(value = "/operation_tpl/{erupt}/{code}", produces = {"text/html;charset=utf-8"})
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public void getOperationTpl(@PathVariable("erupt") String eruptName,
+                                @PathVariable("code") String code,
+                                HttpServletResponse response) {
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        for (RowOperation operation : eruptModel.getErupt().rowOperation()) {
+            if (operation.code().equals(code)) {
+                eruptTplService.tplToResponse(operation.tpl(), response);
+                break;
             }
         }
     }

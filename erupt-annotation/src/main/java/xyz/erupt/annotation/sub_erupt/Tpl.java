@@ -18,9 +18,11 @@ public @interface Tpl {
     @Transient
     Class<? extends TplHandler> tplHandler() default TplHandler.class;
 
+    @Transient
     Engine engine() default Engine.Thymeleaf;
 
     enum Engine {
+        Native,
         FreeMarker,
         Thymeleaf
     }
