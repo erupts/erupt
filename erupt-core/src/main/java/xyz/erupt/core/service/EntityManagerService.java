@@ -9,7 +9,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.config.EruptProp;
-import xyz.erupt.core.view.EruptModel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -62,11 +61,11 @@ public class EntityManagerService implements ApplicationRunner {
     /**
      * 如果使用了@EruptDataSource多数据源，调用此方法必须手动关闭, close()
      *
-     * @param eruptModel
+     * @param eruptClass
      * @return
      */
-    public EntityManager getEntityManager(EruptModel eruptModel) {
-        EruptDataSource eruptDataSource = eruptModel.getClazz().getAnnotation(EruptDataSource.class);
+    public EntityManager getEntityManager(Class<?> eruptClass) {
+        EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) {
             return entityManager;
         } else {
@@ -75,8 +74,8 @@ public class EntityManagerService implements ApplicationRunner {
     }
 
 
-    public void getEntityManager(EruptModel eruptModel, Consumer<EntityManager> consumer) {
-        EruptDataSource eruptDataSource = eruptModel.getClazz().getAnnotation(EruptDataSource.class);
+    public void getEntityManager(Class<?> eruptClass, Consumer<EntityManager> consumer) {
+        EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) {
             consumer.accept(entityManager);
         } else {

@@ -13,11 +13,7 @@ import java.util.List;
 public class Query {
     List<Condition> conditions;
 
-    List<String> list;
+    List<String> conditionStrings;
 
-    List<Order> orders;
-
-    public static void geneCondition(String a, String b) {
-
-    }
+    String order;
 }

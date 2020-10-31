@@ -23,8 +23,8 @@ import javax.persistence.Table;
 @Table(name = "E_OPS_SERVER_GROUP")
 @Erupt(
         name = "服务器组别",
-        orderBy = "sort",
-        tree = @Tree(pid = "opsServerGroup.id")
+        orderBy = "OpsServerGroup.sort",
+        tree = @Tree(pid = "parent.id")
 )
 public class OpsServerGroup extends HyperModel {
 
@@ -45,10 +45,10 @@ public class OpsServerGroup extends HyperModel {
             edit = @Edit(
                     title = "上级组别",
                     type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "id")
+                    referenceTreeType = @ReferenceTreeType(pid = "parent.id")
             )
     )
-    private OpsServerGroup opsServerGroup;
+    private OpsServerGroup parent;
 
     @EruptField(
             views = @View(title = "显示顺序"),

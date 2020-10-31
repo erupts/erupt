@@ -16,11 +16,14 @@ public @interface ReferenceTreeType {
 
     String pid() default "";
 
+    /**
+     * @return 标识pid为何特征才是根节点，需要与filter配合使用
+     */
+    @Transient
+    Expr rootPid() default @Expr;
+
     String dependField() default "";
 
     @Transient
     String dependColumn() default AnnotationConst.ID;
-
-    @Transient
-    Expr rootTagExpr() default @Expr;
 }

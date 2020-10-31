@@ -4,9 +4,11 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.auth.model.base.HyperModel;
 
 import javax.persistence.Entity;
@@ -30,9 +32,6 @@ import javax.persistence.Table;
 )
 public class OpsServer extends HyperModel {
 
-    @ManyToOne
-    private OpsServerGroup opsServerGroup;
-
     @EruptField(
             views = @View(title = "名称"),
             edit = @Edit(title = "名称", notNull = true)
@@ -50,6 +49,14 @@ public class OpsServer extends HyperModel {
             edit = @Edit(title = "端口", notNull = true)
     )
     private Integer port;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "所属组别", column = "name"),
+            edit = @Edit(title = "所属组别", notNull = true, type = EditType.REFERENCE_TREE,
+                    referenceTreeType = @ReferenceTreeType(pid = "parent.id"))
+    )
+    private OpsServerGroup opsServerGroup;
 
     @EruptField(
             views = @View(title = "用户名"),

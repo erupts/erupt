@@ -9,13 +9,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import xyz.erupt.core.service.EruptDataService;
+import xyz.erupt.core.query.Column;
+import xyz.erupt.core.service.IEruptDataService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.core.view.TreeModel;
 
 import javax.persistence.Id;
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -24,7 +23,7 @@ import java.util.*;
  * @date 2019-03-06.
  */
 @Service
-public class EruptMongodbImpl implements EruptDataService {
+public class EruptMongodbImpl implements IEruptDataService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -98,17 +97,7 @@ public class EruptMongodbImpl implements EruptDataService {
     }
 
     @Override
-    public Collection<TreeModel> queryTree(EruptModel eruptModel, String... customCondition) {
-        return null;
-    }
-
-    @Override
-    public Collection<TreeModel> findTabTree(EruptModel eruptModel, String fieldName) {
-        return null;
-    }
-
-    @Override
-    public Collection<TreeModel> getReferenceTree(EruptModel eruptModel, String fieldName, Serializable dependValue, String... conditionStr) {
+    public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, xyz.erupt.core.query.Query query) {
         return null;
     }
 }

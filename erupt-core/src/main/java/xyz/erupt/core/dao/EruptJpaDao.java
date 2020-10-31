@@ -35,22 +35,22 @@ public class EruptJpaDao {
     @Autowired
     private EntityManagerService entityManagerService;
 
-    public void addEntity(EruptModel eruptModel, Object entity) {
-        entityManagerService.getEntityManager(eruptModel, (em) -> {
+    public void addEntity(Class<?> eruptClass, Object entity) {
+        entityManagerService.getEntityManager(eruptClass, (em) -> {
             em.persist(entity);
             em.flush();
         });
     }
 
-    public void editEntity(EruptModel eruptModel, Object entity) {
-        entityManagerService.getEntityManager(eruptModel, (em) -> {
+    public void editEntity(Class<?> eruptClass, Object entity) {
+        entityManagerService.getEntityManager(eruptClass, (em) -> {
             em.merge(entity);
             em.flush();
         });
     }
 
-    public void removeEntity(EruptModel eruptModel, Object entity) {
-        entityManagerService.getEntityManager(eruptModel, (em) -> {
+    public void removeEntity(Class<?> eruptClass, Object entity) {
+        entityManagerService.getEntityManager(eruptClass, (em) -> {
             em.remove(entity);
             em.flush();
         });
@@ -60,7 +60,7 @@ public class EruptJpaDao {
         String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")",
                 customCondition, searchCondition, page.getSort(), false));
         String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, new HqlBean("count(*)", customCondition, searchCondition, null, true));
-        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel);
+        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel.getClazz());
         Query query = entityManager.createQuery(hql);
         Query countQuery = entityManager.createQuery(countHql);
         Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
@@ -133,7 +133,7 @@ public class EruptJpaDao {
             }
         }
         hql.append(EruptJpaUtils.geneEruptHqlOrderBy(eruptModel, sort));
-        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel);
+        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel.getClazz());
         Query query = entityManager.createQuery(hql.toString());
         List list = query.getResultList();
         if (entityManager.isOpen()) {

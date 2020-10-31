@@ -28,7 +28,7 @@ import java.util.List;
 @Table(name = "e_menu", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "菜单配置",
-        orderBy = "sort asc",
+        orderBy = "EruptMenu.sort asc",
         tree = @Tree(pid = "parentMenu.id"),
         dataProxy = EruptMenuService.class
 )

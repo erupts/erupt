@@ -117,25 +117,6 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private Boolean isMd5;
 
-
-//    @EruptField(
-//            views = @View(title = "联系电话", sortable = true),
-//            edit = @Edit(title = "联系电话", notNull = true, search = @Search(value = true, vague = true))
-//    )
-//    private String phone;
-//
-//    @EruptField(
-//            views = @View(title = "邮箱", sortable = true),
-//            edit = @Edit(title = "邮箱", notNull = true, search = @Search(value = true, vague = true))
-//    )
-//    private String email;
-//
-//    @EruptField(
-//            views = @View(title = "身份证号", sortable = true),
-//            edit = @Edit(title = "身份证号", notNull = true, search = @Search(value = true, vague = true))
-//    )
-//    private String identity;
-
     @Lob
     @EruptField(
             edit = @Edit(
@@ -147,6 +128,19 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private String whiteIp;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "E_USER_ROLE",
+            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
+    @EruptField(
+            edit = @Edit(
+                    title = "所属角色",
+                    type = EditType.CHECKBOX
+            )
+    )
+    private Set<EruptRole> roles;
+
     @Lob
     @EruptField(
             edit = @Edit(
@@ -157,18 +151,6 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private String remark;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "E_USER_ROLE",
-            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
-    @EruptField(
-            edit = @Edit(
-                    title = "所属角色",
-                    type = EditType.TAB_TREE
-            )
-    )
-    private Set<EruptRole> roles;
 
     private Boolean isAdmin;
 

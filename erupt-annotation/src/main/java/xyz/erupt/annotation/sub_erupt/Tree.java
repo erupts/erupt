@@ -17,7 +17,10 @@ public @interface Tree {
 
     String pid() default "";
 
+    /**
+     * @return 标识pid为何特征才是根节点，需要与filter配合使用
+     */
     @Transient
-    Expr rootTagExpr() default @Expr;
+    Expr rootPid() default @Expr;
 
 }

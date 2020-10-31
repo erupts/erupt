@@ -1,7 +1,6 @@
 package xyz.erupt.core.query;
 
 import lombok.Data;
-import xyz.erupt.annotation.sub_field.EditType;
 
 @Data
 public class Condition {
@@ -10,11 +9,16 @@ public class Condition {
 
     private Object value;
 
-    private Type valueType;
+    private Expression expression;
 
-    private EditType editType;
-
-    enum Type {
-        INPUT, RANGE, IN
+    public Condition(String key, Object value, Expression expression) {
+        this.key = key;
+        this.value = value;
+        this.expression = expression;
     }
+
+    public enum Expression {
+        EQ, RANGE, IN
+    }
+
 }
