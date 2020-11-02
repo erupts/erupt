@@ -82,19 +82,4 @@ public class EruptBuildController {
         throw new EruptNoLegalPowerException();
     }
 
-//    @GetMapping("/find-init-data/{erupt}")
-//    @ResponseBody
-//    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
-//    public Object addBehavior(@PathVariable("erupt") String eruptName) throws IllegalAccessException, InstantiationException {
-//        EruptModel erupt = CoreService.getErupt(eruptName);
-//        if (erupt.getErupt().dataProxy().length > 0) {
-//            Object obj = erupt.getClazz().newInstance();
-//            for (Class<? extends DataProxy> dp : erupt.getErupt().dataProxy()) {
-//                EruptSpringUtil.getBean(dp).addBehavior(obj);
-//            }
-//            return obj;
-//        }
-//        return null;
-//    }
-
 }

@@ -1,5 +1,7 @@
 package xyz.erupt.annotation.fun;
 
+import java.util.List;
+
 /**
  * @author liyuepeng
  * @date 2018-10-09.
@@ -13,5 +15,10 @@ public interface OperationHandler<Target, EruptObjParam> {
      * @param eruptObjParam 处理参数
      * @param param         RowOperation注解参数
      */
-    void exec(Target data, EruptObjParam eruptObjParam, String[] param);
+    void exec(List<Target> data, EruptObjParam eruptObjParam, String[] param);
+
+
+    default void bindData(List<Target> data, EruptObjParam eruptObjParam, String[] param) {
+
+    }
 }

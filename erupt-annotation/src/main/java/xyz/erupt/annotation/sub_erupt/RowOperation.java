@@ -31,16 +31,21 @@ public @interface RowOperation {
 
     Type type() default Type.ERUPT;
 
+    /**
+     * type为tpl时使用，预注入变量：rows 代表选中行的数据
+     *
+     * @return
+     */
+    @Transient
     Tpl tpl() default @Tpl(path = "");
+
+    Class<?> eruptClass() default void.class;
 
     @Transient
     String[] operationParam() default {};
 
     @Transient
     Class<? extends OperationHandler> operationHandler() default OperationHandler.class;
-
-    Class<?> eruptClass() default void.class;
-
 
     enum Mode {
         SINGLE, MULTI, BUTTON

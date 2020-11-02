@@ -25,6 +25,7 @@ import xyz.erupt.tpl.annotation.TplAction;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -65,14 +66,13 @@ public class EruptTplService implements ApplicationRunner {
     }
 
     @SneakyThrows
-    public void tplToResponse(Tpl tpl, HttpServletResponse response) {
+    public void tplToResponse(Tpl tpl, HttpServletResponse response, Object rows) {
         response.setCharacterEncoding("utf-8");
-        Map<String, Object> data;
+        Map<String, Object> data = new HashMap<>();
         if (!tpl.tplHandler().isInterface()) {
             data = EruptSpringUtil.getBean(tpl.tplHandler()).tplAction(tpl.params());
-        } else {
-            data = null;
         }
+        data.put("rows", rows);
         switch (tpl.engine()) {
             case FreeMarker:
                 freeMarkerEngine.getTemplate(tpl.path()).process(data, response.getWriter());

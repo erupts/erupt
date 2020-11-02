@@ -6,17 +6,16 @@ import freemarker.template.TemplateException;
 import lombok.Cleanup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.service.EruptTplService;
@@ -26,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static xyz.erupt.core.constant.RestPath.ERUPT_API;
@@ -84,7 +85,7 @@ public class EruptTplController {
         }
     }
 
-    @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=utf-8"})
+    @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=UTF-8"})
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void getEruptFieldHtml(@PathVariable("erupt") String eruptName,
                                   @PathVariable("field") String field,
@@ -92,19 +93,29 @@ public class EruptTplController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         response.setCharacterEncoding("utf-8");
         Tpl tpl = eruptModel.getEruptFieldMap().get(field).getEruptField().edit().tplType();
-        eruptTplService.tplToResponse(tpl, response);
+        eruptTplService.tplToResponse(tpl, response, null);
     }
 
 
     @GetMapping(value = "/operation_tpl/{erupt}/{code}", produces = {"text/html;charset=utf-8"})
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void getOperationTpl(@PathVariable("erupt") String eruptName,
                                 @PathVariable("code") String code,
+                                @RequestParam(value = "ids", required = false) String[] ids,
                                 HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         for (RowOperation operation : eruptModel.getErupt().rowOperation()) {
             if (operation.code().equals(code)) {
-                eruptTplService.tplToResponse(operation.tpl(), response);
+                if (operation.tpl().engine() == Tpl.Engine.Native || operation.mode() == RowOperation.Mode.BUTTON) {
+                    eruptTplService.tplToResponse(operation.tpl(), response, null);
+                } else {
+                    List<Object> list = new ArrayList<>();
+                    for (String id : ids) {
+                        Object obj = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
+                        list.add(obj);
+                    }
+                    eruptTplService.tplToResponse(operation.tpl(), response, list);
+                }
                 break;
             }
         }
