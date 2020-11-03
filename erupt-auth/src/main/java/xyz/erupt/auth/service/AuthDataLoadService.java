@@ -56,11 +56,11 @@ public class AuthDataLoadService implements CommandLineRunner {
                         EruptMenu.class.getSimpleName(), "菜单维护", MenuTypeEnum.TREE.getCode(), EruptMenu.class.getSimpleName(), open, 10, "fa fa-list-ul", eruptMenu
                 ), code, EruptMenu.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                        EruptOrg.class.getSimpleName(), "组织维护", MenuTypeEnum.TREE.getCode(), EruptOrg.class.getSimpleName(), open, 20, "fa fa-users", eruptMenu
-                ), code, EruptOrg.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                        EruptRole.class.getSimpleName(), "角色维护", MenuTypeEnum.TABLE.getCode(), EruptRole.class.getSimpleName(), open, 30, null, eruptMenu
+                        EruptRole.class.getSimpleName(), "角色维护", MenuTypeEnum.TABLE.getCode(), EruptRole.class.getSimpleName(), open, 20, null, eruptMenu
                 ), code, EruptRole.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                        EruptOrg.class.getSimpleName(), "组织维护", MenuTypeEnum.TREE.getCode(), EruptOrg.class.getSimpleName(), open, 30, "fa fa-users", eruptMenu
+                ), code, EruptOrg.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptUser.class.getSimpleName(), "用户维护", MenuTypeEnum.TABLE.getCode(), EruptUser.class.getSimpleName(), open, 40, "fa fa-user", eruptMenu
                 ), code, EruptUser.class.getSimpleName());
