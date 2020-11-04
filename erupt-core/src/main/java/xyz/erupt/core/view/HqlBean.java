@@ -21,6 +21,8 @@ public class HqlBean {
 
     private boolean countSql;
 
+    private String orderBy;
+
     public HqlBean(String cols, String[] customCondition, JsonObject searchCondition, String orderBy, boolean countSql) {
         this.cols = cols;
         this.customCondition = customCondition;
@@ -29,9 +31,5 @@ public class HqlBean {
         this.countSql = countSql;
     }
 
-    public HqlBean(String cols) {
-        this.cols = cols;
-    }
 
-    private String orderBy;
 }

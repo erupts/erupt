@@ -1,9 +1,7 @@
 package xyz.erupt.core.util;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 /**
  * @author liyuepeng
@@ -17,34 +15,27 @@ public class TypeUtil {
             "short", "int", "integer", "long", "float", "double", "bigdecimal", "biginteger"
     };
 
-    private static Pattern NUMBER_PATTERN = Pattern.compile("^[-+]?\\d+(\\.\\d+)?$");
-
-
     /**
-     * 将未知类型转换为目标类型（目标类型只支持基本数据类型）
-     *
-     * @param serializable
-     * @param targetType
-     * @return
+     * 将未知类型转换为目标类型
      */
-    public static Serializable typeStrConvertObject(Serializable serializable, String targetType) {
-        Serializable o;
-        if (int.class.getSimpleName().equals(targetType) || Integer.class.getSimpleName().equals(targetType)) {
-            o = Integer.valueOf(serializable.toString());
-        } else if (short.class.getSimpleName().equalsIgnoreCase(targetType)) {
-            o = Short.valueOf(serializable.toString());
-        } else if (long.class.getSimpleName().equalsIgnoreCase(targetType)) {
-            o = Long.valueOf(serializable.toString());
-        } else if (float.class.getSimpleName().equalsIgnoreCase(targetType)) {
-            o = Float.valueOf(serializable.toString());
-        } else if (double.class.getSimpleName().equalsIgnoreCase(targetType)) {
-            o = Double.valueOf(serializable.toString());
-        } else if (boolean.class.getSimpleName().equalsIgnoreCase(targetType)) {
-            o = Boolean.valueOf(serializable.toString());
+    public static Object typeStrConvertObject(Object obj, Class<?> targetType) {
+        if (int.class == targetType || Integer.class == targetType) {
+            return Integer.valueOf(obj.toString());
+        } else if (short.class == targetType || Short.class == targetType) {
+            return Short.valueOf(obj.toString());
+        } else if (long.class == targetType || Long.class == targetType) {
+            return Long.valueOf(obj.toString());
+        } else if (float.class == targetType || Float.class == targetType) {
+            return Float.valueOf(obj.toString());
+        } else if (double.class == targetType || Double.class == targetType) {
+            return Double.valueOf(obj.toString());
+        } else if (boolean.class == targetType || Boolean.class == targetType) {
+            return Boolean.valueOf(obj.toString());
+        } else if (String.class == targetType) {
+            return obj.toString();
         } else {
-            o = serializable.toString();
+            return targetType.cast(obj);
         }
-        return o;
     }
 
     public static void simpleNumberTypeArrayToObject(Object obj, String type, Consumer<Number> consumer) {
@@ -89,9 +80,5 @@ public class TypeUtil {
         return Arrays.asList(NUMBER_TYPE).contains(typeName.toLowerCase());
     }
 
-
-    public static boolean isNumeric(String str) {
-        return NUMBER_PATTERN.matcher(str).matches();
-    }
 
 }

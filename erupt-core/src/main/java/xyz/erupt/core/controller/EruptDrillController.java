@@ -10,12 +10,14 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.EruptService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.TableQueryVo;
 
 import java.lang.reflect.Field;
 
@@ -38,7 +40,7 @@ public class EruptDrillController {
     public Page drill(@PathVariable("erupt") String eruptName,
                       @PathVariable("code") String code,
                       @PathVariable("id") String id,
-                      @RequestBody JsonObject searchCondition) throws IllegalAccessException {
+                      @RequestBody TableQueryVo tableQueryVo) throws IllegalAccessException {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Link link = null;
         for (Drill drill : eruptModel.getErupt().drills()) {
@@ -61,10 +63,7 @@ public class EruptDrillController {
             }
             return eruptService.getEruptData(
                     EruptCoreService.getErupt(link.linkErupt().getSimpleName()),
-                    searchCondition.remove(Page.PAGE_INDEX_STR).getAsInt(),
-                    searchCondition.remove(Page.PAGE_SIZE_STR).getAsInt(),
-                    searchCondition.remove(Page.PAGE_SORT_STR).getAsString(),
-                    searchCondition, null, String.format("%s = '%s'",
+                    tableQueryVo, null, String.format("%s = '%s'",
                             link.linkErupt().getSimpleName() + "." + link.joinColumn(), val));
         }
         throw new EruptNoLegalPowerException();

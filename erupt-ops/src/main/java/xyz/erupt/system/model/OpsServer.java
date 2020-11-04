@@ -53,7 +53,7 @@ public class OpsServer extends HyperModel {
     @ManyToOne
     @EruptField(
             views = @View(title = "所属组别", column = "name"),
-            edit = @Edit(title = "所属组别", notNull = true, type = EditType.REFERENCE_TREE,
+            edit = @Edit(title = "所属组别", type = EditType.REFERENCE_TREE, show = false,
                     referenceTreeType = @ReferenceTreeType(pid = "parent.id"))
     )
     private OpsServerGroup opsServerGroup;

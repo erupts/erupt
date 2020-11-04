@@ -1,6 +1,5 @@
-package xyz.erupt.core.service.data_impl;
+package xyz.erupt.core.service.impl;
 
-import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +54,9 @@ public class EruptDbService implements IEruptDataService {
     }
 
     @Override
-    public Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition) {
-        return eruptJpaDao.queryEruptList(eruptModel, page, searchCondition, customCondition);
+    public Page queryList(EruptModel eruptModel, Page page, Query query) {
+        return eruptJpaDao.queryEruptList(eruptModel, page, query);
     }
-
 
     @Transactional
     @Override
@@ -188,8 +186,8 @@ public class EruptDbService implements IEruptDataService {
                 hql.append(EruptJpaUtils.AND).append(filterStr);
             }
         }
-        if (StringUtils.isNotBlank(query.getOrder())) {
-            hql.append(" order by ").append(query.getOrder());
+        if (StringUtils.isNotBlank(query.getOrderBy())) {
+            hql.append(" order by ").append(query.getOrderBy());
         }
         EntityManager entityManager = entityManagerService.getEntityManager(eruptModel.getClazz());
         List list = entityManager.createQuery(hql.toString()).getResultList();

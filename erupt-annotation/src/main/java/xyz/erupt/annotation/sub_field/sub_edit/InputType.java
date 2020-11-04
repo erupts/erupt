@@ -13,6 +13,8 @@ public @interface InputType {
 
     String type() default "text";
 
+    boolean fullSpan() default false;
+
     @Transient
     String regex() default "";
 

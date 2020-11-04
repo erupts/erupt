@@ -1,6 +1,5 @@
 package xyz.erupt.core.service;
 
-import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
@@ -58,7 +57,7 @@ public class PreEruptDataService {
         List<Condition> conditions = new ArrayList<>();
         List<String> conditionStrings = new ArrayList<>();
         EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> {
-            String condition = dataProxy.beforeFetch(new JsonObject());
+            String condition = dataProxy.beforeFetch();
             if (StringUtils.isNotBlank(condition)) {
                 conditionStrings.add(condition);
             }
@@ -76,14 +75,14 @@ public class PreEruptDataService {
             conditionStrings.addAll(query.getConditionStrings());
         }
         String orderBy;
-        if (StringUtils.isNotBlank(query.getOrder())) {
-            orderBy = query.getOrder();
+        if (StringUtils.isNotBlank(query.getOrderBy())) {
+            orderBy = query.getOrderBy();
         } else {
             orderBy = eruptModel.getErupt().orderBy();
         }
         Collection<Map<String, Object>> result = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
                 .queryColumn(eruptModel, columns, Query.builder()
-                        .conditions(conditions).conditionStrings(conditionStrings).order(orderBy).build());
+                        .conditions(conditions).conditionStrings(conditionStrings).orderBy(orderBy).build());
         EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.afterFetch(result)));
         return result;
     }

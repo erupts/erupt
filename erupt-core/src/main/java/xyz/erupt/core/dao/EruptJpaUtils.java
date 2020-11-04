@@ -1,24 +1,25 @@
 package xyz.erupt.core.dao;
 
-import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.core.query.Condition;
+import xyz.erupt.core.query.Query;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.core.view.HqlBean;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -66,11 +67,11 @@ public class EruptJpaUtils {
 
 
     //erupt 注解信息映射成hql语句
-    public static String generateEruptJpaHql(EruptModel eruptModel, HqlBean hqlModel) {
+    public static String generateEruptJpaHql(EruptModel eruptModel, String cols, Query query, boolean countSql) {
         StringBuilder hql = new StringBuilder();
-        if (StringUtils.isNotBlank(hqlModel.getCols())) {
+        if (StringUtils.isNotBlank(cols)) {
             hql.append("select ");
-            hql.append(hqlModel.getCols());
+            hql.append(cols);
             hql.append(" from ").
                     append(eruptModel.getEruptName()).
                     append(" as ").
@@ -86,9 +87,9 @@ public class EruptJpaUtils {
         } else {
             hql.append("from " + eruptModel.getEruptName());
         }
-        hql.append(geneEruptHqlCondition(eruptModel, hqlModel.getSearchCondition(), hqlModel.getCustomCondition()));
-        if (!hqlModel.isCountSql()) {
-            hql.append(geneEruptHqlOrderBy(eruptModel, hqlModel.getOrderBy()));
+        hql.append(geneEruptHqlCondition(eruptModel, query.getConditions(), query.getConditionStrings()));
+        if (!countSql) {
+            hql.append(geneEruptHqlOrderBy(eruptModel, query.getOrderBy()));
         }
         return hql.toString();
     }
@@ -112,42 +113,42 @@ public class EruptJpaUtils {
         return sb.toString();
     }
 
-    public static String geneEruptHqlCondition(EruptModel eruptModel, JsonObject clientSearchCondition, String[] customCondition) {
+    public static String geneEruptHqlCondition(EruptModel eruptModel, List<Condition> clientSearchCondition, List<String> customCondition) {
         StringBuilder hql = new StringBuilder();
         hql.append(" where 1 = 1 ");
         //condition
         if (null != clientSearchCondition) {
-            for (String key : clientSearchCondition.keySet()) {
-                EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(key);
+            for (Condition condition : clientSearchCondition) {
+                EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(condition.getKey());
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     if (edit.type() == EditType.REFERENCE_TREE) {
-                        hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTreeType().id()).append("=:").append(key);
+                        hql.append(EruptJpaUtils.AND).append(condition.getKey() + "." + edit.referenceTreeType().id()).append("=:").append(condition.getKey());
                         continue;
                     } else if (edit.type() == EditType.REFERENCE_TABLE) {
-                        hql.append(EruptJpaUtils.AND).append(key + "." + edit.referenceTableType().id()).append("=:").append(key);
+                        hql.append(EruptJpaUtils.AND).append(condition.getKey() + "." + edit.referenceTableType().id()).append("=:").append(condition.getKey());
                         continue;
                     }
-                    String $key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), key);
+                    String $key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), condition.getKey());
                     if (edit.search().vague()) {
                         if ((edit.type() == EditType.NUMBER)
                                 || edit.type() == EditType.DATE
                                 || edit.type() == EditType.SLIDER) {
                             hql.append(EruptJpaUtils.AND).append($key)
-                                    .append(" between :").append(LVAL_KEY).append(key)
-                                    .append(" and :").append(RVAL_KEY).append(key);
+                                    .append(" between :").append(LVAL_KEY).append(condition.getKey())
+                                    .append(" and :").append(RVAL_KEY).append(condition.getKey());
                         } else if (edit.type() == EditType.CHOICE) {
-                            hql.append(EruptJpaUtils.AND).append($key).append(" in (:").append(key).append(")");
+                            hql.append(EruptJpaUtils.AND).append($key).append(" in (:").append(condition.getKey()).append(")");
                         } else if (eruptFieldModel.getFieldReturnName().equals(JavaType.STRING)) {
-                            hql.append(EruptJpaUtils.AND).append($key).append(" like :").append(key);
+                            hql.append(EruptJpaUtils.AND).append($key).append(" like :").append(condition.getKey());
                         } else {
-                            hql.append(EruptJpaUtils.AND).append($key).append("=:").append(key);
+                            hql.append(EruptJpaUtils.AND).append($key).append("=:").append(condition.getKey());
                         }
                     } else {
-                        hql.append(EruptJpaUtils.AND).append($key).append("=:").append(key);
+                        hql.append(EruptJpaUtils.AND).append($key).append("=:").append(condition.getKey());
                     }
                 } else {
-                    hql.append(EruptJpaUtils.AND).append(key).append("=:").append(key);
+                    hql.append(EruptJpaUtils.AND).append(condition.getKey()).append("=:").append(condition.getKey());
                 }
             }
         }

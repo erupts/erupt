@@ -1,6 +1,7 @@
 package xyz.erupt.core.view;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Collection;
 import java.util.Map;
@@ -9,7 +10,8 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2018-10-12.
  */
-@Data
+@Getter
+@Setter
 public class Page {
     private int pageIndex;
 

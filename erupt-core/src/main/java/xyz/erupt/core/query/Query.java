@@ -15,5 +15,5 @@ public class Query {
 
     List<String> conditionStrings;
 
-    String order;
+    String orderBy;
 }

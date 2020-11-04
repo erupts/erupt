@@ -1,18 +1,18 @@
-package xyz.erupt.core.controller;
+package xyz.erupt.core.service;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
-import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.query.Condition;
+import xyz.erupt.core.query.Query;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.TableQueryVo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,58 +30,50 @@ public class EruptService {
     private static final int maxPageSize = 500;
 
     /**
-     * @param eruptModel
-     * @param pageIndex       index
-     * @param pageSize        size
-     * @param sort            sort
-     * @param searchCondition 客户端查询条件
-     * @param joCondition     后台自定义条件
-     * @param customCondition 后台自定义条件（字符串格式）
+     * @param eruptModel      eruptModel
+     * @param tableQueryVo    前端查询对象
+     * @param serverCondition 自定义条件
+     * @param customCondition 条件字符串
      * @return
      */
-    Page getEruptData(EruptModel eruptModel, int pageIndex, int pageSize, String sort,
-                      JsonObject searchCondition, JsonObject joCondition, String... customCondition) {
+    public Page getEruptData(EruptModel eruptModel, TableQueryVo tableQueryVo, List<Condition> serverCondition, String... customCondition) {
         if (EruptUtil.getPowerObject(eruptModel).isQuery()) {
+            int pageSize = tableQueryVo.getPageSize();
             if (pageSize > maxPageSize) {
                 pageSize = maxPageSize;
             }
-            List<String> conditionList = new ArrayList<>();
-            JsonObject legalJsonObject = EruptUtil.geneEruptSearchCondition(eruptModel, searchCondition);
+            List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQueryVo.getCondition());
+            List<String> conditionStrings = new ArrayList<>();
             {
                 //DependTree逻辑
                 LinkTree dependTree = eruptModel.getErupt().linkTree();
                 if (StringUtils.isNotBlank(dependTree.field())) {
-                    JsonElement je = searchCondition.get("$" + dependTree.field());
-                    if (null == je || je.isJsonNull()) {
-                        //TODO 临时为前端做兼容用，按道理应该抛出异常
+                    if (null == tableQueryVo.getLinkTreeVal()) {
+                        //TODO 临时为前端做兼容用，其实应该抛出异常
                         if (dependTree.dependNode()) {
                             return new Page();
                         }
                     } else {
-                        EruptModel treeErupt = EruptCoreService.getErupt(dependTree.field());
+                        EruptModel treeErupt = EruptCoreService.getErupt(eruptModel.getEruptFieldMap().get(dependTree.field()).getFieldReturnName());
                         String pk = treeErupt.getErupt().primaryKeyCol();
                         //TODO 存在sql注入风险
-                        conditionList.add(dependTree.field() + "." + pk + " = " + je.getAsString());
-//                        legalJsonObject.addProperty(linkTree.field() + "." + pk, Long.valueOf(je.getAsString()));
+                        conditionStrings.add(dependTree.field() + "." + pk + " = " + tableQueryVo.getLinkTreeVal());
                     }
                 }
             }
-
-            conditionList.addAll(Arrays.asList(customCondition));
+            conditionStrings.addAll(Arrays.asList(customCondition));
             EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> {
-                String condition = dataProxy.beforeFetch(legalJsonObject);
+                String condition = dataProxy.beforeFetch();
                 if (null != condition) {
-                    conditionList.add(condition);
+                    conditionStrings.add(condition);
                 }
             }));
-            if (null != joCondition) {
-                for (String key : joCondition.keySet()) {
-                    legalJsonObject.add(key, joCondition.get(key));
-                }
+            if (null != serverCondition) {
+                legalConditions.addAll(serverCondition);
             }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
-                    .queryList(eruptModel, new Page(pageIndex, pageSize, sort),
-                            legalJsonObject, conditionList.toArray(new String[0]));
+                    .queryList(eruptModel, new Page(tableQueryVo.getPageIndex(), pageSize, tableQueryVo.getSort()),
+                            Query.builder().orderBy(tableQueryVo.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
             for (Map<String, Object> map : page.getList()) {
                 DataHandlerUtil.convertDataToEruptView(eruptModel, map);
             }
@@ -100,11 +92,12 @@ public class EruptService {
      * @param id         标识主键
      * @return
      */
-    boolean verifyIdPermissions(EruptModel eruptModel, String id) {
-        JsonObject jo = new JsonObject();
-        jo.addProperty(eruptModel.getErupt().primaryKeyCol(), id);
+    public boolean verifyIdPermissions(EruptModel eruptModel, String id) {
+        List<Condition> conditions = new ArrayList<>();
+        conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, Condition.Expression.EQ));
         Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
-                .queryList(eruptModel, new Page(0, 1, null), jo);
+                .queryList(eruptModel, new Page(0, 1, null),
+                        Query.builder().conditions(conditions).build());
         return page.getList().size() > 0;
     }
 }

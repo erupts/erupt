@@ -1,7 +1,7 @@
 package xyz.erupt.core.annotation;
 
 import xyz.erupt.core.service.IEruptDataService;
-import xyz.erupt.core.service.data_impl.EruptDbService;
+import xyz.erupt.core.service.impl.EruptDbService;
 
 import java.lang.annotation.*;
 

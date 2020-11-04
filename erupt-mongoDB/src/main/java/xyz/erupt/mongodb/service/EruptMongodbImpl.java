@@ -1,6 +1,5 @@
 package xyz.erupt.mongodb.service;
 
-import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class EruptMongodbImpl implements IEruptDataService {
 
     @SneakyThrows
     @Override
-    public Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition) {
+    public Page queryList(EruptModel eruptModel, Page page, xyz.erupt.core.query.Query eruptQuery) {
         Query query = new Query();
         page.setTotal(mongoTemplate.count(query, eruptModel.getClazz()));
         if (page.getTotal() > 0) {
@@ -51,10 +50,6 @@ public class EruptMongodbImpl implements IEruptDataService {
                         query.with(Sort.by(Sort.Direction.ASC, s.split(" ")[0]));
                     }
                 }
-            }
-//            筛选
-            for (String key : searchCondition.keySet()) {
-                query.addCriteria(Criteria.where(key).is(searchCondition.get(key)));
             }
             List<Map<String, Object>> newList = new ArrayList<>();
             for (Object obj : mongoTemplate.find(query, eruptModel.getClazz())) {

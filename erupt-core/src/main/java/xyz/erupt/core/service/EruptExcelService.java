@@ -207,7 +207,7 @@ public class EruptExcelService {
                             switch (eruptFieldModel.getFieldReturnName()) {
                                 case JavaType.STRING:
                                 case JavaType.DATE:
-                                    jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getStringCellValue());
+                                    jsonObject.addProperty(eruptFieldModel.getFieldName(), getCellValue(cell).toString());
                                     break;
                                 case JavaType.NUMBER:
                                     jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
@@ -222,6 +222,18 @@ public class EruptExcelService {
             listObject.add(jsonObject);
         }
         return listObject;
+    }
+
+    public Object getCellValue(Cell cell) {
+        switch (cell.getCellTypeEnum()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return cell.getNumericCellValue();
+            case BLANK:
+                return null;
+        }
+        return null;
     }
 
     //模板的格式和edit输入框一致

@@ -1,6 +1,5 @@
 package xyz.erupt.core.service;
 
-import com.google.gson.JsonObject;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.Query;
 import xyz.erupt.core.view.EruptModel;
@@ -34,7 +33,7 @@ public interface IEruptDataService {
      * @param customCondition 自定义查询条件
      * @return 页面对象
      */
-    Page queryList(EruptModel eruptModel, Page page, JsonObject searchCondition, String... customCondition);
+    Page queryList(EruptModel eruptModel, Page page, Query query);
 
     /**
      * 根据列查询相关数据

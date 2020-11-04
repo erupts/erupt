@@ -1,7 +1,8 @@
 package xyz.erupt.core.controller;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -13,14 +14,17 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.RestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
+import xyz.erupt.core.service.EruptService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
+import xyz.erupt.core.view.TableQueryVo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +56,9 @@ public class EruptExcelController {
     @Autowired
     private EruptModifyController eruptModifyController;
 
+    @Autowired
+    private EruptService eruptService;
+
 
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
@@ -80,16 +87,16 @@ public class EruptExcelController {
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (EruptUtil.getPowerObject(eruptModel).isExport()) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(Page.PAGE_INDEX_STR, 1);
-            jsonObject.addProperty(Page.PAGE_SIZE_STR, Page.PAGE_MAX_DATA);
-            jsonObject.addProperty(Page.PAGE_SORT_STR, "");
-            JsonObject jsonCondition = JsonParser.parseString(
-                    URLDecoder.decode(condition, "utf-8")).getAsJsonObject();
-            for (String key : jsonCondition.keySet()) {
-                jsonObject.add(key, jsonCondition.get(key));
+            TableQueryVo tableQueryVo = new TableQueryVo();
+            tableQueryVo.setPageIndex(1);
+            tableQueryVo.setPageSize(Page.PAGE_MAX_DATA);
+            if (null != condition) {
+                List<Condition> conditions = new Gson().fromJson(URLDecoder.decode(condition, "utf-8"),
+                        new TypeToken<List<Condition>>() {
+                        }.getType());
+                tableQueryVo.setCondition(conditions);
             }
-            Page page = eruptDataController.getEruptData(eruptName, jsonObject);
+            Page page = eruptService.getEruptData(eruptModel, tableQueryVo, null);
             Workbook wb = dataFileService.exportExcel(eruptModel, page);
             EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
             wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));

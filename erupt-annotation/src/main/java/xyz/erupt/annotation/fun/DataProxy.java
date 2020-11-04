@@ -1,6 +1,5 @@
 package xyz.erupt.annotation.fun;
 
-import com.google.gson.JsonObject;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.Collection;
@@ -65,7 +64,7 @@ public interface DataProxy<MODEL> {
      *
      * @return 自定义查询条件
      */
-    default String beforeFetch(JsonObject condition) {
+    default String beforeFetch() {
         return null;
     }
 

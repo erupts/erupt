@@ -15,7 +15,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeMapping;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.core.service.IEruptDataService;
-import xyz.erupt.core.service.data_impl.EruptDbService;
+import xyz.erupt.core.service.impl.EruptDbService;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
