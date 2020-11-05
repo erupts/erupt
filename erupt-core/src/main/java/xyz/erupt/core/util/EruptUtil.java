@@ -77,7 +77,7 @@ public class EruptUtil {
                         case TAB_TABLE_REFER:
                         case TAB_TABLE_ADD:
                             EruptModel tabEruptModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
-                            Collection collection = (Collection) value;
+                            Collection<?> collection = (Collection<?>) value;
 //                            TODO this is bad code
                             if (eruptField.edit().type() == EditType.TAB_TREE || eruptField.edit().type() == EditType.CHECKBOX) {
                                 if (collection.size() > 0) {

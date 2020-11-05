@@ -25755,11 +25755,11 @@ g2-tag-cloud {
 
 //#25b864; 绿
 //#2196f3; 蓝
-@primary-color: #25b864;
+@primary-color: #2196f3;
 @alain-default-header-bg: @primary-color;
 @alain-default-aside-nav-text-hover-color: @primary-color;
 @alain-default-aside-nav-selected-text-color: @primary-color;
-@alain-default-header-hg: 48px;
+@alain-default-header-hg: 44px;
 @alain-default-content-padding: 16px;
 
 @alain-default-aside-bg: #fff;
@@ -25917,11 +25917,31 @@ html {
   }
 }
 
+img[src='erupt.svg'] {
+  transition: all, 1300ms;
+}
+
+.alain-default__content, .ant-modal-content, .alain-default__aside {
+  transition: filter 800ms ease-out;
+}
+
+.alain-default {
+  transition: background-color, 800ms;
+}
+
 //暗黑模式
 .dark {
+  .alain-default__content, .ant-modal-content, .alain-default__aside, img[src='erupt.svg'] {
+    filter: invert(1) hue-rotate(180deg);
+  }
 
-  .alain-default__content, .ant-modal-content, .alain-default__aside {
-    filter: invert(.9) hue-rotate(180deg);
+  .alain-default {
+    background: #000;
+  }
+
+  .alain-default__header {
+    box-shadow: 0 1px #454549;
+    background: #000;
   }
 
   .alain-default__content, .ant-modal-content {
@@ -25937,18 +25957,6 @@ html {
     }
   }
 
-  img[src='erupt.svg'] {
-    filter: invert(1) hue-rotate(180deg);
-  }
-
-  html {
-    background: #333;
-  }
-
-  .alain-default {
-    background: #222;
-  }
-
   .alain-default__header-logo {
     border-right: 1px solid #333 !important;
   }
@@ -25958,9 +25966,8 @@ html {
     box-shadow: none;
   }
 
-  .alain-default__header {
-    box-shadow: 0 1px #454549;
-    background: #191919;
+  nz-card {
+    box-shadow: none !important;
   }
 
 }
