@@ -84,7 +84,7 @@ public class BiChart extends HyperModel {
     @EruptField(
             views = @View(title = "图表类型"),
             edit = @Edit(title = "图表类型", notNull = true, desc = "图表参考：G2Plot", type = EditType.CHOICE, choiceType = @ChoiceType(
-                    type = ChoiceEnum.RADIO,
+                    type = ChoiceType.Type.RADIO,
                     vl = {
                             //------------
                             @VL(label = "折线图", value = "Line"),
