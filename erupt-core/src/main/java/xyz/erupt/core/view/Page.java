@@ -25,12 +25,6 @@ public class Page {
 
     public static final int PAGE_MAX_DATA = 1000000;
 
-    public static final String PAGE_INDEX_STR = "_pageIndex";
-
-    public static final String PAGE_SIZE_STR = "_pageSize";
-
-    public static final String PAGE_SORT_STR = "_sort";
-
     private Collection<Map<String, Object>> list;
 
     public Page(int pageIndex, int pageSize, String sort) {

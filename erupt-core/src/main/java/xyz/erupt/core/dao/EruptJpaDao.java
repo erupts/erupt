@@ -1,7 +1,5 @@
 package xyz.erupt.core.dao;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -70,16 +68,20 @@ public class EruptJpaDao {
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     if (edit.search().vague()) {
                         if ((edit.type() == EditType.NUMBER) || edit.type() == EditType.DATE || edit.type() == EditType.SLIDER) {
-                            JsonArray jsonArray = JsonParser.parseString(condition.getValue().toString()).getAsJsonArray();
-                            countQuery.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, jsonArray.get(0)));
-                            countQuery.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, jsonArray.get(1)));
-                            query.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, jsonArray.get(0)));
-                            query.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, jsonArray.get(1)));
+                            List<?> list = (List<?>) condition.getValue();
+                            countQuery.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
+                            countQuery.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
+                            query.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
+                            query.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
                             continue;
                         } else if (edit.type() == EditType.INPUT) {
                             countQuery.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
                             query.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
                             continue;
+                        } else if (edit.type() == EditType.CHOICE) {
+                            List<?> list = (List<?>) condition.getValue();
+                            countQuery.setParameter(condition.getKey(), list);
+                            query.setParameter(condition.getKey(), list);
                         }
                     }
                 }

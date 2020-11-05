@@ -13,7 +13,7 @@ import java.util.Properties;
  */
 public class MimeUtil {
 
-    private static Properties mimes = new Properties();
+    private static final Properties mimes = new Properties();
 
     static {
         try (InputStream in = MimeUtil.class.getClassLoader().getResourceAsStream("mime.properties")) {

@@ -21,7 +21,7 @@ import java.util.List;
  * @date 2019-07-15.
  */
 @Service
-@Order(10)
+@Order
 @Slf4j
 public class JobDataLoadService implements CommandLineRunner {
 

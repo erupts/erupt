@@ -7,7 +7,10 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.auth.model.base.BaseModel;
 
 import javax.persistence.Entity;
@@ -56,7 +59,7 @@ public class BiDimension extends BaseModel {
                     notNull = true,
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(
-                            type = ChoiceEnum.RADIO,
+                            type = ChoiceType.Type.RADIO,
                             vl = {
                                     @VL(value = "INPUT", label = "文本"),
                                     @VL(value = "TAG", label = "标签"),

@@ -57,6 +57,9 @@ public @interface Edit {
     @Match("item.type()=='CHOICE'")
     ChoiceType choiceType() default @ChoiceType;
 
+    @Match("item.type()=='TAGS'")
+    TagsType tagsType() default @TagsType;
+
     @Match("item.type()=='ATTACHMENT'")
     AttachmentType attachmentType() default @AttachmentType;
 

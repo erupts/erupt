@@ -37,12 +37,12 @@ public class EruptJobService {
     @Autowired
     private EruptDao eruptDao;
 
-    public static final String MAIL_SENDER_KEY = "mailSensor";
-
     @Autowired
     private JavaMailSenderImpl javaMailSender;
 
-    private Map<String, StdSchedulerFactory> schedulerFactoryMap = new HashMap<>();
+    public static final String MAIL_SENDER_KEY = "mailSensor";
+
+    private final Map<String, StdSchedulerFactory> schedulerFactoryMap = new HashMap<>();
 
     public void triggerJob(EruptJob eruptJob) {
         new EruptJobAction().trigger(eruptJob, javaMailSender);

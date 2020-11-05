@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.base.BaseModel;
@@ -46,7 +47,7 @@ public class EruptJobLog extends BaseModel {
 
     @EruptField(
             views = @View(title = "任务状态"),
-            edit = @Edit(title = "任务状态", search = @Search)
+            edit = @Edit(title = "任务状态", boolType = @BoolType(trueText = "成功", falseText = "失败"), search = @Search)
     )
     private Boolean status;
 

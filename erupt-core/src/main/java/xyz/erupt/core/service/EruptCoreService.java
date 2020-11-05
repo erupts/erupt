@@ -29,7 +29,7 @@ import java.util.Map;
  * @author liyuepeng
  * @date 9/28/18.
  */
-@Order(1)
+@Order
 @Service
 @Slf4j
 public final class EruptCoreService implements ApplicationRunner {
@@ -48,12 +48,14 @@ public final class EruptCoreService implements ApplicationRunner {
             Edit edit = fieldModel.getEruptField().edit();
             if (edit.type() == EditType.CHOICE) {
                 fieldModel.setChoiceList(EruptUtil.getChoiceList(edit.choiceType()));
+            } else if (edit.type() == EditType.TAGS) {
+                fieldModel.setTagList(EruptUtil.getTagList(edit.tagsType()));
             }
         }
         return em;
     }
 
-    private static EruptModel initEruptModel(Class clazz) {
+    private static EruptModel initEruptModel(Class<?> clazz) {
         //erupt class data to memory
         EruptModel eruptModel = new EruptModel(clazz);
         // erupt field data to memory
@@ -79,9 +81,6 @@ public final class EruptCoreService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        if (EruptApplication.getScanPackage().length == 0) {
-            throw new RuntimeException("not found scanner package place check `EruptApplication.run()` Whether to call");
-        }
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(Erupt.class)
         }, clazz -> ERUPTS.put(clazz.getSimpleName(), initEruptModel(clazz)));

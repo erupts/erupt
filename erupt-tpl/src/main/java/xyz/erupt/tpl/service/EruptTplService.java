@@ -32,7 +32,7 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2020-02-24
  */
-@Order(1)
+@Order
 @Service
 @Slf4j
 public class EruptTplService implements ApplicationRunner {

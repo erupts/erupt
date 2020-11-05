@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+import org.springframework.core.annotation.Order;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.function.Consumer;
  * @date 2020-01-13
  */
 @Service
+@Order
 public class EntityManagerService implements ApplicationRunner {
 
     @PersistenceContext
@@ -35,6 +37,7 @@ public class EntityManagerService implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         if (null != eruptProp.getDbs()) {
+            //多数据源处理
             entityManagerMap = new HashMap<>();
             for (EruptProp.DB prop : eruptProp.getDbs()) {
                 LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();

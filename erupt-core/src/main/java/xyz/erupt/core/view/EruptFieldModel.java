@@ -46,6 +46,8 @@ public class EruptFieldModel {
 
     private List<VLModel> choiceList;
 
+    private List<String> tagList;
+
     public EruptFieldModel(Field field) {
         this.field = field;
         this.eruptField = field.getAnnotation(EruptField.class);
@@ -75,7 +77,7 @@ public class EruptFieldModel {
     public static final String TYPE = "type";
 
     /**
-     * erupt自动配置功能
+     * erupt自动配置
      */
     private void eruptAutoConfig() {
         try {
@@ -141,6 +143,6 @@ public class EruptFieldModel {
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
         Field field = invocationHandler.getClass().getDeclaredField("memberValues");
         field.setAccessible(true);
-        return (Map) field.get(invocationHandler);
+        return (Map<String, Object>) field.get(invocationHandler);
     }
 }

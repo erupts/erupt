@@ -13,9 +13,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptApplication;
@@ -34,9 +32,6 @@ import java.util.regex.Pattern;
  * @date 11/1/18.
  */
 public class EruptUtil {
-
-    private static final EditType[] OBJECT_EDIT_TYPES = {EditType.COMBINE, EditType.REFERENCE_TREE, EditType.REFERENCE_TABLE,
-            EditType.TAB_TREE, EditType.TAB_TABLE_ADD, EditType.TAB_TABLE_REFER};
 
     //将object中erupt标识的字段抽取出来放到map中
     public static Map<String, Object> generateEruptDataMap(EruptModel eruptModel, Object obj) {
@@ -132,7 +127,7 @@ public class EruptUtil {
 
     public static List<VLModel> getChoiceList(ChoiceType choiceType) {
         List<VLModel> vls = new ArrayList<>();
-        for (xyz.erupt.annotation.sub_field.sub_edit.VL vl : choiceType.vl()) {
+        for (VL vl : choiceType.vl()) {
             vls.add(new VLModel(vl.value(), vl.label(), vl.desc()));
         }
         for (Class<? extends ChoiceFetchHandler> cla : choiceType.fetchHandler()) {
@@ -144,55 +139,66 @@ public class EruptUtil {
         return vls;
     }
 
+    public static List<String> getTagList(TagsType tagsType) {
+        List<String> tags = new ArrayList<>(Arrays.asList(tagsType.tags()));
+        for (Class<? extends TagsFetchHandler> cla : tagsType.fetchHandler()) {
+            tags.addAll(EruptSpringUtil.getBean(cla).fetchTags(tagsType.fetchHandlerParams()));
+        }
+        return tags;
+    }
+
     public static Object convertObjectType(EruptFieldModel eruptFieldModel, Object obj) {
-        if (null != obj) {
-            if (null == eruptFieldModel) {
-                return obj.toString();
-            }
-            String str = obj.toString();
-            if (NumberUtils.isCreatable(str)) {
-                if (str.endsWith(".0")) {
-                    str = str.substring(0, str.length() - 2);
-                }
-            }
-            Edit edit = eruptFieldModel.getEruptField().edit();
-            switch (edit.type()) {
-                case BOOLEAN:
-                    return Boolean.parseBoolean(str);
-                case DATE:
-                    if (JavaType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
-                        return DateUtil.getDate(str);
-                    } else {
-                        return str;
-                    }
-                case REFERENCE_TREE:
-                case REFERENCE_TABLE:
-                    String id = null;
-                    if (edit.type().equals(EditType.REFERENCE_TREE)) {
-                        id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();
-                    } else if (edit.type().equals(EditType.REFERENCE_TABLE)) {
-                        id = edit.referenceTableType().id();
-                    }
-                    EruptFieldModel efm = EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
-                    return TypeUtil.typeStrConvertObject(str, efm.getField().getType());
-                default:
-                    return TypeUtil.typeStrConvertObject(str, eruptFieldModel.getField().getType());
+        if (null == obj) {
+            return null;
+        }
+        if (null == eruptFieldModel) {
+            return obj.toString();
+        }
+        String str = obj.toString();
+        if (NumberUtils.isCreatable(str)) {
+            if (str.endsWith(".0")) { //处理gson序列化后数值后多了一个0
+                str = str.substring(0, str.length() - 2);
             }
         }
-        return null;
+        Edit edit = eruptFieldModel.getEruptField().edit();
+        switch (edit.type()) {
+            case DATE:
+                if (JavaType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
+                    return DateUtil.getDate(str);
+                } else {
+                    return str;
+                }
+            case REFERENCE_TREE:
+            case REFERENCE_TABLE:
+                String id = null;
+                if (edit.type().equals(EditType.REFERENCE_TREE)) {
+                    id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();
+                } else if (edit.type().equals(EditType.REFERENCE_TABLE)) {
+                    id = edit.referenceTableType().id();
+                }
+                EruptFieldModel efm = EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
+                return TypeUtil.typeStrConvertObject(str, efm.getField().getType());
+            default:
+                return TypeUtil.typeStrConvertObject(str, eruptFieldModel.getField().getType());
+        }
     }
 
     //生成一个合法的searchCondition
-    public static List<Condition> geneEruptSearchCondition(EruptModel
-                                                                   eruptModel, List<Condition> searchCondition) {
+    public static List<Condition> geneEruptSearchCondition(EruptModel eruptModel, List<Condition> searchCondition) {
         List<Condition> legalConditions = new ArrayList<>();
         if (null != searchCondition) {
             for (Condition condition : searchCondition) {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(condition.getKey());
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
-                    if (AnnotationUtil.getEditTypeMapping(edit.type()).search()) {
+                    if (AnnotationUtil.getEditTypeMapping(edit.type()).search().value()) {
                         if (edit.search().value() && null != condition.getValue()) {
+                            if (condition.getValue() instanceof Collection) {
+                                Collection<?> collection = (Collection<?>) condition.getValue();
+                                if (collection.size() == 0) {
+                                    continue;
+                                }
+                            }
                             legalConditions.add(condition);
                         }
                     }
@@ -206,11 +212,6 @@ public class EruptUtil {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             Edit edit = field.getEruptField().edit();
             JsonElement value = jsonObject.get(field.getFieldName());
-//            if (field.getEruptField().edit().readOnly()) {
-//                if (null != value) {
-//                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "只读");
-//                }
-//            }
             if (field.getEruptField().edit().notNull()) {
                 if (null == value) {
                     return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");
@@ -287,20 +288,13 @@ public class EruptUtil {
         return TypeUtil.typeStrConvertObject(id, primaryField.getType());
     }
 
-    public static Object findEruptObjectFieldId(EruptModel eruptModel, String field, Object val) {
-        String fr = eruptModel.getEruptFieldMap().get(field).getFieldReturnName();
-        EruptModel em = EruptCoreService.getErupt(fr);
-        return toEruptId(em, val.toString());
-    }
-
-
     /**
      * 获取附件上传代理器
      *
      * @return AttachmentProxy
      */
     public static AttachmentProxy findAttachmentProxy() {
-        EruptAttachmentUpload eruptAttachmentUpload = EruptApplication.primarySource.getAnnotation(EruptAttachmentUpload.class);
+        EruptAttachmentUpload eruptAttachmentUpload = EruptApplication.getPrimarySource().getAnnotation(EruptAttachmentUpload.class);
         if (null != eruptAttachmentUpload) {
             return EruptSpringUtil.getBean(eruptAttachmentUpload.value());
         }

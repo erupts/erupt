@@ -11,7 +11,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface EruptRouter {
 
-
     int authIndex();
 
     int skipAuthIndex() default 1;

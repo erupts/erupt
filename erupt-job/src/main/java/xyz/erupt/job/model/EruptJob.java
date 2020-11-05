@@ -13,9 +13,8 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.job.service.EruptJobService;
@@ -76,7 +75,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
     @Lob
     @EruptField(
             views = @View(title = "失败通知邮箱"),
-            edit = @Edit(title = "失败通知邮箱", desc = "使用此功能需配置发信邮箱信息", type = EditType.CHOICE, choiceType = @ChoiceType(type = ChoiceEnum.TAGS))
+            edit = @Edit(title = "失败通知邮箱", desc = "使用此功能需配置发信邮箱信息", type = EditType.TAGS, tagsType = @TagsType)
     )
     private String notifyEmails;
 

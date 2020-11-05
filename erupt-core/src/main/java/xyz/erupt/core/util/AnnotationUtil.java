@@ -2,6 +2,7 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lombok.SneakyThrows;
 import org.json.JSONObject;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
@@ -57,15 +58,14 @@ public class AnnotationUtil {
         return new JSONObject(convertStr).toString();
     }
 
-    public static JsonObject annotationToJsonByReflect(Annotation annotation) {
-        try {
-            return annotationToJson(annotation);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
+    //创建ScriptEngine成本太高，所以设置为全局变量。
     private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("js");
+
+    @SneakyThrows
+    public static JsonObject annotationToJsonByReflect(Annotation annotation) {
+        return annotationToJson(annotation);
+    }
 
     private static final String VALUE_VAR = "value";
 
@@ -80,13 +80,6 @@ public class AnnotationUtil {
             if (null != tran && tran.value()) {
                 continue;
             }
-//            SerializeBy serializeBy = method.getAnnotation(SerializeBy.class);
-//            if (null != serializeBy) {
-//                String type = annotation.getClass().getMethod(serializeBy.method()).invoke(annotation).toString();
-//                if (!serializeBy.value().equals(type)) {
-//                    continue;
-//                }
-//            }
             String methodName = method.getName();
             EruptProperty eruptProperty = method.getAnnotation(EruptProperty.class);
             if (null != eruptProperty && !AnnotationConst.EMPTY_STR.equals(eruptProperty.alias())) {
@@ -96,8 +89,7 @@ public class AnnotationUtil {
             Object result = method.invoke(annotation);
             Match match = method.getAnnotation(Match.class);
             if (null != match) {
-                //创建ScriptEngine成本太高，所以设置为全局变量，同时保证线程安全
-                synchronized (engine) {
+                synchronized (engine) { //保证ScriptEngine线程安全
                     engine.put(VALUE_VAR, result);
                     engine.put(ITEM_VAR, annotation);
                     if (!(Boolean) engine.eval(String.format("!!(%s)", match.value()))) {
@@ -131,7 +123,7 @@ public class AnnotationUtil {
                         } else if (JavaType.BOOLEAN.equals(returnType)) {
                             jsonArray.add((Boolean) res);
                         } else if (JavaType.CLASS.equals(returnType)) {
-                            jsonArray.add(((Class) res).getSimpleName());
+                            jsonArray.add(((Class<?>) res).getSimpleName());
                         } else if (res.getClass().isEnum()) {
                             jsonArray.add(res.toString());
                         } else {
@@ -166,7 +158,7 @@ public class AnnotationUtil {
                 } else if (method.getReturnType().isAnnotation()) {
                     jsonObject.add(methodName, annotationToJson((Annotation) result));
                 } else if (JavaType.CLASS.equals(returnType)) {
-                    jsonObject.addProperty(methodName, ((Class) result).getSimpleName());
+                    jsonObject.addProperty(methodName, ((Class<?>) result).getSimpleName());
                 }
             }
         }

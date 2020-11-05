@@ -17,11 +17,11 @@ import java.lang.annotation.*;
 @Documented
 public @interface EruptField {
 
-    //表列信息
+    //表格列信息
     View[] views() default {};
 
-    //@Match("value.title()")
     //编辑信息
+    //@Match("value.title()")
     Edit edit() default @Edit(title = AnnotationConst.EMPTY_STR);
 
     @Transient

@@ -9,9 +9,13 @@ import xyz.erupt.core.constant.EruptConst;
  */
 public class EruptApplication {
 
-    public static Class<?> primarySource;
+    private static Class<?> primarySource;
 
     private static String[] scanPackage = {};
+
+    public static Class<?> getPrimarySource() {
+        return primarySource;
+    }
 
     public static String[] getScanPackage() {
         return scanPackage;

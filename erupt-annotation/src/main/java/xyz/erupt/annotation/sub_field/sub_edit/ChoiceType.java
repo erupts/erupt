@@ -10,9 +10,7 @@ import java.beans.Transient;
  */
 public @interface ChoiceType {
 
-    String joinSeparator() default "|";
-
-    ChoiceEnum type() default ChoiceEnum.SELECT_SINGLE;
+    Type type() default Type.SELECT;
 
     @Transient
     VL[] vl() default {};
@@ -22,4 +20,9 @@ public @interface ChoiceType {
 
     @Transient
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
+
+    enum Type {
+        SELECT,
+        RADIO,
+    }
 }

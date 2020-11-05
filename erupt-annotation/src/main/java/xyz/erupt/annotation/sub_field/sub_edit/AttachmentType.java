@@ -24,8 +24,6 @@ public @interface AttachmentType {
     @Transient
     ImageType imageType() default @ImageType;
 
-    SaveMode saveMode() default SaveMode.SINGLE_COLUMN;
-
     //当maxLimit大于1且SaveMode为SINGLE_COLUMN使用
     String fileSeparator() default "|";
 

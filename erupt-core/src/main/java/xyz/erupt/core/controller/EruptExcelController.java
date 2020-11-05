@@ -51,9 +51,6 @@ public class EruptExcelController {
     private EruptExcelService dataFileService;
 
     @Autowired
-    private EruptDataController eruptDataController;
-
-    @Autowired
     private EruptModifyController eruptModifyController;
 
     @Autowired

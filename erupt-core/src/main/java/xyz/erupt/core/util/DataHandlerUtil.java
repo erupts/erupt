@@ -3,7 +3,6 @@ package xyz.erupt.core.util;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceEnum;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -69,14 +68,12 @@ public class DataHandlerUtil {
                         }
                         break;
                     case CHOICE:
-                        if (edit.choiceType().type() == ChoiceEnum.SELECT_SINGLE || edit.choiceType().type() == ChoiceEnum.RADIO) {
-                            if (!choiceItems.containsKey(fieldModel.getFieldName())) {
-                                choiceItems.put(fieldModel.getFieldName(), EruptUtil.getChoiceMap(edit.choiceType()));
-                            }
-                            map.put(entry.getKey(),
-                                    choiceItems.get(fieldModel.getFieldName())
-                                            .get(entry.getValue().toString()));
+                        if (!choiceItems.containsKey(fieldModel.getFieldName())) {
+                            choiceItems.put(fieldModel.getFieldName(), EruptUtil.getChoiceMap(edit.choiceType()));
                         }
+                        map.put(entry.getKey(),
+                                choiceItems.get(fieldModel.getFieldName())
+                                        .get(entry.getValue().toString()));
                         break;
                     case BOOLEAN:
                         map.put(entry.getKey(), (Boolean) entry.getValue() ? edit.boolType().trueText() : edit.boolType().falseText());
@@ -92,10 +89,7 @@ public class DataHandlerUtil {
                                 switch (vef.getEruptField().edit().type()) {
                                     case CHOICE:
                                         Map<String, String> cmp = EruptUtil.getChoiceMap(vef.getEruptField().edit().choiceType());
-                                        if (vef.getEruptField().edit().choiceType().type() == ChoiceEnum.SELECT_SINGLE
-                                                || vef.getEruptField().edit().choiceType().type() == ChoiceEnum.RADIO) {
-                                            map.put(entry.getKey(), cmp.get(entry.getValue().toString()));
-                                        }
+                                        map.put(entry.getKey(), cmp.get(entry.getValue().toString()));
                                         break;
                                     case BOOLEAN:
                                         map.put(entry.getKey(), (Boolean) entry.getValue() ?

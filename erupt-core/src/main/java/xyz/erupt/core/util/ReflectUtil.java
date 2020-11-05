@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 public class ReflectUtil {
 
     //递归查找类字段
-    public static Field findClassField(Class clazz, String fieldName) {
+    public static Field findClassField(Class<?> clazz, String fieldName) {
         Field field = null;
         while (clazz != null) {
             try {
@@ -43,8 +43,8 @@ public class ReflectUtil {
         return obj;
     }
 
-    public static void findClassAllFields(Class clazz, Consumer<Field> fieldConsumer) {
-        Class tempClass = clazz;
+    public static void findClassAllFields(Class<?> clazz, Consumer<Field> fieldConsumer) {
+        Class<?> tempClass = clazz;
         while (null != tempClass) {
             for (Field field : tempClass.getDeclaredFields()) {
                 int mod = field.getModifiers();
@@ -63,8 +63,8 @@ public class ReflectUtil {
         Type gType = field.getGenericType();
         if (gType instanceof ParameterizedType) {
             Type[] typeArguments = ((ParameterizedType) gType).getActualTypeArguments();
-            for (int i = 0; i < typeArguments.length; i++) {
-                String[] gArray = typeArguments[i].getTypeName().split("\\.");
+            for (Type typeArgument : typeArguments) {
+                String[] gArray = typeArgument.getTypeName().split("\\.");
                 names.add(gArray[gArray.length - 1]);
             }
         }
