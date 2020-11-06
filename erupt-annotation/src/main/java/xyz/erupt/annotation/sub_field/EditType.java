@@ -10,17 +10,17 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 public enum EditType {
     @EditTypeMapping(desc = "框架自动检测类型", allowType = {JavaTypeEnum.any})
     AUTO,
-    @EditTypeMapping(mapping = InputType.class, desc = "输入框 vague the like", search = @Search(vague = true), allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
+    @EditTypeMapping(mapping = InputType.class, desc = "输入框", search = @Search(vague = true), allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     INPUT,
-    @EditTypeMapping(mapping = NumberType.class, desc = "数字输入 vague the range", search = @Search(vague = true), allowType = {JavaTypeEnum.number})
+    @EditTypeMapping(mapping = NumberType.class, desc = "数字输入", search = @Search(vague = true), allowType = {JavaTypeEnum.number})
     NUMBER,
-    @EditTypeMapping(mapping = SliderType.class, desc = "数字滑块 vague the range", search = @Search(vague = true), allowType = {JavaTypeEnum.number})
+    @EditTypeMapping(mapping = SliderType.class, desc = "数字滑块", search = @Search(vague = true), allowType = {JavaTypeEnum.number})
     SLIDER,
-    @EditTypeMapping(mapping = DateType.class, desc = "日期 vague the range", search = @Search(vague = true), allowType = {JavaTypeEnum.String, JavaTypeEnum.date})
+    @EditTypeMapping(mapping = DateType.class, desc = "日期", search = @Search(vague = true), allowType = {JavaTypeEnum.String, JavaTypeEnum.date})
     DATE,
     @EditTypeMapping(mapping = BoolType.class, desc = "布尔", allowType = {JavaTypeEnum.bool})
     BOOLEAN,
-    @EditTypeMapping(mapping = ChoiceType.class, desc = "选择框 vague the in", search = @Search(vague = true), allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
+    @EditTypeMapping(mapping = ChoiceType.class, desc = "选择框", search = @Search(vague = true), allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     CHOICE,
     @EditTypeMapping(mapping = TagsType.class, desc = "标签选择器", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     TAGS,

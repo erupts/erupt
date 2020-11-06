@@ -81,9 +81,6 @@ public @interface Edit {
     @Match("item.type()=='CODE_EDITOR'")
     CodeEditorType codeEditType() default @CodeEditorType(language = "sql");
 
-    @Match("item.type()=='MAP'")
-    MapType mapType() default @MapType;
-
     @Transient
     Tpl tplType() default @Tpl(path = "");
 
