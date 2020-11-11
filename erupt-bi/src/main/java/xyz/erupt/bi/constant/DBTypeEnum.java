@@ -7,8 +7,8 @@ public enum DBTypeEnum {
     MySQL(DBTypeEnum.GENERAL_LIMIT),
     PostgreSQL(DBTypeEnum.GENERAL_LIMIT),
     Oracle(DBTypeEnum.ORACLE_LIMIT),
-    SQLServer(DBTypeEnum.SQL_SERVER_LIMIT),
-    Other(DBTypeEnum.GENERAL_LIMIT);
+    SQLServer2012(DBTypeEnum.SQL_SERVER_2012_LIMIT),
+    Other(null);
 
     public static final String $SQL = "@sql";
     public static final String $SIZE = "@size";
@@ -23,7 +23,7 @@ public enum DBTypeEnum {
             "WHERE RN > " + $SKIP;
 
     //    支持2012及以上版本
-    private static final String SQL_SERVER_LIMIT = "SELECT * from (" + $SQL + ") t\n" +
+    private static final String SQL_SERVER_2012_LIMIT = "SELECT * from (" + $SQL + ") t\n" +
             "OFFSET " + $SKIP + " ROWS\n" +
             "FETCH NEXT " + $SIZE + " ROWS ONLY";
 

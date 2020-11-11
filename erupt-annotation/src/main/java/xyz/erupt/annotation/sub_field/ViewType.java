@@ -21,7 +21,7 @@ public enum ViewType {
     QR_CODE,
     //链接
     LINK,
-    //对话框方式打开连接
+    //对话框方式打开链接
     LINK_DIALOG,
     //下载
     DOWNLOAD,
