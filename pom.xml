@@ -40,7 +40,6 @@
         <module>erupt-ops</module>
         <module>erupt-tool</module>
         <module>erupt-mongodb</module>
-        <module>erupt-blog</module>
     </modules>
 
     <dependencyManagement>

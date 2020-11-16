@@ -11,6 +11,7 @@ public enum ViewType {
     TEXT,
     //图片
     IMAGE,
+    IMAGE_BASE64,
     //flash文件
     SWF,
     //HTML
