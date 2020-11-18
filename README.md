@@ -71,3 +71,7 @@ https://www.yuque.com/yuepeng/erupt
 
 ## 作者 
 YuePeng / erupts@126.com
+
+## 开源推荐
+`zeta-api` : 仅需配置XML快速创建api接口与文档，安全且高效，快速开发必备！ https://github.com/erupts/zeta-api
+
