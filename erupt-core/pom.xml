@@ -14,7 +14,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.2.4</version>
+        <version>1.3.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -72,12 +72,6 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>3.17</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 

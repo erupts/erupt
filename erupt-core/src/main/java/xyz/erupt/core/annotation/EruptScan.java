@@ -1,5 +1,8 @@
 package xyz.erupt.core.annotation;
 
+import org.springframework.context.annotation.Import;
+import xyz.erupt.core.service.EruptApplication;
+
 import java.lang.annotation.*;
 
 /**
@@ -9,6 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 @Documented
+@Import({EruptApplication.class})
 public @interface EruptScan {
     String[] value() default {};
 }

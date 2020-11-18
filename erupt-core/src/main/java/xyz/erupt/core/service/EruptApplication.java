@@ -1,5 +1,9 @@
 package xyz.erupt.core.service;
 
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
+import org.springframework.core.type.AnnotationMetadata;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.EruptConst;
 
@@ -7,11 +11,11 @@ import xyz.erupt.core.constant.EruptConst;
  * @author liyuepeng
  * @date 2020-09-09
  */
-public class EruptApplication {
+public class EruptApplication implements ImportBeanDefinitionRegistrar {
 
     private static Class<?> primarySource;
 
-    private static String[] scanPackage = {};
+    private static String[] scanPackage;
 
     public static Class<?> getPrimarySource() {
         return primarySource;
@@ -21,16 +25,22 @@ public class EruptApplication {
         return scanPackage;
     }
 
-    public static void run(Class<?> primarySource, String... args) {
-        EruptApplication.primarySource = primarySource;
+    @SneakyThrows
+    @Override
+    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+        primarySource = Class.forName(importingClassMetadata.getClassName());
         EruptScan eruptScan = primarySource.getAnnotation(EruptScan.class);
-        if (null == eruptScan || eruptScan.value().length == 0) {
-            scanPackage = new String[2];
-            scanPackage[0] = primarySource.getPackage().getName();
-            scanPackage[1] = EruptConst.BASE_PACKAGE;
+        if (eruptScan.value().length == 0) {
+            if (primarySource.getPackage().getName().startsWith(EruptConst.BASE_PACKAGE)) {
+                scanPackage = new String[1];
+                scanPackage[0] = EruptConst.BASE_PACKAGE;
+            } else {
+                scanPackage = new String[2];
+                scanPackage[0] = primarySource.getPackage().getName();
+                scanPackage[1] = EruptConst.BASE_PACKAGE;
+            }
         } else {
             scanPackage = eruptScan.value();
         }
     }
-
 }
