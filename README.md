@@ -12,9 +12,8 @@
 
 ## 项目介绍
 通过注解快速构建Admin管理后台  
-零前端代码  
-后端controller、service、dao、mapper都可以不写  
-仅需创建model与对应注解即可
+零前端代码、无需编写后端controller、service、dao、mapper ！    
+仅需创建model与对应注解即可！！
 
 ## 代码示例
 ``` java
