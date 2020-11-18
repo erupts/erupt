@@ -3,7 +3,6 @@ package xyz.erupt.core.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
-import org.json.JSONObject;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
@@ -39,27 +38,27 @@ public class AnnotationUtil {
 
     private static final String EMPTY_ARRAY = "[]";
 
-    @Deprecated
-    public static String annotationToJsonByReplace(String annotationStr) {
-        String convertStr = annotationStr
-                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.sub_attachment\\.\\w+", "")
-                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
-                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_view\\.\\w+", "")
-                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
-                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
-                .replaceAll("@xyz\\.erupt\\.annotation\\.\\w+", "")
-                //屏蔽类信息
-                .replaceAll("class [a-zA-Z0-9.]+", "")
-                .replace("=,", "='',")
-                .replace("=)", "='')")
-                .replace("=", ":")
-                .replace("(", "{")
-                .replace(")", "}");
-        return new JSONObject(convertStr).toString();
-    }
+//    @Deprecated
+//    public static String annotationToJsonByReplace(String annotationStr) {
+//        String convertStr = annotationStr
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.sub_attachment\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_view\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.\\w+", "")
+//                //屏蔽类信息
+//                .replaceAll("class [a-zA-Z0-9.]+", "")
+//                .replace("=,", "='',")
+//                .replace("=)", "='')")
+//                .replace("=", ":")
+//                .replace("(", "{")
+//                .replace(")", "}");
+//        return new JSONObject(convertStr).toString();
+//    }
 
 
-    //创建ScriptEngine成本太高，所以设置为全局变量。
+    //创建ScriptEngine成本过，所以定义为全局变量。
     private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("js");
 
     @SneakyThrows
