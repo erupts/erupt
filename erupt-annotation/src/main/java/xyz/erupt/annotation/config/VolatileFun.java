@@ -1,7 +1,5 @@
 package xyz.erupt.annotation.config;
 
-import com.google.gson.JsonElement;
-
 import java.lang.annotation.Annotation;
 
 /**
@@ -15,5 +13,5 @@ public interface VolatileFun<A extends Annotation, P extends Annotation> {
      * @param p 父级注解
      * @return json对象
      */
-    JsonElement exec(A a, P p);
+    Void exec(A a, P p);
 }
