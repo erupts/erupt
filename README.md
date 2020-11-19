@@ -4,7 +4,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 
-官方网站：https://www.erupt.xyz
+网站首页：https://www.erupt.xyz
 
 国内仓库：https://gitee.com/erupt/erupt
 
@@ -59,14 +59,14 @@ Java 8、Spring Boot、JPA、Hibernate、quartz、Gson、lombok ...
 Angular、NG-ZORRO、NG-ALAIN、G2Plot、RxJS、TypeScript ...
 
 ## 演示Demo 
-体验地址：https://www.erupt.xyz/demo  
+演示地址：https://www.erupt.xyz/demo  
 账号密码：`guest / guest`
 
 ## 使用文档
 https://www.yuque.com/yuepeng/erupt
 
 ## 软件著作权
-本框架已获取软件著作权，受国家版权局知识产权以及国家计算机软件著作权保护！
+本框架已获得软件著作权，受国家版权局知识产权以及国家计算机软件著作权保护！
 
 ## 作者 
 YuePeng / erupts@126.com
