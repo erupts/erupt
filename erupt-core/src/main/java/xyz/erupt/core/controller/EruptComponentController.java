@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptCoreService;
@@ -19,7 +19,7 @@ import java.util.List;
  * @date 2020-08-14
  */
 @RestController
-@RequestMapping(RestPath.ERUPT_COMP)
+@RequestMapping(EruptRestPath.ERUPT_COMP)
 public class EruptComponentController {
 
     @RequestMapping("/auto-complete/{erupt}/{field}/{val}")

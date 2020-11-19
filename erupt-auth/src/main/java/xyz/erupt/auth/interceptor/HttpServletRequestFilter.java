@@ -3,7 +3,7 @@ package xyz.erupt.auth.interceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.auth.config.EruptAuthConfig;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -15,7 +15,7 @@ import java.io.IOException;
  * @date 2020-09-08
  */
 @Component
-@WebFilter(urlPatterns = RestPath.ERUPT_API)
+@WebFilter(urlPatterns = EruptRestPath.ERUPT_API)
 public class HttpServletRequestFilter implements Filter {
 
     @Autowired
@@ -29,7 +29,7 @@ public class HttpServletRequestFilter implements Filter {
         if (eruptAuthConfig.isRecordOperateLog()) {
             if (servletRequest instanceof HttpServletRequest) {
                 HttpServletRequest request = (HttpServletRequest) servletRequest;
-                if (request.getServletPath().contains(RestPath.ERUPT_API)) {
+                if (request.getServletPath().contains(EruptRestPath.ERUPT_API)) {
                     if (null != request.getContentType() && CONTENT_TYPE_JSON.equals(request.getContentType())) {
                         RequestWrapper requestWrapper = new RequestWrapper(request);
                         servletRequest.setAttribute(LoginInterceptor.REQ_BODY, requestWrapper.getBody());

@@ -20,7 +20,7 @@ import xyz.erupt.bi.view.BiModel;
 import xyz.erupt.bi.view.Reference;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * @date 2019-08-26.
  */
 @RestController
-@RequestMapping(RestPath.ERUPT_API + "/bi")
+@RequestMapping(EruptRestPath.ERUPT_API + "/bi")
 public class EruptBiController {
 
     @Autowired

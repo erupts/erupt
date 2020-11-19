@@ -19,13 +19,17 @@ import java.util.List;
 @ConfigurationProperties(prefix = "erupt")
 public class EruptProp {
 
-    //文件上传根路径
+    //附件存储根路径
     private String uploadPath = "/opt/erupt-attachment";
 
     //是否使用redis管理session
     private boolean redisSession = false;
 
+    //是否开启csrf校验
     private boolean csrfInspect = true;
+
+    //是否保留上传文件原始名称
+    private boolean keepUploadFileName = false;
 
     private List<DB> dbs;
 

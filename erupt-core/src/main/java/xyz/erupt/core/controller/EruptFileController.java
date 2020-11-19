@@ -3,6 +3,7 @@ package xyz.erupt.core.controller;
 import com.google.gson.Gson;
 import lombok.Cleanup;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
@@ -41,7 +42,7 @@ import java.util.*;
  * @date 10/15/18.
  */
 @RestController
-@RequestMapping(RestPath.ERUPT_FILE)
+@RequestMapping(EruptRestPath.ERUPT_FILE)
 public class EruptFileController {
 
     @Autowired
@@ -64,14 +65,21 @@ public class EruptFileController {
                 throw new EruptNoLegalPowerException();
             }
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
-            String path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
-                    RandomUtils.nextInt(100, 9999) + "-" +
-                    file.getOriginalFilename()
-                            .replace("&", "")
-                            .replace("?", "")
-                            .replace("#", "")
-                            .replace(" ", "")
-                            .replace(edit.attachmentType().fileSeparator(), "");
+            String path;
+            if (eruptProp.isKeepUploadFileName()) {
+                path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
+                        RandomUtils.nextInt(100, 9999) + "-" +
+                        file.getOriginalFilename()
+                                .replace("&", "")
+                                .replace("?", "")
+                                .replace("#", "")
+                                .replace(" ", "")
+                                .replace(edit.attachmentType().fileSeparator(), "");
+            } else {
+                String[] fileNameSplit = file.getOriginalFilename().split("\\.");
+                path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE)
+                        + File.separator + RandomStringUtils.randomAlphabetic(12) + "." + fileNameSplit[fileNameSplit.length - 1];
+            }
             switch (edit.type()) {
                 case ATTACHMENT:
                     AttachmentType attachmentType = edit.attachmentType();
@@ -174,7 +182,7 @@ public class EruptFileController {
             if (null != attachmentProxy) {
                 map.put("url", attachmentProxy.fileDomain() + eruptApiModel.getData());
             } else {
-                map.put("url", RestPath.ERUPT_ATTACHMENT + eruptApiModel.getData());
+                map.put("url", EruptRestPath.ERUPT_ATTACHMENT + eruptApiModel.getData());
             }
             map.put("uploaded", true);
         } else {
@@ -212,7 +220,7 @@ public class EruptFileController {
 
     @RequestMapping(value = DOWNLOAD_PATH + "/**", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public void downloadAttachment(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String path = request.getServletPath().replace(RestPath.ERUPT_FILE + DOWNLOAD_PATH, "");
+        String path = request.getServletPath().replace(EruptRestPath.ERUPT_FILE + DOWNLOAD_PATH, "");
         if (!path.startsWith(FS_SEP)) {
             path = FS_SEP + path;
         }

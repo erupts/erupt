@@ -7,7 +7,7 @@ import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptService;
@@ -26,7 +26,7 @@ import java.lang.reflect.Field;
  * @date 2020-03-06
  */
 @RestController
-@RequestMapping(RestPath.ERUPT_DATA)
+@RequestMapping(EruptRestPath.ERUPT_DATA)
 public class EruptDrillController {
 
     @Autowired

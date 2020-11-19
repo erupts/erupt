@@ -13,7 +13,7 @@ public @interface EruptRouter {
 
     int authIndex();
 
-    int skipAuthIndex() default 1;
+    int skipAuthIndex() default 2;
 
     VerifyType verifyType();
 

@@ -15,7 +15,7 @@ import xyz.erupt.auth.service.EruptSessionService;
 import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.auth.vo.EruptMenuVo;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.EruptApiModel;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ import java.util.List;
  * @date 2018-12-13.
  */
 @RestController
-@RequestMapping(RestPath.ERUPT_API)
+@RequestMapping(EruptRestPath.ERUPT_API)
 public class EruptUserController {
 
     @Autowired

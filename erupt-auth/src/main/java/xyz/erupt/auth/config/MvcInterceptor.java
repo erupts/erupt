@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.auth.interceptor.LoginInterceptor;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 
 import javax.annotation.Resource;
 
@@ -21,7 +21,7 @@ public class MvcInterceptor implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor).addPathPatterns(RestPath.ERUPT_API + "/**");
+        registry.addInterceptor(loginInterceptor).addPathPatterns(EruptRestPath.ERUPT_API + "/**");
     }
 
 //    @Override

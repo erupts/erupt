@@ -4,7 +4,7 @@ package xyz.erupt.core.controller;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptUtil;
@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
  * @date 2018-09-28.
  */
 @RestController
-@RequestMapping(RestPath.ERUPT_BUILD)
+@RequestMapping(EruptRestPath.ERUPT_BUILD)
 public class EruptBuildController {
 
     @GetMapping("/{erupt}")

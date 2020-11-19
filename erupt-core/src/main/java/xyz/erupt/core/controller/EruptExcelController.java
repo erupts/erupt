@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptCoreService;
@@ -40,7 +40,7 @@ import java.util.List;
  * @date 10/15/18.
  */
 @RestController
-@RequestMapping(RestPath.ERUPT_EXCEL)
+@RequestMapping(EruptRestPath.ERUPT_EXCEL)
 public class EruptExcelController {
 
 

@@ -3,7 +3,7 @@ package xyz.erupt.core.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import java.util.Properties;
  * @date 2020-04-22
  */
 @RestController
-@RequestMapping(RestPath.ERUPT_API)
+@RequestMapping(EruptRestPath.ERUPT_API)
 public class EruptApi {
 
     private static Properties props;

@@ -117,7 +117,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
                 String path = request.getServletPath();
-                String authStr = path.split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex() + 1];
+                String authStr = path.split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
                 //eruptParent logic
                 $ep:
                 if (StringUtils.isNotBlank(parentEruptName)) {

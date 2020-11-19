@@ -4,7 +4,7 @@ package xyz.erupt.core.constant;
  * @author liyuepeng
  * @date 10/15/18.
  */
-public class RestPath {
+public class EruptRestPath {
 
     public static final String ERUPT_API = "/erupt-api";
 
@@ -13,6 +13,9 @@ public class RestPath {
 
     //数据
     public static final String ERUPT_DATA = ERUPT_API + "/data";
+
+    //数据增删改操作
+    public static final String ERUPT_DATA_MODIFY = ERUPT_DATA + "/modify";
 
     //组件
     public static final String ERUPT_COMP = ERUPT_API + "/comp";

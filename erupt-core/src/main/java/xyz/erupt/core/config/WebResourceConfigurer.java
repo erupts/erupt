@@ -3,7 +3,7 @@ package xyz.erupt.core.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import xyz.erupt.core.constant.RestPath;
+import xyz.erupt.core.constant.EruptRestPath;
 
 import javax.annotation.Resource;
 
@@ -23,7 +23,7 @@ public class WebResourceConfigurer implements WebMvcConfigurer {
         if (!eruptProp.getUploadPath().endsWith("/")) {
             uploadPath += "/";
         }
-        registry.addResourceHandler(RestPath.ERUPT_ATTACHMENT + "/**")
+        registry.addResourceHandler(EruptRestPath.ERUPT_ATTACHMENT + "/**")
                 .addResourceLocations("file:" + uploadPath);
     }
 

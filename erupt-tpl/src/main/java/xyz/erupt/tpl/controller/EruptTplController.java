@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static xyz.erupt.core.constant.RestPath.ERUPT_API;
+import static xyz.erupt.core.constant.EruptRestPath.ERUPT_API;
 
 /**
  * Erupt 页面结构构建信息

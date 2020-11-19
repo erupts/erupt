@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.auth.base.LoginModel;
 import xyz.erupt.auth.constant.SessionKey;
@@ -15,10 +14,10 @@ import xyz.erupt.auth.model.log.EruptLoginLog;
 import xyz.erupt.auth.util.IpUtil;
 import xyz.erupt.auth.util.MD5Utils;
 import xyz.erupt.core.dao.EruptDao;
-import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -38,13 +37,13 @@ public class EruptUserService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
+    @Resource
     private EruptSessionService sessionService;
 
-    @Autowired
+    @Resource
     private HttpServletRequest request;
 
-    @Autowired
+    @Resource
     private EruptDao eruptDao;
 
     @Transactional
@@ -160,15 +159,12 @@ public class EruptUserService {
 
     public EruptUser getCurrentEruptUser() {
         entityManager.clear();
-        return entityManager.find(EruptUser.class, getCurrentUid());
+        Long uid = this.getCurrentUid();
+        return null == uid ? null : entityManager.find(EruptUser.class, uid);
     }
 
     public boolean verifyToken(String token) {
-        if (null == sessionService.get(SessionKey.USER_TOKEN + token)) {
-            return false;
-        } else {
-            return true;
-        }
+        return null != sessionService.get(SessionKey.USER_TOKEN + token);
     }
 
     public Long getCurrentUid() {
@@ -177,11 +173,7 @@ public class EruptUserService {
             token = request.getParameter(LoginInterceptor.URL_ERUPT_PARAM_TOKEN);
         }
         Object uid = sessionService.get(SessionKey.USER_TOKEN + token);
-        if (null != uid) {
-            return Long.valueOf(uid.toString());
-        } else {
-            throw new EruptWebApiRuntimeException("登录过期请重新登录");
-        }
+        return null == uid ? null : Long.valueOf(uid.toString());
     }
 
     private EruptUser findEruptUserByAccount(String account) {
@@ -214,9 +206,7 @@ public class EruptUserService {
             return true;
         }
         //校验菜单权限
-        {
-            return verifyMenuAuth(token, eruptModel.getEruptName());
-        }
+        return verifyMenuAuth(token, eruptModel.getEruptName());
     }
 
 }
