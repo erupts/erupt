@@ -68,8 +68,8 @@ public class Bi extends HyperModel {
 
 
     @EruptField(
-            views = @View(title = "是否可导出"),
-            edit = @Edit(title = "是否可导出", search = @Search)
+            views = @View(title = "导出"),
+            edit = @Edit(title = "导出", search = @Search)
     )
     private Boolean export;
 

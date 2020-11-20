@@ -60,7 +60,7 @@ public class EruptBuildController {
             }
         }
         for (RowOperation operation : eruptBuildModel.getEruptModel().getErupt().rowOperation()) {
-            if (operation.eruptClass() != void.class) {
+            if (operation.eruptClass() != void.class && operation.type() == RowOperation.Type.ERUPT) {
                 if (eruptBuildModel.getOperationErupts() == null) {
                     eruptBuildModel.setOperationErupts(new LinkedHashMap<>());
                 }

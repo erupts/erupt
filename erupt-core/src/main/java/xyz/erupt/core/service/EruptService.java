@@ -17,7 +17,6 @@ import xyz.erupt.core.view.TableQueryVo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author liyuepeng
@@ -74,9 +73,7 @@ public class EruptService {
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
                     .queryList(eruptModel, new Page(tableQueryVo.getPageIndex(), pageSize, tableQueryVo.getSort()),
                             Query.builder().orderBy(tableQueryVo.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
-            for (Map<String, Object> map : page.getList()) {
-                DataHandlerUtil.convertDataToEruptView(eruptModel, map);
-            }
+            DataHandlerUtil.convertDataToEruptView(eruptModel, page.getList());
             EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
             return page;
         } else {

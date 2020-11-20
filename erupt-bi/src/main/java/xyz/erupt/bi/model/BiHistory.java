@@ -33,6 +33,17 @@ import java.util.Date;
 @Setter
 public class BiHistory extends BaseModel {
 
+    @EruptField(
+            views = @View(title = "操作人", column = "name")
+    )
+    @ManyToOne
+    private EruptUser operateUser;
+
+    @EruptField(
+            views = @View(title = "操作时间")
+    )
+    private Date operateTime;
+
     @Lob
     @EruptField(
             views = @View(title = "SQL语句"),
@@ -40,16 +51,6 @@ public class BiHistory extends BaseModel {
     )
     private String sqlStatement;
 
-    @EruptField(
-            views = @View(title = "操作时间")
-    )
-    private Date operateTime;
-
-    @EruptField(
-            views = @View(title = "操作人", column = "name")
-    )
-    @ManyToOne
-    private EruptUser operateUser;
 
     @ManyToOne
     private Bi bi;

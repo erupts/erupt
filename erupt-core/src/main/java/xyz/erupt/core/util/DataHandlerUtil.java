@@ -49,10 +49,11 @@ public class DataHandlerUtil {
         }
     }
 
-    public static void convertDataToEruptView(EruptModel eruptModel, Map<String, Object> map) {
+
+    public static void convertDataToEruptView(EruptModel eruptModel, Collection<Map<String, Object>> list) {
         Map<String, Map<String, String>> choiceItems = new HashMap<>();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (null != entry.getValue()) {
+        for (Map<String, Object> map : list) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();
                 if (entry.getKey().contains("_")) {
                     key = entry.getKey().split("_")[0];
@@ -60,50 +61,51 @@ public class DataHandlerUtil {
                 EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
                 Edit edit = fieldModel.getEruptField().edit();
                 switch (edit.type()) {
-                    case DATE:
-                        if (edit.dateType().type() == DateType.Type.DATE) {
-                            if (null != entry.getValue() && StringUtils.isNotBlank(entry.getValue().toString())) {
-                                map.put(entry.getKey(), entry.getValue().toString().substring(0, 10));
-                            }
-                        }
-                        break;
-                    case CHOICE:
-                        if (!choiceItems.containsKey(fieldModel.getFieldName())) {
-                            choiceItems.put(fieldModel.getFieldName(), EruptUtil.getChoiceMap(edit.choiceType()));
-                        }
-                        map.put(entry.getKey(),
-                                choiceItems.get(fieldModel.getFieldName())
-                                        .get(entry.getValue().toString()));
-                        break;
-                    case BOOLEAN:
-                        map.put(entry.getKey(), (Boolean) entry.getValue() ? edit.boolType().trueText() : edit.boolType().falseText());
-                        break;
                     case REFERENCE_TREE:
                     case REFERENCE_TABLE:
                     case COMBINE:
+                        String[] $keys = entry.getKey().split("_");
                         for (View view : fieldModel.getEruptField().views()) {
-                            String[] $keys = entry.getKey().split("_");
                             if (view.column().equals($keys[$keys.length - 1])) {
                                 EruptFieldModel vef = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).
                                         getEruptFieldMap().get(view.column());
-                                switch (vef.getEruptField().edit().type()) {
-                                    case CHOICE:
-                                        Map<String, String> cmp = EruptUtil.getChoiceMap(vef.getEruptField().edit().choiceType());
-                                        map.put(entry.getKey(), cmp.get(entry.getValue().toString()));
-                                        break;
-                                    case BOOLEAN:
-                                        map.put(entry.getKey(), (Boolean) entry.getValue() ?
-                                                vef.getEruptField().edit().boolType().trueText() :
-                                                vef.getEruptField().edit().boolType().falseText());
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                map.put(entry.getKey(), convertColumnValue(vef, entry.getValue(), choiceItems));
                             }
                         }
+                        break;
+                    default:
+                        map.put(entry.getKey(), convertColumnValue(fieldModel, entry.getValue(), choiceItems));
                         break;
                 }
             }
         }
     }
+
+    private static Object convertColumnValue(EruptFieldModel fieldModel, Object value, Map<String, Map<String, String>> choiceItems) {
+        if (null == value) {
+            return null;
+        }
+        Edit edit = fieldModel.getEruptField().edit();
+        switch (edit.type()) {
+            case DATE:
+                if (edit.dateType().type() == DateType.Type.DATE) {
+                    if (StringUtils.isNotBlank(value.toString())) {
+                        return value.toString().substring(0, 10);
+                    }
+                }
+                break;
+            case CHOICE:
+                Map<String, String> cm = choiceItems.get(fieldModel.getFieldName());
+                if (null == cm) {
+                    cm = EruptUtil.getChoiceMap(edit.choiceType());
+                    choiceItems.put(fieldModel.getFieldName(), cm);
+                }
+                return cm.get(value.toString());
+            case BOOLEAN:
+                return (Boolean) value ? edit.boolType().trueText() : edit.boolType().falseText();
+        }
+        return value;
+    }
+
+
 }

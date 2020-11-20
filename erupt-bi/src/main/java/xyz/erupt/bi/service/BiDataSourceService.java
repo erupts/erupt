@@ -44,10 +44,8 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
                     jdbcTemplate = new NamedParameterJdbcTemplate(hikariDataSource);
                     templateMap.put(biDataSource.getCode(), jdbcTemplate);
                 }
-                return jdbcTemplate;
-            } else {
-                return jdbcTemplate;
             }
+            return jdbcTemplate;
         }
     }
 
@@ -84,11 +82,17 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
 
     @Override
     public void afterUpdate(BiDataSource biDataSource) {
-        templateMap.remove(biDataSource.getCode());
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = templateMap.remove(biDataSource.getCode());
+        if (null != namedParameterJdbcTemplate) {
+            HikariDataSource hikariDataSource = (HikariDataSource) namedParameterJdbcTemplate.getJdbcTemplate().getDataSource();
+            if (hikariDataSource != null && !hikariDataSource.isClosed()) {
+                hikariDataSource.close();
+            }
+        }
     }
 
     @Override
     public void afterDelete(BiDataSource biDataSource) {
-        templateMap.remove(biDataSource.getCode());
+        afterUpdate(biDataSource);
     }
 }
