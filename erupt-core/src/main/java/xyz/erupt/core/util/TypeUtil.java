@@ -31,10 +31,8 @@ public class TypeUtil {
             return Double.valueOf(obj.toString());
         } else if (boolean.class == targetType || Boolean.class == targetType) {
             return Boolean.valueOf(obj.toString());
-        } else if (String.class == targetType) {
-            return obj.toString();
         } else {
-            return targetType.cast(obj);
+            return obj.toString();
         }
     }
 

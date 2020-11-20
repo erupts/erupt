@@ -73,7 +73,9 @@ public class EruptService {
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
                     .queryList(eruptModel, new Page(tableQueryVo.getPageIndex(), pageSize, tableQueryVo.getSort()),
                             Query.builder().orderBy(tableQueryVo.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
-            DataHandlerUtil.convertDataToEruptView(eruptModel, page.getList());
+            if (null != page.getList()) {
+                DataHandlerUtil.convertDataToEruptView(eruptModel, page.getList());
+            }
             EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
             return page;
         } else {
