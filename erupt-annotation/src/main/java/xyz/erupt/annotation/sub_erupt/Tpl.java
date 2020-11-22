@@ -35,7 +35,7 @@ public @interface Tpl {
          * @param params 注解参数
          * @return 页面绑定数据
          */
-        Map<String, Object> tplAction(String[] params);
+        Map<String, Object> bindTplData(String[] params);
     }
 
 }

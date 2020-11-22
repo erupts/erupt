@@ -67,10 +67,10 @@ public class EruptTplService implements ApplicationRunner {
 
     @SneakyThrows
     public void tplToResponse(Tpl tpl, HttpServletResponse response, Object rows) {
-        response.setCharacterEncoding("utf-8");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         Map<String, Object> data = new HashMap<>();
         if (!tpl.tplHandler().isInterface()) {
-            data = EruptSpringUtil.getBean(tpl.tplHandler()).tplAction(tpl.params());
+            data = EruptSpringUtil.getBean(tpl.tplHandler()).bindTplData(tpl.params());
         }
         data.put("rows", rows);
         switch (tpl.engine()) {

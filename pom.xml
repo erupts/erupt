@@ -40,6 +40,7 @@
         <module>erupt-ops</module>
         <module>erupt-tool</module>
         <module>erupt-mongodb</module>
+        <module>erupt-generator</module>
     </modules>
 
     <dependencyManagement>
