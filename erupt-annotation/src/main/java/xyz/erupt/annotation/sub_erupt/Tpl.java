@@ -19,7 +19,7 @@ public @interface Tpl {
     Class<? extends TplHandler> tplHandler() default TplHandler.class;
 
     @Transient
-    Engine engine() default Engine.Thymeleaf;
+    Engine engine() default Engine.FreeMarker;
 
     enum Engine {
         Native,

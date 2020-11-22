@@ -25,7 +25,7 @@ import java.util.Set;
         rowOperation = @RowOperation(code = "preview", title = "代码预览",
                 mode = RowOperation.Mode.SINGLE, icon = "fa fa-code",
                 type = RowOperation.Type.TPL,
-                tpl = @Tpl(path = "generator/code-skeleton.ftl", engine = Tpl.Engine.FreeMarker,
+                tpl = @Tpl(path = "generator/code-skeleton.ftl",
                         tplHandler = GeneratorClass.class)))
 @Entity
 @Table(name = "e_generator_class")
