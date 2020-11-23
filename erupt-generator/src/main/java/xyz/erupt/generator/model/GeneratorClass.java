@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.fun.AutoCompleteHandler;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -22,11 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 @Erupt(name = "生成Erupt代码",
-        rowOperation = @RowOperation(code = "preview", title = "代码预览",
-                mode = RowOperation.Mode.SINGLE, icon = "fa fa-code",
-                type = RowOperation.Type.TPL,
-                tpl = @Tpl(path = "generator/code-skeleton.ftl",
-                        tplHandler = GeneratorClass.class)))
+        rowOperation = @RowOperation(code = "preview", title = "代码预览", icon = "fa fa-code",
+                mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,
+                tpl = @Tpl(path = "generator/erupt-code-skeleton.ftl", tplHandler = GeneratorClass.class)))
 @Entity
 @Table(name = "e_generator_class")
 @Getter
@@ -42,17 +41,28 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
     @EruptField(
             views = @View(title = "实体类名"),
             edit = @Edit(title = "实体类名", notNull = true,
-                    inputType = @InputType,
+                    referenceTreeType = @ReferenceTreeType(id = "id", label = "name"),
+                    referenceTableType = @ReferenceTableType(id = "id", label = "name"),
+                    checkboxType = @CheckboxType(id = "id", label = "label"),
                     numberType = @NumberType,
                     sliderType = @SliderType(max = 999),
-                    dateType = @DateType(type = DateType.Type.DATE_TIME),
+                    dateType = @DateType(type = DateType.Type.WEEK),
                     boolType = @BoolType,
-                    choiceType = @ChoiceType,
-                    tagsType = @TagsType
-
+                    autoCompleteType = @AutoCompleteType(handler = AutoCompleteHandler.class),
+                    choiceType = @ChoiceType(vl = {@VL(value = "xxx", label = "xxx"), @VL(value = "yyy", label = "yyy")}),
+                    tagsType = @TagsType,
+                    attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE),
+                    codeEditType = @CodeEditorType(language = "sql"),
+                    htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR)
             )
     )
     private String className;
+
+    @EruptField(
+            views = @View(title = "表名"),
+            edit = @Edit(title = "表名", notNull = true)
+    )
+    private String tableName;
 
 //    @EruptField(
 //            views = @View(title = "维护"),

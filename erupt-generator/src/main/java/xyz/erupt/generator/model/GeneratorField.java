@@ -2,59 +2,73 @@ package xyz.erupt.generator.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.auth.model.base.BaseModel;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.generator.base.GeneratorType;
+import xyz.erupt.generator.base.Ref;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
-@Erupt(name = "Erupt字段信息")
-@Entity
+@Erupt(name = "Erupt字段信息", dataProxy = GeneratorField.class)
 @Table(name = "e_generator_field")
+@Entity
 @Getter
 @Setter
-public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
+public class GeneratorField extends BaseModel implements DataProxy<GeneratorField>, ChoiceFetchHandler {
 
     @EruptField(
             views = @View(title = "字段名"),
-            edit = @Edit(title = "字段名", notNull = true)
+            edit = @Edit(title = "字段名", notNull = true,
+                    desc = "驼峰命名法，字母以小写开头，其后每个单词首字母大写")
     )
     private String fieldName;
 
     @EruptField(
-            views = @View(title = "展示名称"),
-            edit = @Edit(title = "展示名称", notNull = true)
+            views = @View(title = "显示名称"),
+            edit = @Edit(title = "显示名称", notNull = true)
     )
     private String showName;
 
     @EruptField(
-            views = @View(title = "组件类型"),
-            edit = @Edit(title = "组件类型",
+            views = @View(title = "显示顺序", sortable = true),
+            edit = @Edit(title = "显示顺序")
+    )
+    private Integer sort;
+
+    @EruptField(
+            views = @View(title = "编辑类型"),
+            edit = @Edit(title = "编辑类型",
                     notNull = true, type = EditType.CHOICE,
-                    choiceType = @ChoiceType(type = ChoiceType.Type.SELECT, fetchHandler = GeneratorField.class))
+                    choiceType = @ChoiceType(type = ChoiceType.Type.RADIO, fetchHandler = GeneratorField.class))
     )
     private String type;
 
     @EruptField(
-            views = @View(title = "关联表"),
-            edit = @Edit(title = "关联表")
+            views = @View(title = "关联实体类"),
+            edit = @Edit(title = "关联实体类", showBy = @ShowBy(dependField = "type",
+                    expr = "value == 'REFERENCE_TREE'||value == 'REFERENCE_TABLE'||value == 'CHECKBOX'||" +
+                            "value == 'TAB_TREE'||value == 'TAB_TABLE_REFER'||value == 'TAB_TABLE_ADD'"))
     )
     private String linkClass;
 
     @EruptField(
-            views = @View(title = "查询列"),
-            edit = @Edit(title = "查询列")
+            views = @View(title = "是否可筛选"),
+            edit = @Edit(title = "是否可筛选")
     )
     private Boolean query;
 
@@ -76,8 +90,6 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
     )
     private Boolean isShow;
 
-    @Transient
-    private GeneratorType generatorType;
 
     @Override
     public List<VLModel> fetch(String[] params) {
@@ -88,5 +100,18 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
         return list;
     }
 
+    @SneakyThrows
+    @Override
+    public void beforeAdd(GeneratorField generatorField) {
+        if (null != GeneratorType.class.getDeclaredField(generatorField.getType()).getAnnotation(Ref.class)) {
+            if (StringUtils.isBlank(generatorField.getLinkClass())) {
+                throw new EruptWebApiRuntimeException("关联实体类必填！");
+            }
+        }
+    }
 
+    @Override
+    public void beforeUpdate(GeneratorField generatorField) {
+        this.beforeAdd(generatorField);
+    }
 }

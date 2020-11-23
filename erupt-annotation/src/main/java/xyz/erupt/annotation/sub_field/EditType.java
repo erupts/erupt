@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 public enum EditType {
     @EditTypeMapping(desc = "框架自动检测类型", allowType = {JavaTypeEnum.any})
     AUTO,
-    @EditTypeMapping(mapping = InputType.class, desc = "输入框", search = @Search(vague = true), allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
+    @EditTypeMapping(mapping = InputType.class, desc = "文本输入", search = @Search(vague = true), allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     INPUT,
     @EditTypeMapping(mapping = NumberType.class, desc = "数字输入", search = @Search(vague = true), allowType = {JavaTypeEnum.number})
     NUMBER,
@@ -28,9 +28,9 @@ public enum EditType {
     ATTACHMENT,
     @EditTypeMapping(mapping = AutoCompleteType.class, desc = "自动联想", allowType = {JavaTypeEnum.String})
     AUTO_COMPLETE,
-    @EditTypeMapping(desc = "富文本编辑器", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(mapping = HtmlEditorType.class, desc = "富文本编辑器", allowType = {JavaTypeEnum.String})
     HTML_EDITOR,
-    @EditTypeMapping(desc = "大文本域", allowType = {JavaTypeEnum.String}, nameInfer = {"desc", "remark"})
+    @EditTypeMapping(desc = "多行文本框", allowType = {JavaTypeEnum.String}, nameInfer = {"desc", "remark"})
     TEXTAREA,
     @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, search = @Search(value = false), excelOperator = false)
     MAP,
@@ -50,7 +50,7 @@ public enum EditType {
     TAB_TREE,
     @EditTypeMapping(desc = "表格引用（多对多）", allowType = {JavaTypeEnum.object}, search = @Search(value = false), excelOperator = false)
     TAB_TABLE_REFER,
-    @EditTypeMapping(desc = "表格引用（一对多)", allowType = {JavaTypeEnum.object}, search = @Search(value = false), excelOperator = false)
+    @EditTypeMapping(desc = "表格添加（一对多)", allowType = {JavaTypeEnum.object}, search = @Search(value = false), excelOperator = false)
     TAB_TABLE_ADD,
     @EditTypeMapping(desc = "表格合并（一对一）", search = @Search(value = false), allowType = {JavaTypeEnum.object})
     COMBINE,

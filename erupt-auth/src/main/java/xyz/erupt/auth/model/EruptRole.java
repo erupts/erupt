@@ -61,11 +61,10 @@ public class EruptRole extends BaseModel {
     )
     private Set<EruptMenu> menus;
 
-    @ManyToMany
-    @JoinTable(
-            name = "e_user_role",
-            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+
+    @JoinTable(name = "e_user_role", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    @ManyToMany
     @EruptField(
             edit = @Edit(
                     title = "包含用户",

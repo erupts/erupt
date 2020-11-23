@@ -14,5 +14,5 @@ import java.lang.annotation.*;
 @Inherited
 public @interface EruptTpl {
 
-    Tpl.Engine engine() default Tpl.Engine.Thymeleaf;
+    Tpl.Engine engine() default Tpl.Engine.FreeMarker;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2025, erupt.xyz All rights reserved.
+ * Copyright (c) 2020-2099, erupt.xyz All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -24,6 +24,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.auth.model.base.BaseModel;
 import xyz.erupt.auth.model.base.HyperModel;
 import javax.persistence.*;
+import java.util.Set;
 
 <#assign erupt=rows[0]/>
 @Erupt(name = "${erupt.name}")
@@ -35,19 +36,15 @@ public class ${erupt.className} extends BaseModel {
         <#assign type = GeneratorType.valueOf(field.type)/>
         @EruptField(
                 views = @View(
-                        title = "${field.showName}",
-                        show = true,
-                        sortable = true
+                        title = "${field.showName}"${field.sortable?string(', sortable = true', '')}${field.isShow?string('', ', show = false')}
                 ),
                 edit = @Edit(
                         title = "${field.showName}",
-                        notNull = true,
-                        show = true,
-                        ${field.notNull?string('yes', 'no')}
-                        ${type.code}
+                        type = EditType.${type.mapping.name()}${field.isShow?string('', ', show = false')}${field.notNull?string(', notNull = true', '')}
+                        <#if type.code??>${','+type.code}</#if>
                 )
         )
-        private ${type.type} ${field.fieldName};
+        private ${GeneratorType.replaceLinkClass(type.type, field.linkClass!)} ${field.fieldName};
 
     </#list>
 }
