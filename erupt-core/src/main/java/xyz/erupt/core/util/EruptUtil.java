@@ -74,28 +74,29 @@ public class EruptUtil {
                             break;
                         case CHECKBOX:
                         case TAB_TREE:
-                        case TAB_TABLE_REFER:
-                        case TAB_TABLE_ADD:
                             EruptModel tabEruptModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
                             Collection<?> collection = (Collection<?>) value;
-//                            TODO this is bad code
-                            if (eruptField.edit().type() == EditType.TAB_TREE || eruptField.edit().type() == EditType.CHECKBOX) {
-                                if (collection.size() > 0) {
-                                    Set<Object> idSet = new HashSet<>();
-                                    Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
-                                            tabEruptModel.getErupt().primaryKeyCol());
-                                    for (Object o : collection) {
-                                        idSet.add(primaryField.get(o));
-                                    }
-                                    map.put(field.getName(), idSet);
-                                }
-                            } else {
-                                List<Object> list = new ArrayList<>();
+                            if (collection.size() > 0) {
+                                Set<Object> idSet = new HashSet<>();
+                                Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
+                                        tabEruptModel.getErupt().primaryKeyCol());
                                 for (Object o : collection) {
-                                    list.add(generateEruptDataMap(tabEruptModel, o));
+                                    idSet.add(primaryField.get(o));
                                 }
-                                map.put(field.getName(), list);
+                                map.put(field.getName(), idSet);
                             }
+                            break;
+                        case TAB_TABLE_REFER:
+                        case TAB_TABLE_ADD:
+                            EruptModel tabEruptModelRef = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
+                            Collection<?> collectionRef = (Collection<?>) value;
+                            List<Object> list = new ArrayList<>();
+                            for (Object o : collectionRef) {
+                                list.add(generateEruptDataMap(tabEruptModelRef, o));
+                            }
+//                            bi.getBiCharts().stream().sorted(Comparator.comparing(BiChart::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList())
+//                            list.stream().sorted()
+                            map.put(field.getName(), list);
                             break;
                         default:
                             map.put(field.getName(), value);
@@ -141,8 +142,8 @@ public class EruptUtil {
 
     public static List<String> getTagList(TagsType tagsType) {
         List<String> tags = new ArrayList<>(Arrays.asList(tagsType.tags()));
-        for (Class<? extends TagsFetchHandler> cla : tagsType.fetchHandler()) {
-            tags.addAll(EruptSpringUtil.getBean(cla).fetchTags(tagsType.fetchHandlerParams()));
+        for (Class<? extends TagsFetchHandler> clazz : tagsType.fetchHandler()) {
+            tags.addAll(EruptSpringUtil.getBean(clazz).fetchTags(tagsType.fetchHandlerParams()));
         }
         return tags;
     }

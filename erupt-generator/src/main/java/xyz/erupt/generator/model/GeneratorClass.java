@@ -41,9 +41,7 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
     @EruptField(
             views = @View(title = "实体类名"),
             edit = @Edit(title = "实体类名", notNull = true,
-                    referenceTreeType = @ReferenceTreeType(id = "id", label = "name"),
-                    referenceTableType = @ReferenceTableType(id = "id", label = "name"),
-                    checkboxType = @CheckboxType(id = "id", label = "label"),
+
                     numberType = @NumberType,
                     sliderType = @SliderType(max = 999),
                     dateType = @DateType(type = DateType.Type.WEEK),
@@ -53,7 +51,10 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
                     tagsType = @TagsType,
                     attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE),
                     codeEditType = @CodeEditorType(language = "sql"),
-                    htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR)
+                    htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR),
+                    referenceTreeType = @ReferenceTreeType(id = "id", label = "name"),
+                    referenceTableType = @ReferenceTableType(id = "id", label = "name"),
+                    checkboxType = @CheckboxType(id = "id", label = "name")
             )
     )
     private String className;
