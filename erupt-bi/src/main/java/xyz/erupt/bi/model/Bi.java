@@ -82,7 +82,7 @@ public class Bi extends HyperModel {
 
 //    @Lob
 //    @EruptField(
-//            edit = @Edit(title = "总条数sql", type = EditType.TEXTAREA)
+//            edit = @Edit(title = "总条数sql", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
 //    )
 //    private String countSql;
 

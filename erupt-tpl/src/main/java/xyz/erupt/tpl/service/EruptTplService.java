@@ -22,6 +22,8 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -44,6 +46,9 @@ public class EruptTplService implements ApplicationRunner {
 
     @Autowired
     private Configuration freeMarkerEngine;
+
+    @Resource
+    private HttpServletRequest request;
 
     public Method getAction(String name) {
         return tplActions.get(name);
@@ -73,6 +78,7 @@ public class EruptTplService implements ApplicationRunner {
             data = EruptSpringUtil.getBean(tpl.tplHandler()).bindTplData(tpl.params());
         }
         data.put("rows", rows);
+        data.put("request", request);
         switch (tpl.engine()) {
             case FreeMarker:
                 freeMarkerEngine.getTemplate(tpl.path()).process(data, response.getWriter());

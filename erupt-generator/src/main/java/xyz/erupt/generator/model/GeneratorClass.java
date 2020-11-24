@@ -23,9 +23,12 @@ import java.util.Map;
 import java.util.Set;
 
 @Erupt(name = "生成Erupt代码",
-        rowOperation = @RowOperation(code = "preview", title = "代码预览", icon = "fa fa-code",
+        rowOperation = @RowOperation(
+                code = "preview", title = "代码预览", icon = "fa fa-code",
                 mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,
-                tpl = @Tpl(path = "generator/erupt-code-skeleton.ftl", tplHandler = GeneratorClass.class)))
+                tpl = @Tpl(path = "generator/erupt-code-skeleton.ftl", tplHandler = GeneratorClass.class)
+        )
+)
 @Entity
 @Table(name = "e_generator_class")
 @Getter
@@ -77,7 +80,6 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
             edit = @Edit(title = "字段管理", type = EditType.TAB_TABLE_ADD)
     )
     private Set<GeneratorField> generatorFields;
-
 
     @SneakyThrows
     @Override
