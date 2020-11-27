@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-<div id="copy-success" class="alert alert-success">复制成功!</div>
+<div id="copy-success" class="alert alert-success">复制成功 !</div>
 <pre id="erupt-code" style="margin: 0;border-radius: 0;background: #272822;"><code
             class="prism language-java"><#include "erupt-code.java"/></code></pre>
 <div style="padding: 18px;position: fixed;bottom: 0px;right: 0px">

@@ -1,13 +1,12 @@
 package xyz.erupt.core.dao;
 
 import org.apache.commons.lang3.StringUtils;
-import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.query.Condition;
-import xyz.erupt.core.query.Query;
+import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -67,7 +66,7 @@ public class EruptJpaUtils {
 
 
     //erupt 注解信息映射成hql语句
-    public static String generateEruptJpaHql(EruptModel eruptModel, String cols, Query query, boolean countSql) {
+    public static String generateEruptJpaHql(EruptModel eruptModel, String cols, EruptQuery query, boolean countSql) {
         StringBuilder hql = new StringBuilder();
         if (StringUtils.isNotBlank(cols)) {
             hql.append("select ");
@@ -113,12 +112,12 @@ public class EruptJpaUtils {
         return sb.toString();
     }
 
-    public static String geneEruptHqlCondition(EruptModel eruptModel, List<Condition> clientSearchCondition, List<String> customCondition) {
+    public static String geneEruptHqlCondition(EruptModel eruptModel, List<Condition> conditions, List<String> customCondition) {
         StringBuilder hql = new StringBuilder();
         hql.append(" where 1 = 1 ");
         //condition
-        if (null != clientSearchCondition) {
-            for (Condition condition : clientSearchCondition) {
+        if (null != conditions) {
+            for (Condition condition : conditions) {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(condition.getKey());
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
@@ -130,22 +129,22 @@ public class EruptJpaUtils {
                         continue;
                     }
                     String $key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), condition.getKey());
-                    if (edit.search().vague()) {
-                        if ((edit.type() == EditType.NUMBER)
-                                || edit.type() == EditType.DATE
-                                || edit.type() == EditType.SLIDER) {
-                            hql.append(EruptJpaUtils.AND).append($key)
-                                    .append(" between :").append(LVAL_KEY).append(condition.getKey())
-                                    .append(" and :").append(RVAL_KEY).append(condition.getKey());
-                        } else if (edit.type() == EditType.CHOICE) {
-                            hql.append(EruptJpaUtils.AND).append($key).append(" in (:").append(condition.getKey()).append(")");
-                        } else if (eruptFieldModel.getFieldReturnName().equals(JavaType.STRING)) {
-                            hql.append(EruptJpaUtils.AND).append($key).append(" like :").append(condition.getKey());
-                        } else {
+
+                    switch (condition.getExpression()) {
+                        case EQ:
                             hql.append(EruptJpaUtils.AND).append($key).append("=:").append(condition.getKey());
-                        }
-                    } else {
-                        hql.append(EruptJpaUtils.AND).append($key).append("=:").append(condition.getKey());
+                            break;
+                        case LIKE:
+                            hql.append(EruptJpaUtils.AND).append($key).append(" like :").append(condition.getKey());
+                            break;
+                        case RANGE:
+                            hql.append(EruptJpaUtils.AND).append($key).append(" between :")
+                                    .append(LVAL_KEY).append(condition.getKey()).append(" and :")
+                                    .append(RVAL_KEY).append(condition.getKey());
+                            break;
+                        case IN:
+                            hql.append(EruptJpaUtils.AND).append($key).append(" in (:").append(condition.getKey()).append(")");
+                            break;
                     }
                 } else {
                     hql.append(EruptJpaUtils.AND).append(condition.getKey()).append("=:").append(condition.getKey());

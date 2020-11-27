@@ -7,7 +7,7 @@ import xyz.erupt.annotation.expr.Expr;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.Condition;
-import xyz.erupt.core.query.Query;
+import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -32,7 +32,7 @@ public class PreEruptDataService {
      * @param query      查询对象
      * @return 树对象
      */
-    public Collection<TreeModel> geneTree(EruptModel eruptModel, String id, String label, String pid, Expr rootId, Query query) {
+    public Collection<TreeModel> geneTree(EruptModel eruptModel, String id, String label, String pid, Expr rootId, EruptQuery query) {
         List<Column> columns = new ArrayList<>();
         columns.add(new Column(id, AnnotationConst.ID));
         columns.add(new Column(label, AnnotationConst.LABEL));
@@ -53,7 +53,7 @@ public class PreEruptDataService {
         }
     }
 
-    public Collection<Map<String, Object>> createColumnQuery(EruptModel eruptModel, List<Column> columns, Query query) {
+    public Collection<Map<String, Object>> createColumnQuery(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
         List<Condition> conditions = new ArrayList<>();
         List<String> conditionStrings = new ArrayList<>();
         EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> {
@@ -81,7 +81,7 @@ public class PreEruptDataService {
             orderBy = eruptModel.getErupt().orderBy();
         }
         Collection<Map<String, Object>> result = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
-                .queryColumn(eruptModel, columns, Query.builder()
+                .queryColumn(eruptModel, columns, EruptQuery.builder()
                         .conditions(conditions).conditionStrings(conditionStrings).orderBy(orderBy).build());
         EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.afterFetch(result)));
         return result;

@@ -9,6 +9,5 @@ public @interface Search {
 
     boolean notNull() default false;
 
-    //vague支持类型：INPUT CHOICE SLIDER DATE TEXTAREA
     boolean vague() default false;
 }

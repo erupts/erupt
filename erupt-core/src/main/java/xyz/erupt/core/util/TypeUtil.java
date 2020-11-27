@@ -1,5 +1,7 @@
 package xyz.erupt.core.util;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -19,20 +21,26 @@ public class TypeUtil {
      * 将未知类型转换为目标类型
      */
     public static Object typeStrConvertObject(Object obj, Class<?> targetType) {
+        String str = obj.toString();
+        if (NumberUtils.isCreatable(str)) {
+            if (str.endsWith(".0")) { //处理gson序列化后数值后多了一个0
+                str = str.substring(0, str.length() - 2);
+            }
+        }
         if (int.class == targetType || Integer.class == targetType) {
-            return Integer.valueOf(obj.toString());
+            return Integer.valueOf(str);
         } else if (short.class == targetType || Short.class == targetType) {
-            return Short.valueOf(obj.toString());
+            return Short.valueOf(str);
         } else if (long.class == targetType || Long.class == targetType) {
-            return Long.valueOf(obj.toString());
+            return Long.valueOf(str);
         } else if (float.class == targetType || Float.class == targetType) {
-            return Float.valueOf(obj.toString());
+            return Float.valueOf(str);
         } else if (double.class == targetType || Double.class == targetType) {
-            return Double.valueOf(obj.toString());
+            return Double.valueOf(str);
         } else if (boolean.class == targetType || Boolean.class == targetType) {
-            return Boolean.valueOf(obj.toString());
+            return Boolean.valueOf(str);
         } else {
-            return obj.toString();
+            return str;
         }
     }
 

@@ -1,6 +1,7 @@
 package xyz.erupt.core.query;
 
 import lombok.Data;
+import xyz.erupt.annotation.config.QueryExpression;
 
 @Data
 public class Condition {
@@ -9,16 +10,17 @@ public class Condition {
 
     private Object value;
 
-    private Expression expression;
+    private transient QueryExpression expression = QueryExpression.EQ;
 
-    public Condition(String key, Object value, Expression expression) {
+    public Condition(String key, Object value, QueryExpression expression) {
         this.key = key;
         this.value = value;
         this.expression = expression;
     }
 
-    public enum Expression {
-        EQ, RANGE, IN
+    public Condition(String key, Object value) {
+        this.key = key;
+        this.value = value;
     }
 
 }

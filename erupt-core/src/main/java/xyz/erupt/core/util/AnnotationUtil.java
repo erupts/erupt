@@ -13,6 +13,7 @@ import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeMapping;
+import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.core.service.IEruptDataService;
 import xyz.erupt.core.service.impl.EruptDbService;
@@ -185,6 +186,15 @@ public class AnnotationUtil {
     public static EditTypeMapping getEditTypeMapping(EditType editType) {
         try {
             return EditType.class.getDeclaredField(editType.name()).getAnnotation(EditTypeMapping.class);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static EditTypeSearch getEditTypeSearch(EditType editType) {
+        try {
+            return EditType.class.getDeclaredField(editType.name()).getAnnotation(EditTypeSearch.class);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
             return null;

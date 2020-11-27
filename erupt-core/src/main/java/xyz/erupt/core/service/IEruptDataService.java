@@ -1,7 +1,7 @@
 package xyz.erupt.core.service;
 
 import xyz.erupt.core.query.Column;
-import xyz.erupt.core.query.Query;
+import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 
@@ -27,13 +27,12 @@ public interface IEruptDataService {
     /**
      * 查询分页数据
      *
-     * @param eruptModel      erupt核心对象
-     * @param page            page 分页参数
-     * @param searchCondition 参数查询条件
-     * @param customCondition 自定义查询条件
+     * @param eruptModel erupt核心对象
+     * @param page       page 分页参数
+     * @param query      查询对象
      * @return 页面对象
      */
-    Page queryList(EruptModel eruptModel, Page page, Query query);
+    Page queryList(EruptModel eruptModel, Page page, EruptQuery query);
 
     /**
      * 根据列查询相关数据
@@ -42,7 +41,7 @@ public interface IEruptDataService {
      * @param columns    列
      * @param query      查询对象
      */
-    Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, Query query);
+    Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery query);
 
 
     /**

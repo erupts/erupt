@@ -12,7 +12,7 @@ import xyz.erupt.core.dao.EruptJpaUtils;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.Condition;
-import xyz.erupt.core.query.Query;
+import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EntityManagerService;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.IEruptDataService;
@@ -54,7 +54,7 @@ public class EruptDbService implements IEruptDataService {
     }
 
     @Override
-    public Page queryList(EruptModel eruptModel, Page page, Query query) {
+    public Page queryList(EruptModel eruptModel, Page page, EruptQuery query) {
         return eruptJpaDao.queryEruptList(eruptModel, page, query);
     }
 
@@ -155,7 +155,7 @@ public class EruptDbService implements IEruptDataService {
      * @return
      */
     @Override
-    public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, Query query) {
+    public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
         StringBuilder hql = new StringBuilder();
         List<String> columnStrList = new ArrayList<>();
         for (Column column : columns) {

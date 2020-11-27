@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 @Builder
-public class Query {
+public class EruptQuery {
     List<Condition> conditions;
 
     List<String> conditionStrings;

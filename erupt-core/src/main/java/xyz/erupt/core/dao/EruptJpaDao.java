@@ -4,9 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.sub_erupt.Filter;
-import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.query.Condition;
+import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EntityManagerService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -54,7 +53,7 @@ public class EruptJpaDao {
         });
     }
 
-    public Page queryEruptList(EruptModel eruptModel, Page page, xyz.erupt.core.query.Query eruptQuery) {
+    public Page queryEruptList(EruptModel eruptModel, Page page, EruptQuery eruptQuery) {
         String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")", eruptQuery, false);
         String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "count(*)", eruptQuery, true);
         EntityManager entityManager = entityManagerService.getEntityManager(eruptModel.getClazz());
@@ -64,29 +63,28 @@ public class EruptJpaDao {
         if (null != eruptQuery.getConditions()) {
             for (Condition condition : eruptQuery.getConditions()) {
                 EruptFieldModel eruptFieldModel = eruptFieldMap.get(condition.getKey());
-                if (null != eruptFieldModel) {
-                    Edit edit = eruptFieldModel.getEruptField().edit();
-                    if (edit.search().vague()) {
-                        if ((edit.type() == EditType.NUMBER) || edit.type() == EditType.DATE || edit.type() == EditType.SLIDER) {
-                            List<?> list = (List<?>) condition.getValue();
-                            countQuery.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
-                            countQuery.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
-                            query.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
-                            query.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
-                            continue;
-                        } else if (edit.type() == EditType.INPUT) {
-                            countQuery.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
-                            query.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
-                            continue;
-                        } else if (edit.type() == EditType.CHOICE) {
-                            List<?> list = (List<?>) condition.getValue();
-                            countQuery.setParameter(condition.getKey(), list);
-                            query.setParameter(condition.getKey(), list);
-                        }
-                    }
+                switch (condition.getExpression()) {
+                    case EQ:
+                        countQuery.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
+                        query.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
+                        break;
+                    case LIKE:
+                        countQuery.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
+                        query.setParameter(condition.getKey(), EruptJpaUtils.PERCENT + condition.getValue() + EruptJpaUtils.PERCENT);
+                        break;
+                    case RANGE:
+                        List<?> list = (List<?>) condition.getValue();
+                        countQuery.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
+                        countQuery.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
+                        query.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
+                        query.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
+                        break;
+                    case IN:
+                        List<?> listIn = (List<?>) condition.getValue();
+                        countQuery.setParameter(condition.getKey(), listIn);
+                        query.setParameter(condition.getKey(), listIn);
+                        break;
                 }
-                countQuery.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
-                query.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
             }
         }
         page.setTotal((Long) countQuery.getSingleResult());

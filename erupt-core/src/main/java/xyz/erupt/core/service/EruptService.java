@@ -3,13 +3,15 @@ package xyz.erupt.core.service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.query.Condition;
-import xyz.erupt.core.query.Query;
+import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQueryVo;
@@ -48,12 +50,11 @@ public class EruptService {
                 LinkTree dependTree = eruptModel.getErupt().linkTree();
                 if (StringUtils.isNotBlank(dependTree.field())) {
                     if (null == tableQueryVo.getLinkTreeVal()) {
-                        //TODO 临时为前端做兼容用，其实应该抛出异常
                         if (dependTree.dependNode()) {
                             return new Page();
                         }
                     } else {
-                        EruptModel treeErupt = EruptCoreService.getErupt(eruptModel.getEruptFieldMap().get(dependTree.field()).getFieldReturnName());
+                        EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
                         String pk = treeErupt.getErupt().primaryKeyCol();
                         //TODO 存在sql注入风险
                         conditionStrings.add(dependTree.field() + "." + pk + " = " + tableQueryVo.getLinkTreeVal());
@@ -72,7 +73,7 @@ public class EruptService {
             }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
                     .queryList(eruptModel, new Page(tableQueryVo.getPageIndex(), pageSize, tableQueryVo.getSort()),
-                            Query.builder().orderBy(tableQueryVo.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
+                            EruptQuery.builder().orderBy(tableQueryVo.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
             if (null != page.getList()) {
                 DataHandlerUtil.convertDataToEruptView(eruptModel, page.getList());
             }
@@ -83,7 +84,6 @@ public class EruptService {
         }
     }
 
-
     /**
      * 校验id使用权限
      *
@@ -93,10 +93,11 @@ public class EruptService {
      */
     public boolean verifyIdPermissions(EruptModel eruptModel, String id) {
         List<Condition> conditions = new ArrayList<>();
-        conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, Condition.Expression.EQ));
+        conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, QueryExpression.EQ));
         Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
                 .queryList(eruptModel, new Page(0, 1, null),
-                        Query.builder().conditions(conditions).build());
+                        EruptQuery.builder().conditions(conditions).build());
         return page.getList().size() > 0;
     }
+
 }

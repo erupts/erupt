@@ -6,12 +6,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.*;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
@@ -156,11 +158,6 @@ public class EruptUtil {
             return obj.toString();
         }
         String str = obj.toString();
-        if (NumberUtils.isCreatable(str)) {
-            if (str.endsWith(".0")) { //处理gson序列化后数值后多了一个0
-                str = str.substring(0, str.length() - 2);
-            }
-        }
         Edit edit = eruptFieldModel.getEruptField().edit();
         switch (edit.type()) {
             case DATE:
@@ -178,7 +175,8 @@ public class EruptUtil {
                     id = edit.referenceTableType().id();
                 }
                 EruptFieldModel efm = EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
-                return TypeUtil.typeStrConvertObject(str, efm.getField().getType());
+                Map<String, Object> map = (Map<String, Object>) obj;
+                return TypeUtil.typeStrConvertObject(map.get(id), efm.getField().getType());
             default:
                 return TypeUtil.typeStrConvertObject(str, eruptFieldModel.getField().getType());
         }
@@ -192,13 +190,19 @@ public class EruptUtil {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(condition.getKey());
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
-                    if (AnnotationUtil.getEditTypeMapping(edit.type()).search().value()) {
+                    EditTypeSearch editTypeSearch = AnnotationUtil.getEditTypeSearch(edit.type());
+                    if (null != editTypeSearch && editTypeSearch.value()) {
                         if (edit.search().value() && null != condition.getValue()) {
                             if (condition.getValue() instanceof Collection) {
                                 Collection<?> collection = (Collection<?>) condition.getValue();
                                 if (collection.size() == 0) {
                                     continue;
                                 }
+                            }
+                            if (edit.search().vague()) {
+                                condition.setExpression(editTypeSearch.vagueMethod());
+                            } else {
+                                condition.setExpression(QueryExpression.EQ);
                             }
                             legalConditions.add(condition);
                         }
