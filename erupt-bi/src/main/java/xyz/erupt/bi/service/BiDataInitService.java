@@ -1,10 +1,12 @@
 package xyz.erupt.bi.service;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.auth.constant.MenuTypeEnum;
 import xyz.erupt.auth.model.EruptMenu;
@@ -14,6 +16,7 @@ import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.ProjectUtil;
 
 import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,10 +60,20 @@ public class BiDataInitService implements CommandLineRunner {
                     eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiHistory.class.getSimpleName(), "修改记录", MenuTypeEnum.TABLE.getCode(), BiHistory.class.getSimpleName()
                             , Integer.valueOf(EruptMenu.HIDE), 20, null, eruptMenuBi), code, BiHistory.class.getSimpleName());
                 }
+                this.loadDefaultFunction();
             }
         });
-        flushFunction();
+        this.flushFunction();
         log.info("Erupt bi initialization complete");
+    }
+
+    @SneakyThrows
+    private void loadDefaultFunction() {
+        String defaultFunctionCode = "DefaultFunction";
+        eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(defaultFunctionCode,
+                        defaultFunctionCode, StreamUtils.copyToString(BiDataInitService.class
+                        .getResourceAsStream("./BiDefaultFunction.js"), StandardCharsets.UTF_8)),
+                "code", defaultFunctionCode);
     }
 
     public void flushFunction() {

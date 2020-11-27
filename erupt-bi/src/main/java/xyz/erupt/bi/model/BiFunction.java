@@ -68,4 +68,13 @@ public class BiFunction extends HyperModel implements DataProxy<BiFunction> {
     public void afterDelete(BiFunction biFunction) {
         biDataInitService.flushFunction();
     }
+
+    public BiFunction(String code, String name, String jsFunction) {
+        this.code = code;
+        this.name = name;
+        this.jsFunction = jsFunction;
+    }
+
+    public BiFunction() {
+    }
 }
