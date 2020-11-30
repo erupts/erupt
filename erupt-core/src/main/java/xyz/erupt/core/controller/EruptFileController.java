@@ -68,7 +68,7 @@ public class EruptFileController {
             String path;
             if (eruptProp.isKeepUploadFileName()) {
                 path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
-                        RandomUtils.nextInt(100, 9999) + "-" +
+                        RandomUtils.nextInt(100, 999) + "-" +
                         file.getOriginalFilename()
                                 .replace("&", "")
                                 .replace("?", "")

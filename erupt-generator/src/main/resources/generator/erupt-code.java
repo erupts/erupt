@@ -17,7 +17,7 @@ import java.util.Set;
 @Entity
 public class ${erupt.className} extends BaseModel {
 
-    <#list erupt.generatorFields?sort_by('sort') as field>
+    <#list erupt.fields?sort_by('sort') as field>
         <#assign type = GeneratorType.valueOf(field.type)/>
         @EruptField(
                 views = @View(

@@ -29,8 +29,8 @@ import java.util.Set;
                 tpl = @Tpl(path = "generator/erupt-code-skeleton.ftl", tplHandler = GeneratorClass.class)
         )
 )
-@Entity
 @Table(name = "e_generator_class")
+@Entity
 @Getter
 @Setter
 public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
@@ -75,11 +75,12 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
 //    private Boolean createField;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "CLASS_ID")
+    @JoinColumn(name = "class_id")
+    @OrderBy("sort")
     @EruptField(
             edit = @Edit(title = "字段管理", type = EditType.TAB_TABLE_ADD)
     )
-    private Set<GeneratorField> generatorFields;
+    private Set<GeneratorField> fields;
 
     @SneakyThrows
     @Override

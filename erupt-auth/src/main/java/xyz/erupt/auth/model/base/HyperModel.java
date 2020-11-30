@@ -2,13 +2,13 @@ package xyz.erupt.auth.model.base;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.SkipSerialize;
 import xyz.erupt.auth.model.EruptUser;
 
-import javax.persistence.*;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
 /**
@@ -19,14 +19,7 @@ import java.util.Date;
 @Setter
 @MappedSuperclass
 @PreDataProxy(HyperDataProxy.class)
-public class HyperModel {
-
-    @Id
-    @GeneratedValue(generator = "generator")
-    @GenericGenerator(name = "generator", strategy = "native")
-    @Column(name = "ID")
-    @EruptField
-    private Long id;
+public class HyperModel extends BaseModel {
 
     @SkipSerialize
     private Date createTime;
