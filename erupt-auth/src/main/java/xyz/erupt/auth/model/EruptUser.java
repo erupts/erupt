@@ -120,9 +120,9 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "E_USER_ROLE",
-            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
+            name = "e_user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     @EruptField(
             edit = @Edit(
                     title = "所属角色",

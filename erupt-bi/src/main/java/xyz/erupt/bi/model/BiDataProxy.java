@@ -10,7 +10,9 @@ import xyz.erupt.auth.service.EruptUserService;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author liyuepeng
@@ -18,7 +20,6 @@ import java.util.Date;
  */
 @Component
 public class BiDataProxy implements DataProxy<Bi> {
-
 
     @Autowired
     private EruptUserService eruptUserService;
@@ -45,7 +46,9 @@ public class BiDataProxy implements DataProxy<Bi> {
     }
 
     @Override
-    public void afterUpdate(Bi bi) {
-
+    public void afterFetch(Collection<Map<String, Object>> list) {
+        for (Map<String, Object> map : list) {
+            map.put("view", "#/fill/bi/" + map.get("code"));
+        }
     }
 }

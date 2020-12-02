@@ -22,7 +22,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "E_OPS_SERVER"
+@Table(name = "e_ops_server"
 //    uniqueConstraints = @UniqueConstraint(columnNames = "name")
 )
 @Erupt(

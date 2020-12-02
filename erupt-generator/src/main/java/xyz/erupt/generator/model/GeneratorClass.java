@@ -7,13 +7,12 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.fun.AutoCompleteHandler;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.generator.base.GeneratorType;
 
@@ -37,36 +36,28 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
 
     @EruptField(
             views = @View(title = "中文名称"),
-            edit = @Edit(title = "中文名称", notNull = true)
+            edit = @Edit(title = "中文名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
             views = @View(title = "实体类名"),
-            edit = @Edit(title = "实体类名", notNull = true,
-
-                    numberType = @NumberType,
-                    sliderType = @SliderType(max = 999),
-                    dateType = @DateType(type = DateType.Type.WEEK),
-                    boolType = @BoolType,
-                    autoCompleteType = @AutoCompleteType(handler = AutoCompleteHandler.class),
-                    choiceType = @ChoiceType(vl = {@VL(value = "xxx", label = "xxx"), @VL(value = "yyy", label = "yyy")}),
-                    tagsType = @TagsType,
-                    attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE),
-                    codeEditType = @CodeEditorType(language = "sql"),
-                    htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR),
-                    referenceTreeType = @ReferenceTreeType(id = "id", label = "name"),
-                    referenceTableType = @ReferenceTableType(id = "id", label = "name"),
-                    checkboxType = @CheckboxType(id = "id", label = "name")
-            )
+            edit = @Edit(title = "实体类名", notNull = true, search = @Search(vague = true))
     )
     private String className;
 
     @EruptField(
             views = @View(title = "表名"),
-            edit = @Edit(title = "表名", notNull = true)
+            edit = @Edit(title = "表名", notNull = true, search = @Search(vague = true))
     )
     private String tableName;
+
+    @Lob
+    @EruptField(
+            views = @View(title = "简介"),
+            edit = @Edit(title = "简介", type = EditType.TEXTAREA)
+    )
+    private String remark;
 
 //    @EruptField(
 //            views = @View(title = "维护"),
@@ -89,7 +80,7 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
         TemplateHashModel staticModels = wrapper.getStaticModels();
         TemplateHashModel fileStatics = (TemplateHashModel) staticModels.get(GeneratorType.class.getName());
-        map.put("GeneratorType", fileStatics);
+        map.put(GeneratorType.class.getSimpleName(), fileStatics);
         return map;
     }
 }

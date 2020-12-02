@@ -47,6 +47,8 @@ public enum GeneratorType {
 
     private final String code;
 
+//    private final String otherAnnotation;
+
     GeneratorType(EditType mapping, String name, String type, String code) {
         this.mapping = mapping;
         this.name = name;
@@ -58,8 +60,11 @@ public enum GeneratorType {
     private static final String Transient = "@Transient ";
     private static final String LOB = "@Lob ";
 
+
+    private static final String REF = "#refClass";
+
     private static final String THIS = "#this";
-    private static final String REF = "#ref";
+    private static final String TARGET = "#target";
     private static final String SET = "Set<" + REF + ">";
 
     private static final String ManyToOne = "@ManyToOne ";
@@ -67,22 +72,28 @@ public enum GeneratorType {
     private static final String OneToMany = "@OneToMany(cascade = CascadeType.ALL)\n" +
             "                @JoinColumn(name = \"" + THIS + "_id\") " + GeneratorType.SET;
 
-    private static final String ManyToMany = "@ManyToMany @JoinTable(name = \"" + THIS + "_" + REF + "\",\n" +
+    private static final String ManyToMany = "@ManyToMany @JoinTable(name = \"" + THIS + "_" + TARGET + "\",\n" +
             "            joinColumns = @JoinColumn(name = \"" + THIS + "_id\", referencedColumnName = \"id\"),\n" +
-            "            inverseJoinColumns = @JoinColumn(name = \"" + REF + "_id\", referencedColumnName = \"id\")) " + SET;
+            "            inverseJoinColumns = @JoinColumn(name = \"" + TARGET + "_id\", referencedColumnName = \"id\")) " + SET;
 
     public static String replaceLinkClass(GeneratorType generatorType, String thisErupt, String linkErupt) {
         if (StringUtils.isNotBlank(linkErupt)) {
-            return generatorType.getType().replace(REF, linkErupt).replace(THIS, thisErupt)
+            return generatorType.getType().replace(REF, linkErupt)
+                    .replace(THIS, humpToLine(thisErupt)).replace(TARGET, humpToLine(linkErupt))
                     .replace("<", "&lt;").replace(">", "&gt;");
         } else {
             return generatorType.getType();
         }
     }
 
+
     //驼峰转下划线
     public static String humpToLine(String str) {
-        return str.replaceAll("[A-Z]", "_$0").toLowerCase();
+        String hump = str.replaceAll("[A-Z]", "_$0").toLowerCase();
+        if (hump.startsWith("_")) {
+            hump = hump.substring(1);
+        }
+        return hump;
     }
 
 }

@@ -35,7 +35,7 @@ import java.util.List;
                 title = "执行一次任务", operationHandler = EruptJob.class)
 )
 @Entity
-@Table(name = "E_JOB", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_job", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Component
 public class EruptJob extends HyperModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
 

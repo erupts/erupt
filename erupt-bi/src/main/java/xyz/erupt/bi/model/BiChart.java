@@ -17,7 +17,7 @@ import javax.persistence.*;
  * @date 2019-12-24.
  */
 @Entity
-@Table(name = "E_BI_CHART", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_bi_chart", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
 @Erupt(name = "图表配置", orderBy = "sort")
 @Getter
 @Setter
@@ -41,12 +41,6 @@ public class BiChart extends HyperModel {
                     sliderType = @SliderType(max = 12, markPoints = {1, 2, 3, 4, 6, 8, 12}, dots = true))
     )
     private Integer grid = 1;
-
-//    @EruptField(
-//            views = @View(title = "查询项依赖"),
-//            edit = @Edit(title = "查询项依赖")
-//    )
-//    private Boolean dependSearch = false;
 
     @EruptField(
             views = @View(title = "高度(px)"),
@@ -83,49 +77,55 @@ public class BiChart extends HyperModel {
      */
     @EruptField(
             views = @View(title = "图表类型"),
-            edit = @Edit(title = "图表类型", notNull = true, desc = "图表参考：G2Plot", type = EditType.CHOICE, choiceType = @ChoiceType(
-                    type = ChoiceType.Type.RADIO,
-                    vl = {
-                            //------------
-                            @VL(label = "折线图", value = "Line"),
-                            @VL(label = "阶梯折线图", value = "StepLine"),
-                            @VL(label = "柱状图", value = "Column"),
-                            @VL(label = "堆叠柱状图", value = "StackedColumn"),
-                            @VL(label = "面积图", value = "Area"),
-                            @VL(label = "百分比面积图", value = "PercentageArea"),
-                            @VL(label = "条形图", value = "Bar"),
-                            @VL(label = "百分比条形图", value = "PercentStackedBar"),
-                            @VL(label = "散点图", value = "Scatter"),
-                            //------------
-                            @VL(label = "饼图", value = "Pie"),
-                            @VL(label = "环形图", value = "Ring"),
-                            @VL(label = "玫瑰图", value = "Rose"),
-                            @VL(label = "雷达图", value = "Radar"),
-                            //------------
-                            @VL(label = "气泡图", value = "Bubble", desc = "需要4个数据列：x / y / series / size"),
-                            @VL(label = "瀑布图", value = "Waterfall", desc = "需要2个数据列：x:名称 y:增加或减少的值"),
-                            @VL(label = "漏斗图", value = "Funnel"),
-//                            @VL(label = "词云", value = "WordCloud", desc = "需要2个数据列：x:名称 y:数值"),
-//                            @VL(label = "热力图", value = "Heatmap", desc = "最少需要3个数据列，size可选：x / y / value / [size]"),
-//                            @VL(label = "HTML", value = "html"),
-//                            @VL(label = "表格", value = "table"),
-                    }
-            ))
+            edit = @Edit(title = "图表类型", notNull = true, desc = "图表参考：G2Plot", type = EditType.CHOICE,
+                    choiceType = @ChoiceType(
+                            type = ChoiceType.Type.RADIO,
+                            vl = {
+                                    //------------
+                                    @VL(label = "折线图", value = "Line"),
+                                    @VL(label = "阶梯折线图", value = "StepLine"),
+                                    @VL(label = "柱状图", value = "Column"),
+                                    @VL(label = "堆叠柱状图", value = "StackedColumn"),
+                                    @VL(label = "面积图", value = "Area"),
+                                    @VL(label = "百分比面积图", value = "PercentageArea"),
+                                    @VL(label = "条形图", value = "Bar"),
+                                    @VL(label = "百分比条形图", value = "PercentStackedBar"),
+                                    @VL(label = "散点图", value = "Scatter"),
+                                    //------------
+                                    @VL(label = "饼图", value = "Pie"),
+                                    @VL(label = "环形图", value = "Ring"),
+                                    @VL(label = "玫瑰图", value = "Rose"),
+                                    @VL(label = "雷达图", value = "Radar"),
+                                    //------------
+                                    @VL(label = "气泡图", value = "Bubble", desc = "需要4个数据列：x / y / series / size"),
+                                    @VL(label = "瀑布图", value = "Waterfall", desc = "需要2个数据列：x:名称 y:增加或减少的值"),
+                                    @VL(label = "漏斗图", value = "Funnel"),
+                                    //@VL(label = "词云", value = "WordCloud", desc = "需要2个数据列：x:名称 y:数值"),
+                                    //@VL(label = "热力图", value = "Heatmap", desc = "最少需要3个数据列，size可选：x / y / value / [size]"),
+                                    @VL(label = "自定义模板", value = "tpl", desc = "图表sql可由模板进行自定义渲染"),
+                            }
+                    ))
     )
     private String type;
+
+    @EruptField(
+            edit = @Edit(title = "模板地址", desc = "项目内路径，解析方式为freemarker，可通过data获取图表数据，option获取自定义图表参数",
+                    showBy = @ShowBy(dependField = "type", expr = "value=='tpl'"))
+    )
+    private String path;
 
     @Lob
     @EruptField(
             views = @View(title = "图表SQL"),
-            edit = @Edit(title = "图表SQL", desc = "规则：二维切片，三维切片，维度顺序：X -> Y -> Series", type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
+            edit = @Edit(title = "图表SQL", desc = "规则：二维切片，三维切片，维度顺序：X -> Y -> Series",
+                    type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
     @Lob
     @EruptField(
             edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照G2Plot",
-                    type = EditType.CODE_EDITOR,
-                    codeEditType = @CodeEditorType(language = "json"))
+                    type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
     )
     private String chartOption;
 

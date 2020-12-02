@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.auth.model.base.HyperModel;
@@ -21,7 +22,7 @@ import java.util.Set;
  * @date 2019-08-26.
  */
 @Entity
-@Table(name = "E_BI", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_bi", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "报表配置",
         dataProxy = BiDataProxy.class,
         drills = {
@@ -47,7 +48,7 @@ public class Bi extends HyperModel {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "DATASOURCE_ID")
+    @JoinColumn(name = "datasource_id")
     @EruptField(
             views = @View(title = "数据源", column = "name"),
             edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search)
@@ -75,10 +76,18 @@ public class Bi extends HyperModel {
 
     @Lob
     @EruptField(
-            views = @View(title = "SQL语句"),
+            views = {
+                    @View(title = "SQL语句")
+            },
             edit = @Edit(title = "SQL语句", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
+
+    @Transient
+    @EruptField(
+            views = @View(title = "效果预览", type = ViewType.LINK_DIALOG, desc = "需提前设置菜单权限")
+    )
+    private String view;
 
 //    @Lob
 //    @EruptField(
@@ -87,11 +96,12 @@ public class Bi extends HyperModel {
 //    private String countSql;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "BI_ID")
+    @JoinColumn(name = "bi_id")
     private Set<BiChart> biCharts;
 
+    @OrderBy("sort")
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "BI_ID")
+    @JoinColumn(name = "bi_id")
     @EruptField(
             edit = @Edit(title = "查询维度", type = EditType.TAB_TABLE_ADD)
     )

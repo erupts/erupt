@@ -18,15 +18,15 @@ import java.util.Set;
 public class ${erupt.className} extends BaseModel {
 
     <#list erupt.fields?sort_by('sort') as field>
-        <#assign type = GeneratorType.valueOf(field.type)/>
+        <#assign type = GeneratorType.valueOf(field.type) />
         @EruptField(
                 views = @View(
                         title = "${field.showName}"${field.sortable?string(', sortable = true', '')}${field.isShow?string('', ', show = false')}
                 ),
                 edit = @Edit(
                         title = "${field.showName}",
-                        type = EditType.${type.mapping.name()}${field.isShow?string('', ', show = false')}${field.notNull?string(', notNull = true', '')}
-                        <#if type.code??>${', ' + type.code}</#if>
+                        type = EditType.${type.mapping.name()}${field.isShow?string('', ', show = false')}${field.notNull?string(', notNull = true', '')}<#if type.code??>${',
+                        ' + type.code}</#if>
                 )
         )
         private ${GeneratorType.replaceLinkClass(type, erupt.className, field.linkClass!)} ${field.fieldName};

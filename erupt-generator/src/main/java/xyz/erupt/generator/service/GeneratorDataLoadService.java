@@ -25,7 +25,6 @@ public class GeneratorDataLoadService implements CommandLineRunner {
     @Autowired
     private EruptDao eruptDao;
 
-
     @Transactional
     @Override
     public void run(String... args) throws Exception {

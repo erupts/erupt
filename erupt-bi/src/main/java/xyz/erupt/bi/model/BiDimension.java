@@ -22,7 +22,7 @@ import javax.persistence.Table;
  * @date 2019-08-26.
  */
 @Entity
-@Table(name = "E_BI_DIMENSION")
+@Table(name = "e_bi_dimension")
 @Erupt(name = "查询维度")
 @Getter
 @Setter

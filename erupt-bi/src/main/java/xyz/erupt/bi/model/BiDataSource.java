@@ -30,7 +30,7 @@ import java.util.List;
  * @date 2019-08-26.
  */
 @Entity
-@Table(name = "E_BI_DATASOURCE", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_bi_datasource", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "数据源", dataProxy = BiDataSourceService.class)
 @Getter
 @Setter

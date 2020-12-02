@@ -23,7 +23,7 @@ import java.util.Date;
  * @date 2019-08-26.
  */
 @Entity
-@Table(name = "E_BI_HISTORY")
+@Table(name = "e_bi_history")
 @Erupt(
         name = "报表历史记录",
         orderBy = "operateTime desc",

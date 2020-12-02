@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @date 2020-03-30
  */
 @Entity
-@Table(name = "E_BI_DIMENSION_REFERENCE")
+@Table(name = "e_bi_dimension_reference")
 @Erupt(name = "参照维度")
 @Getter
 @Setter

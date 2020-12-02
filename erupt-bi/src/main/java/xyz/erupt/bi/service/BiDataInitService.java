@@ -69,7 +69,7 @@ public class BiDataInitService implements CommandLineRunner {
 
     @SneakyThrows
     private void loadDefaultFunction() {
-        String defaultFunctionCode = "DefaultFunction";
+        String defaultFunctionCode = "default_function";
         eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(defaultFunctionCode,
                         defaultFunctionCode, StreamUtils.copyToString(BiDataInitService.class
                         .getResourceAsStream("./BiDefaultFunction.js"), StandardCharsets.UTF_8)),

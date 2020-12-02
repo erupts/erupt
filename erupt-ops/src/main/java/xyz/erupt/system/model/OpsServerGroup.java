@@ -20,7 +20,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "E_OPS_SERVER_GROUP")
+@Table(name = "e_ops_server_group")
 @Erupt(
         name = "服务器组别",
         orderBy = "OpsServerGroup.sort",

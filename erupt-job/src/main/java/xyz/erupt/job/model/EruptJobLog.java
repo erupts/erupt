@@ -27,13 +27,13 @@ import java.util.Date;
         power = @Power(export = true, add = false, delete = false, edit = false, viewDetails = false)
 )
 @Entity
-@Table(name = "E_JOB_LOG")
+@Table(name = "e_job_log")
 @Getter
 @Setter
 public class EruptJobLog extends BaseModel {
 
     @ManyToOne
-    @JoinColumn(name = "JOB_ID")
+    @JoinColumn(name = "job_id")
     @EruptField(
             views = @View(title = "任务名称", column = "name"),
             edit = @Edit(title = "任务名称", show = false, search = @Search, type = EditType.REFERENCE_TREE)

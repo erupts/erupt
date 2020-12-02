@@ -24,7 +24,7 @@ import javax.persistence.Transient;
  * @date 2019-08-26.
  */
 @Entity
-@Table(name = "E_BI_FUNCTION")
+@Table(name = "e_bi_function")
 @Erupt(name = "报表函数", dataProxy = BiFunction.class)
 @Getter
 @Service
