@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>xyz.erupt</groupId>
+    <artifactId>erupt-pro</artifactId>
+    <version>1.3.4</version>
+
+    <packaging>pom</packaging>
+    <name>erupt-pro</name>
+    <description>erupt common data framework pom parent</description>
+    <url>https://www.erupt.xyz</url>
+
+    <properties>
+        <erupt.groupId>xyz.erupt</erupt.groupId>
+        <erupt.version>1.3.4</erupt.version>
+        <java.version>1.8</java.version>
+        <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
+    </properties>
+
+    <!--
+    在编译spring boot 等多模块项目的时候，往往出现
+    Non-resolvable parent POM: Could not find artifact
+    后面跟一串其它信息，网上大部分解决方案是修改relativePath配置项，
+    其实这是很不优雅的方式。这里介绍另一种解决方案。
+    解决办法如下，把父项目的modules里面的配置全部注释或者删除，
+    让后编译并打包并安装，在提示成功后，再把原来注释活删除的配置项还原即可，然后再编译即可成功。
+    -->
+    <modules>
+        <module>erupt-tpl</module>
+        <module>erupt-bi</module>
+        <module>erupt-generator</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgs>
+                        <compilerArg>-parameters</compilerArg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- 一键更新子模块版本号 plugins -> versions -> version:set  -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>wings-times</id>
+            <name>wings-times-releases</name>
+            <url>http://192.168.1.189:8081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
+</project>
