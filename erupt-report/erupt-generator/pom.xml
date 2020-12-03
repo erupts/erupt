@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>xyz.erupt</groupId>
-        <artifactId>erupt</artifactId>
-        <version>1.3.3</version>
+        <artifactId>erupt-pro</artifactId>
+        <version>1.3.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
