@@ -11,7 +11,8 @@ import java.lang.annotation.*;
 @Documented
 public @interface EruptRouter {
 
-    int authIndex();
+    //校验方式为erupt时使用
+    int authIndex() default 0;
 
     int skipAuthIndex() default 2;
 

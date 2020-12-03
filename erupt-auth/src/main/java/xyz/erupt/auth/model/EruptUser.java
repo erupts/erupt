@@ -46,7 +46,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 
     @EruptField(
             views = @View(title = "用户名", sortable = true),
-            edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true)
+            edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true, search = @Search(vague = true))
     )
     private String account;
 
@@ -78,6 +78,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
             views = @View(title = "账户状态"),
             edit = @Edit(
                     title = "账户状态",
+                    search = @Search,
                     type = EditType.BOOLEAN,
                     boolType = @BoolType(
                             trueText = "激活",
@@ -112,8 +113,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
                     boolType = @BoolType(
                             trueText = "加密",
                             falseText = "不加密"
-                    ),
-                    search = @Search
+                    )
             )
     )
     private Boolean isMd5;
@@ -147,8 +147,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     @EruptField(
             edit = @Edit(
                     title = "备注",
-                    type = EditType.TEXTAREA,
-                    search = @Search(vague = true)
+                    type = EditType.TEXTAREA
             )
     )
     private String remark;

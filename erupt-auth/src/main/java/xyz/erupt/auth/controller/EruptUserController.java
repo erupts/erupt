@@ -69,7 +69,7 @@ public class EruptUserController {
 
     @GetMapping("/menu")
     @ResponseBody
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = -1)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public List<EruptMenuVo> getMenu(HttpServletRequest request) {
         return sessionService.get(SessionKey.MENU_VIEW + request.getHeader("token"), new TypeToken<List<EruptMenuVo>>() {
         }.getType());
@@ -77,7 +77,7 @@ public class EruptUserController {
 
     @PostMapping("/logout")
     @ResponseBody
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = -1)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel logout(HttpServletRequest request) {
         String token = request.getHeader(LoginInterceptor.ERUPT_HEADER_TOKEN);
         sessionService.remove(SessionKey.MENU + token);
@@ -88,7 +88,7 @@ public class EruptUserController {
 
     @PostMapping("/change-pwd")
     @ResponseBody
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = -1)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel changePwd(@RequestParam("account") String account,
                                    @RequestParam("pwd") String pwd,
                                    @RequestParam("newPwd") String newPwd,
