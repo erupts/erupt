@@ -4,16 +4,17 @@
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 
-网站首页：https://www.erupt.xyz
-
 国内仓库：https://gitee.com/erupt/erupt
 
 国外仓库：https://github.com/erupts/erupt
 
+## 网站首页🚀
+https://www.erupt.xyz
+
 ## 项目介绍
-通过注解快速构建Admin管理后台  
+快速构建Admin管理后台  
 零前端代码、无需编写后端controller、service、dao、mapper ！    
-仅需创建model与对应注解即可！！
+仅创建实体类与对应注解即可 ！
 
 ## 代码示例
 ``` java
