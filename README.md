@@ -50,7 +50,7 @@ public class Simple extends BaseModel {
 }
 ```
 ## 运行效果
-![avatar](https://cdn.nlark.com/yuque/0/2020/gif/117735/1599711030466-c546dd4e-a167-4c12-b00e-00bfbf962c73.gif)
+![avatar](https://gitee.com/erupt/erupt/raw/master/img/simple.gif)
 
 ## 技术体系
 后端  
