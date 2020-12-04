@@ -12,8 +12,8 @@ import xyz.erupt.auth.constant.MenuTypeEnum;
 import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.util.MenuTool;
 import xyz.erupt.bi.model.*;
-import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.ProjectUtil;
+import xyz.erupt.eruptdb.dao.EruptDao;
 
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +30,7 @@ import java.util.List;
 public class BiDataInitService implements CommandLineRunner {
 
     static List<String> functions = new ArrayList<>();
+
     @Autowired
     private EruptDao eruptDao;
 

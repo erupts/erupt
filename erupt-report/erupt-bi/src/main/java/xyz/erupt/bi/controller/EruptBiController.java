@@ -23,7 +23,6 @@ import xyz.erupt.bi.view.Reference;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptExcelService;
@@ -31,6 +30,7 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.ExcelUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
+import xyz.erupt.eruptdb.dao.EruptDao;
 import xyz.erupt.tpl.service.EruptTplService;
 
 import javax.annotation.Resource;
@@ -69,7 +69,7 @@ public class EruptBiController {
     private HttpServletRequest request;
 
     @RequestMapping("/{code}")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     public BiModel getBuilder(@PathVariable("code") String code, HttpServletResponse response) {
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code",
                 new HashMap<String, Object>(1) {
@@ -118,26 +118,26 @@ public class EruptBiController {
         return biModel;
     }
 
-    @PostMapping("/data/{id}")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @PostMapping("/{code}/data/{id}")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     public BiData getData(@PathVariable("id") Long id,
                           @RequestParam("index") int pageIndex,
                           @RequestParam("size") int pageSize,
                           @RequestParam(value = "sort", required = false) String sort,
-                          @RequestBody Map<String, Object> query) {
+                          @RequestBody Map<String, Object> query, @PathVariable String code) {
         if (pageSize > 100) {
             pageSize = 100;
         }
         Bi bi = biService.findBi(id);
-        this.verifyBiMenuPermissions(bi);
+        this.verifyBiMenuPermissions(bi, code);
         return biService.queryBiData(bi, pageIndex, pageSize, query, false);
     }
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
-    @RequestMapping("/reference/{id}")
-    public List<Reference> refQuery(@PathVariable("id") Long dimId) {
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
+    @RequestMapping("/{code}/reference/{id}")
+    public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code) {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
-        this.verifyBiMenuPermissions(dimension.getBi());
+        this.verifyBiMenuPermissions(dimension.getBi(), code);
         BiDimensionReference reference = dimension.getBiDimensionReference();
         List<Map<String, Object>> list = biService.startQuery(reference.getRefSql(), reference.getClassHandler(), reference.getDataSource(), null);
         List<Reference> references = new ArrayList<>();
@@ -156,26 +156,26 @@ public class EruptBiController {
         return references;
     }
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
-    @RequestMapping("/chart/{id}")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
+    @RequestMapping("/{code}/chart/{id}")
     public List<Map<String, Object>> biChart(@PathVariable("id") Long chartId, @RequestBody Map<String, Object> query,
-                                             HttpServletRequest request) {
+                                             HttpServletRequest request, @PathVariable String code) {
         BiChart chart = entityManager.find(BiChart.class, chartId);
-        this.verifyBiMenuPermissions(chart.getBi());
+        this.verifyBiMenuPermissions(chart.getBi(), code);
         return biService.startQuery(chart.getSqlStatement(), chart.getClassHandler(), chart.getDataSource(), query);
     }
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    @RequestMapping("/excel/{id}")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 1)
+    @RequestMapping("/{code}/excel/{id}")
     public void exportExcel(@PathVariable("id") Long id,
                             @RequestParam("condition") String conditionStr,
                             HttpServletRequest request,
-                            HttpServletResponse response) throws ClassNotFoundException, IOException {
+                            HttpServletResponse response, @PathVariable String code) throws ClassNotFoundException, IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
             return;
         }
         Bi bi = biService.findBi(id);
-        this.verifyBiMenuPermissions(bi);
+        this.verifyBiMenuPermissions(bi, code);
         if (!bi.getExport()) {
             throw new EruptWebApiRuntimeException(bi.getName() + "禁止导出！");
         }
@@ -227,17 +227,17 @@ public class EruptBiController {
         wb.write(HttpUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLS_FORMAT));
     }
 
-    @GetMapping(value = "/custom-chart/{id}", produces = {"text/html;charset=UTF-8"})
-    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    @GetMapping(value = "/{code}/custom-chart/{id}", produces = {"text/html;charset=UTF-8"})
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void customerChart(@PathVariable("id") Long chartId,
                               @RequestParam("condition") String conditionStr,
-                              HttpServletResponse response) throws IOException {
+                              HttpServletResponse response, @PathVariable String code) throws IOException {
         response.setCharacterEncoding("utf-8");
         Map<String, Object> condition = gson.fromJson(URLDecoder.decode(conditionStr, "utf-8"),
                 new TypeToken<Map<String, Object>>() {
                 }.getType());
         BiChart biChart = entityManager.find(BiChart.class, chartId);
-        this.verifyBiMenuPermissions(biChart.getBi());
+        this.verifyBiMenuPermissions(biChart.getBi(), code);
         Map<String, Object> map = new HashMap<>();
         map.put("data", biService.startQuery(biChart.getSqlStatement(), biChart.getClassHandler(), biChart.getDataSource(), condition));
         EruptTplService eruptTplService = EruptSpringUtil.getBean(EruptTplService.class);
@@ -245,12 +245,12 @@ public class EruptBiController {
     }
 
     //校验请求id是否拥有菜单权限
-    private void verifyBiMenuPermissions(Bi bi) {
+    private void verifyBiMenuPermissions(Bi bi, String code) {
         String biCode = request.getHeader(LoginInterceptor.ERUPT_HEADER_KEY);
         if (null == biCode) {
             biCode = request.getParameter(LoginInterceptor.URL_ERUPT_PARAM_KEY);
         }
-        if (!biCode.equals(bi.getCode())) {
+        if (!biCode.equals(bi.getCode()) || !code.equals(bi.getCode())) {
             throw new EruptNoLegalPowerException();
         }
     }

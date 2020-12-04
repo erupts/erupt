@@ -7,8 +7,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import xyz.erupt.auth.constant.MenuTypeEnum;
 import xyz.erupt.auth.model.EruptMenu;
-import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.ProjectUtil;
+import xyz.erupt.eruptdb.dao.EruptDao;
 import xyz.erupt.generator.model.GeneratorClass;
 
 import javax.transaction.Transactional;
