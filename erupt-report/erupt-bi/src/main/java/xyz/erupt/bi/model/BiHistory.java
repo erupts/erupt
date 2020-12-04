@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.auth.model.EruptUser;
-import xyz.erupt.auth.model.base.BaseModel;
+import xyz.erupt.db.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;

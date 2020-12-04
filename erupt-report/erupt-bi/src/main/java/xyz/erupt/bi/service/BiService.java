@@ -16,7 +16,7 @@ import xyz.erupt.bi.view.BiColumn;
 import xyz.erupt.bi.view.BiData;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.eruptdb.dao.EruptDao;
+import xyz.erupt.db.dao.EruptDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

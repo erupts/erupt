@@ -13,7 +13,7 @@ import xyz.erupt.auth.model.EruptMenu;
 import xyz.erupt.auth.util.MenuTool;
 import xyz.erupt.bi.model.*;
 import xyz.erupt.core.util.ProjectUtil;
-import xyz.erupt.eruptdb.dao.EruptDao;
+import xyz.erupt.db.dao.EruptDao;
 
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;

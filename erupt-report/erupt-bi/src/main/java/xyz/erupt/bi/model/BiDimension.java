@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.auth.model.base.BaseModel;
+import xyz.erupt.db.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

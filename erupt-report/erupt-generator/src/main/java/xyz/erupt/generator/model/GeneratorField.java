@@ -14,8 +14,8 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
-import xyz.erupt.auth.model.base.BaseModel;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.db.model.BaseModel;
 import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.generator.base.Ref;
 
