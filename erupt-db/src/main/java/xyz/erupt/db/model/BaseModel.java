@@ -1,4 +1,4 @@
-package xyz.erupt.auth.model.base;
+package xyz.erupt.db.model;
 
 import lombok.Getter;
 import lombok.Setter;

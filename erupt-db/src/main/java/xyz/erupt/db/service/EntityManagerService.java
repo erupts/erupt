@@ -1,4 +1,4 @@
-package xyz.erupt.eruptdb.service;
+package xyz.erupt.db.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;

@@ -10,10 +10,10 @@
 
 QQ交流群：821389129
 
-## 网站首页🚀
-https://www.erupt.xyz
+## 🚀 网站首页
+<img src="./erupt-web/src/main/resources/public/erupt.svg" width="150" alt="logo"/><br/>
 
-<img src="./erupt-web/src/main/resources/public/erupt.svg" width="160" alt="logo"/><br/>
+https://www.erupt.xyz
 
 ## 项目简介
 使用Erupt framework可快速构建企业级Admin管理后台，安全高效且无冗余代码。
@@ -106,10 +106,10 @@ public class Simple extends BaseModel {
 + 代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并，虽然减轻了一部分工作，但仍需更好的解决方式。
 
 ## 技术体系
-后端  
+#### 后端  
 Java 8、ScriptEngine、Annotation、jdbc、Reflect、Spring Boot、JPA、Hibernate、Quartz、Gson、lombok、freemarker ...
 
-前端  
+#### 前端  
 JavaScript、h5、MVVM、Router、Angular CLI、Angular、NG-ZORRO、NG-ALAIN、G2Plot、RxJS、TypeScript、Less ...
 
 ## 演示Demo 

@@ -2,6 +2,11 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>erupt-upms</artifactId>
+    <description>用户权限管理</description>
+    <packaging>jar</packaging>
+
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
@@ -9,32 +14,12 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>erupt-db</artifactId>
-    <name>erupt-db</name>
-    <description>EruptProcess database impl</description>
-
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>${erupt.groupId}</groupId>
-            <artifactId>erupt-core</artifactId>
+            <artifactId>erupt-db</artifactId>
             <version>${parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
+

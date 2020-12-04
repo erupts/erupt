@@ -1,4 +1,4 @@
-package xyz.erupt.eruptdb.dao;
+package xyz.erupt.db.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.sub_erupt.Filter;

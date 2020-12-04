@@ -12,7 +12,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.base.BaseModel;
+import xyz.erupt.db.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
