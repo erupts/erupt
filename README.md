@@ -1,5 +1,7 @@
 # Erupt Framework 通用数据管理框架
 
+![avatar](./erupt-web/src/main/resources/public/erupt.svg)
+
 [![star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
@@ -11,10 +13,21 @@
 ## 网站首页🚀
 https://www.erupt.xyz
 
-## 项目介绍
+## 项目简介
 快速构建Admin管理后台  
 零前端代码、无需编写后端controller、service、dao、mapper ！    
 仅创建实体类与对应注解即可 ！
+
+
+## 使用场景
+
+
+## 为什么要做Erupt 
++ 相信大家都知道，开发管理后台是项目中必不可少的工作，
+开发过的都知道功能性与美观程度很难做到优秀  
++ 本来要需要一个月的工作任务，能否在几小时之内完成呢？
++ 需求的不断更迭是常态，代码生成器面对字段的修改与增加工作量会越来越大，但是erupt可以很好的解决这个问题，
+
 
 ## 代码示例
 ``` java
