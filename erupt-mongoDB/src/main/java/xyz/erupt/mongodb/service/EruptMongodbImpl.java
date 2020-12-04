@@ -15,7 +15,6 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 
 import javax.annotation.Resource;
-import javax.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -39,23 +38,7 @@ public class EruptMongodbImpl implements IEruptDataService {
     @Override
     public Page queryList(EruptModel eruptModel, Page page, EruptQuery eruptQuery) {
         Query query = new Query();
-        for (Condition condition : eruptQuery.getConditions()) {
-            switch (condition.getExpression()) {
-                case EQ:
-                    query.addCriteria(Criteria.where(condition.getKey()).is(condition.getValue()));
-                    break;
-                case LIKE:
-                    query.addCriteria(Criteria.where(condition.getKey()).regex("^.*" + condition.getValue() + ".*$"));
-                    break;
-                case RANGE:
-                    List<?> list = (List<?>) condition.getValue();
-                    query.addCriteria(Criteria.where(condition.getKey()).gte(list.get(0)).lte(list.get(1)));
-                    break;
-                case IN:
-                    query.addCriteria(Criteria.where(condition.getKey()).in(condition.getValue()));
-                    break;
-            }
-        }
+        this.addQueryCondition(eruptQuery, query);
         page.setTotal(mongoTemplate.count(query, eruptModel.getClazz()));
         if (page.getTotal() > 0) {
             query.limit(page.getPageSize());
@@ -79,18 +62,33 @@ public class EruptMongodbImpl implements IEruptDataService {
         return page;
     }
 
+    public void addQueryCondition(EruptQuery eruptQuery, Query query) {
+        for (Condition condition : eruptQuery.getConditions()) {
+            switch (condition.getExpression()) {
+                case EQ:
+                    query.addCriteria(Criteria.where(condition.getKey()).is(condition.getValue()));
+                    break;
+                case LIKE:
+                    query.addCriteria(Criteria.where(condition.getKey()).regex("^.*" + condition.getValue() + ".*$"));
+                    break;
+                case RANGE:
+                    List<?> list = (List<?>) condition.getValue();
+                    query.addCriteria(Criteria.where(condition.getKey()).gte(list.get(0)).lte(list.get(1)));
+                    break;
+                case IN:
+                    query.addCriteria(Criteria.where(condition.getKey()).in(condition.getValue()));
+                    break;
+            }
+        }
+    }
+
     @SneakyThrows
     private Map<String, Object> mongoObjectToMap(Object obj) {
         Map<String, Object> map = new HashMap<>();
         Class<?> clazz = obj.getClass();
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
-            String fieldName = field.getName();
-            if (null != field.getAnnotation(Id.class)) {
-                map.put(fieldName, field.get(obj).toString());
-            } else {
-                map.put(fieldName, field.get(obj));
-            }
+            map.put(field.getName(), field.get(obj));
         }
         return map;
     }
@@ -111,7 +109,14 @@ public class EruptMongodbImpl implements IEruptDataService {
     }
 
     @Override
-    public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
-        return null;
+    public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery eruptQuery) {
+        Query query = new Query();
+        this.addQueryCondition(eruptQuery, query);
+        columns.stream().map(Column::getName).forEach(query.fields()::include);
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Object obj : mongoTemplate.find(query, eruptModel.getClazz())) {
+            list.add(mongoObjectToMap(obj));
+        }
+        return list;
     }
 }

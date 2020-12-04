@@ -1,8 +1,9 @@
 # Erupt Framework 通用数据管理框架
+快速搭建企业级管理后台
 
 <img src="./erupt-web/src/main/resources/public/erupt.svg" width="160" alt="logo"/><br/>
 
-[![star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
+[![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 
@@ -19,14 +20,11 @@ https://www.erupt.xyz
 仅创建实体类与对应注解即可 ！
 
 
-## 使用场景
-
 
 ## 为什么要做Erupt 
-+ 相信大家都知道，开发管理后台是项目中必不可少的工作，
-开发过的都知道功能性与美观程度很难做到优秀  
-+ 本来要需要一个月的工作任务，能否在几小时之内完成呢？
-+ 需求的不断更迭是常态，代码生成器面对字段的修改与增加工作量会越来越大，但是erupt可以很好的解决这个问题，
++ 开发管理后台是项目中必不可少的工作，但往往管理后台的开发周期要占到实际工作量的50%
++ 本来要需要一个月甚至几个月的工作任务，能否在几小时之内完成呢？
++ 代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并。
 
 
 ## 代码示例
@@ -64,6 +62,34 @@ public class Simple extends BaseModel {
 ```
 ## 运行效果
 ![result](./img/simple.gif)
+
+##演示截图
+<table>
+    <tr>
+        <td><img src="./img/login.png"/></td>
+        <td><img src="./img/home.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="./img/role.png"/></td>
+        <td><img src="./img/log.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="./img/code.png"/></td>
+        <td><img src="./img/job.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="./img/tpl.png"/></td>
+        <td><img src="./img/complex.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="./img/goods.png"/></td>
+        <td><img src="./img/chart.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="./img/bi.png"/></td>
+        <td><img src="./img/bi2.png"/></td>
+    </tr>
+</table>
 
 ## 技术体系
 后端  

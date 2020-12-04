@@ -32,7 +32,7 @@ public interface IEruptDataService {
      * @param query      查询对象
      * @return 页面对象
      */
-    Page queryList(EruptModel eruptModel, Page page, EruptQuery query);
+    Page queryList(EruptModel eruptModel, Page page, EruptQuery eruptQuery);
 
     /**
      * 根据列查询相关数据
@@ -41,7 +41,7 @@ public interface IEruptDataService {
      * @param columns    列
      * @param query      查询对象
      */
-    Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery query);
+    Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery eruptQuery);
 
 
     /**
