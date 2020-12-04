@@ -16,22 +16,19 @@ https://www.erupt.xyz
 <img src="./erupt-web/src/main/resources/public/erupt.svg" width="160" alt="logo"/><br/>
 
 ## 项目简介
-快速构建企业级Admin管理后台，几分钟就可搭建一个完全可控的管理页面，从此以后专注业务逻辑！
-零前端代码，自动生成数据库表结构，无需编写controller、service、dao、mapper，仅创建实体类与对应注解即可 ！
+使用Erupt framework可快速构建企业级Admin管理后台，安全高效且无冗余代码。
+几分钟就可搭建一个完全可控的管理页面，从此专注核心逻辑的开发。
+零前端代码，自动生成数据库表结构，无需编写controller、service、dao、mapper，仅创建实体类与对应注解即可！
 
 ## 核心功能
-+ erupt      提供注解式开发api,让开发效率倍增
-+ erupt-auth 用户管理，菜单管理，角色管理，字典项配置，安全控制，访问拦截，等一系列安全相关功能。
-+ erupt-job  可使用此模块快速开发与配置定时任务相关功能
-+ erupt-mongodb  使用erupt管理mongodb数据源
-+ erupt-bi   可配置话报表工具，仅需后台配置加sql语句
-+ erupt-tpl  支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
-+ erupt-generator 代码生成器，通过简单配置，生成erupt代码段
-
-## 为什么要做Erupt 
-+ 开发管理后台是项目中必不可少的工作，但往往管理后台的开发周期要占到实际工作量的50%
-+ 本来要需要一个月甚至几个月的工作任务，能否在几小时之内完成呢？
-+ 代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并。
++ erupt-core        提供注解式开发api,让开发效率倍增
++ erupt-db          提供关系型数据库访问功能
++ erupt-auth        用户管理，菜单管理，角色管理，字典项配置，安全控制，访问拦截，等一系列安全相关功能。
++ erupt-job         可使用此模块快速开发与配置定时任务相关功能
++ erupt-mongodb     提供mongodb数据管理功能
++ erupt-bi          可配置话报表工具，仅需后台配置加sql语句
++ erupt-tpl         支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
++ erupt-generator   代码生成器，通过简单配置，生成erupt代码段
 
 
 ## 代码示例
@@ -102,12 +99,18 @@ public class Simple extends BaseModel {
     </tr>
 </table>
 
+## 为什么要做Erupt 
++ 开发管理后台是项目中必不可少的工作，但往往管理后台的开发周期要占到实际工作量的50%
++ 开发后台数据管理系统，管理系统页面单一，接口众多，很多后端小伙伴被迫开始接触的前端代码，
++ 本来要需要一个月甚至几个月的工作任务，能否在几小时之内完成呢？
++ 代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并，虽然减轻了一部分工作，但仍需更好的解决方式。
+
 ## 技术体系
 后端  
 Java 8、ScriptEngine、Annotation、jdbc、Reflect、Spring Boot、JPA、Hibernate、Quartz、Gson、lombok、freemarker ...
 
 前端  
-JavaScript、h5、MVVM、router、Angular、NG-ZORRO、NG-ALAIN、G2Plot、RxJS、TypeScript ...
+JavaScript、h5、MVVM、Router、Angular CLI、Angular、NG-ZORRO、NG-ALAIN、G2Plot、RxJS、TypeScript、Less ...
 
 ## 演示Demo 
 演示地址：https://www.erupt.xyz/demo  
