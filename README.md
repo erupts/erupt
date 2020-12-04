@@ -1,6 +1,6 @@
 # Erupt Framework 通用数据管理框架
 
-![avatar](./erupt-web/src/main/resources/public/erupt.svg)
+<img src="./erupt-web/src/main/resources/public/erupt.svg" width="160" alt="logo"/><br/>
 
 [![star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
@@ -63,7 +63,7 @@ public class Simple extends BaseModel {
 }
 ```
 ## 运行效果
-![avatar](./img/simple.gif)
+![result](./img/simple.gif)
 
 ## 技术体系
 后端  
