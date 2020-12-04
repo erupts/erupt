@@ -2,6 +2,8 @@ package xyz.erupt.mongodb.service;
 
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,6 +13,7 @@ import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.IEruptDataService;
+import xyz.erupt.core.util.DataProcessorManager;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 
@@ -23,8 +26,9 @@ import java.util.*;
  * @date 2020-03-06.
  */
 @Service
-public class EruptMongodbImpl implements IEruptDataService {
+public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
 
+    public static final String MONGODB_PROCESS = "mongodb";
     @Resource
     private MongoTemplate mongoTemplate;
 
@@ -110,6 +114,7 @@ public class EruptMongodbImpl implements IEruptDataService {
 
     @Override
     public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery eruptQuery) {
+
         Query query = new Query();
         this.addQueryCondition(eruptQuery, query);
         columns.stream().map(Column::getName).forEach(query.fields()::include);
@@ -118,5 +123,10 @@ public class EruptMongodbImpl implements IEruptDataService {
             list.add(mongoObjectToMap(obj));
         }
         return list;
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        DataProcessorManager.register(MONGODB_PROCESS, EruptMongodbImpl.class);
     }
 }

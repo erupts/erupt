@@ -1,26 +1,29 @@
-package xyz.erupt.core.service.impl;
+package xyz.erupt.eruptdb.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.core.dao.EruptJpaDao;
-import xyz.erupt.core.dao.EruptJpaUtils;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.service.EntityManagerService;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.IEruptDataService;
 import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.DataProcessorManager;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
+import xyz.erupt.eruptdb.dao.EruptJpaDao;
+import xyz.erupt.eruptdb.dao.EruptJpaUtils;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -35,7 +38,7 @@ import java.util.Map;
  * @date 2019-03-06.
  */
 @Service
-public class EruptDbService implements IEruptDataService {
+public class EruptDataServiceDbImpl implements IEruptDataService, ApplicationRunner {
 
     @Autowired
     private EruptJpaDao eruptJpaDao;
@@ -195,5 +198,10 @@ public class EruptDbService implements IEruptDataService {
             entityManager.close();
         }
         return list;
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        DataProcessorManager.register(EruptConst.DEFAULT_DATA_PROCESSOR, EruptDataServiceDbImpl.class);
     }
 }

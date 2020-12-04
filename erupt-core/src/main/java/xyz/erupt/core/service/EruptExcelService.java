@@ -7,7 +7,6 @@ import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.VLModel;
@@ -15,7 +14,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.core.dao.EruptDao;
+import xyz.erupt.core.query.Column;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ExcelUtil;
@@ -27,10 +26,7 @@ import xyz.erupt.core.view.Page;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liyuepeng
@@ -42,9 +38,6 @@ public class EruptExcelService {
     public static final String XLS_FORMAT = ".xls";
 
     public static final String XLSX_FORMAT = ".xlsx";
-
-    @Autowired
-    private EruptDao eruptDao;
 
     private static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
 
@@ -124,7 +117,7 @@ public class EruptExcelService {
             EruptFieldModel eruptFieldModel = editTitleMappingEruptField.get(titleName);
             cellIndexMapping.put(i, eruptFieldModel);
             Edit edit = eruptFieldModel.getEruptField().edit();
-            switch (eruptFieldModel.getEruptField().edit().type()) {
+            switch (edit.type()) {
                 case CHOICE:
                     Map<String, String> map = EruptUtil.getChoiceMap(edit.choiceType());
                     Map<String, Object> choiceMap = new HashMap<>(map.size());
@@ -141,22 +134,36 @@ public class EruptExcelService {
                     cellIndexJoinEruptMap.put(i, boolMap);
                     break;
                 case REFERENCE_TREE:
-                    List<Object[]> list = eruptDao.queryObjectList(eruptFieldModel.getField().getType(), "",
-                            null, edit.referenceTreeType().id(), edit.referenceTreeType().label());
+                    IEruptDataService iEruptDataService = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz());
+                    List<Column> columns = new ArrayList<>();
+                    columns.add(new Column(edit.referenceTreeType().id(), edit.referenceTreeType().id()));
+                    columns.add(new Column(edit.referenceTreeType().label(), edit.referenceTreeType().label()));
+                    Collection<Map<String, Object>> list = iEruptDataService.queryColumn(eruptModel, columns, null);
                     Map<String, Object> refTreeMap = new HashMap<>(list.size());
-                    for (Object[] obj : list) {
-                        refTreeMap.put(obj[1] == null ? null : obj[1].toString(), obj[0]);
+                    for (Map<String, Object> m : list) {
+                        Object label = m.get(edit.referenceTreeType().label());
+                        if (null == label) {
+                            continue;
+                        }
+                        refTreeMap.put(label.toString(), m.get(edit.referenceTreeType().id()));
                     }
                     cellIndexJoinEruptMap.put(i, refTreeMap);
                     break;
                 case REFERENCE_TABLE:
-                    list = eruptDao.queryObjectList(eruptFieldModel.getField().getType(), "",
-                            null, edit.referenceTableType().id(), edit.referenceTableType().label());
-                    refTreeMap = new HashMap<>(list.size());
-                    for (Object[] obj : list) {
-                        refTreeMap.put(obj[1] == null ? null : obj[1].toString(), obj[0]);
+                    IEruptDataService eruptDataProcessor = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz());
+                    List<Column> columnList = new ArrayList<>();
+                    columnList.add(new Column(edit.referenceTableType().id(), edit.referenceTableType().id()));
+                    columnList.add(new Column(edit.referenceTableType().label(), edit.referenceTableType().label()));
+                    Collection<Map<String, Object>> list2 = eruptDataProcessor.queryColumn(eruptModel, columnList, null);
+                    Map<String, Object> refTreeMap2 = new HashMap<>(list2.size());
+                    for (Map<String, Object> m : list2) {
+                        Object label = m.get(edit.referenceTableType().label());
+                        if (null == label) {
+                            continue;
+                        }
+                        refTreeMap2.put(label.toString(), m.get(edit.referenceTableType().id()));
                     }
-                    cellIndexJoinEruptMap.put(i, refTreeMap);
+                    cellIndexJoinEruptMap.put(i, refTreeMap2);
                     break;
                 default:
                     break;

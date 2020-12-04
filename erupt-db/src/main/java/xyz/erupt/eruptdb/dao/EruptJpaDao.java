@@ -1,4 +1,4 @@
-package xyz.erupt.core.dao;
+package xyz.erupt.eruptdb.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,13 +6,13 @@ import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.service.EntityManagerService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
+import xyz.erupt.eruptdb.service.EntityManagerService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.ManyToOne;

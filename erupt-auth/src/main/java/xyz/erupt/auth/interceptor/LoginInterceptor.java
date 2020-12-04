@@ -105,6 +105,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             case LOGIN:
                 break;
             case MENU:
+                String auth = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
+                if (!auth.equals(eruptName)) {
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    response.sendError(HttpStatus.FORBIDDEN.value());
+                    return false;
+                }
                 if (!eruptUserService.verifyMenuAuth(token, eruptName)) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());

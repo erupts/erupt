@@ -1,4 +1,4 @@
-package xyz.erupt.core.service;
+package xyz.erupt.eruptdb.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -10,6 +10,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.config.EruptProp;
+import xyz.erupt.core.service.EruptApplication;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

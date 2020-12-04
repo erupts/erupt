@@ -8,7 +8,7 @@ import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
-import xyz.erupt.core.dao.EruptDao;
+import xyz.erupt.eruptdb.dao.EruptDao;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 

@@ -30,6 +30,7 @@
     <modules>
         <module>erupt-annotation</module>
         <module>erupt-core</module>
+        <module>erupt-db</module>
         <module>erupt-auth</module>
         <module>erupt-web</module>
         <module>erupt-job</module>

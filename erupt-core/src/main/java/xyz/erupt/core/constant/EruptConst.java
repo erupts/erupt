@@ -8,4 +8,6 @@ public class EruptConst {
     public static final String BASE_PACKAGE = "xyz.erupt";
 
     public static final String ERUPT_DIR = ".erupt";
+
+    public static final String DEFAULT_DATA_PROCESSOR = "jpa";
 }

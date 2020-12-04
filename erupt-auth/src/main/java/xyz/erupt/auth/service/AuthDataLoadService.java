@@ -10,8 +10,8 @@ import xyz.erupt.auth.model.*;
 import xyz.erupt.auth.model.log.EruptLoginLog;
 import xyz.erupt.auth.model.log.EruptOperateLog;
 import xyz.erupt.auth.util.MD5Utils;
-import xyz.erupt.core.dao.EruptDao;
 import xyz.erupt.core.util.ProjectUtil;
+import xyz.erupt.eruptdb.dao.EruptDao;
 
 import javax.transaction.Transactional;
 import java.util.Date;
