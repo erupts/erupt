@@ -8,6 +8,8 @@
 
 国外仓库：https://github.com/erupts/erupt
 
+QQ交流群：821389129
+
 ## 网站首页🚀
 https://www.erupt.xyz
 
@@ -91,6 +93,10 @@ public class Simple extends BaseModel {
         <td><img src="./img/chart.png"/></td>
     </tr>
     <tr>
+        <td><img src="./img/component.png"/></td>
+        <td><img src="./img/component-edit.png"/></td>
+    </tr>
+    <tr>
         <td><img src="./img/bi.png"/></td>
         <td><img src="./img/bi2.png"/></td>
     </tr>
@@ -98,10 +104,10 @@ public class Simple extends BaseModel {
 
 ## 技术体系
 后端  
-Java 8、Spring Boot、JPA、Hibernate、quartz、Gson、lombok ...
+Java 8、ScriptEngine、Annotation、jdbc、Reflect、Spring Boot、JPA、Hibernate、Quartz、Gson、lombok、freemarker ...
 
 前端  
-Angular、NG-ZORRO、NG-ALAIN、G2Plot、RxJS、TypeScript ...
+JavaScript、h5、MVVM、router、Angular、NG-ZORRO、NG-ALAIN、G2Plot、RxJS、TypeScript ...
 
 ## 演示Demo 
 演示地址：https://www.erupt.xyz/demo  
