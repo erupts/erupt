@@ -16,11 +16,11 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Tpl;
-import xyz.erupt.auth.util.MenuTool;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
+import xyz.erupt.upms.util.MenuTool;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

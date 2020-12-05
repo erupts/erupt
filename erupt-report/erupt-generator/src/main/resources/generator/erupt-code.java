@@ -4,12 +4,9 @@
  */
 
 import xyz.erupt.annotation.*;
-import xyz.erupt.annotation.sub_erupt.*;
 import xyz.erupt.annotation.sub_field.*;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.auth.model.base.*;
+
 import javax.persistence.*;
-import java.util.Set;
 
 <#assign erupt=rows[0]/>
 @Erupt(name = "${erupt.name}")

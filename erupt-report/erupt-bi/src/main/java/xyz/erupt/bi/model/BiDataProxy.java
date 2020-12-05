@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.auth.model.EruptUser;
-import xyz.erupt.auth.service.EruptUserService;
+import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.service.EruptUserService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

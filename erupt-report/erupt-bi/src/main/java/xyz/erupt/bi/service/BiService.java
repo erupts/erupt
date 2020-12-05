@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import xyz.erupt.auth.service.EruptUserService;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.Bi;
@@ -17,6 +16,7 @@ import xyz.erupt.bi.view.BiData;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.db.dao.EruptDao;
+import xyz.erupt.upms.service.EruptUserService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

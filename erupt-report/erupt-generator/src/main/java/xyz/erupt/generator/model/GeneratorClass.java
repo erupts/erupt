@@ -13,8 +13,8 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.generator.base.GeneratorType;
+import xyz.erupt.upms.model.base.HyperModel;
 
 import javax.persistence.*;
 import java.util.HashMap;

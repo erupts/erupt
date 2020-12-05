@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.Tpl;
-import xyz.erupt.auth.interceptor.LoginInterceptor;
 import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiChart;
@@ -32,6 +31,7 @@ import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.db.dao.EruptDao;
 import xyz.erupt.tpl.service.EruptTplService;
+import xyz.erupt.upms.interceptor.LoginInterceptor;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;

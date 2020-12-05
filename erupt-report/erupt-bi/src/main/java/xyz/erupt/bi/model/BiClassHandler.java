@@ -9,7 +9,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.auth.model.base.HyperModel;
+import xyz.erupt.upms.model.base.HyperModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
