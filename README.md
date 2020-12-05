@@ -21,14 +21,35 @@ https://www.erupt.xyz
 零前端代码，自动生成数据库表结构，无需编写controller、service、dao、mapper，仅创建实体类与对应注解即可！
 
 ## 核心功能
-+ erupt-core        提供注解式开发api,让开发效率倍增
-+ erupt-db          提供关系型数据库访问功能
-+ erupt-auth        用户管理，菜单管理，角色管理，字典项配置，安全控制，访问拦截，等一系列安全相关功能。
-+ erupt-job         可使用此模块快速开发与配置定时任务相关功能
-+ erupt-mongodb     提供mongodb数据管理功能
-+ erupt-bi          可配置话报表工具，仅需后台配置加sql语句
-+ erupt-tpl         支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
-+ erupt-generator   代码生成器，通过简单配置，生成erupt代码段
+| 依赖                   | 版本          |
+| ---------------------- | ------------- |
+| Spring Boot            | 2.3.6.RELEASE |
+| Spring Cloud           | Hoxton.SR9    |
+| Spring Cloud Alibaba   | 2.2.3.RELEASE |
+| Spring Security OAuth2 | 2.3.6         |
+| Mybatis Plus           | 3.4.1         |
+| hutool                 | 5.5.1         |
+| Avue                   | 2.6.16        |
+
+### 模块说明
+
+```lua
+erupt
+├── erupt-annotation -- 核心注解模块
+├── erupt-core -- 核心功能包
+├── erupt-data -- 数据相关包
+     ├── erupt-db -- 关系型数据库erupt实现
+     └── erupt-mongodb -- mongodb数据库erupt实现
+├── erupt-job -- 定时任务功能
+├── erupt-security -- 接口数据安全模块
+├── erupt-upms -- 用户权限管理
+└── erupt-web -- 前端页面
+
+erupt-pro
+├── erupt-bi -- 配置化灵活报表工具，仅需后台配置加sql语句，支持sql与js混编
+├── erupt-tpl -- 支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
+└── erupt-generator -- 代码生成器，通过简单配置，生成erupt代码段
+```
 
 
 ## 代码示例

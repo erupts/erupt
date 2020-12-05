@@ -2,33 +2,40 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>erupt-job</artifactId>
-    <name>erupt-job</name>
-    <description>任务调度模块</description>
-
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
         <version>1.4.1</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
+
+    <artifactId>erupt-db</artifactId>
+    <name>erupt-db</name>
+    <description>EruptProcess database impl</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-upms</artifactId>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>erupt-core</artifactId>
             <version>${parent.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

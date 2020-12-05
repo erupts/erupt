@@ -15,9 +15,9 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
-import xyz.erupt.auth.model.base.HyperModel;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.job.service.EruptJobService;
+import xyz.erupt.upms.model.base.HyperModel;
 
 import javax.persistence.*;
 import java.text.ParseException;
