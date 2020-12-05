@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.constant.UpmsConst;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
@@ -72,7 +72,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
-        String token = request.getHeader(UpmsConst.ERUPT_HEADER_TOKEN);
+        String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
         List<EruptMenu> eruptMenus = getMenuList(eruptUserService.getCurrentEruptUser());
         List<EruptMenuVo> menuVoList = geneMenuListVo(eruptMenus);
         sessionService.put(SessionKey.MENU + token, gson.toJson(eruptMenus));

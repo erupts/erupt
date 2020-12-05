@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.db.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.constant.UpmsConst;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.util.IpUtil;
@@ -160,9 +160,9 @@ public class EruptUserService {
     }
 
     public Long getCurrentUid() {
-        String token = request.getHeader(UpmsConst.ERUPT_HEADER_TOKEN);
+        String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
         if (StringUtils.isBlank(token)) {
-            token = request.getParameter(UpmsConst.URL_ERUPT_PARAM_TOKEN);
+            token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
         }
         Object uid = sessionService.get(SessionKey.USER_TOKEN + token);
         return null == uid ? null : Long.valueOf(uid.toString());

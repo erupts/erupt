@@ -15,7 +15,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.service.SecurityService;
-import xyz.erupt.upms.constant.UpmsConst;
+import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptOperateLog;
 import xyz.erupt.upms.service.EruptUserService;
@@ -45,16 +45,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private SecurityService securityService;
 
-    //header
-    public static final String ERUPT_HEADER_KEY = "erupt";
-
     private static final String ERUPT_PARENT_HEADER_KEY = "eruptParent";
 
-    //param
-    public static final String URL_ERUPT_PARAM_KEY = "_erupt";
-
     private static final String ERUPT_PARENT_PARAM_KEY = "_eruptParent";
-
 
     @Autowired
     private EruptSecurityProp eruptSecurityProp;
@@ -76,12 +69,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String eruptName = null;
         String parentEruptName = null;
         if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
-            token = request.getHeader(UpmsConst.ERUPT_HEADER_TOKEN);
-            eruptName = request.getHeader(ERUPT_HEADER_KEY);
+            token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
+            eruptName = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
             parentEruptName = request.getHeader(ERUPT_PARENT_HEADER_KEY);
         } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
-            token = request.getParameter(UpmsConst.URL_ERUPT_PARAM_TOKEN);
-            eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
+            token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
+            eruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
             parentEruptName = request.getHeader(ERUPT_PARENT_PARAM_KEY);
         }
 
@@ -171,9 +164,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     if (null != eruptRouter && eruptRouter.verifyType() == EruptRouter.VerifyType.ERUPT) {
                         String eruptName;
                         if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
-                            eruptName = request.getHeader(ERUPT_HEADER_KEY);
+                            eruptName = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
                         } else {
-                            eruptName = request.getParameter(URL_ERUPT_PARAM_KEY);
+                            eruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
                         }
                         operate.setApiName(eruptOperate.desc() + " | " + EruptCoreService.getErupt(eruptName).getErupt().name());
                     } else {

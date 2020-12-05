@@ -9,8 +9,8 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.constant.UpmsConst;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptMenuService;
@@ -82,7 +82,7 @@ public class EruptUserController {
     @ResponseBody
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public EruptApiModel logout(HttpServletRequest request) {
-        String token = request.getHeader(UpmsConst.ERUPT_HEADER_TOKEN);
+        String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
         sessionService.remove(SessionKey.MENU + token);
         sessionService.remove(SessionKey.MENU_VIEW + token);
         sessionService.remove(SessionKey.USER_TOKEN + token);
