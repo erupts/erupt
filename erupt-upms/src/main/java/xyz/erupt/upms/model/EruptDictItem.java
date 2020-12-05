@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint;
  */
 
 @Entity
-@Table(name = "e_dict_item", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_dict_item", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "erupt_dict_id"}))
 @Erupt(
         name = "字典项",
         orderBy = "sort",
