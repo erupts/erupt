@@ -31,7 +31,7 @@ import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.db.dao.EruptDao;
 import xyz.erupt.tpl.service.EruptTplService;
-import xyz.erupt.upms.interceptor.LoginInterceptor;
+import xyz.erupt.upms.constant.EruptReqHeaderConst;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -246,9 +246,9 @@ public class EruptBiController {
 
     //校验请求id是否拥有菜单权限
     private void verifyBiMenuPermissions(Bi bi, String code) {
-        String biCode = request.getHeader(LoginInterceptor.ERUPT_HEADER_KEY);
+        String biCode = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
         if (null == biCode) {
-            biCode = request.getParameter(LoginInterceptor.URL_ERUPT_PARAM_KEY);
+            biCode = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
         }
         if (!biCode.equals(bi.getCode()) || !code.equals(bi.getCode())) {
             throw new EruptNoLegalPowerException();
