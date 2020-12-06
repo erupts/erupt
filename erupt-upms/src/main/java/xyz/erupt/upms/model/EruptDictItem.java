@@ -10,10 +10,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.upms.model.base.HyperModel;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 /**
  * @author liyuepeng
@@ -59,6 +56,7 @@ public class EruptDictItem extends HyperModel {
 
     @ManyToOne
     @EruptField
+    @JoinColumn(name = "erupt_dict_id")
     private EruptDict eruptDict;
 
 }
