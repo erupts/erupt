@@ -17,7 +17,7 @@ public @interface AttachmentType {
 
     String[] fileTypes() default {};
 
-    Type type() default Type.OTHER;
+    Type type() default Type.BASE;
 
     int maxLimit() default 1;
 
@@ -28,8 +28,8 @@ public @interface AttachmentType {
     String fileSeparator() default "|";
 
     enum Type {
+        BASE,
         IMAGE,
-        OTHER,
     }
 
     @interface ImageType {

@@ -22,7 +22,7 @@ public @interface ChoiceType {
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
     enum Type {
-        SELECT,
-        RADIO,
+        SELECT, //下拉选择
+        RADIO,  //单选框
     }
 }

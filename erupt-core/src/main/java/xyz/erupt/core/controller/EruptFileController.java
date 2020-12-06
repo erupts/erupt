@@ -124,8 +124,7 @@ public class EruptFileController {
                                 }
                             }
                             break;
-                        case OTHER:
-
+                        case BASE:
                             break;
                     }
                     break;

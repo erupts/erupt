@@ -1,5 +1,6 @@
 package xyz.erupt.core.exception;
 
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.view.EruptFieldModel;
 
@@ -14,7 +15,8 @@ public class EruptFieldAnnotationException extends RuntimeException {
     }
 
     public static void validateEruptFieldInfo(EruptFieldModel eruptFieldModel) {
-        switch (eruptFieldModel.getEruptField().edit().type()) {
+        Edit edit = eruptFieldModel.getEruptField().edit();
+        switch (edit.type()) {
             case REFERENCE_TREE:
             case REFERENCE_TABLE:
                 if (eruptFieldModel.getEruptField().views().length > 0) {
@@ -26,7 +28,5 @@ public class EruptFieldAnnotationException extends RuntimeException {
                 }
                 break;
         }
-
-
     }
 }

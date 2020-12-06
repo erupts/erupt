@@ -33,7 +33,7 @@ public enum EditType {
     @EditTypeMapping(mapping = TagsType.class, desc = "标签选择器", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     TAGS,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
-    @EditTypeMapping(mapping = AutoCompleteType.class, desc = "自动联想", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(mapping = AutoCompleteType.class, desc = "自动完成", allowType = {JavaTypeEnum.String})
     AUTO_COMPLETE,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
     @EditTypeMapping(mapping = HtmlEditorType.class, desc = "富文本编辑器", allowType = {JavaTypeEnum.String})
@@ -42,7 +42,7 @@ public enum EditType {
     @EditTypeMapping(desc = "多行文本框", allowType = {JavaTypeEnum.String}, nameInfer = {"desc", "remark"})
     TEXTAREA,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
-    @EditTypeMapping(desc = "代码编辑器", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(mapping = CodeEditorType.class, desc = "代码编辑器", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
 
 
@@ -55,16 +55,16 @@ public enum EditType {
 
     @EditTypeMapping(mapping = CheckboxType.class, desc = "多选（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
     CHECKBOX,
-    @EditTypeMapping(desc = "树引用（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    @EditTypeMapping(desc = "多选树（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
     TAB_TREE,
-    @EditTypeMapping(desc = "表格引用（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    @EditTypeMapping(desc = "多选表格（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
     TAB_TABLE_REFER,
     @EditTypeMapping(desc = "表格添加（一对多)", allowType = {JavaTypeEnum.object}, excelOperator = false)
     TAB_TABLE_ADD,
     @EditTypeMapping(desc = "表格合并（一对一）", allowType = {JavaTypeEnum.object})
     COMBINE,
 
-    @EditTypeMapping(mapping = AttachmentType.class, desc = "附件", allowType = {JavaTypeEnum.String}, excelOperator = false)
+    @EditTypeMapping(mapping = AttachmentType.class, desc = "附件上传", allowType = {JavaTypeEnum.String}, excelOperator = false)
     ATTACHMENT,
     @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, excelOperator = false)
     MAP,
