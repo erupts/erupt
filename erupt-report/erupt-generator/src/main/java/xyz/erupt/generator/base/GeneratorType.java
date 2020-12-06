@@ -50,6 +50,7 @@ public enum GeneratorType {
     private static final String SET = "Set<" + REF + ">";
     private static final String ManyToOne = "@ManyToOne ";
     private static final String OneToMany = "@OneToMany(cascade = CascadeType.ALL)\n" +
+            "                @OrderBy\n" +
             "                @JoinColumn(name = \"" + THIS + "_id\") " + GeneratorType.SET;
     private static final String ManyToMany = "@ManyToMany @JoinTable(name = \"" + THIS + "_" + TARGET + "\",\n" +
             "            joinColumns = @JoinColumn(name = \"" + THIS + "_id\", referencedColumnName = \"id\"),\n" +

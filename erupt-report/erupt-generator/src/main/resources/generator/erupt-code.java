@@ -4,7 +4,10 @@
  */
 
 import xyz.erupt.annotation.*;
+import xyz.erupt.annotation.sub_erupt.*;
 import xyz.erupt.annotation.sub_field.*;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.db.model.BaseModel;
 
 import javax.persistence.*;
 
