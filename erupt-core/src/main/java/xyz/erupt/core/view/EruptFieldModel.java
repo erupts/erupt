@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -105,9 +106,9 @@ public class EruptFieldModel {
                                 continue;
                         }
                     }
-                    if (JavaType.BOOLEAN.equals(this.fieldReturnName.toLowerCase())) {
+                    if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName.toLowerCase())) {
                         viewValues.put(TYPE, ViewType.BOOLEAN);
-                    } else if (JavaType.DATE.equals(this.fieldReturnName)) {
+                    } else if (Date.class.getSimpleName().equals(this.fieldReturnName)) {
                         viewValues.put(TYPE, ViewType.DATE);
                     } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
                         viewValues.put(TYPE, ViewType.NUMBER);
@@ -120,9 +121,9 @@ public class EruptFieldModel {
             if (StringUtils.isNotBlank(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
                 Map<String, Object> editValues = getAnnotationMap(this.eruptField.edit());
                 //根据返回类型推断
-                if (JavaType.BOOLEAN.equals(this.fieldReturnName.toLowerCase())) {
+                if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName)) {
                     editValues.put(TYPE, EditType.BOOLEAN);
-                } else if (JavaType.DATE.equals(this.fieldReturnName)) {
+                } else if (Date.class.getSimpleName().equals(this.fieldReturnName)) {
                     editValues.put(TYPE, EditType.DATE);
                 } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
                     editValues.put(TYPE, EditType.NUMBER);
@@ -145,4 +146,5 @@ public class EruptFieldModel {
         field.setAccessible(true);
         return (Map<String, Object>) field.get(invocationHandler);
     }
+
 }

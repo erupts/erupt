@@ -8,16 +8,4 @@ public class JavaType {
 
     public static final String NUMBER = "number";
 
-    public static final String CLASS = "Class";
-
-    public static final String STRING = "String";
-
-    public static final String DATE = "Date";
-
-    public static final String BOOLEAN = "boolean";
-
-    public static final String CHAR = "char";
-
-    public static final String BYTE = "byte";
-
 }

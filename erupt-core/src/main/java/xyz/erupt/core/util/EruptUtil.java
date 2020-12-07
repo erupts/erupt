@@ -8,7 +8,6 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.*;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -161,7 +160,7 @@ public class EruptUtil {
         Edit edit = eruptFieldModel.getEruptField().edit();
         switch (edit.type()) {
             case DATE:
-                if (JavaType.DATE.equals(eruptFieldModel.getFieldReturnName())) {
+                if (Date.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
                     return DateUtil.getDate(str);
                 } else {
                     return str;
@@ -220,7 +219,7 @@ public class EruptUtil {
             if (field.getEruptField().edit().notNull()) {
                 if (null == value) {
                     return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");
-                } else if (JavaType.STRING.equals(field.getFieldReturnName())) {
+                } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
                         return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");
                     }

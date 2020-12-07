@@ -211,16 +211,11 @@ public class EruptExcelService {
                             jsonObject.addProperty(eruptFieldModel.getFieldName(), bool);
                             break;
                         default:
-                            switch (eruptFieldModel.getFieldReturnName()) {
-                                case JavaType.STRING:
-                                case JavaType.DATE:
-                                    jsonObject.addProperty(eruptFieldModel.getFieldName(), getCellValue(cell).toString());
-                                    break;
-                                case JavaType.NUMBER:
-                                    jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
-                                    break;
-                                default:
-                                    break;
+                            String rn = eruptFieldModel.getFieldReturnName();
+                            if (String.class.getSimpleName().equals(rn) || Date.class.getSimpleName().equals(rn)) {
+                                jsonObject.addProperty(eruptFieldModel.getFieldName(), getCellValue(cell).toString());
+                            } else if (JavaType.NUMBER.equals(rn)) {
+                                jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
                             }
                             break;
                     }

@@ -7,7 +7,6 @@ import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.expr.Expr;
 import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
@@ -105,12 +104,12 @@ public class AnnotationUtil {
                 //基本类型无法强转成Object类型数组，所以使用下面的方法进行处理
                 if (Arrays.asList(ANNOTATION_NUMBER_TYPE).contains(returnType)) {
                     TypeUtil.simpleNumberTypeArrayToObject(result, returnType, (number) -> jsonArray.add(number));
-                } else if (JavaType.CHAR.equals(returnType)) {
+                } else if (char.class.getSimpleName().equals(returnType)) {
                     char[] intArray = (char[]) result;
                     for (char i : intArray) {
                         jsonArray.add(i);
                     }
-                } else if (JavaType.BYTE.equals(returnType)) {
+                } else if (byte.class.getSimpleName().equals(returnType)) {
                     byte[] intArray = (byte[]) result;
                     for (byte i : intArray) {
                         jsonArray.add(i);
@@ -118,11 +117,11 @@ public class AnnotationUtil {
                 } else {
                     Object[] resultArray = (Object[]) result;
                     for (Object res : resultArray) {
-                        if (JavaType.STRING.equals(returnType)) {
+                        if (String.class.getSimpleName().equals(returnType)) {
                             jsonArray.add(res.toString());
-                        } else if (JavaType.BOOLEAN.equals(returnType)) {
+                        } else if (boolean.class.getSimpleName().equals(returnType)) {
                             jsonArray.add((Boolean) res);
-                        } else if (JavaType.CLASS.equals(returnType)) {
+                        } else if (Class.class.getSimpleName().equals(returnType)) {
                             jsonArray.add(((Class<?>) res).getSimpleName());
                         } else if (res.getClass().isEnum()) {
                             jsonArray.add(res.toString());
@@ -151,13 +150,13 @@ public class AnnotationUtil {
                     jsonObject.addProperty(methodName, result.toString());
                 } else if (Arrays.asList(ANNOTATION_NUMBER_TYPE).contains(returnType)) {
                     jsonObject.addProperty(methodName, (Number) result);
-                } else if (JavaType.BOOLEAN.equals(returnType)) {
+                } else if (boolean.class.getSimpleName().equals(returnType)) {
                     jsonObject.addProperty(methodName, (Boolean) result);
                 } else if (method.getReturnType().isEnum()) {
                     jsonObject.addProperty(methodName, result.toString());
                 } else if (method.getReturnType().isAnnotation()) {
                     jsonObject.add(methodName, annotationToJson((Annotation) result));
-                } else if (JavaType.CLASS.equals(returnType)) {
+                } else if (Class.class.getSimpleName().equals(returnType)) {
                     jsonObject.addProperty(methodName, ((Class<?>) result).getSimpleName());
                 }
             }

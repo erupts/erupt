@@ -35,7 +35,7 @@ public final class EruptModel implements Cloneable {
     }
 
     @Override
-    public EruptModel clone() throws CloneNotSupportedException {
+    public final EruptModel clone() throws CloneNotSupportedException {
         return (EruptModel) super.clone();
     }
 
