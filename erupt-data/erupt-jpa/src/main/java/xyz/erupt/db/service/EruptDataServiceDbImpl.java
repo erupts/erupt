@@ -175,7 +175,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService, ApplicationRun
         hql.append(" where 1 = 1 ");
         if (null != query.getConditions()) {
             for (Condition condition : query.getConditions()) {
-                hql.append(EruptJpaUtils.AND).append(condition.getKey()).append("=").append(condition.getValue());
+                hql.append(EruptJpaUtils.AND).append(condition.getKey()).append('=').append(condition.getValue());
             }
         }
         if (null != query.getConditionStrings()) {

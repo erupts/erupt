@@ -48,10 +48,10 @@ public class UpmsDataLoadService implements CommandLineRunner {
 
                 //菜单
                 String code = "code";
-                String $manager = "$manager";
+                String manager = "$manager";
                 Integer open = Integer.valueOf(EruptMenu.OPEN);
-                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu($manager, "系统管理", null, null, 1, 0, "fa fa-cogs", null)
-                        , code, $manager);
+                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(manager, "系统管理", null, null, 1, 0, "fa fa-cogs", null)
+                        , code, manager);
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptMenu.class.getSimpleName(), "菜单维护", MenuTypeEnum.TREE.getCode(), EruptMenu.class.getSimpleName(), open, 10, "fa fa-list-ul", eruptMenu
                 ), code, EruptMenu.class.getSimpleName());

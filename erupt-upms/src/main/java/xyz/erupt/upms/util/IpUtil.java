@@ -42,8 +42,8 @@ public class IpUtil {
                     // "***.***.***.***".length()
                     if (ip != null && ip.length() > 15) {
                         // = 15
-                        if (ip.indexOf(",") > 0) {
-                            ip = ip.substring(0, ip.indexOf(","));
+                        if (ip.indexOf(',') > 0) {
+                            ip = ip.substring(0, ip.indexOf(','));
                         }
                     }
                 }
@@ -51,8 +51,8 @@ public class IpUtil {
             // "***.***.***.***".length()
             if (ip != null && ip.length() > 15) {
                 // = 15
-                if (ip.indexOf(",") > 0) {
-                    ip = ip.substring(0, ip.indexOf(","));
+                if (ip.indexOf(',') > 0) {
+                    ip = ip.substring(0, ip.indexOf(','));
                 }
             }
             return ip;

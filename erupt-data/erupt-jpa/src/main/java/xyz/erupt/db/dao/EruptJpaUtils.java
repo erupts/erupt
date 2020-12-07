@@ -76,15 +76,14 @@ public class EruptJpaUtils {
                     append(" as ").
                     append(eruptModel.getEruptName());
             ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
-                if (null != field.getAnnotation(ManyToOne.class) ||
-                        null != field.getAnnotation(OneToOne.class)) {
+                if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
                     hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".")
-                            .append(field.getName() + " as " + field.getName());
+                            .append(field.getName()).append(" as ").append(field.getName());
                 }
             });
 
         } else {
-            hql.append("from " + eruptModel.getEruptName());
+            hql.append("from ").append(eruptModel.getEruptName());
         }
         hql.append(geneEruptHqlCondition(eruptModel, query.getConditions(), query.getConditionStrings()));
         if (!countSql) {
@@ -99,7 +98,7 @@ public class EruptJpaUtils {
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
                 sb.append(" left outer join ")
-                        .append(eruptModel.getEruptName()).append(".").append(field.getName()).append(" as ").append(field.getName());
+                        .append(eruptModel.getEruptName()).append('.').append(field.getName()).append(" as ").append(field.getName());
                 try {
                     Object obj = field.get(eruptModel.getClazz());
                     String join = generateEruptJoinHql(EruptCoreService.getErupt(obj.getClass().getSimpleName()));
@@ -122,28 +121,28 @@ public class EruptJpaUtils {
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     if (edit.type() == EditType.REFERENCE_TREE) {
-                        hql.append(EruptJpaUtils.AND).append(condition.getKey() + "." + edit.referenceTreeType().id()).append("=:").append(condition.getKey());
+                        hql.append(EruptJpaUtils.AND).append(condition.getKey()).append(".").append(edit.referenceTreeType().id()).append("=:").append(condition.getKey());
                         continue;
                     } else if (edit.type() == EditType.REFERENCE_TABLE) {
-                        hql.append(EruptJpaUtils.AND).append(condition.getKey() + "." + edit.referenceTableType().id()).append("=:").append(condition.getKey());
+                        hql.append(EruptJpaUtils.AND).append(condition.getKey()).append(".").append(edit.referenceTableType().id()).append("=:").append(condition.getKey());
                         continue;
                     }
-                    String $key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), condition.getKey());
+                    String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), condition.getKey());
 
                     switch (condition.getExpression()) {
                         case EQ:
-                            hql.append(EruptJpaUtils.AND).append($key).append("=:").append(condition.getKey());
+                            hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(condition.getKey());
                             break;
                         case LIKE:
-                            hql.append(EruptJpaUtils.AND).append($key).append(" like :").append(condition.getKey());
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(condition.getKey());
                             break;
                         case RANGE:
-                            hql.append(EruptJpaUtils.AND).append($key).append(" between :")
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" between :")
                                     .append(LVAL_KEY).append(condition.getKey()).append(" and :")
                                     .append(RVAL_KEY).append(condition.getKey());
                             break;
                         case IN:
-                            hql.append(EruptJpaUtils.AND).append($key).append(" in (:").append(condition.getKey()).append(")");
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(condition.getKey()).append(")");
                             break;
                     }
                 } else {

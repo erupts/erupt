@@ -64,9 +64,9 @@ public class DataHandlerUtil {
                     case REFERENCE_TREE:
                     case REFERENCE_TABLE:
                     case COMBINE:
-                        String[] $keys = entry.getKey().split("_");
+                        String[] _keys = entry.getKey().split("_");
                         for (View view : fieldModel.getEruptField().views()) {
-                            if (view.column().equals($keys[$keys.length - 1])) {
+                            if (view.column().equals(_keys[_keys.length - 1])) {
                                 EruptFieldModel vef = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).
                                         getEruptFieldMap().get(view.column());
                                 map.put(entry.getKey(), convertColumnValue(vef, entry.getValue(), choiceItems));
