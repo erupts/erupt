@@ -49,7 +49,7 @@ public class EruptOrg extends BaseModel {
             edit = @Edit(
                     title = "上级组织",
                     type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "id")
+                    referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id")
             )
     )
     private EruptOrg parentOrg;

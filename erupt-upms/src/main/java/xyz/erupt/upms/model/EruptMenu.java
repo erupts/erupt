@@ -111,7 +111,7 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
             edit = @Edit(
                     title = "上级菜单",
                     type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "id")
+                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
             )
     )
     private EruptMenu parentMenu;

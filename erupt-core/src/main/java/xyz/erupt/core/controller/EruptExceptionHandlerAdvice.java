@@ -4,7 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.view.EruptApiModel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +20,7 @@ import java.util.Map;
  * @date 2020-09-30
  */
 @ControllerAdvice
-public class EruptExceptionHandler {
+public class EruptExceptionHandlerAdvice {
 
     @ResponseBody
     @ExceptionHandler(EruptWebApiRuntimeException.class)
@@ -31,6 +34,14 @@ public class EruptExceptionHandler {
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         e.printStackTrace();
         return map;
+    }
+
+    @ExceptionHandler(EruptApiErrorTip.class)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public EruptApiModel eruptApiErrorTip(EruptApiErrorTip e) {
+        e.eruptApiModel.setErrorIntercept(false);
+        return e.eruptApiModel;
     }
 
 }
