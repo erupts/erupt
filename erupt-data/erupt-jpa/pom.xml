@@ -5,12 +5,12 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.4.1</version>
+        <version>1.4.2</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>erupt-db</artifactId>
-    <name>erupt-db</name>
+    <artifactId>erupt-jpa</artifactId>
+    <name>erupt-jpa</name>
     <description>EruptProcess database impl</description>
 
     <properties>
