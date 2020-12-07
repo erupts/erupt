@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-pro</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
 
     <packaging>pom</packaging>
     <name>erupt-pro</name>
@@ -49,6 +49,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
