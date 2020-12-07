@@ -19,7 +19,7 @@ public class ProjectUtil {
      * @param projectName 标识名
      * @param first       bool回调，表示函数是否为第一次调用
      */
-    public void projectStartLoaded(String projectName, Consumer<Boolean> first) throws Exception {
+    public void projectStartLoaded(String projectName, Consumer<Boolean> first) {
         String userDir = System.getProperty("user.dir");
         File dirFile = new File(userDir, EruptConst.ERUPT_DIR);
         String warnTxt = "项目加载标识文件无法创建，可能造成数据多次加载等问题";
@@ -32,10 +32,15 @@ public class ProjectUtil {
         if (file.exists()) {
             first.accept(false);
         } else {
-            first.accept(true);
-            if (!file.createNewFile()) {
-                log.warn(dirFile.toString() + warnTxt);
+            try {
+                first.accept(true);
+                if (!file.createNewFile()) {
+                    log.warn(dirFile.toString() + warnTxt);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
+
 }
