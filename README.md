@@ -20,17 +20,6 @@ https://www.erupt.xyz
 几分钟就可搭建一个完全可控的管理页面，从此专注核心逻辑的开发。
 零前端代码，自动生成数据库表结构，无需编写controller、service、dao、mapper，仅创建实体类与对应注解即可！
 
-## 核心功能
-| 依赖                   | 版本          |
-| ---------------------- | ------------- |
-| Spring Boot            | 2.3.6.RELEASE |
-| Spring Cloud           | Hoxton.SR9    |
-| Spring Cloud Alibaba   | 2.2.3.RELEASE |
-| Spring Security OAuth2 | 2.3.6         |
-| Mybatis Plus           | 3.4.1         |
-| hutool                 | 5.5.1         |
-| Avue                   | 2.6.16        |
-
 ### 模块说明
 
 ```lua
