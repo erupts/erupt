@@ -1,4 +1,5 @@
-# <img src="./erupt-web/src/main/resources/public/erupt.svg" height="38" alt="logo"/> Erupt Framework
+<img style="padding:10px" src="./erupt-web/src/main/resources/public/erupt.svg" height="100" alt="logo"/><br/>
+# Erupt Framework
 
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
