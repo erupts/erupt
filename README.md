@@ -2,7 +2,7 @@
 
 ---
 
-# Erupt Framework
+# 🚀 Erupt Framework
 
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
@@ -11,12 +11,13 @@
 官方网站：https://erupt.xyz
 
 国内仓库：https://gitee.com/erupt/erupt  
+
 国外仓库：https://github.com/erupts/erupt
 
-## 🚀 网站首页 | Home
-https://www.erupt.xyz
-
 QQ交流群：821389129
+
+## 首页 | Home
+https://www.erupt.xyz
 
 ## 简介 | Intro
 Erupt Framework仅需要简单的注解配置，可快速开发企业级Admin管理后台。  
@@ -39,28 +40,6 @@ Erupt Framework仅需要简单的注解配置，可快速开发企业级Admin管
 + **代码生成**：erupt代码已经足够简洁，代码生成器可进一步提升开发效率。
 + **扩展性强**：支持自定义数据源实现、自定义页面、自定义模板等。
 + **界面美观**：每个交互都精心设计，产品思维打磨，只为了更好的操作体验。
-
-
-### 模块说明 | Module
-
-```lua
-erupt
-├── erupt-annotation -- 核心注解模块
-├── erupt-core -- 核心功能包
-├── erupt-data -- 数据相关包
-     ├── erupt-jpa -- 关系型数据库erupt实现
-     └── erupt-mongodb -- mongodb数据库erupt实现
-├── erupt-job -- 定时任务功能
-├── erupt-security -- 接口数据安全模块
-├── erupt-upms -- 用户权限管理
-└── erupt-web -- 前端页面
-
-erupt-pro //暂未开放
-├── erupt-bi -- 配置化灵活报表工具，仅需后台配置加sql语句，支持sql与js混编
-├── erupt-tpl -- 支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
-└── erupt-generator -- 代码生成器，通过简单配置，生成erupt代码段
-```
-
 
 ## 代码示例
 ``` java
@@ -129,6 +108,26 @@ public class Simple extends BaseModel {
         <td><img src="./img/bi2.png"/></td>
     </tr>
 </table>
+
+
+### 模块说明 | Module
+```lua
+erupt
+├── erupt-annotation -- 核心注解模块
+├── erupt-core -- 核心功能包
+├── erupt-data -- 数据相关包
+     ├── erupt-jpa -- 关系型数据库erupt实现
+     └── erupt-mongodb -- mongodb数据库erupt实现
+├── erupt-job -- 定时任务功能
+├── erupt-security -- 接口数据安全模块
+├── erupt-upms -- 用户权限管理
+└── erupt-web -- 前端页面
+
+erupt-pro //暂未开放
+├── erupt-bi -- 配置化灵活报表工具，仅需后台配置加sql语句，支持sql与js混编
+├── erupt-tpl -- 支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
+└── erupt-generator -- 代码生成器，通过简单配置，生成erupt代码段
+```
 
 ## 为什么要做Erupt 
 + 开发管理后台是项目中必不可少的工作，但往往管理后台的开发周期要占到总工作量的50%
