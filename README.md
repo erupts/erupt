@@ -1,8 +1,8 @@
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="100" alt="logo"/></p>
 
+---
+
 # Erupt Framework
-
-
 
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
@@ -19,10 +19,9 @@ https://www.erupt.xyz
 QQ交流群：821389129
 
 ## 简介 | Intro
-Erupt Framework仅需要简单的注解配置，可快速开发企业级Admin管理后台。
-拥有简洁美观的后台页面，支持23类数据录入组件，支持多数据源，严密的安全策略。
-**非代码生成器**erupt不会生成任何代码段，不会出现修改后的代码后期无法合并的问题。
-我不是代码生成器，代码生成器并非后台开发的最优解。
+Erupt Framework仅需要简单的注解配置，可快速开发企业级Admin管理后台。  
+拥有简洁美观的后台页面，支持23类数据录入组件，支持多数据源，严密的安全策略。  
+**我不是代码生成器**，代码生成器并非后台开发的最优解。
 
 
 
