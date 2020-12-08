@@ -1,4 +1,4 @@
-<img style="padding:10px" src="./erupt-web/src/main/resources/public/erupt.svg" height="100" alt="logo"/><br/>
+<p style="text-align: center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="100" alt="logo"/></p>
 # Erupt Framework
 
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
