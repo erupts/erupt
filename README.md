@@ -1,4 +1,4 @@
-# <img src="./erupt-web/src/main/resources/public/erupt.svg" height="25" alt="logo"/> Erupt Framework
+# <img src="./erupt-web/src/main/resources/public/erupt.svg" height="38" alt="logo"/> Erupt Framework
 
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
@@ -9,11 +9,10 @@
 国内仓库：https://gitee.com/erupt/erupt  
 国外仓库：https://github.com/erupts/erupt
 
-QQ交流群：821389129
-
 ## 🚀 网站首页 | Home
-<img src="./erupt-web/src/main/resources/public/erupt.svg" width="150" alt="logo"/><br/>
 https://www.erupt.xyz
+
+QQ交流群：821389129
 
 ## 简介 | Intro
 Erupt Framework仅需要简单的注解配置，可快速开发企业级Admin管理后台。
