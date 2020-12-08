@@ -1,8 +1,8 @@
-<p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="100" alt="logo"/></p>
+<p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 
 ---
 
-# 🚀 Erupt Framework
+# Erupt Framework 🚀 
 
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
