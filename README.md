@@ -162,12 +162,12 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI
         <td width="16.66%" align="center"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" /> <br> Electron </td>
     </tr>
     <tr>
-        <td>Edge 16 / IE 11+</td>
-        <td>522</td>
-        <td>57</td>
-        <td>11</td>
-        <td>44</td>
-        <td>Chromium 57</td>
+        <td align="center">Edge 16 <br> IE 11+</td>
+        <td align="center">522</td>
+        <td align="center">57</td>
+        <td align="center">11</td>
+        <td align="center">44</td>
+        <td align="center">Chromium 57</td>
     </tr>
 </table>
 
