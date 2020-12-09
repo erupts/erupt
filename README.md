@@ -152,14 +152,14 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI
 
 支持主流 4 款现代浏览器，以及 Internet Explorer 11+。
 
-<table>
+<table align="center">
     <tr>
-        <td><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" /> <p> Edge / IE </p></td>
-        <td><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" /><p> Firefox </p> </td>
-        <td><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" /><p> Chrome </p> </td>
-        <td><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" /><p> Safari </p> </td>
-        <td><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" /><p> Opera </p> </td>
-        <td><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" /><p> Electron </p> </td>
+        <td width="16.66%"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" /> <p> Edge / IE </p></td>
+        <td width="16.66%"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" /><p> Firefox </p> </td>
+        <td width="16.66%"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" /><p> Chrome </p> </td>
+        <td width="16.66%"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" /><p> Safari </p> </td>
+        <td width="16.66%"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" /><p> Opera </p> </td>
+        <td width="16.66%"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" /><p> Electron </p> </td>
     </tr>
     <tr>
         <td>Edge 16 / IE 11+</td>
