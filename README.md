@@ -1,5 +1,5 @@
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
-<h1 align="center">Erupt Framework 🚀 新一代全栈类后台管理框架</h1>
+<h1 align="center">Erupt Framework 🚀 </h1>
 
 ---
 
@@ -17,15 +17,15 @@
 
 QQ交流群：821389129 🔥
 
-##  首页 | Home
+## 首页 | Home
 https://www.erupt.xyz
 
 ## 简介 | Intro
-+ Erupt Framework 零前端代码，仅需单个实体类 + 注解配置，即可快速开发企业级Admin管理后台。
++ 零前端代码，仅需单个文件 + 简洁的注解配置，即可快速开发企业级Admin管理后台。
++ 快速搭建企业级中后台管理系统的全栈解决方案，提供超多业务组件，压缩研发周期，降低研发成本。
 + 后端开发存在一定的痛点，开发效率低、界面不美观、交互不理想、工作量重复、后端开发写前端代码、代码生成器二次生成的代码难合并，Erupt可轻松解决这些难题。
-+ 企业级中后台管理系统，全栈解决方案，提供超多业务组件，压缩研发周期，降低研发成本。
-+ 拥有简洁美观的后台页面，支持23类数据录入组件，支持多种数据源，严密的安全策略。
-+ **我不是代码生成器**，代码生成器并非后台开发的最优解。代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并，虽然减轻了一部分工作，单解决方式并非最佳。
++ 拥有简洁美观的后台页面，支持23类数据录入组件，多种数据源支持，严密的安全策略。
++ **我不是代码生成器**，代码生成器并非后台开发的最优解。代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并，虽然减轻了一部分工作，可解决方式并非最佳。
 
 ## 特性 | Features
 + **易于上手**：仅需了解@Erupt与@EruptField两个注解即可上手开发。
@@ -77,37 +77,37 @@ public class Simple extends BaseModel {
 }
 ```
 #### 运行效果
-![result](./img/simple.gif)
+![result](readme/simple.gif)
 
 ## 演示截图 | Screenshot
 <table>
     <tr>
-        <td><img src="./img/login.png"/></td>
-        <td><img src="./img/home.png"/></td>
+        <td><img src="readme/login.png"/></td>
+        <td><img src="readme/home.png"/></td>
     </tr>
     <tr>
-        <td><img src="./img/role.png"/></td>
-        <td><img src="./img/log.png"/></td>
+        <td><img src="readme/role.png"/></td>
+        <td><img src="readme/log.png"/></td>
     </tr>
     <tr>
-        <td><img src="./img/code.png"/></td>
-        <td><img src="./img/job.png"/></td>
+        <td><img src="readme/code.png"/></td>
+        <td><img src="readme/job.png"/></td>
     </tr>
     <tr>
-        <td><img src="./img/tpl.png"/></td>
-        <td><img src="./img/complex.png"/></td>
+        <td><img src="readme/tpl.png"/></td>
+        <td><img src="readme/complex.png"/></td>
     </tr>
     <tr>
-        <td><img src="./img/goods.png"/></td>
-        <td><img src="./img/chart.png"/></td>
+        <td><img src="readme/goods.png"/></td>
+        <td><img src="readme/chart.png"/></td>
     </tr>
     <tr>
-        <td><img src="./img/component.png"/></td>
-        <td><img src="./img/component-edit.png"/></td>
+        <td><img src="readme/component.png"/></td>
+        <td><img src="readme/component-edit.png"/></td>
     </tr>
     <tr>
-        <td><img src="./img/bi.png"/></td>
-        <td><img src="./img/bi2.png"/></td>
+        <td><img src="readme/bi.png"/></td>
+        <td><img src="readme/bi2.png"/></td>
     </tr>
 </table>
 
@@ -115,9 +115,9 @@ public class Simple extends BaseModel {
 ### 模块说明 | Module
 ```lua
 erupt
-├── erupt-annotation -- 核心注解模块
+├── erupt-annotation -- 核心注解定义
 ├── erupt-core -- 核心功能包
-├── erupt-data -- 数据相关包
+├── erupt-data -- 数据实现包
      ├── erupt-jpa -- 关系型数据库erupt实现
      └── erupt-mongodb -- mongodb数据库erupt实现
 ├── erupt-job -- 定时任务功能
@@ -126,13 +126,13 @@ erupt
 └── erupt-web -- 前端页面
 
 erupt-pro //暂未开放
-├── erupt-bi -- 配置化灵活报表工具，仅需后台配置加sql语句，支持sql与js混编
+├── erupt-bi -- 配置化灵活报表工具，仅需后台配置sql语句，支持sql与js混编
 ├── erupt-tpl -- 支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
 └── erupt-generator -- 代码生成器，通过简单配置，生成erupt代码段
 ```
 
 ## 技术体系 | Technology system
-#### 后端
+####  后端
 Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect
 、 Spring Boot、 JPA、 Hibernate、 Quartz、 Gson
 、 Lombok、 Freemarker、 Thymeleaf ...
@@ -140,7 +140,7 @@ Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect
 #### 前端
 JavaScript、 H5、 MVVM、 Router、 Angular CLI
 、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot
-、 RxJS、 TypeScript、 Less、 ...
+、 RxJS、 TypeScript、 Less ...
 
 
 ## 在线演示 | Demo
