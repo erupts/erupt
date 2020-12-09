@@ -2,7 +2,7 @@
 <h1 align="center">Erupt Framework 🚀 | 一定是最简单后台管理框架</h1>
 
 ---
-# Erupt Framework 🚀 | 一定是最简单后台管理框架
+
 [![license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
@@ -12,13 +12,15 @@
 
 国外仓库：https://github.com/erupts/erupt
 
-QQ交流群：821389129🔥
+QQ交流群：821389129 🔥
 
 ##  首页 | Home
 https://www.erupt.xyz
 
 ## 简介 | Intro
 + Erupt Framework 仅需简单注解配置，即可快速开发企业级Admin管理后台。
++ 
++ 后端开发存在一定的痛点，开发效率低，界面不美观，工作量重复，代码生成器二次生成的代码难合并，Erupt可轻松解决此难题。
 + 企业级中后台管理系统，全栈解决方案，提供超多业务组件，压缩研发周期，降低研发成本。
 + 拥有简洁美观的后台页面，支持23类数据录入组件，支持多种数据源，严密的安全策略。
 + **我不是代码生成器**，代码生成器并非后台开发的最优解。
@@ -29,14 +31,15 @@ https://www.erupt.xyz
 + **代码简洁**：前端零代码，后端template、controller、service、dao都不需要，仅需一个实体类即可。
 + **敏捷开发**：仅单个`.java`文件即可实现后台管理功能，专注业务与核心功能的研发。
 + **快速迭代**：需求变更仅需修改或添加注解配置即可，迭代速度比需求讨论速度还快。
++ **功能强大**：动态条件处理，支持增删改查等功能代理接口，Session存储机制选择，行为日志记录等。
 + **高安全性**：可靠的安全机制，登录白名单，菜单权限验证，请求头检查，注解项检查，为你的数据保驾护航。
 + **自动建表**：依托于JPA可自动帮你完成数据库建表相关工作。
-+ **无侵入性**：完全不影响Spring Boot与JPA功能的使用。
++ **无侵入性**：完全不影响Spring Boot与其他模块功能的使用。
 + **多数据源**：MySQL、Oracle、SQL Server、PostgreSQL、H2，甚至支持MongoDB。
 + **多种组件**：支持滑动输入、时间选择、开关、图片上传、代码编辑器、自动完成、树、多选框、地图等23类组件
 + **丰富展示**：普通文本、二维码、链接、图片、HTML、代码段、iframe、swf等
 + **代码生成**：erupt代码已经足够简洁，代码生成器可进一步提升开发效率。
-+ **扩展性强**：支持自定义数据源实现、自定义页面、自定义模板等。
++ **扩展性强**：支持自定义数据源实现、自定义页面、自定义模板、自定义附件上传机制等。
 + **界面美观**：每个交互都精心设计，产品思维打磨，只为了更好的操作体验。
 
 ## 代码示例 | Code
