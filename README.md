@@ -2,12 +2,11 @@
 
 ---
 
-# Erupt Framework 🚀 | 开发后台管理系统只用后台代码语言
-
+# Erupt Framework 🚀 | 一定是最简单后台管理框架
+[![license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
-
 官方网站：https://erupt.xyz
 
 国内仓库：https://gitee.com/erupt/erupt  
