@@ -25,8 +25,7 @@ Erupt Framework仅需要简单的注解配置，可快速开发企业级Admin管
 **我不是代码生成器**，代码生成器并非后台开发的最优解。
 
 
-
-## 优点 | Advantages
+## 特性 | Features
 + **易于上手**：仅需了解@Erupt与@EruptField两个注解即可上手开发。
 + **代码简洁**：前端零代码，后端template、controller、service、dao都不需要，仅需一个实体类即可。
 + **敏捷开发**：仅单个`.java`文件即可实现后台管理功能，专注业务逻辑与核心功能的研发。
@@ -146,9 +145,17 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI
 、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot
 、 RxJS、 TypeScript、 Less、 ...
 
-## 实例演示 | Demo
+
+## 在线演示 | Demo
 演示地址：https://www.erupt.xyz/demo  
 账号密码：`guest / guest`
+
+- 主流 4 款现代浏览器，以及 Internet Explorer 11+。
+- 可直接运行在 [Electron](http://electron.atom.io/) 等基于 Web 标准的环境上。
+| [<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge / IE | [<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                                                                 Edge 16 / IE 11†                                                                                                 |                                                                                                        522                                                                                                        |                                                                                                      57                                                                                                       |                                                                                                      11                                                                                                       |                                                                                                    44                                                                                                     |                                                                                                      Chromium 57                                                                                                      |
+
 
 ## 使用文档 | Documentation
 https://www.yuque.com/yuepeng/erupt
