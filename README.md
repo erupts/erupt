@@ -1,8 +1,6 @@
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework 🚀 </h1>
 
----
-
 ![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)
 [![license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
@@ -10,9 +8,9 @@
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![size](https://img.shields.io/github/repo-size/erupts/erupt)](./)  
 
-github：https://gitee.com/erupt/erupt  
+github：https://github.com/erupts/erupt  
 
-gitee：https://github.com/erupts/erupt
+gitee ：https://gitee.com/erupt/erupt  
 
 ## Home
 https://www.erupt.xyz
