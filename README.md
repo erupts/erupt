@@ -2,21 +2,19 @@
 <h1 align="center">Erupt Framework 🚀 | 一定是最简单后台管理框架</h1>
 
 ---
-
+# Erupt Framework 🚀 | 一定是最简单后台管理框架
 [![license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)  
 
-官方网站：https://erupt.xyz
-
 国内仓库：https://gitee.com/erupt/erupt  
 
 国外仓库：https://github.com/erupts/erupt
 
-QQ交流群：821389129
+QQ交流群：821389129🔥
 
-## 首页 | Home
+##  首页 | Home
 https://www.erupt.xyz
 
 ## 简介 | Intro
