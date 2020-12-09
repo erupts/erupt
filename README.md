@@ -1,12 +1,12 @@
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
-<h1 align="center"># Erupt Framework 🚀 | 一定是最简单后台管理框架</h1>
-<hr/>
-<div align="center">
+<h1 align="center">Erupt Framework 🚀 | 一定是最简单后台管理框架</h1>
+
+---
+
 [![license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)  
-</div> 
 
 官方网站：https://erupt.xyz
 
