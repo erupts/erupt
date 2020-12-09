@@ -25,20 +25,20 @@ https://www.erupt.xyz
 I am not a code generator, and a code generator is not the best solution for background development. The essence of a code generator is to generate cumbersome background code. Once the code is modified, it is difficult to merge the code generated in the later period. Although it alleviates some work, the solution is not the best way.
 
 ## Features
-+ ** Easy to emerge ** : Just understand the two annotations of @erupt and @EruptField to get started.
-+ ** Code is simple ** : Front-end zero code, back-end template, Controller, Service, DAO are not needed, only one entity class is needed.
-+ ** Agile development ** : only a single `. Java` file can achieve the background management function, focus on business and core functions of the RESEARCH and development.
-+ ** Fast iteration ** : Requirement changes can be made by simply modifying or adding annotation configurations faster than requirement discussions.
-+ ** powerful ** : dynamic condition processing, support to add, delete, change, check and other functions of proxy interface, Session storage mechanism selection, behavior logging, etc.
-+ ** High security ** : Reliable security mechanism, login whitelist, menu permission authentication, request header check, annotation item check, to protect your data.
-+ ** Automatic table building ** : Relying on JPA can help you do database table building automatically.
-+ ** Non-invasive ** : Does not affect the use of Spring Boot and other module functions at all.
-+ ** Multiple data sources ** : MySQL, Oracle, SQL Server, PostgreSQL, H2, and even MongoDB.
-+ ** Variety of components ** : support sliding input, time selection, switch, picture upload, code editor, auto complete, tree, checkbox, map and other 23 types of components
-+ ** Rich display ** : ordinary text, TWO-DIMENSIONAL code, links, pictures, HTML, code segments, iframe, SWF, etc
-+ ** Code generation ** : Erupt code is concise enough that the code generator can further improve the development efficiency.
-+ ** Strong scalability ** : support custom data source implementation, custom page, custom template, custom attachment upload mechanism, etc.
-+ ** Beautiful interface ** : Each interaction is carefully designed and product thinking is polished for a better operating experience.
++ **Easy to emerge** : Just understand the two annotations of @erupt and @EruptField to get started.
++ **Code is simple** : Front-end zero code, back-end template, Controller, Service, DAO are not needed, only one entity class is needed.
++ **Agile development** : only a single `. Java` file can achieve the background management function, focus on business and core functions of the RESEARCH and development.
++ **Fast iteration** : Requirement changes can be made by simply modifying or adding annotation configurations faster than requirement discussions.
++ **powerful** : dynamic condition processing, support to add, delete, change, check and other functions of proxy interface, Session storage mechanism selection, behavior logging, etc.
++ **High security** : Reliable security mechanism, login whitelist, menu permission authentication, request header check, annotation item check, to protect your data.
++ **Automatic table building** : Relying on JPA can help you do database table building automatically.
++ **Non-invasive** : Does not affect the use of Spring Boot and other module functions at all.
++ **Multiple data sources** : MySQL, Oracle, SQL Server, PostgreSQL, H2, and even MongoDB.
++ **Variety of components** : support sliding input, time selection, switch, picture upload, code editor, auto complete, tree, checkbox, map and other 23 types of components
++ **Rich display** : ordinary text, TWO-DIMENSIONAL code, links, pictures, HTML, code segments, iframe, SWF, etc
++ **Code generation** : Erupt code is concise enough that the code generator can further improve the development efficiency.
++ **Strong scalability** : support custom data source implementation, custom page, custom template, custom attachment upload mechanism, etc.
++ **Beautiful interface** : Each interaction is carefully designed and product thinking is polished for a better operating experience.
 
 ## Code
 ``` java
