@@ -1,5 +1,5 @@
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
-<h1 align="center"> Erupt Framework 🚀 | 通过用后台管理框架 </h1>
+<h1 align="center"> Erupt Framework 🚀 | 通用后台管理框架 </h1>
 
 ---
 
@@ -25,7 +25,7 @@ https://www.erupt.xyz
 + 快速搭建企业级中后台管理系统的全栈解决方案，提供超多业务组件，压缩研发周期，降低研发成本。
 + 后端开发存在一定的痛点，开发效率低、界面不美观、交互不理想、工作量重复、后端开发写前端代码、代码生成器二次生成的代码难合并，Erupt可轻松解决这些难题。
 + 拥有简洁美观的后台页面，支持23类数据录入组件，多种数据源支持，严密的安全策略。
-+ **我不是代码生成器**，代码生成器并非后台开发的最优解。代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并，虽然减轻了一部分工作，可解决方式并非最佳。
++ 我不是代码生成器，代码生成器并非后台开发的最优解。代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并，虽然减轻了一部分工作，可解决方式并非最佳。
 
 ## 特性 | Features
 + **易于上手**：仅需了解@Erupt与@EruptField两个注解即可上手开发。
@@ -132,15 +132,9 @@ erupt-pro //暂未开放
 ```
 
 ## 技术体系 | Technology system
-####  后端
-Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect
-、 Spring Boot、 JPA、 Hibernate、 Quartz、 Gson
-、 Lombok、 Freemarker、 Thymeleaf ...
+####  后端：Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、 Hibernate、 Quartz、 Gson、 Lombok、 Freemarker、 Thymeleaf ...
 
-#### 前端
-JavaScript、 H5、 MVVM、 Router、 Angular CLI
-、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot
-、 RxJS、 TypeScript、 Less ...
+#### 前端：JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
 
 ## 在线演示 | Demo
