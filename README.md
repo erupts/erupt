@@ -1,12 +1,15 @@
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
-<h1 align="center">Erupt Framework 🚀 | 一定是最简单后台管理框架</h1>
+<h1 align="center">Erupt Framework 🚀 | 后台管理全栈框架</h1>
 
 ---
 
+![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)
 [![license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)  
+[![size](https://img.shields.io/github/repo-size/erupts/erupt)](https://github.com/erupts/erupt)  
+
 
 国内仓库：https://gitee.com/erupt/erupt  
 
@@ -18,13 +21,11 @@ QQ交流群：821389129 🔥
 https://www.erupt.xyz
 
 ## 简介 | Intro
-+ Erupt Framework 仅需简单注解配置，即可快速开发企业级Admin管理后台。
-+ 
-+ 后端开发存在一定的痛点，开发效率低，界面不美观，工作量重复，代码生成器二次生成的代码难合并，Erupt可轻松解决此难题。
++ Erupt Framework 零前端代码，仅需单个实体类 + 注解配置，即可快速开发企业级Admin管理后台。
++ 后端开发存在一定的痛点，开发效率低、界面不美观、交互不理想、工作量重复、后端开发写前端代码、代码生成器二次生成的代码难合并，Erupt可轻松解决这些难题。
 + 企业级中后台管理系统，全栈解决方案，提供超多业务组件，压缩研发周期，降低研发成本。
 + 拥有简洁美观的后台页面，支持23类数据录入组件，支持多种数据源，严密的安全策略。
-+ **我不是代码生成器**，代码生成器并非后台开发的最优解。
-+ 代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并，虽然减轻了一部分工作，但仍需更好的解决方式。
++ **我不是代码生成器**，代码生成器并非后台开发的最优解。代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并，虽然减轻了一部分工作，单解决方式并非最佳。
 
 ## 特性 | Features
 + **易于上手**：仅需了解@Erupt与@EruptField两个注解即可上手开发。
