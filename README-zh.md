@@ -4,8 +4,9 @@
 ---
 
 ![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)
-[![license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
+[![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
 [![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
+[![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![size](https://img.shields.io/github/repo-size/erupts/erupt)](./)  
