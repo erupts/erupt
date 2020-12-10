@@ -12,7 +12,6 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.CheckboxType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.exception.EruptApiErrorTip;
@@ -118,7 +117,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private Boolean isMd5;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "e_user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -126,8 +125,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     @EruptField(
             edit = @Edit(
                     title = "所属角色",
-                    type = EditType.CHECKBOX,
-                    checkboxType = @CheckboxType
+                    type = EditType.CHECKBOX
             )
     )
     private Set<EruptRole> roles;

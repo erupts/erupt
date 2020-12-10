@@ -7,7 +7,7 @@ package xyz.erupt.annotation.fun;
 public interface PowerHandler {
 
     /**
-     * erupt权限执行类
+     * 动态控制各功能使用权限
      *
      * @param power 注解
      * @return power bean

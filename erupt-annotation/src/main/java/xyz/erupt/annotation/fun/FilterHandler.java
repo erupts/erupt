@@ -9,7 +9,7 @@ public interface FilterHandler {
     /**
      * 数据过滤
      *
-     * @param condition 过滤字符串
+     * @param condition 条件表达式
      * @param params    注解参数
      * @return
      */

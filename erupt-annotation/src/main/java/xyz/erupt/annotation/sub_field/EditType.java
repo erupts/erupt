@@ -36,34 +36,14 @@ public enum EditType {
     @EditTypeMapping(mapping = AutoCompleteType.class, desc = "自动完成", allowType = {JavaTypeEnum.String})
     AUTO_COMPLETE,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
-    @EditTypeMapping(mapping = HtmlEditorType.class, desc = "富文本编辑器", allowType = {JavaTypeEnum.String})
-    HTML_EDITOR,
-    @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
     @EditTypeMapping(desc = "多行文本框", allowType = {JavaTypeEnum.String}, nameInfer = {"desc", "remark"})
     TEXTAREA,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
+    @EditTypeMapping(mapping = HtmlEditorType.class, desc = "富文本编辑器", allowType = {JavaTypeEnum.String})
+    HTML_EDITOR,
+    @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
     @EditTypeMapping(mapping = CodeEditorType.class, desc = "代码编辑器", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
-
-
-    @EditTypeSearch
-    @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用（多对一)", allowType = {JavaTypeEnum.object})
-    REFERENCE_TREE,
-    @EditTypeSearch
-    @EditTypeMapping(mapping = ReferenceTableType.class, desc = "表格引用（多对一)", allowType = {JavaTypeEnum.bool})
-    REFERENCE_TABLE,
-
-    @EditTypeMapping(mapping = CheckboxType.class, desc = "多选（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
-    CHECKBOX,
-    @EditTypeMapping(desc = "多选树（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
-    TAB_TREE,
-    @EditTypeMapping(desc = "多选表格（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
-    TAB_TABLE_REFER,
-    @EditTypeMapping(desc = "表格添加（一对多)", allowType = {JavaTypeEnum.object}, excelOperator = false)
-    TAB_TABLE_ADD,
-    @EditTypeMapping(desc = "表格合并（一对一）", allowType = {JavaTypeEnum.object})
-    COMBINE,
-
     @EditTypeMapping(mapping = AttachmentType.class, desc = "附件上传", allowType = {JavaTypeEnum.String}, excelOperator = false)
     ATTACHMENT,
     @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, excelOperator = false)
@@ -76,4 +56,23 @@ public enum EditType {
     HIDDEN,
     @EditTypeMapping(desc = "空（仍占据组件位置）", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     EMPTY,
+
+
+    //一下对象使用较为复杂，作用于复杂对象基础上
+    @EditTypeSearch
+    @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用（多对一)", allowType = {JavaTypeEnum.object})
+    REFERENCE_TREE,
+    @EditTypeSearch
+    @EditTypeMapping(mapping = ReferenceTableType.class, desc = "表格引用（多对一)", allowType = {JavaTypeEnum.bool})
+    REFERENCE_TABLE,
+    @EditTypeMapping(mapping = CheckboxType.class, desc = "多选（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    CHECKBOX,
+    @EditTypeMapping(desc = "多选树（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    TAB_TREE,
+    @EditTypeMapping(desc = "多选表格（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    TAB_TABLE_REFER,
+    @EditTypeMapping(desc = "表格添加（一对多)", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    TAB_TABLE_ADD,
+    @EditTypeMapping(desc = "表格合并（一对一）", allowType = {JavaTypeEnum.object})
+    COMBINE,
 }

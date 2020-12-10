@@ -12,7 +12,7 @@ import java.util.Map;
 public interface DataProxy<MODEL> {
 
     /**
-     * 增
+     * 新增前
      *
      * @param model 待新增对象数据
      */
@@ -20,7 +20,7 @@ public interface DataProxy<MODEL> {
     }
 
     /**
-     * 增
+     * 新增后
      *
      * @param model 已新增对象数据
      */
@@ -28,7 +28,7 @@ public interface DataProxy<MODEL> {
     }
 
     /**
-     * 改
+     * 修改前
      *
      * @param model 待修改对象数据
      */
@@ -36,7 +36,7 @@ public interface DataProxy<MODEL> {
     }
 
     /**
-     * 改
+     * 修改后
      *
      * @param model 已修改对象数据
      */
@@ -44,7 +44,7 @@ public interface DataProxy<MODEL> {
     }
 
     /**
-     * 删
+     * 删除前
      *
      * @param model 待删除对象数据
      */
@@ -52,7 +52,7 @@ public interface DataProxy<MODEL> {
     }
 
     /**
-     * 删
+     * 删除后
      *
      * @param model 已删除对象数据
      */
@@ -60,7 +60,7 @@ public interface DataProxy<MODEL> {
     }
 
     /**
-     * 查询
+     * 查询前动态注入条件
      *
      * @return 自定义查询条件
      */
@@ -69,7 +69,7 @@ public interface DataProxy<MODEL> {
     }
 
     /**
-     * 查询
+     * 查询结果处理
      *
      * @param list 查询结果
      */
@@ -78,38 +78,20 @@ public interface DataProxy<MODEL> {
 
 
     /**
-     * 新增数据行为操作，生成默认数据
+     * 数据新增行为，对数据做初始化操作
+     *
+     * @param model 要编辑的数据
      */
     default void addBehavior(MODEL model) {
     }
 
     /**
-     * 编辑数据行为操作
-     * 可用于在前端隐藏密码等操作
+     * 数据编辑行为，对待编辑的数据做预处理
      *
      * @param model 要编辑的数据
      */
     default void editBehavior(MODEL model) {
     }
-
-//    /**
-//     * 待上传文件
-//     *
-//     * @param inputStream 数据流
-//     * @param file        文件对象
-//     */
-//    default void beforeUpLoadFile(InputStream inputStream, File file) {
-//
-//    }
-//
-//    /**
-//     * 已上传文件
-//     *
-//     * @param relativePath 文件上传路径
-//     * @param file         文件对象
-//     */
-//    default void afterUpLoadFile(File file, String relativePath) {
-//    }
 
     /**
      * excel导出
