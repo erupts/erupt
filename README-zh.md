@@ -1,5 +1,3 @@
-中文文档 | [英文文档](./README.md)
-
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework 🚀 | 通用后台管理框架 </h1>
 
