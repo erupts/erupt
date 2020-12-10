@@ -1,3 +1,5 @@
+English | [Chinese](./README-zh.md)
+
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework 🚀 </h1>
 
