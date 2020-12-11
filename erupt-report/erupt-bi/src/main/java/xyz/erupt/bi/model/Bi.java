@@ -89,19 +89,13 @@ public class Bi extends HyperModel {
     )
     private String view;
 
-//    @Lob
-//    @EruptField(
-//            edit = @Edit(title = "总条数sql", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
-//    )
-//    private String countSql;
-
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "bi_id")
     private Set<BiChart> biCharts;
 
-    @OrderBy("sort")
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "bi_id")
+    @OrderBy("sort")
     @EruptField(
             edit = @Edit(title = "查询维度", type = EditType.TAB_TABLE_ADD)
     )

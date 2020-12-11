@@ -10,7 +10,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt-pro</artifactId>
-        <version>1.4.2</version>
+        <version>1.5.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,14 +30,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

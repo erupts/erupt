@@ -12,6 +12,7 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -46,7 +47,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
 
     @EruptField(
             views = @View(title = "显示顺序", sortable = true),
-            edit = @Edit(title = "显示顺序")
+            edit = @Edit(title = "显示顺序", notNull = true)
     )
     private Integer sort;
 
@@ -74,7 +75,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
 
     @EruptField(
             views = @View(title = "排序"),
-            edit = @Edit(title = "排序")
+            edit = @Edit(title = "排序", boolType = @BoolType(defaultValue = false))
     )
     private Boolean sortable;
 

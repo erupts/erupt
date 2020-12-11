@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.db.model.BaseModel;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -62,9 +63,9 @@ public class BiDimension extends BaseModel {
                             type = ChoiceType.Type.RADIO,
                             vl = {
                                     @VL(value = "INPUT", label = "文本"),
-                                    @VL(value = "TAG", label = "标签"),
                                     @VL(value = "NUMBER", label = "数值"),
                                     @VL(value = "NUMBER_RANGE", label = "数值区间"),
+                                    @VL(value = "TAG", label = "标签"),
 
                                     @VL(value = "DATE", label = "日期"),
                                     @VL(value = "DATE_RANGE", label = "日期区间"),
@@ -96,8 +97,11 @@ public class BiDimension extends BaseModel {
     )
     private BiDimensionReference biDimensionReference;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     private Bi bi;
+
+//    @Column(name = "bi_id")
+//    private Long bi;
 
 }
 

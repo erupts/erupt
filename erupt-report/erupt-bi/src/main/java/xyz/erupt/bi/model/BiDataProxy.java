@@ -32,6 +32,12 @@ public class BiDataProxy implements DataProxy<Bi> {
     public void beforeUpdate(Bi bi) {
         entityManager.clear();
         Bi bbi = entityManager.find(Bi.class, bi.getId());
+        // TODO 在一对多的映射情况下，多的一方如果存有一的一方对象，那么这个对象必须赋值否则会出现多的一方数据无法保存的问题
+        if (null != bi.getBiDimension()) {
+            for (BiDimension dimension : bi.getBiDimension()) {
+                dimension.setBi(bi);
+            }
+        }
         if (StringUtils.isNotBlank(bi.getSqlStatement()) && StringUtils.isNotBlank(bbi.getSqlStatement())) {
             if (!bi.getSqlStatement().equals(bbi.getSqlStatement())) {
                 BiHistory bh = new BiHistory();

@@ -70,7 +70,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
         try {
             Class.forName(biDataSource.getDriver());
         } catch (ClassNotFoundException e) {
-            throw new EruptApiErrorTip("找不到驱动类，请确认jdbc包是否引入");
+            throw new EruptApiErrorTip("找不到驱动类，请检查JDBC驱动包是否在项目内");
         }
     }
 
