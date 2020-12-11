@@ -41,7 +41,7 @@ public class SecurityService {
             return false;
         }
         //检验注解
-        if (!eruptModel.getErupt().loginVerify()) {
+        if (!eruptModel.getErupt().authVerify()) {
             return true;
         }
         //校验菜单权限

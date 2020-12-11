@@ -116,11 +116,13 @@ public class EruptUtil {
         for (xyz.erupt.annotation.sub_field.sub_edit.VL vl : choiceType.vl()) {
             choiceMap.put(vl.value(), vl.label());
         }
-        for (Class<? extends ChoiceFetchHandler> cla : choiceType.fetchHandler()) {
-            List<VLModel> vls = EruptSpringUtil.getBean(cla).fetch(choiceType.fetchHandlerParams());
-            if (null != vls) {
-                for (VLModel vl : vls) {
-                    choiceMap.put(vl.getValue(), vl.getLabel());
+        for (Class<? extends ChoiceFetchHandler> clazz : choiceType.fetchHandler()) {
+            if (!clazz.isInterface()) {
+                List<VLModel> vls = EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams());
+                if (null != vls) {
+                    for (VLModel vl : vls) {
+                        choiceMap.put(vl.getValue(), vl.getLabel());
+                    }
                 }
             }
         }
@@ -132,10 +134,12 @@ public class EruptUtil {
         for (VL vl : choiceType.vl()) {
             vls.add(new VLModel(vl.value(), vl.label(), vl.desc()));
         }
-        for (Class<? extends ChoiceFetchHandler> cla : choiceType.fetchHandler()) {
-            List<VLModel> VL = EruptSpringUtil.getBean(cla).fetch(choiceType.fetchHandlerParams());
-            if (null != VL) {
-                vls.addAll(VL);
+        for (Class<? extends ChoiceFetchHandler> clazz : choiceType.fetchHandler()) {
+            if (!clazz.isInterface()) {
+                List<VLModel> VL = EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams());
+                if (null != VL) {
+                    vls.addAll(VL);
+                }
             }
         }
         return vls;
@@ -144,7 +148,9 @@ public class EruptUtil {
     public static List<String> getTagList(TagsType tagsType) {
         List<String> tags = new ArrayList<>(Arrays.asList(tagsType.tags()));
         for (Class<? extends TagsFetchHandler> clazz : tagsType.fetchHandler()) {
-            tags.addAll(EruptSpringUtil.getBean(clazz).fetchTags(tagsType.fetchHandlerParams()));
+            if (!clazz.isInterface()) {
+                tags.addAll(EruptSpringUtil.getBean(clazz).fetchTags(tagsType.fetchHandlerParams()));
+            }
         }
         return tags;
     }

@@ -27,7 +27,7 @@ public @interface Erupt {
     String desc() default AnnotationConst.EMPTY_STR;
 
     @Transient
-    boolean loginVerify() default true;
+    boolean authVerify() default true;
 
     @Transient
     Power power() default @Power;
