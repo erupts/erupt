@@ -76,6 +76,12 @@
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.7</version>
             </plugin>
+            <!--SCM插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.8.1</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -97,7 +103,10 @@
         <developer>
             <name>yuepeng</name>
             <email>erupts@126.com</email>
-            <organization>erupts</organization>
+            <roles>
+                <role>owner</role>
+            </roles>
+            <timezone>+8</timezone>
         </developer>
     </developers>
 
@@ -114,31 +123,27 @@
 
     <profiles>
         <profile>
+            <id>disable-javadoc-doclint</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <!-- java8版本导致javadoc打包编译失败时候，添加-->
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+                <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
+            </properties>
+        </profile>
+        <profile>
             <id>release</id>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.interceptor</groupId>
+                    <artifactId>javax.interceptor-api</artifactId>
+                    <version>1.2</version>
+                </dependency>
+            </dependencies>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5.3</version>
-                        <configuration>
-                            <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <useReleaseProfile>false</useReleaseProfile>
-                            <releaseProfiles>release</releaseProfiles>
-                            <goals>deploy</goals>
-                        </configuration>
-                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
@@ -146,32 +151,45 @@
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>jar-no-fork</goal>
                                 </goals>
                             </execution>
                         </executions>
                     </plugin>
+
+                    <!-- Javadoc -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>2.9.1</version>
+                        <configuration>
+                            <aggregate>true</aggregate>
+                            <!--需要配置，不然会出现“错误: 未知标记:xxxx”-->
+                            <charset>UTF-8</charset>
+                            <encoding>UTF-8</encoding>
+                            <docencoding>UTF-8</docencoding>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
                         <executions>
                             <execution>
-                                <id>attach-javadocs</id>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                                <configuration>
+                                    <additionalparam>${javadoc.opts}</additionalparam>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- GPG -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.1</version>
                         <executions>
                             <execution>
-                                <id>sign-artifacts</id>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
