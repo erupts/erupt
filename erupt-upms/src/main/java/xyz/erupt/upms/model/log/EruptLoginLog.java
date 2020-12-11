@@ -14,7 +14,6 @@ import xyz.erupt.db.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
@@ -24,7 +23,7 @@ import java.util.Date;
  * @date 2019-11-27.
  */
 @Entity
-@Table(name = "e_user_login_log")
+@Table(name = "e_upms_login_log")
 @Erupt(
         name = "登录日志",
         power = @Power(add = false, edit = false, viewDetails = false, delete = false, export = true),
@@ -35,7 +34,6 @@ import java.util.Date;
 public class EruptLoginLog extends BaseModel {
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
     @EruptField(
             views = @View(title = "用户", column = "name"),
             edit = @Edit(title = "用户", type = EditType.REFERENCE_TABLE

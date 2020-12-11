@@ -25,7 +25,7 @@ import java.util.List;
  * @date 2018-11-22.
  */
 @Entity
-@Table(name = "e_menu", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_upms_menu", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "菜单配置",
         orderBy = "EruptMenu.sort asc",

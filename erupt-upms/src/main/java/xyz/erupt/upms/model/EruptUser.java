@@ -29,7 +29,7 @@ import java.util.Set;
  * @date 2018-11-22.
  */
 @Entity
-@Table(name = "e_user", uniqueConstraints = {
+@Table(name = "e_upms_user", uniqueConstraints = {
         @UniqueConstraint(columnNames = "account")
 })
 @Erupt(
@@ -119,7 +119,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 
     @ManyToMany
     @JoinTable(
-            name = "e_user_role",
+            name = "e_upms_user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     @EruptField(

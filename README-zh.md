@@ -1,5 +1,5 @@
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
-<h1 align="center"> Erupt Framework 🚀 | 通用后台管理框架 </h1>
+<h1 align="center"> Erupt Framework 🚀 通用后台管理框架 </h1>
 
 ---
 
@@ -11,10 +11,8 @@
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![size](https://img.shields.io/github/repo-size/erupts/erupt)](./)  
 
-
 国内仓库：https://gitee.com/erupt/erupt  
-
-国外仓库：https://github.com/erupts/erupt
+国外仓库：https://github.com/erupts/erupt  
 
 QQ交流群：821389129 🔥
 
@@ -22,6 +20,7 @@ QQ交流群：821389129 🔥
 https://www.erupt.xyz
 
 ## 简介 | Intro
+**零前端代码，零CURD，一个文件几行代码搞定后台管理页面**
 + 零前端代码，仅需单个文件 + 简洁的注解配置，即可快速开发企业级Admin管理后台。
 + 快速搭建企业级中后台管理系统的全栈解决方案，提供超多业务组件，压缩研发周期，降低研发成本。
 + 后端开发存在一定的痛点，开发效率低、界面不美观、交互不理想、工作量重复、后端开发写前端代码、代码生成器二次生成的代码难合并，Erupt可轻松解决这些难题。
