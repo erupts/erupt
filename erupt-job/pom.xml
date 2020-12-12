@@ -5,7 +5,7 @@
 
     <artifactId>erupt-job</artifactId>
     <name>erupt-job</name>
-    <description>任务调度模块</description>
+    <description>Task scheduling module</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>

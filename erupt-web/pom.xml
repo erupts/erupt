@@ -6,7 +6,7 @@
 
     <artifactId>erupt-web</artifactId>
     <name>erupt-web</name>
-    <description>erupt web</description>
+    <description>erupt web ui</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>

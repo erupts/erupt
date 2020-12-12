@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-upms</artifactId>
-    <description>用户权限管理模块</description>
+    <description>User Permissions Management</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
