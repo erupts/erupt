@@ -50,7 +50,7 @@ Erupt提供企业级中后台管理系统的全栈解决方案，提供超多业
 
 ## 代码示例 | Code
 ``` java
-@Erupt(name = "简单的例子")
+@Erupt(name = "入门示例")
 @Table(name = "t_xxxxxx") //数据库表名
 @Entity
 public class Simple extends BaseModel {
@@ -83,6 +83,9 @@ public class Simple extends BaseModel {
 ```
 #### 运行效果
 ![result](readme/simple.gif)
+![result](readme/view.png)
+![result](readme/edit.png)
+
 
 ## 演示截图 | Screenshot
 <table>
