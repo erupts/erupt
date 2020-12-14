@@ -97,7 +97,11 @@ public class EruptService {
         Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
                 .queryList(eruptModel, new Page(0, 1, null),
                         EruptQuery.builder().conditions(conditions).build());
-        return page.getList().size() > 0;
+        boolean is = page.getList().size() > 0;
+        if (is) {
+            log.info(eruptModel.getEruptName() + " Id allows access : " + id);
+        }
+        return is;
     }
 
 }

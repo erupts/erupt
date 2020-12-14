@@ -2,6 +2,7 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import xyz.erupt.annotation.EruptField;
@@ -35,78 +36,75 @@ import java.util.regex.Pattern;
 public class EruptUtil {
 
     //将object中erupt标识的字段抽取出来放到map中
+    @SneakyThrows
     public static Map<String, Object> generateEruptDataMap(EruptModel eruptModel, Object obj) {
         Map<String, Object> map = new HashMap<>();
-        try {
-            for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
-                if (AnnotationConst.EMPTY_STR.equals(fieldModel.getEruptField().edit().title()) &&
-                        !eruptModel.getErupt().primaryKeyCol().equals(fieldModel.getFieldName())) {
-                    continue;
-                }
-                Field field = fieldModel.getField();
-                field.setAccessible(true);
-                Object value = field.get(obj);
-                if (null != value) {
-                    EruptField eruptField = fieldModel.getEruptField();
-                    switch (eruptField.edit().type()) {
-                        case REFERENCE_TREE:
-                        case REFERENCE_TABLE:
-                            String id = null;
-                            String label = null;
-                            if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
-                                ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
-                                id = referenceTreeType.id();
-                                label = referenceTreeType.label();
-                            } else if (eruptField.edit().type() == EditType.REFERENCE_TABLE) {
-                                ReferenceTableType referenceTableType = eruptField.edit().referenceTableType();
-                                id = referenceTableType.id();
-                                label = referenceTableType.label();
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            if (AnnotationConst.EMPTY_STR.equals(fieldModel.getEruptField().edit().title()) &&
+                    !eruptModel.getErupt().primaryKeyCol().equals(fieldModel.getFieldName())) {
+                continue;
+            }
+            Field field = fieldModel.getField();
+            field.setAccessible(true);
+            Object value = field.get(obj);
+            if (null != value) {
+                EruptField eruptField = fieldModel.getEruptField();
+                switch (eruptField.edit().type()) {
+                    case REFERENCE_TREE:
+                    case REFERENCE_TABLE:
+                        String id = null;
+                        String label = null;
+                        if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
+                            ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
+                            id = referenceTreeType.id();
+                            label = referenceTreeType.label();
+                        } else if (eruptField.edit().type() == EditType.REFERENCE_TABLE) {
+                            ReferenceTableType referenceTableType = eruptField.edit().referenceTableType();
+                            id = referenceTableType.id();
+                            label = referenceTableType.label();
+                        }
+                        Map<String, Object> referMap = new HashMap<>();
+                        referMap.put(id, ReflectUtil.findFieldChain(id, value));
+                        referMap.put(label, ReflectUtil.findFieldChain(label, value));
+                        for (View view : eruptField.views()) {
+                            referMap.put(view.column(), ReflectUtil.findFieldChain(view.column(), value));
+                        }
+                        map.put(field.getName(), referMap);
+                        break;
+                    case COMBINE:
+                        map.put(field.getName(), generateEruptDataMap(EruptCoreService.getErupt(fieldModel.getFieldReturnName()), value));
+                        break;
+                    case CHECKBOX:
+                    case TAB_TREE:
+                        EruptModel tabEruptModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
+                        Collection<?> collection = (Collection<?>) value;
+                        if (collection.size() > 0) {
+                            Set<Object> idSet = new HashSet<>();
+                            Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
+                                    tabEruptModel.getErupt().primaryKeyCol());
+                            for (Object o : collection) {
+                                idSet.add(primaryField.get(o));
                             }
-                            Map<String, Object> referMap = new HashMap<>();
-                            referMap.put(id, ReflectUtil.findFieldChain(id, value));
-                            referMap.put(label, ReflectUtil.findFieldChain(label, value));
-                            for (View view : eruptField.views()) {
-                                referMap.put(view.column(), ReflectUtil.findFieldChain(view.column(), value));
-                            }
-                            map.put(field.getName(), referMap);
-                            break;
-                        case COMBINE:
-                            map.put(field.getName(), generateEruptDataMap(EruptCoreService.getErupt(fieldModel.getFieldReturnName()), value));
-                            break;
-                        case CHECKBOX:
-                        case TAB_TREE:
-                            EruptModel tabEruptModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
-                            Collection<?> collection = (Collection<?>) value;
-                            if (collection.size() > 0) {
-                                Set<Object> idSet = new HashSet<>();
-                                Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
-                                        tabEruptModel.getErupt().primaryKeyCol());
-                                for (Object o : collection) {
-                                    idSet.add(primaryField.get(o));
-                                }
-                                map.put(field.getName(), idSet);
-                            }
-                            break;
-                        case TAB_TABLE_REFER:
-                        case TAB_TABLE_ADD:
-                            EruptModel tabEruptModelRef = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
-                            Collection<?> collectionRef = (Collection<?>) value;
-                            List<Object> list = new ArrayList<>();
-                            for (Object o : collectionRef) {
-                                list.add(generateEruptDataMap(tabEruptModelRef, o));
-                            }
+                            map.put(field.getName(), idSet);
+                        }
+                        break;
+                    case TAB_TABLE_REFER:
+                    case TAB_TABLE_ADD:
+                        EruptModel tabEruptModelRef = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
+                        Collection<?> collectionRef = (Collection<?>) value;
+                        List<Object> list = new ArrayList<>();
+                        for (Object o : collectionRef) {
+                            list.add(generateEruptDataMap(tabEruptModelRef, o));
+                        }
 //                            bi.getBiCharts().stream().sorted(Comparator.comparing(BiChart::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList())
 //                            list.stream().sorted()
-                            map.put(field.getName(), list);
-                            break;
-                        default:
-                            map.put(field.getName(), value);
-                            break;
-                    }
+                        map.put(field.getName(), list);
+                        break;
+                    default:
+                        map.put(field.getName(), value);
+                        break;
                 }
             }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
         }
         return map;
     }
