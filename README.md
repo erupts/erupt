@@ -15,7 +15,9 @@
 
 国外仓库：https://github.com/erupts/erupt  
 
-环境搭建：https://www.yuque.com/yuepeng/erupt/tpq1l9  
+环境搭建：https://www.yuque.com/yuepeng/erupt/tpq1l9
+
+演示地址：https://www.erupt.xyz/demo （自适应布局支持手机端访问）
 
 QQ交流群：821389129 🔥
 
