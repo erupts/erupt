@@ -5,7 +5,7 @@
 
 ![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)
 [![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
-[![Gitee star](https://gitee.com/erupt/erupt-site/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
+[![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
@@ -135,7 +135,7 @@ erupt
 ├── erupt-upms -- 用户权限管理
 └── erupt-web -- 前端页面
 
-erupt-pro //暂未开放
+erupt-pro //暂未开放  star超过1K开源erupt-tpl模块与erupt-generator模块
 ├── erupt-bi -- 通过sql加js混编实现动态报表，支持多数据源，支持十几种图表
 ├── erupt-tpl -- 支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
 └── erupt-generator -- 代码生成器，通过简单配置，生成erupt代码段
