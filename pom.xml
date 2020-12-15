@@ -65,6 +65,7 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <verbose>true</verbose>
                     <compilerArgs>
                         <compilerArg>-parameters</compilerArg>
                     </compilerArgs>

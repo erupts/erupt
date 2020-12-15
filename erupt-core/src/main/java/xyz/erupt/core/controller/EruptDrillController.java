@@ -19,6 +19,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQueryVo;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 
 /**
@@ -80,6 +81,7 @@ public class EruptDrillController {
     public EruptApiModel drillAdd(@PathVariable("erupt") String erupt,
                                   @PathVariable("code") String code,
                                   @PathVariable("id") String id,
+                                  HttpServletRequest request,
                                   @RequestBody JsonObject data) throws Exception {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Link link = null;
@@ -106,7 +108,7 @@ public class EruptDrillController {
             } else {
                 jo.addProperty(joinColumn, val.toString());
             }
-            return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, jo);
+            return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, jo, request);
         }
         throw new EruptNoLegalPowerException();
     }

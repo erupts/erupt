@@ -108,7 +108,7 @@ public class EruptExcelController {
     @ResponseBody
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional(rollbackOn = Exception.class)
-    public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) throws Exception {
+    public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (EruptUtil.getPowerObject(eruptModel).isImportable()) {
             if (file.isEmpty()) {
@@ -133,7 +133,7 @@ public class EruptExcelController {
             i = 1;
             for (JsonObject jo : list) {
                 i++;
-                EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo, null);
+                EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo, null, request);
                 if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
                     throw new EruptWebApiRuntimeException("第" + i + "行：" + eruptApiModel.getMessage());
                 }
