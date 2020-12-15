@@ -11,9 +11,9 @@
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![size](https://img.shields.io/github/repo-size/erupts/erupt)](./)  
 
-国内仓库：https://gitee.com/erupt/erupt  
+国内仓库：https://gitee.com/erupt/erupt
 
-国外仓库：https://github.com/erupts/erupt  
+国外仓库：https://github.com/erupts/erupt （如果github图片不显示请访问国内仓库）  
 
 环境搭建：https://www.yuque.com/yuepeng/erupt/tpq1l9
 

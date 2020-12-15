@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.upms.config.EruptUpmsConfig;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,7 @@ public class EruptSessionService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    @Autowired
+    @Resource
     private HttpServletRequest request;
 
     @Autowired
