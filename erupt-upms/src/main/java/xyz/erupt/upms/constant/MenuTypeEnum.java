@@ -10,7 +10,8 @@ public enum MenuTypeEnum {
     LINK("link", "链接", "互联网地址"),
     NEW_WINDOW("newWindow", "新页签", "互联网地址"),
     FILL("fill", "充满屏幕", "路由地址"),
-    ROUTER("router", "页面路由", "路由地址"),
+    ROUTER("router", "页面路由", null),
+    API("api", "接口名称", null),
     ;
 
     private final String code;
