@@ -45,9 +45,10 @@ public class EntityManagerService implements ApplicationRunner {
                 {
                     JpaProperties jpa = prop.getJpa();
                     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-                    vendorAdapter.setGenerateDdl(jpa.isGenerateDdl());
+                    vendorAdapter.setGenerateDdl(false);
                     vendorAdapter.setDatabase(jpa.getDatabase());
                     vendorAdapter.setShowSql(jpa.isShowSql());
+                    vendorAdapter.setDatabase(jpa.getDatabase());
                     vendorAdapter.setDatabasePlatform(jpa.getDatabasePlatform());
                     factory.setJpaVendorAdapter(vendorAdapter);
                 }
