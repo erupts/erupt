@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.5.2</version>
+    <version>1.5.3</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -66,9 +66,11 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <verbose>true</verbose>
+                    <fork>true</fork>
                     <compilerArgs>
                         <compilerArg>-parameters</compilerArg>
                     </compilerArgs>
+                    <executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_231.jdk/Contents/Home/bin/javac</executable>
                 </configuration>
             </plugin>
             <!-- 一键更新子模块版本号 plugins -> versions -> version:set  -->
