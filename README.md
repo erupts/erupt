@@ -9,11 +9,12 @@
 [![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
-[![size](https://img.shields.io/github/repo-size/erupts/erupt)](./)  
+![size](https://img.shields.io/github/repo-size/erupts/erupt)
 
 国内仓库：https://gitee.com/erupt/erupt
+（如果github图片不显示请访问国内仓库）
 
-国外仓库：https://github.com/erupts/erupt（如果github图片不显示请访问国内仓库）
+国外仓库：https://github.com/erupts/erupt
 
 环境搭建：https://www.yuque.com/yuepeng/erupt/tpq1l9
 
@@ -48,6 +49,7 @@ Erupt提供企业级中后台管理系统的全栈解决方案，提供超多业
 + **代码生成**：erupt代码已经足够简洁，代码生成器可进一步提升开发效率。
 + **扩展性强**：支持自定义数据源实现、自定义页面、自定义模板、自定义附件上传机制等。
 + **界面美观**：每个交互都精心设计，产品思维打磨，只为了更好的操作体验。
++ **权限管理**：用户管理、角色管理、组织管理、菜单管理、登录日志、操作日志、
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用。
 + **无需二次开发**：仅需引用jar包即可。
 
