@@ -152,6 +152,12 @@ Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、
 #### 前端：
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
+### 未来设想 | Future vision
+1. 支持markdown等更多组件
+2. 增加按钮级权限控制
+3. 流程引擎支持（会完全自己做，不会用市面上已有的）
+4. 主题色更改
+4. 国际化支持
 
 ## 在线演示 | Demo
 演示地址：https://www.erupt.xyz/demo  
