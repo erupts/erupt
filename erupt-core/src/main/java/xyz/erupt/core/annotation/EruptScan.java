@@ -14,7 +14,10 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Documented
 @Import({EruptApplication.class})
-@Comment("erupt项目，包扫描核心注解")
+@Comment("Erupt项目包扫描核心注解")
 public @interface EruptScan {
+
+    @Comment("需要被扫描的包名")
     String[] value() default {};
+
 }
