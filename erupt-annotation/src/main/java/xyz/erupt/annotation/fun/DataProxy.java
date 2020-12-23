@@ -36,9 +36,8 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
     default void afterDelete(MODEL model) {
     }
 
-    @Comment("查询前")
-    default @Comment("自定义查询条件")
-    String beforeFetch() {
+    @Comment("查询前，返回值为：自定义查询条件")
+    default String beforeFetch() {
         return null;
     }
 
@@ -55,8 +54,8 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
     default void editBehavior(MODEL model) {
     }
 
-    @Comment("excel导出，wb为POI文档对象")
-    default void excelExport(Workbook wb) {
+    @Comment("excel导出")
+    default void excelExport(@Comment("POI文档对象") Workbook wb) {
     }
 
     @Comment("excel导入")

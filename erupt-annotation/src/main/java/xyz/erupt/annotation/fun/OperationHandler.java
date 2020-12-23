@@ -1,24 +1,18 @@
 package xyz.erupt.annotation.fun;
 
+import xyz.erupt.annotation.config.Comment;
+
 import java.util.List;
 
 /**
  * @author liyuepeng
  * @date 2018-10-09.
  */
-public interface OperationHandler<Target, EruptObjParam> {
+public interface OperationHandler<@Comment("行数据类型") Target, @Comment("表单输入对象类型") EruptObjParam> {
 
-    /**
-     * 操作执行类
-     *
-     * @param data          待处理数据
-     * @param eruptObjParam 处理参数
-     * @param param         RowOperation注解参数
-     */
-    void exec(List<Target> data, EruptObjParam eruptObjParam, String[] param);
+    @Comment("按钮事件触发类")
+    void exec(@Comment("行数据") List<Target> data,
+              @Comment("表单输入数据") EruptObjParam eruptObjParam,
+              @Comment("注解回传参数") String[] param);
 
-
-    default void bindData(List<Target> data, EruptObjParam eruptObjParam, String[] param) {
-
-    }
 }

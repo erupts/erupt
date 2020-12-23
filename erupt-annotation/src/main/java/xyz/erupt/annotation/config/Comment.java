@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * @date 2020-12-23.
  */
 @Repeatable(Comments.class)
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE_PARAMETER, ElementType.PARAMETER})
+@Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD, ElementType.TYPE_PARAMETER, ElementType.PARAMETER})
 @Documented
 public @interface Comment {
 
