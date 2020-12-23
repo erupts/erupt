@@ -1,5 +1,7 @@
 package xyz.erupt.core.annotation;
 
+import xyz.erupt.annotation.config.Comment;
+
 import java.lang.annotation.*;
 
 /**
@@ -9,31 +11,34 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Documented
+@Comment("接口菜单权限校验，仅对/erupt-api/**下的接口有效")
 public @interface EruptRouter {
 
-    //在VerifyType为menu或erupt使用
+    @Comment("根据请求地址'/'进行分隔，定义处于第几个下标为的字符为菜单权限标识字符")
     int authIndex();
 
+    @Comment("配合authIndex使用，计算后权限下标位置为：skipAuthIndex + authIndex")
     int skipAuthIndex() default 2;
 
+    @Comment("权限校验类型")
     VerifyType verifyType();
 
-    //权限数据校验方式，请求头校验与参数校验可选
+    @Comment("权限校验方式")
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;
 
     enum VerifyMethod {
-        //token必须放在请求头
+        @Comment("token必须放在请求头")
         HEADER,
-        //token必须放在URL参数中
+        @Comment("token必须放在URL参数中")
         PARAM
     }
 
     enum VerifyType {
-        //仅验证登录
+        @Comment("仅验证是否登录")
         LOGIN,
-        //验证登录与erupt权限
+        @Comment("验证登录与erupt权限")
         ERUPT,
-        //验证登录与菜单权限
+        @Comment("验证登录与菜单权限")
         MENU
     }
 

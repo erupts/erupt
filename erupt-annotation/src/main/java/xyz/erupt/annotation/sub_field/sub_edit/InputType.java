@@ -1,7 +1,5 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
-import xyz.erupt.annotation.constant.DataLength;
-
 import java.beans.Transient;
 
 /**
@@ -9,7 +7,7 @@ import java.beans.Transient;
  * @date 2018-10-10.
  */
 public @interface InputType {
-    int length() default DataLength.TEXT_LENGTH;
+    int length() default 255;
 
     String type() default "text";
 

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @date 2020-12-23.
  */
 
-@Target({ElementType.METHOD, ElementType.FIELD})
+@Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD, ElementType.TYPE_PARAMETER, ElementType.PARAMETER})
 @Documented
 public @interface Comments {
 

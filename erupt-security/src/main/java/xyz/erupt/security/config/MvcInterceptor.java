@@ -24,9 +24,4 @@ public class MvcInterceptor implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor).addPathPatterns(EruptRestPath.ERUPT_API + "/**");
     }
 
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler(RestPath.ERUPT_ATTACHMENT + "/**")
-//                .addResourceLocations("file:" + eruptProp.getUploadPath());
-//    }
 }
