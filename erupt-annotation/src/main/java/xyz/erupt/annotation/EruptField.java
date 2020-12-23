@@ -1,5 +1,6 @@
 package xyz.erupt.annotation;
 
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -17,11 +18,11 @@ import java.lang.annotation.*;
 @Documented
 public @interface EruptField {
 
-    //表格列信息
+    @Comment("表格列配置")
     View[] views() default {};
 
-    //编辑信息
-    //@Match("value.title()")
+
+    @Comment("编辑配置")
     Edit edit() default @Edit(title = AnnotationConst.EMPTY_STR);
 
     @Transient

@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptProperty;
 
 import java.beans.Transient;
@@ -14,7 +15,7 @@ public @interface View {
 
     String desc() default "";
 
-    //在修饰类型为实体类对象时必须指定列名
+    @Comment("修饰类型为实体类对象时必须指定列名")
     String column() default "";
 
     @EruptProperty(alias = "viewType")
@@ -27,16 +28,13 @@ public @interface View {
     @Transient
     boolean export() default true;
 
+    @Comment("样式类名")
     String className() default "";
 
-    /**
-     * 该参数在前端使用eval方法解析
-     * 支持变量：
-     * 1、item（整行数据）
-     * 2、item.xxx（数据中的某一列）
-     * 3、value (当前数据)
-     * demo："姓名：" + item.name  => 姓名xxxx
-     */
+    @Comment("格式化表格列值，前端使用eval方法解析，支持变量：" +
+            "1、item    （表格整行数据）" +
+            "2、item.xxx（数据行中某一列的值）" +
+            "3、value   （当前列值）")
     String template() default "";
 
 }

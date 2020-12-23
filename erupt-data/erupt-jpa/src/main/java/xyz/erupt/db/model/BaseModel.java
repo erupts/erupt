@@ -25,5 +25,4 @@ public class BaseModel {
     @Column(name = "id")
     @EruptField
     private Long id;
-
 }

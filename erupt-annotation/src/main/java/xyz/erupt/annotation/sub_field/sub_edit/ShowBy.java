@@ -1,17 +1,17 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
+import xyz.erupt.annotation.config.Comment;
+
 /**
  * @author liyuepeng
  * @date 2020-05-21
  */
 public @interface ShowBy {
 
+    @Comment("依赖字段名")
     String dependField();
 
-    /**
-     * 使用eval解析的前端表达式
-     * 变量：value 表示field前端值
-     */
+    @Comment("显示条件表达式，支持变量：value 该值表示依赖字段的值")
     String expr();
 
 }

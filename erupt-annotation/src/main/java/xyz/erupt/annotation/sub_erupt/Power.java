@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_erupt;
 
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.fun.PowerHandler;
 
 import java.beans.Transient;
@@ -9,6 +10,7 @@ import java.beans.Transient;
  * @date 2018-09-28.
  */
 public @interface Power {
+
     boolean add() default true;
 
     boolean delete() default true;
@@ -19,10 +21,13 @@ public @interface Power {
 
     boolean viewDetails() default true;
 
+    @Comment("导入")
     boolean export() default false;
 
+    @Comment("导出")
     boolean importable() default false;
 
     @Transient
+    @Comment("动态处理Power权限")
     Class<? extends PowerHandler> powerHandler() default PowerHandler.class;
 }

@@ -22,12 +22,12 @@ public @interface Edit {
 
     boolean show() default true;
 
-    @Match("value.dependField()")
-    ShowBy showBy() default @ShowBy(dependField = "", expr = "");
-
     boolean readOnly() default false;
 
     String placeHolder() default "";
+
+    @Match("value.dependField()")
+    ShowBy showBy() default @ShowBy(dependField = "", expr = "");
 
     Search search() default @Search(false);
 

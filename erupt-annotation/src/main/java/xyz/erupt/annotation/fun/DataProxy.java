@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.fun;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import xyz.erupt.annotation.config.Comment;
 
 import java.util.Collection;
 import java.util.Map;
@@ -9,103 +10,55 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2018-10-09.
  */
-public interface DataProxy<MODEL> {
+public interface DataProxy<@Comment("Erupt类对象") MODEL> {
 
-    /**
-     * 新增前
-     *
-     * @param model 待新增对象数据
-     */
+    @Comment("增加前")
     default void beforeAdd(MODEL model) {
     }
 
-    /**
-     * 新增后
-     *
-     * @param model 已新增对象数据
-     */
+    @Comment("增加后")
     default void afterAdd(MODEL model) {
     }
 
-    /**
-     * 修改前
-     *
-     * @param model 待修改对象数据
-     */
+    @Comment("修改前")
     default void beforeUpdate(MODEL model) {
     }
 
-    /**
-     * 修改后
-     *
-     * @param model 已修改对象数据
-     */
+    @Comment("修改后")
     default void afterUpdate(MODEL model) {
     }
 
-    /**
-     * 删除前
-     *
-     * @param model 待删除对象数据
-     */
+    @Comment("删除前")
     default void beforeDelete(MODEL model) {
     }
 
-    /**
-     * 删除后
-     *
-     * @param model 已删除对象数据
-     */
+    @Comment("删除后")
     default void afterDelete(MODEL model) {
     }
 
-    /**
-     * 查询前动态注入条件
-     *
-     * @return 自定义查询条件
-     */
+    @Comment("查询前，返回值为：自定义查询条件")
     default String beforeFetch() {
         return null;
     }
 
-    /**
-     * 查询结果处理
-     *
-     * @param list 查询结果
-     */
+    @Comment("查询后结果处理，list：查询结果")
     default void afterFetch(Collection<Map<String, Object>> list) {
     }
 
 
-    /**
-     * 数据新增行为，对数据做初始化操作
-     *
-     * @param model 要编辑的数据
-     */
+    @Comment("数据新增行为，可对数据做初始化等操作")
     default void addBehavior(MODEL model) {
     }
 
-    /**
-     * 数据编辑行为，对待编辑的数据做预处理
-     *
-     * @param model 要编辑的数据
-     */
+    @Comment("数据编辑行为，对待编辑的数据做预处理")
     default void editBehavior(MODEL model) {
     }
 
-    /**
-     * excel导出
-     *
-     * @param wb POI文档对象
-     */
+    @Comment("excel导出，wb为POI文档对象")
     default void excelExport(Workbook wb) {
     }
 
-    /**
-     * excel导入
-     *
-     * @param model 待导入对象数据
-     */
+    @Comment("excel导入")
     default void excelImport(MODEL model) {
     }
 
