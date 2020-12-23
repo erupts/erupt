@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.fun.AutoCompleteHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
@@ -18,23 +19,29 @@ public @interface Edit {
 
     String desc() default "";
 
+    @Comment("必填")
     boolean notNull() default false;
 
     boolean show() default true;
 
+    @Comment("只读")
     boolean readOnly() default false;
 
     String placeHolder() default "";
 
     @Match("value.dependField()")
+    @Comment("显示依赖")
     ShowBy showBy() default @ShowBy(dependField = "", expr = "");
 
+    @Comment("查询项")
     Search search() default @Search(false);
 
     @Transient
+    @Comment("排序表达式，在修饰类型为对象时可用")
     String orderBy() default "";
 
     @Transient
+    @Comment("数据过滤表达式，在修饰类型为对象时可用")
     Filter[] filter() default {};
 
     EditType type() default EditType.AUTO;

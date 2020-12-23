@@ -10,5 +10,4 @@ public interface TagsFetchHandler {
 
     List<String> fetchTags(String[] params);
 
-
 }

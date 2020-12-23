@@ -9,5 +9,7 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface PreDataProxy {
-    Class<? extends DataProxy> value();
+
+    Class<? extends DataProxy<?>> value();
+
 }

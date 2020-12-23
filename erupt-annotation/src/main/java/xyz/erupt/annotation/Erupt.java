@@ -47,7 +47,7 @@ public @interface Erupt {
     Drill[] drills() default {};
 
     @Transient
-    @Comment("数据过滤")
+    @Comment("数据过滤表达式")
     Filter[] filter() default {};
 
     @Transient
@@ -56,7 +56,7 @@ public @interface Erupt {
 
     @Transient
     @Comment("数据行为代理接口，对增、删、改、查等行为做逻辑处理")
-    Class<? extends DataProxy>[] dataProxy() default {};
+    Class<? extends DataProxy<?>>[] dataProxy() default {};
 
     @Comment("树节点配置")
     Tree tree() default @Tree;
@@ -66,7 +66,7 @@ public @interface Erupt {
     LinkTree linkTree() default @LinkTree(field = AnnotationConst.EMPTY_STR);
 
     @ToMap(key = "key")
-    @Comment("自定义参数")
+    @Comment("自定义扩展参数")
     KV[] param() default {};
 
     @Deprecated

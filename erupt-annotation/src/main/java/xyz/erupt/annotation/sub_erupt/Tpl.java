@@ -1,5 +1,7 @@
 package xyz.erupt.annotation.sub_erupt;
 
+import xyz.erupt.annotation.config.Comment;
+
 import java.beans.Transient;
 import java.util.Map;
 
@@ -9,33 +11,35 @@ import java.util.Map;
  */
 public @interface Tpl {
 
+    @Comment("模板文件的位置")
     @Transient
     String path();
 
     @Transient
+    @Comment("定义的值可在tplHandler中获取到")
     String[] params() default {};
 
     @Transient
+    @Comment("定义模板绑定数据")
     Class<? extends TplHandler> tplHandler() default TplHandler.class;
 
     @Transient
+    @Comment("模板引擎")
     Engine engine() default Engine.FreeMarker;
 
     enum Engine {
+        @Comment("Native模式下不支持tplHandler")
         Native,
+        @Comment("FreeMarker")
         FreeMarker,
+        @Comment("Thymeleaf")
         Thymeleaf
     }
 
     interface TplHandler {
 
-        /**
-         * 获取模板绑定数据
-         *
-         * @param params 注解参数
-         * @return 页面绑定数据
-         */
         Map<String, Object> bindTplData(String[] params);
+
     }
 
 }

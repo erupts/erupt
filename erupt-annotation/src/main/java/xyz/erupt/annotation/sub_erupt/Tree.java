@@ -18,7 +18,7 @@ public @interface Tree {
     @Comment("树展示列")
     String label() default AnnotationConst.LABEL;
 
-    @Comment("树上级列")
+    @Comment("父级节点标识列")
     String pid() default "";
 
     @Transient

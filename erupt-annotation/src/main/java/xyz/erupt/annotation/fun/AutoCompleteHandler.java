@@ -1,5 +1,7 @@
 package xyz.erupt.annotation.fun;
 
+import xyz.erupt.annotation.config.Comment;
+
 import java.util.List;
 
 /**
@@ -8,10 +10,5 @@ import java.util.List;
  */
 public interface AutoCompleteHandler {
 
-    /**
-     * @param val   前端输入值
-     * @param param 注解回传参数
-     * @return
-     */
-    List<Object> completeHandler(String val, String[] param);
+    List<Object> completeHandler(@Comment("前端输入值") String val, @Comment("注解回传参数") String[] param);
 }

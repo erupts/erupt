@@ -36,13 +36,14 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
     default void afterDelete(MODEL model) {
     }
 
-    @Comment("查询前，返回值为：自定义查询条件")
-    default String beforeFetch() {
+    @Comment("查询前")
+    default @Comment("自定义查询条件")
+    String beforeFetch() {
         return null;
     }
 
-    @Comment("查询后结果处理，list：查询结果")
-    default void afterFetch(Collection<Map<String, Object>> list) {
+    @Comment("查询后结果处理")
+    default void afterFetch(@Comment("查询结果") Collection<Map<String, Object>> list) {
     }
 
 
