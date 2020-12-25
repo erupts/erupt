@@ -4,23 +4,24 @@
 
 ---
 
-[![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)](https://www.erupt.xyz) &nbsp;
-[![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE) &nbsp;
-[![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt) &nbsp;
-[![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt) &nbsp;
-[![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt) &nbsp;
-[![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt) &nbsp;
+[![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)](https://www.erupt.xyz) 
+[![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE) 
+[![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt) 
+[![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt) 
+[![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt) 
+[![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt) 
 ![size](https://img.shields.io/github/repo-size/erupts/erupt)
 
-| &nbsp; 
+
 [码云仓库](https://gitee.com/erupt/erupt) &nbsp; | &nbsp; [github仓库](https://github.com/erupts/erupt) &nbsp; | &nbsp; 
 [项目官网](https://www.erupt.xyz) &nbsp; | &nbsp; [使用文档](https://www.yuque.com/yuepeng/erupt) &nbsp; | &nbsp; 
 [JavaDoc](https://apidoc.gitee.com/erupt/erupt/) &nbsp; | &nbsp; [环境搭建](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
-
-QQ交流群：821389129 🔥 
+[代码演示](https://www.erupt.xyz/#!/contrast) &nbsp; | &nbsp; [在线体验](https://www.erupt.xyz/demo)
 
 ## 首页 | Home 
 https://www.erupt.xyz
+
+> QQ交流群：821389129 🔥 
 
 ##  简介 | Intro
 Erupt Framework 快速的构建管理页面，零前端代码、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，即可快速开发企业级`Admin`管理后台！
