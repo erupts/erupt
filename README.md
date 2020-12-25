@@ -84,7 +84,7 @@ public class Simple extends BaseModel {
 
 全部实现这些仅前端就需要大量的代码，后端的接口与业务逻辑更不在少数。
 
-但可以看到，用 erupt 只需要 30 几行 注解 配置，你不需要了解 Angular / React / Vue / Jquery 也不需要了解 JavaScript / HTML / HTML，甚至不需要了解 Spring MVC / JPA / Mybatis / SQL，即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
+但可以看到，用 erupt 只需要 30 几行 注解 配置，你不需要了解 Angular / React / Vue / Jquery 也不需要了解 JavaScript / HTML / CSS，甚至不需要了解 Spring MVC / JPA / Mybatis / SQL，即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
 
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
 
