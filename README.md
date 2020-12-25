@@ -18,10 +18,10 @@
 [JavaDoc](https://apidoc.gitee.com/erupt/erupt/) &nbsp; | &nbsp; [环境搭建](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
 [代码演示](https://www.erupt.xyz/#!/contrast) &nbsp; | &nbsp; [在线体验](https://www.erupt.xyz/demo)
 
+> QQ交流群：821389129 🔥 
+
 ## 首页 | Home 
 https://www.erupt.xyz
-
-> QQ交流群：821389129 🔥 
 
 ##  简介 | Intro
 Erupt Framework 快速的构建管理页面，零前端代码、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，即可快速开发企业级`Admin`管理后台！
@@ -48,7 +48,7 @@ Erupt提供企业级中后台管理系统的全栈解决方案，提供超多业
 + **扩展性强**：支持自定义数据源实现、自定义页面、自定义模板、自定义附件上传机制等。
 + **界面美观**：每个交互都精心设计，产品思维打磨，只为了更好的操作体验。
 + **权限管理**：用户管理、角色管理、组织管理、菜单管理、登录日志、操作日志等。
-+ **高安全性**：🛡可靠的安全机制，登录白名单，菜单权限验证，请求头检查，注解项检查，细颗粒度权限控制，为你的数据保驾护航。
++ **高安全性**：可靠的安全机制，登录白名单，权限验证，请求头检查，注解项检查，细颗粒度权限控制，为你的数据保驾护航。
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用。
 + **无需二次开发**：仅需引用jar包即可。
 
@@ -159,7 +159,7 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 4. 主题色更改
 4. 国际化支持
 
-## 在线演示 | Demo
+## 在线体验 | Demo
 演示地址：https://www.erupt.xyz/demo  
 账号密码：`guest / guest`
 
