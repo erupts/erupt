@@ -12,18 +12,17 @@
 ![size](https://img.shields.io/github/repo-size/erupts/erupt)
 
 国内仓库：https://gitee.com/erupt/erupt
-（如果github图片不显示请访问国内仓库）
 
 国外仓库：https://github.com/erupts/erupt
-
-环境搭建：https://www.yuque.com/yuepeng/erupt/tpq1l9
-
-演示地址：https://www.erupt.xyz/demo （自适应布局支持手机端访问）
 
 QQ交流群：821389129 🔥
 
 ## 首页 | Home
-https://www.erupt.xyz
+官网地址：https://www.erupt.xyz
+
+环境搭建：https://www.yuque.com/yuepeng/erupt/tpq1l9
+
+演示地址：https://www.erupt.xyz/demo （自适应布局支持手机端访问）
 
 ## 简介 | Intro
 Erupt 可快速的构建管理页面，零前端代码、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，即可快速开发企业级`Admin`管理后台！
