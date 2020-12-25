@@ -63,6 +63,7 @@ public class Simple extends BaseModel {
 
 }
 ```
+<iframe width="100%" height="100px" src="https://erupt.xyz/demo/fill/build/table/Simple"></iframe>
 ![result](readme/view.png)
 ![result](readme/edit.png)
 
