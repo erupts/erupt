@@ -11,7 +11,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
 ![size](https://img.shields.io/github/repo-size/erupts/erupt)
 
-[码云仓库](https://gitee.com/erupt/erupt) | [github仓库](https://github.com/erupts/erupt) | [项目官网](https://www.erupt.xyz) | [使用文档](https://www.yuque.com/yuepeng/erupt)
+[码云仓库](https://gitee.com/erupt/erupt) | [github仓库](https://github.com/erupts/erupt) | [项目官网](https://www.erupt.xyz) | [使用文档](https://www.yuque.com/yuepeng/erupt) | [JavaDoc](https://apidoc.gitee.com/erupt/erupt/)
 
 QQ交流群：821389129 🔥
 
