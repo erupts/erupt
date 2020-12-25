@@ -3,7 +3,7 @@
 
 ---
 
-![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)
+[![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)](https://www.erupt.xyz)
 [![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
 [![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
 [![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt)
@@ -25,11 +25,13 @@ QQ交流群：821389129 🔥
 ## 简介 | Intro
 Erupt Framework快速的构建管理页面，零前端代码、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，即可快速开发企业级`Admin`管理后台！
 
-后台管理系统非常重要，但开发存在一定的痛点，如：开发效率低、界面不美观、交互不理想、工作量重复、存在安全漏洞、后端研发被迫写前端代码等。
-
-Erupt提供企业级中后台管理系统的全栈解决方案，提供超多业务组件，简洁美观的后台页面，支持23类数据组件，支持所有主流数据库，支持多数据源，严密的安全策略，大幅压缩研发周期，降低研发成本。  
+后台管理系统非常重要，但开发存在一定的痛点，如：开发效率低、界面不美观、交互不理想、工作量重复、存在安全漏洞、后端研发被迫写前端代码等，Erupt 的初衷是为了让后台开发更简单，希望大家可以专注核心业务，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而心烦意乱！
 
 **非代码生成器**，代码生成器并非后台开发的最优解。代码生成器的本质还是生成繁琐的后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了一部分工作，可解决方式并非最佳。
+
+Erupt提供企业级中后台管理系统的全栈解决方案，提供超多业务组件，简洁美观的后台页面，支持所有主流数据库，支持多数据源，严密的安全策略，极高的扩展性，大幅压缩研发周期，专注核心业务。
+
+Erupt 的初衷是为了让后台开发更简单，希望大家可以专注核心业务，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而心烦意乱！  
 
 ## 特性 | Features
 + **易于上手**：仅需了解@Erupt与@EruptField两个注解即可上手开发。
