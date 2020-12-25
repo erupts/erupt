@@ -49,6 +49,7 @@ Erupt提供企业级中后台管理系统的全栈解决方案，提供超多业
 + **界面美观**：每个交互都精心设计，产品思维打磨，只为了更好的操作体验。
 + **权限管理**：用户管理、角色管理、组织管理、菜单管理、登录日志、操作日志等。
 + **高安全性**：可靠的安全机制，登录白名单，权限验证，请求头检查，注解项检查，细颗粒度权限控制，为你的数据保驾护航。
++ **前后端分离**：后端与前端可分开部署
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用。
 + **无需二次开发**：仅需引用jar包即可。
 
@@ -147,7 +148,7 @@ erupt-pro -- 暂未开放 star超过1K开源erupt-tpl模块与erupt-generator模
 
 ## 技术体系 | Technology system
 ####  后端：
-Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、 Hibernate、 Quartz、 Gson、 Lombok、 Freemarker、 Thymeleaf ...
+Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、 Hibernate、 Quartz、 Gson、 Lombok、 POI ...
 
 #### 前端：
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
