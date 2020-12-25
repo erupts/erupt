@@ -35,8 +35,11 @@ public class ReflectUtil {
             throws IllegalAccessException {
         String[] fields = fieldName.split("\\.");
         for (String field : fields) {
-            obj = findClassField(obj.getClass(), field).get(obj);
-            if (null == obj) {
+            Field f = findClassField(obj.getClass(), field);
+            if (f == null) {
+                throw new RuntimeException(obj.getClass().getName() + "." + fieldName + " not found");
+            }
+            if (null == (obj = f.get(obj))) {
                 return null;
             }
         }

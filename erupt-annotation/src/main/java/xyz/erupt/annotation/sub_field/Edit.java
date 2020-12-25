@@ -17,16 +17,19 @@ public @interface Edit {
 
     String title();
 
+    @Comment("描述")
     String desc() default "";
 
-    @Comment("必填")
+    @Comment("是否必填")
     boolean notNull() default false;
 
+    @Comment("是否显示")
     boolean show() default true;
 
-    @Comment("只读")
+    @Comment("是否只读")
     boolean readOnly() default false;
 
+    @Comment("输入字段预期值的提示信息")
     String placeHolder() default "";
 
     @Match("value.dependField()")

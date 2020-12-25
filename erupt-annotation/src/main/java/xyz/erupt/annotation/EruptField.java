@@ -2,7 +2,6 @@ package xyz.erupt.annotation;
 
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.ToMap;
-import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 
@@ -22,7 +21,7 @@ public @interface EruptField {
     View[] views() default {};
 
     @Comment("编辑组件配置")
-    Edit edit() default @Edit(title = AnnotationConst.EMPTY_STR);
+    Edit edit() default @Edit(title = "");
 
     @Transient
     @Comment("显示顺序，默认按照字段排列顺序排序")

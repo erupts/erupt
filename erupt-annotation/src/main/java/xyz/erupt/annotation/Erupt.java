@@ -3,7 +3,6 @@ package xyz.erupt.annotation;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
-import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.*;
 
@@ -28,7 +27,7 @@ public @interface Erupt {
 
     @Transient
     @Comment("功能描述")
-    String desc() default AnnotationConst.EMPTY_STR;
+    String desc() default "";
 
     @Transient
     @Comment("访问该功能是否进行校验权限")
@@ -43,7 +42,7 @@ public @interface Erupt {
     RowOperation[] rowOperation() default {};
 
     @ToMap(key = "code")
-    @Comment("下钻功能")
+    @Comment("数据钻取功能")
     Drill[] drills() default {};
 
     @Transient
@@ -63,7 +62,7 @@ public @interface Erupt {
 
     @Match("value.field()")
     @Comment("左树右表配置项")
-    LinkTree linkTree() default @LinkTree(field = AnnotationConst.EMPTY_STR);
+    LinkTree linkTree() default @LinkTree(field = "");
 
     @ToMap(key = "key")
     @Comment("自定义扩展参数")
