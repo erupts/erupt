@@ -1,30 +1,29 @@
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework 🚀 通用后台管理框架 </h1>
-<h3 align="center">零前端代码，几行Java代码搞定后台管理系统</h3>
+<h3 align="center">零前端代码，几行Java注解，搞定后台管理系统</h3>
 
 ---
 
-[![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)](https://www.erupt.xyz)
-[![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
-[![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
-[![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt)
-[![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
-[![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
+[![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)](https://www.erupt.xyz) &nbsp;
+[![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE) &nbsp;
+[![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt) &nbsp;
+[![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt) &nbsp;
+[![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt) &nbsp;
+[![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt) &nbsp;
 ![size](https://img.shields.io/github/repo-size/erupts/erupt)
 
-[码云仓库](https://gitee.com/erupt/erupt) | [github仓库](https://github.com/erupts/erupt) | [项目官网](https://www.erupt.xyz) | [使用文档](https://www.yuque.com/yuepeng/erupt) | [JavaDoc](https://apidoc.gitee.com/erupt/erupt/)
+| &nbsp; 
+[码云仓库](https://gitee.com/erupt/erupt) &nbsp; | &nbsp; [github仓库](https://github.com/erupts/erupt) &nbsp; | &nbsp; 
+[项目官网](https://www.erupt.xyz) &nbsp; | &nbsp; [使用文档](https://www.yuque.com/yuepeng/erupt) &nbsp; | &nbsp; 
+[JavaDoc](https://apidoc.gitee.com/erupt/erupt/) &nbsp; | &nbsp; [环境搭建](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
 
-QQ交流群：821389129 🔥
+QQ交流群：821389129 🔥 
 
-## 首页 | Home
-官网地址：https://www.erupt.xyz
+## 首页 | Home 
+https://www.erupt.xyz
 
-演示地址：https://www.erupt.xyz/demo （自适应布局支持手机端访问）
-
-环境搭建：https://www.yuque.com/yuepeng/erupt/tpq1l9
-
-## 简介 | Intro
-Erupt Framework快速的构建管理页面，零前端代码、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，即可快速开发企业级`Admin`管理后台！
+##  简介 | Intro
+Erupt Framework 快速的构建管理页面，零前端代码、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，即可快速开发企业级`Admin`管理后台！
 
 后台管理系统非常重要，但开发存在一定的痛点，如：开发效率低、界面不美观、交互不理想、工作量重复、存在安全漏洞、后端研发被迫写前端代码等，Erupt 的初衷是为了让后台开发更简单，希望大家可以专注核心业务，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而心烦意乱！
 
