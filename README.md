@@ -1,5 +1,6 @@
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework 🚀 通用后台管理框架 </h1>
+<h3 align="center">零前端代码，几行Java代码搞定后台管理系统</h3>
 
 ---
 
