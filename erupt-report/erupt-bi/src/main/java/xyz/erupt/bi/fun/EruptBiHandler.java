@@ -1,6 +1,7 @@
 package xyz.erupt.bi.fun;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import xyz.erupt.annotation.config.Comment;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,8 @@ public interface EruptBiHandler {
      * @param expr  表达式
      * @return
      */
-    default String exprHandler(String param, String expr) {
+    @Comment("查询表达式动态处理")
+    default String exprHandler(@Comment("参数") String param, @Comment("查询表达式") String expr) {
 
         return expr;
     }
@@ -29,7 +31,8 @@ public interface EruptBiHandler {
      * @param param  参数
      * @param result 结果
      */
-    default void resultHandler(String param, List<Map<String, Object>> result) {
+    @Comment("返回结果处理")
+    default void resultHandler(@Comment("参数") String param, @Comment("查询结果") List<Map<String, Object>> result) {
 
     }
 
@@ -39,7 +42,8 @@ public interface EruptBiHandler {
      * @param condition 查询条件
      * @param workbook  poi对象
      */
-    default void exportHandler(Map<String, Object> condition, Workbook workbook) {
+    @Comment("导出excel处理")
+    default void exportHandler(@Comment("查询条件") Map<String, Object> condition, @Comment("poi对象") Workbook workbook) {
 
     }
 }
