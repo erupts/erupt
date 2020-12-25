@@ -19,7 +19,7 @@
 [代码演示](https://www.erupt.xyz/#!/contrast) &nbsp; | &nbsp; [在线体验](https://www.erupt.xyz/demo)
 
 ## 什么是 erupt
-erupt 是一个低代码全栈框架，它使用 **注解** 配置来生成页面以及增、删、改、查、权限控制等数据功能，减少开发工作量，极大提升效率。
+erupt 是一个低代码全栈类Java框架，它使用 **注解** 配置来生成页面以及增、删、改、查、权限控制等数据功能，减少开发工作量，极大提升效率。
 
 ## 为什么要做 erupt ?
 无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存这无法规避的痛点，如：开发效率低下、UI界面不尽人意、交互凑合、代码重复、存在安全漏洞，导致其开发成本极高。
@@ -28,6 +28,9 @@ erupt 是一个低代码全栈框架，它使用 **注解** 配置来生成页�
 代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
 
 开发后台管理系统大部分情况下只想做个普通的增删改查界面，用于数据管理，类似下面这种：
+![result](readme/view.png)
+![result](readme/edit.png)
+
 ``` java
 @Erupt(
        name = "简单的例子",
@@ -63,10 +66,7 @@ public class Simple extends BaseModel {
 
 }
 ```
-<iframe width="100%" height="100px" src="https://erupt.xyz/demo/fill/build/table/Simple"></iframe>
-
-![result](readme/view.png)
-![result](readme/edit.png)
+[功能体验](https://www.erupt.xyz/#!/contrast)
 
 这个界面虽然用 Vue + Ant-Design + SSM 也能做出个大概，但仔细观察会发现它有大量细节功能如：
 
