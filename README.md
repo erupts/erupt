@@ -165,10 +165,15 @@ erupt
 ├── erupt-upms -- 用户权限管理
 └── erupt-web -- 前端页面
 
+erupt-site -- erupt官方网站 https://github.com/erupts/erupt-site
+
 erupt-pro -- 暂未开放 star超过1K开源erupt-tpl模块与erupt-generator模块
 ├── erupt-bi -- 通过sql加js混编实现动态报表，支持多数据源，支持十几种图表
 ├── erupt-tpl -- 支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
 └── erupt-generator -- 代码生成器，通过简单配置，生成erupt代码段
+
+erupt-web-angular -- 暂未开放 erupt项目前端源码
+
 ```
 
 ## 技术体系 | Technology system
