@@ -100,8 +100,8 @@ Erupt Framework 快速的构建管理页面，不需要懂前端、零CURD、自
 Erupt 提供企业级中后台管理系统的全栈解决方案，提供超多业务组件，简洁美观的后台页面，支持所有主流数据库，支持多数据源，严密的安全策略，极高的扩展性，大幅压缩研发周期，专注核心业务。
 
 ## 特性 | Features
-+ **易于上手**：仅需了解@Erupt与@EruptField两个注解即可上手开发。
-+ **代码简洁**：前端零代码，后端template、controller、service、dao都不需要，仅需一个实体类即可。
++ **易于上手**：仅需了解 @Erupt 与 @EruptField 两个注解即可上手开发。
++ **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，仅需一个实体类即可。
 + **敏捷开发**：仅单个`.java`文件即可实现后台管理功能，专注业务与核心功能的研发。
 + **快速迭代**：需求变更仅需修改或添加注解配置即可，迭代速度比需求讨论速度还快。
 + **功能强大**：动态条件处理，支持增删改查等功能代理接口，Session存储机制选择，行为日志记录等。
@@ -117,7 +117,7 @@ Erupt 提供企业级中后台管理系统的全栈解决方案，提供超多�
 + **高安全性**：可靠的安全机制，登录白名单，权限验证，注解项检查，细颗粒度权限控制，为你的数据保驾护航。
 + **前后端分离**：后端与前端可分开部署
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用。
-+ **无需二次开发**：仅需引用jar包即可。
++ **无需二次开发**：仅需引用 jar 包即可。
 
 ## 演示截图 | Screenshot
 <table>
@@ -156,7 +156,7 @@ Erupt 提供企业级中后台管理系统的全栈解决方案，提供超多�
 ```lua
 erupt
 ├── erupt-annotation -- 核心注解声明
-├── erupt-core -- 核心功能包
+├── erupt-core -- 核心功能实现
 ├── erupt-data -- 数据实现包
      ├── erupt-jpa -- 关系型数据库erupt实现
      └── erupt-mongodb -- mongodb数据库erupt实现
@@ -167,12 +167,12 @@ erupt
 
 erupt-site -- erupt官方网站 https://github.com/erupts/erupt-site
 
-erupt-pro -- 暂未开放 star超过1K开源erupt-tpl模块与erupt-generator模块
-├── erupt-bi -- 通过sql加js混编实现动态报表，支持多数据源，支持十几种图表
-├── erupt-tpl -- 支持在erupt中自定义页面，自定义图表，自定义模板等功能，模板引擎支持freemarker/thymeleaf/原生H5
-└── erupt-generator -- 代码生成器，通过简单配置，生成erupt代码段
+erupt-pro -- 暂未开放 star 超过 1K 开源 erupt-tpl 模块与 erupt-generator 模块
+├── erupt-bi -- 通过 sql 加 js 混编实现动态报表，支持多数据源，支持十几种图表
+├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义模板等功能，模板引擎支持 freemarker / thymeleaf / 原生H5
+└── erupt-generator -- 代码生成器，通过简单配置，生成 erupt 代码段
 
-erupt-web-angular -- 暂未开放 erupt项目前端源码
+erupt-web-angular -- 暂未开放 erupt 前端源码
 
 ```
 
