@@ -5,15 +5,12 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import org.springframework.util.unit.DataSize;
 import xyz.erupt.annotation.config.SkipSerialize;
 
-import javax.servlet.MultipartConfigElement;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -50,15 +47,5 @@ public class MvcConfig {
             }
         }).setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
     }
-
-    @Bean
-    public MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        //  单个数据大小
-        factory.setMaxFileSize(DataSize.parse("102400MB"));
-        factory.setMaxRequestSize(DataSize.parse("102400MB"));
-        return factory.createMultipartConfig();
-    }
-
 
 }

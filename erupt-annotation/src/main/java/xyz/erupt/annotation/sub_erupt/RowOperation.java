@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.sub_erupt;
 
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.OperationHandler;
 
 import java.beans.Transient;
@@ -13,17 +14,22 @@ import java.beans.Transient;
  */
 public @interface RowOperation {
 
+    @Comment("唯一标识编码")
     String code();
 
     String title();
+
+    ExprBool show() default @ExprBool(true);
 
     String tip() default "";
 
     @Comment("图标请参考Font Awesome")
     String icon() default "fa fa-ravelry";
 
+    @Comment("功能模式")
     Mode mode() default Mode.MULTI;
 
+    @Comment("功能类型")
     Type type() default Type.ERUPT;
 
     @Comment("控制按钮显示与隐藏（JS表达式），变量：item 获取整行数据")
@@ -41,7 +47,7 @@ public @interface RowOperation {
     String[] operationParam() default {};
 
     @Transient
-    @Comment("type为ERUPT时可用，事件处理类")
+    @Comment("type为ERUPT时可用，操作按钮点击后，后台处理逻辑")
     Class<? extends OperationHandler> operationHandler() default OperationHandler.class;
 
     enum Mode {

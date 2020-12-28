@@ -18,7 +18,8 @@
 [JavaDoc](https://apidoc.gitee.com/erupt/erupt/) &nbsp; | &nbsp; [环境搭建](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
 [代码演示](https://www.erupt.xyz/#!/contrast) &nbsp; | &nbsp; [在线体验](https://www.erupt.xyz/demo)
 
-> QQ交流群：821389129 🔥
+> QQ交流群：821389129 🔥   
+> _加群可提前获取需要 1000 star 才能开放的 erupt-tpl 模块与 erupt-generator 模块 jar 包_
 
 ## 什么是 erupt
 erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 来生成页面以及增、删、改、查、权限控制等后台功能，不需要懂前端，也不需要写繁琐的CURD，自动创建表结构，controller / service / sao / mapper 文件都不用创建，极大减少开发工作量，将后台开发速度提升到极致。
