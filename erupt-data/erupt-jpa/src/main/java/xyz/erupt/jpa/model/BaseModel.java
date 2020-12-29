@@ -1,4 +1,4 @@
-package xyz.erupt.db.model;
+package xyz.erupt.jpa.model;
 
 import lombok.Getter;
 import lombok.Setter;

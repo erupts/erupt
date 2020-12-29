@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.SkipSerialize;
-import xyz.erupt.db.model.BaseModel;
+import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 
 import javax.persistence.FetchType;
