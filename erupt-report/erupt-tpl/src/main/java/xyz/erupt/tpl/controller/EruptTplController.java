@@ -12,6 +12,7 @@ import org.thymeleaf.context.Context;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -102,6 +103,9 @@ public class EruptTplController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         for (RowOperation operation : eruptModel.getErupt().rowOperation()) {
             if (operation.code().equals(code)) {
+                if (!AnnotationUtil.getExprBool(operation.show())) {
+                    throw new EruptNoLegalPowerException();
+                }
                 if (operation.tpl().engine() == Tpl.Engine.Native || operation.mode() == RowOperation.Mode.BUTTON) {
                     eruptTplService.tplToResponse(operation.tpl(), response, null);
                 } else {
