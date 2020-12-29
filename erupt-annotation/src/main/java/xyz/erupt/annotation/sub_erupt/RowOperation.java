@@ -19,7 +19,8 @@ public @interface RowOperation {
 
     String title();
 
-    ExprBool show() default @ExprBool(true);
+    @Transient
+    ExprBool show() default @ExprBool;
 
     String tip() default "";
 

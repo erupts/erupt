@@ -8,6 +8,7 @@ import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.Expr;
+import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -178,6 +179,15 @@ public class AnnotationUtil {
         if (!expr.exprHandler().isInterface()) {
             Expr.ExprHandler eh = EruptSpringUtil.getBean(expr.exprHandler());
             value = eh.handler(value, expr.params());
+        }
+        return value;
+    }
+
+    public static boolean getExprBool(ExprBool expr) {
+        boolean value = expr.value();
+        if (!expr.exprHandler().isInterface()) {
+            ExprBool.ExprHandler eh = EruptSpringUtil.getBean(expr.exprHandler());
+            value = eh.boolHandler(value, expr.params());
         }
         return value;
     }

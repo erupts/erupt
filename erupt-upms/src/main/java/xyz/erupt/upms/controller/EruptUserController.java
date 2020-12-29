@@ -72,8 +72,8 @@ public class EruptUserController {
     @GetMapping("/menu")
     @ResponseBody
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
-    public List<EruptMenuVo> getMenu(HttpServletRequest request) {
-        return sessionService.get(SessionKey.MENU_VIEW + request.getHeader("token"), new TypeToken<List<EruptMenuVo>>() {
+    public List<EruptMenuVo> getMenu() {
+        return sessionService.get(SessionKey.MENU_VIEW + eruptUserService.getToken(), new TypeToken<List<EruptMenuVo>>() {
         }.getType());
     }
 
