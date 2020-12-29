@@ -22,7 +22,7 @@
 > _加群可提前获取需要 1000 star 才能开放的 erupt-tpl 模块与 erupt-generator 模块 jar 包_
 
 ## 什么是 erupt
-erupt 是一个基于 Spring Boot 低代码 **全栈类** 框架，它使用 **Java 注解** 来生成页面以及增、删、改、查、权限控制等后台功能，不需要懂前端，也不需要写繁琐的CURD，自动创建表结构，controller / service / sao / mapper 文件都不用创建，极大减少开发工作量，将后台开发速度提升到极致。
+erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 来生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，自动创建表结构，controller / service / sao / mapper 文件都不用创建，极大减少开发工作量，将后台开发速度提升到极致。
 
 > 取代代码生成器，开发后台管理系统更优解！
 
