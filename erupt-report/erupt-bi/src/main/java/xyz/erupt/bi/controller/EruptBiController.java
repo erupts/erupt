@@ -29,7 +29,7 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.ExcelUtil;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
-import xyz.erupt.db.dao.EruptDao;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.tpl.service.EruptTplService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 

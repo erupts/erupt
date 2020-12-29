@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.db.model.BaseModel;
+import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

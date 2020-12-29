@@ -10,7 +10,7 @@ import org.springframework.util.StreamUtils;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.bi.model.*;
 import xyz.erupt.core.util.ProjectUtil;
-import xyz.erupt.db.dao.EruptDao;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.util.MenuTool;

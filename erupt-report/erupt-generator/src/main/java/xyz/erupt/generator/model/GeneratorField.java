@@ -16,9 +16,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
-import xyz.erupt.db.model.BaseModel;
 import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.generator.base.Ref;
+import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
