@@ -1,7 +1,10 @@
-[Chinese](./README-zh.md) &nbsp; | &nbsp; English
+[Chinese](./README.md) &nbsp; | &nbsp; English
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
-<h1 align="center"> Erupt Framework 🚀 </h1>
+<h1 align="center"> Erupt Framework 🚀 General background management framework </h1>
+<h3 align="center">Zero front-end web code, a few lines of Java annotations, get rid of the background management system</h3>
+
+---
 
 [![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)](https://www.erupt.xyz) 
 [![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE) 
@@ -201,6 +204,10 @@ Account / pwd：`guest / guest`
 
 ## Documentation
 https://www.yuque.com/yuepeng/erupt
+
+## Example code
+gitee: &nbsp; https://gitee.com/erupt/erupt-example   
+github: https://github.com/erupts/erupt-example
 
 ## Recommend
 [`zeta-api`：Quickly create API interface and document through XML configuration, safe and efficient, rapid development essential！](https://github.com/erupts/zeta-api)

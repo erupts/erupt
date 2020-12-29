@@ -1,7 +1,7 @@
 Chinese &nbsp; | &nbsp; [English](./README-EN.md)  
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
-<h1 align="center"> Erupt Framework 🚀 通用后台管理框架 </h1>
+<h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用后台管理框架 </h1>
 <h3 align="center">零前端代码，几行Java注解，搞定后台管理系统</h3>
 
 ---
@@ -223,6 +223,10 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 
 ## 使用文档 | Documentation
 https://www.yuque.com/yuepeng/erupt
+
+## 代码样例 | Example Code
+gitee: &nbsp; https://gitee.com/erupt/erupt-example   
+github: https://github.com/erupts/erupt-example
 
 ## 开源推荐 | Recommend
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
