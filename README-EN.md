@@ -1,19 +1,89 @@
-English | [Chinese](./README-zh.md)
+[Chinese](./README-zh.md) &nbsp; | &nbsp; English
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework 🚀 </h1>
 
-![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)
-[![license](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE)
-[![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt)
-[![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt)
-[![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt)
-[![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt)
-[![size](https://img.shields.io/github/repo-size/erupts/erupt)](./)  
+[![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)](https://www.erupt.xyz) 
+[![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE) 
+[![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt) 
+[![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt) 
+[![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt) 
+[![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt) 
+![size](https://img.shields.io/github/repo-size/erupts/erupt)
 
-github：https://github.com/erupts/erupt  
+[gitee](https://gitee.com/erupt/erupt) &nbsp; | &nbsp; [github](https://github.com/erupts/erupt) &nbsp; | &nbsp; 
+[website](https://www.erupt.xyz) &nbsp; | &nbsp; [document](https://www.yuque.com/yuepeng/erupt) &nbsp; | &nbsp; 
+[JavaDoc](https://apidoc.gitee.com/erupt/erupt/) &nbsp; | &nbsp; [Environment Build](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
+[Code](https://www.erupt.xyz/#!/contrast) &nbsp; | &nbsp; [DEMO](https://www.erupt.xyz/demo)
 
-gitee ：https://gitee.com/erupt/erupt  
+# What erupt
+Erupt is a low code all the stack class framework, it USES Java **annotations** to generate the page and add, delete, change, check and back-office functions such as access control, will be simple **Spring Boot** basic knowledge can, don't need to understand the front, also do not need to write tedious CURD, automatically create table structure, the controller/service/SAO/don't have to create mapper file, greatly reduce the development workload, development will be the background faster to the extreme.
+
+> Replace the code generator, the development of background management system better solution!
+
+## Why do you do it ?
+Although **code generator** has become the new favorite of background development in recent years, is it really the best solution for background development?
+The essence of code Generator is to generate tedious front-end and back-end code. Once the code generated in the later stage is modified, it is difficult to merge. Think of Mybatis-Generator, which is basically a one-time thing.
+
+In most cases, I only want to make a common interface of adding, deleting, modifying and checking for data management, similar to the following:
+![result](readme/view.png)
+![result](readme/edit.png)
+
+``` java
+@Erupt(
+       name = "Simple example",
+       power = @Power(importable = true, export = true)
+)
+@Table(name = "t_simple")   //Database table name
+@Entity
+public class Simple extends BaseModel {
+
+    @EruptField(
+            views = @View(title = "textInput"),
+            edit = @Edit(title = "textInput", notNull = true, search = @Search)
+    )
+    private String input;
+
+    @EruptField(
+            views = @View(title = "numberInput", sortable = true),
+            edit = @Edit(title = "numberInput", search = @Search)
+    )
+    private Float number;
+
+    @EruptField(
+            views = @View(title = "switch"),
+            edit = @Edit(title = "switch")
+    )
+    private Boolean bool;
+
+    @EruptField(
+            views = @View(title = "datePicker"),
+            edit = @Edit(title = "datePicker", search = @Search(vague = true))
+    )
+    private Date date;
+
+}
+```
+[Functional experience](https://www.erupt.xyz/#!/contrast)
+
+Although this interface can be roughly made with Vue + Ant Design + SSM, a closer look reveals that it has a lot of detailed functions, such as:
+
++ can filter the data
++ There are buttons to refresh, add and data
++ tables have pagination and summary
++ Preview a single row of data
++ Batch delete
++ hides a column
++ Multiple components
++ sort by some column
++ has a non-null check
++ Supports import and export of Excel
+
+It takes a lot of code to implement all of this just on the front end, not to mention the interfaces and business logic on the back end.
+
+You don't need to know Angular/React/Vue/Jquery or JavaScript/HTML/CSS or even Spring MVC/JPA/Mybatis/SQL to declare. You can guess what most of the configuration will do even if you haven't learned how to declare; all the background page development can be done with simple configuration.
+
+This is the original intention of establishing The Restraint. For most of the commonly used pages, the simplest way should be used. There is no need to learn all kinds of frameworks and tools, so as to focus on the core business and save time to do what you like, instead of being troubled by tedious background development.
 
 ## Home
 https://www.erupt.xyz
@@ -41,39 +111,6 @@ I am not a code generator, and a code generator is not the best solution for bac
 + **Strong scalability** : support custom data source implementation, custom page, custom template, custom attachment upload mechanism, etc.
 + **Beautiful interface** : Each interaction is carefully designed and product thinking is polished for a better operating experience.
 
-## Code
-``` java
-@Erupt(name = "Simple Erupt Code")
-@Table(name = "t_xxxxxx") // jpa annotation
-@Entity
-public class Simple extends BaseModel {
-
-    @EruptField(
-            views = @View(title = "text"),
-            edit = @Edit(title = "text")
-    )
-    private String input;
-    
-    @EruptField(
-            views = @View(title = "number"),
-            edit = @Edit(title = "number")
-    )
-    private Integer number;
-
-    @EruptField(
-            views = @View(title = "switch"),
-            edit = @Edit(title = "switch")
-    )
-    private Boolean bool;
-
-    @EruptField(
-            views = @View(title = "date"),
-            edit = @Edit(title = "date")
-    )
-    private Date date;
-
-}
-```
 #### Effect
 ![result](readme/simple.gif)
 
