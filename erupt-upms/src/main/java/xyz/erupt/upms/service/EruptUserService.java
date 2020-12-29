@@ -6,7 +6,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.view.EruptApiModel;
-import xyz.erupt.db.dao.EruptDao;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;

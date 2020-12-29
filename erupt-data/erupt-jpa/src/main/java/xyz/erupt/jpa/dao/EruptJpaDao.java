@@ -1,4 +1,4 @@
-package xyz.erupt.db.dao;
+package xyz.erupt.jpa.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.db.service.EntityManagerService;
+import xyz.erupt.jpa.service.EntityManagerService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.ManyToOne;

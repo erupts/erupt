@@ -8,9 +8,9 @@ import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
-import xyz.erupt.db.dao.EruptDao;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
+import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;

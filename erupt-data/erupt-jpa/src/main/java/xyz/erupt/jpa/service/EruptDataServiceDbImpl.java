@@ -1,4 +1,4 @@
-package xyz.erupt.db.service;
+package xyz.erupt.jpa.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -22,8 +22,8 @@ import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.db.dao.EruptJpaDao;
-import xyz.erupt.db.dao.EruptJpaUtils;
+import xyz.erupt.jpa.dao.EruptJpaDao;
+import xyz.erupt.jpa.dao.EruptJpaUtils;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
