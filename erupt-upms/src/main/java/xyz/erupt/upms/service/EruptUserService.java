@@ -1,5 +1,6 @@
 package xyz.erupt.upms.service;
 
+import com.google.gson.reflect.TypeToken;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +10,7 @@ import xyz.erupt.db.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
+import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.util.IpUtil;
@@ -22,6 +24,7 @@ import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author liyuepeng
@@ -159,12 +162,21 @@ public class EruptUserService {
         return null == uid ? null : entityManager.find(EruptUser.class, uid);
     }
 
-    public Long getCurrentUid() {
+    public List<EruptMenu> getCurrentEruptUserMenu() {
+        return sessionService.get(SessionKey.MENU + getToken(), new TypeToken<List<EruptMenu>>() {
+        }.getType());
+    }
+
+    public String getToken() {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
         if (StringUtils.isBlank(token)) {
             token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
         }
-        Object uid = sessionService.get(SessionKey.USER_TOKEN + token);
+        return token;
+    }
+
+    public Long getCurrentUid() {
+        Object uid = sessionService.get(SessionKey.USER_TOKEN + getToken());
         return null == uid ? null : Long.valueOf(uid.toString());
     }
 

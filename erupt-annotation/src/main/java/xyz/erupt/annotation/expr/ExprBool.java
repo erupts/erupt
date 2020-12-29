@@ -5,7 +5,7 @@ import java.beans.Transient;
 public @interface ExprBool {
 
     @Transient
-    boolean value();
+    boolean value() default true;
 
     @Transient
     String[] params() default {};
@@ -22,6 +22,6 @@ public @interface ExprBool {
          * @param params 注解参数
          * @return 程序处理后的表达式
          */
-        boolean handler(boolean expr, String[] params);
+        boolean boolHandler(boolean expr, String[] params);
     }
 }

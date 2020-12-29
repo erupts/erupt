@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.exception.EruptAnnotationException;
+import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -55,6 +57,12 @@ public final class EruptCoreService implements ApplicationRunner {
                 fieldModel.setChoiceList(EruptUtil.getChoiceList(edit.choiceType()));
             } else if (edit.type() == EditType.TAGS) {
                 fieldModel.setTagList(EruptUtil.getTagList(edit.tagsType()));
+            }
+        }
+        em.setEruptJson(em.getEruptJson().deepCopy());
+        for (RowOperation operation : em.getErupt().rowOperation()) {
+            if (!AnnotationUtil.getExprBool(operation.show())) {
+                em.getEruptJson().getAsJsonObject("rowOperation").remove(operation.code());
             }
         }
         return em;
