@@ -2,8 +2,10 @@ package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -18,10 +20,7 @@ import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.service.BiDataSourceService;
 import xyz.erupt.upms.model.base.HyperModel;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +77,7 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
     private String type;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             edit = @Edit(title = "分页语句", type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "sql"),
@@ -92,7 +92,7 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
     private String limitSql;
 
 
-    @Lob
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "备注", type = ViewType.HTML),
             edit = @Edit(title = "备注", type = EditType.TEXTAREA)

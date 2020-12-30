@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -52,7 +53,7 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
     )
     private String tableName;
 
-    @Lob
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "简介"),
             edit = @Edit(title = "简介", type = EditType.TEXTAREA)

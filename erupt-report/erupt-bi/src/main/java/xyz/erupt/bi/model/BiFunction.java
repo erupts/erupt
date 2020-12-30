@@ -1,6 +1,7 @@
 package xyz.erupt.bi.model;
 
 import lombok.Getter;
+import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -43,6 +44,7 @@ public class BiFunction extends HyperModel implements DataProxy<BiFunction> {
     private String name;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "函数表达式"),
             edit = @Edit(title = "函数表达式", desc = "参照JavaScript function写法",

@@ -2,6 +2,7 @@ package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -115,6 +116,7 @@ public class BiChart extends HyperModel {
     private String path;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "图表SQL"),
             edit = @Edit(title = "图表SQL", desc = "规则：二维切片，三维切片，维度顺序：X -> Y -> Series",
@@ -123,6 +125,7 @@ public class BiChart extends HyperModel {
     private String sqlStatement;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照G2Plot",
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))

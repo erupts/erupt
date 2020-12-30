@@ -2,6 +2,7 @@ package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -49,6 +50,7 @@ public class BiDimensionReference extends HyperModel {
 
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "参照SQL"),
             edit = @Edit(title = "参照SQL", type = EditType.CODE_EDITOR,

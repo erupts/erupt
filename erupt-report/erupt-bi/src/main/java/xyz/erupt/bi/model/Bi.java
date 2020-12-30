@@ -2,6 +2,7 @@ package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Drill;
@@ -75,6 +76,7 @@ public class Bi extends HyperModel {
     private Boolean export;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = {
                     @View(title = "SQL语句")
