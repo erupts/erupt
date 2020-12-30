@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -130,7 +131,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private Set<EruptRole> roles;
 
-    @Lob
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
                     title = "ip白名单",
@@ -141,7 +142,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private String whiteIp;
 
-    @Lob
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
                     title = "备注",

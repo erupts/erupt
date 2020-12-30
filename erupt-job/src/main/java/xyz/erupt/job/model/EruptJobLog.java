@@ -2,6 +2,7 @@ package xyz.erupt.job.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -64,6 +65,7 @@ public class EruptJobLog extends BaseModel {
     private Date endTime;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "执行结果"),
             edit = @Edit(title = "执行结果")
@@ -71,6 +73,7 @@ public class EruptJobLog extends BaseModel {
     private String resultInfo;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "错误信息", type = ViewType.HTML),
             edit = @Edit(title = "错误信息")

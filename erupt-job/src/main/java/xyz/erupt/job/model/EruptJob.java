@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
@@ -72,21 +73,21 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
     )
     private Boolean status;
 
-    @Lob
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "失败通知邮箱"),
             edit = @Edit(title = "失败通知邮箱", desc = "使用此功能需配置发信邮箱信息", type = EditType.TAGS, tagsType = @TagsType)
     )
     private String notifyEmails;
 
-    @Lob
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "任务参数"),
             edit = @Edit(title = "任务参数", type = EditType.TEXTAREA)
     )
     private String handlerParam;
 
-    @Lob
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "描述"),
             edit = @Edit(title = "描述")
