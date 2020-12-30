@@ -2,6 +2,7 @@ package xyz.erupt.upms.model.log;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -15,10 +16,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -55,12 +53,6 @@ public class EruptOperateLog extends BaseModel {
     )
     private String region;
 
-//    @EruptField(
-//            views = @View(title = "操作行为"),
-//            edit = @Edit(title = "操作行为", search = @Search)
-//    )
-//    private String behavior;
-
     @EruptField(
             views = @View(title = "功能名称"),
             edit = @Edit(title = "功能名称", search = @Search(vague = true))
@@ -68,6 +60,7 @@ public class EruptOperateLog extends BaseModel {
     private String apiName;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "请求参数", type = ViewType.CODE),
             edit = @Edit(title = "请求参数", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
@@ -81,6 +74,7 @@ public class EruptOperateLog extends BaseModel {
     private Boolean status;
 
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "错误信息", type = ViewType.HTML)
     )
@@ -98,7 +92,7 @@ public class EruptOperateLog extends BaseModel {
     )
     private Date createTime;
 
-    @Lob
+    @Column(length = 500)
     @EruptField(
             views = @View(title = "请求地址", type = ViewType.HTML)
     )

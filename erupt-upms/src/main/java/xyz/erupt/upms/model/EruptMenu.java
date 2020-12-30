@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Tree;
@@ -116,7 +117,7 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
     )
     private EruptMenu parentMenu;
 
-    @Lob
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
                     title = "菜单参数",
