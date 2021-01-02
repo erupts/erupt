@@ -4,7 +4,6 @@ package xyz.erupt.tpl.controller;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import lombok.Cleanup;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
@@ -21,6 +20,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.service.EruptTplService;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,13 +43,17 @@ import static xyz.erupt.core.constant.EruptRestPath.ERUPT_API;
 public class EruptTplController {
 
     private static final String TPL = "tpl";
-    @Autowired
+
+    @Resource
     private EruptTplService tplService;
-    @Autowired
+
+    @Resource
     private TemplateEngine thymeleafEngine;
-    @Autowired
+
+    @Resource
     private Configuration freeMarkerEngine;
-    @Autowired
+
+    @Resource
     private EruptTplService eruptTplService;
 
     @GetMapping(value = "/{name}", produces = {"text/html;charset=utf-8"})
