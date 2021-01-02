@@ -104,7 +104,7 @@ public class AnnotationUtil {
                 JsonObject jsonMap = new JsonObject();
                 //基本类型无法强转成Object类型数组，所以使用下面的方法进行处理
                 if (Arrays.asList(ANNOTATION_NUMBER_TYPE).contains(returnType)) {
-                    TypeUtil.simpleNumberTypeArrayToObject(result, returnType, (number) -> jsonArray.add(number));
+                    TypeUtil.simpleNumberTypeArrayToObject(result, returnType, jsonArray::add);
                 } else if (char.class.getSimpleName().equals(returnType)) {
                     char[] intArray = (char[]) result;
                     for (char i : intArray) {

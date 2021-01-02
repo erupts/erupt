@@ -69,5 +69,6 @@ public @interface Erupt {
     KV[] param() default {};
 
     @Deprecated
+    @Transient
     Class<? extends Annotation> extra() default Annotation.class;
 }

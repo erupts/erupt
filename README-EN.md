@@ -114,9 +114,6 @@ I am not a code generator, and a code generator is not the best solution for bac
 + **Strong scalability** : support custom data source implementation, custom page, custom template, custom attachment upload mechanism, etc.
 + **Beautiful interface** : Each interaction is carefully designed and product thinking is polished for a better operating experience.
 
-#### Effect
-![result](readme/simple.gif)
-
 ## Screenshot
 <table>
     <tr>

@@ -85,7 +85,7 @@ public class EruptFieldModel {
             // view auto
             for (View view : this.eruptField.views()) {
                 if (ViewType.AUTO == view.type()) {
-                    Map<String, Object> viewValues = getAnnotationMap(view);
+                    Map<String, Object> viewValues = this.getAnnotationMap(view);
                     if (!AnnotationConst.EMPTY_STR.equals(this.eruptField.edit().title())) {
                         switch (this.eruptField.edit().type()) {
                             case ATTACHMENT:
@@ -119,7 +119,7 @@ public class EruptFieldModel {
             }
             // edit auto
             if (StringUtils.isNotBlank(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
-                Map<String, Object> editValues = getAnnotationMap(this.eruptField.edit());
+                Map<String, Object> editValues = this.getAnnotationMap(this.eruptField.edit());
                 //根据返回类型推断
                 if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName)) {
                     editValues.put(TYPE, EditType.BOOLEAN);
@@ -144,7 +144,7 @@ public class EruptFieldModel {
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
         Field field = invocationHandler.getClass().getDeclaredField("memberValues");
         field.setAccessible(true);
-        return (Map<String, Object>) field.get(invocationHandler);
+        return (Map) field.get(invocationHandler);
     }
 
 }

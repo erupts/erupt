@@ -13,10 +13,7 @@ import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,18 +30,16 @@ public class EruptJpaUtils {
 
     public static final String RVAL_KEY = "r_";
 
-    public static final String NULL = "$null$";
-
-    public static final String NOT_NULL = "$notNull$";
-
     public static final String PERCENT = "%";
+
+    public static final String AS = " as ";
 
     public static Set<String> getEruptColJapKeys(EruptModel eruptModel) {
         Set<String> cols = new HashSet<>();
         String eruptNameSymbol = eruptModel.getEruptName() + ".";
-        cols.add(eruptNameSymbol + eruptModel.getErupt().primaryKeyCol() + " as " + eruptModel.getErupt().primaryKeyCol());
+        cols.add(eruptNameSymbol + eruptModel.getErupt().primaryKeyCol() + AS + eruptModel.getErupt().primaryKeyCol());
         eruptModel.getEruptFieldModels().forEach(field -> {
-            if (null != field.getField().getAnnotation(OneToMany.class)) {
+            if (null != field.getField().getAnnotation(OneToMany.class) || null != field.getField().getAnnotation(ManyToMany.class)) {
                 return;
             }
             if (null != field.getField().getAnnotation(Transient.class)) {
@@ -53,9 +48,9 @@ public class EruptJpaUtils {
             String fieldKey;
             for (View view : field.getEruptField().views()) {
                 if (view.column().length() == 0) {
-                    fieldKey = eruptNameSymbol + field.getFieldName() + " as " + field.getFieldName();
+                    fieldKey = eruptNameSymbol + field.getFieldName() + AS + field.getFieldName();
                 } else {
-                    fieldKey = eruptNameSymbol + field.getFieldName() + "." + view.column() + " as " + field.getFieldName() + "_"
+                    fieldKey = eruptNameSymbol + field.getFieldName() + "." + view.column() + AS + field.getFieldName() + "_"
                             + view.column().replace(".", "_");
                 }
                 cols.add(fieldKey);
@@ -63,7 +58,6 @@ public class EruptJpaUtils {
         });
         return cols;
     }
-
 
     //erupt 注解信息映射成hql语句
     public static String generateEruptJpaHql(EruptModel eruptModel, String cols, EruptQuery query, boolean countSql) {
@@ -73,12 +67,12 @@ public class EruptJpaUtils {
             hql.append(cols);
             hql.append(" from ").
                     append(eruptModel.getEruptName()).
-                    append(" as ").
+                    append(AS).
                     append(eruptModel.getEruptName());
             ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
                 if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
                     hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".")
-                            .append(field.getName()).append(" as ").append(field.getName());
+                            .append(field.getName()).append(AS).append(field.getName());
                 }
             });
 
@@ -98,7 +92,7 @@ public class EruptJpaUtils {
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
                 sb.append(" left outer join ")
-                        .append(eruptModel.getEruptName()).append('.').append(field.getName()).append(" as ").append(field.getName());
+                        .append(eruptModel.getEruptName()).append('.').append(field.getName()).append(AS).append(field.getName());
                 try {
                     Object obj = field.get(eruptModel.getClazz());
                     String join = generateEruptJoinHql(EruptCoreService.getErupt(obj.getClass().getSimpleName()));
