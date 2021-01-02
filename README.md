@@ -171,7 +171,7 @@ erupt
 
 erupt-site -- erupt官方网站 https://github.com/erupts/erupt-site
 
-erupt-pro -- 暂未开放 star 超过 1K 开源 erupt-tpl 模块与 erupt-generator 模块
+erupt-pro -- 暂未开放 star 超过 1K 开放 erupt-tpl 模块与 erupt-generator 模块
 ├── erupt-bi -- 通过 sql 加 js 混编实现动态报表，支持多数据源，支持十几种图表
 ├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义模板等功能，模板引擎支持 freemarker / thymeleaf / 原生H5
 └── erupt-generator -- 代码生成器，通过简单配置，生成 erupt 代码段

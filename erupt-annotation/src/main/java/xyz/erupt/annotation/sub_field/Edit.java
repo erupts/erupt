@@ -47,6 +47,7 @@ public @interface Edit {
     @Comment("数据过滤表达式，在修饰类型为对象时可用")
     Filter[] filter() default {};
 
+    @Comment("组件类型")
     EditType type() default EditType.AUTO;
 
     @Match("item.type()=='INPUT'")

@@ -11,8 +11,8 @@ import java.util.Map;
  */
 public @interface Tpl {
 
-    @Comment("模板文件的位置")
     @Transient
+    @Comment("模板文件路径")
     String path();
 
     @Transient

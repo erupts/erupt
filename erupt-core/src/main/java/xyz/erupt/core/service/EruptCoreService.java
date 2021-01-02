@@ -14,7 +14,6 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -23,7 +22,6 @@ import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,9 +35,6 @@ import java.util.Map;
 @Service
 @Slf4j
 public final class EruptCoreService implements ApplicationRunner {
-
-    @Resource
-    private EruptProp eruptProp;
 
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
@@ -59,10 +54,12 @@ public final class EruptCoreService implements ApplicationRunner {
                 fieldModel.setTagList(EruptUtil.getTagList(edit.tagsType()));
             }
         }
-        em.setEruptJson(em.getEruptJson().deepCopy());
-        for (RowOperation operation : em.getErupt().rowOperation()) {
-            if (!AnnotationUtil.getExprBool(operation.show())) {
-                em.getEruptJson().getAsJsonObject("rowOperation").remove(operation.code());
+        if (em.getErupt().rowOperation().length > 0) {
+            em.setEruptJson(em.getEruptJson().deepCopy());
+            for (RowOperation operation : em.getErupt().rowOperation()) {
+                if (!AnnotationUtil.getExprBool(operation.show())) {
+                    em.getEruptJson().getAsJsonObject("rowOperation").remove(operation.code());
+                }
             }
         }
         return em;
