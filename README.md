@@ -124,10 +124,13 @@ Erupt 提供企业级中后台管理系统的全栈解决方案，提供超多�
 + **无需二次开发**：仅需引用 jar 包即可。
 
 ## 演示截图 | Screenshot
+![](./readme/index.png)
+
+![](./readme/seer.png)
 <table>
     <tr>
         <td><img src="readme/login.png"/></td>
-        <td><img src="readme/home.png"/></td>
+        <td><img src="readme/bi-config.png"/></td>
     </tr>
     <tr>
         <td><img src="readme/role.png"/></td>
@@ -148,10 +151,6 @@ Erupt 提供企业级中后台管理系统的全栈解决方案，提供超多�
     <tr>
         <td><img src="readme/component.png"/></td>
         <td><img src="readme/component-edit.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="readme/bi.png"/></td>
-        <td><img src="readme/bi2.png"/></td>
     </tr>
 </table>
 
