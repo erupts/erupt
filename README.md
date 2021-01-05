@@ -25,7 +25,7 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 > _加群可提前获取需要 1000 star 才能开放的 erupt-tpl 模块与 erupt-generator 模块 jar 包_
 
 ## 什么是 erupt
-erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 来生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，自动创建表结构，controller / service / dao / mapper 文件都不用创建，极大减少开发工作量，将后台开发速度提升到极致。
+erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 来生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，自动创建表结构，controller / service / sao / mapper 文件都不用创建，极大减少开发工作量，将后台开发速度提升到极致。
 
 > 取代代码生成器，开发后台管理系统更优解！
 
@@ -187,9 +187,10 @@ Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
 ### 未来更新计划 | Future vision
-+ 支持更多组件
-+ 自定义登录登出代理拦截器
++ 增加按钮级权限控制 （已支持 ✔️）
++ 支持markdown等更多组件
 + 大数据分库分表支持
++ 多种不同的登录形式
 + 主题色更改
 + 国际化支持
 + 流程引擎支持（会完全自己做，不会用市面上已有的）
