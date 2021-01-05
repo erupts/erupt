@@ -37,6 +37,7 @@ public class MvcConfig {
                 .setLongSerializationPolicy(LongSerializationPolicy.STRING)
                 .serializeNulls()
                 .create();
+
         gsonHttpMessageConverter.setGson(gson);
         messageConverters.add(gsonHttpMessageConverter);
         return new HttpMessageConverters(true, messageConverters);
