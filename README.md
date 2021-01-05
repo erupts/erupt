@@ -2,7 +2,7 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用后台管理框架 </h1>
-<h3 align="center">零前端代码，几行Java注解，搞定后台管理系统</h3>
+<h3 align="center">零前端代码，几行 Java 注解，搞定后台管理系统</h3>
 
 ---
 
@@ -187,8 +187,8 @@ Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
 ### 未来更新计划 | Future vision
++ 增加按钮级权限控制 （已支持 ✔️）
 + 支持markdown等更多组件
-+ 增加按钮级权限控制
 + 大数据分库分表支持
 + 多种不同的登录形式
 + 主题色更改
