@@ -187,10 +187,9 @@ Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
 ### 未来更新计划 | Future vision
-+ 增加按钮级权限控制 （已支持 ✔️）
-+ 支持markdown等更多组件
++ 支持更多组件
++ 自定义登录登出代理拦截器
 + 大数据分库分表支持
-+ 多种不同的登录形式
 + 主题色更改
 + 国际化支持
 + 流程引擎支持（会完全自己做，不会用市面上已有的）
