@@ -34,7 +34,7 @@ public class MvcConfig {
                         -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                         -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .setLongSerializationPolicy(LongSerializationPolicy.STRING) //
+                .setLongSerializationPolicy(LongSerializationPolicy.STRING)
                 .serializeNulls()
                 .create();
         gsonHttpMessageConverter.setGson(gson);
