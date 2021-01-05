@@ -27,7 +27,6 @@ public class MvcConfig {
     public HttpMessageConverters customConverters() {
         Collection<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))))
                 .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
