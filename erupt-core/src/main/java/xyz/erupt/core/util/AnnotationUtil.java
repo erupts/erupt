@@ -59,7 +59,7 @@ public class AnnotationUtil {
 //    }
 
 
-    //创建ScriptEngine成本过，所以定义为全局变量。
+    //创建ScriptEngine成本过高，所以定义为全局变量。
     private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("js");
 
     @SneakyThrows
@@ -177,8 +177,7 @@ public class AnnotationUtil {
     public static String getExpr(Expr expr) {
         String value = expr.value();
         if (!expr.exprHandler().isInterface()) {
-            Expr.ExprHandler eh = EruptSpringUtil.getBean(expr.exprHandler());
-            value = eh.handler(value, expr.params());
+            value = EruptSpringUtil.getBean(expr.exprHandler()).handler(value, expr.params());
         }
         return value;
     }
@@ -186,8 +185,7 @@ public class AnnotationUtil {
     public static boolean getExprBool(ExprBool expr) {
         boolean value = expr.value();
         if (!expr.exprHandler().isInterface()) {
-            ExprBool.ExprHandler eh = EruptSpringUtil.getBean(expr.exprHandler());
-            value = eh.boolHandler(value, expr.params());
+            value = EruptSpringUtil.getBean(expr.exprHandler()).boolHandler(value, expr.params());
         }
         return value;
     }
