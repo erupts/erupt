@@ -17,36 +17,22 @@ import java.util.*;
  * @date 2019-04-28.
  */
 public class DataHandlerUtil {
-    //内存计算的方式生成树结构
+
+    // 生成树结构数据
     public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels) {
-        List<TreeModel> resultTreeModels = new ArrayList<>();
-        List<TreeModel> tempTreeModels = new LinkedList<>();
-        tempTreeModels.addAll(treeModels);
-        for (TreeModel treeModel : treeModels) {
-            if (treeModel.isRoot()) {
-                resultTreeModels.add(treeModel);
-                tempTreeModels.remove(treeModel);
-            }
-        }
-        for (TreeModel treeModel : resultTreeModels) {
-            recursionTree(tempTreeModels, treeModel);
-        }
-        return resultTreeModels;
+        return quoteTree(treeModels);
     }
 
-    /**
-     * 引用方式生成树结构
-     * @param treeModels
-     * @return
-     */
+    // 引用方式生成树结构
     private static List<TreeModel> quoteTree(List<TreeModel> treeModels) {
-        Map<String, TreeModel> treeModelMap = new HashMap<>(treeModels.size());
+        Map<String, TreeModel> treeModelMap = new LinkedHashMap<>(treeModels.size());
         for (TreeModel treeModel : treeModels) {
             treeModelMap.put(treeModel.getId(), treeModel);
         }
-
+        List<TreeModel> resultTreeModels = new ArrayList<>();
         for (TreeModel treeModel : treeModels) {
-            if (treeModel.getPid() == null) {
+            if (treeModel.isRoot()) {
+                resultTreeModels.add(treeModel);
                 continue;
             }
             TreeModel parentTreeModel = treeModelMap.get(treeModel.getPid());
@@ -56,31 +42,8 @@ public class DataHandlerUtil {
                 parentTreeModel.setChildren(children);
             }
         }
-        List<TreeModel> resultTreeModels = new ArrayList<>();
-        for (TreeModel treeModel : treeModelMap.values()) {
-            if (treeModel.isRoot()) {
-                resultTreeModels.add(treeModel);
-            }
-        }
         return resultTreeModels;
     }
-
-    private static void recursionTree(List<TreeModel> treeModels, TreeModel parentTreeModel) {
-        List<TreeModel> childrenModel = new ArrayList<>();
-        List<TreeModel> tempTreeModels = new LinkedList<>();
-        tempTreeModels.addAll(treeModels);
-        for (TreeModel treeModel : treeModels) {
-            if (null != treeModel.getPid() && treeModel.getPid().equals(parentTreeModel.getId())) {
-                childrenModel.add(treeModel);
-                tempTreeModels.remove(treeModel);
-                if (childrenModel.size() > 0) {
-                    recursionTree(tempTreeModels, treeModel);
-                }
-                parentTreeModel.setChildren(childrenModel);
-            }
-        }
-    }
-
 
     public static void convertDataToEruptView(EruptModel eruptModel, Collection<Map<String, Object>> list) {
         Map<String, Map<String, String>> choiceItems = new HashMap<>();
