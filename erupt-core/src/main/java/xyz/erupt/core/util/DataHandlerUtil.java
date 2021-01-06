@@ -1,6 +1,7 @@
 package xyz.erupt.core.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
@@ -29,6 +30,37 @@ public class DataHandlerUtil {
         }
         for (TreeModel treeModel : resultTreeModels) {
             recursionTree(tempTreeModels, treeModel);
+        }
+        return resultTreeModels;
+    }
+
+    /**
+     * 引用方式生成树结构
+     * @param treeModels
+     * @return
+     */
+    private static List<TreeModel> quoteTree(List<TreeModel> treeModels) {
+        Map<String, TreeModel> treeModelMap = new HashMap<>(treeModels.size());
+        for (TreeModel treeModel : treeModels) {
+            treeModelMap.put(treeModel.getId(), treeModel);
+        }
+
+        for (TreeModel treeModel : treeModels) {
+            if (treeModel.getPid() == null) {
+                continue;
+            }
+            TreeModel parentTreeModel = treeModelMap.get(treeModel.getPid());
+            if (parentTreeModel != null) {
+                Collection<TreeModel> children = CollectionUtils.isEmpty(parentTreeModel.getChildren()) ? new ArrayList<>() : parentTreeModel.getChildren();
+                children.add(treeModel);
+                parentTreeModel.setChildren(children);
+            }
+        }
+        List<TreeModel> resultTreeModels = new ArrayList<>();
+        for (TreeModel treeModel : treeModelMap.values()) {
+            if (treeModel.isRoot()) {
+                resultTreeModels.add(treeModel);
+            }
         }
         return resultTreeModels;
     }
