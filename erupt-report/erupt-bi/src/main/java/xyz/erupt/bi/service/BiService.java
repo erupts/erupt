@@ -112,10 +112,10 @@ public class BiService {
     @SneakyThrows
     private Long getTotal(Bi bi, Map<String, Object> query) {
         String express = processPlaceHolder(bi.getSqlStatement(), query);
-        BiClassHandler biDataSource = bi.getClassHandler();
-        if (null != biDataSource) {
-            express = EruptSpringUtil.getBeanByPath(biDataSource.getHandlerPath(), EruptBiHandler.class)
-                    .exprHandler(biDataSource.getParam(), express);
+        BiClassHandler biClassHandler = bi.getClassHandler();
+        if (null != biClassHandler) {
+            express = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class)
+                    .exprHandler(biClassHandler.getParam(), query, express);
         }
         express = String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express);
         NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
@@ -128,12 +128,12 @@ public class BiService {
         express = processPlaceHolder(express, query);
         if (null != classHandler) {
             biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), EruptBiHandler.class);
-            express = biHandler.exprHandler(classHandler.getParam(), express);
+            express = biHandler.exprHandler(classHandler.getParam(), query, express);
         }
         NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(biDataSource);
         List<Map<String, Object>> list = jdbcQuery(jdbcTemplate, express, query);
         if (null != biHandler) {
-            biHandler.resultHandler(classHandler.getParam(), list);
+            biHandler.resultHandler(classHandler.getParam(), query, list);
         }
         return list;
     }

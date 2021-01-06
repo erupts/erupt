@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.bi.fun.EruptBiHandler;
-import xyz.erupt.bi.model.Bi;
-import xyz.erupt.bi.model.BiChart;
-import xyz.erupt.bi.model.BiDimension;
-import xyz.erupt.bi.model.BiDimensionReference;
+import xyz.erupt.bi.model.*;
 import xyz.erupt.bi.service.BiService;
 import xyz.erupt.bi.view.BiColumn;
 import xyz.erupt.bi.view.BiData;
@@ -221,8 +218,9 @@ public class EruptBiController {
             }
         }
         if (null != bi.getClassHandler()) {
-            EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(bi.getClassHandler().getHandlerPath(), EruptBiHandler.class);
-            biHandler.exportHandler(condition, wb);
+            BiClassHandler biClassHandler = bi.getClassHandler();
+            EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
+            biHandler.exportHandler(biClassHandler.getParam(), condition, wb);
         }
         wb.write(HttpUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLS_FORMAT));
     }

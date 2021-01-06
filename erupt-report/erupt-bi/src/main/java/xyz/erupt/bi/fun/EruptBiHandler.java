@@ -20,7 +20,9 @@ public interface EruptBiHandler {
      * @return
      */
     @Comment("查询表达式动态处理")
-    default String exprHandler(@Comment("参数") String param, @Comment("查询表达式") String expr) {
+    default String exprHandler(@Comment("处理类参数") String param,
+                               @Comment("查询条件") Map<String, Object> condition,
+                               @Comment("查询表达式") String expr) {
 
         return expr;
     }
@@ -32,7 +34,9 @@ public interface EruptBiHandler {
      * @param result 结果
      */
     @Comment("返回结果处理")
-    default void resultHandler(@Comment("参数") String param, @Comment("查询结果") List<Map<String, Object>> result) {
+    default void resultHandler(@Comment("处理类参数") String param,
+                               @Comment("查询条件") Map<String, Object> condition,
+                               @Comment("查询结果") List<Map<String, Object>> result) {
 
     }
 
@@ -43,7 +47,9 @@ public interface EruptBiHandler {
      * @param workbook  poi对象
      */
     @Comment("导出excel处理")
-    default void exportHandler(@Comment("查询条件") Map<String, Object> condition, @Comment("poi对象") Workbook workbook) {
+    default void exportHandler(@Comment("处理类参数") String param,
+                               @Comment("查询条件") Map<String, Object> condition,
+                               @Comment("创建好的poi对象") Workbook workbook) {
 
     }
 }
