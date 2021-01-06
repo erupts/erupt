@@ -76,7 +76,8 @@ public class EruptExcelController {
     @PostMapping("/export/{erupt}")
     @EruptRecordOperate(desc = "导出Excel")
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public void exportData(@PathVariable("erupt") String eruptName, @RequestParam("condition") String condition,
+    public void exportData(@PathVariable("erupt") String eruptName,
+                           String condition,
                            HttpServletRequest request,
                            HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
