@@ -21,7 +21,7 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 [JavaDoc](https://apidoc.gitee.com/erupt/erupt/) &nbsp; | &nbsp; [环境搭建](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
 [代码演示](https://www.erupt.xyz/#!/contrast) &nbsp; | &nbsp; [在线体验](https://www.erupt.xyz/demo)
 
-> QQ交流群：821389129 🔥   
+> QQ交流群：[821389129](https://jq.qq.com/?_wv=1027&k=MCd4plZ0) 🔥   
 > _加群可提前获取需要 1000 star 才能开放的 erupt-tpl 模块与 erupt-generator 模块 jar 包_
 
 ## 什么是 erupt
@@ -230,12 +230,20 @@ github: https://github.com/erupts/erupt-example
 ## 开源推荐 | Recommend
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
 
+## 加入讨论 | Join Discussion
+<table width="100%">
+    <tr>
+        <td width="50%"><img src="readme/group/qq-1.jpeg" alt=""></td>
+        <td width="50%"><img src="readme/group/wexin-1.jpeg" alt=""></td>
+    </tr>
+</table>
+
 ## 捐赠 | Donate
 此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱。
 <table width="100%">
     <tr>
-        <td><img src="readme/wepay.jpeg" alt=""></td>
-        <td><img src="readme/alipay.jpeg" alt=""></td>
+        <td width="50%"><img src="readme/wepay.jpeg" alt=""></td>
+        <td width="50%"><img src="readme/alipay.jpeg" alt=""></td>
     </tr>
 </table>
 
