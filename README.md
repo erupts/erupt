@@ -231,6 +231,12 @@ github: https://github.com/erupts/erupt-example
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
 
 ## 捐赠 | Donate
-感谢所有支持者!🙏
+此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱。
+<table width="100%">
+    <tr>
+        <td><img src="readme/wepay.jpeg" alt=""></td>
+        <td><img src="readme/alipay.jpeg" alt=""></td>
+    </tr>
+</table>
 
 **作者**：YuePeng / erupts@126.com
