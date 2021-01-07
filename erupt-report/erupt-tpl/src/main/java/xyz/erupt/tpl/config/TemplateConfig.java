@@ -18,7 +18,6 @@ public class TemplateConfig {
         Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_29);
         freemarkerConfig.setDefaultEncoding("utf-8");
         freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/");
-//        freemarkerConfig.setDirectoryForTemplateLoading(new File(this.getClass().getResource("/").getPath()));
         return freemarkerConfig;
     }
 
