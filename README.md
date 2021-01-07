@@ -244,4 +244,11 @@ github: https://github.com/erupts/erupt-example
     </tr>
 </table>
 
+
+### Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
+
+- **Github**：https://github.com/erupts/erupt
+
+- Gitee：https://gitee.com/erupt/erupt
+
 **作者**：YuePeng / erupts@126.com
