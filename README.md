@@ -233,8 +233,9 @@ github: https://github.com/erupts/erupt-example
 ## 加入讨论 | Join Discussion
 <table width="100%">
     <tr>
-        <td width="50%"><img src="readme/group/qq-1.jpeg" alt=""></td>
-        <td width="50%"><img src="readme/group/wexin-1.jpeg" alt=""></td>
+        <td width="33.333%"><img src="readme/group/qq-1.jpeg" alt=""></td>
+        <td width="33.333%"><img src="readme/group/wexin-1.jpeg" alt=""></td>
+        <td width="33.333%"><img src="readme/group/ding-1.jpeg" alt=""></td>
     </tr>
 </table>
 
