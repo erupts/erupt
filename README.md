@@ -25,12 +25,12 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 > _加群可提前获取需要 1000 star 才能开放的 erupt-tpl 模块与 erupt-generator 模块 jar 包_
 
 ## 什么是 erupt
-erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 来生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，自动创建表结构，controller / service / sao / mapper 文件都不用创建，极大减少开发工作量，将后台开发速度提升到极致。
+erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，自动创建表结构，controller / service / sao / mapper 文件都不用创建，极大减少开发工作量，将后台开发速度提升到极致。
 
 > 取代代码生成器，开发后台管理系统更优解！
 
 ## 为什么要做 erupt ?
-无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存这无法规避的痛点，如：开发效率低下、UI界面不尽人意、交互凑合、代码重复、存在安全漏洞，导致开发成本极高。
+无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存这无法规避的痛点，如：开发效率低下、接口对接繁琐、界面差强人意、代码重复、有安全漏洞，导致开发成本极高。
 
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？   
 代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
@@ -76,10 +76,10 @@ public class Simple extends BaseModel {
 ```
 [功能体验](https://www.erupt.xyz/#!/contrast)
 
-这个界面虽然用 Vue + Ant Design + SSM 也能做出个大概，但仔细观察会发现它有大量细节功能如：
+这个界面虽然用 Vue + Ant-Design + SSM 也能做出个大概，但仔细观察会发现它有大量细节功能如：
 
++ 有按钮可以查询、新增
 + 可以对数据做筛选
-+ 有按钮可以刷新、新增、数据
 + 表格有分页与汇总
 + 预览单行数据
 + 批量删除
@@ -91,12 +91,12 @@ public class Simple extends BaseModel {
 
 全部实现这些仅前端就需要大量的代码，后端的接口与业务逻辑更不在少数。
 
-但可以看到，用 erupt 只需要 30 几行 注解 配置，你不需要了解 Angular / React / Vue / Jquery 也不需要了解 JavaScript / HTML / CSS，甚至不需要了解 Spring MVC / JPA / Mybatis / SQL，即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
+但可以看到，用 erupt 只需要 **30** 几行代码就能完成，你不需要了解 Angular / React / Vue / Jquery 也不需要了解 JavaScript / HTML / CSS，甚至不需要了解 Spring MVC / Mybatis / SQL，即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
 
-这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
+这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
 
 ## 首页 | Home 
-https://www.erupt.xyz
+[https://erupt.xyz](https://erupt.xyz)
 
 ##  简介 | Intro
 Erupt Framework 快速的构建管理页面，不需要懂前端、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，即可快速开发企业级 `Admin` 管理后台！
@@ -105,7 +105,7 @@ Erupt 提供企业级中后台管理系统的全栈解决方案，提供超多�
 
 ## 特性 | Features
 + **易于上手**：仅需了解 @Erupt 与 @EruptField 两个注解即可上手开发。
-+ **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，仅需一个实体类即可。
++ **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，仅需一个类文件即可。
 + **敏捷开发**：仅单个`.java`文件即可实现后台管理功能，专注业务与核心功能的研发。
 + **快速迭代**：需求变更仅需修改或添加注解配置即可，迭代速度比需求讨论速度还快。
 + **功能强大**：动态条件处理，支持增删改查等功能代理接口，Session存储机制选择，行为日志记录等。
@@ -129,20 +129,20 @@ Erupt 提供企业级中后台管理系统的全栈解决方案，提供超多�
 ![](./readme/seer.png)
 <table>
     <tr>
-        <td><img src="readme/complex.png"/></td>
-        <td><img src="readme/complex-edit.png"/></td>
+        <td><img src="readme/goods.png"/></td>
+        <td><img src="readme/chart.png"/></td>
     </tr>
     <tr>
         <td><img src="readme/code.png"/></td>
         <td><img src="readme/job.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/tpl.png"/></td>
         <td><img src="readme/complex.png"/></td>
+        <td><img src="readme/complex-edit.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/goods.png"/></td>
-        <td><img src="readme/chart.png"/></td>
+        <td><img src="readme/tpl.png"/></td>
+        <td><img src="readme/role.png"/></td>
     </tr>
     <tr>
         <td><img src="readme/component.png"/></td>
