@@ -251,4 +251,7 @@ github: https://github.com/erupts/erupt-example
 
 - Gitee：https://gitee.com/erupt/erupt
 
+## 贡献指南 | Contribution Guide
+https://www.yuque.com/yuepeng/erupt/bdiq6o
+
 **作者**：YuePeng / erupts@126.com
