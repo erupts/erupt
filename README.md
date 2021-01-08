@@ -3,10 +3,12 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用后台管理框架 </h1>
 <h3 align="center">零前端代码，几行 Java 注解，搞定后台管理系统</h3>
+<h5 align="center"><a href="https://erupt.xyz">https://erupt.xyz</a></h5>
 
 ---
 
 [![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)](https://www.erupt.xyz) 
+[![jdk 8+](https://img.shields.io/badge/JDK-8+-green.svg)](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
 [![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE) 
 [![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt) 
 [![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt) 
@@ -21,20 +23,12 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 [代码演示](https://www.erupt.xyz/#!/contrast) &nbsp; | &nbsp; [在线体验](https://www.erupt.xyz/demo)
 
 > QQ交流群：[821389129](https://jq.qq.com/?_wv=1027&k=MCd4plZ0) 🔥   
-> _加群可提前获取需要 1000 star 才可开放的 erupt-tpl 模块与 erupt-generator 模块 jar 包_
-
-## 首页 | Home 
-[https://erupt.xyz](https://erupt.xyz)
-
-##  简介 | Intro
-Erupt Framework 通用后台管理框架，零前端代码、零 CURD、自动建表，仅需单个类文件 + 简洁的注解配置，快速开发企业级 Admin 管理后台！
-
-提供企业级中后台管理系统的全栈解决方案，超多业务组件可用，简洁美观的后台页面，支持所有主流数据库，支持多数据源，自定义按钮，自定义OSS，严密的安全策略，极高的扩展性，大幅压缩研发周期，专注核心业务。
-
-> 完美取代代码生成器，开发后台管理系统更优解！
+> 加群可提前获取 erupt-tpl & erupt-generator jar 
 
 ### 什么是 erupt ?
-erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，不需要手动建表，controller / service / sao / mapper 文件都无需创建，极大减少开发工作量，将后台开发速度提升到极致。
+erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，不需要手动建表，controller / service / dao / mapper 文件都无需创建，极大减少开发工作量，将后台开发速度提升到极致。
+
+> 完美取代代码生成器，开发后台管理系统更优解！
 
 ### 为什么要做 erupt ?
 无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存这无法规避的痛点，如：开发效率低下、接口对接繁琐、界面差强人意、代码重复、有安全漏洞，导致开发成本极高。
@@ -96,6 +90,11 @@ public class Simple extends BaseModel {
 但可以看到，用 erupt 只需要 **30几行** 代码就能完成，你不需要了解 Angular / React / Vue / Jquery 也不需要了解 JavaScript / HTML / CSS，甚至不需要了解 Spring MVC / Mybatis / SQL，即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
 
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
+
+##  简介 | Intro
+Erupt Framework 通用后台管理框架，零前端代码、零 CURD、自动建表，仅需单个类文件 + 简洁的注解配置，快速开发企业级 Admin 管理后台！
+
+提供企业级中后台管理系统的全栈解决方案，超多业务组件可用，简洁美观的后台页面，支持所有主流数据库，支持多数据源，自定义按钮，自定义OSS，严密的安全策略，极高的扩展性，大幅压缩研发周期，专注核心业务。
 
 ## 框架特性 | Features
 + **易于上手**：仅需了解 @Erupt 与 @EruptField 两个注解即可上手开发。
@@ -194,13 +193,13 @@ erupt-web-angular -- 暂未开放 erupt 前端源码
 ```
 
 ## 技术体系 | Technology system
-####  后端：
+**后端：**
 Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、 Hibernate、 Quartz、 Gson、 Lombok、 POI ...
 
-#### 前端：
+**前端：**
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
-### 未来更新计划 | Future vision
+## 未来更新计划 | Future vision
 + 增加按钮级权限控制 （已支持 ✔️）
 + 支持更多的组件
 + 大数据分库分表支持
@@ -247,9 +246,8 @@ github: https://github.com/erupts/erupt-example
 ## 加入讨论 | Join Discussion
 <table width="100%">
     <tr>
-        <td width="33.333%"><img src="readme/group/qq-1.jpeg" alt=""></td>
-        <td width="33.333%"><img src="readme/group/wexin-1.jpeg" alt=""></td>
-        <td width="33.333%"><img src="readme/group/ding-1.jpeg" alt=""></td>
+        <td width="50%"><img src="readme/group/qq-1.jpeg" alt=""></td>
+        <td width="50%"><img src="readme/group/wexin-1.jpeg" alt=""></td>
     </tr>
 </table>
 
@@ -262,15 +260,14 @@ github: https://github.com/erupts/erupt-example
     </tr>
 </table>
 
+## 贡献指南 | Contribution Guide
+https://www.yuque.com/yuepeng/erupt/bdiq6o
 
-### Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
+## Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
 
 - **Github**：https://github.com/erupts/erupt
 
-- Gitee：https://gitee.com/erupt/erupt
-
-## 贡献指南 | Contribution Guide
-https://www.yuque.com/yuepeng/erupt/bdiq6o
+- **Gitee**：https://gitee.com/erupt/erupt
 
 ---
 
