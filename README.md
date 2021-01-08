@@ -3,27 +3,29 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用后台管理框架 </h1>
 <h3 align="center">零前端代码，几行 Java 注解，搞定后台管理系统</h3>
-<h5 align="center"><a href="https://erupt.xyz">https://erupt.xyz</a></h5>
+<h4 align="center"><a href="https://erupt.xyz">https://erupt.xyz</a></h4>
 
 ---
 
-[![Erupt Framework](https://img.shields.io/badge/Erupt-Framework-brightgreen)](https://www.erupt.xyz) 
-[![jdk 8+](https://img.shields.io/badge/JDK-8+-green.svg)](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
-[![license Apache 2.0](https://img.shields.io/badge/license-Apache%202-blue)](./LICENSE) 
-[![Gitee star](https://gitee.com/erupt/erupt/badge/star.svg?theme=dark)](https://gitee.com/erupt/erupt) 
-[![Gitee fork](https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark)](https://gitee.com/erupt/erupt) 
-[![GitHub stars](https://img.shields.io/github/stars/erupts/erupt?style=social)](https://github.com/erupts/erupt) 
-[![GitHub forks](https://img.shields.io/github/forks/erupts/erupt?style=social)](https://github.com/erupts/erupt) 
-![size](https://img.shields.io/github/repo-size/erupts/erupt)
+<p align="center">
+    <a href="https://www.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/Erupt-Framework-brightgreen" alt="Erupt Framework"></a>
+    <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html"><img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk 8+"></a>
+    <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-blue" alt="license Apache 2.0"></a>
+    <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
+    <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
+    <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=social" alt="GitHub stars"></a>
+    <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/forks/erupts/erupt?style=social" alt="GitHub forks"></a>
+    <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/repo-size/erupts/erupt" alt="size"></a>
+</p>
 
 
 [Github 仓库](https://github.com/erupts/erupt) &nbsp; | &nbsp; [Gitee 仓库](https://gitee.com/erupt/erupt) &nbsp; | &nbsp; 
 [项目官网](https://www.erupt.xyz) &nbsp; | &nbsp; [使用文档](https://www.yuque.com/yuepeng/erupt) &nbsp; | &nbsp; 
-[环境搭建](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
 [代码演示](https://www.erupt.xyz/#!/contrast) &nbsp; | &nbsp; [在线体验](https://www.erupt.xyz/demo)
 
-> QQ交流群：[821389129](https://jq.qq.com/?_wv=1027&k=MCd4plZ0) 🔥   
-> 加群可提前获取 erupt-tpl & erupt-generator jar 
+---
+
+> QQ交流群：[821389129](https://jq.qq.com/?_wv=1027&k=MCd4plZ0) 🔥  加群可提前获取 erupt-tpl & erupt-generator jar 
 
 ### 什么是 erupt ?
 erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，不需要手动建表，controller / service / dao / mapper 文件都无需创建，极大减少开发工作量，将后台开发速度提升到极致。
