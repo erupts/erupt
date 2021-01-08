@@ -31,13 +31,13 @@ Erupt Framework 通用后台管理框架，零前端代码、零 CURD、自动�
 
 提供企业级中后台管理系统的全栈解决方案，超多业务组件可用，简洁美观的后台页面，支持所有主流数据库，支持多数据源，自定义按钮，自定义OSS，严密的安全策略，极高的扩展性，大幅压缩研发周期，专注核心业务。
 
-### 什么是 erupt ?
+#### 什么是 erupt ?
 erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，不需要手动建表，controller / service / sao / mapper 文件都无需创建，极大减少开发工作量，将后台开发速度提升到极致。
 
 > 完美取代代码生成器，开发后台管理系统更优解！
 
 
-### 为什么要做 erupt ?
+#### 为什么要做 erupt ?
 无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存这无法规避的痛点，如：开发效率低下、接口对接繁琐、界面差强人意、代码重复、有安全漏洞，导致开发成本极高。
 
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？   
@@ -98,7 +98,7 @@ public class Simple extends BaseModel {
 
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
 
-## 特性 | Features
+## 框架特性 | Features
 + **易于上手**：仅需了解 @Erupt 与 @EruptField 两个注解即可上手开发。
 + **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，仅需一个类文件即可。
 + **敏捷开发**：仅单个`.java`文件即可实现后台管理功能，专注业务与核心功能的研发。
@@ -118,29 +118,6 @@ public class Simple extends BaseModel {
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用。
 + **无需二次开发**：仅需引用 jar 包即可。
 
-
-## 下载 | Download
-下载最新的JAR或通过Maven获取。
-```xml
-<!--用户权限管理-->
-<dependency>
-  <groupId>xyz.erupt</groupId>
-  <artifactId>erupt-upms</artifactId>
-  <version>LATEST-VERSION</version>
-</dependency>
-<!--接口数据安全-->
-<dependency>
-  <groupId>xyz.erupt</groupId>
-  <artifactId>erupt-security</artifactId>
-  <version>LATEST-VERSION</version>
-</dependency>
-<!--后台WEB界面-->
-<dependency>
-  <groupId>xyz.erupt</groupId>
-  <artifactId>erupt-web</artifactId>
-  <version>LATEST-VERSION</version>
-</dependency>
-```
 [详细使用步骤](https://www.yuque.com/yuepeng/erupt/tpq1l9)
 
 ## 演示截图 | Screenshot
@@ -170,6 +147,28 @@ public class Simple extends BaseModel {
     </tr>
 </table>
 
+## 下载使用 | Download
+下载最新的JAR或通过Maven获取。
+```xml
+<!--用户权限管理-->
+<dependency>
+  <groupId>xyz.erupt</groupId>
+  <artifactId>erupt-upms</artifactId>
+  <version>LATEST-VERSION</version>
+</dependency>
+<!--接口数据安全-->
+<dependency>
+  <groupId>xyz.erupt</groupId>
+  <artifactId>erupt-security</artifactId>
+  <version>LATEST-VERSION</version>
+</dependency>
+<!--后台WEB界面-->
+<dependency>
+  <groupId>xyz.erupt</groupId>
+  <artifactId>erupt-web</artifactId>
+  <version>LATEST-VERSION</version>
+</dependency>
+```
 
 ## 模块说明 | Module
 ```lua
@@ -204,12 +203,12 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 
 ### 未来更新计划 | Future vision
 + 增加按钮级权限控制 （已支持 ✔️）
-+ 支持markdown等更多组件
++ 支持更多的组件
 + 大数据分库分表支持
 + 多种不同的登录形式
 + 主题色更改
 + 国际化支持
-+ 流程引擎支持（会完全自己做，不会用市面上已有的）
++ 流程引擎支持
 
 ## 在线体验 | Demo
 演示地址：https://www.erupt.xyz/demo  
