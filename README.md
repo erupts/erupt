@@ -28,7 +28,7 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 </p>
 
 <p align="center">
-    QQ交流群<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129🔥</a> 加群可获取erupt-tpl & erupt-generator jar
+    QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129🔥</a> 加群可获取erupt-tpl 与 erupt-generator 模块
 </p>
 
 ---
