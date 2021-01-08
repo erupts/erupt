@@ -21,45 +21,43 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 <p align="center">
     <a href="https://github.com/erupts/erupt">Github 仓库</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">Gitee 仓库</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz">官方网站</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/yuepeng/erupt">使用文档</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/yuepeng/erupt/bdiq6o">贡献指南</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz/demo">在线体验</a>
+    <a href="https://www.erupt.xyz" target="_blank">官方网站</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/yuepeng/erupt" target="_blank">使用文档</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/yuepeng/erupt/bdiq6o" target="_blank">贡献指南</a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a>
 </p>
 
 ---
 
 ##  简介 | Intro
-Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可
+Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能。
 
-零前端代码、零 CURD、自动建表，仅需**一个类文件** + 简洁的注解配置，快速开发企业级 Admin 管理后台    
+零前端代码、零 CURD、自动建表，仅需**一个类文件** + 简洁的注解配置，快速开发企业级 Admin 管理后台。
 
 提供企业级中后台管理系统的全栈解决方案，超多业务组件可用，支持所有主流数据库，大幅压缩研发周期，专注核心业务。
 
 > 完美取代代码生成器，开发后台管理系统更优解！
 
-
-## 框架特性 | Features
-+ **易于上手**：仅需了解 @Erupt 与 @EruptField 两个注解即可上手开发。
-+ **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，仅需一个类文件即可。
+## 特性 | Features
++ **易于上手**：会简单的 **Spring Boot** 基础知识即可。
++ **使用简单**：仅需了解 **@Erupt** 与 **@EruptField** 两个注解即可上手开发
++ **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，**仅需一个类文件**即可。
 + **敏捷开发**：仅单个`.java`文件即可实现后台管理功能，专注业务与核心功能的研发。
 + **快速迭代**：需求变更仅需修改或添加注解配置即可，迭代速度比需求讨论速度还快。
 + **功能强大**：动态条件处理，支持增删改查等功能代理接口，Session存储机制选择，行为日志记录等。
 + **自动建表**：依托于JPA可自动帮你完成数据库建表相关工作。
 + **低侵入性**：几乎所有功能都围绕注解而展开，不影响Spring Boot其他功能或三方库库的使用。
-+ **多数据源**：MySQL、Oracle、SQL Server、PostgreSQL、H2，甚至支持MongoDB。
++ **多数据源**：MySQL、Oracle、SQL Server、PostgreSQL、H2，甚至支持**MongoDB**。
 + **多种组件**：支持滑动输入、时间选择、开关、图片上传、代码编辑器、自动完成、树、多选框、地图等23类组件
-+ **丰富展示**：普通文本、二维码、链接、图片、HTML、代码段、iframe、swf等
++ **丰富展示**：普通文本、**二维码**、链接、图片、HTML、代码段、iframe、swf等
 + **代码生成**：erupt代码已经足够简洁，代码生成器可进一步提升开发效率。
-+ **高扩展性**：支持自定义数据源实现、自定义页面、自定义模板、自定义OSS制等。
++ **高扩展性**：支持自定义数据源实现、自定义页面、动态权限管理、**自定义OSS**等。
 + **界面美观**：每个交互都精心设计，产品思维打磨，只为了更好的操作体验。
 + **权限管理**：用户管理、角色管理、组织管理、菜单管理、登录日志、操作日志等。
 + **高安全性**：可靠的安全机制，登录白名单，权限验证，注解项检查，细颗粒度权限控制，为你的数据保驾护航。
 + **前后端分离**：后端与前端可分开部署
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用。
 + **无需二次开发**：仅需引用 jar 包即可。
-
-[详细使用步骤](https://www.yuque.com/yuepeng/erupt/tpq1l9)
 
 ## 演示截图 | Screenshot
 ![](./readme/index.png)
@@ -173,6 +171,7 @@ public class Simple extends BaseModel {
   <version>LATEST-VERSION</version>
 </dependency>
 ```
+[详细使用步骤](https://www.yuque.com/yuepeng/erupt/tpq1l9)
 
 ## 模块说明 | Module
 ```lua
