@@ -15,7 +15,6 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 ![size](https://img.shields.io/github/repo-size/erupts/erupt)
 
 
-
 [Github 仓库](https://github.com/erupts/erupt) &nbsp; | &nbsp; [Gitee 仓库](https://gitee.com/erupt/erupt) &nbsp; | &nbsp; 
 [项目官网](https://www.erupt.xyz) &nbsp; | &nbsp; [使用文档](https://www.yuque.com/yuepeng/erupt) &nbsp; | &nbsp; 
 [环境搭建](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
@@ -24,17 +23,21 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 > QQ交流群：[821389129](https://jq.qq.com/?_wv=1027&k=MCd4plZ0) 🔥   
 > _加群可提前获取需要 1000 star 才可开放的 erupt-tpl 模块与 erupt-generator 模块 jar 包_
 
-## 什么是 erupt
-erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，自动创建表结构，controller / service / sao / mapper 文件都不用创建，极大减少开发工作量，将后台开发速度提升到极致。
+## 首页 | Home 
+[https://erupt.xyz](https://erupt.xyz)
 
-快速开发后台管理页面，零前端代码、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，快速开发企业级 Admin 管理后台！
+##  简介 | Intro
+Erupt Framework 通用后台管理框架，零前端代码、零 CURD、自动建表，仅需单个类文件 + 简洁的注解配置，快速开发企业级 Admin 管理后台！
 
 提供企业级中后台管理系统的全栈解决方案，超多业务组件可用，简洁美观的后台页面，支持所有主流数据库，支持多数据源，自定义按钮，自定义OSS，严密的安全策略，极高的扩展性，大幅压缩研发周期，专注核心业务。
 
-> 取代代码生成器，开发后台管理系统更优解！
+### 什么是 erupt ?
+erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能，会简单的 **Spring Boot** 基础知识即可，不需要懂前端，也不需要写繁琐的 CURD ，不需要手动建表，controller / service / sao / mapper 文件都无需创建，极大减少开发工作量，将后台开发速度提升到极致。
+
+> 完美取代代码生成器，开发后台管理系统更优解！
 
 
-## 为什么要做 erupt ?
+### 为什么要做 erupt ?
 无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存这无法规避的痛点，如：开发效率低下、接口对接繁琐、界面差强人意、代码重复、有安全漏洞，导致开发成本极高。
 
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？   
@@ -84,7 +87,7 @@ public class Simple extends BaseModel {
 
 这个界面虽然用 Vue + Ant-Design + SSM 也能做出个大概，但仔细观察会发现它有大量细节功能如：
 
-+ 有按钮可以查询、新增、批量删除、excel导入导出
++ 有按钮可以查询、新增、批量删除、excel 导入导出
 + 可以对数据做筛选、隐藏某列、按某列排序
 + 表格有分页与汇总，可预览单行数据
 + 多种组件、有校验规则
@@ -94,15 +97,6 @@ public class Simple extends BaseModel {
 但可以看到，用 erupt 只需要 **30几行** 代码就能完成，你不需要了解 Angular / React / Vue / Jquery 也不需要了解 JavaScript / HTML / CSS，甚至不需要了解 Spring MVC / Mybatis / SQL，即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
 
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
-
-## 首页 | Home 
-[https://erupt.xyz](https://erupt.xyz)
-
-
-##  简介 | Intro
-Erupt Framework 快速的构建管理页面，不需要懂前端、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，即可快速开发企业级 `Admin` 管理后台！
-
-Erupt 提供企业级中后台管理系统的全栈解决方案，提供超多业务组件，简洁美观的后台页面，支持所有主流数据库，支持多数据源，严密的安全策略，极高的扩展性，大幅压缩研发周期，专注核心业务。
 
 ## 特性 | Features
 + **易于上手**：仅需了解 @Erupt 与 @EruptField 两个注解即可上手开发。
