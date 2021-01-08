@@ -16,9 +16,9 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 
 
 
-[码云仓库](https://gitee.com/erupt/erupt) &nbsp; | &nbsp; [github仓库](https://github.com/erupts/erupt) &nbsp; | &nbsp; 
+[Github 仓库](https://github.com/erupts/erupt) &nbsp; | &nbsp; [Gitee 仓库](https://gitee.com/erupt/erupt) &nbsp; | &nbsp; 
 [项目官网](https://www.erupt.xyz) &nbsp; | &nbsp; [使用文档](https://www.yuque.com/yuepeng/erupt) &nbsp; | &nbsp; 
-[JavaDoc](https://apidoc.gitee.com/erupt/erupt/) &nbsp; | &nbsp; [环境搭建](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
+[环境搭建](https://www.yuque.com/yuepeng/erupt/tpq1l9) &nbsp; | &nbsp; 
 [代码演示](https://www.erupt.xyz/#!/contrast) &nbsp; | &nbsp; [在线体验](https://www.erupt.xyz/demo)
 
 > QQ交流群：[821389129](https://jq.qq.com/?_wv=1027&k=MCd4plZ0) 🔥   
@@ -74,6 +74,7 @@ public class Simple extends BaseModel {
 
 }
 ```
+
 [功能体验](https://www.erupt.xyz/#!/contrast)
 
 这个界面虽然用 Vue + Ant-Design + SSM 也能做出个大概，但仔细观察会发现它有大量细节功能如：
@@ -97,6 +98,7 @@ public class Simple extends BaseModel {
 
 ## 首页 | Home 
 [https://erupt.xyz](https://erupt.xyz)
+
 
 ##  简介 | Intro
 Erupt Framework 快速的构建管理页面，不需要懂前端、零CURD、自动建表，仅需单个类文件 + 简洁的注解配置，即可快速开发企业级 `Admin` 管理后台！
@@ -122,6 +124,31 @@ Erupt 提供企业级中后台管理系统的全栈解决方案，提供超多�
 + **前后端分离**：后端与前端可分开部署
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用。
 + **无需二次开发**：仅需引用 jar 包即可。
+
+
+## 下载 | Download
+下载最新的JAR或通过Maven获取。
+```xml
+<!--用户权限管理-->
+<dependency>
+  <groupId>xyz.erupt</groupId>
+  <artifactId>erupt-upms</artifactId>
+  <version>LATEST-VERSION</version>
+</dependency>
+<!--接口数据安全-->
+<dependency>
+  <groupId>xyz.erupt</groupId>
+  <artifactId>erupt-security</artifactId>
+  <version>LATEST-VERSION</version>
+</dependency>
+<!--后台WEB界面-->
+<dependency>
+  <groupId>xyz.erupt</groupId>
+  <artifactId>erupt-web</artifactId>
+  <version>LATEST-VERSION</version>
+</dependency>
+```
+[详细使用步骤](https://www.yuque.com/yuepeng/erupt/tpq1l9)
 
 ## 演示截图 | Screenshot
 ![](./readme/index.png)
