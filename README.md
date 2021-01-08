@@ -256,4 +256,6 @@ https://www.yuque.com/yuepeng/erupt/bdiq6o
 
 ---
 
-<p align="right">**作者**：YuePeng / erupts@126.com</p>
+<p align="right">
+作者 ：YuePeng / <a href="mailto:erupts@126.com">erupts@126.com</a>
+</p>
