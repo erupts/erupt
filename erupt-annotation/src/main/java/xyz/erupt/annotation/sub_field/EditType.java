@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.JavaTypeEnum;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
@@ -44,6 +45,8 @@ public enum EditType {
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
     @EditTypeMapping(mapping = CodeEditorType.class, desc = "代码编辑器", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
+    @EditTypeMapping(desc = "MarkDown编辑器", allowType = {JavaTypeEnum.String})
+    MARKDOWN,
     @EditTypeMapping(mapping = AttachmentType.class, desc = "附件上传", allowType = {JavaTypeEnum.String}, excelOperator = false)
     ATTACHMENT,
     @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, excelOperator = false)
@@ -57,8 +60,8 @@ public enum EditType {
     @EditTypeMapping(desc = "空（仍占据组件位置）", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     EMPTY,
 
-
-    //一下对象使用较为复杂，作用于复杂对象基础上
+    @Comment("==================================")
+    @Comment("以下对象使用较为复杂，作用于复杂对象基础上")
     @EditTypeSearch
     @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用（多对一)", allowType = {JavaTypeEnum.object})
     REFERENCE_TREE,
