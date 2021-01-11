@@ -4,7 +4,7 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用后台管理框架 </h1>
 <h3 align="center">零前端代码，几行 Java 注解，搞定后台管理系统</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://erupt.xyz</a></h3>
-<h2 align="center">🌋</h2>
+<h3 align="center">🌋</h3>
 
 ---
 
