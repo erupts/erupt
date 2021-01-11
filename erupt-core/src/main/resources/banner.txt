@@ -9,5 +9,5 @@ ${AnsiColor.BRIGHT_YELLOW}
                          \ \_\       
                           \/_/
 
-:: Spring Boot ::  v(${spring-boot.version})
-:: Erupt       ::  v(${project.version})
+:: Spring Boot     ::  v(${spring-boot.version})
+:: Erupt Framework ::  v(${project.version})

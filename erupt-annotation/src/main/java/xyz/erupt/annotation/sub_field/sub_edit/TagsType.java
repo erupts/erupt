@@ -10,7 +10,7 @@ public @interface TagsType {
     @Comment("多个标签存储时分割字符")
     String joinSeparator() default "|";
 
-    @Comment("是否允许从自定义标签")
+    @Comment("是否允许自定义标签")
     boolean allowExtension() default true;
 
     @Transient
