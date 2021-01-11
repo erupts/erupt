@@ -4,10 +4,10 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用后台管理框架 </h1>
 <h3 align="center">零前端代码，几行 Java 注解，搞定后台管理系统</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://erupt.xyz</a></h3>
+<h2 align="center">🌋</h2>
 
 ---
 
-<h1 align="center">🌋</h1>
 <p align="center">
     <a href="https://www.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/Erupt-Framework-brightgreen" alt="Erupt Framework"></a>
     <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html"><img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk 8+"></a>
