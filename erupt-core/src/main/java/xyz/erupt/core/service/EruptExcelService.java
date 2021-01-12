@@ -15,10 +15,8 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.core.query.Column;
-import xyz.erupt.core.util.AnnotationUtil;
-import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.util.ExcelUtil;
-import xyz.erupt.core.util.HttpUtil;
+import xyz.erupt.core.util.DateUtil;
+import xyz.erupt.core.util.*;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
@@ -212,10 +210,12 @@ public class EruptExcelService {
                             break;
                         default:
                             String rn = eruptFieldModel.getFieldReturnName();
-                            if (String.class.getSimpleName().equals(rn) || Date.class.getSimpleName().equals(rn)) {
+                            if (String.class.getSimpleName().equals(rn)) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), getCellValue(cell).toString());
                             } else if (JavaType.NUMBER.equals(rn)) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
+                            } else if (Date.class.getSimpleName().equals(rn)) {
+                                jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getSimpleFormatDate(cell.getDateCellValue()));
                             }
                             break;
                     }
