@@ -14,6 +14,10 @@ public class DateUtil {
 
     public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
+    public static String getSimpleFormatDate(Date date) {
+        return getFormatDate(date, DATE_TIME);
+    }
+
     public static String getFormatDate(Date date, String formatStr) {
         SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
         return sdf.format(date);

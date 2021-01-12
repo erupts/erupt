@@ -125,7 +125,7 @@ public class EruptExcelController {
                 } else if (fileName.endsWith(EruptExcelService.XLSX_FORMAT)) {
                     list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
                 } else {
-                    throw new EruptWebApiRuntimeException("上传文件必须为Excel");
+                    throw new EruptWebApiRuntimeException("上传文件格式必须为Excel");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
