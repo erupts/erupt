@@ -14,6 +14,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.upms.model.base.HyperModel;
 
@@ -46,7 +47,8 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
 
     @EruptField(
             views = @View(title = "接收人"),
-            edit = @Edit(title = "接收人", notNull = true, search = @Search)
+            edit = @Edit(title = "接收人", notNull = true, search = @Search,
+                    inputType = @InputType(fullSpan = true, regex = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$"))
     )
     private String recipient;
 
@@ -58,7 +60,7 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
 
     @EruptField(
             views = @View(title = "主题"),
-            edit = @Edit(title = "主题", notNull = true, search = @Search)
+            edit = @Edit(title = "主题", notNull = true, search = @Search, inputType = @InputType(fullSpan = true))
     )
     private String subject;
 

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import xyz.erupt.annotation.config.SkipSerialize;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,7 +26,7 @@ public class MvcConfig {
     public HttpMessageConverters customConverters() {
         Collection<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss")
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").setExclusionStrategies(new GsonExclusionStrategies())
                 .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context)
                         -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))))
                 .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, typeOfSrc, context)
@@ -46,18 +45,7 @@ public class MvcConfig {
 
     @Bean
     public Gson gson() {
-        return new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-            @Override
-            public boolean shouldSkipField(FieldAttributes f) {
-                SkipSerialize skip = f.getAnnotation(SkipSerialize.class);
-                return null != skip;
-            }
-
-            @Override
-            public boolean shouldSkipClass(Class<?> incomingClass) {
-                return false;
-            }
-        }).setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
+        return new GsonBuilder().setExclusionStrategies(new GsonExclusionStrategies()).setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
     }
 
 }
