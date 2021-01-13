@@ -61,7 +61,7 @@ public class EruptTplController {
     public void eruptTplPage(@PathVariable("name") String fileName, HttpServletResponse response) throws Exception {
         @Cleanup InputStream inputStream = this.getClass().getResourceAsStream("/" + TPL + "/" + fileName);
         Method method = tplService.getAction(fileName);
-        response.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         if (null != method) {
             Class<?> clazz = method.getDeclaringClass();
             Object obj = EruptSpringUtil.getBean(clazz);
@@ -92,7 +92,7 @@ public class EruptTplController {
                                   @PathVariable("field") String field,
                                   HttpServletResponse response) throws IOException, TemplateException {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        response.setCharacterEncoding("utf-8");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         Tpl tpl = eruptModel.getEruptFieldMap().get(field).getEruptField().edit().tplType();
         eruptTplService.tplToResponse(tpl, response, null);
     }

@@ -6,6 +6,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author liyuepeng
  * @date 2019-10-18.
@@ -16,7 +18,7 @@ public class TemplateConfig {
     @Bean
     public Configuration freeMarkerEngine() {
         Configuration freemarkerConfig = new Configuration(Configuration.VERSION_2_3_29);
-        freemarkerConfig.setDefaultEncoding("utf-8");
+        freemarkerConfig.setDefaultEncoding(StandardCharsets.UTF_8.name());
         freemarkerConfig.setClassForTemplateLoading(this.getClass(), "/");
         return freemarkerConfig;
     }

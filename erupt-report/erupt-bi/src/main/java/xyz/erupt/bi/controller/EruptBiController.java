@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -177,7 +178,7 @@ public class EruptBiController {
             throw new EruptWebApiRuntimeException(bi.getName() + "禁止导出！");
         }
         Map<String, Object> condition = gson.fromJson(
-                URLDecoder.decode(conditionStr, "utf-8"),
+                URLDecoder.decode(conditionStr, StandardCharsets.UTF_8.name()),
                 new TypeToken<Map<String, Object>>() {
                 }.getType());
         BiData biData = biService.queryBiData(bi, 1, 100000, condition, true);
@@ -230,8 +231,8 @@ public class EruptBiController {
     public void customerChart(@PathVariable("id") Long chartId,
                               @RequestParam("condition") String conditionStr,
                               HttpServletResponse response, @PathVariable String code) throws IOException {
-        response.setCharacterEncoding("utf-8");
-        Map<String, Object> condition = gson.fromJson(URLDecoder.decode(conditionStr, "utf-8"),
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        Map<String, Object> condition = gson.fromJson(URLDecoder.decode(conditionStr, StandardCharsets.UTF_8.name()),
                 new TypeToken<Map<String, Object>>() {
                 }.getType());
         BiChart biChart = entityManager.find(BiChart.class, chartId);
