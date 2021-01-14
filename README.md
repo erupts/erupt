@@ -4,7 +4,7 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用后台管理框架 </h1>
 <h3 align="center">零前端代码，几行 Java 注解，搞定后台管理系统</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://erupt.xyz</a></h3>
-<h3 align="center">🌋</h3>
+<h2 align="center">🌋</h2>
 
 ---
 
@@ -148,7 +148,7 @@ public class Simple extends BaseModel {
 
 全部实现这些仅前端就需要大量的代码，后端的接口与业务逻辑更不在少数。
 
-但可以看到，用 erupt 只需要 **30几行** 代码就能完成，你不需要了解 Angular / React / Vue / Jquery 也不需要了解 JavaScript / HTML / CSS，甚至不需要了解 Spring MVC / Mybatis / SQL，即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
+但可以看到，用 erupt 只需要 **30几行** 代码就能完成，你不需要了解 **Angular / React / Vue / Jquery** 也不需要了解 **JavaScript / HTML / CSS**，甚至不需要了解 **Spring MVC / Mybatis / SQL**，即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
 
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
 
@@ -209,7 +209,7 @@ Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
 
-## ✈️ 在线体验 | Demo
+## 🌕 在线体验 | Demo
 演示地址：https://www.erupt.xyz/demo  
 账号密码：`guest / guest`
 
@@ -237,14 +237,14 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 ## 📕 使用文档 | Documentation
 https://www.yuque.com/yuepeng/erupt
 
-## 💻 代码样例 | Example Code
+## 代码样例 | Example Code
 gitee: &nbsp; https://gitee.com/erupt/erupt-example   
 github: https://github.com/erupts/erupt-example
 
-## 🌕 开源推荐 | Recommend
+## 开源推荐 | Recommend
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
 
-## 🌗 加入讨论 | Join Discussion
+## 加入讨论 | Join Discussion
 <table width="100%">
     <tr>
         <td width="50%"><img src="readme/group/qq-1.jpeg" alt=""></td>
