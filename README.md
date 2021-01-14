@@ -22,9 +22,9 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
     <a href="https://github.com/erupts/erupt">Github 仓库</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">Gitee 仓库</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank">官方网站</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/yuepeng/erupt" target="_blank">使用文档</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/yuepeng/erupt/bdiq6o" target="_blank">贡献指南</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a>
+    <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/yuepeng/erupt" target="_blank"><b>使用文档</b></a>
 </p>
 
 <p align="center">
@@ -62,7 +62,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用
 + **无需二次开发**：仅需引用 jar 包即可 ！
 + **支持扩展页面**：可开发自定义页面，自定义弹出层，且支持：原生H5 / Freemarker / Thymeleaf等方式渲染
-+ **完全兼容 Spring Boot**：erupt 中所有实现类都支持加入 @Service、@Component 等注解，即可实现 **自动注入** 功能
++ **完全兼容 Spring Boot**：erupt 中所有实现类都支持加入 @Service、@Component 等注解实现 **自动注入** 等功能
 
 ## ⛰ 演示截图 | Screenshot
 ![](./readme/index.png)
@@ -151,9 +151,9 @@ public class Simple extends BaseModel {
 
 但可以看到，用 erupt 只需要 **30几行** 代码就能完成，
 
-完全不需要了解 **Angular / React / Vue / Jquery**   
-而且不需要了解 **JavaScript / HTML / CSS**   
-甚至不需要了解 **Spring MVC / Mybatis / SQL**   
+> 完全不需要了解 **Angular / React / Vue / Jquery**   
+> 而且不需要了解 **JavaScript / HTML / CSS**   
+> 甚至不需要了解 **Spring MVC / Mybatis / SQL**   
 
 即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
 
