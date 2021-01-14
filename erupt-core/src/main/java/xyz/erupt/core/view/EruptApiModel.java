@@ -1,7 +1,6 @@
 package xyz.erupt.core.view;
 
 import lombok.Data;
-import xyz.erupt.annotation.model.BoolAndReason;
 
 /**
  * @author liyuepeng

@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -89,7 +90,7 @@ public class EruptExcelController {
             tableQueryVo.setPageIndex(1);
             tableQueryVo.setPageSize(Page.PAGE_MAX_DATA);
             if (null != condition) {
-                List<Condition> conditions = new Gson().fromJson(URLDecoder.decode(condition, "utf-8"),
+                List<Condition> conditions = new Gson().fromJson(URLDecoder.decode(condition, StandardCharsets.UTF_8.name()),
                         new TypeToken<List<Condition>>() {
                         }.getType());
                 tableQueryVo.setCondition(conditions);
@@ -125,7 +126,7 @@ public class EruptExcelController {
                 } else if (fileName.endsWith(EruptExcelService.XLSX_FORMAT)) {
                     list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
                 } else {
-                    throw new EruptWebApiRuntimeException("上传文件必须为Excel");
+                    throw new EruptWebApiRuntimeException("上传文件格式必须为Excel");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

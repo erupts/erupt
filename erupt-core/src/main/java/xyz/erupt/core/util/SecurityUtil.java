@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 /**
@@ -24,7 +25,7 @@ public class SecurityUtil {
                 return true;
             }
             // 避免src形式的表达式
-            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\\'(.*?)\\\'", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\'(.*?)\\'", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
             if (scriptPattern.matcher(value).matches()) {
                 return true;
             }
@@ -82,9 +83,7 @@ public class SecurityUtil {
             }
             // 避免 onerror= 表达式
             scriptPattern = Pattern.compile("onerror(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).matches()) {
-                return true;
-            }
+            return scriptPattern.matcher(value).matches();
         }
         return false;
     }
@@ -93,7 +92,7 @@ public class SecurityUtil {
     public static boolean csrfInspect(HttpServletRequest request, HttpServletResponse response) {
         String origin = request.getHeader("Origin");
         if (null != origin && !origin.contains(request.getHeader("Host"))) {
-            response.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType("text/plain; charset=utf-8");
             try (PrintWriter out = response.getWriter()) {
                 out.append("非法跨站请求!");
