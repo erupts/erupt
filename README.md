@@ -34,13 +34,12 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 
 ---
 
-##  简介 | Intro
+## ⚽ 简介 | Intro
 Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能。
 
 零前端代码、零 CURD、自动建表，仅需 **一个类文件** + 简洁的注解配置，快速开发企业级 Admin 管理后台。
 
 提供企业级中后台管理系统的全栈解决方案，大幅压缩研发周期，专注核心业务。
-
 > 完美取代 **代码生成器**，开发后台管理系统更优解！
 
 ## 特性 | Features
@@ -140,7 +139,7 @@ public class Simple extends BaseModel {
 
 [功能体验](https://www.erupt.xyz/#!/contrast)
 
-这个界面虽然用 Vue + Ant-Design + SSM 也能做出个大概，但仔细观察会发现它有大量细节功能如：
+这个界面虽然用 Vue + Ant Design + SSM 也能做出个大概，但仔细观察会发现它有大量细节功能如：
 
 + 有按钮可以查询、新增、批量删除、excel 导入导出
 + 可以对数据做筛选、隐藏某列、按某列排序
@@ -209,14 +208,6 @@ Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、
 **前端：**
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
-## 更新计划 | Future vision
-+ 增加按钮级权限控制 （已支持 ✔️）
-+ 支持更多的组件
-+ 大数据分库分表支持
-+ 多种不同的登录形式
-+ 主题色更改
-+ 国际化支持
-+ 流程引擎支持
 
 ## 在线体验 | Demo
 演示地址：https://www.erupt.xyz/demo  
@@ -257,21 +248,19 @@ github: https://github.com/erupts/erupt-example
 <table width="100%">
     <tr>
         <td width="50%"><img src="readme/group/qq-1.jpeg" alt=""></td>
-        <td width="50%"><img src="readme/group/wexin-1.jpeg" alt=""></td>
+        <td width="50%"><img src="readme/group/weixin-1.jpeg" alt=""></td>
     </tr>
 </table>
 
 ## 捐赠 | Donate
 此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱。
-<table width="100%">
-    <tr>
-        <td width="50%"><img src="readme/wepay.jpeg" alt=""></td>
-        <td width="50%"><img src="readme/alipay.jpeg" alt=""></td>
-    </tr>
-</table>
+
+点击以下链接，将页面拉到最下方点击 "捐赠" 即可。
+
+[前往捐赠](https://gitee.com/erupt/erupt)
 
 
-**Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇**
+### Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
 
 - **Github**：https://github.com/erupts/erupt
 
