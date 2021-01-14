@@ -63,7 +63,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用。
 + **无需二次开发**：仅需引用 jar 包即可。
 
-## 🏞 演示截图 | Screenshot
+## ⛰ 演示截图 | Screenshot
 ![](./readme/index.png)
 
 ![](./readme/seer.png)
@@ -153,7 +153,7 @@ public class Simple extends BaseModel {
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
 
 
-## 📎 下载使用 | Download
+## 🛤 下载使用 | Download
 下载最新的JAR或通过Maven获取。
 ```xml
 <!--用户权限管理-->
@@ -177,7 +177,7 @@ public class Simple extends BaseModel {
 ```
 [详细使用步骤](https://www.yuque.com/yuepeng/erupt/tpq1l9)
 
-## 模块说明 | Module
+## 🥏 模块说明 | Module
 ```lua
 erupt
 ├── erupt-annotation -- 核心注解声明
@@ -201,7 +201,7 @@ erupt-web-angular -- 暂未开放 erupt 前端源码
 
 ```
 
-## 技术体系 | Technology system
+## 📟 技术体系 | Technology system
 **后端：**
 Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、 Hibernate、 Quartz、 Gson、 Lombok、 POI ...
 
@@ -209,7 +209,7 @@ Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
 
-## 在线体验 | Demo
+## ✈️ 在线体验 | Demo
 演示地址：https://www.erupt.xyz/demo  
 账号密码：`guest / guest`
 
@@ -234,17 +234,17 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
     </tr>
 </table>
 
-## 使用文档 | Documentation
+## 📕 使用文档 | Documentation
 https://www.yuque.com/yuepeng/erupt
 
-## 代码样例 | Example Code
+## 💻 代码样例 | Example Code
 gitee: &nbsp; https://gitee.com/erupt/erupt-example   
 github: https://github.com/erupts/erupt-example
 
-## 开源推荐 | Recommend
+## 🌕 开源推荐 | Recommend
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
 
-## 加入讨论 | Join Discussion
+## 🌗 加入讨论 | Join Discussion
 <table width="100%">
     <tr>
         <td width="50%"><img src="readme/group/qq-1.jpeg" alt=""></td>
@@ -252,8 +252,8 @@ github: https://github.com/erupts/erupt-example
     </tr>
 </table>
 
-## 捐赠 | Donate
-此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱。
+## 🌘 捐赠 | Donate
+此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏。
 
 点击以下链接，将页面拉到最下方点击 "捐赠" 即可。
 
