@@ -158,7 +158,7 @@ public class Simple extends BaseModel {
 
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
 
-## 🛤 下载使用 | Download
+## 🔗 下载使用 | Download
 下载最新的JAR或通过Maven获取。
 ```xml
 <!--用户权限管理-->
@@ -242,12 +242,9 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 ## 📕 使用文档 | Documentation
 https://www.yuque.com/yuepeng/erupt
 
-## ⚡️ 代码样例 | Example Code
+## 🍁 代码样例 | Example Code
 gitee: &nbsp; https://gitee.com/erupt/erupt-example   
 github: https://github.com/erupts/erupt-example
-
-## 🍁 开源推荐 | Recommend
-[`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
 
 ## 📬 加入讨论 | Join Discussion
 <table width="100%">
@@ -256,6 +253,9 @@ github: https://github.com/erupts/erupt-example
         <td width="50%"><img src="readme/group/weixin-1.jpeg" alt=""></td>
     </tr>
 </table>
+
+## 🔭 开源推荐 | Recommend
+[`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
 
 ## ⛽️ 捐赠 | Donate
 此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏。
@@ -267,7 +267,7 @@ github: https://github.com/erupts/erupt-example
 
 ### ⭐️ Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
 
-### [Github](https://github.com/erupts/erupt) &nbsp; / &nbsp;  [Gitee](https://gitee.com/erupt/erupt)
+## [Github](https://github.com/erupts/erupt) &nbsp; / &nbsp;  [Gitee](https://gitee.com/erupt/erupt)
 
 
 ---
