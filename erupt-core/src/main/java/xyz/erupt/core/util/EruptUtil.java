@@ -58,7 +58,7 @@ public class EruptUtil {
                             ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
                             id = referenceTreeType.id();
                             label = referenceTreeType.label();
-                        } else if (eruptField.edit().type() == EditType.REFERENCE_TABLE) {
+                        } else {
                             ReferenceTableType referenceTableType = eruptField.edit().referenceTableType();
                             id = referenceTableType.id();
                             label = referenceTableType.label();
@@ -275,7 +275,7 @@ public class EruptUtil {
         if (null != preDataProxy) {
             consumer.accept(EruptSpringUtil.getBean(preDataProxy.value()));
         }
-        for (Class<? extends DataProxy> proxy : eruptModel.getErupt().dataProxy()) {
+        for (Class<? extends DataProxy<?>> proxy : eruptModel.getErupt().dataProxy()) {
             consumer.accept(EruptSpringUtil.getBean(proxy));
         }
     }
