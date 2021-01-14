@@ -67,7 +67,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 ## ⛰ 演示截图 | Screenshot
 ![](./readme/index.png)
 
-![](./readme/seer.png)
+<img src="./readme/seer.png" width="100%"/>
 <table>
     <tr>
         <td><img src="readme/goods.png"/></td>
