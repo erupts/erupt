@@ -1,6 +1,7 @@
 package xyz.erupt.job.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
@@ -41,6 +42,7 @@ import java.util.Objects;
 )
 @Entity
 @Getter
+@Setter
 @Table(name = "e_job_mail")
 @Component
 public class EruptMail extends HyperModel implements DataProxy<EruptMail> {

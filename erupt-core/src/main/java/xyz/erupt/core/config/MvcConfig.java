@@ -27,7 +27,15 @@ public class MvcConfig {
     public HttpMessageConverters customConverters() {
         Collection<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-        Gson gson = new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
+        gsonHttpMessageConverter.setGson(gson());
+        messageConverters.add(gsonHttpMessageConverter);
+        return new HttpMessageConverters(true, messageConverters);
+    }
+
+    @Bean
+    public Gson gson() {
+        return new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
+//                .setExclusionStrategies(new GsonExclusionStrategies())
                 .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context)
                         -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME))))
                 .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, typeOfSrc, context)
@@ -37,16 +45,6 @@ public class MvcConfig {
                 .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                         -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
                 .setLongSerializationPolicy(LongSerializationPolicy.STRING).serializeNulls().create();
-        gsonHttpMessageConverter.setGson(gson);
-        messageConverters.add(gsonHttpMessageConverter);
-        return new HttpMessageConverters(true, messageConverters);
-    }
-
-    @Bean
-    public Gson gson() {
-        return new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
-                .setExclusionStrategies(new GsonExclusionStrategies())
-                .serializeNulls().create();
     }
 
 }
