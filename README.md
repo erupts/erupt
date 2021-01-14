@@ -29,12 +29,12 @@ Chinese &nbsp; | &nbsp; [English](./README-EN.md)
 </p>
 
 <p align="center">
-    QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129🔥</a> 加群可获取erupt-tpl 与 erupt-generator 模块
+    QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a> 加群可获取erupt-tpl 与 erupt-generator 模块
 </p>
 
 ---
 
-## ⚽ 简介 | Intro
+## 🚀 简介 | Intro
 Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能。
 
 零前端代码、零 CURD、自动建表，仅需 **一个类文件** + 简洁的注解配置，快速开发企业级 Admin 管理后台。
@@ -42,7 +42,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 提供企业级中后台管理系统的全栈解决方案，大幅压缩研发周期，专注核心业务。
 > 完美取代 **代码生成器**，开发后台管理系统更优解！
 
-## 特性 | Features
+## 🌎 特性 | Features
 + **易于上手**：会简单的 **Spring Boot** 基础知识即可。
 + **使用简单**：仅需了解 **@Erupt** 与 **@EruptField** 两个注解即可上手开发
 + **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，**仅需一个类文件**即可。
@@ -63,7 +63,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用。
 + **无需二次开发**：仅需引用 jar 包即可。
 
-## 演示截图 | Screenshot
+## 🏞 演示截图 | Screenshot
 ![](./readme/index.png)
 
 ![](./readme/seer.png)
@@ -91,7 +91,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 </table>
 
 
-## 为什么要做 Erupt ?
+## 🧐 为什么要做 Erupt ?
 无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存这无法规避的痛点，如：开发效率低下、接口对接繁琐、界面差强人意、代码重复、有安全漏洞，导致开发成本极高。
 
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？   
@@ -153,7 +153,7 @@ public class Simple extends BaseModel {
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
 
 
-## 下载使用 | Download
+## 📎 下载使用 | Download
 下载最新的JAR或通过Maven获取。
 ```xml
 <!--用户权限管理-->
@@ -192,7 +192,7 @@ erupt
 
 erupt-site -- erupt官方网站 https://github.com/erupts/erupt-site
 
-erupt-pro -- 暂未开放 star 超过 1K 开放 erupt-tpl 模块与 erupt-generator 模块
+erupt-pro -- 暂未开放 star 超过 1K 开放 erupt-tpl 模块与 erupt-generator 模块 （加群可直接获取）
 ├── erupt-bi -- 通过 sql 加 js 混编实现动态报表，支持多数据源，支持十几种图表
 ├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义模板等功能，模板引擎支持 freemarker / thymeleaf / 原生H5
 └── erupt-generator -- 代码生成器，通过简单配置，生成 erupt 代码段
