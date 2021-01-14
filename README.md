@@ -64,7 +64,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 + **支持扩展页面**：可开发自定义页面，自定义弹出层，且支持：原生H5 / Freemarker / Thymeleaf等方式渲染
 
 ## ⛰ 演示截图 | Screenshot
-![](./readme/index.png)
+<img src="./readme/index.png" width="100%"/>
 
 <img src="./readme/seer.png" width="100%"/>
 <table>
