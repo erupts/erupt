@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.job.constant.JobConst;
 import xyz.erupt.upms.model.base.HyperModel;
 
 import javax.annotation.Resource;
@@ -24,7 +25,6 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;
@@ -33,7 +33,6 @@ import java.util.Objects;
  * @author liyuepeng
  * @date 2019-12-26
  */
-@Getter
 @Erupt(
         name = "邮件发送",
         dataProxy = EruptMail.class,
@@ -41,6 +40,7 @@ import java.util.Objects;
         orderBy = "id desc"
 )
 @Entity
+@Getter
 @Table(name = "e_job_mail")
 @Component
 public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
@@ -48,12 +48,12 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
     @EruptField(
             views = @View(title = "接收人"),
             edit = @Edit(title = "接收人", notNull = true, search = @Search,
-                    inputType = @InputType(fullSpan = true, regex = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$"))
+                    inputType = @InputType(fullSpan = true, regex = JobConst.EMAIL_REGEX))
     )
     private String recipient;
 
     @EruptField(
-            views = @View(title = "抄送人", template = "value&&value.replace(/\\|/g,'<span class=\"text-red\"> | </span>')"),
+            views = @View(title = "抄送人", template = JobConst.BEAUTIFUL_TAG),
             edit = @Edit(title = "抄送人", type = EditType.TAGS)
     )
     private String cc;
@@ -80,10 +80,6 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
     @Transient
     @Resource
     private JavaMailSenderImpl javaMailSender;
-
-    @Transient
-    @Resource
-    private HttpServletRequest request;
 
     @SneakyThrows
     @Override
