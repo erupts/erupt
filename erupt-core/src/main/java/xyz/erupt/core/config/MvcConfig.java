@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import xyz.erupt.annotation.config.SkipSerialize;
+import xyz.erupt.core.util.DateUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,18 +27,16 @@ public class MvcConfig {
     public HttpMessageConverters customConverters() {
         Collection<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss")
+        Gson gson = new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
                 .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context)
-                        -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))))
+                        -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME))))
                 .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, typeOfSrc, context)
-                        -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                        -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(DateUtil.DATE))))
                 .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext)
-                        -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)))
                 .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
-                        -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .setLongSerializationPolicy(LongSerializationPolicy.STRING)
-                .serializeNulls()
-                .create();
+                        -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
+                .setLongSerializationPolicy(LongSerializationPolicy.STRING).serializeNulls().create();
         gsonHttpMessageConverter.setGson(gson);
         messageConverters.add(gsonHttpMessageConverter);
         return new HttpMessageConverters(true, messageConverters);
@@ -46,18 +44,9 @@ public class MvcConfig {
 
     @Bean
     public Gson gson() {
-        return new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
-            @Override
-            public boolean shouldSkipField(FieldAttributes f) {
-                SkipSerialize skip = f.getAnnotation(SkipSerialize.class);
-                return null != skip;
-            }
-
-            @Override
-            public boolean shouldSkipClass(Class<?> incomingClass) {
-                return false;
-            }
-        }).setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
+        return new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
+                .setExclusionStrategies(new GsonExclusionStrategies())
+                .serializeNulls().create();
     }
 
 }

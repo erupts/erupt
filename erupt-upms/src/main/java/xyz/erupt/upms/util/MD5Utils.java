@@ -1,5 +1,6 @@
 package xyz.erupt.upms.util;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
@@ -33,7 +34,7 @@ public class MD5Utils {
     }
 
     public static String digest(String strObj) {
-        return digest(strObj, "utf-8");
+        return digest(strObj, StandardCharsets.UTF_8.name());
     }
 
     public static String digest(String strObj, String charset) {

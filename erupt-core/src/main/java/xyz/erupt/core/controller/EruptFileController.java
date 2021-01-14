@@ -35,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -200,18 +201,18 @@ public class EruptFileController {
                                    HttpServletResponse response, HttpServletRequest request) throws IOException, ClassNotFoundException {
         if (null == file) {
             @Cleanup InputStream stream = EruptFileController.class.getClassLoader().getResourceAsStream("ueditor.json");
-            String json = StreamUtils.copyToString(stream, Charset.forName("utf-8"));
+            String json = StreamUtils.copyToString(stream, Charset.forName(StandardCharsets.UTF_8.name()));
             if (null == callback) {
-                IOUtils.write(json, response.getOutputStream(), "UTF-8");
+                IOUtils.write(json, response.getOutputStream(), StandardCharsets.UTF_8.name());
             } else {
-                IOUtils.write(callback + "(" + json + ")", response.getOutputStream(), "UTF-8");
+                IOUtils.write(callback + "(" + json + ")", response.getOutputStream(), StandardCharsets.UTF_8.name());
             }
 
         } else {
             Map<String, Object> map = uploadHtmlEditorImage(eruptName, fieldName, file);
             Boolean status = (Boolean) map.get("uploaded");
             map.put("state", status ? "SUCCESS" : "ERROR");
-            IOUtils.write(new Gson().toJson(map), response.getOutputStream(), "UTF-8");
+            IOUtils.write(new Gson().toJson(map), response.getOutputStream(), StandardCharsets.UTF_8.name());
         }
     }
 

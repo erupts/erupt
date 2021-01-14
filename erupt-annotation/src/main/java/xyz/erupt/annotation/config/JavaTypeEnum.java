@@ -10,9 +10,6 @@ public enum JavaTypeEnum {
     number,
     date,
     object,
-    array,
     bool,
     not_know,
-    StringNumber,
-    StringDate,
 }
