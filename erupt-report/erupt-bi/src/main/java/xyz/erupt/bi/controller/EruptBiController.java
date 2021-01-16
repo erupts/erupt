@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.Tpl;
@@ -49,22 +48,23 @@ import java.util.stream.Collectors;
 @RequestMapping(EruptRestPath.ERUPT_API + "/bi")
 public class EruptBiController {
 
-    @Autowired
+    @Resource
     private EruptDao eruptDao;
+
+    @Resource
+    private BiService biService;
+
+    @Resource
+    private Gson gson;
+
+    @Resource
+    private EruptProp eruptProp;
+
+    @Resource
+    private HttpServletRequest request;
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    private BiService biService;
-
-    @Autowired
-    private Gson gson;
-
-    @Autowired
-    private EruptProp eruptProp;
-    @Resource
-    private HttpServletRequest request;
 
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
@@ -144,10 +144,10 @@ public class EruptBiController {
                 Object obj = map.values().iterator().next();
                 references.add(new Reference(obj, obj));
             } else if (map.keySet().size() >= 3 && dimension.getType().contains("REFERENCE_TREE")) {
-                Iterator iterator = map.values().iterator();
+                Iterator<?> iterator = map.values().iterator();
                 references.add(new Reference(iterator.next(), iterator.next(), iterator.next()));
             } else {
-                Iterator iterator = map.values().iterator();
+                Iterator<?> iterator = map.values().iterator();
                 references.add(new Reference(iterator.next(), iterator.next()));
             }
         }
@@ -240,7 +240,7 @@ public class EruptBiController {
         Map<String, Object> map = new HashMap<>();
         map.put("data", biService.startQuery(biChart.getSqlStatement(), biChart.getClassHandler(), biChart.getDataSource(), condition));
         EruptTplService eruptTplService = EruptSpringUtil.getBean(EruptTplService.class);
-        response.getWriter().write(eruptTplService.tplRender(biChart.getPath(), map, Tpl.Engine.FreeMarker));
+        eruptTplService.tplRender(Tpl.Engine.FreeMarker, biChart.getPath(), map, response.getWriter());
     }
 
     //校验请求id是否拥有菜单权限

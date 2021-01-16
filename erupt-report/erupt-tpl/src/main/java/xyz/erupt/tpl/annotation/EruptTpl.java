@@ -15,4 +15,5 @@ import java.lang.annotation.*;
 public @interface EruptTpl {
 
     Tpl.Engine engine() default Tpl.Engine.FreeMarker;
+
 }
