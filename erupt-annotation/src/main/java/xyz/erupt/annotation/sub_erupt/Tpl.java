@@ -28,12 +28,16 @@ public @interface Tpl {
     Engine engine() default Engine.FreeMarker;
 
     enum Engine {
+        //        @Comment("根据模板引擎jar自动推断")
+//        AUTO,
         @Comment("Native模式下不支持tplHandler")
         Native,
         @Comment("FreeMarker")
         FreeMarker,
         @Comment("Thymeleaf")
-        Thymeleaf
+        Thymeleaf,
+        @Comment("Velocity")
+        Velocity
     }
 
     interface TplHandler {
