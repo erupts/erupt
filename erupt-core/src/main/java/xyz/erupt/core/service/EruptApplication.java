@@ -31,6 +31,7 @@ public class EruptApplication implements ImportBeanDefinitionRegistrar {
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         primarySource = ClassUtils.forName(importingClassMetadata.getClassName(), ClassUtils.getDefaultClassLoader());
         EruptScan eruptScan = primarySource.getAnnotation(EruptScan.class);
+
         if (eruptScan.value().length == 0) {
             if (primarySource.getPackage().getName().startsWith(EruptConst.BASE_PACKAGE)) {
                 scanPackage = new String[1];
