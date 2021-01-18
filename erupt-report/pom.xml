@@ -28,8 +28,10 @@
     -->
     <modules>
         <module>erupt-tpl</module>
-        <module>erupt-bi</module>
         <module>erupt-generator</module>
+
+        <module>erupt-bi</module>
+        <module>erupt-flow</module>
     </modules>
 
     <dependencyManagement>
