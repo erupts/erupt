@@ -88,7 +88,7 @@ public class EruptExcelController {
         if (EruptUtil.getPowerObject(eruptModel).isExport()) {
             TableQueryVo tableQueryVo = new TableQueryVo();
             tableQueryVo.setPageIndex(1);
-            tableQueryVo.setPageSize(Page.PAGE_MAX_DATA);
+            tableQueryVo.setDataExport(true);
             if (null != condition) {
                 List<Condition> conditions = new Gson().fromJson(URLDecoder.decode(condition, StandardCharsets.UTF_8.name()),
                         new TypeToken<List<Condition>>() {

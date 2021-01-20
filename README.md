@@ -1,4 +1,4 @@
-Chinese &nbsp; | &nbsp; [English](./README-EN.md)  
+中文 &nbsp; | &nbsp; [English](./README-EN.md)  
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用后台管理框架 </h1>

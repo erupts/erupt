@@ -9,6 +9,11 @@ import java.util.List;
 @Getter
 @Setter
 public class TableQueryVo {
+
+    private static final int maxPageSize = 200;
+
+    private boolean dataExport = false;
+
     private Integer pageIndex;
 
     private Integer pageSize;
@@ -18,4 +23,16 @@ public class TableQueryVo {
     private Object linkTreeVal;
 
     private List<Condition> condition;
+
+    public Integer getPageSize() {
+        if (this.isDataExport()) {
+            pageSize = Page.PAGE_MAX_DATA;
+        } else {
+            if (pageSize > maxPageSize) {
+                pageSize = maxPageSize;
+            }
+        }
+        return pageSize;
+    }
+
 }
