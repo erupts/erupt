@@ -8,7 +8,7 @@ import java.beans.Transient;
 public @interface AutoCompleteType {
 
     @Transient
-    @Comment("生成自动完成列表")
+    @Comment("动态生成自动完成列表")
     Class<? extends AutoCompleteHandler> handler();
 
     @Transient

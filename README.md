@@ -58,7 +58,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 + **低侵入性**：几乎所有功能都围绕注解而展开，不影响Spring Boot其他功能或三方库库的使用
 
-+ **多数据源**：支持：MySQL、Oracle、SQL Server、**PostgreSQL**、H2，甚至支持**MongoDB**
++ **多数据源**：支持：MySQL、Oracle、SQL Server、**PostgreSQL**、H2，甚至支持 **MongoDB**
 
 + **大量组件**：滑动输入、时间选择、**一对多**、图片上传、代码编辑器、自动完成、树、**多对多**、地图等23类组件
 
