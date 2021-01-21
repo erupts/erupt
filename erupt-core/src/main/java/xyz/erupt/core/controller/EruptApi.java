@@ -20,7 +20,7 @@ public class EruptApi {
     private static Properties props;
 
     static {
-        String path = "/core.properties";
+        String path = "/erupt-core.properties";
         Properties props = new Properties();
         try (InputStream stream = EruptApi.class.getResourceAsStream(path)) {
             props.load(stream);
@@ -30,8 +30,16 @@ public class EruptApi {
         }
     }
 
+    //获取当前Erupt版本号
     @GetMapping("/version")
     public String version() {
         return props.getProperty("version");
     }
+
+    @GetMapping("/erupt-app")
+    public String eruptApp() {
+        return props.getProperty("version");
+    }
+
+
 }
