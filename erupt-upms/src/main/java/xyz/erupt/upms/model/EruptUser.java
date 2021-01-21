@@ -174,8 +174,8 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     @Override
     public void beforeAdd(EruptUser eruptUser) {
         if (StringUtils.isBlank(eruptUser.getPassword())) {
-            throw new EruptApiErrorTip(new EruptApiModel(EruptApiModel.Status.WARNING,
-                    "密码必填", EruptApiModel.PromptWay.MESSAGE));
+            throw new EruptApiErrorTip(new EruptApiModel(EruptApiModel.Status.WARNING, "密码必填",
+                    EruptApiModel.PromptWay.MESSAGE));
         }
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
             eruptUser.setIsAdmin(false);
@@ -192,6 +192,9 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     public void beforeUpdate(EruptUser eruptUser) {
         entityManager.clear();
         EruptUser eu = entityManager.find(EruptUser.class, eruptUser.getId());
+        if (!eruptUser.getIsMd5() && eu.getIsMd5()) {
+            throw new EruptWebApiRuntimeException("MD5 不可逆");
+        }
         if (StringUtils.isNotBlank(eruptUser.getPassword())) {
             if (!eruptUser.getPassword().equals(eruptUser.getPassword2())) {
                 throw new EruptWebApiRuntimeException("两次密码输入不一致");
@@ -202,7 +205,11 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
                 eruptUser.setPassword(eruptUser.getPassword());
             }
         } else {
-            eruptUser.setPassword(eu.getPassword());
+            if (eruptUser.getIsMd5() && !eu.getIsMd5()) {
+                eruptUser.setPassword(MD5Utils.digest(eu.getPassword()));
+            } else {
+                eruptUser.setPassword(eu.getPassword());
+            }
         }
     }
 
