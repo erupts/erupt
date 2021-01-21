@@ -210,19 +210,21 @@ erupt
 ├── erupt-data -- 数据实现包
      ├── erupt-jpa -- 关系型数据库erupt实现
      └── erupt-mongodb -- mongodb数据库erupt实现
-├── erupt-job -- 定时任务功能
+├── erupt-job -- 定时任务功能，支持动态定时任务，邮件发送，任务日志等功能
 ├── erupt-security -- 接口数据安全模块
 ├── erupt-upms -- 用户权限管理
-├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义模板等功能，模板引擎支持 / FreeMarker / Thymeleaf / 原生H5 / Velocity
+├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义弹出层，模板引擎支持：FreeMarker / Thymeleaf / 原生H5 / Velocity 等
 ├── erupt-generator -- 代码生成器，通过简单配置，生成 erupt 代码段
 └── erupt-web -- 前端页面
 
 erupt-pro
-└── erupt-bi -- 通过 sql 加 js 混编实现动态报表，支持多数据源，支持十几种图表
+├── erupt-workflow -- 基于erupt实现的工作流模块(开发中)
+├── erupt-dataflow -- 基于erupt实现的数据流模块(开发中)
+└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、十几种图表（付费模块）
 
-erupt-site -- Erupt官方网站 https://github.com/erupts/erupt-site
+erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
 
-erupt-web-angular -- Erupt前端源码，暂不开放
+erupt-web-angular -- Erupt 前端源码，暂不开放，如有自定义页面的需求，可使用 erupt-tpl 模块
 
 ```
 
