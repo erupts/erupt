@@ -84,7 +84,7 @@ public class EruptTplService implements ApplicationRunner {
     @SneakyThrows
     public void tplRender(Tpl tpl, Map<String, Object> map, HttpServletResponse response) {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        tplRender(tpl, map, response.getWriter());
+        this.tplRender(tpl, map, response.getWriter());
     }
 
     public void tplRender(Tpl tpl, Map<String, Object> map, Writer writer) {
