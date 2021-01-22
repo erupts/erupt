@@ -8,4 +8,5 @@ window.eruptSiteConfig = {
     logoText: "Erupt",
     registerPage: null,
     amapKey: null,
+    routerReuse: true
 };

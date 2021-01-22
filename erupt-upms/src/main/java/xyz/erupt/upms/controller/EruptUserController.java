@@ -3,7 +3,7 @@ package xyz.erupt.upms.controller;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wf.captcha.ArithmeticCaptcha;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
@@ -16,8 +16,10 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptMenuService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.upms.util.IpUtil;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -30,16 +32,16 @@ import java.util.List;
 @RequestMapping(EruptRestPath.ERUPT_API)
 public class EruptUserController {
 
-    @Autowired
+    @Resource
     private EruptMenuService menuService;
 
-    @Autowired
+    @Resource
     private EruptUserService eruptUserService;
 
-    @Autowired
+    @Resource
     private EruptSessionService sessionService;
 
-    @Autowired
+    @Resource
     private Gson gson;
 
     //登录
@@ -47,13 +49,13 @@ public class EruptUserController {
     @ResponseBody
     public LoginModel login(@RequestParam("account") String account,
                             @RequestParam("pwd") String pwd,
-                            @RequestParam(name = "verifyCode", required = false) String verifyCode,
-                            HttpServletRequest request) {
-        LoginModel loginModel = eruptUserService.login(account, pwd, verifyCode, request);
+                            @RequestParam(name = "verifyCode", required = false) String verifyCode) {
+        LoginModel loginModel = eruptUserService.login(account, pwd, verifyCode);
         if (loginModel.isPass()) {
-            //生成token
             EruptUser eruptUser = loginModel.getEruptUser();
-            eruptUserService.createToken(loginModel);
+            loginModel.setToken(RandomStringUtils.random(20, true, true));
+            sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(),
+                    loginModel.getEruptUser().getId().toString());
             loginModel.setUserName(eruptUser.getName());
             EruptMenu indexMenu = eruptUser.getEruptMenu();
             if (null != indexMenu) {
@@ -62,8 +64,7 @@ public class EruptUserController {
             List<EruptMenu> eruptMenus = menuService.getMenuList(eruptUser);
             sessionService.put(SessionKey.MENU + loginModel.getToken(), gson.toJson(eruptMenus));
             sessionService.put(SessionKey.MENU_VIEW + loginModel.getToken(), gson.toJson(menuService.geneMenuListVo(eruptMenus)));
-            //记录登录日志
-            eruptUserService.saveLoginLog(eruptUser);
+            eruptUserService.saveLoginLog(eruptUser); //记录登录日志
         }
         return loginModel;
     }
@@ -89,15 +90,7 @@ public class EruptUserController {
         return EruptApiModel.successApi();
     }
 
-    /**
-     * 修改密码
-     *
-     * @param account 用户名
-     * @param pwd     密码
-     * @param newPwd  新密码
-     * @param newPwd2 确认新密码
-     * @return 结果
-     */
+    // 修改密码
     @PostMapping("/change-pwd")
     @ResponseBody
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
@@ -109,23 +102,17 @@ public class EruptUserController {
     }
 
 
-    /**
-     * 生成验证码
-     */
+    // 生成验证码
     @GetMapping
     @RequestMapping("/code-img")
-    public void createCode(@RequestParam("account") String account, HttpServletResponse response) throws Exception {
-        // 设置响应的类型格式为图片格式
-        response.setContentType("image/jpeg");
-        // 禁止图像缓存。
-        response.setHeader("Pragma", "no-cache");
+    public void createCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        response.setContentType("image/jpeg"); // 设置响应的类型格式为图片格式
+        response.setHeader("Pragma", "no-cache"); // 禁止图像缓存。
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
-        ArithmeticCaptcha captcha = new ArithmeticCaptcha(150, 38, 3);
-        // 验证码过期时间1分钟
-        sessionService.put(SessionKey.VERIFY_CODE + account, captcha.text(), 60);
-        // 响应图片
-        captcha.out(response.getOutputStream());
+        ArithmeticCaptcha captcha = new ArithmeticCaptcha(150, 38, 2);
+        sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60);
+        captcha.out(response.getOutputStream()); // 响应图片
     }
 
 }

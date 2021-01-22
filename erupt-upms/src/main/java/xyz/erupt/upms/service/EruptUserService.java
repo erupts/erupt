@@ -2,9 +2,9 @@ package xyz.erupt.upms.service;
 
 import com.google.gson.reflect.TypeToken;
 import eu.bitwalker.useragentutils.UserAgent;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.config.EruptAppProp;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
@@ -45,6 +45,9 @@ public class EruptUserService {
     @Resource
     private EruptDao eruptDao;
 
+    @Resource
+    private EruptAppProp eruptAppProp;
+
     @Transactional
     public void saveLoginLog(EruptUser user) {
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
@@ -61,23 +64,24 @@ public class EruptUserService {
 
     public static final String LOGIN_ERROR_HINT = "账号或密码错误";
 
-    public LoginModel login(String account, String pwd, String verifyCode, HttpServletRequest request) {
-        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + account);
+    public LoginModel login(String account, String pwd, String verifyCode) {
+        String requestIp = IpUtil.getIpAddr(request);
+        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + requestIp);
         long loginErrorCount = 0;
         if (null != loginError) {
             loginErrorCount = Long.parseLong(loginError.toString());
         }
-        if (loginErrorCount >= 3) {
+        if (loginErrorCount >= eruptAppProp.getVerifyCodeCount()) {
             if (StringUtils.isBlank(verifyCode)) {
                 return new LoginModel(false, "请填写验证码", true);
             }
-            Object vc = sessionService.get(SessionKey.VERIFY_CODE + account);
-            sessionService.remove(SessionKey.VERIFY_CODE + account);
+            Object vc = sessionService.get(SessionKey.VERIFY_CODE + requestIp);
+            sessionService.remove(SessionKey.VERIFY_CODE + requestIp);
             if (vc == null || !vc.toString().equalsIgnoreCase(verifyCode)) {
                 return new LoginModel(false, "验证码不正确", true);
             }
         }
-        EruptUser eruptUser = findEruptUserByAccount(account);
+        EruptUser eruptUser = this.findEruptUserByAccount(account);
         if (null != eruptUser) {
             if (!eruptUser.getStatus()) {
                 return new LoginModel(false, "账号已锁定!");
@@ -85,9 +89,8 @@ public class EruptUserService {
             //校验IP
             if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
                 boolean isAllowIp = false;
-                String ipAddr = IpUtil.getIpAddr(request);
                 for (String ip : eruptUser.getWhiteIp().split("\n")) {
-                    if (ip.equals(ipAddr)) {
+                    if (ip.equals(requestIp)) {
                         isAllowIp = true;
                         break;
                     }
@@ -112,20 +115,24 @@ public class EruptUserService {
                 }
             }
             if (pass) {
-                sessionService.put(SessionKey.LOGIN_ERROR + account, "0");
+                sessionService.put(SessionKey.LOGIN_ERROR + requestIp, "0");
                 return new LoginModel(true, eruptUser);
             } else {
-                loginErrorCount += 1;
-                sessionService.put(SessionKey.LOGIN_ERROR + account, loginErrorCount + "");
-                if (loginErrorCount >= 3) {
-                    return new LoginModel(false, LOGIN_ERROR_HINT, true);
-                } else {
-                    return new LoginModel(false, LOGIN_ERROR_HINT);
-                }
+                return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
             }
         } else {
-            return new LoginModel(false, LOGIN_ERROR_HINT);
+            return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
         }
+    }
+
+    private boolean loginErrorCountPlus(String ip) {
+        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + ip);
+        int loginErrorCount = 0;
+        if (null != loginError) {
+            loginErrorCount = Integer.parseInt(loginError.toString());
+        }
+        sessionService.put(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "");
+        return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
     }
 
     @Transactional
@@ -148,11 +155,6 @@ public class EruptUserService {
         } else {
             return EruptApiModel.errorNoInterceptApi("密码错误");
         }
-    }
-
-    public void createToken(LoginModel loginModel) {
-        loginModel.setToken(RandomStringUtils.random(20, true, true));
-        sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString());
     }
 
 

@@ -3,8 +3,10 @@ package xyz.erupt.core.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.erupt.core.config.EruptAppProp;
 import xyz.erupt.core.constant.EruptRestPath;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -16,6 +18,9 @@ import java.util.Properties;
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API)
 public class EruptApi {
+
+    @Resource
+    private EruptAppProp eruptAppProp;
 
     private static Properties props;
 
@@ -37,8 +42,8 @@ public class EruptApi {
     }
 
     @GetMapping("/erupt-app")
-    public String eruptApp() {
-        return props.getProperty("version");
+    public EruptAppProp eruptApp() {
+        return eruptAppProp;
     }
 
 
