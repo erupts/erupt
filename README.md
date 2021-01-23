@@ -171,7 +171,9 @@ public class Simple extends BaseModel {
 但可以看到，用 erupt 只需要 **30几行** 代码就能完成，
 
 > 完全不需要了解 **Angular / React / Vue / Jquery**   
+>
 > 而且不需要了解 **JavaScript / HTML / CSS**   
+>
 > 甚至不需要了解 **Spring MVC / Mybatis / SQL**   
 
 即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
@@ -220,7 +222,7 @@ erupt
 erupt-pro
 ├── erupt-workflow -- 基于erupt实现的工作流模块(开发中)
 ├── erupt-dataflow -- 基于erupt实现的数据流模块(开发中)
-└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、十几种图表（付费模块）
+└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（付费模块）
 
 erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
 
