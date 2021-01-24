@@ -28,7 +28,6 @@
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
             <version>${parent.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
