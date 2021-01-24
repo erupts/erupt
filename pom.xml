@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.5.7</version>
+    <version>1.6.1</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -29,12 +29,14 @@
     <modules>
         <module>erupt-annotation</module>
         <module>erupt-core</module>
+        <module>erupt-tpl</module>
         <module>erupt-data/erupt-jpa</module>
         <module>erupt-data/erupt-mongodb</module>
         <module>erupt-upms</module>
         <module>erupt-security</module>
         <module>erupt-web</module>
         <module>erupt-job</module>
+        <module>erupt-generator</module>
     </modules>
 
     <dependencyManagement>
@@ -70,7 +72,7 @@
                     <compilerArgs>
                         <compilerArg>-parameters</compilerArg>
                     </compilerArgs>
-<!--                    <executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_231.jdk/Contents/Home/bin/javac</executable>-->
+                    <!--                    <executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_231.jdk/Contents/Home/bin/javac</executable>-->
                 </configuration>
             </plugin>
             <!-- 一键更新子模块版本号 plugins -> versions -> version:set  -->

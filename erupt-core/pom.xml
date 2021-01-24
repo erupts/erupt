@@ -14,7 +14,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.5.7</version>
+        <version>1.6.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -68,7 +68,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>core.properties</include>
+                    <include>erupt-core.properties</include>
                     <include>banner.txt</include>
                 </includes>
             </resource>

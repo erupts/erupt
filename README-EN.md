@@ -1,4 +1,4 @@
-[Chinese](./README.md) &nbsp; | &nbsp; English
+[中文](./README.md) &nbsp; | &nbsp; English
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework 🚀 General background management framework </h1>

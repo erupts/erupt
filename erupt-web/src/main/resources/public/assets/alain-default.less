@@ -25822,6 +25822,10 @@ nz-picker, nz-picker .ant-calendar-picker {
   height: 100%;
 }
 
+reuse-tab .ant-tabs-tab-arrow-show{
+  color: #FF5722;
+}
+
 //iframe page-container style start
 .alain-default__collapsed {
   .page-container {
@@ -25829,10 +25833,10 @@ nz-picker, nz-picker .ant-calendar-picker {
   }
 }
 
-reuse-tab ~ app-page {
-  .page-container {
-    top: 116px;
-  }
+reuse-tab ~ app-site .page-container,
+reuse-tab ~ app-home .page-container,
+reuse-tab ~ app-tpl .page-container {
+  top: @alain-default-header-hg + 40
 }
 
 .page-container {
@@ -26023,10 +26027,6 @@ html {
 .alain-default {
   background: #f5f7fa;
   //background: #fff;
-}
-
-.alain-default__header {
-  box-shadow: 0 1px #dadfe6;
 }
 
 .alain-default__progress-bar {

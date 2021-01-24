@@ -34,7 +34,7 @@ import java.util.Map;
 @Order
 @Service
 @Slf4j
-public final class EruptCoreService implements ApplicationRunner {
+public class EruptCoreService implements ApplicationRunner {
 
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
