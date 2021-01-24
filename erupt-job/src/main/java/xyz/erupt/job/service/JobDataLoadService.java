@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
+import xyz.erupt.job.model.EruptMail;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
@@ -54,6 +55,8 @@ public class JobDataLoadService implements CommandLineRunner {
                         Integer.valueOf(EruptMenu.OPEN), 0, "fa fa-tasks", eruptMenu), code, EruptJob.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJobLog.class.getSimpleName(), "任务日志", MenuTypeEnum.TABLE.getCode(), EruptJobLog.class.getSimpleName(),
                         Integer.valueOf(EruptMenu.OPEN), 10, "fa fa-file-text", eruptMenu), code, EruptJobLog.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMail.class, new EruptMenu(EruptMail.class.getSimpleName(), "发送邮件", MenuTypeEnum.TABLE.getCode(), EruptMail.class.getSimpleName(),
+                        Integer.valueOf(EruptMenu.OPEN), 20, "fa fa-envelope-o", eruptMenu), code, EruptMail.class.getSimpleName());
             }
         });
     }

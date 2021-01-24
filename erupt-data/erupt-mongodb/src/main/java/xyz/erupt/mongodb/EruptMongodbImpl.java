@@ -29,6 +29,7 @@ import java.util.*;
 public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
 
     public static final String MONGODB_PROCESS = "mongodb";
+
     @Resource
     private MongoTemplate mongoTemplate;
 
@@ -126,7 +127,7 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         DataProcessorManager.register(MONGODB_PROCESS, EruptMongodbImpl.class);
     }
 }

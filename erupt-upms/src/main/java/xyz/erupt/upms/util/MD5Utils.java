@@ -27,8 +27,8 @@ public class MD5Utils {
 
     private static String byteToString(byte[] bByte) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bByte.length; i++) {
-            sb.append(byteToArrayString(bByte[i]));
+        for (byte b : bByte) {
+            sb.append(byteToArrayString(b));
         }
         return sb.toString();
     }
@@ -46,7 +46,7 @@ public class MD5Utils {
         }
     }
 
-    // str -> md5str -> md5(md5str+salt )-> md5salt
+    // str -> md5str -> md5(md5str + salt )-> md5salt
     public static String digestSalt(String strObj, String salt) {
         strObj = digest(strObj);
         strObj += salt;

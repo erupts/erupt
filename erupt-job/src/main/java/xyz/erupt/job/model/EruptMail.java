@@ -35,7 +35,7 @@ import java.util.Objects;
  * @date 2019-12-26
  */
 @Erupt(
-        name = "邮件发送",
+        name = "发送邮件",
         dataProxy = EruptMail.class,
         power = @Power(edit = false),
         orderBy = "id desc"

@@ -1,4 +1,4 @@
-Chinese &nbsp; | &nbsp; [English](./README-EN.md)  
+中文 &nbsp; | &nbsp; [English](./README-EN.md)  
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用后台管理框架 </h1>
@@ -42,29 +42,48 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 > 完美取代 **代码生成器**，开发后台管理系统更优解！
 
 ## 🌈 特性 | Features
-+ **易于上手**：会简单的 **Spring Boot** 基础知识即可。
++ **易于上手**：会简单的 **Spring Boot** 基础知识即可
+
 + **使用简单**：仅需了解 **@Erupt** 与 **@EruptField** 两个注解即可上手开发
-+ **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，**仅需一个类文件**即可。
-+ **敏捷开发**：仅单个`.java`文件即可实现后台管理功能，专注业务与核心功能的研发。
-+ **快速迭代**：需求变更仅需修改或添加注解配置即可，迭代速度比需求讨论速度还快。
-+ **功能强大**：动态条件处理，支持增删改查等功能代理接口，Session存储机制选择，行为日志记录等。
-+ **自动建表**：依托于JPA可自动帮你完成数据库建表相关工作。
-+ **低侵入性**：几乎所有功能都围绕注解而展开，不影响Spring Boot其他功能或三方库库的使用。
-+ **多数据源**：MySQL、Oracle、SQL Server、PostgreSQL、H2，甚至支持**MongoDB**。
-+ **多种组件**：支持滑动输入、时间选择、开关、图片上传、代码编辑器、自动完成、树、多选框、地图等23类组件
+
++ **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，**仅需一个类文件**即可
+
++ **敏捷开发**：仅单个`.java`文件即可实现后台管理功能，专注业务与核心功能的研发
+
++ **快速迭代**：需求变更仅需修改或添加注解配置即可，迭代速度比需求讨论速度还快
+
++ **功能强大**：动态条件处理，支持增删改查等功能代理接口，Session存储机制选择，行为日志记录等
+
++ **自动建表**：依托于JPA可自动帮你完成数据库建表相关工作
+
++ **低侵入性**：几乎所有功能都围绕注解而展开，不影响Spring Boot其他功能或三方库库的使用
+
++ **多数据源**：支持：MySQL、Oracle、SQL Server、**PostgreSQL**、H2，甚至支持 **MongoDB**
+
++ **大量组件**：滑动输入、时间选择、**一对多**、图片上传、代码编辑器、自动完成、树、**多对多**、地图等23类组件
+
 + **丰富展示**：普通文本、**二维码**、链接、图片、HTML、代码段、iframe、swf等
-+ **代码生成**：erupt代码已经足够简洁，代码生成器可进一步提升开发效率。
-+ **高扩展性**：支持自定义数据源实现、自定义页面、动态权限管理、**自定义OSS**等。
-+ **界面美观**：每个交互都精心设计，产品思维打磨，只为了更好的操作体验。
-+ **权限管理**：用户管理、角色管理、组织管理、菜单管理、登录日志、操作日志等。
-+ **高安全性**：可靠的安全机制，登录白名单，权限验证，注解项检查，细颗粒度权限控制，为你的数据保驾护航。
+
++ **代码生成**：erupt代码已经足够简洁，代码生成器可进一步提升开发效率
+
++ **高扩展性**：支持自定义数据源实现、自定义页面、动态权限管理、生命周期函数、**自定义OSS**等
+
++ **界面美观**：每个交互都精心设计，产品思维打磨，只为了更好的操作体验
+
++ **权限管理**：用户管理、角色管理、组织管理、菜单管理、登录日志、操作日志等
+
++ **高安全性**：可靠的安全机制，登录白名单，权限验证，注解项检查，细颗粒度权限控制，为你的数据保驾护航
+
 + **前后端分离**：后端与前端可分开部署
+
 + **响应式布局**：支持PC端手机端等各种规格的设备中使用
+
 + **无需二次开发**：仅需引用 jar 包即可 ！
+
 + **支持扩展页面**：可开发自定义页面，自定义弹出层，且支持：原生H5 / Freemarker / Thymeleaf等方式渲染
 
 ## ⛰ 演示截图 | Screenshot
-![](./readme/index.png)
+<img src="./readme/index.png" width="100%"/>
 
 <img src="./readme/seer.png" width="100%"/>
 <table>
@@ -98,6 +117,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
 
 开发后台管理系统大部分情况下只想做个普通的增删改查界面，用于数据管理，类似下面这种：
+
 ![result](readme/view.png)
 ![result](readme/edit.png)
 
@@ -151,7 +171,9 @@ public class Simple extends BaseModel {
 但可以看到，用 erupt 只需要 **30几行** 代码就能完成，
 
 > 完全不需要了解 **Angular / React / Vue / Jquery**   
+>
 > 而且不需要了解 **JavaScript / HTML / CSS**   
+>
 > 甚至不需要了解 **Spring MVC / Mybatis / SQL**   
 
 即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
@@ -190,19 +212,21 @@ erupt
 ├── erupt-data -- 数据实现包
      ├── erupt-jpa -- 关系型数据库erupt实现
      └── erupt-mongodb -- mongodb数据库erupt实现
-├── erupt-job -- 定时任务功能
+├── erupt-job -- 定时任务功能，支持动态定时任务，邮件发送，任务日志等功能
 ├── erupt-security -- 接口数据安全模块
 ├── erupt-upms -- 用户权限管理
+├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义弹出层，模板引擎支持：FreeMarker / Thymeleaf / 原生H5 / Velocity 等
+├── erupt-generator -- 代码生成器，通过简单配置，生成 erupt 代码段
 └── erupt-web -- 前端页面
 
-erupt-site -- erupt官方网站 https://github.com/erupts/erupt-site
+erupt-pro
+├── erupt-workflow -- 基于erupt实现的工作流模块(开发中)
+├── erupt-dataflow -- 基于erupt实现的数据流模块(开发中)
+└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（付费模块）
 
-erupt-pro -- 暂未开放 star 超过 1K 开放 erupt-tpl 模块与 erupt-generator 模块 （加群可直接获取）
-├── erupt-bi -- 通过 sql 加 js 混编实现动态报表，支持多数据源，支持十几种图表
-├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义模板等功能，模板引擎支持 freemarker / thymeleaf / 原生H5
-└── erupt-generator -- 代码生成器，通过简单配置，生成 erupt 代码段
+erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
 
-erupt-web-angular -- 暂未开放 erupt 前端源码
+erupt-web-angular -- Erupt 前端源码，暂不开放，如有自定义页面的需求，可使用 erupt-tpl 模块
 
 ```
 

@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.util.ClassUtils;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.EruptConst;
 
@@ -28,7 +29,7 @@ public class EruptApplication implements ImportBeanDefinitionRegistrar {
     @SneakyThrows
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        primarySource = Class.forName(importingClassMetadata.getClassName());
+        primarySource = ClassUtils.forName(importingClassMetadata.getClassName(), ClassUtils.getDefaultClassLoader());
         EruptScan eruptScan = primarySource.getAnnotation(EruptScan.class);
         if (eruptScan.value().length == 0) {
             if (primarySource.getPackage().getName().startsWith(EruptConst.BASE_PACKAGE)) {

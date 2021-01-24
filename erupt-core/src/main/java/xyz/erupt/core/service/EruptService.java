@@ -28,7 +28,6 @@ import java.util.List;
 @Slf4j
 public class EruptService {
 
-    private static final int maxPageSize = 500;
 
     /**
      * @param eruptModel      eruptModel
@@ -39,10 +38,6 @@ public class EruptService {
      */
     public Page getEruptData(EruptModel eruptModel, TableQueryVo tableQueryVo, List<Condition> serverCondition, String... customCondition) {
         if (EruptUtil.getPowerObject(eruptModel).isQuery()) {
-            int pageSize = tableQueryVo.getPageSize();
-            if (pageSize > maxPageSize) {
-                pageSize = maxPageSize;
-            }
             List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQueryVo.getCondition());
             List<String> conditionStrings = new ArrayList<>();
             {
@@ -72,7 +67,7 @@ public class EruptService {
                 legalConditions.addAll(serverCondition);
             }
             Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
-                    .queryList(eruptModel, new Page(tableQueryVo.getPageIndex(), pageSize, tableQueryVo.getSort()),
+                    .queryList(eruptModel, new Page(tableQueryVo.getPageIndex(), tableQueryVo.getPageSize(), tableQueryVo.getSort()),
                             EruptQuery.builder().orderBy(tableQueryVo.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
             if (null != page.getList()) {
                 DataHandlerUtil.convertDataToEruptView(eruptModel, page.getList());

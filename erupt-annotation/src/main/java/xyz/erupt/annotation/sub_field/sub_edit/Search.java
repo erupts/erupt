@@ -13,7 +13,7 @@ public @interface Search {
     @Deprecated
     boolean notNull() default false;
 
-    @Comment("模糊查询")
+    @Comment("高级查询")
     boolean vague() default false;
 
 }
