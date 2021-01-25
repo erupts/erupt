@@ -25836,7 +25836,7 @@ reuse-tab .ant-tabs-tab-arrow-show{
 reuse-tab ~ app-site .page-container,
 reuse-tab ~ app-home .page-container,
 reuse-tab ~ app-tpl .page-container {
-  top: @alain-default-header-hg + 40
+  top: @alain-default-header-hg + 40;
 }
 
 .page-container {
@@ -25851,7 +25851,7 @@ reuse-tab ~ app-tpl .page-container {
   .page-container {
     height: calc(100vh - @alain-default-header-hg);
     left: 0 !important;
-    top: 0 !important;
+    top: 40px !important;
     margin: 0 -25px;
   }
 }
@@ -26079,6 +26079,11 @@ img[src='erupt.svg'] {
 
 //暗黑模式
 .dark {
+  //.reuse-tab{
+  //  left: 0;
+  //  top: 0;
+  //}
+
   .alain-default__content, .ant-modal-content, .alain-default__aside, img[src='erupt.svg'] {
     filter: invert(1) hue-rotate(180deg);
   }
