@@ -26,4 +26,5 @@ public class SystemUtil {
         double tbNumber = gbNumber / FORMAT;
         return new DecimalFormat("#.##TB").format(tbNumber);
     }
+
 }

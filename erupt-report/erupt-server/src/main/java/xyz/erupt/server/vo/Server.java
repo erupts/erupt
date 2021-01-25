@@ -3,10 +3,11 @@ package xyz.erupt.server.vo;
 import lombok.Getter;
 import lombok.Setter;
 import oshi.SystemInfo;
-import oshi.hardware.HardwareAbstractionLayer;
 import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
+import xyz.erupt.core.util.EruptSpringUtil;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,6 +39,10 @@ public class Server {
      */
     private Sys sys;
 
+    private Date startupDate; //启动时间
+
+    private String runDay; //运行时长
+
     /**
      * 磁盘相关信息
      */
@@ -45,12 +50,15 @@ public class Server {
 
     public Server() {
         SystemInfo si = new SystemInfo();
-        HardwareAbstractionLayer hal = si.getHardware();
         OperatingSystem os = si.getOperatingSystem();
         this.setCpu(new Cpu(si));
-        this.setJvm(new Jvm());
         this.setMem(new Mem(si));
+        this.setJvm(new Jvm());
         this.setSys(new Sys());
+        long startupDate = EruptSpringUtil.getApplicationContext().getStartupDate();
+        this.setStartupDate(new Date(startupDate));
+        this.setRunDay(((System.currentTimeMillis() - startupDate)
+                / 1000 / 60 / 60 / 24) + " 天");
         for (OSFileStore store : os.getFileSystem().getFileStores()) {
             sysFiles.add(new SysFile(store));
         }

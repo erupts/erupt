@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.server.util.SystemUtil;
 
+import java.lang.management.ManagementFactory;
 import java.text.DecimalFormat;
 import java.util.Properties;
 
@@ -14,6 +15,10 @@ import java.util.Properties;
 @Getter
 @Setter
 public class Jvm {
+
+    private String name;
+
+    private String vendor;
 
     private String total;
 
@@ -29,6 +34,10 @@ public class Jvm {
 
     private String usage;
 
+    private String inputArgs;
+
+    private String pid;
+
     Jvm() {
         Properties props = System.getProperties();
         long total = Runtime.getRuntime().totalMemory();
@@ -40,5 +49,12 @@ public class Jvm {
         this.setUsage(new DecimalFormat("#.##%").format((total - free) * 1.0 / total));
         this.setVersion(props.getProperty("java.version"));
         this.setHome(props.getProperty("java.home"));
+        this.setInputArgs(ManagementFactory.getRuntimeMXBean().getInputArguments().toString());
+        this.setPid(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
+        this.setName(props.getProperty("java.vm.name"));
+        this.setVendor(props.getProperty("java.vendor"));
+//        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+//        System.out.println("堆内存信息: " + memoryMXBean);
+//        System.out.println("方法区内存信息: " + memoryMXBean);
     }
 }

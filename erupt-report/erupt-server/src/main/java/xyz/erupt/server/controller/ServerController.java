@@ -11,13 +11,13 @@ import xyz.erupt.server.vo.Server;
  * @date 2021/1/23 21:36
  */
 @RestController
-@RequestMapping(EruptRestPath.ERUPT_API + "/os")
+@RequestMapping(EruptRestPath.ERUPT_API + "/server")
 public class ServerController {
 
     public static final String ERUPT_OS = "/erupt_os";
 
     @RequestMapping(ERUPT_OS + "/info")
-//    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
     public Server info() {
         return new Server();
     }

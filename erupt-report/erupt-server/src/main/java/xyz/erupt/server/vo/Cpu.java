@@ -20,8 +20,6 @@ public class Cpu {
 
     private int cpuNum; //核心数
 
-    private int cpuTotal; //核心总数
-
     private String freq; //主频
 
     private String sys; //CPU系统使用率
@@ -31,6 +29,8 @@ public class Cpu {
     private String wait; //CPU当前等待率
 
     private String usage; //使用率
+
+    private String cpuModel; //型号
 
     @SneakyThrows
     Cpu(SystemInfo systemInfo) {
@@ -50,12 +50,12 @@ public class Cpu {
         long totalCpu = user + nice + cSys + idle + iowait + irq + softirq + steal;
         String freq = SystemUtil.formatByte(processor.getMaxFreq());
         this.setFreq(freq.substring(0, freq.length() - 1) + "Hz");
-        this.setCpuTotal(processor.getPhysicalProcessorCount());
         this.setCpuNum(processor.getLogicalProcessorCount());
         this.setUser(new DecimalFormat("#.##%").format(user * 1.0 / totalCpu));
         this.setSys(new DecimalFormat("#.##%").format(cSys * 1.0 / totalCpu));
         this.setWait(new DecimalFormat("#.##%").format(iowait * 1.0 / totalCpu));
         this.setUsage(new DecimalFormat("#.##%").format(1.0 - (idle * 1.0 / totalCpu)));
+        this.setCpuModel(processor.toString());
     }
 
 }
