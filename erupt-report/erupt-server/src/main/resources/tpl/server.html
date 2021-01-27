@@ -44,10 +44,6 @@
     <el-row :gutter="12">
         <el-col :span="8">
             <el-card class="box-card" shadow="never">
-                <div class="clearfix" slot="header">
-                    <span>CPU</span>
-                    <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-                </div>
                 <table class="table">
                     <tr>
                         <th>属性</th>
@@ -69,21 +65,15 @@
                         <td>使用率</td>
                         <td>{{server.cpu.usage}}</td>
                     </tr>
-                    <tr>
-                        <td colspan="2">
-                            {{server.cpu.cpuModel}}
-                        </td>
-                    </tr>
                 </table>
+                <div ref="cpu" style="height: 100px;width: 200px">
+
+                </div>
             </el-card>
         </el-col>
 
         <el-col :span="8">
             <el-card class="box-card" shadow="never">
-                <div class="clearfix" slot="header">
-                    <span>内存</span>
-                    <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-                </div>
                 <table class="table">
                     <tr>
                         <th>属性</th>
@@ -116,10 +106,6 @@
     </el-row>
 
     <el-card class="box-card" shadow="never">
-        <div class="clearfix" slot="header">
-            <span>服务器信息</span>
-            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-        </div>
         <table class="table">
             <tr>
                 <th>服务器名称</th>
@@ -136,7 +122,6 @@
             <tr>
                 <th>IP</th>
                 <td>{{server.sys.ip}}</td>
-
             </tr>
         </table>
     </el-card>
@@ -199,6 +184,7 @@
 <script src="/server/vue.min.js"></script>
 <script src="/server/element.min.js"></script>
 <script src="/server/axios.min.js"></script>
+<script src="/server/echarts.min.js"></script>
 <script>
     let vue = new Vue({
         el: '#app',
@@ -218,10 +204,94 @@
                 })
             }
 
+            this.cpuChart();
             load();
             setInterval(() => {
                 load()
             }, 5000)
+        },
+        methods: {
+            cpuChart: function () {
+                console.log(this.$refs)
+                var cpu = echarts.init(this.$refs.cpu);
+                cpu.setOption({
+                    series: [{
+                        type: 'gauge',
+                        startAngle: 0,
+                        endAngle: 100,
+                        min: 0,
+                        max: 1,
+                        splitNumber: 8,
+                        axisLine: {
+                            lineStyle: {
+                                width: 6,
+                                color: [
+                                    [0.25, '#FF6E76'],
+                                    [0.5, '#FDDD60'],
+                                    [0.75, '#58D9F9'],
+                                    [1, '#7CFFB2']
+                                ]
+                            }
+                        },
+                        pointer: {
+                            icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+                            length: '12%',
+                            width: 20,
+                            offsetCenter: [0, '-60%'],
+                            itemStyle: {
+                                color: 'auto'
+                            }
+                        },
+                        axisTick: {
+                            length: 12,
+                            lineStyle: {
+                                color: 'auto',
+                                width: 2
+                            }
+                        },
+                        splitLine: {
+                            length: 20,
+                            lineStyle: {
+                                color: 'auto',
+                                width: 5
+                            }
+                        },
+                        axisLabel: {
+                            color: '#464646',
+                            fontSize: 20,
+                            distance: -60,
+                            formatter: function (value) {
+                                if (value === 0.875) {
+                                    return '优';
+                                } else if (value === 0.625) {
+                                    return '中';
+                                } else if (value === 0.375) {
+                                    return '良';
+                                } else if (value === 0.125) {
+                                    return '差';
+                                }
+                            }
+                        },
+                        title: {
+                            offsetCenter: [0, '-20%'],
+                            fontSize: 30
+                        },
+                        detail: {
+                            fontSize: 50,
+                            offsetCenter: [0, '0%'],
+                            valueAnimation: true,
+                            formatter: function (value) {
+                                return Math.round(value * 100) + '分';
+                            },
+                            color: 'auto'
+                        },
+                        data: [{
+                            value: 0.70,
+                            name: '成绩评定'
+                        }]
+                    }]
+                });
+            }
         }
     })
 
