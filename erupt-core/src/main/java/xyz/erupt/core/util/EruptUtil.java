@@ -96,8 +96,6 @@ public class EruptUtil {
                         for (Object o : collectionRef) {
                             list.add(generateEruptDataMap(tabEruptModelRef, o));
                         }
-//                            bi.getBiCharts().stream().sorted(Comparator.comparing(BiChart::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList())
-//                            list.stream().sorted()
                         map.put(field.getName(), list);
                         break;
                     default:
