@@ -40,7 +40,7 @@
     </style>
 </head>
 <body>
-<div id="app" v-if="server">
+<div id="app" v-loading.fullscreen.lock="fullscreenLoading">
     <el-row :gutter="12">
         <el-col :span="8">
             <el-card class="box-card" shadow="never">
@@ -190,7 +190,13 @@
         el: '#app',
         data: function () {
             return {
-                server: null
+                server: {
+                    cpu: {},
+                    mem: {},
+                    jvm: {},
+                    sys: {},
+                },
+                fullscreenLoading: true
             }
         },
         mounted: function () {
@@ -201,10 +207,11 @@
                     }
                 }).then((res) => {
                     vue.server = res.data;
+                    vue.fullscreenLoading = false;
                 })
             }
 
-            this.cpuChart();
+            // this.cpuChart();
             load();
             setInterval(() => {
                 load()

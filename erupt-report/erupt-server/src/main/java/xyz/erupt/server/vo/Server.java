@@ -39,14 +39,14 @@ public class Server {
      */
     private Sys sys;
 
-    private Date startupDate; //启动时间
-
-    private String runDay; //运行时长
-
     /**
      * 磁盘相关信息
      */
     private List<SysFile> sysFiles = new LinkedList<>();
+
+    private Date startupDate; //启动时间
+
+    private String runDay; //运行时长
 
     public Server() {
         SystemInfo si = new SystemInfo();
