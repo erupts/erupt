@@ -6,7 +6,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -19,6 +18,9 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.tpl.engine.EngineTemplate;
+import xyz.erupt.tpl.engine.FreemarkerEngine;
+import xyz.erupt.tpl.engine.ThymeleafEngine;
+import xyz.erupt.tpl.engine.VelocityTplEngine;
 import xyz.erupt.upms.util.MenuTool;
 
 import javax.annotation.Resource;
@@ -62,11 +64,10 @@ public class EruptTplService implements ApplicationRunner {
     }
 
     private void engineLoader() {
-        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
-                new AssignableTypeFilter(EngineTemplate.class)
-        }, (clazz) -> {
+        Class<?>[] engineTemplates = {FreemarkerEngine.class, ThymeleafEngine.class, VelocityTplEngine.class};
+        for (Class<?> tpl : engineTemplates) {
             try {
-                EngineTemplate<Object> engineTemplate = (EngineTemplate<Object>) clazz.newInstance();
+                EngineTemplate<Object> engineTemplate = (EngineTemplate<Object>) tpl.newInstance();
                 engineTemplate.setEngine(engineTemplate.init());
                 tplEngines.put(engineTemplate.engine(), engineTemplate);
             } catch (NoClassDefFoundError e) {
@@ -74,7 +75,7 @@ public class EruptTplService implements ApplicationRunner {
             } catch (IllegalAccessException | InstantiationException e) {
                 throw new RuntimeException(e);
             }
-        });
+        }
     }
 
     public Method getAction(String name) {
