@@ -44,6 +44,6 @@ public enum ViewType {
     @Comment("代码")
     CODE,
     @Deprecated
-    @Comment("md")
+    @Comment("markdown 编辑器")
     MARKDOWN,
 }
