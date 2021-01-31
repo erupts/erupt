@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="${base}/">
+    <title>Title</title>
+    <link href="monitor/element.min.css" rel="stylesheet">
+    <link href="monitor/element.erupt.css" rel="stylesheet">
+    <style>
+        .d-flex {
+            display: flex;
+        }
+
+        .ml_auto {
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-loading.fullscreen.lock="fullscreenLoading">
+    <el-row :gutter="16">
+        <el-col :span="8" :xs="24">
+            <el-card class="box-card" shadow="always">
+                <div class="clearfix" slot="header">
+                    <span>Redis 信息</span>
+                </div>
+                <div style="height: 404px">
+                    <div>
+                        <p class="d-flex">版本号：<span class="ml_auto">{{redis.version}}</span></p>
+                        <p class="d-flex">端口号：<span class="ml_auto">{{redis.port}}</span></p>
+                        <p class="d-flex">已连接客户端：<span class="ml_auto">{{redis.clientNum}}</span></p>
+                        <p class="d-flex">运行天数：<span class="ml_auto">{{redis.day}} 天</span></p>
+                        <p class="d-flex">是否集群：<span class="ml_auto">{{redis.isCluster ? '是' : '否'}}</span></p>
+                        <p class="d-flex">持久化方式：<span class="ml_auto">{{redis.isAOF ? 'AOF' : 'RDB'}}</span></p>
+                        <p class="d-flex">Key数量：<span class="ml_auto">{{redis.keyNum}}</span></p>
+                        <p class="d-flex">总内存：<span class="ml_auto">{{redis.totalMem}}</span></p>
+                        <p class="d-flex">已用内存：<span class="ml_auto">{{redis.usedMem}}</span></p>
+                    </div>
+                </div>
+            </el-card>
+        </el-col>
+        <el-col :span="16" :xs="24">
+            <el-card class="box-card" shadow="always">
+                <div class="clearfix" slot="header">
+                    <span>命令统计</span>
+                </div>
+                <div ref="commandPie" style="height: 420px">
+
+                </div>
+            </el-card>
+        </el-col>
+    </el-row>
+</div>
+<script src="monitor/echarts.min.js"></script>
+<script src="monitor/vue.min.js"></script>
+<script src="monitor/element.min.js"></script>
+<script src="monitor/axios.min.js"></script>
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                redis: {},
+                fullscreenLoading: true
+            }
+        },
+        mounted: function () {
+            var that = this;
+
+            function load() {
+                axios.get("erupt-api/erupt-monitor/redis.html/info", {
+                    headers: {
+                        token: parent.getAppToken().token
+                    }
+                }).then(function (res) {
+                    if (res.status === 401) {
+                        window.parent.location.href = "${base}/"
+                    } else {
+                        vue.redis = res.data;
+                        vue.fullscreenLoading = false;
+                        that.commandPie(res.data.redisCmdStat);
+                    }
+                })
+            }
+
+            load();
+            setInterval(function () {
+                load()
+            }, 5000)
+        },
+        methods: {
+            commandPie: function (redisCmdStat) {
+                var chart = echarts.init(this.$refs.commandPie)
+                chart.setOption({
+                    color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        bottom: 10,
+                        left: 'center',
+                        // show: false
+                    },
+                    series: [
+                        {
+                            type: 'pie',
+                            radius: '60%',
+                            data: redisCmdStat,
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                });
+                chart.resize();
+            }
+        }
+    })
+</script>
+</body>
+</html>

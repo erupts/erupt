@@ -28,7 +28,7 @@
     -->
     <modules>
         <module>erupt-bi</module>
-        <module>erupt-server</module>
+        <module>erupt-monitor</module>
         <module>erupt-flow</module>
     </modules>
 
