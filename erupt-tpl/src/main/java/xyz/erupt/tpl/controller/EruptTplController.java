@@ -1,9 +1,7 @@
 package xyz.erupt.tpl.controller;
 
 
-import lombok.Cleanup;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
@@ -16,11 +14,11 @@ import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
+import xyz.erupt.tpl.engine.EngineConst;
 import xyz.erupt.tpl.service.EruptTplService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -41,6 +39,7 @@ import static xyz.erupt.core.constant.EruptRestPath.ERUPT_API;
 public class EruptTplController {
 
     public static final String TPL = "/tpl";
+
     @Resource
     private EruptTplService eruptTplService;
 
@@ -59,8 +58,7 @@ public class EruptTplController {
             }
             eruptTplService.tplRender(eruptTpl.engine(), path, (Map) method.invoke(obj), response.getWriter());
         } else {
-            @Cleanup InputStream inputStream = this.getClass().getResourceAsStream(TPL + "/" + fileName);
-            response.getWriter().write(StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8));
+            eruptTplService.tplRender(Tpl.Engine.Native, TPL + "/" + fileName, null, response.getWriter());
         }
     }
 
@@ -96,7 +94,7 @@ public class EruptTplController {
                         list.add(obj);
                     }
                     Map<String, Object> map = new HashMap<>();
-                    map.put("rows", list);
+                    map.put(EngineConst.INJECT_ROWS, list);
                     eruptTplService.tplRender(operation.tpl(), map, response);
                 }
             }

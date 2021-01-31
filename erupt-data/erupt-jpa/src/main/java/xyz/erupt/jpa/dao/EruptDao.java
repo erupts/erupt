@@ -47,6 +47,10 @@ public class EruptDao {
         entityManager.persist(obj);
     }
 
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
     //不存在则新增
     public <T> T persistIfNotExist(Class<T> eruptClass, Object obj, String field, String val) throws NonUniqueResultException {
         T t = (T) queryEntity(obj.getClass(), field + EQU + " :val", new HashMap<String, Object>(1) {
@@ -102,6 +106,14 @@ public class EruptDao {
         return simpleQuery(eruptClass, false, expr, param).getResultList();
     }
 
+    public <T> List<T> queryEntityList(Class<T> eruptClass, String expr) {
+        return this.queryEntityList(eruptClass, expr, null);
+    }
+
+    public <T> List<T> queryEntityList(Class<T> eruptClass) {
+        return this.queryEntityList(eruptClass, null);
+    }
+
     public Map<String, Object> queryMap(Class eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
         try {
             return (Map<String, Object>) simpleQuery(eruptClass, true, expr, param, cols).getSingleResult();
@@ -124,7 +136,13 @@ public class EruptDao {
         } catch (NoResultException e) {
             return null;
         }
-
     }
 
+    public <T> T queryEntity(Class<T> eruptClass, String expr) {
+        return this.queryEntity(eruptClass, expr, null);
+    }
+
+    public <T> T queryEntity(Class<T> eruptClass) {
+        return this.queryEntity(eruptClass, null);
+    }
 }
