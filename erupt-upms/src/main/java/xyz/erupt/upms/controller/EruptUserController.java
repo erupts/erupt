@@ -49,25 +49,34 @@ public class EruptUserController {
     @ResponseBody
     public LoginModel login(@RequestParam("account") String account,
                             @RequestParam("pwd") String pwd,
-                            @RequestParam(name = "verifyCode", required = false) String verifyCode) {
+                            @RequestParam(name = "verifyCode", required = false) String verifyCode,
+                            HttpServletRequest request) {
         LoginModel loginModel = eruptUserService.login(account, pwd, verifyCode);
         if (loginModel.isPass()) {
             EruptUser eruptUser = loginModel.getEruptUser();
             loginModel.setToken(RandomStringUtils.random(20, true, true));
-            sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(),
-                    loginModel.getEruptUser().getId().toString());
+            loginModel.setExpire(this.eruptUserService.getExpireTime());
+            sessionService.putByLoginExpire(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString());
             loginModel.setUserName(eruptUser.getName());
             EruptMenu indexMenu = eruptUser.getEruptMenu();
             if (null != indexMenu) {
                 loginModel.setIndexMenu(indexMenu.getType() + "||" + indexMenu.getValue());
             }
             List<EruptMenu> eruptMenus = menuService.getMenuList(eruptUser);
-            sessionService.put(SessionKey.MENU + loginModel.getToken(), gson.toJson(eruptMenus));
-            sessionService.put(SessionKey.MENU_VIEW + loginModel.getToken(), gson.toJson(menuService.geneMenuListVo(eruptMenus)));
+            sessionService.putByLoginExpire(SessionKey.MENU + loginModel.getToken(), gson.toJson(eruptMenus));
+            sessionService.putByLoginExpire(SessionKey.MENU_VIEW + loginModel.getToken(), gson.toJson(menuService.geneMenuListVo(eruptMenus)));
             eruptUserService.saveLoginLog(eruptUser); //记录登录日志
         }
         return loginModel;
     }
+
+    //token 是否有效
+    @GetMapping("/token-valid")
+    @ResponseBody
+    public boolean tokenValid() {
+        return sessionService.get(eruptUserService.getToken()) != null;
+    }
+
 
     //获取菜单
     @GetMapping("/menu")

@@ -5,9 +5,11 @@ import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.EruptAppProp;
+import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.config.EruptUpmsConfig;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
@@ -21,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,6 +50,12 @@ public class EruptUserService {
 
     @Resource
     private EruptAppProp eruptAppProp;
+
+    @Resource
+    private EruptProp eruptProp;
+
+    @Resource
+    private EruptUpmsConfig eruptUpmsConfig;
 
     @Transactional
     public void saveLoginLog(EruptUser user) {
@@ -115,7 +124,7 @@ public class EruptUserService {
                 }
             }
             if (pass) {
-                sessionService.put(SessionKey.LOGIN_ERROR + requestIp, "0");
+                sessionService.putByLoginExpire(SessionKey.LOGIN_ERROR + requestIp, "0");
                 return new LoginModel(true, eruptUser);
             } else {
                 return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
@@ -131,8 +140,16 @@ public class EruptUserService {
         if (null != loginError) {
             loginErrorCount = Integer.parseInt(loginError.toString());
         }
-        sessionService.put(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "");
+        sessionService.putByLoginExpire(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "");
         return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
+    }
+
+    public LocalDateTime getExpireTime() {
+        if (eruptProp.isRedisSession()) {
+            return LocalDateTime.now().plusMinutes(eruptUpmsConfig.getExpireTimeByLogin());
+        } else {
+            return LocalDateTime.now().plusSeconds(request.getSession().getMaxInactiveInterval());
+        }
     }
 
     @Transactional
