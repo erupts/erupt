@@ -16,7 +16,6 @@
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
     <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=social" alt="GitHub stars"></a>
     <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/forks/erupts/erupt?style=social" alt="GitHub forks"></a>
-    <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/repo-size/erupts/erupt" alt="size"></a>
 </p>
 
 <p align="center">
@@ -25,7 +24,7 @@
     <a href="https://www.erupt.xyz" target="_blank">官方网站</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/yuepeng/erupt/bdiq6o" target="_blank">贡献指南</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/yuepeng/erupt" target="_blank"><b>使用文档</b></a>
+    <a href="https://www.yuque.com/yuepeng/erupt" target="_blank"><b>📕 使用文档</b></a>
 </p>
 
 <p align="center">
@@ -83,7 +82,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 + **支持扩展页面**：可开发自定义页面，自定义弹出层，且支持：原生H5 / Freemarker / Thymeleaf等方式渲染
 
-## ⚙️ 架构图
+## ⚙️ 架构图 | Framework
 ![架构图](readme/architecture.png)
 
 ## ⛰ 演示截图 | Screenshot
@@ -267,31 +266,24 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
     </tr>
 </table>
 
-## 📕 使用文档 | Documentation
-https://www.yuque.com/yuepeng/erupt
-
 ## 🍁 代码样例 | Example Code
 gitee: &nbsp; https://gitee.com/erupt/erupt-example   
 github: https://github.com/erupts/erupt-example
-
-## 📬 加入讨论 | Join Discussion
-<table width="100%">
-    <tr>
-        <td width="50%"><img src="readme/group/qq-1.jpeg" alt=""></td>
-        <td width="50%"><img src="readme/group/weixin-1.jpeg" alt=""></td>
-    </tr>
-</table>
 
 ## 🔭 开源推荐 | Recommend
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
 
 ## ⛽️ 捐赠 | Donate
-此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏。
+此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏
 
 点击以下链接，将页面拉到最下方点击 "捐赠" 即可。
 
 [前往捐赠](https://gitee.com/erupt/erupt)
 
+## 🧩 公众号 
+欢迎关注 Erupt 官方公众号，关注后可获取群二维码与 erupt-monitor 模块 jar
+
+![qr.jpg](./readme/qr.jpg)
 
 ## ⭐️ Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
 
