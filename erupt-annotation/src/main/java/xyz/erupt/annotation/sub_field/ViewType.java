@@ -43,6 +43,7 @@ public enum ViewType {
     MAP,
     @Comment("代码")
     CODE,
-    @Comment("md")
+    @Deprecated
+    @Comment("markdown 编辑器")
     MARKDOWN,
 }

@@ -9,6 +9,7 @@
 
 <p align="center">
     <a href="https://www.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/Erupt-Framework-brightgreen" alt="Erupt Framework"></a>
+    <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
     <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html"><img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk 8+"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-blue" alt="license Apache 2.0"></a>
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
@@ -81,6 +82,9 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 + **无需二次开发**：仅需引用 jar 包即可 ！
 
 + **支持扩展页面**：可开发自定义页面，自定义弹出层，且支持：原生H5 / Freemarker / Thymeleaf等方式渲染
+
+## ⚙️ 架构图
+![架构图](readme/architecture.png)
 
 ## ⛰ 演示截图 | Screenshot
 <img src="./readme/index.png" width="100%"/>
@@ -289,7 +293,7 @@ github: https://github.com/erupts/erupt-example
 [前往捐赠](https://gitee.com/erupt/erupt)
 
 
-### ⭐️ Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
+## ⭐️ Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
 
 ## [Github](https://github.com/erupts/erupt) &nbsp; / &nbsp;  [Gitee](https://gitee.com/erupt/erupt)
 

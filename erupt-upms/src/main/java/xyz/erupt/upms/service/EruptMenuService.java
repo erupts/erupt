@@ -75,8 +75,8 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
         List<EruptMenu> eruptMenus = getMenuList(eruptUserService.getCurrentEruptUser());
         List<EruptMenuVo> menuVoList = geneMenuListVo(eruptMenus);
-        sessionService.put(SessionKey.MENU + token, gson.toJson(eruptMenus));
-        sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(menuVoList));
+        sessionService.putByLoginExpire(SessionKey.MENU + token, gson.toJson(eruptMenus));
+        sessionService.putByLoginExpire(SessionKey.MENU_VIEW + token, gson.toJson(menuVoList));
     }
 
     @Override
