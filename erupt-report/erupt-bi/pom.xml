@@ -9,7 +9,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt-pro</artifactId>
-        <version>1.6.2</version>
+        <version>1.6.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -26,14 +26,14 @@
         <dependency>
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-upms</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
