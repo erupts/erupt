@@ -24,14 +24,14 @@
                 <div class="clearfix" slot="header">
                     <span>Redis 信息</span>
                 </div>
-                <div style="height: 404px">
+                <div style="height: 364px">
                     <div>
                         <p class="d-flex">版本号：<span class="ml_auto">{{redis.version}}</span></p>
                         <p class="d-flex">端口号：<span class="ml_auto">{{redis.port}}</span></p>
-                        <p class="d-flex">已连接客户端：<span class="ml_auto">{{redis.clientNum}}</span></p>
                         <p class="d-flex">运行天数：<span class="ml_auto">{{redis.day}} 天</span></p>
                         <p class="d-flex">是否集群：<span class="ml_auto">{{redis.isCluster ? '是' : '否'}}</span></p>
                         <p class="d-flex">持久化方式：<span class="ml_auto">{{redis.isAOF ? 'AOF' : 'RDB'}}</span></p>
+                        <p class="d-flex">已连接客户端：<span class="ml_auto">{{redis.clientNum}}</span></p>
                         <p class="d-flex">Key数量：<span class="ml_auto">{{redis.keyNum}}</span></p>
                         <p class="d-flex">总内存：<span class="ml_auto">{{redis.totalMem}}</span></p>
                         <p class="d-flex">已用内存：<span class="ml_auto">{{redis.usedMem}}</span></p>
@@ -44,12 +44,21 @@
                 <div class="clearfix" slot="header">
                     <span>命令统计</span>
                 </div>
-                <div ref="commandPie" style="height: 420px">
+                <div ref="commandPie" style="height: 380px">
 
                 </div>
             </el-card>
         </el-col>
     </el-row>
+
+    <el-card class="box-card" shadow="always" style="margin-top: 16px">
+        <div class="clearfix" slot="header">
+            <span>Redis Key 数量</span>
+        </div>
+        <div ref="keyLine" style="height: 420px">
+
+        </div>
+    </el-card>
 </div>
 <script src="monitor/echarts.min.js"></script>
 <script src="monitor/vue.min.js"></script>
@@ -99,12 +108,12 @@
                     legend: {
                         bottom: 10,
                         left: 'center',
-                        // show: false
+                        show: false
                     },
                     series: [
                         {
                             type: 'pie',
-                            radius: '60%',
+                            radius: '80%',
                             data: redisCmdStat,
                             emphasis: {
                                 itemStyle: {
