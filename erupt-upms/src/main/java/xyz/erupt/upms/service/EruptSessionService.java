@@ -42,7 +42,7 @@ public class EruptSessionService {
         }
     }
 
-    public void put(String key, String str) {
+    public void putByLoginExpire(String key, String str) {
         if (eruptProp.isRedisSession()) {
             redisTemplate.opsForValue().set(key, str, eruptUpmsConfig.getExpireTimeByLogin(), TimeUnit.MINUTES);
         } else {

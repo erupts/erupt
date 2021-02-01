@@ -6,19 +6,17 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedCaseInsensitiveMap;
-import org.springframework.util.StreamUtils;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
-import xyz.erupt.tpl.engine.EngineTemplate;
+import xyz.erupt.tpl.engine.*;
 import xyz.erupt.upms.util.MenuTool;
 
 import javax.annotation.Resource;
@@ -40,7 +38,11 @@ import java.util.Map;
 public class EruptTplService implements ApplicationRunner {
 
     private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
+
     private final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
+
+    public static String TPL = "tpl";
+
     @Resource
     private HttpServletRequest request;
 
@@ -57,16 +59,16 @@ public class EruptTplService implements ApplicationRunner {
             }
         });
         this.engineLoader();
-        MenuTool.addMenuType(new VLModel("tpl", "模板", "tpl目录下文件名"));
+        MenuTool.addMenuType(new VLModel(TPL, "模板", "tpl目录下文件名"));
         log.info("Erupt tpl initialization complete");
     }
 
     private void engineLoader() {
-        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
-                new AssignableTypeFilter(EngineTemplate.class)
-        }, (clazz) -> {
+        Class<?>[] engineTemplates = {H5Engine.class, FreemarkerEngine.class,
+                ThymeleafEngine.class, VelocityTplEngine.class};
+        for (Class<?> tpl : engineTemplates) {
             try {
-                EngineTemplate<Object> engineTemplate = (EngineTemplate<Object>) clazz.newInstance();
+                EngineTemplate<Object> engineTemplate = (EngineTemplate<Object>) tpl.newInstance();
                 engineTemplate.setEngine(engineTemplate.init());
                 tplEngines.put(engineTemplate.engine(), engineTemplate);
             } catch (NoClassDefFoundError e) {
@@ -74,7 +76,7 @@ public class EruptTplService implements ApplicationRunner {
             } catch (IllegalAccessException | InstantiationException e) {
                 throw new RuntimeException(e);
             }
-        });
+        }
     }
 
     public Method getAction(String name) {
@@ -99,17 +101,13 @@ public class EruptTplService implements ApplicationRunner {
 
     @SneakyThrows
     public void tplRender(Tpl.Engine engine, String path, Map<String, Object> map, Writer writer) {
-        if (Tpl.Engine.Native.equals(engine)) {
-            writer.write(StreamUtils.copyToString(this.getClass().getResourceAsStream(path), StandardCharsets.UTF_8));
-        } else {
-            if (null == map) {
-                map = new HashMap<>();
-            }
-            map.put("request", request);
-            EngineTemplate<Object> engineAbstractTemplate = this.tplEngines.get(engine);
-            Assert.notNull(engineAbstractTemplate, engine.name() + " jar not found");
-            engineAbstractTemplate.render(engineAbstractTemplate.getEngine(), path, map, writer);
+        if (null == map) {
+            map = new HashMap<>();
         }
+        map.put(EngineConst.INJECT_REQUEST, request);
+        EngineTemplate<Object> engineAbstractTemplate = this.tplEngines.get(engine);
+        Assert.notNull(engineAbstractTemplate, engine.name() + " jar not found");
+        engineAbstractTemplate.render(engineAbstractTemplate.getEngine(), path, map, writer);
     }
 
 }

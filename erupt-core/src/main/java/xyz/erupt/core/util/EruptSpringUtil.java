@@ -32,7 +32,7 @@ public class EruptSpringUtil implements ApplicationContextAware {
     }
 
     //获取applicationContext
-    private static ApplicationContext getApplicationContext() {
+    public static ApplicationContext getApplicationContext() {
         return applicationContext;
     }
 

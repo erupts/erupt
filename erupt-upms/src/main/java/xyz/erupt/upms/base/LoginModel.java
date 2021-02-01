@@ -3,6 +3,8 @@ package xyz.erupt.upms.base;
 import lombok.Data;
 import xyz.erupt.upms.model.EruptUser;
 
+import java.time.LocalDateTime;
+
 /**
  * @author liyuepeng
  * @date 2018-12-14.
@@ -13,6 +15,8 @@ public class LoginModel {
     private transient EruptUser eruptUser;
 
     private boolean useVerifyCode = false;
+
+    private LocalDateTime expire;
 
     private boolean pass;
 

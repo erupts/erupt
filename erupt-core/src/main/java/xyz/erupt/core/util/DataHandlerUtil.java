@@ -54,8 +54,7 @@ public class DataHandlerUtil {
                     key = entry.getKey().split("_")[0];
                 }
                 EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
-                if (fieldModel == null) {
-                    map.put(key, null);
+                if (null == fieldModel) {
                     continue;
                 }
                 Edit edit = fieldModel.getEruptField().edit();
