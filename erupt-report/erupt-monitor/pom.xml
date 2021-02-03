@@ -37,10 +37,5 @@
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-            <optional>false</optional>
-        </dependency>
     </dependencies>
 </project>

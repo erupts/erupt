@@ -84,6 +84,9 @@
         },
         mounted: function () {
             var that = this;
+            var interval = setInterval(function () {
+                load()
+            }, 5000)
 
             function load() {
                 axios.get("erupt-api/erupt-monitor/redis.html/info", {
@@ -98,14 +101,18 @@
                         vue.fullscreenLoading = false;
                         that.changeChart(res.data);
                     }
+                }).catch(function () {
+                    clearInterval(interval);
+                    that.$confirm('Redis 连接失败', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        showClose: false
+                    });
                 })
             }
-
             this.init();
             load();
-            setInterval(function () {
-                load()
-            }, 5000)
         },
         methods: {
             changeChart: function (data) {
