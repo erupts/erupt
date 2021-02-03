@@ -11,7 +11,7 @@ public class EruptApiModel {
 
     private Status status;
 
-    private PromptWay promptWay = PromptWay.DIALOG;
+    private PromptWay promptWay;
 
     private String message;
 
