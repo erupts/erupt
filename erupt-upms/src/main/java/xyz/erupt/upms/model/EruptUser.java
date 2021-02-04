@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.exception.EruptApiErrorTip;
@@ -44,6 +45,10 @@ import java.util.Set;
 @Component
 public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 
+    private static final String EMAIL_REGEX = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+
+    private static final String PHONE_REGEX = "^[1][3,4,5,6,7,8,9][0-9]{9}$";
+
     @EruptField(
             views = @View(title = "用户名", sortable = true),
             edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true, search = @Search(vague = true))
@@ -55,6 +60,32 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
             edit = @Edit(title = "姓名", notNull = true, search = @Search(vague = true))
     )
     private String name;
+
+    @EruptField(
+            views = @View(title = "账户状态"),
+            edit = @Edit(
+                    title = "账户状态",
+                    search = @Search,
+                    type = EditType.BOOLEAN,
+                    boolType = @BoolType(
+                            trueText = "激活",
+                            falseText = "锁定"
+                    )
+            )
+    )
+    private Boolean status;
+
+    @EruptField(
+            views = @View(title = "手机号码"),
+            edit = @Edit(title = "手机号码", search = @Search(vague = true), inputType = @InputType(regex = PHONE_REGEX))
+    )
+    private String phone;
+
+    @EruptField(
+            views = @View(title = "邮箱"),
+            edit = @Edit(title = "邮箱", search = @Search(vague = true), inputType = @InputType(regex = EMAIL_REGEX))
+    )
+    private String email;
 
     @ManyToOne
     @EruptField(
@@ -74,19 +105,12 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private EruptOrg eruptOrg;
 
+    @ManyToOne
     @EruptField(
-            views = @View(title = "账户状态"),
-            edit = @Edit(
-                    title = "账户状态",
-                    search = @Search,
-                    type = EditType.BOOLEAN,
-                    boolType = @BoolType(
-                            trueText = "激活",
-                            falseText = "锁定"
-                    )
-            )
+            views = @View(title = "岗位", column = "name"),
+            edit = @Edit(title = "岗位", type = EditType.REFERENCE_TREE)
     )
-    private Boolean status;
+    private EruptPost eruptPost;
 
     @Transient
     @EruptField(
