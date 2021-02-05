@@ -223,8 +223,10 @@ erupt
 └── erupt-web -- 前端页面
 
 erupt-pro
-├── erupt-workflow -- 基于erupt实现的工作流模块(开发中)
-├── erupt-dataflow -- 基于erupt实现的数据流模块(开发中)
+├── erupt-workflow -- 基于erupt实现的工作流模块(构思中)
+├── erupt-dataflow -- 基于erupt实现的数据流模块(构思中)
+├── erupt-dataflow -- 基于erupt实现的数据流模块(构思中)
+├── erupt-tenant -- 基于erupt实现的SaaS云多租户模块（开发中，面向企业用户）
 └── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（付费模块）
 
 erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
