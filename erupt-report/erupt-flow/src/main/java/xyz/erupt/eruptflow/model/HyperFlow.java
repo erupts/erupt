@@ -18,4 +18,5 @@ import javax.persistence.MappedSuperclass;
 public class HyperFlow extends HyperModel {
 
     private String status;
+
 }
