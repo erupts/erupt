@@ -175,7 +175,6 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private String remark;
 
-
     private Boolean isAdmin;
 
     @Transient
