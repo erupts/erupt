@@ -1,4 +1,4 @@
-package xyz.erupt.rent.service;
+package xyz.erupt.tenant.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.rent.model.EruptRent;
+import xyz.erupt.tenant.model.EruptTenant;
 import xyz.erupt.upms.constant.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
@@ -29,14 +29,14 @@ import java.util.Map;
 @Service
 @Order
 @Slf4j
-public class RentDataLoadService implements CommandLineRunner, DataProxy<EruptRent> {
+public class RentDataLoadService implements CommandLineRunner, DataProxy<EruptTenant> {
 
-    private static final Map<String, EruptRent> eruptRentMap = new HashMap<>();
+    private static final Map<String, EruptTenant> eruptRentMap = new HashMap<>();
     private static final Map<String, String> rentUrlMappingMap = new HashMap<>();
 
     static {
         try {
-            EruptField eruptField = EruptRent.class.getDeclaredField("mappingType").getAnnotation(EruptField.class);
+            EruptField eruptField = EruptTenant.class.getDeclaredField("mappingType").getAnnotation(EruptField.class);
             for (VL vl : eruptField.edit().choiceType().vl()) {
                 rentUrlMappingMap.put(vl.label(), vl.value());
             }
@@ -50,13 +50,13 @@ public class RentDataLoadService implements CommandLineRunner, DataProxy<EruptRe
     @Resource
     private HttpServletRequest request;
 
-    public static EruptRent getEruptRent(String link) {
+    public static EruptTenant getEruptRent(String link) {
         return eruptRentMap.get(link);
     }
 
     private void fillRentMap() {
         eruptRentMap.clear();
-        for (EruptRent rent : eruptDao.queryEntityList(EruptRent.class, "status = true")) {
+        for (EruptTenant rent : eruptDao.queryEntityList(EruptTenant.class, "status = true")) {
             eruptRentMap.put(rent.getMappingValue(), rent);
         }
     }
@@ -71,29 +71,29 @@ public class RentDataLoadService implements CommandLineRunner, DataProxy<EruptRe
                 String manager = "$manager";
                 EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(manager, "系统管理", null, null, 1, 0, "fa fa-cogs", null)
                         , code, manager);
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptRent.class.getSimpleName(), "租户管理", MenuTypeEnum.TABLE.getCode(), EruptRent.class.getSimpleName()
-                        , Integer.valueOf(EruptMenu.OPEN), 1, null, eruptMenu), code, EruptRent.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptTenant.class.getSimpleName(), "租户管理", MenuTypeEnum.TABLE.getCode(), EruptTenant.class.getSimpleName()
+                        , Integer.valueOf(EruptMenu.OPEN), 1, null, eruptMenu), code, EruptTenant.class.getSimpleName());
             }
         });
     }
 
     @Override
-    public void beforeAdd(EruptRent eruptRent) {
-        eruptRent.setToken(RandomStringUtils.randomAlphanumeric(6));
+    public void beforeAdd(EruptTenant eruptTenant) {
+        eruptTenant.setToken(RandomStringUtils.randomAlphanumeric(6));
     }
 
     @Override
-    public void afterAdd(EruptRent eruptRent) {
+    public void afterAdd(EruptTenant eruptTenant) {
         this.fillRentMap();
     }
 
     @Override
-    public void afterUpdate(EruptRent eruptRent) {
+    public void afterUpdate(EruptTenant eruptTenant) {
         this.fillRentMap();
     }
 
     @Override
-    public void afterDelete(EruptRent eruptRent) {
+    public void afterDelete(EruptTenant eruptTenant) {
         this.fillRentMap();
     }
 
@@ -103,9 +103,9 @@ public class RentDataLoadService implements CommandLineRunner, DataProxy<EruptRe
         for (Map<String, Object> map : list) {
             String mappingType = rentUrlMappingMap.get(map.get("mappingType"));
             String mappingValue = (String) map.get("mappingValue");
-            if (EruptRent.MAPPING_DOMAIN.equals(mappingType)) {
+            if (EruptTenant.MAPPING_DOMAIN.equals(mappingType)) {
                 map.put("mappingValue", mappingValue);
-            } else if (EruptRent.MAPPING_SECOND_DOMAIN.equals(mappingType)) {
+            } else if (EruptTenant.MAPPING_SECOND_DOMAIN.equals(mappingType)) {
                 map.put("mappingValue", mappingValue + "." + request.getServerName());
             }
         }

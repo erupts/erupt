@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
-import xyz.erupt.rent.model.EruptRent;
+import xyz.erupt.tenant.model.EruptTenant;
 
 import javax.persistence.*;
 
@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @MappedSuperclass
-@PreDataProxy(BaseRentDataProxy.class)
+@PreDataProxy(BaseTenantDataProxy.class)
 public class BaseModel {
 
     @Id
@@ -27,8 +27,8 @@ public class BaseModel {
     private Long id;
 
     @ManyToOne
-    private EruptRent eruptRent;
+    private EruptTenant eruptTenant;
 
     @Column(length = 12)
-    private String rentToken;
+    private String tenantToken;
 }
