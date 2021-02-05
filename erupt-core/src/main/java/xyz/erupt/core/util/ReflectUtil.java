@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -58,6 +59,22 @@ public class ReflectUtil {
             }
             tempClass = tempClass.getSuperclass();
         }
+    }
+
+    //获取继承列表
+    public static List<Class<?>> findClassExtendStack(Class<?> clazz) {
+        List<Class<?>> list = new ArrayList<>();
+        Class<?> tempClass = clazz;
+        while (null != tempClass) {
+            tempClass = tempClass.getSuperclass();
+            if (tempClass != null && tempClass != Object.class) {
+                list.add(tempClass);
+            }
+        }
+        if (list.size() > 1) {
+            Collections.reverse(list);
+        }
+        return list;
     }
 
     //获取字段泛型名
