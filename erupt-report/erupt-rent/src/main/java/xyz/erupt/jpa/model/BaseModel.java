@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @MappedSuperclass
-@PreDataProxy(RentDataProxy.class)
+@PreDataProxy(BaseRentDataProxy.class)
 public class BaseModel {
 
     @Id
@@ -28,4 +28,7 @@ public class BaseModel {
 
     @ManyToOne
     private EruptRent eruptRent;
+
+    @Column(length = 12)
+    private String rentToken;
 }
