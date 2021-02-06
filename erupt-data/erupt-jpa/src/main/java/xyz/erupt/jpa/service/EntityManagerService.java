@@ -1,6 +1,5 @@
 package xyz.erupt.jpa.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
@@ -12,6 +11,7 @@ import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.service.EruptApplication;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -30,7 +30,7 @@ public class EntityManagerService implements ApplicationRunner {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
+    @Resource
     private EruptProp eruptProp;
 
     private Map<String, EntityManagerFactory> entityManagerMap;
@@ -63,12 +63,7 @@ public class EntityManagerService implements ApplicationRunner {
     }
 
 
-    /**
-     * 如果使用了@EruptDataSource多数据源，调用此方法必须手动关闭, close()
-     *
-     * @param eruptClass
-     * @return
-     */
+    //如果使用了@EruptDataSource多数据源，调用此方法必须手动关闭, close()
     public EntityManager getEntityManager(Class<?> eruptClass) {
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) {

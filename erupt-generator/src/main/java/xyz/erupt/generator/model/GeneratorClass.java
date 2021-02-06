@@ -27,7 +27,8 @@ import java.util.Set;
                 code = "preview", title = "代码预览", icon = "fa fa-code",
                 mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,
                 tpl = @Tpl(path = "generator/erupt-code-skeleton.ftl",
-                        engine = Tpl.Engine.FreeMarker, tplHandler = GeneratorClass.class)
+                        engine = Tpl.Engine.FreeMarker,
+                        tplHandler = GeneratorClass.class)
         )
 )
 @Table(name = "e_generator_class")
@@ -67,7 +68,7 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
 //    )
 //    private Boolean createField;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "class_id")
     @OrderBy("sort")
     @EruptField(
@@ -78,10 +79,9 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
     @SneakyThrows
     @Override
     public Map<String, Object> bindTplData(String[] params) {
-        Map<String, Object> map = new HashMap<>();
-        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-        TemplateHashModel staticModels = wrapper.getStaticModels();
+        TemplateHashModel staticModels = BeansWrapper.getDefaultInstance().getStaticModels();
         TemplateHashModel fileStatics = (TemplateHashModel) staticModels.get(GeneratorType.class.getName());
+        Map<String, Object> map = new HashMap<>();
         map.put(GeneratorType.class.getSimpleName(), fileStatics);
         return map;
     }
