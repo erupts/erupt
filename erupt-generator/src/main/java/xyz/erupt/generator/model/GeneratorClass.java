@@ -68,6 +68,7 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
 //    )
 //    private Boolean createField;
 
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "class_id")
     @OrderBy("sort")
