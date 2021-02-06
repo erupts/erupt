@@ -91,11 +91,11 @@ public class Bi extends HyperModel {
     )
     private String view;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "bi_id")
     private Set<BiChart> biCharts;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "bi_id")
     @OrderBy("sort")
     @EruptField(
