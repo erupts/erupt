@@ -18,7 +18,7 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-core</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>tk.mybatis</groupId>

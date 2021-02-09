@@ -9,6 +9,7 @@ import xyz.erupt.annotation.config.SkipSerialize;
  * @date 2021/1/13 00:09
  */
 public class GsonExclusionStrategies implements ExclusionStrategy {
+
     @Override
     public boolean shouldSkipField(FieldAttributes f) {
         SkipSerialize skip = f.getAnnotation(SkipSerialize.class);
@@ -19,4 +20,5 @@ public class GsonExclusionStrategies implements ExclusionStrategy {
     public boolean shouldSkipClass(Class<?> incomingClass) {
         return false;
     }
+
 }

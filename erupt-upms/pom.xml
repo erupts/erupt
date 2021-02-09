@@ -9,7 +9,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.6.2</version>
+        <version>1.6.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -25,12 +25,12 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-core</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-jpa</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <!--    根据请求头获取浏览器信息    -->
         <dependency>
