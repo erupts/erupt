@@ -86,6 +86,8 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 ![架构图](readme/architecture.png)
 
 ## ⛰ 演示截图 | Screenshot
+<img src="./readme/login.png" width="100%"/>
+
 <img src="./readme/index.png" width="100%"/>
 
 <img src="./readme/seer.png" width="100%"/>
@@ -114,7 +116,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 
 ## 🧐 为什么要做 Erupt ?
-无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存这无法规避的痛点，如：开发效率低下、接口对接繁琐、界面差强人意、代码重复、有安全漏洞，导致开发成本极高。
+无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存在无法规避的痛点，如：开发效率低下、接口对接繁琐、界面差强人意、代码重复、有安全漏洞，导致开发成本极高。
 
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？   
 代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
@@ -223,8 +225,10 @@ erupt
 └── erupt-web -- 前端页面
 
 erupt-pro
-├── erupt-workflow -- 基于erupt实现的工作流模块(开发中)
-├── erupt-dataflow -- 基于erupt实现的数据流模块(开发中)
+├── erupt-workflow -- 基于erupt实现的工作流模块(构思中)
+├── erupt-dataflow -- 基于erupt实现的数据流模块(构思中)
+├── erupt-tenant -- 基于erupt实现的SaaS云多租户模块（开发中，面向企业用户）
+├── erupt-monitor -- 基于erupt实现的服务器监控模块
 └── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（付费模块）
 
 erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
