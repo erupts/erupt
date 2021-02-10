@@ -58,7 +58,6 @@ public class AnnotationUtil {
 //        return new JSONObject(convertStr).toString();
 //    }
 
-
     //创建ScriptEngine成本过高，所以定义为全局变量。
     private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 
