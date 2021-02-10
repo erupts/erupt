@@ -60,7 +60,7 @@ public class AnnotationUtil {
 
 
     //创建ScriptEngine成本过高，所以定义为全局变量。
-    private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("js");
+    private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 
     @SneakyThrows
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
