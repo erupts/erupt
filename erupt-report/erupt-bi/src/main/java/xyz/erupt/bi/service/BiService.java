@@ -154,7 +154,7 @@ public class BiService {
     @SneakyThrows
     private String processPlaceHolder(String express, Map<String, Object> param) {
         Matcher m = Pattern.compile(EXPRESS_PATTERN).matcher(express);
-        ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("js");
+        ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
         try {
             for (String s : BiDataInitService.functions) {
                 scriptEngine.eval(s);
