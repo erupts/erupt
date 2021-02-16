@@ -25,47 +25,49 @@
 </head>
 <body>
 <div id="app" v-loading.fullscreen.lock="fullscreenLoading">
-    <el-row :gutter="16">
-        <el-col :span="8" :xs="24">
-            <el-card :body-style="{padding:'0'}" class="box-card" shadow="always">
-                <div class="clearfix" slot="header">
-                    <span>Redis 信息</span>
-                </div>
-                <div style="height: 410px">
-                    <div class="attr">
-                        <p class="d-flex">版本号：<span class="ml_auto">{{redis.version}}</span></p>
-                        <p class="d-flex">端口号：<span class="ml_auto">{{redis.port}}</span></p>
-                        <p class="d-flex">运行天数：<span class="ml_auto">{{redis.day}} 天</span></p>
-                        <p class="d-flex">是否集群：<span class="ml_auto">{{redis.isCluster ? '是' : '否'}}</span></p>
-                        <p class="d-flex">持久化方式：<span class="ml_auto">{{redis.isAOF ? 'AOF' : 'RDB'}}</span></p>
-                        <p class="d-flex">已连接客户端：<span class="ml_auto">{{redis.clientNum}}</span></p>
-                        <p class="d-flex">总内存：<span class="ml_auto">{{redis.totalMem}}</span></p>
-                        <p class="d-flex" style="border-bottom: none">已用内存：<span
-                                class="ml_auto">{{redis.usedMem}}</span></p>
+    <template>
+        <el-row :gutter="16">
+            <el-col :span="8" :xs="24">
+                <el-card :body-style="{padding:'0'}" class="box-card" shadow="always">
+                    <div class="clearfix" slot="header">
+                        <span>Redis 信息</span>
                     </div>
-                </div>
-            </el-card>
-        </el-col>
-        <el-col :span="16" :xs="24">
-            <el-card class="box-card" shadow="always">
-                <div class="clearfix" slot="header">
-                    <span>命令统计</span>
-                </div>
-                <div ref="commandPie" style="height: 375px">
+                    <div style="height: 410px">
+                        <div class="attr">
+                            <p class="d-flex">版本号：<span class="ml_auto">{{redis.version}}</span></p>
+                            <p class="d-flex">端口号：<span class="ml_auto">{{redis.port}}</span></p>
+                            <p class="d-flex">运行天数：<span class="ml_auto">{{redis.day}} 天</span></p>
+                            <p class="d-flex">是否集群：<span class="ml_auto">{{redis.isCluster ? '是' : '否'}}</span></p>
+                            <p class="d-flex">持久化方式：<span class="ml_auto">{{redis.isAOF ? 'AOF' : 'RDB'}}</span></p>
+                            <p class="d-flex">已连接客户端：<span class="ml_auto">{{redis.clientNum}}</span></p>
+                            <p class="d-flex">总内存：<span class="ml_auto">{{redis.totalMem}}</span></p>
+                            <p class="d-flex" style="border-bottom: none">已用内存：<span
+                                    class="ml_auto">{{redis.usedMem}}</span></p>
+                        </div>
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="16" :xs="24">
+                <el-card class="box-card" shadow="always">
+                    <div class="clearfix" slot="header">
+                        <span>命令统计</span>
+                    </div>
+                    <div ref="commandPie" style="height: 375px">
 
-                </div>
-            </el-card>
-        </el-col>
-    </el-row>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
 
-    <el-card :body-style="{padding:'0'}" class="box-card" shadow="always" style="margin-top: 16px">
-        <div class="clearfix" slot="header">
-            <span>Redis Key 数量</span>
-        </div>
-        <div ref="keyLine" style="height: 220px">
+        <el-card :body-style="{padding:'0'}" class="box-card" shadow="always" style="margin-top: 16px">
+            <div class="clearfix" slot="header">
+                <span>Redis Key 数量</span>
+            </div>
+            <div ref="keyLine" style="height: 220px">
 
-        </div>
-    </el-card>
+            </div>
+        </el-card>
+    </template>
 </div>
 <script src="monitor/echarts.min.js"></script>
 <script src="element/vue.min.js"></script>

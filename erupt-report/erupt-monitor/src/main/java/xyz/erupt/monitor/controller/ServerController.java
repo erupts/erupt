@@ -21,8 +21,6 @@ import javax.annotation.Resource;
 public class ServerController {
 
     @Resource
-    private Platform platform;
-    @Resource
     private EruptProp eruptProp;
 
     @RequestMapping("/info")
