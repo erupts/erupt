@@ -2,6 +2,7 @@ package xyz.erupt.core.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -22,11 +23,11 @@ import java.util.List;
 @RequestMapping(EruptRestPath.ERUPT_COMP)
 public class EruptComponentController {
 
-    @RequestMapping("/auto-complete/{erupt}/{field}/{val}")
+    @RequestMapping("/auto-complete/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<Object> findAutoCompleteValue(@PathVariable("erupt") String eruptName,
                                               @PathVariable("field") String field,
-                                              @PathVariable("val") String val) {
+                                              @RequestParam("val") String val) {
         EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
         if (null == fieldModel) {
             throw new EruptNoLegalPowerException();

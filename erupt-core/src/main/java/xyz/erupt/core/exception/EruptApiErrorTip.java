@@ -18,5 +18,4 @@ public class EruptApiErrorTip extends RuntimeException {
         this.eruptApiModel = eruptApiModel;
     }
 
-
 }
