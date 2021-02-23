@@ -76,4 +76,6 @@ public class EruptLoginLog extends BaseModel {
             edit = @Edit(title = "设备类型", search = @Search)
     )
     private String deviceType;
+
+    private String token;
 }

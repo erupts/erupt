@@ -6,12 +6,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.EruptAppProp;
 import xyz.erupt.core.config.EruptProp;
+import xyz.erupt.core.service.EruptApplication;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.config.EruptUpmsConfig;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
+import xyz.erupt.upms.fun.EruptLogin;
+import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
@@ -57,18 +61,12 @@ public class EruptUserService {
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
 
-    @Transactional
-    public void saveLoginLog(EruptUser user) {
-        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
-        EruptLoginLog loginLog = new EruptLoginLog();
-        loginLog.setEruptUser(user);
-        loginLog.setLoginTime(new Date());
-        loginLog.setIp(IpUtil.getIpAddr(request));
-        loginLog.setSystemName(userAgent.getOperatingSystem().getName());
-        loginLog.setRegion(IpUtil.getCityInfo(loginLog.getIp()));
-        loginLog.setBrowser(userAgent.getBrowser().getName() + " " + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
-        loginLog.setDeviceType(userAgent.getOperatingSystem().getDeviceType().getName());
-        entityManager.persist(loginLog);
+    public static LoginProxy findEruptLogin() {
+        EruptLogin eruptLogin = EruptApplication.getPrimarySource().getAnnotation(EruptLogin.class);
+        if (null != eruptLogin) {
+            return EruptSpringUtil.getBean(eruptLogin.value());
+        }
+        return null;
     }
 
     public static final String LOGIN_ERROR_HINT = "账号或密码错误";
@@ -150,6 +148,21 @@ public class EruptUserService {
         } else {
             return LocalDateTime.now().plusSeconds(request.getSession().getMaxInactiveInterval());
         }
+    }
+
+    @Transactional
+    public void saveLoginLog(EruptUser user, String token) {
+        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+        EruptLoginLog loginLog = new EruptLoginLog();
+        loginLog.setToken(token);
+        loginLog.setEruptUser(user);
+        loginLog.setLoginTime(new Date());
+        loginLog.setIp(IpUtil.getIpAddr(request));
+        loginLog.setSystemName(userAgent.getOperatingSystem().getName());
+        loginLog.setRegion(IpUtil.getCityInfo(loginLog.getIp()));
+        loginLog.setBrowser(userAgent.getBrowser().getName() + " " + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
+        loginLog.setDeviceType(userAgent.getOperatingSystem().getDeviceType().getName());
+        entityManager.persist(loginLog);
     }
 
     @Transactional

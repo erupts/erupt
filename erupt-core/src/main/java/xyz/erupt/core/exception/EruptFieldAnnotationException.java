@@ -26,10 +26,6 @@ public class EruptFieldAnnotationException extends RuntimeException {
                         }
                     }
                 }
-                if (eruptFieldModel.getFieldName().contains("_")) {
-                    throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, eruptFieldModel.getFieldName()
-                            + " 命名不规范，字段命名方式必须为驼峰");
-                }
                 break;
         }
     }

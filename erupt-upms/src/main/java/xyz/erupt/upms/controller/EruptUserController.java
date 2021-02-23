@@ -3,6 +3,7 @@ package xyz.erupt.upms.controller;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wf.captcha.ArithmeticCaptcha;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -11,12 +12,14 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
+import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptMenuService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
+import xyz.erupt.upms.vo.BoolReasonValue;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
@@ -45,16 +48,27 @@ public class EruptUserController {
     private Gson gson;
 
     //登录
+    @SneakyThrows
     @PostMapping("/login")
     @ResponseBody
     public LoginModel login(@RequestParam("account") String account,
                             @RequestParam("pwd") String pwd,
-                            @RequestParam(name = "verifyCode", required = false) String verifyCode,
-                            HttpServletRequest request) {
+                            @RequestParam(name = "verifyCode", required = false) String verifyCode) {
         LoginModel loginModel = eruptUserService.login(account, pwd, verifyCode);
+        LoginProxy loginProxy = EruptUserService.findEruptLogin();
+        Object value = null;
+        if (null != loginProxy) {
+            if (loginModel.isPass()) {
+                BoolReasonValue<?> boolReasonValue = loginProxy.login(account, loginModel.getEruptUser().getPassword());
+                value = boolReasonValue.getValue();
+                loginModel.setUseVerifyCode(true);
+                loginModel.setPass(boolReasonValue.isBool());
+                loginModel.setReason(boolReasonValue.getReason());
+            }
+        }
         if (loginModel.isPass()) {
             EruptUser eruptUser = loginModel.getEruptUser();
-            loginModel.setToken(RandomStringUtils.random(20, true, true));
+            loginModel.setToken(RandomStringUtils.random(16, true, true));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             sessionService.putByLoginExpire(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString());
             loginModel.setUserName(eruptUser.getName());
@@ -63,9 +77,14 @@ public class EruptUserController {
                 loginModel.setIndexMenu(indexMenu.getType() + "||" + indexMenu.getValue());
             }
             List<EruptMenu> eruptMenus = menuService.getMenuList(eruptUser);
-            sessionService.putByLoginExpire(SessionKey.MENU + loginModel.getToken(), gson.toJson(eruptMenus));
-            sessionService.putByLoginExpire(SessionKey.MENU_VIEW + loginModel.getToken(), gson.toJson(menuService.geneMenuListVo(eruptMenus)));
-            eruptUserService.saveLoginLog(eruptUser); //记录登录日志
+            if (null != loginProxy) {
+                loginProxy.loginSuccess(eruptUser, loginModel.getToken(), eruptMenus, value);
+            }
+            sessionService.putByLoginExpire(SessionKey.MENU + loginModel.getToken(),
+                    gson.toJson(eruptMenus));
+            sessionService.putByLoginExpire(SessionKey.MENU_VIEW + loginModel.getToken(),
+                    gson.toJson(menuService.geneMenuListVo(eruptMenus)));
+            eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
         return loginModel;
     }
