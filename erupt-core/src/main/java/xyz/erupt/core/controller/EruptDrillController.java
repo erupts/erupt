@@ -62,14 +62,11 @@ public class EruptDrillController {
             if (null == val) {
                 return new Page();
             }
-//            String.format("%s = '%s'",
-//                    link.linkErupt().getSimpleName() + "." + link.joinColumn(), val)
-//            List<Condition> serverCondition = new ArrayList<>();
-//            serverCondition.add(new Condition(link.linkErupt().getSimpleName() + "." + link.joinColumn(), val));
             return eruptService.getEruptData(
                     EruptCoreService.getErupt(link.linkErupt().getSimpleName()),
-                    tableQueryVo, null, String.format("%s = '%s'",
-                            link.linkErupt().getSimpleName() + "." + link.joinColumn(), val));
+                    tableQueryVo, null,
+                    String.format("%s = '%s'", link.linkErupt().getSimpleName() + "." + link.joinColumn(), val)
+            );
         }
         throw new EruptNoLegalPowerException();
     }

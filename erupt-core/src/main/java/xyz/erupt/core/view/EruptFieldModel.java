@@ -104,6 +104,12 @@ public class EruptFieldModel {
                             case MAP:
                                 viewValues.put(TYPE, ViewType.MAP);
                                 continue;
+                            case TAB_TABLE_ADD:
+                            case TAB_TREE:
+                            case TAB_TABLE_REFER:
+                            case CHECKBOX:
+                                viewValues.put(TYPE, ViewType.TAB_VIEW);
+                                continue;
                         }
                     }
                     if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName.toLowerCase())) {

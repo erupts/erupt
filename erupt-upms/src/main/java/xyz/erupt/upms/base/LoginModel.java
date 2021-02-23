@@ -43,4 +43,7 @@ public class LoginModel {
         this.reason = reason;
         this.useVerifyCode = useVerifyCode;
     }
+
+    public LoginModel() {
+    }
 }

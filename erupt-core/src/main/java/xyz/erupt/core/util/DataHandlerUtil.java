@@ -45,15 +45,24 @@ public class DataHandlerUtil {
         return resultTreeModels;
     }
 
+    private static EruptFieldModel cycleFindFieldByKey(EruptModel eruptModel, String key) {
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
+        if (null != fieldModel) {
+            return fieldModel;
+        } else {
+            if (key.contains("_")) {
+                return cycleFindFieldByKey(eruptModel, key.substring(0, key.lastIndexOf("_")));
+            } else {
+                return null;
+            }
+        }
+    }
+
     public static void convertDataToEruptView(EruptModel eruptModel, Collection<Map<String, Object>> list) {
         Map<String, Map<String, String>> choiceItems = new HashMap<>();
         for (Map<String, Object> map : list) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String key = entry.getKey();
-                if (entry.getKey().contains("_")) {
-                    key = entry.getKey().split("_")[0];
-                }
-                EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
+                EruptFieldModel fieldModel = cycleFindFieldByKey(eruptModel, entry.getKey());
                 if (null == fieldModel) {
                     continue;
                 }

@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.6.4</version>
+    <version>1.6.5</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -30,6 +30,8 @@
         <module>erupt-annotation</module>
         <module>erupt-core</module>
         <module>erupt-tpl</module>
+        <module>erupt-tpl-ui/ant-design</module>
+        <module>erupt-tpl-ui/element-ui</module>
         <module>erupt-data/erupt-jpa</module>
         <module>erupt-data/erupt-mongodb</module>
         <module>erupt-upms</module>
@@ -55,7 +57,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
