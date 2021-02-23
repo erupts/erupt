@@ -54,8 +54,9 @@ public class EruptRole extends BaseModel {
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"))
     @EruptField(
+            views = @View(title = "菜单权限"),
             edit = @Edit(
-                    title = "菜单",
+                    title = "菜单权限",
                     type = EditType.TAB_TREE
             )
     )
@@ -66,6 +67,7 @@ public class EruptRole extends BaseModel {
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     @ManyToMany
     @EruptField(
+            views = @View(title = "包含用户"),
             edit = @Edit(
                     title = "包含用户",
                     type = EditType.TAB_TABLE_REFER
