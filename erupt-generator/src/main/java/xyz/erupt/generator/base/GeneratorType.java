@@ -43,8 +43,6 @@ public enum GeneratorType {
     private static final String Transient = "@Transient ";
     private static final String LOB = "@Lob ";
     private static final String REF = "#refClass";
-
-    //    private final String otherAnnotation;
     private static final String THIS = "#this";
     private static final String TARGET = "#target";
     private static final String SET = "Set<" + REF + ">";
