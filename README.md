@@ -225,15 +225,15 @@ erupt
 └── erupt-web -- 前端页面
 
 erupt-pro
-├── erupt-workflow -- 基于erupt实现的工作流模块(构思中)
-├── erupt-dataflow -- 基于erupt实现的数据流模块(构思中)
+├── erupt-workflow -- 基于erupt实现的工作流模块（构思中）
+├── erupt-dataflow -- 基于erupt实现的数据流模块（构思中）
 ├── erupt-tenant -- 基于erupt实现的SaaS云多租户模块（开发中，面向企业用户）
-├── erupt-monitor -- 基于erupt实现的服务器监控模块
+├── erupt-monitor -- 基于erupt实现的服务器监控模块，支持在线用户统计与账户强退
 └── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（付费模块）
 
 erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
 
-erupt-web-angular -- Erupt 前端源码，暂不开放，如有自定义页面的需求，可使用 erupt-tpl 模块
+erupt-web-angular -- Erupt 前端源码，如有自定义页面的需求，可使用 erupt-tpl 模块，需要此模块源码请联系作者
 
 ```
 

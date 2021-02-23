@@ -7,7 +7,7 @@ import xyz.erupt.annotation.*;
 import xyz.erupt.annotation.sub_erupt.*;
 import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.auth.model.base.*;
+import xyz.erupt.upms.model.base.HyperModel;
 import javax.persistence.*;
 import java.util.Set;
 import xyz.erupt.jpa.model.BaseModel;
