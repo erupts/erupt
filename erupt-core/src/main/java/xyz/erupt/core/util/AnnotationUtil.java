@@ -18,9 +18,7 @@ import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.service.IEruptDataService;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.script.*;
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -58,7 +56,6 @@ public class AnnotationUtil {
 //        return new JSONObject(convertStr).toString();
 //    }
 
-    //创建ScriptEngine成本过高，所以定义为全局变量。
     private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 
     @SneakyThrows
@@ -88,12 +85,11 @@ public class AnnotationUtil {
             Object result = method.invoke(annotation);
             Match match = method.getAnnotation(Match.class);
             if (null != match) {
-                synchronized (engine) { //保证ScriptEngine线程安全
-                    engine.put(VALUE_VAR, result);
-                    engine.put(ITEM_VAR, annotation);
-                    if (!(Boolean) engine.eval(String.format("!!(%s)", match.value()))) {
-                        continue;
-                    }
+                Bindings bindings = new SimpleBindings();
+                bindings.put(VALUE_VAR, result);
+                bindings.put(ITEM_VAR, annotation);
+                if (!(Boolean) engine.eval(String.format("!!(%s)", match.value()), bindings)) {
+                    continue;
                 }
             }
             if (returnType.endsWith(EMPTY_ARRAY)) {
