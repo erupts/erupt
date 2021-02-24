@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.service.BiDataInitService;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.upms.model.base.HyperModel;
 
 import javax.annotation.Resource;
@@ -19,6 +20,9 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * @author liyuepeng
@@ -52,10 +56,6 @@ public class BiFunction extends HyperModel implements DataProxy<BiFunction> {
     )
     private String jsFunction;
 
-    @Resource
-    @Transient
-    private BiDataInitService biDataInitService;
-
     public BiFunction(String code, String name, String jsFunction) {
         this.code = code;
         this.name = name;
@@ -65,18 +65,34 @@ public class BiFunction extends HyperModel implements DataProxy<BiFunction> {
     public BiFunction() {
     }
 
+    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
+    @Resource
+    @Transient
+    private BiDataInitService biDataInitService;
+
+    private void testFunction(BiFunction biFunction) {
+        try {
+            scriptEngine.eval(biFunction.getJsFunction());
+        } catch (ScriptException e) {
+            throw new EruptApiErrorTip(e.getMessage());
+        }
+    }
+
     @Override
     public void afterAdd(BiFunction biFunction) {
+        this.testFunction(biFunction);
         biDataInitService.flushFunction();
     }
 
     @Override
     public void afterUpdate(BiFunction biFunction) {
+        this.testFunction(biFunction);
         biDataInitService.flushFunction();
     }
 
     @Override
     public void afterDelete(BiFunction biFunction) {
+        this.testFunction(biFunction);
         biDataInitService.flushFunction();
     }
 }

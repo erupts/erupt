@@ -2,7 +2,6 @@ package xyz.erupt.bi.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -15,9 +14,9 @@ import xyz.erupt.upms.constant.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.util.MenuTool;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,10 +28,7 @@ import java.util.List;
 @Slf4j
 public class BiDataInitService implements CommandLineRunner {
 
-    static List<String> functions = new ArrayList<>();
-
-    @Autowired
-    private EruptDao eruptDao;
+    static String defineFunctions;
 
     @Transactional
     @Override
@@ -76,11 +72,16 @@ public class BiDataInitService implements CommandLineRunner {
                 "code", defaultFunctionCode);
     }
 
+    @Resource
+    private EruptDao eruptDao;
+
     public void flushFunction() {
         List<Object[]> list = eruptDao.queryObjectList(BiFunction.class, null, null, "jsFunction");
+        StringBuilder sb = new StringBuilder();
         for (Object o : list) {
-            functions.add((String) o);
+            sb.append((String) o).append("\n");
         }
+        defineFunctions = sb.toString();
     }
 
 }

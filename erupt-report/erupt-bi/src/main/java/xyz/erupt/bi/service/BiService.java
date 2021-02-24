@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.bi.constant.DBTypeEnum;
+import xyz.erupt.bi.constant.ScriptPlaceholderConst;
 import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiClassHandler;
@@ -17,9 +18,14 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.service.EruptUserService;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.script.*;
+import javax.script.Bindings;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.SimpleBindings;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSetMetaData;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -33,19 +39,13 @@ import java.util.regex.Pattern;
 @Slf4j
 public class BiService {
 
-    //导出标识符
-    private static final String EXPORT_PLACEHOLDER = "$export";
-
-    //用户ID
-    private static final String USER_ID_PLACEHOLDER = "$uid";
-
-    private static final String TOTAL_KEY = "count";
-
     @Autowired
     private EruptUserService eruptUserService;
 
     @Autowired
     private BiDataSourceService dataSourceService;
+
+    private static final String TOTAL_KEY = "count";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -54,13 +54,37 @@ public class BiService {
         return entityManager.find(Bi.class, id);
     }
 
+    @Resource
+    private HttpServletRequest request;
+
+    private String getLimitSql(BiDataSource biDataSource) {
+        if (null == biDataSource) {
+            return DBTypeEnum.GENERAL_LIMIT;
+        }
+        if (StringUtils.isNotBlank(biDataSource.getLimitSql())) {
+            return biDataSource.getLimitSql();
+        } else {
+            for (DBTypeEnum value : DBTypeEnum.values()) {
+                if (value.name().equals(biDataSource.getType())) {
+                    if (null == value.getLimitSql()) {
+                        return DBTypeEnum.GENERAL_LIMIT;
+                    } else {
+                        return value.getLimitSql();
+                    }
+                }
+            }
+        }
+        return DBTypeEnum.GENERAL_LIMIT;
+    }
+
     public BiData queryBiData(Bi bi, int pageIndex, int pageSize,
                               Map<String, Object> query, boolean export) {
         if (StringUtils.isBlank(bi.getSqlStatement())) {
             throw new EruptWebApiRuntimeException("express not found");
         }
-        query.put(EXPORT_PLACEHOLDER, export);
-        query.put(USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
+        query.put(ScriptPlaceholderConst.EXPORT_PLACEHOLDER, export);
+        query.put(ScriptPlaceholderConst.USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
+        query.put(ScriptPlaceholderConst.REQUEST_PLACEHOLDER, request);
         BiData biData = new BiData();
         if (!export) {
             biData.setTotal(this.getTotal(bi, query));
@@ -86,26 +110,6 @@ public class BiService {
             biData.setList(new ArrayList<>(0));
         }
         return biData;
-    }
-
-    private String getLimitSql(BiDataSource biDataSource) {
-        if (null == biDataSource) {
-            return DBTypeEnum.GENERAL_LIMIT;
-        }
-        if (StringUtils.isNotBlank(biDataSource.getLimitSql())) {
-            return biDataSource.getLimitSql();
-        } else {
-            for (DBTypeEnum value : DBTypeEnum.values()) {
-                if (value.name().equals(biDataSource.getType())) {
-                    if (null == value.getLimitSql()) {
-                        return DBTypeEnum.GENERAL_LIMIT;
-                    } else {
-                        return value.getLimitSql();
-                    }
-                }
-            }
-        }
-        return DBTypeEnum.GENERAL_LIMIT;
     }
 
     @SneakyThrows
@@ -156,13 +160,6 @@ public class BiService {
 
     @SneakyThrows
     private String processPlaceHolder(String express, Map<String, Object> param) {
-        try {
-            for (String s : BiDataInitService.functions) {
-                scriptEngine.eval(s);
-            }
-        } catch (ScriptException e) {
-            throw new EruptWebApiRuntimeException("函数脚本解析异常：" + e.getMessage());
-        }
         Bindings bindings = new SimpleBindings();
         if (null != param) {
             for (Map.Entry<String, Object> entry : param.entrySet()) {
@@ -172,7 +169,8 @@ public class BiService {
         Matcher m = EXPRESS_PATTERN.matcher(express);
         while (m.find()) {
             String exp = m.group();
-            Object result = scriptEngine.eval(exp, bindings);
+            Object result = scriptEngine.eval(BiDataInitService.defineFunctions
+                    + "\n" + exp, bindings);
             if (null == result) {
                 result = "";
             }
