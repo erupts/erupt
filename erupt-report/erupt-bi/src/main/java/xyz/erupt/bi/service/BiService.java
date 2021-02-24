@@ -15,14 +15,11 @@ import xyz.erupt.bi.view.BiColumn;
 import xyz.erupt.bi.view.BiData;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.script.*;
 import java.sql.ResultSetMetaData;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -38,16 +35,18 @@ public class BiService {
 
     //导出标识符
     private static final String EXPORT_PLACEHOLDER = "$export";
-    private static final String EXPRESS_PATTERN = "(?<=\\$\\{)(.+?)(?=\\})";
-    private static final String TOTAL_KEY = "count";
+
     //用户ID
     private static final String USER_ID_PLACEHOLDER = "$uid";
-    @Autowired
-    private EruptDao eruptDao;
+
+    private static final String TOTAL_KEY = "count";
+
     @Autowired
     private EruptUserService eruptUserService;
+
     @Autowired
     private BiDataSourceService dataSourceService;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -151,10 +150,12 @@ public class BiService {
         });
     }
 
+    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
+
+    private static final Pattern EXPRESS_PATTERN = Pattern.compile("(?<=\\$\\{)(.+?)(?=\\})");
+
     @SneakyThrows
     private String processPlaceHolder(String express, Map<String, Object> param) {
-        Matcher m = Pattern.compile(EXPRESS_PATTERN).matcher(express);
-        ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
         try {
             for (String s : BiDataInitService.functions) {
                 scriptEngine.eval(s);
@@ -162,14 +163,16 @@ public class BiService {
         } catch (ScriptException e) {
             throw new EruptWebApiRuntimeException("函数脚本解析异常：" + e.getMessage());
         }
+        Bindings bindings = new SimpleBindings();
         if (null != param) {
             for (Map.Entry<String, Object> entry : param.entrySet()) {
-                scriptEngine.put(entry.getKey(), param.get(entry.getKey()));
+                bindings.put(entry.getKey(), param.get(entry.getKey()));
             }
         }
+        Matcher m = EXPRESS_PATTERN.matcher(express);
         while (m.find()) {
             String exp = m.group();
-            Object result = scriptEngine.eval(exp);
+            Object result = scriptEngine.eval(exp, bindings);
             if (null == result) {
                 result = "";
             }
