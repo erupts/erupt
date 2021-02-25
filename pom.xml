@@ -32,13 +32,22 @@
         <module>erupt-tpl</module>
         <module>erupt-tpl-ui/ant-design</module>
         <module>erupt-tpl-ui/element-ui</module>
+        <!-- hibernate jpa 数据源实现 -->
         <module>erupt-data/erupt-jpa</module>
+        <!-- MongoDB 数据源实现 -->
         <module>erupt-data/erupt-mongodb</module>
+        <!--用户权限管理-->
         <module>erupt-upms</module>
+        <!--API 接口安全-->
         <module>erupt-security</module>
+        <!--前端代码-->
         <module>erupt-web</module>
+        <!--任务调度-->
         <module>erupt-job</module>
+        <!--代码生成-->
         <module>erupt-generator</module>
+        <!--服务监控-->
+        <module>erupt-monitor</module>
     </modules>
 
     <dependencyManagement>
