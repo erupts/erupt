@@ -9,7 +9,7 @@ public class ScriptPlaceholderConst {
     //导出标识符
     public static final String EXPORT_PLACEHOLDER = "$export";
 
-    //用户ID
+    //当前登录用户ID
     public static final String USER_ID_PLACEHOLDER = "$uid";
 
     //request 请求对象
