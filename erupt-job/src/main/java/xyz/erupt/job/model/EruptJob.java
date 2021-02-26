@@ -71,7 +71,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
                     trueText = "启用", falseText = "禁用"
             ), notNull = true, search = @Search)
     )
-    private Boolean status;
+    private final Boolean status = true;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(

@@ -32,22 +32,14 @@
         <module>erupt-tpl</module>
         <module>erupt-tpl-ui/ant-design</module>
         <module>erupt-tpl-ui/element-ui</module>
-        <!-- hibernate jpa 数据源实现 -->
-        <module>erupt-data/erupt-jpa</module>
-        <!-- MongoDB 数据源实现 -->
-        <module>erupt-data/erupt-mongodb</module>
-        <!--用户权限管理-->
-        <module>erupt-upms</module>
-        <!--API 接口安全-->
-        <module>erupt-security</module>
-        <!--前端代码-->
-        <module>erupt-web</module>
-        <!--任务调度-->
-        <module>erupt-job</module>
-        <!--代码生成-->
-        <module>erupt-generator</module>
-        <!--服务监控-->
-        <module>erupt-monitor</module>
+        <module>erupt-data/erupt-jpa</module><!-- hibernate jpa 数据源实现 -->
+        <module>erupt-data/erupt-mongodb</module><!-- MongoDB 数据源实现 -->
+        <module>erupt-upms</module><!--用户权限管理-->
+        <module>erupt-security</module><!--API 接口安全-->
+        <module>erupt-web</module><!--前端代码-->
+        <module>erupt-job</module><!--任务调度-->
+        <module>erupt-generator</module><!--代码生成-->
+        <module>erupt-monitor</module><!--服务监控-->
     </modules>
 
     <dependencyManagement>
@@ -67,6 +59,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
