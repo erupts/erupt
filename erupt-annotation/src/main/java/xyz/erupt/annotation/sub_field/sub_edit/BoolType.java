@@ -8,7 +8,4 @@ public @interface BoolType {
     String trueText() default "是";
 
     String falseText() default "否";
-
-    boolean defaultValue() default true;
-
 }
