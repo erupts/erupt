@@ -29,7 +29,6 @@
     <modules>
         <module>erupt-bi</module>
         <module>erupt-tenant</module>
-        <module>erupt-monitor</module>
         <module>erupt-flow</module>
     </modules>
 
