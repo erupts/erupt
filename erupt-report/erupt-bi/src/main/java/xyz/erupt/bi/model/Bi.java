@@ -71,9 +71,9 @@ public class Bi extends HyperModel {
 
     @EruptField(
             views = @View(title = "导出"),
-            edit = @Edit(title = "导出", search = @Search)
+            edit = @Edit(title = "导出", search = @Search, notNull = true)
     )
-    private Boolean export;
+    private Boolean export = true;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
