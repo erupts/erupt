@@ -3,6 +3,10 @@ package xyz.erupt.core.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
@@ -18,7 +22,7 @@ import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.service.IEruptDataService;
 
-import javax.script.*;
+import javax.script.ScriptException;
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -56,7 +60,9 @@ public class AnnotationUtil {
 //        return new JSONObject(convertStr).toString();
 //    }
 
-    private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+//    private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+
+    private static final ExpressionParser parser = new SpelExpressionParser();
 
     @SneakyThrows
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
@@ -85,10 +91,11 @@ public class AnnotationUtil {
             Object result = method.invoke(annotation);
             Match match = method.getAnnotation(Match.class);
             if (null != match) {
-                Bindings bindings = new SimpleBindings();
-                bindings.put(VALUE_VAR, result);
-                bindings.put(ITEM_VAR, annotation);
-                if (!(Boolean) engine.eval(String.format("!!(%s)", match.value()), bindings)) {
+                EvaluationContext evaluationContext = new StandardEvaluationContext();
+                evaluationContext.setVariable(VALUE_VAR, result);
+                evaluationContext.setVariable(ITEM_VAR, annotation);
+                Object r = parser.parseExpression(match.value()).getValue(evaluationContext);
+                if (null == r || !(Boolean) r) {
                     continue;
                 }
             }
