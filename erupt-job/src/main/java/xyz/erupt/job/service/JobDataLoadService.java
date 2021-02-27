@@ -5,8 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.type.filter.AssignableTypeFilter;
+import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.service.EruptApplication;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.ProjectUtil;
+import xyz.erupt.job.handler.EruptJobHandler;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.job.model.EruptMail;
@@ -15,6 +20,7 @@ import xyz.erupt.upms.constant.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +40,12 @@ public class JobDataLoadService implements CommandLineRunner {
 
     @Value("${erupt.job.enable:true}")
     private Boolean openJob;
+
+    private static final List<String> loadedJobHandler = new ArrayList<>();
+
+    public static List<String> getLoadedJobHandler() {
+        return loadedJobHandler;
+    }
 
     @Transactional
     @Override
@@ -59,6 +71,8 @@ public class JobDataLoadService implements CommandLineRunner {
                         Integer.valueOf(EruptMenu.OPEN), 20, "fa fa-envelope-o", eruptMenu), code, EruptMail.class.getSimpleName());
             }
         });
+        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
+                new AssignableTypeFilter(EruptJobHandler.class)
+        }, clazz -> loadedJobHandler.add(clazz.getName()));
     }
-
 }
