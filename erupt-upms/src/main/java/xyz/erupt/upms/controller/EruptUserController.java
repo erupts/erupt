@@ -2,7 +2,8 @@ package xyz.erupt.upms.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wf.captcha.ArithmeticCaptcha;
+import com.wf.captcha.SpecCaptcha;
+import com.wf.captcha.base.Captcha;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -138,7 +139,7 @@ public class EruptUserController {
         response.setHeader("Pragma", "no-cache"); // 禁止图像缓存。
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
-        ArithmeticCaptcha captcha = new ArithmeticCaptcha(150, 38, 2);
+        Captcha captcha = new SpecCaptcha(150, 38, 4);
         sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60);
         captcha.out(response.getOutputStream()); // 响应图片
     }
