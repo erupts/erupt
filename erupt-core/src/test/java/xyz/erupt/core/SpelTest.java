@@ -1,6 +1,6 @@
 package xyz.erupt.core;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
