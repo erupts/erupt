@@ -65,10 +65,11 @@ public class BiFunction extends HyperModel implements DataProxy<BiFunction> {
     public BiFunction() {
     }
 
-    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
     @Resource
     @Transient
     private BiDataInitService biDataInitService;
+
+    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
 
     private void testFunction(BiFunction biFunction) {
         try {
