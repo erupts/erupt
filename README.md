@@ -285,9 +285,7 @@ github: https://github.com/erupts/erupt-example
 ## ⛽️ 捐赠 | Donate
 此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏
 
-点击以下链接，将页面拉到最下方点击 "捐赠" 即可。
-
-[前往捐赠](https://gitee.com/erupt/erupt)
+[前往捐赠](https://www.yuque.com/erupts/erupt/mwf15h)
 
 ## 🧩 公众号 
 欢迎关注 Erupt 官方公众号，关注后可获取群二维码与 erupt-monitor 模块 jar
