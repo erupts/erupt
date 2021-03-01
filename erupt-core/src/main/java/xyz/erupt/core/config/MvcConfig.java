@@ -43,11 +43,4 @@ public class MvcConfig {
         return new HttpMessageConverters(true, messageConverters);
     }
 
-    @Bean
-    public Gson gson() {
-        return new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
-                .setExclusionStrategies(new GsonExclusionStrategies())
-                .serializeNulls().create();
-    }
-
 }

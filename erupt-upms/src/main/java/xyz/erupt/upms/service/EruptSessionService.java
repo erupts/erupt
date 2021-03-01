@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.EruptProp;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.upms.config.EruptUpmsConfig;
 
 import javax.annotation.Resource;
@@ -31,8 +32,7 @@ public class EruptSessionService {
     @Resource
     private HttpServletRequest request;
 
-    @Autowired
-    private Gson gson;
+    private final Gson gson = GsonFactory.getGson();
 
     public void put(String key, String str, long timeout) {
         if (eruptProp.isRedisSession()) {
