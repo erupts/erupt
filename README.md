@@ -238,7 +238,7 @@ erupt-pro
 
 erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
 
-erupt-web-angular -- Erupt 前端源码，如有自定义页面的需求，可使用 erupt-tpl 模块，需要此模块源码请联系作者
+erupt-web-angular -- Erupt 前端源码，github star 达到550开源，如有自定义页面的需求，可使用 erupt-tpl 模块，需要此模块源码请联系作者
 
 ```
 
