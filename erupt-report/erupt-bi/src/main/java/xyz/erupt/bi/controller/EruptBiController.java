@@ -17,6 +17,7 @@ import xyz.erupt.bi.view.BiModel;
 import xyz.erupt.bi.view.Reference;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -54,8 +55,7 @@ public class EruptBiController {
     @Resource
     private BiService biService;
 
-    @Resource
-    private Gson gson;
+    private final Gson gson = GsonFactory.getGson();
 
     @Resource
     private EruptProp eruptProp;
