@@ -9,6 +9,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptAppProp;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
@@ -48,8 +49,7 @@ public class EruptUserController {
     @Resource
     private EruptAppProp eruptAppProp;
 
-    @Resource
-    private Gson gson;
+    private final Gson gson = GsonFactory.getGson();
 
     //登录
     @SneakyThrows

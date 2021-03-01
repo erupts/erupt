@@ -33,7 +33,7 @@ public class LoginModel {
 
     public LoginModel(boolean pass, EruptUser eruptUser) {
         this.pass = pass;
-        this.eruptUser = eruptUser;
+        this.setEruptUser(eruptUser);
     }
 
     public LoginModel(boolean pass, String reason) {
