@@ -31,6 +31,10 @@
     QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
 </p>
 
+<p align="center">
+    <b>重要通知</b>：前端源码将在 <a href="https://github.com/erupts/erupt">github star</a> 达到 550 开源
+</p>
+
 ---
 
 ## 🚀 简介 | Intro
