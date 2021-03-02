@@ -67,13 +67,14 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
                     title = "账户状态",
                     search = @Search,
                     type = EditType.BOOLEAN,
+                    notNull = true,
                     boolType = @BoolType(
                             trueText = "激活",
                             falseText = "锁定"
                     )
             )
     )
-    private Boolean status;
+    private Boolean status = true;
 
     @EruptField(
             views = @View(title = "手机号码"),
@@ -134,13 +135,14 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
             edit = @Edit(
                     title = "md5加密",
                     type = EditType.BOOLEAN,
+                    notNull = true,
                     boolType = @BoolType(
                             trueText = "加密",
                             falseText = "不加密"
                     )
             )
     )
-    private Boolean isMd5;
+    private Boolean isMd5 = true;
 
     @ManyToMany
     @JoinTable(

@@ -24,8 +24,7 @@ public class SqlChoiceFetchHandler implements ChoiceFetchHandler {
             throw new RuntimeException("SqlChoiceFetchHandler → params not found");
         }
         return jdbcTemplate.query(params[0], (rs, i) -> {
-            int cc = rs.getMetaData().getColumnCount();
-            if (cc == 1) {
+            if (rs.getMetaData().getColumnCount() == 1) {
                 return new VLModel(rs.getString(1), rs.getString(1));
             } else {
                 return new VLModel(rs.getString(1), rs.getString(2));

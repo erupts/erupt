@@ -60,7 +60,7 @@ public @interface Erupt {
     @Comment("树节点配置")
     Tree tree() default @Tree;
 
-    @Match("value.field()")
+    @Match("#value.field() != ''")
     @Comment("左树右表配置项")
     LinkTree linkTree() default @LinkTree(field = "");
 

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="${base}/">
+    <title>Title</title>
+    <link href="element/element.min.css" rel="stylesheet">
+    <link href="monitor/element.erupt.css" rel="stylesheet">
+    <style>
+        body {
+            background: #fff;
+            padding: 12px;
+        }
+
+        .el-card__body {
+            padding: 0 !important;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .table {
+            width: 100%;
+            font-family: verdana, arial, sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 0;
+            border-color: #EBEEF5;
+            /*border-collapse: collapse;*/
+        }
+
+        .table th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #EBEEF5;
+        }
+
+        .table td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #EBEEF5;
+            background-color: #ffffff;
+        }
+
+        .table td:hover {
+            background-color: #efefef;
+        }
+
+        .el-card {
+            margin-bottom: 16px !important;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-loading.fullscreen.lock="fullscreenLoading">
+    <template>
+        <el-row :gutter="16">
+            <el-col :span="12">
+                <el-card class="box-card" shadow="always">
+                    <div class="clearfix" slot="header">
+                        <span>CPU 信息</span>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th style="width:30%">属性</th>
+                            <th>值</th>
+                        </tr>
+                        <tr>
+                            <td>核心个数</td>
+                            <td>{{server.cpu.cpuNum}}</td>
+                        </tr>
+                        <tr>
+                            <td>核心频率</td>
+                            <td>{{server.cpu.freq}}</td>
+                        </tr>
+                        <tr>
+                            <td>系统/用户</td>
+                            <td>{{server.cpu.sys}} / {{server.cpu.user}}</td>
+                        </tr>
+                        <tr>
+                            <td>使用率</td>
+                            <td :class="{'text-danger':server.cpu.usage>80}">{{server.cpu.usage}}%</td>
+                        </tr>
+                    </table>
+                </el-card>
+            </el-col>
+
+            <el-col :span="12">
+                <el-card class="box-card" shadow="always">
+                    <div class="clearfix" slot="header">
+                        <span>内存信息</span>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th style="width:33.333%">属性</th>
+                            <th style="width:33.333%">内存</th>
+                            <th style="width:33.333%">JVM</th>
+                        </tr>
+                        <tr>
+                            <td>总内存</td>
+                            <td>{{server.mem.total}}</td>
+                            <td>{{server.jvm.total}}</td>
+                        </tr>
+                        <tr>
+                            <td>已用内存</td>
+                            <td>{{server.mem.used}}</td>
+                            <td>{{server.jvm.used}}</td>
+                        </tr>
+                        <tr>
+                            <td>剩余内存</td>
+                            <td>{{server.mem.free}}</td>
+                            <td>{{server.jvm.free}}</td>
+                        </tr>
+                        <tr>
+                            <td>使用率</td>
+                            <td :class="{'text-danger':server.mem.usage>80}">{{server.mem.usage}}%</td>
+                            <td :class="{'text-danger':server.jvm.usage>80}">{{server.jvm.usage}}%</td>
+                        </tr>
+                    </table>
+                </el-card>
+            </el-col>
+        </el-row>
+
+        <el-card class="box-card" shadow="always">
+            <div class="clearfix" slot="header">
+                <span>服务器信息</span>
+            </div>
+            <table class="table">
+                <tr>
+                    <th style="width: 16%">服务器名称</th>
+                    <td>{{server.sys.hostName}}</td>
+                    <th style="width: 16%">操作系统</th>
+                    <td>{{server.sys.name}}</td>
+                </tr>
+                <tr>
+                    <th>服务器时间</th>
+                    <td>{{server.sys.date}}</td>
+                    <th>系统架构</th>
+                    <td>{{server.sys.arch}}</td>
+                </tr>
+            </table>
+        </el-card>
+
+        <el-card class="box-card" shadow="always">
+            <div class="clearfix" slot="header">
+                <span>Java 虚拟机信息</span>
+            </div>
+            <table class="table">
+                <tr>
+                    <th style="width: 16%">Java名称</th>
+                    <td>{{server.jvm.name}}</td>
+                    <th style="width: 16%">Java版本</th>
+                    <td>{{server.jvm.version}}</td>
+                </tr>
+                <tr>
+                    <th>启动时间</th>
+                    <td>{{server.startupDate}}</td>
+                    <th>运行时长</th>
+                    <td>{{server.runDay}}</td>
+                </tr>
+                <tr>
+                    <th>PID</th>
+                    <td colspan="3">{{server.jvm.pid}}</td>
+                </tr>
+                <tr>
+                    <th>安装路径</th>
+                    <td colspan="3">{{server.jvm.home}}</td>
+                </tr>
+                <tr>
+                    <th>项目路径</th>
+                    <td colspan="3">{{server.jvm.path}}</td>
+                </tr>
+                <tr>
+                    <th>运行参数</th>
+                    <td colspan="3">{{server.jvm.inputArgs}}</td>
+                </tr>
+            </table>
+        </el-card>
+        <el-card class="box-card" shadow="always">
+            <div class="clearfix" slot="header">
+                <span>平台参数</span>
+            </div>
+            <table class="table">
+                <tr>
+                    <th style="width: 20%">上传文件路径</th>
+                    <td>{{platform.uploadPath}}</td>
+                </tr>
+                <tr>
+                    <th>Session 策略</th>
+                    <td>{{platform.redisSession ? 'redis' : 'servlet'}}</td>
+                </tr>
+            </table>
+        </el-card>
+        <el-card class="box-card" shadow="always">
+            <div class="clearfix" slot="header">
+                <span>磁盘信息</span>
+            </div>
+            <table class="table">
+                <tr>
+                    <th>盘符路径</th>
+                    <th>盘符类型</th>
+                    <th>文件类型</th>
+                    <th>总大小</th>
+                    <th>剩余大小</th>
+                    <th>已经使用量</th>
+                    <th>使用率</th>
+                </tr>
+                <tr v-for="sysFile in server.sysFiles">
+                    <td>{{sysFile.dirName}}</td>
+                    <td>{{sysFile.sysTypeName}}</td>
+                    <td>{{sysFile.typeName}}</td>
+                    <td>{{sysFile.total}}</td>
+                    <td>{{sysFile.free}}</td>
+                    <td>{{sysFile.used}}</td>
+                    <td>{{sysFile.usage}}</td>
+                </tr>
+            </table>
+        </el-card>
+    </template>
+</div>
+<script src="element/vue.min.js"></script>
+<script src="element/element.min.js"></script>
+<script src="element/axios.min.js"></script>
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                server: {
+                    cpu: {},
+                    mem: {},
+                    jvm: {},
+                    sys: {},
+                },
+                platform: {},
+                fullscreenLoading: true
+            }
+        },
+        mounted: function () {
+            function load() {
+                axios.get("erupt-api/erupt-monitor/server.html/info", {
+                    headers: {
+                        token: parent.getAppToken().token
+                    }
+                }).then((res) => {
+                    if (res.status === 401) {
+                        window.parent.location.href = "${base}/"
+                    } else {
+                        var data = res.data;
+                        data.cpu.usage = parseFloat(data.cpu.usage.substr(0, data.cpu.usage.length - 1));
+                        data.jvm.usage = parseFloat(data.jvm.usage.substr(0, data.jvm.usage.length - 1));
+                        data.mem.usage = parseFloat(data.mem.usage.substr(0, data.mem.usage.length - 1));
+                        vue.server = data;
+                        vue.fullscreenLoading = false;
+                    }
+                })
+            }
+
+            load();
+
+            axios.get("erupt-api/erupt-monitor/server.html/platform", {
+                headers: {
+                    token: parent.getAppToken().token
+                }
+            }).then((res) => {
+                if (res.status === 401) {
+                    window.parent.location.href = "${base}/"
+                } else {
+                    vue.platform = res.data;
+                }
+            })
+            setInterval(() => {
+                load()
+            }, 5000)
+        },
+        methods: {}
+    })
+
+</script>
+</body>
+</html>

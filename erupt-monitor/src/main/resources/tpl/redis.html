@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="${base}/">
+    <title>Title</title>
+    <link href="element/element.min.css" rel="stylesheet">
+    <link href="monitor/element.erupt.css" rel="stylesheet">
+    <style>
+        .d-flex {
+            display: flex;
+        }
+
+        .ml_auto {
+            margin-left: auto;
+        }
+
+        .attr P {
+            border-bottom: 1px dashed #eee;
+            font-size: .8em;
+            margin: 0;
+            padding: 16px
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-loading.fullscreen.lock="fullscreenLoading">
+    <template>
+        <el-row :gutter="16">
+            <el-col :span="8" :xs="24">
+                <el-card :body-style="{padding:'0'}" class="box-card" shadow="always">
+                    <div class="clearfix" slot="header">
+                        <span>Redis 信息</span>
+                    </div>
+                    <div style="height: 410px">
+                        <div class="attr">
+                            <p class="d-flex">版本号：<span class="ml_auto">{{redis.version}}</span></p>
+                            <p class="d-flex">端口号：<span class="ml_auto">{{redis.port}}</span></p>
+                            <p class="d-flex">运行天数：<span class="ml_auto">{{redis.day}} 天</span></p>
+                            <p class="d-flex">是否集群：<span class="ml_auto">{{redis.isCluster ? '是' : '否'}}</span></p>
+                            <p class="d-flex">持久化方式：<span class="ml_auto">{{redis.isAOF ? 'AOF' : 'RDB'}}</span></p>
+                            <p class="d-flex">已连接客户端：<span class="ml_auto">{{redis.clientNum}}</span></p>
+                            <p class="d-flex">总内存：<span class="ml_auto">{{redis.totalMem}}</span></p>
+                            <p class="d-flex" style="border-bottom: none">已用内存：<span
+                                    class="ml_auto">{{redis.usedMem}}</span></p>
+                        </div>
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="16" :xs="24">
+                <el-card class="box-card" shadow="always">
+                    <div class="clearfix" slot="header">
+                        <span>命令统计</span>
+                    </div>
+                    <div ref="commandPie" style="height: 375px">
+
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+
+        <el-card :body-style="{padding:'0'}" class="box-card" shadow="always" style="margin-top: 16px">
+            <div class="clearfix" slot="header">
+                <span>Redis Key 数量</span>
+            </div>
+            <div ref="keyLine" style="height: 220px">
+
+            </div>
+        </el-card>
+    </template>
+</div>
+<script src="monitor/echarts.min.js"></script>
+<script src="element/vue.min.js"></script>
+<script src="element/element.min.js"></script>
+<script src="element/axios.min.js"></script>
+<script>
+    var commandPie, keySizeLine;
+    var keySizeArr = [];
+    var vue = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                redis: {},
+                fullscreenLoading: true
+            }
+        },
+        mounted: function () {
+            var that = this;
+            var interval = setInterval(function () {
+                load()
+            }, 5000)
+
+            function load() {
+                axios.get("erupt-api/erupt-monitor/redis.html/info", {
+                    headers: {
+                        token: parent.getAppToken().token
+                    }
+                }).then(function (res) {
+                    if (res.status === 401) {
+                        window.parent.location.href = "${base}/"
+                    } else {
+                        vue.redis = res.data;
+                        vue.fullscreenLoading = false;
+                        that.changeChart(res.data);
+                    }
+                }).catch(function () {
+                    clearInterval(interval);
+                    that.$confirm('Redis 连接失败', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        showClose: false
+                    });
+                })
+            }
+
+            this.init();
+            load();
+        },
+        methods: {
+            changeChart: function (data) {
+                var option = commandPie.getOption();
+                option.series[0].data = data.redisCmdStat;
+                commandPie.setOption(option)
+                keySizeArr.push(data.keyNum)
+                option = keySizeLine.getOption();
+                option.series[0].data = keySizeArr;
+                var date = new Date();
+
+                var time = (date.getHours() + 1) + ":";
+                if (date.getMinutes() + 1 <= 9) {
+                    time += '0' + (date.getMinutes() + 1);
+                } else {
+                    time += (date.getMinutes() + 1);
+                }
+                if (date.getSeconds() + 1 <= 9) {
+                    time += ':0' + (date.getSeconds() + 1);
+                } else {
+                    time += ':' + (date.getSeconds() + 1);
+                }
+                option.xAxis[0].data.push(time);
+                if (keySizeArr.length > 6) {
+                    keySizeArr.shift();
+                    option.xAxis[0].data.shift()
+                }
+                keySizeLine.setOption(option)
+            },
+            init: function () {
+                commandPie = echarts.init(this.$refs.commandPie)
+                commandPie.setOption({
+                    // color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        bottom: 10,
+                        left: 'center',
+                        show: false
+                    },
+                    series: [
+                        {
+                            type: 'pie',
+                            radius: '80%',
+                            data: [],
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                });
+                keySizeLine = echarts.init(this.$refs.keyLine)
+                keySizeLine.setOption({
+                    xAxis: {
+                        type: 'category',
+                        data: []
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#6a7985'
+                            }
+                        }
+                    },
+                    series: [{
+                        data: [],
+                        name: "key 数量",
+                        type: 'line',
+                        smooth: true
+                    }]
+                });
+                window.onresize = function () {
+                    commandPie.resize();
+                    keySizeLine.resize();
+                };
+            }
+        }
+    })
+</script>
+</body>
+</html>

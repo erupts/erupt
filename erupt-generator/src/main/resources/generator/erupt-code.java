@@ -27,7 +27,7 @@ public class ${erupt.className} extends BaseModel {
                 ),
                 edit = @Edit(
                         title = "${field.showName}",
-                        type = EditType.${type.mapping.name()}${field.isShow?string('', ', show = false')}${field.notNull?string(', notNull = true', '')}<#if type.code??>${',
+                        type = EditType.${type.mapping.name()}${field.query?string(', search = @Search', '')}${field.isShow?string('', ', show = false')}${field.notNull?string(', notNull = true', '')}<#if type.code??>${',
                         ' + type.code}</#if>
                 )
         )

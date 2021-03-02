@@ -15,6 +15,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface EruptLogin {
 
-    Class<? extends LoginProxy<?>> value();
+    Class<? extends LoginProxy> value();
 
 }

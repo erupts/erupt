@@ -2,11 +2,14 @@ package xyz.erupt.upms.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wf.captcha.ArithmeticCaptcha;
+import com.wf.captcha.SpecCaptcha;
+import com.wf.captcha.base.Captcha;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.config.EruptAppProp;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
@@ -19,7 +22,6 @@ import xyz.erupt.upms.service.EruptMenuService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
-import xyz.erupt.upms.vo.BoolReasonValue;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
@@ -45,7 +47,9 @@ public class EruptUserController {
     private EruptSessionService sessionService;
 
     @Resource
-    private Gson gson;
+    private EruptAppProp eruptAppProp;
+
+    private final Gson gson = GsonFactory.getGson();
 
     //登录
     @SneakyThrows
@@ -54,16 +58,30 @@ public class EruptUserController {
     public LoginModel login(@RequestParam("account") String account,
                             @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode) {
-        LoginModel loginModel = eruptUserService.login(account, pwd, verifyCode);
+        if (!eruptUserService.checkVerifyCode(verifyCode)) {
+            LoginModel loginModel = new LoginModel();
+            loginModel.setUseVerifyCode(true);
+            loginModel.setReason("验证码错误");
+            loginModel.setPass(false);
+            return loginModel;
+        }
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
-        Object value = null;
-        if (null != loginProxy) {
-            if (loginModel.isPass()) {
-                BoolReasonValue<?> boolReasonValue = loginProxy.login(account, loginModel.getEruptUser().getPassword());
-                value = boolReasonValue.getValue();
-                loginModel.setUseVerifyCode(true);
-                loginModel.setPass(boolReasonValue.isBool());
-                loginModel.setReason(boolReasonValue.getReason());
+        LoginModel loginModel;
+        if (null == loginProxy) {
+            loginModel = eruptUserService.login(account, pwd);
+        } else {
+            loginModel = new LoginModel();
+            try {
+                EruptUser eruptUser = loginProxy.login(account, pwd);
+                loginModel.setEruptUser(eruptUser);
+                loginModel.setPass(true);
+            } catch (Exception e) {
+                if (0 == eruptAppProp.getVerifyCodeCount()) {
+                    loginModel.setUseVerifyCode(true);
+                }
+                loginModel.setReason(e.getMessage());
+                loginModel.setPass(false);
+
             }
         }
         if (loginModel.isPass()) {
@@ -71,14 +89,9 @@ public class EruptUserController {
             loginModel.setToken(RandomStringUtils.random(16, true, true));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             sessionService.putByLoginExpire(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString());
-            loginModel.setUserName(eruptUser.getName());
-            EruptMenu indexMenu = eruptUser.getEruptMenu();
-            if (null != indexMenu) {
-                loginModel.setIndexMenu(indexMenu.getType() + "||" + indexMenu.getValue());
-            }
             List<EruptMenu> eruptMenus = menuService.getMenuList(eruptUser);
             if (null != loginProxy) {
-                loginProxy.loginSuccess(eruptUser, loginModel.getToken(), eruptMenus, value);
+                loginProxy.loginSuccess(eruptUser, loginModel.getToken());
             }
             sessionService.putByLoginExpire(SessionKey.MENU + loginModel.getToken(),
                     gson.toJson(eruptMenus));
@@ -88,14 +101,6 @@ public class EruptUserController {
         }
         return loginModel;
     }
-
-    //token 是否有效
-    @GetMapping("/token-valid")
-    @ResponseBody
-    public boolean tokenValid() {
-        return sessionService.get(eruptUserService.getToken()) != null;
-    }
-
 
     //获取菜单
     @GetMapping("/menu")
@@ -115,6 +120,10 @@ public class EruptUserController {
         sessionService.remove(SessionKey.MENU + token);
         sessionService.remove(SessionKey.MENU_VIEW + token);
         sessionService.remove(SessionKey.USER_TOKEN + token);
+        LoginProxy loginProxy = EruptUserService.findEruptLogin();
+        if (null != loginProxy) {
+            loginProxy.logout(token);
+        }
         return EruptApiModel.successApi();
     }
 
@@ -129,6 +138,12 @@ public class EruptUserController {
         return eruptUserService.changePwd(account, pwd, newPwd, newPwd2);
     }
 
+    @GetMapping("/token-valid")
+    @ResponseBody
+    public boolean tokenValid() {
+        return sessionService.get(eruptUserService.getToken()) != null;
+    }
+
 
     // 生成验证码
     @GetMapping
@@ -138,7 +153,7 @@ public class EruptUserController {
         response.setHeader("Pragma", "no-cache"); // 禁止图像缓存。
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
-        ArithmeticCaptcha captcha = new ArithmeticCaptcha(150, 38, 2);
+        Captcha captcha = new SpecCaptcha(150, 38, 4);
         sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60);
         captcha.out(response.getOutputStream()); // 响应图片
     }

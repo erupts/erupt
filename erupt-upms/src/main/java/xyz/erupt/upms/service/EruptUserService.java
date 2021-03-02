@@ -61,6 +61,8 @@ public class EruptUserService {
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
 
+    public static final String LOGIN_ERROR_HINT = "账号或密码错误";
+
     public static LoginProxy findEruptLogin() {
         EruptLogin eruptLogin = EruptApplication.getPrimarySource().getAnnotation(EruptLogin.class);
         if (null != eruptLogin) {
@@ -69,25 +71,18 @@ public class EruptUserService {
         return null;
     }
 
-    public static final String LOGIN_ERROR_HINT = "账号或密码错误";
-
-    public LoginModel login(String account, String pwd, String verifyCode) {
-        String requestIp = IpUtil.getIpAddr(request);
-        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + requestIp);
-        long loginErrorCount = 0;
+    private boolean loginErrorCountPlus(String ip) {
+        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + ip);
+        int loginErrorCount = 0;
         if (null != loginError) {
-            loginErrorCount = Long.parseLong(loginError.toString());
+            loginErrorCount = Integer.parseInt(loginError.toString());
         }
-        if (loginErrorCount >= eruptAppProp.getVerifyCodeCount()) {
-            if (StringUtils.isBlank(verifyCode)) {
-                return new LoginModel(false, "请填写验证码", true);
-            }
-            Object vc = sessionService.get(SessionKey.VERIFY_CODE + requestIp);
-            sessionService.remove(SessionKey.VERIFY_CODE + requestIp);
-            if (vc == null || !vc.toString().equalsIgnoreCase(verifyCode)) {
-                return new LoginModel(false, "验证码不正确", true);
-            }
-        }
+        sessionService.putByLoginExpire(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "");
+        return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
+    }
+
+    public LoginModel login(String account, String pwd) {
+        String requestIp = IpUtil.getIpAddr(request);
         EruptUser eruptUser = this.findEruptUserByAccount(account);
         if (null != eruptUser) {
             if (!eruptUser.getStatus()) {
@@ -115,8 +110,7 @@ public class EruptUserService {
                 } else {
                     digestPwd = MD5Utils.digest(eruptUser.getPassword());
                 }
-                String calcPwd = MD5Utils.digest(digestPwd +
-                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + account);
+                String calcPwd = MD5Utils.digest(digestPwd + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + account);
                 if (pwd.equalsIgnoreCase(calcPwd)) {
                     pass = true;
                 }
@@ -132,22 +126,30 @@ public class EruptUserService {
         }
     }
 
-    private boolean loginErrorCountPlus(String ip) {
-        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + ip);
-        int loginErrorCount = 0;
-        if (null != loginError) {
-            loginErrorCount = Integer.parseInt(loginError.toString());
-        }
-        sessionService.putByLoginExpire(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "");
-        return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
-    }
-
     public LocalDateTime getExpireTime() {
         if (eruptProp.isRedisSession()) {
             return LocalDateTime.now().plusMinutes(eruptUpmsConfig.getExpireTimeByLogin());
         } else {
             return LocalDateTime.now().plusSeconds(request.getSession().getMaxInactiveInterval());
         }
+    }
+
+    public boolean checkVerifyCode(String verifyCode) {
+        String requestIp = IpUtil.getIpAddr(request);
+        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + requestIp);
+        long loginErrorCount = 0;
+        if (null != loginError) {
+            loginErrorCount = Long.parseLong(loginError.toString());
+        }
+        if (loginErrorCount >= eruptAppProp.getVerifyCodeCount()) {
+            if (StringUtils.isBlank(verifyCode)) {
+                return false;
+            }
+            Object vc = sessionService.get(SessionKey.VERIFY_CODE + requestIp);
+            sessionService.remove(SessionKey.VERIFY_CODE + requestIp);
+            return vc != null && vc.toString().equalsIgnoreCase(verifyCode);
+        }
+        return true;
     }
 
     @Transactional
@@ -171,6 +173,10 @@ public class EruptUserService {
             return EruptApiModel.errorNoInterceptApi("修改失败，新密码与确认密码不匹配");
         }
         EruptUser eruptUser = findEruptUserByAccount(account);
+        LoginProxy loginProxy = EruptUserService.findEruptLogin();
+        if (null != loginProxy) {
+            loginProxy.beforeChangePwd(eruptUser, newPwd);
+        }
         if (eruptUser.getIsMd5()) {
             pwd = MD5Utils.digest(pwd);
             newPwd = MD5Utils.digest(newPwd);
