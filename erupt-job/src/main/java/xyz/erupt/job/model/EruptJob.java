@@ -2,7 +2,6 @@ package xyz.erupt.job.model;
 
 import lombok.Getter;
 import org.quartz.SchedulerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -22,6 +21,7 @@ import xyz.erupt.job.service.ChoiceFetchEruptJobHandler;
 import xyz.erupt.job.service.EruptJobService;
 import xyz.erupt.upms.model.base.HyperModel;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.text.ParseException;
 import java.util.List;
@@ -79,7 +79,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "失败通知邮箱"),
-            edit = @Edit(title = "失败通知邮箱", desc = "使用此功能需配置发信邮箱信息", type = EditType.TAGS, tagsType = @TagsType)
+            edit = @Edit(title = "失败通知邮箱", desc = "使用此功能需配置发信邮箱", type = EditType.TAGS, tagsType = @TagsType)
     )
     private String notifyEmails;
 
@@ -98,7 +98,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
     private String remark;
 
     @Transient
-    @Autowired
+    @Resource
     private EruptJobService eruptJobService;
 
 

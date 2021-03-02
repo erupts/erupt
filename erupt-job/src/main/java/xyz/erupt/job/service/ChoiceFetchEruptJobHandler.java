@@ -16,7 +16,7 @@ public class ChoiceFetchEruptJobHandler implements ChoiceFetchHandler {
     public List<VLModel> fetch(String[] params) {
         List<VLModel> list = new ArrayList<>();
         for (String job : JobDataLoadService.getLoadedJobHandler()) {
-            list.add(new VLModel(job, job));
+            list.add(new VLModel(job, job.substring(job.lastIndexOf(".") + 1)));
         }
         return list;
     }
