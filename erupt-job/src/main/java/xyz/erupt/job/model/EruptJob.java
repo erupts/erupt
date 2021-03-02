@@ -14,9 +14,11 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.job.service.ChoiceFetchEruptJobHandler;
 import xyz.erupt.job.service.EruptJobService;
 import xyz.erupt.upms.model.base.HyperModel;
 
@@ -60,8 +62,9 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
 
     @EruptField(
             views = @View(title = "JOB处理类"),
-            edit = @Edit(title = "JOB处理类", desc = "需实现EruptJobHandler接口"
-                    , notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "JOB处理类", desc = "需实现EruptJobHandler接口",
+                    choiceType = @ChoiceType(fetchHandler = ChoiceFetchEruptJobHandler.class)
+                    , notNull = true, search = @Search, type = EditType.CHOICE)
     )
     private String handler;
 
@@ -71,7 +74,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
                     trueText = "启用", falseText = "禁用"
             ), notNull = true, search = @Search)
     )
-    private Boolean status;
+    private final Boolean status = true;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(

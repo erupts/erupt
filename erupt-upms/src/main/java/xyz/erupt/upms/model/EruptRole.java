@@ -43,10 +43,11 @@ public class EruptRole extends BaseModel {
             edit = @Edit(
                     title = "状态",
                     type = EditType.BOOLEAN,
+                    notNull = true,
                     boolType = @BoolType(trueText = "启用", falseText = "禁用")
             )
     )
-    private Boolean status;
+    private Boolean status = true;
 
     @ManyToMany
     @JoinTable(

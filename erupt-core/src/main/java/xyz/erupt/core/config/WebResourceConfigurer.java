@@ -23,8 +23,7 @@ public class WebResourceConfigurer implements WebMvcConfigurer {
         if (!eruptProp.getUploadPath().endsWith("/")) {
             uploadPath += "/";
         }
-        registry.addResourceHandler(EruptRestPath.ERUPT_ATTACHMENT + "/**")
-                .addResourceLocations("file:" + uploadPath);
+        registry.addResourceHandler(EruptRestPath.ERUPT_ATTACHMENT + "/**").addResourceLocations("file:" + uploadPath);
     }
 
 }

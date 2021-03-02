@@ -59,7 +59,6 @@ public class EruptFileController {
         }
         try {
             //生成存储路径
-
             EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
             PowerObject powerObject = EruptUtil.getPowerObject(eruptModel);
             if (!powerObject.isEdit() && !powerObject.isAdd()) {

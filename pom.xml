@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.6.5</version>
+    <version>1.6.6</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -15,7 +15,7 @@
     <properties>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>1.8</java.version>
-        <spring.boot.version>2.4.1</spring.boot.version>
+        <spring.boot.version>2.4.3</spring.boot.version>
     </properties>
 
     <!--
@@ -32,13 +32,14 @@
         <module>erupt-tpl</module>
         <module>erupt-tpl-ui/ant-design</module>
         <module>erupt-tpl-ui/element-ui</module>
-        <module>erupt-data/erupt-jpa</module>
-        <module>erupt-data/erupt-mongodb</module>
-        <module>erupt-upms</module>
-        <module>erupt-security</module>
-        <module>erupt-web</module>
-        <module>erupt-job</module>
-        <module>erupt-generator</module>
+        <module>erupt-data/erupt-jpa</module><!-- hibernate jpa 数据源实现 -->
+        <module>erupt-data/erupt-mongodb</module><!-- MongoDB 数据源实现 -->
+        <module>erupt-upms</module><!--用户权限管理-->
+        <module>erupt-security</module><!--API 接口安全-->
+        <module>erupt-web</module><!--前端代码-->
+        <module>erupt-job</module><!--任务调度-->
+        <module>erupt-generator</module><!--代码生成-->
+        <module>erupt-monitor</module><!--服务监控-->
     </modules>
 
     <dependencyManagement>
@@ -59,6 +60,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -74,7 +80,7 @@
                     <compilerArgs>
                         <compilerArg>-parameters</compilerArg>
                     </compilerArgs>
-                    <!--                    <executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_231.jdk/Contents/Home/bin/javac</executable>-->
+                    <!--<executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_231.jdk/Contents/Home/bin/javac</executable>-->
                 </configuration>
             </plugin>
             <!-- 一键更新子模块版本号 plugins -> versions -> version:set  -->

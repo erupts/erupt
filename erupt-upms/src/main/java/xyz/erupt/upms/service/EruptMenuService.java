@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
@@ -11,6 +12,7 @@ import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -31,13 +33,11 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     private EruptSessionService sessionService;
 
     @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
-    private Gson gson;
-
-    @Autowired
     private EruptUserService eruptUserService;
+
+    private final Gson gson = GsonFactory.getGson();
+    @Resource
+    private HttpServletRequest request;
 
     public List<EruptMenu> getMenuList(EruptUser eruptUser) {
         List<EruptMenu> menus;
