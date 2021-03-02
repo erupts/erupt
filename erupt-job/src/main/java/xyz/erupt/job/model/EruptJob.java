@@ -8,6 +8,8 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
+import xyz.erupt.annotation.sub_erupt.Drill;
+import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -34,6 +36,7 @@ import java.util.List;
 @Erupt(
         name = "任务维护",
         dataProxy = EruptJob.class,
+        drills = @Drill(code = "list", title = "日志", icon = "fa fa-sliders", link = @Link(linkErupt = EruptJobLog.class, joinColumn = "eruptJob.id")),
         rowOperation = @RowOperation(code = "action", icon = "fa fa-play",
                 title = "执行一次任务", operationHandler = EruptJob.class)
 )
