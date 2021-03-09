@@ -63,9 +63,15 @@ public class RedisInfo {
             this.setPort(properties.getProperty("tcp_port"));
             this.setDay(properties.getProperty("uptime_in_days"));
             this.setClientNum(properties.getProperty("connected_clients"));
-            this.setCluster(Integer.parseInt(properties.getProperty("cluster_enabled")) > 0);
-            this.setAOF(Integer.parseInt(properties.getProperty("aof_enabled")) != 0);
             this.setPort(properties.getProperty("tcp_port"));
+            String clusterEnabled = properties.getProperty("cluster_enabled");
+            if (null != clusterEnabled) {
+                this.setCluster(Integer.parseInt(clusterEnabled) > 0);
+            }
+            String aofEnabled = properties.getProperty("aof_enabled");
+            if (null != aofEnabled) {
+                this.setAOF(Integer.parseInt(aofEnabled) != 0);
+            }
         }
 
     }
