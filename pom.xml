@@ -32,6 +32,7 @@
         <module>erupt-tpl</module>
         <module>erupt-tpl-ui/ant-design</module>
         <module>erupt-tpl-ui/element-ui</module>
+        <module>erupt-tpl-ui/amis</module>
         <module>erupt-data/erupt-jpa</module><!-- hibernate jpa 数据源实现 -->
         <module>erupt-data/erupt-mongodb</module><!-- MongoDB 数据源实现 -->
         <module>erupt-upms</module><!--用户权限管理-->
@@ -75,6 +76,7 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <encoding>utf-8</encoding>
                     <verbose>true</verbose>
                     <fork>true</fork>
                     <compilerArgs>
