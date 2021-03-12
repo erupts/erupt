@@ -54,7 +54,7 @@ public class EruptJpaDao {
     }
 
     public Page queryEruptList(EruptModel eruptModel, Page page, EruptQuery eruptQuery) {
-        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")", eruptQuery, false);
+        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "new map(" + String.join(",", EruptJpaUtils.getEruptColJpaKeys(eruptModel)) + ")", eruptQuery, false);
         String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "count(*)", eruptQuery, true);
         EntityManager entityManager = entityManagerService.getEntityManager(eruptModel.getClazz());
         Query query = entityManager.createQuery(hql);
