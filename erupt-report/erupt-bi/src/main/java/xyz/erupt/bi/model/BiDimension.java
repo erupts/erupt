@@ -48,7 +48,7 @@ public class BiDimension extends BaseModel {
 
     @EruptField(
             views = @View(title = "是否必填"),
-            edit = @Edit(title = "是否必填")
+            edit = @Edit(title = "是否必填", notNull = true)
     )
     private Boolean notNull = true;
 
