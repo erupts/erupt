@@ -84,6 +84,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService, ApplicationRun
 
     //优化异常提示类
     private void handlerException(Exception e, EruptModel eruptModel) {
+        e.printStackTrace();
         if (e instanceof DataIntegrityViolationException) {
             if (e.getMessage().contains("ConstraintViolationException")) {
                 throw new EruptWebApiRuntimeException(gcRepeatHint(eruptModel));
