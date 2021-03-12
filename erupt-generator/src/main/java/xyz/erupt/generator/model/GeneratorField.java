@@ -68,25 +68,25 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
 
     @EruptField(
             views = @View(title = "查询项"),
-            edit = @Edit(title = "查询项")
+            edit = @Edit(title = "查询项", notNull = true)
     )
     private Boolean query = true;
 
     @EruptField(
             views = @View(title = "字段排序"),
-            edit = @Edit(title = "字段排序")
+            edit = @Edit(title = "字段排序", notNull = true)
     )
     private Boolean sortable = true;
 
     @EruptField(
             views = @View(title = "是否必填"),
-            edit = @Edit(title = "是否必填")
+            edit = @Edit(title = "是否必填", notNull = true)
     )
     private Boolean notNull = true;
 
     @EruptField(
             views = @View(title = "是否显示"),
-            edit = @Edit(title = "是否显示")
+            edit = @Edit(title = "是否显示", notNull = true)
     )
     private Boolean isShow = true;
 
