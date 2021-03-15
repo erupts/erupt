@@ -48,7 +48,6 @@ public class UpmsDataLoadService implements CommandLineRunner {
                 eruptUser.setPassword(MD5Utils.digest(DEFAULT_ACCOUNT));
                 eruptUser.setName(DEFAULT_ACCOUNT);
                 eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
-
                 //菜单
                 String code = "code";
                 String manager = "$manager";
