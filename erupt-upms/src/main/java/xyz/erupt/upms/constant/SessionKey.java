@@ -10,9 +10,14 @@ public class SessionKey {
 
     public static final String VERIFY_CODE = AUTH_SPACE + "verifyCode:";
 
-    public static final String MENU = AUTH_SPACE + "menu:";
+    //菜单类型值作为key的map
+    public static final String MENU_VALUE_MAP = AUTH_SPACE + "menu-value-map:";
+
+    //菜单编码作为key的map
+    public static final String MENU_CODE_MAP = AUTH_SPACE + "menu-code-map:";
 
     public static final String MENU_VIEW = AUTH_SPACE + "menu-view:";
+
 
     public static final String USER_TOKEN = AUTH_SPACE + "token:";
 

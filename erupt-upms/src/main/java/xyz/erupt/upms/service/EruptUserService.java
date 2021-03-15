@@ -1,9 +1,9 @@
 package xyz.erupt.upms.service;
 
-import com.google.gson.reflect.TypeToken;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import xyz.erupt.core.config.EruptAppProp;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.service.EruptApplication;
@@ -31,7 +31,6 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author liyuepeng
@@ -77,7 +76,7 @@ public class EruptUserService {
         if (null != loginError) {
             loginErrorCount = Integer.parseInt(loginError.toString());
         }
-        sessionService.putByLoginExpire(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "");
+        sessionService.put(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "", eruptUpmsConfig.getExpireTimeByLogin());
         return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
     }
 
@@ -116,7 +115,7 @@ public class EruptUserService {
                 }
             }
             if (pass) {
-                sessionService.putByLoginExpire(SessionKey.LOGIN_ERROR + requestIp, "0");
+                sessionService.put(SessionKey.LOGIN_ERROR + requestIp, "0", eruptUpmsConfig.getExpireTimeByLogin());
                 return new LoginModel(true, eruptUser);
             } else {
                 return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
@@ -193,19 +192,19 @@ public class EruptUserService {
         }
     }
 
-
-    public EruptUser getCurrentEruptUser() {
-        entityManager.clear();
-        Long uid = this.getCurrentUid();
-        return null == uid ? null : entityManager.find(EruptUser.class, uid);
+    private EruptUser findEruptUserByAccount(String account) {
+        return eruptDao.queryEntity(EruptUser.class, "account = :account", new HashMap<String, Object>(1) {{
+            this.put("account", account);
+        }});
     }
 
-    public List<EruptMenu> getCurrentEruptUserMenu() {
-        return sessionService.get(SessionKey.MENU + getToken(), new TypeToken<List<EruptMenu>>() {
-        }.getType());
+    //当前用户菜单中，通过编码获取菜单
+    public EruptMenu getEruptMenuByCode(String menuValue) {
+        return sessionService.getMapValue(SessionKey.MENU_CODE_MAP + getCurrentToken(), menuValue, EruptMenu.class);
     }
 
-    public String getToken() {
+    //获取当前请求token
+    public String getCurrentToken() {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
         if (StringUtils.isBlank(token)) {
             token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
@@ -213,20 +212,27 @@ public class EruptUserService {
         return token;
     }
 
+    //获取当前菜单对象
+    public EruptMenu getCurrentMenu() {
+        String erupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
+        if (StringUtils.isBlank(erupt)) {
+            erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
+        }
+        Assert.notNull(erupt, "request header 'menu' not found ");
+        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken(), erupt, EruptMenu.class);
+    }
+
+    //获取当前用户ID
     public Long getCurrentUid() {
-        Object uid = sessionService.get(SessionKey.USER_TOKEN + getToken());
+        Object uid = sessionService.get(SessionKey.USER_TOKEN + getCurrentToken());
         return null == uid ? null : Long.valueOf(uid.toString());
     }
 
-
-    private EruptUser findEruptUserByAccount(String account) {
-        return eruptDao.queryEntity(EruptUser.class, "account = :account",
-                new HashMap<String, Object>(1) {
-                    {
-                        this.put("account", account);
-                    }
-                });
+    //获取当前登录用户对象
+    public EruptUser getCurrentEruptUser() {
+        entityManager.clear();
+        Long uid = this.getCurrentUid();
+        return null == uid ? null : entityManager.find(EruptUser.class, uid);
     }
-
 
 }
