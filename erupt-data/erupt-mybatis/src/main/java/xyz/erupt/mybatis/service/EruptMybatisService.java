@@ -18,7 +18,7 @@ public class EruptMybatisService {
     public static BaseMapper findMapper(Class<?> eruptClass) {
         BindMapper bindMapper = eruptClass.getAnnotation(BindMapper.class);
         if (null != bindMapper) {
-            return (BaseMapper<?>) EruptSpringUtil.getBean(bindMapper.value());
+            return (BaseMapper<?>) EruptSpringUtil.getApplicationContext().getBean(bindMapper.value());
         }
         throw new RuntimeException("not found BindMapper annotation");
     }
