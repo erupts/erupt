@@ -1,20 +1,18 @@
 package xyz.erupt.upms.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
-import xyz.erupt.core.util.PowerHandlerUtil;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.MenuTypeEnum;
-import xyz.erupt.upms.handler.UpmsPowerHandler;
 import xyz.erupt.upms.model.*;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.model.log.EruptOperateLog;
 import xyz.erupt.upms.util.MD5Utils;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Date;
 
@@ -27,15 +25,14 @@ import java.util.Date;
 @Slf4j
 public class UpmsDataLoadService implements CommandLineRunner {
 
-    @Autowired
+    @Resource
     private EruptDao eruptDao;
 
     public static final String DEFAULT_ACCOUNT = "erupt";
 
     @Transactional
     @Override
-    public void run(String... args) throws Exception {
-        PowerHandlerUtil.RegisterPowerHandler(UpmsPowerHandler.class);
+    public void run(String... args) {
         new ProjectUtil().projectStartLoaded("upms", first -> {
             if (first) {
                 //用户
