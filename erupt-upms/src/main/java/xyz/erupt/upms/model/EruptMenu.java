@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.upms.model.base.HyperModel;
@@ -121,7 +122,8 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
     @EruptField(
             edit = @Edit(
                     title = "菜单参数",
-                    type = EditType.TEXTAREA
+                    type = EditType.CODE_EDITOR,
+                    codeEditType = @CodeEditorType(language = "json")
             )
     )
     private String param;
