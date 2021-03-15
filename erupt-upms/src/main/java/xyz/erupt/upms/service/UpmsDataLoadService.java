@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.util.PowerHandlerUtil;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.MenuTypeEnum;
+import xyz.erupt.upms.handler.UpmsPowerHandler;
 import xyz.erupt.upms.model.*;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.model.log.EruptOperateLog;
@@ -33,6 +35,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
+        PowerHandlerUtil.RegisterPowerHandler(UpmsPowerHandler.class);
         new ProjectUtil().projectStartLoaded("upms", first -> {
             if (first) {
                 //用户

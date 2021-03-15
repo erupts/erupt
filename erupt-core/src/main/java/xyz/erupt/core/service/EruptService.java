@@ -8,10 +8,7 @@ import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.util.AnnotationUtil;
-import xyz.erupt.core.util.DataHandlerUtil;
-import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.util.*;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQueryVo;
@@ -37,7 +34,7 @@ public class EruptService {
      * @return
      */
     public Page getEruptData(EruptModel eruptModel, TableQueryVo tableQueryVo, List<Condition> serverCondition, String... customCondition) {
-        if (EruptUtil.getPowerObject(eruptModel).isQuery()) {
+        if (PowerHandlerUtil.getPowerObject(eruptModel).isQuery()) {
             List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQueryVo.getCondition());
             List<String> conditionStrings = new ArrayList<>();
             {

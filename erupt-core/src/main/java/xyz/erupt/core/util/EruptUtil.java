@@ -10,7 +10,6 @@ import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.*;
-import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
@@ -278,16 +277,6 @@ public class EruptUtil {
         for (Class<? extends DataProxy<?>> proxy : eruptModel.getErupt().dataProxy()) {
             consumer.accept(EruptSpringUtil.getBean(proxy));
         }
-    }
-
-    //动态获取erupt power值
-    public static PowerObject getPowerObject(EruptModel eruptModel) {
-        Power power = eruptModel.getErupt().power();
-        PowerObject powerBean = new PowerObject(power);
-        if (!power.powerHandler().isInterface()) {
-            EruptSpringUtil.getBean(power.powerHandler()).handler(powerBean);
-        }
-        return powerBean;
     }
 
     public static Object toEruptId(EruptModel eruptModel, String id) {

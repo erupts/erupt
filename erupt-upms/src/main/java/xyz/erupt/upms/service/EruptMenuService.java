@@ -2,11 +2,9 @@ package xyz.erupt.upms.service;
 
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.upms.config.EruptUpmsConfig;
@@ -22,7 +20,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -59,8 +56,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         }
         return menus;
     }
-    @Resource
-    private EruptProp eruptProp;
+
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
 
@@ -116,27 +112,4 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(menuVoList), eruptUpmsConfig.getExpireTimeByLogin());
     }
 
-    public void putLoginMenuMap(String key, List<EruptMenu> eruptMenus) {
-        Map<String, EruptMenu> map = new HashMap<>();
-        for (EruptMenu menu : eruptMenus) {
-            map.put(menu.getCode(), menu);
-        }
-        if (eruptProp.isRedisSession()) {
-            BoundHashOperations boundHashOperations = redisTemplate.boundHashOps(key);
-            boundHashOperations.expire(eruptUpmsConfig.getExpireTimeByLogin(), TimeUnit.MINUTES);
-            boundHashOperations.putAll(map);
-        } else {
-            request.getSession().setAttribute(key, map);
-        }
-    }
-
-    public EruptMenu getEruptMenuByCode(String key, String code) {
-        if (eruptProp.isRedisSession()) {
-            Object obj = redisTemplate.boundHashOps(key).get(code);
-            return (EruptMenu) obj;
-        } else {
-            Map<String, EruptMenu> map = (Map<String, EruptMenu>) request.getSession().getAttribute(key);
-            return map.get(code);
-        }
-    }
 }
