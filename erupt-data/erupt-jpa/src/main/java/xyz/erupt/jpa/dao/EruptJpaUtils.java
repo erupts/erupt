@@ -34,7 +34,7 @@ public class EruptJpaUtils {
 
     public static final String AS = " as ";
 
-    public static Set<String> getEruptColJapKeys(EruptModel eruptModel) {
+    public static Set<String> getEruptColJpaKeys(EruptModel eruptModel) {
         Set<String> cols = new HashSet<>();
         String eruptNameSymbol = eruptModel.getEruptName() + ".";
         cols.add(eruptNameSymbol + eruptModel.getErupt().primaryKeyCol() + AS + eruptModel.getErupt().primaryKeyCol());
