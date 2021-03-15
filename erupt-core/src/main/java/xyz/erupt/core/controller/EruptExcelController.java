@@ -20,6 +20,7 @@ import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.service.EruptService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.HttpUtil;
+import xyz.erupt.core.util.PowerHandlerUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
@@ -66,7 +67,7 @@ public class EruptExcelController {
             return;
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (EruptUtil.getPowerObject(eruptModel).isImportable()) {
+        if (PowerHandlerUtil.getPowerObject(eruptModel).isImportable()) {
             dataFileService.createExcelTemplate(eruptModel, request, response);
         } else {
             throw new EruptWebApiRuntimeException("没有导入权限");
@@ -85,7 +86,7 @@ public class EruptExcelController {
             return;
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (EruptUtil.getPowerObject(eruptModel).isExport()) {
+        if (PowerHandlerUtil.getPowerObject(eruptModel).isExport()) {
             TableQueryVo tableQueryVo = new TableQueryVo();
             tableQueryVo.setPageIndex(1);
             tableQueryVo.setDataExport(true);
@@ -112,7 +113,7 @@ public class EruptExcelController {
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (EruptUtil.getPowerObject(eruptModel).isImportable()) {
+        if (PowerHandlerUtil.getPowerObject(eruptModel).isImportable()) {
             if (file.isEmpty()) {
                 return EruptApiModel.errorApi("上传失败，请选择文件");
             }
