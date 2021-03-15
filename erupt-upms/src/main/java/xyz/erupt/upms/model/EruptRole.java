@@ -51,6 +51,9 @@ public class EruptRole extends BaseModel {
     )
     private Boolean status = true;
 
+
+    private String range;
+
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "角色参数"),

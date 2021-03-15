@@ -1,10 +1,15 @@
 package xyz.erupt.upms.service;
 
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.BoundHashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.upms.config.EruptUpmsConfig;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
@@ -17,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -29,15 +35,14 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private EruptSessionService sessionService;
-
-    @Autowired
-    private EruptUserService eruptUserService;
-
     private final Gson gson = GsonFactory.getGson();
     @Resource
+    private EruptSessionService sessionService;
+
+    @Resource
     private HttpServletRequest request;
+    @Resource
+    private EruptUserService eruptUserService;
 
     public List<EruptMenu> getMenuList(EruptUser eruptUser) {
         List<EruptMenu> menus;
@@ -54,30 +59,10 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         }
         return menus;
     }
-
-
-    public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
-        List<EruptMenuVo> list = new ArrayList<>();
-        menus.forEach(menu -> {
-            if (Integer.valueOf(EruptMenu.OPEN).equals(menu.getStatus())) {
-                Long pid = null;
-                if (null != menu.getParentMenu()) {
-                    pid = menu.getParentMenu().getId();
-                }
-                list.add(new EruptMenuVo(menu.getId(), menu.getName(), menu.getType(), menu.getValue(), menu.getIcon(), pid));
-            }
-        });
-        return list;
-    }
-
-    @Override
-    public void afterAdd(EruptMenu eruptMenu) {
-        String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
-        List<EruptMenu> eruptMenus = getMenuList(eruptUserService.getCurrentEruptUser());
-        List<EruptMenuVo> menuVoList = geneMenuListVo(eruptMenus);
-        sessionService.putByLoginExpire(SessionKey.MENU + token, gson.toJson(eruptMenus));
-        sessionService.putByLoginExpire(SessionKey.MENU_VIEW + token, gson.toJson(menuVoList));
-    }
+    @Resource
+    private EruptProp eruptProp;
+    @Resource
+    private EruptUpmsConfig eruptUpmsConfig;
 
     @Override
     public void afterUpdate(EruptMenu eruptMenu) {
@@ -99,5 +84,59 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
             eruptMenu.setSort(obj + 10);
         }
         eruptMenu.setStatus(Integer.valueOf(EruptMenu.OPEN));
+    }
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
+    public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
+        List<EruptMenuVo> list = new ArrayList<>();
+        menus.forEach(menu -> {
+            if (Integer.valueOf(EruptMenu.OPEN).equals(menu.getStatus())) {
+                Long pid = null;
+                if (null != menu.getParentMenu()) {
+                    pid = menu.getParentMenu().getId();
+                }
+                list.add(new EruptMenuVo(menu.getId(), menu.getCode(), menu.getName(), menu.getType(), menu.getValue(), menu.getIcon(), pid));
+            }
+        });
+        return list;
+    }
+
+    @Override
+    public void afterAdd(EruptMenu eruptMenu) {
+        if (eruptMenu.getCode().contains("/")) {
+            throw new EruptWebApiRuntimeException("菜单编码禁止出现 '/' 字符");
+        }
+        if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
+            throw new EruptWebApiRuntimeException("选择菜单类型时，类型值不能为空");
+        }
+        String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
+        List<EruptMenu> eruptMenus = getMenuList(eruptUserService.getCurrentEruptUser());
+        List<EruptMenuVo> menuVoList = geneMenuListVo(eruptMenus);
+        sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(menuVoList), eruptUpmsConfig.getExpireTimeByLogin());
+    }
+
+    public void putLoginMenuMap(String key, List<EruptMenu> eruptMenus) {
+        Map<String, EruptMenu> map = new HashMap<>();
+        for (EruptMenu menu : eruptMenus) {
+            map.put(menu.getCode(), menu);
+        }
+        if (eruptProp.isRedisSession()) {
+            BoundHashOperations boundHashOperations = redisTemplate.boundHashOps(key);
+            boundHashOperations.expire(eruptUpmsConfig.getExpireTimeByLogin(), TimeUnit.MINUTES);
+            boundHashOperations.putAll(map);
+        } else {
+            request.getSession().setAttribute(key, map);
+        }
+    }
+
+    public EruptMenu getEruptMenuByCode(String key, String code) {
+        if (eruptProp.isRedisSession()) {
+            Object obj = redisTemplate.boundHashOps(key).get(code);
+            return (EruptMenu) obj;
+        } else {
+            Map<String, EruptMenu> map = (Map<String, EruptMenu>) request.getSession().getAttribute(key);
+            return map.get(code);
+        }
     }
 }

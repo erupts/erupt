@@ -99,6 +99,16 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
     )
     private Integer sort = 0;
 
+//    @EruptField(
+//            edit = @Edit(
+//                    title = "权限",
+//                    type = EditType.TAGS,
+//                    tagsType = @TagsType(tags = {
+//                            "ADD", "DELETE", "UPDATE", "QUERY"
+//                    })
+//            )
+//    )
+//    private String limit;
 
     @EruptField(
             edit = @Edit(
