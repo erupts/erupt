@@ -3,6 +3,7 @@ package xyz.erupt.upms.handler;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.PowerHandler;
 import xyz.erupt.annotation.fun.PowerObject;
+import xyz.erupt.core.util.PowerHandlerUtil;
 
 /**
  * @author liyuepeng
@@ -10,6 +11,10 @@ import xyz.erupt.annotation.fun.PowerObject;
  */
 @Service
 public class UpmsPowerHandler implements PowerHandler {
+
+    static {
+        PowerHandlerUtil.RegisterPowerHandler(UpmsPowerHandler.class);
+    }
 
     @Override
     public void handler(PowerObject power) {
