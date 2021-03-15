@@ -1,9 +1,10 @@
-package xyz.erupt.upms.helper;
+package xyz.erupt.upms.looker;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -17,9 +18,9 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2021/3/10 11:30
  */
 @MappedSuperclass
-@PreDataProxy(OnlySelf.class)
+@PreDataProxy(LookerOrg.class)
 @Service
-public class OnlySelf extends HyperModel implements DataProxy<Object> {
+public class LookerOrg extends HyperModel implements DataProxy<Object> {
 
     @Resource
     @Transient
@@ -31,8 +32,13 @@ public class OnlySelf extends HyperModel implements DataProxy<Object> {
 
     @Override
     public String beforeFetch() {
-        if (!eruptUserService.getCurrentEruptUser().getIsAdmin()) {
-            return request.getHeader("erupt") + ".createUser.id = " + eruptUserService.getCurrentUid();
+        EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
+        if (!eruptUser.getIsAdmin()) {
+            if (null == eruptUser.getEruptOrg()) {
+                throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded organization cannot filter data");
+            } else {
+                return request.getHeader("erupt") + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
+            }
         } else {
             return null;
         }
