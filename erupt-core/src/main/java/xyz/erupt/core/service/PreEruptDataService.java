@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.Expr;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
-import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.TreeModel;
 
@@ -56,7 +56,7 @@ public class PreEruptDataService {
     public Collection<Map<String, Object>> createColumnQuery(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
         List<Condition> conditions = new ArrayList<>();
         List<String> conditionStrings = new ArrayList<>();
-        EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> {
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> {
             String condition = dataProxy.beforeFetch();
             if (StringUtils.isNotBlank(condition)) {
                 conditionStrings.add(condition);
@@ -83,7 +83,8 @@ public class PreEruptDataService {
         Collection<Map<String, Object>> result = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
                 .queryColumn(eruptModel, columns, EruptQuery.builder()
                         .conditions(conditions).conditionStrings(conditionStrings).orderBy(orderBy).build());
-        EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.afterFetch(result)));
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(result)));
         return result;
     }
+
 }

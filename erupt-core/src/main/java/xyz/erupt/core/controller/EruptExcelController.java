@@ -14,13 +14,13 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.service.EruptService;
-import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.HttpUtil;
-import xyz.erupt.core.util.PowerHandlerUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
@@ -67,7 +67,7 @@ public class EruptExcelController {
             return;
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (PowerHandlerUtil.getPowerObject(eruptModel).isImportable()) {
+        if (PowerInvoke.getPowerObject(eruptModel).isImportable()) {
             dataFileService.createExcelTemplate(eruptModel, request, response);
         } else {
             throw new EruptWebApiRuntimeException("没有导入权限");
@@ -86,7 +86,7 @@ public class EruptExcelController {
             return;
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (PowerHandlerUtil.getPowerObject(eruptModel).isExport()) {
+        if (PowerInvoke.getPowerObject(eruptModel).isExport()) {
             TableQueryVo tableQueryVo = new TableQueryVo();
             tableQueryVo.setPageIndex(1);
             tableQueryVo.setDataExport(true);
@@ -98,7 +98,7 @@ public class EruptExcelController {
             }
             Page page = eruptService.getEruptData(eruptModel, tableQueryVo, null);
             Workbook wb = dataFileService.exportExcel(eruptModel, page);
-            EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
             wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));
         } else {
             throw new EruptWebApiRuntimeException("没有导出权限");
@@ -113,7 +113,7 @@ public class EruptExcelController {
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (PowerHandlerUtil.getPowerObject(eruptModel).isImportable()) {
+        if (PowerInvoke.getPowerObject(eruptModel).isImportable()) {
             if (file.isEmpty()) {
                 return EruptApiModel.errorApi("上传失败，请选择文件");
             }
