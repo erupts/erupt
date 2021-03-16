@@ -12,7 +12,6 @@ import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
-import xyz.erupt.upms.util.MenuTool;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -33,7 +32,7 @@ public class BiDataInitService implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-        MenuTool.addMenuType(new VLModel("bi", "报表", "报表编码"));
+        MenuTypeEnum.addMenuType(new VLModel("bi", "报表", "报表编码"));
         new ProjectUtil().projectStartLoaded("bi", first -> {
             if (first) {
                 String code = "code";
