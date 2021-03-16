@@ -76,7 +76,7 @@ public class EruptMenu extends HyperModel {
             edit = @Edit(
                     title = "菜单类型",
                     type = EditType.CHOICE,
-                    choiceType = @ChoiceType(fetchHandler = MenuTypeEnum.class)
+                    choiceType = @ChoiceType(fetchHandler = MenuTypeEnum.ChoiceFetch.class)
             )
     )
     private String type;

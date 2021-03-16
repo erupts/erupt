@@ -9,6 +9,7 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.service.EruptApplication;
+import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.job.handler.EruptJobHandler;
@@ -50,12 +51,16 @@ public class JobDataLoadService implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
+        TimeRecorder timeRecorder = new TimeRecorder();
+        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
+                new AssignableTypeFilter(EruptJobHandler.class)
+        }, clazz -> loadedJobHandler.add(clazz.getName()));
         if (openJob) {
             List<EruptJob> list = eruptDao.queryEntityList(EruptJob.class, "status = true", null);
             for (EruptJob job : list) {
                 eruptJobService.modifyJob(job);
             }
-            log.info("Erupt job initialization complete");
+            log.info("Erupt job initialization completed in {} ms", timeRecorder.recorder());
         } else {
             log.info("Erupt job disable");
         }
@@ -71,8 +76,5 @@ public class JobDataLoadService implements CommandLineRunner {
                         Integer.valueOf(EruptMenu.OPEN), 20, "fa fa-envelope-o", eruptMenu), code, EruptMail.class.getSimpleName());
             }
         });
-        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
-                new AssignableTypeFilter(EruptJobHandler.class)
-        }, clazz -> loadedJobHandler.add(clazz.getName()));
     }
 }
