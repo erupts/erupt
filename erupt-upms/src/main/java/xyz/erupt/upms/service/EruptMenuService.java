@@ -32,30 +32,16 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final Gson gson = GsonFactory.getGson();
     @Resource
     private EruptSessionService sessionService;
 
     @Resource
     private HttpServletRequest request;
+
     @Resource
     private EruptUserService eruptUserService;
 
-    public List<EruptMenu> getMenuList(EruptUser eruptUser) {
-        List<EruptMenu> menus;
-        if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
-            menus = entityManager.createQuery("from EruptMenu order by sort", EruptMenu.class).getResultList();
-        } else {
-            Set<EruptMenu> menuSet = new HashSet<>();
-            for (EruptRole role : eruptUser.getRoles()) {
-                if (role.getStatus()) {
-                    menuSet.addAll(role.getMenus());
-                }
-            }
-            menus = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
-        }
-        return menus;
-    }
+    private final Gson gson = GsonFactory.getGson();
 
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
@@ -107,9 +93,24 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
             throw new EruptWebApiRuntimeException("选择菜单类型时，类型值不能为空");
         }
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
-        List<EruptMenu> eruptMenus = getMenuList(eruptUserService.getCurrentEruptUser());
-        List<EruptMenuVo> menuVoList = geneMenuListVo(eruptMenus);
+        List<EruptMenuVo> menuVoList = geneMenuListVo(getMenuList(eruptUserService.getCurrentEruptUser()));
         sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(menuVoList), eruptUpmsConfig.getExpireTimeByLogin());
+    }
+
+    public List<EruptMenu> getMenuList(EruptUser eruptUser) {
+        List<EruptMenu> menus;
+        if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
+            menus = entityManager.createQuery("from EruptMenu order by sort", EruptMenu.class).getResultList();
+        } else {
+            Set<EruptMenu> menuSet = new HashSet<>();
+            for (EruptRole role : eruptUser.getRoles()) {
+                if (role.getStatus()) {
+                    menuSet.addAll(role.getMenus());
+                }
+            }
+            menus = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
+        }
+        return menus;
     }
 
 }

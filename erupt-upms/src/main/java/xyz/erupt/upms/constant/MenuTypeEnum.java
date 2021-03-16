@@ -1,9 +1,14 @@
 package xyz.erupt.upms.constant;
 
 import lombok.Getter;
+import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.fun.VLModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-public enum MenuTypeEnum {
+public enum MenuTypeEnum implements ChoiceFetchHandler {
 
     TABLE("table", "表格", "填erupt类名"),
     TREE("tree", "树", "填erupt类名"),
@@ -22,5 +27,22 @@ public enum MenuTypeEnum {
         this.code = code;
         this.name = name;
         this.desc = desc;
+    }
+
+    private static final List<VLModel> menuTypes = new ArrayList<>();
+
+    static {
+        for (MenuTypeEnum menuTypeEnum : MenuTypeEnum.values()) {
+            menuTypes.add(new VLModel(menuTypeEnum.getCode(), menuTypeEnum.getName(), menuTypeEnum.getDesc()));
+        }
+    }
+
+    public static void addMenuType(VLModel menuType) {
+        menuTypes.add(menuType);
+    }
+
+    @Override
+    public List<VLModel> fetch(String[] params) {
+        return menuTypes;
     }
 }
