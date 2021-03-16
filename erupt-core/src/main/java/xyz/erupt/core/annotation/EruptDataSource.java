@@ -15,6 +15,6 @@ import java.lang.annotation.*;
 @Comment("多数据源注解")
 public @interface EruptDataSource {
 
-    @Comment("应该为：erupt.dbs[i].datasource.name")
+    @Comment("多数据源名称：erupt.dbs[i].datasource.name")
     String value();
 }

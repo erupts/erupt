@@ -40,13 +40,9 @@ public class EruptExcelService {
 
     private static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
 
-
     /**
-     * excel导出
-     * 展示的格式和view表格一致
+     * excel导出，展示的格式和view表格一致
      *
-     * @param eruptModel
-     * @param page
      * @return Workbook
      */
     public Workbook exportExcel(EruptModel eruptModel, Page page) {

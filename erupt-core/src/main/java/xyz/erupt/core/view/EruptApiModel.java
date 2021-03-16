@@ -73,7 +73,6 @@ public class EruptApiModel {
         DIALOG, MESSAGE, NOTIFY
     }
 
-
 }
 
 
