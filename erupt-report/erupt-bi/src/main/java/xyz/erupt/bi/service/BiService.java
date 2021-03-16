@@ -3,7 +3,6 @@ package xyz.erupt.bi.service;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.bi.constant.DBTypeEnum;
@@ -39,23 +38,17 @@ import java.util.regex.Pattern;
 @Slf4j
 public class BiService {
 
-    @Autowired
-    private EruptUserService eruptUserService;
-
-    @Autowired
-    private BiDataSourceService dataSourceService;
-
     private static final String TOTAL_KEY = "count";
+    @Resource
+    private EruptUserService eruptUserService;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Bi findBi(Long id) {
-        return entityManager.find(Bi.class, id);
-    }
-
     @Resource
     private HttpServletRequest request;
+    @Resource
+    private BiDataSourceService dataSourceService;
 
     private String getLimitSql(BiDataSource biDataSource) {
         if (null == biDataSource) {
@@ -75,6 +68,10 @@ public class BiService {
             }
         }
         return DBTypeEnum.GENERAL_LIMIT;
+    }
+
+    public Bi findBi(Long id) {
+        return entityManager.find(Bi.class, id);
     }
 
     public BiData queryBiData(Bi bi, int pageIndex, int pageSize,
@@ -169,8 +166,7 @@ public class BiService {
         Matcher m = EXPRESS_PATTERN.matcher(express);
         while (m.find()) {
             String exp = m.group();
-            Object result = scriptEngine.eval(BiDataInitService.defineFunctions
-                    + "\n" + exp, bindings);
+            Object result = scriptEngine.eval(BiDataInitService.defineFunctions + "\n" + exp, bindings);
             if (null == result) {
                 result = "";
             }

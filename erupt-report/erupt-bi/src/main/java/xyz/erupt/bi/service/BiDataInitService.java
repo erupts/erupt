@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.bi.model.*;
+import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.MenuTypeEnum;
@@ -58,21 +59,21 @@ public class BiDataInitService implements CommandLineRunner {
                 this.loadDefaultFunction();
             }
         });
+        TimeRecorder timeRecorder = new TimeRecorder();
         this.flushFunction();
-        log.info("Erupt bi initialization complete");
-    }
-
-    @SneakyThrows
-    private void loadDefaultFunction() {
-        String defaultFunctionCode = "default_function";
-        eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(defaultFunctionCode,
-                        defaultFunctionCode, StreamUtils.copyToString(BiDataInitService.class
-                        .getResourceAsStream("./BiDefaultFunction.js"), StandardCharsets.UTF_8)),
-                "code", defaultFunctionCode);
+        log.info("Erupt bi initialization completed in {} ms", timeRecorder.recorder());
     }
 
     @Resource
     private EruptDao eruptDao;
+
+    @SneakyThrows
+    private void loadDefaultFunction() {
+        String defaultFunctionCode = "default_function";
+        eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(defaultFunctionCode, defaultFunctionCode,
+                StreamUtils.copyToString(BiDataInitService.class.getResourceAsStream("./BiDefaultFunction.js")
+                        , StandardCharsets.UTF_8)), "code", defaultFunctionCode);
+    }
 
     public void flushFunction() {
         List<Object[]> list = eruptDao.queryObjectList(BiFunction.class, null, null, "jsFunction");
