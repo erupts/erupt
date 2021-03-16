@@ -20,10 +20,10 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.util.PowerHandlerUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
@@ -61,7 +61,7 @@ public class EruptFileController {
         try {
             //生成存储路径
             EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-            PowerObject powerObject = PowerHandlerUtil.getPowerObject(eruptModel);
+            PowerObject powerObject = PowerInvoke.getPowerObject(eruptModel);
             if (!powerObject.isEdit() && !powerObject.isAdd()) {
                 throw new EruptNoLegalPowerException();
             }

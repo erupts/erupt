@@ -6,9 +6,14 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.util.*;
+import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.DataHandlerUtil;
+import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQueryVo;
@@ -34,7 +39,7 @@ public class EruptService {
      * @return
      */
     public Page getEruptData(EruptModel eruptModel, TableQueryVo tableQueryVo, List<Condition> serverCondition, String... customCondition) {
-        if (PowerHandlerUtil.getPowerObject(eruptModel).isQuery()) {
+        if (PowerInvoke.getPowerObject(eruptModel).isQuery()) {
             List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQueryVo.getCondition());
             List<String> conditionStrings = new ArrayList<>();
             {
@@ -54,7 +59,7 @@ public class EruptService {
                 }
             }
             conditionStrings.addAll(Arrays.asList(customCondition));
-            EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> {
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> {
                 String condition = dataProxy.beforeFetch();
                 if (null != condition) {
                     conditionStrings.add(condition);
@@ -69,7 +74,7 @@ public class EruptService {
             if (null != page.getList()) {
                 DataHandlerUtil.convertDataToEruptView(eruptModel, page.getList());
             }
-            EruptUtil.handlerDataProxy(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
             return page;
         } else {
             throw new EruptNoLegalPowerException();

@@ -6,8 +6,8 @@ import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.util.PowerHandlerUtil;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -30,7 +30,7 @@ public class EruptBuildController {
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName) {
         EruptModel eruptView = EruptCoreService.getEruptView(eruptName);
         EruptBuildModel eruptBuildModel = new EruptBuildModel();
-        eruptBuildModel.setPower(PowerHandlerUtil.getPowerObject(eruptView));
+        eruptBuildModel.setPower(PowerInvoke.getPowerObject(eruptView));
         eruptBuildModel.setEruptModel(eruptView);
         for (EruptFieldModel fieldModel : eruptView.getEruptFieldModels()) {
             switch (fieldModel.getEruptField().edit().type()) {

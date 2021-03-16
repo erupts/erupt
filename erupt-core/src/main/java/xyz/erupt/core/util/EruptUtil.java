@@ -6,10 +6,12 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.fun.*;
+import xyz.erupt.annotation.fun.AttachmentProxy;
+import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.fun.TagsFetchHandler;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
@@ -25,7 +27,6 @@ import xyz.erupt.core.view.EruptModel;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
@@ -264,19 +265,6 @@ public class EruptUtil {
             }
         }
         return EruptApiModel.successApi();
-    }
-
-    //处理dataProxy回调对象
-    public static void handlerDataProxy(EruptModel eruptModel, Consumer<DataProxy> consumer) {
-        for (Class<?> clazz : ReflectUtil.findClassExtendStack(eruptModel.getClazz())) {
-            PreDataProxy preDataProxy = clazz.getAnnotation(PreDataProxy.class);
-            if (null != preDataProxy) {
-                consumer.accept(EruptSpringUtil.getBean(preDataProxy.value()));
-            }
-        }
-        for (Class<? extends DataProxy<?>> proxy : eruptModel.getErupt().dataProxy()) {
-            consumer.accept(EruptSpringUtil.getBean(proxy));
-        }
     }
 
     public static Object toEruptId(EruptModel eruptModel, String id) {
