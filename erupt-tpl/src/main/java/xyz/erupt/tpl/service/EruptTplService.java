@@ -17,7 +17,7 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.tpl.engine.*;
-import xyz.erupt.upms.util.MenuTool;
+import xyz.erupt.upms.constant.MenuTypeEnum;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +59,7 @@ public class EruptTplService implements ApplicationRunner {
             }
         });
         this.engineLoader();
-        MenuTool.addMenuType(new VLModel(TPL, "模板", "tpl目录下文件名"));
+        MenuTypeEnum.addMenuType(new VLModel(TPL, "模板", "tpl目录下文件名"));
         log.info("Erupt tpl initialization complete");
     }
 

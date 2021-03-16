@@ -5,8 +5,6 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.fun.ChoiceFetchHandler;
-import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -15,12 +13,11 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.upms.constant.MenuTypeEnum;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptMenuService;
-import xyz.erupt.upms.util.MenuTool;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * @author liyuepeng
@@ -36,7 +33,7 @@ import java.util.List;
 )
 @Getter
 @Setter
-public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
+public class EruptMenu extends HyperModel {
 
     public static final String OPEN = "1";
 
@@ -79,7 +76,7 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
             edit = @Edit(
                     title = "菜单类型",
                     type = EditType.CHOICE,
-                    choiceType = @ChoiceType(fetchHandler = EruptMenu.class)
+                    choiceType = @ChoiceType(fetchHandler = MenuTypeEnum.class)
             )
     )
     private String type;
@@ -103,9 +100,7 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
 //            edit = @Edit(
 //                    title = "权限",
 //                    type = EditType.TAGS,
-//                    tagsType = @TagsType(tags = {
-//                            "ADD", "DELETE", "UPDATE", "QUERY"
-//                    })
+//                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.class)
 //            )
 //    )
 //    private String limit;
@@ -150,10 +145,5 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
     }
 
     public EruptMenu() {
-    }
-
-    @Override
-    public List<VLModel> fetch(String[] params) {
-        return MenuTool.getMenuTypes();
     }
 }
