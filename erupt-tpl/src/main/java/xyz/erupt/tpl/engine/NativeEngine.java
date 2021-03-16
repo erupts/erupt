@@ -15,7 +15,7 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2021/1/29 17:10
  */
-public class H5Engine extends EngineTemplate<Void> {
+public class NativeEngine extends EngineTemplate<Void> {
 
     public static final String baseDir = "${base}";
 

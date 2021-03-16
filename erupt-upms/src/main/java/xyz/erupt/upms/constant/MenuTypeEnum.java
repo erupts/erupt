@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public enum MenuTypeEnum implements ChoiceFetchHandler {
+public enum MenuTypeEnum {
 
     TABLE("table", "表格", "填erupt类名"),
     TREE("tree", "树", "填erupt类名"),
@@ -41,8 +41,13 @@ public enum MenuTypeEnum implements ChoiceFetchHandler {
         menuTypes.add(menuType);
     }
 
-    @Override
-    public List<VLModel> fetch(String[] params) {
-        return menuTypes;
+    public static class ChoiceFetch implements ChoiceFetchHandler {
+
+        @Override
+        public List<VLModel> fetch(String[] params) {
+            return menuTypes;
+        }
+
     }
+
 }
