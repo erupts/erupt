@@ -36,7 +36,6 @@ public class EruptService {
      * @param tableQueryVo    前端查询对象
      * @param serverCondition 自定义条件
      * @param customCondition 条件字符串
-     * @return
      */
     public Page getEruptData(EruptModel eruptModel, TableQueryVo tableQueryVo, List<Condition> serverCondition, String... customCondition) {
         if (PowerInvoke.getPowerObject(eruptModel).isQuery()) {
@@ -86,7 +85,7 @@ public class EruptService {
      *
      * @param eruptModel erupt Object
      * @param id         标识主键
-     * @return
+     * @return 是否有数据权限
      */
     public boolean verifyIdPermissions(EruptModel eruptModel, String id) {
         List<Condition> conditions = new ArrayList<>();

@@ -200,8 +200,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     @Override
     public void beforeAdd(EruptUser eruptUser) {
         if (StringUtils.isBlank(eruptUser.getPassword())) {
-            throw new EruptApiErrorTip(new EruptApiModel(EruptApiModel.Status.WARNING, "密码必填",
-                    EruptApiModel.PromptWay.MESSAGE));
+            throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, "密码必填",EruptApiModel.PromptWay.MESSAGE);
         }
         this.checkPostOrg(eruptUser);
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
