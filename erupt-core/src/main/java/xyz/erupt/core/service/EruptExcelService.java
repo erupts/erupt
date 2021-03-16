@@ -14,6 +14,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.*;
@@ -132,7 +133,7 @@ public class EruptExcelService {
                     cellIndexJoinEruptMap.put(i, boolMap);
                     break;
                 case REFERENCE_TREE:
-                    IEruptDataService iEruptDataService = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz());
+                    IEruptDataService iEruptDataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
                     List<Column> columns = new ArrayList<>();
                     columns.add(new Column(edit.referenceTreeType().id(), edit.referenceTreeType().id()));
                     columns.add(new Column(edit.referenceTreeType().label(), edit.referenceTreeType().label()));
@@ -148,7 +149,7 @@ public class EruptExcelService {
                     cellIndexJoinEruptMap.put(i, refTreeMap);
                     break;
                 case REFERENCE_TABLE:
-                    IEruptDataService eruptDataProcessor = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz());
+                    IEruptDataService eruptDataProcessor = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
                     List<Column> columnList = new ArrayList<>();
                     columnList.add(new Column(edit.referenceTableType().id(), edit.referenceTableType().id()));
                     columnList.add(new Column(edit.referenceTableType().label(), edit.referenceTableType().label()));

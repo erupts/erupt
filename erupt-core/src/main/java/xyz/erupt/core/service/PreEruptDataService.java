@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.Expr;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
@@ -40,7 +42,7 @@ public class PreEruptDataService {
             columns.add(new Column(pid, AnnotationConst.PID));
         }
         Collection<Map<String, Object>> result = this.createColumnQuery(eruptModel, columns, query);
-        String root = AnnotationUtil.getExpr(rootId);
+        String root = ExprInvoke.getExpr(rootId);
         List<TreeModel> treeModels = new ArrayList<>();
         for (Map<String, Object> map : result) {
             TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), root);
@@ -80,7 +82,7 @@ public class PreEruptDataService {
         } else {
             orderBy = eruptModel.getErupt().orderBy();
         }
-        Collection<Map<String, Object>> result = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
+        Collection<Map<String, Object>> result = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryColumn(eruptModel, columns, EruptQuery.builder()
                         .conditions(conditions).conditionStrings(conditionStrings).orderBy(orderBy).build());
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(result)));

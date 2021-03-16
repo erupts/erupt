@@ -73,11 +73,7 @@ public class TypeUtil {
         }
     }
 
-    /**
-     * 判断实体类字段返回值是否为基本类型（包括String与date）
-     *
-     * @return
-     */
+    // 判断实体类字段返回值是否为基本类型（包括String与date）
     public static boolean isFieldSimpleType(String typeName) {
         return Arrays.asList(SIMPLE_JPA_TYPE).contains(typeName.toLowerCase());
     }
