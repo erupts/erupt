@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -68,7 +68,7 @@ public class EruptService {
             if (null != serverCondition) {
                 legalConditions.addAll(serverCondition);
             }
-            Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
+            Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                     .queryList(eruptModel, new Page(tableQueryVo.getPageIndex(), tableQueryVo.getPageSize(), tableQueryVo.getSort()),
                             EruptQuery.builder().orderBy(tableQueryVo.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
             if (null != page.getList()) {
@@ -91,7 +91,7 @@ public class EruptService {
     public boolean verifyIdPermissions(EruptModel eruptModel, String id) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, QueryExpression.EQ));
-        Page page = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
+        Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryList(eruptModel, new Page(0, 1, null),
                         EruptQuery.builder().conditions(conditions).build());
         boolean is = page.getList().size() > 0;

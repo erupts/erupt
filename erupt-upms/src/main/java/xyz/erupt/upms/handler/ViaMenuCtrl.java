@@ -21,7 +21,7 @@ public class ViaMenuCtrl implements ExprBool.ExprHandler {
 
     @Override
     @Comment("params必填，值为菜单编码")
-    public boolean boolHandler(boolean expr, String[] params) {
+    public boolean handler(boolean expr, String[] params) {
         if (null == params || params.length == 0) {
             throw new RuntimeException(ViaMenuCtrl.class.getSimpleName() + " → params[0] not found");
         }
