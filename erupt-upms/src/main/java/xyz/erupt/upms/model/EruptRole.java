@@ -4,13 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
+import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.upms.enums.MenuLimitEnum;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -51,19 +51,25 @@ public class EruptRole extends BaseModel {
     )
     private Boolean status = true;
 
-
-    private String range;
-
-    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "角色参数"),
             edit = @Edit(
-                    title = "角色参数",
-                    type = EditType.CODE_EDITOR,
-                    codeEditType = @CodeEditorType(language = "json")
+                    title = "权限",
+                    type = EditType.TAGS,
+                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
             )
     )
-    private String param;
+    private String powerOff;
+
+//    @Column(length = AnnotationConst.REMARK_LENGTH)
+//    @EruptField(
+//            views = @View(title = "角色参数"),
+//            edit = @Edit(
+//                    title = "角色参数",
+//                    type = EditType.CODE_EDITOR,
+//                    codeEditType = @CodeEditorType(language = "json")
+//            )
+//    )
+//    private String param;
 
     @ManyToMany
     @JoinTable(
