@@ -12,7 +12,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.tenant.model.EruptTenant;
-import xyz.erupt.upms.constant.MenuTypeEnum;
+import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
 import javax.annotation.Resource;
