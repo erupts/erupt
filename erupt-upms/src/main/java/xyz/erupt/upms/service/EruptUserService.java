@@ -228,6 +228,11 @@ public class EruptUserService {
         return sessionService.getMapValue(SessionKey.MENU_CODE_MAP + getCurrentToken(), menuValue, EruptMenu.class);
     }
 
+    //当前用户菜单中，通过菜单类型值获取菜单
+    public EruptMenu getEruptMenuByValue(String menuValue) {
+        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken(), menuValue, EruptMenu.class);
+    }
+
     //获取当前请求token
     public String getCurrentToken() {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);

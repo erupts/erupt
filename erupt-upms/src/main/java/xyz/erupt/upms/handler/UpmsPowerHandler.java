@@ -45,7 +45,7 @@ public class UpmsPowerHandler implements PowerHandler {
             if (powerStr.contains(MenuLimitEnum.NO_DELETE.name())) {
                 power.setDelete(false);
             }
-            if (powerStr.contains(MenuLimitEnum.NO_UPDATE.name())) {
+            if (powerStr.contains(MenuLimitEnum.NO_EDIT.name())) {
                 power.setEdit(false);
             }
             if (powerStr.contains(MenuLimitEnum.NO_QUERY.name())) {
