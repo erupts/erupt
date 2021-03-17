@@ -248,7 +248,7 @@ public class EruptUserService {
         if (StringUtils.isBlank(erupt)) {
             erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
         }
-        Assert.notNull(erupt, "request header 'menu' not found ");
+        Assert.notNull(erupt, "request header 'erupt' not found ");
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken(), erupt, EruptMenu.class);
     }
 

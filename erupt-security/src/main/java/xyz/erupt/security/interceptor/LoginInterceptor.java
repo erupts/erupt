@@ -100,7 +100,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             case LOGIN:
                 break;
             case MENU:
-                if (!authStr.equalsIgnoreCase(eruptUserService.getCurrentMenu().getValue())) {
+                if (null == eruptUserService.getEruptMenuByValue(authStr)) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
