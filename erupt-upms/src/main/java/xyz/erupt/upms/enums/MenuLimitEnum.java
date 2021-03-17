@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2021/3/16 14:31
  */
 public enum MenuLimitEnum {
-    NO_ADD, NO_DELETE, NO_UPDATE, NO_QUERY, NO_EXPORT, NO_IMPORT;
+    NO_ADD, NO_DELETE, NO_EDIT, NO_QUERY, NO_EXPORT, NO_IMPORT;
 
     public static class MenuLimitFetch implements TagsFetchHandler {
 

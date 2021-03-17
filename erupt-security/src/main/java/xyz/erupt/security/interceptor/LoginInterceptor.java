@@ -13,10 +13,11 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.config.EruptSecurityProp;
-import xyz.erupt.security.service.EruptSecurityService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
+import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptOperateLog;
+import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
 
@@ -35,15 +36,8 @@ import java.util.Date;
 @Service
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
-    private static final String REQ_DATE = "@req_date@";
-
-    static final String REQ_BODY = "@req_body@";
-
     @Resource
     private EruptUserService eruptUserService;
-
-    @Resource
-    private EruptSecurityService eruptSecurityService;
 
     @Resource
     private EntityManager entityManager;
@@ -51,9 +45,14 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Resource
     private EruptSecurityProp eruptSecurityProp;
 
+    static final String REQ_BODY = "@req_body@";
+
     private static final String ERUPT_PARENT_HEADER_KEY = "eruptParent";
 
     private static final String ERUPT_PARENT_PARAM_KEY = "_eruptParent";
+    private static final String REQ_DATE = "@req_date@";
+    @Resource
+    private EruptSessionService sessionService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
@@ -89,7 +88,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        if (null == token || !eruptSecurityService.verifyToken(token)) {
+        if (null == token || null == sessionService.get(SessionKey.USER_TOKEN + token)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.sendError(HttpStatus.UNAUTHORIZED.value());
             return false;
@@ -101,7 +100,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             case LOGIN:
                 break;
             case MENU:
-                if (!eruptSecurityService.verifyMenuAuth(authStr)) {
+                if (!authStr.equalsIgnoreCase(eruptUserService.getCurrentMenu().getValue())) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
@@ -124,7 +123,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
-                if (!eruptSecurityService.verifyEruptMenuAuth(authStr, eruptModel)) {
+                if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
+                    return false;
+                }
+                if (null == eruptUserService.getEruptMenuByValue(eruptModel.getEruptName())) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
