@@ -33,7 +33,7 @@ public class UpmsPowerHandler implements PowerHandler {
 
     @Override
     public void handler(PowerObject power) {
-        this.powerOff(eruptUserService.getCurrentMenu().getPowerOff(), power);
+        this.powerOff(eruptUserService.getCurrentEruptMenu().getPowerOff(), power);
         this.powerOff(eruptSessionService.get(SessionKey.ROLE_POWER + eruptUserService.getCurrentToken()).toString(), power);
     }
 

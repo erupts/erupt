@@ -243,7 +243,7 @@ public class EruptUserService {
     }
 
     //获取当前菜单对象
-    public EruptMenu getCurrentMenu() {
+    public EruptMenu getCurrentEruptMenu() {
         String erupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
         if (StringUtils.isBlank(erupt)) {
             erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
