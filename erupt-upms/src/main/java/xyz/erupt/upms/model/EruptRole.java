@@ -52,24 +52,14 @@ public class EruptRole extends BaseModel {
     private Boolean status = true;
 
     @EruptField(
+            views = @View(title = "操作权限", template = "value&&value.replace(/\\|/g,'<span class=\"text-red\"> | </span>')"),
             edit = @Edit(
-                    title = "权限",
+                    title = "操作权限",
                     type = EditType.TAGS,
                     tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
             )
     )
     private String powerOff;
-
-//    @Column(length = AnnotationConst.REMARK_LENGTH)
-//    @EruptField(
-//            views = @View(title = "角色参数"),
-//            edit = @Edit(
-//                    title = "角色参数",
-//                    type = EditType.CODE_EDITOR,
-//                    codeEditType = @CodeEditorType(language = "json")
-//            )
-//    )
-//    private String param;
 
     @ManyToMany
     @JoinTable(
