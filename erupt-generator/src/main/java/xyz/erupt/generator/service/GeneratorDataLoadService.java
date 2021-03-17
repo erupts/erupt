@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.generator.model.GeneratorClass;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.constant.MenuTypeEnum;
+import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
 import javax.transaction.Transactional;

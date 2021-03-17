@@ -9,11 +9,9 @@ import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.upms.constant.MenuTypeEnum;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.upms.enums.MenuLimitEnum;
+import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptMenuService;
 
@@ -96,14 +94,15 @@ public class EruptMenu extends HyperModel {
     )
     private Integer sort = 0;
 
-//    @EruptField(
-//            edit = @Edit(
-//                    title = "权限",
-//                    type = EditType.TAGS,
-//                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.class)
-//            )
-//    )
-//    private String limit;
+    @EruptField(
+            edit = @Edit(
+                    title = "权限",
+                    type = EditType.TAGS,
+                    showBy = @ShowBy(dependField = "type", expr = "value=='tree'||value=='table'"),
+                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
+            )
+    )
+    private String powerOff;
 
     @EruptField(
             edit = @Edit(

@@ -1,4 +1,4 @@
-package xyz.erupt.upms.constant;
+package xyz.erupt.upms.enums;
 
 import xyz.erupt.annotation.fun.TagsFetchHandler;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2021/3/16 14:31
  */
 public enum MenuLimitEnum {
-    ADD, DELETE, UPDATE, QUERY;
+    NO_ADD, NO_DELETE, NO_UPDATE, NO_QUERY, NO_EXPORT, NO_IMPORT;
 
     public static class MenuLimitFetch implements TagsFetchHandler {
 

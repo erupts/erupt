@@ -1,11 +1,13 @@
 package xyz.erupt.upms.service;
 
+import com.google.gson.Gson;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import xyz.erupt.core.config.EruptAppProp;
 import xyz.erupt.core.config.EruptProp;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptApiModel;
@@ -17,6 +19,7 @@ import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.EruptLogin;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptMenu;
+import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.util.IpUtil;
@@ -28,9 +31,7 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * @author liyuepeng
@@ -60,7 +61,31 @@ public class EruptUserService {
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
 
+    private final Gson gson = GsonFactory.getGson();
+    @Resource
+    private EruptMenuService eruptMenuService;
+
     public static final String LOGIN_ERROR_HINT = "账号或密码错误";
+
+    public void cacheUserInfo(EruptUser eruptUser, String token) {
+        List<EruptMenu> eruptMenus = eruptMenuService.getUserAllMenu(eruptUser);
+        Map<String, Object> valueMap = new HashMap<>();
+        Map<String, Object> codeMap = new HashMap<>();
+        for (EruptMenu menu : eruptMenus) {
+            codeMap.put(menu.getCode(), menu);
+            if (null != menu.getValue()) {
+                valueMap.put(menu.getValue(), menu);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (EruptRole role : eruptUser.getRoles()) {
+            sb.append(role.getPowerOff()).append("|");
+        }
+        sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsConfig.getExpireTimeByLogin());
+        sessionService.putMap(SessionKey.MENU_CODE_MAP + token, codeMap, eruptUpmsConfig.getExpireTimeByLogin());
+        sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsConfig.getExpireTimeByLogin());
+        sessionService.put(SessionKey.ROLE_POWER + token, sb.toString(), eruptUpmsConfig.getExpireTimeByLogin());
+    }
 
     public static LoginProxy findEruptLogin() {
         EruptLogin eruptLogin = EruptApplication.getPrimarySource().getAnnotation(EruptLogin.class);

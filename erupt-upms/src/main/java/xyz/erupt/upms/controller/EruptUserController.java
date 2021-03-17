@@ -17,7 +17,6 @@ import xyz.erupt.upms.config.EruptUpmsConfig;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
-import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptMenuService;
 import xyz.erupt.upms.service.EruptSessionService;
@@ -28,9 +27,7 @@ import xyz.erupt.upms.vo.EruptMenuVo;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author liyuepeng
@@ -95,21 +92,10 @@ public class EruptUserController {
             loginModel.setToken(RandomStringUtils.random(16, true, true));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString(), eruptUpmsConfig.getExpireTimeByLogin());
-            List<EruptMenu> eruptMenus = menuService.getMenuList(eruptUser);
             if (null != loginProxy) {
                 loginProxy.loginSuccess(eruptUser, loginModel.getToken());
             }
-            Map<String, Object> valueMap = new HashMap<>();
-            Map<String, Object> codeMap = new HashMap<>();
-            for (EruptMenu menu : eruptMenus) {
-                codeMap.put(menu.getCode(), menu);
-                if (null != menu.getValue()) {
-                    valueMap.put(menu.getValue(), menu);
-                }
-            }
-            sessionService.putMap(SessionKey.MENU_VALUE_MAP + loginModel.getToken(), valueMap, eruptUpmsConfig.getExpireTimeByLogin());
-            sessionService.putMap(SessionKey.MENU_CODE_MAP + loginModel.getToken(), codeMap, eruptUpmsConfig.getExpireTimeByLogin());
-            sessionService.put(SessionKey.MENU_VIEW + loginModel.getToken(), gson.toJson(menuService.geneMenuListVo(eruptMenus)), eruptUpmsConfig.getExpireTimeByLogin());
+            eruptUserService.cacheUserInfo(eruptUser,loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
         return loginModel;

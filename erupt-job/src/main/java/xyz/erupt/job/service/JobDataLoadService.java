@@ -17,7 +17,7 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.job.model.EruptMail;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.constant.MenuTypeEnum;
+import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
 import javax.transaction.Transactional;
