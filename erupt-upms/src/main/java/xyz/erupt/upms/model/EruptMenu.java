@@ -125,7 +125,8 @@ public class EruptMenu extends HyperModel {
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
-                    title = "菜单参数",
+                    title = "自定义参数",
+                    desc = "json格式",
                     type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "json")
             )
