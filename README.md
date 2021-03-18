@@ -22,7 +22,7 @@
     <a href="https://github.com/erupts/erupt">Github 仓库</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">码云仓库</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank"><b>🦅 官方网站</b></a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz/demo" target="_blank"><b>在线体验</b></a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts" target="_blank"><b>📕 使用文档</b></a>
 </p>
 
@@ -33,6 +33,7 @@
 <p align="center">
     QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
 </p>
+
 
 ---
 
@@ -79,8 +80,6 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 + **无需二次开发**：仅需引用 jar 包即可 ！
 
 ## 🧐 为什么要做 Erupt ?
-无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存在无法规避的痛点，如：开发效率低下、接口对接繁琐、界面差强人意、代码重复、有安全漏洞，导致开发成本极高。
-
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？
 
 代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
@@ -137,7 +136,7 @@ public class Simple extends BaseModel {
 
 全部实现这些仅前端就需要大量的代码，后端的接口与业务逻辑更不在少数。
 
-但可以看到，用 erupt 只需要 **30几行** 代码就能完成，
+但可以看到，用 erupt 只需要 **30几行** 代码就能完成 ！
 
 > 完全不需要了解 **Angular / React / Vue / Jquery**   
 >
@@ -147,15 +146,15 @@ public class Simple extends BaseModel {
 
 即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
 
-这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
+这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务。
 
 
 ## ⛰ 演示截图 | Screenshot
-<img src="./readme/login2.png" width="100%"/>
+<a href="https://www.erupt.xyz/demo" target="_blank"><img src="./readme/login2.png" width="100%"/></a>
 
-<img src="./readme/index.png" width="100%"/>
+<a href="https://www.erupt.xyz" target="_blank"><img src="./readme/index.png" width="100%"/></a>
 
-<img src="./readme/seer.png" width="100%"/>
+<a href="https://www.erupt.xyz/demo" target="_blank"><img src="./readme/seer.png" width="100%"/></a>
 <table>
     <tr>
         <td><img src="readme/goods.png"/></td>
@@ -249,7 +248,8 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 ![架构图](readme/architecture.png)
 
 ## 🌕 在线体验 | Demo
-演示地址：https://www.erupt.xyz/demo  
+演示地址：https://www.erupt.xyz/demo
+
 账号密码：`guest / guest`
 
 **支持主流 4 款现代浏览器，以及 Internet Explorer 11+，可直接运行在 Electron 等基于 Web 标准的环境上**
@@ -274,7 +274,8 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 </table>
 
 ## 🍁 代码样例 | Example Code
-gitee: &nbsp; https://gitee.com/erupt/erupt-example   
+gitee: &nbsp; https://gitee.com/erupt/erupt-example
+
 github: https://github.com/erupts/erupt-example
 
 ## 🔭 开源推荐 | Recommend
