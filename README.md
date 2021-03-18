@@ -20,21 +20,19 @@
 
 <p align="center">
     <a href="https://github.com/erupts/erupt">Github 仓库</a> &nbsp; | &nbsp; 
-    <a href="https://gitee.com/erupt/erupt">Gitee 仓库</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz" target="_blank">官方网站</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/yuepeng/erupt/bdiq6o" target="_blank">贡献指南</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/yuepeng/erupt" target="_blank"><b>📕 使用文档</b></a>
-</p>
-
-<p align="center">
-    QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
+    <a href="https://gitee.com/erupt/erupt">码云仓库</a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz" target="_blank"><b>🦅 官方网站</b></a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz/demo" target="_blank"><b>在线体验</b></a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/erupts" target="_blank"><b>📕 使用文档</b></a>
 </p>
 
 <p align="center">
     <b>重要通知</b>：前端源码将在 <a href="https://github.com/erupts/erupt">github star</a> 达到 550 开源
 </p>
 
+<p align="center">
+    QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
+</p>
 ---
 
 ## 🚀 简介 | Intro
@@ -52,13 +50,9 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 + **代码简洁**：前端零代码，后端 template、controller、service、dao 都不需要，**仅需一个类文件**即可
 
-+ **敏捷开发**：仅单个`.java`文件即可实现后台管理功能，专注业务与核心功能的研发
-
-+ **快速迭代**：需求变更仅需修改或添加注解配置即可，迭代速度比需求讨论速度还快
-
 + **功能强大**：动态条件处理，支持增删改查等功能代理接口，Session存储机制选择，行为日志记录等
 
-+ **自动建表**：依托于JPA可自动帮你完成数据库建表相关工作
++ **自动建表**：依托于JPA可自动帮你完成数据库建表相关工作，无需手动建表
 
 + **低侵入性**：几乎所有功能都围绕注解而展开，不影响Spring Boot其他功能或三方库库的使用
 
@@ -68,15 +62,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 + **丰富展示**：普通文本、**二维码**、链接、图片、HTML、代码段、iframe、swf等
 
-+ **代码生成**：erupt代码已经足够简洁，代码生成器可进一步提升开发效率
-
 + **高扩展性**：支持自定义数据源实现、自定义页面、动态权限管理、生命周期函数、**自定义OSS**等
-
-+ **界面美观**：每个交互都精心设计，产品思维打磨，只为了更好的操作体验
-
-+ **权限管理**：用户管理、角色管理、组织管理、菜单管理、登录日志、操作日志等
-
-+ **高安全性**：可靠的安全机制，登录白名单，权限验证，注解项检查，细颗粒度权限控制，为你的数据保驾护航
 
 + **前后端分离**：后端与前端可分开部署
 
@@ -84,45 +70,13 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 + **无需二次开发**：仅需引用 jar 包即可 ！
 
-+ **支持扩展页面**：可开发自定义页面，自定义弹出层，且支持：原生H5 / Freemarker / Thymeleaf等方式渲染
-
-## ⚙️ 架构图 | Framework
-![架构图](readme/architecture.png)
-
-## ⛰ 演示截图 | Screenshot
-<img src="./readme/login2.png" width="100%"/>
-
-<img src="./readme/index.png" width="100%"/>
-
-<img src="./readme/seer.png" width="100%"/>
-<table>
-    <tr>
-        <td><img src="readme/goods.png"/></td>
-        <td><img src="readme/chart.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="readme/code.png"/></td>
-        <td><img src="readme/job.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="readme/complex.png"/></td>
-        <td><img src="readme/complex-edit.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="readme/tpl.png"/></td>
-        <td><img src="readme/role.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="readme/component.png"/></td>
-        <td><img src="readme/component-edit.png"/></td>
-    </tr>
-</table>
-
++ **自定义页面**：支持自定义页面，自定义弹出层，且支持：原生H5 / Freemarker / Thymeleaf等方式渲染
 
 ## 🧐 为什么要做 Erupt ?
 无论开发怎样的系统，都需要配套的管理后台做数据支撑，是软件开发中必不可少的一环，但实际开发中存在无法规避的痛点，如：开发效率低下、接口对接繁琐、界面差强人意、代码重复、有安全漏洞，导致开发成本极高。
 
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？   
+
 代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
 
 开发后台管理系统大部分情况下只想做个普通的增删改查界面，用于数据管理，类似下面这种：
@@ -189,6 +143,36 @@ public class Simple extends BaseModel {
 
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务，告别 996，省下的时间做自己喜欢做的事，从此不再因为繁琐的后台开发而焦头烂额。
 
+
+## ⛰ 演示截图 | Screenshot
+<img src="./readme/login2.png" width="100%"/>
+
+<img src="./readme/index.png" width="100%"/>
+
+<img src="./readme/seer.png" width="100%"/>
+<table>
+    <tr>
+        <td><img src="readme/goods.png"/></td>
+        <td><img src="readme/chart.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="readme/code.png"/></td>
+        <td><img src="readme/job.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="readme/complex.png"/></td>
+        <td><img src="readme/complex-edit.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="readme/tpl.png"/></td>
+        <td><img src="readme/role.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="readme/component.png"/></td>
+        <td><img src="readme/component-edit.png"/></td>
+    </tr>
+</table>
+
 ## 🔗 下载使用 | Download
 下载最新的JAR或通过Maven获取。
 ```xml
@@ -253,6 +237,8 @@ Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、
 **前端：**
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
+## ⚙️ 架构图 | Framework
+![架构图](readme/architecture.png)
 
 ## 🌕 在线体验 | Demo
 演示地址：https://www.erupt.xyz/demo  
@@ -292,7 +278,7 @@ github: https://github.com/erupts/erupt-example
 [前往捐赠](https://www.yuque.com/erupts/erupt/mwf15h)
 
 ## 🧩 公众号 
-欢迎关注 Erupt 官方公众号，关注后可获取群二维码与 erupt-monitor 模块 jar
+欢迎关注 Erupt 官方公众号，关注后可获取最新群二维码
 
 ![qr.jpg](./readme/qr.jpg)
 
@@ -307,3 +293,15 @@ github: https://github.com/erupts/erupt-example
 作者 ：YuePeng / <a href="mailto:erupts@126.com">erupts@126.com</a>
 </p>
 <br>
+
+---
+
+<p align="center">
+    <a href="https://github.com/erupts/erupt">Github 仓库</a> &nbsp; | &nbsp; 
+    <a href="https://gitee.com/erupt/erupt">码云仓库</a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz" target="_blank"><b>🦅 官方网站</b></a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz/demo" target="_blank"><b>在线体验</b></a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/erupts" target="_blank"><b>📕 使用文档</b></a>
+</p>
+
+---
