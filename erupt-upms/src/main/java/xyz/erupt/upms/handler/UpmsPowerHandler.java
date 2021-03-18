@@ -7,6 +7,7 @@ import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.enums.MenuLimitEnum;
+import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -33,8 +34,11 @@ public class UpmsPowerHandler implements PowerHandler {
 
     @Override
     public void handler(PowerObject power) {
-        this.powerOff(eruptUserService.getCurrentEruptMenu().getPowerOff(), power);
-        this.powerOff(eruptSessionService.get(SessionKey.ROLE_POWER + eruptUserService.getCurrentToken()).toString(), power);
+        EruptMenu eruptMenu = eruptUserService.getCurrentEruptMenu();
+        if (null != eruptMenu) {
+            this.powerOff(eruptMenu.getPowerOff(), power);
+            this.powerOff(eruptSessionService.get(SessionKey.ROLE_POWER + eruptUserService.getCurrentToken()).toString(), power);
+        }
     }
 
     private void powerOff(String powerStr, PowerObject power) {

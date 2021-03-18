@@ -90,7 +90,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 ![架构图](readme/architecture.png)
 
 ## ⛰ 演示截图 | Screenshot
-<img src="./readme/login.png" width="100%"/>
+<img src="./readme/login2.png" width="100%"/>
 
 <img src="./readme/index.png" width="100%"/>
 

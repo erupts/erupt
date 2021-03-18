@@ -1,9 +1,6 @@
 package xyz.erupt.core.invoke;
 
-import xyz.erupt.annotation.expr.Expr;
-import xyz.erupt.annotation.expr.ExprBool;
-import xyz.erupt.annotation.expr.ExprClass;
-import xyz.erupt.annotation.expr.ExprInt;
+import xyz.erupt.annotation.expr.*;
 import xyz.erupt.core.util.EruptSpringUtil;
 
 /**
@@ -30,6 +27,14 @@ public class ExprInvoke {
 
     public static int getExpr(ExprInt expr) {
         int value = expr.value();
+        if (!expr.exprHandler().isInterface()) {
+            value = EruptSpringUtil.getBean(expr.exprHandler()).handler(value, expr.params());
+        }
+        return value;
+    }
+
+    public static float getExpr(ExprFloat expr) {
+        float value = expr.value();
         if (!expr.exprHandler().isInterface()) {
             value = EruptSpringUtil.getBean(expr.exprHandler()).handler(value, expr.params());
         }
