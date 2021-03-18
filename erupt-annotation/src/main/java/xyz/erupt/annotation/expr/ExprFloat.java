@@ -2,15 +2,20 @@ package xyz.erupt.annotation.expr;
 
 import java.beans.Transient;
 
-public @interface Expr {
+/**
+ * @author liyuepeng
+ * @date 2021/3/18 11:50
+ */
+public @interface ExprFloat {
 
-    String value() default "";
+    @Transient
+    float value();
 
     @Transient
     String[] params() default {};
 
     @Transient
-    Class<? extends ExprHandler> exprHandler() default ExprHandler.class;
+    Class<? extends ExprHandler> exprHandler() default ExprHandler .class;
 
     interface ExprHandler {
 
@@ -19,6 +24,6 @@ public @interface Expr {
          * @param params 注解参数
          * @return 程序处理后的表达式
          */
-        String handler(String expr, String[] params);
+        float handler(float expr, String[] params);
     }
 }
