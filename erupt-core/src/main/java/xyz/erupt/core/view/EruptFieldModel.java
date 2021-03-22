@@ -116,6 +116,8 @@ public class EruptFieldModel {
                         viewValues.put(TYPE, ViewType.BOOLEAN);
                     } else if (Date.class.getSimpleName().equals(this.fieldReturnName)) {
                         viewValues.put(TYPE, ViewType.DATE);
+                    } else if (this.eruptField.edit().type() == EditType.DATE) {
+                        viewValues.put(TYPE, ViewType.DATE);
                     } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
                         viewValues.put(TYPE, ViewType.NUMBER);
                     } else {
