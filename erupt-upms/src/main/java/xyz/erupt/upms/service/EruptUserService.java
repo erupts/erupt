@@ -61,9 +61,10 @@ public class EruptUserService {
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
 
-    private final Gson gson = GsonFactory.getGson();
     @Resource
     private EruptMenuService eruptMenuService;
+
+    private final Gson gson = GsonFactory.getGson();
 
     public static final String LOGIN_ERROR_HINT = "账号或密码错误";
 
@@ -125,21 +126,7 @@ public class EruptUserService {
                     return new LoginModel(false, "ip不允许访问");
                 }
             }
-            //校验密码
-            boolean pass = false;
-            {
-                String digestPwd;
-                if (eruptUser.getIsMd5()) {
-                    digestPwd = eruptUser.getPassword();
-                } else {
-                    digestPwd = MD5Utils.digest(eruptUser.getPassword());
-                }
-                String calcPwd = MD5Utils.digest(digestPwd + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + account);
-                if (pwd.equalsIgnoreCase(calcPwd)) {
-                    pass = true;
-                }
-            }
-            if (pass) {
+            if (checkPwd(eruptUser, pwd)) {
                 sessionService.put(SessionKey.LOGIN_ERROR + requestIp, "0", eruptUpmsConfig.getExpireTimeByLogin());
                 return new LoginModel(true, eruptUser);
             } else {
@@ -147,6 +134,25 @@ public class EruptUserService {
             }
         } else {
             return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
+        }
+    }
+
+    //校验密码
+    public boolean checkPwd(EruptUser eruptUser, String pwd) {
+        if (eruptAppProp.getPwdTransferEncrypt()) {
+            String digestPwd;
+            if (eruptUser.getIsMd5()) {
+                digestPwd = eruptUser.getPassword();
+            } else {
+                digestPwd = MD5Utils.digest(eruptUser.getPassword());
+            }
+            String calcPwd = MD5Utils.digest(digestPwd + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + eruptUser.getAccount());
+            return pwd.equalsIgnoreCase(calcPwd);
+        } else {
+            if (eruptUser.getIsMd5()) {
+                pwd = MD5Utils.digest(pwd);
+            }
+            return pwd.equals(eruptUser.getPassword());
         }
     }
 
