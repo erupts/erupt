@@ -137,7 +137,6 @@ public class EruptUserController {
         return sessionService.get(eruptUserService.getCurrentToken()) != null;
     }
 
-
     // 生成验证码
     @GetMapping
     @RequestMapping("/code-img")
