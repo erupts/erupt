@@ -1,17 +1,25 @@
 package xyz.erupt.upms.looker;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
+import xyz.erupt.annotation.config.SkipSerialize;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
-import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * @author liyuepeng
@@ -20,11 +28,32 @@ import javax.servlet.http.HttpServletRequest;
 @MappedSuperclass
 @PreDataProxy(LookerOrg.class)
 @Service
-public class LookerOrg extends HyperModel implements DataProxy<Object> {
+@Getter
+@Setter
+public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
 
-    @Resource
-    @Transient
-    private HttpServletRequest request;
+    @EruptField(
+            views = @View(title = "创建时间"),
+            edit = @Edit(title = "创建时间", readOnly = true)
+    )
+    private Date createTime;
+
+    @ManyToOne
+    @EruptField(
+            views = {
+                    @View(title = "创建人", column = "name"),
+                    @View(title = "所属组织", column = "eruptOrg.name")
+            },
+            edit = @Edit(title = "创建人", readOnly = true, type = EditType.REFERENCE_TABLE)
+    )
+    private EruptUser createUser;
+
+    @SkipSerialize
+    private Date updateTime;
+
+    @ManyToOne
+    @SkipSerialize
+    private EruptUser updateUser;
 
     @Resource
     @Transient
@@ -33,14 +62,26 @@ public class LookerOrg extends HyperModel implements DataProxy<Object> {
     @Override
     public String beforeFetch() {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
-        if (!eruptUser.getIsAdmin()) {
-            if (null == eruptUser.getEruptOrg()) {
-                throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded organization cannot filter data");
-            } else {
-                return request.getHeader("erupt") + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
-            }
-        } else {
+        if (eruptUser.getIsAdmin()) {
             return null;
         }
+        if (null == eruptUser.getEruptOrg()) {
+            throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded organization cannot filter data");
+        } else {
+            String erupt = eruptUserService.getCurrentEruptMenu().getValue();
+            return erupt + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
+        }
+    }
+
+    @Override
+    public void beforeAdd(LookerOrg lookerOrg) {
+        lookerOrg.setCreateTime(new Date());
+        lookerOrg.setCreateUser(new EruptUser(eruptUserService.getCurrentUid()));
+    }
+
+    @Override
+    public void beforeUpdate(LookerOrg lookerOrg) {
+        lookerOrg.setUpdateTime(new Date());
+        lookerOrg.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
     }
 }

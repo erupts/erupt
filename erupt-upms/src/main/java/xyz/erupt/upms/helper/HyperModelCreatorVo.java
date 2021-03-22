@@ -27,9 +27,8 @@ import java.util.Date;
 @Getter
 @Setter
 @MappedSuperclass
-@PreDataProxy(HyperModelCreatorVo.class)
-@Service
-public class HyperModelCreatorVo extends BaseModel implements DataProxy<HyperModelCreatorVo> {
+@PreDataProxy(HyperModelCreatorVo.HyperModelDataProxy.class)
+public class HyperModelCreatorVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "创建时间"),
@@ -51,20 +50,22 @@ public class HyperModelCreatorVo extends BaseModel implements DataProxy<HyperMod
     @SkipSerialize
     private EruptUser updateUser;
 
-    @Transient
-    @Resource
-    private EruptUserService eruptUserService;
+    @Service
+    static class HyperModelDataProxy implements DataProxy<HyperModelCreatorVo> {
+        @Transient
+        @Resource
+        private EruptUserService eruptUserService;
 
-    @Override
-    public void beforeAdd(HyperModelCreatorVo hyperModel) {
-        hyperModel.setCreateTime(new Date());
-        hyperModel.setCreateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        @Override
+        public void beforeAdd(HyperModelCreatorVo hyperModel) {
+            hyperModel.setCreateTime(new Date());
+            hyperModel.setCreateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        }
+
+        @Override
+        public void beforeUpdate(HyperModelCreatorVo hyperModel) {
+            hyperModel.setUpdateTime(new Date());
+            hyperModel.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        }
     }
-
-    @Override
-    public void beforeUpdate(HyperModelCreatorVo hyperModel) {
-        hyperModel.setUpdateTime(new Date());
-        hyperModel.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
-    }
-
 }
