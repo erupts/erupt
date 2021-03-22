@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liyuepeng
@@ -87,7 +88,7 @@ public class EruptUserController {
             if (null != loginProxy) {
                 loginProxy.loginSuccess(eruptUser, loginModel.getToken());
             }
-            eruptUserService.cacheUserInfo(eruptUser,loginModel.getToken());
+            eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
         return loginModel;
@@ -146,7 +147,7 @@ public class EruptUserController {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         Captcha captcha = new SpecCaptcha(150, 38, 4);
-        sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60);
+        sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60, TimeUnit.SECONDS);
         captcha.out(response.getOutputStream()); // 响应图片
     }
 
