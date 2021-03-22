@@ -22,9 +22,15 @@ public class DataProxyInvoke {
                 consumer.accept(EruptSpringUtil.getBean(preDataProxy.value()));
             }
         }
+        for (Class<?> clazz : eruptModel.getClazz().getInterfaces()) {
+            PreDataProxy preDataProxy = clazz.getAnnotation(PreDataProxy.class);
+            if (null != preDataProxy) {
+                consumer.accept(EruptSpringUtil.getBean(preDataProxy.value()));
+            }
+        }
         for (Class<? extends DataProxy<?>> proxy : eruptModel.getErupt().dataProxy()) {
             consumer.accept(EruptSpringUtil.getBean(proxy));
         }
     }
-    
+
 }
