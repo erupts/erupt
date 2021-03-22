@@ -26,8 +26,7 @@ import java.util.Date;
 @Getter
 @Setter
 @MappedSuperclass
-@PreDataProxy(HyperModelVo.class)
-@Service
+@PreDataProxy(HyperModelVo.HyperModelDataProxy.class)
 public class HyperModelVo extends BaseModel implements DataProxy<HyperModelVo> {
 
     @Transient
@@ -62,20 +61,22 @@ public class HyperModelVo extends BaseModel implements DataProxy<HyperModelVo> {
     )
     private EruptUser updateUser;
 
-    @Transient
-    @Resource
-    private EruptUserService eruptUserService;
+    @Service
+    static class HyperModelDataProxy implements DataProxy<HyperModelVo> {
+        @Transient
+        @Resource
+        private EruptUserService eruptUserService;
 
-    @Override
-    public void beforeAdd(HyperModelVo hyperModel) {
-        hyperModel.setCreateTime(new Date());
-        hyperModel.setCreateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        @Override
+        public void beforeAdd(HyperModelVo hyperModel) {
+            hyperModel.setCreateTime(new Date());
+            hyperModel.setCreateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        }
+
+        @Override
+        public void beforeUpdate(HyperModelVo hyperModel) {
+            hyperModel.setUpdateTime(new Date());
+            hyperModel.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        }
     }
-
-    @Override
-    public void beforeUpdate(HyperModelVo hyperModel) {
-        hyperModel.setUpdateTime(new Date());
-        hyperModel.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
-    }
-
 }
