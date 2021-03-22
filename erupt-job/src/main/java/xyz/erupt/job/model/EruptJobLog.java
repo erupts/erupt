@@ -11,7 +11,6 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
@@ -53,9 +52,7 @@ public class EruptJobLog extends BaseModel {
     private Boolean status;
 
     @EruptField(
-            views = @View(title = "开始时间"),
-            edit = @Edit(title = "开始时间", search = @Search(vague = true),
-                    dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "开始时间")
     )
     private Date startTime;
 

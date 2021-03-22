@@ -35,12 +35,6 @@ public class HyperModelVo extends BaseModel implements DataProxy<HyperModelVo> {
     )
     private String divide;
 
-    @EruptField(
-            views = @View(title = "创建时间"),
-            edit = @Edit(title = "创建时间", readOnly = true)
-    )
-    private Date createTime;
-
     @ManyToOne
     @EruptField(
             views = @View(title = "创建人", column = "name"),
@@ -49,10 +43,10 @@ public class HyperModelVo extends BaseModel implements DataProxy<HyperModelVo> {
     private EruptUser createUser;
 
     @EruptField(
-            views = @View(title = "更新时间"),
-            edit = @Edit(title = "更新时间", readOnly = true)
+            views = @View(title = "创建时间"),
+            edit = @Edit(title = "创建时间", readOnly = true)
     )
-    private Date updateTime;
+    private Date createTime;
 
     @ManyToOne
     @EruptField(
@@ -60,6 +54,12 @@ public class HyperModelVo extends BaseModel implements DataProxy<HyperModelVo> {
             edit = @Edit(title = "更新人", readOnly = true, type = EditType.REFERENCE_TABLE)
     )
     private EruptUser updateUser;
+
+    @EruptField(
+            views = @View(title = "更新时间"),
+            edit = @Edit(title = "更新时间", readOnly = true)
+    )
+    private Date updateTime;
 
     @Service
     static class HyperModelDataProxy implements DataProxy<HyperModelVo> {

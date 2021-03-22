@@ -15,6 +15,9 @@ public @interface View {
 
     String desc() default "";
 
+    @Comment("列宽度（请指定单位如：%,px）")
+    String width() default "";
+
     @Comment("修饰类型为实体类对象时必须指定列名")
     String column() default "";
 
