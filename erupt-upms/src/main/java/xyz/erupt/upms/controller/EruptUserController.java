@@ -1,6 +1,5 @@
 package xyz.erupt.upms.controller;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
@@ -9,7 +8,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptAppProp;
-import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
@@ -18,7 +16,6 @@ import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
-import xyz.erupt.upms.service.EruptMenuService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
@@ -38,9 +35,6 @@ import java.util.List;
 public class EruptUserController {
 
     @Resource
-    private EruptMenuService menuService;
-
-    @Resource
     private EruptUserService eruptUserService;
 
     @Resource
@@ -51,8 +45,6 @@ public class EruptUserController {
 
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
-
-    private final Gson gson = GsonFactory.getGson();
 
     //登录
     @SneakyThrows
