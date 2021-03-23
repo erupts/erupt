@@ -7,8 +7,8 @@ import xyz.erupt.core.service.EruptApplication;
 import java.lang.annotation.*;
 
 /**
- * @author liyuepeng
- * @date 2020-09-09
+ * @author YuePeng
+ * date 2020-09-09
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})

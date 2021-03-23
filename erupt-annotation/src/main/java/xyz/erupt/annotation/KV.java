@@ -1,8 +1,8 @@
 package xyz.erupt.annotation;
 
 /**
- * @author liyuepeng
- * @date 2019-05-22.
+ * @author YuePeng
+ * date 2019-05-22.
  */
 public @interface KV {
     String key();

@@ -18,8 +18,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author liyuepeng
- * @date 2020-04-13
+ * @author YuePeng
+ * date 2020-04-13
  */
 @Service
 public class EruptMenuService implements DataProxy<EruptMenu> {

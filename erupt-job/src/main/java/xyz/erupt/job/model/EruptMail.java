@@ -31,8 +31,8 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * @author liyuepeng
- * @date 2019-12-26
+ * @author YuePeng
+ * date 2019-12-26
  */
 @Erupt(
         name = "发送邮件",

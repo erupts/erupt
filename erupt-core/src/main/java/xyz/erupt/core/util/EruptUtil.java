@@ -30,8 +30,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * @author liyuepeng
- * @date 11/1/18.
+ * @author YuePeng
+ * date 11/1/18.
  */
 public class EruptUtil {
 

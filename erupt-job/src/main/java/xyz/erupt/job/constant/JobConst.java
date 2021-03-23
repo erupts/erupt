@@ -1,8 +1,8 @@
 package xyz.erupt.job.constant;
 
 /**
- * @author liyuepeng
- * @date 2021/1/14 17:15
+ * @author YuePeng
+ * date 2021/1/14 17:15
  */
 public class JobConst {
 

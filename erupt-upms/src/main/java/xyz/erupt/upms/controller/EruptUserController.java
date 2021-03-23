@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author liyuepeng
- * @date 2018-12-13.
+ * @author YuePeng
+ * date 2018-12-13.
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API)

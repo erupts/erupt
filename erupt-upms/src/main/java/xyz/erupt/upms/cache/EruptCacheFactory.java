@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author liyuepeng
- * @date 2021/3/23 11:52
+ * @author YuePeng
+ * date 2021/3/23 11:52
  */
 @Service
 public class EruptCacheFactory {

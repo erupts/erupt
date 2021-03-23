@@ -18,8 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * @author liyuepeng
- * @date 2020-04-08
+ * @author YuePeng
+ * date 2020-04-08
  */
 @Entity
 @Table(name = "e_upms_org")

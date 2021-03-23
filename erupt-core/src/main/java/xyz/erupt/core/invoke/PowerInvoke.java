@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author liyuepeng
- * @date 2021/3/16 00:07
+ * @author YuePeng
+ * date 2021/3/16 00:07
  */
 public class PowerInvoke {
 

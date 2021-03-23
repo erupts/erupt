@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author liyuepeng
- * @date 2019-08-13.
+ * @author YuePeng
+ * date 2019-08-13.
  */
 @Component
 public class EruptSessionService {

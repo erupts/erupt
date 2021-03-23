@@ -5,8 +5,8 @@ import com.google.gson.FieldAttributes;
 import xyz.erupt.annotation.config.SkipSerialize;
 
 /**
- * @author liyuepeng
- * @date 2021/1/13 00:09
+ * @author YuePeng
+ * date 2021/1/13 00:09
  */
 public class GsonExclusionStrategies implements ExclusionStrategy {
 

@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 
 /**
- * @author liyuepeng
- * @date 2020-03-06
+ * @author YuePeng
+ * date 2020-03-06
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_DATA)

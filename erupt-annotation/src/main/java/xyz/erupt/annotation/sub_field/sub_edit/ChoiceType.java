@@ -6,8 +6,8 @@ import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import java.beans.Transient;
 
 /**
- * @author liyuepeng
- * @date 2018-10-09.
+ * @author YuePeng
+ * date 2018-10-09.
  */
 public @interface ChoiceType {
 

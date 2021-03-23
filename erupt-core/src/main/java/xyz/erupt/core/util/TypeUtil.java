@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 /**
- * @author liyuepeng
- * @date 2018-11-01.
+ * @author YuePeng
+ * date 2018-11-01.
  */
 public class TypeUtil {
     private static final String[] SIMPLE_JPA_TYPE = {

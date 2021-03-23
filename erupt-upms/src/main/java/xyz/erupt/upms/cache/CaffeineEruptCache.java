@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
- * @author liyuepeng
- * @date 2021/3/23 11:31
+ * @author YuePeng
+ * date 2021/3/23 11:31
  */
 public class CaffeineEruptCache<V> extends AbstractEruptCache<V> {
 

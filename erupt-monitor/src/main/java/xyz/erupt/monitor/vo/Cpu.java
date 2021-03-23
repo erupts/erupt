@@ -11,8 +11,8 @@ import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author liyuepeng
- * @date 2021/1/23 23:04
+ * @author YuePeng
+ * date 2021/1/23 23:04
  */
 @Getter
 @Setter

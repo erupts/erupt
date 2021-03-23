@@ -1,8 +1,8 @@
 package xyz.erupt.upms.constant;
 
 /**
- * @author liyuepeng
- * @date 2018-12-14.
+ * @author YuePeng
+ * date 2018-12-14.
  */
 public class SessionKey {
 

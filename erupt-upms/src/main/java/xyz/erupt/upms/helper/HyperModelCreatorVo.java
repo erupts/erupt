@@ -22,8 +22,8 @@ import javax.persistence.Transient;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2021/3/15 10:23
+ * @author YuePeng
+ * date 2021/3/15 10:23
  */
 @Getter
 @Setter

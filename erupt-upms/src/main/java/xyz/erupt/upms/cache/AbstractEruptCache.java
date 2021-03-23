@@ -3,8 +3,8 @@ package xyz.erupt.upms.cache;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author liyuepeng
- * @date 2021/3/23 13:25
+ * @author YuePeng
+ * date 2021/3/23 13:25
  */
 public abstract class AbstractEruptCache<V> implements IEruptCache<V> {
 

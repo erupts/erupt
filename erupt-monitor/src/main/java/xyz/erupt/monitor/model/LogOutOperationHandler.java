@@ -10,8 +10,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author liyuepeng
- * @date 2021/2/16 14:34
+ * @author YuePeng
+ * date 2021/2/16 14:34
  */
 @Service
 public class LogOutOperationHandler implements OperationHandler<EruptOnline, Void> {

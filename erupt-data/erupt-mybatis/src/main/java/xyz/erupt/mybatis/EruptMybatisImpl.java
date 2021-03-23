@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2020/12/8 20:49
+ * @author YuePeng
+ * date 2020/12/8 20:49
  */
 @Service
 public class EruptMybatisImpl implements IEruptDataService, ApplicationRunner {

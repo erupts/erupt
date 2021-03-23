@@ -5,8 +5,8 @@ import xyz.erupt.annotation.config.Comment;
 import java.lang.annotation.*;
 
 /**
- * @author liyuepeng
- * @date 2019-06-11.
+ * @author YuePeng
+ * date 2019-06-11.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})

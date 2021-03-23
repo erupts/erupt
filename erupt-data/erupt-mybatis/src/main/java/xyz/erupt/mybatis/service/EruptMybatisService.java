@@ -10,8 +10,8 @@ import xyz.erupt.mybatis.annotation.BindMapper;
 import java.lang.reflect.ParameterizedType;
 
 /**
- * @author liyuepeng
- * @date 2020/12/8 20:49
+ * @author YuePeng
+ * date 2020/12/8 20:49
  */
 public class EruptMybatisService {
 

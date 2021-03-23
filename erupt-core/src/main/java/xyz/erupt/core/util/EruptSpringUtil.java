@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.function.Consumer;
 
 /**
- * @author liyuepeng
- * @date 1/24/19.
+ * @author YuePeng
+ * date 1/24/19.
  */
 @Component
 public class EruptSpringUtil implements ApplicationContextAware {

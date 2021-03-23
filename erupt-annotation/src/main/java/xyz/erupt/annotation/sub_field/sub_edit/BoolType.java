@@ -1,8 +1,8 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
 /**
- * @author liyuepeng
- * @date 2018-09-18.
+ * @author YuePeng
+ * date 2018-09-18.
  */
 public @interface BoolType {
     String trueText() default "是";

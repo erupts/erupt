@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 /**
- * @author liyuepeng
- * @date 2018-10-11.
+ * @author YuePeng
+ * date 2018-10-11.
  */
 @Getter
 @Setter

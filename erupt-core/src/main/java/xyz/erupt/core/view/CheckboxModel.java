@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author liyuepeng
- * @date 2018-11-15.
+ * @author YuePeng
+ * date 2018-11-15.
  */
 @Getter
 @Setter

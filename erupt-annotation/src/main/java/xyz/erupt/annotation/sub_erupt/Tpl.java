@@ -6,8 +6,8 @@ import java.beans.Transient;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2019-10-16.
+ * @author YuePeng
+ * date 2019-10-16.
  */
 public @interface Tpl {
 

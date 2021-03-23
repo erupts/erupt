@@ -13,8 +13,8 @@ import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2018-10-11.
+ * @author YuePeng
+ * date 2018-10-11.
  */
 @Getter
 @Setter

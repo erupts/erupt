@@ -17,8 +17,8 @@ import xyz.erupt.core.view.EruptFieldModel;
 import java.util.List;
 
 /**
- * @author liyuepeng
- * @date 2020-08-14
+ * @author YuePeng
+ * date 2020-08-14
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_COMP)

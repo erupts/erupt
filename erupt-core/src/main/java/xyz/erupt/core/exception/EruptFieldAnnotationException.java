@@ -5,8 +5,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.view.EruptFieldModel;
 
 /**
- * @author liyuepeng
- * @date 11/1/18.
+ * @author YuePeng
+ * date 11/1/18.
  */
 public class EruptFieldAnnotationException extends RuntimeException {
 

@@ -7,8 +7,8 @@ import xyz.erupt.annotation.fun.PowerObject;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2018-09-29.
+ * @author YuePeng
+ * date 2018-09-29.
  */
 @Getter
 @Setter

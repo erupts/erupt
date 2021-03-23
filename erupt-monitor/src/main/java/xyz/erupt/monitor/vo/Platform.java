@@ -5,8 +5,8 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 /**
- * @author liyuepeng
- * @date 2021/1/31 20:09
+ * @author YuePeng
+ * date 2021/1/31 20:09
  */
 @Component
 @Getter

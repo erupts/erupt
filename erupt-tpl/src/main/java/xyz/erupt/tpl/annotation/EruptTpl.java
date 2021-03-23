@@ -5,8 +5,8 @@ import xyz.erupt.annotation.sub_erupt.Tpl;
 import java.lang.annotation.*;
 
 /**
- * @author liyuepeng
- * @date 2020-02-24
+ * @author YuePeng
+ * date 2020-02-24
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

@@ -3,8 +3,8 @@ package xyz.erupt.job.handler;
 import xyz.erupt.annotation.config.Comment;
 
 /**
- * @author liyuepeng
- * @date 2019-12-26
+ * @author YuePeng
+ * date 2019-12-26
  */
 public interface EruptJobHandler {
 

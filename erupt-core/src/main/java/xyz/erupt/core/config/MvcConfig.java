@@ -17,8 +17,8 @@ import java.util.Collection;
 
 
 /**
- * @author liyuepeng
- * @date 10/31/18.
+ * @author YuePeng
+ * date 10/31/18.
  */
 @Configuration
 public class MvcConfig {

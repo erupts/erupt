@@ -18,8 +18,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2019-12-26
+ * @author YuePeng
+ * date 2019-12-26
  */
 @Erupt(
         orderBy = "startTime desc",
