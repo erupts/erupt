@@ -13,11 +13,12 @@ import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.service.EruptApplication;
+import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.tpl.engine.*;
-import xyz.erupt.upms.util.MenuTool;
+import xyz.erupt.upms.enums.MenuTypeEnum;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -39,15 +40,36 @@ public class EruptTplService implements ApplicationRunner {
 
     private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
 
-    private final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
-
     public static String TPL = "tpl";
+
+    private static final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
+
+    private static final Class<?>[] engineTemplates = {
+            NativeEngine.class,
+            FreemarkerEngine.class,
+            ThymeleafEngine.class,
+            VelocityTplEngine.class
+    };
+
+    static {
+        for (Class<?> tpl : engineTemplates) {
+            try {
+                EngineTemplate<Object> engineTemplate = (EngineTemplate<Object>) tpl.newInstance();
+                engineTemplate.setEngine(engineTemplate.init());
+                tplEngines.put(engineTemplate.engine(), engineTemplate);
+            } catch (NoClassDefFoundError ignored) {
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     @Resource
     private HttpServletRequest request;
 
     @Override
     public void run(ApplicationArguments args) {
+        TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(EruptTpl.class)
         }, clazz -> {
@@ -58,25 +80,8 @@ public class EruptTplService implements ApplicationRunner {
                 }
             }
         });
-        this.engineLoader();
-        MenuTool.addMenuType(new VLModel(TPL, "模板", "tpl目录下文件名"));
-        log.info("Erupt tpl initialization complete");
-    }
-
-    private void engineLoader() {
-        Class<?>[] engineTemplates = {H5Engine.class, FreemarkerEngine.class,
-                ThymeleafEngine.class, VelocityTplEngine.class};
-        for (Class<?> tpl : engineTemplates) {
-            try {
-                EngineTemplate<Object> engineTemplate = (EngineTemplate<Object>) tpl.newInstance();
-                engineTemplate.setEngine(engineTemplate.init());
-                tplEngines.put(engineTemplate.engine(), engineTemplate);
-            } catch (NoClassDefFoundError e) {
-                return;
-            } catch (IllegalAccessException | InstantiationException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        MenuTypeEnum.addMenuType(new VLModel(TPL, "模板", "tpl目录下文件名"));
+        log.info("Erupt tpl initialization completed in {} ms", timeRecorder.recorder());
     }
 
     public Method getAction(String name) {
@@ -105,7 +110,7 @@ public class EruptTplService implements ApplicationRunner {
             map = new HashMap<>();
         }
         map.put(EngineConst.INJECT_REQUEST, request);
-        EngineTemplate<Object> engineAbstractTemplate = this.tplEngines.get(engine);
+        EngineTemplate<Object> engineAbstractTemplate = tplEngines.get(engine);
         Assert.notNull(engineAbstractTemplate, engine.name() + " jar not found");
         engineAbstractTemplate.render(engineAbstractTemplate.getEngine(), path, map, writer);
     }

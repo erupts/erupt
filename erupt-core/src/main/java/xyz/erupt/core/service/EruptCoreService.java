@@ -15,7 +15,8 @@ import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.exception.EruptAnnotationException;
-import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.invoke.ExprInvoke;
+import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -57,7 +58,7 @@ public class EruptCoreService implements ApplicationRunner {
         if (em.getErupt().rowOperation().length > 0) {
             em.setEruptJson(em.getEruptJson().deepCopy());
             for (RowOperation operation : em.getErupt().rowOperation()) {
-                if (!AnnotationUtil.getExprBool(operation.show())) {
+                if (!ExprInvoke.getExpr(operation.show())) {
                     em.getEruptJson().getAsJsonObject("rowOperation").remove(operation.code());
                 }
             }
@@ -91,9 +92,10 @@ public class EruptCoreService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(Erupt.class)
         }, clazz -> ERUPTS.put(clazz.getSimpleName(), initEruptModel(clazz)));
-        log.info("Erupt core initialization complete");
+        log.info("Erupt core initialization completed in {} ms", timeRecorder.recorder());
     }
 }

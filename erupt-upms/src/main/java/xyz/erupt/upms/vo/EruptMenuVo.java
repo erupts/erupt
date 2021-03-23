@@ -1,15 +1,15 @@
 package xyz.erupt.upms.vo;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class EruptMenuVo {
 
     private Long id;
+
+    private String code;
 
     private String name;
 
@@ -21,4 +21,16 @@ public class EruptMenuVo {
 
     private Long pid;
 
+    public EruptMenuVo(Long id, String code, String name, String type, String value, String icon, Long pid) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.type = type;
+        this.value = value;
+        this.icon = icon;
+        this.pid = pid;
+    }
+
+    public EruptMenuVo() {
+    }
 }

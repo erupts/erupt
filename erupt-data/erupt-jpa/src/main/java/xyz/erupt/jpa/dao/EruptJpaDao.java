@@ -1,7 +1,6 @@
 package xyz.erupt.jpa.dao;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.query.Condition;
@@ -14,6 +13,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.jpa.service.EntityManagerService;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -29,7 +29,7 @@ import java.util.Map;
 @Repository
 public class EruptJpaDao {
 
-    @Autowired
+    @Resource
     private EntityManagerService entityManagerService;
 
     public void addEntity(Class<?> eruptClass, Object entity) {
@@ -54,7 +54,7 @@ public class EruptJpaDao {
     }
 
     public Page queryEruptList(EruptModel eruptModel, Page page, EruptQuery eruptQuery) {
-        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "new map(" + String.join(",", EruptJpaUtils.getEruptColJapKeys(eruptModel)) + ")", eruptQuery, false);
+        String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "new map(" + String.join(",", EruptJpaUtils.getEruptColJpaKeys(eruptModel)) + ")", eruptQuery, false);
         String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "count(*)", eruptQuery, true);
         EntityManager entityManager = entityManagerService.getEntityManager(eruptModel.getClazz());
         Query query = entityManager.createQuery(hql);
@@ -74,10 +74,10 @@ public class EruptJpaDao {
                         break;
                     case RANGE:
                         List<?> list = (List<?>) condition.getValue();
-                        countQuery.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
-                        countQuery.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
-                        query.setParameter(EruptJpaUtils.LVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
-                        query.setParameter(EruptJpaUtils.RVAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
+                        countQuery.setParameter(EruptJpaUtils.L_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
+                        countQuery.setParameter(EruptJpaUtils.R_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
+                        query.setParameter(EruptJpaUtils.L_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(0)));
+                        query.setParameter(EruptJpaUtils.R_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
                         break;
                     case IN:
                         List<?> listIn = (List<?>) condition.getValue();

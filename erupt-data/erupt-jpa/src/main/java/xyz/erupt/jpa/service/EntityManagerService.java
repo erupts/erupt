@@ -94,5 +94,7 @@ public class EntityManagerService implements ApplicationRunner {
         }
     }
 
-
+    public EntityManagerFactory findEntityManagerFactory(String name) {
+        return entityManagerMap.get(name);
+    }
 }

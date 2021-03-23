@@ -8,7 +8,9 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.upms.enums.MenuLimitEnum;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -49,6 +51,16 @@ public class EruptRole extends BaseModel {
     )
     private Boolean status = true;
 
+    @EruptField(
+            views = @View(title = "操作权限", template = "value&&value.replace(/\\|/g,'<span class=\"text-red\"> | </span>')"),
+            edit = @Edit(
+                    title = "操作权限",
+                    type = EditType.TAGS,
+                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
+            )
+    )
+    private String powerOff;
+
     @ManyToMany
     @JoinTable(
             name = "e_upms_role_menu",
@@ -63,10 +75,10 @@ public class EruptRole extends BaseModel {
     )
     private Set<EruptMenu> menus;
 
+    @ManyToMany
     @JoinTable(name = "e_upms_user_role",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    @ManyToMany
     @EruptField(
             views = @View(title = "包含用户"),
             edit = @Edit(

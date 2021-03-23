@@ -11,18 +11,12 @@ import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.expr.Expr;
-import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeMapping;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
-import xyz.erupt.core.annotation.EruptDataProcessor;
-import xyz.erupt.core.constant.EruptConst;
-import xyz.erupt.core.service.IEruptDataService;
 
-import javax.script.ScriptException;
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -41,41 +35,19 @@ public class AnnotationUtil {
 
     private static final String EMPTY_ARRAY = "[]";
 
-//    @Deprecated
-//    public static String annotationToJsonByReplace(String annotationStr) {
-//        String convertStr = annotationStr
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.sub_attachment\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_view\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.\\w+", "")
-//                //屏蔽类信息
-//                .replaceAll("class [a-zA-Z0-9.]+", "")
-//                .replace("=,", "='',")
-//                .replace("=)", "='')")
-//                .replace("=", ":")
-//                .replace("(", "{")
-//                .replace(")", "}");
-//        return new JSONObject(convertStr).toString();
-//    }
-
-//    private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-
     private static final ExpressionParser parser = new SpelExpressionParser();
+
+    private static final String VALUE_VAR = "value";
+
+    private static final String ITEM_VAR = "item";
 
     @SneakyThrows
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
         return annotationToJson(annotation);
     }
 
-    private static final String VALUE_VAR = "value";
-
-    private static final String ITEM_VAR = "item";
-
-    //耗时操作，勿频繁调用
     private static JsonObject annotationToJson(Annotation annotation)
-            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException, ScriptException {
+            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         JsonObject jsonObject = new JsonObject();
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
@@ -167,6 +139,25 @@ public class AnnotationUtil {
         return jsonObject;
     }
 
+//    @Deprecated
+//    public static String annotationToJsonByReplace(String annotationStr) {
+//        String convertStr = annotationStr
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.sub_attachment\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_view\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
+//                .replaceAll("@xyz\\.erupt\\.annotation\\.\\w+", "")
+//                //屏蔽类信息
+//                .replaceAll("class [a-zA-Z0-9.]+", "")
+//                .replace("=,", "='',")
+//                .replace("=)", "='')")
+//                .replace("=", ":")
+//                .replace("(", "{")
+//                .replace(")", "}");
+//        return new JSONObject(convertStr).toString();
+//    }
+
     public static String switchFilterConditionToStr(Filter filter) {
         String condition = filter.value();
         if (!filter.conditionHandler().isInterface()) {
@@ -174,22 +165,6 @@ public class AnnotationUtil {
             condition = ch.filter(condition, filter.params());
         }
         return condition;
-    }
-
-    public static String getExpr(Expr expr) {
-        String value = expr.value();
-        if (!expr.exprHandler().isInterface()) {
-            value = EruptSpringUtil.getBean(expr.exprHandler()).handler(value, expr.params());
-        }
-        return value;
-    }
-
-    public static boolean getExprBool(ExprBool expr) {
-        boolean value = expr.value();
-        if (!expr.exprHandler().isInterface()) {
-            value = EruptSpringUtil.getBean(expr.exprHandler()).boolHandler(value, expr.params());
-        }
-        return value;
     }
 
     public static EditTypeMapping getEditTypeMapping(EditType editType) {
@@ -209,15 +184,5 @@ public class AnnotationUtil {
             return null;
         }
     }
-
-    public static IEruptDataService getEruptDataProcessor(Class<?> clazz) {
-        EruptDataProcessor eruptDataProcessor = clazz.getAnnotation(EruptDataProcessor.class);
-        if (null == eruptDataProcessor) {
-            return EruptSpringUtil.getBean(DataProcessorManager.getDataProcessor(EruptConst.DEFAULT_DATA_PROCESSOR));
-        } else {
-            return EruptSpringUtil.getBean(DataProcessorManager.getDataProcessor(eruptDataProcessor.value()));
-        }
-    }
-
 
 }

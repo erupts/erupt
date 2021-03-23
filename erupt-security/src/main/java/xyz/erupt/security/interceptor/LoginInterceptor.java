@@ -2,7 +2,6 @@ package xyz.erupt.security.interceptor;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
@@ -14,13 +13,15 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.config.EruptSecurityProp;
-import xyz.erupt.security.service.SecurityService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
+import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptOperateLog;
+import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,25 +36,23 @@ import java.util.Date;
 @Service
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
-    private static final String REQ_DATE = "@req_date@";
-
-    static final String REQ_BODY = "@req_body@";
-
-    @Autowired
+    @Resource
     private EruptUserService eruptUserService;
 
-    @Autowired
-    private SecurityService securityService;
+    @Resource
+    private EntityManager entityManager;
+
+    @Resource
+    private EruptSecurityProp eruptSecurityProp;
+
+    static final String REQ_BODY = "@req_body@";
 
     private static final String ERUPT_PARENT_HEADER_KEY = "eruptParent";
 
     private static final String ERUPT_PARENT_PARAM_KEY = "_eruptParent";
-
-    @Autowired
-    private EruptSecurityProp eruptSecurityProp;
-
-    @Autowired
-    private EntityManager entityManager;
+    private static final String REQ_DATE = "@req_date@";
+    @Resource
+    private EruptSessionService sessionService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
@@ -89,18 +88,19 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        if (null == token || !securityService.verifyToken(token)) {
+        if (null == token || null == sessionService.get(SessionKey.USER_TOKEN + token)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.sendError(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
+
         //权限校验
+        String authStr = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
         switch (eruptRouter.verifyType()) {
             case LOGIN:
                 break;
             case MENU:
-                String auth = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
-                if (!securityService.verifyMenuAuth(token, auth)) {
+                if (null == eruptUserService.getEruptMenuByValue(authStr)) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
@@ -108,13 +108,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 break;
             case ERUPT:
                 EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-                if (null == eruptModel) {
-                    response.setStatus(HttpStatus.NOT_FOUND.value());
-                    return false;
-                }
-                String path = request.getServletPath();
-                String authStr = path.split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
-                //eruptParent logic
                 $ep:
                 if (StringUtils.isNotBlank(parentEruptName)) {
                     EruptModel eruptParentModel = EruptCoreService.getErupt(parentEruptName);
@@ -130,7 +123,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
-                if (!path.contains(eruptName) || !securityService.verifyEruptMenuAuth(token, authStr, eruptModel)) {
+                if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
+                    return false;
+                }
+                if (null == eruptUserService.getEruptMenuByValue(eruptModel.getEruptName())) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;

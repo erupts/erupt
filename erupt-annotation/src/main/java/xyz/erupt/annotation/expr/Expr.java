@@ -15,8 +15,6 @@ public @interface Expr {
     interface ExprHandler {
 
         /**
-         * 数据过滤
-         *
          * @param expr   表达式
          * @param params 注解参数
          * @return 程序处理后的表达式
