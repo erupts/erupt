@@ -8,8 +8,8 @@
 //import xyz.erupt.annotation.sub_erupt.Power;
 //
 ///**
-// * @author liyuepeng
-// * @date 2020-01-07
+// * @author YuePeng
+// * date 2020-01-07
 // */
 //@Deprecated
 //public class PowerVolatile implements VolatileFun<Power, Erupt> {

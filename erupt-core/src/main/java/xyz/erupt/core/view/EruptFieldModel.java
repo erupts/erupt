@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2018-10-10.
+ * @author YuePeng
+ * date 2018-10-10.
  */
 @Data
 public class EruptFieldModel {

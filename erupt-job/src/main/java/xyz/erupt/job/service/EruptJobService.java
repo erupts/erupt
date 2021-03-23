@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @author liyuepeng
- * @date 2019-12-26
+ * @author YuePeng
+ * date 2019-12-26
  */
 @Service
 public class EruptJobService {

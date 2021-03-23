@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author liyuepeng
- * @date 2020/12/16 18:00
+ * @author YuePeng
+ * date 2020/12/16 18:00
  */
 @Component
 public class DictChoiceFetchHandler implements ChoiceFetchHandler {

@@ -13,8 +13,8 @@ import java.io.InputStream;
 import java.net.InetAddress;
 
 /**
- * @author liyuepeng
- * @date 2018-12-24.
+ * @author YuePeng
+ * date 2018-12-24.
  */
 @Slf4j
 public class IpUtil {

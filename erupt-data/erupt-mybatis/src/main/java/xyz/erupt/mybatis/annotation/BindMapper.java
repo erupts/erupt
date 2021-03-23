@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.Mapper;
 import java.lang.annotation.*;
 
 /**
- * @author liyuepeng
- * @date 2021/3/12 16:38
+ * @author YuePeng
+ * date 2021/3/12 16:38
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

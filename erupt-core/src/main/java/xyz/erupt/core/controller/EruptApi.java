@@ -12,8 +12,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * @author liyuepeng
- * @date 2020-04-22
+ * @author YuePeng
+ * date 2020-04-22
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API)

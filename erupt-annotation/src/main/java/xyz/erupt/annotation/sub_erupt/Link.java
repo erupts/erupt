@@ -5,8 +5,8 @@ import xyz.erupt.annotation.config.Comment;
 import java.beans.Transient;
 
 /**
- * @author liyuepeng
- * @date 2020-03-08
+ * @author YuePeng
+ * date 2020-03-08
  */
 public @interface Link {
 

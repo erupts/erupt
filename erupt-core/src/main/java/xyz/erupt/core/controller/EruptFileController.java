@@ -39,8 +39,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
- * @author liyuepeng
- * @date 10/15/18.
+ * @author YuePeng
+ * date 10/15/18.
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_FILE)

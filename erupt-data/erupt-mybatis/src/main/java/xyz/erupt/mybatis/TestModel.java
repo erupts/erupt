@@ -15,8 +15,8 @@ import xyz.erupt.mybatis.annotation.BindMapper;
 import xyz.erupt.mybatis.annotation.BindXmlMapper;
 
 /**
- * @author liyuepeng
- * @date 2021/3/11 15:09
+ * @author YuePeng
+ * date 2021/3/11 15:09
  */
 @Getter
 @Setter

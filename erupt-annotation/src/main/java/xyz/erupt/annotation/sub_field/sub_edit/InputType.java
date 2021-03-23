@@ -5,8 +5,8 @@ import xyz.erupt.annotation.config.Comment;
 import java.beans.Transient;
 
 /**
- * @author liyuepeng
- * @date 2018-10-10.
+ * @author YuePeng
+ * date 2018-10-10.
  */
 public @interface InputType {
 

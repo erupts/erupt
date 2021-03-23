@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2020/12/4 16:24
+ * @author YuePeng
+ * date 2020/12/4 16:24
  */
 public class DataProcessorManager {
 

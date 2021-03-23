@@ -3,8 +3,8 @@ package xyz.erupt.monitor.util;
 import java.text.DecimalFormat;
 
 /**
- * @author liyuepeng
- * @date 2021/1/23 23:45
+ * @author YuePeng
+ * date 2021/1/23 23:45
  */
 public class SystemUtil {
 

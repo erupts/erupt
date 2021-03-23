@@ -3,8 +3,8 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 import xyz.erupt.annotation.config.Comment;
 
 /**
- * @author liyuepeng
- * @date 2019-01-10.
+ * @author YuePeng
+ * date 2019-01-10.
  */
 public @interface SliderType {
     int max();

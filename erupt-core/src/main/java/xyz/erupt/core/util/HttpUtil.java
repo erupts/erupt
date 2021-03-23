@@ -7,8 +7,8 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author liyuepeng
- * @date 12/4/18.
+ * @author YuePeng
+ * date 12/4/18.
  */
 public class HttpUtil {
 

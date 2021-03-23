@@ -13,8 +13,8 @@ import xyz.erupt.monitor.vo.Server;
 import javax.annotation.Resource;
 
 /**
- * @author liyuepeng
- * @date 2021/1/23 21:36
+ * @author YuePeng
+ * date 2021/1/23 21:36
  */
 @RestController
 @RequestMapping(MonitorConstant.REST_MONITOR + "/server.html")

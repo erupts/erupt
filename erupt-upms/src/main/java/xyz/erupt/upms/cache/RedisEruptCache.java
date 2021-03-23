@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
- * @author liyuepeng
- * @date 2021/3/23 11:51
+ * @author YuePeng
+ * date 2021/3/23 11:51
  */
 public class RedisEruptCache<V> extends AbstractEruptCache<V> {
 

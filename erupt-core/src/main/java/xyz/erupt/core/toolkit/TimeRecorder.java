@@ -1,8 +1,8 @@
 package xyz.erupt.core.toolkit;
 
 /**
- * @author liyuepeng
- * @date 2021/3/16 18:32
+ * @author YuePeng
+ * date 2021/3/16 18:32
  */
 public class TimeRecorder {
 

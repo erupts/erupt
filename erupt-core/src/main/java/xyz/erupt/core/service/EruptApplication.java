@@ -9,8 +9,8 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.EruptConst;
 
 /**
- * @author liyuepeng
- * @date 2020-09-09
+ * @author YuePeng
+ * date 2020-09-09
  */
 public class EruptApplication implements ImportBeanDefinitionRegistrar {
 

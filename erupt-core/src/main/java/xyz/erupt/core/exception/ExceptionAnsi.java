@@ -7,8 +7,8 @@ import xyz.erupt.core.view.EruptModel;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
- * @author liyuepeng
- * @date 11/1/18.
+ * @author YuePeng
+ * date 11/1/18.
  */
 public class ExceptionAnsi {
 

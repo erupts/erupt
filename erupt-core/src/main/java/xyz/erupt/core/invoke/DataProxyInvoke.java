@@ -9,8 +9,8 @@ import xyz.erupt.core.view.EruptModel;
 import java.util.function.Consumer;
 
 /**
- * @author liyuepeng
- * @date 2021/3/16 13:37
+ * @author YuePeng
+ * date 2021/3/16 13:37
  */
 public class DataProxyInvoke {
 

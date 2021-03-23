@@ -3,8 +3,8 @@ package xyz.erupt.core.exception;
 import xyz.erupt.core.view.EruptModel;
 
 /**
- * @author liyuepeng
- * @date 11/1/18.
+ * @author YuePeng
+ * date 11/1/18.
  */
 public class EruptAnnotationException extends RuntimeException {
 

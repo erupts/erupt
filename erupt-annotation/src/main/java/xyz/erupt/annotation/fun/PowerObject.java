@@ -5,8 +5,8 @@ import lombok.Setter;
 import xyz.erupt.annotation.sub_erupt.Power;
 
 /**
- * @author liyuepeng
- * @date 2020-08-07
+ * @author YuePeng
+ * date 2020-08-07
  */
 @Getter
 @Setter

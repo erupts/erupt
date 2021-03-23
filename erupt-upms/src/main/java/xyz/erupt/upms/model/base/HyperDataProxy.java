@@ -9,8 +9,8 @@ import javax.annotation.Resource;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2020-08-04
+ * @author YuePeng
+ * date 2020-08-04
  */
 @Service
 public class HyperDataProxy implements DataProxy<HyperModel> {

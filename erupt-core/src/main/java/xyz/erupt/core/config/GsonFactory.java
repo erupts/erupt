@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import xyz.erupt.core.util.DateUtil;
 
 /**
- * @author liyuepeng
- * @date 2021/3/1 13:03
+ * @author YuePeng
+ * date 2021/3/1 13:03
  */
 public class GsonFactory {
 

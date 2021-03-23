@@ -5,8 +5,8 @@ import xyz.erupt.annotation.config.Comment;
 import java.util.List;
 
 /**
- * @author liyuepeng
- * @date 2018-10-09.
+ * @author YuePeng
+ * date 2018-10-09.
  */
 public interface OperationHandler<@Comment("行数据类型") Target, @Comment("表单输入对象类型") EruptObjParam> {
 

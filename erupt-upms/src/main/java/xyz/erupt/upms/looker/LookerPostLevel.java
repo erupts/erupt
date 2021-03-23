@@ -23,8 +23,8 @@ import javax.persistence.Transient;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2021/3/10 11:30
+ * @author YuePeng
+ * date 2021/3/10 11:30
  */
 @MappedSuperclass
 @PreDataProxy(LookerPostLevel.class)

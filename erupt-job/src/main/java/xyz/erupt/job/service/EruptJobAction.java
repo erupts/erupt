@@ -15,8 +15,8 @@ import xyz.erupt.job.model.EruptJobLog;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2019-12-26.
+ * @author YuePeng
+ * date 2019-12-26.
  */
 public class EruptJobAction implements Job {
 

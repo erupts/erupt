@@ -18,8 +18,8 @@ import xyz.erupt.upms.service.EruptMenuService;
 import javax.persistence.*;
 
 /**
- * @author liyuepeng
- * @date 2018-11-22.
+ * @author YuePeng
+ * date 2018-11-22.
  */
 @Entity
 @Table(name = "e_upms_menu", uniqueConstraints = @UniqueConstraint(columnNames = "code"))

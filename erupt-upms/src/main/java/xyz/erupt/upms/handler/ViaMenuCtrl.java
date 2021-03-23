@@ -9,8 +9,8 @@ import xyz.erupt.upms.service.EruptUserService;
 import javax.annotation.Resource;
 
 /**
- * @author liyuepeng
- * @date 2020/12/28 22:33
+ * @author YuePeng
+ * date 2020/12/28 22:33
  */
 @Service
 @Comment("通过菜单编码控制是否显示")

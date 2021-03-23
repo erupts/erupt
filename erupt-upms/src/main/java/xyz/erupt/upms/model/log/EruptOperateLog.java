@@ -20,8 +20,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2020-05-26
+ * @author YuePeng
+ * date 2020-05-26
  */
 @Entity
 @Table(name = "e_upms_operate_log")
