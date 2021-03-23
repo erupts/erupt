@@ -91,6 +91,9 @@ public class EruptSessionService {
             return gson.fromJson(obj.toString(), type);
         } else {
             Map<String, T> map = (Map<String, T>) request.getSession().getAttribute(key);
+            if (null == map) {
+                return null;
+            }
             return map.get(mapKey);
         }
     }
