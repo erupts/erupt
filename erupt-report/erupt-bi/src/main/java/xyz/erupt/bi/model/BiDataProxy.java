@@ -15,8 +15,8 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2019-08-26.
+ * @author YuePeng
+ * date 2019-08-26.
  */
 @Component
 public class BiDataProxy implements DataProxy<Bi> {

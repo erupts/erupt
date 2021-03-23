@@ -14,8 +14,8 @@ import xyz.erupt.upms.model.base.HyperModel;
 import javax.persistence.*;
 
 /**
- * @author liyuepeng
- * @date 2019-12-24.
+ * @author YuePeng
+ * date 2019-12-24.
  */
 @Entity
 @Table(name = "e_bi_chart", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))

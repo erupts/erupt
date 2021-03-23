@@ -15,8 +15,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2021/2/3 16:17
+ * @author YuePeng
+ * date 2021/2/3 16:17
  */
 @Erupt(name = "多租户配置", dataProxy = RentDataLoadService.class)
 @Table(name = "e_tenant", uniqueConstraints = {

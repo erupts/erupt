@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author liyuepeng
- * @date 2019-08-26.
+ * @author YuePeng
+ * date 2019-08-26.
  */
 @Entity
 @Table(name = "e_bi_datasource", uniqueConstraints = @UniqueConstraint(columnNames = "code"))

@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Pattern;
 
 /**
- * @author liyuepeng
- * @date 2018-10-11.
+ * @author YuePeng
+ * date 2018-10-11.
  */
 @Service
 public class BaseTenantDataProxy implements DataProxy<BaseModel> {

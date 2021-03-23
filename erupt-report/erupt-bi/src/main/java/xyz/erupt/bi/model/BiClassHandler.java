@@ -17,8 +17,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * @author liyuepeng
- * @date 2019-08-26.
+ * @author YuePeng
+ * date 2019-08-26.
  */
 @Entity
 @Table(name = "e_bi_class_handler")

@@ -1,8 +1,8 @@
 package xyz.erupt.bi.constant;
 
 /**
- * @author liyuepeng
- * @date 2021/2/24 23:21
+ * @author YuePeng
+ * date 2021/2/24 23:21
  */
 public class ScriptPlaceholderConst {
 

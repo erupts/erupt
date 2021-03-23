@@ -8,8 +8,8 @@ import xyz.erupt.bi.model.BiDimension;
 import java.util.List;
 
 /**
- * @author liyuepeng
- * @date 2020-02-13
+ * @author YuePeng
+ * date 2020-02-13
  */
 @Getter
 @Setter

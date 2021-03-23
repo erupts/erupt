@@ -3,8 +3,8 @@ package xyz.erupt.bi.view;
 import lombok.Data;
 
 /**
- * @author liyuepeng
- * @date 2020-02-16
+ * @author YuePeng
+ * date 2020-02-16
  */
 @Data
 public class Reference {

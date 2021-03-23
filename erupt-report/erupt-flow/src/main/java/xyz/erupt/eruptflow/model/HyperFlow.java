@@ -8,8 +8,8 @@ import xyz.erupt.upms.model.base.HyperModel;
 import javax.persistence.MappedSuperclass;
 
 /**
- * @author liyuepeng
- * @date 2021/1/18 17:09
+ * @author YuePeng
+ * date 2021/1/18 17:09
  */
 @Getter
 @Setter

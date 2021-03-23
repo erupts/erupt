@@ -25,8 +25,8 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 /**
- * @author liyuepeng
- * @date 2019-08-26.
+ * @author YuePeng
+ * date 2019-08-26.
  */
 @Entity
 @Table(name = "e_bi_function")

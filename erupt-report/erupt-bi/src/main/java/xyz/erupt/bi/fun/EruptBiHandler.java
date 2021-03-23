@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2019-08-26.
+ * @author YuePeng
+ * date 2019-08-26.
  */
 public interface EruptBiHandler {
 

@@ -19,8 +19,8 @@ import javax.persistence.*;
 import java.util.Set;
 
 /**
- * @author liyuepeng
- * @date 2019-08-26.
+ * @author YuePeng
+ * date 2019-08-26.
  */
 @Entity
 @Table(name = "e_bi", uniqueConstraints = @UniqueConstraint(columnNames = "code"))

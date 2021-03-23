@@ -42,8 +42,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author liyuepeng
- * @date 2019-08-26.
+ * @author YuePeng
+ * date 2019-08-26.
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API + "/bi")

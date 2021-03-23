@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2020-02-28
+ * @author YuePeng
+ * date 2020-02-28
  */
 @Service
 public class BiDataSourceService implements DataProxy<BiDataSource> {

@@ -10,8 +10,8 @@ import xyz.erupt.tenant.model.EruptTenant;
 import javax.persistence.*;
 
 /**
- * @author liyuepeng
- * @date 2018-10-11.
+ * @author YuePeng
+ * date 2018-10-11.
  */
 @Getter
 @Setter
