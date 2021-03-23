@@ -5,21 +5,17 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.fun.ChoiceFetchHandler;
-import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.upms.enums.MenuLimitEnum;
+import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptMenuService;
-import xyz.erupt.upms.util.MenuTool;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * @author liyuepeng
@@ -35,7 +31,7 @@ import java.util.List;
 )
 @Getter
 @Setter
-public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
+public class EruptMenu extends HyperModel {
 
     public static final String OPEN = "1";
 
@@ -78,7 +74,7 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
             edit = @Edit(
                     title = "菜单类型",
                     type = EditType.CHOICE,
-                    choiceType = @ChoiceType(fetchHandler = EruptMenu.class)
+                    choiceType = @ChoiceType(fetchHandler = MenuTypeEnum.ChoiceFetch.class)
             )
     )
     private String type;
@@ -98,6 +94,15 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
     )
     private Integer sort = 0;
 
+    @EruptField(
+            edit = @Edit(
+                    title = "权限",
+                    type = EditType.TAGS,
+                    showBy = @ShowBy(dependField = "type", expr = "value=='tree'||value=='table'"),
+                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
+            )
+    )
+    private String powerOff;
 
     @EruptField(
             edit = @Edit(
@@ -120,8 +125,10 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
-                    title = "菜单参数",
-                    type = EditType.TEXTAREA
+                    title = "自定义参数",
+                    desc = "json格式",
+                    type = EditType.CODE_EDITOR,
+                    codeEditType = @CodeEditorType(language = "json")
             )
     )
     private String param;
@@ -138,10 +145,5 @@ public class EruptMenu extends HyperModel implements ChoiceFetchHandler {
     }
 
     public EruptMenu() {
-    }
-
-    @Override
-    public List<VLModel> fetch(String[] params) {
-        return MenuTool.getMenuTypes();
     }
 }

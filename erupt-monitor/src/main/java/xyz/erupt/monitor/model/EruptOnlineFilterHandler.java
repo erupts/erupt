@@ -38,10 +38,8 @@ public class EruptOnlineFilterHandler implements FilterHandler {
                 return "1 = 2";
             }
         } else {
-            throw new EruptApiErrorTip(new EruptApiModel(
-                    EruptApiModel.Status.INFO,
-                    "启用 redisSession 配置可使用该功能",
-                    EruptApiModel.PromptWay.NOTIFY));
+            throw new EruptApiErrorTip(EruptApiModel.Status.INFO, "Enable the RedisSession configuration to use this feature",
+                    EruptApiModel.PromptWay.NOTIFY);
         }
     }
 }

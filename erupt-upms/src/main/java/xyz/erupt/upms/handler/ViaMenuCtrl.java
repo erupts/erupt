@@ -1,11 +1,12 @@
 package xyz.erupt.upms.handler;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.service.EruptUserService;
+
+import javax.annotation.Resource;
 
 /**
  * @author liyuepeng
@@ -15,21 +16,17 @@ import xyz.erupt.upms.service.EruptUserService;
 @Comment("通过菜单编码控制是否显示")
 public class ViaMenuCtrl implements ExprBool.ExprHandler {
 
-    @Autowired
+    @Resource
     private EruptUserService eruptUserService;
 
     @Override
     @Comment("params必填，值为菜单编码")
-    public boolean boolHandler(boolean expr, String[] params) {
+    public boolean handler(boolean expr, String[] params) {
         if (null == params || params.length == 0) {
-            throw new RuntimeException("ViaMenuCtrl → params[0] not found");
+            throw new RuntimeException(ViaMenuCtrl.class.getSimpleName() + " → params[0] not found");
         }
-        for (EruptMenu menu : eruptUserService.getCurrentEruptUserMenu()) {
-            if (menu.getCode().equals(params[0])) {
-                return true;
-            }
-        }
-        return false;
+        EruptMenu eruptMenu = eruptUserService.getEruptMenuByCode(params[0]);
+        return null != eruptMenu;
     }
 
 }

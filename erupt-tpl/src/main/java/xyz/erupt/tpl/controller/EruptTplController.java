@@ -7,8 +7,9 @@ import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
@@ -82,7 +83,7 @@ public class EruptTplController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         for (RowOperation operation : eruptModel.getErupt().rowOperation()) {
             if (operation.code().equals(code)) {
-                if (!AnnotationUtil.getExprBool(operation.show())) {
+                if (!ExprInvoke.getExpr(operation.show())) {
                     throw new EruptNoLegalPowerException();
                 }
                 if (operation.tpl().engine() == Tpl.Engine.Native || operation.mode() == RowOperation.Mode.BUTTON) {
@@ -90,7 +91,7 @@ public class EruptTplController {
                 } else {
                     List<Object> list = new ArrayList<>();
                     for (String id : ids) {
-                        Object obj = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
+                        Object obj = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
                         list.add(obj);
                     }
                     Map<String, Object> map = new HashMap<>();

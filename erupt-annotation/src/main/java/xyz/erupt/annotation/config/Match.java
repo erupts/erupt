@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 使用SpEL表达式校验注解信息，用来确定是否序列化，表达式必须返回布尔类型，
+ * 使用 SpEL 表达式校验注解信息，用来确定是否序列化，表达式必须返回布尔类型，
  *
  * @author liyuepeng
  * @date 2020-02-21

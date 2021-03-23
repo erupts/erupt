@@ -200,9 +200,9 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     @Override
     public void beforeAdd(EruptUser eruptUser) {
         if (StringUtils.isBlank(eruptUser.getPassword())) {
-            throw new EruptApiErrorTip(new EruptApiModel(EruptApiModel.Status.WARNING, "密码必填",
-                    EruptApiModel.PromptWay.MESSAGE));
+            throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, "密码必填",EruptApiModel.PromptWay.MESSAGE);
         }
+        this.checkPostOrg(eruptUser);
         if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
             eruptUser.setIsAdmin(false);
             eruptUser.setCreateTime(new Date());
@@ -221,6 +221,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
         if (!eruptUser.getIsMd5() && eu.getIsMd5()) {
             throw new EruptWebApiRuntimeException("MD5 不可逆");
         }
+        this.checkPostOrg(eruptUser);
         if (StringUtils.isNotBlank(eruptUser.getPassword())) {
             if (!eruptUser.getPassword().equals(eruptUser.getPassword2())) {
                 throw new EruptWebApiRuntimeException("两次密码输入不一致");
@@ -239,5 +240,10 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
         }
     }
 
+    private void checkPostOrg(EruptUser eruptUser) {
+        if (eruptUser.getEruptPost() != null && eruptUser.getEruptOrg() == null) {
+            throw new EruptWebApiRuntimeException("选择岗位时，所属组织必填");
+        }
+    }
 
 }

@@ -1,6 +1,5 @@
 package xyz.erupt.upms.controller;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
@@ -9,16 +8,14 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptAppProp;
-import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.config.EruptUpmsConfig;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
-import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
-import xyz.erupt.upms.service.EruptMenuService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
@@ -28,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liyuepeng
@@ -38,9 +36,6 @@ import java.util.List;
 public class EruptUserController {
 
     @Resource
-    private EruptMenuService menuService;
-
-    @Resource
     private EruptUserService eruptUserService;
 
     @Resource
@@ -49,7 +44,8 @@ public class EruptUserController {
     @Resource
     private EruptAppProp eruptAppProp;
 
-    private final Gson gson = GsonFactory.getGson();
+    @Resource
+    private EruptUpmsConfig eruptUpmsConfig;
 
     //登录
     @SneakyThrows
@@ -88,15 +84,11 @@ public class EruptUserController {
             EruptUser eruptUser = loginModel.getEruptUser();
             loginModel.setToken(RandomStringUtils.random(16, true, true));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
-            sessionService.putByLoginExpire(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString());
-            List<EruptMenu> eruptMenus = menuService.getMenuList(eruptUser);
+            sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString(), eruptUpmsConfig.getExpireTimeByLogin());
             if (null != loginProxy) {
                 loginProxy.loginSuccess(eruptUser, loginModel.getToken());
             }
-            sessionService.putByLoginExpire(SessionKey.MENU + loginModel.getToken(),
-                    gson.toJson(eruptMenus));
-            sessionService.putByLoginExpire(SessionKey.MENU_VIEW + loginModel.getToken(),
-                    gson.toJson(menuService.geneMenuListVo(eruptMenus)));
+            eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
         return loginModel;
@@ -107,7 +99,7 @@ public class EruptUserController {
     @ResponseBody
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public List<EruptMenuVo> getMenu() {
-        return sessionService.get(SessionKey.MENU_VIEW + eruptUserService.getToken(), new TypeToken<List<EruptMenuVo>>() {
+        return sessionService.get(SessionKey.MENU_VIEW + eruptUserService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
         }.getType());
     }
 
@@ -117,7 +109,8 @@ public class EruptUserController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public EruptApiModel logout(HttpServletRequest request) {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
-        sessionService.remove(SessionKey.MENU + token);
+        sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
+        sessionService.remove(SessionKey.MENU_CODE_MAP + token);
         sessionService.remove(SessionKey.MENU_VIEW + token);
         sessionService.remove(SessionKey.USER_TOKEN + token);
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
@@ -141,9 +134,8 @@ public class EruptUserController {
     @GetMapping("/token-valid")
     @ResponseBody
     public boolean tokenValid() {
-        return sessionService.get(eruptUserService.getToken()) != null;
+        return sessionService.get(eruptUserService.getCurrentToken()) != null;
     }
-
 
     // 生成验证码
     @GetMapping
@@ -154,7 +146,7 @@ public class EruptUserController {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         Captcha captcha = new SpecCaptcha(150, 38, 4);
-        sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60);
+        sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60, TimeUnit.SECONDS);
         captcha.out(response.getOutputStream()); // 响应图片
     }
 

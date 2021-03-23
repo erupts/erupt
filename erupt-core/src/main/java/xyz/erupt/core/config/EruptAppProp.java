@@ -16,4 +16,7 @@ public class EruptAppProp {
     //登录失败几次出现验证码
     private Integer verifyCodeCount = 2;
 
+    //登录密码是否加密传输
+    private Boolean pwdTransferEncrypt = true;
+
 }

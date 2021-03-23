@@ -1,10 +1,10 @@
 package xyz.erupt.security.interceptor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.security.config.EruptSecurityProp;
 
+import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @WebFilter(urlPatterns = EruptRestPath.ERUPT_API)
 public class HttpServletRequestFilter implements Filter {
 
-    @Autowired
+    @Resource
     private EruptSecurityProp eruptSecurityProp;
 
     private static final String CONTENT_TYPE_JSON = "application/json";

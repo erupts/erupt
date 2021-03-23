@@ -22,7 +22,7 @@ public class EruptFieldAnnotationException extends RuntimeException {
                 if (eruptFieldModel.getEruptField().views().length > 0) {
                     for (View view : eruptFieldModel.getEruptField().views()) {
                         if ("".equals(view.column())) {
-                            throw ExceptionUtil.styleEruptFieldException(eruptFieldModel, "@View注解" + view.title() + "必须指定column值");
+                            throw ExceptionAnsi.styleEruptFieldException(eruptFieldModel, "@View注解" + view.title() + "必须指定column值");
                         }
                     }
                 }

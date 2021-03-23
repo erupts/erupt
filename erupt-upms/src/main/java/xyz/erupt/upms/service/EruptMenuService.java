@@ -1,12 +1,10 @@
 package xyz.erupt.upms.service;
 
-import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
-import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
@@ -29,17 +27,28 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private EruptSessionService sessionService;
-
-    @Autowired
-    private EruptUserService eruptUserService;
-
-    private final Gson gson = GsonFactory.getGson();
     @Resource
     private HttpServletRequest request;
 
-    public List<EruptMenu> getMenuList(EruptUser eruptUser) {
+    @Resource
+    private EruptUserService eruptUserService;
+
+
+    public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
+        List<EruptMenuVo> list = new ArrayList<>();
+        menus.forEach(menu -> {
+            if (Integer.valueOf(EruptMenu.OPEN).equals(menu.getStatus())) {
+                Long pid = null;
+                if (null != menu.getParentMenu()) {
+                    pid = menu.getParentMenu().getId();
+                }
+                list.add(new EruptMenuVo(menu.getId(), menu.getCode(), menu.getName(), menu.getType(), menu.getValue(), menu.getIcon(), pid));
+            }
+        });
+        return list;
+    }
+
+    public List<EruptMenu> getUserAllMenu(EruptUser eruptUser) {
         List<EruptMenu> menus;
         if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
             menus = entityManager.createQuery("from EruptMenu order by sort", EruptMenu.class).getResultList();
@@ -55,28 +64,27 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         return menus;
     }
 
-
-    public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
-        List<EruptMenuVo> list = new ArrayList<>();
-        menus.forEach(menu -> {
-            if (Integer.valueOf(EruptMenu.OPEN).equals(menu.getStatus())) {
-                Long pid = null;
-                if (null != menu.getParentMenu()) {
-                    pid = menu.getParentMenu().getId();
-                }
-                list.add(new EruptMenuVo(menu.getId(), menu.getName(), menu.getType(), menu.getValue(), menu.getIcon(), pid));
-            }
-        });
-        return list;
+    @Override
+    public void addBehavior(EruptMenu eruptMenu) {
+        Integer obj = (Integer) entityManager
+                .createQuery("select max(sort) from " + EruptMenu.class.getSimpleName())
+                .getSingleResult();
+        if (null != obj) {
+            eruptMenu.setSort(obj + 10);
+        }
+        eruptMenu.setStatus(Integer.valueOf(EruptMenu.OPEN));
     }
 
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
+        if (eruptMenu.getCode().contains("/")) {
+            throw new EruptWebApiRuntimeException("菜单编码禁止出现 '/' 字符");
+        }
+        if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
+            throw new EruptWebApiRuntimeException("选择菜单类型时，类型值不能为空");
+        }
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
-        List<EruptMenu> eruptMenus = getMenuList(eruptUserService.getCurrentEruptUser());
-        List<EruptMenuVo> menuVoList = geneMenuListVo(eruptMenus);
-        sessionService.putByLoginExpire(SessionKey.MENU + token, gson.toJson(eruptMenus));
-        sessionService.putByLoginExpire(SessionKey.MENU_VIEW + token, gson.toJson(menuVoList));
+        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), token);
     }
 
     @Override
@@ -90,14 +98,4 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         this.afterAdd(eruptMenu);
     }
 
-    @Override
-    public void addBehavior(EruptMenu eruptMenu) {
-        Integer obj = (Integer) entityManager
-                .createQuery("select max(sort) from " + EruptMenu.class.getSimpleName())
-                .getSingleResult();
-        if (null != obj) {
-            eruptMenu.setSort(obj + 10);
-        }
-        eruptMenu.setStatus(Integer.valueOf(EruptMenu.OPEN));
-    }
 }

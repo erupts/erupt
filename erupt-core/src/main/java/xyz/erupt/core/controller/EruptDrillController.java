@@ -9,9 +9,9 @@ import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptService;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptApiModel;
@@ -56,7 +56,7 @@ public class EruptDrillController {
             }
             Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
             field.setAccessible(true);
-            Object data = AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
+            Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                     .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
             Object val = field.get(data);
             if (null == val) {
@@ -95,7 +95,7 @@ public class EruptDrillController {
             String joinColumn = link.joinColumn();
             Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
             field.setAccessible(true);
-            Object val = field.get(AnnotationUtil.getEruptDataProcessor(eruptModel.getClazz())
+            Object val = field.get(DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                     .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id)));
             if (joinColumn.contains(".")) {
                 String[] jc = joinColumn.split("\\.");

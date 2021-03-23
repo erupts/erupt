@@ -10,4 +10,5 @@ public class EruptReqHeaderConst {
     public static final String URL_ERUPT_PARAM_KEY = "_erupt";
 
     public static final String URL_ERUPT_PARAM_TOKEN = "_token";
+
 }

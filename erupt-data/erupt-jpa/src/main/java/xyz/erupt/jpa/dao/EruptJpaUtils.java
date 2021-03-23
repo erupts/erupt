@@ -24,17 +24,17 @@ import java.util.Set;
  */
 public class EruptJpaUtils {
 
-    public static final String AND = " and ";
+    public static final String L_VAL_KEY = "l_";
 
-    public static final String LVAL_KEY = "l_";
-
-    public static final String RVAL_KEY = "r_";
+    public static final String R_VAL_KEY = "r_";
 
     public static final String PERCENT = "%";
 
+    public static final String AND = " and ";
+
     public static final String AS = " as ";
 
-    public static Set<String> getEruptColJapKeys(EruptModel eruptModel) {
+    public static Set<String> getEruptColJpaKeys(EruptModel eruptModel) {
         Set<String> cols = new HashSet<>();
         String eruptNameSymbol = eruptModel.getEruptName() + ".";
         cols.add(eruptNameSymbol + eruptModel.getErupt().primaryKeyCol() + AS + eruptModel.getErupt().primaryKeyCol());
@@ -86,7 +86,6 @@ public class EruptJpaUtils {
         return hql.toString();
     }
 
-
     public static String generateEruptJoinHql(EruptModel eruptModel) {
         StringBuilder sb = new StringBuilder();
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
@@ -132,8 +131,8 @@ public class EruptJpaUtils {
                             break;
                         case RANGE:
                             hql.append(EruptJpaUtils.AND).append(_key).append(" between :")
-                                    .append(LVAL_KEY).append(condition.getKey()).append(" and :")
-                                    .append(RVAL_KEY).append(condition.getKey());
+                                    .append(L_VAL_KEY).append(condition.getKey()).append(" and :")
+                                    .append(R_VAL_KEY).append(condition.getKey());
                             break;
                         case IN:
                             hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(condition.getKey()).append(")");
@@ -160,7 +159,6 @@ public class EruptJpaUtils {
         return hql.toString();
     }
 
-
     public static String geneEruptHqlOrderBy(EruptModel eruptModel, String orderBy) {
         if (StringUtils.isNotBlank(orderBy)) {
             return " order by " + EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), orderBy);
@@ -178,8 +176,6 @@ public class EruptJpaUtils {
         } else {
             return eruptName + "." + hqlPath;
         }
-
     }
-
 
 }
