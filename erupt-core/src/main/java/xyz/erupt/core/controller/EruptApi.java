@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.config.EruptAppProp;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 
 import javax.annotation.Resource;
@@ -46,5 +47,9 @@ public class EruptApi {
         return eruptAppProp;
     }
 
+    @GetMapping(value = "/erupt-app-js", produces = {"application/javascript"})
+    public String eruptAppJs() {
+        return "var eruptApp = " + GsonFactory.getGson().toJson(eruptAppProp);
+    }
 
 }
