@@ -29,13 +29,11 @@
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
             <version>${project.parent.version}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl-ui.element-ui</artifactId>
             <version>${project.parent.version}</version>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>
