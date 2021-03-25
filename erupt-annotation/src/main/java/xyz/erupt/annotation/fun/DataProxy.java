@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2018-10-09.
+ * @author YuePeng
+ * date 2018-10-09.
  */
 public interface DataProxy<@Comment("Erupt类对象") MODEL> {
 

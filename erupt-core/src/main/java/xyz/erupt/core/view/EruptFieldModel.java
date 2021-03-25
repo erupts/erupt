@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2018-10-10.
+ * @author YuePeng
+ * date 2018-10-10.
  */
 @Data
 public class EruptFieldModel {
@@ -115,6 +115,8 @@ public class EruptFieldModel {
                     if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName.toLowerCase())) {
                         viewValues.put(TYPE, ViewType.BOOLEAN);
                     } else if (Date.class.getSimpleName().equals(this.fieldReturnName)) {
+                        viewValues.put(TYPE, ViewType.DATE);
+                    } else if (this.eruptField.edit().type() == EditType.DATE) {
                         viewValues.put(TYPE, ViewType.DATE);
                     } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
                         viewValues.put(TYPE, ViewType.NUMBER);

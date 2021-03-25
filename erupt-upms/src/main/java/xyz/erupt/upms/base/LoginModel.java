@@ -7,8 +7,8 @@ import xyz.erupt.upms.model.EruptUser;
 import java.time.LocalDateTime;
 
 /**
- * @author liyuepeng
- * @date 2018-12-14.
+ * @author YuePeng
+ * date 2018-12-14.
  */
 @Data
 public class LoginModel {

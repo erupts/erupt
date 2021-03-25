@@ -8,8 +8,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * @author liyuepeng
- * @date 2019-07-11.
+ * @author YuePeng
+ * date 2019-07-11.
  */
 public class MimeUtil {
 

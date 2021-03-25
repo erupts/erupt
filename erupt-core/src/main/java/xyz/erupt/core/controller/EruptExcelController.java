@@ -38,8 +38,8 @@ import java.util.List;
 /**
  * 对Excel数据的处理
  *
- * @author liyuepeng
- * @date 10/15/18.
+ * @author YuePeng
+ * date 10/15/18.
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_EXCEL)

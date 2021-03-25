@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 
 /**
  * 作用域：annotation[]
- * @author liyuepeng
- * @date 2019-05-28.
+ * @author YuePeng
+ * date 2019-05-28.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

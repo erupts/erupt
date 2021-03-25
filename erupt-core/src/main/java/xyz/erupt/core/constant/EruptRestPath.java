@@ -1,8 +1,8 @@
 package xyz.erupt.core.constant;
 
 /**
- * @author liyuepeng
- * @date 10/15/18.
+ * @author YuePeng
+ * date 10/15/18.
  */
 public class EruptRestPath {
 

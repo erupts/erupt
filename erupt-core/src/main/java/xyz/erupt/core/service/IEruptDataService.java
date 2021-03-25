@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 10/10/18.
+ * @author YuePeng
+ * date 10/10/18.
  */
 public interface IEruptDataService {
 

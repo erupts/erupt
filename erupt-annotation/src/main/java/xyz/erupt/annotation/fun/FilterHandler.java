@@ -3,8 +3,8 @@ package xyz.erupt.annotation.fun;
 import xyz.erupt.annotation.config.Comment;
 
 /**
- * @author liyuepeng
- * @date 2018-11-05.
+ * @author YuePeng
+ * date 2018-11-05.
  */
 public interface FilterHandler {
 

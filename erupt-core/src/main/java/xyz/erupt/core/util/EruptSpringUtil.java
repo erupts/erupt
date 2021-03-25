@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.function.Consumer;
 
 /**
- * @author liyuepeng
- * @date 1/24/19.
+ * @author YuePeng
+ * date 1/24/19.
  */
 @Component
 public class EruptSpringUtil implements ApplicationContextAware {
@@ -49,6 +49,11 @@ public class EruptSpringUtil implements ApplicationContextAware {
             return clazz.newInstance();
         }
     }
+
+    public static <T> T getBean(T t) {
+        return (T) getBean(t.getClass());
+    }
+
 
     //通过name,以及Clazz返回指定的Bean
     public static <T> T getProperty(String key, Class<T> clazz) {

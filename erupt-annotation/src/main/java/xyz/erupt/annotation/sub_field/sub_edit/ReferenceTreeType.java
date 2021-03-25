@@ -7,8 +7,8 @@ import xyz.erupt.annotation.expr.Expr;
 import java.beans.Transient;
 
 /**
- * @author liyuepeng
- * @date 2018-09-28.
+ * @author YuePeng
+ * date 2018-09-28.
  */
 public @interface ReferenceTreeType {
 

@@ -1,8 +1,8 @@
 package xyz.erupt.annotation.constant;
 
 /**
- * @author liyuepeng
- * @date 2019-07-05.
+ * @author YuePeng
+ * date 2019-07-05.
  */
 public class AnnotationConst {
 

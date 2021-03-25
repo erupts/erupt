@@ -5,8 +5,8 @@ import xyz.erupt.annotation.config.QueryExpression;
 import java.lang.annotation.*;
 
 /**
- * @author liyuepeng
- * @date 2020/11/27 12:00
+ * @author YuePeng
+ * date 2020/11/27 12:00
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})

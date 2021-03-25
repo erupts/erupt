@@ -13,8 +13,8 @@ import xyz.erupt.upms.model.base.HyperModel;
 import javax.persistence.*;
 
 /**
- * @author liyuepeng
- * @date 2018-12-07.
+ * @author YuePeng
+ * date 2018-12-07.
  */
 
 @Entity

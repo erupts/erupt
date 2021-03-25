@@ -6,8 +6,8 @@ import xyz.erupt.annotation.config.JavaTypeEnum;
 import java.lang.annotation.*;
 
 /**
- * @author liyuepeng
- * @date 2019-05-24.
+ * @author YuePeng
+ * date 2019-05-24.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})

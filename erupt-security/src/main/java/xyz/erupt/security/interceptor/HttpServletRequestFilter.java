@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
- * @author liyuepeng
- * @date 2020-09-08
+ * @author YuePeng
+ * date 2020-09-08
  */
 @Component
 @WebFilter(urlPatterns = EruptRestPath.ERUPT_API)

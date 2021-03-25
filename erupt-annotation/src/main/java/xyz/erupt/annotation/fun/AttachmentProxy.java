@@ -5,8 +5,8 @@ import xyz.erupt.annotation.config.Comment;
 import java.io.InputStream;
 
 /**
- * @author liyuepeng
- * @date 2020-05-18
+ * @author YuePeng
+ * date 2020-05-18
  */
 @Comment("自定义附件上传策略")
 public interface AttachmentProxy {

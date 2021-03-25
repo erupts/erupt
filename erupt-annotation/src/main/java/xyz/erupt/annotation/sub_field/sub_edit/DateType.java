@@ -3,8 +3,8 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 import xyz.erupt.annotation.config.Comment;
 
 /**
- * @author liyuepeng
- * @date 2018-10-15.
+ * @author YuePeng
+ * date 2018-10-15.
  */
 public @interface DateType {
 

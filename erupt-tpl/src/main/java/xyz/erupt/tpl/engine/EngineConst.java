@@ -1,8 +1,8 @@
 package xyz.erupt.tpl.engine;
 
 /**
- * @author liyuepeng
- * @date 2021/1/29 17:26
+ * @author YuePeng
+ * date 2021/1/29 17:26
  */
 public class EngineConst {
 

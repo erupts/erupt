@@ -11,8 +11,8 @@ import javax.annotation.Resource;
 import java.util.Objects;
 
 /**
- * @author liyuepeng
- * @date 2021/1/29 14:42
+ * @author YuePeng
+ * date 2021/1/29 14:42
  */
 @RestController
 @RequestMapping(MonitorConstant.REST_MONITOR + "/redis.html")

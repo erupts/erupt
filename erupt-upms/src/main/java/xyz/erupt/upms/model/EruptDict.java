@@ -17,8 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
- * @author liyuepeng
- * @date 2018-12-07.
+ * @author YuePeng
+ * date 2018-12-07.
  */
 
 @Entity

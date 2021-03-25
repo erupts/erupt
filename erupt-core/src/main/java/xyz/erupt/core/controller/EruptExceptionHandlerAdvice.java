@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2020-09-30
+ * @author YuePeng
+ * date 2020-09-30
  */
 @ControllerAdvice
 public class EruptExceptionHandlerAdvice {

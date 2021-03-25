@@ -11,8 +11,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 /**
- * @author liyuepeng
- * @date 2021/3/10 11:30
+ * @author YuePeng
+ * date 2021/3/10 11:30
  */
 @MappedSuperclass
 @PreDataProxy(LookerSelf.class)

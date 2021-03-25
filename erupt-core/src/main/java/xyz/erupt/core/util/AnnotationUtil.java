@@ -24,8 +24,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * @author liyuepeng
- * @date 2019-02-28.
+ * @author YuePeng
+ * date 2019-02-28.
  */
 public class AnnotationUtil {
 

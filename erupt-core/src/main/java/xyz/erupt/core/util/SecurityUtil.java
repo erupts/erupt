@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 /**
- * @author liyuepeng
- * @date 2019-10-30.
+ * @author YuePeng
+ * date 2019-10-30.
  */
 public class SecurityUtil {
 

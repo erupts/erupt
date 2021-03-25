@@ -5,8 +5,8 @@ import xyz.erupt.annotation.config.Comment;
 import java.util.List;
 
 /**
- * @author liyuepeng
- * @date 2020-08-14
+ * @author YuePeng
+ * date 2020-08-14
  */
 public interface AutoCompleteHandler {
 

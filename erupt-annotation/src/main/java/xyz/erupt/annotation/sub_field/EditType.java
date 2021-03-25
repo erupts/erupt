@@ -6,8 +6,8 @@ import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 
 /**
- * @author liyuepeng
- * @date 2018-09-28.
+ * @author YuePeng
+ * date 2018-09-28.
  */
 public enum EditType {
     @EditTypeMapping(desc = "框架自动检测类型", allowType = {JavaTypeEnum.any})

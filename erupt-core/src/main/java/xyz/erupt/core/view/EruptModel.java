@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2018-09-29.
+ * @author YuePeng
+ * date 2018-09-29.
  */
 @Data
 public final class EruptModel implements Cloneable {

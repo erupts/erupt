@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2019-01-17.
+ * @author YuePeng
+ * date 2019-01-17.
  */
 public class DateUtil {
 

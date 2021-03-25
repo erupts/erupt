@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2019-03-06.
+ * @author YuePeng
+ * date 2019-03-06.
  */
 @Service
 public class EruptDataServiceDbImpl implements IEruptDataService {
@@ -157,7 +157,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
      * @param eruptModel eruptModel
      * @param columns    列
      * @param query      查询对象
-     * @return
+     * @return 数据结果集
      */
     @Override
     public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery query) {

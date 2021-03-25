@@ -3,9 +3,8 @@ package xyz.erupt.core.exception;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @Description:
- * @author: liyuepeng
- * @time:2018/12/15 23:18
+ * @author YuePeng
+ * date 2018-12-15
  */
 @Slf4j
 public class EruptNoLegalPowerException extends RuntimeException {

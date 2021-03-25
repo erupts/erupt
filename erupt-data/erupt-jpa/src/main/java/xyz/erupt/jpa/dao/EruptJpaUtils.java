@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author liyuepeng
- * @date 2018-11-05.
+ * @author YuePeng
+ * date 2018-11-05.
  */
 public class EruptJpaUtils {
 

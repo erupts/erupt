@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import lombok.Cleanup;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,8 +39,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
- * @author liyuepeng
- * @date 10/15/18.
+ * @author YuePeng
+ * date 10/15/18.
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_FILE)
@@ -69,7 +68,6 @@ public class EruptFileController {
             String path;
             if (eruptProp.isKeepUploadFileName()) {
                 path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
-                        RandomUtils.nextInt(100, 999) + "-" +
                         file.getOriginalFilename()
                                 .replace("&", "")
                                 .replace("?", "")

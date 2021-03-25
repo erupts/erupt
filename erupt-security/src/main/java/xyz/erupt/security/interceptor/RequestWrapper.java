@@ -1,8 +1,8 @@
 package xyz.erupt.security.interceptor;
 
 /**
- * @author liyuepeng
- * @date 2020-09-08
+ * @author YuePeng
+ * date 2020-09-08
  */
 
 import javax.servlet.ReadListener;

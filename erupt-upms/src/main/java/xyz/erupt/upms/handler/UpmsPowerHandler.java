@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 /**
  * 全局菜单权限控制
  *
- * @author liyuepeng
- * @date 2021/3/16 00:15
+ * @author YuePeng
+ * date 2021/3/16 00:15
  */
 @Service
 public class UpmsPowerHandler implements PowerHandler {

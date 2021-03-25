@@ -30,8 +30,8 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2019-12-05.
+ * @author YuePeng
+ * date 2019-12-05.
  */
 @Service
 public class LoginInterceptor extends HandlerInterceptorAdapter {
