@@ -19,6 +19,7 @@
         <spring.boot.version>2.4.3</spring.boot.version>
     </properties>
 
+
     <!--
     在编译spring boot 等多模块项目的时候，往往出现
     Non-resolvable parent POM: Could not find artifact
