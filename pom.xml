@@ -31,7 +31,6 @@
     <modules>
         <module>erupt-annotation</module>
         <module>erupt-core</module>
-
         <module>erupt-tpl</module>
         <module>erupt-tpl-ui/ant-design</module>
         <module>erupt-tpl-ui/element-ui</module>
