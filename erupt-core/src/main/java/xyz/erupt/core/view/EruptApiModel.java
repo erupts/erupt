@@ -3,8 +3,8 @@ package xyz.erupt.core.view;
 import lombok.Data;
 
 /**
- * @author liyuepeng
- * @date 2018-10-09.
+ * @author YuePeng
+ * date 2018-10-09.
  */
 @Data
 public class EruptApiModel {

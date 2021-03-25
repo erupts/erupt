@@ -3,8 +3,8 @@ package xyz.erupt.annotation.sub_erupt;
 import xyz.erupt.annotation.config.Comment;
 
 /**
- * @author liyuepeng
- * @date 2020-02-17.
+ * @author YuePeng
+ * date 2020-02-17.
  */
 public @interface Drill {
 

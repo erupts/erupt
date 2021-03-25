@@ -1,8 +1,8 @@
 package xyz.erupt.annotation.config;
 
 /**
- * @author liyuepeng
- * @date 2019-05-24.
+ * @author YuePeng
+ * date 2019-05-24.
  */
 public enum JavaTypeEnum {
     any,

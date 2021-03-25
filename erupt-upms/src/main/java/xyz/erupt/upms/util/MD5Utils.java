@@ -4,8 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
- * @author liyuepeng
- * @date 2018-10-10.
+ * @author YuePeng
+ * date 2018-10-10.
  */
 public class MD5Utils {
 

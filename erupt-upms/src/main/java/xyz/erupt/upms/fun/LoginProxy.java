@@ -4,8 +4,8 @@ import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.upms.model.EruptUser;
 
 /**
- * @author liyuepeng
- * @date 2021/2/13 20:11
+ * @author YuePeng
+ * date 2021/2/13 20:11
  */
 public interface LoginProxy {
 

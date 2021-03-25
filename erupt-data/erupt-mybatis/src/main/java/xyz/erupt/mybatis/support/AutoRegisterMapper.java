@@ -12,8 +12,8 @@ import xyz.erupt.mybatis.TestModel;
 import javax.annotation.Resource;
 
 /**
- * @author liyuepeng
- * @date 2021/3/11 15:18
+ * @author YuePeng
+ * date 2021/3/11 15:18
  */
 @Service
 public class AutoRegisterMapper {

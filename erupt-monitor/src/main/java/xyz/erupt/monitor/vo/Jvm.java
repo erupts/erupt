@@ -10,8 +10,8 @@ import java.text.DecimalFormat;
 import java.util.Properties;
 
 /**
- * @author liyuepeng
- * @date 2021/1/23 23:27
+ * @author YuePeng
+ * date 2021/1/23 23:27
  */
 @Getter
 @Setter

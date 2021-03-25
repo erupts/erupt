@@ -9,8 +9,8 @@ import xyz.erupt.security.interceptor.LoginInterceptor;
 import javax.annotation.Resource;
 
 /**
- * @author liyuepeng
- * @date 2018-12-20.
+ * @author YuePeng
+ * date 2018-12-20.
  */
 
 @Configuration

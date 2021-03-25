@@ -3,8 +3,8 @@ package xyz.erupt.core.exception;
 import xyz.erupt.core.view.EruptApiModel;
 
 /**
- * @author liyuepeng
- * @date 2020-04-10
+ * @author YuePeng
+ * date 2020-04-10
  */
 public class EruptApiErrorTip extends RuntimeException {
 

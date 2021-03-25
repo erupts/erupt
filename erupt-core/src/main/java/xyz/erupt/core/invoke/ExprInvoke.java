@@ -4,8 +4,8 @@ import xyz.erupt.annotation.expr.*;
 import xyz.erupt.core.util.EruptSpringUtil;
 
 /**
- * @author liyuepeng
- * @date 2021/3/16 13:44
+ * @author YuePeng
+ * date 2021/3/16 13:44
  */
 public class ExprInvoke {
 

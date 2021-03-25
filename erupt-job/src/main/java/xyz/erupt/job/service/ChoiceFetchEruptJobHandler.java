@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author liyuepeng
- * @date 2021/2/27 22:46
+ * @author YuePeng
+ * date 2021/2/27 22:46
  */
 public class ChoiceFetchEruptJobHandler implements ChoiceFetchHandler {
 

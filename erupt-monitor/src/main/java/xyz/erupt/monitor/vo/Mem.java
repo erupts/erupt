@@ -9,8 +9,8 @@ import xyz.erupt.monitor.util.SystemUtil;
 import java.text.DecimalFormat;
 
 /**
- * @author liyuepeng
- * @date 2021/1/23 23:05
+ * @author YuePeng
+ * date 2021/1/23 23:05
  */
 @Getter
 @Setter

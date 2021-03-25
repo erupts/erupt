@@ -32,8 +32,8 @@ import static xyz.erupt.core.constant.EruptRestPath.ERUPT_API;
 /**
  * Erupt 页面结构构建信息
  *
- * @author liyuepeng
- * @date 2018-09-28.
+ * @author YuePeng
+ * date 2018-09-28.
  */
 @RestController
 @RequestMapping(ERUPT_API + EruptTplController.TPL)

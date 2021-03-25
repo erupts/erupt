@@ -7,8 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 
 /**
- * @author liyuepeng
- * @date 2018-11-15.
+ * @author YuePeng
+ * date 2018-11-15.
  */
 @Getter
 @Setter

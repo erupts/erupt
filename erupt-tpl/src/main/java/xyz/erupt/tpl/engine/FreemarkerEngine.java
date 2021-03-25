@@ -9,8 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
- * @author liyuepeng
- * @date 2021/1/16 14:39
+ * @author YuePeng
+ * date 2021/1/16 14:39
  */
 public class FreemarkerEngine extends EngineTemplate<Configuration> {
 

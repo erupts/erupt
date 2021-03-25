@@ -27,8 +27,8 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * @author liyuepeng
- * @date 2018-11-22.
+ * @author YuePeng
+ * date 2018-11-22.
  */
 @Entity
 @Table(name = "e_upms_user", uniqueConstraints = {

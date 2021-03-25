@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author liyuepeng
- * @date 2019-08-13.
+ * @author YuePeng
+ * date 2019-08-13.
  */
 @Component
 public class EruptSessionService {
@@ -91,6 +91,9 @@ public class EruptSessionService {
             return gson.fromJson(obj.toString(), type);
         } else {
             Map<String, T> map = (Map<String, T>) request.getSession().getAttribute(key);
+            if (null == map) {
+                return null;
+            }
             return map.get(mapKey);
         }
     }

@@ -21,8 +21,8 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * @author liyuepeng
- * @date 2021/2/16 14:28
+ * @author YuePeng
+ * date 2021/2/16 14:28
  */
 @Entity
 @Table(name = "e_upms_login_log")
