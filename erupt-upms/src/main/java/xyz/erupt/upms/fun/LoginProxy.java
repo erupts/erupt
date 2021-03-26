@@ -10,7 +10,7 @@ import xyz.erupt.upms.model.EruptUser;
 public interface LoginProxy {
 
     @Comment("登录校验，如要提示校验结果请抛异常")
-    @Comment("为安全考虑pwd是加密的，加密逻辑：md5(md5(account)+ Calendar.DAY_OF_MONTH +account)")
+    @Comment("为安全考虑pwd是加密的，加密逻辑：md5(md5(pwd)+ Calendar.DAY_OF_MONTH +account)")
     @Comment("Calendar.DAY_OF_MONTH → Calendar.getInstance().get(Calendar.DAY_OF_MONTH) //今天月的哪一天")
     @Comment("如果不希望加密，请前往配置文件，将：erupt-app.pwdTransferEncrypt 设置为 false 即可")
     EruptUser login(String account, String pwd);
