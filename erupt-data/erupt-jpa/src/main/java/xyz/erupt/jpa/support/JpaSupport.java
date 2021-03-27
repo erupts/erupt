@@ -36,12 +36,14 @@ public class JpaSupport {
                 }
                 field.setAccessible(true);
                 Object refObject = field.get(obj);
-                Field idField = ReflectUtil.findClassField(refObject.getClass(), id);
-                idField.setAccessible(true);
-                Object result = eruptDao.getEntityManager()
-                        .createQuery("from " + refObject.getClass().getSimpleName() + " I where I.id = :id")
-                        .setParameter("id", idField.get(refObject)).getSingleResult();
-                field.set(obj, result);
+                if (null != refObject) {
+                    Field idField = ReflectUtil.findClassField(refObject.getClass(), id);
+                    idField.setAccessible(true);
+                    Object result = eruptDao.getEntityManager()
+                            .createQuery("from " + refObject.getClass().getSimpleName() + " I where I.id = :id")
+                            .setParameter("id", idField.get(refObject)).getSingleResult();
+                    field.set(obj, result);
+                }
             }
         }
 

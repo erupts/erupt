@@ -12,6 +12,8 @@ public @interface VL {
 
     String label();
 
+    boolean disable() default false;
+
     @Transient
     String desc() default "";
 }
