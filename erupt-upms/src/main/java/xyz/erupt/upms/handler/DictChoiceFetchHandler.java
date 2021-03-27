@@ -4,11 +4,10 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.cache.EruptCacheFactory;
-import xyz.erupt.upms.cache.IEruptCache;
+import xyz.erupt.upms.cache.CaffeineEruptCache;
+import xyz.erupt.upms.constant.FetchConst;
 import xyz.erupt.upms.model.EruptDictItem;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,20 +23,19 @@ public class DictChoiceFetchHandler implements ChoiceFetchHandler {
     private EruptDao eruptDao;
 
     private final String CACHE_SPACE = DictChoiceFetchHandler.class.getName() + ":";
-    @Resource
-    private EruptCacheFactory eruptCacheFactory;
-    private IEruptCache<List<VLModel>> dictCache;
 
-    @PostConstruct
-    public void init() {
-        dictCache = eruptCacheFactory.getInstance(5_000);
-    }
+    private final CaffeineEruptCache<List<VLModel>> dictCache = new CaffeineEruptCache<>();
 
     @Override
     public List<VLModel> fetch(String[] params) {
         if (null == params || params.length == 0) {
             throw new RuntimeException("DictChoiceFetchHandler → params[0] must dict → code");
         }
+        long timeout = FetchConst.DEFAULT_CACHE_TIME;
+        if (params.length == 2) {
+            timeout = Long.parseLong(params[1]);
+        }
+        dictCache.init(timeout);
         String dictCode = params[0];
         return dictCache.get(CACHE_SPACE + params[0], (key) -> {
             List<VLModel> list = new ArrayList<>();
