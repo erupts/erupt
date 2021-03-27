@@ -21,6 +21,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.jpa.dao.EruptJpaDao;
 import xyz.erupt.jpa.dao.EruptJpaUtils;
+import xyz.erupt.jpa.support.JpaSupport;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
@@ -48,6 +49,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     @Resource
     private EntityManagerService entityManagerService;
 
+    @Resource
+    private JpaSupport jpaSupport;
+
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
         EntityManager entityManager = entityManagerService.getEntityManager(eruptModel.getClazz());
@@ -65,10 +69,11 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
 
     @Transactional
     @Override
-    public void addData(EruptModel eruptModel, Object object) {
+    public void addData(EruptModel eruptModel, Object data) {
         try {
-            jpaManyToOneConvert(eruptModel, object);
-            eruptJpaDao.addEntity(eruptModel.getClazz(), object);
+            this.loadSupport(data);
+            this.jpaManyToOneConvert(eruptModel, data);
+            eruptJpaDao.addEntity(eruptModel.getClazz(), data);
         } catch (Exception e) {
             handlerException(e, eruptModel);
         }
@@ -78,9 +83,16 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     @Override
     public void editData(EruptModel eruptModel, Object data) {
         try {
+            this.loadSupport(data);
             eruptJpaDao.editEntity(eruptModel.getClazz(), data);
         } catch (Exception e) {
             handlerException(e, eruptModel);
+        }
+    }
+
+    private void loadSupport(Object jpaEntity) {
+        for (Field field : jpaEntity.getClass().getDeclaredFields()) {
+            jpaSupport.referencedColumnNameSupport(jpaEntity, field);
         }
     }
 

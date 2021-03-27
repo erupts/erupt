@@ -109,14 +109,14 @@ public class EruptUserController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public EruptApiModel logout(HttpServletRequest request) {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
-        sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
-        sessionService.remove(SessionKey.MENU_CODE_MAP + token);
-        sessionService.remove(SessionKey.MENU_VIEW + token);
-        sessionService.remove(SessionKey.USER_TOKEN + token);
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         if (null != loginProxy) {
             loginProxy.logout(token);
         }
+        sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
+        sessionService.remove(SessionKey.MENU_CODE_MAP + token);
+        sessionService.remove(SessionKey.MENU_VIEW + token);
+        sessionService.remove(SessionKey.USER_TOKEN + token);
         return EruptApiModel.successApi();
     }
 

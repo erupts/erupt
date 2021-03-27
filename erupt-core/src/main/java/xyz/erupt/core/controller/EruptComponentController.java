@@ -37,20 +37,20 @@ public class EruptComponentController {
         return EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(val, autoCompleteType.param());
     }
 
+    //Gets the CHOICE component drop-down list
     @RequestMapping("/choice-item/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<VLModel> findChoiceItem(@PathVariable("erupt") String eruptName,
-                                        @PathVariable("field") String field,
-                                        @RequestParam(value = "depend", required = false) String depend) {
+                                        @PathVariable("field") String field) {
         EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
         return EruptUtil.getChoiceList(fieldModel.getEruptField().edit().choiceType());
     }
 
+    //Gets the TAGS component list data
     @RequestMapping("/tags-item/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<String> findTagsItem(@PathVariable("erupt") String eruptName,
-                                     @PathVariable("field") String field,
-                                     @RequestParam(value = "depend", required = false) String depend) {
+                                     @PathVariable("field") String field) {
         EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
         return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType());
     }
