@@ -128,7 +128,7 @@ public class EruptUtil {
     public static List<VLModel> getChoiceList(ChoiceType choiceType) {
         List<VLModel> vls = new ArrayList<>();
         for (VL vl : choiceType.vl()) {
-            vls.add(new VLModel(vl.value(), vl.label(), vl.desc()));
+            vls.add(new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable()));
         }
         for (Class<? extends ChoiceFetchHandler> clazz : choiceType.fetchHandler()) {
             if (!clazz.isInterface()) {
