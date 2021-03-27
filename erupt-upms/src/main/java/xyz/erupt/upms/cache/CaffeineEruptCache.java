@@ -10,13 +10,22 @@ import java.util.function.Function;
  * @author YuePeng
  * date 2021/3/23 11:31
  */
-public class CaffeineEruptCache<V> extends AbstractEruptCache<V> {
+public class CaffeineEruptCache<V> implements IEruptCache<V> {
 
-    Cache<String, V> cache;
+    private Cache<String, V> cache;
 
-    public CaffeineEruptCache(long timeout, TimeUnit timeUnit) {
-        super(timeout, timeUnit);
-        this.cache = Caffeine.newBuilder().expireAfterWrite(timeout, timeUnit).build();
+    public void init(long timeout, TimeUnit timeUnit) {
+        if (null == this.cache) {
+            synchronized (this) {
+                if (null == this.cache) {
+                    this.cache = Caffeine.newBuilder().expireAfterWrite(timeout, timeUnit).build();
+                }
+            }
+        }
+    }
+
+    public void init(long timeout) {
+        this.init(timeout, TimeUnit.MILLISECONDS);
     }
 
     @Override

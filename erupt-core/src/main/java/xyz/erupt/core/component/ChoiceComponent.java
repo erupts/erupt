@@ -14,4 +14,5 @@ public class ChoiceComponent implements EruptComponent {
     public Class<? extends Annotation> bindAnnotation() {
         return ChoiceType.class;
     }
+
 }
