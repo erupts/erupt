@@ -2,8 +2,6 @@ package xyz.erupt.core.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -37,15 +35,7 @@ public class EruptProp {
 
     private String[] jacksonHttpMessageConvertersPackages;
 
-    private List<DB> dbs;
+    private List<EruptPropDb> dbs;
 
-    @Getter
-    @Setter
-    public static class DB {
 
-        private DataSourceProperties datasource;
-
-        private JpaProperties jpa;
-
-    }
 }
