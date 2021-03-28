@@ -1,6 +1,7 @@
 package xyz.erupt.core.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import xyz.erupt.core.constant.EruptConst;
 
 import java.io.File;
@@ -34,7 +35,9 @@ public class ProjectUtil {
         } else {
             try {
                 first.accept(true);
-                if (!file.createNewFile()) {
+                if (file.createNewFile()) {
+                    FileUtils.write(file, EruptVersionUtil.getEruptVersion());
+                } else {
                     log.warn(dirFile.toString() + warnTxt);
                 }
             } catch (Exception e) {
