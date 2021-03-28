@@ -36,6 +36,8 @@
         <module>erupt-tpl-ui/element-ui</module>
         <module>erupt-tpl-ui/amis</module>
 
+        <module>erupt-magic-api</module> <!-- magic-api 接口配置 -->
+
         <module>erupt-data/erupt-jpa</module><!-- Hibernate JPA 数据实现 -->
         <module>erupt-data/erupt-mongodb</module><!-- MongoDB   数据实现 -->
 
