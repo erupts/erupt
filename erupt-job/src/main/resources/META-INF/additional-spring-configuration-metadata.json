@@ -1,0 +1,9 @@
+{
+  "groups": [
+    {
+      "sourceType": "xyz.erupt.job.config.EruptJobProp",
+      "name": "erupt.job",
+      "type": "xyz.erupt.job.config.EruptJobProp"
+    }
+  ]
+}

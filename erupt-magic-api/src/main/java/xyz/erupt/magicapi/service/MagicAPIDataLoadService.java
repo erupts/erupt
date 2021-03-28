@@ -35,8 +35,11 @@ public class MagicAPIDataLoadService implements CommandLineRunner {
         new ProjectUtil().projectStartLoaded(menuKey, bool -> {
             if (bool) {
                 AtomicInteger sort = new AtomicInteger(80);
-                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(menuKey, "接口配置", EruptTplService.TPL, MagicApiTpl.MAGIC_API_PERMISSION,
-                        Integer.valueOf(EruptMenu.OPEN), sort.getAndAdd(10), "fa fa-cube", null), "code", menuKey);
+                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class,
+                        new EruptMenu(menuKey, "接口配置", EruptTplService.TPL,
+                                MagicApiTpl.MAGIC_API_PERMISSION, Integer.valueOf(EruptMenu.OPEN),
+                                sort.getAndAdd(10), "fa fa-cube", null),
+                        "code", menuKey);
                 Map<Authorization, String> menus = new LinkedHashMap<>();
                 menus.put(Authorization.VIEW, "查看详情");
                 menus.put(Authorization.SAVE, "保存");
@@ -48,8 +51,11 @@ public class MagicAPIDataLoadService implements CommandLineRunner {
                 menus.put(Authorization.DATASOURCE_DELETE, "数据源删除");
                 menus.forEach((key, value) -> {
                     String menuCode = menuKey + "-" + key.name().toLowerCase();
-                    eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(menuCode, value, MenuTypeEnum.BUTTON.getCode(),
-                            MAGIC_API_MENU_PREFIX + key.name(), Integer.valueOf(EruptMenu.HIDE), sort.getAndAdd(10), null, eruptMenu), "code", menuCode);
+                    eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(menuCode, value,
+                            MenuTypeEnum.BUTTON.getCode(),
+                            MAGIC_API_MENU_PREFIX + key.name(),
+                            Integer.valueOf(EruptMenu.HIDE), sort.getAndAdd(10),
+                            null, eruptMenu), "code", menuCode);
                 });
             }
         });

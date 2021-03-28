@@ -1,7 +1,8 @@
 package xyz.erupt.core.view;
 
 import com.google.gson.JsonObject;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.util.AnnotationUtil;
 
@@ -12,7 +13,8 @@ import java.util.Map;
  * @author YuePeng
  * date 2018-09-29.
  */
-@Data
+@Getter
+@Setter
 public final class EruptModel implements Cloneable {
 
     private transient Class<?> clazz;

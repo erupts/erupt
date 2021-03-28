@@ -17,7 +17,8 @@ import java.util.Map;
 @Component
 public class MagicApiTpl {
 
-    public static final String MAGIC_API_PERMISSION = "magic-api.html";
+    public static final String MAGIC_API_PERMISSION = "magic-api.ftl";
+
     @Resource
     private MagicAPIProperties magicAPIProperties;
 
