@@ -32,6 +32,7 @@
         <module>erupt-annotation</module>
         <module>erupt-core</module>
         <module>erupt-tpl</module>
+
         <module>erupt-tpl-ui/ant-design</module>
         <module>erupt-tpl-ui/element-ui</module>
         <module>erupt-tpl-ui/amis</module>
@@ -50,6 +51,8 @@
         <module>erupt-job</module><!--任务调度-->
         <module>erupt-generator</module><!--代码生成-->
         <module>erupt-monitor</module><!--服务监控-->
+
+        <module>erupt-magic-api</module><!--集成：Magic-API-->
     </modules>
 
     <dependencyManagement>
