@@ -1,6 +1,7 @@
 package xyz.erupt.core.config;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +9,8 @@ import org.springframework.stereotype.Component;
  * @author YuePeng
  * date 2021/1/22 10:11
  */
-@Data
+@Getter
+@Setter
 @Component
 @ConfigurationProperties(prefix = "erupt-app")
 public class EruptAppProp {
