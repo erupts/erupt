@@ -37,7 +37,10 @@ public class UpmsPowerHandler implements PowerHandler {
         EruptMenu eruptMenu = eruptUserService.getCurrentEruptMenu();
         if (null != eruptMenu) {
             this.powerOff(eruptMenu.getPowerOff(), power);
-            this.powerOff(eruptSessionService.get(SessionKey.ROLE_POWER + eruptUserService.getCurrentToken()).toString(), power);
+            Object powerStr = eruptSessionService.get(SessionKey.ROLE_POWER + eruptUserService.getCurrentToken());
+            if (null != powerStr) {
+                this.powerOff(powerStr.toString(), power);
+            }
         }
     }
 
