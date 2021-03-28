@@ -15,9 +15,21 @@
         <version>1.6.10</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
+    <properties>
+        <magic-api.version>1.0.0</magic-api.version>
+    </properties>
     <dependencies>
-
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-upms</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ssssssss</groupId>
+            <artifactId>magic-api-spring-boot-starter</artifactId>
+            <version>${magic-api.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

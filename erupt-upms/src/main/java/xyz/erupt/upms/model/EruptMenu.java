@@ -133,6 +133,9 @@ public class EruptMenu extends HyperModel {
     )
     private String param;
 
+    public EruptMenu() {
+    }
+
     public EruptMenu(String code, String name, String type, String value, Integer status, Integer sort, String icon, EruptMenu parentMenu) {
         this.code = code;
         this.name = name;
@@ -142,8 +145,5 @@ public class EruptMenu extends HyperModel {
         this.sort = sort;
         this.icon = icon;
         this.parentMenu = parentMenu;
-    }
-
-    public EruptMenu() {
     }
 }
