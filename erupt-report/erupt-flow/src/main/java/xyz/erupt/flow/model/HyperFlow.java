@@ -1,4 +1,4 @@
-package xyz.erupt.magicapi.model;
+package xyz.erupt.flow.model;
 
 import lombok.Getter;
 import lombok.Setter;
