@@ -1,12 +1,14 @@
 package xyz.erupt.bi.view;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author YuePeng
  * date 2020-02-16
  */
-@Data
+@Getter
+@Setter
 public class Reference {
 
     Object id;
