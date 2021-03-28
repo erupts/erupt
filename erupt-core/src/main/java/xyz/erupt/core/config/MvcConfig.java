@@ -9,6 +9,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import xyz.erupt.core.util.DateUtil;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +23,9 @@ import java.util.Collection;
  */
 @Configuration
 public class MvcConfig {
+
+    @Resource
+    private EruptProp eruptProp;
 
     @Bean
     public HttpMessageConverters customConverters() {
@@ -37,9 +41,17 @@ public class MvcConfig {
                 .setLongSerializationPolicy(LongSerializationPolicy.STRING).setExclusionStrategies(new GsonExclusionStrategies())
                 .serializeNulls().create();
         Collection<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-        messageConverters.add(new GsonHttpMessageConverter() {{
-            this.setGson(gson);
-        }});
+        messageConverters.add(new GsonHttpMessageConverter(gson) {
+            @Override
+            protected boolean supports(Class<?> clazz) {
+                for (String convertersPackage : eruptProp.getJacksonHttpMessageConvertersPackages()) {
+                    if (clazz.getName().startsWith(convertersPackage)) {
+                        return false;
+                    }
+                }
+                return super.supports(clazz);
+            }
+        });
         return new HttpMessageConverters(true, messageConverters);
     }
 

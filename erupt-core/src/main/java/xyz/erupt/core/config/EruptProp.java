@@ -35,6 +35,8 @@ public class EruptProp {
     //是否保留上传文件原始名称
     private boolean keepUploadFileName = false;
 
+    private String[] jacksonHttpMessageConvertersPackages;
+
     private List<DB> dbs;
 
     @Getter
