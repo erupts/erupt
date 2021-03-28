@@ -1,7 +1,8 @@
 package xyz.erupt.core.view;
 
 import com.google.gson.JsonObject;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
@@ -30,7 +31,8 @@ import java.util.Map;
  * @author YuePeng
  * date 2018-10-10.
  */
-@Data
+@Getter
+@Setter
 public class EruptFieldModel {
 
     private transient EruptField eruptField;

@@ -21,6 +21,7 @@
         }
     }
 </script>
-<iframe height="100%" src="${request.contextPath}/${web}" style="border: 0" width="100%"></iframe>
+<iframe src="${request.contextPath}<#if request.contextPath!=''>/</#if>${web}"
+        style="border: 0" width="100%" height="100%"></iframe>
 </body>
 </html>

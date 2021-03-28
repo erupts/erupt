@@ -1,6 +1,7 @@
 package xyz.erupt.upms.base;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 
@@ -10,7 +11,8 @@ import java.time.LocalDateTime;
  * @author YuePeng
  * date 2018-12-14.
  */
-@Data
+@Getter
+@Setter
 public class LoginModel {
 
     private transient EruptUser eruptUser;

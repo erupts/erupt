@@ -1,8 +1,6 @@
 package xyz.erupt.job.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AssignableTypeFilter;
@@ -12,6 +10,7 @@ import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.ProjectUtil;
+import xyz.erupt.job.config.EruptJobProp;
 import xyz.erupt.job.handler.EruptJobHandler;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
@@ -20,6 +19,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +33,14 @@ import java.util.List;
 @Slf4j
 public class JobDataLoadService implements CommandLineRunner {
 
-    @Autowired
+    @Resource
     private EruptDao eruptDao;
 
-    @Autowired
+    @Resource
     private EruptJobService eruptJobService;
 
-    @Value("${erupt.job.enable:true}")
-    private Boolean openJob;
+    @Resource
+    private EruptJobProp eruptJobProp;
 
     private static final List<String> loadedJobHandler = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class JobDataLoadService implements CommandLineRunner {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AssignableTypeFilter(EruptJobHandler.class)
         }, clazz -> loadedJobHandler.add(clazz.getName()));
-        if (openJob) {
+        if (eruptJobProp.isEnable()) {
             List<EruptJob> list = eruptDao.queryEntityList(EruptJob.class, "status = true", null);
             for (EruptJob job : list) {
                 eruptJobService.modifyJob(job);

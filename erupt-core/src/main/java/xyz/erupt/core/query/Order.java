@@ -1,8 +1,10 @@
 package xyz.erupt.core.query;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class Order {
 
     private String properties;

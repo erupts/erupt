@@ -1,0 +1,9 @@
+{
+  "groups": [
+    {
+      "sourceType": "xyz.erupt.upms.config.EruptUpmsConfig",
+      "name": "erupt.upms",
+      "type": "xyz.erupt.upms.config.EruptUpmsConfig"
+    }
+  ]
+}

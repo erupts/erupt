@@ -1,6 +1,5 @@
 package xyz.erupt.core.config;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -14,13 +13,14 @@ import java.util.List;
  * @author YuePeng
  * date 2019-10-31.
  */
-@Data
+@Getter
+@Setter
 @Component
 @ConfigurationProperties(prefix = "erupt")
 public class EruptProp {
 
-    @Deprecated
     //热构建erupt,开启此功能后每次请求都会重新构建erupt，该功能方便启动时修改erupt代码
+    @Deprecated
     private boolean hotBuild = false;
 
     //附件存储根路径
