@@ -126,7 +126,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
                     return false;
                 }
-                if (null == eruptUserService.getEruptMenuByValue(eruptModel.getEruptName())) {
+                if (null == eruptUserService.getEruptMenuByValue(authStr)) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
