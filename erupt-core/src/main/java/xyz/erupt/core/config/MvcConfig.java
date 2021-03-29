@@ -44,9 +44,11 @@ public class MvcConfig {
         messageConverters.add(new GsonHttpMessageConverter(gson) {
             @Override
             protected boolean supports(Class<?> clazz) {
-                for (String convertersPackage : eruptProp.getJacksonHttpMessageConvertersPackages()) {
-                    if (clazz.getName().startsWith(convertersPackage)) {
-                        return false;
+                if (null != eruptProp.getJacksonHttpMessageConvertersPackages()) {
+                    for (String convertersPackage : eruptProp.getJacksonHttpMessageConvertersPackages()) {
+                        if (clazz.getName().startsWith(convertersPackage)) {
+                            return false;
+                        }
                     }
                 }
                 return super.supports(clazz);
