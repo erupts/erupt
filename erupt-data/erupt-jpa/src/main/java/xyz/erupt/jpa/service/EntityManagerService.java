@@ -9,6 +9,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.config.EruptProp;
+import xyz.erupt.core.config.EruptPropDb;
 import xyz.erupt.core.service.EruptApplication;
 
 import javax.annotation.Resource;
@@ -40,7 +41,7 @@ public class EntityManagerService implements ApplicationRunner {
         if (null != eruptProp.getDbs()) {
             //多数据源处理
             entityManagerMap = new HashMap<>();
-            for (EruptProp.DB prop : eruptProp.getDbs()) {
+            for (EruptPropDb prop : eruptProp.getDbs()) {
                 LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
                 {
                     JpaProperties jpa = prop.getJpa();

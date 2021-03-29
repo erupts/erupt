@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>magic-api</title>
@@ -21,7 +22,7 @@
         }
     }
 </script>
-<iframe src="${request.contextPath}<#if request.contextPath!=''>/</#if>${web}"
+<iframe src="${request.contextPath}${web}"
         style="border: 0" width="100%" height="100%"></iframe>
 </body>
 </html>
