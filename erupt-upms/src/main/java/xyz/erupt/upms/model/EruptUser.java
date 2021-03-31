@@ -119,16 +119,19 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private String pwdDivide;
 
+    private String password;
+
+    @Transient
     @EruptField(
             edit = @Edit(title = "密码")
     )
-    private String password;
+    private String passwordA;
 
     @Transient
     @EruptField(
             edit = @Edit(title = "确认密码")
     )
-    private String password2;
+    private String passwordB;
 
     @EruptField(
             views = @View(title = "md5加密"),
@@ -193,21 +196,16 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 
 
     @Override
-    public void editBehavior(EruptUser eruptUser) {
-        eruptUser.setPassword(null);
-    }
-
-    @Override
     public void beforeAdd(EruptUser eruptUser) {
-        if (StringUtils.isBlank(eruptUser.getPassword())) {
-            throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, "密码必填",EruptApiModel.PromptWay.MESSAGE);
+        if (StringUtils.isBlank(eruptUser.getPasswordA())) {
+            throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, "密码必填", EruptApiModel.PromptWay.MESSAGE);
         }
         this.checkPostOrg(eruptUser);
-        if (eruptUser.getPassword().equals(eruptUser.getPassword2())) {
+        if (eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
             eruptUser.setIsAdmin(false);
             eruptUser.setCreateTime(new Date());
             if (eruptUser.getIsMd5()) {
-                eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
+                eruptUser.setPassword(MD5Utils.digest(eruptUser.getPasswordA()));
             }
         } else {
             throw new EruptWebApiRuntimeException("两次密码输入不一致");
@@ -222,20 +220,14 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
             throw new EruptWebApiRuntimeException("MD5 不可逆");
         }
         this.checkPostOrg(eruptUser);
-        if (StringUtils.isNotBlank(eruptUser.getPassword())) {
-            if (!eruptUser.getPassword().equals(eruptUser.getPassword2())) {
+        if (StringUtils.isNotBlank(eruptUser.getPasswordA())) {
+            if (!eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
                 throw new EruptWebApiRuntimeException("两次密码输入不一致");
             }
             if (eruptUser.getIsMd5()) {
-                eruptUser.setPassword(MD5Utils.digest(eruptUser.getPassword()));
+                eruptUser.setPassword(MD5Utils.digest(eruptUser.getPasswordA()));
             } else {
-                eruptUser.setPassword(eruptUser.getPassword());
-            }
-        } else {
-            if (eruptUser.getIsMd5() && !eu.getIsMd5()) {
-                eruptUser.setPassword(MD5Utils.digest(eu.getPassword()));
-            } else {
-                eruptUser.setPassword(eu.getPassword());
+                eruptUser.setPassword(eruptUser.getPasswordA());
             }
         }
     }
