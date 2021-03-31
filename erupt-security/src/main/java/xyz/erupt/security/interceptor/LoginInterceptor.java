@@ -123,10 +123,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
-                if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
+                if (!authStr.equals(eruptModel.getEruptName())) {
+                    response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
-                if (null == eruptUserService.getEruptMenuByValue(authStr)) {
+                if (null == eruptUserService.getEruptMenuByValue(eruptModel.getEruptName())) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
