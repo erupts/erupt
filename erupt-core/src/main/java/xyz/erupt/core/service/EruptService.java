@@ -52,8 +52,7 @@ public class EruptService {
                     } else {
                         EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
                         String pk = treeErupt.getErupt().primaryKeyCol();
-                        //TODO 存在sql注入风险
-                        conditionStrings.add(dependTree.field() + "." + pk + " = " + tableQueryVo.getLinkTreeVal());
+                        conditionStrings.add(dependTree.field() + "." + pk + " = '" + tableQueryVo.getLinkTreeVal() + "'");
                     }
                 }
             }

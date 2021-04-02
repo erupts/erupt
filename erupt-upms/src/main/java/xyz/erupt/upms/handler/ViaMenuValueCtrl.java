@@ -13,10 +13,8 @@ import javax.annotation.Resource;
  * date 2020/12/28 22:33
  */
 @Service
-@Comment("通过菜单编码控制是否显示" +
-         "1.6.12级以上版本请使用 ViaMenuValueCtrl 代替")
-@Deprecated
-public class ViaMenuCtrl implements ExprBool.ExprHandler {
+@Comment("通过菜单类型值控制是否显示")
+public class ViaMenuValueCtrl implements ExprBool.ExprHandler {
 
     @Resource
     private EruptUserService eruptUserService;
@@ -25,9 +23,9 @@ public class ViaMenuCtrl implements ExprBool.ExprHandler {
     @Comment("params必填，值为菜单编码")
     public boolean handler(boolean expr, String[] params) {
         if (null == params || params.length == 0) {
-            throw new RuntimeException(ViaMenuCtrl.class.getSimpleName() + " → params[0] not found");
+            throw new RuntimeException(ViaMenuValueCtrl.class.getSimpleName() + " → params[0] not found");
         }
-        EruptMenu eruptMenu = eruptUserService.getEruptMenuByCode(params[0]);
+        EruptMenu eruptMenu = eruptUserService.getEruptMenuByValue(params[0]);
         return null != eruptMenu;
     }
 

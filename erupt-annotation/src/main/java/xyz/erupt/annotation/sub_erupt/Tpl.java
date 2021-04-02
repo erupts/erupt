@@ -35,7 +35,9 @@ public @interface Tpl {
         @Comment("Thymeleaf")
         Thymeleaf,
         @Comment("Velocity")
-        Velocity
+        Velocity,
+        @Comment("Beetl")
+        Beetl
     }
 
     interface TplHandler {
