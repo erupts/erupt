@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_erupt;
 
+import xyz.erupt.annotation.config.AutoFill;
 import xyz.erupt.annotation.config.Comment;
 
 /**
@@ -8,7 +9,9 @@ import xyz.erupt.annotation.config.Comment;
  */
 public @interface Drill {
 
-    String code();
+    @Deprecated
+    @AutoFill("T(org.apache.commons.lang3.RandomStringUtils).randomAlphanumeric(4)")
+    String code() default "";
 
     String title();
 

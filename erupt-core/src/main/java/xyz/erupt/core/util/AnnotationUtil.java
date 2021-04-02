@@ -7,6 +7,7 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import xyz.erupt.annotation.config.AutoFill;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
@@ -19,9 +20,9 @@ import xyz.erupt.annotation.sub_field.EditTypeSearch;
 
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * @author YuePeng
@@ -69,6 +70,16 @@ public class AnnotationUtil {
                 Object r = parser.parseExpression(match.value()).getValue(evaluationContext);
                 if (null == r || !(Boolean) r) {
                     continue;
+                }
+            }
+            AutoFill autoFill = method.getAnnotation(AutoFill.class);
+            if (null != autoFill) {
+                EvaluationContext evaluationContext = new StandardEvaluationContext();
+                if (AnnotationConst.EMPTY_STR.equals(result)) {
+                    evaluationContext.setVariable(ITEM_VAR, annotation);
+                    evaluationContext.setVariable(VALUE_VAR, result);
+                    result = parser.parseExpression(autoFill.value()).getValue(evaluationContext);
+                    AnnotationUtil.getAnnotationMap(annotation).put(methodName, result);
                 }
             }
             if (returnType.endsWith(EMPTY_ARRAY)) {
@@ -157,6 +168,14 @@ public class AnnotationUtil {
 //                .replace(")", "}");
 //        return new JSONObject(convertStr).toString();
 //    }
+
+    @SneakyThrows
+    public static Map<String, Object> getAnnotationMap(Annotation annotation) {
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
+        Field field = invocationHandler.getClass().getDeclaredField("memberValues");
+        field.setAccessible(true);
+        return (Map) field.get(invocationHandler);
+    }
 
     public static String switchFilterConditionToStr(Filter filter) {
         String condition = filter.value();

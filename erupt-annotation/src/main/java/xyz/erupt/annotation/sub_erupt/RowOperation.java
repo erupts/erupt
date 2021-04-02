@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_erupt;
 
+import xyz.erupt.annotation.config.AutoFill;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.OperationHandler;
@@ -14,8 +15,9 @@ import java.beans.Transient;
  */
 public @interface RowOperation {
 
-    @Comment("唯一标识编码")
-    String code();
+    @Deprecated
+    @AutoFill("T(org.apache.commons.lang3.RandomStringUtils).randomAlphanumeric(4)")
+    String code() default "";
 
     String title();
 
