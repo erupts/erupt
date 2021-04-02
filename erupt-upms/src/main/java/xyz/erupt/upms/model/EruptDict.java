@@ -27,7 +27,6 @@ import javax.persistence.UniqueConstraint;
         name = "数据字典",
         power = @Power(export = true),
         drills = @Drill(
-                code = "item",
                 title = "字典项",
                 link = @Link(
                         linkErupt = EruptDictItem.class, joinColumn = "eruptDict.id"

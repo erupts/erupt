@@ -42,6 +42,8 @@ public class AnnotationUtil {
 
     private static final String ITEM_VAR = "item";
 
+    private static final String INDEX_VAR = "index";
+
     @SneakyThrows
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
         return annotationToJson(annotation);
@@ -78,6 +80,7 @@ public class AnnotationUtil {
                 if (AnnotationConst.EMPTY_STR.equals(result)) {
                     evaluationContext.setVariable(ITEM_VAR, annotation);
                     evaluationContext.setVariable(VALUE_VAR, result);
+//                    INDEX_VAR
                     result = parser.parseExpression(autoFill.value()).getValue(evaluationContext);
                     AnnotationUtil.getAnnotationMap(annotation).put(methodName, result);
                 }
