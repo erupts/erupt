@@ -28,6 +28,13 @@ public class CaffeineEruptCache<V> implements IEruptCache<V> {
         this.init(timeout, TimeUnit.MILLISECONDS);
     }
 
+    public CaffeineEruptCache() {
+    }
+
+    public CaffeineEruptCache(long timeout) {
+        this.init(timeout);
+    }
+
     @Override
     public V get(String key, Function<String, V> function) {
         return cache.get(key, function);
