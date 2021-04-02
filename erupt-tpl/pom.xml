@@ -37,6 +37,12 @@
             <version>1.7</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl</artifactId>
+            <version>3.3.2.RELEASE</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>

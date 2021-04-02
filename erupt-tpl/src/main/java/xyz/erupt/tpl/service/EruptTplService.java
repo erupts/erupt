@@ -48,7 +48,8 @@ public class EruptTplService implements ApplicationRunner {
             NativeEngine.class,
             FreemarkerEngine.class,
             ThymeleafEngine.class,
-            VelocityTplEngine.class
+            VelocityTplEngine.class,
+            BeetlEngine.class
     };
 
     static {
@@ -66,6 +67,9 @@ public class EruptTplService implements ApplicationRunner {
 
     @Resource
     private HttpServletRequest request;
+
+    @Resource
+    private HttpServletResponse response;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -110,6 +114,8 @@ public class EruptTplService implements ApplicationRunner {
             map = new HashMap<>();
         }
         map.put(EngineConst.INJECT_REQUEST, request);
+        map.put(EngineConst.INJECT_RESPONSE, response);
+        map.put(EngineConst.INJECT_BASE, request.getContextPath());
         EngineTemplate<Object> engineAbstractTemplate = tplEngines.get(engine);
         Assert.notNull(engineAbstractTemplate, engine.name() + " jar not found");
         engineAbstractTemplate.render(engineAbstractTemplate.getEngine(), path, map, writer);
