@@ -6,7 +6,6 @@ import xyz.erupt.security.config.EruptSecurityProp;
 
 import javax.annotation.Resource;
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
@@ -15,7 +14,6 @@ import java.io.IOException;
  * date 2020-09-08
  */
 @Component
-@WebFilter(urlPatterns = EruptRestPath.ERUPT_API)
 public class HttpServletRequestFilter implements Filter {
 
     @Resource
