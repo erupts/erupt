@@ -15,8 +15,9 @@ import java.beans.Transient;
  */
 public @interface RowOperation {
 
+    // T(org.apache.commons.lang3.RandomStringUtils).randomAlphanumeric(4)
     @Deprecated
-    @AutoFill("T(org.apache.commons.lang3.RandomStringUtils).randomAlphanumeric(4)")
+    @AutoFill("T(Integer).toString(#item.hashCode())")
     String code() default "";
 
     String title();
