@@ -19,10 +19,7 @@ import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -83,78 +80,66 @@ public class EruptFieldModel {
      * erupt自动配置
      */
     private void eruptAutoConfig() {
-        try {
-            // view auto
-            for (View view : this.eruptField.views()) {
-                if (ViewType.AUTO == view.type()) {
-                    Map<String, Object> viewValues = this.getAnnotationMap(view);
-                    if (!AnnotationConst.EMPTY_STR.equals(this.eruptField.edit().title())) {
-                        switch (this.eruptField.edit().type()) {
-                            case ATTACHMENT:
-                                if (this.eruptField.edit().attachmentType().type() == AttachmentType.Type.IMAGE) {
-                                    viewValues.put(TYPE, ViewType.IMAGE);
-                                } else {
-                                    viewValues.put(TYPE, ViewType.ATTACHMENT);
-                                }
-                                continue;
-                            case HTML_EDITOR:
-                                viewValues.put(TYPE, ViewType.HTML);
-                                continue;
-                            case CODE_EDITOR:
-                                viewValues.put(TYPE, ViewType.CODE);
-                                continue;
-                            case MAP:
-                                viewValues.put(TYPE, ViewType.MAP);
-                                continue;
-                            case TAB_TABLE_ADD:
-                            case TAB_TREE:
-                            case TAB_TABLE_REFER:
-                            case CHECKBOX:
-                                viewValues.put(TYPE, ViewType.TAB_VIEW);
-                                continue;
-                        }
-                    }
-                    if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName.toLowerCase())) {
-                        viewValues.put(TYPE, ViewType.BOOLEAN);
-                    } else if (Date.class.getSimpleName().equals(this.fieldReturnName)) {
-                        viewValues.put(TYPE, ViewType.DATE);
-                    } else if (this.eruptField.edit().type() == EditType.DATE) {
-                        viewValues.put(TYPE, ViewType.DATE);
-                    } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
-                        viewValues.put(TYPE, ViewType.NUMBER);
-                    } else {
-                        viewValues.put(TYPE, ViewType.TEXT);
+        for (View view : this.eruptField.views()) {
+            if (ViewType.AUTO == view.type()) {
+                Map<String, Object> viewValues = AnnotationUtil.getAnnotationMap(view);
+                if (!AnnotationConst.EMPTY_STR.equals(this.eruptField.edit().title())) {
+                    switch (this.eruptField.edit().type()) {
+                        case ATTACHMENT:
+                            if (this.eruptField.edit().attachmentType().type() == AttachmentType.Type.IMAGE) {
+                                viewValues.put(TYPE, ViewType.IMAGE);
+                            } else {
+                                viewValues.put(TYPE, ViewType.ATTACHMENT);
+                            }
+                            continue;
+                        case HTML_EDITOR:
+                            viewValues.put(TYPE, ViewType.HTML);
+                            continue;
+                        case CODE_EDITOR:
+                            viewValues.put(TYPE, ViewType.CODE);
+                            continue;
+                        case MAP:
+                            viewValues.put(TYPE, ViewType.MAP);
+                            continue;
+                        case TAB_TABLE_ADD:
+                        case TAB_TREE:
+                        case TAB_TABLE_REFER:
+                        case CHECKBOX:
+                            viewValues.put(TYPE, ViewType.TAB_VIEW);
+                            continue;
                     }
                 }
-            }
-            // edit auto
-            if (StringUtils.isNotBlank(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
-                Map<String, Object> editValues = this.getAnnotationMap(this.eruptField.edit());
-                //根据返回类型推断
-                if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName)) {
-                    editValues.put(TYPE, EditType.BOOLEAN);
+                if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName.toLowerCase())) {
+                    viewValues.put(TYPE, ViewType.BOOLEAN);
                 } else if (Date.class.getSimpleName().equals(this.fieldReturnName)) {
-                    editValues.put(TYPE, EditType.DATE);
+                    viewValues.put(TYPE, ViewType.DATE);
+                } else if (this.eruptField.edit().type() == EditType.DATE) {
+                    viewValues.put(TYPE, ViewType.DATE);
                 } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
-                    editValues.put(TYPE, EditType.NUMBER);
+                    viewValues.put(TYPE, ViewType.NUMBER);
                 } else {
-                    editValues.put(TYPE, EditType.INPUT);
-                }
-                //根据属性名推断
-                if (ArrayUtils.contains(AnnotationUtil.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), this.fieldName.toLowerCase())) {
-                    editValues.put(TYPE, EditType.TEXTAREA);
+                    viewValues.put(TYPE, ViewType.TEXT);
                 }
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
         }
-    }
-
-    private Map<String, Object> getAnnotationMap(Annotation annotation) throws NoSuchFieldException, IllegalAccessException {
-        InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
-        Field field = invocationHandler.getClass().getDeclaredField("memberValues");
-        field.setAccessible(true);
-        return (Map) field.get(invocationHandler);
+        // edit auto
+        if (StringUtils.isNotBlank(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
+            Map<String, Object> editValues = AnnotationUtil.getAnnotationMap(this.eruptField.edit());
+            //根据返回类型推断
+            if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName)) {
+                editValues.put(TYPE, EditType.BOOLEAN);
+            } else if (Date.class.getSimpleName().equals(this.fieldReturnName)) {
+                editValues.put(TYPE, EditType.DATE);
+            } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
+                editValues.put(TYPE, EditType.NUMBER);
+            } else {
+                editValues.put(TYPE, EditType.INPUT);
+            }
+            //根据属性名推断
+            if (ArrayUtils.contains(AnnotationUtil.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), this.fieldName.toLowerCase())) {
+                editValues.put(TYPE, EditType.TEXTAREA);
+            }
+        }
     }
 
 }
