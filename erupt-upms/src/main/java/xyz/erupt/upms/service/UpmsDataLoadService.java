@@ -36,15 +36,17 @@ public class UpmsDataLoadService implements CommandLineRunner {
         new ProjectUtil().projectStartLoaded("upms", first -> {
             if (first) {
                 //用户
-                EruptUser eruptUser = new EruptUser();
-                eruptUser.setIsAdmin(true);
-                eruptUser.setIsMd5(true);
-                eruptUser.setStatus(true);
-                eruptUser.setCreateTime(new Date());
-                eruptUser.setAccount(DEFAULT_ACCOUNT);
-                eruptUser.setPassword(MD5Utils.digest(DEFAULT_ACCOUNT));
-                eruptUser.setName(DEFAULT_ACCOUNT);
-                eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
+                if (eruptDao.queryEntityList(EruptUser.class, "isAdmin = true").size() <= 0) {
+                    EruptUser eruptUser = new EruptUser();
+                    eruptUser.setIsAdmin(true);
+                    eruptUser.setIsMd5(true);
+                    eruptUser.setStatus(true);
+                    eruptUser.setCreateTime(new Date());
+                    eruptUser.setAccount(DEFAULT_ACCOUNT);
+                    eruptUser.setPassword(MD5Utils.digest(DEFAULT_ACCOUNT));
+                    eruptUser.setName(DEFAULT_ACCOUNT);
+                    eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
+                }
                 //菜单
                 String code = "code";
                 String manager = "$manager";
