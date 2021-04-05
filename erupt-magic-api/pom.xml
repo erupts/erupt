@@ -16,7 +16,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <properties>
-        <magic-api.version>1.0.0</magic-api.version>
+        <magic-api.version>1.0.1</magic-api.version>
     </properties>
     <dependencies>
         <dependency>
