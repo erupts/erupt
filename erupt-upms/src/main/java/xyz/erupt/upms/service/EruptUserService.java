@@ -272,8 +272,7 @@ public class EruptUserService {
     public EruptUser getCurrentEruptUser() {
         entityManager.clear();
         Long uid = this.getCurrentUid();
-        return null == uid ? null : eruptUserIEruptCache.get(uid + "",
-                (key) -> entityManager.find(EruptUser.class, Long.parseLong(key)));
+        return null == uid ? null : eruptUserIEruptCache.get(uid + "", (key) -> entityManager.find(EruptUser.class, Long.parseLong(key)));
     }
 
 }
