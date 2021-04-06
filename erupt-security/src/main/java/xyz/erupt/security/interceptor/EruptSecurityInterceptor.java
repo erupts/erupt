@@ -4,15 +4,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.config.EruptSecurityProp;
+import xyz.erupt.security.tl.RequestBodyTL;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptUser;
@@ -27,14 +29,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author YuePeng
  * date 2019-12-05.
  */
 @Service
-public class LoginInterceptor extends HandlerInterceptorAdapter {
+public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapter {
 
     @Resource
     private EruptUserService eruptUserService;
@@ -45,18 +49,19 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Resource
     private EruptSecurityProp eruptSecurityProp;
 
-    static final String REQ_BODY = "@req_body@";
-
     private static final String ERUPT_PARENT_HEADER_KEY = "eruptParent";
 
     private static final String ERUPT_PARENT_PARAM_KEY = "_eruptParent";
-    private static final String REQ_DATE = "@req_date@";
+
     @Resource
     private EruptSessionService sessionService;
 
+    public EruptSecurityInterceptor(WebRequestInterceptor requestInterceptor) {
+        super(requestInterceptor);
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        request.setAttribute(REQ_DATE, System.currentTimeMillis());
         EruptRouter eruptRouter = null;
         if (handler instanceof HandlerMethod) {
             eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
@@ -164,21 +169,24 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                     } else {
                         operate.setApiName(eruptOperate.desc());
                     }
-                    Object param = request.getAttribute(REQ_BODY);
-                    if (null != param) {
-                        operate.setReqParam(param.toString());
-                    }
+                    Object param = RequestBodyTL.get().getBody();
                     operate.setIp(IpUtil.getIpAddr(request));
                     operate.setRegion(IpUtil.getCityInfo(operate.getIp()));
                     operate.setStatus(true);
                     operate.setReqMethod(request.getMethod());
                     operate.setReqAddr(request.getRequestURL().toString());
-                    operate.setEruptUser(new EruptUser() {{
-                        this.setId(eruptUserService.getCurrentUid());
-                    }});
-                    Date date = new Date();
-                    operate.setCreateTime(date);
-                    operate.setTotalTime(date.getTime() - (Long) request.getAttribute(REQ_DATE));
+                    if (null != eruptUserService.getCurrentUid()) {
+                        operate.setEruptUser(new EruptUser() {{
+                            this.setId(eruptUserService.getCurrentUid());
+                        }});
+                    }
+                    if (null != param) {
+                        operate.setReqParam(param.toString());
+                    } else {
+                        operate.setReqParam(findRequestParamVal(request));
+                    }
+                    operate.setCreateTime(new Date());
+                    operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
                     if (null != ex) {
                         operate.setErrorInfo(ExceptionUtils.getStackTrace(ex));
                         operate.setStatus(false);
@@ -189,9 +197,19 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
     }
 
-
     @Override
-    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) {
         super.afterConcurrentHandlingStarted(request, response, handler);
+    }
+
+    public String findRequestParamVal(HttpServletRequest request) {
+        if (request.getParameterMap().size() > 0) {
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+                sb.append(entry.getKey()).append("=").append(Arrays.toString(entry.getValue())).append("\n");
+            }
+            return sb.toString();
+        }
+        return null;
     }
 }
