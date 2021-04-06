@@ -31,7 +31,7 @@ public enum GeneratorType {
     @Ref REFERENCE_TABLE(EditType.REFERENCE_TABLE, "表格引用", GeneratorType.ManyToOne + GeneratorType.REF, "referenceTableType = @ReferenceTableType(id = \"id\", label = \"name\")"),
     @Ref CHECKBOX(EditType.CHECKBOX, "多选", GeneratorType.ManyToMany, "checkboxType = @CheckboxType(id = \"id\", label = \"name\")"),
     @Ref TAB_TREE(EditType.TAB_TREE, "多选树", GeneratorType.ManyToMany, null),
-    @Ref TAB_TABLE_REFER(EditType.TAB_TABLE_REFER, "一对多引用", GeneratorType.OneToMany, null),
+    @Ref TAB_TABLE_REFER(EditType.TAB_TABLE_REFER, "一对多引用", GeneratorType.ManyToMany, null),
     @Ref TAB_TABLE_ADD(EditType.TAB_TABLE_ADD, "一对多新增", GeneratorType.OneToMany, null),
     MAP(EditType.MAP, "地图", GeneratorType.STRING, null),
     TPL(EditType.TPL, "自定义模板", GeneratorType.Transient + GeneratorType.STRING, "tplType = @Tpl(path = \"/xxx.ftl\")"),

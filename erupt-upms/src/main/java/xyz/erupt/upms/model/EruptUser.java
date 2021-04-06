@@ -20,8 +20,10 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.MD5Utils;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -186,6 +188,10 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     @Transient
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Transient
+    @Resource
+    private EruptUserService eruptUserService;
 
     public EruptUser() {
     }
