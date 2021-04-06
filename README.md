@@ -223,16 +223,15 @@ erupt
 ├── erupt-generator -- 代码生成器，通过配置，生成 erupt 代码段
 └── erupt-monitor -- 基于erupt实现的服务器监控模块
 
+erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
+
+erupt-web -- Erupt 前端源码 https://github.com/erupts/erupt-web
 
 erupt-pro
 ├── erupt-dataflow -- 基于erupt实现的数据流模块（构思中）
 ├── erupt-workflow -- 基于erupt实现的工作流模块（构思中）
 ├── erupt-tenant -- 基于erupt实现的SaaS云多租户模块（开发中，面向企业用户）
-└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等
-
-erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
-
-erupt-web-angular -- Erupt 前端源码，github star 达到550开源，如有自定义页面的需求，可使用 erupt-tpl 模块，需要此模块源码请联系作者
+└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（开发中）
 
 ```
 

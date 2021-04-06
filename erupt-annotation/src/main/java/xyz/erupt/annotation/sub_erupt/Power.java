@@ -21,10 +21,10 @@ public @interface Power {
 
     boolean viewDetails() default true;
 
-    @Comment("导入")
+    @Comment("导出")
     boolean export() default false;
 
-    @Comment("导出")
+    @Comment("导入")
     boolean importable() default false;
 
     @Transient
