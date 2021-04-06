@@ -24,7 +24,10 @@ import xyz.erupt.jpa.dao.EruptJpaUtils;
 import xyz.erupt.jpa.support.JpaSupport;
 
 import javax.annotation.Resource;
-import javax.persistence.*;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -54,12 +57,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel.getClazz());
-        Object obj = entityManager.find(eruptModel.getClazz(), id);
-        if (entityManager.isOpen()) {
-            entityManager.close();
-        }
-        return obj;
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> {
+            return em.find(eruptModel.getClazz(), id);
+        });
     }
 
     @Override
@@ -206,12 +206,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         if (StringUtils.isNotBlank(query.getOrderBy())) {
             hql.append(" order by ").append(query.getOrderBy());
         }
-        EntityManager entityManager = entityManagerService.getEntityManager(eruptModel.getClazz());
-        List list = entityManager.createQuery(hql.toString()).getResultList();
-        if (entityManager.isOpen()) {
-            entityManager.close();
-        }
-        return list;
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> {
+            return em.createQuery(hql.toString()).getResultList();
+        });
     }
 
 }
