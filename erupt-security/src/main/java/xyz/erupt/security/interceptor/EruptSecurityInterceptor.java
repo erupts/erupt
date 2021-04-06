@@ -169,7 +169,6 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                     } else {
                         operate.setApiName(eruptOperate.desc());
                     }
-                    Object param = RequestBodyTL.get().getBody();
                     operate.setIp(IpUtil.getIpAddr(request));
                     operate.setRegion(IpUtil.getCityInfo(operate.getIp()));
                     operate.setStatus(true);
@@ -180,6 +179,7 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                             this.setId(eruptUserService.getCurrentUid());
                         }});
                     }
+                    Object param = RequestBodyTL.get().getBody();
                     if (null != param) {
                         operate.setReqParam(param.toString());
                     } else {
