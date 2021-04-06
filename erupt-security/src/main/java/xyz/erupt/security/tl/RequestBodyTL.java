@@ -17,4 +17,8 @@ public class RequestBodyTL {
     public static void set(RequestBody requestBody) {
         threadLocal.set(requestBody);
     }
+
+    public static void remove() {
+        threadLocal.remove();
+    }
 }
