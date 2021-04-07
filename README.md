@@ -312,8 +312,10 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 
 [前往捐赠](https://www.yuque.com/erupts/erupt/mwf15h)
 
-## 🧩 公众号 
-欢迎关注 Erupt 官方公众号（EruptGuide），关注后可获取最新群二维码
+## 🧩 加入讨论
+QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
+
+由于微信群二维码有效时间仅7日，关注 Erupt 官方公众号（EruptGuide），可获取最新群二维码
 
 ![qr.jpg](./readme/qr.jpg)
 
