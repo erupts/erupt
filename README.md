@@ -40,12 +40,6 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 提供企业级中后台管理系统的全栈解决方案，大幅压缩研发周期，专注核心业务。
 > 完美取代 **代码生成器**，开发后台管理系统更优解！
 
-| |  Github  | 码云 |
-|  ---- |  ----  | ----  | 
-| 后端源码 | https://github.com/erupts/erupt | https://gitee.com/erupt/erupt |
-| 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
-| 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |
-
 ## 🌈 特性 | Features
 + **自动建表**：表结构自动生成，无需手动建表
 
@@ -281,10 +275,12 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
     </tr>
 </table>
 
-## 🍁 代码样例 | Example Code
-gitee: &nbsp; https://gitee.com/erupt/erupt-example
-
-github: https://github.com/erupts/erupt-example
+## 🍁 代码仓库 | Git Repo
+| |  Github  | 码云 |
+|  ---- |  ----  | ----  | 
+| 后端源码 | https://github.com/erupts/erupt | https://gitee.com/erupt/erupt |
+| 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
+| 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |
 
 ## 🔭 开源推荐 | Recommend
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
@@ -295,7 +291,7 @@ github: https://github.com/erupts/erupt-example
 [前往捐赠](https://www.yuque.com/erupts/erupt/mwf15h)
 
 ## 🧩 公众号 
-欢迎关注 Erupt 官方公众号，关注后可获取最新群二维码
+欢迎关注 Erupt 官方公众号（EruptGuide），关注后可获取最新群二维码
 
 ![qr.jpg](./readme/qr.jpg)
 
