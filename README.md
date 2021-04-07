@@ -177,9 +177,11 @@ public class Simple extends BaseModel {
         <td><img src="readme/component-edit.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/m1.png"/></td>
-        <td><img src="readme/m2.png"/></td>
-        <td><img src="readme/m3.png"/></td>
+        <td colspan="2">
+            <img src="readme/m1.png"/>
+            <img src="readme/m2.png"/>
+            <img src="readme/m3.png"/>
+        </td>
     </tr>
 </table>
 
