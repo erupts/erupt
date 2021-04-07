@@ -4,8 +4,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-monitor</artifactId>
-    <name>erupt-monitor</name>
-
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>

@@ -15,9 +15,11 @@
         <version>1.6.13</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <properties>
         <magic-api.version>1.0.1</magic-api.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
