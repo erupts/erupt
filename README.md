@@ -157,35 +157,32 @@ public class Simple extends BaseModel {
 <a href="https://www.erupt.xyz/demo" target="_blank"><img src="./readme/seer.png" width="100%"/></a>
 <table>
     <tr>
-        <td><img src="readme/goods.png"/></td>
-        <td><img src="readme/chart.png"/></td>
+        <td colspan="2"><img src="readme/goods.png"/></td>
+        <td colspan="2"><img src="readme/chart.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/code.png"/></td>
-        <td><img src="readme/job.png"/></td>
+        <td colspan="2"><img src="readme/code.png"/></td>
+        <td colspan="2"><img src="readme/job.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/complex.png"/></td>
-        <td><img src="readme/complex-edit.png"/></td>
+        <td colspan="2"><img src="readme/complex.png"/></td>
+        <td colspan="2"><img src="readme/complex-edit.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/tpl.png"/></td>
-        <td><img src="readme/role.png"/></td>
+        <td colspan="2"><img src="readme/tpl.png"/></td>
+        <td colspan="2"><img src="readme/role.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/component.png"/></td>
-        <td><img src="readme/component-edit.png"/></td>
+        <td colspan="2"><img src="readme/component.png"/></td>
+        <td colspan="2"><img src="readme/component-edit.png"/></td>
     </tr>
     <tr>
-        <td colspan="2" align="center">移动端展示效果</td>
+        <td colspan="4" align="center">移动端展示效果</td>
     </tr>
     <tr>
         <td><img src="readme/m1.png"/></td>
         <td><img src="readme/m2.png"/></td>
-    </tr>
-    <tr>
         <td><img src="readme/m3.png"/></td>
-        <td><img src="readme/m4.png"/></td>
     </tr>
 </table>
 
