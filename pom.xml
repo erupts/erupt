@@ -142,7 +142,7 @@
             <!-- java8版本导致javadoc打包编译失败时候，添加-->
             <properties>
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
-                <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
             </properties>
         </profile>
         <profile>

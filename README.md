@@ -44,6 +44,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 |  ---- |  ----  | ----  | 
 | 后端源码 | https://github.com/erupts/erupt | https://gitee.com/erupt/erupt |
 | 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
+| 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |
 
 ## 🌈 特性 | Features
 + **自动建表**：表结构自动生成，无需手动建表
@@ -175,6 +176,11 @@ public class Simple extends BaseModel {
         <td><img src="readme/component.png"/></td>
         <td><img src="readme/component-edit.png"/></td>
     </tr>
+    <tr>
+        <td><img src="readme/m1.png"/></td>
+        <td><img src="readme/m2.png"/></td>
+        <td><img src="readme/m3.png"/></td>
+    </tr>
 </table>
 
 ## 🔗 下载使用 | Download
@@ -213,25 +219,25 @@ erupt
      └── erupt-mongodb -- mongodb数据库erupt实现
 ├── erupt-job -- 定时任务功能，支持动态定时任务，邮件发送，任务日志等功能
 ├── erupt-upms -- 用户权限管理
-├── erupt-security -- 接口数据安全模块
-├── erupt-web -- 前端页面
+├── erupt-security -- 接口数据安全
+├── erupt-web -- 编译后的前端页面
 ├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义弹出层，模板引擎支持：FreeMarker / Thymeleaf / 原生H5 / Velocity 等
 ├── erupt-tpl-ui -- 在 erupt-tpl 中可使用的 UI 库
     ├── ant-design
     ├── element-ui
     └── amis 
 ├── erupt-generator -- 代码生成器，通过配置，生成 erupt 代码段
-└── erupt-monitor -- 基于erupt实现的服务器监控模块
+└── erupt-monitor -- 基于erupt实现的服务监控
+
+erupt-pro
+├── erupt-dataflow -- 基于erupt实现的数据流（构思中）
+├── erupt-workflow -- 基于erupt实现的工作流（构思中）
+├── erupt-tenant -- 基于erupt实现的SaaS云多租户（开发中，面向企业用户）
+└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（面向企业用户）
 
 erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
 
 erupt-web -- Erupt 前端源码 https://github.com/erupts/erupt-web
-
-erupt-pro
-├── erupt-dataflow -- 基于erupt实现的数据流模块（构思中）
-├── erupt-workflow -- 基于erupt实现的工作流模块（构思中）
-├── erupt-tenant -- 基于erupt实现的SaaS云多租户模块（开发中，面向企业用户）
-└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（开发中）
 
 ```
 
