@@ -73,6 +73,13 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 + **无需二次开发**：仅需引用 jar 包即可 ！
 
+## 💧 代码仓库 | Git Repository
+| |  Github  | 码云 |
+|  ---- |  ----  | ----  | 
+| 后端源码 | https://github.com/erupts/erupt | https://gitee.com/erupt/erupt |
+| 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
+| 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |
+
 ## 🧐 为什么要做 Erupt ?
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？
 
@@ -274,13 +281,6 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
         <td align="center">Chromium 57</td>
     </tr>
 </table>
-
-## 🍁 代码仓库 | Git Repo
-| |  Github  | 码云 |
-|  ---- |  ----  | ----  | 
-| 后端源码 | https://github.com/erupts/erupt | https://gitee.com/erupt/erupt |
-| 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
-| 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |
 
 ## 🔭 开源推荐 | Recommend
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
