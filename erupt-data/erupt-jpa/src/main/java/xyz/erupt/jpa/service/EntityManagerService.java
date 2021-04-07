@@ -19,6 +19,7 @@ import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author YuePeng
@@ -64,13 +65,19 @@ public class EntityManagerService implements ApplicationRunner {
     }
 
 
-    //如果使用了@EruptDataSource多数据源，调用此方法必须手动关闭, close()
-    public EntityManager getEntityManager(Class<?> eruptClass) {
+    public <R> R getEntityManager(Class<?> eruptClass, Function<EntityManager, R> function) {
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) {
-            return entityManager;
+            return function.apply(entityManager);
         } else {
-            return entityManagerMap.get(eruptDataSource.value()).createEntityManager();
+            try {
+                EntityManager entityManager = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
+                return function.apply(entityManager);
+            } finally {
+                if (entityManager.isOpen()) {
+                    entityManager.close();
+                }
+            }
         }
     }
 
@@ -86,6 +93,7 @@ public class EntityManagerService implements ApplicationRunner {
                 consumer.accept(em);
                 em.getTransaction().commit();
             } catch (Exception e) {
+                e.printStackTrace();
                 em.getTransaction().rollback();
             } finally {
                 if (em.isOpen()) {
@@ -95,7 +103,7 @@ public class EntityManagerService implements ApplicationRunner {
         }
     }
 
-    public EntityManagerFactory findEntityManagerFactory(String name) {
-        return entityManagerMap.get(name);
+    public EntityManager findEntityManager(String name) {
+        return entityManagerMap.get(name).createEntityManager();
     }
 }

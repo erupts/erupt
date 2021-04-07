@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.6.12</version>
+    <version>1.6.13</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -142,7 +142,7 @@
             <!-- java8版本导致javadoc打包编译失败时候，添加-->
             <properties>
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
-                <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
             </properties>
         </profile>
         <profile>
@@ -208,11 +208,6 @@
             </build>
 
             <distributionManagement>
-                <!--                <repository>-->
-                <!--                    <id>wings-times</id>-->
-                <!--                    <name>wings-times-releases</name>-->
-                <!--                    <url>http://192.168.1.189:8081/repository/maven-releases/</url>-->
-                <!--                </repository>-->
                 <snapshotRepository>
                     <id>erupt</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>

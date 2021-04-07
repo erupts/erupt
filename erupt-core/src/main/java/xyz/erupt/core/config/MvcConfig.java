@@ -2,19 +2,20 @@ package xyz.erupt.core.config;
 
 
 import com.google.gson.*;
-import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.util.DateUtil;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -22,13 +23,14 @@ import java.util.Collection;
  * date 10/31/18.
  */
 @Configuration
-public class MvcConfig {
+@Component
+public class MvcConfig implements WebMvcConfigurer {
 
     @Resource
     private EruptProp eruptProp;
 
-    @Bean
-    public HttpMessageConverters customConverters() {
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         Gson gson = new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
                 .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context)
                         -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME))))
@@ -40,8 +42,7 @@ public class MvcConfig {
                         -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
                 .setLongSerializationPolicy(LongSerializationPolicy.STRING).setExclusionStrategies(new GsonExclusionStrategies())
                 .serializeNulls().create();
-        Collection<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-        messageConverters.add(new GsonHttpMessageConverter(gson) {
+        converters.add(0, new GsonHttpMessageConverter(gson) {
             @Override
             protected boolean supports(Class<?> clazz) {
                 if (null != eruptProp.getJacksonHttpMessageConvertersPackages()) {
@@ -54,7 +55,15 @@ public class MvcConfig {
                 return super.supports(clazz);
             }
         });
-        return new HttpMessageConverters(true, messageConverters);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String uploadPath = eruptProp.getUploadPath();
+        if (!eruptProp.getUploadPath().endsWith("/")) {
+            uploadPath += "/";
+        }
+        registry.addResourceHandler(EruptRestPath.ERUPT_ATTACHMENT + "/**").addResourceLocations("file:" + uploadPath);
     }
 
 }
