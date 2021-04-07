@@ -8,8 +8,6 @@
     <artifactId>erupt-annotation</artifactId>
     <description>Core annotation declaration</description>
 
-    <packaging>jar</packaging>
-
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>

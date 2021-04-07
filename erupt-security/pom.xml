@@ -5,7 +5,6 @@
 
     <artifactId>erupt-security</artifactId>
     <description>Interface data security</description>
-    <packaging>jar</packaging>
 
     <parent>
         <groupId>xyz.erupt</groupId>
