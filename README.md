@@ -74,7 +74,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 + **无需二次开发**：仅需引用 jar 包即可 ！
 
-## 💧 代码仓库 | Git Repository
+## 🏅 代码仓库 | Git Repository
 | |  Github  | 码云 |
 |  ---- |  ----  | ----  | 
 | 后端源码 | https://github.com/erupts/erupt | https://gitee.com/erupt/erupt |
@@ -87,6 +87,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
 
 开发后台管理系统大部分情况下只想做个普通的增删改查界面，用于数据管理，类似下面这种：
+
 PS: erupt支持定义复杂的页面自定义，详见erupt-tpl模块
 
 ![result](readme/view.png)
