@@ -5,7 +5,6 @@
 
     <artifactId>erupt-mongodb</artifactId>
     <description>EruptProcess mongodb impl</description>
-    <packaging>jar</packaging>
 
     <parent>
         <groupId>xyz.erupt</groupId>

@@ -13,10 +13,6 @@
     <name>erupt-jpa</name>
     <description>EruptProcess database impl</description>
 
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>${erupt.groupId}</groupId>
