@@ -23,6 +23,7 @@
     <a href="https://gitee.com/erupt/erupt">码云仓库</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank"><b>🦅 官方网站</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz/#!/module" target="_blank">框架生态</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts" target="_blank"><b>📕 使用文档</b></a>
 </p>
 
@@ -39,11 +40,6 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 提供企业级中后台管理系统的全栈解决方案，大幅压缩研发周期，专注核心业务。
 > 完美取代 **代码生成器**，开发后台管理系统更优解！
-
-| |  Github  | 码云 |
-|  ---- |  ----  | ----  | 
-| 后端源码 | https://github.com/erupts/erupt | https://gitee.com/erupt/erupt |
-| 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
 
 ## 🌈 特性 | Features
 + **自动建表**：表结构自动生成，无需手动建表
@@ -78,12 +74,21 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 + **无需二次开发**：仅需引用 jar 包即可 ！
 
+## 🏅 代码仓库 | Git Repository
+| |  Github  | 码云 |
+|  ---- |  ----  | ----  | 
+| 后端源码 | https://github.com/erupts/erupt | https://gitee.com/erupt/erupt |
+| 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
+| 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |
+
 ## 🧐 为什么要做 Erupt ?
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？
 
 代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
 
 开发后台管理系统大部分情况下只想做个普通的增删改查界面，用于数据管理，类似下面这种：
+
+PS: erupt支持定义复杂的页面自定义，详见erupt-tpl模块
 
 ![result](readme/view.png)
 ![result](readme/edit.png)
@@ -111,15 +116,35 @@ public class Simple extends BaseModel {
 
     @EruptField(
             views = @View(title = "布尔"),
-            edit = @Edit(title = "布尔")
+            edit = @Edit(title = "布尔", search = @Search)
     )
     private Boolean bool;
+
 
     @EruptField(
             views = @View(title = "时间"),
             edit = @Edit(title = "时间", search = @Search(vague = true))
     )
     private Date date;
+
+    @EruptField(
+            views = @View(title = "滑动条"),
+            edit = @Edit(title = "滑动条", type = EditType.SLIDER, search = @Search,
+                    sliderType = @SliderType(max = 90, markPoints = {0, 30, 60, 90}, dots = true))
+    )
+    private Integer slide;
+
+    @EruptField(
+            views = @View(title = "下拉选择"),
+            edit = @Edit(
+                    search = @Search,
+                    title = "下拉选择", type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = SqlChoiceFetchHandler.class,
+                            fetchHandlerParams = "select id,name from e_upms_menu"
+                    )
+            )
+    )
+    private Long choice;
 
 }
 ```
@@ -156,24 +181,33 @@ public class Simple extends BaseModel {
 <a href="https://www.erupt.xyz/demo" target="_blank"><img src="./readme/seer.png" width="100%"/></a>
 <table>
     <tr>
-        <td><img src="readme/goods.png"/></td>
-        <td><img src="readme/chart.png"/></td>
+        <td colspan="2"><img src="readme/goods.png"/></td>
+        <td colspan="2"><img src="readme/chart.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/code.png"/></td>
-        <td><img src="readme/job.png"/></td>
+        <td colspan="2"><img src="readme/code.png"/></td>
+        <td colspan="2"><img src="readme/job.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/complex.png"/></td>
-        <td><img src="readme/complex-edit.png"/></td>
+        <td colspan="2"><img src="readme/complex.png"/></td>
+        <td colspan="2"><img src="readme/complex-edit.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/tpl.png"/></td>
-        <td><img src="readme/role.png"/></td>
+        <td colspan="2"><img src="readme/tpl.png"/></td>
+        <td colspan="2"><img src="readme/role.png"/></td>
     </tr>
     <tr>
-        <td><img src="readme/component.png"/></td>
-        <td><img src="readme/component-edit.png"/></td>
+        <td colspan="2"><img src="readme/component.png"/></td>
+        <td colspan="2"><img src="readme/component-edit.png"/></td>
+    </tr>
+    <tr>
+        <td colspan="4" align="center">移动端展示效果</td>
+    </tr>
+    <tr>
+        <td><img src="readme/m1.png"/></td>
+        <td><img src="readme/m2.png"/></td>
+        <td><img src="readme/m3.png"/></td>
+        <td><img src="readme/m4.png"/></td>
     </tr>
 </table>
 
@@ -213,25 +247,25 @@ erupt
      └── erupt-mongodb -- mongodb数据库erupt实现
 ├── erupt-job -- 定时任务功能，支持动态定时任务，邮件发送，任务日志等功能
 ├── erupt-upms -- 用户权限管理
-├── erupt-security -- 接口数据安全模块
-├── erupt-web -- 前端页面
+├── erupt-security -- 接口数据安全
+├── erupt-web -- 编译后的前端页面
 ├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义弹出层，模板引擎支持：FreeMarker / Thymeleaf / 原生H5 / Velocity 等
 ├── erupt-tpl-ui -- 在 erupt-tpl 中可使用的 UI 库
     ├── ant-design
     ├── element-ui
     └── amis 
 ├── erupt-generator -- 代码生成器，通过配置，生成 erupt 代码段
-└── erupt-monitor -- 基于erupt实现的服务器监控模块
+└── erupt-monitor -- 基于erupt实现的服务监控
+
+erupt-pro
+├── erupt-dataflow -- 基于erupt实现的数据流（构思中）
+├── erupt-workflow -- 基于erupt实现的工作流（构思中）
+├── erupt-tenant -- 基于erupt实现的SaaS云多租户（开发中，面向企业用户）
+└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（面向企业用户）
 
 erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
 
 erupt-web -- Erupt 前端源码 https://github.com/erupts/erupt-web
-
-erupt-pro
-├── erupt-dataflow -- 基于erupt实现的数据流模块（构思中）
-├── erupt-workflow -- 基于erupt实现的工作流模块（构思中）
-├── erupt-tenant -- 基于erupt实现的SaaS云多租户模块（开发中，面向企业用户）
-└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（开发中）
 
 ```
 
@@ -271,11 +305,6 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
     </tr>
 </table>
 
-## 🍁 代码样例 | Example Code
-gitee: &nbsp; https://gitee.com/erupt/erupt-example
-
-github: https://github.com/erupts/erupt-example
-
 ## 🔭 开源推荐 | Recommend
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
 
@@ -284,8 +313,10 @@ github: https://github.com/erupts/erupt-example
 
 [前往捐赠](https://www.yuque.com/erupts/erupt/mwf15h)
 
-## 🧩 公众号 
-欢迎关注 Erupt 官方公众号，关注后可获取最新群二维码
+## 🧩 加入讨论
+QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
+
+由于微信群二维码有效时间仅7日，关注 Erupt 官方公众号（EruptGuide），可获取最新群二维码
 
 ![qr.jpg](./readme/qr.jpg)
 
