@@ -183,6 +183,7 @@ public class Simple extends BaseModel {
         <td><img src="readme/m1.png"/></td>
         <td><img src="readme/m2.png"/></td>
         <td><img src="readme/m3.png"/></td>
+        <td><img src="readme/m4.png"/></td>
     </tr>
 </table>
 
