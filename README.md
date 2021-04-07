@@ -23,6 +23,7 @@
     <a href="https://gitee.com/erupt/erupt">码云仓库</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank"><b>🦅 官方网站</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz/#!/module" target="_blank">框架生态</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts" target="_blank"><b>📕 使用文档</b></a>
 </p>
 
@@ -86,6 +87,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
 
 开发后台管理系统大部分情况下只想做个普通的增删改查界面，用于数据管理，类似下面这种：
+PS: erupt支持定义复杂的页面自定义，详见erupt-tpl模块
 
 ![result](readme/view.png)
 ![result](readme/edit.png)
@@ -113,15 +115,35 @@ public class Simple extends BaseModel {
 
     @EruptField(
             views = @View(title = "布尔"),
-            edit = @Edit(title = "布尔")
+            edit = @Edit(title = "布尔", search = @Search)
     )
     private Boolean bool;
+
 
     @EruptField(
             views = @View(title = "时间"),
             edit = @Edit(title = "时间", search = @Search(vague = true))
     )
     private Date date;
+
+    @EruptField(
+            views = @View(title = "滑动条"),
+            edit = @Edit(title = "滑动条", type = EditType.SLIDER, search = @Search,
+                    sliderType = @SliderType(max = 90, markPoints = {0, 30, 60, 90}, dots = true))
+    )
+    private Integer slide;
+
+    @EruptField(
+            views = @View(title = "下拉选择"),
+            edit = @Edit(
+                    search = @Search,
+                    title = "下拉选择", type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = SqlChoiceFetchHandler.class,
+                            fetchHandlerParams = "select id,name from e_upms_menu"
+                    )
+            )
+    )
+    private Long choice;
 
 }
 ```
