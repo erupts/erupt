@@ -177,15 +177,15 @@ public class Simple extends BaseModel {
         <td><img src="readme/component-edit.png"/></td>
     </tr>
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <td><img src="readme/m1.png"/></td>
-                    <td><img src="readme/m2.png"/></td>
-                    <td><img src="readme/m3.png"/></td>
-                </tr>
-            </table>
-        </td>
+        <td colspan="2" align="center">移动端展示效果</td>
+    </tr>
+    <tr>
+        <td><img src="readme/m1.png"/></td>
+        <td><img src="readme/m2.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="readme/m3.png"/></td>
+        <td><img src="readme/m4.png"/></td>
     </tr>
 </table>
 
