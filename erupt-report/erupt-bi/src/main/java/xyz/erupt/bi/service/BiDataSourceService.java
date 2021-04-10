@@ -19,6 +19,7 @@ import java.util.Map;
 public class BiDataSourceService implements DataProxy<BiDataSource> {
 
     private static final Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
+
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
