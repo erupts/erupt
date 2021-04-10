@@ -53,14 +53,17 @@ public enum GeneratorType {
     @Ref CHECKBOX(EditType.CHECKBOX, "多选", null, "checkboxType = @CheckboxType(id = \"id\", label = \"name\")") {
         @Override
         public String annotation(String thisErupt, String linkErupt) {
-            return "@ManyToMany @JoinTable(name = \"" + humpToLine(thisErupt) + "_" + humpToLine(linkErupt) + "\",\n" +
+            return "@ManyToMany \n" +
+                    "        @JoinTable(name = \"" + humpToLine(thisErupt) + "_" + humpToLine(linkErupt) + "\",\n" +
                     "            joinColumns = @JoinColumn(name = \"" + humpToLine(thisErupt) + "_id\", referencedColumnName = \"id\"),\n" +
                     "            inverseJoinColumns = @JoinColumn(name = \"" + humpToLine(linkErupt) + "_id\", referencedColumnName = \"id\")) ";
         }
 
         @Override
         public String fieldType(String thisErupt, String linkErupt) {
-            return "Set<" + linkErupt + ">";
+            return ("Set<" + linkErupt + ">")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;");
         }
     },
     @Ref TAB_TREE(EditType.TAB_TREE, "多选树", null, null) {
@@ -89,8 +92,8 @@ public enum GeneratorType {
         @Override
         public String annotation(String thisErupt, String linkErupt) {
             return "@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)\n" +
-                    "                @OrderBy\n" +
-                    "                @JoinColumn(name = \"" + humpToLine(thisErupt) + "_id\") ";
+                    "        @OrderBy\n" +
+                    "        @JoinColumn(name = \"" + humpToLine(thisErupt) + "_id\") ";
         }
 
         @Override
