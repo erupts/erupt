@@ -31,7 +31,8 @@ public class ${erupt.className} extends BaseModel {
                         type = EditType.${type.mapping.name()}${field.query?string(', search = @Search', '')}${field.isShow?string('', ', show = false')}${field.notNull?string(', notNull = true', '')}<#if type.code??>${',
                         ' + type.code}</#if>
                 )
-        )${annotation!null?string("\n" + annotation,null)!}
+        )<#if annotation??>
+        ${annotation}</#if>
         private ${type.fieldType(erupt.className, field.linkClass!)!} ${field.fieldName};
 
     </#list>
