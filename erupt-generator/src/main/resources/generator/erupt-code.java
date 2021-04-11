@@ -21,7 +21,7 @@ public class ${erupt.className} extends BaseModel {
 
     <#list erupt.fields?sort_by('sort') as field>
         <#assign type = GeneratorType.valueOf(field.type) />
-        <#assign annotation = type.annotation(erupt.className, field.linkClass!)! />
+        <#assign annotation = type.annotation(erupt.className, field.linkClass!)!'' />
         @EruptField(
                 views = @View(
                         title = "${field.showName}"${field.sortable?string(', sortable = true', '')}${field.isShow?string('', ', show = false')}
@@ -31,8 +31,7 @@ public class ${erupt.className} extends BaseModel {
                         type = EditType.${type.mapping.name()}${field.query?string(', search = @Search', '')}${field.isShow?string('', ', show = false')}${field.notNull?string(', notNull = true', '')}<#if type.code??>${',
                         ' + type.code}</#if>
                 )
-        )<#if annotation??>
-        ${annotation}</#if>
+        )<#if annotation!=''>${'\n        '+annotation}</#if>
         private ${type.fieldType(erupt.className, field.linkClass!)!} ${field.fieldName};
 
     </#list>
