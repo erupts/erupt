@@ -45,12 +45,16 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     public Object preHandle(ApiInfo info, MagicScriptContext context, HttpServletRequest request, HttpServletResponse response) {
         String permission = Objects.toString(info.getOptionValue(Options.PERMISSION), "");
         String role = Objects.toString(info.getOptionValue(Options.ROLE), "");
-        if (StringUtils.isNotBlank(permission) || StringUtils.isNotBlank(role)) {
-            EruptUser user = eruptUserService.getCurrentEruptUser();
+        String login = Objects.toString(info.getOptionValue(Options.REQUIRE_LOGIN), "");
+        if (StringUtils.isNotBlank(permission) || StringUtils.isNotBlank(role) || StringUtils.isNotBlank(login)) {
             // 未登录
-            if (user == null) {
+            if (eruptUserService.getCurrentUid() == null) {
                 return new JsonBean<Void>(401, "用户未登录");
             } else {
+                if (StringUtils.isNotBlank(login)) {
+                    return null;
+                }
+                EruptUser user = eruptUserService.getCurrentEruptUser();
                 // 权限判断
                 if (StringUtils.isNotBlank(permission) && eruptUserService.getEruptMenuByValue(permission) == null) {
                     return new JsonBean<Void>(403, "用户权限不足");
