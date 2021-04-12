@@ -3,14 +3,14 @@
  * Author: YuePeng (erupts@126.com)
  */
 
+import javax.persistence.*;
 import xyz.erupt.annotation.*;
 import xyz.erupt.annotation.sub_erupt.*;
 import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.upms.model.base.HyperModel;
-import javax.persistence.*;
-import java.util.Set;
 import xyz.erupt.jpa.model.BaseModel;
+import java.util.Set;
 import java.util.Date;
 
 <#assign erupt=rows[0]/>

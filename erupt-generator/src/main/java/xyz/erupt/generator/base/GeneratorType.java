@@ -6,6 +6,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 public enum GeneratorType {
@@ -47,7 +48,7 @@ public enum GeneratorType {
 
         @Override
         public String fieldType(String thisErupt, String linkErupt) {
-            return linkErupt;
+            return REFERENCE_TREE.fieldType(thisErupt, linkErupt);
         }
     },
     @Ref CHECKBOX(EditType.CHECKBOX, "多选", null, "checkboxType = @CheckboxType(id = \"id\", label = \"name\")") {
@@ -65,6 +66,11 @@ public enum GeneratorType {
                     .replace("<", "&lt;")
                     .replace(">", "&gt;");
         }
+
+        @Override
+        public String importPackages() {
+            return "import " + Set.class.getName() + ";";
+        }
     },
     @Ref TAB_TREE(EditType.TAB_TREE, "多选树", null, null) {
         @Override
@@ -76,6 +82,11 @@ public enum GeneratorType {
         public String fieldType(String thisErupt, String linkErupt) {
             return CHECKBOX.fieldType(thisErupt, linkErupt);
         }
+
+        @Override
+        public String importPackages() {
+            return CHECKBOX.importPackages();
+        }
     },
     @Ref TAB_TABLE_REFER(EditType.TAB_TABLE_REFER, "一对多引用", null, null) {
         @Override
@@ -86,6 +97,11 @@ public enum GeneratorType {
         @Override
         public String fieldType(String thisErupt, String linkErupt) {
             return CHECKBOX.fieldType(thisErupt, linkErupt);
+        }
+
+        @Override
+        public String importPackages() {
+            return CHECKBOX.importPackages();
         }
     },
     @Ref TAB_TABLE_ADD(EditType.TAB_TABLE_ADD, "一对多新增", null, null) {
@@ -99,6 +115,11 @@ public enum GeneratorType {
         @Override
         public String fieldType(String thisErupt, String linkErupt) {
             return CHECKBOX.fieldType(thisErupt, linkErupt);
+        }
+
+        @Override
+        public String importPackages() {
+            return CHECKBOX.importPackages();
         }
     },
     MAP(EditType.MAP, "地图", String.class.getSimpleName(), null),
@@ -137,7 +158,7 @@ public enum GeneratorType {
         return this.getType();
     }
 
-    public String importPackage() {
+    public String importPackages() {
         return null;
     }
 
