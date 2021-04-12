@@ -27,21 +27,21 @@ public class EruptJpaDao {
     private EntityManagerService entityManagerService;
 
     public void addEntity(Class<?> eruptClass, Object entity) {
-        entityManagerService.getEntityManager(eruptClass, (em) -> {
+        entityManagerService.getEntityManagerTran(eruptClass, (em) -> {
             em.persist(entity);
             em.flush();
         });
     }
 
     public void editEntity(Class<?> eruptClass, Object entity) {
-        entityManagerService.getEntityManager(eruptClass, (em) -> {
+        entityManagerService.getEntityManagerTran(eruptClass, (em) -> {
             em.merge(entity);
             em.flush();
         });
     }
 
     public void removeEntity(Class<?> eruptClass, Object entity) {
-        entityManagerService.getEntityManager(eruptClass, (em) -> {
+        entityManagerService.getEntityManagerTran(eruptClass, (em) -> {
             EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
             if (null == eruptDataSource) {
                 em.remove(entity);
