@@ -55,9 +55,9 @@
     });
     clipboard.on('success', function (e) {
         e.clearSelection();
-        let ele = document.getElementById("copy-success");
+        var ele = document.getElementById("copy-success");
         ele.style.display = "block";
-        setTimeout(() => {
+        setTimeout(function () {
             ele.style.display = "none";
         }, 1600);
     });
@@ -65,8 +65,9 @@
 
     function download() {
         //无需接口即可实现下载
-        let url = window.URL.createObjectURL(new Blob([`<#include "erupt-code.java"/>`]))
-        let link = document.createElement('a')
+        var code = document.getElementById("erupt-code").innerText;
+        var url = window.URL.createObjectURL(new Blob([code.replace(/&gt;/g, '>').replace(/&lt;/g, '<')]))
+        var link = document.createElement('a')
         link.style.display = 'none'
         link.href = url
         link.download = '${rows[0].className}.java'; //下载后文件名

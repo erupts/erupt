@@ -83,7 +83,7 @@ public class EntityManagerService implements ApplicationRunner {
     }
 
 
-    public void getEntityManagerTran(Class<?> eruptClass, Consumer<EntityManager> consumer) {
+    public void entityManagerTran(Class<?> eruptClass, Consumer<EntityManager> consumer) {
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) {
             consumer.accept(entityManager);
