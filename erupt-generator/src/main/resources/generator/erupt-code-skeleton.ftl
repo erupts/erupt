@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
 
@@ -29,12 +30,13 @@
             display: none;
         }
     </style>
+    <title></title>
 </head>
 <body>
 <div id="copy-success" class="alert alert-success">复制成功 !</div>
 <pre id="erupt-code" style="margin: 0;border-radius: 0;background: #272822;"><code
             class="prism language-java"><#include "erupt-code.java"/></code></pre>
-<div style="padding: 18px;position: fixed;bottom: 0px;right: 0px">
+<div style="padding: 18px;position: fixed;bottom: 0;right: 0">
     <button class="btn btn-outline-success btn-sm copy">复制</button>&nbsp;&nbsp;&nbsp;
     <button class="btn btn-outline-warning btn-sm" onclick="download()">下载</button>
 </div>
@@ -62,9 +64,8 @@
         }, 1600);
     });
 
-
+    //无需接口即可实现下载
     function download() {
-        //无需接口即可实现下载
         var code = document.getElementById("erupt-code").innerText;
         var url = window.URL.createObjectURL(new Blob([code.replace(/&gt;/g, '>').replace(/&lt;/g, '<')]))
         var link = document.createElement('a')
