@@ -33,3 +33,15 @@ function In(field, code) {
     var val = eval(code);
     return val && val.length > 0 && ' and ' + field + ' in (:' + code + ')' || null;
 }
+
+/**
+ * 区间查询
+ * 结果预览：and field > a and field < b
+ * @param field  字段名
+ * @param code   维度编码
+ * @returns {string}
+ */
+function range(field, code) {
+    var val = eval(code);
+    return val && val.length && " and " + field + " >= '" + val[0] + "' and " + field + " <= '" + val[1] + "'"
+}
