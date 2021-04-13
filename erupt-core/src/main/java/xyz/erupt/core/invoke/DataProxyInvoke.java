@@ -23,6 +23,12 @@ public class DataProxyInvoke {
             }
         }
         DataProxyInvoke.invokeInterfaceDataProxy(eruptModel.getClazz(), consumer);
+
+        PreDataProxy preDataProxy = eruptModel.getClazz().getAnnotation(PreDataProxy.class);
+        if (null != preDataProxy) {
+            consumer.accept(EruptSpringUtil.getBean(preDataProxy.value()));
+        }
+
         for (Class<? extends DataProxy<?>> proxy : eruptModel.getErupt().dataProxy()) {
             consumer.accept(EruptSpringUtil.getBean(proxy));
         }

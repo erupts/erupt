@@ -23,7 +23,7 @@ public class TypeUtil {
     public static Object typeStrConvertObject(Object obj, Class<?> targetType) {
         String str = obj.toString();
         if (NumberUtils.isCreatable(str)) {
-            if (str.endsWith(".0")) { //处理gson序列化后数值后多了一个0
+            if (str.endsWith(".0")) {  //处理gson序列化数值多了一个0
                 str = str.substring(0, str.length() - 2);
             }
         }

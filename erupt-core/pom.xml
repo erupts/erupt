@@ -3,18 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>erupt-core</artifactId>
 
-    <packaging>jar</packaging>
-
-    <name>erupt-core</name>
     <description>Erupt core</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.6.13</version>
+        <version>1.6.14</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

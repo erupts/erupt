@@ -308,11 +308,6 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 ## 🔭 开源推荐 | Recommend
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)
 
-## ⛽️ 捐赠 | Donate
-此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏
-
-[前往捐赠](https://www.yuque.com/erupts/erupt/mwf15h)
-
 ## 🧩 加入讨论
 QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
 
@@ -320,9 +315,12 @@ QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a
 
 ![qr.jpg](./readme/qr.jpg)
 
-## ⭐️ Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
+## ⛽️ 捐赠 | Donate
+此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏
 
-## [Github](https://github.com/erupts/erupt) &nbsp; / &nbsp;  [Gitee](https://gitee.com/erupt/erupt)
+[前往捐赠](https://www.yuque.com/erupts/erupt/mwf15h)
+
+### ⭐️ Erupt 使用 Apache License 2.0 协议，源代码完全开源，无商业限制。 开源不易如果喜欢请给作者 Star 鼓励 👇
 
 ---
 

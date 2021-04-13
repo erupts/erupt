@@ -11,6 +11,8 @@ import org.ssssssss.magicapi.model.JsonBean;
 import org.ssssssss.magicapi.model.Options;
 import org.ssssssss.script.MagicScriptContext;
 import xyz.erupt.magicapi.service.MagicAPIDataLoadService;
+import xyz.erupt.upms.cache.CaffeineEruptCache;
+import xyz.erupt.upms.cache.IEruptCache;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -38,6 +40,9 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         return false;
     }
 
+
+    private final IEruptCache<EruptUser> eruptUserIEruptCache = new CaffeineEruptCache<>(1000 * 60 * 10);
+
     /**
      * 配置接口权限
      */
@@ -45,18 +50,23 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     public Object preHandle(ApiInfo info, MagicScriptContext context, HttpServletRequest request, HttpServletResponse response) {
         String permission = Objects.toString(info.getOptionValue(Options.PERMISSION), "");
         String role = Objects.toString(info.getOptionValue(Options.ROLE), "");
-        if (StringUtils.isNotBlank(permission) || StringUtils.isNotBlank(role)) {
-            EruptUser user = eruptUserService.getCurrentEruptUser();
+        String login = Objects.toString(info.getOptionValue(Options.REQUIRE_LOGIN), "");
+        boolean isLogin = eruptUserService.getCurrentUid() != null;
+        if (StringUtils.isNotBlank(login) && !isLogin) {
+            return new JsonBean<Void>(401, "用户未登录");
+        }
+        if (StringUtils.isNotBlank(role) || StringUtils.isNotBlank(permission)) {
             // 未登录
-            if (user == null) {
+            if (!isLogin) {
                 return new JsonBean<Void>(401, "用户未登录");
             } else {
+                EruptUser user = eruptUserIEruptCache.get(eruptUserService.getCurrentToken(), key -> eruptUserService.getCurrentEruptUser());
                 // 权限判断
                 if (StringUtils.isNotBlank(permission) && eruptUserService.getEruptMenuByValue(permission) == null) {
                     return new JsonBean<Void>(403, "用户权限不足");
                 }
                 // 角色判断
-                if (StringUtils.isNotBlank(role) && user.getRoles().stream().anyMatch(it -> role.equals(it.getCode()))) {
+                if (StringUtils.isNotBlank(role) && user.getRoles().stream().noneMatch(it -> role.equals(it.getCode()))) {
                     return new JsonBean<Void>(403, "用户权限不足");
                 }
             }

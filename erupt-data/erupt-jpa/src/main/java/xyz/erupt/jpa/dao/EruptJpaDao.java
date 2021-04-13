@@ -27,21 +27,21 @@ public class EruptJpaDao {
     private EntityManagerService entityManagerService;
 
     public void addEntity(Class<?> eruptClass, Object entity) {
-        entityManagerService.getEntityManager(eruptClass, (em) -> {
+        entityManagerService.entityManagerTran(eruptClass, (em) -> {
             em.persist(entity);
             em.flush();
         });
     }
 
     public void editEntity(Class<?> eruptClass, Object entity) {
-        entityManagerService.getEntityManager(eruptClass, (em) -> {
+        entityManagerService.entityManagerTran(eruptClass, (em) -> {
             em.merge(entity);
             em.flush();
         });
     }
 
     public void removeEntity(Class<?> eruptClass, Object entity) {
-        entityManagerService.getEntityManager(eruptClass, (em) -> {
+        entityManagerService.entityManagerTran(eruptClass, (em) -> {
             EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
             if (null == eruptDataSource) {
                 em.remove(entity);
@@ -79,7 +79,10 @@ public class EruptJpaDao {
                             query.setParameter(EruptJpaUtils.R_VAL_KEY + condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, list.get(1)));
                             break;
                         case IN:
-                            List<?> listIn = (List<?>) condition.getValue();
+                            List<Object> listIn = new ArrayList<>();
+                            for (Object o : (List<?>) condition.getValue()) {
+                                listIn.add(EruptUtil.convertObjectType(eruptFieldModel, o));
+                            }
                             countQuery.setParameter(condition.getKey(), listIn);
                             query.setParameter(condition.getKey(), listIn);
                             break;
@@ -93,9 +96,6 @@ public class EruptJpaDao {
                 page.setList(list);
             } else {
                 page.setList(new ArrayList<>(0));
-            }
-            if (entityManager.isOpen()) {
-                entityManager.close();
             }
             return page;
         });

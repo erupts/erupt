@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.EruptPropDb;
@@ -82,7 +83,7 @@ public class EntityManagerService implements ApplicationRunner {
     }
 
 
-    public void getEntityManager(Class<?> eruptClass, Consumer<EntityManager> consumer) {
+    public void entityManagerTran(Class<?> eruptClass, Consumer<EntityManager> consumer) {
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) {
             consumer.accept(entityManager);
@@ -103,6 +104,7 @@ public class EntityManagerService implements ApplicationRunner {
         }
     }
 
+    @Comment("必须手动执行 close() 方法")
     public EntityManager findEntityManager(String name) {
         return entityManagerMap.get(name).createEntityManager();
     }
