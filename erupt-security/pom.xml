@@ -5,12 +5,11 @@
 
     <artifactId>erupt-security</artifactId>
     <description>Interface data security</description>
-    <packaging>jar</packaging>
 
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.6.13</version>
+        <version>1.6.14</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
