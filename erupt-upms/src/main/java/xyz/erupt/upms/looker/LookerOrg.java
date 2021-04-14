@@ -1,5 +1,6 @@
 package xyz.erupt.upms.looker;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -52,8 +54,9 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
     @SkipSerialize
     private Date updateTime;
 
-    @ManyToOne
     @SkipSerialize
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private EruptUser updateUser;
 
     @Resource
