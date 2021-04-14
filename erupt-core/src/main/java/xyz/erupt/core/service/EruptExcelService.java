@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
+import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.*;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -133,7 +134,7 @@ public class EruptExcelService {
                     List<Column> columns = new ArrayList<>();
                     columns.add(new Column(edit.referenceTreeType().id(), edit.referenceTreeType().id()));
                     columns.add(new Column(edit.referenceTreeType().label(), edit.referenceTreeType().label()));
-                    Collection<Map<String, Object>> list = iEruptDataService.queryColumn(eruptModel, columns, null);
+                    Collection<Map<String, Object>> list = iEruptDataService.queryColumn(EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName()), columns, EruptQuery.builder().build());
                     Map<String, Object> refTreeMap = new HashMap<>(list.size());
                     for (Map<String, Object> m : list) {
                         Object label = m.get(edit.referenceTreeType().label());
@@ -149,7 +150,7 @@ public class EruptExcelService {
                     List<Column> columnList = new ArrayList<>();
                     columnList.add(new Column(edit.referenceTableType().id(), edit.referenceTableType().id()));
                     columnList.add(new Column(edit.referenceTableType().label(), edit.referenceTableType().label()));
-                    Collection<Map<String, Object>> list2 = eruptDataProcessor.queryColumn(eruptModel, columnList, null);
+                    Collection<Map<String, Object>> list2 = eruptDataProcessor.queryColumn(EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName()), columnList, EruptQuery.builder().build());
                     Map<String, Object> refTreeMap2 = new HashMap<>(list2.size());
                     for (Map<String, Object> m : list2) {
                         Object label = m.get(edit.referenceTableType().label());
@@ -189,7 +190,7 @@ public class EruptExcelService {
                                             cellIndexJoinEruptMap.get(cellNum).get(cell.getStringCellValue()).toString());
                                 }
                             } catch (Exception e) {
-                                throw new Exception(edit.title() + " -> " + cell.getStringCellValue() + "数据不存在");
+                                throw new Exception(edit.title() + " -> " + this.getCellValue(cell) + "数据不存在");
                             }
                             jsonObject.add(eruptFieldModel.getFieldName(), jo);
                             break;
@@ -198,7 +199,7 @@ public class EruptExcelService {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cellIndexJoinEruptMap.get(cellNum)
                                         .get(cell.getStringCellValue()).toString());
                             } catch (Exception e) {
-                                throw new Exception(edit.title() + " -> " + cell.getStringCellValue() + "数据不存在");
+                                throw new Exception(edit.title() + " -> " + this.getCellValue(cell) + "数据不存在");
                             }
                             break;
                         case BOOLEAN:
