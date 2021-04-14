@@ -33,7 +33,10 @@ public class EruptProp {
     //是否保留上传文件原始名称
     private boolean keepUploadFileName = false;
 
+    @Deprecated
     private String[] jacksonHttpMessageConvertersPackages;
+
+    private String[] gsonHttpMessageConvertersPackages;
 
     private List<EruptPropDb> dbs;
 
