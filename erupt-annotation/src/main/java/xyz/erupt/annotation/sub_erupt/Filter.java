@@ -20,6 +20,6 @@ public @interface Filter {
     String[] params() default {};
 
     @Transient
-    @Comment("数据动态过滤接口")
+    @Comment("动态处理过滤条件")
     Class<? extends FilterHandler> conditionHandler() default FilterHandler.class;
 }

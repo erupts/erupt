@@ -1,7 +1,10 @@
 package xyz.erupt.core.controller;
 
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
@@ -25,7 +28,6 @@ import java.util.LinkedHashMap;
 public class EruptBuildController {
 
     @GetMapping("/{erupt}")
-    @ResponseBody
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName) {
         EruptModel eruptView = EruptCoreService.getEruptView(eruptName);
@@ -71,7 +73,6 @@ public class EruptBuildController {
     }
 
     @GetMapping("/{erupt}/{field}")
-    @ResponseBody
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
         EruptModel eruptModel = EruptCoreService.getEruptView(eruptName);

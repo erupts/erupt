@@ -18,6 +18,7 @@ import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
@@ -185,6 +186,7 @@ public class EruptUtil {
 
     //生成一个合法的searchCondition
     public static List<Condition> geneEruptSearchCondition(EruptModel eruptModel, List<Condition> searchCondition) {
+        checkEruptSearchNotnull(eruptModel, searchCondition);
         List<Condition> legalConditions = new ArrayList<>();
         if (null != searchCondition) {
             for (Condition condition : searchCondition) {
@@ -212,6 +214,27 @@ public class EruptUtil {
             }
         }
         return legalConditions;
+    }
+
+    public static void checkEruptSearchNotnull(EruptModel eruptModel, List<Condition> searchCondition) {
+        Map<String, Condition> conditionMap = new HashMap<>();
+        if (null != searchCondition) {
+            searchCondition.forEach(condition -> conditionMap.put(condition.getKey(), condition));
+        }
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            Edit edit = fieldModel.getEruptField().edit();
+            if (edit.search().value() && edit.search().notNull()) {
+                Condition condition = conditionMap.get(fieldModel.getFieldName());
+                if (null == condition || null == condition.getValue()) {
+                    throw new EruptApiErrorTip(EruptApiModel.Status.INFO, edit.title() + "必填", EruptApiModel.PromptWay.MESSAGE);
+                }
+                if (condition.getValue() instanceof List) {
+                    if (((List<?>) condition.getValue()).size() == 0) {
+                        throw new EruptApiErrorTip(EruptApiModel.Status.INFO + edit.title() + "必填", EruptApiModel.PromptWay.MESSAGE);
+                    }
+                }
+            }
+        }
     }
 
     public static EruptApiModel validateEruptValue(EruptModel eruptModel, JsonObject jsonObject) {

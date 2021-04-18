@@ -50,7 +50,6 @@ public class EruptUserController {
     //登录
     @SneakyThrows
     @PostMapping("/login")
-    @ResponseBody
     public LoginModel login(@RequestParam("account") String account,
                             @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode) {
@@ -96,7 +95,6 @@ public class EruptUserController {
 
     //获取菜单
     @GetMapping("/menu")
-    @ResponseBody
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public List<EruptMenuVo> getMenu() {
         return sessionService.get(SessionKey.MENU_VIEW + eruptUserService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
@@ -105,7 +103,6 @@ public class EruptUserController {
 
     //登出
     @PostMapping("/logout")
-    @ResponseBody
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public EruptApiModel logout(HttpServletRequest request) {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
@@ -122,7 +119,6 @@ public class EruptUserController {
 
     // 修改密码
     @PostMapping("/change-pwd")
-    @ResponseBody
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public EruptApiModel changePwd(@RequestParam("account") String account,
                                    @RequestParam("pwd") String pwd,
@@ -132,7 +128,6 @@ public class EruptUserController {
     }
 
     @GetMapping("/token-valid")
-    @ResponseBody
     public boolean tokenValid() {
         return sessionService.get(eruptUserService.getCurrentToken()) != null;
     }

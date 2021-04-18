@@ -8,6 +8,7 @@ import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.util.DateUtil;
 
@@ -15,7 +16,11 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -28,6 +33,8 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Resource
     private EruptProp eruptProp;
+
+    private final Set<String> gsonMessageConverterPackage = Stream.of(EruptConst.BASE_PACKAGE, Gson.class.getPackage().getName()).collect(Collectors.toSet());
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -42,17 +49,18 @@ public class MvcConfig implements WebMvcConfigurer {
                         -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
                 .setLongSerializationPolicy(LongSerializationPolicy.STRING).setExclusionStrategies(new GsonExclusionStrategies())
                 .serializeNulls().create();
+        if (null != eruptProp.getGsonHttpMessageConvertersPackages()) {
+            gsonMessageConverterPackage.addAll(Arrays.asList(eruptProp.getGsonHttpMessageConvertersPackages()));
+        }
         converters.add(0, new GsonHttpMessageConverter(gson) {
             @Override
             protected boolean supports(Class<?> clazz) {
-                if (null != eruptProp.getJacksonHttpMessageConvertersPackages()) {
-                    for (String convertersPackage : eruptProp.getJacksonHttpMessageConvertersPackages()) {
-                        if (clazz.getName().startsWith(convertersPackage)) {
-                            return false;
-                        }
+                for (String pack : gsonMessageConverterPackage) {
+                    if (clazz.getName().startsWith(pack)) {
+                        return super.supports(clazz);
                     }
                 }
-                return super.supports(clazz);
+                return false;
             }
         });
     }

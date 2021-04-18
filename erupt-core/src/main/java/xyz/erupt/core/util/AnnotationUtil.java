@@ -177,6 +177,9 @@ public class AnnotationUtil {
         InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
         Field field = invocationHandler.getClass().getDeclaredField("memberValues");
         field.setAccessible(true);
+//        Unsafe unsafe = Unsafe.getUnsafe();
+//        long offset = unsafe.objectFieldOffset(field);
+//        Object o = unsafe.getObject(annotation,offset);
         return (Map) field.get(invocationHandler);
     }
 
