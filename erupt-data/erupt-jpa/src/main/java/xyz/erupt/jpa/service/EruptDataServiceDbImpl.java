@@ -57,9 +57,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> {
-            return em.find(eruptModel.getClazz(), id);
-        });
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> em.find(eruptModel.getClazz(), id));
     }
 
     @Override
@@ -206,9 +204,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         if (StringUtils.isNotBlank(query.getOrderBy())) {
             hql.append(" order by ").append(query.getOrderBy());
         }
-        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> {
-            return em.createQuery(hql.toString()).getResultList();
-        });
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> em.createQuery(hql.toString()).getResultList());
     }
 
 }
