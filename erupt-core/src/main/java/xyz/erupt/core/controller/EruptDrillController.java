@@ -72,7 +72,6 @@ public class EruptDrillController {
     }
 
     @PostMapping("/add/{erupt}/drill/{code}/{id}")
-    @ResponseBody
     @EruptRecordOperate(desc = "新增")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel drillAdd(@PathVariable("erupt") String erupt,

@@ -108,7 +108,6 @@ public class EruptExcelController {
     //导入
     @PostMapping("/import/{erupt}")
     @EruptRecordOperate(desc = "导入Excel")
-    @ResponseBody
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
