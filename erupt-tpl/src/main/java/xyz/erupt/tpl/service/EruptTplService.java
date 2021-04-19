@@ -38,9 +38,20 @@ import java.util.Map;
 @Slf4j
 public class EruptTplService implements ApplicationRunner {
 
-    private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
-
     public static String TPL = "tpl";
+
+    static {
+        for (Class<?> tpl : engineTemplates) {
+            try {
+                EngineTemplate<Object> engineTemplate = (EngineTemplate) tpl.newInstance();
+                engineTemplate.setEngine(engineTemplate.init());
+                tplEngines.put(engineTemplate.engine(), engineTemplate);
+            } catch (NoClassDefFoundError ignored) {
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     private static final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
 
@@ -52,18 +63,7 @@ public class EruptTplService implements ApplicationRunner {
             BeetlEngine.class
     };
 
-    static {
-        for (Class<?> tpl : engineTemplates) {
-            try {
-                EngineTemplate<Object> engineTemplate = (EngineTemplate<Object>) tpl.newInstance();
-                engineTemplate.setEngine(engineTemplate.init());
-                tplEngines.put(engineTemplate.engine(), engineTemplate);
-            } catch (NoClassDefFoundError ignored) {
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+    private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
 
     @Resource
     private HttpServletRequest request;
