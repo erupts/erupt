@@ -14,13 +14,13 @@ function and(field, code) {
 }
 
 /**
- * 结果预览：and field like concat("%",:code,"%")'
+ * 结果预览：and field like '%xxx%'
  * @param field  字段名
  * @param code   维度编码
  * @returns {string}
  */
 function like(field, code) {
-    return eval(code) && ' and ' + field + ' like concat("%",:' + code + ',"%")'
+    return eval(code) && ' and ' + field + " like '%" + eval(code) + "%'"
 }
 
 /**
@@ -36,7 +36,7 @@ function In(field, code) {
 
 /**
  * 区间查询
- * 结果预览：and field > a and field < b
+ * 结果预览：and field >= a and field <= b
  * @param field  字段名
  * @param code   维度编码
  * @returns {string}
@@ -45,3 +45,4 @@ function range(field, code) {
     var val = eval(code);
     return val && val.length && " and " + field + " >= '" + val[0] + "' and " + field + " <= '" + val[1] + "'"
 }
+
