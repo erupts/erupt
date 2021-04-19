@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.tenant.model.EruptTenant;
+import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
@@ -72,7 +73,7 @@ public class RentDataLoadService implements CommandLineRunner, DataProxy<EruptTe
                 EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(manager, "系统管理", null, null, 1, 0, "fa fa-cogs", null)
                         , code, manager);
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptTenant.class.getSimpleName(), "租户管理", MenuTypeEnum.TABLE.getCode(), EruptTenant.class.getSimpleName()
-                        , Integer.valueOf(EruptMenu.OPEN), 1, null, eruptMenu), code, EruptTenant.class.getSimpleName());
+                        , MenuStatus.OPEN.getValue(), 1, null, eruptMenu), code, EruptTenant.class.getSimpleName());
             }
         });
     }
