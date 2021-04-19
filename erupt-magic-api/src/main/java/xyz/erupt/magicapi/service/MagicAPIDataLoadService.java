@@ -9,6 +9,7 @@ import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.magicapi.action.MagicApiTpl;
 import xyz.erupt.tpl.service.EruptTplService;
+import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
@@ -37,7 +38,7 @@ public class MagicAPIDataLoadService implements CommandLineRunner {
                 AtomicInteger sort = new AtomicInteger(80);
                 EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class,
                         new EruptMenu(menuKey, "接口配置", EruptTplService.TPL,
-                                MagicApiTpl.MAGIC_API_PERMISSION, Integer.valueOf(EruptMenu.OPEN),
+                                MagicApiTpl.MAGIC_API_PERMISSION, MenuStatus.OPEN.getValue(),
                                 sort.getAndAdd(10), "fa fa-cube", null),
                         "code", menuKey);
                 Map<Authorization, String> menus = new LinkedHashMap<>();
@@ -54,7 +55,7 @@ public class MagicAPIDataLoadService implements CommandLineRunner {
                     eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(menuCode, value,
                             MenuTypeEnum.BUTTON.getCode(),
                             MAGIC_API_MENU_PREFIX + key.name(),
-                            Integer.valueOf(EruptMenu.HIDE), sort.getAndAdd(10),
+                            MenuStatus.HIDE.getValue(), sort.getAndAdd(10),
                             null, eruptMenu), "code", menuCode);
                 });
             }
