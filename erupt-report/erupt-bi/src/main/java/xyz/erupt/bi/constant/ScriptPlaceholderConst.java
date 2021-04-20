@@ -15,4 +15,7 @@ public class ScriptPlaceholderConst {
     //request 请求对象
     public static final String REQUEST_PLACEHOLDER = "__request__";
 
+    //request 请求对象
+    public static final String RESPONSE_PLACEHOLDER = "__response__";
+
 }

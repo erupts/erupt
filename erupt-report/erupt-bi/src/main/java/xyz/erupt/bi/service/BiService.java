@@ -25,6 +25,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.ResultSetMetaData;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -47,6 +48,10 @@ public class BiService {
 
     @Resource
     private HttpServletRequest request;
+
+    @Resource
+    private HttpServletResponse response;
+
     @Resource
     private BiDataSourceService dataSourceService;
 
@@ -82,6 +87,7 @@ public class BiService {
         query.put(ScriptPlaceholderConst.EXPORT_PLACEHOLDER, export);
         query.put(ScriptPlaceholderConst.USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
         query.put(ScriptPlaceholderConst.REQUEST_PLACEHOLDER, request);
+        query.put(ScriptPlaceholderConst.RESPONSE_PLACEHOLDER, response);
         BiData biData = new BiData();
         if (!export) {
             biData.setTotal(this.getTotal(bi, query));
