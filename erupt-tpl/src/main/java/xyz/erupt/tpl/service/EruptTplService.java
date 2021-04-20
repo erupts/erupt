@@ -40,6 +40,16 @@ public class EruptTplService implements ApplicationRunner {
 
     public static String TPL = "tpl";
 
+    private static final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
+
+    private static final Class<?>[] engineTemplates = {
+            NativeEngine.class,
+            FreemarkerEngine.class,
+            ThymeleafEngine.class,
+            VelocityTplEngine.class,
+            BeetlEngine.class
+    };
+
     static {
         for (Class<?> tpl : engineTemplates) {
             try {
@@ -52,16 +62,6 @@ public class EruptTplService implements ApplicationRunner {
             }
         }
     }
-
-    private static final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
-
-    private static final Class<?>[] engineTemplates = {
-            NativeEngine.class,
-            FreemarkerEngine.class,
-            ThymeleafEngine.class,
-            VelocityTplEngine.class,
-            BeetlEngine.class
-    };
 
     private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
 
