@@ -71,12 +71,11 @@ public class EntityManagerService implements ApplicationRunner {
         if (null == eruptDataSource) {
             return function.apply(entityManager);
         } else {
-            EntityManager em = null;
+            EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
             try {
-                em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
                 return function.apply(em);
             } finally {
-                if (null != em && em.isOpen()) {
+                if (em.isOpen()) {
                     em.close();
                 }
             }
