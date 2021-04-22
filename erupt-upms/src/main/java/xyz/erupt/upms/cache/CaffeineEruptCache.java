@@ -28,6 +28,7 @@ public class CaffeineEruptCache<V> implements IEruptCache<V> {
         this.init(timeout, TimeUnit.MILLISECONDS);
     }
 
+    //使用此构造必须手动执行init方法
     public CaffeineEruptCache() {
     }
 
