@@ -1,5 +1,7 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.SceneEnum;
+
 import java.beans.Transient;
 
 /**
@@ -7,7 +9,7 @@ import java.beans.Transient;
  * date 2021/3/22 10:13
  */
 public @interface ReadOnly {
-    BehaviorEnum value() default BehaviorEnum.NONE;
+    SceneEnum[] value() default {SceneEnum.ADD, SceneEnum.EDIT, SceneEnum.VIEW_DETAIL};
 
     @Transient
     String[] params() default {};
@@ -17,7 +19,7 @@ public @interface ReadOnly {
 
     interface ReadOnlyHandler {
 
-        BehaviorEnum handler(BehaviorEnum behaviorEnum, String[] params);
+        SceneEnum[] handler(SceneEnum[] sceneEnum, String[] params);
 
     }
 }
