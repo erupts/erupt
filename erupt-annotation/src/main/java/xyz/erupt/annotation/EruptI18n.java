@@ -1,5 +1,10 @@
 package xyz.erupt.annotation;
 
-public @interface EruptI18n {
+import java.lang.annotation.*;
 
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Documented
+public @interface EruptI18n {
+    boolean enable() default true;
 }
