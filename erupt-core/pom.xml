@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>erupt-core</artifactId>
 
-    <description>Erupt core</description>
+    <description>erupt core impl</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>

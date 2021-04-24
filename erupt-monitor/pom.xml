@@ -5,6 +5,8 @@
 
     <artifactId>erupt-monitor</artifactId>
 
+    <description>erupt monitor → redis / server / online user </description>
+
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
