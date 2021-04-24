@@ -11,7 +11,7 @@
 
     <artifactId>erupt-generator</artifactId>
     <name>erupt-generator</name>
-    <description>erupt代码生成器</description>
+    <description>generator erupt code</description>
 
     <dependencies>
         <dependency>
