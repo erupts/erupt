@@ -231,27 +231,22 @@ public class EruptExcelService {
             case NUMERIC:
                 return cell.getNumericCellValue();
             case BLANK:
-                return new Object();
+                return "";
             case FORMULA:
-                // 如果是公式
-                String formulaValue = "";
                 try {
-                    formulaValue = String.valueOf(cell.getNumericCellValue());
+                    return String.valueOf(cell.getNumericCellValue());
                 } catch (IllegalStateException e) {
-                    if (e.getMessage().indexOf("from a STRING cell") != -1) {
-                        formulaValue = String.valueOf(cell.getStringCellValue());
-                    } else if (e.getMessage().indexOf("from a ERROR formula cell") != -1) {
-                        formulaValue = String.valueOf(cell.getErrorCellValue());
+                    if (e.getMessage().contains("from a STRING cell")) {
+                        return String.valueOf(cell.getStringCellValue());
+                    } else if (e.getMessage().contains("from a ERROR formula cell")) {
+                        return String.valueOf(cell.getErrorCellValue());
                     }
                 } catch (Exception e) {
                     throw new RuntimeException("行/列" + cell.getRowIndex() + "/" + cell.getColumnIndex() + "公式读取失败");
                 }
-                return formulaValue;
         }
         return new Object();
     }
-
-
 
 
     //模板的格式和edit输入框一致
