@@ -6,6 +6,7 @@ import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.monitor.model.EruptOnline;
 import xyz.erupt.tpl.service.EruptTplService;
+import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
@@ -29,13 +30,13 @@ public class MonitorLoadedService implements CommandLineRunner {
             if (bool) {
                 String code = "code";
                 EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("monitor", "系统监控", null, null,
-                        Integer.valueOf(EruptMenu.OPEN), 10, "fa fa-bullseye", null), "code", "monitor");
+                        MenuStatus.OPEN.getValue(), 10, "fa fa-bullseye", null), "code", "monitor");
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("server.html", "服务监控", EruptTplService.TPL,
-                        "server.html", Integer.valueOf(EruptMenu.OPEN), 10, null, eruptMenu), code, "server.html");
+                        "server.html", MenuStatus.OPEN.getValue(), 10, null, eruptMenu), code, "server.html");
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu("redis.html", "缓存监控", EruptTplService.TPL,
-                        "redis.html", Integer.valueOf(EruptMenu.OPEN), 20, null, eruptMenu), code, "redis.html");
+                        "redis.html", MenuStatus.OPEN.getValue(), 20, null, eruptMenu), code, "redis.html");
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptOnline.class.getSimpleName(), "在线用户", MenuTypeEnum.TABLE.getCode(),
-                        EruptOnline.class.getSimpleName(), Integer.valueOf(EruptMenu.OPEN), 30, null, eruptMenu), code, EruptOnline.class.getSimpleName());
+                        EruptOnline.class.getSimpleName(), MenuStatus.OPEN.getValue(), 30, null, eruptMenu), code, EruptOnline.class.getSimpleName());
             }
         });
     }

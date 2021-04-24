@@ -13,8 +13,6 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
-import xyz.erupt.upms.cache.CaffeineEruptCache;
-import xyz.erupt.upms.cache.IEruptCache;
 import xyz.erupt.upms.config.EruptUpmsConfig;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
@@ -266,13 +264,11 @@ public class EruptUserService {
         return null == uid ? null : Long.valueOf(uid.toString());
     }
 
-    private final IEruptCache<EruptUser> eruptUserIEruptCache = new CaffeineEruptCache<>(1500);
-
     //获取当前登录用户对象
     public EruptUser getCurrentEruptUser() {
         entityManager.clear();
         Long uid = this.getCurrentUid();
-        return null == uid ? null : eruptUserIEruptCache.get(uid + "", (key) -> entityManager.find(EruptUser.class, Long.parseLong(key)));
+        return null == uid ? null : entityManager.find(EruptUser.class, uid);
     }
 
 }

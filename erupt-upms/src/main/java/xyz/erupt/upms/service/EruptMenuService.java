@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
+import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
@@ -37,7 +38,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
         List<EruptMenuVo> list = new ArrayList<>();
         menus.forEach(menu -> {
-            if (Integer.valueOf(EruptMenu.OPEN).equals(menu.getStatus())) {
+            if (Integer.valueOf(MenuStatus.OPEN.getValue()).equals(menu.getStatus())) {
                 Long pid = null;
                 if (null != menu.getParentMenu()) {
                     pid = menu.getParentMenu().getId();
@@ -72,7 +73,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         if (null != obj) {
             eruptMenu.setSort(obj + 10);
         }
-        eruptMenu.setStatus(Integer.valueOf(EruptMenu.OPEN));
+        eruptMenu.setStatus(MenuStatus.OPEN.getValue());
     }
 
     @Override

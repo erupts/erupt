@@ -12,7 +12,7 @@ import java.util.function.Function;
  */
 public class CaffeineEruptCache<V> implements IEruptCache<V> {
 
-    private volatile Cache<String, V> cache;
+    private Cache<String, V> cache;
 
     public void init(long timeout, TimeUnit timeUnit) {
         if (null == this.cache) {
@@ -28,6 +28,7 @@ public class CaffeineEruptCache<V> implements IEruptCache<V> {
         this.init(timeout, TimeUnit.MILLISECONDS);
     }
 
+    //使用此构造必须手动执行init方法
     public CaffeineEruptCache() {
     }
 

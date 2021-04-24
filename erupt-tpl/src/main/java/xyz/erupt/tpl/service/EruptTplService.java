@@ -38,8 +38,6 @@ import java.util.Map;
 @Slf4j
 public class EruptTplService implements ApplicationRunner {
 
-    private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
-
     public static String TPL = "tpl";
 
     private static final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
@@ -55,7 +53,7 @@ public class EruptTplService implements ApplicationRunner {
     static {
         for (Class<?> tpl : engineTemplates) {
             try {
-                EngineTemplate<Object> engineTemplate = (EngineTemplate<Object>) tpl.newInstance();
+                EngineTemplate<Object> engineTemplate = (EngineTemplate) tpl.newInstance();
                 engineTemplate.setEngine(engineTemplate.init());
                 tplEngines.put(engineTemplate.engine(), engineTemplate);
             } catch (NoClassDefFoundError ignored) {
@@ -64,6 +62,8 @@ public class EruptTplService implements ApplicationRunner {
             }
         }
     }
+
+    private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
 
     @Resource
     private HttpServletRequest request;

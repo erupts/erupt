@@ -65,6 +65,25 @@ public class Simple extends BaseModel {
     )
     private Date date;
 
+    @EruptField(
+            views = @View(title = "slider"),
+            edit = @Edit(title = "slider", type = EditType.SLIDER, search = @Search,
+                    sliderType = @SliderType(max = 90, markPoints = {0, 30, 60, 90}, dots = true))
+    )
+    private Integer slide;
+
+    @EruptField(
+            views = @View(title = "choice"),
+            edit = @Edit(
+                    search = @Search,
+                    title = "choice", type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = SqlChoiceFetchHandler.class,
+                            fetchHandlerParams = "select id,name from e_upms_menu"
+                    )
+            )
+    )
+    private Long choice;
+
 }
 ```
 [Functional experience](https://www.erupt.xyz/#!/contrast)

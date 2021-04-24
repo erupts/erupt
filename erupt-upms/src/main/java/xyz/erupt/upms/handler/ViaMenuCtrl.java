@@ -3,7 +3,6 @@ package xyz.erupt.upms.handler;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.expr.ExprBool;
-import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -27,8 +26,7 @@ public class ViaMenuCtrl implements ExprBool.ExprHandler {
         if (null == params || params.length == 0) {
             throw new RuntimeException(ViaMenuCtrl.class.getSimpleName() + " → params[0] not found");
         }
-        EruptMenu eruptMenu = eruptUserService.getEruptMenuByCode(params[0]);
-        return null != eruptMenu;
+        return null != eruptUserService.getEruptMenuByCode(params[0]);
     }
 
 }

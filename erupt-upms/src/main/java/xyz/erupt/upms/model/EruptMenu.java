@@ -11,6 +11,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.upms.enums.MenuLimitEnum;
+import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptMenuService;
@@ -33,12 +34,6 @@ import javax.persistence.*;
 @Setter
 public class EruptMenu extends HyperModel {
 
-    public static final String OPEN = "1";
-
-    public static final String HIDE = "2";
-
-    public static final String DISABLE = "3";
-
     @EruptField(
             views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true)
@@ -59,13 +54,7 @@ public class EruptMenu extends HyperModel {
                     notNull = true,
                     title = "状态",
                     type = EditType.CHOICE,
-                    choiceType = @ChoiceType(
-                            vl = {
-                                    @VL(value = OPEN, label = "启用"),
-                                    @VL(value = HIDE, label = "隐藏"),
-                                    @VL(value = DISABLE, label = "禁用"),
-                            }
-                    )
+                    choiceType = @ChoiceType(fetchHandler = MenuStatus.ChoiceFetch.class)
             )
     )
     private Integer status;

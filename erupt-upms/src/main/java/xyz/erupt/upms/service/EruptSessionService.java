@@ -74,9 +74,9 @@ public class EruptSessionService {
     public void putMap(String key, Map<String, Object> map, long expire) {
         if (eruptProp.isRedisSession()) {
             BoundHashOperations<?, String, Object> boundHashOperations = stringRedisTemplate.boundHashOps(key);
-            boundHashOperations.expire(expire, TimeUnit.MINUTES);
             map.replaceAll((k, v) -> gson.toJson(v));
             boundHashOperations.putAll(map);
+            boundHashOperations.expire(expire, TimeUnit.MINUTES);
         } else {
             request.getSession().setAttribute(key, map);
         }
