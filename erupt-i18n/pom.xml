@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-i18n</artifactId>
-    <name>erupt i18n internationalization</name>
+    <description>erupt i18n internationalization</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
