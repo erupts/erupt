@@ -231,10 +231,23 @@ public class EruptExcelService {
             case NUMERIC:
                 return cell.getNumericCellValue();
             case BLANK:
-                return null;
+                return "";
+            case FORMULA:
+                try {
+                    return String.valueOf(cell.getNumericCellValue());
+                } catch (IllegalStateException e) {
+                    if (e.getMessage().contains("from a STRING cell")) {
+                        return String.valueOf(cell.getStringCellValue());
+                    } else if (e.getMessage().contains("from a ERROR formula cell")) {
+                        return String.valueOf(cell.getErrorCellValue());
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException("行/列" + cell.getRowIndex() + "/" + cell.getColumnIndex() + "公式读取失败");
+                }
         }
-        return null;
+        return new Object();
     }
+
 
     //模板的格式和edit输入框一致
     public void createExcelTemplate(EruptModel eruptModel, HttpServletRequest request, HttpServletResponse response) {
