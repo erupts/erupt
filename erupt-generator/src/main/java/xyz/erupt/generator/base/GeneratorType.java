@@ -17,6 +17,7 @@ public enum GeneratorType {
     SLIDER(EditType.SLIDER, "数字滑块", Integer.class.getSimpleName(), "sliderType = @SliderType(max = 999)"),
     DATE(EditType.DATE, "日期", Date.class.getSimpleName(), "dateType = @DateType"),
     DATE_TIME(EditType.DATE, "日期时间", Date.class.getSimpleName(), "dateType = @DateType(type = DateType.Type.DATE_TIME)"),
+    TIME(EditType.DATE, "时间", String.class.getSimpleName(), "dateType = @DateType(type = DateType.Type.TIME)"),
     WEEK(EditType.DATE, "周", String.class.getSimpleName(), "dateType = @DateType(type = DateType.Type.MONTH)"),
     MONTH(EditType.DATE, "月", String.class.getSimpleName(), "dateType = @DateType(type = DateType.Type.WEEK)"),
     YEAR(EditType.DATE, "年", String.class.getSimpleName(), "dateType = @DateType(type = DateType.Type.YEAR)"),
