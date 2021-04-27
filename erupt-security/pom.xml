@@ -9,7 +9,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.6.16</version>
+        <version>1.7.0-bate</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

@@ -1,7 +1,6 @@
 package xyz.erupt.generator.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -12,6 +11,7 @@ import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
 /**
@@ -23,7 +23,7 @@ import javax.transaction.Transactional;
 @Slf4j
 public class GeneratorDataLoadService implements CommandLineRunner {
 
-    @Autowired
+    @Resource
     private EruptDao eruptDao;
 
     @Transactional
