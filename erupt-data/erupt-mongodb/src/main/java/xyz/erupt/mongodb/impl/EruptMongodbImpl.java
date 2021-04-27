@@ -1,4 +1,4 @@
-package xyz.erupt.mongodb;
+package xyz.erupt.mongodb.impl;
 
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
