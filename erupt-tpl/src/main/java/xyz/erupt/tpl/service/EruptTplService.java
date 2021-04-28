@@ -103,7 +103,7 @@ public class EruptTplService implements ApplicationRunner {
             if (null == map) {
                 map = new HashMap<>();
             }
-            map.putAll(EruptSpringUtil.getBean(tpl.tplHandler()).bindTplData(tpl.params()));
+            EruptSpringUtil.getBean(tpl.tplHandler()).bindTplData(map, tpl.params());
         }
         this.tplRender(tpl.engine(), tpl.path(), map, writer);
     }
