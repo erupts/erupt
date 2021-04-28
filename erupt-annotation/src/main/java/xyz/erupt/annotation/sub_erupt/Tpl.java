@@ -42,7 +42,15 @@ public @interface Tpl {
 
     interface TplHandler {
 
-        void bindTplData(Map<String, Object> binding,String[] params);
+        /**
+         * 1.7.0 And above use the Function
+         */
+        void bindTplData(Map<String, Object> binding, String[] params);
+
+        @Deprecated
+        default Map<String, Object> bindTplData(String[] params) {
+            return null;
+        };
 
     }
 
