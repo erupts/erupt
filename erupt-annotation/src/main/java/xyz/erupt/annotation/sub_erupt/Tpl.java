@@ -42,7 +42,7 @@ public @interface Tpl {
 
     interface TplHandler {
 
-        Map<String, Object> bindTplData(String[] params);
+        void bindTplData(Map<String, Object> binding,String[] params);
 
     }
 
