@@ -7,8 +7,8 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.ClassUtils;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.EruptConst;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,19 +42,11 @@ public class EruptApplication implements ImportBeanDefinitionRegistrar {
         if (eruptScan.value().length == 0) {
             scanPackage.add(clazz.getPackage().getName());
         } else {
-            scanPackage.addAll(Arrays.asList(eruptScan.value()));
+            for (String pack : eruptScan.value()) {
+                if (!pack.equals(EruptConst.BASE_PACKAGE)) {
+                    scanPackage.add(pack);
+                }
+            }
         }
-//        if (eruptScan.value().length == 0) {
-//            if (primarySource.getPackage().getName().startsWith(EruptConst.BASE_PACKAGE)) {
-//                scanPackage = new String[1];
-//                scanPackage[0] = EruptConst.BASE_PACKAGE;
-//            } else {
-//                scanPackage = new String[2];
-//                scanPackage[0] = primarySource.getPackage().getName();
-//                scanPackage[1] = EruptConst.BASE_PACKAGE;
-//            }
-//        } else {
-//            scanPackage = eruptScan.value();
-//        }
     }
 }
