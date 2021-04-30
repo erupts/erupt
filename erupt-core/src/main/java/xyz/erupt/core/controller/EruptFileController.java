@@ -2,10 +2,10 @@ package xyz.erupt.core.controller;
 
 import com.google.gson.Gson;
 import lombok.Cleanup;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
@@ -44,10 +44,10 @@ import java.util.*;
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_FILE)
+@RequiredArgsConstructor
 public class EruptFileController {
 
-    @Autowired
-    private EruptProp eruptProp;
+    private final EruptProp eruptProp;
 
     private static final String FS_SEP = "/";
 

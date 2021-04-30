@@ -3,10 +3,10 @@ package xyz.erupt.core.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.core.annotation.EruptRecordOperate;
@@ -43,20 +43,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_EXCEL)
+@RequiredArgsConstructor
 public class EruptExcelController {
 
+    private final EruptProp eruptProp;
 
-    @Autowired
-    private EruptProp eruptProp;
+    private final EruptExcelService dataFileService;
 
-    @Autowired
-    private EruptExcelService dataFileService;
+    private final EruptModifyController eruptModifyController;
 
-    @Autowired
-    private EruptModifyController eruptModifyController;
-
-    @Autowired
-    private EruptService eruptService;
+    private final EruptService eruptService;
 
 
     //模板下载

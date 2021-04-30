@@ -2,6 +2,7 @@ package xyz.erupt.core.config;
 
 
 import com.google.gson.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
@@ -12,7 +13,6 @@ import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.util.DateUtil;
 
-import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,12 +27,12 @@ import java.util.stream.Stream;
  * @author YuePeng
  * date 10/31/18.
  */
+@RequiredArgsConstructor
 @Configuration
 @Component
 public class MvcConfig implements WebMvcConfigurer {
 
-    @Resource
-    private EruptProp eruptProp;
+    private final EruptProp eruptProp;
 
     private final Set<String> gsonMessageConverterPackage = Stream.of(EruptConst.BASE_PACKAGE, Gson.class.getPackage().getName()).collect(Collectors.toSet());
 

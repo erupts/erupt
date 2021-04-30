@@ -1,7 +1,7 @@
 package xyz.erupt.core.controller;
 
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
@@ -28,13 +28,12 @@ import java.lang.reflect.Field;
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_DATA)
+@RequiredArgsConstructor
 public class EruptDrillController {
 
-    @Autowired
-    private EruptModifyController eruptModifyController;
+    private final EruptModifyController eruptModifyController;
 
-    @Autowired
-    private EruptService eruptService;
+    private final EruptService eruptService;
 
     @PostMapping("{erupt}/drill/{code}/{id}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
