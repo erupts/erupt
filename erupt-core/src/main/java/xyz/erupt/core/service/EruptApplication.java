@@ -22,7 +22,6 @@ public class EruptApplication implements ImportBeanDefinitionRegistrar {
 
     private static final Set<String> scanPackage = new HashSet<>();
 
-
     public static Class<?> getPrimarySource() {
         return primarySource;
     }

@@ -22,7 +22,6 @@ public interface IEruptDataService {
     @Comment("查询分页数据")
     Page queryList(EruptModel eruptModel, @Comment("分页对象") Page page, @Comment("条件") EruptQuery eruptQuery);
 
-
     @Comment("根据列查询相关数据")
     Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, @Comment("列信息") List<Column> columns, @Comment("条件") EruptQuery eruptQuery);
 
