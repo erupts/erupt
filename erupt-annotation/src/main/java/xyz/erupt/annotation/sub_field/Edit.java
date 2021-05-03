@@ -27,7 +27,7 @@ public @interface Edit {
     boolean show() default true;
 
     @Comment("是否只读")
-    boolean readOnly() default false;
+    Readonly readonly() default @Readonly(add = false, edit = false);
 
     @Comment("输入字段预期值的提示信息")
     String placeHolder() default "";

@@ -260,7 +260,7 @@ public class EruptExcelService {
         int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
-            if (edit.show() && !edit.readOnly() && StringUtils.isNotBlank(edit.title())
+            if (edit.show() && !edit.readonly().add() && StringUtils.isNotBlank(edit.title())
                     && AnnotationUtil.getEditTypeMapping(edit.type()).excelOperator()) {
                 Cell cell = headRow.createCell(cellNum);
                 //256表格一个字节的宽度
