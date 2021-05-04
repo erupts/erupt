@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.fun.AutoCompleteHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
@@ -27,6 +28,7 @@ public @interface Edit {
     boolean show() default true;
 
     @Comment("是否只读")
+    @EruptProperty(alias = "readOnly")
     Readonly readonly() default @Readonly(add = false, edit = false);
 
     @Comment("输入字段预期值的提示信息")
