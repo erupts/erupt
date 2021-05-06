@@ -254,6 +254,7 @@ public class EruptExcelService {
         Workbook wb = new HSSFWorkbook();
         //基本信息
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
+        sheet.setZoom(160);
         //冻结首行
         sheet.createFreezePane(0, 1, 1, 1);
         Row headRow = sheet.createRow(0);
