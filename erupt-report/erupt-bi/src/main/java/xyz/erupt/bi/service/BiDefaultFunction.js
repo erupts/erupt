@@ -1,6 +1,6 @@
 // Copyright © 2020-2035 erupt.xyz All rights reserved.
 // Author: YuePeng (erupts@126.com)
-// EruptBi Default Functions
+// Erupt Bi Default Functions
 
 
 /**
