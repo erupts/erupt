@@ -16,6 +16,7 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.invoke.PowerInvoke;
+import xyz.erupt.core.naming.EruptOperateConfig;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
@@ -72,7 +73,7 @@ public class EruptExcelController {
 
     //导出
     @PostMapping("/export/{erupt}")
-    @EruptRecordOperate(desc = "导出Excel")
+    @EruptRecordOperate(value = "导出Excel", dynamicConfig = EruptOperateConfig.class)
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName,
                            String condition,
@@ -103,7 +104,7 @@ public class EruptExcelController {
 
     //导入
     @PostMapping("/import/{erupt}")
-    @EruptRecordOperate(desc = "导入Excel")
+    @EruptRecordOperate(value = "导入Excel", dynamicConfig = EruptOperateConfig.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
