@@ -311,7 +311,9 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 ## 🧩 加入讨论
 QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
 
-由于微信群二维码有效时间仅7日，关注 Erupt 官方公众号（EruptGuide），可获取最新群二维码
+由于微信群已满200人，无法通过二维码加入，添加作者微信加入微信群，微信号：erupts
+
+公众号：
 
 ![qr.jpg](./readme/qr.jpg)
 
