@@ -50,6 +50,7 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
     @Resource
     private EruptSecurityProp eruptSecurityProp;
 
+
     private static final String ERUPT_PARENT_HEADER_KEY = "eruptParent";
 
     private static final String ERUPT_PARENT_PARAM_KEY = "_eruptParent";
