@@ -139,6 +139,7 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
+
                 if (!authStr.equals(eruptModel.getEruptName())) {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
@@ -152,7 +153,6 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
         }
         return true;
     }
-
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
