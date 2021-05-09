@@ -186,7 +186,7 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                         operate.setReqParam(findRequestParamVal(request));
                     }
                     operate.setCreateTime(new Date());
-                    operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
+                    operate.setTotalTime((int) (operate.getCreateTime().getTime() - RequestBodyTL.get().getDate()));
                     RequestBodyTL.remove();
                     if (null != ex) {
                         operate.setErrorInfo(ExceptionUtils.getStackTrace(ex));
