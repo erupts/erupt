@@ -8,6 +8,7 @@ import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.service.EruptCoreService;
@@ -124,6 +125,15 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                             }
                             eruptModel = eruptParentModel;
                             break $ep;
+                        }
+                    }
+                    for (RowOperation operation : eruptParentModel.getErupt().rowOperation()) {
+                        if (void.class != operation.eruptClass()) {
+                            if (eruptModel.getEruptName().equals(operation.eruptClass().getSimpleName())) {
+                                authStr = eruptParentModel.getEruptName();
+                                eruptModel = eruptParentModel;
+                                break $ep;
+                            }
                         }
                     }
                     response.setStatus(HttpStatus.NOT_FOUND.value());
