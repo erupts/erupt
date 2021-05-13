@@ -71,6 +71,9 @@ public class EruptExcelService {
                     Cell cell = row.createCell(colNum);
                     cell.setCellStyle(headStyle);
                     cell.setCellValue(view.title());
+//                    if (StringUtils.isNotBlank(view.width())) {
+//                        sheet.setColumnWidth(colNum, view.width());
+//                    }
                     colNum++;
                 }
             }

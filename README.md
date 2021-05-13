@@ -123,7 +123,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
         <td>业务逻辑</td>
         <td>接口 + 实现</td>
         <td>内置 + 按需实现</td>
-        <td>内置 + 按需 @DataProxy实现</td>
+        <td>内置 + 按需 <a href="https://www.yuque.com/erupts/erupt/nicqg3">@DataProxy</a> 实现</td>
         <td>代码生成</td>
     </tr>
     <tr>
