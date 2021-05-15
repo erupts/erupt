@@ -58,7 +58,7 @@ public class EruptService {
             }
             conditionStrings.addAll(Arrays.asList(customCondition));
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> {
-                String condition = dataProxy.beforeFetch();
+                String condition = dataProxy.beforeFetch(eruptModel.getClazz());
                 if (null != condition) {
                     conditionStrings.add(condition);
                 }

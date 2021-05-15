@@ -48,7 +48,7 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
 
     @EruptField(
             views = @View(title = "创建时间"),
-            edit = @Edit(title = "创建时间", readonly =  @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
 
@@ -65,7 +65,7 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
     private EruptUserService eruptUserService;
 
     @Override
-    public String beforeFetch() {
+    public String beforeFetch(Class<?> eruptClass) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         if (eruptUser.getIsAdmin()) {
             return null;
@@ -73,8 +73,7 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
         if (null == eruptUser.getEruptOrg()) {
             throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded organization cannot filter data");
         } else {
-            String erupt = eruptUserService.getCurrentEruptMenu().getValue();
-            return erupt + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
+            return eruptClass.getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
         }
     }
 

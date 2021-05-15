@@ -66,7 +66,7 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
     private EruptUserService eruptUserService;
 
     @Override
-    public String beforeFetch() {
+    public String beforeFetch(Class<?> eruptClass) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         if (eruptUser.getIsAdmin()) {
             return null;
@@ -74,9 +74,8 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
         if (null == eruptUser.getEruptOrg() || null == eruptUser.getEruptPost()) {
             throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded department cannot filter data");
         }
-        String erupt = eruptUserService.getCurrentEruptMenu().getValue();
-        return "(" + erupt + ".createUser.id = " + eruptUserService.getCurrentUid() + " or " + erupt + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
-                + erupt + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
+        return "(" + eruptClass.getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid() + " or " + eruptClass.getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
+                + eruptClass.getSimpleName() + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
     }
 
     @Override

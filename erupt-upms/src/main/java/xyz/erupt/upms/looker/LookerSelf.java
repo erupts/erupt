@@ -24,11 +24,10 @@ public class LookerSelf extends HyperModelCreatorVo implements DataProxy<Object>
     private EruptUserService eruptUserService;
 
     @Override
-    public String beforeFetch() {
+    public String beforeFetch(Class<?> eruptClass) {
         if (eruptUserService.getCurrentEruptUser().getIsAdmin()) {
             return null;
         }
-        String erupt = eruptUserService.getCurrentEruptMenu().getValue();
-        return erupt + ".createUser.id = " + eruptUserService.getCurrentUid();
+        return eruptClass.getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid();
     }
 }
