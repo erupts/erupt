@@ -59,7 +59,7 @@ public class PreEruptDataService {
         List<Condition> conditions = new ArrayList<>();
         List<String> conditionStrings = new ArrayList<>();
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> {
-            String condition = dataProxy.beforeFetch();
+            String condition = dataProxy.beforeFetch(eruptModel.getClazz());
             if (StringUtils.isNotBlank(condition)) {
                 conditionStrings.add(condition);
             }
