@@ -104,13 +104,6 @@ public class EruptTplService implements ApplicationRunner {
                 map = new HashMap<>();
             }
             Tpl.TplHandler tplHandler = EruptSpringUtil.getBean(tpl.tplHandler());
-            {
-                // TODO 后续版本会移除该兼容性方法
-                Map<String, Object> bindMap = tplHandler.bindTplData(tpl.params());
-                if (null != bindMap) {
-                    map.putAll(bindMap);
-                }
-            }
             tplHandler.bindTplData(map, tpl.params());
         }
         this.tplRender(tpl.engine(), tpl.path(), map, writer);
