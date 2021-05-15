@@ -8,9 +8,11 @@ import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.config.EruptSecurityProp;
@@ -125,9 +127,19 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                             break $ep;
                         }
                     }
+                    for (RowOperation operation : eruptParentModel.getErupt().rowOperation()) {
+                        if (void.class != operation.eruptClass()) {
+                            if (eruptModel.getEruptName().equals(operation.eruptClass().getSimpleName())) {
+                                authStr = eruptParentModel.getEruptName();
+                                eruptModel = eruptParentModel;
+                                break $ep;
+                            }
+                        }
+                    }
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
+
                 if (!authStr.equals(eruptModel.getEruptName())) {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
@@ -142,7 +154,6 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
         return true;
     }
 
-
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         super.postHandle(request, response, handler, modelAndView);
@@ -154,20 +165,19 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
         if (eruptSecurityProp.isRecordOperateLog()) {
             if (handler instanceof HandlerMethod) {
                 HandlerMethod handlerMethod = (HandlerMethod) handler;
-                EruptRecordOperate eruptOperate = handlerMethod.getMethodAnnotation(EruptRecordOperate.class);
-                if (null != eruptOperate) {
-                    EruptRouter eruptRouter = handlerMethod.getMethodAnnotation(EruptRouter.class);
+                EruptRecordOperate eruptRecordOperate = handlerMethod.getMethodAnnotation(EruptRecordOperate.class);
+                if (null != eruptRecordOperate) {
                     EruptOperateLog operate = new EruptOperateLog();
-                    if (null != eruptRouter && eruptRouter.verifyType() == EruptRouter.VerifyType.ERUPT) {
-                        String eruptName;
-                        if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
-                            eruptName = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
-                        } else {
+                    if (eruptRecordOperate.dynamicConfig().isInterface()) {
+                        operate.setApiName(eruptRecordOperate.value());
+                    } else {
+                        String eruptName = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
+                        if (null == eruptName) {
                             eruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
                         }
-                        operate.setApiName(eruptOperate.desc() + " | " + EruptCoreService.getErupt(eruptName).getErupt().name());
-                    } else {
-                        operate.setApiName(eruptOperate.desc());
+                        EruptRecordOperate.DynamicConfig dynamicConfig = EruptSpringUtil.getBean(eruptRecordOperate.dynamicConfig());
+                        if (!dynamicConfig.canRecord(eruptName, handlerMethod.getMethod())) return;
+                        operate.setApiName(dynamicConfig.naming(eruptRecordOperate.value(), eruptName, handlerMethod.getMethod()));
                     }
                     operate.setIp(IpUtil.getIpAddr(request));
                     operate.setRegion(IpUtil.getCityInfo(operate.getIp()));
@@ -186,7 +196,7 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                         operate.setReqParam(findRequestParamVal(request));
                     }
                     operate.setCreateTime(new Date());
-                    operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
+                    operate.setTotalTime((int) (operate.getCreateTime().getTime() - RequestBodyTL.get().getDate()));
                     RequestBodyTL.remove();
                     if (null != ex) {
                         operate.setErrorInfo(ExceptionUtils.getStackTrace(ex));

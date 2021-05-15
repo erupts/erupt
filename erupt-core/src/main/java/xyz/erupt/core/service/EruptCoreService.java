@@ -89,7 +89,6 @@ public class EruptCoreService implements ApplicationRunner {
         return eruptModel;
     }
 
-
     @Override
     public void run(ApplicationArguments args) {
         TimeRecorder timeRecorder = new TimeRecorder();

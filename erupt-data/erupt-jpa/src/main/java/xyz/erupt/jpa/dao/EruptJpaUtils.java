@@ -34,6 +34,8 @@ public class EruptJpaUtils {
 
     public static final String AS = " as ";
 
+    public static final String LEFT_JOIN = " left outer join ";
+
     public static Set<String> getEruptColJpaKeys(EruptModel eruptModel) {
         Set<String> cols = new HashSet<>();
         String eruptNameSymbol = eruptModel.getEruptName() + ".";
@@ -71,7 +73,7 @@ public class EruptJpaUtils {
                     append(eruptModel.getEruptName());
             ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
                 if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                    hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".")
+                    hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(".")
                             .append(field.getName()).append(AS).append(field.getName());
                 }
             });
@@ -90,7 +92,7 @@ public class EruptJpaUtils {
         StringBuilder sb = new StringBuilder();
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                sb.append(" left outer join ")
+                sb.append(LEFT_JOIN)
                         .append(eruptModel.getEruptName()).append('.').append(field.getName()).append(AS).append(field.getName());
                 try {
                     Object obj = field.get(eruptModel.getClazz());

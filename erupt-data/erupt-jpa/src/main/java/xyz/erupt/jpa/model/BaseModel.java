@@ -26,4 +26,5 @@ public class BaseModel implements Serializable {
     @Column(name = "id")
     @EruptField
     private Long id;
+
 }

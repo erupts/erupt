@@ -18,7 +18,6 @@ import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.upms.model.base.HyperModel;
 
 import javax.persistence.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -79,11 +78,11 @@ public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
 
     @SneakyThrows
     @Override
-    public Map<String, Object> bindTplData(String[] params) {
+    public void bindTplData(Map<String, Object> binding, String[] params) {
         TemplateHashModel staticModels = BeansWrapper.getDefaultInstance().getStaticModels();
         TemplateHashModel fileStatics = (TemplateHashModel) staticModels.get(GeneratorType.class.getName());
-        Map<String, Object> map = new HashMap<>();
-        map.put(GeneratorType.class.getSimpleName(), fileStatics);
-        return map;
+        binding.put(GeneratorType.class.getSimpleName(), fileStatics);
     }
+
+
 }

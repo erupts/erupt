@@ -5,13 +5,13 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.6.16</version>
+        <version>1.7.0-bate</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>erupt-generator</artifactId>
     <name>erupt-generator</name>
-    <description>erupt代码生成器</description>
+    <description>generator erupt code</description>
 
     <dependencies>
         <dependency>
