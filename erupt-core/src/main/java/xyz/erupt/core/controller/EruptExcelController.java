@@ -3,10 +3,10 @@ package xyz.erupt.core.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.core.annotation.EruptRecordOperate;
@@ -16,6 +16,7 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.invoke.PowerInvoke;
+import xyz.erupt.core.naming.EruptOperateConfig;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
@@ -43,21 +44,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_EXCEL)
+@RequiredArgsConstructor
 public class EruptExcelController {
 
+    private final EruptProp eruptProp;
 
-    @Autowired
-    private EruptProp eruptProp;
+    private final EruptExcelService dataFileService;
 
-    @Autowired
-    private EruptExcelService dataFileService;
+    private final EruptModifyController eruptModifyController;
 
-    @Autowired
-    private EruptModifyController eruptModifyController;
-
-    @Autowired
-    private EruptService eruptService;
-
+    private final EruptService eruptService;
 
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
@@ -76,7 +72,7 @@ public class EruptExcelController {
 
     //导出
     @PostMapping("/export/{erupt}")
-    @EruptRecordOperate(desc = "导出Excel")
+    @EruptRecordOperate(value = "导出Excel", dynamicConfig = EruptOperateConfig.class)
     @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName,
                            String condition,
@@ -107,7 +103,7 @@ public class EruptExcelController {
 
     //导入
     @PostMapping("/import/{erupt}")
-    @EruptRecordOperate(desc = "导入Excel")
+    @EruptRecordOperate(value = "导入Excel", dynamicConfig = EruptOperateConfig.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {

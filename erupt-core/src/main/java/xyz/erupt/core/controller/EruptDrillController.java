@@ -1,7 +1,7 @@
 package xyz.erupt.core.controller;
 
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
@@ -10,6 +10,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.naming.EruptOperateConfig;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptService;
 import xyz.erupt.core.util.EruptUtil;
@@ -28,13 +29,12 @@ import java.lang.reflect.Field;
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_DATA)
+@RequiredArgsConstructor
 public class EruptDrillController {
 
-    @Autowired
-    private EruptModifyController eruptModifyController;
+    private final EruptModifyController eruptModifyController;
 
-    @Autowired
-    private EruptService eruptService;
+    private final EruptService eruptService;
 
     @PostMapping("{erupt}/drill/{code}/{id}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
@@ -72,7 +72,7 @@ public class EruptDrillController {
     }
 
     @PostMapping("/add/{erupt}/drill/{code}/{id}")
-    @EruptRecordOperate(desc = "新增")
+    @EruptRecordOperate(value = "新增", dynamicConfig = EruptOperateConfig.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel drillAdd(@PathVariable("erupt") String erupt,
                                   @PathVariable("code") String code,

@@ -85,6 +85,67 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 | 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
 | 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |
 
+
+## 🆚 横向比对 | VS
+<table>
+    <tr>
+        <td></td>
+        <td>传统 Spring Web 开发</td>
+        <td>Axelor</td>
+        <td>Erupt</td>
+        <td>RouYi</td>
+    </tr>
+    <tr>
+        <td>领域模型</td>
+        <td>Java 代码</td>
+        <td>XML 定义</td>
+        <td>注解定义</td>
+        <td>Java 代码</td>
+    </tr>
+    <tr>
+        <td>DTO</td>
+        <td>Java 代码</td>
+        <td>不需要</td>
+        <td>不需要</td>
+        <td>代码生成</td>
+    </tr>
+    <tr>
+        <td>ORM 映射</td>
+        <td>XML 或 Java 代码</td>
+        <td>自动生成</td>
+        <td>注解定义</td>
+        <td>代码生成</td>
+    </tr>
+    <tr>
+        <td>数据访问</td>
+        <td>接口 + 实现</td>
+        <td>自动生成</td>
+        <td>动态处理</td>
+        <td>代码生成</td>
+    </tr>
+    <tr>
+        <td>业务逻辑</td>
+        <td>接口 + 实现</td>
+        <td>内置 + 按需实现</td>
+        <td>内置 + 按需 <a href="https://www.yuque.com/erupts/erupt/nicqg3">@DataProxy</a> 实现</td>
+        <td>代码生成</td>
+    </tr>
+    <tr>
+        <td>展现层 MVC</td>
+        <td>Java 代码 + 视图模板</td>
+        <td>不需要</td>
+        <td>不需要</td>
+        <td>代码生成</td>
+    </tr>
+    <tr>
+        <td>前端</td>
+        <td>比 Java 代码还多</td>
+        <td>常规应用无需开发</td>
+        <td>常规应用无需开发</td>
+        <td>代码生成</td>
+    </tr>
+</table>
+
 ## 🧐 为什么要做 Erupt ?
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？
 

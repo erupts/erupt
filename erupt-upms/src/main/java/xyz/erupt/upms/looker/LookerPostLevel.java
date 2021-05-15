@@ -10,6 +10,7 @@ import xyz.erupt.annotation.config.SkipSerialize;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -42,13 +43,13 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
                     @View(title = "所属组织", column = "eruptOrg.name"),
                     @View(title = "岗位", column = "eruptPost.name"),
             },
-            edit = @Edit(title = "创建人", readOnly = true, type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     private EruptUser createUser;
 
     @EruptField(
             views = @View(title = "创建时间"),
-            edit = @Edit(title = "创建时间", readOnly = true, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
 
@@ -65,7 +66,7 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
     private EruptUserService eruptUserService;
 
     @Override
-    public String beforeFetch() {
+    public String beforeFetch(Class<?> eruptClass) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         if (eruptUser.getIsAdmin()) {
             return null;
@@ -73,9 +74,8 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
         if (null == eruptUser.getEruptOrg() || null == eruptUser.getEruptPost()) {
             throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded department cannot filter data");
         }
-        String erupt = eruptUserService.getCurrentEruptMenu().getValue();
-        return "(" + erupt + ".createUser.id = " + eruptUserService.getCurrentUid() + " or " + erupt + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
-                + erupt + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
+        return "(" + eruptClass.getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid() + " or " + eruptClass.getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
+                + eruptClass.getSimpleName() + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
     }
 
     @Override

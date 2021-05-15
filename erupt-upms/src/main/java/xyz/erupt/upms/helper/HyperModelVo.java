@@ -8,6 +8,7 @@ import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
@@ -38,26 +39,26 @@ public class HyperModelVo extends BaseModel implements DataProxy<HyperModelVo> {
     @ManyToOne
     @EruptField(
             views = @View(title = "创建人", column = "name"),
-            edit = @Edit(title = "创建人", readOnly = true, type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     private EruptUser createUser;
 
     @EruptField(
             views = @View(title = "创建时间"),
-            edit = @Edit(title = "创建时间", readOnly = true)
+            edit = @Edit(title = "创建时间", readonly = @Readonly)
     )
     private Date createTime;
 
     @ManyToOne
     @EruptField(
             views = @View(title = "更新人", column = "name"),
-            edit = @Edit(title = "更新人", readOnly = true, type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "更新人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     private EruptUser updateUser;
 
     @EruptField(
             views = @View(title = "更新时间"),
-            edit = @Edit(title = "更新时间", readOnly = true)
+            edit = @Edit(title = "更新时间", readonly =  @Readonly)
     )
     private Date updateTime;
 

@@ -84,7 +84,7 @@ public class EruptOperateLog extends BaseModel {
             views = @View(title = "请求耗时", template = "value && value+'ms'"),
             edit = @Edit(title = "请求耗时", search = @Search(vague = true))
     )
-    private Long totalTime;
+    private Integer totalTime;
 
     @EruptField(
             views = @View(title = "记录时间"),

@@ -47,6 +47,8 @@ public class EruptExcelService {
      * @return Workbook
      */
     public Workbook exportExcel(EruptModel eruptModel, Page page) {
+//        XSSFWorkbook
+//        SXSSFWorkbook
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         sheet.setZoom(160);
@@ -69,6 +71,9 @@ public class EruptExcelService {
                     Cell cell = row.createCell(colNum);
                     cell.setCellStyle(headStyle);
                     cell.setCellValue(view.title());
+//                    if (StringUtils.isNotBlank(view.width())) {
+//                        sheet.setColumnWidth(colNum, view.width());
+//                    }
                     colNum++;
                 }
             }
@@ -254,13 +259,14 @@ public class EruptExcelService {
         Workbook wb = new HSSFWorkbook();
         //基本信息
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
+        sheet.setZoom(160);
         //冻结首行
         sheet.createFreezePane(0, 1, 1, 1);
         Row headRow = sheet.createRow(0);
         int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
-            if (edit.show() && !edit.readOnly() && StringUtils.isNotBlank(edit.title())
+            if (edit.show() && !edit.readonly().add() && StringUtils.isNotBlank(edit.title())
                     && AnnotationUtil.getEditTypeMapping(edit.type()).excelOperator()) {
                 Cell cell = headRow.createCell(cellNum);
                 //256表格一个字节的宽度

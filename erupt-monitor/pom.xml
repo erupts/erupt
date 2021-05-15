@@ -5,10 +5,12 @@
 
     <artifactId>erupt-monitor</artifactId>
 
+    <description>erupt monitor → redis / server / online user </description>
+
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.6.16</version>
+        <version>1.7.0-bate</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -16,7 +18,7 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-            <version>5.3.7</version>
+            <version>5.7.2</version>
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
