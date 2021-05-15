@@ -47,11 +47,6 @@ public @interface Tpl {
          */
         void bindTplData(Map<String, Object> binding, String[] params);
 
-        @Deprecated
-        default Map<String, Object> bindTplData(String[] params) {
-            return null;
-        };
-
     }
 
 }
