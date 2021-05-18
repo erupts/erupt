@@ -58,8 +58,8 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
     default void excelExport(@Comment("POI文档对象") Workbook wb) {
     }
 
-    @Comment("excel导入")
-    default void excelImport(MODEL model) {
-    }
+//    @Comment("excel导入")
+//    default void excelImport(MODEL model) {
+//    }
 
 }
