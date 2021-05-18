@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -17,10 +18,10 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.job.constant.JobConst;
 import xyz.erupt.upms.model.base.HyperModel;
 
-import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -80,12 +81,15 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
     private Date createTime;
 
     @Transient
-    @Resource
+    @Autowired(required = false)
     private JavaMailSenderImpl javaMailSender;
 
     @SneakyThrows
     @Override
     public void beforeAdd(EruptMail eruptMail) {
+        if (null == javaMailSender) {
+            throw new EruptApiErrorTip("No sending mailbox is not configured");
+        }
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
         helper.setSubject(eruptMail.getSubject());
