@@ -38,9 +38,9 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 零前端代码、零 CURD、自动建表，仅需 **一个类文件** + 简洁的注解配置，快速开发企业级 Admin 管理后台。
 
-提供企业级中后台管理系统的全栈解决方案，大幅压缩研发周期，专注核心业务。
+高扩展性，支持CURD自由扩展 [@DataProxy](https://www.yuque.com/erupts/erupt/nicqg3) 、自定义数据源、逻辑删除、LDAP、OSS。
 
-> 不止于 CURD，支持 CURD 前置扩展、后置扩展 (DataProxy)，也可自定义按钮！
+提供企业级中后台管理系统的全栈解决方案，大幅压缩研发周期，专注核心业务。
 
 > 完美取代 **代码生成器**，开发后台管理系统更优解！
 
@@ -85,67 +85,6 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 | 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
 | 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |
 
-
-## 🆚 横向比对 | VS
-<table>
-    <tr>
-        <td></td>
-        <td>传统 Spring Web 开发</td>
-        <td>Axelor</td>
-        <td>Erupt</td>
-        <td>RouYi</td>
-    </tr>
-    <tr>
-        <td>领域模型</td>
-        <td>Java 代码</td>
-        <td>XML 定义</td>
-        <td>注解定义</td>
-        <td>Java 代码</td>
-    </tr>
-    <tr>
-        <td>DTO</td>
-        <td>Java 代码</td>
-        <td>不需要</td>
-        <td>不需要</td>
-        <td>代码生成</td>
-    </tr>
-    <tr>
-        <td>ORM 映射</td>
-        <td>XML 或 Java 代码</td>
-        <td>自动生成</td>
-        <td>注解定义</td>
-        <td>代码生成</td>
-    </tr>
-    <tr>
-        <td>数据访问</td>
-        <td>接口 + 实现</td>
-        <td>自动生成</td>
-        <td>动态处理</td>
-        <td>代码生成</td>
-    </tr>
-    <tr>
-        <td>业务逻辑</td>
-        <td>接口 + 实现</td>
-        <td>内置 + 按需实现</td>
-        <td>内置 + 按需 <a href="https://www.yuque.com/erupts/erupt/nicqg3">@DataProxy</a> 实现</td>
-        <td>代码生成</td>
-    </tr>
-    <tr>
-        <td>展现层 MVC</td>
-        <td>Java 代码 + 视图模板</td>
-        <td>不需要</td>
-        <td>不需要</td>
-        <td>代码生成</td>
-    </tr>
-    <tr>
-        <td>前端</td>
-        <td>比 Java 代码还多</td>
-        <td>常规应用无需开发</td>
-        <td>常规应用无需开发</td>
-        <td>代码生成</td>
-    </tr>
-</table>
-
 ## 🧐 为什么要做 Erupt ?
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？
 
@@ -153,7 +92,7 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 开发后台管理系统大部分情况下只想做个普通的增删改查界面，用于数据管理，类似下面这种：
 
-PS: erupt支持定义复杂的页面自定义，详见erupt-tpl模块
+PS: erupt支持定义复杂的页面自定义，详见 [erupt-tpl](https://www.yuque.com/erupts/erupt/sgx66o) 模块
 
 ![result](readme/view.png)
 ![result](readme/edit.png)
@@ -236,6 +175,67 @@ public class Simple extends BaseModel {
 即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
 
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务。
+
+
+## 🆚 开发方式横向比对 | VS
+<table>
+    <tr>
+        <td></td>
+        <td>传统 Spring Web 开发</td>
+        <td>RouYi</td>
+        <td>Axelor</td>
+        <td>Erupt</td>
+    </tr>
+    <tr>
+        <td>领域模型</td>
+        <td>Java 代码</td>
+        <td>Java 代码</td>
+        <td>XML 定义</td>
+        <td>Annotation 注解定义</td>
+    </tr>
+    <tr>
+        <td>DTO</td>
+        <td>Java 代码</td>
+        <td>代码生成 + 逻辑调整</td>
+        <td>不需要</td>
+        <td>不需要</td>
+    </tr>
+    <tr>
+        <td>ORM 映射</td>
+        <td>XML 或 Java 代码</td>
+        <td>代码生成 + 逻辑调整</td>
+        <td>自动生成</td>
+        <td>注解定义</td>
+    </tr>
+    <tr>
+        <td>数据访问</td>
+        <td>接口 + 实现</td>
+        <td>代码生成 + 逻辑调整</td>
+        <td>自动生成</td>
+        <td>动态处理</td>
+    </tr>
+    <tr>
+        <td>业务逻辑</td>
+        <td>接口 + 实现</td>
+        <td>代码生成 + 逻辑调整</td>
+        <td>内置 + 按需实现</td>
+        <td>内置 + 按需 <a href="https://www.yuque.com/erupts/erupt/nicqg3">@DataProxy</a> 实现</td>
+    </tr>
+    <tr>
+        <td>展现层 MVC</td>
+        <td>Java 代码 + 视图模板</td>
+        <td>代码生成 + 逻辑调整</td>
+        <td>不需要</td>
+        <td>不需要</td>
+    </tr>
+    <tr>
+        <td>前端</td>
+        <td>比 Java 代码还多</td>
+        <td>代码生成 + 逻辑调整</td>
+        <td>常规应用无需开发</td>
+        <td>常规应用无需开发</td>
+    </tr>
+</table>
 
 
 ## ⛰ 演示截图 | Screenshot
@@ -336,7 +336,7 @@ erupt-web -- Erupt 前端源码 https://github.com/erupts/erupt-web
 
 ## 📟 技术体系 | Technology system
 **后端：**
-Java 8、 ScriptEngine、 Annotation、 JDBC、 Reflect、 Spring Boot、 JPA、 Hibernate、 Quartz、 Gson、 Lombok、 POI ...
+Java 8、 Spring Boot、 ScriptEngine、SpEL、 Annotation、 JDBC、 Reflect、  JPA、 Hibernate、 Quartz、 Gson、 Lombok、 POI ...
 
 **前端：**
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
@@ -345,7 +345,7 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 ![架构图](readme/architecture.png)
 
 ## 🌕 在线体验 | Demo
-演示地址：https://www.erupt.xyz/demo
+演示地址：[https://www.erupt.xyz/demo](https://www.erupt.xyz/demo)
 
 账号密码：`guest / guest`
 
@@ -376,7 +376,7 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 ## 🧩 加入讨论
 QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
 
-由于微信群已满200人，无法通过二维码加入，添加作者微信加入微信群，微信号：erupts
+微信交流群：由于微信群已满200人，无法通过二维码加入，添加作者微信加入群聊，微信号：erupts
 
 ## ⛽️ 捐赠 | Donate
 此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏
