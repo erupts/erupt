@@ -88,7 +88,7 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
     @Override
     public void beforeAdd(EruptMail eruptMail) {
         if (null == javaMailSender) {
-            throw new EruptApiErrorTip("No sending mailbox is not configured");
+            throw new EruptApiErrorTip("Sending mailbox not configured");
         }
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
