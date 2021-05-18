@@ -177,7 +177,7 @@ public class Simple extends BaseModel {
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务。
 
 
-## 🆚 开放方式横向比对 | VS
+## 🆚 开发方式横向比对 | VS
 <table>
     <tr>
         <td></td>
