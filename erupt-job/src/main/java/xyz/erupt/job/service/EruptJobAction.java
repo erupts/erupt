@@ -1,5 +1,6 @@
 package xyz.erupt.job.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.quartz.Job;
@@ -19,6 +20,7 @@ import java.util.Objects;
  * @author YuePeng
  * date 2019-12-26.
  */
+@Slf4j
 public class EruptJobAction implements Job {
 
     @Override
@@ -48,9 +50,11 @@ public class EruptJobAction implements Job {
                 eruptJobLog.setErrorInfo(exceptionTraceStr);
                 {
                     //失败通知
-                    if (null != javaMailSender) {
-                        String notifyEmails = eruptJob.getNotifyEmails();
-                        if (StringUtils.isNotBlank(notifyEmails)) {
+                    String notifyEmails = eruptJob.getNotifyEmails();
+                    if (StringUtils.isNotBlank(notifyEmails)) {
+                        if (null == javaMailSender) {
+                            log.warn("Sending mailbox not configured");
+                        }else{
                             SimpleMailMessage message = new SimpleMailMessage();
                             message.setSubject(eruptJob.getName() + " job error ！！！");
                             message.setText(exceptionTraceStr);
