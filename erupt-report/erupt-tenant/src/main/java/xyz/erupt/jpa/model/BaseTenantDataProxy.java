@@ -31,7 +31,7 @@ public class BaseTenantDataProxy implements DataProxy<BaseModel> {
     }
 
     @Override
-    public String beforeFetch() {
+    public String beforeFetch(Class<?> clazz) {
         EruptTenant eruptTenant = findEruptRent();
         if (null != eruptTenant) {
             return EruptCoreService.getErupt(request.getHeader("erupt")).getEruptName() + ".eruptTenant=" + eruptTenant.getId();
