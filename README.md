@@ -196,22 +196,22 @@ public class Simple extends BaseModel {
     <tr>
         <td>DTO</td>
         <td>Java 代码</td>
-        <td>代码生成 + 逻辑调整</td>
+        <td>代码生成</td>
         <td>不需要</td>
         <td>不需要</td>
     </tr>
     <tr>
         <td>ORM 映射</td>
         <td>XML 或 Java 代码</td>
-        <td>代码生成 + 逻辑调整</td>
-        <td>自动生成</td>
+        <td>代码生成</td>
+        <td>代码生成</td>
         <td>注解定义</td>
     </tr>
     <tr>
         <td>数据访问</td>
         <td>接口 + 实现</td>
-        <td>代码生成 + 逻辑调整</td>
-        <td>自动生成</td>
+        <td>代码生成</td>
+        <td>代码生成</td>
         <td>动态处理</td>
     </tr>
     <tr>
