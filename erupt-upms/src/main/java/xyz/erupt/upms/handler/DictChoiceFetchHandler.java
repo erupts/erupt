@@ -9,8 +9,8 @@ import xyz.erupt.upms.constant.FetchConst;
 import xyz.erupt.upms.model.EruptDictItem;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -19,32 +19,22 @@ import java.util.List;
 @Component
 public class DictChoiceFetchHandler implements ChoiceFetchHandler {
 
-    @Resource
-    private EruptDao eruptDao;
-
     private final String CACHE_SPACE = DictChoiceFetchHandler.class.getName() + ":";
 
     private final CaffeineEruptCache<List<VLModel>> dictCache = new CaffeineEruptCache<>();
 
+    @Resource
+    private EruptDao eruptDao;
+
     @Override
     public List<VLModel> fetch(String[] params) {
         if (null == params || params.length == 0) {
-            throw new RuntimeException("DictChoiceFetchHandler → params[0] must dict → code");
+            throw new RuntimeException(DictChoiceFetchHandler.class.getSimpleName() + " → params[0] must dict → code");
         }
-        long timeout = FetchConst.DEFAULT_CACHE_TIME;
-        if (params.length == 2) {
-            timeout = Long.parseLong(params[1]);
-        }
-        dictCache.init(timeout);
-        String dictCode = params[0];
-        return dictCache.get(CACHE_SPACE + params[0], (key) -> {
-            List<VLModel> list = new ArrayList<>();
-            List<EruptDictItem> eruptDictItem = eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = '" + dictCode + "'", null);
-            for (EruptDictItem item : eruptDictItem) {
-                list.add(new VLModel(item.getId().toString(), item.getName()));
-            }
-            return list;
-        });
+        dictCache.init(params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME);
+        return dictCache.get(CACHE_SPACE + params[0], (key) ->
+                eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = '" + params[0] + "'", null)
+                        .stream().map((item) -> new VLModel(item.getCode(), item.getName())).collect(Collectors.toList()));
     }
 
 }
