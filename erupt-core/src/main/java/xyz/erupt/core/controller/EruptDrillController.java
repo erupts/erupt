@@ -3,7 +3,7 @@ package xyz.erupt.core.controller;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import xyz.erupt.annotation.sub_erupt.Drill;
+import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -22,6 +22,7 @@ import xyz.erupt.core.view.TableQueryVo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -43,71 +44,56 @@ public class EruptDrillController {
                       @PathVariable("id") String id,
                       @RequestBody TableQueryVo tableQueryVo) throws IllegalAccessException {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        Link link = null;
-        for (Drill drill : eruptModel.getErupt().drills()) {
-            if (drill.code().equals(code)) {
-                link = drill.link();
-            }
+        Link link = findDrillLink(eruptModel.getErupt(), code);
+        if (!eruptService.verifyIdPermissions(eruptModel, id)) {
+            throw new EruptNoLegalPowerException();
         }
-
-        if (null != link) {
-            if (!eruptService.verifyIdPermissions(eruptModel, id)) {
-                throw new EruptNoLegalPowerException();
-            }
-            Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
-            field.setAccessible(true);
-            Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                    .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
-            Object val = field.get(data);
-            if (null == val) {
-                return new Page();
-            }
-            return eruptService.getEruptData(
-                    EruptCoreService.getErupt(link.linkErupt().getSimpleName()),
-                    tableQueryVo, null,
-                    String.format("%s = '%s'", link.linkErupt().getSimpleName() + "." + link.joinColumn(), val)
-            );
+        Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
+        field.setAccessible(true);
+        Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
+        Object val = field.get(data);
+        if (null == val) {
+            return new Page();
         }
-        throw new EruptNoLegalPowerException();
+        return eruptService.getEruptData(
+                EruptCoreService.getErupt(link.linkErupt().getSimpleName()),
+                tableQueryVo, null,
+                String.format("%s = '%s'", link.linkErupt().getSimpleName() + "." + link.joinColumn(), val)
+        );
     }
 
     @PostMapping("/add/{erupt}/drill/{code}/{id}")
     @EruptRecordOperate(value = "新增", dynamicConfig = EruptOperateConfig.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public EruptApiModel drillAdd(@PathVariable("erupt") String erupt,
-                                  @PathVariable("code") String code,
-                                  @PathVariable("id") String id,
-                                  HttpServletRequest request,
-                                  @RequestBody JsonObject data) throws Exception {
+    public EruptApiModel drillAdd(@PathVariable("erupt") String erupt, @PathVariable("code") String code,
+                                  @PathVariable("id") String id, @RequestBody JsonObject data,
+                                  HttpServletRequest request) throws Exception {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
-        Link link = null;
-        for (Drill drill : eruptModel.getErupt().drills()) {
-            if (code.equals(drill.code())) {
-                link = drill.link();
-                break;
-            }
+        Link link = findDrillLink(eruptModel.getErupt(), code);
+        if (!eruptService.verifyIdPermissions(eruptModel, id)) {
+            throw new EruptNoLegalPowerException();
         }
-        if (null != link) {
-            if (!eruptService.verifyIdPermissions(eruptModel, id)) {
-                throw new EruptNoLegalPowerException();
-            }
-            JsonObject jo = new JsonObject();
-            String joinColumn = link.joinColumn();
-            Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
-            field.setAccessible(true);
-            Object val = field.get(DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                    .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id)));
-            if (joinColumn.contains(".")) {
-                String[] jc = joinColumn.split("\\.");
-                JsonObject jo2 = new JsonObject();
-                jo2.addProperty(jc[1], val.toString());
-                jo.add(jc[0], jo2);
-            } else {
-                jo.addProperty(joinColumn, val.toString());
-            }
-            return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, jo, request);
+        JsonObject jo = new JsonObject();
+        String joinColumn = link.joinColumn();
+        Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
+        field.setAccessible(true);
+        Object val = field.get(DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id)));
+        if (joinColumn.contains(".")) {
+            String[] jc = joinColumn.split("\\.");
+            JsonObject jo2 = new JsonObject();
+            jo2.addProperty(jc[1], val.toString());
+            jo.add(jc[0], jo2);
+        } else {
+            jo.addProperty(joinColumn, val.toString());
         }
-        throw new EruptNoLegalPowerException();
+        return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, jo, request);
+    }
+
+    private Link findDrillLink(Erupt erupt, String code) {
+        return Stream.of(erupt.drills()).filter(it -> code.equals(it.code()))
+                .findFirst().orElseThrow(EruptNoLegalPowerException::new).link();
     }
 
 

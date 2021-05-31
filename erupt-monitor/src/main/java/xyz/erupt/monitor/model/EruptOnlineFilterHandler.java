@@ -30,9 +30,7 @@ public class EruptOnlineFilterHandler implements FilterHandler {
             Set<String> keys = stringRedisTemplate.keys(SessionKey.USER_TOKEN + "*");
             if (keys != null && keys.size() > 0) {
                 StringBuilder sb = new StringBuilder(EruptOnline.class.getSimpleName() + ".token in (");
-                for (String key : keys) {
-                    sb.append("'").append(key.substring(SessionKey.USER_TOKEN.length())).append("',");
-                }
+                keys.forEach(it -> sb.append("'").append(it.substring(SessionKey.USER_TOKEN.length())).append("',"));
                 return sb.substring(0, sb.length() - 1) + ")";
             } else {
                 return "1 = 2";
