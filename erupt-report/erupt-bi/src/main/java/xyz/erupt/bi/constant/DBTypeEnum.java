@@ -10,6 +10,8 @@ public enum DBTypeEnum {
     SQLServer2012(DBTypeEnum.SQL_SERVER_2012_LIMIT),
     Other(null);
 
+    public static final String OTHER = Other.name();
+
     public static final String $SQL = "@sql";
     public static final String $SIZE = "@size";
     public static final String $SKIP = "@skip";
@@ -22,7 +24,7 @@ public enum DBTypeEnum {
             "WHERE ROWNUM < " + $SKIP + " + " + $SIZE + " + 1) t   \n" +
             "WHERE RN > " + $SKIP;
 
-    //    支持2012及以上版本
+    // 支持2012及以上版本
     private static final String SQL_SERVER_2012_LIMIT = "SELECT * from (" + $SQL + ") t\n" +
             "OFFSET " + $SKIP + " ROWS\n" +
             "FETCH NEXT " + $SIZE + " ROWS ONLY";

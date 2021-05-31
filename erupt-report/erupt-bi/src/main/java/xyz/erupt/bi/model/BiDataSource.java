@@ -21,8 +21,9 @@ import xyz.erupt.bi.service.BiDataSourceService;
 import xyz.erupt.upms.model.base.HyperModel;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -101,10 +102,6 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
 
     @Override
     public List<VLModel> fetch(String[] params) {
-        List<VLModel> list = new ArrayList<>();
-        for (DBTypeEnum value : DBTypeEnum.values()) {
-            list.add(new VLModel(value.name(), value.name()));
-        }
-        return list;
+        return Stream.of(DBTypeEnum.values()).map(it -> new VLModel(it.name(), it.name())).collect(Collectors.toList());
     }
 }
