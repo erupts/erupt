@@ -2,8 +2,9 @@ package xyz.erupt.upms.enums;
 
 import xyz.erupt.annotation.fun.TagsFetchHandler;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -16,12 +17,10 @@ public enum MenuLimitEnum {
 
         @Override
         public List<String> fetchTags(String[] params) {
-            List<String> list = new ArrayList<>();
-            for (MenuLimitEnum value : MenuLimitEnum.values()) {
-                list.add(value.name());
-            }
-            return list;
+            return Stream.of(MenuLimitEnum.values())
+                    .map(Enum::name).collect(Collectors.toList());
         }
+
     }
 
 }

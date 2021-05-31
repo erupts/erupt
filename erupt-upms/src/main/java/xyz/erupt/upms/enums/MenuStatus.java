@@ -4,8 +4,9 @@ import lombok.Getter;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -27,11 +28,9 @@ public enum MenuStatus {
 
         @Override
         public List<VLModel> fetch(String[] params) {
-            List<VLModel> menuStatus = new ArrayList<>();
-            for (MenuStatus menuTypeEnum : MenuStatus.values()) {
-                menuStatus.add(new VLModel(menuTypeEnum.getValue() + "", menuTypeEnum.getLabel()));
-            }
-            return menuStatus;
+            return Stream.of(MenuStatus.values())
+                    .map(menuTypeEnum -> new VLModel(menuTypeEnum.getValue() + "", menuTypeEnum.getLabel()))
+                    .collect(Collectors.toList());
         }
 
     }
