@@ -4,13 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
-import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.IEruptDataService;
@@ -30,10 +28,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author YuePeng
@@ -173,9 +168,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
         StringBuilder hql = new StringBuilder();
         List<String> columnStrList = new ArrayList<>();
-        for (Column column : columns) {
-            columnStrList.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), column.getName()) + " as " + column.getAlias());
-        }
+        columns.forEach(column ->
+                columnStrList.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName()
+                        , column.getName()) + " as " + column.getAlias()));
         hql.append("select new map(").append(String.join(", ", columnStrList))
                 .append(") from ").append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
@@ -186,21 +181,13 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         });
         hql.append(" where 1 = 1 ");
         if (null != query.getConditions()) {
-            for (Condition condition : query.getConditions()) {
-                hql.append(EruptJpaUtils.AND).append(condition.getKey()).append('=').append(condition.getValue());
-            }
+            query.getConditions().forEach(it -> hql.append(EruptJpaUtils.AND).append(it.getKey()).append('=').append(it.getValue()));
         }
         if (null != query.getConditionStrings()) {
-            for (String condition : query.getConditionStrings()) {
-                hql.append(EruptJpaUtils.AND).append(condition);
-            }
+            query.getConditionStrings().forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
         }
-        for (Filter filter : eruptModel.getErupt().filter()) {
-            String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
-            if (StringUtils.isNotBlank(filterStr)) {
-                hql.append(EruptJpaUtils.AND).append(filterStr);
-            }
-        }
+        Arrays.stream(eruptModel.getErupt().filter()).map(AnnotationUtil::switchFilterConditionToStr)
+                .filter(StringUtils::isNotBlank).forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
         if (StringUtils.isNotBlank(query.getOrderBy())) {
             hql.append(" order by ").append(query.getOrderBy());
         }
