@@ -84,6 +84,7 @@ public class EruptDrillController {
         for (Drill drill : eruptModel.getErupt().drills()) {
             if (code.equals(drill.code())) {
                 link = drill.link();
+                break;
             }
         }
         if (null != link) {
