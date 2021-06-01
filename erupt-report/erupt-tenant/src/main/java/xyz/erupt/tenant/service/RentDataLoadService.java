@@ -8,7 +8,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.tenant.model.EruptTenant;
@@ -22,6 +21,7 @@ import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -33,14 +33,13 @@ import java.util.Map;
 public class RentDataLoadService implements CommandLineRunner, DataProxy<EruptTenant> {
 
     private static final Map<String, EruptTenant> eruptRentMap = new HashMap<>();
+
     private static final Map<String, String> rentUrlMappingMap = new HashMap<>();
 
     static {
         try {
             EruptField eruptField = EruptTenant.class.getDeclaredField("mappingType").getAnnotation(EruptField.class);
-            for (VL vl : eruptField.edit().choiceType().vl()) {
-                rentUrlMappingMap.put(vl.label(), vl.value());
-            }
+            Stream.of(eruptField.edit().choiceType().vl()).forEach(vl -> rentUrlMappingMap.put(vl.label(), vl.value()));
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
@@ -48,6 +47,7 @@ public class RentDataLoadService implements CommandLineRunner, DataProxy<EruptTe
 
     @Resource
     private EruptDao eruptDao;
+
     @Resource
     private HttpServletRequest request;
 

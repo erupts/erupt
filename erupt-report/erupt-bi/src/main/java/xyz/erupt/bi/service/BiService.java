@@ -30,6 +30,7 @@ import java.sql.ResultSetMetaData;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -40,6 +41,7 @@ import java.util.regex.Pattern;
 public class BiService {
 
     private static final String TOTAL_KEY = "count";
+
     @Resource
     private EruptUserService eruptUserService;
 
@@ -62,17 +64,10 @@ public class BiService {
         if (StringUtils.isNotBlank(biDataSource.getLimitSql())) {
             return biDataSource.getLimitSql();
         } else {
-            for (DBTypeEnum value : DBTypeEnum.values()) {
-                if (value.name().equals(biDataSource.getType())) {
-                    if (null == value.getLimitSql()) {
-                        return DBTypeEnum.GENERAL_LIMIT;
-                    } else {
-                        return value.getLimitSql();
-                    }
-                }
-            }
+            return Stream.of(DBTypeEnum.values())
+                    .filter(it -> it.name().equals(biDataSource.getType()))
+                    .findFirst().orElse(DBTypeEnum.MySQL).getLimitSql();
         }
-        return DBTypeEnum.GENERAL_LIMIT;
     }
 
     public Bi findBi(Long id) {
