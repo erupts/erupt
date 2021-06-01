@@ -82,7 +82,7 @@ public class EruptService {
     /**
      * 校验id使用权限
      *
-     * @param eruptModel erupt Object
+     * @param eruptModel eruptModel
      * @param id         标识主键
      * @return 是否有数据权限
      */

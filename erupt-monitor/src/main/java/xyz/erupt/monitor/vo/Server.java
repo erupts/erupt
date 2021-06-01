@@ -3,13 +3,12 @@ package xyz.erupt.monitor.vo;
 import lombok.Getter;
 import lombok.Setter;
 import oshi.SystemInfo;
-import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 import xyz.erupt.core.util.EruptSpringUtil;
 
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -42,7 +41,7 @@ public class Server {
     /**
      * 磁盘相关信息
      */
-    private List<SysFile> sysFiles = new LinkedList<>();
+    private List<SysFile> sysFiles;
 
     private Date startupDate; //启动时间
 
@@ -58,9 +57,7 @@ public class Server {
         long startupDate = EruptSpringUtil.getApplicationContext().getStartupDate();
         this.setStartupDate(new Date(startupDate));
         this.setRunDay(this.zhDateDiff(this.getStartupDate()));
-        for (OSFileStore store : os.getFileSystem().getFileStores()) {
-            sysFiles.add(new SysFile(store));
-        }
+        sysFiles = os.getFileSystem().getFileStores().stream().map(SysFile::new).collect(Collectors.toList());
     }
 
     private String zhDateDiff(Date date) {
