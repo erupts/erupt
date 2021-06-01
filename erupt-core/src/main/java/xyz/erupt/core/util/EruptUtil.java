@@ -10,13 +10,15 @@ import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
-import xyz.erupt.annotation.fun.TagsFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.query.Condition;
@@ -29,6 +31,8 @@ import xyz.erupt.core.view.EruptModel;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -127,28 +131,17 @@ public class EruptUtil {
     }
 
     public static List<VLModel> getChoiceList(ChoiceType choiceType) {
-        List<VLModel> vls = new ArrayList<>();
-        for (VL vl : choiceType.vl()) {
-            vls.add(new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable()));
-        }
-        for (Class<? extends ChoiceFetchHandler> clazz : choiceType.fetchHandler()) {
-            if (!clazz.isInterface()) {
-                List<VLModel> VL = EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams());
-                if (null != VL) {
-                    vls.addAll(VL);
-                }
-            }
-        }
+        List<VLModel> vls = Stream.of(choiceType.vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).collect(Collectors.toList());
+        Stream.of(choiceType.fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz -> {
+            Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams())).ifPresent(vls::addAll);
+        });
         return vls;
     }
 
     public static List<String> getTagList(TagsType tagsType) {
         List<String> tags = new ArrayList<>(Arrays.asList(tagsType.tags()));
-        for (Class<? extends TagsFetchHandler> clazz : tagsType.fetchHandler()) {
-            if (!clazz.isInterface()) {
-                tags.addAll(EruptSpringUtil.getBean(clazz).fetchTags(tagsType.fetchHandlerParams()));
-            }
-        }
+        Stream.of(tagsType.fetchHandler()).filter(clazz -> !clazz.isInterface())
+                .forEach(clazz -> tags.addAll(EruptSpringUtil.getBean(clazz).fetchTags(tagsType.fetchHandlerParams())));
         return tags;
     }
 
