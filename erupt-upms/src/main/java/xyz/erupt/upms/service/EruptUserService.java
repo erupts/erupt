@@ -113,17 +113,9 @@ public class EruptUserService {
             if (!eruptUser.getStatus()) {
                 return new LoginModel(false, "账号已锁定!");
             }
-            //校验IP
             if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
-                boolean isAllowIp = false;
-                for (String ip : eruptUser.getWhiteIp().split("\n")) {
-                    if (ip.equals(requestIp)) {
-                        isAllowIp = true;
-                        break;
-                    }
-                }
-                if (!isAllowIp) {
-                    return new LoginModel(false, "ip不允许访问");
+                if (Arrays.stream(eruptUser.getWhiteIp().split("\n")).noneMatch(ip -> ip.equals(requestIp))) {
+                    return new LoginModel(false, "当前 ip 无权访问");
                 }
             }
             if (checkPwd(eruptUser, pwd)) {
