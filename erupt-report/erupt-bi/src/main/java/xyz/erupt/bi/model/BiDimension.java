@@ -77,6 +77,8 @@ public class BiDimension extends BaseModel {
 
                                     @VL(value = "REFERENCE_TREE_RADIO", label = "单选树参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
                                     @VL(value = "REFERENCE_TREE_MULTI", label = "多选树参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
+                                    @VL(value = "REFERENCE_CASCADE", label = "级联选择参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
+
                                     @VL(value = "REFERENCE", label = "单选参照"),
                                     @VL(value = "REFERENCE_MULTI", label = "多选参照"),
                                     @VL(value = "REFERENCE_RADIO", label = "Radio参照"),

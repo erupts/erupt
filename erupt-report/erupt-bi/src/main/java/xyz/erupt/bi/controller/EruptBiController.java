@@ -143,7 +143,7 @@ public class EruptBiController {
             if (map.keySet().size() == 1) {
                 Object obj = map.values().iterator().next();
                 references.add(new Reference(obj, obj));
-            } else if (map.keySet().size() >= 3 && dimension.getType().contains("REFERENCE_TREE")) {
+            } else if (map.keySet().size() >= 3) {
                 Iterator<?> iterator = map.values().iterator();
                 references.add(new Reference(iterator.next(), iterator.next(), iterator.next()));
             } else {
