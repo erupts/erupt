@@ -8,8 +8,6 @@ import xyz.erupt.annotation.fun.DataProxy;
  */
 public class HyperFlowProxy implements DataProxy<HyperFlow> {
 
-    @Override
-    public String beforeFetch() {
-        return null;
-    }
+
+
 }
