@@ -6,9 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -36,22 +36,17 @@ public class RedisInfo {
 
     private boolean isAOF;
 
-    private List<RedisCmdStat> redisCmdStat = new ArrayList<>();
+    private List<RedisCmdStat> redisCmdStat;
 
     public RedisInfo(RedisConnectionFactory redisConnectionFactory) {
         RedisConnection redisConnection = redisConnectionFactory.getConnection();
-        Properties properties = redisConnection.info();
-        Properties commandStats = redisConnection.info("commandstats");
-        if (null != commandStats) {
-            commandStats.stringPropertyNames().forEach(key -> {
-                String cs = "cmdstat_";
-                if (key.startsWith(cs)) {
-                    redisCmdStat.add(new RedisCmdStat(StringUtils.removeStart(key, cs),
-                            StringUtils.substringBetween(commandStats.getProperty(key), "calls=", ",usec")));
-                }
-            });
-        }
-        if (null != properties) {
+        Optional.ofNullable(redisConnection.info("commandstats")).ifPresent(commandStats -> {
+            String cs = "cmdstat_";
+            redisCmdStat = commandStats.stringPropertyNames().stream().filter(it -> it.startsWith(cs))
+                    .map(it -> new RedisCmdStat(StringUtils.removeStart(it, cs),
+                            StringUtils.substringBetween(commandStats.getProperty(it), "calls=", ",usec"))).collect(Collectors.toList());
+        });
+        Optional.ofNullable(redisConnection.info()).ifPresent(properties -> {
             this.setKeyNum(redisConnectionFactory.getConnection().serverCommands().dbSize());
             this.setVersion(properties.getProperty("redis_version"));
             this.setUsedMem(properties.getProperty("used_memory_human"));
@@ -72,7 +67,6 @@ public class RedisInfo {
             if (null != aofEnabled) {
                 this.setAOF(Integer.parseInt(aofEnabled) != 0);
             }
-        }
-
+        });
     }
 }

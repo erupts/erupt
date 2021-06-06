@@ -17,23 +17,19 @@ import java.util.List;
 @Component
 public class SqlChoiceFetchHandler implements ChoiceFetchHandler {
 
-    @Resource
-    private JdbcTemplate jdbcTemplate;
-
     private final String CACHE_SPACE = SqlChoiceFetchHandler.class.getName() + ":";
 
     private final CaffeineEruptCache<List<VLModel>> sqlCache = new CaffeineEruptCache<>();
 
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+
     @Override
     public List<VLModel> fetch(String[] params) {
         if (null == params || params.length == 0) {
-            throw new RuntimeException("SqlChoiceFetchHandler → params not found");
+            throw new RuntimeException(SqlChoiceFetchHandler.class.getSimpleName() + " → params not found");
         }
-        long timeout = FetchConst.DEFAULT_CACHE_TIME;
-        if (params.length == 2) {
-            timeout = Long.parseLong(params[1]);
-        }
-        sqlCache.init(timeout);
+        sqlCache.init(params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME);
         return sqlCache.get(CACHE_SPACE + params[0], (key) -> jdbcTemplate.query(params[0], (rs, i) -> {
             if (rs.getMetaData().getColumnCount() == 1) {
                 return new VLModel(rs.getString(1), rs.getString(1));

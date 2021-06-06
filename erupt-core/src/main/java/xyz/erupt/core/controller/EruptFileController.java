@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -86,7 +87,8 @@ public class EruptFileController {
                     if (attachmentType.fileTypes().length > 0) {
                         String[] fileNameArr = file.getOriginalFilename().split("\\.");
                         String extensionName = fileNameArr[fileNameArr.length - 1];
-                        if (!Arrays.asList(attachmentType.fileTypes()).contains(extensionName)) {
+                        if (Stream.of(attachmentType.fileTypes()).noneMatch(type ->
+                                fileNameArr[fileNameArr.length - 1].equalsIgnoreCase(type))) {
                             return EruptApiModel.errorApi("上传失败，文件格式不允许为：" + extensionName);
                         }
                     }

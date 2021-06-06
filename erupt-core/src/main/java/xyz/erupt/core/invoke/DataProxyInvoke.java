@@ -6,7 +6,9 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptModel;
 
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -15,32 +17,21 @@ import java.util.function.Consumer;
 public class DataProxyInvoke {
 
     public static void invoke(EruptModel eruptModel, Consumer<DataProxy> consumer) {
-        for (Class<?> clazz : ReflectUtil.findClassExtendStack(eruptModel.getClazz())) {
-            DataProxyInvoke.invokeInterfaceDataProxy(clazz, consumer);
-            PreDataProxy preDataProxy = clazz.getAnnotation(PreDataProxy.class);
-            if (null != preDataProxy) {
-                consumer.accept(EruptSpringUtil.getBean(preDataProxy.value()));
-            }
-        }
-        DataProxyInvoke.invokeInterfaceDataProxy(eruptModel.getClazz(), consumer);
-
-        PreDataProxy preDataProxy = eruptModel.getClazz().getAnnotation(PreDataProxy.class);
-        if (null != preDataProxy) {
-            consumer.accept(EruptSpringUtil.getBean(preDataProxy.value()));
-        }
-
-        for (Class<? extends DataProxy<?>> proxy : eruptModel.getErupt().dataProxy()) {
-            consumer.accept(EruptSpringUtil.getBean(proxy));
-        }
+        //父类及接口 @PreDataProxy
+        ReflectUtil.findClassExtendStack(eruptModel.getClazz()).forEach(clazz -> DataProxyInvoke.actionInvokePreDataProxy(clazz, consumer));
+        //本类及接口 @PreDataProxy
+        DataProxyInvoke.actionInvokePreDataProxy(eruptModel.getClazz(), consumer);
+        //@Erupt → DataProxy
+        Stream.of(eruptModel.getErupt().dataProxy()).forEach(proxy -> consumer.accept(EruptSpringUtil.getBean(proxy)));
     }
 
-    private static void invokeInterfaceDataProxy(Class<?> clazz, Consumer<DataProxy> consumer) {
-        for (Class<?> ic : clazz.getInterfaces()) {
-            PreDataProxy preDataProxy = ic.getAnnotation(PreDataProxy.class);
-            if (null != preDataProxy) {
-                consumer.accept(EruptSpringUtil.getBean(preDataProxy.value()));
-            }
-        }
+    private static void actionInvokePreDataProxy(Class<?> clazz, Consumer<DataProxy> consumer) {
+        //接口
+        Stream.of(clazz.getInterfaces()).forEach(it -> Optional.ofNullable(it.getAnnotation(PreDataProxy.class))
+                .ifPresent(preDataProxy -> consumer.accept(EruptSpringUtil.getBean(preDataProxy.value()))));
+        //类
+        Optional.ofNullable(clazz.getAnnotation(PreDataProxy.class))
+                .ifPresent(preDataProxy -> consumer.accept(EruptSpringUtil.getBean(preDataProxy.value())));
     }
 
 }

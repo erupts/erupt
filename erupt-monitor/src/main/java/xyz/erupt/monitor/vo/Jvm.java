@@ -5,7 +5,6 @@ import lombok.Setter;
 import xyz.erupt.monitor.util.SystemUtil;
 
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 import java.text.DecimalFormat;
 import java.util.Properties;
 
@@ -44,9 +43,7 @@ public class Jvm {
     private int threadCount;
 
     Jvm() {
-        MemoryMXBean mxb = ManagementFactory.getMemoryMXBean();
         this.setThreadCount(ManagementFactory.getThreadMXBean().getThreadCount());
-
         Properties props = System.getProperties();
         long total = Runtime.getRuntime().maxMemory();
         long free = Runtime.getRuntime().freeMemory();

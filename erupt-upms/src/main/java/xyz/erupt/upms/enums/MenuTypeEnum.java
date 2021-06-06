@@ -4,8 +4,9 @@ import lombok.Getter;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 public enum MenuTypeEnum {
@@ -23,18 +24,16 @@ public enum MenuTypeEnum {
     private final String name;
     private final String desc;
 
+    private static final List<VLModel> menuTypes;
+
+    static {
+        menuTypes = Stream.of(MenuTypeEnum.values()).map(menuTypeEnum -> new VLModel(menuTypeEnum.getCode(), menuTypeEnum.getName(), menuTypeEnum.getDesc())).collect(Collectors.toList());
+    }
+
     MenuTypeEnum(String code, String name, String desc) {
         this.code = code;
         this.name = name;
         this.desc = desc;
-    }
-
-    private static final List<VLModel> menuTypes = new ArrayList<>();
-
-    static {
-        for (MenuTypeEnum menuTypeEnum : MenuTypeEnum.values()) {
-            menuTypes.add(new VLModel(menuTypeEnum.getCode(), menuTypeEnum.getName(), menuTypeEnum.getDesc()));
-        }
     }
 
     public static void addMenuType(VLModel menuType) {
