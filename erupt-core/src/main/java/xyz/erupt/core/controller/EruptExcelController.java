@@ -106,7 +106,7 @@ public class EruptExcelController {
     @EruptRecordOperate(value = "导入Excel", dynamicConfig = EruptOperateConfig.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional(rollbackOn = Exception.class)
-    public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
+    public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         if (PowerInvoke.getPowerObject(eruptModel).isImportable()) {
             if (file.isEmpty()) {
@@ -126,14 +126,14 @@ public class EruptExcelController {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new EruptWebApiRuntimeException("Excel解析异常" + "，出错行数：" + i + "，原因：" + e.getMessage());
+                throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage());
             }
             i = 1;
             for (JsonObject jo : list) {
                 i++;
                 EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo, null, request);
                 if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-                    throw new EruptWebApiRuntimeException("第" + i + "行：" + eruptApiModel.getMessage());
+                    throw new EruptWebApiRuntimeException("数据入库异常，出错行数：" + i + "，原因：" + eruptApiModel.getMessage());
                 }
             }
             return EruptApiModel.successApi();
