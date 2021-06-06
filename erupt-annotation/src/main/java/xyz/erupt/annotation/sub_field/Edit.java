@@ -42,7 +42,7 @@ public @interface Edit {
     Search search() default @Search(false);
 
     @Transient
-    @Comment("排序表达式，在修饰类型为对象时可用")
+    @Comment("排序表达式，在修饰类型为 ORM 对象时可用")
     String orderBy() default "";
 
     @Transient

@@ -195,7 +195,7 @@ public class EruptExcelService {
                                             cellIndexJoinEruptMap.get(cellNum).get(cell.getStringCellValue()).toString());
                                 }
                             } catch (Exception e) {
-                                throw new Exception(edit.title() + " -> " + this.getCellValue(cell) + "数据不存在");
+                                throw new Exception(edit.title() + " -> " + this.getStringCellValue(cell) + "数据不存在");
                             }
                             jsonObject.add(eruptFieldModel.getFieldName(), jo);
                             break;
@@ -204,7 +204,7 @@ public class EruptExcelService {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cellIndexJoinEruptMap.get(cellNum)
                                         .get(cell.getStringCellValue()).toString());
                             } catch (Exception e) {
-                                throw new Exception(edit.title() + " -> " + this.getCellValue(cell) + "数据不存在");
+                                throw new Exception(edit.title() + " -> " + this.getStringCellValue(cell) + "数据不存在");
                             }
                             break;
                         case BOOLEAN:
@@ -214,7 +214,7 @@ public class EruptExcelService {
                         default:
                             String rn = eruptFieldModel.getFieldReturnName();
                             if (String.class.getSimpleName().equals(rn)) {
-                                jsonObject.addProperty(eruptFieldModel.getFieldName(), getCellValue(cell).toString());
+                                jsonObject.addProperty(eruptFieldModel.getFieldName(), this.getStringCellValue(cell));
                             } else if (JavaType.NUMBER.equals(rn)) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
                             } else if (Date.class.getSimpleName().equals(rn)) {
@@ -229,28 +229,9 @@ public class EruptExcelService {
         return listObject;
     }
 
-    public Object getCellValue(Cell cell) {
-        switch (cell.getCellTypeEnum()) {
-            case STRING:
-                return cell.getStringCellValue();
-            case NUMERIC:
-                return cell.getNumericCellValue();
-            case BLANK:
-                return "";
-            case FORMULA:
-                try {
-                    return String.valueOf(cell.getNumericCellValue());
-                } catch (IllegalStateException e) {
-                    if (e.getMessage().contains("from a STRING cell")) {
-                        return String.valueOf(cell.getStringCellValue());
-                    } else if (e.getMessage().contains("from a ERROR formula cell")) {
-                        return String.valueOf(cell.getErrorCellValue());
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException("行/列" + cell.getRowIndex() + "/" + cell.getColumnIndex() + "公式读取失败");
-                }
-        }
-        return new Object();
+    public String getStringCellValue(Cell cell) {
+        cell.setCellType(CellType.STRING);
+        return cell.getStringCellValue() + "";
     }
 
 
@@ -297,8 +278,10 @@ public class EruptExcelService {
                                         Integer.toString(edit.sliderType().min()), Integer.toString(edit.sliderType().max()))));
                         break;
                     case DATE:
-                        sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间！", dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN,
-                                "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
+                        if (fieldModel.getFieldReturnName().equals(Date.class.getSimpleName())) {
+                            sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间！", dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN,
+                                    "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
+                        }
                         break;
                     default:
                         break;

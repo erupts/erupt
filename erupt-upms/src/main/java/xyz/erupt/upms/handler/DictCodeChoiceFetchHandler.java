@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
  * date 2020/12/16 18:00
  */
 @Component
-public class DictChoiceFetchHandler implements ChoiceFetchHandler {
+public class DictCodeChoiceFetchHandler implements ChoiceFetchHandler {
 
-    private final String CACHE_SPACE = DictChoiceFetchHandler.class.getName() + ":";
+    private final String CACHE_SPACE = DictCodeChoiceFetchHandler.class.getName() + ":";
 
     private final CaffeineEruptCache<List<VLModel>> dictCache = new CaffeineEruptCache<>();
 
@@ -29,7 +29,7 @@ public class DictChoiceFetchHandler implements ChoiceFetchHandler {
     @Override
     public List<VLModel> fetch(String[] params) {
         if (null == params || params.length == 0) {
-            throw new RuntimeException(DictChoiceFetchHandler.class.getSimpleName() + " → params[0] must dict → code");
+            throw new RuntimeException(DictCodeChoiceFetchHandler.class.getSimpleName() + " → params[0] must dict → code");
         }
         dictCache.init(params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME);
         return dictCache.get(CACHE_SPACE + params[0], (key) ->

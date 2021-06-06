@@ -57,8 +57,7 @@ public class JobDataLoadService implements CommandLineRunner {
                 new AssignableTypeFilter(EruptJobHandler.class)
         }, clazz -> loadedJobHandler.add(clazz.getName()));
         if (eruptJobProp.isEnable()) {
-            List<EruptJob> list = eruptDao.queryEntityList(EruptJob.class, "status = true", null);
-            for (EruptJob job : list) {
+            for (EruptJob job : eruptDao.queryEntityList(EruptJob.class, "status = true", null)) {
                 eruptJobService.modifyJob(job);
             }
             log.info("Erupt job initialization completed in {} ms", timeRecorder.recorder());

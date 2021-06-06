@@ -10,6 +10,7 @@ import xyz.erupt.core.view.EruptModel;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * @author YuePeng
@@ -30,11 +31,8 @@ public class EruptRowOperationConfig implements EruptRecordOperate.DynamicConfig
 
     private RowOperation findRowOperation(EruptModel eruptModel) {
         String code = request.getServletPath().split(EruptDataController.OPERATOR_PATH_STR + "/")[1];
-        for (RowOperation operation : eruptModel.getErupt().rowOperation()) {
-            if (operation.code().equals(code)) {
-                return operation;
-            }
-        }
-        throw new RuntimeException(eruptModel.getEruptName() + " RowOperation not found " + code);
+        return Arrays.stream(eruptModel.getErupt().rowOperation())
+                .filter(operation -> operation.code().equals(code)).findFirst()
+                .orElseThrow(() -> new RuntimeException(eruptModel.getEruptName() + " RowOperation not found " + code));
     }
 }

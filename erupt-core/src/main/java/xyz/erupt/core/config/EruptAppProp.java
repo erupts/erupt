@@ -21,4 +21,7 @@ public class EruptAppProp {
     //登录密码是否加密传输
     private Boolean pwdTransferEncrypt = true;
 
+    //多语言配置
+    private String[] locale;
+
 }
