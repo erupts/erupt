@@ -125,8 +125,7 @@ public class EruptExcelController {
                     throw new EruptWebApiRuntimeException("上传文件格式必须为Excel");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage());
+                throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage(), e);
             }
             i = 1;
             for (JsonObject jo : list) {
