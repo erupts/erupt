@@ -2,8 +2,6 @@ package xyz.erupt.bi.view;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.erupt.bi.model.BiChart;
-import xyz.erupt.bi.model.BiDimension;
 
 import java.util.List;
 
@@ -13,9 +11,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class BiModel {
-
-    private Long id;
+public class BiVo {
 
     private String code;
 
@@ -25,7 +21,7 @@ public class BiModel {
 
     private int refreshTime;
 
-    private List<BiDimension> dimensions;
+    private List<BiDimensionVo> dimensions;
 
-    private List<BiChart> charts;
+    private List<BiChartVo> charts;
 }

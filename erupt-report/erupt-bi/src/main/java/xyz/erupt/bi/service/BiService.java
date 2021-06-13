@@ -20,10 +20,7 @@ import xyz.erupt.upms.service.EruptUserService;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.script.Bindings;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.SimpleBindings;
+import javax.script.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.ResultSetMetaData;
@@ -155,6 +152,14 @@ public class BiService {
     private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
 
     private static final Pattern EXPRESS_PATTERN = Pattern.compile("(?<=\\$\\{)(.+?)(?=\\})");
+
+    public static Object evalScript(String script, Bindings bindings) throws ScriptException {
+        if (null == bindings) {
+            return scriptEngine.eval(script);
+        } else {
+            return scriptEngine.eval(script, bindings);
+        }
+    }
 
     @SneakyThrows
     private String processPlaceHolder(String express, Map<String, Object> param) {

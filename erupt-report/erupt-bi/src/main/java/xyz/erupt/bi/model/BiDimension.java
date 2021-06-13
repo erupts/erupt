@@ -8,14 +8,12 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author YuePeng
@@ -51,6 +49,15 @@ public class BiDimension extends BaseModel {
             edit = @Edit(title = "是否必填", notNull = true)
     )
     private Boolean notNull = true;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "参照维度", column = "name"),
+            edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE,
+                    showBy = @ShowBy(dependField = "type",
+                            expr = "value && value.indexOf('REFERENCE') != -1"))
+    )
+    private BiDimensionReference biDimensionReference;
 
     @EruptField(
             views = @View(title = "维度类型"),
@@ -89,20 +96,16 @@ public class BiDimension extends BaseModel {
     )
     private String type;
 
-    @ManyToOne
+    @Column(length = 2000)
     @EruptField(
-            views = @View(title = "参照维度", column = "name"),
-            edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE,
-                    showBy = @ShowBy(dependField = "type",
-                            expr = "value && value.indexOf('REFERENCE') != -1"))
+            views = @View(title = "默认值"),
+            edit = @Edit(title = "默认值", desc = "通过js脚本动态生成默认值，字符串请加引号"
+                    , type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "js"))
     )
-    private BiDimensionReference biDimensionReference;
+    private String defaultValue;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     private Bi bi;
-
-//    @Column(name = "bi_id")
-//    private Long bi;
 
 }
 

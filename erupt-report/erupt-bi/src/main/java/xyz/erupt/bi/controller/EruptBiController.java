@@ -2,6 +2,7 @@ package xyz.erupt.bi.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -11,10 +12,7 @@ import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.*;
 import xyz.erupt.bi.service.BiService;
-import xyz.erupt.bi.view.BiColumn;
-import xyz.erupt.bi.view.BiData;
-import xyz.erupt.bi.view.BiModel;
-import xyz.erupt.bi.view.Reference;
+import xyz.erupt.bi.view.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.GsonFactory;
@@ -33,6 +31,7 @@ import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -47,6 +46,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API + "/bi")
+@Slf4j
 public class EruptBiController {
 
     @Resource
@@ -68,76 +68,88 @@ public class EruptBiController {
 
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
-    public BiModel getBuilder(@PathVariable("code") String code, HttpServletResponse response) {
-        Bi bi = eruptDao.queryEntity(Bi.class, "code = :code",
-                new HashMap<String, Object>(1) {
-                    {
-                        this.put("code", code);
-                    }
-                });
+    public BiVo getBuilder(@PathVariable("code") String code, HttpServletResponse response) {
+        Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
+            this.put("code", code);
+        }});
         if (null == bi) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
         }
-        BiModel biModel = new BiModel();
+        BiVo biVo = new BiVo();
         if (StringUtils.isBlank(bi.getSqlStatement())) {
-            biModel.setTable(false);
-            biModel.setExport(false);
+            biVo.setTable(false);
+            biVo.setExport(false);
         } else {
-            biModel.setTable(true);
-            biModel.setExport(bi.getExport());
+            biVo.setTable(true);
+            biVo.setExport(bi.getExport());
         }
         int maxSort = 9999;
+
+        List<BiChartVo> biChartVos = new ArrayList<>();
         for (BiChart chart : bi.getBiCharts()) {
-            chart.setSqlStatement(null);
-            chart.setBi(null);
-            chart.setCreateTime(null);
-            chart.setUpdateTime(null);
-            chart.setCreateUser(null);
-            chart.setUpdateUser(null);
-            if (chart.getSort() == null) {
-                chart.setSort(++maxSort);
-            }
+            BiChartVo biChartVo = new BiChartVo();
+            biChartVo.setChartOption(chart.getChartOption());
+            biChartVo.setId(chart.getId());
+            biChartVo.setCode(chart.getCode());
+            biChartVo.setGrid(chart.getGrid());
+            biChartVo.setHeight(chart.getHeight());
+            biChartVo.setName(chart.getName());
+            biChartVo.setPath(chart.getPath());
+            biChartVo.setType(chart.getType());
+            biChartVo.setSort((chart.getSort() == null) ? ++maxSort : chart.getSort());
+            biChartVos.add(biChartVo);
+            biVo.setCharts(biChartVos);
         }
+        List<BiDimensionVo> biDimensionVos = new ArrayList<>();
         for (BiDimension dimension : bi.getBiDimension()) {
-            dimension.setBiDimensionReference(null);
-            dimension.setBi(null);
-            if (dimension.getSort() == null) {
-                dimension.setSort(++maxSort);
+            BiDimensionVo biDimensionVo = new BiDimensionVo();
+            biDimensionVo.setId(dimension.getId());
+            biDimensionVo.setCode(dimension.getCode());
+            biDimensionVo.setNotNull(dimension.getNotNull());
+            biDimensionVo.setTitle(dimension.getTitle());
+            biDimensionVo.setType(dimension.getType());
+            dimension.setSort((dimension.getSort() == null) ? ++maxSort : dimension.getSort());
+            if (StringUtils.isNotBlank(dimension.getDefaultValue())) {
+                try {
+                    biDimensionVo.setDefaultValue(BiService.evalScript(dimension.getDefaultValue(), null));
+                } catch (ScriptException e) {
+                    log.error("{}.{} -> {}", bi.getName(), dimension.getCode(), e.getMessage());
+                }
             }
+            biDimensionVos.add(biDimensionVo);
         }
         if (null != bi.getRefreshTime() && bi.getRefreshTime() > 0) {
-            biModel.setRefreshTime(bi.getRefreshTime());
+            biVo.setRefreshTime(bi.getRefreshTime());
         }
-        biModel.setId(bi.getId());
-        biModel.setCode(bi.getCode());
-        biModel.setCharts(bi.getBiCharts().stream().sorted(Comparator.comparing(BiChart::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
-        biModel.setDimensions(bi.getBiDimension().stream().sorted(Comparator.comparing(BiDimension::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
-        return biModel;
+        biVo.setCode(bi.getCode());
+        biVo.setCharts(biChartVos.stream().sorted(Comparator.comparing(BiChartVo::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
+        biVo.setDimensions(biDimensionVos.stream().sorted(Comparator.comparing(BiDimensionVo::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
+        return biVo;
     }
 
-    @PostMapping("/{code}/data/{id}")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
-    public BiData getData(@PathVariable("id") Long id,
-                          @RequestParam("index") int pageIndex,
+    @PostMapping("/data/{code}")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 2)
+    public BiData getData(@RequestParam("index") int pageIndex,
                           @RequestParam("size") int pageSize,
                           @RequestParam(value = "sort", required = false) String sort,
                           @RequestBody Map<String, Object> query, @PathVariable String code) {
-        if (pageSize > 100) {
-            pageSize = 100;
-        }
-        Bi bi = biService.findBi(id);
+        pageSize = pageSize > 100 ? 100 : pageSize;
+        Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
+            this.put("code", code);
+        }});
         this.verifyBiMenuPermissions(bi, code);
         return biService.queryBiData(bi, pageIndex, pageSize, query, false);
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @RequestMapping("/{code}/reference/{id}")
-    public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code) {
+    public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code,
+                                    @RequestBody Map<String, Object> query) {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
         this.verifyBiMenuPermissions(dimension.getBi(), code);
         BiDimensionReference reference = dimension.getBiDimensionReference();
-        List<Map<String, Object>> list = biService.startQuery(reference.getRefSql(), reference.getClassHandler(), reference.getDataSource(), null);
+        List<Map<String, Object>> list = biService.startQuery(reference.getRefSql(), reference.getClassHandler(), reference.getDataSource(), query);
         List<Reference> references = new ArrayList<>();
         for (Map<String, Object> map : list) {
             if (map.keySet().size() == 1) {
