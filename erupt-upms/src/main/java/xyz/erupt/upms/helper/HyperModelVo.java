@@ -28,7 +28,7 @@ import java.util.Date;
 @Setter
 @MappedSuperclass
 @PreDataProxy(HyperModelVo.HyperModelDataProxy.class)
-public class HyperModelVo extends BaseModel implements DataProxy<HyperModelVo> {
+public class HyperModelVo extends BaseModel {
 
     @Transient
     @EruptField(
@@ -58,7 +58,7 @@ public class HyperModelVo extends BaseModel implements DataProxy<HyperModelVo> {
 
     @EruptField(
             views = @View(title = "更新时间"),
-            edit = @Edit(title = "更新时间", readonly =  @Readonly)
+            edit = @Edit(title = "更新时间", readonly = @Readonly)
     )
     private Date updateTime;
 

@@ -34,7 +34,7 @@ public class DictChoiceFetchHandler implements ChoiceFetchHandler {
         dictCache.init(params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME);
         return dictCache.get(CACHE_SPACE + params[0], (key) ->
                 eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = '" + params[0] + "'", null)
-                        .stream().map((item) -> new VLModel(item.getCode(), item.getName())).collect(Collectors.toList()));
+                        .stream().map((item) -> new VLModel(item.getId(), item.getName())).collect(Collectors.toList()));
     }
 
 }

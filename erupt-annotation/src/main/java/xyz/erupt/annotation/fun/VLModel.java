@@ -19,6 +19,11 @@ public class VLModel {
 
     private boolean disable;
 
+    public VLModel(Long value, String label) {
+        this.value = value + "";
+        this.label = label;
+    }
+
     public VLModel(String value, String label) {
         this.value = value;
         this.label = label;

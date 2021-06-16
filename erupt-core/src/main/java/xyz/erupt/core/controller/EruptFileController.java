@@ -19,6 +19,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
@@ -187,6 +188,7 @@ public class EruptFileController {
             map.put("uploaded", true);
         } else {
             map.put("uploaded", false);
+            throw new EruptWebApiRuntimeException(eruptApiModel.getMessage());
         }
         return map;
     }

@@ -48,24 +48,21 @@ public class EruptJobAction implements Job {
                 eruptJobLog.setStatus(false);
                 String exceptionTraceStr = ExceptionUtils.getStackTrace(e);
                 eruptJobLog.setErrorInfo(exceptionTraceStr);
-                {
-                    //失败通知
-                    String notifyEmails = eruptJob.getNotifyEmails();
-                    if (StringUtils.isNotBlank(notifyEmails)) {
-                        if (null == javaMailSender) {
-                            log.warn("Sending mailbox not configured");
-                        }else{
-                            SimpleMailMessage message = new SimpleMailMessage();
-                            message.setSubject(eruptJob.getName() + " job error ！！！");
-                            message.setText(exceptionTraceStr);
-                            message.setTo(notifyEmails.split("\\|"));
-                            message.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
-                            javaMailSender.send(message);
-                        }
-                    }
-                }
                 if (null != jobHandler) {
                     jobHandler.error(e, eruptJob.getHandlerParam());
+                }
+                //失败通知
+                if (StringUtils.isNotBlank(eruptJob.getNotifyEmails())) {
+                    if (null == javaMailSender) {
+                        log.warn("Sending mailbox not configured");
+                    }else{
+                        SimpleMailMessage message = new SimpleMailMessage();
+                        message.setSubject(eruptJob.getName() + " job error ！！！");
+                        message.setText(exceptionTraceStr);
+                        message.setTo(eruptJob.getNotifyEmails().split("\\|"));
+                        message.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
+                        javaMailSender.send(message);
+                    }
                 }
             }
             eruptJobLog.setHandlerParam(eruptJob.getHandlerParam());
