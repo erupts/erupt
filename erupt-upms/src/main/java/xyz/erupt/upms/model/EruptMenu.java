@@ -17,6 +17,7 @@ import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptMenuService;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author YuePeng
@@ -134,5 +135,6 @@ public class EruptMenu extends HyperModel {
         this.sort = sort;
         this.icon = icon;
         this.parentMenu = parentMenu;
+        this.setCreateTime(new Date());
     }
 }

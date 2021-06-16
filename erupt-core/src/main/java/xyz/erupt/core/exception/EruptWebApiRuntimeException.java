@@ -9,4 +9,8 @@ public class EruptWebApiRuntimeException extends RuntimeException {
     public EruptWebApiRuntimeException(String message) {
         super(message);
     }
+
+    public EruptWebApiRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

@@ -11,4 +11,5 @@ import java.util.List;
 public interface AutoCompleteHandler {
 
     List<Object> completeHandler(@Comment("前端输入值") String val, @Comment("注解回传参数") String[] param);
+
 }
