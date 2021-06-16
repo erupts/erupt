@@ -6,6 +6,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.core.annotation.EruptHandlerNaming;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -43,9 +45,9 @@ public class JobDataLoadService implements CommandLineRunner {
     @Resource
     private EruptJobProp eruptJobProp;
 
-    private static final List<String> loadedJobHandler = new ArrayList<>();
+    private static final List<VLModel> loadedJobHandler = new ArrayList<>();
 
-    public static List<String> getLoadedJobHandler() {
+    public static List<VLModel> getLoadedJobHandler() {
         return loadedJobHandler;
     }
 
@@ -55,7 +57,10 @@ public class JobDataLoadService implements CommandLineRunner {
         TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AssignableTypeFilter(EruptJobHandler.class)
-        }, clazz -> loadedJobHandler.add(clazz.getName()));
+        }, clazz -> {
+            EruptHandlerNaming eruptHandlerNaming = clazz.getAnnotation(EruptHandlerNaming.class);
+            loadedJobHandler.add(new VLModel(clazz.getName(), (null == eruptHandlerNaming) ? clazz.getSimpleName() : eruptHandlerNaming.value()));
+        });
         if (eruptJobProp.isEnable()) {
             for (EruptJob job : eruptDao.queryEntityList(EruptJob.class, "status = true", null)) {
                 eruptJobService.modifyJob(job);
