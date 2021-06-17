@@ -26,12 +26,12 @@ public class EruptExceptionHandlerAdvice {
     @ExceptionHandler(EruptWebApiRuntimeException.class)
     public Map<String, Object> eruptWebApiRuntimeException(Exception e, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         map.put("error", "erupt web api error");
         map.put("message", e.getMessage());
         map.put("timestamp", new Date());
         map.put("path", request.getServletPath());
-        map.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        map.put("status", response.getStatus());
         e.printStackTrace();
         return map;
     }
