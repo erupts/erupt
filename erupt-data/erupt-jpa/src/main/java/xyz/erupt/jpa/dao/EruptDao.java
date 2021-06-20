@@ -2,7 +2,10 @@ package xyz.erupt.jpa.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.jpa.service.EntityManagerService;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +20,9 @@ public class EruptDao {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Resource
+    private EntityManagerService entityManagerService;
 
     private static final String SELECT = "select ";
 
@@ -49,6 +55,11 @@ public class EruptDao {
 
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    @Comment("根据数据源名称获取 EntityManager  注意：必须手动执行 entityManager.close() 方法")
+    public EntityManager getEntityManager(String name) {
+        return entityManagerService.findEntityManager(name);
     }
 
     //不存在则新增
