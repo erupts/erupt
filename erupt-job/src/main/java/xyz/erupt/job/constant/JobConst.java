@@ -8,5 +8,4 @@ public class JobConst {
 
     public static final String BEAUTIFUL_TAG = "value&&value.replace(/\\|/g,'<span class=\"text-red\"> | </span>')";
 
-    public static final String EMAIL_REGEX = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
 }

@@ -19,6 +19,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.upms.constant.RegexConst;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.MD5Utils;
@@ -45,10 +46,6 @@ import java.util.Set;
 @Setter
 @Component
 public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
-
-    private static final String EMAIL_REGEX = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-
-    private static final String PHONE_REGEX = "^[1][3,4,5,6,7,8,9][0-9]{9}$";
 
     @EruptField(
             views = @View(title = "用户名", sortable = true),
@@ -79,13 +76,13 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 
     @EruptField(
             views = @View(title = "手机号码"),
-            edit = @Edit(title = "手机号码", search = @Search(vague = true), inputType = @InputType(regex = PHONE_REGEX))
+            edit = @Edit(title = "手机号码", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.PHONE_REGEX))
     )
     private String phone;
 
     @EruptField(
             views = @View(title = "邮箱"),
-            edit = @Edit(title = "邮箱", search = @Search(vague = true), inputType = @InputType(regex = EMAIL_REGEX))
+            edit = @Edit(title = "邮箱", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
     )
     private String email;
 

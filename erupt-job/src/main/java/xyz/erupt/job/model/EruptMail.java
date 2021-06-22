@@ -20,6 +20,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.job.constant.JobConst;
+import xyz.erupt.upms.constant.RegexConst;
 import xyz.erupt.upms.model.base.HyperModel;
 
 import javax.mail.internet.MimeMessage;
@@ -51,7 +52,7 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
     @EruptField(
             views = @View(title = "接收人"),
             edit = @Edit(title = "接收人", notNull = true, search = @Search,
-                    inputType = @InputType(fullSpan = true, regex = JobConst.EMAIL_REGEX))
+                    inputType = @InputType(fullSpan = true, regex = RegexConst.EMAIL_REGEX))
     )
     private String recipient;
 
