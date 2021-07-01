@@ -7,6 +7,7 @@ import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.VLModel;
@@ -49,7 +50,7 @@ public class EruptExcelService {
     public Workbook exportExcel(EruptModel eruptModel, Page page) {
 //        XSSFWorkbook
 //        SXSSFWorkbook
-        Workbook wb = new HSSFWorkbook();
+        Workbook wb = new SXSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         sheet.setZoom(160);
         //冻结首行

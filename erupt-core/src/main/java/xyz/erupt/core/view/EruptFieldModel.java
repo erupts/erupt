@@ -92,6 +92,9 @@ public class EruptFieldModel {
                                 viewValues.put(TYPE, ViewType.ATTACHMENT);
                             }
                             continue;
+                        case CHOICE:
+                            viewValues.put(TYPE, ViewType.TEXT);
+                            continue;
                         case HTML_EDITOR:
                             viewValues.put(TYPE, ViewType.HTML);
                             continue;
