@@ -258,7 +258,6 @@ public class EruptUserService {
 
     //获取当前登录用户对象
     public EruptUser getCurrentEruptUser() {
-        entityManager.clear();
         Long uid = this.getCurrentUid();
         return null == uid ? null : entityManager.find(EruptUser.class, uid);
     }
