@@ -30,6 +30,7 @@ public class BiDataProxy implements DataProxy<Bi> {
     @Override
     @Transactional
     public void beforeUpdate(Bi bi) {
+        //TODO clear 方法貌似存在一些问题
         entityManager.clear();
         Bi bbi = entityManager.find(Bi.class, bi.getId());
         // TODO 在一对多的映射情况下，多的一方如果存有一的一方对象，那么这个对象必须赋值否则会出现多的一方数据无法保存的问题
