@@ -4,10 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -40,7 +38,7 @@ import java.util.Map;
  * date 2019-12-05.
  */
 @Service
-public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapter {
+public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
     private EruptUserService eruptUserService;
@@ -57,10 +55,6 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
 
     @Resource
     private EruptSessionService sessionService;
-
-    public EruptSecurityInterceptor(WebRequestInterceptor requestInterceptor) {
-        super(requestInterceptor);
-    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
@@ -155,11 +149,6 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        super.postHandle(request, response, handler, modelAndView);
-    }
-
-    @Override
     @Transactional
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         if (eruptSecurityProp.isRecordOperateLog()) {
@@ -206,11 +195,6 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                 }
             }
         }
-    }
-
-    @Override
-    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        super.afterConcurrentHandlingStarted(request, response, handler);
     }
 
     public String findRequestParamVal(HttpServletRequest request) {
