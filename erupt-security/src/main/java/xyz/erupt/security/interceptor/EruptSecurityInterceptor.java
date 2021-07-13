@@ -182,7 +182,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                         operate.setReqParam(findRequestParamVal(request));
                     }
                     operate.setCreateTime(new Date());
-                    operate.setTotalTime((int) (operate.getCreateTime().getTime() - RequestBodyTL.get().getDate()));
+                    operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
                     RequestBodyTL.remove();
                     Optional.ofNullable(ex).ifPresent(e -> {
                         operate.setErrorInfo(ExceptionUtils.getStackTrace(e));
