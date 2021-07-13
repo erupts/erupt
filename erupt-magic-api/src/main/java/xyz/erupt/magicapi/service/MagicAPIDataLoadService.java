@@ -47,9 +47,9 @@ public class MagicAPIDataLoadService implements CommandLineRunner {
                 menus.put(Authorization.DELETE, "删除");
                 menus.put(Authorization.UPLOAD, "上传");
                 menus.put(Authorization.DOWNLOAD, "导出");
-                menus.put(Authorization.DATASOURCE_VIEW, "数据源查看详情");
-                menus.put(Authorization.DATASOURCE_SAVE, "数据源保存");
-                menus.put(Authorization.DATASOURCE_DELETE, "数据源删除");
+//                menus.put(Authorization.DATASOURCE_VIEW, "数据源查看详情");
+//                menus.put(Authorization.DATASOURCE_SAVE, "数据源保存");
+//                menus.put(Authorization.DATASOURCE_DELETE, "数据源删除");
                 menus.forEach((key, value) -> {
                     String menuCode = menuKey + "-" + key.name().toLowerCase();
                     eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(menuCode, value,

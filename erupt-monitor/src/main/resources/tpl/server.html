@@ -48,17 +48,13 @@
         .table td:hover {
             background-color: #efefef;
         }
-
-        .el-card {
-            margin-bottom: 16px !important;
-        }
     </style>
 </head>
 <body>
 <div id="app" v-loading.fullscreen.lock="fullscreenLoading">
     <template>
         <el-row :gutter="16">
-            <el-col :span="12">
+            <el-col :span="12" :xs="24">
                 <el-card class="box-card" shadow="always">
                     <div class="clearfix" slot="header">
                         <span>CPU 信息</span>
@@ -88,7 +84,7 @@
                 </el-card>
             </el-col>
 
-            <el-col :span="12">
+            <el-col :span="12" :xs="24">
                 <el-card class="box-card" shadow="always">
                     <div class="clearfix" slot="header">
                         <span>内存信息</span>

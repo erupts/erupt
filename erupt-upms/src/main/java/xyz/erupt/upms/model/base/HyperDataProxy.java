@@ -2,7 +2,7 @@ package xyz.erupt.upms.model.base;
 
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -21,12 +21,12 @@ public class HyperDataProxy implements DataProxy<HyperModel> {
     @Override
     public void beforeAdd(HyperModel hyperModel) {
         hyperModel.setCreateTime(new Date());
-        hyperModel.setCreateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        hyperModel.setCreateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
     }
 
     @Override
     public void beforeUpdate(HyperModel hyperModel) {
         hyperModel.setUpdateTime(new Date());
-        hyperModel.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        hyperModel.setUpdateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
     }
 }
