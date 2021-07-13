@@ -61,8 +61,7 @@ public class EruptJobLog extends BaseModel {
     )
     private Date endTime;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = 2000)
     @EruptField(
             views = @View(title = "执行结果"),
             edit = @Edit(title = "执行结果")
