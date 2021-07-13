@@ -1,13 +1,13 @@
 package xyz.erupt.bi.service;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,14 +18,14 @@ import java.util.Map;
 @Service
 public class BiDataSourceService implements DataProxy<BiDataSource> {
 
-    private static final Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
+    private final Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
 
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    @Resource
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    NamedParameterJdbcTemplate getJdbcTemplate(BiDataSource biDataSource) {
+    public NamedParameterJdbcTemplate getJdbcTemplate(BiDataSource biDataSource) {
         if (null == biDataSource) {
-            return jdbcTemplate;
+            return namedParameterJdbcTemplate;
         } else {
             NamedParameterJdbcTemplate jdbcTemplate = templateMap.get(biDataSource.getCode());
             if (null == jdbcTemplate) {
@@ -48,22 +48,6 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
             return jdbcTemplate;
         }
     }
-
-//    @Override
-//    public void beforeUpdate(BiDataSource biDataSource) {
-//        entityManager.clear();
-//        BiDataSource ds = entityManager.find(BiDataSource.class, biDataSource.getId());
-//        if (StringUtils.isBlank(ds.getPassword())) {
-//
-//        } else {
-//
-//        }
-//    }
-//
-//    @Override
-//    public void editBehavior(BiDataSource biDataSource) {
-//        biDataSource.setPassword(null);
-//    }
 
 
     @Override
