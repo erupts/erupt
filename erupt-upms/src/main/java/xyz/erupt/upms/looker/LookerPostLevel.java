@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -45,7 +46,7 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
             },
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
-    private EruptUser createUser;
+    private EruptUserVo createUser;
 
     @EruptField(
             views = @View(title = "创建时间"),
@@ -81,7 +82,7 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
     @Override
     public void beforeAdd(LookerPostLevel lookerPostLevel) {
         lookerPostLevel.setCreateTime(new Date());
-        lookerPostLevel.setCreateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        lookerPostLevel.setCreateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
     }
 
     @Override

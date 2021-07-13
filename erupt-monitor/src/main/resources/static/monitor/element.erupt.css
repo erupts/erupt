@@ -173,3 +173,7 @@
     position: relative;
     float: right;
 }
+
+.el-card {
+    margin-bottom: 16px !important;
+}

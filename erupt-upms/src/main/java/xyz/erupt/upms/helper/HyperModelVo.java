@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -41,7 +41,7 @@ public class HyperModelVo extends BaseModel {
             views = @View(title = "创建人", column = "name"),
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
-    private EruptUser createUser;
+    private EruptUserVo createUser;
 
     @EruptField(
             views = @View(title = "创建时间"),
@@ -54,7 +54,7 @@ public class HyperModelVo extends BaseModel {
             views = @View(title = "更新人", column = "name"),
             edit = @Edit(title = "更新人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
-    private EruptUser updateUser;
+    private EruptUserVo updateUser;
 
     @EruptField(
             views = @View(title = "更新时间"),
@@ -71,13 +71,13 @@ public class HyperModelVo extends BaseModel {
         @Override
         public void beforeAdd(HyperModelVo hyperModel) {
             hyperModel.setCreateTime(new Date());
-            hyperModel.setCreateUser(new EruptUser(eruptUserService.getCurrentUid()));
+            hyperModel.setCreateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
         }
 
         @Override
         public void beforeUpdate(HyperModelVo hyperModel) {
             hyperModel.setUpdateTime(new Date());
-            hyperModel.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
+            hyperModel.setUpdateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
         }
     }
 }

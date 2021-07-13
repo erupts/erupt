@@ -38,6 +38,7 @@ public class EntityManagerService implements ApplicationRunner {
 
     private Map<String, EntityManagerFactory> entityManagerMap;
 
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         if (null != eruptProp.getDbs()) {
@@ -51,7 +52,6 @@ public class EntityManagerService implements ApplicationRunner {
                     vendorAdapter.setGenerateDdl(false);
                     vendorAdapter.setDatabase(jpa.getDatabase());
                     vendorAdapter.setShowSql(jpa.isShowSql());
-                    vendorAdapter.setDatabase(jpa.getDatabase());
                     vendorAdapter.setDatabasePlatform(jpa.getDatabasePlatform());
                     factory.setJpaVendorAdapter(vendorAdapter);
                 }

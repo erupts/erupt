@@ -4,10 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -19,7 +17,7 @@ import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.tl.RequestBodyTL;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.model.log.EruptOperateLog;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
@@ -34,13 +32,14 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author YuePeng
  * date 2019-12-05.
  */
 @Service
-public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapter {
+public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
     private EruptUserService eruptUserService;
@@ -57,10 +56,6 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
 
     @Resource
     private EruptSessionService sessionService;
-
-    public EruptSecurityInterceptor(WebRequestInterceptor requestInterceptor) {
-        super(requestInterceptor);
-    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
@@ -155,11 +150,6 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        super.postHandle(request, response, handler, modelAndView);
-    }
-
-    @Override
     @Transactional
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         if (eruptSecurityProp.isRecordOperateLog()) {
@@ -184,11 +174,7 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                     operate.setStatus(true);
                     operate.setReqMethod(request.getMethod());
                     operate.setReqAddr(request.getRequestURL().toString());
-                    if (null != eruptUserService.getCurrentUid()) {
-                        operate.setEruptUser(new EruptUser() {{
-                            this.setId(eruptUserService.getCurrentUid());
-                        }});
-                    }
+                    Optional.ofNullable(eruptUserService.getCurrentUid()).ifPresent(it -> operate.setEruptUser(new EruptUserVo(it)));
                     Object param = RequestBodyTL.get().getBody();
                     if (null != param) {
                         operate.setReqParam(param.toString());
@@ -196,21 +182,16 @@ public class EruptSecurityInterceptor extends WebRequestHandlerInterceptorAdapte
                         operate.setReqParam(findRequestParamVal(request));
                     }
                     operate.setCreateTime(new Date());
-                    operate.setTotalTime((int) (operate.getCreateTime().getTime() - RequestBodyTL.get().getDate()));
+                    operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
                     RequestBodyTL.remove();
-                    if (null != ex) {
-                        operate.setErrorInfo(ExceptionUtils.getStackTrace(ex));
+                    Optional.ofNullable(ex).ifPresent(e -> {
+                        operate.setErrorInfo(ExceptionUtils.getStackTrace(e));
                         operate.setStatus(false);
-                    }
+                    });
                     entityManager.persist(operate);
                 }
             }
         }
-    }
-
-    @Override
-    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        super.afterConcurrentHandlingStarted(request, response, handler);
     }
 
     public String findRequestParamVal(HttpServletRequest request) {

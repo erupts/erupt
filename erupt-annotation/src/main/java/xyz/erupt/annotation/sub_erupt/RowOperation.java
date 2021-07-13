@@ -17,7 +17,7 @@ public @interface RowOperation {
 
     // T(org.apache.commons.lang3.RandomStringUtils).randomAlphanumeric(4)
     @Deprecated
-    @AutoFill("T(Integer).toString(#item.hashCode())")
+    @AutoFill("T(Integer).toString(#item.title().hashCode())")
     String code() default "";
 
     String title();
@@ -67,6 +67,8 @@ public @interface RowOperation {
         @Comment("通过erupt表单渲染，operationHandler进行逻辑处理")
         ERUPT,
         @Comment("通过自定义模板渲染")
-        TPL
+        TPL,
+//        @Comment("前端执行JavaScript脚本")
+//        JS
     }
 }

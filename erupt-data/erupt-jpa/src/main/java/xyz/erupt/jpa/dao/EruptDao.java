@@ -2,7 +2,10 @@ package xyz.erupt.jpa.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.jpa.service.EntityManagerService;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +20,9 @@ public class EruptDao {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Resource
+    private EntityManagerService entityManagerService;
 
     private static final String SELECT = "select ";
 
@@ -51,6 +57,11 @@ public class EruptDao {
         return entityManager;
     }
 
+    @Comment("根据数据源名称获取 EntityManager  注意：必须手动执行 entityManager.close() 方法")
+    public EntityManager getEntityManager(String name) {
+        return entityManagerService.findEntityManager(name);
+    }
+
     //不存在则新增
     public <T> T persistIfNotExist(Class<T> eruptClass, Object obj, String field, String val) throws NonUniqueResultException {
         T t = (T) queryEntity(obj.getClass(), field + EQU + " :val", new HashMap<String, Object>(1) {
@@ -65,32 +76,6 @@ public class EruptDao {
         } else {
             return t;
         }
-    }
-
-    private Query simpleQuery(Class eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
-        StringBuilder sb = new StringBuilder();
-        if (cols.length > 0) {
-            sb.append(SELECT);
-            if (isMap) {
-                sb.append(NEW_MAP);
-                for (int i = 0; i < cols.length; i++) {
-                    sb.append(cols[i]).append(AS).append(cols[i]).append(i == cols.length - 1 ? "" : ",");
-                }
-                sb.append(")");
-            } else {
-                for (int i = 0; i < cols.length; i++) {
-                    sb.append(cols[i]).append(i == cols.length - 1 ? "" : ",");
-                }
-            }
-        }
-        expr = StringUtils.isBlank(expr) ? "" : WHERE + expr;
-        Query query = entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() + expr);
-        if (null != paramMap) {
-            for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-        }
-        return query;
     }
 
     //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
@@ -144,5 +129,33 @@ public class EruptDao {
 
     public <T> T queryEntity(Class<T> eruptClass) {
         return this.queryEntity(eruptClass, null);
+    }
+
+
+
+    private Query simpleQuery(Class eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
+        StringBuilder sb = new StringBuilder();
+        if (cols.length > 0) {
+            sb.append(SELECT);
+            if (isMap) {
+                sb.append(NEW_MAP);
+                for (int i = 0; i < cols.length; i++) {
+                    sb.append(cols[i]).append(AS).append(cols[i]).append(i == cols.length - 1 ? "" : ",");
+                }
+                sb.append(")");
+            } else {
+                for (int i = 0; i < cols.length; i++) {
+                    sb.append(cols[i]).append(i == cols.length - 1 ? "" : ",");
+                }
+            }
+        }
+        expr = StringUtils.isBlank(expr) ? "" : WHERE + expr;
+        Query query = entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() + expr);
+        if (null != paramMap) {
+            for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+        }
+        return query;
     }
 }

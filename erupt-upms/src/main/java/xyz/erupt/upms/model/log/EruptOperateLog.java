@@ -14,7 +14,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -39,7 +39,7 @@ public class EruptOperateLog extends BaseModel {
             views = @View(title = "用户", column = "name"),
             edit = @Edit(title = "用户", type = EditType.REFERENCE_TABLE, search = @Search)
     )
-    private EruptUser eruptUser;
+    private EruptUserVo eruptUser;
 
     @EruptField(
             views = @View(title = "IP"),
@@ -59,8 +59,7 @@ public class EruptOperateLog extends BaseModel {
     )
     private String apiName;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = 5000)
     @EruptField(
             views = @View(title = "请求参数", type = ViewType.CODE),
             edit = @Edit(title = "请求参数", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
@@ -84,7 +83,7 @@ public class EruptOperateLog extends BaseModel {
             views = @View(title = "请求耗时", template = "value && value+'ms'"),
             edit = @Edit(title = "请求耗时", search = @Search(vague = true))
     )
-    private Integer totalTime;
+    private Long totalTime;
 
     @EruptField(
             views = @View(title = "记录时间"),
