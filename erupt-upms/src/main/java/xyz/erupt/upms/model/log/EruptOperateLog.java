@@ -14,7 +14,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -39,7 +39,7 @@ public class EruptOperateLog extends BaseModel {
             views = @View(title = "用户", column = "name"),
             edit = @Edit(title = "用户", type = EditType.REFERENCE_TABLE, search = @Search)
     )
-    private EruptUser eruptUser;
+    private EruptUserVo eruptUser;
 
     @EruptField(
             views = @View(title = "IP"),

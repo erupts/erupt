@@ -17,7 +17,7 @@ import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.tl.RequestBodyTL;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.model.log.EruptOperateLog;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -173,11 +174,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     operate.setStatus(true);
                     operate.setReqMethod(request.getMethod());
                     operate.setReqAddr(request.getRequestURL().toString());
-                    if (null != eruptUserService.getCurrentUid()) {
-                        operate.setEruptUser(new EruptUser() {{
-                            this.setId(eruptUserService.getCurrentUid());
-                        }});
-                    }
+                    Optional.ofNullable(eruptUserService.getCurrentUid()).ifPresent(it -> operate.setEruptUser(new EruptUserVo(it)));
                     Object param = RequestBodyTL.get().getBody();
                     if (null != param) {
                         operate.setReqParam(param.toString());
@@ -187,10 +184,10 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     operate.setCreateTime(new Date());
                     operate.setTotalTime((int) (operate.getCreateTime().getTime() - RequestBodyTL.get().getDate()));
                     RequestBodyTL.remove();
-                    if (null != ex) {
-                        operate.setErrorInfo(ExceptionUtils.getStackTrace(ex));
+                    Optional.ofNullable(ex).ifPresent(e -> {
+                        operate.setErrorInfo(ExceptionUtils.getStackTrace(e));
                         operate.setStatus(false);
-                    }
+                    });
                     entityManager.persist(operate);
                 }
             }
