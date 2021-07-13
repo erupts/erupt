@@ -11,7 +11,6 @@ import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.EruptPropDb;
-import xyz.erupt.core.service.EruptApplication;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -19,6 +18,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -45,19 +46,26 @@ public class EntityManagerService implements ApplicationRunner {
             //多数据源处理
             entityManagerMap = new HashMap<>();
             for (EruptPropDb prop : eruptProp.getDbs()) {
+                Objects.requireNonNull(prop.getDatasource().getName(), "dbs Must specify name → dbs.datasource.name");
+                if (prop.getScanPackages().length == 0) {
+                    throw new RuntimeException(String.format("%s DataSource not found 'scanPackages' configuration", prop.getDatasource().getName()));
+                }
                 LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
                 {
                     JpaProperties jpa = prop.getJpa();
                     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-                    vendorAdapter.setGenerateDdl(false);
+                    vendorAdapter.setGenerateDdl(jpa.isGenerateDdl());
                     vendorAdapter.setDatabase(jpa.getDatabase());
                     vendorAdapter.setShowSql(jpa.isShowSql());
                     vendorAdapter.setDatabasePlatform(jpa.getDatabasePlatform());
                     factory.setJpaVendorAdapter(vendorAdapter);
+                    Properties properties = new Properties();
+                    properties.putAll(jpa.getProperties());
+                    factory.setJpaProperties(properties);
                 }
                 {
                     factory.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
-                    factory.setPackagesToScan(EruptApplication.getScanPackage());
+                    factory.setPackagesToScan(prop.getScanPackages());
                     factory.afterPropertiesSet();
                 }
                 entityManagerMap.put(prop.getDatasource().getName(), factory.getObject());
