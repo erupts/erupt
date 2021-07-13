@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -39,7 +39,7 @@ public class EruptLoginLog extends BaseModel {
             edit = @Edit(title = "用户", type = EditType.REFERENCE_TABLE
                     , search = @Search(vague = true))
     )
-    private EruptUser eruptUser;
+    private EruptUserVo eruptUser;
 
     @EruptField(
             views = @View(title = "登录时间", sortable = true),

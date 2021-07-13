@@ -145,7 +145,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private Boolean isMd5 = true;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "e_upms_user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

@@ -21,6 +21,7 @@ import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.util.IpUtil;
 import xyz.erupt.upms.util.MD5Utils;
@@ -179,7 +180,7 @@ public class EruptUserService {
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
         EruptLoginLog loginLog = new EruptLoginLog();
         loginLog.setToken(token);
-        loginLog.setEruptUser(user);
+        loginLog.setEruptUser(new EruptUserVo(user.getId()));
         loginLog.setLoginTime(new Date());
         loginLog.setIp(IpUtil.getIpAddr(request));
         loginLog.setSystemName(userAgent.getOperatingSystem().getName());

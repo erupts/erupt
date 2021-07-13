@@ -78,32 +78,6 @@ public class EruptDao {
         }
     }
 
-    private Query simpleQuery(Class eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
-        StringBuilder sb = new StringBuilder();
-        if (cols.length > 0) {
-            sb.append(SELECT);
-            if (isMap) {
-                sb.append(NEW_MAP);
-                for (int i = 0; i < cols.length; i++) {
-                    sb.append(cols[i]).append(AS).append(cols[i]).append(i == cols.length - 1 ? "" : ",");
-                }
-                sb.append(")");
-            } else {
-                for (int i = 0; i < cols.length; i++) {
-                    sb.append(cols[i]).append(i == cols.length - 1 ? "" : ",");
-                }
-            }
-        }
-        expr = StringUtils.isBlank(expr) ? "" : WHERE + expr;
-        Query query = entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() + expr);
-        if (null != paramMap) {
-            for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-        }
-        return query;
-    }
-
     //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
     public List<Map<String, Object>> queryMapList(Class eruptClass, String expr, Map<String, Object> param, String... cols) {
         return simpleQuery(eruptClass, true, expr, param, cols).getResultList();
@@ -155,5 +129,33 @@ public class EruptDao {
 
     public <T> T queryEntity(Class<T> eruptClass) {
         return this.queryEntity(eruptClass, null);
+    }
+
+
+
+    private Query simpleQuery(Class eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
+        StringBuilder sb = new StringBuilder();
+        if (cols.length > 0) {
+            sb.append(SELECT);
+            if (isMap) {
+                sb.append(NEW_MAP);
+                for (int i = 0; i < cols.length; i++) {
+                    sb.append(cols[i]).append(AS).append(cols[i]).append(i == cols.length - 1 ? "" : ",");
+                }
+                sb.append(")");
+            } else {
+                for (int i = 0; i < cols.length; i++) {
+                    sb.append(cols[i]).append(i == cols.length - 1 ? "" : ",");
+                }
+            }
+        }
+        expr = StringUtils.isBlank(expr) ? "" : WHERE + expr;
+        Query query = entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() + expr);
+        if (null != paramMap) {
+            for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
+                query.setParameter(entry.getKey(), entry.getValue());
+            }
+        }
+        return query;
     }
 }

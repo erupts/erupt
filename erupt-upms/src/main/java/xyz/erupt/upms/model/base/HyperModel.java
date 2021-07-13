@@ -6,7 +6,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.SkipSerialize;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -32,10 +32,10 @@ public class HyperModel extends BaseModel {
     @JsonIgnore
     @SkipSerialize
     @ManyToOne(fetch = FetchType.LAZY)
-    private EruptUser createUser;
+    private EruptUserVo createUser;
 
     @JsonIgnore
     @SkipSerialize
     @ManyToOne(fetch = FetchType.LAZY)
-    private EruptUser updateUser;
+    private EruptUserVo updateUser;
 }

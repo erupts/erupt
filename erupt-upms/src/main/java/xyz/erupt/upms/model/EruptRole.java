@@ -61,7 +61,7 @@ public class EruptRole extends BaseModel {
     )
     private String powerOff;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "e_upms_role_menu",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
@@ -75,7 +75,7 @@ public class EruptRole extends BaseModel {
     )
     private Set<EruptMenu> menus;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "e_upms_user_role",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
