@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -38,7 +38,7 @@ public class BiHistory extends BaseModel {
             views = @View(title = "操作人", column = "name")
     )
     @ManyToOne
-    private EruptUser operateUser;
+    private EruptUserVo operateUser;
 
     @EruptField(
             views = @View(title = "操作时间")

@@ -95,7 +95,7 @@ public class Bi extends HyperModel {
     @JoinColumn(name = "bi_id")
     private Set<BiChart> biCharts;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bi_id")
     @OrderBy("sort")
     @EruptField(

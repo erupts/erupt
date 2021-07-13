@@ -1,12 +1,12 @@
 package xyz.erupt.bi.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Component
 public class BiDataProxy implements DataProxy<Bi> {
 
-    @Autowired
+    @Resource
     private EruptUserService eruptUserService;
 
     @PersistenceContext
@@ -45,7 +45,7 @@ public class BiDataProxy implements DataProxy<Bi> {
                 bh.setBi(bi);
                 bh.setSqlStatement(bbi.getSqlStatement());
                 bh.setOperateTime(new Date());
-                bh.setOperateUser(new EruptUser(eruptUserService.getCurrentUid()));
+                bh.setOperateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
                 entityManager.persist(bh);
                 entityManager.flush();
             }
