@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.service;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
@@ -46,10 +47,8 @@ public class EntityManagerService implements ApplicationRunner {
             //多数据源处理
             entityManagerMap = new HashMap<>();
             for (EruptPropDb prop : eruptProp.getDbs()) {
-                Objects.requireNonNull(prop.getDatasource().getName(), "dbs Must specify name → dbs.datasource.name");
-                if (prop.getScanPackages().length == 0) {
-                    throw new RuntimeException(String.format("%s DataSource not found 'scanPackages' configuration", prop.getDatasource().getName()));
-                }
+                Objects.requireNonNull(prop.getDatasource().getName(), "dbs configuration Must specify name → dbs.datasource.name");
+                Objects.requireNonNull(prop.getScanPackages(),String.format("%s DataSource not found 'scanPackages' configuration", prop.getDatasource().getName()));
                 LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
                 {
                     JpaProperties jpa = prop.getJpa();
@@ -64,7 +63,9 @@ public class EntityManagerService implements ApplicationRunner {
                     factory.setJpaProperties(properties);
                 }
                 {
-                    factory.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
+                    HikariDataSource hikariDataSource = new HikariDataSource();
+                    hikariDataSource.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
+                    factory.setDataSource(hikariDataSource);
                     factory.setPackagesToScan(prop.getScanPackages());
                     factory.afterPropertiesSet();
                 }
