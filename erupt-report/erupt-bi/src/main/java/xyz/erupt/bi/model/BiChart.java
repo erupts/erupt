@@ -124,8 +124,7 @@ public class BiChart extends HyperModel {
     )
     private String sqlStatement;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = 5000)
     @EruptField(
             edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照G2Plot",
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
