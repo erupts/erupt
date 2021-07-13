@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.service;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
@@ -11,7 +12,6 @@ import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.EruptPropDb;
-import xyz.erupt.core.service.EruptApplication;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -19,6 +19,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -45,19 +47,26 @@ public class EntityManagerService implements ApplicationRunner {
             //多数据源处理
             entityManagerMap = new HashMap<>();
             for (EruptPropDb prop : eruptProp.getDbs()) {
+                Objects.requireNonNull(prop.getDatasource().getName(), "dbs configuration Must specify name → dbs.datasource.name");
+                Objects.requireNonNull(prop.getScanPackages(),String.format("%s DataSource not found 'scanPackages' configuration", prop.getDatasource().getName()));
                 LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
                 {
                     JpaProperties jpa = prop.getJpa();
                     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-                    vendorAdapter.setGenerateDdl(false);
+                    vendorAdapter.setGenerateDdl(jpa.isGenerateDdl());
                     vendorAdapter.setDatabase(jpa.getDatabase());
                     vendorAdapter.setShowSql(jpa.isShowSql());
                     vendorAdapter.setDatabasePlatform(jpa.getDatabasePlatform());
                     factory.setJpaVendorAdapter(vendorAdapter);
+                    Properties properties = new Properties();
+                    properties.putAll(jpa.getProperties());
+                    factory.setJpaProperties(properties);
                 }
                 {
-                    factory.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
-                    factory.setPackagesToScan(EruptApplication.getScanPackage());
+                    HikariDataSource hikariDataSource = new HikariDataSource();
+                    hikariDataSource.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
+                    factory.setDataSource(hikariDataSource);
+                    factory.setPackagesToScan(prop.getScanPackages());
                     factory.afterPropertiesSet();
                 }
                 entityManagerMap.put(prop.getDatasource().getName(), factory.getObject());

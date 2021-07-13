@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "erupt")
+@ConfigurationProperties("erupt")
 public class EruptProp {
 
     //热构建erupt,开启此功能后每次请求都会重新构建erupt，该功能方便启动时修改erupt代码
@@ -39,6 +39,4 @@ public class EruptProp {
     private String[] gsonHttpMessageConvertersPackages;
 
     private List<EruptPropDb> dbs;
-
-
 }
