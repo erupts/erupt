@@ -168,8 +168,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
         StringBuilder hql = new StringBuilder();
         List<String> columnStrList = new ArrayList<>();
-        columns.forEach(column ->
-                columnStrList.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName()
+        columns.forEach(column -> columnStrList.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName()
                         , column.getName()) + " as " + column.getAlias()));
         hql.append("select new map(").append(String.join(", ", columnStrList))
                 .append(") from ").append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
@@ -180,12 +179,8 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
             }
         });
         hql.append(" where 1 = 1 ");
-        if (null != query.getConditions()) {
-            query.getConditions().forEach(it -> hql.append(EruptJpaUtils.AND).append(it.getKey()).append('=').append(it.getValue()));
-        }
-        if (null != query.getConditionStrings()) {
-            query.getConditionStrings().forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
-        }
+        Optional.ofNullable(query.getConditions()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it.getKey()).append('=').append(it.getValue())));
+        Optional.ofNullable(query.getConditionStrings()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it)));
         Arrays.stream(eruptModel.getErupt().filter()).map(AnnotationUtil::switchFilterConditionToStr)
                 .filter(StringUtils::isNotBlank).forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
         if (StringUtils.isNotBlank(query.getOrderBy())) {

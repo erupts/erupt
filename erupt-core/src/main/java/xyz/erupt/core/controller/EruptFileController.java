@@ -12,17 +12,15 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.AttachmentProxy;
-import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
-import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
+import xyz.erupt.core.util.EruptAssertUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
@@ -62,10 +60,7 @@ public class EruptFileController {
         try {
             //生成存储路径
             EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-            PowerObject powerObject = PowerInvoke.getPowerObject(eruptModel);
-            if (!powerObject.isEdit() && !powerObject.isAdd()) {
-                throw new EruptNoLegalPowerException();
-            }
+            EruptAssertUtil.powerLegal(eruptModel,powerObject -> !powerObject.isEdit() && !powerObject.isAdd());
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
             String path;
             if (eruptProp.isKeepUploadFileName()) {
