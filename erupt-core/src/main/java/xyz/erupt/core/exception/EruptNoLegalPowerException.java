@@ -17,6 +17,10 @@ public class EruptNoLegalPowerException extends RuntimeException {
 
     public EruptNoLegalPowerException(String message) {
         //TODO 记录IP或者其他操作
-        throw new EruptWebApiRuntimeException(message);
+        if (null == message) {
+            throw new EruptWebApiRuntimeException(NO_LEGAL_POWER);
+        } else {
+            throw new EruptWebApiRuntimeException(message);
+        }
     }
 }

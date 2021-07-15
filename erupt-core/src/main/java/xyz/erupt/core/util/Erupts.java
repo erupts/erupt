@@ -27,13 +27,7 @@ public class Erupts {
     }
 
     public static void powerLegal(Boolean bool, String message) {
-        if (null == bool || !bool) {
-            if (null == message) {
-                throw new EruptNoLegalPowerException();
-            } else {
-                throw new EruptNoLegalPowerException(message);
-            }
-        }
+        if (bool == Boolean.TRUE) throw new EruptNoLegalPowerException(message);
     }
 
     public static void requireFalse(boolean bool, String message) {
