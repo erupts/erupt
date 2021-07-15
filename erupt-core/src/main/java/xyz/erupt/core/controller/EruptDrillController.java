@@ -45,17 +45,13 @@ public class EruptDrillController {
                       @RequestBody TableQueryVo tableQueryVo) throws IllegalAccessException {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Link link = findDrillLink(eruptModel.getErupt(), code);
-        if (!eruptService.verifyIdPermissions(eruptModel, id)) {
-            throw new EruptNoLegalPowerException();
-        }
+        eruptService.verifyIdPermissions(eruptModel, id);
         Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
         field.setAccessible(true);
         Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
         Object val = field.get(data);
-        if (null == val) {
-            return new Page();
-        }
+        if (null == val) return new Page();
         return eruptService.getEruptData(
                 EruptCoreService.getErupt(link.linkErupt().getSimpleName()),
                 tableQueryVo, null,
@@ -71,9 +67,7 @@ public class EruptDrillController {
                                   HttpServletRequest request) throws Exception {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Link link = findDrillLink(eruptModel.getErupt(), code);
-        if (!eruptService.verifyIdPermissions(eruptModel, id)) {
-            throw new EruptNoLegalPowerException();
-        }
+        eruptService.verifyIdPermissions(eruptModel, id);
         JsonObject jo = new JsonObject();
         String joinColumn = link.joinColumn();
         Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());

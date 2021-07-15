@@ -9,18 +9,19 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProxyInvoke;
-import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.naming.EruptOperateConfig;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.service.EruptService;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
@@ -63,11 +64,8 @@ public class EruptExcelController {
             return;
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (PowerInvoke.getPowerObject(eruptModel).isImportable()) {
-            dataFileService.createExcelTemplate(eruptModel, request, response);
-        } else {
-            throw new EruptWebApiRuntimeException("没有导入权限");
-        }
+        Erupts.powerLegal(eruptModel, PowerObject::isImportable);
+        dataFileService.createExcelTemplate(eruptModel, request, response);
     }
 
     //导出
@@ -82,23 +80,20 @@ public class EruptExcelController {
             return;
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (PowerInvoke.getPowerObject(eruptModel).isExport()) {
-            TableQueryVo tableQueryVo = new TableQueryVo();
-            tableQueryVo.setPageIndex(1);
-            tableQueryVo.setDataExport(true);
-            if (null != condition) {
-                List<Condition> conditions = new Gson().fromJson(URLDecoder.decode(condition, StandardCharsets.UTF_8.name()),
-                        new TypeToken<List<Condition>>() {
-                        }.getType());
-                tableQueryVo.setCondition(conditions);
-            }
-            Page page = eruptService.getEruptData(eruptModel, tableQueryVo, null);
-            Workbook wb = dataFileService.exportExcel(eruptModel, page);
-            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
-            wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));
-        } else {
-            throw new EruptWebApiRuntimeException("没有导出权限");
+        Erupts.powerLegal(eruptModel, PowerObject::isExport);
+        TableQueryVo tableQueryVo = new TableQueryVo();
+        tableQueryVo.setPageIndex(1);
+        tableQueryVo.setDataExport(true);
+        if (null != condition) {
+            List<Condition> conditions = new Gson().fromJson(URLDecoder
+                    .decode(condition, StandardCharsets.UTF_8.name()), new TypeToken<List<Condition>>() {
+            }.getType());
+            tableQueryVo.setCondition(conditions);
         }
+        Page page = eruptService.getEruptData(eruptModel, tableQueryVo, null);
+        Workbook wb = dataFileService.exportExcel(eruptModel, page);
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
+        wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));
     }
 
     //导入
@@ -108,37 +103,34 @@ public class EruptExcelController {
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        if (PowerInvoke.getPowerObject(eruptModel).isImportable()) {
-            if (file.isEmpty()) {
-                return EruptApiModel.errorApi("上传失败，请选择文件");
-            }
-            String fileName = file.getOriginalFilename();
-            List<JsonObject> list;
-            int i = 1;
-            try {
-                i++;
-                if (fileName.endsWith(EruptExcelService.XLS_FORMAT)) {
-                    list = dataFileService.excelToEruptObject(eruptModel, new HSSFWorkbook(file.getInputStream()));
-                } else if (fileName.endsWith(EruptExcelService.XLSX_FORMAT)) {
-                    list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
-                } else {
-                    throw new EruptWebApiRuntimeException("上传文件格式必须为Excel");
-                }
-            } catch (Exception e) {
-                throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage(), e);
-            }
-            i = 1;
-            for (JsonObject jo : list) {
-                i++;
-                EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo, null, request);
-                if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-                    throw new EruptWebApiRuntimeException("数据入库异常，出错行数：" + i + "，原因：" + eruptApiModel.getMessage());
-                }
-            }
-            return EruptApiModel.successApi();
-        } else {
-            throw new EruptWebApiRuntimeException("没有导入权限");
+        Erupts.powerLegal(eruptModel, PowerObject::isImportable, "没有导入权限");
+        if (file.isEmpty()) {
+            return EruptApiModel.errorApi("上传失败，请选择文件");
         }
+        String fileName = file.getOriginalFilename();
+        List<JsonObject> list;
+        int i = 1;
+        try {
+            i++;
+            if (fileName.endsWith(EruptExcelService.XLS_FORMAT)) {
+                list = dataFileService.excelToEruptObject(eruptModel, new HSSFWorkbook(file.getInputStream()));
+            } else if (fileName.endsWith(EruptExcelService.XLSX_FORMAT)) {
+                list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
+            } else {
+                throw new EruptWebApiRuntimeException("上传文件格式必须为Excel");
+            }
+        } catch (Exception e) {
+            throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage(), e);
+        }
+        i = 1;
+        for (JsonObject jo : list) {
+            i++;
+            EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo, null, request);
+            if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
+                throw new EruptWebApiRuntimeException("数据入库异常，出错行数：" + i + "，原因：" + eruptApiModel.getMessage());
+            }
+        }
+        return EruptApiModel.successApi();
     }
 
 

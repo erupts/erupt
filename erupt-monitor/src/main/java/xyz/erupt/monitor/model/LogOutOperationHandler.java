@@ -23,12 +23,13 @@ public class LogOutOperationHandler implements OperationHandler<EruptOnline, Voi
     private EruptSessionService eruptSessionService;
 
     @Override
-    public void exec(List<EruptOnline> data, Void v, String[] param) {
+    public String exec(List<EruptOnline> data, Void v, String[] param) {
         if (eruptProp.isRedisSession()) {
             for (EruptOnline datum : data) {
                 eruptSessionService.remove(SessionKey.USER_TOKEN + datum.getToken());
             }
         }
+        return null;
     }
 
 }

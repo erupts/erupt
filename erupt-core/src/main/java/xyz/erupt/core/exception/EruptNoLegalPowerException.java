@@ -12,7 +12,11 @@ public class EruptNoLegalPowerException extends RuntimeException {
     private static final String NO_LEGAL_POWER = "权限不足，该操作将被记录!";
 
     public EruptNoLegalPowerException() {
-        //TODO 需要记录IP或者其他操作
-        throw new EruptWebApiRuntimeException(NO_LEGAL_POWER);
+        this(NO_LEGAL_POWER);
+    }
+
+    public EruptNoLegalPowerException(String message) {
+        //TODO 记录IP或者其他操作
+        throw new EruptWebApiRuntimeException(message);
     }
 }
