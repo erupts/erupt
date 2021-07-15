@@ -5,13 +5,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
+import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.DataHandlerUtil;
-import xyz.erupt.core.util.EruptAssertUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
@@ -37,7 +38,7 @@ public class EruptService {
      * @param customCondition 条件字符串
      */
     public Page getEruptData(EruptModel eruptModel, TableQueryVo tableQueryVo, List<Condition> serverCondition, String... customCondition) {
-        EruptAssertUtil.powerLegal(eruptModel, powerObject -> powerObject.isQuery());
+        Erupts.powerLegal(eruptModel, powerObject -> powerObject.isQuery());
         List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQueryVo.getCondition());
         List<String> conditionStrings = new ArrayList<>();
         {
@@ -82,17 +83,15 @@ public class EruptService {
      * @param id         标识主键
      * @return 是否有数据权限
      */
-    public boolean verifyIdPermissions(EruptModel eruptModel, String id) {
+    public void verifyIdPermissions(EruptModel eruptModel, String id) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, QueryExpression.EQ));
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryList(eruptModel, new Page(0, 1, null),
                         EruptQuery.builder().conditions(conditions).build());
-        boolean is = page.getList().size() > 0;
-        if (is) {
-            log.info(eruptModel.getEruptName() + " Id allows access : " + id);
+        if (page.getList().size() <= 0) {
+            throw new EruptNoLegalPowerException();
         }
-        return is;
     }
 
 }

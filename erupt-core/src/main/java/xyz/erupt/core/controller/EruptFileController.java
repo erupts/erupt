@@ -20,8 +20,8 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
-import xyz.erupt.core.util.EruptAssertUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
@@ -60,7 +60,7 @@ public class EruptFileController {
         try {
             //生成存储路径
             EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-            EruptAssertUtil.powerLegal(eruptModel,powerObject -> !powerObject.isEdit() && !powerObject.isAdd());
+            Erupts.powerLegal(eruptModel, powerObject -> !powerObject.isEdit() && !powerObject.isAdd());
             Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
             String path;
             if (eruptProp.isKeepUploadFileName()) {
@@ -204,7 +204,6 @@ public class EruptFileController {
             } else {
                 IOUtils.write(callback + "(" + json + ")", response.getOutputStream(), StandardCharsets.UTF_8.name());
             }
-
         } else {
             Map<String, Object> map = uploadHtmlEditorImage(eruptName, fieldName, file);
             Boolean status = (Boolean) map.get("uploaded");
