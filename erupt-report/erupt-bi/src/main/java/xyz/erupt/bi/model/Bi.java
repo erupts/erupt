@@ -27,9 +27,9 @@ import java.util.Set;
 @Erupt(name = "报表配置",
         dataProxy = BiDataProxy.class,
         drills = {
-                @Drill(code = "chart", title = "图表配置", icon = "fa fa-pie-chart"
+                @Drill(title = "图表配置", icon = "fa fa-pie-chart"
                         , link = @Link(linkErupt = BiChart.class, joinColumn = "bi.id")),
-                @Drill(code = "history", title = "修改记录", icon = "fa fa-history"
+                @Drill(title = "修改记录", icon = "fa fa-history"
                         , link = @Link(linkErupt = BiHistory.class, joinColumn = "bi.id"))
         })
 @Getter
