@@ -47,9 +47,8 @@ public class EruptDrillController {
         Link link = findDrillLink(eruptModel.getErupt(), code);
         eruptService.verifyIdPermissions(eruptModel, id);
         Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
+        Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
         field.setAccessible(true);
-        Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
         Object val = field.get(data);
         if (null == val) return new Page();
         return eruptService.getEruptData(
