@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -76,7 +77,6 @@ public class EruptUserController {
                 }
                 loginModel.setReason(e.getMessage());
                 loginModel.setPass(false);
-
             }
         }
         if (loginModel.isPass()) {
@@ -84,9 +84,7 @@ public class EruptUserController {
             loginModel.setToken(RandomStringUtils.random(16, true, true));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString(), eruptUpmsConfig.getExpireTimeByLogin());
-            if (null != loginProxy) {
-                loginProxy.loginSuccess(eruptUser, loginModel.getToken());
-            }
+            Optional.ofNullable(loginProxy).ifPresent(it -> it.loginSuccess(eruptUser, loginModel.getToken()));
             eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
@@ -142,7 +140,7 @@ public class EruptUserController {
         response.setDateHeader("Expires", 0);
         Captcha captcha = new SpecCaptcha(150, 38, 4);
         sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60, TimeUnit.SECONDS);
-        captcha.out(response.getOutputStream()); // 响应图片
+        captcha.out(response.getOutputStream());
     }
 
 }

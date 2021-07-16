@@ -46,28 +46,23 @@ public class TypeUtil {
 
     public static void simpleNumberTypeArrayToObject(Object obj, String type, Consumer<Number> consumer) {
         if (int.class.getSimpleName().equals(type)) {
-            int[] array = (int[]) obj;
-            for (Number i : array) {
+            for (Number i : (int[]) obj) {
                 consumer.accept(i);
             }
         } else if (short.class.getSimpleName().equals(type)) {
-            short[] array = (short[]) obj;
-            for (Number i : array) {
+            for (Number i : (short[]) obj) {
                 consumer.accept(i);
             }
         } else if (long.class.getSimpleName().equals(type)) {
-            long[] array = (long[]) obj;
-            for (Number i : array) {
+            for (Number i : (long[]) obj) {
                 consumer.accept(i);
             }
         } else if (float.class.getSimpleName().equals(type)) {
-            float[] array = (float[]) obj;
-            for (Number i : array) {
+            for (Number i : (float[]) obj) {
                 consumer.accept(i);
             }
         } else if (double.class.getSimpleName().equals(type)) {
-            double[] array = (double[]) obj;
-            for (Number i : array) {
+            for (Number i : (double[]) obj) {
                 consumer.accept(i);
             }
         }

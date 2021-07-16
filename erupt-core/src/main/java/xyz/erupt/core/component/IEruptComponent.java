@@ -13,6 +13,4 @@ public interface IEruptComponent<A extends Annotation> {
 
     }
 
-    //
-
 }
