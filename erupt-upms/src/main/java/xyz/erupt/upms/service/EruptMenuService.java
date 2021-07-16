@@ -55,11 +55,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
             menus = entityManager.createQuery("from EruptMenu order by sort", EruptMenu.class).getResultList();
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
-            for (EruptRole role : eruptUser.getRoles()) {
-                if (role.getStatus()) {
-                    menuSet.addAll(role.getMenus());
-                }
-            }
+            eruptUser.getRoles().stream().filter(EruptRole::getStatus).map(EruptRole::getMenus).forEach(menuSet::addAll);
             menus = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
         }
         return menus;
@@ -70,9 +66,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         Integer obj = (Integer) entityManager
                 .createQuery("select max(sort) from " + EruptMenu.class.getSimpleName())
                 .getSingleResult();
-        if (null != obj) {
-            eruptMenu.setSort(obj + 10);
-        }
+        Optional.ofNullable(obj).ifPresent(it -> eruptMenu.setSort(it + 10));
         eruptMenu.setStatus(MenuStatus.OPEN.getValue());
     }
 

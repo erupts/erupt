@@ -21,6 +21,7 @@ import xyz.erupt.core.view.TableQueryVo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -46,9 +47,7 @@ public class EruptService {
             LinkTree dependTree = eruptModel.getErupt().linkTree();
             if (StringUtils.isNotBlank(dependTree.field())) {
                 if (null == tableQueryVo.getLinkTreeVal()) {
-                    if (dependTree.dependNode()) {
-                        return new Page();
-                    }
+                    if (dependTree.dependNode()) return new Page();
                 } else {
                     EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
                     String pk = treeErupt.getErupt().primaryKeyCol();
@@ -59,19 +58,13 @@ public class EruptService {
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> {
             String condition = dataProxy.beforeFetch(eruptModel.getClazz());
-            if (null != condition) {
-                conditionStrings.add(condition);
-            }
+            Optional.ofNullable(condition).ifPresent(it -> conditionStrings.add(condition));
         }));
-        if (null != serverCondition) {
-            legalConditions.addAll(serverCondition);
-        }
+        Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryList(eruptModel, new Page(tableQueryVo.getPageIndex(), tableQueryVo.getPageSize(), tableQueryVo.getSort()),
                         EruptQuery.builder().orderBy(tableQueryVo.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
-        if (null != page.getList()) {
-            DataHandlerUtil.convertDataToEruptView(eruptModel, page.getList());
-        }
+        Optional.ofNullable(page.getList()).ifPresent(it -> DataHandlerUtil.convertDataToEruptView(eruptModel, it));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
         return page;
     }
