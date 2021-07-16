@@ -69,14 +69,12 @@ public class UpmsDataLoadService implements CommandLineRunner {
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptUser.class.getSimpleName(), "用户维护", MenuTypeEnum.TABLE.getCode(), EruptUser.class.getSimpleName(), open, 40, "fa fa-user", eruptMenu
                 ), code, EruptUser.class.getSimpleName());
-                {
-                    EruptMenu eruptMenuDict = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                            EruptDict.class.getSimpleName(), "字典维护", MenuTypeEnum.TABLE.getCode(), EruptDict.class.getSimpleName(), open, 50, null, eruptMenu
-                    ), code, EruptDict.class.getSimpleName());
-                    eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                            EruptDictItem.class.getSimpleName(), "字典项", MenuTypeEnum.TABLE.getCode(), EruptDictItem.class.getSimpleName(), MenuStatus.HIDE.getValue(), 10, null, eruptMenuDict
-                    ), code, EruptDictItem.class.getSimpleName());
-                }
+                EruptMenu eruptMenuDict = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                        EruptDict.class.getSimpleName(), "字典维护", MenuTypeEnum.TABLE.getCode(), EruptDict.class.getSimpleName(), open, 50, null, eruptMenu
+                ), code, EruptDict.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                        EruptDictItem.class.getSimpleName(), "字典项", MenuTypeEnum.TABLE.getCode(), EruptDictItem.class.getSimpleName(), MenuStatus.HIDE.getValue(), 10, null, eruptMenuDict
+                ), code, EruptDictItem.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptLoginLog.class.getSimpleName(), "登录日志", MenuTypeEnum.TABLE.getCode(), EruptLoginLog.class.getSimpleName(), open, 60, null, eruptMenu
                 ), code, EruptLoginLog.class.getSimpleName());

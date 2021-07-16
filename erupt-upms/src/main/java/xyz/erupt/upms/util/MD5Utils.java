@@ -9,11 +9,7 @@ import java.security.MessageDigest;
  */
 public class MD5Utils {
 
-    private final static String[] STR_DIGITS = {"0", "1", "2", "3", "4", "5",
-            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
-
-    private MD5Utils() {
-    }
+    private final static String[] STR_DIGITS = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
 
     private static String byteToArrayString(byte bByte) {
         int iRet = bByte;

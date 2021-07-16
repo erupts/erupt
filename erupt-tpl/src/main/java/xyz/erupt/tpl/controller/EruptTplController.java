@@ -12,6 +12,7 @@ import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
@@ -50,18 +51,18 @@ public class EruptTplController {
     public void eruptTplPage(@PathVariable("name") String fileName, HttpServletResponse response) throws Exception {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         Method method = eruptTplService.getAction(fileName);
-        if (null != method) {
-            Object obj = EruptSpringUtil.getBean(method.getDeclaringClass());
-            EruptTpl eruptTpl = obj.getClass().getAnnotation(EruptTpl.class);
-            TplAction tplAction = method.getAnnotation(TplAction.class);
-            String path = TPL + "/" + fileName;
-            if (StringUtils.isNotBlank(tplAction.path())) {
-                path = tplAction.path();
-            }
-            eruptTplService.tplRender(eruptTpl.engine(), path, (Map) method.invoke(obj), response.getWriter());
-        } else {
+        if (null == method) {
             eruptTplService.tplRender(Tpl.Engine.Native, TPL + "/" + fileName, null, response.getWriter());
+            return;
         }
+        Object obj = EruptSpringUtil.getBean(method.getDeclaringClass());
+        EruptTpl eruptTpl = obj.getClass().getAnnotation(EruptTpl.class);
+        TplAction tplAction = method.getAnnotation(TplAction.class);
+        String path = TPL + "/" + fileName;
+        if (StringUtils.isNotBlank(tplAction.path())) {
+            path = tplAction.path();
+        }
+        eruptTplService.tplRender(eruptTpl.engine(), path, (Map) method.invoke(obj), response.getWriter());
     }
 
     @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=UTF-8"})
@@ -84,9 +85,7 @@ public class EruptTplController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         RowOperation operation = Arrays.stream(eruptModel.getErupt().rowOperation())
                 .filter(it -> it.code().equals(code)).findFirst().orElseThrow(EruptNoLegalPowerException::new);
-        if (!ExprInvoke.getExpr(operation.show())) {
-            throw new EruptNoLegalPowerException();
-        }
+        Erupts.powerLegal(ExprInvoke.getExpr(operation.show()));
         if (operation.tpl().engine() == Tpl.Engine.Native || operation.mode() == RowOperation.Mode.BUTTON) {
             eruptTplService.tplRender(operation.tpl(), null, response);
         } else {
