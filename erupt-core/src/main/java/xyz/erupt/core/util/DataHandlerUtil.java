@@ -49,13 +49,11 @@ public class DataHandlerUtil {
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
         if (null != fieldModel) {
             return fieldModel;
-        } else {
-            if (key.contains("_")) {
-                return cycleFindFieldByKey(eruptModel, key.substring(0, key.lastIndexOf("_")));
-            } else {
-                return null;
-            }
         }
+        if (key.contains("_")) {
+            return cycleFindFieldByKey(eruptModel, key.substring(0, key.lastIndexOf("_")));
+        }
+        return null;
     }
 
     public static void convertDataToEruptView(EruptModel eruptModel, Collection<Map<String, Object>> list) {
@@ -74,8 +72,7 @@ public class DataHandlerUtil {
                         String[] _keys = entry.getKey().split("_");
                         for (View view : fieldModel.getEruptField().views()) {
                             if (view.column().equals(_keys[_keys.length - 1])) {
-                                EruptFieldModel vef = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).
-                                        getEruptFieldMap().get(view.column());
+                                EruptFieldModel vef = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).getEruptFieldMap().get(view.column());
                                 map.put(entry.getKey(), convertColumnValue(vef, entry.getValue(), choiceItems));
                             }
                         }

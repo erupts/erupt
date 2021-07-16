@@ -10,7 +10,9 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.EruptConst;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -34,18 +36,12 @@ public class EruptApplication implements ImportBeanDefinitionRegistrar {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         Class<?> clazz = ClassUtils.forName(importingClassMetadata.getClassName(), ClassUtils.getDefaultClassLoader());
-        if (null != clazz.getAnnotation(SpringBootApplication.class)) {
-            primarySource = clazz;
-        }
+        Optional.ofNullable(clazz.getAnnotation(SpringBootApplication.class)).ifPresent(it -> primarySource = clazz);
         EruptScan eruptScan = clazz.getAnnotation(EruptScan.class);
         if (eruptScan.value().length == 0) {
             scanPackage.add(clazz.getPackage().getName());
         } else {
-            for (String pack : eruptScan.value()) {
-                if (!pack.equals(EruptConst.BASE_PACKAGE)) {
-                    scanPackage.add(pack);
-                }
-            }
+            Stream.of(eruptScan.value()).filter(pack->!pack.equals(EruptConst.BASE_PACKAGE)).forEach(scanPackage::add);
         }
     }
 }

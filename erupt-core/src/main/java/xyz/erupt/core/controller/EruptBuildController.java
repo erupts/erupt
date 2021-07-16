@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptBuildModel;
@@ -75,12 +74,7 @@ public class EruptBuildController {
     @GetMapping("/{erupt}/{field}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptBuildModel getEruptBuild(@PathVariable("erupt") String eruptName, @PathVariable("field") String field) {
-        EruptModel eruptModel = EruptCoreService.getEruptView(eruptName);
-        EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(field);
-        if (null != eruptFieldModel) {
-            return this.getEruptBuild(eruptFieldModel.getFieldReturnName());
-        }
-        throw new EruptNoLegalPowerException();
+        return this.getEruptBuild(EruptCoreService.getEruptView(eruptName).getEruptFieldMap().get(field).getFieldReturnName());
     }
 
 }

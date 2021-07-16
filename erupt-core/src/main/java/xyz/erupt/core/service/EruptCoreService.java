@@ -25,8 +25,8 @@ import xyz.erupt.core.view.EruptModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -70,21 +70,15 @@ public class EruptCoreService implements ApplicationRunner {
         //erupt class data to memory
         EruptModel eruptModel = new EruptModel(clazz);
         // erupt field data to memory
-        {
-            List<EruptFieldModel> eruptFieldModels = new ArrayList<>();
-            Map<String, EruptFieldModel> eruptFieldMap = new LinkedCaseInsensitiveMap<>();
-            //erupt class annotation
-            ReflectUtil.findClassAllFields(clazz, field -> {
-                if (null != field.getAnnotation(EruptField.class)) {
-                    EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
-                    eruptFieldModels.add(eruptFieldModel);
-                    eruptFieldMap.put(field.getName(), eruptFieldModel);
-                }
-            });
-            eruptFieldModels.sort(Comparator.comparingInt((a) -> a.getEruptField().sort()));
-            eruptModel.setEruptFieldModels(eruptFieldModels);
-            eruptModel.setEruptFieldMap(eruptFieldMap);
-        }
+        eruptModel.setEruptFieldModels(new ArrayList<>());
+        eruptModel.setEruptFieldMap(new LinkedCaseInsensitiveMap<>());
+        ReflectUtil.findClassAllFields(clazz, field -> Optional.ofNullable(field.getAnnotation(EruptField.class)).ifPresent(ignore -> {
+            EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
+            eruptModel.getEruptFieldModels().add(eruptFieldModel);
+            eruptModel.getEruptFieldMap().put(field.getName(), eruptFieldModel);
+        }));
+        eruptModel.getEruptFieldModels().sort(Comparator.comparingInt((a) -> a.getEruptField().sort()));
+        // erupt annotation validate
         EruptAnnotationException.validateEruptInfo(eruptModel);
         return eruptModel;
     }
