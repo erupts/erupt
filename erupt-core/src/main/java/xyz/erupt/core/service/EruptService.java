@@ -57,8 +57,7 @@ public class EruptService {
         }
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> {
-            String condition = dataProxy.beforeFetch(eruptModel.getClazz());
-            Optional.ofNullable(condition).ifPresent(it -> conditionStrings.add(condition));
+            Optional.ofNullable(dataProxy.beforeFetch(eruptModel.getClazz())).ifPresent(it -> conditionStrings.add(it));
         }));
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
