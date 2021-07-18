@@ -1,0 +1,28 @@
+package xyz.erupt.bi.model;
+
+import lombok.Getter;
+import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.upms.model.EruptMenu;
+
+/**
+ * @author YuePeng
+ * date 2021/7/17 23:04
+ */
+@Erupt(name = "弹窗")
+@Getter
+public class BiReleaseModal extends BaseModel {
+
+    @EruptField(
+            edit = @Edit(
+                    title = "菜单位置", desc = "发布至根目录可跳过此选项", type = EditType.REFERENCE_TREE,
+                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
+            )
+    )
+    private EruptMenu eruptMenu;
+
+}

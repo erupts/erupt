@@ -3,19 +3,31 @@ package xyz.erupt.bi.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.bi.constant.BiConst;
+import xyz.erupt.core.util.Erupts;
+import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.enums.MenuStatus;
+import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.upms.service.EruptUserService;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,6 +37,10 @@ import java.util.Set;
 @Entity
 @Table(name = "e_bi", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "报表配置",
+        rowOperation = @RowOperation(
+                title = "发布", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
+                eruptClass = BiReleaseModal.class, operationHandler = Bi.class
+        ),
         dataProxy = BiDataProxy.class,
         drills = {
                 @Drill(title = "图表配置", icon = "fa fa-pie-chart"
@@ -34,7 +50,8 @@ import java.util.Set;
         })
 @Getter
 @Setter
-public class Bi extends HyperModel {
+@Component
+public class Bi extends HyperModel implements OperationHandler<Bi, BiReleaseModal> {
 
     @EruptField(
             views = @View(title = "编码"),
@@ -103,4 +120,27 @@ public class Bi extends HyperModel {
     )
     private Set<BiDimension> biDimension;
 
+    @Resource
+    @Transient
+    private EruptDao eruptDao;
+
+    @Resource
+    @Transient
+    private EruptUserService eruptUserService;
+
+    @Override
+    @Transactional
+    public String exec(List<Bi> data, BiReleaseModal biReleaseModal, String[] param) {
+        Bi bi = data.get(0);
+        Erupts.requireNull(eruptDao.queryEntity(EruptMenu.class, String.format("code = '%s'", bi.getCode())),
+                "菜单已存在请勿重复发布");
+        Integer max = (Integer) eruptDao.getEntityManager()
+                .createQuery("select max(sort) from " + EruptMenu.class.getSimpleName()).getSingleResult();
+        EruptMenu eruptMenu = new EruptMenu(bi.getCode(), bi.getName(), BiConst.MENU_TYPE,
+                bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());
+        eruptDao.persist(eruptMenu);
+        //刷新当前用户菜单
+        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptUserService.getCurrentToken());
+        return null;
+    }
 }
