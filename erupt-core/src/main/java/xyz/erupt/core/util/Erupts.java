@@ -34,14 +34,17 @@ public class Erupts {
         requireTrue(!bool, message);
     }
 
-
     public static void requireTrue(boolean bool, String message) {
         if (!bool) throw new EruptWebApiRuntimeException(message);
     }
 
-    public static <T> T requireNonNull(T obj, String message) {
-        if (obj == null) throw new EruptWebApiRuntimeException(message);
-        return obj;
+    public static <T> T requireNonNull(T t, String message) {
+        if (t == null) throw new EruptWebApiRuntimeException(message);
+        return t;
+    }
+
+    public static void requireNull(Object obj, String message) {
+        if (obj != null) throw new EruptWebApiRuntimeException(message);
     }
 
 

@@ -236,7 +236,7 @@ public class EruptUserService {
     public String getCurrentToken() {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
         if (StringUtils.isBlank(token)) {
-            token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
+            return request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
         }
         return token;
     }

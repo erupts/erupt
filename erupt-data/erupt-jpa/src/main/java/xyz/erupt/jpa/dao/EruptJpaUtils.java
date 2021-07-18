@@ -47,15 +47,13 @@ public class EruptJpaUtils {
             if (null != field.getField().getAnnotation(Transient.class)) {
                 return;
             }
-            String fieldKey;
             for (View view : field.getEruptField().views()) {
                 if (view.column().length() == 0) {
-                    fieldKey = eruptNameSymbol + field.getFieldName() + AS + field.getFieldName();
+                    cols.add(eruptNameSymbol + field.getFieldName() + AS + field.getFieldName());
                 } else {
-                    fieldKey = eruptNameSymbol + field.getFieldName() + "." + view.column() + AS + field.getFieldName() + "_"
-                            + view.column().replace(".", "_");
+                    cols.add(eruptNameSymbol + field.getFieldName() + "." + view.column() + AS + field.getFieldName() + "_"
+                            + view.column().replace(".", "_"));
                 }
-                cols.add(fieldKey);
             }
         });
         return cols;
@@ -65,19 +63,14 @@ public class EruptJpaUtils {
     public static String generateEruptJpaHql(EruptModel eruptModel, String cols, EruptQuery query, boolean countSql) {
         StringBuilder hql = new StringBuilder();
         if (StringUtils.isNotBlank(cols)) {
-            hql.append("select ");
-            hql.append(cols);
-            hql.append(" from ").
-                    append(eruptModel.getEruptName()).
-                    append(AS).
-                    append(eruptModel.getEruptName());
+            hql.append("select ").append(cols).append(" from ")
+                    .append(eruptModel.getEruptName()).append(AS).append(eruptModel.getEruptName());
             ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
                 if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
                     hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(".")
                             .append(field.getName()).append(AS).append(field.getName());
                 }
             });
-
         } else {
             hql.append("from ").append(eruptModel.getEruptName());
         }
@@ -92,8 +85,7 @@ public class EruptJpaUtils {
         StringBuilder sb = new StringBuilder();
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                sb.append(LEFT_JOIN)
-                        .append(eruptModel.getEruptName()).append('.').append(field.getName()).append(AS).append(field.getName());
+                sb.append(LEFT_JOIN).append(eruptModel.getEruptName()).append('.').append(field.getName()).append(AS).append(field.getName());
                 try {
                     Object obj = field.get(eruptModel.getClazz());
                     String join = generateEruptJoinHql(EruptCoreService.getErupt(obj.getClass().getSimpleName()));

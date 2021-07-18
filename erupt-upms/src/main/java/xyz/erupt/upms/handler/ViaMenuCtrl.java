@@ -3,6 +3,7 @@ package xyz.erupt.upms.handler;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.expr.ExprBool;
+import xyz.erupt.core.util.EruptAssert;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -23,9 +24,7 @@ public class ViaMenuCtrl implements ExprBool.ExprHandler {
     @Override
     @Comment("params必填，值为菜单编码")
     public boolean handler(boolean expr, String[] params) {
-        if (null == params || params.length == 0) {
-            throw new RuntimeException(ViaMenuCtrl.class.getSimpleName() + " → params[0] not found");
-        }
+        EruptAssert.notNull(params,ViaMenuCtrl.class.getSimpleName() + " → params[0] not found");
         return null != eruptUserService.getEruptMenuByCode(params[0]);
     }
 

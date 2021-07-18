@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
-import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
@@ -37,14 +36,9 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
         List<EruptMenuVo> list = new ArrayList<>();
-        menus.forEach(menu -> {
-            if (Integer.valueOf(MenuStatus.OPEN.getValue()).equals(menu.getStatus())) {
-                Long pid = null;
-                if (null != menu.getParentMenu()) {
-                    pid = menu.getParentMenu().getId();
-                }
-                list.add(new EruptMenuVo(menu.getId(), menu.getCode(), menu.getName(), menu.getType(), menu.getValue(), menu.getIcon(), pid));
-            }
+        menus.stream().filter(menu -> menu.getStatus() == MenuStatus.OPEN.getValue()).forEach(menu -> {
+            Long pid = null == menu.getParentMenu() ? null : menu.getParentMenu().getId();
+            list.add(new EruptMenuVo(menu.getId(), menu.getCode(), menu.getName(), menu.getType(), menu.getValue(), menu.getIcon(), pid));
         });
         return list;
     }
@@ -78,8 +72,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
             throw new EruptWebApiRuntimeException("选择菜单类型时，类型值不能为空");
         }
-        String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
-        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), token);
+        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptUserService.getCurrentToken());
     }
 
     @Override

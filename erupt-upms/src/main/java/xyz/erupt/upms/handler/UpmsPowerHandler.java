@@ -7,11 +7,11 @@ import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.enums.MenuLimitEnum;
-import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * 全局菜单权限控制
@@ -34,14 +34,10 @@ public class UpmsPowerHandler implements PowerHandler {
 
     @Override
     public void handler(PowerObject power) {
-        EruptMenu eruptMenu = eruptUserService.getCurrentEruptMenu();
-        if (null != eruptMenu) {
+        Optional.ofNullable(eruptUserService.getCurrentEruptMenu()).ifPresent(eruptMenu -> {
             this.powerOff(eruptMenu.getPowerOff(), power);
-            Object powerStr = eruptSessionService.get(SessionKey.ROLE_POWER + eruptUserService.getCurrentToken());
-            if (null != powerStr) {
-                this.powerOff(powerStr.toString(), power);
-            }
-        }
+            Optional.of(eruptSessionService.get(SessionKey.ROLE_POWER + eruptUserService.getCurrentToken())).ifPresent(it -> this.powerOff(it.toString(), power));
+        });
     }
 
     private void powerOff(String powerStr, PowerObject power) {

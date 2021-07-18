@@ -12,7 +12,6 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.config.EruptUpmsConfig;
-import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
@@ -102,12 +101,10 @@ public class EruptUserController {
     //登出
     @PostMapping("/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
-    public EruptApiModel logout(HttpServletRequest request) {
-        String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
+    public EruptApiModel logout() {
+        String token = eruptUserService.getCurrentToken();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
-        if (null != loginProxy) {
-            loginProxy.logout(token);
-        }
+        Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
         sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
         sessionService.remove(SessionKey.MENU_CODE_MAP + token);
         sessionService.remove(SessionKey.MENU_VIEW + token);
