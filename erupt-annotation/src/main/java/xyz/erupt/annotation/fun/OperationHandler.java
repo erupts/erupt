@@ -16,4 +16,9 @@ public interface OperationHandler<@Comment("行数据类型") Target, @Comment("
               @Comment("表单输入数据") EruptObject eruptObject,
               @Comment("注解回传参数") String[] param);
 
+//    @Comment("事件触发后执行 JavaScript 表达式")
+//    default String afterJS(List<Target> data, EruptObject eruptObject, String[] param) {
+//        return null;
+//    }
+
 }
