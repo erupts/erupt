@@ -65,13 +65,8 @@ public class EruptFileController {
         Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
         String path;
         if (eruptProp.isKeepUploadFileName()) {
-            path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
-                    file.getOriginalFilename()
-                            .replace("&", "")
-                            .replace("?", "")
-                            .replace("#", "")
-                            .replace(" ", "")
-                            .replace(edit.attachmentType().fileSeparator(), "");
+            path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator + file.getOriginalFilename()
+                    .replaceAll("&|#|\\?|\\s", "").replace(edit.attachmentType().fileSeparator(), "");
         } else {
             String[] fileNameSplit = file.getOriginalFilename().split("\\.");
             path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE)
@@ -89,7 +84,6 @@ public class EruptFileController {
                         return EruptApiModel.errorApi("上传失败，文件格式不允许为：" + extensionName);
                     }
                 }
-
                 if (!"".equals(attachmentType.path())) {
                     path = attachmentType.path() + path;
                 }
