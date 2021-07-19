@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.QueryExpression;
+import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.invoke.DataProcessorManager;
@@ -39,7 +40,7 @@ public class EruptService {
      * @param customCondition 条件字符串
      */
     public Page getEruptData(EruptModel eruptModel, TableQueryVo tableQueryVo, List<Condition> serverCondition, String... customCondition) {
-        Erupts.powerLegal(eruptModel, powerObject -> powerObject.isQuery());
+        Erupts.powerLegal(eruptModel, PowerObject::isQuery);
         List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQueryVo.getCondition());
         List<String> conditionStrings = new ArrayList<>();
         {
