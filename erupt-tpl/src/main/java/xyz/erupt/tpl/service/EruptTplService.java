@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -78,10 +79,8 @@ public class EruptTplService implements ApplicationRunner {
                 new AnnotationTypeFilter(EruptTpl.class)
         }, clazz -> {
             for (Method method : clazz.getDeclaredMethods()) {
-                TplAction tplAction = method.getAnnotation(TplAction.class);
-                if (null != tplAction) {
-                    tplActions.put(tplAction.value(), method);
-                }
+                Optional.ofNullable(method.getAnnotation(TplAction.class))
+                        .ifPresent(it -> tplActions.put(it.value(), method));
             }
         });
         MenuTypeEnum.addMenuType(new VLModel(TPL, "模板", "tpl目录下文件名"));
