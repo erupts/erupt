@@ -3,6 +3,7 @@ package xyz.erupt.core.controller;
 import com.google.gson.Gson;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -51,85 +52,86 @@ public class EruptFileController {
 
     private static final String FS_SEP = "/";
 
+    @SneakyThrows
     @PostMapping("/upload/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty() || StringUtils.isBlank(file.getOriginalFilename())) {
             return EruptApiModel.errorApi("上传失败，请选择文件");
         }
-        try {
-            //生成存储路径
-            EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-            Erupts.powerLegal(eruptModel, powerObject -> !powerObject.isEdit() && !powerObject.isAdd());
-            Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
-            String path;
-            if (eruptProp.isKeepUploadFileName()) {
-                path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
-                        file.getOriginalFilename()
-                                .replace("&", "")
-                                .replace("?", "")
-                                .replace("#", "")
-                                .replace(" ", "")
-                                .replace(edit.attachmentType().fileSeparator(), "");
-            } else {
-                String[] fileNameSplit = file.getOriginalFilename().split("\\.");
-                path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE)
-                        + File.separator + RandomStringUtils.randomAlphabetic(12) + "." + fileNameSplit[fileNameSplit.length - 1];
-            }
-            switch (edit.type()) {
-                case ATTACHMENT:
-                    AttachmentType attachmentType = edit.attachmentType();
-                    //校验扩展名
-                    if (attachmentType.fileTypes().length > 0) {
-                        String[] fileNameArr = file.getOriginalFilename().split("\\.");
-                        String extensionName = fileNameArr[fileNameArr.length - 1];
-                        if (Stream.of(attachmentType.fileTypes()).noneMatch(type ->
-                                fileNameArr[fileNameArr.length - 1].equalsIgnoreCase(type))) {
-                            return EruptApiModel.errorApi("上传失败，文件格式不允许为：" + extensionName);
-                        }
+        //生成存储路径
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isAdd());
+        Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
+        String path;
+        if (eruptProp.isKeepUploadFileName()) {
+            path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator +
+                    file.getOriginalFilename()
+                            .replace("&", "")
+                            .replace("?", "")
+                            .replace("#", "")
+                            .replace(" ", "")
+                            .replace(edit.attachmentType().fileSeparator(), "");
+        } else {
+            String[] fileNameSplit = file.getOriginalFilename().split("\\.");
+            path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE)
+                    + File.separator + RandomStringUtils.randomAlphabetic(12) + "." + fileNameSplit[fileNameSplit.length - 1];
+        }
+        switch (edit.type()) {
+            case ATTACHMENT:
+                AttachmentType attachmentType = edit.attachmentType();
+                //校验扩展名
+                if (attachmentType.fileTypes().length > 0) {
+                    String[] fileNameArr = file.getOriginalFilename().split("\\.");
+                    String extensionName = fileNameArr[fileNameArr.length - 1];
+                    if (Stream.of(attachmentType.fileTypes()).noneMatch(type ->
+                            fileNameArr[fileNameArr.length - 1].equalsIgnoreCase(type))) {
+                        return EruptApiModel.errorApi("上传失败，文件格式不允许为：" + extensionName);
                     }
+                }
 
-                    if (!"".equals(attachmentType.path())) {
-                        path = attachmentType.path() + path;
-                    }
-                    //校验文件大小
-                    if (attachmentType.size() > 0 && file.getSize() / 1024 > attachmentType.size()) {
-                        return EruptApiModel.errorApi("上传失败，文件大小不能超过" + attachmentType.size() + "KB");
-                    }
-                    switch (edit.attachmentType().type()) {
-                        case IMAGE:
-                            AttachmentType.ImageType imageType = edit.attachmentType().imageType();
-                            // 通过MultipartFile得到InputStream，从而得到BufferedImage
-                            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-                            if (bufferedImage == null) {
-                                return EruptApiModel.errorApi("获取图片流失败，请确认上传文件为图片");
-                            }
-                            if (imageType.width().length > 1 || imageType.height().length > 1) {
-                                int width = bufferedImage.getWidth();
-                                int height = bufferedImage.getHeight();
-                                if (imageType.width().length > 1) {
-                                    if (imageType.width()[0] > width || imageType.width()[1] < width) {
-                                        return EruptApiModel.errorApi("上传失败，图片宽度不在["
-                                                + imageType.width()[0] + "," + imageType.width()[1] + "]范围内");
-                                    }
-                                }
-                                if (imageType.height().length > 1) {
-                                    if (imageType.height()[0] > height || imageType.height()[1] < height) {
-                                        return EruptApiModel.errorApi("上传失败，图片高度不在["
-                                                + imageType.height()[0] + "," + imageType.height()[1] + "]范围内");
-                                    }
+                if (!"".equals(attachmentType.path())) {
+                    path = attachmentType.path() + path;
+                }
+                //校验文件大小
+                if (attachmentType.size() > 0 && file.getSize() / 1024 > attachmentType.size()) {
+                    return EruptApiModel.errorApi("上传失败，文件大小不能超过" + attachmentType.size() + "KB");
+                }
+                switch (edit.attachmentType().type()) {
+                    case IMAGE:
+                        AttachmentType.ImageType imageType = edit.attachmentType().imageType();
+                        // 通过MultipartFile得到InputStream，从而得到BufferedImage
+                        BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+                        if (bufferedImage == null) {
+                            return EruptApiModel.errorApi("获取图片流失败，请确认上传文件为图片");
+                        }
+                        if (imageType.width().length > 1 || imageType.height().length > 1) {
+                            int width = bufferedImage.getWidth();
+                            int height = bufferedImage.getHeight();
+                            if (imageType.width().length > 1) {
+                                if (imageType.width()[0] > width || imageType.width()[1] < width) {
+                                    return EruptApiModel.errorApi("上传失败，图片宽度不在["
+                                            + imageType.width()[0] + "," + imageType.width()[1] + "]范围内");
                                 }
                             }
-                            break;
-                        case BASE:
-                            break;
-                    }
-                    break;
-                case HTML_EDITOR:
-                    break;
-                default:
-                    return EruptApiModel.errorApi("上传失败，非法类型!");
-            }
+                            if (imageType.height().length > 1) {
+                                if (imageType.height()[0] > height || imageType.height()[1] < height) {
+                                    return EruptApiModel.errorApi("上传失败，图片高度不在["
+                                            + imageType.height()[0] + "," + imageType.height()[1] + "]范围内");
+                                }
+                            }
+                        }
+                        break;
+                    case BASE:
+                        break;
+                }
+                break;
+            case HTML_EDITOR:
+                break;
+            default:
+                return EruptApiModel.errorApi("上传失败，非法类型!");
+        }
+        try {
             boolean localSave = true;
             AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
             if (null != attachmentProxy) {
