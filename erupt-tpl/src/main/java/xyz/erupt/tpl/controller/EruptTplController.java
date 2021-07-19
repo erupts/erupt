@@ -41,7 +41,7 @@ import static xyz.erupt.core.constant.EruptRestPath.ERUPT_API;
 @RequestMapping(ERUPT_API + EruptTplController.TPL)
 public class EruptTplController {
 
-    public static final String TPL = "/tpl";
+    static final String TPL = "/tpl";
 
     @Resource
     private EruptTplService eruptTplService;
@@ -88,11 +88,11 @@ public class EruptTplController {
         Erupts.powerLegal(ExprInvoke.getExpr(operation.show()));
         if (operation.tpl().engine() == Tpl.Engine.Native || operation.mode() == RowOperation.Mode.BUTTON) {
             eruptTplService.tplRender(operation.tpl(), null, response);
-        } else {
-            Map<String, Object> map = new HashMap<>();
-            map.put(EngineConst.INJECT_ROWS, Stream.of(ids).map(id -> DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                    .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id))).collect(Collectors.toList()));
-            eruptTplService.tplRender(operation.tpl(), map, response);
+            return;
         }
+        Map<String, Object> map = new HashMap<>();
+        map.put(EngineConst.INJECT_ROWS, Stream.of(ids).map(id -> DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id))).collect(Collectors.toList()));
+        eruptTplService.tplRender(operation.tpl(), map, response);
     }
 }
