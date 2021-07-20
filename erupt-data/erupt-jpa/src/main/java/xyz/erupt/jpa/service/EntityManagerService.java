@@ -41,7 +41,7 @@ public class EntityManagerService implements ApplicationRunner {
     private Map<String, EntityManagerFactory> entityManagerMap;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         if (null != eruptProp.getDbs()) {
             //多数据源处理
             entityManagerMap = new HashMap<>();
