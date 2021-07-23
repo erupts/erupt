@@ -122,12 +122,11 @@ public class EruptExcelController {
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage(), e);
         }
-        i = 1;
-        for (JsonObject jo : list) {
-            i++;
+        for (int j = 0; j < list.size(); j++) {
+            JsonObject jo = list.get(j);
             EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, jo, null, request);
             if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-                throw new EruptWebApiRuntimeException("数据入库异常，出错行数：" + i + "，原因：" + eruptApiModel.getMessage());
+                throw new EruptWebApiRuntimeException("数据入库异常，出错行数：" + (j + 1) + "，原因：" + eruptApiModel.getMessage());
             }
         }
         return EruptApiModel.successApi();
