@@ -8,7 +8,6 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -155,7 +154,6 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     @EruptField(
             views = @View(title = "所属角色"),
             edit = @Edit(
-                    filter = @Filter("code = 1"),
                     title = "所属角色",
                     type = EditType.CHECKBOX
             )
@@ -242,5 +240,4 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
             throw new EruptWebApiRuntimeException("选择岗位时，所属组织必填");
         }
     }
-
 }
