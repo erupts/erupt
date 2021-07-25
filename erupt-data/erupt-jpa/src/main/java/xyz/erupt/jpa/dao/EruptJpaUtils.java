@@ -1,7 +1,6 @@
 package xyz.erupt.jpa.dao;
 
 import org.apache.commons.lang3.StringUtils;
-import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -16,6 +15,7 @@ import xyz.erupt.core.view.EruptModel;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -137,19 +137,12 @@ public class EruptJpaUtils {
                 }
             }
         }
-        for (Filter filter : eruptModel.getErupt().filter()) {
-            String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
-            if (StringUtils.isNotBlank(filterStr)) {
-                hql.append(AND).append(filterStr);
-            }
-        }
-        if (null != customCondition) {
-            for (String s : customCondition) {
-                if (StringUtils.isNotBlank(s)) {
-                    hql.append(EruptJpaUtils.AND).append(s);
-                }
-            }
-        }
+        AnnotationUtil.switchFilterConditionToStr(eruptModel.getErupt().filter()).forEach(it -> {
+            if (StringUtils.isNotBlank(it)) hql.append(AND).append(it);
+        });
+        Optional.ofNullable(customCondition).ifPresent(it -> it.forEach(str -> {
+            if (StringUtils.isNotBlank(str)) hql.append(EruptJpaUtils.AND).append(str);
+        }));
         return hql.toString();
     }
 
