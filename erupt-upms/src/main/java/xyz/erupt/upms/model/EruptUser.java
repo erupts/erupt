@@ -8,6 +8,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -149,10 +150,12 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     @JoinTable(
             name = "e_upms_user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
     @EruptField(
             views = @View(title = "所属角色"),
             edit = @Edit(
+                    filter = @Filter("code = 1"),
                     title = "所属角色",
                     type = EditType.CHECKBOX
             )
