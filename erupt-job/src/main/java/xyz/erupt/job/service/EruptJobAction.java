@@ -55,7 +55,7 @@ public class EruptJobAction implements Job {
                 if (StringUtils.isNotBlank(eruptJob.getNotifyEmails())) {
                     if (null == javaMailSender) {
                         log.warn("Sending mailbox not configured");
-                    }else{
+                    } else {
                         SimpleMailMessage message = new SimpleMailMessage();
                         message.setSubject(eruptJob.getName() + " job error ！！！");
                         message.setText(exceptionTraceStr);
