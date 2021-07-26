@@ -76,12 +76,10 @@ public class EruptTplService implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         TimeRecorder timeRecorder = new TimeRecorder();
-        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
-                        new AnnotationTypeFilter(EruptTpl.class)
-                }, clazz -> Arrays.stream(clazz.getDeclaredMethods()).forEach(method ->
-                        Optional.ofNullable(method.getAnnotation(TplAction.class))
-                                .ifPresent(it -> tplActions.put(it.value(), method))
-                )
+        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AnnotationTypeFilter(EruptTpl.class)},
+                clazz -> Arrays.stream(clazz.getDeclaredMethods()).forEach(
+                        method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(
+                                it -> tplActions.put(it.value(), method)))
         );
         MenuTypeEnum.addMenuType(new VLModel(TPL, "模板", "tpl目录下文件名"));
         log.info("Erupt tpl initialization completed in {} ms", timeRecorder.recorder());
@@ -99,20 +97,15 @@ public class EruptTplService implements ApplicationRunner {
 
     public void tplRender(Tpl tpl, Map<String, Object> map, Writer writer) {
         if (!tpl.tplHandler().isInterface()) {
-            if (null == map) {
-                map = new HashMap<>();
-            }
             Tpl.TplHandler tplHandler = EruptSpringUtil.getBean(tpl.tplHandler());
-            tplHandler.bindTplData(map, tpl.params());
+            tplHandler.bindTplData(Optional.ofNullable(map).orElse(new HashMap<>()), tpl.params());
         }
         this.tplRender(tpl.engine(), tpl.path(), map, writer);
     }
 
     @SneakyThrows
     public void tplRender(Tpl.Engine engine, String path, Map<String, Object> map, Writer writer) {
-        if (null == map) {
-            map = new HashMap<>();
-        }
+        map = Optional.ofNullable(map).orElse(new HashMap<>());
         map.put(EngineConst.INJECT_REQUEST, request);
         map.put(EngineConst.INJECT_RESPONSE, response);
         map.put(EngineConst.INJECT_BASE, request.getContextPath());
