@@ -31,7 +31,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -155,16 +154,13 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         if (eruptSecurityProp.isRecordOperateLog()) {
             if (handler instanceof HandlerMethod) {
                 HandlerMethod handlerMethod = (HandlerMethod) handler;
-                EruptRecordOperate eruptRecordOperate = handlerMethod.getMethodAnnotation(EruptRecordOperate.class);
-                if (null != eruptRecordOperate) {
+                Optional.ofNullable(handlerMethod.getMethodAnnotation(EruptRecordOperate.class)).ifPresent(eruptRecordOperate -> {
                     EruptOperateLog operate = new EruptOperateLog();
                     if (eruptRecordOperate.dynamicConfig().isInterface()) {
                         operate.setApiName(eruptRecordOperate.value());
                     } else {
                         String eruptName = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
-                        if (null == eruptName) {
-                            eruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
-                        }
+                        eruptName = Optional.ofNullable(eruptName).orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
                         EruptRecordOperate.DynamicConfig dynamicConfig = EruptSpringUtil.getBean(eruptRecordOperate.dynamicConfig());
                         if (!dynamicConfig.canRecord(eruptName, handlerMethod.getMethod())) return;
                         operate.setApiName(dynamicConfig.naming(eruptRecordOperate.value(), eruptName, handlerMethod.getMethod()));
@@ -175,21 +171,22 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     operate.setReqMethod(request.getMethod());
                     operate.setReqAddr(request.getRequestURL().toString());
                     Optional.ofNullable(eruptUserService.getCurrentUid()).ifPresent(it -> operate.setEruptUser(new EruptUserVo(it)));
+                    operate.setCreateTime(new Date());
+                    operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
+                    Optional.ofNullable(ex).ifPresent(e -> {
+                        operate.setErrorInfo(ExceptionUtils.getStackTrace(e));
+                        operate.setStatus(false);
+                    });
                     Object param = RequestBodyTL.get().getBody();
                     if (null != param) {
                         operate.setReqParam(param.toString());
                     } else {
                         operate.setReqParam(findRequestParamVal(request));
                     }
-                    operate.setCreateTime(new Date());
-                    operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
                     RequestBodyTL.remove();
-                    Optional.ofNullable(ex).ifPresent(e -> {
-                        operate.setErrorInfo(ExceptionUtils.getStackTrace(e));
-                        operate.setStatus(false);
-                    });
                     entityManager.persist(operate);
-                }
+
+                });
             }
         }
     }
@@ -197,9 +194,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     public String findRequestParamVal(HttpServletRequest request) {
         if (request.getParameterMap().size() > 0) {
             StringBuilder sb = new StringBuilder();
-            for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
-                sb.append(entry.getKey()).append("=").append(Arrays.toString(entry.getValue())).append("\n");
-            }
+            request.getParameterMap().forEach((key, value) -> sb.append(key).append("=").append(Arrays.toString(value)).append("\n"));
             return sb.toString();
         }
         return null;
