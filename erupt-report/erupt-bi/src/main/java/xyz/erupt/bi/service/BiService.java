@@ -71,44 +71,6 @@ public class BiService {
         return entityManager.find(Bi.class, id);
     }
 
-    public static Object evalScript(String script, Bindings bindings) throws ScriptException {
-        return null == bindings ? scriptEngine.eval(script) : scriptEngine.eval(script, bindings);
-    }
-
-    @SneakyThrows
-    private Long getTotal(Bi bi, Map<String, Object> query) {
-        String express = processPlaceHolder(bi.getSqlStatement(), query);
-        BiClassHandler biClassHandler = bi.getClassHandler();
-        if (null != biClassHandler) {
-            express = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class)
-                    .exprHandler(biClassHandler.getParam(), query, express);
-        }
-        express = String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express);
-        NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
-        return Long.valueOf(jdbcTemplate.queryForMap(express, query).get(TOTAL_KEY).toString());
-    }
-
-    public static Object evalScript(String script) throws ScriptException {
-        return evalScript(script, null);
-    }
-
-    private List<Map<String, Object>> jdbcQuery(NamedParameterJdbcTemplate jdbcTemplate, String express, Map<String, Object> query) {
-        log.info(express);
-        return jdbcTemplate.query(express, query, (rs, i) -> {
-            Map<String, Object> map = new LinkedHashMap<>();
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            for (int index = 1; index <= columnCount; index++) {
-                map.put(metaData.getColumnLabel(index), rs.getObject(index));
-            }
-            return map;
-        });
-    }
-
-    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
-
-    private static final Pattern EXPRESS_PATTERN = Pattern.compile("(?<=\\$\\{)(.+?)(?=\\})");
-
     public BiData queryBiData(Bi bi, int pageIndex, int pageSize,
                               Map<String, Object> query, boolean export) {
         Erupts.requireTrue(StringUtils.isNotBlank(bi.getSqlStatement()), "express not found");
@@ -143,6 +105,8 @@ public class BiService {
         return biData;
     }
 
+    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
+
     @SneakyThrows
     public List<Map<String, Object>> startQuery(String express, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
         EruptBiHandler biHandler = null;
@@ -156,16 +120,52 @@ public class BiService {
         Optional.ofNullable(biHandler).ifPresent(it -> it.resultHandler(classHandler.getParam(), query, list));
         return list;
     }
+    private static final Pattern EXPRESS_PATTERN = Pattern.compile("(?<=\\$\\{)(.+?)(?=\\})");
+
+    public static Object evalScript(String script, Bindings bindings) throws ScriptException {
+        return null == bindings ? scriptEngine.eval(script) : scriptEngine.eval(script, bindings);
+    }
+
+    public static Object evalScript(String script) throws ScriptException {
+        return evalScript(script, null);
+    }
+
+    @SneakyThrows
+    private Long getTotal(Bi bi, Map<String, Object> query) {
+        String express = processPlaceHolder(bi.getSqlStatement(), query);
+        BiClassHandler biClassHandler = bi.getClassHandler();
+        if (null != biClassHandler) {
+            express = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class)
+                    .exprHandler(biClassHandler.getParam(), query, express);
+        }
+        express = String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express);
+        NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
+        return Long.valueOf(jdbcTemplate.queryForMap(express, query).get(TOTAL_KEY).toString());
+    }
+
+    private List<Map<String, Object>> jdbcQuery(NamedParameterJdbcTemplate jdbcTemplate, String express, Map<String, Object> query) {
+        log.info(express);
+        return jdbcTemplate.query(express, query, (rs, i) -> {
+            Map<String, Object> map = new LinkedHashMap<>();
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            for (int index = 1; index <= columnCount; index++) {
+                map.put(metaData.getColumnLabel(index), rs.getObject(index));
+            }
+            return map;
+        });
+    }
 
     @SneakyThrows
     private String processPlaceHolder(String express, Map<String, Object> param) {
         Bindings bindings = new SimpleBindings();
-        Optional.ofNullable(param).ifPresent(it -> it.forEach((key, value) -> it.put(key, it.get(key))));
+        Optional.ofNullable(param).ifPresent(it -> it.forEach((key, value) -> bindings.put(key, it.get(key))));
         Matcher m = EXPRESS_PATTERN.matcher(express);
         while (m.find()) {
             String exp = m.group();
             Object result = scriptEngine.eval(BiDataInitService.defineFunctions + "\n" + exp, bindings);
-            express = express.replace("${" + exp + "}", Optional.ofNullable(result).orElse("").toString());
+            result = Optional.ofNullable(result).orElse("");
+            express = express.replace("${" + exp + "}", result.toString());
         }
         return express;
     }
