@@ -112,7 +112,7 @@ public class EruptBiController {
             dimension.setSort((dimension.getSort() == null) ? ++maxSort : dimension.getSort());
             if (StringUtils.isNotBlank(dimension.getDefaultValue())) {
                 try {
-                    biDimensionVo.setDefaultValue(BiService.evalScript(dimension.getDefaultValue(), null));
+                    biDimensionVo.setDefaultValue(BiService.evalScript(dimension.getDefaultValue()));
                 } catch (ScriptException e) {
                     log.error("{}.{} -> {}", bi.getName(), dimension.getCode(), e.getMessage());
                 }
@@ -257,10 +257,8 @@ public class EruptBiController {
 
     //校验请求id是否拥有菜单权限
     private void verifyBiMenuPermissions(Bi bi, String code) {
-        String biCode = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
-        if (null == biCode) {
-            biCode = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
-        }
+        String biCode = Optional.ofNullable(request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY))
+                .orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
         if (!biCode.equals(bi.getCode()) || !code.equals(bi.getCode())) {
             throw new EruptNoLegalPowerException();
         }
