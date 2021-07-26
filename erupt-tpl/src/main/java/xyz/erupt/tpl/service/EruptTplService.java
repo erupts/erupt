@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -76,13 +77,12 @@ public class EruptTplService implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
-                new AnnotationTypeFilter(EruptTpl.class)
-        }, clazz -> {
-            for (Method method : clazz.getDeclaredMethods()) {
-                Optional.ofNullable(method.getAnnotation(TplAction.class))
-                        .ifPresent(it -> tplActions.put(it.value(), method));
-            }
-        });
+                        new AnnotationTypeFilter(EruptTpl.class)
+                }, clazz -> Arrays.stream(clazz.getDeclaredMethods()).forEach(method ->
+                        Optional.ofNullable(method.getAnnotation(TplAction.class))
+                                .ifPresent(it -> tplActions.put(it.value(), method))
+                )
+        );
         MenuTypeEnum.addMenuType(new VLModel(TPL, "模板", "tpl目录下文件名"));
         log.info("Erupt tpl initialization completed in {} ms", timeRecorder.recorder());
     }
