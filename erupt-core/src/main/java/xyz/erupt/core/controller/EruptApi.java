@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import oshi.SystemInfo;
+import oshi.hardware.HardwareAbstractionLayer;
 import xyz.erupt.core.config.EruptAppProp;
-import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.util.EruptVersionUtil;
 
@@ -31,9 +32,18 @@ public class EruptApi {
         return eruptAppProp;
     }
 
-    @GetMapping(value = "/erupt-app-js", produces = {"application/javascript"})
-    public String eruptAppJs() {
-        return "var eruptApp = " + GsonFactory.getGson().toJson(eruptAppProp);
+//    @GetMapping(value = "/erupt-app-js", produces = {"application/javascript"})
+//    public String eruptAppJs() {
+//        return "var eruptApp = " + GsonFactory.getGson().toJson(eruptAppProp);
+//    }
+
+    @GetMapping(value = "/erupt-machine-code")
+    public String eruptMachineCode() {
+        HardwareAbstractionLayer hal = new SystemInfo().getHardware();
+        //CPU序列号 + 操作系统序列号 + 硬件UUID
+        return hal.getProcessor().getProcessorIdentifier().getProcessorID()
+                + hal.getComputerSystem().getSerialNumber()
+                + hal.getComputerSystem().getHardwareUUID();
     }
 
 }
