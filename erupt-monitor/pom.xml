@@ -16,11 +16,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.oshi</groupId>
-            <artifactId>oshi-core</artifactId>
-            <version>5.7.2</version>
-        </dependency>
-        <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-upms</artifactId>
             <version>${project.parent.version}</version>
