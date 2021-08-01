@@ -15,6 +15,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 /**
  * Erupt 页面结构构建信息
@@ -36,35 +37,25 @@ public class EruptBuildController {
         for (EruptFieldModel fieldModel : eruptView.getEruptFieldModels()) {
             switch (fieldModel.getEruptField().edit().type()) {
                 case TAB_TREE:
-                    if (eruptBuildModel.getTabErupts() == null) {
-                        eruptBuildModel.setTabErupts(new LinkedHashMap<>());
-                    }
+                    eruptBuildModel.setTabErupts(Optional.ofNullable(eruptBuildModel.getTabErupts()).orElse(new LinkedHashMap<>()));
                     EruptBuildModel eruptBuildModel1 = new EruptBuildModel();
                     eruptBuildModel1.setEruptModel(EruptCoreService.getEruptView(fieldModel.getFieldReturnName()));
                     eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), eruptBuildModel1);
                     break;
                 case TAB_TABLE_ADD:
                 case TAB_TABLE_REFER:
-                    if (eruptBuildModel.getTabErupts() == null) {
-                        eruptBuildModel.setTabErupts(new LinkedHashMap<>());
-                    }
+                    eruptBuildModel.setTabErupts(Optional.ofNullable(eruptBuildModel.getTabErupts()).orElse(new LinkedHashMap<>()));
                     eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), getEruptBuild(fieldModel.getFieldReturnName()));
                     break;
                 case COMBINE:
-                    if (eruptBuildModel.getCombineErupts() == null) {
-                        eruptBuildModel.setCombineErupts(new LinkedHashMap<>());
-                    }
+                    eruptBuildModel.setCombineErupts(Optional.ofNullable(eruptBuildModel.getCombineErupts()).orElse(new LinkedHashMap<>()));
                     eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), EruptCoreService.getEruptView(fieldModel.getFieldReturnName()));
-                    break;
-                default:
                     break;
             }
         }
         for (RowOperation operation : eruptBuildModel.getEruptModel().getErupt().rowOperation()) {
             if (operation.eruptClass() != void.class && operation.type() == RowOperation.Type.ERUPT) {
-                if (eruptBuildModel.getOperationErupts() == null) {
-                    eruptBuildModel.setOperationErupts(new LinkedHashMap<>());
-                }
+                eruptBuildModel.setOperationErupts(Optional.ofNullable(eruptBuildModel.getOperationErupts()).orElse(new LinkedHashMap<>()));
                 eruptBuildModel.getOperationErupts().put(operation.code(), EruptCoreService.getEruptView(operation.eruptClass().getSimpleName()));
             }
         }
