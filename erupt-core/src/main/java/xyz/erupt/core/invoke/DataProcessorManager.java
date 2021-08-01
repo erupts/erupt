@@ -22,10 +22,7 @@ public class DataProcessorManager {
 
     public static IEruptDataService getEruptDataProcessor(Class<?> clazz) {
         EruptDataProcessor eruptDataProcessor = clazz.getAnnotation(EruptDataProcessor.class);
-        if (null == eruptDataProcessor) {
-            return EruptSpringUtil.getBean(eruptDataServiceMap.get(EruptConst.DEFAULT_DATA_PROCESSOR));
-        } else {
-            return EruptSpringUtil.getBean(eruptDataServiceMap.get(eruptDataProcessor.value()));
-        }
+        return EruptSpringUtil.getBean(eruptDataServiceMap.get(null == eruptDataProcessor ?
+                EruptConst.DEFAULT_DATA_PROCESSOR : eruptDataProcessor.value()));
     }
 }
