@@ -11,9 +11,9 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptBuildModel;
-import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
@@ -34,13 +34,13 @@ public class EruptBuildController {
         EruptBuildModel eruptBuildModel = new EruptBuildModel();
         eruptBuildModel.setPower(PowerInvoke.getPowerObject(eruptView));
         eruptBuildModel.setEruptModel(eruptView);
-        for (EruptFieldModel fieldModel : eruptView.getEruptFieldModels()) {
+        eruptView.getEruptFieldModels().forEach(fieldModel -> {
             switch (fieldModel.getEruptField().edit().type()) {
                 case TAB_TREE:
                     eruptBuildModel.setTabErupts(Optional.ofNullable(eruptBuildModel.getTabErupts()).orElse(new LinkedHashMap<>()));
-                    EruptBuildModel eruptBuildModel1 = new EruptBuildModel();
-                    eruptBuildModel1.setEruptModel(EruptCoreService.getEruptView(fieldModel.getFieldReturnName()));
-                    eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), eruptBuildModel1);
+                    EruptBuildModel m1 = new EruptBuildModel();
+                    m1.setEruptModel(EruptCoreService.getEruptView(fieldModel.getFieldReturnName()));
+                    eruptBuildModel.getTabErupts().put(fieldModel.getFieldName(), m1);
                     break;
                 case TAB_TABLE_ADD:
                 case TAB_TABLE_REFER:
@@ -52,13 +52,12 @@ public class EruptBuildController {
                     eruptBuildModel.getCombineErupts().put(fieldModel.getFieldName(), EruptCoreService.getEruptView(fieldModel.getFieldReturnName()));
                     break;
             }
-        }
-        for (RowOperation operation : eruptBuildModel.getEruptModel().getErupt().rowOperation()) {
-            if (operation.eruptClass() != void.class && operation.type() == RowOperation.Type.ERUPT) {
-                eruptBuildModel.setOperationErupts(Optional.ofNullable(eruptBuildModel.getOperationErupts()).orElse(new LinkedHashMap<>()));
-                eruptBuildModel.getOperationErupts().put(operation.code(), EruptCoreService.getEruptView(operation.eruptClass().getSimpleName()));
-            }
-        }
+        });
+        Arrays.stream(eruptBuildModel.getEruptModel().getErupt().rowOperation()).filter(operation ->
+                operation.eruptClass() != void.class && operation.type() == RowOperation.Type.ERUPT).forEach(operation -> {
+            eruptBuildModel.setOperationErupts(Optional.ofNullable(eruptBuildModel.getOperationErupts()).orElse(new LinkedHashMap<>()));
+            eruptBuildModel.getOperationErupts().put(operation.code(), EruptCoreService.getEruptView(operation.eruptClass().getSimpleName()));
+        });
         return eruptBuildModel;
     }
 
