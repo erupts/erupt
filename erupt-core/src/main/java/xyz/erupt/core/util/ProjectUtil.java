@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import xyz.erupt.core.constant.EruptConst;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.function.Consumer;
 
 /**
@@ -27,7 +28,7 @@ public class ProjectUtil {
         File dirFile = new File(userDir, EruptConst.ERUPT_DIR);
         String warnTxt = " The erupt initialization ID file could not be created";
         if (!dirFile.exists() && !dirFile.mkdirs()) {
-            log.warn(dirFile.toString() + warnTxt);
+            log.warn(dirFile + warnTxt);
         }
         File file = new File(dirFile.getPath(), projectName + LOADED_EXT);
         if (file.exists()) {
@@ -35,9 +36,9 @@ public class ProjectUtil {
         } else {
             first.accept(true);
             if (file.createNewFile()) {
-                FileUtils.write(file, EruptVersionUtil.getEruptVersion());
+                FileUtils.write(file, EruptPropUtil.getEruptVersion(), Charset.defaultCharset());
             } else {
-                log.warn(dirFile.toString() + warnTxt);
+                log.warn(dirFile + warnTxt);
             }
         }
     }

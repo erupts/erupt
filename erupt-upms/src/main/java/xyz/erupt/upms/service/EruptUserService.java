@@ -10,6 +10,7 @@ import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
@@ -24,7 +25,6 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.util.IpUtil;
-import xyz.erupt.upms.util.MD5Utils;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -137,13 +137,13 @@ public class EruptUserService {
             if (eruptUser.getIsMd5()) {
                 digestPwd = eruptUser.getPassword();
             } else {
-                digestPwd = MD5Utils.digest(eruptUser.getPassword());
+                digestPwd = MD5Util.digest(eruptUser.getPassword());
             }
-            String calcPwd = MD5Utils.digest(digestPwd + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + eruptUser.getAccount());
+            String calcPwd = MD5Util.digest(digestPwd + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + eruptUser.getAccount());
             return pwd.equalsIgnoreCase(calcPwd);
         } else {
             if (eruptUser.getIsMd5()) {
-                pwd = MD5Utils.digest(pwd);
+                pwd = MD5Util.digest(pwd);
             }
             return pwd.equals(eruptUser.getPassword());
         }
@@ -201,8 +201,8 @@ public class EruptUserService {
             loginProxy.beforeChangePwd(eruptUser, newPwd);
         }
         if (eruptUser.getIsMd5()) {
-            pwd = MD5Utils.digest(pwd);
-            newPwd = MD5Utils.digest(newPwd);
+            pwd = MD5Util.digest(pwd);
+            newPwd = MD5Util.digest(newPwd);
         }
         if (eruptUser.getPassword().equals(pwd)) {
             if (newPwd.equals(eruptUser.getPassword())) {

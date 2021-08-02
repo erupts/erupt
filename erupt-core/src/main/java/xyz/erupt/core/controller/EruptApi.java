@@ -8,7 +8,8 @@ import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import xyz.erupt.core.config.EruptAppProp;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.util.EruptVersionUtil;
+import xyz.erupt.core.util.EruptPropUtil;
+import xyz.erupt.core.util.MD5Util;
 
 /**
  * @author YuePeng
@@ -24,7 +25,7 @@ public class EruptApi {
     //获取当前Erupt版本号
     @GetMapping("/version")
     public String version() {
-        return EruptVersionUtil.getEruptVersion();
+        return EruptPropUtil.getEruptVersion();
     }
 
     @GetMapping("/erupt-app")
@@ -32,18 +33,13 @@ public class EruptApi {
         return eruptAppProp;
     }
 
-//    @GetMapping(value = "/erupt-app-js", produces = {"application/javascript"})
-//    public String eruptAppJs() {
-//        return "var eruptApp = " + GsonFactory.getGson().toJson(eruptAppProp);
-//    }
-
     @GetMapping(value = "/erupt-machine-code")
     public String eruptMachineCode() {
-        HardwareAbstractionLayer hal = new SystemInfo().getHardware();
         //CPU序列号 + 操作系统序列号 + 硬件UUID
-        return hal.getProcessor().getProcessorIdentifier().getProcessorID()
+        HardwareAbstractionLayer hal = new SystemInfo().getHardware();
+        return MD5Util.digest(hal.getProcessor().getProcessorIdentifier().getProcessorID()
                 + hal.getComputerSystem().getSerialNumber()
-                + hal.getComputerSystem().getHardwareUUID();
+                + hal.getComputerSystem().getHardwareUUID());
     }
 
 }
