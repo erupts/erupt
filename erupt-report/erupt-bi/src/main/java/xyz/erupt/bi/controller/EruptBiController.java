@@ -18,12 +18,8 @@ import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
-import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptExcelService;
-import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.core.util.ExcelUtil;
-import xyz.erupt.core.util.HttpUtil;
-import xyz.erupt.core.util.SecurityUtil;
+import xyz.erupt.core.util.*;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.tpl.service.EruptTplService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
@@ -181,18 +177,13 @@ public class EruptBiController {
                             @RequestParam("condition") String conditionStr,
                             HttpServletRequest request,
                             HttpServletResponse response, @PathVariable String code) throws ClassNotFoundException, IOException {
-        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
-            return;
-        }
+        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         Bi bi = biService.findBi(id);
         this.verifyBiMenuPermissions(bi, code);
-        if (!bi.getExport()) {
-            throw new EruptWebApiRuntimeException(bi.getName() + "禁止导出！");
-        }
-        Map<String, Object> condition = gson.fromJson(
-                URLDecoder.decode(conditionStr, StandardCharsets.UTF_8.name()),
-                new TypeToken<Map<String, Object>>() {
-                }.getType());
+        Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
+        Map<String, Object> condition = gson.fromJson(URLDecoder
+                .decode(conditionStr, StandardCharsets.UTF_8.name()), new TypeToken<Map<String, Object>>() {
+        }.getType());
         BiData biData = biService.queryBiData(bi, 1, 100000, condition, true);
         Workbook wb = new HSSFWorkbook();
         //基本信息
