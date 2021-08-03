@@ -28,8 +28,7 @@ public class HttpServletRequestFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         if (eruptSecurityProp.isRecordOperateLog()) {
             RequestBody requestBody = new RequestBody();
             RequestBodyTL.set(requestBody);
