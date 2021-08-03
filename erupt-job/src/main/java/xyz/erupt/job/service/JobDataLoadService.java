@@ -55,8 +55,7 @@ public class JobDataLoadService implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         TimeRecorder timeRecorder = new TimeRecorder();
-        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
-                new AssignableTypeFilter(EruptJobHandler.class)}, clazz -> {
+        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptJobHandler.class)}, clazz -> {
             EruptHandlerNaming eruptHandlerNaming = clazz.getAnnotation(EruptHandlerNaming.class);
             loadedJobHandler.add(new VLModel(clazz.getName(), (null == eruptHandlerNaming) ? clazz.getSimpleName() : eruptHandlerNaming.value()));
         });

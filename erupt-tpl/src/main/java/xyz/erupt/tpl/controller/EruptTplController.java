@@ -67,8 +67,7 @@ public class EruptTplController {
 
     @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=UTF-8"})
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void getEruptFieldHtml(@PathVariable("erupt") String eruptName,
-                                  @PathVariable("field") String field,
+    public void getEruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field,
                                   HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
@@ -78,8 +77,7 @@ public class EruptTplController {
 
     @GetMapping(value = "/operation_tpl/{erupt}/{code}", produces = {"text/html;charset=utf-8"})
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void getOperationTpl(@PathVariable("erupt") String eruptName,
-                                @PathVariable("code") String code,
+    public void getOperationTpl(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
                                 @RequestParam(value = "ids", required = false) String[] ids,
                                 HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
