@@ -133,7 +133,6 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
-
                 if (!authStr.equals(eruptModel.getEruptName())) {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
@@ -178,14 +177,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                         operate.setStatus(false);
                     });
                     Object param = RequestBodyTL.get().getBody();
-                    if (null != param) {
-                        operate.setReqParam(param.toString());
-                    } else {
-                        operate.setReqParam(findRequestParamVal(request));
-                    }
+                    operate.setReqParam(null == param ? findRequestParamVal(request) : param.toString());
                     RequestBodyTL.remove();
                     entityManager.persist(operate);
-
                 });
             }
         }

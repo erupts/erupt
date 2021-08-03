@@ -18,7 +18,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.job.constant.JobConst;
 import xyz.erupt.upms.constant.RegexConst;
 import xyz.erupt.upms.model.base.HyperModel;
@@ -88,17 +88,13 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
     @SneakyThrows
     @Override
     public void beforeAdd(EruptMail eruptMail) {
-        if (null == javaMailSender) {
-            throw new EruptApiErrorTip("Sending mailbox not configured");
-        }
+        Erupts.requireNonNull(javaMailSender, "Sending mailbox not configured");
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
         helper.setSubject(eruptMail.getSubject());
         helper.setTo(eruptMail.getRecipient());
         helper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
-        if (StringUtils.isNotBlank(eruptMail.getCc())) {
-            helper.setCc(eruptMail.getCc().split("\\|"));
-        }
+        if (StringUtils.isNotBlank(eruptMail.getCc())) helper.setCc(eruptMail.getCc().split("\\|"));
         helper.setText(eruptMail.getContent(), true);
         javaMailSender.send(mimeMessage);
     }
