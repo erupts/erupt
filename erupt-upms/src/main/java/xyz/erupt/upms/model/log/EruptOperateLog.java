@@ -91,7 +91,7 @@ public class EruptOperateLog extends BaseModel {
     )
     private Date createTime;
 
-    @Column(length = 500)
+    @Column(length = 2083)
     @EruptField(
             views = @View(title = "请求地址", type = ViewType.HTML)
     )
