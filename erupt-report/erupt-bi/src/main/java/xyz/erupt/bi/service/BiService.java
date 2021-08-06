@@ -60,11 +60,10 @@ public class BiService {
         }
         if (StringUtils.isNotBlank(biDataSource.getLimitSql())) {
             return biDataSource.getLimitSql();
-        } else {
-            return Stream.of(DBTypeEnum.values())
-                    .filter(it -> it.name().equals(biDataSource.getType()))
-                    .findFirst().orElse(DBTypeEnum.MySQL).getLimitSql();
         }
+        return Stream.of(DBTypeEnum.values())
+                .filter(it -> it.name().equals(biDataSource.getType()))
+                .findFirst().orElse(DBTypeEnum.MySQL).getLimitSql();
     }
 
     public Bi findBi(Long id) {
@@ -91,11 +90,7 @@ public class BiService {
             if (null != list && list.size() > 0) {
                 List<BiColumn> biColumns = new LinkedList<>();
                 Map<String, Object> map = list.get(0);
-                for (String key : map.keySet()) {
-                    BiColumn biColumn = new BiColumn();
-                    biColumn.setName(key);
-                    biColumns.add(biColumn);
-                }
+                map.keySet().forEach(key -> biColumns.add(new BiColumn(key)));
                 biData.setColumns(biColumns);
             }
             biData.setList(list);
@@ -120,6 +115,7 @@ public class BiService {
         Optional.ofNullable(biHandler).ifPresent(it -> it.resultHandler(classHandler.getParam(), query, list));
         return list;
     }
+
     private static final Pattern EXPRESS_PATTERN = Pattern.compile("(?<=\\$\\{)(.+?)(?=\\})");
 
     public static Object evalScript(String script, Bindings bindings) throws ScriptException {
@@ -138,9 +134,9 @@ public class BiService {
             express = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class)
                     .exprHandler(biClassHandler.getParam(), query, express);
         }
-        express = String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express);
-        NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(bi.getDataSource());
-        return Long.valueOf(jdbcTemplate.queryForMap(express, query).get(TOTAL_KEY).toString());
+        return Long.valueOf(dataSourceService.getJdbcTemplate(bi.getDataSource())
+                .queryForMap(String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express), query)
+                .get(TOTAL_KEY).toString());
     }
 
     private List<Map<String, Object>> jdbcQuery(NamedParameterJdbcTemplate jdbcTemplate, String express, Map<String, Object> query) {

@@ -36,7 +36,7 @@ public class BiClassHandler extends HyperModel {
     @EruptField(
             views = @View(title = "处理类路径"),
             edit = @Edit(title = "处理类路径", notNull = true,
-                    desc = "需实现xyz.erupt.bi.fun.BiHandler接口", inputType = @InputType(fullSpan = true))
+                    desc = "需实现xyz.erupt.bi.fun.EruptBiHandler接口", inputType = @InputType(fullSpan = true))
     )
     private String handlerPath;
 
