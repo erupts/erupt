@@ -119,10 +119,10 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     }
 
     //@ManyToOne数据处理
-    private void jpaManyToOneConvert(EruptModel eruptModel, Object object) throws NoSuchFieldException, IllegalAccessException {
+    private void jpaManyToOneConvert(EruptModel eruptModel, Object object) throws IllegalAccessException {
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             if (fieldModel.getEruptField().edit().type() == EditType.TAB_TABLE_ADD) {
-                Field field = object.getClass().getDeclaredField(fieldModel.getFieldName());
+                Field field = ReflectUtil.findClassField(object.getClass(), fieldModel.getFieldName());
                 field.setAccessible(true);
                 Collection<?> collection = (Collection<?>) field.get(object);
                 if (null != collection) {
@@ -169,7 +169,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         StringBuilder hql = new StringBuilder();
         List<String> columnStrList = new ArrayList<>();
         columns.forEach(column -> columnStrList.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName()
-                        , column.getName()) + " as " + column.getAlias()));
+                , column.getName()) + " as " + column.getAlias()));
         hql.append("select new map(").append(String.join(", ", columnStrList))
                 .append(") from ").append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
