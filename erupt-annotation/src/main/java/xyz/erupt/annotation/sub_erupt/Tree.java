@@ -21,8 +21,8 @@ public @interface Tree {
     @Comment("父级节点标识列")
     String pid() default "";
 
-//    @Comment("是否启动懒加载")
-//    boolean lazyFetch() default false;
+    @Comment("展开层级数")
+    int expandLevel() default 999;
 
     @Transient
     @Comment("标识pid为何特征才是根节点，需要与filter配合使用")

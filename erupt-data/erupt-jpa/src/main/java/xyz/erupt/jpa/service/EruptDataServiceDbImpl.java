@@ -127,10 +127,10 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 Collection<?> collection = (Collection<?>) field.get(object);
                 if (null != collection) {
                     for (Object o : collection) {
-                        //强制删除主键ID
-                        Field pk = ReflectUtil.findClassField(o.getClass(), EruptCoreService
-                                .getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol());
-                        pk.set(o, null);
+                        //强制删除主键
+                        ReflectUtil.findClassField(o.getClass(),
+                                EruptCoreService.getErupt(fieldModel.getFieldReturnName()).getErupt()
+                                        .primaryKeyCol()).set(o, null);
                     }
                 }
             }
