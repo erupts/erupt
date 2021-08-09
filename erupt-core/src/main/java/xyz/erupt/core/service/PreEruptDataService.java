@@ -45,7 +45,7 @@ public class PreEruptDataService {
         if (StringUtils.isBlank(pid)) {
             return treeModels;
         } else {
-            return DataHandlerUtil.treeModelToTree(treeModels);
+            return DataHandlerUtil.quoteTree(treeModels);
         }
     }
 
