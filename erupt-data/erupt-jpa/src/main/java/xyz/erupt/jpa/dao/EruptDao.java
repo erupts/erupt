@@ -41,7 +41,9 @@ public class EruptDao {
 
     //修改
     public <T> T merge(T t) {
-        return entityManager.merge(t);
+        T type = entityManager.merge(t);
+        entityManager.flush();
+        return type;
     }
 
     //删除
