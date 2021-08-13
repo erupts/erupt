@@ -12,7 +12,7 @@ import java.io.InputStream;
 public interface AttachmentProxy {
 
     @Comment("附件上传")
-    void upLoad(@Comment("数据流") InputStream inputStream, @Comment("上传位置") String path);
+    String upLoad(@Comment("数据流") InputStream inputStream, @Comment("上传位置") String path);
 
     @Comment("附件所在域名")
     String fileDomain();
