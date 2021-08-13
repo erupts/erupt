@@ -129,7 +129,7 @@ public class EruptFileController {
             boolean localSave = true;
             AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
             if (null != attachmentProxy) {
-                attachmentProxy.upLoad(file.getInputStream(), path.replace("\\", "/"));
+                path = attachmentProxy.upLoad(file.getInputStream(), path.replace("\\", "/"));
                 localSave = attachmentProxy.isLocalSave();
             }
             if (localSave) {
