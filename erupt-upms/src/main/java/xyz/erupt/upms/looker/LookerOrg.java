@@ -25,6 +25,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 /**
  * @author YuePeng
@@ -66,7 +68,7 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
     private EruptUserService eruptUserService;
 
     @Override
-    public String beforeFetch(Class<?> eruptClass) {
+    public String beforeFetch(List<Condition> conditions) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         if (eruptUser.getIsAdmin()) {
             return null;
@@ -74,7 +76,7 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
         if (null == eruptUser.getEruptOrg()) {
             throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded organization cannot filter data");
         } else {
-            return eruptClass.getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
+            return eruptUserService.getContextEruptClass().getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
         }
     }
 

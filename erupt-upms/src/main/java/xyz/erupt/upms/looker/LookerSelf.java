@@ -9,6 +9,8 @@ import xyz.erupt.upms.service.EruptUserService;
 import javax.annotation.Resource;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 /**
  * @author YuePeng
@@ -24,10 +26,10 @@ public class LookerSelf extends HyperModelCreatorVo implements DataProxy<Object>
     private EruptUserService eruptUserService;
 
     @Override
-    public String beforeFetch(Class<?> eruptClass) {
+    public String beforeFetch(List<Condition> conditions) {
         if (eruptUserService.getCurrentEruptUser().getIsAdmin()) {
             return null;
         }
-        return eruptClass.getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid();
+        return eruptUserService.getContextEruptClass() + ".createUser.id = " + eruptUserService.getCurrentUid();
     }
 }
