@@ -72,7 +72,7 @@ public class EruptApiModel {
     }
 
     public enum PromptWay {
-        DIALOG, MESSAGE, NOTIFY
+        DIALOG, MESSAGE, NOTIFY, NONE
     }
 
 }
