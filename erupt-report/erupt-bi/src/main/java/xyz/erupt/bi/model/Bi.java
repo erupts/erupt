@@ -130,7 +130,7 @@ public class Bi extends HyperModel implements OperationHandler<Bi, BiReleaseModa
 
     @Override
     @Transactional
-    public void exec(List<Bi> data, BiReleaseModal biReleaseModal, String[] param) {
+    public String exec(List<Bi> data, BiReleaseModal biReleaseModal, String[] param) {
         Bi bi = data.get(0);
         Erupts.requireNull(eruptDao.queryEntity(EruptMenu.class, String.format("code = '%s'", bi.getCode())),
                 "菜单已存在请勿重复发布");
@@ -141,5 +141,6 @@ public class Bi extends HyperModel implements OperationHandler<Bi, BiReleaseModa
         eruptDao.persist(eruptMenu);
         //刷新当前用户菜单
         eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptUserService.getCurrentToken());
+        return null;
     }
 }
