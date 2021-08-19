@@ -9,6 +9,7 @@ import xyz.erupt.core.config.EruptAppProp;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.service.EruptApplication;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
@@ -241,14 +242,24 @@ public class EruptUserService {
         return token;
     }
 
-    //获取当前菜单对象
-    public EruptMenu getCurrentEruptMenu() {
+    private String getEruptHeader() {
         String erupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
         if (StringUtils.isBlank(erupt)) {
             erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
         }
         Assert.notNull(erupt, "request header 'erupt' not found ");
-        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken(), erupt, EruptMenu.class);
+        return erupt;
+    }
+
+    //获取当前菜单对象
+    public EruptMenu getCurrentEruptMenu() {
+        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
+                , this.getEruptHeader(), EruptMenu.class);
+    }
+
+    //获取erupt上下文对象
+    public Class<?> getContextEruptClass() {
+        return EruptCoreService.getErupt(this.getEruptHeader()).getClazz();
     }
 
     //获取当前用户ID

@@ -25,6 +25,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 /**
  * @author YuePeng
@@ -67,7 +69,7 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
     private EruptUserService eruptUserService;
 
     @Override
-    public String beforeFetch(Class<?> eruptClass) {
+    public String beforeFetch(List<Condition> conditions) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         if (eruptUser.getIsAdmin()) {
             return null;
@@ -75,8 +77,9 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
         if (null == eruptUser.getEruptOrg() || null == eruptUser.getEruptPost()) {
             throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded department cannot filter data");
         }
-        return "(" + eruptClass.getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid() + " or " + eruptClass.getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
-                + eruptClass.getSimpleName() + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
+        return "(" + eruptUserService.getContextEruptClass().getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid()
+                + " or " + eruptUserService.getContextEruptClass().getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
+                + eruptUserService.getContextEruptClass().getSimpleName() + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
     }
 
     @Override
