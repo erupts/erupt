@@ -4,7 +4,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import xyz.erupt.annotation.config.Comment;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Condition;
 
 /**
  * @author YuePeng
@@ -37,7 +39,7 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
     }
 
     @Comment("查询前，返回值为：自定义查询条件")
-    default String beforeFetch(Class<?> eruptClass) {
+    default String beforeFetch(List<Condition> conditions) {
         return null;
     }
 
