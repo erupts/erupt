@@ -134,9 +134,10 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
     }
 
     @Override
-    public void exec(List<EruptJob> eruptJob, Void param, String[] operationParam) {
+    public String exec(List<EruptJob> eruptJob, Void param, String[] operationParam) {
         try {
             eruptJobService.triggerJob(eruptJob.get(0));
+            return null;
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException(e.getMessage());
         }
