@@ -15,6 +15,7 @@ import xyz.erupt.upms.config.EruptUpmsConfig;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
@@ -46,6 +47,9 @@ public class EruptUserController {
 
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
+
+    @Resource
+    private EruptContextService eruptContextService;
 
     //登录
     @SneakyThrows
@@ -94,7 +98,7 @@ public class EruptUserController {
     @GetMapping("/menu")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public List<EruptMenuVo> getMenu() {
-        return sessionService.get(SessionKey.MENU_VIEW + eruptUserService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
+        return sessionService.get(SessionKey.MENU_VIEW + eruptContextService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
         }.getType());
     }
 
@@ -102,7 +106,7 @@ public class EruptUserController {
     @PostMapping("/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public EruptApiModel logout() {
-        String token = eruptUserService.getCurrentToken();
+        String token = eruptContextService.getCurrentToken();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
         sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
@@ -124,7 +128,7 @@ public class EruptUserController {
 
     @GetMapping("/token-valid")
     public boolean tokenValid() {
-        return sessionService.get(eruptUserService.getCurrentToken()) != null;
+        return sessionService.get(eruptContextService.getCurrentToken()) != null;
     }
 
     // 生成验证码

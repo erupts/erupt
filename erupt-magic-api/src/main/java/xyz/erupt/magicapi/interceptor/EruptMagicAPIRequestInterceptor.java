@@ -14,6 +14,7 @@ import xyz.erupt.magicapi.service.MagicAPIDataLoadService;
 import xyz.erupt.upms.cache.CaffeineEruptCache;
 import xyz.erupt.upms.cache.IEruptCache;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,8 +29,11 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
 
     private final EruptUserService eruptUserService;
 
-    public EruptMagicAPIRequestInterceptor(EruptUserService eruptUserService) {
+    private final EruptContextService eruptContextService;
+
+    public EruptMagicAPIRequestInterceptor(EruptUserService eruptUserService, EruptContextService eruptContextService) {
         this.eruptUserService = eruptUserService;
+        this.eruptContextService = eruptContextService;
     }
 
     /**
@@ -60,7 +64,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
             if (!isLogin) {
                 return new JsonBean<Void>(401, "用户未登录");
             } else {
-                EruptUser user = eruptUserIEruptCache.get(eruptUserService.getCurrentToken(), key -> eruptUserService.getCurrentEruptUser());
+                EruptUser user = eruptUserIEruptCache.get(eruptContextService.getCurrentToken(), key -> eruptUserService.getCurrentEruptUser());
                 // 权限判断
                 if (StringUtils.isNotBlank(permission) && eruptUserService.getEruptMenuByValue(permission) == null) {
                     return new JsonBean<Void>(403, "用户权限不足");

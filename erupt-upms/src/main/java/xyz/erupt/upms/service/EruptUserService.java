@@ -4,19 +4,16 @@ import com.google.gson.Gson;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import xyz.erupt.core.config.EruptAppProp;
 import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.service.EruptApplication;
-import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.config.EruptUpmsConfig;
-import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.EruptLogin;
 import xyz.erupt.upms.fun.LoginProxy;
@@ -62,6 +59,9 @@ public class EruptUserService {
 
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
+
+    @Resource
+    private EruptContextService eruptContextService;
 
     @Resource
     private EruptMenuService eruptMenuService;
@@ -134,18 +134,11 @@ public class EruptUserService {
     //校验密码
     public boolean checkPwd(EruptUser eruptUser, String pwd) {
         if (eruptAppProp.getPwdTransferEncrypt()) {
-            String digestPwd;
-            if (eruptUser.getIsMd5()) {
-                digestPwd = eruptUser.getPassword();
-            } else {
-                digestPwd = MD5Util.digest(eruptUser.getPassword());
-            }
+            String digestPwd = eruptUser.getIsMd5() ? eruptUser.getPassword() : MD5Util.digest(eruptUser.getPassword());
             String calcPwd = MD5Util.digest(digestPwd + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + eruptUser.getAccount());
             return pwd.equalsIgnoreCase(calcPwd);
         } else {
-            if (eruptUser.getIsMd5()) {
-                pwd = MD5Util.digest(pwd);
-            }
+            if (eruptUser.getIsMd5()) pwd = MD5Util.digest(pwd);
             return pwd.equals(eruptUser.getPassword());
         }
     }
@@ -225,46 +218,17 @@ public class EruptUserService {
 
     //当前用户菜单中，通过编码获取菜单
     public EruptMenu getEruptMenuByCode(String menuValue) {
-        return sessionService.getMapValue(SessionKey.MENU_CODE_MAP + getCurrentToken(), menuValue, EruptMenu.class);
+        return sessionService.getMapValue(SessionKey.MENU_CODE_MAP + eruptContextService.getCurrentToken(), menuValue, EruptMenu.class);
     }
 
     //当前用户菜单中，通过菜单类型值获取菜单
     public EruptMenu getEruptMenuByValue(String menuValue) {
-        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken(), menuValue, EruptMenu.class);
-    }
-
-    //获取当前请求token
-    public String getCurrentToken() {
-        String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
-        if (StringUtils.isBlank(token)) {
-            return request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
-        }
-        return token;
-    }
-
-    private String getEruptHeader() {
-        String erupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
-        if (StringUtils.isBlank(erupt)) {
-            erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
-        }
-        Assert.notNull(erupt, "request header 'erupt' not found ");
-        return erupt;
-    }
-
-    //获取当前菜单对象
-    public EruptMenu getCurrentEruptMenu() {
-        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
-                , this.getEruptHeader(), EruptMenu.class);
-    }
-
-    //获取erupt上下文对象
-    public Class<?> getContextEruptClass() {
-        return EruptCoreService.getErupt(this.getEruptHeader()).getClazz();
+        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken(), menuValue, EruptMenu.class);
     }
 
     //获取当前用户ID
     public Long getCurrentUid() {
-        Object uid = sessionService.get(SessionKey.USER_TOKEN + getCurrentToken());
+        Object uid = sessionService.get(SessionKey.USER_TOKEN + eruptContextService.getCurrentToken());
         return null == uid ? null : Long.valueOf(uid.toString());
     }
 
