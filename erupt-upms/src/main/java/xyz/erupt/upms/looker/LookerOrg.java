@@ -17,6 +17,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserVo;
+import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -67,6 +68,10 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
     @Transient
     private EruptUserService eruptUserService;
 
+    @Resource
+    @Transient
+    private EruptContextService eruptContextService;
+
     @Override
     public String beforeFetch(List<Condition> conditions) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
@@ -76,7 +81,7 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
         if (null == eruptUser.getEruptOrg()) {
             throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded organization cannot filter data");
         } else {
-            return eruptUserService.getContextEruptClass().getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
+            return eruptContextService.getContextEruptClass().getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
         }
     }
 

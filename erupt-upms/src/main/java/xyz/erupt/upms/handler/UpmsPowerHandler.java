@@ -7,8 +7,8 @@ import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.enums.MenuLimitEnum;
+import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
-import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -27,16 +27,17 @@ public class UpmsPowerHandler implements PowerHandler {
     }
 
     @Resource
-    private EruptUserService eruptUserService;
+    private EruptSessionService eruptSessionService;
 
     @Resource
-    private EruptSessionService eruptSessionService;
+    private EruptContextService eruptContextService;
 
     @Override
     public void handler(PowerObject power) {
-        Optional.ofNullable(eruptUserService.getCurrentEruptMenu()).ifPresent(eruptMenu -> {
+        Optional.ofNullable(eruptContextService.getCurrentEruptMenu()).ifPresent(eruptMenu -> {
             this.powerOff(eruptMenu.getPowerOff(), power);
-            Optional.of(eruptSessionService.get(SessionKey.ROLE_POWER + eruptUserService.getCurrentToken())).ifPresent(it -> this.powerOff(it.toString(), power));
+            Optional.of(eruptSessionService.get(SessionKey.ROLE_POWER + eruptContextService.getCurrentToken()))
+                    .ifPresent(it -> this.powerOff(it.toString(), power));
         });
     }
 

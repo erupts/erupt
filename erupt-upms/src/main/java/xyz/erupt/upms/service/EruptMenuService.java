@@ -13,7 +13,6 @@ import xyz.erupt.upms.vo.EruptMenuVo;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,10 +27,10 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     private EntityManager entityManager;
 
     @Resource
-    private HttpServletRequest request;
+    private EruptUserService eruptUserService;
 
     @Resource
-    private EruptUserService eruptUserService;
+    private EruptContextService eruptContextService;
 
 
     public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
@@ -72,7 +71,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
             throw new EruptWebApiRuntimeException("选择菜单类型时，类型值不能为空");
         }
-        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptUserService.getCurrentToken());
+        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
     }
 
     @Override
