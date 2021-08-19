@@ -22,6 +22,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -128,6 +129,10 @@ public class Bi extends HyperModel implements OperationHandler<Bi, BiReleaseModa
     @Transient
     private EruptUserService eruptUserService;
 
+    @Resource
+    @Transient
+    private EruptContextService eruptContextService;
+
     @Override
     @Transactional
     public String exec(List<Bi> data, BiReleaseModal biReleaseModal, String[] param) {
@@ -140,7 +145,7 @@ public class Bi extends HyperModel implements OperationHandler<Bi, BiReleaseModa
                 bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());
         eruptDao.persist(eruptMenu);
         //刷新当前用户菜单
-        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptUserService.getCurrentToken());
+        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
         return null;
     }
 }
