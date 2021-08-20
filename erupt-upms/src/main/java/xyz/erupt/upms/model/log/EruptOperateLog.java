@@ -27,7 +27,8 @@ import java.util.Date;
 @Table(name = "e_upms_operate_log")
 @Erupt(
         name = "操作日志",
-        power = @Power(add = false, edit = false, viewDetails = false, delete = false),
+        power = @Power(add = false, edit = false, viewDetails = false,
+                delete = false, powerHandler = AdminPower.class),
         orderBy = "createTime desc"
 )
 @Getter
