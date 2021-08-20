@@ -2,12 +2,14 @@ package xyz.erupt.jpa.model;
 
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.tenant.model.EruptTenant;
 import xyz.erupt.tenant.service.RentDataLoadService;
+import xyz.erupt.upms.service.EruptContextService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.concurrent.locks.Condition;
 import java.util.regex.Pattern;
 
 /**
@@ -21,6 +23,9 @@ public class BaseTenantDataProxy implements DataProxy<BaseModel> {
     @Resource
     private HttpServletRequest request;
 
+    @Resource
+    private EruptContextService eruptContextService;
+
     @Override
     public void beforeAdd(BaseModel baseModel) {
         EruptTenant eruptTenant = findEruptRent();
@@ -31,10 +36,10 @@ public class BaseTenantDataProxy implements DataProxy<BaseModel> {
     }
 
     @Override
-    public String beforeFetch(Class<?> clazz) {
+    public String beforeFetch(List<Condition> conditions) {
         EruptTenant eruptTenant = findEruptRent();
         if (null != eruptTenant) {
-            return EruptCoreService.getErupt(request.getHeader("erupt")).getEruptName() + ".eruptTenant=" + eruptTenant.getId();
+            return eruptContextService.getContextEruptClass().getSimpleName() + ".eruptTenant=" + eruptTenant.getId();
         }
         return null;
     }
