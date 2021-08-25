@@ -62,4 +62,5 @@ public class EruptOrg extends BaseModel {
     )
     private Integer sort;
 
+
 }
