@@ -118,6 +118,7 @@ public class EruptBiController {
         if (null != bi.getRefreshTime() && bi.getRefreshTime() > 0) {
             biVo.setRefreshTime(bi.getRefreshTime());
         }
+        biVo.setId(bi.getId());
         biVo.setCode(bi.getCode());
         biVo.setCharts(biChartVos.stream().sorted(Comparator.comparing(BiChartVo::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
         biVo.setDimensions(biDimensionVos.stream().sorted(Comparator.comparing(BiDimensionVo::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
@@ -174,9 +175,10 @@ public class EruptBiController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 1)
     @RequestMapping("/{code}/excel/{id}")
     public void exportExcel(@PathVariable("id") Long id,
+                            @PathVariable("code") String code,
                             @RequestParam("condition") String conditionStr,
                             HttpServletRequest request,
-                            HttpServletResponse response, @PathVariable String code) throws ClassNotFoundException, IOException {
+                            HttpServletResponse response) throws ClassNotFoundException, IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         Bi bi = biService.findBi(id);
         this.verifyBiMenuPermissions(bi, code);

@@ -13,6 +13,8 @@ import java.util.List;
 @Setter
 public class BiVo {
 
+    private Long id;
+
     private String code;
 
     private boolean export;
