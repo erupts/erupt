@@ -165,8 +165,9 @@ public class EruptBiController {
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @RequestMapping("/{code}/chart/{id}")
-    public List<Map<String, Object>> biChart(@PathVariable("id") Long chartId, @RequestBody Map<String, Object> query,
-                                             HttpServletRequest request, @PathVariable String code) {
+    public List<Map<String, Object>> biChart(@PathVariable("id") Long chartId,
+                                             @RequestBody Map<String, Object> query,
+                                             @PathVariable String code) {
         BiChart chart = entityManager.find(BiChart.class, chartId);
         this.verifyBiMenuPermissions(chart.getBi(), code);
         return biService.startQuery(chart.getSqlStatement(), chart.getClassHandler(), chart.getDataSource(), query);
