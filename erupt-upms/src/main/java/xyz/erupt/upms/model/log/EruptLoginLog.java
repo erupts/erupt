@@ -26,7 +26,8 @@ import java.util.Date;
 @Table(name = "e_upms_login_log")
 @Erupt(
         name = "登录日志",
-        power = @Power(add = false, edit = false, viewDetails = false, delete = false, export = true),
+        power = @Power(add = false, edit = false, viewDetails = false, delete = false,
+                export = true, powerHandler = AdminPower.class),
         orderBy = "loginTime desc"
 )
 @Getter

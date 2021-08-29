@@ -1,4 +1,4 @@
-package xyz.erupt.upms.util;
+package xyz.erupt.core.util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -7,13 +7,9 @@ import java.security.MessageDigest;
  * @author YuePeng
  * date 2018-10-10.
  */
-public class MD5Utils {
+public class MD5Util {
 
-    private final static String[] STR_DIGITS = {"0", "1", "2", "3", "4", "5",
-            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
-
-    private MD5Utils() {
-    }
+    private final static String[] STR_DIGITS = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
 
     private static String byteToArrayString(byte bByte) {
         int iRet = bByte;

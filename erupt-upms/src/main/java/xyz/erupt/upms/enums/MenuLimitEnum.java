@@ -17,8 +17,7 @@ public enum MenuLimitEnum {
 
         @Override
         public List<String> fetchTags(String[] params) {
-            return Stream.of(MenuLimitEnum.values())
-                    .map(Enum::name).collect(Collectors.toList());
+            return Stream.of(MenuLimitEnum.values()).map(Enum::name).collect(Collectors.toList());
         }
 
     }

@@ -12,10 +12,10 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.config.EruptUpmsConfig;
-import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,6 +47,9 @@ public class EruptUserController {
 
     @Resource
     private EruptUpmsConfig eruptUpmsConfig;
+
+    @Resource
+    private EruptContextService eruptContextService;
 
     //登录
     @SneakyThrows
@@ -76,7 +80,6 @@ public class EruptUserController {
                 }
                 loginModel.setReason(e.getMessage());
                 loginModel.setPass(false);
-
             }
         }
         if (loginModel.isPass()) {
@@ -84,9 +87,7 @@ public class EruptUserController {
             loginModel.setToken(RandomStringUtils.random(16, true, true));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString(), eruptUpmsConfig.getExpireTimeByLogin());
-            if (null != loginProxy) {
-                loginProxy.loginSuccess(eruptUser, loginModel.getToken());
-            }
+            Optional.ofNullable(loginProxy).ifPresent(it -> it.loginSuccess(eruptUser, loginModel.getToken()));
             eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
@@ -97,19 +98,17 @@ public class EruptUserController {
     @GetMapping("/menu")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
     public List<EruptMenuVo> getMenu() {
-        return sessionService.get(SessionKey.MENU_VIEW + eruptUserService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
+        return sessionService.get(SessionKey.MENU_VIEW + eruptContextService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
         }.getType());
     }
 
     //登出
     @PostMapping("/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
-    public EruptApiModel logout(HttpServletRequest request) {
-        String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
+    public EruptApiModel logout() {
+        String token = eruptContextService.getCurrentToken();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
-        if (null != loginProxy) {
-            loginProxy.logout(token);
-        }
+        Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
         sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
         sessionService.remove(SessionKey.MENU_CODE_MAP + token);
         sessionService.remove(SessionKey.MENU_VIEW + token);
@@ -129,7 +128,7 @@ public class EruptUserController {
 
     @GetMapping("/token-valid")
     public boolean tokenValid() {
-        return sessionService.get(eruptUserService.getCurrentToken()) != null;
+        return sessionService.get(eruptContextService.getCurrentToken()) != null;
     }
 
     // 生成验证码
@@ -142,7 +141,7 @@ public class EruptUserController {
         response.setDateHeader("Expires", 0);
         Captcha captcha = new SpecCaptcha(150, 38, 4);
         sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60, TimeUnit.SECONDS);
-        captcha.out(response.getOutputStream()); // 响应图片
+        captcha.out(response.getOutputStream());
     }
 
 }

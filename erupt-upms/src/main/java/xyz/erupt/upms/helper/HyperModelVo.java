@@ -10,6 +10,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
@@ -38,27 +39,27 @@ public class HyperModelVo extends BaseModel {
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "创建人", column = "name"),
+            views = @View(title = "创建人", width = "100px", column = "name"),
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     private EruptUserVo createUser;
 
     @EruptField(
             views = @View(title = "创建时间"),
-            edit = @Edit(title = "创建时间", readonly = @Readonly)
+            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "更新人", column = "name"),
+            views = @View(title = "更新人", width = "100px", column = "name"),
             edit = @Edit(title = "更新人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     private EruptUserVo updateUser;
 
     @EruptField(
             views = @View(title = "更新时间"),
-            edit = @Edit(title = "更新时间", readonly = @Readonly)
+            edit = @Edit(title = "更新时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date updateTime;
 

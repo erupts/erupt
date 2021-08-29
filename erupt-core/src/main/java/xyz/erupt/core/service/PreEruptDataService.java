@@ -4,22 +4,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.Expr;
-import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.query.Column;
-import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.TreeModel;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PreEruptDataService {
@@ -44,47 +39,30 @@ public class PreEruptDataService {
         Collection<Map<String, Object>> result = this.createColumnQuery(eruptModel, columns, query);
         String root = ExprInvoke.getExpr(rootId);
         List<TreeModel> treeModels = new ArrayList<>();
-        for (Map<String, Object> map : result) {
-            TreeModel treeModel = new TreeModel(map.get(AnnotationConst.ID), map.get(AnnotationConst.LABEL), map.get(AnnotationConst.PID), root);
-            treeModels.add(treeModel);
-        }
+        result.forEach(it -> treeModels.add(new TreeModel(
+                it.get(AnnotationConst.ID), it.get(AnnotationConst.LABEL), it.get(AnnotationConst.PID), root
+        )));
         if (StringUtils.isBlank(pid)) {
             return treeModels;
         } else {
-            return DataHandlerUtil.treeModelToTree(treeModels);
+            return DataHandlerUtil.quoteTree(treeModels);
         }
     }
 
     public Collection<Map<String, Object>> createColumnQuery(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
-        List<Condition> conditions = new ArrayList<>();
         List<String> conditionStrings = new ArrayList<>();
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> {
-            String condition = dataProxy.beforeFetch(eruptModel.getClazz());
+            String condition = dataProxy.beforeFetch(query.getConditions());
             if (StringUtils.isNotBlank(condition)) {
                 conditionStrings.add(condition);
             }
         }));
-        for (Filter filter : eruptModel.getErupt().filter()) {
-            String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
-            if (StringUtils.isNotBlank(filterStr)) {
-                conditionStrings.add(filterStr);
-            }
-        }
-        if (null != query.getConditions()) {
-            conditions = query.getConditions();
-        }
-        if (null != query.getConditionStrings()) {
-            conditionStrings.addAll(query.getConditionStrings());
-        }
-        String orderBy;
-        if (StringUtils.isNotBlank(query.getOrderBy())) {
-            orderBy = query.getOrderBy();
-        } else {
-            orderBy = eruptModel.getErupt().orderBy();
-        }
+        conditionStrings.addAll(AnnotationUtil.switchFilterConditionToStr(eruptModel.getErupt().filter()));
+        Optional.ofNullable(query.getConditionStrings()).ifPresent(conditionStrings::addAll);
+        String orderBy = StringUtils.isNotBlank(query.getOrderBy()) ? query.getOrderBy() : eruptModel.getErupt().orderBy();
         Collection<Map<String, Object>> result = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryColumn(eruptModel, columns, EruptQuery.builder()
-                        .conditions(conditions).conditionStrings(conditionStrings).orderBy(orderBy).build());
+                        .conditions(query.getConditions()).conditionStrings(conditionStrings).orderBy(orderBy).build());
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(result)));
         return result;
     }

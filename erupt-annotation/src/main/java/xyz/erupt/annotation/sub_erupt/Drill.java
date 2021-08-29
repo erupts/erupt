@@ -10,7 +10,7 @@ import xyz.erupt.annotation.config.Comment;
 public @interface Drill {
 
     @Deprecated
-    @AutoFill("T(Integer).toString(#item.hashCode())")
+    @AutoFill("T(Integer).toString(#item.title().hashCode())")
     String code() default "";
 
     String title();

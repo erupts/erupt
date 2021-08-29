@@ -31,4 +31,7 @@ public @interface ReferenceTreeType {
     @Transient
     @Comment("与依赖字段值想关联的列名，dependField.value = this.dependColumn")
     String dependColumn() default AnnotationConst.ID;
+
+    @Comment("展开层级数")
+    int expandLevel() default 999;
 }

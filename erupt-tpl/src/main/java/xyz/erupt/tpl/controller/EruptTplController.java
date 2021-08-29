@@ -12,6 +12,7 @@ import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
@@ -40,7 +41,7 @@ import static xyz.erupt.core.constant.EruptRestPath.ERUPT_API;
 @RequestMapping(ERUPT_API + EruptTplController.TPL)
 public class EruptTplController {
 
-    public static final String TPL = "/tpl";
+    static final String TPL = "/tpl";
 
     @Resource
     private EruptTplService eruptTplService;
@@ -50,24 +51,23 @@ public class EruptTplController {
     public void eruptTplPage(@PathVariable("name") String fileName, HttpServletResponse response) throws Exception {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         Method method = eruptTplService.getAction(fileName);
-        if (null != method) {
-            Object obj = EruptSpringUtil.getBean(method.getDeclaringClass());
-            EruptTpl eruptTpl = obj.getClass().getAnnotation(EruptTpl.class);
-            TplAction tplAction = method.getAnnotation(TplAction.class);
-            String path = TPL + "/" + fileName;
-            if (StringUtils.isNotBlank(tplAction.path())) {
-                path = tplAction.path();
-            }
-            eruptTplService.tplRender(eruptTpl.engine(), path, (Map) method.invoke(obj), response.getWriter());
-        } else {
+        if (null == method) {
             eruptTplService.tplRender(Tpl.Engine.Native, TPL + "/" + fileName, null, response.getWriter());
+            return;
         }
+        Object obj = EruptSpringUtil.getBean(method.getDeclaringClass());
+        EruptTpl eruptTpl = obj.getClass().getAnnotation(EruptTpl.class);
+        TplAction tplAction = method.getAnnotation(TplAction.class);
+        String path = TPL + "/" + fileName;
+        if (StringUtils.isNotBlank(tplAction.path())) {
+            path = tplAction.path();
+        }
+        eruptTplService.tplRender(eruptTpl.engine(), path, (Map) method.invoke(obj), response.getWriter());
     }
 
     @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=UTF-8"})
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void getEruptFieldHtml(@PathVariable("erupt") String eruptName,
-                                  @PathVariable("field") String field,
+    public void getEruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field,
                                   HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
@@ -77,23 +77,20 @@ public class EruptTplController {
 
     @GetMapping(value = "/operation_tpl/{erupt}/{code}", produces = {"text/html;charset=utf-8"})
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void getOperationTpl(@PathVariable("erupt") String eruptName,
-                                @PathVariable("code") String code,
+    public void getOperationTpl(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
                                 @RequestParam(value = "ids", required = false) String[] ids,
                                 HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         RowOperation operation = Arrays.stream(eruptModel.getErupt().rowOperation())
                 .filter(it -> it.code().equals(code)).findFirst().orElseThrow(EruptNoLegalPowerException::new);
-        if (!ExprInvoke.getExpr(operation.show())) {
-            throw new EruptNoLegalPowerException();
-        }
+        Erupts.powerLegal(ExprInvoke.getExpr(operation.show()));
         if (operation.tpl().engine() == Tpl.Engine.Native || operation.mode() == RowOperation.Mode.BUTTON) {
             eruptTplService.tplRender(operation.tpl(), null, response);
-        } else {
-            Map<String, Object> map = new HashMap<>();
-            map.put(EngineConst.INJECT_ROWS, Stream.of(ids).map(id -> DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                    .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id))).collect(Collectors.toList()));
-            eruptTplService.tplRender(operation.tpl(), map, response);
+            return;
         }
+        Map<String, Object> map = new HashMap<>();
+        map.put(EngineConst.INJECT_ROWS, Stream.of(ids).map(id -> DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id))).collect(Collectors.toList()));
+        eruptTplService.tplRender(operation.tpl(), map, response);
     }
 }

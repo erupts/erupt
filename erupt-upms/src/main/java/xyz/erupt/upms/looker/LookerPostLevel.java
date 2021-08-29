@@ -17,6 +17,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserVo;
+import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -25,6 +26,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 /**
  * @author YuePeng
@@ -66,8 +69,12 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
     @Transient
     private EruptUserService eruptUserService;
 
+    @Resource
+    @Transient
+    private EruptContextService eruptContextService;
+
     @Override
-    public String beforeFetch(Class<?> eruptClass) {
+    public String beforeFetch(List<Condition> conditions) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         if (eruptUser.getIsAdmin()) {
             return null;
@@ -75,8 +82,9 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
         if (null == eruptUser.getEruptOrg() || null == eruptUser.getEruptPost()) {
             throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded department cannot filter data");
         }
-        return "(" + eruptClass.getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid() + " or " + eruptClass.getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
-                + eruptClass.getSimpleName() + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
+        return "(" + eruptContextService.getContextEruptClass().getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid()
+                + " or " + eruptContextService.getContextEruptClass().getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
+                + eruptContextService.getContextEruptClass().getSimpleName() + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
     }
 
     @Override

@@ -3,6 +3,7 @@ package xyz.erupt.upms.handler;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.core.util.EruptAssert;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.cache.CaffeineEruptCache;
 import xyz.erupt.upms.constant.FetchConst;
@@ -19,21 +20,17 @@ import java.util.stream.Collectors;
 @Component
 public class DictChoiceFetchHandler implements ChoiceFetchHandler {
 
-    private final String CACHE_SPACE = DictChoiceFetchHandler.class.getName() + ":";
-
-    private final CaffeineEruptCache<List<VLModel>> dictCache = new CaffeineEruptCache<>();
-
     @Resource
     private EruptDao eruptDao;
 
+    private final CaffeineEruptCache<List<VLModel>> dictCache = new CaffeineEruptCache<>();
+
     @Override
     public List<VLModel> fetch(String[] params) {
-        if (null == params || params.length == 0) {
-            throw new RuntimeException(DictChoiceFetchHandler.class.getSimpleName() + " → params[0] must dict → code");
-        }
+        EruptAssert.notNull(params, DictChoiceFetchHandler.class.getSimpleName() + " → params[0] must dict → code");
         dictCache.init(params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME);
-        return dictCache.get(CACHE_SPACE + params[0], (key) ->
-                eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = '" + params[0] + "'", null)
+        return dictCache.get(DictChoiceFetchHandler.class.getName() + ":" + params[0], (key) ->
+                eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = '" + params[0] + "'")
                         .stream().map((item) -> new VLModel(item.getId(), item.getName())).collect(Collectors.toList()));
     }
 

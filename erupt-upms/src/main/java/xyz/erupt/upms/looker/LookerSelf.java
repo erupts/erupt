@@ -4,11 +4,14 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.upms.helper.HyperModelCreatorVo;
+import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 /**
  * @author YuePeng
@@ -23,11 +26,15 @@ public class LookerSelf extends HyperModelCreatorVo implements DataProxy<Object>
     @Transient
     private EruptUserService eruptUserService;
 
+    @Resource
+    @Transient
+    private EruptContextService eruptContextService;
+
     @Override
-    public String beforeFetch(Class<?> eruptClass) {
+    public String beforeFetch(List<Condition> conditions) {
         if (eruptUserService.getCurrentEruptUser().getIsAdmin()) {
             return null;
         }
-        return eruptClass.getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid();
+        return eruptContextService.getContextEruptClass() + ".createUser.id = " + eruptUserService.getCurrentUid();
     }
 }

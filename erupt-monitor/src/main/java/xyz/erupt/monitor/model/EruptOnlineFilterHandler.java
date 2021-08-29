@@ -32,12 +32,10 @@ public class EruptOnlineFilterHandler implements FilterHandler {
                 StringBuilder sb = new StringBuilder(EruptOnline.class.getSimpleName() + ".token in (");
                 keys.forEach(it -> sb.append("'").append(it.substring(SessionKey.USER_TOKEN.length())).append("',"));
                 return sb.substring(0, sb.length() - 1) + ")";
-            } else {
-                return "1 = 2";
             }
-        } else {
-            throw new EruptApiErrorTip(EruptApiModel.Status.INFO, "Enable the RedisSession configuration to use this feature",
-                    EruptApiModel.PromptWay.NOTIFY);
+            return "1 = 2";
         }
+        throw new EruptApiErrorTip(EruptApiModel.Status.INFO,
+                "Enable the RedisSession configuration to use this feature", EruptApiModel.PromptWay.NOTIFY);
     }
 }

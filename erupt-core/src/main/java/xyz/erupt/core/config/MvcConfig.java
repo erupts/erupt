@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,9 +50,7 @@ public class MvcConfig implements WebMvcConfigurer {
                         -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
                 .setLongSerializationPolicy(LongSerializationPolicy.STRING).setExclusionStrategies(new GsonExclusionStrategies())
                 .serializeNulls().create();
-        if (null != eruptProp.getGsonHttpMessageConvertersPackages()) {
-            gsonMessageConverterPackage.addAll(Arrays.asList(eruptProp.getGsonHttpMessageConvertersPackages()));
-        }
+        Optional.ofNullable(eruptProp.getGsonHttpMessageConvertersPackages()).ifPresent(it -> gsonMessageConverterPackage.addAll(Arrays.asList(it)));
         converters.add(0, new GsonHttpMessageConverter(gson) {
             @Override
             protected boolean supports(Class<?> clazz) {

@@ -27,7 +27,8 @@ public enum MenuTypeEnum {
     private static final List<VLModel> menuTypes;
 
     static {
-        menuTypes = Stream.of(MenuTypeEnum.values()).map(menuTypeEnum -> new VLModel(menuTypeEnum.getCode(), menuTypeEnum.getName(), menuTypeEnum.getDesc())).collect(Collectors.toList());
+        menuTypes = Stream.of(MenuTypeEnum.values()).map(menuTypeEnum ->
+                new VLModel(menuTypeEnum.getCode(), menuTypeEnum.getName(), menuTypeEnum.getDesc())).collect(Collectors.toList());
     }
 
     MenuTypeEnum(String code, String name, String desc) {

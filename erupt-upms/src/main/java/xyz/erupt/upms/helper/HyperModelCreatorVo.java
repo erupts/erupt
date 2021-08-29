@@ -36,7 +36,7 @@ public class HyperModelCreatorVo extends BaseModel {
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "创建人", column = "name"),
+            views = @View(title = "创建人", width = "100px", column = "name"),
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     private EruptUserVo createUser;

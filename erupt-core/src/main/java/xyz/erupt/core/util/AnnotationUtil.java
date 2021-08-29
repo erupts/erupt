@@ -3,6 +3,7 @@ package xyz.erupt.core.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -21,7 +22,9 @@ import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,8 +44,6 @@ public class AnnotationUtil {
     private static final String VALUE_VAR = "value";
 
     private static final String ITEM_VAR = "item";
-
-    private static final String INDEX_VAR = "index";
 
     @SneakyThrows
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
@@ -80,7 +81,6 @@ public class AnnotationUtil {
                 if (AnnotationConst.EMPTY_STR.equals(result)) {
                     evaluationContext.setVariable(ITEM_VAR, annotation);
                     evaluationContext.setVariable(VALUE_VAR, result);
-//                    INDEX_VAR
                     result = parser.parseExpression(autoFill.value()).getValue(evaluationContext);
                     AnnotationUtil.getAnnotationMap(annotation).put(methodName, result);
                 }
@@ -93,21 +93,14 @@ public class AnnotationUtil {
                 //基本类型无法强转成Object类型数组，所以使用下面的方法进行处理
                 if (Arrays.asList(ANNOTATION_NUMBER_TYPE).contains(returnType)) {
                     TypeUtil.simpleNumberTypeArrayToObject(result, returnType, jsonArray::add);
-                } else if (char.class.getSimpleName().equals(returnType)) {
-                    char[] intArray = (char[]) result;
-                    for (char i : intArray) {
-                        jsonArray.add(i);
-                    }
-                } else if (byte.class.getSimpleName().equals(returnType)) {
-                    byte[] intArray = (byte[]) result;
-                    for (byte i : intArray) {
-                        jsonArray.add(i);
-                    }
                 } else {
-                    Object[] resultArray = (Object[]) result;
-                    for (Object res : resultArray) {
+                    for (Object res : (Object[]) result) {
                         if (String.class.getSimpleName().equals(returnType)) {
                             jsonArray.add(res.toString());
+                        } else if (char.class.getSimpleName().equals(returnType)) {
+                            jsonArray.add((Character) res);
+                        } else if (byte.class.getSimpleName().equals(returnType)) {
+                            jsonArray.add((Character) res);
                         } else if (boolean.class.getSimpleName().equals(returnType)) {
                             jsonArray.add((Boolean) res);
                         } else if (Class.class.getSimpleName().equals(returnType)) {
@@ -190,6 +183,17 @@ public class AnnotationUtil {
             condition = ch.filter(condition, filter.params());
         }
         return condition;
+    }
+
+    public static List<String> switchFilterConditionToStr(Filter[] filters) {
+        List<String> list = new ArrayList<>();
+        for (Filter filter : filters) {
+            String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
+            if (StringUtils.isNotBlank(filterStr)) {
+                list.add(filterStr);
+            }
+        }
+        return list;
     }
 
     public static EditTypeMapping getEditTypeMapping(EditType editType) {

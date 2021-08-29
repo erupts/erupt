@@ -17,7 +17,7 @@ public class ReflectUtil {
 
     //递归查找类字段
     public static Field findClassField(Class<?> clazz, String fieldName) {
-        Field field = null;
+        Field field;
         while (clazz != null) {
             try {
                 field = clazz.getDeclaredField(fieldName);
@@ -29,7 +29,7 @@ public class ReflectUtil {
                 }
             }
         }
-        return field;
+        return null;
     }
 
     public static Object findFieldChain(String fieldName, Object obj)
@@ -90,4 +90,5 @@ public class ReflectUtil {
         }
         return names;
     }
+
 }

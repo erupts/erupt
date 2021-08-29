@@ -24,10 +24,10 @@ public class EruptSessionService {
     private EruptProp eruptProp;
 
     @Resource
-    private StringRedisTemplate stringRedisTemplate;
+    private HttpServletRequest request;
 
     @Resource
-    private HttpServletRequest request;
+    private StringRedisTemplate stringRedisTemplate;
 
     private final Gson gson = GsonFactory.getGson();
 

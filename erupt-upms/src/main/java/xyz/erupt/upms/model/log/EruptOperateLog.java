@@ -27,7 +27,8 @@ import java.util.Date;
 @Table(name = "e_upms_operate_log")
 @Erupt(
         name = "操作日志",
-        power = @Power(add = false, edit = false, viewDetails = false, delete = false),
+        power = @Power(add = false, edit = false, viewDetails = false,
+                delete = false, powerHandler = AdminPower.class),
         orderBy = "createTime desc"
 )
 @Getter
@@ -91,7 +92,7 @@ public class EruptOperateLog extends BaseModel {
     )
     private Date createTime;
 
-    @Column(length = 500)
+    @Column(length = 2083)
     @EruptField(
             views = @View(title = "请求地址", type = ViewType.HTML)
     )

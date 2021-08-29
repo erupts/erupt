@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -40,7 +41,9 @@ public class EruptDao {
 
     //修改
     public <T> T merge(T t) {
-        return entityManager.merge(t);
+        T type = entityManager.merge(t);
+        entityManager.flush();
+        return type;
     }
 
     //删除
@@ -64,18 +67,15 @@ public class EruptDao {
 
     //不存在则新增
     public <T> T persistIfNotExist(Class<T> eruptClass, Object obj, String field, String val) throws NonUniqueResultException {
-        T t = (T) queryEntity(obj.getClass(), field + EQU + " :val", new HashMap<String, Object>(1) {
-            {
-                this.put("val", val);
-            }
-        });
+        T t = (T) queryEntity(obj.getClass(), field + EQU + " :val", new HashMap<String, Object>(1) {{
+            this.put("val", val);
+        }});
         if (null == t) {
             entityManager.persist(obj);
             entityManager.flush();
             return (T) obj;
-        } else {
-            return t;
         }
+        return t;
     }
 
     //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
@@ -131,8 +131,6 @@ public class EruptDao {
         return this.queryEntity(eruptClass, null);
     }
 
-
-
     private Query simpleQuery(Class eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
         StringBuilder sb = new StringBuilder();
         if (cols.length > 0) {
@@ -151,11 +149,9 @@ public class EruptDao {
         }
         expr = StringUtils.isBlank(expr) ? "" : WHERE + expr;
         Query query = entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() + expr);
-        if (null != paramMap) {
-            for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-        }
+        Optional.ofNullable(paramMap).ifPresent(map -> {
+            map.entrySet().forEach(entry -> query.setParameter(entry.getKey(), entry.getValue()));
+        });
         return query;
     }
 }
