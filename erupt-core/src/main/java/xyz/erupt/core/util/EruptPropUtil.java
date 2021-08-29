@@ -10,7 +10,7 @@ import java.util.Properties;
  * @author YuePeng
  * date 2021/3/28 17:45
  */
-public class EruptVersionUtil {
+public class EruptPropUtil {
 
     private static Properties props;
 
@@ -19,7 +19,7 @@ public class EruptVersionUtil {
         Properties props = new Properties();
         try (InputStream stream = EruptApi.class.getResourceAsStream(path)) {
             props.load(stream);
-            EruptVersionUtil.props = props;
+            EruptPropUtil.props = props;
         } catch (IOException e) {
             e.printStackTrace();
         }

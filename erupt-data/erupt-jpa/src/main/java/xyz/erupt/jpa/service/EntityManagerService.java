@@ -40,15 +40,14 @@ public class EntityManagerService implements ApplicationRunner {
 
     private Map<String, EntityManagerFactory> entityManagerMap;
 
-
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         if (null != eruptProp.getDbs()) {
             //多数据源处理
             entityManagerMap = new HashMap<>();
             for (EruptPropDb prop : eruptProp.getDbs()) {
                 Objects.requireNonNull(prop.getDatasource().getName(), "dbs configuration Must specify name → dbs.datasource.name");
-                Objects.requireNonNull(prop.getScanPackages(),String.format("%s DataSource not found 'scanPackages' configuration", prop.getDatasource().getName()));
+                Objects.requireNonNull(prop.getScanPackages(), String.format("%s DataSource not found 'scanPackages' configuration", prop.getDatasource().getName()));
                 LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
                 {
                     JpaProperties jpa = prop.getJpa();
@@ -79,15 +78,12 @@ public class EntityManagerService implements ApplicationRunner {
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) {
             return function.apply(entityManager);
-        } else {
-            EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
-            try {
-                return function.apply(em);
-            } finally {
-                if (em.isOpen()) {
-                    em.close();
-                }
-            }
+        }
+        EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
+        try {
+            return function.apply(em);
+        } finally {
+            if (em.isOpen()) em.close();
         }
     }
 
@@ -96,20 +92,18 @@ public class EntityManagerService implements ApplicationRunner {
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) {
             consumer.accept(entityManager);
-        } else {
-            EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
-            try {
-                em.getTransaction().begin();
-                consumer.accept(em);
-                em.getTransaction().commit();
-            } catch (Exception e) {
-                e.printStackTrace();
-                em.getTransaction().rollback();
-            } finally {
-                if (em.isOpen()) {
-                    em.close();
-                }
-            }
+            return;
+        }
+        EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
+        try {
+            em.getTransaction().begin();
+            consumer.accept(em);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            em.getTransaction().rollback();
+        } finally {
+            if (em.isOpen()) em.close();
         }
     }
 

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuStatus;
@@ -11,7 +12,6 @@ import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.*;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.model.log.EruptOperateLog;
-import xyz.erupt.upms.util.MD5Utils;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -44,7 +44,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     eruptUser.setStatus(true);
                     eruptUser.setCreateTime(new Date());
                     eruptUser.setAccount(DEFAULT_ACCOUNT);
-                    eruptUser.setPassword(MD5Utils.digest(DEFAULT_ACCOUNT));
+                    eruptUser.setPassword(MD5Util.digest(DEFAULT_ACCOUNT));
                     eruptUser.setName(DEFAULT_ACCOUNT);
                     eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
                 }
@@ -69,14 +69,12 @@ public class UpmsDataLoadService implements CommandLineRunner {
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptUser.class.getSimpleName(), "用户维护", MenuTypeEnum.TABLE.getCode(), EruptUser.class.getSimpleName(), open, 40, "fa fa-user", eruptMenu
                 ), code, EruptUser.class.getSimpleName());
-                {
-                    EruptMenu eruptMenuDict = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                            EruptDict.class.getSimpleName(), "字典维护", MenuTypeEnum.TABLE.getCode(), EruptDict.class.getSimpleName(), open, 50, null, eruptMenu
-                    ), code, EruptDict.class.getSimpleName());
-                    eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                            EruptDictItem.class.getSimpleName(), "字典项", MenuTypeEnum.TABLE.getCode(), EruptDictItem.class.getSimpleName(), MenuStatus.HIDE.getValue(), 10, null, eruptMenuDict
-                    ), code, EruptDictItem.class.getSimpleName());
-                }
+                EruptMenu eruptMenuDict = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                        EruptDict.class.getSimpleName(), "字典维护", MenuTypeEnum.TABLE.getCode(), EruptDict.class.getSimpleName(), open, 50, null, eruptMenu
+                ), code, EruptDict.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                        EruptDictItem.class.getSimpleName(), "字典项", MenuTypeEnum.TABLE.getCode(), EruptDictItem.class.getSimpleName(), MenuStatus.HIDE.getValue(), 10, null, eruptMenuDict
+                ), code, EruptDictItem.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptLoginLog.class.getSimpleName(), "登录日志", MenuTypeEnum.TABLE.getCode(), EruptLoginLog.class.getSimpleName(), open, 60, null, eruptMenu
                 ), code, EruptLoginLog.class.getSimpleName());
@@ -88,9 +86,9 @@ public class UpmsDataLoadService implements CommandLineRunner {
                 if (null != eruptUser) {
                     String password = eruptUser.getPassword();
                     if (!eruptUser.getIsMd5()) {
-                        password = MD5Utils.digest(eruptUser.getPassword());
+                        password = MD5Util.digest(eruptUser.getPassword());
                     }
-                    if (MD5Utils.digest(DEFAULT_ACCOUNT).equals(password)) {
+                    if (MD5Util.digest(DEFAULT_ACCOUNT).equals(password)) {
                         log.warn("正在使用框架默认用户名密码，为了您的系统安全请尽快修改！");
                     }
                 }

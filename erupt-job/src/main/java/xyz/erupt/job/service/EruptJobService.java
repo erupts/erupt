@@ -51,9 +51,7 @@ public class EruptJobService {
 
     public void modifyJob(EruptJob eruptJob) throws SchedulerException, ParseException {
         String code = eruptJob.getCode();
-        if (schedulerFactoryMap.containsKey(code)) {
-            deleteJob(eruptJob);
-        }
+        if (schedulerFactoryMap.containsKey(code)) deleteJob(eruptJob);
         if (eruptJob.getStatus()) {
             StdSchedulerFactory ssf = new StdSchedulerFactory();
             ssf.initialize(getSchedulerProp(code));
@@ -81,14 +79,11 @@ public class EruptJobService {
         if (null != sf) {
             Scheduler scheduler = sf.getScheduler();
             scheduler.deleteJob(new JobKey(eruptJob.getCode()));
-            if (!scheduler.isShutdown()) {
-                scheduler.shutdown();
-            }
+            if (!scheduler.isShutdown()) scheduler.shutdown();
             schedulerFactoryMap.remove(eruptJob.getCode());
         }
     }
 
-    //
     private Properties getSchedulerProp(String schedulerName) {
         Properties props = new Properties();
         props.setProperty(StdSchedulerFactory.PROP_SCHED_MAKE_SCHEDULER_THREAD_DAEMON, "true");

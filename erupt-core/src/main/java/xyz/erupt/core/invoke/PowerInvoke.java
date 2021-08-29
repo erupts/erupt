@@ -25,12 +25,8 @@ public class PowerInvoke {
     public static PowerObject getPowerObject(EruptModel eruptModel) {
         Power power = eruptModel.getErupt().power();
         PowerObject powerBean = new PowerObject(power);
-        for (Class<? extends PowerHandler> ph : powerHandlerStack) {
-            EruptSpringUtil.getBean(ph).handler(powerBean);
-        }
-        if (!power.powerHandler().isInterface()) {
-            EruptSpringUtil.getBean(power.powerHandler()).handler(powerBean);
-        }
+        powerHandlerStack.forEach(ph -> EruptSpringUtil.getBean(ph).handler(powerBean));
+        if (!power.powerHandler().isInterface()) EruptSpringUtil.getBean(power.powerHandler()).handler(powerBean);
         return powerBean;
     }
 }

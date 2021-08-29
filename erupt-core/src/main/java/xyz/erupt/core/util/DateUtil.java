@@ -1,6 +1,7 @@
 package xyz.erupt.core.util;
 
-import java.text.ParseException;
+import lombok.SneakyThrows;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,18 +24,12 @@ public class DateUtil {
         return sdf.format(date);
     }
 
+    @SneakyThrows
     public static Date getDate(String str) {
-        SimpleDateFormat sdf;
         if (str.length() == 10) {
-            sdf = new SimpleDateFormat(DATE);
+            return new SimpleDateFormat(DATE).parse(str);
         } else {
-            sdf = new SimpleDateFormat(DATE_TIME);
-        }
-        try {
-            return sdf.parse(str);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            return new SimpleDateFormat(DATE_TIME).parse(str);
         }
     }
 }

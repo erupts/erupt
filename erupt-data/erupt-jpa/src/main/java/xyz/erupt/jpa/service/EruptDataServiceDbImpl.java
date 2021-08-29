@@ -119,18 +119,18 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     }
 
     //@ManyToOne数据处理
-    private void jpaManyToOneConvert(EruptModel eruptModel, Object object) throws NoSuchFieldException, IllegalAccessException {
+    private void jpaManyToOneConvert(EruptModel eruptModel, Object object) throws IllegalAccessException {
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             if (fieldModel.getEruptField().edit().type() == EditType.TAB_TABLE_ADD) {
-                Field field = object.getClass().getDeclaredField(fieldModel.getFieldName());
+                Field field = ReflectUtil.findClassField(object.getClass(), fieldModel.getFieldName());
                 field.setAccessible(true);
                 Collection<?> collection = (Collection<?>) field.get(object);
                 if (null != collection) {
                     for (Object o : collection) {
-                        //强制删除主键ID
-                        Field pk = ReflectUtil.findClassField(o.getClass(), EruptCoreService
-                                .getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol());
-                        pk.set(o, null);
+                        //强制删除主键
+                        ReflectUtil.findClassField(o.getClass(),
+                                EruptCoreService.getErupt(fieldModel.getFieldReturnName()).getErupt()
+                                        .primaryKeyCol()).set(o, null);
                     }
                 }
             }
@@ -168,9 +168,8 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
         StringBuilder hql = new StringBuilder();
         List<String> columnStrList = new ArrayList<>();
-        columns.forEach(column ->
-                columnStrList.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName()
-                        , column.getName()) + " as " + column.getAlias()));
+        columns.forEach(column -> columnStrList.add(EruptJpaUtils.completeHqlPath(eruptModel.getEruptName()
+                , column.getName()) + " as " + column.getAlias()));
         hql.append("select new map(").append(String.join(", ", columnStrList))
                 .append(") from ").append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
@@ -180,12 +179,8 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
             }
         });
         hql.append(" where 1 = 1 ");
-        if (null != query.getConditions()) {
-            query.getConditions().forEach(it -> hql.append(EruptJpaUtils.AND).append(it.getKey()).append('=').append(it.getValue()));
-        }
-        if (null != query.getConditionStrings()) {
-            query.getConditionStrings().forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
-        }
+        Optional.ofNullable(query.getConditions()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it.getKey()).append('=').append(it.getValue())));
+        Optional.ofNullable(query.getConditionStrings()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it)));
         Arrays.stream(eruptModel.getErupt().filter()).map(AnnotationUtil::switchFilterConditionToStr)
                 .filter(StringUtils::isNotBlank).forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
         if (StringUtils.isNotBlank(query.getOrderBy())) {

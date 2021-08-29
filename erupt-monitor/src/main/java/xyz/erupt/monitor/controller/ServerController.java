@@ -40,11 +40,7 @@ public class ServerController {
     public Platform getPlatformInfo() {
         Platform platform = new Platform();
         AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
-        if (null == attachmentProxy) {
-            platform.setUploadPath(eruptProp.getUploadPath());
-        } else {
-            platform.setUploadPath(attachmentProxy.fileDomain());
-        }
+        platform.setUploadPath(null == attachmentProxy ? eruptProp.getUploadPath() : attachmentProxy.fileDomain());
         platform.setRedisSession(eruptProp.isRedisSession());
         return platform;
     }

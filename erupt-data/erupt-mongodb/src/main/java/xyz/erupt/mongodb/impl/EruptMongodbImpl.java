@@ -47,8 +47,7 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
         page.setTotal(mongoTemplate.count(query, eruptModel.getClazz()));
         if (page.getTotal() > 0) {
             query.limit(page.getPageSize());
-            query.skip((page.getPageIndex() - 1) * page.getPageSize());
-//            排序
+            query.skip((long) (page.getPageIndex() - 1) * page.getPageSize());
             if (StringUtils.isNotBlank(page.getSort())) {
                 for (String s : page.getSort().split(",")) {
                     if (s.split(" ")[1].contains("desc")) {
@@ -115,7 +114,6 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
 
     @Override
     public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery eruptQuery) {
-
         Query query = new Query();
         this.addQueryCondition(eruptQuery, query);
         columns.stream().map(Column::getName).forEach(query.fields()::include);

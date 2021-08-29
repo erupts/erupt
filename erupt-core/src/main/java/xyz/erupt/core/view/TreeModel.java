@@ -14,15 +14,17 @@ import java.util.Collection;
 @Setter
 public class TreeModel {
 
-    private Collection<TreeModel> children;
-
     private String id;
 
     private String label;
 
     private String pid;
 
+    private Integer level; //树层级
+
     private boolean root;
+
+    private Collection<TreeModel> children;
 
     public TreeModel(Object id, Object label, Object pid, Object root) {
         this(id, label, pid);

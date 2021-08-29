@@ -18,30 +18,29 @@ import java.util.*;
  */
 public class DataHandlerUtil {
 
-    // 生成树结构数据
-    public static List<TreeModel> treeModelToTree(List<TreeModel> treeModels) {
-        return quoteTree(treeModels);
-    }
-
-    // 引用方式生成树结构
-    private static List<TreeModel> quoteTree(List<TreeModel> treeModels) {
+    // 引用方式 生成树结构数据
+    public static List<TreeModel> quoteTree(List<TreeModel> treeModels) {
         Map<String, TreeModel> treeModelMap = new LinkedHashMap<>(treeModels.size());
-        for (TreeModel treeModel : treeModels) {
-            treeModelMap.put(treeModel.getId(), treeModel);
-        }
+        treeModels.forEach(treeModel -> treeModelMap.put(treeModel.getId(), treeModel));
         List<TreeModel> resultTreeModels = new ArrayList<>();
-        for (TreeModel treeModel : treeModels) {
+        treeModels.forEach(treeModel -> {
             if (treeModel.isRoot()) {
+                treeModel.setLevel(1);
                 resultTreeModels.add(treeModel);
-                continue;
+                return;
             }
-            TreeModel parentTreeModel = treeModelMap.get(treeModel.getPid());
-            if (parentTreeModel != null) {
+            Optional.ofNullable(treeModelMap.get(treeModel.getPid())).ifPresent(parentTreeModel -> {
                 Collection<TreeModel> children = CollectionUtils.isEmpty(parentTreeModel.getChildren()) ? new ArrayList<>() : parentTreeModel.getChildren();
                 children.add(treeModel);
+                children.forEach(child -> child.setLevel(Optional.ofNullable(parentTreeModel.getLevel()).orElse(1) + 1));
                 parentTreeModel.setChildren(children);
-            }
-        }
+            });
+        });
+//        treeModels.forEach(treeModel -> Optional.ofNullable(treeModelMap.get(treeModel.getPid())).ifPresent(parentTreeModel -> {
+//            Collection<TreeModel> children = parentTreeModel.getChildren();
+//            children.forEach(child -> child.setLevel(parentTreeModel.getLevel() + 1));
+//            parentTreeModel.setChildren(children);
+//        }));
         return resultTreeModels;
     }
 
@@ -49,13 +48,11 @@ public class DataHandlerUtil {
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(key);
         if (null != fieldModel) {
             return fieldModel;
-        } else {
-            if (key.contains("_")) {
-                return cycleFindFieldByKey(eruptModel, key.substring(0, key.lastIndexOf("_")));
-            } else {
-                return null;
-            }
         }
+        if (key.contains("_")) {
+            return cycleFindFieldByKey(eruptModel, key.substring(0, key.lastIndexOf("_")));
+        }
+        return null;
     }
 
     public static void convertDataToEruptView(EruptModel eruptModel, Collection<Map<String, Object>> list) {
@@ -74,8 +71,7 @@ public class DataHandlerUtil {
                         String[] _keys = entry.getKey().split("_");
                         for (View view : fieldModel.getEruptField().views()) {
                             if (view.column().equals(_keys[_keys.length - 1])) {
-                                EruptFieldModel vef = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).
-                                        getEruptFieldMap().get(view.column());
+                                EruptFieldModel vef = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).getEruptFieldMap().get(view.column());
                                 map.put(entry.getKey(), convertColumnValue(vef, entry.getValue(), choiceItems));
                             }
                         }

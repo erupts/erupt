@@ -28,7 +28,7 @@ public class GeneratorDataLoadService implements CommandLineRunner {
 
     @Transactional
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         new ProjectUtil().projectStartLoaded("generator", first -> {
             if (first) {
                 String generator = "$generator", code = "code";

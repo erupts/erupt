@@ -28,9 +28,8 @@ public enum MenuStatus {
 
         @Override
         public List<VLModel> fetch(String[] params) {
-            return Stream.of(MenuStatus.values())
-                    .map(menuTypeEnum -> new VLModel(menuTypeEnum.getValue() + "", menuTypeEnum.getLabel()))
-                    .collect(Collectors.toList());
+            return Stream.of(MenuStatus.values()).map(menuTypeEnum ->
+                    new VLModel(menuTypeEnum.getValue() + "", menuTypeEnum.getLabel())).collect(Collectors.toList());
         }
 
     }

@@ -67,8 +67,6 @@ public @interface RowOperation {
         @Comment("通过erupt表单渲染，operationHandler进行逻辑处理")
         ERUPT,
         @Comment("通过自定义模板渲染")
-        TPL,
-//        @Comment("前端执行JavaScript脚本")
-//        JS
+        TPL
     }
 }
