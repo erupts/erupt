@@ -30,6 +30,8 @@
         <module>erupt-bi</module>
         <module>erupt-tenant</module>
         <module>erupt-flow</module>
+        <module>erupt-rpc</module>
+        <module>erupt-i18n</module>
     </modules>
 
     <dependencyManagement>
