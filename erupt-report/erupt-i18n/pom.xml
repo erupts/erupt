@@ -9,8 +9,8 @@
 
     <parent>
         <groupId>xyz.erupt</groupId>
-        <artifactId>erupt</artifactId>
-        <version>1.8.0</version>
+        <artifactId>erupt-pro</artifactId>
+        <version>1.8.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
