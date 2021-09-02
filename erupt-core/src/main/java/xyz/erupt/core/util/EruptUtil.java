@@ -1,28 +1,10 @@
 package xyz.erupt.core.util;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-
-import lombok.SneakyThrows;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.SceneEnum;
 import xyz.erupt.annotation.config.QueryExpression;
@@ -30,6 +12,7 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
@@ -40,12 +23,17 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
+
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author YuePeng
@@ -70,8 +58,8 @@ public class EruptUtil {
                 switch (eruptField.edit().type()) {
                     case REFERENCE_TREE:
                     case REFERENCE_TABLE:
-                        String id = null;
-                        String label = null;
+                        String id;
+                        String label;
                         if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
                             ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
                             id = referenceTreeType.id();

@@ -1,8 +1,8 @@
 package xyz.erupt.jpa.dao;
 
 import org.springframework.stereotype.Repository;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.core.annotation.EruptDataSource;
-import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptFieldModel;

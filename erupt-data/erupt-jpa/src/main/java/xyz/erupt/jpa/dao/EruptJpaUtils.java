@@ -1,10 +1,10 @@
 package xyz.erupt.jpa.dao;
 
 import org.apache.commons.lang3.StringUtils;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.AnnotationUtil;
