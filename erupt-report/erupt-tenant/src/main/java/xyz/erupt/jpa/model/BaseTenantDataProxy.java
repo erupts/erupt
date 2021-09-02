@@ -2,6 +2,7 @@ package xyz.erupt.jpa.model;
 
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.tenant.model.EruptTenant;
 import xyz.erupt.tenant.service.RentDataLoadService;
 import xyz.erupt.upms.service.EruptContextService;
@@ -9,7 +10,6 @@ import xyz.erupt.upms.service.EruptContextService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
 import java.util.regex.Pattern;
 
 /**
