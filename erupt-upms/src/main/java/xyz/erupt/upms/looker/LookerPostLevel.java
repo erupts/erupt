@@ -8,6 +8,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.SkipSerialize;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
@@ -27,7 +28,6 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
 
 /**
  * @author YuePeng

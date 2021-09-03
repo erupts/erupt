@@ -1,4 +1,4 @@
-package xyz.erupt.core.query;
+package xyz.erupt.annotation.query;
 
 import lombok.Getter;
 import lombok.Setter;

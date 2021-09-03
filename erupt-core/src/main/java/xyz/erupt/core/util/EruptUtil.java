@@ -12,6 +12,7 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
@@ -22,7 +23,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.core.query.Condition;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptApiModel;
@@ -58,8 +58,8 @@ public class EruptUtil {
                 switch (eruptField.edit().type()) {
                     case REFERENCE_TREE:
                     case REFERENCE_TABLE:
-                        String id = null;
-                        String label = null;
+                        String id;
+                        String label;
                         if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
                             ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
                             id = referenceTreeType.id();
@@ -73,7 +73,8 @@ public class EruptUtil {
                         referMap.put(id, ReflectUtil.findFieldChain(id, value));
                         referMap.put(label, ReflectUtil.findFieldChain(label, value));
                         for (View view : eruptField.views()) {
-                            referMap.put(view.column(), ReflectUtil.findFieldChain(view.column(), value));
+                            //修复表格列无法显示子类属性（例如xxx.yyy.zzz这样的列配置）的缺陷，要配合前端的bug修复。
+                            referMap.put(view.column().replace(".", "_"), ReflectUtil.findFieldChain(view.column(), value));
                         }
                         map.put(field.getName(), referMap);
                         break;
