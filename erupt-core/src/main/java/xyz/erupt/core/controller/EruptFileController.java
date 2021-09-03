@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -191,20 +190,20 @@ public class EruptFileController {
                                    @PathVariable("field") String fieldName,
                                    @RequestParam(value = "callback", required = false) String callback,
                                    @RequestParam(value = "file", required = false) MultipartFile file,
-                                   HttpServletResponse response, HttpServletRequest request) throws IOException, ClassNotFoundException {
+                                   HttpServletResponse response) throws IOException, ClassNotFoundException {
         if (null == file) {
             @Cleanup InputStream stream = EruptFileController.class.getClassLoader().getResourceAsStream("ueditor.json");
             String json = StreamUtils.copyToString(stream, Charset.forName(StandardCharsets.UTF_8.name()));
             if (null == callback) {
-                IOUtils.write(json, response.getOutputStream(), StandardCharsets.UTF_8.name());
+                response.getOutputStream().write(json.getBytes(StandardCharsets.UTF_8));
             } else {
-                IOUtils.write(callback + "(" + json + ")", response.getOutputStream(), StandardCharsets.UTF_8.name());
+                response.getOutputStream().write((callback + "(" + json + ")").getBytes(StandardCharsets.UTF_8));
             }
         } else {
             Map<String, Object> map = uploadHtmlEditorImage(eruptName, fieldName, file);
             Boolean status = (Boolean) map.get("uploaded");
             map.put("state", status ? "SUCCESS" : "ERROR");
-            IOUtils.write(new Gson().toJson(map), response.getOutputStream(), StandardCharsets.UTF_8.name());
+            response.getOutputStream().write(new Gson().toJson(map).getBytes(StandardCharsets.UTF_8));
         }
     }
 
