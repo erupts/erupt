@@ -2,11 +2,11 @@ package xyz.erupt.annotation.fun;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.query.Condition;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Condition;
 
 /**
  * @author YuePeng

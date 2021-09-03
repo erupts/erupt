@@ -3,6 +3,7 @@ package xyz.erupt.core.query;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.annotation.query.Condition;
 
 import java.util.List;
 
