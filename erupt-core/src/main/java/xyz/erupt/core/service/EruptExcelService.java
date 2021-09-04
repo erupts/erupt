@@ -178,7 +178,7 @@ public class EruptExcelService {
             for (int cellNum = 0; cellNum < titleRow.getPhysicalNumberOfCells(); cellNum++) {
                 Cell cell = row.getCell(cellNum);
                 EruptFieldModel eruptFieldModel = cellIndexMapping.get(cellNum);
-                if (null != cell && CellType.BLANK != cell.getCellTypeEnum()) {
+                if (null != cell && CellType.BLANK != cell.getCellType()) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     switch (edit.type()) {
                         case REFERENCE_TABLE:
@@ -277,8 +277,9 @@ public class EruptExcelService {
                         break;
                     case DATE:
                         if (fieldModel.getFieldReturnName().equals(Date.class.getSimpleName())) {
-                            sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间！", dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN,
-                                    "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
+                            sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间！"
+                                    , dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN
+                                            , "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
                         }
                         break;
                     default:
