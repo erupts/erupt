@@ -81,8 +81,8 @@ public class EruptTplController {
                                 @RequestParam(value = "ids", required = false) String[] ids,
                                 HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        RowOperation operation = Arrays.stream(eruptModel.getErupt().rowOperation())
-                .filter(it -> it.code().equals(code)).findFirst().orElseThrow(EruptNoLegalPowerException::new);
+        RowOperation operation = Arrays.stream(eruptModel.getErupt().rowOperation()).filter(it ->
+                it.code().equals(code)).findFirst().orElseThrow(EruptNoLegalPowerException::new);
         Erupts.powerLegal(ExprInvoke.getExpr(operation.show()));
         if (operation.tpl().engine() == Tpl.Engine.Native || operation.mode() == RowOperation.Mode.BUTTON) {
             eruptTplService.tplRender(operation.tpl(), null, response);
