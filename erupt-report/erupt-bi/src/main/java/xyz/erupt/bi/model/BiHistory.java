@@ -41,7 +41,7 @@ public class BiHistory extends BaseModel {
     private EruptUserVo operateUser;
 
     @EruptField(
-            views = @View(title = "操作时间")
+            views = @View(title = "操作时间", sortable = true)
     )
     private Date operateTime;
 

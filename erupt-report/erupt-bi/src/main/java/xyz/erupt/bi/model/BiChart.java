@@ -9,7 +9,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.upms.helper.HyperModelVo;
 
 import javax.persistence.*;
 
@@ -22,16 +22,16 @@ import javax.persistence.*;
 @Erupt(name = "图表配置", orderBy = "sort")
 @Getter
 @Setter
-public class BiChart extends HyperModel {
+public class BiChart extends HyperModelVo {
 
     @EruptField(
-            views = @View(title = "编码"),
+            views = @View(title = "编码", sortable = true),
             edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
+            views = @View(title = "名称", sortable = true),
             edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
@@ -79,6 +79,7 @@ public class BiChart extends HyperModel {
     @EruptField(
             views = @View(title = "图表类型"),
             edit = @Edit(title = "图表类型", notNull = true, desc = "图表参考：G2Plot", type = EditType.CHOICE,
+                    search = @Search,
                     choiceType = @ChoiceType(
                             type = ChoiceType.Type.RADIO,
                             vl = {

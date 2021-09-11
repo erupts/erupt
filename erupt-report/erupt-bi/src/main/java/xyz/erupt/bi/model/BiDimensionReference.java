@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.upms.helper.HyperModelCreatorVo;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -26,10 +26,10 @@ import javax.persistence.Table;
 @Erupt(name = "参照维度")
 @Getter
 @Setter
-public class BiDimensionReference extends HyperModel {
+public class BiDimensionReference extends HyperModelCreatorVo {
 
     @EruptField(
-            views = @View(title = "名称"),
+            views = @View(title = "名称", sortable = true),
             edit = @Edit(title = "名称", notNull = true, search = @Search)
     )
     private String name;
@@ -43,7 +43,6 @@ public class BiDimensionReference extends HyperModel {
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "处理类", column = "name"),
             edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
     )
     private BiClassHandler classHandler;

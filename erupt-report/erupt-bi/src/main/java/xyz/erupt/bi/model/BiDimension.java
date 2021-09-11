@@ -27,7 +27,7 @@ import javax.persistence.*;
 public class BiDimension extends BaseModel {
 
     @EruptField(
-            views = @View(title = "维度编码"),
+            views = @View(title = "维度编码", sortable = true),
             edit = @Edit(title = "维度编码", notNull = true)
     )
     private String code;

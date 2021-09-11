@@ -20,8 +20,8 @@ import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuStatus;
+import xyz.erupt.upms.helper.HyperModelVo;
 import xyz.erupt.upms.model.EruptMenu;
-import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -52,16 +52,16 @@ import java.util.Set;
 @Getter
 @Setter
 @Component
-public class Bi extends HyperModel implements OperationHandler<Bi, BiReleaseModal> {
+public class Bi extends HyperModelVo implements OperationHandler<Bi, BiReleaseModal> {
 
     @EruptField(
-            views = @View(title = "编码"),
+            views = @View(title = "编码", sortable = true),
             edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
+            views = @View(title = "名称", sortable = true),
             edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
@@ -81,14 +81,14 @@ public class Bi extends HyperModel implements OperationHandler<Bi, BiReleaseModa
     private BiClassHandler classHandler;
 
     @EruptField(
-            views = @View(title = "自动刷新周期（秒）"),
+            views = @View(title = "自动刷新周期（秒）", sortable = true),
             edit = @Edit(title = "自动刷新周期（秒）")
     )
     private Integer refreshTime;
 
 
     @EruptField(
-            views = @View(title = "导出"),
+            views = @View(title = "导出", sortable = true),
             edit = @Edit(title = "导出", search = @Search, notNull = true)
     )
     private Boolean export = true;

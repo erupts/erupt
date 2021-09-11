@@ -13,7 +13,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.service.BiDataInitService;
 import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.upms.helper.HyperModelCreatorVo;
 
 import javax.annotation.Resource;
 import javax.persistence.Entity;
@@ -33,16 +33,16 @@ import javax.script.ScriptException;
 @Erupt(name = "报表函数", dataProxy = BiFunction.class)
 @Getter
 @Service
-public class BiFunction extends HyperModel implements DataProxy<BiFunction> {
+public class BiFunction extends HyperModelCreatorVo implements DataProxy<BiFunction> {
 
     @EruptField(
-            views = @View(title = "编码"),
+            views = @View(title = "编码", sortable = true),
             edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
+            views = @View(title = "名称", sortable = true),
             edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;

@@ -37,13 +37,13 @@ import java.util.stream.Stream;
 public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
 
     @EruptField(
-            views = @View(title = "编码"),
+            views = @View(title = "编码", sortable = true),
             edit = @Edit(title = "编码", notNull = true)
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
+            views = @View(title = "名称", sortable = true),
             edit = @Edit(title = "名称", notNull = true)
     )
     private String name;
@@ -60,7 +60,7 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
     private String url;
 
     @EruptField(
-            views = @View(title = "用户名"),
+            views = @View(title = "用户名", sortable = true),
             edit = @Edit(title = "用户名", notNull = true)
     )
     private String userName;
@@ -71,7 +71,7 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
     private String password;
 
     @EruptField(
-            views = @View(title = "数据库类型"),
+            views = @View(title = "数据库类型", sortable = true),
             edit = @Edit(title = "数据库类型", notNull = true, type = EditType.CHOICE,
                     choiceType = @ChoiceType(fetchHandler = BiDataSource.class))
     )
