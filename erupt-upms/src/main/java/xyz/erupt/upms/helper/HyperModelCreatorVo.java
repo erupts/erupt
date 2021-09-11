@@ -42,7 +42,7 @@ public class HyperModelCreatorVo extends BaseModel {
     private EruptUserVo createUser;
 
     @EruptField(
-            views = @View(title = "创建时间"),
+            views = @View(title = "创建时间", sortable = true),
             edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
