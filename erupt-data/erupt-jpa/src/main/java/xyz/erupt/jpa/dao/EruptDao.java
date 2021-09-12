@@ -41,9 +41,19 @@ public class EruptDao {
 
     //修改
     public <T> T merge(T t) {
-        T type = entityManager.merge(t);
+        return entityManager.merge(t);
+    }
+
+    public <T> T mergeAndFlush(T t) {
+        try {
+            return this.merge(t);
+        } finally {
+            this.flush();
+        }
+    }
+
+    public void flush() {
         entityManager.flush();
-        return type;
     }
 
     //删除
@@ -79,11 +89,11 @@ public class EruptDao {
     }
 
     //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
-    public List<Map<String, Object>> queryMapList(Class eruptClass, String expr, Map<String, Object> param, String... cols) {
+    public List<Map<String, Object>> queryMapList(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) {
         return simpleQuery(eruptClass, true, expr, param, cols).getResultList();
     }
 
-    public List<Object[]> queryObjectList(Class eruptClass, String expr, Map<String, Object> param, String... cols) {
+    public List<Object[]> queryObjectList(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) {
         return simpleQuery(eruptClass, false, expr, param, cols).getResultList();
     }
 
@@ -99,7 +109,7 @@ public class EruptDao {
         return this.queryEntityList(eruptClass, null);
     }
 
-    public Map<String, Object> queryMap(Class eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
+    public Map<String, Object> queryMap(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
         try {
             return (Map<String, Object>) simpleQuery(eruptClass, true, expr, param, cols).getSingleResult();
         } catch (NoResultException e) {
@@ -107,7 +117,7 @@ public class EruptDao {
         }
     }
 
-    public Object[] queryObject(Class eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
+    public Object[] queryObject(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
         try {
             return (Object[]) simpleQuery(eruptClass, false, expr, param, cols).getSingleResult();
         } catch (NoResultException e) {
@@ -131,7 +141,7 @@ public class EruptDao {
         return this.queryEntity(eruptClass, null);
     }
 
-    private Query simpleQuery(Class eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
+    private Query simpleQuery(Class<?> eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
         StringBuilder sb = new StringBuilder();
         if (cols.length > 0) {
             sb.append(SELECT);
@@ -148,10 +158,8 @@ public class EruptDao {
             }
         }
         expr = StringUtils.isBlank(expr) ? "" : WHERE + expr;
-        Query query = entityManager.createQuery(sb.toString() + FROM + eruptClass.getSimpleName() + expr);
-        Optional.ofNullable(paramMap).ifPresent(map -> {
-            map.entrySet().forEach(entry -> query.setParameter(entry.getKey(), entry.getValue()));
-        });
+        Query query = entityManager.createQuery(sb + FROM + eruptClass.getSimpleName() + expr);
+        Optional.ofNullable(paramMap).ifPresent(map -> map.forEach(query::setParameter));
         return query;
     }
 }

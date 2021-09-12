@@ -20,6 +20,8 @@ import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +116,9 @@ public class EruptFieldModel {
                 }
                 if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName.toLowerCase())) {
                     viewValues.put(TYPE, ViewType.BOOLEAN);
-                } else if (Date.class.getSimpleName().equals(this.fieldReturnName)) {
+                } else if (Date.class.getSimpleName().equals(this.fieldReturnName) ||
+                        LocalDate.class.getSimpleName().equals(this.fieldReturnName) ||
+                        LocalDateTime.class.getSimpleName().equals(this.fieldReturnName)) {
                     viewValues.put(TYPE, ViewType.DATE);
                 } else if (this.eruptField.edit().type() == EditType.DATE) {
                     viewValues.put(TYPE, ViewType.DATE);

@@ -1,6 +1,6 @@
 package xyz.erupt.security.tl;
 
-import xyz.erupt.security.model.RequestBody;
+import xyz.erupt.security.model.ReqBody;
 
 /**
  * @author YuePeng
@@ -8,14 +8,14 @@ import xyz.erupt.security.model.RequestBody;
  */
 public class RequestBodyTL {
 
-    private static final ThreadLocal<RequestBody> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<ReqBody> threadLocal = new ThreadLocal<>();
 
-    public static RequestBody get() {
+    public static ReqBody get() {
         return threadLocal.get();
     }
 
-    public static void set(RequestBody requestBody) {
-        threadLocal.set(requestBody);
+    public static void set(ReqBody reqBody) {
+        threadLocal.set(reqBody);
     }
 
     public static void remove() {

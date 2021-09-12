@@ -52,8 +52,7 @@ public class EruptDrillController {
         Object val = field.get(data);
         if (null == val) return new Page();
         return eruptService.getEruptData(
-                EruptCoreService.getErupt(link.linkErupt().getSimpleName()),
-                tableQueryVo, null,
+                EruptCoreService.getErupt(link.linkErupt().getSimpleName()), tableQueryVo, null,
                 String.format("%s = '%s'", link.linkErupt().getSimpleName() + "." + link.joinColumn(), val)
         );
     }
