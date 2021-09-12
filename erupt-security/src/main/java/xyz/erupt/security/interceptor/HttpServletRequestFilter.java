@@ -3,7 +3,7 @@ package xyz.erupt.security.interceptor;
 import org.springframework.web.filter.GenericFilterBean;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.security.config.EruptSecurityProp;
-import xyz.erupt.security.model.RequestBody;
+import xyz.erupt.security.model.ReqBody;
 import xyz.erupt.security.tl.RequestBodyTL;
 
 import javax.servlet.FilterChain;
@@ -30,15 +30,15 @@ public class HttpServletRequestFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         if (eruptSecurityProp.isRecordOperateLog()) {
-            RequestBody requestBody = new RequestBody();
-            RequestBodyTL.set(requestBody);
-            requestBody.setDate(System.currentTimeMillis());
+            ReqBody reqBody = new ReqBody();
+            RequestBodyTL.set(reqBody);
+            reqBody.setDate(System.currentTimeMillis());
             if (servletRequest instanceof HttpServletRequest) {
                 HttpServletRequest request = (HttpServletRequest) servletRequest;
                 if (request.getServletPath().contains(EruptRestPath.ERUPT_API)) {
                     if (null != request.getContentType() && CONTENT_TYPE_JSON.equals(request.getContentType())) {
                         EruptRequestWrapper eruptRequestWrapper = new EruptRequestWrapper(request);
-                        requestBody.setBody(eruptRequestWrapper.getBody());
+                        reqBody.setBody(eruptRequestWrapper.getBody());
                         filterChain.doFilter(eruptRequestWrapper, servletResponse);
                         return;
                     }

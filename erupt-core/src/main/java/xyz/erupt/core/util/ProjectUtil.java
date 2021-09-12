@@ -6,7 +6,7 @@ import org.apache.commons.io.FileUtils;
 import xyz.erupt.core.constant.EruptConst;
 
 import java.io.File;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 /**
@@ -36,7 +36,7 @@ public class ProjectUtil {
         } else {
             first.accept(true);
             if (file.createNewFile()) {
-                FileUtils.write(file, EruptPropUtil.getEruptVersion(), Charset.defaultCharset());
+                FileUtils.writeStringToFile(file, EruptPropUtil.getEruptVersion(), StandardCharsets.UTF_8);
             } else {
                 log.warn(dirFile + warnTxt);
             }

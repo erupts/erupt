@@ -9,12 +9,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class RequestBody {
+public class ReqBody {
 
     private long date;
 
     private Object body;
 
-    public RequestBody() {
+    public ReqBody() {
     }
 }
