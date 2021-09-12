@@ -44,13 +44,16 @@ public class EruptDao {
         return entityManager.merge(t);
     }
 
-    //修改
     public <T> T mergeAndFlush(T t) {
         try {
             return this.merge(t);
         } finally {
-            entityManager.flush();
+            this.flush();
         }
+    }
+
+    public void flush() {
+        entityManager.flush();
     }
 
     //删除
