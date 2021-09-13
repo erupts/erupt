@@ -21,10 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 public class EruptBuildAop {
 
     private final String POINT_CUT = "execution(public * xyz.erupt.core.controller.EruptBuildController.getEruptBuild(..))";
+
     @Resource
     private HttpServletRequest request;
 
-    @AfterReturning(returning = "eruptBuildModel", pointcut = POINT_CUT)
+    @AfterReturning(pointcut = POINT_CUT, returning = "eruptBuildModel")
     public void doAfterReturning(EruptBuildModel eruptBuildModel) {
         for (EruptFieldModel fieldModel : eruptBuildModel.getEruptModel().getEruptFieldModels()) {
             eruptFieldJsonI18n(fieldModel.getEruptFieldJson());
