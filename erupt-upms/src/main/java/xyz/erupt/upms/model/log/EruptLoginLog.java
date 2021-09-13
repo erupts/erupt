@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -30,6 +31,7 @@ import java.util.Date;
                 export = true, powerHandler = AdminPower.class),
         orderBy = "loginTime desc"
 )
+@EruptI18n
 @Getter
 @Setter
 public class EruptLoginLog extends BaseModel {
