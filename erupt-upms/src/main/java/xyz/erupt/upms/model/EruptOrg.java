@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -28,6 +29,7 @@ import javax.persistence.Table;
         tree = @Tree(pid = "parentOrg.id"),
         orderBy = "EruptOrg.sort asc"
 )
+@EruptI18n
 @Getter
 @Setter
 @NoArgsConstructor

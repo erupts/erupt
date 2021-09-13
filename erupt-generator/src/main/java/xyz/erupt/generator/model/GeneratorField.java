@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.VLModel;
@@ -24,6 +25,7 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+@EruptI18n
 @Erupt(name = "Erupt字段信息", dataProxy = GeneratorField.class)
 @Table(name = "e_generator_field")
 @Entity

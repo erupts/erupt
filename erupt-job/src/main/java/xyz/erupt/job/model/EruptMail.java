@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -36,6 +37,7 @@ import java.util.Objects;
  * @author YuePeng
  * date 2019-12-26
  */
+@EruptI18n
 @Erupt(
         name = "发送邮件",
         dataProxy = EruptMail.class,

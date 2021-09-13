@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -31,6 +32,7 @@ import java.util.Date;
         tree = @Tree(pid = "parentMenu.id"),
         dataProxy = EruptMenuService.class
 )
+@EruptI18n
 @Getter
 @Setter
 public class EruptMenu extends HyperModel {

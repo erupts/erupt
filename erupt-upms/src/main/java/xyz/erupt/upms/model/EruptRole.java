@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
         name = "用户角色",
         filter = @Filter(conditionHandler = EruptRole.class)
 )
+@EruptI18n
 @Getter
 @Setter
 @Component

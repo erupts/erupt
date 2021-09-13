@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
@@ -42,6 +43,7 @@ import java.util.Set;
         dataProxy = EruptUser.class,
         linkTree = @LinkTree(field = "eruptOrg")
 )
+@EruptI18n
 @Getter
 @Setter
 @Component

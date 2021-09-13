@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -31,6 +32,7 @@ import java.util.Date;
                 delete = false, powerHandler = AdminPower.class),
         orderBy = "createTime desc"
 )
+@EruptI18n
 @Getter
 @Setter
 public class EruptOperateLog extends BaseModel {
