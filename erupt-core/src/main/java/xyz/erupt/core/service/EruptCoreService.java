@@ -1,5 +1,7 @@
 package xyz.erupt.core.service;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -57,14 +59,19 @@ public class EruptCoreService implements ApplicationRunner {
         }
         if (em.getErupt().rowOperation().length > 0) {
             boolean copy = false;
-            for (int i = 0; i < em.getErupt().rowOperation().length; i++) {
-                RowOperation operation = em.getErupt().rowOperation()[i];
-                if (!ExprInvoke.getExpr(operation.show())) {
+            for (RowOperation rowOperation : em.getErupt().rowOperation()) {
+                if (!ExprInvoke.getExpr(rowOperation.show())) {
                     if (!copy) {
                         copy = true;
                         em.setEruptJson(em.getEruptJson().deepCopy());
                     }
-                    em.getEruptJson().getAsJsonArray(RowOperation.class.getSimpleName()).remove(i);
+                    JsonArray jsonArray = em.getEruptJson().getAsJsonArray("rowOperation");
+                    for (JsonElement operation : jsonArray) {
+                        if (rowOperation.code().equals(operation.getAsJsonObject().get("code").getAsString())) {
+                            jsonArray.remove(operation);
+                            break;
+                        }
+                    }
                 }
             }
         }
