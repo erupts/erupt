@@ -111,9 +111,8 @@ public class EruptRole extends BaseModel implements FilterHandler {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         if (eruptUser.getIsAdmin()) {
             return null;
-        } else {
-            Set<String> roles = eruptUser.getRoles().stream().map(it -> it.getId().toString()).collect(Collectors.toSet());
-            return String.format("id in (%s)", String.join(",", roles));
         }
+        Set<String> roles = eruptUser.getRoles().stream().map(it -> it.getId().toString()).collect(Collectors.toSet());
+        return String.format("id in (%s)", String.join(",", roles));
     }
 }

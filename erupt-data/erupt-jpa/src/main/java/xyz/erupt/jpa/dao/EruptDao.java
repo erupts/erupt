@@ -1,6 +1,8 @@
 package xyz.erupt.jpa.dao;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.jpa.service.EntityManagerService;
@@ -25,13 +27,17 @@ public class EruptDao {
     @Resource
     private EntityManagerService entityManagerService;
 
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+
+    @Resource
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     private static final String SELECT = "select ";
 
     private static final String FROM = " from ";
 
     private static final String NEW_MAP = "new map(";
-
-    private static final String AND = " and ";
 
     private static final String AS = " as ";
 
@@ -68,6 +74,14 @@ public class EruptDao {
 
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    public JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
+
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
+        return namedParameterJdbcTemplate;
     }
 
     @Comment("根据数据源名称获取 EntityManager  注意：必须手动执行 entityManager.close() 方法")
