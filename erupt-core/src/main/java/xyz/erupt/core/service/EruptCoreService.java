@@ -45,7 +45,7 @@ public class EruptCoreService implements ApplicationRunner {
         return ERUPTS.get(eruptName);
     }
 
-    //需要动态构建的EruptModel对象属性值，通过此方法暴露给外界使用
+    //需要动态构建的EruptModel视图属性
     @SneakyThrows
     public static EruptModel getEruptView(String eruptName) {
         EruptModel em = getErupt(eruptName).clone();
