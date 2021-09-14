@@ -56,10 +56,15 @@ public class EruptCoreService implements ApplicationRunner {
             }
         }
         if (em.getErupt().rowOperation().length > 0) {
-            em.setEruptJson(em.getEruptJson().deepCopy());
-            for (RowOperation operation : em.getErupt().rowOperation()) {
+            boolean copy = false;
+            for (int i = 0; i < em.getErupt().rowOperation().length; i++) {
+                RowOperation operation = em.getErupt().rowOperation()[i];
                 if (!ExprInvoke.getExpr(operation.show())) {
-                    em.getEruptJson().getAsJsonObject("rowOperation").remove(operation.code());
+                    if (!copy) {
+                        copy = true;
+                        em.setEruptJson(em.getEruptJson().deepCopy());
+                    }
+                    em.getEruptJson().getAsJsonArray(RowOperation.class.getSimpleName()).remove(i);
                 }
             }
         }
