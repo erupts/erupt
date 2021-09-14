@@ -32,7 +32,6 @@ import java.util.Optional;
 @Slf4j
 public class EruptService {
 
-
     /**
      * @param eruptModel      eruptModel
      * @param tableQueryVo    前端查询对象
@@ -43,18 +42,14 @@ public class EruptService {
         Erupts.powerLegal(eruptModel, PowerObject::isQuery);
         List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQueryVo.getCondition());
         List<String> conditionStrings = new ArrayList<>();
-        {
-            //DependTree逻辑
-            LinkTree dependTree = eruptModel.getErupt().linkTree();
-            if (StringUtils.isNotBlank(dependTree.field())) {
-                if (null == tableQueryVo.getLinkTreeVal()) {
-                    if (dependTree.dependNode()) return new Page();
-                } else {
-                    EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
-                    String pk = treeErupt.getErupt().primaryKeyCol();
-                    conditionStrings.add(dependTree.field() + "." + pk + " = '" + tableQueryVo.getLinkTreeVal() + "'");
-                }
+        //DependTree logic
+        LinkTree dependTree = eruptModel.getErupt().linkTree();
+        if (StringUtils.isNotBlank(dependTree.field())) {
+            if (null == tableQueryVo.getLinkTreeVal()) {
+                if (dependTree.dependNode()) return new Page();
             }
+            EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
+            conditionStrings.add(dependTree.field() + "." + treeErupt.getErupt().primaryKeyCol() + " = '" + tableQueryVo.getLinkTreeVal() + "'");
         }
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(it -> conditionStrings.add(it))));
