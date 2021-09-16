@@ -1,0 +1,115 @@
+package xyz.erupt.i18n.service;
+
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Service;
+import xyz.erupt.core.toolkit.TimeRecorder;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+/**
+ * @author YuePeng
+ * date 2021/9/15 00:46
+ */
+@Service
+@Slf4j
+public class I18nService extends HashMap<String, Properties> implements ApplicationRunner {
+
+    //语言文件对应文字映射
+    private static final I18nService langMappings = new I18nService();
+
+    private static final String I18N_EXT = "properties";
+
+    private static Long totalSize = 0L;
+
+    public static Properties getLangMapping(String lang) {
+        return langMappings.get(lang);
+    }
+
+    @Override
+    @SneakyThrows
+    public void run(ApplicationArguments args) {
+        TimeRecorder timeRecorder = new TimeRecorder();
+        Enumeration<URL> urls = I18nService.class.getClassLoader().getResources("i18n/");
+        while (urls.hasMoreElements()) {
+            URL url = urls.nextElement();
+            switch (url.getProtocol()) {
+                case "file":
+                    scanFile(new File(URLDecoder.decode(url.getFile(), Charset.defaultCharset().name())));
+                    break;
+                case "jar":
+                    JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
+                    scanJar(urlConnection.getJarFile());
+                    break;
+            }
+        }
+        System.out.println(langMappings);
+        log.info("Erupt i18n initialization completed in {} ms", timeRecorder.recorder());
+        log.info("Erupt i18n total file size: {}kb", totalSize);
+    }
+
+    @SneakyThrows
+    private void scanFile(File file) {
+        if (file.isFile()) {
+            final String fileName = file.getAbsolutePath();
+            if (fileName.endsWith(I18N_EXT)) {
+                String lang = this.getFileLang(fileName);
+                Properties properties = new Properties();
+                FileInputStream fileInputStream = new FileInputStream(file);
+                properties.load(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8));
+                totalSize += fileInputStream.available();
+                if (langMappings.containsKey(lang)) {
+                    langMappings.get(lang).putAll(properties);
+                } else {
+                    langMappings.put(lang, properties);
+                }
+            }
+        } else if (file.isDirectory()) {
+            final File[] files = file.listFiles();
+            if (null != files) {
+                for (File subFile : files) {
+                    scanFile(subFile);
+                }
+            }
+        }
+    }
+
+    @SneakyThrows
+    private void scanJar(JarFile jar) {
+        while (jar.entries().hasMoreElements()) {
+            final JarEntry entry = jar.entries().nextElement();
+            if (entry.getName().endsWith(I18N_EXT)) {
+                String lang = this.getFileLang(entry.getName());
+                totalSize += entry.getSize();
+                Properties properties = new Properties();
+                properties.load(new InputStreamReader(jar.getInputStream(entry), StandardCharsets.UTF_8));
+                if (langMappings.containsKey(lang)) {
+                    langMappings.get(lang).putAll(properties);
+                } else {
+                    langMappings.put(lang, properties);
+                }
+            }
+        }
+    }
+
+    private String getFileLang(String fileName) {
+        fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+        String[] split = fileName.substring(0, fileName.indexOf(I18N_EXT) - 1).split("_");
+        return split[split.length - 1];
+    }
+
+}

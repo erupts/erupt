@@ -12,27 +12,43 @@ public class I18nConstant {
 
     public static final String TITLE = "title";
 
-    private static final String DESC = "desc";
+    public static final String TYPE = "type";
 
-    private static final String ROW_OPERATION = "rowOperation";
+    public static final String DESC = "desc";
+
+    public static final String ROW_OPERATION = "rowOperation";
+
+    public static final String DRILLS = "drills";
+
+    public static final String DOT = ".";
+
+    public static final String TRUE_TEXT = "trueText";
+
+    public static final String FALSE_TEXT = "falseText";
+
+    public static final String BOOL_TYPE = "boolType";
 
 
-    private static final String DRILLS = "drills";
-
-    private static final String DOT = ".";
-
-    public String[] eruptAnnI18nPath = new String[]{
+    private static String[] eruptAnnI18nPath = new String[]{
             ROW_OPERATION + DOT + TITLE,
             ROW_OPERATION + DOT + "tip",
             DRILLS + DOT + TITLE
     };
 
-    public String[] eruptFieldAnnI18nPath = new String[]{
+    private static String[] eruptFieldAnnI18nPath = new String[]{
             VIEWS + DOT + TITLE,
             VIEWS + DOT + DESC,
             EDIT + DOT + TITLE,
             EDIT + DOT + DESC,
             EDIT + DOT + "placeHolder",
     };
+
+    public static String[] getEruptAnnI18nPath() {
+        return eruptAnnI18nPath;
+    }
+
+    public static String[] getEruptFieldAnnI18nPath() {
+        return eruptFieldAnnI18nPath;
+    }
 
 }
