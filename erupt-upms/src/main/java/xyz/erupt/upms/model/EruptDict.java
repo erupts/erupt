@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -23,6 +24,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "e_dict", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@EruptI18n
 @Erupt(
         name = "数据字典",
         power = @Power(export = true),
