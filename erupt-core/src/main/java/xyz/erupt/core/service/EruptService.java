@@ -67,7 +67,6 @@ public class EruptService {
      *
      * @param eruptModel eruptModel
      * @param id         标识主键
-     * @return 是否有数据权限
      */
     public void verifyIdPermissions(EruptModel eruptModel, String id) {
         List<Condition> conditions = new ArrayList<>();
