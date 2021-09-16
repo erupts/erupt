@@ -2,7 +2,6 @@ package xyz.erupt.upms.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
@@ -27,16 +26,9 @@ public class EruptContextService {
     private String getEruptHeader() {
         String erupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
         if (StringUtils.isBlank(erupt)) {
-            erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
+            return request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
         }
-        Assert.notNull(erupt, "request header 'erupt' not found ");
         return erupt;
-    }
-
-    //获取当前菜单对象
-    public EruptMenu getCurrentEruptMenu() {
-        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
-                , this.getEruptHeader(), EruptMenu.class);
     }
 
     //获取erupt上下文对象
@@ -51,5 +43,11 @@ public class EruptContextService {
             return request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
         }
         return token;
+    }
+
+    //获取当前菜单对象
+    public EruptMenu getCurrentEruptMenu() {
+        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
+                , this.getEruptHeader(), EruptMenu.class);
     }
 }
