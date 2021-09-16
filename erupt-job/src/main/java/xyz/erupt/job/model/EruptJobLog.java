@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -21,6 +22,7 @@ import java.util.Date;
  * @author YuePeng
  * date 2019-12-26
  */
+@EruptI18n
 @Erupt(
         orderBy = "startTime desc",
         name = "任务日志",

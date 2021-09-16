@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
@@ -26,6 +27,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "e_upms_login_log")
+@EruptI18n
 @Erupt(
         name = "在线用户",
         filter = @Filter(conditionHandler = EruptOnlineFilterHandler.class),

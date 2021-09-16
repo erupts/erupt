@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
@@ -21,6 +22,7 @@ import javax.persistence.*;
 import java.util.Map;
 import java.util.Set;
 
+@EruptI18n
 @Erupt(name = "生成Erupt代码",
         rowOperation = @RowOperation(
                 code = "preview", title = "代码预览", icon = "fa fa-code",

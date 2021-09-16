@@ -6,6 +6,7 @@ import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
@@ -33,6 +34,7 @@ import java.util.List;
  * @author YuePeng
  * date 2019-12-26
  */
+@EruptI18n
 @Erupt(
         name = "任务维护",
         dataProxy = EruptJob.class,
