@@ -47,9 +47,10 @@ public class EruptService {
         if (StringUtils.isNotBlank(dependTree.field())) {
             if (null == tableQueryVo.getLinkTreeVal()) {
                 if (dependTree.dependNode()) return new Page();
+            } else {
+                EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
+                conditionStrings.add(dependTree.field() + "." + treeErupt.getErupt().primaryKeyCol() + " = '" + tableQueryVo.getLinkTreeVal() + "'");
             }
-            EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
-            conditionStrings.add(dependTree.field() + "." + treeErupt.getErupt().primaryKeyCol() + " = '" + tableQueryVo.getLinkTreeVal() + "'");
         }
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(it -> conditionStrings.add(it))));
