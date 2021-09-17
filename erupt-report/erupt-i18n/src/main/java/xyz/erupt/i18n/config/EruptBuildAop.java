@@ -40,7 +40,7 @@ public class EruptBuildAop {
 
     @AfterReturning(pointcut = POINT_CUT, returning = "eruptBuildModel")
     public void doAfterReturning(EruptBuildModel eruptBuildModel) {
-        if (!StringUtils.isNotBlank(request.getHeader(LANG_HEADER))) {
+        if (StringUtils.isNotBlank(request.getHeader(LANG_HEADER))) {
             Optional.ofNullable(eruptContextService.getContextEruptClass()).ifPresent(eruptClass -> {
                 EruptI18n eruptI18n = eruptClass.getAnnotation(EruptI18n.class);
                 if (null != eruptI18n && eruptI18n.enable()) {
