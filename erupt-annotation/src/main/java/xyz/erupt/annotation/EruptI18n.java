@@ -6,5 +6,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Documented
 public @interface EruptI18n {
+
     boolean enable() default true;
+
 }
