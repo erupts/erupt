@@ -104,8 +104,8 @@ public class DataHandlerUtil {
                     choiceItems.put(fieldModel.getFieldName(), cm);
                 }
                 return cm.get(value.toString());
-            case BOOLEAN:
-                return (Boolean) value ? edit.boolType().trueText() : edit.boolType().falseText();
+//            case BOOLEAN:
+//                return (Boolean) value ? edit.boolType().trueText() : edit.boolType().falseText();
         }
         return value;
     }
