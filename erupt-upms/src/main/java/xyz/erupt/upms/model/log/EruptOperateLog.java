@@ -26,13 +26,13 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "e_upms_operate_log")
+@EruptI18n
 @Erupt(
         name = "操作日志",
         power = @Power(add = false, edit = false, viewDetails = false,
                 delete = false, powerHandler = AdminPower.class),
         orderBy = "createTime desc"
 )
-@EruptI18n
 @Getter
 @Setter
 public class EruptOperateLog extends BaseModel {
