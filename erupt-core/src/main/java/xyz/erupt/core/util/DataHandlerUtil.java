@@ -36,11 +36,6 @@ public class DataHandlerUtil {
                 parentTreeModel.setChildren(children);
             });
         });
-//        treeModels.forEach(treeModel -> Optional.ofNullable(treeModelMap.get(treeModel.getPid())).ifPresent(parentTreeModel -> {
-//            Collection<TreeModel> children = parentTreeModel.getChildren();
-//            children.forEach(child -> child.setLevel(parentTreeModel.getLevel() + 1));
-//            parentTreeModel.setChildren(children);
-//        }));
         return resultTreeModels;
     }
 
@@ -85,9 +80,7 @@ public class DataHandlerUtil {
     }
 
     private static Object convertColumnValue(EruptFieldModel fieldModel, Object value, Map<String, Map<String, String>> choiceItems) {
-        if (null == value) {
-            return null;
-        }
+        if (null == value) return null;
         Edit edit = fieldModel.getEruptField().edit();
         switch (edit.type()) {
             case DATE:
@@ -104,8 +97,8 @@ public class DataHandlerUtil {
                     choiceItems.put(fieldModel.getFieldName(), cm);
                 }
                 return cm.get(value.toString());
-//            case BOOLEAN:
-//                return (Boolean) value ? edit.boolType().trueText() : edit.boolType().falseText();
+            case BOOLEAN:
+                return (Boolean) value ? edit.boolType().trueText() : edit.boolType().falseText();
         }
         return value;
     }
