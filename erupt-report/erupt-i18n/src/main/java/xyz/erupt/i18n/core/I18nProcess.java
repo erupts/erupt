@@ -1,4 +1,4 @@
-package xyz.erupt.i18n.service;
+package xyz.erupt.i18n.core;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +15,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -27,10 +25,10 @@ import java.util.jar.JarFile;
  */
 @Service
 @Slf4j
-public class I18nService extends HashMap<String, Properties> implements ApplicationRunner {
+public class I18nProcess extends HashMap<String, Properties> implements ApplicationRunner {
 
     //语言文件对应文字映射
-    private static final I18nService langMappings = new I18nService();
+    private static final I18nProcess langMappings = new I18nProcess();
 
     private static final String I18N_EXT = "properties";
 
@@ -44,7 +42,7 @@ public class I18nService extends HashMap<String, Properties> implements Applicat
     @SneakyThrows
     public void run(ApplicationArguments args) {
         TimeRecorder timeRecorder = new TimeRecorder();
-        Enumeration<URL> urls = I18nService.class.getClassLoader().getResources("i18n/");
+        Enumeration<URL> urls = I18nProcess.class.getClassLoader().getResources("i18n/");
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
             switch (url.getProtocol()) {
@@ -57,9 +55,8 @@ public class I18nService extends HashMap<String, Properties> implements Applicat
                     break;
             }
         }
-        System.out.println(langMappings);
+        log.info("Erupt i18n total file size: {} kb", totalSize / 1000);
         log.info("Erupt i18n initialization completed in {} ms", timeRecorder.recorder());
-        log.info("Erupt i18n total file size: {}kb", totalSize);
     }
 
     @SneakyThrows
@@ -79,12 +76,7 @@ public class I18nService extends HashMap<String, Properties> implements Applicat
                 }
             }
         } else if (file.isDirectory()) {
-            final File[] files = file.listFiles();
-            if (null != files) {
-                for (File subFile : files) {
-                    scanFile(subFile);
-                }
-            }
+            Optional.ofNullable(file.listFiles()).ifPresent(files -> Arrays.stream(files).forEach(this::scanFile));
         }
     }
 

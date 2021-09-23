@@ -20,6 +20,8 @@ public class I18nConstant {
 
     public static final String DRILLS = "drills";
 
+    public static final String TIP = "tip";
+
     public static final String DOT = ".";
 
     public static final String TRUE_TEXT = "trueText";

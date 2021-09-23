@@ -7,12 +7,11 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.EruptI18n;
-import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.i18n.constant.I18nConstant;
-import xyz.erupt.i18n.service.I18nService;
+import xyz.erupt.i18n.core.I18nProcess;
 import xyz.erupt.upms.service.EruptContextService;
 
 import javax.annotation.Resource;
@@ -44,7 +43,7 @@ public class EruptBuildAop {
             Optional.ofNullable(eruptContextService.getContextEruptClass()).ifPresent(eruptClass -> {
                 EruptI18n eruptI18n = eruptClass.getAnnotation(EruptI18n.class);
                 if (null != eruptI18n && eruptI18n.enable()) {
-                    Optional.ofNullable(I18nService.getLangMapping("en")).ifPresent(it -> {
+                    Optional.ofNullable(I18nProcess.getLangMapping("en")).ifPresent(it -> {
                         this.i18nProcess(eruptBuildModel.getEruptModel(), it);
                         if (null != eruptBuildModel.getOperationErupts()) {
                             eruptBuildModel.getOperationErupts().values().forEach(eruptModel -> this.i18nProcess(eruptModel, it));
@@ -60,45 +59,45 @@ public class EruptBuildAop {
 
     private void i18nProcess(EruptModel eruptModel, Properties langMapping) {
         JsonObject eruptJson = eruptModel.getEruptJson();
-
+        if (eruptJson.has(I18nConstant.ROW_OPERATION)) {
+            for (JsonElement rowOperation : eruptJson.getAsJsonArray(I18nConstant.ROW_OPERATION)) {
+                this.convert(langMapping, rowOperation.getAsJsonObject(), I18nConstant.TITLE);
+                this.convert(langMapping, rowOperation.getAsJsonObject(), I18nConstant.TIP);
+            }
+        }
+        if (eruptJson.has(I18nConstant.ROW_OPERATION)) {
+            for (JsonElement drill : eruptJson.getAsJsonArray(I18nConstant.DRILLS)) {
+                this.convert(langMapping, drill.getAsJsonObject(), I18nConstant.TITLE);
+            }
+        }
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             JsonObject eruptFieldJson = fieldModel.getEruptFieldJson();
             if (eruptFieldJson.has(I18nConstant.EDIT)) {
                 JsonObject edit = eruptFieldJson.getAsJsonObject(I18nConstant.EDIT);
-                String title = edit.get(I18nConstant.TITLE).getAsString();
-                if (langMapping.containsKey(title)) {
-                    edit.addProperty(I18nConstant.TITLE, langMapping.get(title).toString());
-                }
-                if (EditType.BOOLEAN.name().equals(edit.get(I18nConstant.TYPE).getAsString())) {
-                    JsonObject boolType = edit.getAsJsonObject(I18nConstant.BOOL_TYPE);
-                    String trueText = boolType.get(I18nConstant.TRUE_TEXT).getAsString();
-                    String falseText = boolType.get(I18nConstant.FALSE_TEXT).getAsString();
-                    if (langMapping.containsKey(trueText)) {
-                        boolType.addProperty(I18nConstant.TRUE_TEXT, langMapping.get(trueText).toString());
-                    }
-                    if (langMapping.containsKey(falseText)) {
-                        boolType.addProperty(I18nConstant.FALSE_TEXT, langMapping.get(falseText).toString());
-                    }
-                }
+                this.convert(langMapping, edit, I18nConstant.TITLE);
+                this.convert(langMapping, edit, I18nConstant.DESC);
+//                if (EditType.BOOLEAN.name().equals(edit.get(I18nConstant.TYPE).getAsString())) {
+//                    JsonObject boolType = edit.getAsJsonObject(I18nConstant.BOOL_TYPE);
+//                    this.convert(langMapping, boolType, I18nConstant.TRUE_TEXT);
+//                    this.convert(langMapping, boolType, I18nConstant.FALSE_TEXT);
+//                }
             }
             if (eruptFieldJson.has(I18nConstant.VIEWS)) {
-                for (JsonElement element : eruptFieldJson.getAsJsonArray(I18nConstant.VIEWS)) {
-                    String title = element.getAsJsonObject().get(I18nConstant.TITLE).getAsString();
-                    if (langMapping.containsKey(title)) {
-                        element.getAsJsonObject().addProperty(I18nConstant.TITLE, langMapping.get(title).toString());
-                    }
+                for (JsonElement view : eruptFieldJson.getAsJsonArray(I18nConstant.VIEWS)) {
+                    this.convert(langMapping, view.getAsJsonObject(), I18nConstant.TITLE);
+                    this.convert(langMapping, view.getAsJsonObject(), I18nConstant.DESC);
                 }
             }
         }
     }
 
-
-    private void eruptJsonI18n(JsonObject eruptJson, Properties langMapping) {
-
-    }
-
-    public String convert(String key) {
-        return key;
+    public void convert(Properties langMapping, JsonObject element, String replaceKey) {
+        String value = element.get(replaceKey).getAsString();
+        if (StringUtils.isNotBlank(value)) {
+            if (langMapping.containsKey(value)) {
+                element.addProperty(replaceKey, langMapping.get(value).toString());
+            }
+        }
     }
 
 }
