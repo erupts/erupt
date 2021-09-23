@@ -39,8 +39,8 @@ import java.util.Set;
 public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
 
     @EruptField(
-            views = @View(title = "中文名称"),
-            edit = @Edit(title = "中文名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "名称"),
+            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
