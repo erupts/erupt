@@ -76,9 +76,7 @@ public class EntityManagerService implements ApplicationRunner {
 
     public <R> R getEntityManager(Class<?> eruptClass, Function<EntityManager, R> function) {
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
-        if (null == eruptDataSource) {
-            return function.apply(entityManager);
-        }
+        if (null == eruptDataSource) return function.apply(entityManager);
         EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
         try {
             return function.apply(em);
