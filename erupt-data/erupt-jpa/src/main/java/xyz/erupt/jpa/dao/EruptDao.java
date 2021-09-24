@@ -84,7 +84,7 @@ public class EruptDao {
         return namedParameterJdbcTemplate;
     }
 
-    @Comment("根据数据源名称获取 EntityManager  注意：必须手动执行 entityManager.close() 方法")
+    @Comment("根据数据源名称获取 EntityManager 注意：必须手动执行 entityManager.close() 方法")
     public EntityManager getEntityManager(String name) {
         return entityManagerService.findEntityManager(name);
     }
