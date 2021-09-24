@@ -13,8 +13,6 @@ import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 @Setter
 public class EruptPropDb {
 
-    private String name;
-
     private DataSourceProperties datasource;
 
     private JpaProperties jpa;
