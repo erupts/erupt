@@ -45,8 +45,8 @@ public class EruptOperateLog extends BaseModel {
     private EruptUserVo eruptUser;
 
     @EruptField(
-            views = @View(title = "IP"),
-            edit = @Edit(title = "IP", search = @Search)
+            views = @View(title = "IP地址"),
+            edit = @Edit(title = "IP地址", search = @Search)
     )
     private String ip;
 
