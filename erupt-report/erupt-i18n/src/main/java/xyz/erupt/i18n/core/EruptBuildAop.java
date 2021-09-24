@@ -1,4 +1,4 @@
-package xyz.erupt.i18n.config;
+package xyz.erupt.i18n.core;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,7 +11,6 @@ import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.i18n.constant.I18nConstant;
-import xyz.erupt.i18n.core.I18nProcess;
 import xyz.erupt.upms.service.EruptContextService;
 
 import javax.annotation.Resource;
@@ -43,13 +42,13 @@ public class EruptBuildAop {
             Optional.ofNullable(eruptContextService.getContextEruptClass()).ifPresent(eruptClass -> {
                 EruptI18n eruptI18n = eruptClass.getAnnotation(EruptI18n.class);
                 if (null != eruptI18n && eruptI18n.enable()) {
-                    Optional.ofNullable(I18nProcess.getLangMapping("en")).ifPresent(it -> {
-                        this.i18nProcess(eruptBuildModel.getEruptModel(), it);
+                    Optional.ofNullable(I18nProcess.getLangMapping(request.getHeader(LANG_HEADER).toLowerCase())).ifPresent(it -> {
+                        this.process(eruptBuildModel.getEruptModel(), it);
                         if (null != eruptBuildModel.getOperationErupts()) {
-                            eruptBuildModel.getOperationErupts().values().forEach(eruptModel -> this.i18nProcess(eruptModel, it));
+                            eruptBuildModel.getOperationErupts().values().forEach(eruptModel -> this.process(eruptModel, it));
                         }
                         if (null != eruptBuildModel.getTabErupts()) {
-                            eruptBuildModel.getTabErupts().values().forEach(eruptModel -> this.i18nProcess(eruptModel.getEruptModel(), it));
+                            eruptBuildModel.getTabErupts().values().forEach(eruptModel -> this.process(eruptModel.getEruptModel(), it));
                         }
                     });
                 }
@@ -57,7 +56,7 @@ public class EruptBuildAop {
         }
     }
 
-    private void i18nProcess(EruptModel eruptModel, Properties langMapping) {
+    private void process(EruptModel eruptModel, Properties langMapping) {
         JsonObject eruptJson = eruptModel.getEruptJson();
         if (eruptJson.has(I18nConstant.ROW_OPERATION)) {
             for (JsonElement rowOperation : eruptJson.getAsJsonArray(I18nConstant.ROW_OPERATION)) {
@@ -76,11 +75,6 @@ public class EruptBuildAop {
                 JsonObject edit = eruptFieldJson.getAsJsonObject(I18nConstant.EDIT);
                 this.convert(langMapping, edit, I18nConstant.TITLE);
                 this.convert(langMapping, edit, I18nConstant.DESC);
-//                if (EditType.BOOLEAN.name().equals(edit.get(I18nConstant.TYPE).getAsString())) {
-//                    JsonObject boolType = edit.getAsJsonObject(I18nConstant.BOOL_TYPE);
-//                    this.convert(langMapping, boolType, I18nConstant.TRUE_TEXT);
-//                    this.convert(langMapping, boolType, I18nConstant.FALSE_TEXT);
-//                }
             }
             if (eruptFieldJson.has(I18nConstant.VIEWS)) {
                 for (JsonElement view : eruptFieldJson.getAsJsonArray(I18nConstant.VIEWS)) {
