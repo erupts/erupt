@@ -1,11 +1,9 @@
-package xyz.erupt.core.config;
+package xyz.erupt.core.prop;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * @author YuePeng
@@ -33,10 +31,8 @@ public class EruptProp {
     //是否保留上传文件原始名称
     private boolean keepUploadFileName = false;
 
-    @Deprecated
-    private String[] jacksonHttpMessageConvertersPackages;
-
     private String[] gsonHttpMessageConvertersPackages;
 
-    private List<EruptPropDb> dbs;
+    private EruptPropDb[] dbs;
+
 }

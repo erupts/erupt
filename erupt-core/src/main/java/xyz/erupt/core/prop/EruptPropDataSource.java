@@ -1,8 +1,9 @@
-package xyz.erupt.core.config;
+package xyz.erupt.core.prop;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import xyz.erupt.core.config.HikariCpConfig;
 
 /**
  * @author YuePeng
@@ -10,7 +11,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
  */
 @Getter
 @Setter
-public class EruptDataSourceProp {
+public class EruptPropDataSource {
 
     private String name;
 
@@ -22,9 +23,7 @@ public class EruptDataSourceProp {
 
     private String password;
 
-//    @NestedConfigurationProperty
-//    private DruidConfig druid = new DruidConfig();
-//    @NestedConfigurationProperty
-//    private HikariCpConfig hikari = new HikariCpConfig();
+    @NestedConfigurationProperty
+    private HikariCpConfig hikari = new HikariCpConfig();
 
 }

@@ -1,4 +1,4 @@
-package xyz.erupt.core.config;
+package xyz.erupt.core.prop;
 
 import lombok.Getter;
 import lombok.Setter;

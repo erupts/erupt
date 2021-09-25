@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.prop.EruptProp;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

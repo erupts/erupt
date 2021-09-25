@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.DateUtil;
 
 import java.time.LocalDate;
