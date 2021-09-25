@@ -3,8 +3,8 @@ package xyz.erupt.monitor.model;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.FilterHandler;
-import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.constant.SessionKey;
 

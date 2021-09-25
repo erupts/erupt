@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
-import xyz.erupt.core.config.EruptAppProp;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.prop.EruptAppProp;
 import xyz.erupt.core.util.EruptPropUtil;
 import xyz.erupt.core.util.MD5Util;
 

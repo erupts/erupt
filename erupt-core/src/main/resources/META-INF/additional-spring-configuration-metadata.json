@@ -1,14 +1,14 @@
 {
   "groups": [
     {
-      "sourceType": "xyz.erupt.core.config.EruptProp",
+      "sourceType": "xyz.erupt.core.prop.EruptProp",
       "name": "erupt",
-      "type": "xyz.erupt.core.config.EruptProp"
+      "type": "xyz.erupt.core.prop.EruptProp"
     },
     {
-      "sourceType": "xyz.erupt.core.config.EruptAppProp",
+      "sourceType": "xyz.erupt.core.prop.EruptAppProp",
       "name": "erupt-app",
-      "type": "xyz.erupt.core.config.EruptAppProp"
+      "type": "xyz.erupt.core.prop.EruptAppProp"
     }
   ]
 }

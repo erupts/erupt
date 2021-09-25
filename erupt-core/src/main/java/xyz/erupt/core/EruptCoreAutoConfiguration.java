@@ -3,7 +3,6 @@ package xyz.erupt.core;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import xyz.erupt.core.config.EruptProp;
 
 /**
  * @author YuePeng
@@ -11,6 +10,6 @@ import xyz.erupt.core.config.EruptProp;
  */
 @Configuration
 @ComponentScan
-@EnableConfigurationProperties(EruptProp.class)
+@EnableConfigurationProperties
 public class EruptCoreAutoConfiguration {
 }

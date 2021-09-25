@@ -2,7 +2,7 @@ package xyz.erupt.monitor.model;
 
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.OperationHandler;
-import xyz.erupt.core.config.EruptProp;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.service.EruptSessionService;
 

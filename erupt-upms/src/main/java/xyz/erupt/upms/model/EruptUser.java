@@ -21,6 +21,7 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.RegexConst;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptUserService;
@@ -185,8 +186,8 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     private Boolean isAdmin;
 
     @Transient
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Resource
+    private EruptDao eruptDao;
 
     @Transient
     @Resource
@@ -219,8 +220,8 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
 
     @Override
     public void beforeUpdate(EruptUser eruptUser) {
-        entityManager.clear();
-        EruptUser eu = entityManager.find(EruptUser.class, eruptUser.getId());
+        eruptDao.getEntityManager().clear();
+        EruptUser eu = eruptDao.getEntityManager().find(EruptUser.class, eruptUser.getId());
         if (!eruptUser.getIsMd5() && eu.getIsMd5()) {
             throw new EruptWebApiRuntimeException("MD5 不可逆");
         }

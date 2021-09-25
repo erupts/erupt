@@ -25,6 +25,10 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-annotation</artifactId>
             <version>${project.parent.version}</version>

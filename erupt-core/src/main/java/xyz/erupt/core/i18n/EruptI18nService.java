@@ -1,7 +1,7 @@
 package xyz.erupt.core.i18n;
 
 import org.springframework.stereotype.Service;
-import xyz.erupt.core.config.EruptAppProp;
+import xyz.erupt.core.prop.EruptAppProp;
 
 import javax.annotation.Resource;
 import java.util.Locale;

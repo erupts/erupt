@@ -1,8 +1,7 @@
-package xyz.erupt.core.config;
+package xyz.erupt.core.prop;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 
 /**
@@ -13,7 +12,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 @Setter
 public class EruptPropDb {
 
-    private DataSourceProperties datasource;
+    private EruptPropDataSource datasource;
 
     private JpaProperties jpa;
 

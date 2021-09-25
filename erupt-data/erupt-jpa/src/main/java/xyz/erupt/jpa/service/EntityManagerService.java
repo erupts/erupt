@@ -3,6 +3,7 @@ package xyz.erupt.jpa.service;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -10,8 +11,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.core.annotation.EruptDataSource;
-import xyz.erupt.core.config.EruptProp;
-import xyz.erupt.core.config.EruptPropDb;
+import xyz.erupt.core.prop.EruptProp;
+import xyz.erupt.core.prop.EruptPropDb;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -62,8 +63,15 @@ public class EntityManagerService implements ApplicationRunner {
                     factory.setJpaProperties(properties);
                 }
                 {
+                    DataSourceProperties dataSourceProperties = new DataSourceProperties();
+                    dataSourceProperties.setUsername(prop.getDatasource().getUsername());
+                    dataSourceProperties.setPassword(prop.getDatasource().getPassword());
+                    dataSourceProperties.setUrl(prop.getDatasource().getUrl());
+                    dataSourceProperties.setDriverClassName(prop.getDatasource().getDriverClassName());
                     HikariDataSource hikariDataSource = new HikariDataSource();
-                    hikariDataSource.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
+                    hikariDataSource.copyStateTo(prop.getDatasource().getHikari().toHikariConfig());
+                    hikariDataSource.setPoolName(prop.getDatasource().getName());
+                    hikariDataSource.setDataSource(dataSourceProperties.initializeDataSourceBuilder().build());
                     factory.setDataSource(hikariDataSource);
                     factory.setPackagesToScan(prop.getScanPackages());
                     factory.afterPropertiesSet();
