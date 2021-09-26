@@ -1,9 +1,9 @@
 package xyz.erupt.jpa.service;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -18,10 +18,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -63,16 +60,13 @@ public class EntityManagerService implements ApplicationRunner {
                     factory.setJpaProperties(properties);
                 }
                 {
-                    DataSourceProperties dataSourceProperties = new DataSourceProperties();
-                    dataSourceProperties.setUsername(prop.getDatasource().getUsername());
-                    dataSourceProperties.setPassword(prop.getDatasource().getPassword());
-                    dataSourceProperties.setUrl(prop.getDatasource().getUrl());
-                    dataSourceProperties.setDriverClassName(prop.getDatasource().getDriverClassName());
-                    HikariDataSource hikariDataSource = new HikariDataSource();
-                    hikariDataSource.copyStateTo(prop.getDatasource().getHikari().toHikariConfig());
-                    hikariDataSource.setPoolName(prop.getDatasource().getName());
-                    hikariDataSource.setDataSource(dataSourceProperties.initializeDataSourceBuilder().build());
-                    factory.setDataSource(hikariDataSource);
+                    HikariConfig hikariConfig = prop.getDatasource().getHikari().toHikariConfig();
+                    Optional.ofNullable(prop.getDatasource().getUrl()).ifPresent(hikariConfig::setJdbcUrl);
+                    Optional.ofNullable(prop.getDatasource().getDriverClassName()).ifPresent(hikariConfig::setDriverClassName);
+                    Optional.ofNullable(prop.getDatasource().getUsername()).ifPresent(hikariConfig::setUsername);
+                    Optional.ofNullable(prop.getDatasource().getPassword()).ifPresent(hikariConfig::setPassword);
+                    Optional.ofNullable(prop.getDatasource().getHikari().getPoolName()).ifPresent(hikariConfig::setPoolName);
+                    factory.setDataSource(new HikariDataSource(hikariConfig));
                     factory.setPackagesToScan(prop.getScanPackages());
                     factory.afterPropertiesSet();
                 }

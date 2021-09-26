@@ -31,6 +31,7 @@ public class EruptProp {
     //是否保留上传文件原始名称
     private boolean keepUploadFileName = false;
 
+    //指定哪些包内的类通过gson实现序列化
     private String[] gsonHttpMessageConvertersPackages;
 
     private EruptPropDb[] dbs;
