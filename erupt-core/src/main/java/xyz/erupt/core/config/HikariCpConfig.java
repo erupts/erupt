@@ -4,8 +4,6 @@ import com.zaxxer.hikari.HikariConfig;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.Properties;
@@ -19,46 +17,64 @@ import java.util.concurrent.TimeUnit;
 @Setter
 public class HikariCpConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(HikariCpConfig.class);
-    private static final long CONNECTION_TIMEOUT;
-    private static final long VALIDATION_TIMEOUT;
-    private static final long IDLE_TIMEOUT;
-    private static final long MAX_LIFETIME;
+    private static final long CONNECTION_TIMEOUT = TimeUnit.SECONDS.toMillis(30L);
+    private static final long VALIDATION_TIMEOUT = TimeUnit.SECONDS.toMillis(5L);
+    private static final long IDLE_TIMEOUT = TimeUnit.MINUTES.toMillis(10L);
+    private static final long MAX_LIFETIME = TimeUnit.MINUTES.toMillis(30L);
     private static final int DEFAULT_POOL_SIZE = 10;
 
-    static {
-        CONNECTION_TIMEOUT = TimeUnit.SECONDS.toMillis(30L);
-        VALIDATION_TIMEOUT = TimeUnit.SECONDS.toMillis(5L);
-        IDLE_TIMEOUT = TimeUnit.MINUTES.toMillis(10L);
-        MAX_LIFETIME = TimeUnit.MINUTES.toMillis(30L);
-    }
-
     private String username;
+
     private String password;
+
     private String driverClassName;
+
     private String jdbcUrl;
+
     private String poolName;
+
     private String catalog;
+
     private Long connectionTimeout;
+
     private Long validationTimeout;
+
     private Long idleTimeout;
+
     private Long leakDetectionThreshold;
+
     private Long maxLifetime;
+
     private Integer maxPoolSize;
+
     private Integer minIdle;
+
     private Long initializationFailTimeout;
+
     private String connectionInitSql;
+
     private String connectionTestQuery;
+
     private String dataSourceClassName;
+
     private String dataSourceJndiName;
+
     private String schema;
+
     private String transactionIsolationName;
+
     private Boolean isAutoCommit;
+
     private Boolean isReadOnly;
+
     private Boolean isIsolateInternalQueries;
+
     private Boolean isRegisterMbeans;
+
     private Boolean isAllowPoolSuspension;
+
     private Properties dataSourceProperties;
+
     private Properties healthCheckProperties;
 
     @SneakyThrows
