@@ -1,5 +1,6 @@
 package xyz.erupt.i18n.core;
 
+import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -66,8 +67,9 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
             if (fileName.endsWith(I18N_EXT)) {
                 String lang = this.getFileLang(fileName);
                 Properties properties = new Properties();
-                FileInputStream fileInputStream = new FileInputStream(file);
-                properties.load(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8));
+                @Cleanup FileInputStream fileInputStream = new FileInputStream(file);
+                @Cleanup InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+                properties.load(inputStreamReader);
                 totalSize += fileInputStream.available();
                 if (langMappings.containsKey(lang)) {
                     langMappings.get(lang).putAll(properties);
@@ -82,17 +84,21 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
 
     @SneakyThrows
     private void scanJar(JarFile jar) {
-        while (jar.entries().hasMoreElements()) {
-            final JarEntry entry = jar.entries().nextElement();
+        Enumeration<JarEntry> jarEntryEnumeration = jar.entries();
+        while (jarEntryEnumeration.hasMoreElements()) {
+            final JarEntry entry = jarEntryEnumeration.nextElement();
             if (entry.getName().endsWith(I18N_EXT)) {
                 String lang = this.getFileLang(entry.getName());
                 totalSize += entry.getSize();
                 Properties properties = new Properties();
-                properties.load(new InputStreamReader(jar.getInputStream(entry), StandardCharsets.UTF_8));
-                if (langMappings.containsKey(lang)) {
-                    langMappings.get(lang).putAll(properties);
-                } else {
-                    langMappings.put(lang, properties);
+                try (InputStreamReader inputStreamReader = new InputStreamReader(
+                        jar.getInputStream(entry), StandardCharsets.UTF_8)) {
+                    properties.load(inputStreamReader);
+                    if (langMappings.containsKey(lang)) {
+                        langMappings.get(lang).putAll(properties);
+                    } else {
+                        langMappings.put(lang, properties);
+                    }
                 }
             }
         }
@@ -101,7 +107,7 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
     private String getFileLang(String fileName) {
         fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
         String[] split = fileName.substring(0, fileName.indexOf(I18N_EXT) - 1).split("_");
-        return split[split.length - 1];
+        return split[split.length - 1].toLowerCase();
     }
 
 }
