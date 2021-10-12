@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-pro</artifactId>
-    <version>1.8.5</version>
+    <version>1.9.0-bate</version>
 
     <packaging>pom</packaging>
     <name>erupt-pro</name>
