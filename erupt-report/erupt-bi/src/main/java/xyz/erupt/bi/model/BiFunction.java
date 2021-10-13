@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -33,6 +34,7 @@ import javax.script.ScriptException;
 @Erupt(name = "报表函数", dataProxy = BiFunction.class)
 @Getter
 @Service
+@EruptI18n
 public class BiFunction extends HyperModelCreatorVo implements DataProxy<BiFunction> {
 
     @EruptField(

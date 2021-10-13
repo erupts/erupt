@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
@@ -34,6 +35,7 @@ import java.util.stream.Stream;
 @Erupt(name = "数据源", dataProxy = BiDataSourceService.class)
 @Getter
 @Setter
+@EruptI18n
 public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
 
     @EruptField(

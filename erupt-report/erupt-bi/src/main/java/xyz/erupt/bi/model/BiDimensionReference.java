@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -26,6 +27,7 @@ import javax.persistence.Table;
 @Erupt(name = "参照维度")
 @Getter
 @Setter
+@EruptI18n
 public class BiDimensionReference extends HyperModelCreatorVo {
 
     @EruptField(

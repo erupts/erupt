@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
@@ -52,6 +53,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Component
+@EruptI18n
 public class Bi extends HyperModelVo implements OperationHandler<Bi, BiReleaseModal> {
 
     @EruptField(

@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -22,6 +23,7 @@ import javax.persistence.*;
 @Erupt(name = "图表配置", orderBy = "sort")
 @Getter
 @Setter
+@EruptI18n
 public class BiChart extends HyperModelVo {
 
     @EruptField(

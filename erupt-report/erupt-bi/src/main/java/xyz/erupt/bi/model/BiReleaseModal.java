@@ -3,6 +3,7 @@ package xyz.erupt.bi.model;
 import lombok.Getter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -15,6 +16,7 @@ import xyz.erupt.upms.model.EruptMenu;
  */
 @Erupt(name = "弹窗")
 @Getter
+@EruptI18n
 public class BiReleaseModal extends BaseModel {
 
     @EruptField(
