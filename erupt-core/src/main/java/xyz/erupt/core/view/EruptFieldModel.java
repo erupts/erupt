@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.CloneSupport;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 
@@ -32,7 +33,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class EruptFieldModel {
+public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private transient EruptField eruptField;
 

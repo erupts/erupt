@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.util.AnnotationUtil;
+import xyz.erupt.core.util.CloneSupport;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -38,7 +40,9 @@ public final class EruptModel implements Cloneable {
 
     @Override
     public final EruptModel clone() throws CloneNotSupportedException {
-        return (EruptModel) super.clone();
+        EruptModel eruptModel = (EruptModel) super.clone();
+        eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone).collect(Collectors.toList());
+        return eruptModel;
     }
 
 }
