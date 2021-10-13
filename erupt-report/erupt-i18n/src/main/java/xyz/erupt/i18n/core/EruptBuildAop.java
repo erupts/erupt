@@ -57,6 +57,7 @@ public class EruptBuildAop {
     }
 
     private void process(EruptModel eruptModel, Properties langMapping) {
+        eruptModel.setEruptJson(eruptModel.getEruptJson().deepCopy());
         JsonObject eruptJson = eruptModel.getEruptJson();
         if (eruptJson.has(I18nConstant.ROW_OPERATION)) {
             for (JsonElement rowOperation : eruptJson.getAsJsonArray(I18nConstant.ROW_OPERATION)) {
@@ -70,6 +71,7 @@ public class EruptBuildAop {
             }
         }
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            fieldModel.setEruptFieldJson(fieldModel.getEruptFieldJson().deepCopy());
             JsonObject eruptFieldJson = fieldModel.getEruptFieldJson();
             if (eruptFieldJson.has(I18nConstant.EDIT)) {
                 JsonObject edit = eruptFieldJson.getAsJsonObject(I18nConstant.EDIT);

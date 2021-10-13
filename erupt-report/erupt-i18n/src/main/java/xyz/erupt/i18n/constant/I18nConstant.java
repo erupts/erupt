@@ -22,11 +22,5 @@ public class I18nConstant {
 
     public static final String TYPE = "type";
 
-    public static final String TRUE_TEXT = "trueText";
-
-    public static final String FALSE_TEXT = "falseText";
-
-    public static final String BOOL_TYPE = "boolType";
-
 
 }
