@@ -48,7 +48,6 @@ public class EruptCoreService implements ApplicationRunner {
     //需要动态构建的EruptModel视图属性
     @SneakyThrows
     public static EruptModel getEruptView(String eruptName) {
-//        Kryo kryo = new Kryo();
         EruptModel em = getErupt(eruptName).clone();
         for (EruptFieldModel fieldModel : em.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
