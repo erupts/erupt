@@ -14,5 +14,4 @@ import xyz.erupt.core.annotation.EruptScan;
 @EntityScan
 @EruptScan
 public class EruptBiAutoConfiguration {
-
 }
