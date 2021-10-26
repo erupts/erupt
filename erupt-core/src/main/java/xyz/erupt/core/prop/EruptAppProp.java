@@ -22,6 +22,6 @@ public class EruptAppProp {
     private Boolean pwdTransferEncrypt = true;
 
     //多语言配置
-    private String[] locale;
+    private String[] locales = {"en-zh"};
 
 }
