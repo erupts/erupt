@@ -57,10 +57,14 @@ public class EruptCoreService implements ApplicationRunner {
                 fieldModel.setTagList(EruptUtil.getTagList(edit.tagsType()));
             }
         }
-        em.setEruptJson(em.getEruptJson().deepCopy());
         if (em.getErupt().rowOperation().length > 0) {
+            boolean copy = false;
             for (RowOperation rowOperation : em.getErupt().rowOperation()) {
                 if (!ExprInvoke.getExpr(rowOperation.show())) {
+                    if (!copy) {
+                        copy = true;
+                        em.setEruptJson(em.getEruptJson().deepCopy());
+                    }
                     JsonArray jsonArray = em.getEruptJson().getAsJsonArray("rowOperation");
                     for (JsonElement operation : jsonArray) {
                         if (rowOperation.code().equals(operation.getAsJsonObject().get("code").getAsString())) {
