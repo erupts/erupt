@@ -22,7 +22,6 @@
 # What erupt
 Erupt is a low code all the stack class framework, it USES Java **annotations** to generate the page and add, delete, change, check and back-office functions such as access control, will be simple **Spring Boot** basic knowledge can, don't need to understand the front, also do not need to write tedious CURD, automatically create table structure, the controller/service/SAO/don't have to create mapper file, greatly reduce the development workload, development will be the background faster to the extreme.
 
-
 > Replace the code generator, the development of background management system better solution!
 
 ## Why do you do it ?
