@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.core.toolkit.TimeRecorder;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -27,6 +29,9 @@ import java.util.jar.JarFile;
 @Service
 @Slf4j
 public class I18nProcess extends HashMap<String, Properties> implements ApplicationRunner {
+
+    @Resource
+    private I18NTranslateService i18NTranslateService;
 
     //语言文件对应文字映射
     private static final I18nProcess langMappings = new I18nProcess();
@@ -56,7 +61,8 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
                     break;
             }
         }
-        log.info("Erupt i18n total file size: {} kb", totalSize / 1000);
+        i18NTranslateService.registerI18NMapping(langMappings);
+        log.info("Erupt i18n total file size: {}kb", totalSize / 1000);
         log.info("Erupt i18n initialization completed in {} ms", timeRecorder.recorder());
     }
 

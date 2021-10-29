@@ -97,6 +97,13 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
+            edit = @Edit(title = "连接池配置", desc = "key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
+    )
+    private String poolConfig;
+
+
+    @Column(length = AnnotationConst.REMARK_LENGTH)
+    @EruptField(
             views = @View(title = "备注", type = ViewType.HTML),
             edit = @Edit(title = "备注", type = EditType.TEXTAREA)
     )
