@@ -28,7 +28,6 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
             return namedParameterJdbcTemplate;
         } else {
             NamedParameterJdbcTemplate jdbcTemplate = templateMap.get(biDataSource.getCode());
-//            Optional.ofNullable(templateMap.get(biDataSource.getCode())).ifPresent();
             if (null == jdbcTemplate) {
                 synchronized (this) {
                     jdbcTemplate = templateMap.get(biDataSource.getCode());
@@ -36,13 +35,14 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
                         return jdbcTemplate;
                     }
                     HikariDataSource hikariDataSource = new HikariDataSource();
-                    //报表数据源只读
-                    hikariDataSource.setReadOnly(true);
+                    hikariDataSource.setReadOnly(true); //报表数据源只读
                     hikariDataSource.setDriverClassName(biDataSource.getDriver());
                     hikariDataSource.setJdbcUrl(biDataSource.getUrl());
                     hikariDataSource.setPassword(biDataSource.getPassword());
                     hikariDataSource.setUsername(biDataSource.getUserName());
-                    return templateMap.put(biDataSource.getCode(), new NamedParameterJdbcTemplate(hikariDataSource));
+                    NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(hikariDataSource);
+                    templateMap.put(biDataSource.getCode(), namedParameterJdbcTemplate);
+                    return namedParameterJdbcTemplate;
                 }
             }
             return jdbcTemplate;
