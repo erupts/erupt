@@ -70,7 +70,7 @@
   "login.validate_code": "Verification code",
   "login.button": "Login",
   "login.register": "Register",
-  "login.forget_pwd": "Forget password ?",
+  "login.forget_pwd": "Forget password?",
   "login.forget_pwd_hint": "Please contact the administrator",
   "setting.config": "Page config",
   "setting.fixed-header": "Fixed Header & Nav",

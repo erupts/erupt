@@ -95,8 +95,9 @@ public class SecurityUtil {
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType("text/plain; charset=utf-8");
             try (PrintWriter out = response.getWriter()) {
-                out.append("非法跨站请求!");
-                throw new EruptWebApiRuntimeException("非法跨站请求!");
+                String text = "Illegal cross-site request!";
+                out.append(text);
+                throw new EruptWebApiRuntimeException(text);
             } catch (IOException e) {
                 e.printStackTrace();
             }

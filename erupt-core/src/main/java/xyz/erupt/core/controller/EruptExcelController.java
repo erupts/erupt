@@ -21,6 +21,7 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.service.EruptService;
+import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
@@ -55,6 +56,8 @@ public class EruptExcelController {
     private final EruptModifyController eruptModifyController;
 
     private final EruptService eruptService;
+
+    private final I18NTranslateService i18NTranslateService;
 
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
@@ -103,7 +106,7 @@ public class EruptExcelController {
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        Erupts.powerLegal(eruptModel, PowerObject::isImportable, "没有导入权限");
+        Erupts.powerLegal(eruptModel, PowerObject::isImportable, "No import permission");
         if (file.isEmpty()) {
             return EruptApiModel.errorApi("上传失败，请选择文件");
         }
