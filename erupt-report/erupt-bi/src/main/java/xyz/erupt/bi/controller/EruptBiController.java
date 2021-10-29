@@ -108,7 +108,7 @@ public class EruptBiController {
             dimension.setSort((dimension.getSort() == null) ? ++maxSort : dimension.getSort());
             if (StringUtils.isNotBlank(dimension.getDefaultValue())) {
                 try {
-                    biDimensionVo.setDefaultValue(BiService.evalScript(dimension.getDefaultValue()));
+                    biDimensionVo.setDefaultValue(biService.evalScript(dimension.getDefaultValue()));
                 } catch (ScriptException e) {
                     log.error("{}.{} -> {}", bi.getName(), dimension.getCode(), e.getMessage());
                 }

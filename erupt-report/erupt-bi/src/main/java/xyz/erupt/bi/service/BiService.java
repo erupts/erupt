@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.constant.ScriptPlaceholderConst;
 import xyz.erupt.bi.fun.EruptBiHandler;
@@ -36,8 +37,6 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class BiService {
-
-    private static final String TOTAL_KEY = "count";
 
     @Resource
     private EruptUserService eruptUserService;
@@ -100,7 +99,7 @@ public class BiService {
         return biData;
     }
 
-    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
+    private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
 
     @SneakyThrows
     public List<Map<String, Object>> startQuery(String express, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
@@ -116,15 +115,15 @@ public class BiService {
         return list;
     }
 
-    private static final Pattern EXPRESS_PATTERN = Pattern.compile("(?<=\\$\\{)(.+?)(?=\\})");
-
-    public static Object evalScript(String script, Bindings bindings) throws ScriptException {
+    public Object evalScript(String script, Bindings bindings) throws ScriptException {
         return null == bindings ? scriptEngine.eval(script) : scriptEngine.eval(script, bindings);
     }
 
-    public static Object evalScript(String script) throws ScriptException {
+    public Object evalScript(String script) throws ScriptException {
         return evalScript(script, null);
     }
+
+    private static final String TOTAL_KEY = "count";
 
     @SneakyThrows
     private Long getTotal(Bi bi, Map<String, Object> query) {
@@ -140,7 +139,9 @@ public class BiService {
     }
 
     private List<Map<String, Object>> jdbcQuery(NamedParameterJdbcTemplate jdbcTemplate, String express, Map<String, Object> query) {
-        log.info(express);
+        if (log.isDebugEnabled()) {
+            log.debug(express);
+        }
         return jdbcTemplate.query(express, query, (rs, i) -> {
             Map<String, Object> map = new LinkedHashMap<>();
             ResultSetMetaData metaData = rs.getMetaData();
@@ -151,6 +152,8 @@ public class BiService {
             return map;
         });
     }
+
+    public final Pattern EXPRESS_PATTERN = Pattern.compile("(?<=\\$\\{)(.+?)(?=\\})");
 
     @SneakyThrows
     private String processPlaceHolder(String express, Map<String, Object> param) {

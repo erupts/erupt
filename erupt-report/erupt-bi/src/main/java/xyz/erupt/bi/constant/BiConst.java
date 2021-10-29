@@ -8,4 +8,6 @@ public class BiConst {
 
     public static final String MENU_TYPE = "bi";
 
+    public static final String SCRIPT_ENGINE = "nashorn";
+
 }

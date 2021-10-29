@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.service.BiDataInitService;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.upms.helper.HyperModelCreatorVo;
@@ -71,7 +72,7 @@ public class BiFunction extends HyperModelCreatorVo implements DataProxy<BiFunct
     @Transient
     private BiDataInitService biDataInitService;
 
-    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
+    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
 
     private void testFunction(BiFunction biFunction) {
         try {
