@@ -174,7 +174,7 @@ title: 背景色
 }
 
 .bg-warning {
-  background-color: #28a745;
+  background-color: #fad733;
 }
 
 .bg-danger {
@@ -662,7 +662,7 @@ title: 背景色
 }
 
 .hover\:bg-warning:hover {
-  background-color: #28a745;
+  background-color: #fad733;
 }
 
 .hover\:bg-danger:hover {
@@ -1157,7 +1157,7 @@ title: 背景色
 
 .active\:bg-warning.is-active,
 .active\:bg-warning:active {
-  background-color: #28a745;
+  background-color: #fad733;
 }
 
 .active\:bg-danger.is-active,
@@ -1738,7 +1738,7 @@ title: 背景色
 }
 
 .focus\:bg-warning:focus {
-  background-color: #28a745;
+  background-color: #fad733;
 }
 
 .focus\:bg-danger:focus {
@@ -2233,7 +2233,7 @@ title: 背景色
 
 .disabled\:bg-warning.is-disabled,
 .disabled\:bg-warning:disabled {
-  background-color: #28a745;
+  background-color: #fad733;
 }
 
 .disabled\:bg-danger.is-disabled,
@@ -2814,7 +2814,7 @@ title: 背景色
 }
 
 .group:hover .group-hover\:bg-warning {
-  background-color: #28a745;
+  background-color: #fad733;
 }
 
 .group:hover .group-hover\:bg-danger {
@@ -3303,7 +3303,7 @@ title: 背景色
   }
 
   .m\:bg-warning {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .m\:bg-danger {
@@ -3791,7 +3791,7 @@ title: 背景色
   }
 
   .m\:hover\:bg-warning:hover {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .m\:hover\:bg-danger:hover {
@@ -4286,7 +4286,7 @@ title: 背景色
 
   .m\:active\:bg-warning.is-active,
 .m\:active\:bg-warning:active {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .m\:active\:bg-danger.is-active,
@@ -4867,7 +4867,7 @@ title: 背景色
   }
 
   .m\:focus\:bg-warning:focus {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .m\:focus\:bg-danger:focus {
@@ -5362,7 +5362,7 @@ title: 背景色
 
   .m\:disabled\:bg-warning.is-disabled,
 .m\:disabled\:bg-warning:disabled {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .m\:disabled\:bg-danger.is-disabled,
@@ -5943,7 +5943,7 @@ title: 背景色
   }
 
   .group:hover .m\:group-hover\:bg-warning {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .group:hover .m\:group-hover\:bg-danger {
@@ -6432,7 +6432,7 @@ title: 背景色
   }
 
   .pc\:bg-warning {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .pc\:bg-danger {
@@ -6920,7 +6920,7 @@ title: 背景色
   }
 
   .pc\:hover\:bg-warning:hover {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .pc\:hover\:bg-danger:hover {
@@ -7415,7 +7415,7 @@ title: 背景色
 
   .pc\:active\:bg-warning.is-active,
 .pc\:active\:bg-warning:active {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .pc\:active\:bg-danger.is-active,
@@ -7996,7 +7996,7 @@ title: 背景色
   }
 
   .pc\:focus\:bg-warning:focus {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .pc\:focus\:bg-danger:focus {
@@ -8491,7 +8491,7 @@ title: 背景色
 
   .pc\:disabled\:bg-warning.is-disabled,
 .pc\:disabled\:bg-warning:disabled {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .pc\:disabled\:bg-danger.is-disabled,
@@ -9072,7 +9072,7 @@ title: 背景色
   }
 
   .group:hover .pc\:group-hover\:bg-warning {
-    background-color: #28a745;
+    background-color: #fad733;
   }
 
   .group:hover .pc\:group-hover\:bg-danger {
@@ -9657,7 +9657,7 @@ title: 边框颜色
 }
 
 .border-warning {
-  border-color: #28a745;
+  border-color: #fad733;
 }
 
 .border-danger {
@@ -10057,7 +10057,7 @@ title: 边框颜色
 }
 
 .hover\:border-warning:hover {
-  border-color: #28a745;
+  border-color: #fad733;
 }
 
 .hover\:border-danger:hover {
@@ -10464,7 +10464,7 @@ title: 边框颜色
 
 .active\:border-warning.is-active,
 .active\:border-warning:active {
-  border-color: #28a745;
+  border-color: #fad733;
 }
 
 .active\:border-danger.is-active,
@@ -10957,7 +10957,7 @@ title: 边框颜色
 }
 
 .focus\:border-warning:focus {
-  border-color: #28a745;
+  border-color: #fad733;
 }
 
 .focus\:border-danger:focus {
@@ -11364,7 +11364,7 @@ title: 边框颜色
 
 .disabled\:border-warning.is-disabled,
 .disabled\:border-warning:disabled {
-  border-color: #28a745;
+  border-color: #fad733;
 }
 
 .disabled\:border-danger.is-disabled,
@@ -11857,7 +11857,7 @@ title: 边框颜色
 }
 
 .group:hover .group-hover\:border-warning {
-  border-color: #28a745;
+  border-color: #fad733;
 }
 
 .group:hover .group-hover\:border-danger {
@@ -12258,7 +12258,7 @@ title: 边框颜色
   }
 
   .m\:border-warning {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .m\:border-danger {
@@ -12658,7 +12658,7 @@ title: 边框颜色
   }
 
   .m\:hover\:border-warning:hover {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .m\:hover\:border-danger:hover {
@@ -13065,7 +13065,7 @@ title: 边框颜色
 
   .m\:active\:border-warning.is-active,
 .m\:active\:border-warning:active {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .m\:active\:border-danger.is-active,
@@ -13558,7 +13558,7 @@ title: 边框颜色
   }
 
   .m\:focus\:border-warning:focus {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .m\:focus\:border-danger:focus {
@@ -13965,7 +13965,7 @@ title: 边框颜色
 
   .m\:disabled\:border-warning.is-disabled,
 .m\:disabled\:border-warning:disabled {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .m\:disabled\:border-danger.is-disabled,
@@ -14458,7 +14458,7 @@ title: 边框颜色
   }
 
   .group:hover .m\:group-hover\:border-warning {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .group:hover .m\:group-hover\:border-danger {
@@ -14859,7 +14859,7 @@ title: 边框颜色
   }
 
   .pc\:border-warning {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .pc\:border-danger {
@@ -15259,7 +15259,7 @@ title: 边框颜色
   }
 
   .pc\:hover\:border-warning:hover {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .pc\:hover\:border-danger:hover {
@@ -15666,7 +15666,7 @@ title: 边框颜色
 
   .pc\:active\:border-warning.is-active,
 .pc\:active\:border-warning:active {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .pc\:active\:border-danger.is-active,
@@ -16159,7 +16159,7 @@ title: 边框颜色
   }
 
   .pc\:focus\:border-warning:focus {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .pc\:focus\:border-danger:focus {
@@ -16566,7 +16566,7 @@ title: 边框颜色
 
   .pc\:disabled\:border-warning.is-disabled,
 .pc\:disabled\:border-warning:disabled {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .pc\:disabled\:border-danger.is-disabled,
@@ -17059,7 +17059,7 @@ title: 边框颜色
   }
 
   .group:hover .pc\:group-hover\:border-warning {
-    border-color: #28a745;
+    border-color: #fad733;
   }
 
   .group:hover .pc\:group-hover\:border-danger {
@@ -48965,6 +48965,31 @@ title: Height
 /*!markdown
 
 ---
+title: Font Family
+---
+
+| Class       | Properties               |
+| ----------- | ------------------------ |
+| font-sans | ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' |
+| font-serif | font-family: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif |
+| font-mono | font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace |
+
+*/
+.font-sans {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.font-serif {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/*!markdown
+
+---
 title: Font Size
 ---
 
@@ -49707,7 +49732,7 @@ title: Text Color
 | text-secondary | color: #6c757d |
 | text-success | color: #28a745 |
 | text-info | color: #17a2b8 |
-| text-warning | color: #28a745 |
+| text-warning | color: #fad733 |
 | text-danger | color: #dc3545 |
 | text-light | color: #f8f9fa |
 | text-dark | color: #343a40 |
@@ -49838,7 +49863,7 @@ title: Text Color
 }
 
 .text-warning {
-  color: #28a745;
+  color: #fad733;
 }
 
 .text-danger {
@@ -50246,7 +50271,7 @@ title: Text Color
 }
 
 .hover\:text-warning:hover {
-  color: #28a745;
+  color: #fad733;
 }
 
 .hover\:text-danger:hover {
@@ -50661,7 +50686,7 @@ title: Text Color
 
 .active\:text-warning.is-active,
 .active\:text-warning:active {
-  color: #28a745;
+  color: #fad733;
 }
 
 .active\:text-danger.is-active,
@@ -51162,7 +51187,7 @@ title: Text Color
 }
 
 .focus\:text-warning:focus {
-  color: #28a745;
+  color: #fad733;
 }
 
 .focus\:text-danger:focus {
@@ -51577,7 +51602,7 @@ title: Text Color
 
 .disabled\:text-warning.is-disabled,
 .disabled\:text-warning:disabled {
-  color: #28a745;
+  color: #fad733;
 }
 
 .disabled\:text-danger.is-disabled,
@@ -52078,7 +52103,7 @@ title: Text Color
 }
 
 .group:hover .group-hover\:text-warning {
-  color: #28a745;
+  color: #fad733;
 }
 
 .group:hover .group-hover\:text-danger {
@@ -52487,7 +52512,7 @@ title: Text Color
   }
 
   .m\:text-warning {
-    color: #28a745;
+    color: #fad733;
   }
 
   .m\:text-danger {
@@ -52895,7 +52920,7 @@ title: Text Color
   }
 
   .m\:hover\:text-warning:hover {
-    color: #28a745;
+    color: #fad733;
   }
 
   .m\:hover\:text-danger:hover {
@@ -53310,7 +53335,7 @@ title: Text Color
 
   .m\:active\:text-warning.is-active,
 .m\:active\:text-warning:active {
-    color: #28a745;
+    color: #fad733;
   }
 
   .m\:active\:text-danger.is-active,
@@ -53811,7 +53836,7 @@ title: Text Color
   }
 
   .m\:focus\:text-warning:focus {
-    color: #28a745;
+    color: #fad733;
   }
 
   .m\:focus\:text-danger:focus {
@@ -54226,7 +54251,7 @@ title: Text Color
 
   .m\:disabled\:text-warning.is-disabled,
 .m\:disabled\:text-warning:disabled {
-    color: #28a745;
+    color: #fad733;
   }
 
   .m\:disabled\:text-danger.is-disabled,
@@ -54727,7 +54752,7 @@ title: Text Color
   }
 
   .group:hover .m\:group-hover\:text-warning {
-    color: #28a745;
+    color: #fad733;
   }
 
   .group:hover .m\:group-hover\:text-danger {
@@ -55136,7 +55161,7 @@ title: Text Color
   }
 
   .pc\:text-warning {
-    color: #28a745;
+    color: #fad733;
   }
 
   .pc\:text-danger {
@@ -55544,7 +55569,7 @@ title: Text Color
   }
 
   .pc\:hover\:text-warning:hover {
-    color: #28a745;
+    color: #fad733;
   }
 
   .pc\:hover\:text-danger:hover {
@@ -55959,7 +55984,7 @@ title: Text Color
 
   .pc\:active\:text-warning.is-active,
 .pc\:active\:text-warning:active {
-    color: #28a745;
+    color: #fad733;
   }
 
   .pc\:active\:text-danger.is-active,
@@ -56460,7 +56485,7 @@ title: Text Color
   }
 
   .pc\:focus\:text-warning:focus {
-    color: #28a745;
+    color: #fad733;
   }
 
   .pc\:focus\:text-danger:focus {
@@ -56875,7 +56900,7 @@ title: Text Color
 
   .pc\:disabled\:text-warning.is-disabled,
 .pc\:disabled\:text-warning:disabled {
-    color: #28a745;
+    color: #fad733;
   }
 
   .pc\:disabled\:text-danger.is-disabled,
@@ -57376,7 +57401,7 @@ title: Text Color
   }
 
   .group:hover .pc\:group-hover\:text-warning {
-    color: #28a745;
+    color: #fad733;
   }
 
   .group:hover .pc\:group-hover\:text-danger {
