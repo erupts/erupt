@@ -43,15 +43,15 @@ public class HyperModelUpdateVo extends BaseModel {
     private Date createTime;
 
     @EruptField(
-            views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "更新时间", sortable = true),
+            edit = @Edit(title = "更新时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date updateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @EruptField(
-            views = @View(title = "创建人", width = "100px", column = "name"),
-            edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
+            views = @View(title = "更新人", width = "100px", column = "name"),
+            edit = @Edit(title = "更新人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     private EruptUserVo updateUser;
 
