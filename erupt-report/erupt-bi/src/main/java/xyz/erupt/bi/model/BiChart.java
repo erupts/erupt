@@ -10,7 +10,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
-import xyz.erupt.upms.helper.HyperModelVo;
+import xyz.erupt.upms.helper.HyperModelUpdateVo;
 
 import javax.persistence.*;
 
@@ -24,7 +24,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @EruptI18n
-public class BiChart extends HyperModelVo {
+public class BiChart extends HyperModelUpdateVo {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),

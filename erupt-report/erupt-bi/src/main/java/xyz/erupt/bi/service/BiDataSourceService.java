@@ -31,6 +31,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
     @Resource
     private I18NTranslateService i18NTranslateService;
 
+    @SneakyThrows
     public NamedParameterJdbcTemplate getJdbcTemplate(BiDataSource biDataSource) {
         if (null == biDataSource) {
             return namedParameterJdbcTemplate;
@@ -49,6 +50,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
                     hikariDataSource.setPassword(biDataSource.getPassword());
                     hikariDataSource.setUsername(biDataSource.getUserName());
                     Properties properties = new Properties();
+                    properties.load(new ByteArrayInputStream(biDataSource.getPoolConfig().getBytes()));
                     hikariDataSource.setDataSourceProperties(properties);
                     NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(hikariDataSource);
                     templateMap.put(biDataSource.getCode(), namedParameterJdbcTemplate);

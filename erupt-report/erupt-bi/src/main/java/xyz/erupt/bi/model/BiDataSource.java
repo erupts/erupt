@@ -19,7 +19,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.service.BiDataSourceService;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.upms.helper.HyperModelUpdateVo;
 
 import javax.persistence.*;
 import java.util.List;
@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @EruptI18n
-public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
+public class BiDataSource extends HyperModelUpdateVo implements ChoiceFetchHandler {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),
@@ -63,7 +63,7 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
 
     @EruptField(
             views = @View(title = "用户名", sortable = true),
-            edit = @Edit(title = "用户名", notNull = true)
+            edit = @Edit(title = "用户名")
     )
     private String userName;
 
@@ -97,7 +97,7 @@ public class BiDataSource extends HyperModel implements ChoiceFetchHandler {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            edit = @Edit(title = "连接池配置", desc = "key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
+            edit = @Edit(title = "连接池配置", desc = "参考hikari", placeHolder = "key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
     )
     private String poolConfig;
 

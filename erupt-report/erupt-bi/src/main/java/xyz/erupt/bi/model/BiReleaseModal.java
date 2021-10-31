@@ -14,7 +14,7 @@ import xyz.erupt.upms.model.EruptMenu;
  * @author YuePeng
  * date 2021/7/17 23:04
  */
-@Erupt(name = "弹窗")
+@Erupt(name = "报表发布弹窗")
 @Getter
 @EruptI18n
 public class BiReleaseModal extends BaseModel {
