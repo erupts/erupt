@@ -10,3 +10,9 @@ window.eruptSiteConfig = {
     registerPage: null,
     amapKey: null
 };
+
+window.eruptI18n = {
+    "en-US": {
+        "接口配置": "Api Config"
+    }
+}

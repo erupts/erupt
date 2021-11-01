@@ -19,8 +19,10 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.RegexConst;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptUserService;
@@ -185,12 +187,16 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     private Boolean isAdmin;
 
     @Transient
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Resource
+    private EruptDao eruptDao;
 
     @Transient
     @Resource
     private EruptUserService eruptUserService;
+
+    @Transient
+    @Resource
+    private I18NTranslateService i18NTranslateService;
 
     public EruptUser() {
     }
@@ -213,21 +219,21 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
                 eruptUser.setPassword(MD5Util.digest(eruptUser.getPasswordA()));
             }
         } else {
-            throw new EruptWebApiRuntimeException("两次密码输入不一致");
+            throw new EruptWebApiRuntimeException(i18NTranslateService.translate("两次密码输入不一致"));
         }
     }
 
     @Override
     public void beforeUpdate(EruptUser eruptUser) {
-        entityManager.clear();
-        EruptUser eu = entityManager.find(EruptUser.class, eruptUser.getId());
+        eruptDao.getEntityManager().clear();
+        EruptUser eu = eruptDao.getEntityManager().find(EruptUser.class, eruptUser.getId());
         if (!eruptUser.getIsMd5() && eu.getIsMd5()) {
-            throw new EruptWebApiRuntimeException("MD5 不可逆");
+            throw new EruptWebApiRuntimeException(i18NTranslateService.translate("MD5不可逆", "MD5 irreversible"));
         }
         this.checkPostOrg(eruptUser);
         if (StringUtils.isNotBlank(eruptUser.getPasswordA())) {
             if (!eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
-                throw new EruptWebApiRuntimeException("两次密码输入不一致");
+                throw new EruptWebApiRuntimeException(i18NTranslateService.translate("两次密码输入不一致"));
             }
             if (eruptUser.getIsMd5()) {
                 eruptUser.setPassword(MD5Util.digest(eruptUser.getPasswordA()));

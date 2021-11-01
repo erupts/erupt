@@ -12,12 +12,12 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.8.5</version>
+        <version>1.9.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
-        <magic-api.version>1.4.3</magic-api.version>
+        <magic-api.version>1.6.3</magic-api.version>
     </properties>
 
     <dependencies>
@@ -31,6 +31,10 @@
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
         </dependency>
         <dependency>
             <groupId>org.ssssssss</groupId>

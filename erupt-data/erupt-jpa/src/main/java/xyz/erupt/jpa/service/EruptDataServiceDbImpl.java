@@ -11,6 +11,7 @@ import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.core.service.IEruptDataService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
@@ -49,6 +50,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
 
     @Resource
     private JpaSupport jpaSupport;
+
+    @Resource
+    private I18NTranslateService i18NTranslateService;
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
@@ -96,7 +100,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
             if (e.getMessage().contains("ConstraintViolationException")) {
                 throw new EruptWebApiRuntimeException(gcRepeatHint(eruptModel));
             } else if (e.getMessage().contains("DataException")) {
-                throw new EruptWebApiRuntimeException("内容超出数据库限制长度！");
+                throw new EruptWebApiRuntimeException(i18NTranslateService.translate("内容超出数据库限制长度"));
             } else {
                 throw new EruptWebApiRuntimeException(e.getMessage());
             }
@@ -112,7 +116,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
             eruptJpaDao.removeEntity(eruptModel.getClazz(), object);
         } catch (DataIntegrityViolationException | ConstraintViolationException e) {
             e.printStackTrace();
-            throw new EruptWebApiRuntimeException("删除失败，可能存在关联数据，无法直接删除！");
+            throw new EruptWebApiRuntimeException(i18NTranslateService.translate("删除失败，可能存在关联数据，无法直接删除"));
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException(e.getMessage());
         }
@@ -148,9 +152,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 }
             }
         }
-        String repeatTxt = "数据重复";
+        String repeatTxt = i18NTranslateService.translate("数据重复");
         if (StringUtils.isNotBlank(str)) {
-            return str.substring(0, str.length() - 1) + repeatTxt;
+            return str.substring(0, str.length() - 1) + " " + repeatTxt;
         } else {
             return repeatTxt;
         }
