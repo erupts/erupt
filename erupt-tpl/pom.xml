@@ -43,6 +43,12 @@
             <version>3.6.1.RELEASE</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>enjoy</artifactId>
+            <version>4.9.16</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>
