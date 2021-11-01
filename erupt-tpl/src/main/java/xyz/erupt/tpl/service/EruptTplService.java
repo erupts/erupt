@@ -49,7 +49,8 @@ public class EruptTplService implements ApplicationRunner {
             FreemarkerEngine.class,
             ThymeleafEngine.class,
             VelocityTplEngine.class,
-            BeetlEngine.class
+            BeetlEngine.class,
+            EnjoyEngine.class
     };
 
     static {
