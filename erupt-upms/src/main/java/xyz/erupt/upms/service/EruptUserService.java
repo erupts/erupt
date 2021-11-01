@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import xyz.erupt.core.config.EruptAppProp;
-import xyz.erupt.core.config.EruptProp;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.prop.EruptAppProp;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.MD5Util;
@@ -25,8 +25,6 @@ import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.util.IpUtil;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -38,9 +36,6 @@ import java.util.*;
  */
 @Service
 public class EruptUserService {
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Resource
     private EruptSessionService sessionService;
@@ -181,7 +176,7 @@ public class EruptUserService {
         loginLog.setRegion(IpUtil.getCityInfo(loginLog.getIp()));
         loginLog.setBrowser(userAgent.getBrowser().getName() + " " + (userAgent.getBrowserVersion() == null ? "" : userAgent.getBrowserVersion().getMajorVersion()));
         loginLog.setDeviceType(userAgent.getOperatingSystem().getDeviceType().getName());
-        entityManager.persist(loginLog);
+        eruptDao.getEntityManager().persist(loginLog);
     }
 
     @Transactional
@@ -203,7 +198,7 @@ public class EruptUserService {
                 return EruptApiModel.errorNoInterceptApi("修改失败，新密码不能和原始密码一样");
             }
             eruptUser.setPassword(newPwd);
-            entityManager.merge(eruptUser);
+            eruptDao.getEntityManager().merge(eruptUser);
             return EruptApiModel.successApi();
         } else {
             return EruptApiModel.errorNoInterceptApi("密码错误");
@@ -235,7 +230,7 @@ public class EruptUserService {
     //获取当前登录用户对象
     public EruptUser getCurrentEruptUser() {
         Long uid = this.getCurrentUid();
-        return null == uid ? null : entityManager.find(EruptUser.class, uid);
+        return null == uid ? null : eruptDao.getEntityManager().find(EruptUser.class, uid);
     }
 
 }

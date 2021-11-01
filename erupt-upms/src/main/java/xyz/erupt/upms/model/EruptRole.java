@@ -89,19 +89,6 @@ public class EruptRole extends BaseModel implements FilterHandler {
     )
     private Set<EruptMenu> menus;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "e_upms_user_role",
-            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    @EruptField(
-            views = @View(title = "包含用户"),
-            edit = @Edit(
-                    title = "包含用户",
-                    type = EditType.TAB_TABLE_REFER
-            )
-    )
-    private Set<EruptUser> users;
-
     @Transient
     @Resource
     private EruptUserService eruptUserService;

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
@@ -11,8 +12,6 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,8 +22,8 @@ import java.util.stream.Collectors;
 @Service
 public class EruptMenuService implements DataProxy<EruptMenu> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Resource
+    private EruptDao eruptDao;
 
     @Resource
     private EruptUserService eruptUserService;
@@ -45,7 +44,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     public List<EruptMenu> getUserAllMenu(EruptUser eruptUser) {
         List<EruptMenu> menus;
         if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
-            menus = entityManager.createQuery("from EruptMenu order by sort", EruptMenu.class).getResultList();
+            menus = eruptDao.getEntityManager().createQuery("from EruptMenu order by sort", EruptMenu.class).getResultList();
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
             eruptUser.getRoles().stream().filter(EruptRole::getStatus).map(EruptRole::getMenus).forEach(menuSet::addAll);
@@ -56,7 +55,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void addBehavior(EruptMenu eruptMenu) {
-        Integer obj = (Integer) entityManager
+        Integer obj = (Integer) eruptDao.getEntityManager()
                 .createQuery("select max(sort) from " + EruptMenu.class.getSimpleName())
                 .getSingleResult();
         Optional.ofNullable(obj).ifPresent(it -> eruptMenu.setSort(it + 10));
@@ -66,10 +65,10 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
         if (eruptMenu.getCode().contains("/")) {
-            throw new EruptWebApiRuntimeException("菜单编码禁止出现 '/' 字符");
+            throw new EruptWebApiRuntimeException("Menu 'Code' disallows the '/' character");
         }
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
-            throw new EruptWebApiRuntimeException("选择菜单类型时，类型值不能为空");
+            throw new EruptWebApiRuntimeException("When selecting a menu type, the type value cannot be empty");
         }
         eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
     }

@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.service;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -10,17 +11,14 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.core.annotation.EruptDataSource;
-import xyz.erupt.core.config.EruptProp;
-import xyz.erupt.core.config.EruptPropDb;
+import xyz.erupt.core.prop.EruptProp;
+import xyz.erupt.core.prop.EruptPropDb;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -62,9 +60,13 @@ public class EntityManagerService implements ApplicationRunner {
                     factory.setJpaProperties(properties);
                 }
                 {
-                    HikariDataSource hikariDataSource = new HikariDataSource();
-                    hikariDataSource.setDataSource(prop.getDatasource().initializeDataSourceBuilder().build());
-                    factory.setDataSource(hikariDataSource);
+                    HikariConfig hikariConfig = prop.getDatasource().getHikari().toHikariConfig();
+                    Optional.ofNullable(prop.getDatasource().getUrl()).ifPresent(hikariConfig::setJdbcUrl);
+                    Optional.ofNullable(prop.getDatasource().getDriverClassName()).ifPresent(hikariConfig::setDriverClassName);
+                    Optional.ofNullable(prop.getDatasource().getUsername()).ifPresent(hikariConfig::setUsername);
+                    Optional.ofNullable(prop.getDatasource().getPassword()).ifPresent(hikariConfig::setPassword);
+                    Optional.ofNullable(prop.getDatasource().getHikari().getPoolName()).ifPresent(hikariConfig::setPoolName);
+                    factory.setDataSource(new HikariDataSource(hikariConfig));
                     factory.setPackagesToScan(prop.getScanPackages());
                     factory.afterPropertiesSet();
                 }
@@ -76,9 +78,7 @@ public class EntityManagerService implements ApplicationRunner {
 
     public <R> R getEntityManager(Class<?> eruptClass, Function<EntityManager, R> function) {
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
-        if (null == eruptDataSource) {
-            return function.apply(entityManager);
-        }
+        if (null == eruptDataSource) return function.apply(entityManager);
         EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
         try {
             return function.apply(em);

@@ -15,6 +15,7 @@ import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserVo;
@@ -72,6 +73,10 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
     @Transient
     private EruptContextService eruptContextService;
 
+    @Resource
+    @Transient
+    private I18NTranslateService i18NTranslateService;
+
     @Override
     public String beforeFetch(List<Condition> conditions) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
@@ -79,7 +84,7 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
             return null;
         }
         if (null == eruptUser.getEruptOrg()) {
-            throw new EruptWebApiRuntimeException(eruptUser.getName() + " unbounded organization cannot filter data");
+            throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + i18NTranslateService.translate("未绑定的组织无法查看数据"));
         } else {
             return eruptContextService.getContextEruptClass().getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
         }

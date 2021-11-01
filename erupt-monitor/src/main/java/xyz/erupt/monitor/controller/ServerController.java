@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.config.EruptProp;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.monitor.constant.MonitorConstant;
 import xyz.erupt.monitor.vo.Platform;
