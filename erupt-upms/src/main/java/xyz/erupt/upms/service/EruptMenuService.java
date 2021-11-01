@@ -65,10 +65,10 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
         if (eruptMenu.getCode().contains("/")) {
-            throw new EruptWebApiRuntimeException("菜单编码禁止出现 '/' 字符");
+            throw new EruptWebApiRuntimeException("Menu 'Code' disallows the '/' character");
         }
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
-            throw new EruptWebApiRuntimeException("选择菜单类型时，类型值不能为空");
+            throw new EruptWebApiRuntimeException("When selecting a menu type, the type value cannot be empty");
         }
         eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
     }
