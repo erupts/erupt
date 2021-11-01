@@ -11,6 +11,7 @@ import java.util.Map;
  * author: icefairy
  */
 public class EnjoyEngine extends EngineTemplate<Engine> {
+
     @Override
     public Tpl.Engine engine() {
         return Tpl.Engine.Enjoy;
@@ -18,15 +19,14 @@ public class EnjoyEngine extends EngineTemplate<Engine> {
 
     @Override
     public Engine init() {
-        Engine eng=new Engine();
+        Engine eng = new Engine();
         eng.addSharedMethod(StrKit.class);
         eng.setDevMode(true);
-        setEngine(new Engine());
-        return getEngine();
+        return eng;
     }
 
     @Override
     public void render(Engine engine, String filePath, Map<String, Object> bindingMap, Writer out) {
-        engine.getTemplate(filePath).render(bindingMap,out);
+        engine.getTemplate(filePath).render(bindingMap, out);
     }
 }
