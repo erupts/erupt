@@ -1,10 +1,5 @@
 #### 说明
 
-1. 请确认你提交的PR是到 'develop' 分支，否则我会手动修改代码并关闭PR。
-2. 请确认没有更改代码风格（如tab缩进）
-3. 新特性添加请确认注释完备，如有必要，请在src/test/java下添加Junit测试用例
+前往 github 提交PR，否则可能出现提交后不在贡献者列表出现的BUG
 
-### 修改描述(包括说明bug修复或者添加新特性)
-
-1. [bug修复] balabala……
-2. [新特性]  balabala……
+https://github.com/erupts/erupt
