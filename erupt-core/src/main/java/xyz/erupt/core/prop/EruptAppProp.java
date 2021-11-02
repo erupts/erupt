@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "erupt-app")
 public class EruptAppProp {
 
+    public static final String DEFAULT_LANG = "zh-CN";
+
     //登录失败几次出现验证码
     private Integer verifyCodeCount = 2;
 
@@ -22,6 +24,11 @@ public class EruptAppProp {
     private Boolean pwdTransferEncrypt = true;
 
     //多语言配置
-    private String[] locales = {"zh-CN", "en-US"};
+    private String[] locales = {DEFAULT_LANG,
+            "zh-TW",  //繁体中文
+            "en-US",  //英文
+            "ja-JP",  //日文
+            "ko-KR"   //韩文
+    };
 
 }
