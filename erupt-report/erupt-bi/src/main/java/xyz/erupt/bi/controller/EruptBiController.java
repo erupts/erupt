@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.Tpl;
@@ -188,7 +188,7 @@ public class EruptBiController {
                 .decode(conditionStr, StandardCharsets.UTF_8.name()), new TypeToken<Map<String, Object>>() {
         }.getType());
         BiData biData = biService.queryBiData(bi, 1, 100000, condition, true);
-        Workbook wb = new HSSFWorkbook();
+        Workbook wb = new SXSSFWorkbook();
         //基本信息
         Sheet sheet = wb.createSheet(bi.getName());
         sheet.createFreezePane(0, 1, 1, 1);
@@ -229,7 +229,7 @@ public class EruptBiController {
             EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
             biHandler.exportHandler(biClassHandler.getParam(), condition, wb);
         }
-        wb.write(HttpUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLS_FORMAT));
+        wb.write(HttpUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLSX_FORMAT));
     }
 
     @GetMapping(value = "/{code}/custom-chart/{id}", produces = {"text/html;charset=UTF-8"})

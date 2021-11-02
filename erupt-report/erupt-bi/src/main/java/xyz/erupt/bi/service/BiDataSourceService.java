@@ -1,5 +1,6 @@
 package xyz.erupt.bi.service;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import xyz.erupt.core.service.I18NTranslateService;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -49,9 +51,18 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
                     hikariDataSource.setJdbcUrl(biDataSource.getUrl());
                     hikariDataSource.setPassword(biDataSource.getPassword());
                     hikariDataSource.setUsername(biDataSource.getUserName());
-                    Properties properties = new Properties();
-                    properties.load(new ByteArrayInputStream(biDataSource.getPoolConfig().getBytes()));
-                    hikariDataSource.setDataSourceProperties(properties);
+                    if (StringUtils.isNotBlank(biDataSource.getPoolConfig())) {
+                        Properties properties = new Properties();
+                        properties.load(new ByteArrayInputStream(biDataSource.getPoolConfig().getBytes()));
+                        properties.forEach((k, v) -> {
+                            try {
+                                Field field = HikariConfig.class.getDeclaredField(k.toString());
+                                field.setAccessible(true);
+                                field.set(hikariDataSource, v);
+                            } catch (IllegalAccessException | NoSuchFieldException ignored) {
+                            }
+                        });
+                    }
                     NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(hikariDataSource);
                     templateMap.put(biDataSource.getCode(), namedParameterJdbcTemplate);
                     return namedParameterJdbcTemplate;
@@ -65,9 +76,6 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
     @SneakyThrows
     @Override
     public void beforeAdd(BiDataSource biDataSource) {
-        if (StringUtils.isNotBlank(biDataSource.getPoolConfig())) {
-            new Properties().load(new ByteArrayInputStream(biDataSource.getPoolConfig().getBytes()));
-        }
         try {
             Class.forName(biDataSource.getDriver());
         } catch (ClassNotFoundException e) {
