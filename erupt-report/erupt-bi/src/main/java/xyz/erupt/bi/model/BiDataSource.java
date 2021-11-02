@@ -97,7 +97,7 @@ public class BiDataSource extends HyperModelUpdateVo implements ChoiceFetchHandl
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            edit = @Edit(title = "连接池配置", desc = "参考hikari", placeHolder = "key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
+            edit = @Edit(title = "连接池配置", desc = "参考hikari,key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
     )
     private String poolConfig;
 
