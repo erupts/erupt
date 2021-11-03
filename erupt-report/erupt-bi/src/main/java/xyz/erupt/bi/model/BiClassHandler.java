@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.upms.helper.HyperModelCreatorVo;
+import xyz.erupt.upms.helper.HyperModelUpdateVo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +27,7 @@ import javax.persistence.Table;
 @Getter
 @Service
 @EruptI18n
-public class BiClassHandler extends HyperModelCreatorVo {
+public class BiClassHandler extends HyperModelUpdateVo {
 
     @EruptField(
             views = @View(title = "名称", sortable = true),

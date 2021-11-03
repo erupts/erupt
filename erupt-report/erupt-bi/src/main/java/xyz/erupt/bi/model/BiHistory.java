@@ -47,6 +47,11 @@ public class BiHistory extends BaseModel {
     )
     private Date operateTime;
 
+//    @EruptField(
+//            views = @View(title = "操作标识")
+//    )
+//    private String mark;
+
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(

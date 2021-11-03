@@ -15,7 +15,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.service.BiDataInitService;
 import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.upms.helper.HyperModelCreatorVo;
+import xyz.erupt.upms.helper.HyperModelUpdateVo;
 
 import javax.annotation.Resource;
 import javax.persistence.Entity;
@@ -36,7 +36,7 @@ import javax.script.ScriptException;
 @Getter
 @Service
 @EruptI18n
-public class BiFunction extends HyperModelCreatorVo implements DataProxy<BiFunction> {
+public class BiFunction extends HyperModelUpdateVo implements DataProxy<BiFunction> {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),
