@@ -187,7 +187,7 @@ public class EruptBiController {
         Map<String, Object> condition = gson.fromJson(URLDecoder
                 .decode(conditionStr, StandardCharsets.UTF_8.name()), new TypeToken<Map<String, Object>>() {
         }.getType());
-        BiData biData = biService.queryBiData(bi, 1, 100000, condition, true);
+        BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, condition, true);
         Workbook wb = new SXSSFWorkbook();
         //基本信息
         Sheet sheet = wb.createSheet(bi.getName());
