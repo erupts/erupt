@@ -116,13 +116,14 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();
-        try {
-            for (Map<String, Object> map : list) {
-                if (null != map.get("reqParam")) {
-                    map.put("reqParam", gson.toJson(gson.fromJson(map.get("reqParam").toString(), Object.class)));
+        for (Map<String, Object> map : list) {
+            Object reqParam = map.get("reqParam");
+            if (null != reqParam) {
+                try {
+                    map.put("reqParam", gson.toJson(gson.fromJson(reqParam.toString(), Object.class)));
+                } catch (Exception ignore) {
                 }
             }
-        } catch (Exception ignore) {
         }
     }
 }
