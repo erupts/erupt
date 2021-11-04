@@ -1,11 +1,14 @@
 package xyz.erupt.upms.model.log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -18,7 +21,9 @@ import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author YuePeng
@@ -31,11 +36,12 @@ import java.util.Date;
         name = "操作日志",
         power = @Power(add = false, edit = false, viewDetails = false,
                 delete = false, powerHandler = AdminPower.class),
-        orderBy = "createTime desc"
+        orderBy = "createTime desc",
+        dataProxy = EruptOperateLog.class
 )
 @Getter
 @Setter
-public class EruptOperateLog extends BaseModel {
+public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperateLog> {
 
     @ManyToOne
     @EruptField(
@@ -105,4 +111,18 @@ public class EruptOperateLog extends BaseModel {
     )
     private String reqMethod;
 
+    @Override
+    public void afterFetch(Collection<Map<String, Object>> list) {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
+        try {
+            for (Map<String, Object> map : list) {
+                if (null != map.get("reqParam")) {
+                    map.put("reqParam", gson.toJson(gson.fromJson(map.get("reqParam").toString(), Object.class)));
+                }
+            }
+        } catch (Exception ignore) {
+        }
+    }
 }
