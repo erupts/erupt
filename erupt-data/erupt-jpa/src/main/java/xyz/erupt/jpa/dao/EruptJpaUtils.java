@@ -1,18 +1,6 @@
 package xyz.erupt.jpa.dao;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-
 import org.apache.commons.lang3.StringUtils;
-
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -22,6 +10,12 @@ import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author YuePeng date 2018-11-05.
@@ -56,7 +50,7 @@ public class EruptJpaUtils {
                     cols.add(eruptNameSymbol + field.getFieldName() + AS + field.getFieldName());
                 } else {
                     cols.add(eruptNameSymbol + field.getFieldName() + "." + view.column() + AS + field.getFieldName() + "_"
-                            + view.column().replace(".", "_"));                
+                            + view.column().replace(".", "_"));
                 }
             }
         });
@@ -88,28 +82,22 @@ public class EruptJpaUtils {
         StringBuffer hql = new StringBuffer();
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-
                 EruptFieldModel model = eruptModel.getEruptFieldMap().get(field.getName());
-                if (model != null && model.getEruptField().views() != null) {
+                if (model != null) {
+                    Set<String> pathSet = new HashSet<>();
                     View[] views = model.getEruptField().views();
-                    Set<String> pathSet = new HashSet<String>();
                     for (View v : views) {
                         String columnPath = v.column();
-                        if (columnPath.length() != 0 && columnPath.contains(".")) {
-                            String path = eruptModel.getEruptName() + "." + field.getName() + "."
-                                    + columnPath.substring(0, columnPath.lastIndexOf("."));
+                        if (columnPath.contains(".")) {
+                            String path = eruptModel.getEruptName() + "." + field.getName() + "." + columnPath.substring(0, columnPath.lastIndexOf("."));
                             if (!pathSet.contains(path)) {
-                                hql.append(LEFT_JOIN).append(path).append(AS)
-                                        .append(path.substring(path.lastIndexOf(".") + 1));
+                                hql.append(LEFT_JOIN).append(path);
                                 pathSet.add(path);
                             }
-
+                        } else {
+                            hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(".").append(field.getName()).append(AS).append(field.getName());
                         }
                     }
-                    pathSet.clear();
-                } else {
-                    hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(".").append(field.getName())
-                            .append(AS).append(field.getName());
                 }
             }
         });
@@ -135,20 +123,20 @@ public class EruptJpaUtils {
                     String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), condition.getKey());
 
                     switch (condition.getExpression()) {
-                    case EQ:
-                        hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(condition.getKey());
-                        break;
-                    case LIKE:
-                        hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(condition.getKey());
-                        break;
-                    case RANGE:
-                        hql.append(EruptJpaUtils.AND).append(_key).append(" between :")
-                                .append(L_VAL_KEY).append(condition.getKey()).append(" and :")
-                                .append(R_VAL_KEY).append(condition.getKey());
-                        break;
-                    case IN:
-                        hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(condition.getKey()).append(")");
-                        break;
+                        case EQ:
+                            hql.append(EruptJpaUtils.AND).append(_key).append("=:").append(condition.getKey());
+                            break;
+                        case LIKE:
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" like :").append(condition.getKey());
+                            break;
+                        case RANGE:
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" between :")
+                                    .append(L_VAL_KEY).append(condition.getKey()).append(" and :")
+                                    .append(R_VAL_KEY).append(condition.getKey());
+                            break;
+                        case IN:
+                            hql.append(EruptJpaUtils.AND).append(_key).append(" in (:").append(condition.getKey()).append(")");
+                            break;
                     }
                 } else {
                     hql.append(EruptJpaUtils.AND).append(condition.getKey()).append("=:").append(condition.getKey());
