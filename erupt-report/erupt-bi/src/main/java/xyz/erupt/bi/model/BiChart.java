@@ -131,7 +131,7 @@ public class BiChart extends HyperModelUpdateVo implements DataProxy<BiChart> {
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "图表SQL"),
-            edit = @Edit(title = "图表SQL", desc = "规则：二维切片，三维切片，维度顺序：X -> Y -> Series",
+            edit = @Edit(title = "图表SQL", desc = "规则：二维切片，三维切块，维度顺序：X -> Y -> Series",
                     type = EditType.CODE_EDITOR, notNull = true, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;

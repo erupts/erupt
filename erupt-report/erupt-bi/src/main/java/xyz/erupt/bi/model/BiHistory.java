@@ -39,7 +39,7 @@ import java.util.Date;
 public class BiHistory extends BaseModel {
 
     @EruptField(
-            views = @View(title = "来源", width = "300"),
+            views = @View(title = "来源"),
             edit = @Edit(title = "来源", search = @Search(vague = true))
     )
     private String mark;
