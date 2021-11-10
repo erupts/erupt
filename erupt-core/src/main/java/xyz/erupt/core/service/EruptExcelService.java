@@ -67,9 +67,12 @@ public class EruptExcelService {
         headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         headFont.setBold(true);
         headStyle.setFont(headFont);
+        int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             for (View view : fieldModel.getEruptField().views()) {
+                cellNum++;
                 if (view.show() && view.export()) {
+                    sheet.setColumnWidth(cellNum, (view.title().length() + 10) * 256);
                     Cell cell = row.createCell(colNum);
                     cell.setCellStyle(headStyle);
                     cell.setCellValue(view.title());
