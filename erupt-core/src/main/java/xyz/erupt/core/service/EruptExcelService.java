@@ -14,6 +14,7 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
@@ -87,13 +88,23 @@ public class EruptExcelService {
                         cell.setCellStyle(style);
                         Object val;
                         if (StringUtils.isNotBlank(view.column())) {
-                            val = map.get(fieldModel.getFieldName() + "_" + view.column());
+                            val = map.get(fieldModel.getFieldName() + "_" + view.column().replace(".", "_"));
                         } else {
                             val = map.get(fieldModel.getFieldName());
                         }
-                        if (null != val) {
-                            cell.setCellValue(val.toString());
-                        }
+                        Edit edit = fieldModel.getEruptField().edit();
+                        Optional.ofNullable(val).ifPresent(it -> {
+                            String str = it.toString();
+                            if (edit.type() == EditType.BOOLEAN || view.type() == ViewType.BOOLEAN) {
+                                if (Boolean.parseBoolean(str)) {
+                                    cell.setCellValue(edit.boolType().trueText());
+                                } else {
+                                    cell.setCellValue(edit.boolType().falseText());
+                                }
+                            } else {
+                                cell.setCellValue(str);
+                            }
+                        });
                         dataColNum++;
                     }
                 }
