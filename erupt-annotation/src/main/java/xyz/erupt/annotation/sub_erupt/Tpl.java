@@ -37,7 +37,9 @@ public @interface Tpl {
         @Comment("Velocity")
         Velocity,
         @Comment("Beetl")
-        Beetl
+        Beetl,
+        @Comment(("JFinalEnjoy"))
+        Enjoy
     }
 
     interface TplHandler {
