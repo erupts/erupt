@@ -3,16 +3,23 @@ package xyz.erupt.bi.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
+import xyz.erupt.upms.model.EruptUserVo;
+import xyz.erupt.upms.service.EruptUserService;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author YuePeng
@@ -20,11 +27,12 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "e_bi_chart", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
-@Erupt(name = "图表配置", orderBy = "sort")
+@Erupt(name = "图表配置", orderBy = "sort", dataProxy = BiChart.class)
 @Getter
 @Setter
 @EruptI18n
-public class BiChart extends HyperModelUpdateVo {
+@Component
+public class BiChart extends HyperModelUpdateVo implements DataProxy<BiChart> {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),
@@ -40,7 +48,7 @@ public class BiChart extends HyperModelUpdateVo {
 
     @EruptField(
             views = @View(title = "栅格数"),
-            edit = @Edit(title = "栅格数", type = EditType.SLIDER, desc = "单行可以显示的图表数量", notNull = true,
+            edit = @Edit(title = "栅格数", search = @Search(vague = true), type = EditType.SLIDER, desc = "单行可以显示的图表数量", notNull = true,
                     sliderType = @SliderType(max = 12, markPoints = {1, 2, 3, 4, 6, 8, 12}, dots = true))
     )
     private Integer grid = 1;
@@ -80,8 +88,9 @@ public class BiChart extends HyperModelUpdateVo {
      */
     @EruptField(
             views = @View(title = "图表类型"),
-            edit = @Edit(title = "图表类型", notNull = true, desc = "图表参考：G2Plot", type = EditType.CHOICE,
-                    search = @Search,
+            edit = @Edit(title = "图表类型", notNull = true,
+                    desc = "图表参考：G2Plot",
+                    type = EditType.CHOICE,
                     choiceType = @ChoiceType(
                             type = ChoiceType.Type.RADIO,
                             vl = {
@@ -127,7 +136,7 @@ public class BiChart extends HyperModelUpdateVo {
     )
     private String sqlStatement;
 
-    @Column(length = 5000)
+    @Column(length = 4000)
     @EruptField(
             edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照G2Plot",
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
@@ -137,7 +146,30 @@ public class BiChart extends HyperModelUpdateVo {
     @ManyToOne
     private Bi bi;
 
-//    @Autowired
+    @Resource
+    @Transient
+    private EruptDao eruptDao;
+
+    @Resource
+    @Transient
+    private EruptUserService eruptUserService;
+
+    @Override
+    public void beforeUpdate(BiChart biChart) {
+        eruptDao.getEntityManager().clear();
+        BiChart hbc = eruptDao.getEntityManager().find(BiChart.class, biChart.getId());
+        if (!biChart.getSqlStatement().equals(hbc.getSqlStatement())) {
+            BiHistory history = new BiHistory();
+            history.setBi(biChart.getBi());
+            history.setSqlStatement(hbc.getSqlStatement());
+            history.setOperateTime(new Date());
+            history.setMark(biChart.getName());
+            history.setOperateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
+            eruptDao.persistAndFlush(history);
+        }
+    }
+
+    //    @Autowired
 //    @Transient
 //    private EruptDao eruptDao;
 //

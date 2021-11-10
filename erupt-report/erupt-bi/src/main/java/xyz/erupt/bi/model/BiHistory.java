@@ -11,6 +11,8 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
 
@@ -37,20 +39,23 @@ import java.util.Date;
 public class BiHistory extends BaseModel {
 
     @EruptField(
-            views = @View(title = "操作人", column = "name")
+            views = @View(title = "来源", width = "300"),
+            edit = @Edit(title = "来源", search = @Search(vague = true))
+    )
+    private String mark;
+
+    @EruptField(
+            views = @View(title = "操作人", column = "name"),
+            edit = @Edit(title = "操作人", type = EditType.REFERENCE_TREE, search = @Search(vague = true))
     )
     @ManyToOne
     private EruptUserVo operateUser;
 
     @EruptField(
-            views = @View(title = "操作时间", sortable = true)
+            views = @View(title = "操作时间", sortable = true, width = "200"),
+            edit = @Edit(title = "操作时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date operateTime;
-
-//    @EruptField(
-//            views = @View(title = "操作标识")
-//    )
-//    private String mark;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
@@ -59,7 +64,6 @@ public class BiHistory extends BaseModel {
             edit = @Edit(title = "SQL语句", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
-
 
     @ManyToOne
     private Bi bi;
