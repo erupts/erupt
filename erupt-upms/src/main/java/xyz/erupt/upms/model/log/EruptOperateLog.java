@@ -62,7 +62,7 @@ public class EruptOperateLog extends BaseModel {
     )
     private String apiName;
 
-    @Column(length = 5000)
+    @Column(length = 4000)
     @EruptField(
             views = @View(title = "请求参数", type = ViewType.CODE),
             edit = @Edit(title = "请求参数", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
@@ -94,7 +94,7 @@ public class EruptOperateLog extends BaseModel {
     )
     private Date createTime;
 
-    @Column(length = 2083)
+    @Column(length = 4000)
     @EruptField(
             views = @View(title = "请求地址", type = ViewType.HTML)
     )
