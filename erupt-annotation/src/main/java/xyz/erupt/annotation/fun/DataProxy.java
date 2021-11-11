@@ -2,6 +2,7 @@ package xyz.erupt.annotation.fun;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.model.Row;
 import xyz.erupt.annotation.query.Condition;
 
 import java.util.Collection;
@@ -54,6 +55,11 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
 
     @Comment("数据编辑行为，对待编辑的数据做预处理")
     default void editBehavior(MODEL model) {
+    }
+
+    @Comment("自定义行，可实现行计算等能力")
+    default List<Row> extraRow(List<Condition> conditions) {
+        return null;
     }
 
     @Comment("excel导出")

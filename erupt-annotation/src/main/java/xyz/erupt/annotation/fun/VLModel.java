@@ -15,9 +15,13 @@ public class VLModel {
 
     private String label;
 
+    // 额外描述
     private String desc;
 
+    // 是否禁用
     private boolean disable;
+
+//    private String color; //标签颜色
 
     public VLModel(Long value, String label) {
         this.value = value + "";
