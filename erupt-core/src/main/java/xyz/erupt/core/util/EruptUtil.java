@@ -74,7 +74,12 @@ public class EruptUtil {
                         referMap.put(label, ReflectUtil.findFieldChain(label, value));
                         for (View view : eruptField.views()) {
                             //修复表格列无法显示子类属性（例如xxx.yyy.zzz这样的列配置）的缺陷，要配合前端的bug修复。
-                            referMap.put(view.column().replace(".", "_"), ReflectUtil.findFieldChain(view.column(), value));
+                            //修复一对多情况下无法显示子类属性的问题 
+                            String columnKey = view.column().replace(".", "_"); 
+                            Object columnValue = ReflectUtil.findFieldChain(view.column(), value); 
+                            referMap.put(columnKey, columnValue); 
+                            map.put(field.getName() + "_" + columnKey, columnValue); 
+                            
                         }
                         map.put(field.getName(), referMap);
                         break;
