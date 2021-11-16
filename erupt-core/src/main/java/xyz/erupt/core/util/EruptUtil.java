@@ -1,10 +1,28 @@
 package xyz.erupt.core.util;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import lombok.SneakyThrows;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+
+import lombok.SneakyThrows;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.SceneEnum;
 import xyz.erupt.annotation.config.QueryExpression;
@@ -29,14 +47,8 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 /**
- * @author YuePeng
+ * @author YuePeng 
  * date 11/1/18.
  */
 public class EruptUtil {
@@ -56,58 +68,58 @@ public class EruptUtil {
             if (null != value) {
                 EruptField eruptField = fieldModel.getEruptField();
                 switch (eruptField.edit().type()) {
-                    case REFERENCE_TREE:
-                    case REFERENCE_TABLE:
-                        String id;
-                        String label;
-                        if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
-                            ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
-                            id = referenceTreeType.id();
-                            label = referenceTreeType.label();
-                        } else {
-                            ReferenceTableType referenceTableType = eruptField.edit().referenceTableType();
-                            id = referenceTableType.id();
-                            label = referenceTableType.label();
+                case REFERENCE_TREE:
+                case REFERENCE_TABLE:
+                    String id;
+                    String label;
+                    if (eruptField.edit().type() == EditType.REFERENCE_TREE) {
+                        ReferenceTreeType referenceTreeType = eruptField.edit().referenceTreeType();
+                        id = referenceTreeType.id();
+                        label = referenceTreeType.label();
+                    } else {
+                        ReferenceTableType referenceTableType = eruptField.edit().referenceTableType();
+                        id = referenceTableType.id();
+                        label = referenceTableType.label();
+                    }
+                    Map<String, Object> referMap = new HashMap<>();
+                    referMap.put(id, ReflectUtil.findFieldChain(id, value));
+                    referMap.put(label, ReflectUtil.findFieldChain(label, value));
+                    for (View view : eruptField.views()) {
+                        //修复表格列无法显示子类属性（例如xxx.yyy.zzz这样的列配置）的缺陷，要配合前端的bug修复。
+                        referMap.put(view.column(), ReflectUtil.findFieldChain(view.column(), value));
+                    }
+                    map.put(field.getName(), referMap);
+                    break;
+                case COMBINE:
+                    map.put(field.getName(), generateEruptDataMap(EruptCoreService.getErupt(fieldModel.getFieldReturnName()), value));
+                    break;
+                case CHECKBOX:
+                case TAB_TREE:
+                    EruptModel tabEruptModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
+                    Collection<?> collection = (Collection<?>) value;
+                    if (collection.size() > 0) {
+                        Set<Object> idSet = new HashSet<>();
+                        Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
+                                tabEruptModel.getErupt().primaryKeyCol());
+                        for (Object o : collection) {
+                            idSet.add(primaryField.get(o));
                         }
-                        Map<String, Object> referMap = new HashMap<>();
-                        referMap.put(id, ReflectUtil.findFieldChain(id, value));
-                        referMap.put(label, ReflectUtil.findFieldChain(label, value));
-                        for (View view : eruptField.views()) {
-                            //修复表格列无法显示子类属性（例如xxx.yyy.zzz这样的列配置）的缺陷，要配合前端的bug修复。
-                            referMap.put(view.column().replace(".", "_"), ReflectUtil.findFieldChain(view.column(), value));
-                        }
-                        map.put(field.getName(), referMap);
-                        break;
-                    case COMBINE:
-                        map.put(field.getName(), generateEruptDataMap(EruptCoreService.getErupt(fieldModel.getFieldReturnName()), value));
-                        break;
-                    case CHECKBOX:
-                    case TAB_TREE:
-                        EruptModel tabEruptModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
-                        Collection<?> collection = (Collection<?>) value;
-                        if (collection.size() > 0) {
-                            Set<Object> idSet = new HashSet<>();
-                            Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
-                                    tabEruptModel.getErupt().primaryKeyCol());
-                            for (Object o : collection) {
-                                idSet.add(primaryField.get(o));
-                            }
-                            map.put(field.getName(), idSet);
-                        }
-                        break;
-                    case TAB_TABLE_REFER:
-                    case TAB_TABLE_ADD:
-                        EruptModel tabEruptModelRef = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
-                        Collection<?> collectionRef = (Collection<?>) value;
-                        List<Object> list = new ArrayList<>();
-                        for (Object o : collectionRef) {
-                            list.add(generateEruptDataMap(tabEruptModelRef, o));
-                        }
-                        map.put(field.getName(), list);
-                        break;
-                    default:
-                        map.put(field.getName(), value);
-                        break;
+                        map.put(field.getName(), idSet);
+                    }
+                    break;
+                case TAB_TABLE_REFER:
+                case TAB_TABLE_ADD:
+                    EruptModel tabEruptModelRef = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
+                    Collection<?> collectionRef = (Collection<?>) value;
+                    List<Object> list = new ArrayList<>();
+                    for (Object o : collectionRef) {
+                        list.add(generateEruptDataMap(tabEruptModelRef, o));
+                    }
+                    map.put(field.getName(), list);
+                    break;
+                default:
+                    map.put(field.getName(), value);
+                    break;
                 }
             }
         }
@@ -157,25 +169,25 @@ public class EruptUtil {
         String str = obj.toString();
         Edit edit = eruptFieldModel.getEruptField().edit();
         switch (edit.type()) {
-            case DATE:
-                if (Date.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
-                    return DateUtil.getDate(str);
-                } else {
-                    return str;
-                }
-            case REFERENCE_TREE:
-            case REFERENCE_TABLE:
-                String id = null;
-                if (edit.type().equals(EditType.REFERENCE_TREE)) {
-                    id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();
-                } else if (edit.type().equals(EditType.REFERENCE_TABLE)) {
-                    id = edit.referenceTableType().id();
-                }
-                EruptFieldModel efm = EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
-                Map<String, Object> map = (Map<String, Object>) obj;
-                return TypeUtil.typeStrConvertObject(map.get(id), efm.getField().getType());
-            default:
-                return TypeUtil.typeStrConvertObject(str, eruptFieldModel.getField().getType());
+        case DATE:
+            if (Date.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
+                return DateUtil.getDate(str);
+            } else {
+                return str;
+            }
+        case REFERENCE_TREE:
+        case REFERENCE_TABLE:
+            String id = null;
+            if (edit.type().equals(EditType.REFERENCE_TREE)) {
+                id = eruptFieldModel.getEruptField().edit().referenceTreeType().id();
+            } else if (edit.type().equals(EditType.REFERENCE_TABLE)) {
+                id = edit.referenceTableType().id();
+            }
+            EruptFieldModel efm = EruptCoreService.getErupt(eruptFieldModel.getFieldReturnName()).getEruptFieldMap().get(id);
+            Map<String, Object> map = (Map<String, Object>) obj;
+            return TypeUtil.typeStrConvertObject(map.get(id), efm.getField().getType());
+        default:
+            return TypeUtil.typeStrConvertObject(str, eruptFieldModel.getField().getType());
         }
     }
 
@@ -261,22 +273,22 @@ public class EruptUtil {
                 }
                 //数据类型校验
                 switch (edit.type()) {
-                    case NUMBER:
-                    case SLIDER:
-                        if (!NumberUtils.isCreatable(value.getAsString())) {
-                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必须为数值");
-                        }
-                        break;
-                    case INPUT:
-                        if (!AnnotationConst.EMPTY_STR.equals(edit.inputType().regex())) {
-                            String content = value.getAsString();
-                            if (StringUtils.isNotBlank(content)) {
-                                if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "格式不正确");
-                                }
+                case NUMBER:
+                case SLIDER:
+                    if (!NumberUtils.isCreatable(value.getAsString())) {
+                        return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必须为数值");
+                    }
+                    break;
+                case INPUT:
+                    if (!AnnotationConst.EMPTY_STR.equals(edit.inputType().regex())) {
+                        String content = value.getAsString();
+                        if (StringUtils.isNotBlank(content)) {
+                            if (!Pattern.matches(edit.inputType().regex(), content)) {
+                                return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "格式不正确");
                             }
                         }
-                        break;
+                    }
+                    break;
 
                 }
             }
