@@ -47,7 +47,9 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
             menus = eruptDao.getEntityManager().createQuery("from EruptMenu order by sort", EruptMenu.class).getResultList();
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
-            eruptUser.getRoles().stream().filter(EruptRole::getStatus).map(EruptRole::getMenus).forEach(menuSet::addAll);
+            eruptUser.getRoles().stream().filter(EruptRole::getStatus)
+//                    .sorted(Comparator.comparing(EruptRole::getPowerOff, Comparator.nullsFirst(StringUtils::isNotBlank)))
+                    .map(EruptRole::getMenus).forEach(menuSet::addAll);
             menus = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
         }
         return menus;
