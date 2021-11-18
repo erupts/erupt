@@ -48,7 +48,6 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
     default void afterFetch(@Comment("查询结果") Collection<Map<String, Object>> list) {
     }
 
-
     @Comment("数据新增行为，可对数据做初始化等操作")
     default void addBehavior(MODEL model) {
     }
@@ -57,18 +56,20 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
     default void editBehavior(MODEL model) {
     }
 
-    @Comment("自定义行，可实现行计算等能力")
-    default List<Row> extraRow(List<Condition> conditions) {
-        return null;
-    }
-
     @Comment("excel导出")
     default void excelExport(@Comment("POI文档对象") Workbook wb) {
     }
 
-    @Comment("excel导入")
     @Deprecated
+    @Comment("excel导入，请使用beforeAdd代替该方法")
     default void excelImport(MODEL model) {
+    }
+
+
+    @Deprecated
+    @Comment("自定义行，可实现行计算等能力")
+    default List<Row> extraRow(List<Condition> conditions) {
+        return null;
     }
 
 }
