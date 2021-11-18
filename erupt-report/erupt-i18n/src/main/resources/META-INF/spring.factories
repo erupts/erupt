@@ -1,1 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=xyz.erupt.i18n.EruptI18nAutoConfiguration
