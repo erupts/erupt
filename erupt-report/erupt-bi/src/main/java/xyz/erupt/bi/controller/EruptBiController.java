@@ -173,20 +173,17 @@ public class EruptBiController {
         return biService.startQuery(chart.getSqlStatement(), chart.getClassHandler(), chart.getDataSource(), query);
     }
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 1)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @RequestMapping("/{code}/excel/{id}")
     public void exportExcel(@PathVariable("id") Long id,
                             @PathVariable("code") String code,
-                            @RequestParam("condition") String conditionStr,
+                            @RequestBody Map<String, Object> condition,
                             HttpServletRequest request,
                             HttpServletResponse response) throws ClassNotFoundException, IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         Bi bi = biService.findBi(id);
         this.verifyBiMenuPermissions(bi, code);
         Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
-        Map<String, Object> condition = gson.fromJson(URLDecoder
-                .decode(conditionStr, StandardCharsets.UTF_8.name()), new TypeToken<Map<String, Object>>() {
-        }.getType());
         BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, condition, true);
         Workbook wb = new SXSSFWorkbook();
         //基本信息
