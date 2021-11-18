@@ -1,8 +1,6 @@
 package xyz.erupt.core.controller;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -34,9 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 对Excel数据的处理
@@ -74,9 +71,9 @@ public class EruptExcelController {
     //导出
     @PostMapping("/export/{erupt}")
     @EruptRecordOperate(value = "导出Excel", dynamicConfig = EruptOperateConfig.class)
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName,
-                           String condition,
+                           @RequestBody List<Condition> conditions,
                            HttpServletRequest request,
                            HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
@@ -87,12 +84,7 @@ public class EruptExcelController {
         TableQueryVo tableQueryVo = new TableQueryVo();
         tableQueryVo.setPageIndex(1);
         tableQueryVo.setDataExport(true);
-        if (null != condition) {
-            List<Condition> conditions = new Gson().fromJson(URLDecoder
-                    .decode(condition, StandardCharsets.UTF_8.name()), new TypeToken<List<Condition>>() {
-            }.getType());
-            tableQueryVo.setCondition(conditions);
-        }
+        Optional.ofNullable(conditions).ifPresent(tableQueryVo::setCondition);
         Page page = eruptService.getEruptData(eruptModel, tableQueryVo, null);
         Workbook wb = dataFileService.exportExcel(eruptModel, page);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
