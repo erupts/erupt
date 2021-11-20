@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.EruptMenu;
@@ -24,9 +25,6 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Resource
     private EruptDao eruptDao;
-
-    @Resource
-    private EruptUserService eruptUserService;
 
     @Resource
     private EruptContextService eruptContextService;
@@ -72,6 +70,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
             throw new EruptWebApiRuntimeException("When selecting a menu type, the type value cannot be empty");
         }
+        EruptUserService eruptUserService = EruptSpringUtil.getBean(EruptUserService.class);
         eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
     }
 
