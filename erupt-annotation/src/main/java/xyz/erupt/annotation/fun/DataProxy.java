@@ -65,7 +65,6 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
     default void excelImport(MODEL model) {
     }
 
-
     @Deprecated
     @Comment("自定义行，可实现行计算等能力")
     default List<Row> extraRow(List<Condition> conditions) {
