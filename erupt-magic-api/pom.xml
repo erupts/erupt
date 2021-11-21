@@ -9,16 +9,13 @@
         url: https://ssssssss.org
     </description>
 
+
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.9.0</version>
+        <version>1.9.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
-    <properties>
-        <magic-api.version>1.6.3</magic-api.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -39,7 +36,7 @@
         <dependency>
             <groupId>org.ssssssss</groupId>
             <artifactId>magic-api-spring-boot-starter</artifactId>
-            <version>${magic-api.version}</version>
+            <version>1.6.4</version>
         </dependency>
     </dependencies>
 

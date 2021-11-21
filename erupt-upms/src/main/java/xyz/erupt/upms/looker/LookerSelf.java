@@ -32,7 +32,6 @@ public class LookerSelf extends HyperModelCreatorVo implements DataProxy<Object>
 
     @Override
     public String beforeFetch(List<Condition> conditions) {
-        conditions.clear();
         if (eruptUserService.getCurrentEruptUser().getIsAdmin()) {
             return null;
         }

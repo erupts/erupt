@@ -57,7 +57,7 @@
   "change-pwd.confirm_password": "确认密码",
   "change-pwd.validate.original_password": "请输入原始密码！",
   "change-pwd.validate.length-sex": "密码至少六位",
-  "change-pwd.validate.height.": "强度：强",
+  "change-pwd.validate.height": "强度：强",
   "change-pwd.validate.middle": "强度：中",
   "change-pwd.validate.low": "强度：太短",
   "change-pwd.validate.text": "请至少输入 6 个字符。请不要使用容易被猜到的密码。",
