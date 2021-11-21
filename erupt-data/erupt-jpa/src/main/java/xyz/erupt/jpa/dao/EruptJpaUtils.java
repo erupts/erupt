@@ -6,7 +6,6 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -19,8 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * @author YuePeng
- * date 2018-11-05.
+ * @author YuePeng date 2018-11-05.
  */
 public class EruptJpaUtils {
 
@@ -65,12 +63,11 @@ public class EruptJpaUtils {
         if (StringUtils.isNotBlank(cols)) {
             hql.append("select ").append(cols).append(" from ")
                     .append(eruptModel.getEruptName()).append(AS).append(eruptModel.getEruptName());
-            ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
-                if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                    hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(".")
-                            .append(field.getName()).append(AS).append(field.getName());
-                }
-            });
+            // 修复view配置多级显示时查询结果不正确的缺陷
+            // 如果view配置了多级显示，则必须手动进行left join 关联，否则会因jpa自动生成的cross join 导致查询结果不完整。
+            // 在这里调用改写的 generateEruptJoinHql 方法
+            hql.append(generateEruptJoinHql(eruptModel));
+
         } else {
             hql.append("from ").append(eruptModel.getEruptName());
         }
@@ -82,20 +79,29 @@ public class EruptJpaUtils {
     }
 
     public static String generateEruptJoinHql(EruptModel eruptModel) {
-        StringBuilder sb = new StringBuilder();
+        StringBuffer hql = new StringBuffer();
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                sb.append(LEFT_JOIN).append(eruptModel.getEruptName()).append('.').append(field.getName()).append(AS).append(field.getName());
-                try {
-                    Object obj = field.get(eruptModel.getClazz());
-                    String join = generateEruptJoinHql(EruptCoreService.getErupt(obj.getClass().getSimpleName()));
-                    sb.append(join);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                EruptFieldModel model = eruptModel.getEruptFieldMap().get(field.getName());
+                if (model != null) {
+                    Set<String> pathSet = new HashSet<>();
+                    View[] views = model.getEruptField().views();
+                    for (View v : views) {
+                        String columnPath = v.column();
+                        if (columnPath.contains(".")) {
+                            String path = eruptModel.getEruptName() + "." + field.getName() + "." + columnPath.substring(0, columnPath.lastIndexOf("."));
+                            if (!pathSet.contains(path)) {
+                                hql.append(LEFT_JOIN).append(path);
+                                pathSet.add(path);
+                            }
+                        } else {
+                            hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(".").append(field.getName()).append(AS).append(field.getName());
+                        }
+                    }
                 }
             }
         });
-        return sb.toString();
+        return hql.toString();
     }
 
     public static String geneEruptHqlCondition(EruptModel eruptModel, List<Condition> conditions, List<String> customCondition) {

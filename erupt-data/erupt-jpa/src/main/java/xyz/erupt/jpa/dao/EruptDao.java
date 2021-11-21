@@ -72,6 +72,11 @@ public class EruptDao {
         entityManager.persist(obj);
     }
 
+    public void persistAndFlush(Object obj) {
+        this.persist(obj);
+        this.flush();
+    }
+
     public EntityManager getEntityManager() {
         return entityManager;
     }
