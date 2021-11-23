@@ -19,9 +19,10 @@ import java.util.Properties;
 @Service
 public class I18NTranslateService {
 
-    private final Map<String, Properties> i18NMapping = new HashMap<>();
     @Resource
     private HttpServletRequest request;
+
+    private final Map<String, Properties> i18NMapping = new HashMap<>();
 
     public void registerI18NMapping(Map<String, Properties> props) {
         i18NMapping.putAll(props);
