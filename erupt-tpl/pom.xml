@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>${erupt.groupId}</groupId>
-            <artifactId>erupt-upms</artifactId>
+            <artifactId>erupt-core</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
