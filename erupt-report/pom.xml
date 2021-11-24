@@ -28,7 +28,7 @@
     -->
     <modules>
         <module>erupt-bi</module>
-        <module>erupt-amis</module>
+        <module>erupt-schema</module>
         <module>erupt-tenant</module>
         <module>erupt-flow</module>
         <module>erupt-rpc</module>

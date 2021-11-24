@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.bi.model.*;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuStatus;
-import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
 import javax.annotation.Resource;
