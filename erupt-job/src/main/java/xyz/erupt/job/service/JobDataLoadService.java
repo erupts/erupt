@@ -8,6 +8,7 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.annotation.EruptHandlerNaming;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -19,7 +20,6 @@ import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.job.model.EruptMail;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuStatus;
-import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.EruptMenu;
 
 import javax.annotation.Resource;
