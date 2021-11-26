@@ -37,6 +37,7 @@ public class SchemaAction {
     @Resource
     private EruptContextService eruptContextService;
 
+
     @TplAction("amis.schema.html")
     public Map<String, Object> render() throws IOException {
         Map<String, Object> result = new HashMap<>();
