@@ -3,6 +3,8 @@ package xyz.erupt.bi.model;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.model.Row;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -12,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,5 +61,10 @@ public class BiDataProxy implements DataProxy<Bi> {
         for (Map<String, Object> map : list) {
             map.put("view", "#/fill/bi/" + map.get("code"));
         }
+    }
+
+    @Override
+    public List<Row> extraRow(List<Condition> conditions) {
+        return DataProxy.super.extraRow(conditions);
     }
 }
