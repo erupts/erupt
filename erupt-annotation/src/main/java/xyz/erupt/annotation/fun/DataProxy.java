@@ -13,7 +13,7 @@ import java.util.Map;
  * @author YuePeng
  * date 2018-10-09.
  */
-public interface DataProxy<@Comment("Erupt类对象") MODEL> {
+public interface DataProxy<@Comment("Erupt类对象") MODEL> extends IEruptProxy {
 
     @Comment("增加前")
     default void beforeAdd(MODEL model) {
@@ -65,7 +65,6 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> {
     default void excelImport(MODEL model) {
     }
 
-    @Deprecated
     @Comment("自定义行，可实现行计算等能力")
     default List<Row> extraRow(List<Condition> conditions) {
         return null;
