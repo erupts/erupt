@@ -17,7 +17,7 @@ public class Column {
 
     private int colspan = 1;
 
-    private String style;
+    private String className;
 
     public Column(String value) {
         this.value = value;
@@ -28,10 +28,10 @@ public class Column {
         this.colspan = colspan;
     }
 
-    public Column(String value, int colspan, String style) {
+    public Column(String value, int colspan, String className) {
         this.value = value;
         this.colspan = colspan;
-        this.style = style;
+        this.className = className;
     }
 
     public Column() {
