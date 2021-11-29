@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 public @interface EruptRouter {
 
     @Comment("根据请求地址'/'进行分隔，定义处于第几个下标为的字符为菜单权限标识字符")
-    int authIndex();
+    int authIndex() default 0;
 
     @Comment("配合authIndex使用，计算后权限下标位置为：skipAuthIndex + authIndex")
     int skipAuthIndex() default 2;
