@@ -17,7 +17,7 @@ public interface OperationHandler<@Comment("行数据类型") Target, @Comment("
      * @return 事件触发成功后需要前端执行的 js 表达式
      */
     @Comment("按钮事件触发类")
-    @Comment("返回值：事件触发成功后需要前端执行的 js 表达式，不许要此参数返回空即可")
+    @Comment("返回值：事件触发成功后需要前端执行的 js 表达式，不需要此参数返回空即可")
     String exec(List<Target> data, EruptObject eruptObject, String[] param);
 
 }

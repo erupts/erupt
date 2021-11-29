@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
+import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.CloneSupport;
 
@@ -31,11 +32,21 @@ public final class EruptModel implements Cloneable {
 
     private List<EruptFieldModel> eruptFieldModels;
 
+    private boolean extraRow = false;
+
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.eruptName = eruptClazz.getSimpleName();
         this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
+
+        DataProxyInvoke.invoke(this, it -> {
+            try {
+                it.getClass().getDeclaredMethod("extraRow", List.class);
+                this.extraRow = true;
+            } catch (NoSuchMethodException ignored) {
+            }
+        });
     }
 
     @Override

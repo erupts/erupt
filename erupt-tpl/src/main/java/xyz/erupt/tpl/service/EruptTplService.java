@@ -12,13 +12,13 @@ import org.springframework.util.Assert;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Tpl;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.tpl.engine.*;
-import xyz.erupt.upms.enums.MenuTypeEnum;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

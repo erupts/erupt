@@ -217,6 +217,8 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
             eruptUser.setCreateTime(new Date());
             if (eruptUser.getIsMd5()) {
                 eruptUser.setPassword(MD5Util.digest(eruptUser.getPasswordA()));
+            } else {
+                eruptUser.setPassword(eruptUser.getPasswordA());
             }
         } else {
             throw new EruptWebApiRuntimeException(i18NTranslateService.translate("两次密码输入不一致"));
