@@ -8,7 +8,10 @@ window.eruptSiteConfig = {
     logoPath: null,
     logoText: "Erupt",
     registerPage: null,
-    amapKey: null
+    amapKey: null,
+    login: function (e) {
+
+    }
 };
 
 window.eruptI18n = {

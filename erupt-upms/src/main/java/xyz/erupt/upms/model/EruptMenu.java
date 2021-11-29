@@ -11,9 +11,9 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.upms.enums.MenuLimitEnum;
 import xyz.erupt.upms.enums.MenuStatus;
-import xyz.erupt.upms.enums.MenuTypeEnum;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptMenuService;
 

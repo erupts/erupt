@@ -13,7 +13,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.9.1</version>
+        <version>1.9.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.ssssssss</groupId>
             <artifactId>magic-api-spring-boot-starter</artifactId>
-            <version>1.6.4</version>
+            <version>1.7.0</version>
         </dependency>
     </dependencies>
 

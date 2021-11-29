@@ -17,6 +17,6 @@ public class Row {
 
     private List<Column> columns;
 
-    private String color;
+    private String className;
 
 }
