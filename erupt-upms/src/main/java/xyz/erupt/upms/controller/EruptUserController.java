@@ -11,7 +11,6 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.prop.EruptAppProp;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
-import xyz.erupt.upms.config.EruptUpmsConfig;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
@@ -19,6 +18,7 @@ import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
+import xyz.erupt.upms.vo.AdminUserinfo;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
@@ -44,9 +44,6 @@ public class EruptUserController {
 
     @Resource
     private EruptAppProp eruptAppProp;
-
-    @Resource
-    private EruptUpmsConfig eruptUpmsConfig;
 
     @Resource
     private EruptContextService eruptContextService;
@@ -86,7 +83,7 @@ public class EruptUserController {
             EruptUser eruptUser = loginModel.getEruptUser();
             loginModel.setToken(RandomStringUtils.random(16, true, true));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
-            sessionService.put(SessionKey.USER_TOKEN + loginModel.getToken(), loginModel.getEruptUser().getId().toString(), eruptUpmsConfig.getExpireTimeByLogin());
+            eruptUserService.putUserInfo(eruptUser, loginModel.getToken());
             Optional.ofNullable(loginProxy).ifPresent(it -> it.loginSuccess(eruptUser, loginModel.getToken()));
             eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
@@ -94,9 +91,18 @@ public class EruptUserController {
         return loginModel;
     }
 
+    //当前登录用户基本信息
+    @GetMapping("/userinfo")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public AdminUserinfo userinfo() {
+        AdminUserinfo adminUserinfo = eruptUserService.getAdminUserInfo();
+        adminUserinfo.setId(null);
+        return adminUserinfo;
+    }
+
     //获取菜单
     @GetMapping("/menu")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public List<EruptMenuVo> getMenu() {
         return sessionService.get(SessionKey.MENU_VIEW + eruptContextService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
         }.getType());
@@ -104,7 +110,7 @@ public class EruptUserController {
 
     //登出
     @PostMapping("/logout")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel logout() {
         String token = eruptContextService.getCurrentToken();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
@@ -118,7 +124,7 @@ public class EruptUserController {
 
     // 修改密码
     @PostMapping("/change-pwd")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, authIndex = 0)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel changePwd(@RequestParam("account") String account,
                                    @RequestParam("pwd") String pwd,
                                    @RequestParam("newPwd") String newPwd,
