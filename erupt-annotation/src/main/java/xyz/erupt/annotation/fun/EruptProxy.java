@@ -6,10 +6,11 @@ import xyz.erupt.annotation.config.Comment;
  * @author YuePeng
  * date 2018-10-09.
  */
-public interface IEruptProxy {
+public interface EruptProxy<MODEL> {
 
     @Comment("Don't call")
-    default void dual() {
+    default EruptProxy<? extends MODEL> dual() {
+        return null;
     }
 
 }
