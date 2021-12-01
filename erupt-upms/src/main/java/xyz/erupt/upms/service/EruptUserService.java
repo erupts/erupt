@@ -23,12 +23,14 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.util.IpUtil;
+import xyz.erupt.upms.vo.AdminUserinfo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -83,6 +85,18 @@ public class EruptUserService {
         sessionService.putMap(SessionKey.MENU_CODE_MAP + token, codeMap, eruptUpmsConfig.getExpireTimeByLogin());
         sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsConfig.getExpireTimeByLogin());
         sessionService.put(SessionKey.ROLE_POWER + token, sb.toString(), eruptUpmsConfig.getExpireTimeByLogin());
+    }
+
+    public void putUserInfo(EruptUser eruptUser, String token) {
+        AdminUserinfo adminUserinfo = new AdminUserinfo();
+        adminUserinfo.setId(eruptUser.getId());
+        adminUserinfo.setSuperAdmin(eruptUser.getIsAdmin());
+        adminUserinfo.setAccount(eruptUser.getAccount());
+        adminUserinfo.setUsername(eruptUser.getName());
+        adminUserinfo.setRoles(eruptUser.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList()));
+        Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> adminUserinfo.setPost(it.getCode()));
+        Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> adminUserinfo.setOrg(it.getCode()));
+        sessionService.put(SessionKey.USER_TOKEN + token, gson.toJson(adminUserinfo), eruptUpmsConfig.getExpireTimeByLogin());
     }
 
     public static LoginProxy findEruptLogin() {
@@ -223,8 +237,14 @@ public class EruptUserService {
 
     //获取当前用户ID
     public Long getCurrentUid() {
-        Object uid = sessionService.get(SessionKey.USER_TOKEN + eruptContextService.getCurrentToken());
-        return null == uid ? null : Long.valueOf(uid.toString());
+        AdminUserinfo adminUserinfo = getAdminUserInfo();
+        return null == adminUserinfo ? null : adminUserinfo.getId();
+    }
+
+    //获取当前登录用户基础信息
+    public AdminUserinfo getAdminUserInfo() {
+        Object info = sessionService.get(SessionKey.USER_TOKEN + eruptContextService.getCurrentToken());
+        return null == info ? null : gson.fromJson(info.toString(), AdminUserinfo.class);
     }
 
     //获取当前登录用户对象
