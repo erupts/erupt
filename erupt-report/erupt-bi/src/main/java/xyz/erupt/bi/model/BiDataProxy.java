@@ -62,9 +62,4 @@ public class BiDataProxy implements DataProxy<Bi> {
             map.put("view", "#/fill/bi/" + map.get("code"));
         }
     }
-
-    @Override
-    public List<Row> extraRow(List<Condition> conditions) {
-        return DataProxy.super.extraRow(conditions);
-    }
 }
