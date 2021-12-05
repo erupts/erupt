@@ -78,8 +78,7 @@ public class EruptFileController {
                 if (attachmentType.fileTypes().length > 0) {
                     String[] fileNameArr = file.getOriginalFilename().split("\\.");
                     String extensionName = fileNameArr[fileNameArr.length - 1];
-                    if (Stream.of(attachmentType.fileTypes()).noneMatch(type ->
-                            fileNameArr[fileNameArr.length - 1].equalsIgnoreCase(type))) {
+                    if (Stream.of(attachmentType.fileTypes()).noneMatch(type -> extensionName.equalsIgnoreCase(type))) {
                         return EruptApiModel.errorApi("上传失败，文件格式不允许为：" + extensionName);
                     }
                 }
