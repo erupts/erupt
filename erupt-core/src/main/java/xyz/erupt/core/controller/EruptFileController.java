@@ -97,21 +97,15 @@ public class EruptFileController {
                         if (bufferedImage == null) {
                             return EruptApiModel.errorApi("获取图片流失败，请确认上传文件为图片");
                         }
-                        if (imageType.width().length > 1 || imageType.height().length > 1) {
-                            int width = bufferedImage.getWidth();
-                            int height = bufferedImage.getHeight();
-                            if (imageType.width().length > 1) {
-                                if (imageType.width()[0] > width || imageType.width()[1] < width) {
-                                    return EruptApiModel.errorApi("上传失败，图片宽度不在["
-                                            + imageType.width()[0] + "," + imageType.width()[1] + "]范围内");
-                                }
-                            }
-                            if (imageType.height().length > 1) {
-                                if (imageType.height()[0] > height || imageType.height()[1] < height) {
-                                    return EruptApiModel.errorApi("上传失败，图片高度不在["
-                                            + imageType.height()[0] + "," + imageType.height()[1] + "]范围内");
-                                }
-                            }
+                        int width = bufferedImage.getWidth();
+                        int height = bufferedImage.getHeight();
+                        if (imageType.minWidth() > width || imageType.maxWidth() < width) {
+                            return EruptApiModel.errorApi("上传失败，图片宽度不在["
+                                    + imageType.minWidth() + "," + imageType.maxWidth() + "]范围内");
+                        }
+                        if (imageType.minHeight() > height || imageType.maxHeight() < height) {
+                            return EruptApiModel.errorApi("上传失败，图片高度不在["
+                                    + imageType.minHeight() + "," + imageType.maxHeight() + "]范围内");
                         }
                         break;
                     case BASE:
