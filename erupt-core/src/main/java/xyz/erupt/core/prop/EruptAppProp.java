@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
+ *
  * @author YuePeng
  * date 2021/1/22 10:11
  */
@@ -24,11 +25,12 @@ public class EruptAppProp {
     private Boolean pwdTransferEncrypt = true;
 
     //多语言配置
-    private String[] locales = {DEFAULT_LANG,
-            "zh-TW",  //繁体中文
-            "en-US",  //英文
-            "ja-JP",  //日文
-            "ko-KR"   //韩文
+    private String[] locales = {
+            DEFAULT_LANG, //简体中文
+            "zh-TW",      //繁体中文
+            "en-US",      //English
+            "ja-JP",      //日本語
+            "ko-KR"       //한국어
     };
 
 }

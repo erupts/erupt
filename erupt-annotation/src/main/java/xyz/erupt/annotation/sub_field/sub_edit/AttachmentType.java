@@ -11,7 +11,7 @@ import java.beans.Transient;
 public @interface AttachmentType {
 
     @Comment("附件大小限制，单位KB")
-    long size() default 0;
+    long size() default -1;
 
     @Comment("定义独享存储空间，便于文件查找")
     String path() default "";
@@ -39,11 +39,19 @@ public @interface AttachmentType {
     }
 
     @interface ImageType {
-        @Comment("宽高使用长度为2的数组，第一位是最小宽高限制，第二位是最大宽高限制")
-        int[] width() default {};
 
-        @Comment("宽高使用长度为2的数组，第一位是最小宽高限制，第二位是最大宽高限制")
-        int[] height() default {};
+        //最小宽度限制
+        int minWidth() default 0;
+
+        //最大宽度限制
+        int maxWidth() default Integer.MAX_VALUE;
+
+        //最小高度限制
+        int minHeight() default 0;
+
+        //最大高度限制
+        int maxHeight() default Integer.MAX_VALUE;
+
     }
 
 }

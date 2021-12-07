@@ -18,7 +18,6 @@ import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -34,6 +33,12 @@ import java.util.Date;
 @PreDataProxy(HyperModelCreatorVo.HyperModelDataProxy.class)
 public class HyperModelCreatorVo extends BaseModel {
 
+    @EruptField(
+            views = @View(title = "创建时间", sortable = true),
+            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+    )
+    private Date createTime;
+
     @ManyToOne
     @EruptField(
             views = @View(title = "创建人", width = "100px", column = "name"),
@@ -41,16 +46,10 @@ public class HyperModelCreatorVo extends BaseModel {
     )
     private EruptUserVo createUser;
 
-    @EruptField(
-            views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
-    )
-    private Date createTime;
-
     @SkipSerialize
     private Date updateTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JsonIgnore
     @SkipSerialize
     private EruptUserVo updateUser;

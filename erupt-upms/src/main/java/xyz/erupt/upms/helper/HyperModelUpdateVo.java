@@ -48,7 +48,7 @@ public class HyperModelUpdateVo extends BaseModel {
     )
     private Date updateTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @EruptField(
             views = @View(title = "更新人", width = "100px", column = "name"),
             edit = @Edit(title = "更新人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
@@ -57,6 +57,7 @@ public class HyperModelUpdateVo extends BaseModel {
 
     @Service
     static class HyperModelDataProxy implements DataProxy<HyperModelUpdateVo> {
+
         @Transient
         @Resource
         private EruptUserService eruptUserService;
@@ -65,8 +66,7 @@ public class HyperModelUpdateVo extends BaseModel {
         public void beforeAdd(HyperModelUpdateVo hyperModel) {
             hyperModel.setCreateTime(new Date());
             hyperModel.setCreateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
-            hyperModel.setUpdateTime(new Date());
-            hyperModel.setUpdateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
+            this.beforeUpdate(hyperModel);
         }
 
         @Override
