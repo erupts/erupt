@@ -30,6 +30,8 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -75,11 +77,11 @@ public class EruptUtil {
                         for (View view : eruptField.views()) {
                             //修复表格列无法显示子类属性（例如xxx.yyy.zzz这样的列配置）的缺陷，要配合前端的bug修复。
                             //修复一对多情况下无法显示子类属性的问题 
-                            String columnKey = view.column().replace(".", "_"); 
-                            Object columnValue = ReflectUtil.findFieldChain(view.column(), value); 
-                            referMap.put(columnKey, columnValue); 
-                            map.put(field.getName() + "_" + columnKey, columnValue); 
-                            
+                            String columnKey = view.column().replace(".", "_");
+                            Object columnValue = ReflectUtil.findFieldChain(view.column(), value);
+                            referMap.put(columnKey, columnValue);
+                            map.put(field.getName() + "_" + columnKey, columnValue);
+
                         }
                         map.put(field.getName(), referMap);
                         break;
@@ -163,7 +165,7 @@ public class EruptUtil {
         Edit edit = eruptFieldModel.getEruptField().edit();
         switch (edit.type()) {
             case DATE:
-                if (Date.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
+                if (isDateField(eruptFieldModel)) {
                     return DateUtil.getDate(str);
                 } else {
                     return str;
@@ -352,6 +354,15 @@ public class EruptUtil {
             return EruptSpringUtil.getBean(eruptAttachmentUpload.value());
         }
         return null;
+    }
+
+    //是否为时间字段
+    public static boolean isDateField(EruptFieldModel eruptFieldModel) {
+        if (Date.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
+            return true;
+        } else if (LocalDate.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
+            return true;
+        } else return LocalDateTime.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName());
     }
 
 }
