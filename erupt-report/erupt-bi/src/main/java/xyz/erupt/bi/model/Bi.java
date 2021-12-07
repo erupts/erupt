@@ -10,11 +10,13 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
+import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.constant.BiConst;
@@ -44,6 +46,7 @@ import java.util.Set;
                 eruptClass = BiReleaseModal.class, operationHandler = Bi.class
         ),
         dataProxy = BiDataProxy.class,
+        linkTree = @LinkTree(field = "biGroup"),
         drills = {
                 @Drill(title = "图表配置", icon = "fa fa-pie-chart"
                         , link = @Link(linkErupt = BiChart.class, joinColumn = "bi.id")),
@@ -69,6 +72,14 @@ public class Bi extends HyperModelUpdateVo implements OperationHandler<Bi, BiRel
     private String name;
 
     @ManyToOne
+    @JoinColumn(name = "bi_group_id")
+    @EruptField(
+            views = @View(title = "组别", column = "name"),
+            edit = @Edit(title = "组别", notNull = true, type = EditType.REFERENCE_TREE)
+    )
+    private BiGroup biGroup;
+
+    @ManyToOne
     @JoinColumn(name = "datasource_id")
     @EruptField(
             views = @View(title = "数据源", column = "name"),
@@ -83,7 +94,7 @@ public class Bi extends HyperModelUpdateVo implements OperationHandler<Bi, BiRel
     private BiClassHandler classHandler;
 
     @EruptField(
-            views = @View(title = "自动刷新周期（秒）", sortable = true),
+            views = @View(title = "自刷周期", sortable = true),
             edit = @Edit(title = "自动刷新周期（秒）")
     )
     private Integer refreshTime;
@@ -91,7 +102,7 @@ public class Bi extends HyperModelUpdateVo implements OperationHandler<Bi, BiRel
 
     @EruptField(
             views = @View(title = "导出", sortable = true),
-            edit = @Edit(title = "导出", search = @Search, notNull = true)
+            edit = @Edit(title = "导出", search = @Search, notNull = true, boolType = @BoolType(trueText = "开启", falseText = "关闭"))
     )
     private Boolean export = true;
 
