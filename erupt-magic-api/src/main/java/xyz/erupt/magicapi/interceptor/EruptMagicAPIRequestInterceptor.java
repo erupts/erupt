@@ -1,5 +1,6 @@
 package xyz.erupt.magicapi.interceptor;
 
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.ssssssss.magicapi.interceptor.Authorization;
@@ -7,6 +8,7 @@ import org.ssssssss.magicapi.interceptor.AuthorizationInterceptor;
 import org.ssssssss.magicapi.interceptor.MagicUser;
 import org.ssssssss.magicapi.interceptor.RequestInterceptor;
 import org.ssssssss.magicapi.model.ApiInfo;
+import org.ssssssss.magicapi.model.Constants;
 import org.ssssssss.magicapi.model.JsonBean;
 import org.ssssssss.magicapi.model.Options;
 import org.ssssssss.script.MagicScriptContext;
@@ -16,6 +18,7 @@ import xyz.erupt.upms.cache.IEruptCache;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.upms.vo.AdminUserinfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,27 +28,27 @@ import java.util.Objects;
  * magic-api UI鉴权、接口鉴权
  */
 @Component
+@AllArgsConstructor
 public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, AuthorizationInterceptor {
 
     private final EruptUserService eruptUserService;
 
     private final EruptContextService eruptContextService;
 
-    public EruptMagicAPIRequestInterceptor(EruptUserService eruptUserService, EruptContextService eruptContextService) {
-        this.eruptUserService = eruptUserService;
-        this.eruptContextService = eruptContextService;
-    }
+    private final HttpServletRequest request;
 
     /**
      * 配置UI界面不需要登录框
      */
     @Override
     public boolean requireLogin() {
+        try {
+            AdminUserinfo adminUserInfo = eruptUserService.getAdminUserInfo();
+            request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER, new MagicUser(adminUserInfo.getAccount(), adminUserInfo.getUsername(), this.eruptContextService.getCurrentToken()));
+        } catch (IllegalStateException ignore) {
+        }
         return false;
     }
-
-
-    private final IEruptCache<EruptUser> eruptUserIEruptCache = new CaffeineEruptCache<>(1000 * 60 * 10);
 
     /**
      * 配置接口权限
@@ -64,13 +67,13 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
             if (!isLogin) {
                 return new JsonBean<Void>(401, "用户未登录");
             } else {
-                EruptUser user = eruptUserIEruptCache.get(eruptContextService.getCurrentToken(), key -> eruptUserService.getCurrentEruptUser());
+                AdminUserinfo adminUserInfo = eruptUserService.getAdminUserInfo();
                 // 权限判断
                 if (StringUtils.isNotBlank(permission) && eruptUserService.getEruptMenuByValue(permission) == null) {
                     return new JsonBean<Void>(403, "用户权限不足");
                 }
                 // 角色判断
-                if (StringUtils.isNotBlank(role) && user.getRoles().stream().noneMatch(it -> role.equals(it.getCode()))) {
+                if (StringUtils.isNotBlank(role) && adminUserInfo.getRoles().stream().noneMatch(role::equals)) {
                     return new JsonBean<Void>(403, "用户权限不足");
                 }
             }
