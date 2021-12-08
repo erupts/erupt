@@ -51,8 +51,6 @@ public class EruptBiController {
     @Resource
     private BiService biService;
 
-    private final Gson gson = GsonFactory.getGson();
-
     @Resource
     private EruptProp eruptProp;
 
@@ -61,6 +59,9 @@ public class EruptBiController {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final Gson gson = GsonFactory.getGson();
+
 
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)

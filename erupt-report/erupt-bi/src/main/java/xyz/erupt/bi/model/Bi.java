@@ -10,7 +10,6 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
-import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -18,8 +17,10 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.constant.BiConst;
+import xyz.erupt.bi.handler.CopyLinkHandler;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuStatus;
@@ -41,12 +42,18 @@ import java.util.Set;
 @Entity
 @Table(name = "e_bi", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "报表配置",
-        rowOperation = @RowOperation(
-                title = "发布", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
-                eruptClass = BiReleaseModal.class, operationHandler = Bi.class
-        ),
+        rowOperation = {
+                @RowOperation(
+                        title = "发布", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
+                        eruptClass = BiReleaseModal.class, operationHandler = Bi.class
+                ),
+                @RowOperation(
+                        tip = "拷贝公开链接", title = "复制链接", mode = RowOperation.Mode.SINGLE, icon = "fa fa-copy",
+                        operationHandler = CopyLinkHandler.class
+                ),
+        },
         dataProxy = BiDataProxy.class,
-        linkTree = @LinkTree(field = "biGroup"),
+//        linkTree = @LinkTree(field = "biGroup"),
         drills = {
                 @Drill(title = "图表配置", icon = "fa fa-pie-chart"
                         , link = @Link(linkErupt = BiChart.class, joinColumn = "bi.id")),
@@ -75,7 +82,8 @@ public class Bi extends HyperModelUpdateVo implements OperationHandler<Bi, BiRel
     @JoinColumn(name = "bi_group_id")
     @EruptField(
             views = @View(title = "组别", column = "name"),
-            edit = @Edit(title = "组别", notNull = true, type = EditType.REFERENCE_TREE)
+            edit = @Edit(title = "组别", notNull = true, type = EditType.REFERENCE_TREE,
+                    referenceTreeType = @ReferenceTreeType(pid = "parent.id"), search = @Search)
     )
     private BiGroup biGroup;
 
@@ -102,7 +110,7 @@ public class Bi extends HyperModelUpdateVo implements OperationHandler<Bi, BiRel
 
     @EruptField(
             views = @View(title = "导出", sortable = true),
-            edit = @Edit(title = "导出", search = @Search, notNull = true, boolType = @BoolType(trueText = "开启", falseText = "关闭"))
+            edit = @Edit(title = "导出", notNull = true, boolType = @BoolType(trueText = "开启", falseText = "关闭"))
     )
     private Boolean export = true;
 

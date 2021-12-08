@@ -52,7 +52,7 @@ public class BiGroup extends HyperModelUpdateVo {
     @Column(length = 5000)
     @EruptField(
             views = @View(title = "备注", sortable = true),
-            edit = @Edit(title = "备注", search = @Search(vague = true))
+            edit = @Edit(title = "备注")
     )
     private String remark;
 
