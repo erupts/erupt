@@ -20,7 +20,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.constant.BiConst;
-import xyz.erupt.bi.handler.CopyLinkHandler;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.MenuStatus;
@@ -47,17 +46,17 @@ import java.util.Set;
                         title = "发布", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
                         eruptClass = BiReleaseModal.class, operationHandler = Bi.class
                 ),
-                @RowOperation(
-                        tip = "拷贝公开链接", title = "复制链接", mode = RowOperation.Mode.SINGLE, icon = "fa fa-copy",
-                        operationHandler = CopyLinkHandler.class
-                ),
+//                @RowOperation(
+//                        tip = "拷贝公开链接", title = "复制链接", mode = RowOperation.Mode.SINGLE, icon = "fa fa-link",
+//                        operationHandler = CopyLinkHandler.class
+//                ),
         },
         dataProxy = BiDataProxy.class,
 //        linkTree = @LinkTree(field = "biGroup"),
         drills = {
                 @Drill(title = "图表配置", icon = "fa fa-pie-chart"
                         , link = @Link(linkErupt = BiChart.class, joinColumn = "bi.id")),
-                @Drill(title = "修改记录", icon = "fa fa-history"
+                @Drill(title = "修改记录", icon = "fa fa-history text-green"
                         , link = @Link(linkErupt = BiHistory.class, joinColumn = "bi.id"))
         })
 @Getter
