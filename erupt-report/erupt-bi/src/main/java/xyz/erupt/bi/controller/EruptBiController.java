@@ -227,7 +227,7 @@ public class EruptBiController {
             EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
             biHandler.exportHandler(biClassHandler.getParam(), condition, wb);
         }
-        wb.write(HttpUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLSX_FORMAT));
+        wb.write(EruptUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLSX_FORMAT));
     }
 
     @GetMapping(value = "/{code}/custom-chart/{id}", produces = {"text/html;charset=UTF-8"})
