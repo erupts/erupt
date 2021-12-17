@@ -20,8 +20,8 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.service.EruptService;
 import xyz.erupt.core.service.I18NTranslateService;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
-import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
@@ -88,7 +88,7 @@ public class EruptExcelController {
         Page page = eruptService.getEruptData(eruptModel, tableQueryVo, null);
         Workbook wb = dataFileService.exportExcel(eruptModel, page);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
-        wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));
+        wb.write(EruptUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));
     }
 
     //导入

@@ -2,6 +2,7 @@ package xyz.erupt.security.interceptor;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
@@ -38,6 +39,7 @@ import java.util.Optional;
  * date 2019-12-05.
  */
 @Service
+@Order
 public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
