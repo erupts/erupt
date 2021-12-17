@@ -19,8 +19,10 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
+import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DateUtil;
-import xyz.erupt.core.util.*;
+import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.ExcelUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
@@ -321,7 +323,7 @@ public class EruptExcelService {
             }
         }
         try {
-            wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_导入模板" + XLS_FORMAT));
+            wb.write(EruptUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_导入模板" + XLS_FORMAT));
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
