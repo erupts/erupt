@@ -13,9 +13,6 @@ import org.ssssssss.magicapi.model.JsonBean;
 import org.ssssssss.magicapi.model.Options;
 import org.ssssssss.script.MagicScriptContext;
 import xyz.erupt.magicapi.service.MagicAPIDataLoadService;
-import xyz.erupt.upms.cache.CaffeineEruptCache;
-import xyz.erupt.upms.cache.IEruptCache;
-import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.vo.AdminUserinfo;
@@ -90,4 +87,5 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         return eruptUserService.getCurrentUid() != null
                 && eruptUserService.getEruptMenuByValue(MagicAPIDataLoadService.MAGIC_API_MENU_PREFIX + authorization.name()) != null;
     }
+
 }
