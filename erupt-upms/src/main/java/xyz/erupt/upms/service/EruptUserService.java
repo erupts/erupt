@@ -241,13 +241,13 @@ public class EruptUserService {
         return null == adminUserinfo ? null : adminUserinfo.getId();
     }
 
-    //获取当前登录用户基础信息
+    //获取当前登录用户基础信息（缓存中查找）
     public AdminUserinfo getAdminUserInfo() {
         Object info = sessionService.get(SessionKey.USER_TOKEN + eruptContextService.getCurrentToken());
         return null == info ? null : gson.fromJson(info.toString(), AdminUserinfo.class);
     }
 
-    //获取当前登录用户对象
+    //获取当前登录用户对象(数据库中查找)
     public EruptUser getCurrentEruptUser() {
         Long uid = this.getCurrentUid();
         return null == uid ? null : eruptDao.getEntityManager().find(EruptUser.class, uid);
