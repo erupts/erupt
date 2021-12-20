@@ -3,18 +3,13 @@ package xyz.erupt.bi.model;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.model.Row;
-import xyz.erupt.annotation.query.Condition;
-import xyz.erupt.upms.model.EruptUserVo;
-import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.core.view.MetaUser;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,8 +19,8 @@ import java.util.Map;
 @Component
 public class BiDataProxy implements DataProxy<Bi> {
 
-    @Resource
-    private EruptUserService eruptUserService;
+//    @Resource
+//    private EruptUserService eruptUserService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -49,7 +44,7 @@ public class BiDataProxy implements DataProxy<Bi> {
                 bh.setSqlStatement(bbi.getSqlStatement());
                 bh.setOperateTime(new Date());
                 bh.setMark("Table");
-                bh.setOperateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
+                bh.setOperateBy(MetaUser.get().getName());
                 entityManager.persist(bh);
                 entityManager.flush();
             }

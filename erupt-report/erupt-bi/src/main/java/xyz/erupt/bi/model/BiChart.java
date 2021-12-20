@@ -13,9 +13,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.helper.HyperModelUpdateVo;
-import xyz.erupt.upms.model.EruptUserVo;
-import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
@@ -32,7 +30,7 @@ import java.util.Date;
 @Setter
 @EruptI18n
 @Component
-public class BiChart extends HyperModelUpdateVo implements DataProxy<BiChart> {
+public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),
@@ -150,10 +148,6 @@ public class BiChart extends HyperModelUpdateVo implements DataProxy<BiChart> {
     @Transient
     private EruptDao eruptDao;
 
-    @Resource
-    @Transient
-    private EruptUserService eruptUserService;
-
     @Override
     public void beforeUpdate(BiChart biChart) {
         eruptDao.getEntityManager().clear();
@@ -164,22 +158,18 @@ public class BiChart extends HyperModelUpdateVo implements DataProxy<BiChart> {
             history.setSqlStatement(hbc.getSqlStatement());
             history.setOperateTime(new Date());
             history.setMark(biChart.getName());
-            history.setOperateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
+            history.setOperateBy("adf");
             eruptDao.persistAndFlush(history);
         }
     }
 
-    //    @Autowired
-//    @Transient
-//    private EruptDao eruptDao;
-//
-//    @Override
-//    public void addBehavior(BiChart biChart) {
-//        BiChart bc = eruptDao.queryEntity(BiChart.class, "bi.id = " + biChart.getBi().getId() + " order by sort desc  limit 1", null);
-//        if (bc == null) {
-//            biChart.setSort(10);
-//        } else {
-//            biChart.setSort(bc.getSort() + 10);
-//        }
-//    }
+    @Override
+    public void addBehavior(BiChart biChart) {
+        BiChart bc = eruptDao.queryEntity(BiChart.class, "bi.id = " + biChart.getBi().getId() + " order by sort desc  limit 1", null);
+        if (bc == null) {
+            biChart.setSort(10);
+        } else {
+            biChart.setSort(bc.getSort() + 10);
+        }
+    }
 }

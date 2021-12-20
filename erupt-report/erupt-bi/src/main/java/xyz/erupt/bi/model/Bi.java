@@ -22,8 +22,8 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.enums.MenuStatus;
-import xyz.erupt.upms.helper.HyperModelUpdateVo;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
@@ -63,7 +63,7 @@ import java.util.Set;
 @Setter
 @Component
 @EruptI18n
-public class Bi extends HyperModelUpdateVo implements OperationHandler<Bi, BiReleaseModal> {
+public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiReleaseModal> {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),

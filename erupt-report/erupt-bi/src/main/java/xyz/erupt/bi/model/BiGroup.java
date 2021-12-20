@@ -12,7 +12,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.upms.helper.HyperModelUpdateVo;
+import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.*;
 
@@ -27,7 +27,7 @@ import javax.persistence.*;
 @Setter
 @Component
 @EruptI18n
-public class BiGroup extends HyperModelUpdateVo {
+public class BiGroup extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),

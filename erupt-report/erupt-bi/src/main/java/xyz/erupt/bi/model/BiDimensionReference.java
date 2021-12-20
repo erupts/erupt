@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.upms.helper.HyperModelUpdateVo;
+import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @EruptI18n
-public class BiDimensionReference extends HyperModelUpdateVo {
+public class BiDimensionReference extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "名称", sortable = true),

@@ -19,7 +19,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.service.BiDataSourceService;
-import xyz.erupt.upms.helper.HyperModelUpdateVo;
+import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.*;
 import java.util.List;
@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @EruptI18n
-public class BiDataSource extends HyperModelUpdateVo implements ChoiceFetchHandler {
+public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandler {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),
