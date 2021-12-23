@@ -16,7 +16,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping(MonitorConstant.REST_MONITOR + "/redis.html")
-public class RedisController {
+public class MonitorRedisController {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
