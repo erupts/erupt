@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping(MonitorConstant.REST_MONITOR + "/server.html")
-public class ServerController {
+public class MonitorServerController {
 
     @Resource
     private EruptProp eruptProp;
