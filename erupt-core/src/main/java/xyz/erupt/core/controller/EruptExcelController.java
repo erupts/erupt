@@ -62,9 +62,7 @@ public class EruptExcelController {
     public void getExcelTemplate(@PathVariable("erupt") String eruptName,
                                  HttpServletRequest request,
                                  HttpServletResponse response) throws IOException {
-        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
-            return;
-        }
+        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable);
         dataFileService.createExcelTemplate(eruptModel).write(EruptUtil.downLoadFile(request, response,
