@@ -59,8 +59,7 @@ public class EruptExcelController {
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public void getExcelTemplate(@PathVariable("erupt") String eruptName,
-                                 HttpServletRequest request,
+    public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request,
                                  HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
@@ -75,8 +74,7 @@ public class EruptExcelController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName,
                            @RequestBody(required = false) List<Condition> conditions,
-                           HttpServletRequest request,
-                           HttpServletResponse response) throws IOException {
+                           HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
             return;
         }
