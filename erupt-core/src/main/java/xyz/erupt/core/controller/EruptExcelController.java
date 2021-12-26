@@ -58,14 +58,17 @@ public class EruptExcelController {
 
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    public void getExcelTemplate(@PathVariable("erupt") String eruptName,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
             return;
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable);
-        dataFileService.createExcelTemplate(eruptModel, request, response);
+        dataFileService.createExcelTemplate(eruptModel).write(EruptUtil.downLoadFile(request, response,
+                eruptModel.getErupt().name() + "_template" + EruptExcelService.XLS_FORMAT));
     }
 
     //导出
