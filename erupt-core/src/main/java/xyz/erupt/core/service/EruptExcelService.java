@@ -27,9 +27,6 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -250,7 +247,7 @@ public class EruptExcelService {
 
 
     //模板的格式和edit输入框一致
-    public void createExcelTemplate(EruptModel eruptModel, HttpServletRequest request, HttpServletResponse response) {
+    public Workbook createExcelTemplate(EruptModel eruptModel) {
         Workbook wb = new HSSFWorkbook();
         //基本信息
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
@@ -322,12 +319,7 @@ public class EruptExcelService {
                 cellNum++;
             }
         }
-        try {
-            wb.write(EruptUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_导入模板" + XLS_FORMAT));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        return wb;
     }
 
     private DataValidation generateValidation(int colIndex, String errHint, DataValidationConstraint constraint) {
