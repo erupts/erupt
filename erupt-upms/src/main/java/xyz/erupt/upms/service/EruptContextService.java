@@ -2,7 +2,7 @@ package xyz.erupt.upms.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import xyz.erupt.core.service.EruptContextCtrl;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
@@ -26,7 +26,7 @@ public class EruptContextService {
 
     //获取erupt上下文对象
     public Class<?> getContextEruptClass() {
-        return EruptCoreService.getErupt(EruptContextCtrl.get().getName()).getClazz();
+        return EruptCoreService.getErupt(MetaContext.get().getMetaErupt().getName()).getClazz();
     }
 
     //获取当前请求token
@@ -41,6 +41,6 @@ public class EruptContextService {
     //获取当前菜单对象
     public EruptMenu getCurrentEruptMenu() {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
-                , EruptContextCtrl.get().getName(), EruptMenu.class);
+                , MetaContext.get().getMetaErupt().getName(), EruptMenu.class);
     }
 }

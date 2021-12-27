@@ -1,15 +1,17 @@
-package xyz.erupt.core.model;
+package xyz.erupt.core.context;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * @author YuePeng
- * date 2021/12/26 23:57
+ * date 2021/12/27 20:57
  */
+@Builder
 @Getter
 @Setter
-public class EruptContext {
+public class MetaErupt {
 
     private String name;
 

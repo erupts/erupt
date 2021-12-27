@@ -31,8 +31,8 @@ public class GsonFactory {
         return gson;
     }
 
-    public static Gson getCtrlEruptModelGson() {
-        return gson;
+    public static GsonBuilder getGsonBuilder() {
+        return gsonBuilder;
     }
 
     private GsonFactory() {
