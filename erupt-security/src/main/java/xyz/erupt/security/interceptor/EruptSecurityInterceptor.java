@@ -10,11 +10,11 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.model.MetaUser;
-import xyz.erupt.core.service.EruptContextCtrl;
+import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaErupt;
+import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.core.view.EruptContext;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.config.EruptSecurityProp;
@@ -83,14 +83,13 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             eruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
             parentEruptName = request.getHeader(ERUPT_PARENT_PARAM_KEY);
         }
-
         if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
+            MetaContext.register(MetaErupt.builder().name(eruptName).build());
             EruptModel erupt = EruptCoreService.getErupt(eruptName);
             if (null == erupt) {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
-            EruptContextCtrl.set(new EruptContext(eruptName));
             if (!erupt.getErupt().authVerify()) {
                 return true;
             }
@@ -102,7 +101,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             return false;
         }
         AdminUserinfo adminUserinfo = eruptUserService.getAdminUserInfo();
-        MetaUser.register(new MetaUser(adminUserinfo.getId() + "", adminUserinfo.getAccount(), adminUserinfo.getUsername()));
+        MetaContext.register(new MetaUser(adminUserinfo.getId() + "", adminUserinfo.getAccount(), adminUserinfo.getUsername()));
         //权限校验
         String authStr = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
         switch (eruptRouter.verifyType()) {
@@ -158,6 +157,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     @Override
     @Transactional
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        MetaContext.remove();
         if (eruptSecurityProp.isRecordOperateLog()) {
             if (handler instanceof HandlerMethod) {
                 HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -186,13 +186,11 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     });
                     Object param = RequestBodyTL.get().getBody();
                     operate.setReqParam(null == param ? findRequestParamVal(request) : param.toString());
-                    EruptContextCtrl.remove();
                     RequestBodyTL.remove();
                     entityManager.persist(operate);
                 });
             }
         }
-        MetaUser.remove();
     }
 
     public String findRequestParamVal(HttpServletRequest request) {

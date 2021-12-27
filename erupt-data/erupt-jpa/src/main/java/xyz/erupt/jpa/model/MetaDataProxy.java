@@ -1,7 +1,7 @@
 package xyz.erupt.jpa.model;
 
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.core.model.MetaUser;
+import xyz.erupt.core.context.MetaContext;
 
 import java.time.LocalDateTime;
 
@@ -14,15 +14,15 @@ public class MetaDataProxy implements DataProxy<MetaModel> {
     @Override
     public void beforeAdd(MetaModel metaModel) {
         metaModel.setCreateTime(LocalDateTime.now());
-        metaModel.setUpdateBy(MetaUser.get().getName());
+        metaModel.setUpdateBy(MetaContext.get().getMetaUser().getName());
         metaModel.setUpdateTime(metaModel.getCreateTime());
-        metaModel.setUpdateBy(MetaUser.get().getName());
+        metaModel.setUpdateBy(MetaContext.get().getMetaUser().getName());
     }
 
     @Override
     public void beforeUpdate(MetaModel metaModel) {
         metaModel.setUpdateTime(LocalDateTime.now());
-        metaModel.setUpdateBy(MetaUser.get().getName());
+        metaModel.setUpdateBy(MetaContext.get().getMetaUser().getName());
     }
 
 }
