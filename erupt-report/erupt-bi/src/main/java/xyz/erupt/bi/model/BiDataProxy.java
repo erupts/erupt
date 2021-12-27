@@ -3,7 +3,7 @@ package xyz.erupt.bi.model;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.core.view.MetaUser;
+import xyz.erupt.core.model.MetaUser;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
