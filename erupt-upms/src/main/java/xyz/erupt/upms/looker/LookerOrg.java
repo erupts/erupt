@@ -1,12 +1,11 @@
 package xyz.erupt.upms.looker;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
-import xyz.erupt.annotation.config.SkipSerialize;
+import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -49,19 +48,20 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
             },
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
+    @EruptSmartSkipSerialize
     private EruptUserVo createUser;
 
     @EruptField(
             views = @View(title = "创建时间", sortable = true),
             edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
+    @EruptSmartSkipSerialize
     private Date createTime;
 
-    @SkipSerialize
+    @EruptSmartSkipSerialize
     private Date updateTime;
 
-    @SkipSerialize
-    @JsonIgnore
+    @EruptSmartSkipSerialize
     @ManyToOne(fetch = FetchType.LAZY)
     private EruptUserVo updateUser;
 

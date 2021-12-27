@@ -1,14 +1,12 @@
 package xyz.erupt.upms.model.base;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.PreDataProxy;
-import xyz.erupt.annotation.config.SkipSerialize;
+import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
 
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
@@ -23,19 +21,17 @@ import java.util.Date;
 @PreDataProxy(HyperDataProxy.class)
 public class HyperModel extends BaseModel {
 
-    @SkipSerialize
+    @EruptSmartSkipSerialize
     private Date createTime;
 
-    @SkipSerialize
+    @EruptSmartSkipSerialize
     private Date updateTime;
 
-    @JsonIgnore
-    @SkipSerialize
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @EruptSmartSkipSerialize
     private EruptUserVo createUser;
 
-    @JsonIgnore
-    @SkipSerialize
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @EruptSmartSkipSerialize
     private EruptUserVo updateUser;
 }

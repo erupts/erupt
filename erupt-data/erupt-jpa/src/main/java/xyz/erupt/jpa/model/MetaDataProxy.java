@@ -1,7 +1,7 @@
 package xyz.erupt.jpa.model;
 
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.core.view.MetaUser;
+import xyz.erupt.core.model.MetaUser;
 
 import java.time.LocalDateTime;
 
@@ -9,34 +9,20 @@ import java.time.LocalDateTime;
  * @author YuePeng
  * date 2021/12/20 22:04
  */
-public class MetaDataProxy implements DataProxy<BaseModel> {
+public class MetaDataProxy implements DataProxy<MetaModel> {
 
     @Override
-    public void beforeAdd(BaseModel metaModel) {
-        if (metaModel instanceof MetaModel) {
-            ((MetaModel) metaModel).setCreateTime(LocalDateTime.now());
-            ((MetaModel) metaModel).setCreateBy(MetaUser.get().getName());
-        } else if (metaModel instanceof MetaModelVo) {
-            ((MetaModelVo) metaModel).setCreateTime(LocalDateTime.now());
-            ((MetaModelVo) metaModel).setCreateBy(MetaUser.get().getName());
-        } else if (metaModel instanceof MetaModelUpdateVo) {
-            ((MetaModelUpdateVo) metaModel).setCreateTime(LocalDateTime.now());
-            ((MetaModelUpdateVo) metaModel).setCreateBy(MetaUser.get().getName());
-        }
+    public void beforeAdd(MetaModel metaModel) {
+        metaModel.setCreateTime(LocalDateTime.now());
+        metaModel.setUpdateBy(MetaUser.get().getName());
+        metaModel.setUpdateTime(metaModel.getCreateTime());
+        metaModel.setUpdateBy(MetaUser.get().getName());
     }
 
     @Override
-    public void beforeUpdate(BaseModel metaModel) {
-        if (metaModel instanceof MetaModel) {
-            ((MetaModel) metaModel).setUpdateTime(LocalDateTime.now());
-            ((MetaModel) metaModel).setUpdateBy(MetaUser.get().getName());
-        } else if (metaModel instanceof MetaModelVo) {
-            ((MetaModelVo) metaModel).setUpdateTime(LocalDateTime.now());
-            ((MetaModelVo) metaModel).setUpdateBy(MetaUser.get().getName());
-        } else if (metaModel instanceof MetaModelUpdateVo) {
-            ((MetaModelUpdateVo) metaModel).setUpdateTime(LocalDateTime.now());
-            ((MetaModelUpdateVo) metaModel).setUpdateBy(MetaUser.get().getName());
-        }
+    public void beforeUpdate(MetaModel metaModel) {
+        metaModel.setUpdateTime(LocalDateTime.now());
+        metaModel.setUpdateBy(MetaUser.get().getName());
     }
 
 }

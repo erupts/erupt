@@ -3,7 +3,7 @@ package xyz.erupt.jpa.model;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.PreDataProxy;
+import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
@@ -19,23 +19,20 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-@PreDataProxy(MetaDataProxy.class)
-public class MetaModelUpdateVo extends BaseModel {
-
-    private String createBy;
-
-    private LocalDateTime createTime;
+public class MetaModelUpdateVo extends MetaModel {
 
     @EruptField(
             views = @View(title = "更新人", width = "100px"),
             edit = @Edit(title = "更新人", readonly = @Readonly)
     )
+    @EruptSmartSkipSerialize
     private String updateBy;
 
     @EruptField(
             views = @View(title = "更新时间", sortable = true),
             edit = @Edit(title = "更新时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
+    @EruptSmartSkipSerialize
     private LocalDateTime updateTime;
 
 }

@@ -37,7 +37,7 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         Optional.ofNullable(eruptProp.getGsonHttpMessageConvertersPackages()).ifPresent(it -> gsonMessageConverterPackage.addAll(Arrays.asList(it)));
-        converters.add(0, new GsonHttpMessageConverter(GsonFactory.getGson()) {
+        converters.add(0, new GsonHttpMessageConverter(GsonFactory.getCtrlEruptModelGson()) {
             @Override
             protected boolean supports(Class<?> clazz) {
                 for (String pack : gsonMessageConverterPackage) {
