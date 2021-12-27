@@ -6,11 +6,14 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -25,7 +28,7 @@ import javax.persistence.Table;
 @EruptI18n
 @Getter
 @Setter
-public class EruptUserVo extends BaseModel {
+public class EruptUserOrgVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "姓名", sortable = true),
@@ -33,10 +36,24 @@ public class EruptUserVo extends BaseModel {
     )
     private String name;
 
-    public EruptUserVo() {
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "所属组织", column = "name"),
+            edit = @Edit(title = "所属组织", type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id"))
+    )
+    private EruptOrg eruptOrg;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "岗位", column = "name"),
+            edit = @Edit(title = "岗位", type = EditType.REFERENCE_TREE)
+    )
+    private EruptPost eruptPost;
+
+    public EruptUserOrgVo() {
     }
 
-    public EruptUserVo(Long id) {
+    public EruptUserOrgVo(Long id) {
         this.setId(id);
     }
 
