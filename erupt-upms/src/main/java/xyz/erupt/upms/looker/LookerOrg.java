@@ -17,7 +17,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
-import xyz.erupt.upms.model.EruptUserVo;
+import xyz.erupt.upms.model.EruptUserOrgVo;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -49,7 +49,7 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     @EruptSmartSkipSerialize
-    private EruptUserVo createUser;
+    private EruptUserOrgVo createUser;
 
     @EruptField(
             views = @View(title = "创建时间", sortable = true),
@@ -63,7 +63,8 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
 
     @EruptSmartSkipSerialize
     @ManyToOne(fetch = FetchType.LAZY)
-    private EruptUserVo updateUser;
+    private EruptUserOrgVo updateUser;
+
 
     @Resource
     @Transient
@@ -93,12 +94,12 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
     @Override
     public void beforeAdd(LookerOrg lookerOrg) {
         lookerOrg.setCreateTime(new Date());
-        lookerOrg.setCreateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
+        lookerOrg.setCreateUser(new EruptUserOrgVo(eruptUserService.getCurrentUid()));
     }
 
     @Override
     public void beforeUpdate(LookerOrg lookerOrg) {
         lookerOrg.setUpdateTime(new Date());
-        lookerOrg.setUpdateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
+        lookerOrg.setUpdateUser(new EruptUserOrgVo(eruptUserService.getCurrentUid()));
     }
 }
