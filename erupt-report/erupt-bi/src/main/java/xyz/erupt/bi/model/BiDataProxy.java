@@ -3,7 +3,7 @@ package xyz.erupt.bi.model;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.core.model.MetaUser;
+import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -44,7 +44,7 @@ public class BiDataProxy implements DataProxy<Bi> {
                 bh.setSqlStatement(bbi.getSqlStatement());
                 bh.setOperateTime(new Date());
                 bh.setMark("Table");
-                bh.setOperateBy(MetaUser.get().getName());
+                bh.setOperateBy(MetaContext.get().getMetaUser().getName());
                 entityManager.persist(bh);
                 entityManager.flush();
             }
