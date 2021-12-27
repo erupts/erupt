@@ -10,11 +10,13 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.model.MetaUser;
+import xyz.erupt.core.service.EruptContextCtrl;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.view.EruptContext;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.core.view.MetaUser;
 import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.tl.RequestBodyTL;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
@@ -88,6 +90,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
+            EruptContextCtrl.set(new EruptContext(eruptName));
             if (!erupt.getErupt().authVerify()) {
                 return true;
             }
@@ -183,6 +186,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     });
                     Object param = RequestBodyTL.get().getBody();
                     operate.setReqParam(null == param ? findRequestParamVal(request) : param.toString());
+                    EruptContextCtrl.remove();
                     RequestBodyTL.remove();
                     entityManager.persist(operate);
                 });

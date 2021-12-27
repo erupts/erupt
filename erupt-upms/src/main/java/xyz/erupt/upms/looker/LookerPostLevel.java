@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
-import xyz.erupt.annotation.config.SkipSerialize;
+import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -50,6 +50,7 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
             },
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
+    @EruptSmartSkipSerialize
     private EruptUserVo createUser;
 
     @EruptField(
@@ -58,12 +59,12 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
     )
     private Date createTime;
 
-    @SkipSerialize
+    @EruptSmartSkipSerialize
     private Date updateTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    @SkipSerialize
+    @ManyToOne(fetch = FetchType.LAZY)
+    @EruptSmartSkipSerialize
     private EruptUser updateUser;
 
     @Resource

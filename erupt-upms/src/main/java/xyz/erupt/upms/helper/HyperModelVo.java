@@ -2,20 +2,15 @@ package xyz.erupt.upms.helper;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.PreDataProxy;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
-import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.upms.model.base.HyperModel;
 
-import javax.annotation.Resource;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -28,8 +23,7 @@ import java.util.Date;
 @Getter
 @Setter
 @MappedSuperclass
-@PreDataProxy(HyperModelVo.HyperModelDataProxy.class)
-public class HyperModelVo extends BaseModel {
+public class HyperModelVo extends HyperModel {
 
     @Transient
     @EruptField(
@@ -63,22 +57,4 @@ public class HyperModelVo extends BaseModel {
     )
     private Date updateTime;
 
-    @Service
-    static class HyperModelDataProxy implements DataProxy<HyperModelVo> {
-        @Transient
-        @Resource
-        private EruptUserService eruptUserService;
-
-        @Override
-        public void beforeAdd(HyperModelVo hyperModel) {
-            hyperModel.setCreateTime(new Date());
-            hyperModel.setCreateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
-        }
-
-        @Override
-        public void beforeUpdate(HyperModelVo hyperModel) {
-            hyperModel.setUpdateTime(new Date());
-            hyperModel.setUpdateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
-        }
-    }
 }
