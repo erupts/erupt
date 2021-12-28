@@ -17,6 +17,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.util.Erupts;
@@ -53,7 +54,7 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
 
     @EruptField(
             views = @View(title = "接收人"),
-            edit = @Edit(title = "接收人", notNull = true, search = @Search,
+            edit = @Edit(title = "接收人", notNull = true, search = @Search(vague = true),
                     inputType = @InputType(fullSpan = true, regex = RegexConst.EMAIL_REGEX))
     )
     private String recipient;
@@ -66,9 +67,15 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
 
     @EruptField(
             views = @View(title = "主题"),
-            edit = @Edit(title = "主题", notNull = true, search = @Search, inputType = @InputType(fullSpan = true))
+            edit = @Edit(title = "主题", notNull = true, search = @Search(vague = true), inputType = @InputType(fullSpan = true))
     )
     private String subject;
+
+    @EruptField(
+            views = @View(title = "状态"),
+            edit = @Edit(title = "状态", boolType = @BoolType(trueText = "成功", falseText = "失败"), show = false)
+    )
+    private Boolean status;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
@@ -77,6 +84,10 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
             edit = @Edit(title = "内容", notNull = true, type = EditType.HTML_EDITOR)
     )
     private String content;
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    private String errorInfo;
 
     @EruptField(
             views = @View(title = "发送时间")
@@ -98,6 +109,12 @@ public class EruptMail extends HyperModel implements DataProxy<EruptMail> {
         helper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
         if (StringUtils.isNotBlank(eruptMail.getCc())) helper.setCc(eruptMail.getCc().split("\\|"));
         helper.setText(eruptMail.getContent(), true);
-        javaMailSender.send(mimeMessage);
+        try {
+            javaMailSender.send(mimeMessage);
+            eruptMail.setStatus(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            eruptMail.setStatus(false);
+        }
     }
 }
