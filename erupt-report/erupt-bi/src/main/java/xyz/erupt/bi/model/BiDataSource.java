@@ -18,6 +18,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.bi.constant.DBTypeEnum;
+import xyz.erupt.bi.handler.DriverChoice;
 import xyz.erupt.bi.service.BiDataSourceService;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -51,7 +52,8 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     private String name;
 
     @EruptField(
-            edit = @Edit(title = "驱动", notNull = true)
+            edit = @Edit(title = "驱动", notNull = true, type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = DriverChoice.class))
     )
     private String driver;
 

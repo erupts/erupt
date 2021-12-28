@@ -44,8 +44,8 @@ public class BiHistory extends BaseModel {
     private String mark;
 
     @EruptField(
-            views = @View(title = "操作人", column = "name"),
-            edit = @Edit(title = "操作人", type = EditType.REFERENCE_TREE, search = @Search(vague = true))
+            views = @View(title = "操作人"),
+            edit = @Edit(title = "操作人", search = @Search(vague = true))
     )
     private String operateBy;
 

@@ -16,6 +16,7 @@ import xyz.erupt.bi.view.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.controller.EruptExceptionHandlerAdvice;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptExcelService;
@@ -40,9 +41,10 @@ import java.util.stream.Collectors;
  * @author YuePeng
  * date 2019-08-26.
  */
+@Slf4j
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API + "/bi")
-@Slf4j
+@ControllerAdvice("xyz.erupt.bi.controller")
 public class EruptBiController {
 
     @Resource
@@ -57,11 +59,19 @@ public class EruptBiController {
     @Resource
     private HttpServletRequest request;
 
+    @Resource
+    private EruptExceptionHandlerAdvice eruptExceptionHandlerAdvice;
+
     @PersistenceContext
     private EntityManager entityManager;
 
     private final Gson gson = GsonFactory.getGson();
 
+    @ResponseBody
+    @ExceptionHandler(value = RuntimeException.class)
+    public Map<String, Object> biErrorHandler(Exception ex, HttpServletRequest request, HttpServletResponse response) {
+        return eruptExceptionHandlerAdvice.eruptWebApiRuntimeException(ex, request, response);
+    }
 
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
@@ -128,10 +138,10 @@ public class EruptBiController {
 
     @PostMapping("/data/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 2)
-    public BiData getData(@RequestParam("index") int pageIndex,
-                          @RequestParam("size") int pageSize,
-                          @RequestParam(value = "sort", required = false) String sort,
-                          @RequestBody Map<String, Object> query, @PathVariable String code) {
+    public BiData queryData(@RequestParam("index") int pageIndex,
+                            @RequestParam("size") int pageSize,
+                            @RequestParam(value = "sort", required = false) String sort,
+                            @RequestBody Map<String, Object> query, @PathVariable String code) {
         pageSize = pageSize > 100 ? 100 : pageSize;
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
             this.put("code", code);
@@ -167,7 +177,7 @@ public class EruptBiController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @RequestMapping("/{code}/chart/{id}")
     public List<Map<String, Object>> biChart(@PathVariable("id") Long chartId,
-                                             @RequestBody Map<String, Object> query,
+                                             @RequestBody(required = false) Map<String, Object> query,
                                              @PathVariable String code) {
         BiChart chart = entityManager.find(BiChart.class, chartId);
         this.verifyBiMenuPermissions(chart.getBi(), code);
