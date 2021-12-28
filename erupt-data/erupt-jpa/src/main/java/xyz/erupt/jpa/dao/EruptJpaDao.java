@@ -91,8 +91,7 @@ public class EruptJpaDao {
             }
             page.setTotal((Long) countQuery.getSingleResult());
             if (page.getTotal() > 0) {
-                page.setList(query.setMaxResults(page.getPageSize())
-                        .setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList());
+                page.setList(query.setMaxResults(page.getPageSize()).setFirstResult((page.getPageIndex() - 1) * page.getPageSize()).getResultList());
             } else {
                 page.setList(new ArrayList<>(0));
             }
