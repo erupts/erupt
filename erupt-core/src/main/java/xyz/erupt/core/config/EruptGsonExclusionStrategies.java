@@ -22,6 +22,7 @@ public class EruptGsonExclusionStrategies implements ExclusionStrategy {
     public boolean shouldSkipField(FieldAttributes f) {
         MetaContext metaContext = MetaContext.get();
         if (null != metaContext && null != f.getAnnotation(EruptSmartSkipSerialize.class)) {
+            if (null == metaContext.getMetaErupt()) return false;
             EruptModel erupt = EruptCoreService.getErupt(metaContext.getMetaErupt().getName());
             Field ff = ReflectUtil.findClassField(erupt.getClazz(), f.getName());
             if (null == ff) return false;
