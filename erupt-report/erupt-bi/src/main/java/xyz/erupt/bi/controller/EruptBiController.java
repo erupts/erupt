@@ -59,9 +59,6 @@ public class EruptBiController {
     @Resource
     private HttpServletRequest request;
 
-    @Resource
-    private EruptExceptionHandlerAdvice eruptExceptionHandlerAdvice;
-
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -70,7 +67,7 @@ public class EruptBiController {
     @ResponseBody
     @ExceptionHandler(value = RuntimeException.class)
     public Map<String, Object> biErrorHandler(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        return eruptExceptionHandlerAdvice.eruptWebApiRuntimeException(ex, request, response);
+        return new EruptExceptionHandlerAdvice().eruptWebApiRuntimeException(ex, request, response);
     }
 
     @RequestMapping("/{code}")
