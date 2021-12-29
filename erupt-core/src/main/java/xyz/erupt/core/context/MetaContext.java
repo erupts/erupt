@@ -14,11 +14,18 @@ import java.util.Optional;
 public class MetaContext {
 
     private static final ThreadLocal<MetaContext> threadLocal = new ThreadLocal<>();
+
     private MetaErupt metaErupt;
+
     private MetaUser metaUser;
 
     public static MetaContext get() {
-        return threadLocal.get();
+        return Optional.ofNullable(threadLocal.get()).orElseGet(() -> {
+            MetaContext metaContext = new MetaContext();
+            metaContext.setMetaErupt(MetaErupt.builder().build());
+            metaContext.setMetaUser(new MetaUser());
+            return metaContext;
+        });
     }
 
     //注册erupt上下文

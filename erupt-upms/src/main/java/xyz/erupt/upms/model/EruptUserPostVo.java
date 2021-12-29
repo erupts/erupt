@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @EruptI18n
 @Getter
 @Setter
-public class EruptUserOrgVo extends BaseModel {
+public class EruptUserPostVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "姓名", sortable = true),
@@ -50,10 +50,10 @@ public class EruptUserOrgVo extends BaseModel {
     )
     private EruptPost eruptPost;
 
-    public EruptUserOrgVo() {
+    public EruptUserPostVo() {
     }
 
-    public EruptUserOrgVo(Long id) {
+    public EruptUserPostVo(Long id) {
         this.setId(id);
     }
 

@@ -1,6 +1,5 @@
 package xyz.erupt.core.context;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +7,6 @@ import lombok.Setter;
  * @author YuePeng
  * date 2021/12/20 23:20
  */
-@Builder
 @Getter
 @Setter
 public class MetaUser {
@@ -21,5 +19,8 @@ public class MetaUser {
         this.uid = uid;
         this.account = account;
         this.name = name;
+    }
+
+    public MetaUser() {
     }
 }
