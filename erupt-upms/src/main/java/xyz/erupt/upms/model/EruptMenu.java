@@ -9,7 +9,6 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.constant.MenuTypeEnum;
@@ -38,10 +37,6 @@ import java.util.Date;
 @Setter
 public class EruptMenu extends HyperModel {
 
-    @EruptField(
-            views = @View(title = "编码"),
-            edit = @Edit(title = "编码", readonly = @Readonly)
-    )
     private String code;
 
     @EruptField(
@@ -65,6 +60,13 @@ public class EruptMenu extends HyperModel {
 
     @EruptField(
             edit = @Edit(
+                    title = "顺序"
+            )
+    )
+    private Integer sort = 0;
+
+    @EruptField(
+            edit = @Edit(
                     title = "菜单类型",
                     type = EditType.CHOICE,
                     choiceType = @ChoiceType(fetchHandler = MenuTypeEnum.ChoiceFetch.class)
@@ -78,14 +80,6 @@ public class EruptMenu extends HyperModel {
             )
     )
     private String value;
-
-
-    @EruptField(
-            edit = @Edit(
-                    title = "顺序"
-            )
-    )
-    private Integer sort = 0;
 
     @EruptField(
             edit = @Edit(

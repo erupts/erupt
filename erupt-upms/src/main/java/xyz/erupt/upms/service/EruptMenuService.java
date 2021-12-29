@@ -2,7 +2,6 @@ package xyz.erupt.upms.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -31,7 +30,6 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     @Resource
     private EruptContextService eruptContextService;
 
-
     public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
         List<EruptMenuVo> list = new ArrayList<>();
         menus.stream().filter(menu -> menu.getStatus() == MenuStatus.OPEN.getValue()).forEach(menu -> {
@@ -48,7 +46,6 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
             eruptUser.getRoles().stream().filter(EruptRole::getStatus)
-//                    .sorted(Comparator.comparing(EruptRole::getPowerOff, Comparator.nullsFirst(StringUtils::isNotBlank)))
                     .map(EruptRole::getMenus).forEach(menuSet::addAll);
             menus = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
         }
@@ -69,7 +66,6 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         eruptMenu.setCode(RandomStringUtils.randomAlphabetic(6));
     }
 
-    @Async
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
@@ -79,13 +75,11 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
     }
 
-    @Async
     @Override
     public void afterUpdate(EruptMenu eruptMenu) {
         this.afterAdd(eruptMenu);
     }
 
-    @Async
     @Override
     public void afterDelete(EruptMenu eruptMenu) {
         this.afterAdd(eruptMenu);
