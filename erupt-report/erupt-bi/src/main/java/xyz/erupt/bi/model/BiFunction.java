@@ -39,12 +39,6 @@ import javax.script.ScriptException;
 public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunction> {
 
     @EruptField(
-            views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
-    )
-    private String code;
-
-    @EruptField(
             views = @View(title = "名称", sortable = true),
             edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
@@ -59,8 +53,7 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
     )
     private String jsFunction;
 
-    public BiFunction(String code, String name, String jsFunction) {
-        this.code = code;
+    public BiFunction(String name, String jsFunction) {
         this.name = name;
         this.jsFunction = jsFunction;
     }

@@ -11,10 +11,7 @@ import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -66,8 +63,8 @@ import java.util.Set;
 public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiReleaseModal> {
 
     @EruptField(
-            views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
+            views = @View(title = "编码", sortable = true, width = "90px"),
+            edit = @Edit(title = "编码", search = @Search(vague = true), readonly = @Readonly)
     )
     private String code;
 
@@ -101,7 +98,13 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     private BiClassHandler classHandler;
 
     @EruptField(
-            views = @View(title = "自刷周期", sortable = true),
+            views = @View(title = "缓存时间", sortable = true, template = "value&&value+'s'"),
+            edit = @Edit(title = "缓存时间（秒）")
+    )
+    private Integer cacheTime;
+
+    @EruptField(
+            views = @View(title = "自刷周期", sortable = true, template = "value&&value+'s'"),
             edit = @Edit(title = "自动刷新周期（秒）")
     )
     private Integer refreshTime;

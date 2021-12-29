@@ -19,4 +19,5 @@ public class BiData {
     private List<Map<String, Object>> list;
 
     private Long total;
+
 }

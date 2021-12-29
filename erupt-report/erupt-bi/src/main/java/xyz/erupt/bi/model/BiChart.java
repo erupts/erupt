@@ -2,6 +2,7 @@ package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
@@ -33,8 +34,7 @@ import java.util.Date;
 public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
 
     @EruptField(
-            views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
+            views = @View(title = "编码", sortable = true, width = "90px")
     )
     private String code;
 
@@ -149,6 +149,16 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
     private EruptDao eruptDao;
 
     @Override
+    public void beforeAdd(BiChart biChart) {
+        if (null == biChart.getSort()) {
+            Integer obj = (Integer) eruptDao.getEntityManager().createQuery(
+                    "select max(sort) from " + BiChart.class.getSimpleName() + " where bi.id = " + biChart.getBi().getId()).getSingleResult();
+            biChart.setSort((obj == null) ? 10 : obj + 10);
+        }
+        biChart.setCode(RandomStringUtils.randomAlphabetic(6));
+    }
+
+    @Override
     public void beforeUpdate(BiChart biChart) {
         eruptDao.getEntityManager().clear();
         BiChart hbc = eruptDao.getEntityManager().find(BiChart.class, biChart.getId());
@@ -163,13 +173,4 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
         }
     }
 
-    @Override
-    public void addBehavior(BiChart biChart) {
-        BiChart bc = eruptDao.queryEntity(BiChart.class, "bi.id = " + biChart.getBi().getId() + " order by sort desc  limit 1", null);
-        if (bc == null) {
-            biChart.setSort(10);
-        } else {
-            biChart.setSort(bc.getSort() + 10);
-        }
-    }
 }
