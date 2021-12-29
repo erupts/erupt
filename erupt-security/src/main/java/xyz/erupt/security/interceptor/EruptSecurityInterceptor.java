@@ -21,7 +21,7 @@ import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.tl.RequestBodyTL;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.model.EruptUserVo;
+import xyz.erupt.upms.model.EruptUserPostVo;
 import xyz.erupt.upms.model.log.EruptOperateLog;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
@@ -177,7 +177,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     operate.setStatus(true);
                     operate.setReqMethod(request.getMethod());
                     operate.setReqAddr(request.getRequestURL().toString());
-                    Optional.ofNullable(eruptUserService.getCurrentUid()).ifPresent(it -> operate.setEruptUser(new EruptUserVo(it)));
+                    Optional.ofNullable(eruptUserService.getCurrentUid()).ifPresent(it -> operate.setEruptUser(new EruptUserPostVo(it)));
                     operate.setCreateTime(new Date());
                     operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
                     Optional.ofNullable(ex).ifPresent(e -> {

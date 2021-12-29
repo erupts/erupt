@@ -18,7 +18,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.model.EruptUserVo;
+import xyz.erupt.upms.model.EruptUserPostVo;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -48,7 +48,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
             views = @View(title = "用户", column = "name"),
             edit = @Edit(title = "用户", type = EditType.REFERENCE_TABLE, search = @Search)
     )
-    private EruptUserVo eruptUser;
+    private EruptUserPostVo eruptUser;
 
     @EruptField(
             views = @View(title = "IP地址"),
