@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.bi.handler.ChartType;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -113,8 +114,8 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
                                     @VL(label = "漏斗图", value = "Funnel"),
                                     //@VL(label = "词云", value = "WordCloud", desc = "需要2个数据列：x:名称 y:数值"),
                                     //@VL(label = "热力图", value = "Heatmap", desc = "最少需要3个数据列，size可选：x / y / value / [size]"),
-                                    @VL(label = "自定义模板", value = "tpl", desc = "使用前请确认是否导入erupt-tpl模块"),
-                            }
+                            },
+                            fetchHandler = ChartType.class
                     ))
     )
     private String type;
