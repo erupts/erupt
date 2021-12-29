@@ -18,7 +18,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
-import xyz.erupt.upms.model.EruptUserOrgVo;
+import xyz.erupt.upms.model.EruptUserPostVo;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -51,7 +51,7 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     @EruptSmartSkipSerialize
-    private EruptUserOrgVo createUser;
+    private EruptUserPostVo createUser;
 
     @EruptField(
             views = @View(title = "创建时间", sortable = true),
@@ -97,7 +97,7 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
     @Override
     public void beforeAdd(LookerPostLevel lookerPostLevel) {
         lookerPostLevel.setCreateTime(new Date());
-        lookerPostLevel.setCreateUser(new EruptUserOrgVo(eruptUserService.getCurrentUid()));
+        lookerPostLevel.setCreateUser(new EruptUserPostVo(eruptUserService.getCurrentUid()));
     }
 
     @Override

@@ -23,7 +23,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.job.service.ChoiceFetchEruptJobHandler;
 import xyz.erupt.job.service.EruptJobService;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.jpa.model.MetaModel;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
@@ -46,7 +46,7 @@ import java.util.List;
 @Component
 @Getter
 @Setter
-public class EruptJob extends HyperModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
+public class EruptJob extends MetaModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
 
     @EruptField(
             views = @View(title = "任务编码"),

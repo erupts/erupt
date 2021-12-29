@@ -1,6 +1,8 @@
 package xyz.erupt.upms.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -63,10 +65,13 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     }
 
     @Override
+    public void beforeAdd(EruptMenu eruptMenu) {
+        eruptMenu.setCode(RandomStringUtils.randomAlphabetic(6));
+    }
+
+    @Async
+    @Override
     public void afterAdd(EruptMenu eruptMenu) {
-        if (eruptMenu.getCode().contains("/")) {
-            throw new EruptWebApiRuntimeException("Menu 'Code' disallows the '/' character");
-        }
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
             throw new EruptWebApiRuntimeException("When selecting a menu type, the type value cannot be empty");
         }
@@ -74,12 +79,13 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
     }
 
+    @Async
     @Override
     public void afterUpdate(EruptMenu eruptMenu) {
         this.afterAdd(eruptMenu);
     }
 
-
+    @Async
     @Override
     public void afterDelete(EruptMenu eruptMenu) {
         this.afterAdd(eruptMenu);

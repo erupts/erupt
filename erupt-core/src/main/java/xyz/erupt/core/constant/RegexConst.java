@@ -1,4 +1,4 @@
-package xyz.erupt.upms.constant;
+package xyz.erupt.core.constant;
 
 /**
  * @author YuePeng

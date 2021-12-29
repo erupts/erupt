@@ -66,6 +66,10 @@
             <artifactId>oshi-core</artifactId>
             <version>5.8.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
