@@ -98,9 +98,9 @@ public class EruptExcelService {
                         Optional.ofNullable(val).ifPresent(it -> {
                             String str = it.toString();
                             if (edit.type() == EditType.BOOLEAN || view.type() == ViewType.BOOLEAN) {
-                                if (Boolean.parseBoolean(str)) {
+                                if (edit.boolType().trueText().equals(str)) {
                                     cell.setCellValue(edit.boolType().trueText());
-                                } else {
+                                } else if (edit.boolType().falseText().equals(str)) {
                                     cell.setCellValue(edit.boolType().falseText());
                                 }
                             } else {
