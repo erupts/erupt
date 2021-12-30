@@ -1,17 +1,21 @@
 package xyz.erupt.security.interceptor;
 
+import lombok.SneakyThrows;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.model.ReqBody;
 import xyz.erupt.security.tl.RequestBodyTL;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author YuePeng
@@ -37,7 +41,8 @@ public class HttpServletRequestFilter extends GenericFilterBean {
                 HttpServletRequest request = (HttpServletRequest) servletRequest;
                 if (request.getServletPath().contains(EruptRestPath.ERUPT_API)) {
                     if (null != request.getContentType() && CONTENT_TYPE_JSON.equals(request.getContentType())) {
-                        EruptRequestWrapper eruptRequestWrapper = new EruptRequestWrapper(request);
+                        HttpServletRequestFilter.EruptRequestWrapper eruptRequestWrapper =
+                                new EruptRequestWrapper(request);
                         reqBody.setBody(eruptRequestWrapper.getBody());
                         filterChain.doFilter(eruptRequestWrapper, servletResponse);
                         return;
@@ -46,5 +51,52 @@ public class HttpServletRequestFilter extends GenericFilterBean {
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    private static class EruptRequestWrapper extends HttpServletRequestWrapper {
+
+        private final String body;
+
+        @SneakyThrows
+        EruptRequestWrapper(HttpServletRequest request) {
+            super(request);
+            body = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+        }
+
+        @Override
+        public ServletInputStream getInputStream() {
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
+            return new ServletInputStream() {
+                @Override
+                public boolean isFinished() {
+                    return false;
+                }
+
+                @Override
+                public boolean isReady() {
+                    return false;
+                }
+
+                @Override
+                public void setReadListener(ReadListener readListener) {
+                }
+
+                @Override
+                public int read() {
+                    return byteArrayInputStream.read();
+                }
+            };
+
+        }
+
+        @Override
+        public BufferedReader getReader() {
+            return new BufferedReader(new InputStreamReader(this.getInputStream(), StandardCharsets.UTF_8));
+        }
+
+        String getBody() {
+            return this.body;
+        }
+
     }
 }
