@@ -58,12 +58,15 @@ public class EruptMenu extends HyperModel {
     )
     private Integer status;
 
+    @ManyToOne
     @EruptField(
             edit = @Edit(
-                    title = "顺序"
+                    title = "上级菜单",
+                    type = EditType.REFERENCE_TREE,
+                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
             )
     )
-    private Integer sort = 0;
+    private EruptMenu parentMenu;
 
     @EruptField(
             edit = @Edit(
@@ -83,13 +86,10 @@ public class EruptMenu extends HyperModel {
 
     @EruptField(
             edit = @Edit(
-                    title = "权限",
-                    type = EditType.TAGS,
-                    showBy = @ShowBy(dependField = "type", expr = "value=='tree'||value=='table'"),
-                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
+                    title = "顺序"
             )
     )
-    private String powerOff;
+    private Integer sort = 0;
 
     @EruptField(
             edit = @Edit(
@@ -99,21 +99,21 @@ public class EruptMenu extends HyperModel {
     )
     private String icon;
 
-    @ManyToOne
     @EruptField(
             edit = @Edit(
-                    title = "上级菜单",
-                    type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
+                    title = "权限",
+                    type = EditType.TAGS,
+                    showBy = @ShowBy(dependField = "type", expr = "value=='tree'||value=='table'"),
+                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
             )
     )
-    private EruptMenu parentMenu;
+    private String powerOff;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
                     title = "自定义参数",
-                    desc = "json格式",
+                    desc = "json格式，通过上下文获取，根据业务需求解析",
                     type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "json")
             )
