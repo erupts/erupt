@@ -43,4 +43,5 @@ public class EruptContextService {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
                 , MetaContext.get().getMetaErupt().getName(), EruptMenu.class);
     }
+
 }

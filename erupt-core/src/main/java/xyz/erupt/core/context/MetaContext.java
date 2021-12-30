@@ -22,8 +22,8 @@ public class MetaContext {
     public static MetaContext get() {
         return Optional.ofNullable(threadLocal.get()).orElseGet(() -> {
             MetaContext metaContext = new MetaContext();
-            metaContext.setMetaErupt(MetaErupt.builder().build());
             metaContext.setMetaUser(new MetaUser());
+            metaContext.setMetaErupt(MetaErupt.builder().build());
             return metaContext;
         });
     }
