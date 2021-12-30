@@ -20,14 +20,11 @@ import java.util.Map;
 @Component
 public class BiDataProxy implements DataProxy<Bi> {
 
-//    @Resource
-//    private EruptUserService eruptUserService;
-
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public void beforeAdd(Bi bi) {
+    public void addBehavior(Bi bi) {
         bi.setCode(RandomStringUtils.randomAlphabetic(6));
     }
 

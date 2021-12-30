@@ -11,7 +11,10 @@ import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_field.*;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -48,8 +51,8 @@ import java.util.Set;
 //                        operationHandler = CopyLinkHandler.class
 //                ),
         },
-        dataProxy = BiDataProxy.class,
 //        linkTree = @LinkTree(field = "biGroup"),
+        dataProxy = BiDataProxy.class,
         drills = {
                 @Drill(title = "图表配置", icon = "fa fa-pie-chart"
                         , link = @Link(linkErupt = BiChart.class, joinColumn = "bi.id")),
@@ -64,7 +67,7 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
 
     @EruptField(
             views = @View(title = "编码", sortable = true, width = "90px"),
-            edit = @Edit(title = "编码", search = @Search(vague = true), readonly = @Readonly)
+            edit = @Edit(title = "编码", search = @Search(vague = true))
     )
     private String code;
 

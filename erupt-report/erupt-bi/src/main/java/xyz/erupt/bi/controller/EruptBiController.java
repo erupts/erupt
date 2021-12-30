@@ -89,7 +89,6 @@ public class EruptBiController {
             biVo.setExport(bi.getExport());
         }
         int maxSort = 9999;
-
         List<BiChartVo> biChartVos = new ArrayList<>();
         for (BiChart chart : bi.getBiCharts()) {
             BiChartVo biChartVo = new BiChartVo();
@@ -119,6 +118,7 @@ public class EruptBiController {
                     biDimensionVo.setDefaultValue(biService.evalScript(dimension.getDefaultValue()));
                 } catch (ScriptException e) {
                     log.error("{}.{} -> {}", bi.getName(), dimension.getCode(), e.getMessage());
+                    throw new RuntimeException(e);
                 }
             }
             biDimensionVos.add(biDimensionVo);
