@@ -37,11 +37,15 @@ import java.util.Map;
 public class EruptBiTplController {
 
     private final Gson gson = GsonFactory.getGson();
+
     private final StringTemplateLoader stringLoader = new StringTemplateLoader();
+
     @Resource
     private BiService biService;
+
     @Resource
     private EruptTplService eruptTplService;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -68,7 +72,8 @@ public class EruptBiTplController {
             configuration.setTemplateLoader(stringLoader);
             configuration.getTemplate(biChart.getCode(), "utf-8").process(map, response.getWriter());
         } else if (BiTpl.TYPE_PATH.equals(biChart.getBiTpl().getType())) {
-            eruptTplService.tplRender(Tpl.Engine.FreeMarker, biChart.getBiTpl().getUri(), map, response.getWriter());
+            EruptTplService eruptTplService = EruptSpringUtil.getBean(EruptTplService.class);
+            eruptTplService.tplRender(Tpl.Engine.FreeMarker, biChart.getBiTpl().getPath(), map, response.getWriter());
         }
 
     }

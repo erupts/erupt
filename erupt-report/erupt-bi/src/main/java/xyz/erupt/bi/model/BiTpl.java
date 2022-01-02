@@ -67,7 +67,7 @@ public class BiTpl extends MetaModelUpdateVo implements DataProxy<BiTpl> {
                     showBy = @ShowBy(dependField = "type", expr = "value == '" + BiTpl.TYPE_PATH + "'"),
                     desc = "resources路径下模板文件")
     )
-    private String uri;
+    private String path;
 
     @EruptField(
             views = @View(title = "模板"),
