@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_erupt;
 
+import lombok.Getter;
 import xyz.erupt.annotation.config.Comment;
 
 import java.beans.Transient;
@@ -27,6 +28,7 @@ public @interface Tpl {
     @Comment("模板引擎")
     Engine engine() default Engine.FreeMarker;
 
+    @Getter
     enum Engine {
         @Comment("原生H5, Native模式下不支持tplHandler")
         Native,
