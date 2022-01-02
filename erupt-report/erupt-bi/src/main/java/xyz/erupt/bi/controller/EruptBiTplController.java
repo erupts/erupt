@@ -72,7 +72,6 @@ public class EruptBiTplController {
             configuration.setTemplateLoader(stringLoader);
             configuration.getTemplate(biChart.getCode(), "utf-8").process(map, response.getWriter());
         } else if (BiTpl.TYPE_PATH.equals(biChart.getBiTpl().getType())) {
-            EruptTplService eruptTplService = EruptSpringUtil.getBean(EruptTplService.class);
             eruptTplService.tplRender(Tpl.Engine.FreeMarker, biChart.getBiTpl().getPath(), map, response.getWriter());
         }
 
