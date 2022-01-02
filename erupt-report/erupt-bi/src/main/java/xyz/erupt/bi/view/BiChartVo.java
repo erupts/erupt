@@ -25,8 +25,6 @@ public class BiChartVo {
 
     private String type;
 
-    private String path;
-
     private String chartOption;
 
 }

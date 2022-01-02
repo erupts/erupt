@@ -14,8 +14,10 @@ import xyz.erupt.bi.model.BiClassHandler;
 import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.bi.view.BiColumn;
 import xyz.erupt.bi.view.BiData;
+import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
+import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -67,6 +69,15 @@ public class BiService {
 
     public Bi findBi(Long id) {
         return entityManager.find(Bi.class, id);
+    }
+
+    //校验请求id是否拥有菜单权限
+    public void verifyBiMenuPermissions(Bi bi, String code) {
+        String biCode = Optional.ofNullable(request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY))
+                .orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
+        if (!biCode.equals(bi.getCode()) || !code.equals(bi.getCode())) {
+            throw new EruptNoLegalPowerException();
+        }
     }
 
     public BiData queryBiData(Bi bi, int pageIndex, int pageSize,

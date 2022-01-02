@@ -120,11 +120,12 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
     )
     private String type;
 
+    @ManyToOne
     @EruptField(
-            edit = @Edit(title = "模板地址", desc = "项目内路径，解析方式为freemarker，可通过data获取图表数据，option获取自定义图表参数",
-                    showBy = @ShowBy(dependField = "type", expr = "value=='tpl'"))
+            edit = @Edit(title = "报表模板",type = EditType.REFERENCE_TABLE,
+                    showBy = @ShowBy(dependField = "type", expr = "value=='" + ChartType.TPL + "'"))
     )
-    private String path;
+    private BiTpl biTpl;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")

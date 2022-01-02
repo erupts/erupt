@@ -1,29 +1,22 @@
 package xyz.erupt.bi.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import xyz.erupt.annotation.sub_erupt.Tpl;
+import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.*;
 import xyz.erupt.bi.service.BiService;
 import xyz.erupt.bi.view.*;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.config.GsonFactory;
-import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.controller.EruptExceptionHandlerAdvice;
-import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.util.*;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.tpl.service.EruptTplService;
-import xyz.erupt.upms.constant.EruptReqHeaderConst;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -32,8 +25,6 @@ import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping(EruptRestPath.ERUPT_API + "/bi")
+@RequestMapping(BiConst.BATH_PATH)
 @ControllerAdvice("xyz.erupt.bi.controller")
 public class EruptBiController {
 
@@ -56,13 +47,8 @@ public class EruptBiController {
     @Resource
     private EruptProp eruptProp;
 
-    @Resource
-    private HttpServletRequest request;
-
     @PersistenceContext
     private EntityManager entityManager;
-
-    private final Gson gson = GsonFactory.getGson();
 
     @ResponseBody
     @ExceptionHandler(value = RuntimeException.class)
@@ -98,7 +84,6 @@ public class EruptBiController {
             biChartVo.setGrid(chart.getGrid());
             biChartVo.setHeight(chart.getHeight());
             biChartVo.setName(chart.getName());
-            biChartVo.setPath(chart.getPath());
             biChartVo.setType(chart.getType());
             biChartVo.setSort((chart.getSort() == null) ? ++maxSort : chart.getSort());
             biChartVos.add(biChartVo);
@@ -143,7 +128,7 @@ public class EruptBiController {
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
             this.put("code", code);
         }});
-        this.verifyBiMenuPermissions(bi, code);
+        biService.verifyBiMenuPermissions(bi, code);
         return biService.queryBiData(bi, pageIndex, pageSize, query, false);
     }
 
@@ -152,7 +137,7 @@ public class EruptBiController {
     public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code,
                                     @RequestBody Map<String, Object> query) {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
-        this.verifyBiMenuPermissions(dimension.getBi(), code);
+        biService.verifyBiMenuPermissions(dimension.getBi(), code);
         BiDimensionReference reference = dimension.getBiDimensionReference();
         List<Map<String, Object>> list = biService.startQuery(reference.getRefSql(), reference.getClassHandler(), reference.getDataSource(), query);
         List<Reference> references = new ArrayList<>();
@@ -177,7 +162,7 @@ public class EruptBiController {
                                              @RequestBody(required = false) Map<String, Object> query,
                                              @PathVariable String code) {
         BiChart chart = entityManager.find(BiChart.class, chartId);
-        this.verifyBiMenuPermissions(chart.getBi(), code);
+        biService.verifyBiMenuPermissions(chart.getBi(), code);
         return biService.startQuery(chart.getSqlStatement(), chart.getClassHandler(), chart.getDataSource(), query);
     }
 
@@ -190,7 +175,7 @@ public class EruptBiController {
                             HttpServletResponse response) throws ClassNotFoundException, IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         Bi bi = biService.findBi(id);
-        this.verifyBiMenuPermissions(bi, code);
+        biService.verifyBiMenuPermissions(bi, code);
         Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
         BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, condition, true);
         Workbook wb = new SXSSFWorkbook();
@@ -235,32 +220,6 @@ public class EruptBiController {
             biHandler.exportHandler(biClassHandler.getParam(), condition, wb);
         }
         wb.write(EruptUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLSX_FORMAT));
-    }
-
-    @GetMapping(value = "/{code}/custom-chart/{id}", produces = {"text/html;charset=UTF-8"})
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void customerChart(@PathVariable("id") Long chartId,
-                              @RequestParam("condition") String conditionStr,
-                              HttpServletResponse response, @PathVariable String code) throws IOException {
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        Map<String, Object> condition = gson.fromJson(URLDecoder.decode(conditionStr, StandardCharsets.UTF_8.name()),
-                new TypeToken<Map<String, Object>>() {
-                }.getType());
-        BiChart biChart = entityManager.find(BiChart.class, chartId);
-        this.verifyBiMenuPermissions(biChart.getBi(), code);
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", biService.startQuery(biChart.getSqlStatement(), biChart.getClassHandler(), biChart.getDataSource(), condition));
-        EruptTplService eruptTplService = EruptSpringUtil.getBean(EruptTplService.class);
-        eruptTplService.tplRender(Tpl.Engine.FreeMarker, biChart.getPath(), map, response.getWriter());
-    }
-
-    //校验请求id是否拥有菜单权限
-    private void verifyBiMenuPermissions(Bi bi, String code) {
-        String biCode = Optional.ofNullable(request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY))
-                .orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
-        if (!biCode.equals(bi.getCode()) || !code.equals(bi.getCode())) {
-            throw new EruptNoLegalPowerException();
-        }
     }
 
 }
