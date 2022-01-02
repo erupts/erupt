@@ -90,6 +90,10 @@ public class EruptTplService implements ApplicationRunner {
         return tplActions.get(name);
     }
 
+    public Object getEngine(Tpl.Engine engine) {
+        return tplEngines.get(engine).getEngine();
+    }
+
     @SneakyThrows
     public void tplRender(Tpl tpl, Map<String, Object> map, HttpServletResponse response) {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
