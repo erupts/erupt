@@ -39,16 +39,16 @@ public class BiDataInitService implements CommandLineRunner {
             if (first) {
                 String mbi = "$mbi";
                 EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createSimpleMenu(mbi, "报表维护", "fa fa-table", 20), EruptMenu.CODE, mbi);
-                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiDataSource.class, eruptMenu, 10), EruptMenu.CODE);
-                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiClassHandler.class, eruptMenu, 20), EruptMenu.CODE);
-                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiTpl.class, eruptMenu, 25), EruptMenu.CODE);
-                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiDimensionReference.class, eruptMenu, 30), EruptMenu.CODE);
-                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiFunction.class, eruptMenu, 40), EruptMenu.CODE);
-                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiGroup.class, eruptMenu, 50), EruptMenu.CODE);
+                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiDataSource.class, eruptMenu, 10), EruptMenu.CODE, BiDataSource.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiClassHandler.class, eruptMenu, 20), EruptMenu.CODE, BiClassHandler.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiTpl.class, eruptMenu, 25), EruptMenu.CODE, BiTpl.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiDimensionReference.class, eruptMenu, 30), EruptMenu.CODE, BiDimensionReference.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiFunction.class, eruptMenu, 40), EruptMenu.CODE, BiFunction.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiGroup.class, eruptMenu, 50), EruptMenu.CODE, BiGroup.class.getSimpleName());
                 {
-                    EruptMenu eruptMenuBi = eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(Bi.class, eruptMenu, 100), EruptMenu.CODE);
-                    eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiChart.class, eruptMenuBi, 10, MenuStatus.HIDE), EruptMenu.CODE);
-                    eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiHistory.class, eruptMenuBi, 20, MenuStatus.HIDE), EruptMenu.CODE);
+                    EruptMenu eruptMenuBi = eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(Bi.class, eruptMenu, 100), EruptMenu.CODE, Bi.class.getSimpleName());
+                    eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiChart.class, eruptMenuBi, 10, MenuStatus.HIDE), EruptMenu.CODE, BiChart.class.getSimpleName());
+                    eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(BiHistory.class, eruptMenuBi, 20, MenuStatus.HIDE), EruptMenu.CODE, BiHistory.class.getSimpleName());
                 }
                 this.loadDefaultFunction();
             }
