@@ -45,6 +45,8 @@ public class BiDataInitService implements CommandLineRunner {
                         , MenuStatus.OPEN.getValue(), 10, null, eruptMenu), code, BiDataSource.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiClassHandler.class.getSimpleName(), "报表处理类", MenuTypeEnum.TABLE.getCode(), BiClassHandler.class.getSimpleName()
                         , MenuStatus.OPEN.getValue(), 20, null, eruptMenu), code, BiClassHandler.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiTpl.class.getSimpleName(), "组件模板", MenuTypeEnum.TABLE.getCode(), BiTpl.class.getSimpleName()
+                        , MenuStatus.OPEN.getValue(), 25, null, eruptMenu), code, BiTpl.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiDimensionReference.class.getSimpleName(), "参照维度", MenuTypeEnum.TABLE.getCode(), BiDimensionReference.class.getSimpleName()
                         , MenuStatus.OPEN.getValue(), 30, null, eruptMenu), code, BiDimensionReference.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(BiFunction.class.getSimpleName(), "函数管理", MenuTypeEnum.TABLE.getCode(), BiFunction.class.getSimpleName()
