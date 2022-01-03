@@ -22,4 +22,10 @@ public class ScriptPlaceholderConst {
     //response 响应对象
     public static final String RESPONSE_PLACEHOLDER = PLACEHOLDER.replace(SYMBOL, "response");
 
+    //当前页数
+    public static final String PAGE_SIZE_PLACEHOLDER = PLACEHOLDER.replace(SYMBOL, "pageIndex");
+
+    //当前页数
+    public static final String PAGE_INDEX_PLACEHOLDER = PLACEHOLDER.replace(SYMBOL, "pageSize");
+
 }

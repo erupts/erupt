@@ -84,9 +84,9 @@ public class BiService {
                               Map<String, Object> query, boolean export) {
         Erupts.requireTrue(StringUtils.isNotBlank(bi.getSqlStatement()), "express not found");
         query.put(ScriptPlaceholderConst.EXPORT_PLACEHOLDER, export);
-        query.put(ScriptPlaceholderConst.USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
-        query.put(ScriptPlaceholderConst.REQUEST_PLACEHOLDER, request);
-        query.put(ScriptPlaceholderConst.RESPONSE_PLACEHOLDER, response);
+        query.put(ScriptPlaceholderConst.PAGE_SIZE_PLACEHOLDER, pageSize);
+        query.put(ScriptPlaceholderConst.PAGE_INDEX_PLACEHOLDER, pageIndex);
+        this.putCommonContextParam(query);
         BiData biData = new BiData();
         if (!export) {
             biData.setTotal(this.getTotal(bi, query));
@@ -115,6 +115,7 @@ public class BiService {
     @SneakyThrows
     public List<Map<String, Object>> startQuery(String express, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
         EruptBiHandler biHandler = null;
+        this.putCommonContextParam(query);
         express = processPlaceHolder(express, query);
         if (null != classHandler) {
             biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), EruptBiHandler.class);
@@ -135,6 +136,14 @@ public class BiService {
     }
 
     private static final String TOTAL_KEY = "count";
+
+
+    //插入通用上下文条件
+    private void putCommonContextParam(Map<String, Object> param){
+        param.put(ScriptPlaceholderConst.REQUEST_PLACEHOLDER, request);
+        param.put(ScriptPlaceholderConst.RESPONSE_PLACEHOLDER, response);
+        param.put(ScriptPlaceholderConst.USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
+    }
 
     @SneakyThrows
     private Long getTotal(Bi bi, Map<String, Object> query) {

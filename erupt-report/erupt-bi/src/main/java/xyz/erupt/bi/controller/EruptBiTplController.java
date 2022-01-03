@@ -15,8 +15,10 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.tpl.engine.FreemarkerEngine;
 import xyz.erupt.tpl.service.EruptTplService;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -36,10 +38,6 @@ import java.util.Map;
 @RequestMapping(BiConst.BATH_PATH)
 public class EruptBiTplController {
 
-    private final Gson gson = GsonFactory.getGson();
-
-    private final StringTemplateLoader stringLoader = new StringTemplateLoader();
-
     @Resource
     private BiService biService;
 
@@ -49,6 +47,15 @@ public class EruptBiTplController {
     @PersistenceContext
     private EntityManager entityManager;
 
+    private final Gson gson = GsonFactory.getGson();
+
+    private final Configuration freemarker = new FreemarkerEngine().init();
+
+    @PostConstruct
+    public void post() {
+        freemarker.setTemplateLoader(new StringTemplateLoader());
+    }
+
     @GetMapping(value = "/{code}/custom-chart/{id}", produces = {"text/html;charset=UTF-8"})
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void customerChart(@PathVariable String code,
@@ -57,9 +64,9 @@ public class EruptBiTplController {
                               HttpServletRequest request,
                               HttpServletResponse response) throws IOException, TemplateException {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        Map<String, Object> condition = gson.fromJson(URLDecoder.decode(conditionStr, StandardCharsets.UTF_8.name()),
-                new TypeToken<Map<String, Object>>() {
-                }.getType());
+        Map<String, Object> condition = gson.fromJson(URLDecoder.decode(conditionStr,
+                StandardCharsets.UTF_8.name()), new TypeToken<Map<String, Object>>() {
+        }.getType());
         BiChart biChart = entityManager.find(BiChart.class, chartId);
         biService.verifyBiMenuPermissions(biChart.getBi(), code);
         if (null == biChart.getBiTpl()) throw new EruptWebApiRuntimeException("Tpl not config");
@@ -68,8 +75,8 @@ public class EruptBiTplController {
         map.put("data", biService.startQuery(biChart.getSqlStatement(), biChart.getClassHandler(), biChart.getDataSource(), condition));
         if (BiTpl.TYPE_ONLINE.equals(biChart.getBiTpl().getType())) {
             map.put("request", request);
-            stringLoader.putTemplate(biChart.getCode(), biChart.getBiTpl().getTpl());
-            configuration.setTemplateLoader(stringLoader);
+            StringTemplateLoader stringTemplateLoader = (StringTemplateLoader) freemarker.getTemplateLoader();
+            stringTemplateLoader.putTemplate(biChart.getCode(), biChart.getBiTpl().getTpl());
             configuration.getTemplate(biChart.getCode(), "utf-8").process(map, response.getWriter());
         } else if (BiTpl.TYPE_PATH.equals(biChart.getBiTpl().getType())) {
             eruptTplService.tplRender(Tpl.Engine.FreeMarker, biChart.getBiTpl().getPath(), map, response.getWriter());
