@@ -68,7 +68,7 @@ public class EruptJob extends MetaModel implements DataProxy<EruptJob>, Operatio
 
     @EruptField(
             views = @View(title = "JOB处理类"),
-            edit = @Edit(title = "JOB处理类", desc = "需实现EruptJobHandler接口",
+            edit = @Edit(title = "JOB处理类", desc = "实现EruptJobHandler接口即可",
                     choiceType = @ChoiceType(fetchHandler = ChoiceFetchEruptJobHandler.class)
                     , notNull = true, search = @Search, type = EditType.CHOICE)
     )
