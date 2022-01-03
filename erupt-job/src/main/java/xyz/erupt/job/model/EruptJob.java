@@ -2,6 +2,7 @@ package xyz.erupt.job.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
@@ -49,8 +50,7 @@ import java.util.List;
 public class EruptJob extends MetaModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
 
     @EruptField(
-            views = @View(title = "任务编码"),
-            edit = @Edit(title = "任务编码", notNull = true, search = @Search)
+            views = @View(title = "编码")
     )
     private String code;
 
@@ -114,6 +114,9 @@ public class EruptJob extends MetaModel implements DataProxy<EruptJob>, Operatio
 
     @Override
     public void beforeAdd(EruptJob eruptJob) {
+        if (null == eruptJob.getCode()) {
+            eruptJob.setCode(RandomStringUtils.randomAlphabetic(6));
+        }
         try {
             eruptJobService.modifyJob(eruptJob);
         } catch (SchedulerException | ParseException e) {
