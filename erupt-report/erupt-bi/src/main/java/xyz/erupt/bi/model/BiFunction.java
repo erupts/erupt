@@ -32,7 +32,7 @@ import javax.script.ScriptException;
  */
 @Entity
 @Table(name = "e_bi_function")
-@Erupt(name = "报表函数", dataProxy = BiFunction.class)
+@Erupt(name = "函数管理", dataProxy = BiFunction.class)
 @Getter
 @Service
 @EruptI18n

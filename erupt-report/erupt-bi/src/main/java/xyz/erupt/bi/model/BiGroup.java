@@ -22,7 +22,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "e_bi_group", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "报表组别", tree = @Tree(pid = "parent.id"))
+@Erupt(name = "分组管理", tree = @Tree(pid = "parent.id"))
 @Getter
 @Setter
 @Component

@@ -28,7 +28,7 @@ import java.util.Date;
 @Entity
 @Table(name = "e_bi_history")
 @Erupt(
-        name = "报表历史记录",
+        name = "修改记录",
         orderBy = "operateTime desc",
         power = @Power(edit = false, add = false, viewDetails = false)
 )

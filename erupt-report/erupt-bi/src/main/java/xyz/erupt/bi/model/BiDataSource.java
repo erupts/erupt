@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  */
 @Entity
 @Table(name = "e_bi_datasource", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "数据源", dataProxy = BiDataSourceService.class)
+@Erupt(name = "数据源管理", dataProxy = BiDataSourceService.class)
 @Getter
 @Setter
 @EruptI18n
