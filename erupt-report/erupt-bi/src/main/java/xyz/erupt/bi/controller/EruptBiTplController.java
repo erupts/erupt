@@ -14,7 +14,6 @@ import xyz.erupt.bi.service.BiService;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
-import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.engine.FreemarkerEngine;
 import xyz.erupt.tpl.service.EruptTplService;
 
@@ -71,13 +70,12 @@ public class EruptBiTplController {
         biService.verifyBiMenuPermissions(biChart.getBi(), code);
         if (null == biChart.getBiTpl()) throw new EruptWebApiRuntimeException("Tpl not config");
         Map<String, Object> map = new HashMap<>();
-        Configuration configuration = (Configuration) EruptSpringUtil.getBean(EruptTplService.class).getEngine(Tpl.Engine.FreeMarker);
         map.put("data", biService.startQuery(biChart.getSqlStatement(), biChart.getClassHandler(), biChart.getDataSource(), condition));
         if (BiTpl.TYPE_ONLINE.equals(biChart.getBiTpl().getType())) {
             map.put("request", request);
             StringTemplateLoader stringTemplateLoader = (StringTemplateLoader) freemarker.getTemplateLoader();
             stringTemplateLoader.putTemplate(biChart.getCode(), biChart.getBiTpl().getTpl());
-            configuration.getTemplate(biChart.getCode(), "utf-8").process(map, response.getWriter());
+            freemarker.getTemplate(biChart.getCode(), "utf-8").process(map, response.getWriter());
         } else if (BiTpl.TYPE_PATH.equals(biChart.getBiTpl().getType())) {
             eruptTplService.tplRender(Tpl.Engine.FreeMarker, biChart.getBiTpl().getPath(), map, response.getWriter());
         }
