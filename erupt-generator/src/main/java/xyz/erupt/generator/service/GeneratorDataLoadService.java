@@ -1,6 +1,5 @@
 package xyz.erupt.generator.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import javax.transaction.Transactional;
  */
 @Service
 @Order
-@Slf4j
 public class GeneratorDataLoadService implements CommandLineRunner {
 
     @Resource
