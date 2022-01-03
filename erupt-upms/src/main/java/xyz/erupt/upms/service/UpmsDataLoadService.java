@@ -78,7 +78,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptLoginLog.class.getSimpleName(), "登录日志", MenuTypeEnum.TABLE.getCode(), EruptLoginLog.class.getSimpleName(), open, 60, null, eruptMenu
                 ), code, EruptLoginLog.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptOperateLog.class, new EruptMenu(
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
                         EruptOperateLog.class.getSimpleName(), "操作日志", MenuTypeEnum.TABLE.getCode(), EruptOperateLog.class.getSimpleName(), open, 70, null, eruptMenu
                 ), code, EruptOperateLog.class.getSimpleName());
             } else {

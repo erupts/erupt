@@ -75,7 +75,7 @@ public class JobDataLoadService implements CommandLineRunner {
                         MenuStatus.OPEN.getValue(), 0, "fa fa-tasks", eruptMenu), code, EruptJob.class.getSimpleName());
                 eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJobLog.class.getSimpleName(), "任务日志", MenuTypeEnum.TABLE.getCode(), EruptJobLog.class.getSimpleName(),
                         MenuStatus.OPEN.getValue(), 10, "fa fa-file-text", eruptMenu), code, EruptJobLog.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMail.class, new EruptMenu(EruptMail.class.getSimpleName(), "发送邮件", MenuTypeEnum.TABLE.getCode(), EruptMail.class.getSimpleName(),
+                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptMail.class.getSimpleName(), "发送邮件", MenuTypeEnum.TABLE.getCode(), EruptMail.class.getSimpleName(),
                         MenuStatus.OPEN.getValue(), 20, "fa fa-envelope-o", eruptMenu), code, EruptMail.class.getSimpleName());
             }
         });

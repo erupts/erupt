@@ -37,6 +37,8 @@ import java.util.Date;
 @Setter
 public class EruptMenu extends HyperModel {
 
+    public static final String CODE = "code";
+
     private String code;
 
     @EruptField(
@@ -133,5 +135,33 @@ public class EruptMenu extends HyperModel {
         this.icon = icon;
         this.parentMenu = parentMenu;
         this.setCreateTime(new Date());
+    }
+
+    public static EruptMenu createSimpleMenu(String code, String name, String icon, Integer sort) {
+        EruptMenu eruptMenu = new EruptMenu();
+        eruptMenu.code = code;
+        eruptMenu.name = name;
+        eruptMenu.status = MenuStatus.OPEN.getValue();
+        eruptMenu.sort = sort;
+        eruptMenu.icon = icon;
+        eruptMenu.setCreateTime(new Date());
+        return eruptMenu;
+    }
+
+    public static EruptMenu createEruptClassMenu(Class<?> eruptClass, EruptMenu parentMenu, Integer sort, MenuStatus menuStatus) {
+        EruptMenu eruptMenu = new EruptMenu();
+        eruptMenu.code = eruptClass.getSimpleName();
+        eruptMenu.name = eruptClass.getAnnotation(Erupt.class).name();
+        eruptMenu.status = menuStatus.getValue();
+        eruptMenu.type = MenuTypeEnum.TABLE.getCode();
+        eruptMenu.value = eruptClass.getSimpleName();
+        eruptMenu.sort = sort;
+        eruptMenu.parentMenu = parentMenu;
+        eruptMenu.setCreateTime(new Date());
+        return eruptMenu;
+    }
+
+    public static EruptMenu createEruptClassMenu(Class<?> eruptClass, EruptMenu parentMenu, Integer sort) {
+        return createEruptClassMenu(eruptClass, parentMenu, sort, MenuStatus.OPEN);
     }
 }
