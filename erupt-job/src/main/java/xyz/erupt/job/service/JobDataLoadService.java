@@ -8,7 +8,6 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.annotation.EruptHandlerNaming;
-import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -19,7 +18,6 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.job.model.EruptMail;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.EruptMenu;
 
 import javax.annotation.Resource;
@@ -69,14 +67,11 @@ public class JobDataLoadService implements CommandLineRunner {
         }
         new ProjectUtil().projectStartLoaded("job", first -> {
             if (first) {
-                String job = "$job", code = "code";
-                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(job, "任务管理", null, null, 1, 30, "fa fa-cubes", null), code, job);
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJob.class.getSimpleName(), "任务维护", MenuTypeEnum.TABLE.getCode(), EruptJob.class.getSimpleName(),
-                        MenuStatus.OPEN.getValue(), 0, "fa fa-tasks", eruptMenu), code, EruptJob.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptJobLog.class.getSimpleName(), "任务日志", MenuTypeEnum.TABLE.getCode(), EruptJobLog.class.getSimpleName(),
-                        MenuStatus.OPEN.getValue(), 10, "fa fa-file-text", eruptMenu), code, EruptJobLog.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(EruptMail.class.getSimpleName(), "发送邮件", MenuTypeEnum.TABLE.getCode(), EruptMail.class.getSimpleName(),
-                        MenuStatus.OPEN.getValue(), 20, "fa fa-envelope-o", eruptMenu), code, EruptMail.class.getSimpleName());
+                String job = "$job";
+                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createSimpleMenu(job, "任务管理", "fa fa-cubes", 30), EruptMenu.CODE, job);
+                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(EruptJob.class, eruptMenu, 0), EruptMenu.CODE, EruptJob.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(EruptJobLog.class, eruptMenu, 10), EruptMenu.CODE, EruptJobLog.class.getSimpleName());
+                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(EruptMail.class, eruptMenu, 20), EruptMenu.CODE, EruptMail.class.getSimpleName());
             }
         });
     }
