@@ -95,16 +95,20 @@ public class EruptDao {
     }
 
     //不存在则新增
-    public <T> T persistIfNotExist(Class<T> eruptClass, Object obj, String field, String val) throws NonUniqueResultException {
-        T t = (T) queryEntity(obj.getClass(), field + EQU + " :val", new HashMap<String, Object>(1) {{
+    public <T> T persistIfNotExist(Class<T> eruptClass, T obj, String field, String val) throws NonUniqueResultException {
+        T t = (T) queryEntity(eruptClass, field + EQU + " :val", new HashMap<String, Object>(1) {{
             this.put("val", val);
         }});
         if (null == t) {
             entityManager.persist(obj);
             entityManager.flush();
-            return (T) obj;
+            return obj;
         }
         return t;
+    }
+
+    public <T> T persistIfNotExist(Class<T> eruptClass, T obj, String field) throws NonUniqueResultException {
+        return persistIfNotExist(eruptClass, obj, field, eruptClass.getSimpleName());
     }
 
     //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
