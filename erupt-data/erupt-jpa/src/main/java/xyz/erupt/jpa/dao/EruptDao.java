@@ -107,10 +107,6 @@ public class EruptDao {
         return t;
     }
 
-    public <T> T persistIfNotExist(Class<T> eruptClass, T obj, String field) throws NonUniqueResultException {
-        return persistIfNotExist(eruptClass, obj, field, eruptClass.getSimpleName());
-    }
-
     //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
     public List<Map<String, Object>> queryMapList(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) {
         return simpleQuery(eruptClass, true, expr, param, cols).getResultList();
