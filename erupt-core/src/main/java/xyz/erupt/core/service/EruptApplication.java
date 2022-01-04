@@ -41,7 +41,7 @@ public class EruptApplication implements ImportBeanDefinitionRegistrar {
         if (eruptScan.value().length == 0) {
             scanPackage.add(clazz.getPackage().getName());
         } else {
-            Stream.of(eruptScan.value()).filter(pack->!pack.equals(EruptConst.BASE_PACKAGE)).forEach(scanPackage::add);
+            Stream.of(eruptScan.value()).filter(pack -> !pack.equals(EruptConst.BASE_PACKAGE)).forEach(scanPackage::add);
         }
     }
 }

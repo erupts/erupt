@@ -102,5 +102,6 @@ public class EruptCoreService implements ApplicationRunner {
                 new AnnotationTypeFilter(Erupt.class)
         }, clazz -> ERUPTS.put(clazz.getSimpleName(), initEruptModel(clazz)));
         log.info("Erupt core initialization completed in {} ms", timeRecorder.recorder());
+//        EruptModuleInvoke.invoke(EruptModule::init);
     }
 }

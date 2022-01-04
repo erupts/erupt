@@ -1,4 +1,4 @@
-package xyz.erupt.upms.enums;
+package xyz.erupt.core.constant;
 
 import lombok.Getter;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;

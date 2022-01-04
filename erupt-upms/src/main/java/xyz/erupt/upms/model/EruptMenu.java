@@ -11,9 +11,10 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
+import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.upms.enums.MenuLimitEnum;
-import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptMenuService;
 
@@ -135,6 +136,19 @@ public class EruptMenu extends HyperModel {
         this.icon = icon;
         this.parentMenu = parentMenu;
         this.setCreateTime(new Date());
+    }
+
+
+    public static EruptMenu fromMetaMenu(MetaMenu metaMenu) {
+        if (null == metaMenu) return null;
+        return new EruptMenu(metaMenu.getCode(),
+                metaMenu.getName(),
+                null == metaMenu.getType() ? null : metaMenu.getType().getCode(),
+                metaMenu.getValue(),
+                null == metaMenu.getStatus() ? null : metaMenu.getStatus().getValue(),
+                metaMenu.getSort(),
+                metaMenu.getIcon(),
+                fromMetaMenu(metaMenu.getParentMenu()));
     }
 
     public static EruptMenu createSimpleMenu(String code, String name, String icon, Integer sort) {

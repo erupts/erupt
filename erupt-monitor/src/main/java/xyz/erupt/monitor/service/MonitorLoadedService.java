@@ -2,12 +2,12 @@ package xyz.erupt.monitor.service;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.monitor.model.EruptOnline;
 import xyz.erupt.tpl.service.EruptTplService;
-import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.EruptMenu;
 
 import javax.annotation.Resource;
