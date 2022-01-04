@@ -5,12 +5,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.ssssssss.magicapi.interceptor.Authorization;
+import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.magicapi.action.MagicApiTpl;
 import xyz.erupt.tpl.service.EruptTplService;
-import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.EruptMenu;
 
 import javax.annotation.Resource;

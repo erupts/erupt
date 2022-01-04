@@ -1,14 +1,17 @@
 package xyz.erupt.upms.service;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
+import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.enums.MenuStatus;
 import xyz.erupt.upms.model.*;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.model.log.EruptOperateLog;
@@ -34,6 +37,12 @@ public class UpmsDataLoadService implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) {
+        EruptModuleInvoke.invoke(it -> {
+            for (MetaMenu menu : it.menus()) {
+                System.out.println(new Gson().toJson(
+                        EruptMenu.fromMetaMenu(menu)));
+            }
+        });
         new ProjectUtil().projectStartLoaded("upms", first -> {
             if (first) {
                 //用户
@@ -95,5 +104,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
             }
         });
     }
+
+
 
 }
