@@ -21,7 +21,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "e_upms_post", uniqueConstraints = {
         @UniqueConstraint(columnNames = "code")
 })
-@Erupt(name = "用户岗位", orderBy = "weight desc")
+@Erupt(name = "岗位维护", orderBy = "weight desc")
 @EruptI18n
 @Getter
 @Setter

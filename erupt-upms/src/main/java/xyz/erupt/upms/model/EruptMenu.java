@@ -28,7 +28,7 @@ import java.util.Date;
 @Entity
 @Table(name = "e_upms_menu", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
-        name = "菜单配置",
+        name = "菜单管理",
         orderBy = "EruptMenu.sort asc",
         tree = @Tree(pid = "parentMenu.id"),
         dataProxy = EruptMenuService.class

@@ -14,6 +14,8 @@ import xyz.erupt.core.constant.MenuTypeEnum;
 @Setter
 public class MetaMenu {
 
+    private transient Long id; //无需传递此参数
+
     private String code;
 
     private String name;

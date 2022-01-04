@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
         @UniqueConstraint(columnNames = "code")
 })
 @Erupt(
-        name = "用户角色",
+        name = "角色管理",
         filter = @Filter(conditionHandler = EruptRole.class)
 )
 @EruptI18n
