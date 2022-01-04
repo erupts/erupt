@@ -41,7 +41,7 @@ import java.util.Set;
         @UniqueConstraint(columnNames = "account")
 })
 @Erupt(
-        name = "用户", desc = "用户配置",
+        name = "用户配置",
         dataProxy = EruptUser.class,
         linkTree = @LinkTree(field = "eruptOrg")
 )
