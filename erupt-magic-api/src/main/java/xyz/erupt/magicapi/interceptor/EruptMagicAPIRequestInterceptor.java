@@ -41,6 +41,9 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     public boolean requireLogin() {
         try {
             AdminUserinfo adminUserInfo = eruptUserService.getAdminUserInfo();
+            if (null == adminUserInfo) {
+                return false;
+            }
             request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER, new MagicUser(adminUserInfo.getAccount(), adminUserInfo.getUsername(), this.eruptContextService.getCurrentToken()));
         } catch (IllegalStateException ignore) {
         }
