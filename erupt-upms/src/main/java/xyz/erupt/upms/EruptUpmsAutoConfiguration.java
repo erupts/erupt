@@ -13,6 +13,7 @@ import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.upms.model.*;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.model.log.EruptOperateLog;
+import xyz.erupt.upms.model.online.EruptOnline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createEruptClassMenu(EruptUser.class, menus.get(0), 40));
         menus.add(MetaMenu.createEruptClassMenu(EruptDict.class, menus.get(0), 50));
         menus.add(MetaMenu.createEruptClassMenu(EruptDictItem.class, menus.get(0), 60, MenuStatus.HIDE));
+        menus.add(MetaMenu.createEruptClassMenu(EruptOnline.class, menus.get(0), 65));
         menus.add(MetaMenu.createEruptClassMenu(EruptLoginLog.class, menus.get(0), 70));
         menus.add(MetaMenu.createEruptClassMenu(EruptOperateLog.class, menus.get(0), 80));
         return menus;

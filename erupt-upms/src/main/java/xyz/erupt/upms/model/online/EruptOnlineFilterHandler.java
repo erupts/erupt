@@ -1,4 +1,4 @@
-package xyz.erupt.monitor.model;
+package xyz.erupt.upms.model.online;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;

@@ -11,14 +11,10 @@ import xyz.erupt.core.annotation.EruptHandlerNaming;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.job.config.EruptJobProp;
 import xyz.erupt.job.handler.EruptJobHandler;
 import xyz.erupt.job.model.EruptJob;
-import xyz.erupt.job.model.EruptJobLog;
-import xyz.erupt.job.model.EruptMail;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.model.EruptMenu;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -32,7 +28,7 @@ import java.util.List;
 @Service
 @Order
 @Slf4j
-public class JobDataLoadService implements CommandLineRunner {
+public class JobStartService implements CommandLineRunner {
 
     @Resource
     private EruptDao eruptDao;
@@ -65,14 +61,5 @@ public class JobDataLoadService implements CommandLineRunner {
         } else {
             log.info("Erupt job disable");
         }
-        new ProjectUtil().projectStartLoaded("job", first -> {
-            if (first) {
-                String job = "$job";
-                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createSimpleMenu(job, "任务管理", "fa fa-cubes", 30), EruptMenu.CODE, job);
-                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(EruptJob.class, eruptMenu, 0), EruptMenu.CODE, EruptJob.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(EruptJobLog.class, eruptMenu, 10), EruptMenu.CODE, EruptJobLog.class.getSimpleName());
-                eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.createEruptClassMenu(EruptMail.class, eruptMenu, 20), EruptMenu.CODE, EruptMail.class.getSimpleName());
-            }
-        });
     }
 }

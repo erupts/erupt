@@ -18,6 +18,8 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.invoke.ExprInvoke;
+import xyz.erupt.core.module.EruptModule;
+import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -102,6 +104,6 @@ public class EruptCoreService implements ApplicationRunner {
                 new AnnotationTypeFilter(Erupt.class)
         }, clazz -> ERUPTS.put(clazz.getSimpleName(), initEruptModel(clazz)));
         log.info("Erupt core initialization completed in {} ms", timeRecorder.recorder());
-//        EruptModuleInvoke.invoke(EruptModule::init);
+        EruptModuleInvoke.invoke(EruptModule::init);
     }
 }
