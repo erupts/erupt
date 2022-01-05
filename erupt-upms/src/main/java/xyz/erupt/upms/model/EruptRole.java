@@ -6,13 +6,16 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.enums.MenuLimitEnum;
 import xyz.erupt.upms.handler.RoleMenuFilter;
@@ -33,17 +36,18 @@ import java.util.stream.Collectors;
 })
 @Erupt(
         name = "角色管理",
+        dataProxy = EruptRole.class,
         filter = @Filter(conditionHandler = EruptRole.class)
 )
 @EruptI18n
 @Getter
 @Setter
 @Component
-public class EruptRole extends BaseModel implements FilterHandler {
+public class EruptRole extends BaseModel implements FilterHandler, DataProxy<EruptRole> {
 
     @EruptField(
-            views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true)
+            views = @View(title = "编码", width = "100px"),
+            edit = @Edit(title = "编码", notNull = true, readonly = @Readonly(add = false))
     )
     private String code;
 
@@ -101,5 +105,10 @@ public class EruptRole extends BaseModel implements FilterHandler {
         }
         Set<String> roles = eruptUser.getRoles().stream().map(it -> it.getId().toString()).collect(Collectors.toSet());
         return String.format("id in (%s)", String.join(",", roles));
+    }
+
+    @Override
+    public void addBehavior(EruptRole eruptRole) {
+        eruptRole.setCode(Erupts.generateCode());
     }
 }

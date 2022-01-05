@@ -143,7 +143,7 @@ public class EruptMenu extends HyperModel {
         if (null == metaMenu) return null;
         return new EruptMenu(metaMenu.getCode(),
                 metaMenu.getName(),
-                null == metaMenu.getType() ? null : metaMenu.getType().getCode(),
+                null == metaMenu.getType() ? null : metaMenu.getType(),
                 metaMenu.getValue(),
                 null == metaMenu.getStatus() ? null : metaMenu.getStatus().getValue(),
                 metaMenu.getSort(),
@@ -151,31 +151,4 @@ public class EruptMenu extends HyperModel {
                 fromMetaMenu(metaMenu.getParentMenu()));
     }
 
-    public static EruptMenu createSimpleMenu(String code, String name, String icon, Integer sort) {
-        EruptMenu eruptMenu = new EruptMenu();
-        eruptMenu.code = code;
-        eruptMenu.name = name;
-        eruptMenu.status = MenuStatus.OPEN.getValue();
-        eruptMenu.sort = sort;
-        eruptMenu.icon = icon;
-        eruptMenu.setCreateTime(new Date());
-        return eruptMenu;
-    }
-
-    public static EruptMenu createEruptClassMenu(Class<?> eruptClass, EruptMenu parentMenu, Integer sort, MenuStatus menuStatus) {
-        EruptMenu eruptMenu = new EruptMenu();
-        eruptMenu.code = eruptClass.getSimpleName();
-        eruptMenu.name = eruptClass.getAnnotation(Erupt.class).name();
-        eruptMenu.status = menuStatus.getValue();
-        eruptMenu.type = MenuTypeEnum.TABLE.getCode();
-        eruptMenu.value = eruptClass.getSimpleName();
-        eruptMenu.sort = sort;
-        eruptMenu.parentMenu = parentMenu;
-        eruptMenu.setCreateTime(new Date());
-        return eruptMenu;
-    }
-
-    public static EruptMenu createEruptClassMenu(Class<?> eruptClass, EruptMenu parentMenu, Integer sort) {
-        return createEruptClassMenu(eruptClass, parentMenu, sort, MenuStatus.OPEN);
-    }
 }

@@ -22,7 +22,7 @@ public class MetaMenu {
 
     private MenuStatus status;
 
-    private MenuTypeEnum type;
+    private String type;
 
     private String value;
 
@@ -45,16 +45,26 @@ public class MetaMenu {
         return metaMenu;
     }
 
-    public static MetaMenu createEruptClassMenu(Class<?> eruptClass, MetaMenu parent, Integer sort, MenuTypeEnum menuTypeEnum, MenuStatus menuStatus) {
+    public static MetaMenu createSimpleMenu(String code, String name, String value, MetaMenu parent, Integer sort, String icon, String type, MenuStatus menuStatus) {
         MetaMenu metaMenu = new MetaMenu();
-        metaMenu.code = eruptClass.getSimpleName();
-        metaMenu.name = eruptClass.getAnnotation(Erupt.class).name();
+        metaMenu.code = code;
+        metaMenu.name = name;
         metaMenu.status = menuStatus;
-        metaMenu.type = menuTypeEnum;
-        metaMenu.value = eruptClass.getSimpleName();
+        metaMenu.type = type;
+        metaMenu.value = value;
         metaMenu.sort = sort;
         metaMenu.parentMenu = parent;
+        metaMenu.icon = icon;
         return metaMenu;
+    }
+
+    public static MetaMenu createSimpleMenu(String code, String name, String value, MetaMenu parent, Integer sort, String type) {
+        return createSimpleMenu(code, name, value, parent, sort, null, type, MenuStatus.OPEN);
+    }
+
+    public static MetaMenu createEruptClassMenu(Class<?> eruptClass, MetaMenu parent, Integer sort, MenuTypeEnum menuTypeEnum, MenuStatus menuStatus) {
+        return createSimpleMenu(eruptClass.getSimpleName(), eruptClass.getAnnotation(Erupt.class).name(),
+                eruptClass.getSimpleName(), parent, sort, "", menuTypeEnum.getCode(), menuStatus);
     }
 
     public static MetaMenu createEruptClassMenu(Class<?> eruptClass, MetaMenu parent, Integer sort) {

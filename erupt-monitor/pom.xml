@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-upms</artifactId>
+            <artifactId>erupt-core</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -30,6 +30,10 @@
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl-ui.element-ui</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
 </project>

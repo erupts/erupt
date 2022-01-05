@@ -13,7 +13,7 @@ public class ChoiceFetchEruptJobHandler implements ChoiceFetchHandler {
 
     @Override
     public List<VLModel> fetch(String[] params) {
-        return JobDataLoadService.getLoadedJobHandler();
+        return JobStartService.getLoadedJobHandler();
     }
 
 }

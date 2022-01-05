@@ -1,12 +1,12 @@
 package xyz.erupt.upms.service;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
@@ -63,7 +63,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void beforeAdd(EruptMenu eruptMenu) {
-        eruptMenu.setCode(RandomStringUtils.randomAlphabetic(6));
+        eruptMenu.setCode(Erupts.generateCode());
     }
 
     @Override

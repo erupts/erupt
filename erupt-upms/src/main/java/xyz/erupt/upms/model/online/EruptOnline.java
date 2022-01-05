@@ -1,4 +1,4 @@
-package xyz.erupt.monitor.model;
+package xyz.erupt.upms.model.online;
 
 import lombok.Getter;
 import lombok.Setter;

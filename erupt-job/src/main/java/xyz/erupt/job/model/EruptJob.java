@@ -2,7 +2,6 @@ package xyz.erupt.job.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
@@ -22,6 +21,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.job.service.ChoiceFetchEruptJobHandler;
 import xyz.erupt.job.service.EruptJobService;
 import xyz.erupt.jpa.model.MetaModel;
@@ -50,7 +50,7 @@ import java.util.List;
 public class EruptJob extends MetaModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
 
     @EruptField(
-            views = @View(title = "编码")
+            views = @View(title = "编码",width = "100px")
     )
     private String code;
 
@@ -115,7 +115,7 @@ public class EruptJob extends MetaModel implements DataProxy<EruptJob>, Operatio
     @Override
     public void beforeAdd(EruptJob eruptJob) {
         if (null == eruptJob.getCode()) {
-            eruptJob.setCode(RandomStringUtils.randomAlphabetic(6));
+            eruptJob.setCode(Erupts.generateCode());
         }
         try {
             eruptJobService.modifyJob(eruptJob);
