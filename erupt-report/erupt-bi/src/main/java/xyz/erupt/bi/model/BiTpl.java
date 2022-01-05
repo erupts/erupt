@@ -2,7 +2,6 @@ package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -15,6 +14,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.Entity;
@@ -39,7 +39,7 @@ public class BiTpl extends MetaModelUpdateVo implements DataProxy<BiTpl> {
     public static final String TYPE_PATH = "path";
 
     @EruptField(
-            views = @View(title = "编码", width = "80px")
+            views = @View(title = "编码", width = "100px")
     )
     private String code;
 
@@ -79,7 +79,7 @@ public class BiTpl extends MetaModelUpdateVo implements DataProxy<BiTpl> {
 
     @Override
     public void beforeAdd(BiTpl biTpl) {
-        biTpl.setCode(RandomStringUtils.randomAlphabetic(6));
+        biTpl.setCode(Erupts.generateCode());
 
     }
 

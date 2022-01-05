@@ -63,7 +63,7 @@ import java.util.Set;
 public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiReleaseModal> {
 
     @EruptField(
-            views = @View(title = "编码", sortable = true, width = "90px"),
+            views = @View(title = "编码", sortable = true, width = "100px"),
             edit = @Edit(title = "编码", search = @Search(vague = true), readonly = @Readonly(edit = false))
     )
     private String code;

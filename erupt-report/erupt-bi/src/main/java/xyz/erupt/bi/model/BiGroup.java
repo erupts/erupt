@@ -6,12 +6,14 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.*;
@@ -27,7 +29,7 @@ import javax.persistence.*;
 @Setter
 @Component
 @EruptI18n
-public class BiGroup extends MetaModelUpdateVo {
+public class BiGroup extends MetaModelUpdateVo implements DataProxy<BiGroup> {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),
@@ -56,5 +58,8 @@ public class BiGroup extends MetaModelUpdateVo {
     )
     private String remark;
 
-
+    @Override
+    public void beforeAdd(BiGroup biGroup) {
+        biGroup.setCode(Erupts.generateCode());
+    }
 }

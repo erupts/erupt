@@ -2,7 +2,6 @@ package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
@@ -14,6 +13,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.handler.ChartType;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -35,7 +35,7 @@ import java.util.Date;
 public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
 
     @EruptField(
-            views = @View(title = "编码", sortable = true, width = "90px")
+            views = @View(title = "编码", sortable = true, width = "100px")
     )
     private String code;
 
@@ -157,7 +157,7 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
                     "select max(sort) from " + BiChart.class.getSimpleName() + " where bi.id = " + biChart.getBi().getId()).getSingleResult();
             biChart.setSort((obj == null) ? 10 : obj + 10);
         }
-        biChart.setCode(RandomStringUtils.randomAlphabetic(6));
+        biChart.setCode(Erupts.generateCode());
     }
 
     @Override

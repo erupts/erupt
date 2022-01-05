@@ -2,7 +2,6 @@ package xyz.erupt.tenant.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -10,6 +9,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.tenant.model.EruptTenant;
@@ -80,7 +80,7 @@ public class RentDataLoadService implements CommandLineRunner, DataProxy<EruptTe
 
     @Override
     public void beforeAdd(EruptTenant eruptTenant) {
-        eruptTenant.setToken(RandomStringUtils.randomAlphanumeric(6));
+        eruptTenant.setToken(Erupts.generateCode());
     }
 
     @Override

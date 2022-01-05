@@ -1,10 +1,10 @@
 package xyz.erupt.bi.model;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.util.Erupts;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,7 +25,7 @@ public class BiDataProxy implements DataProxy<Bi> {
 
     @Override
     public void addBehavior(Bi bi) {
-        bi.setCode(RandomStringUtils.randomAlphabetic(6));
+        bi.setCode(Erupts.generateCode());
     }
 
     @Override

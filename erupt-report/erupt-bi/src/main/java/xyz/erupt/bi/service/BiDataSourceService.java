@@ -10,6 +10,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.service.I18NTranslateService;
+import xyz.erupt.core.util.Erupts;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
@@ -97,6 +98,11 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
                 hikariDataSource.close();
             }
         }
+    }
+
+    @Override
+    public void addBehavior(BiDataSource biDataSource) {
+        biDataSource.setCode(Erupts.generateCode());
     }
 
     @Override
