@@ -52,6 +52,8 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
         AtomicInteger sort = new AtomicInteger();
         List<MetaMenu> metaMenus = new ArrayList<>();
         metaMenus.add(MetaMenu.createRootMenu(menuKey, "接口配置", "fa fa-cube", 50));
+//        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-function", "函数", "xxx", metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
+//        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-datasource", "数据源", "xxx", metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
         menus.forEach((key, value) ->
                 metaMenus.add(MetaMenu.createSimpleMenu(
                         menuKey + "-" + key.name().toLowerCase(),
