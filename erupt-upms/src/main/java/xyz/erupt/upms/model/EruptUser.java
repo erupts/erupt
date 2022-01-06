@@ -79,6 +79,14 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     private Boolean status = true;
 
     @EruptField(
+            views = @View(title = "超管用户"),
+            edit = @Edit(
+                    title = "超管用户"
+            )
+    )
+    private Boolean isAdmin = false;
+
+    @EruptField(
             views = @View(title = "手机号码"),
             edit = @Edit(title = "手机号码", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.PHONE_REGEX))
     )
@@ -184,8 +192,6 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private String remark;
 
-    private Boolean isAdmin;
-
     @Transient
     @Resource
     private EruptDao eruptDao;
@@ -211,7 +217,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
         if (StringUtils.isBlank(eruptUser.getPasswordA())) {
             throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, "密码必填", EruptApiModel.PromptWay.MESSAGE);
         }
-        this.checkPostOrg(eruptUser);
+        this.checkDataLegal(eruptUser);
         if (eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
             eruptUser.setIsAdmin(false);
             eruptUser.setCreateTime(new Date());
@@ -232,7 +238,7 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
         if (!eruptUser.getIsMd5() && eu.getIsMd5()) {
             throw new EruptWebApiRuntimeException(i18NTranslateService.translate("MD5不可逆", "MD5 irreversible"));
         }
-        this.checkPostOrg(eruptUser);
+        this.checkDataLegal(eruptUser);
         if (StringUtils.isNotBlank(eruptUser.getPasswordA())) {
             if (!eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
                 throw new EruptWebApiRuntimeException(i18NTranslateService.translate("两次密码输入不一致"));
@@ -245,9 +251,13 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
         }
     }
 
-    private void checkPostOrg(EruptUser eruptUser) {
+    private void checkDataLegal(EruptUser eruptUser) {
         if (eruptUser.getEruptPost() != null && eruptUser.getEruptOrg() == null) {
             throw new EruptWebApiRuntimeException("选择岗位时，所属组织必填");
+        }
+        EruptUser curr = eruptUserService.getCurrentEruptUser();
+        if (null == curr.isAdmin || !curr.isAdmin) {
+            throw new EruptWebApiRuntimeException(i18NTranslateService.translate("当前用户非超管，无法创建超管用户！"));
         }
     }
 }
