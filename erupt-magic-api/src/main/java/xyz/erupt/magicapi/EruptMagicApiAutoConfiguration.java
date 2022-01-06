@@ -40,6 +40,7 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
     public List<MetaMenu> menus() {
         String menuKey = "magic-api";
         Map<Authorization, String> menus = new LinkedHashMap<>();
+        for (Authorization authorization : Authorization.values()) menus.put(authorization, authorization.name());
         menus.put(Authorization.SAVE, "保存");
         menus.put(Authorization.VIEW, "查看详情");
         menus.put(Authorization.DELETE, "删除");
