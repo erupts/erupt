@@ -12,7 +12,7 @@ import org.ssssssss.magicapi.model.Constants;
 import org.ssssssss.magicapi.model.JsonBean;
 import org.ssssssss.magicapi.model.Options;
 import org.ssssssss.script.MagicScriptContext;
-import xyz.erupt.magicapi.service.MagicAPIDataLoadService;
+import xyz.erupt.magicapi.EruptMagicApiAutoConfiguration;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.vo.AdminUserinfo;
@@ -20,6 +20,7 @@ import xyz.erupt.upms.vo.AdminUserinfo;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * magic-api UI鉴权、接口鉴权
@@ -39,14 +40,8 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
      */
     @Override
     public boolean requireLogin() {
-        try {
-            AdminUserinfo adminUserInfo = eruptUserService.getAdminUserInfo();
-            if (null == adminUserInfo) {
-                return false;
-            }
-            request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER, new MagicUser(adminUserInfo.getAccount(), adminUserInfo.getUsername(), this.eruptContextService.getCurrentToken()));
-        } catch (IllegalStateException ignore) {
-        }
+        Optional.ofNullable(eruptUserService.getAdminUserInfo()).ifPresent(adminUserInfo -> request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER,
+                new MagicUser(adminUserInfo.getAccount(), adminUserInfo.getUsername(), this.eruptContextService.getCurrentToken())));
         return false;
     }
 
@@ -88,7 +83,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization) {
         // 未登录或UI权限不足
         return eruptUserService.getCurrentUid() != null
-                && eruptUserService.getEruptMenuByValue(MagicAPIDataLoadService.MAGIC_API_MENU_PREFIX + authorization.name()) != null;
+                && eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + authorization.name()) != null;
     }
 
 }
