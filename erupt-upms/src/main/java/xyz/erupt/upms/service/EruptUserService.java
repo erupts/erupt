@@ -212,6 +212,7 @@ public class EruptUserService {
                 return EruptApiModel.errorNoInterceptApi("修改失败，新密码不能和原始密码一样");
             }
             eruptUser.setPassword(newPwd);
+            eruptUser.setResetPwdTime(new Date());
             eruptDao.getEntityManager().merge(eruptUser);
             return EruptApiModel.successApi();
         } else {
@@ -237,12 +238,12 @@ public class EruptUserService {
 
     //获取当前用户ID
     public Long getCurrentUid() {
-        AdminUserinfo adminUserinfo = getAdminUserInfo();
+        AdminUserinfo adminUserinfo = getSimpleUserInfo();
         return null == adminUserinfo ? null : adminUserinfo.getId();
     }
 
     //获取当前登录用户基础信息（缓存中查找）
-    public AdminUserinfo getAdminUserInfo() {
+    public AdminUserinfo getSimpleUserInfo() {
         Object info = sessionService.get(SessionKey.USER_TOKEN + eruptContextService.getCurrentToken());
         return null == info ? null : gson.fromJson(info.toString(), AdminUserinfo.class);
     }

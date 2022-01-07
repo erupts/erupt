@@ -40,7 +40,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
      */
     @Override
     public boolean requireLogin() {
-        Optional.ofNullable(eruptUserService.getAdminUserInfo()).ifPresent(adminUserInfo -> request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER,
+        Optional.ofNullable(eruptUserService.getSimpleUserInfo()).ifPresent(adminUserInfo -> request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER,
                 new MagicUser(adminUserInfo.getAccount(), adminUserInfo.getUsername(), this.eruptContextService.getCurrentToken())));
         return false;
     }
@@ -62,7 +62,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
             if (!isLogin) {
                 return new JsonBean<Void>(401, "用户未登录");
             } else {
-                AdminUserinfo adminUserInfo = eruptUserService.getAdminUserInfo();
+                AdminUserinfo adminUserInfo = eruptUserService.getSimpleUserInfo();
                 // 权限判断
                 if (StringUtils.isNotBlank(permission) && eruptUserService.getEruptMenuByValue(permission) == null) {
                     return new JsonBean<Void>(403, "用户权限不足");

@@ -40,7 +40,6 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
     public List<MetaMenu> menus() {
         String menuKey = "magic-api";
         Map<Authorization, String> menus = new LinkedHashMap<>();
-        for (Authorization authorization : Authorization.values()) menus.put(authorization, authorization.name());
         menus.put(Authorization.SAVE, "保存");
         menus.put(Authorization.VIEW, "查看详情");
         menus.put(Authorization.DELETE, "删除");
@@ -56,11 +55,9 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
 //        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-datasource", "数据源", "xxx", metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
         menus.forEach((key, value) ->
                 metaMenus.add(MetaMenu.createSimpleMenu(
-                        menuKey + "-" + key.name().toLowerCase(),
-                        value,
+                        menuKey + "-" + key.name().toLowerCase(), value,
                         MAGIC_API_MENU_PREFIX + key.name(),
-                        metaMenus.get(0),
-                        sort.addAndGet(10),
+                        metaMenus.get(0), sort.addAndGet(10),
                         MenuTypeEnum.BUTTON.getCode()
                 ))
         );

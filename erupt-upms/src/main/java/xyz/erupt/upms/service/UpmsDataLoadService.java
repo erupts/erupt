@@ -8,7 +8,6 @@ import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 
 import javax.annotation.Resource;
@@ -33,17 +32,17 @@ public class UpmsDataLoadService implements CommandLineRunner {
     @Override
     public void run(String... args) {
         EruptModuleInvoke.invoke(module -> {
-            if (null != module.menus()) {
-                new ProjectUtil().projectStartLoaded(module.info().getName(), first -> {
-                    if (first) {
-                        module.menus().forEach(metaMenu ->
-                                metaMenu.setId(eruptDao.persistIfNotExist(
-                                        EruptMenu.class, EruptMenu.fromMetaMenu(metaMenu),
-                                        EruptMenu.CODE, metaMenu.getCode()).getId())
-                        );
-                    }
-                });
-            }
+//            if (null != module.menus()) new ProjectUtil().projectStartLoaded(module.info().getName(), first -> {
+//                if (first) {
+//                    for (MetaMenu metaMenu : module.menus()) {
+//                        metaMenu.setId(
+//                                eruptDao.persistIfNotExist(EruptMenu.class,
+//                                        EruptMenu.fromMetaMenu(metaMenu), EruptMenu.CODE, metaMenu.getCode()
+//                                ).getId()
+//                        );
+//                    }
+//                }
+//            });
         });
         new ProjectUtil().projectStartLoaded("erupt-upms-user", first -> {
             if (first) {
@@ -57,6 +56,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     eruptUser.setAccount(DEFAULT_ACCOUNT);
                     eruptUser.setPassword(MD5Util.digest(DEFAULT_ACCOUNT));
                     eruptUser.setName(DEFAULT_ACCOUNT);
+                    eruptUser.setResetPwdTime(new Date());
                     eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
                 }
             } else {
