@@ -17,12 +17,6 @@
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-core</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

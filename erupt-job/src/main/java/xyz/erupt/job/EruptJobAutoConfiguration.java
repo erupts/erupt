@@ -35,7 +35,7 @@ public class EruptJobAutoConfiguration implements EruptModule {
     }
 
     @Override
-    public List<MetaMenu> menus() {
+    public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         menus.add(MetaMenu.createRootMenu("$job", "任务管理", "fa fa-cubes", 30));
         menus.add(MetaMenu.createEruptClassMenu(EruptJob.class, menus.get(0), 0));

@@ -18,7 +18,6 @@
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-core</artifactId>
             <version>${project.parent.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -18,7 +18,6 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.invoke.ExprInvoke;
-import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -103,7 +102,22 @@ public class EruptCoreService implements ApplicationRunner {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(Erupt.class)
         }, clazz -> ERUPTS.put(clazz.getSimpleName(), initEruptModel(clazz)));
-        log.info("Erupt core initialization completed in {} ms", timeRecorder.recorder());
-        EruptModuleInvoke.invoke(EruptModule::init);
+        EruptModuleInvoke.invoke(it -> {
+            it.run();
+            log.info("→ {} module completed", fillCharacter(it.info().getName(), 16));
+        });
+        log.info("Erupt initialization completed in {} ms", timeRecorder.recorder());
+    }
+
+    public String fillCharacter(String character, int targetWidth) {
+        return character + repeat(targetWidth - character.length());
+    }
+
+    public String repeat(int num) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < num; i++) {
+            sb.append(" ");
+        }
+        return sb.toString();
     }
 }

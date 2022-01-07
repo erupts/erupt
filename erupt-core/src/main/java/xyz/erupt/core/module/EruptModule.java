@@ -14,13 +14,18 @@ public interface EruptModule {
     ModuleInfo info();
 
     @Comment("初始化")
-    default void init() {
+    default void run() {
 
     }
 
-    @Comment("功能菜单")
-    default List<MetaMenu> menus() {
+    @Comment("初始化菜单")
+    default List<MetaMenu> initMenus() {
         return null;
+    }
+
+    @Comment("初始化方法")
+    default void initFun() {
+
     }
 
 }
