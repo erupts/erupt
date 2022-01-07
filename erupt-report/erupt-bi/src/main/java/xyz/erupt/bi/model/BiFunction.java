@@ -1,6 +1,7 @@
 package xyz.erupt.bi.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.Erupt;
@@ -13,8 +14,9 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.constant.BiConst;
-import xyz.erupt.bi.service.BiDataInitService;
+import xyz.erupt.bi.service.BiService;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.annotation.Resource;
@@ -34,6 +36,7 @@ import javax.script.ScriptException;
 @Table(name = "e_bi_function")
 @Erupt(name = "函数管理", dataProxy = BiFunction.class)
 @Getter
+@Setter
 @Service
 @EruptI18n
 public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunction> {
@@ -53,6 +56,7 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
     )
     private String jsFunction;
 
+
     public BiFunction(String name, String jsFunction) {
         this.name = name;
         this.jsFunction = jsFunction;
@@ -63,7 +67,11 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
 
     @Resource
     @Transient
-    private BiDataInitService biDataInitService;
+    private EruptDao eruptDao;
+
+    @Resource
+    @Transient
+    private BiService biService;
 
     private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
 
@@ -78,18 +86,16 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
     @Override
     public void afterAdd(BiFunction biFunction) {
         this.testFunction(biFunction);
-        biDataInitService.flushFunction();
+        biService.flushFunction();
     }
 
     @Override
     public void afterUpdate(BiFunction biFunction) {
-        this.testFunction(biFunction);
-        biDataInitService.flushFunction();
+        this.afterAdd(biFunction);
     }
 
     @Override
     public void afterDelete(BiFunction biFunction) {
-        this.testFunction(biFunction);
-        biDataInitService.flushFunction();
+        biService.flushFunction();
     }
 }

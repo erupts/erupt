@@ -12,14 +12,17 @@ import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiClassHandler;
 import xyz.erupt.bi.model.BiDataSource;
+import xyz.erupt.bi.model.BiFunction;
 import xyz.erupt.bi.view.BiColumn;
 import xyz.erupt.bi.view.BiData;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.service.EruptUserService;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,6 +45,8 @@ public class BiService {
 
     @Resource
     private EruptUserService eruptUserService;
+
+    private static String DEFINE_FUNCTIONS = "";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -136,14 +141,8 @@ public class BiService {
     }
 
     private static final String TOTAL_KEY = "count";
-
-
-    //插入通用上下文条件
-    private void putCommonContextParam(Map<String, Object> param){
-        param.put(ScriptPlaceholderConst.REQUEST_PLACEHOLDER, request);
-        param.put(ScriptPlaceholderConst.RESPONSE_PLACEHOLDER, response);
-        param.put(ScriptPlaceholderConst.USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
-    }
+    @Resource
+    private EruptDao eruptDao;
 
     @SneakyThrows
     private Long getTotal(Bi bi, Map<String, Object> query) {
@@ -175,6 +174,13 @@ public class BiService {
 
     public final Pattern EXPRESS_PATTERN = Pattern.compile("(?<=\\$\\{)(.+?)(?=\\})");
 
+    //插入通用上下文条件
+    private void putCommonContextParam(Map<String, Object> param) {
+        param.put(ScriptPlaceholderConst.REQUEST_PLACEHOLDER, request);
+        param.put(ScriptPlaceholderConst.RESPONSE_PLACEHOLDER, response);
+        param.put(ScriptPlaceholderConst.USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
+    }
+
     @SneakyThrows
     private String processPlaceHolder(String express, Map<String, Object> param) {
         Bindings bindings = new SimpleBindings();
@@ -182,10 +188,21 @@ public class BiService {
         Matcher m = EXPRESS_PATTERN.matcher(express);
         while (m.find()) {
             String exp = m.group();
-            Object result = scriptEngine.eval(BiDataInitService.defineFunctions + "\n" + exp, bindings);
+            Object result = scriptEngine.eval(DEFINE_FUNCTIONS + "\n" + exp, bindings);
             result = Optional.ofNullable(result).orElse("");
             express = express.replace("${" + exp + "}", result.toString());
         }
         return express;
     }
+
+    @PostConstruct
+    public void flushFunction() {
+        List<Object[]> list = eruptDao.queryObjectList(BiFunction.class, null, null, "jsFunction");
+        StringBuilder sb = new StringBuilder();
+        for (Object o : list) {
+            sb.append((String) o).append("\n");
+        }
+        DEFINE_FUNCTIONS = sb.toString();
+    }
+
 }

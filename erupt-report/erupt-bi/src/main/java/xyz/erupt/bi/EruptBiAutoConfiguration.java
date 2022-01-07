@@ -1,8 +1,11 @@
 package xyz.erupt.bi;
 
+import lombok.SneakyThrows;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.bi.model.*;
 import xyz.erupt.core.annotation.EruptScan;
@@ -12,7 +15,10 @@ import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
+import xyz.erupt.jpa.dao.EruptDao;
 
+import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +30,15 @@ import java.util.List;
 @ComponentScan
 @EntityScan
 @EruptScan
+@Component
 public class EruptBiAutoConfiguration implements EruptModule {
 
     static {
         EruptModuleInvoke.addEruptModule(EruptBiAutoConfiguration.class);
     }
+
+    @Resource
+    private EruptDao eruptDao;
 
     @Override
     public ModuleInfo info() {
@@ -36,12 +46,21 @@ public class EruptBiAutoConfiguration implements EruptModule {
     }
 
     @Override
-    public void init() {
+    public void run() {
         MenuTypeEnum.addMenuType(new VLModel("bi", "报表", "报表编码"));
     }
 
     @Override
-    public List<MetaMenu> menus() {
+    @SneakyThrows
+    public void initFun() {
+        String defaultFunctionCode = "simple_function";
+        eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(defaultFunctionCode,
+                StreamUtils.copyToString(EruptBiAutoConfiguration.class.getResourceAsStream("./BiDefaultFunction.js")
+                        , StandardCharsets.UTF_8)), "name", defaultFunctionCode);
+    }
+
+    @Override
+    public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         menus.add(MetaMenu.createRootMenu("$mbi", "报表维护", "fa fa-table", 20));
         menus.add(MetaMenu.createEruptClassMenu(BiDataSource.class, menus.get(0), 10));
