@@ -79,12 +79,9 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     private Boolean status = true;
 
     @EruptField(
-            views = @View(title = "超管用户"),
-            edit = @Edit(
-                    title = "超管用户"
-            )
+            views = @View(title = "重置密码时间")
     )
-    private Boolean isAdmin = false;
+    private Date resetPwdTime;
 
     @EruptField(
             views = @View(title = "手机号码"),
@@ -97,6 +94,14 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
             edit = @Edit(title = "邮箱", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
     )
     private String email;
+
+    @EruptField(
+            views = @View(title = "超管用户"),
+            edit = @Edit(
+                    title = "超管用户", notNull = true
+            )
+    )
+    private Boolean isAdmin = false;
 
     @ManyToOne
     @EruptField(

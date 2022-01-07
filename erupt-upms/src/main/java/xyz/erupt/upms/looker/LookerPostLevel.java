@@ -87,7 +87,7 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
             return null;
         }
         if (null == eruptUser.getEruptOrg() || null == eruptUser.getEruptPost()) {
-            throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + i18NTranslateService.translate("未绑定的部门无法查看数据"));
+            throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + i18NTranslateService.translate("未绑定的岗位无法查看数据"));
         }
         return "(" + eruptContextService.getContextEruptClass().getSimpleName() + ".createUser.id = " + eruptUserService.getCurrentUid()
                 + " or " + eruptContextService.getContextEruptClass().getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "

@@ -95,7 +95,7 @@ public class EruptUserController {
     @GetMapping("/userinfo")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public AdminUserinfo userinfo() {
-        AdminUserinfo adminUserinfo = eruptUserService.getAdminUserInfo();
+        AdminUserinfo adminUserinfo = eruptUserService.getSimpleUserInfo();
         adminUserinfo.setId(null);
         return adminUserinfo;
     }

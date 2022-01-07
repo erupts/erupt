@@ -18,7 +18,6 @@ public class EruptModuleInvoke {
         ERUPT_MODULES.add(eruptModule);
     }
 
-    //动态获取erupt power值
     public static void invoke(Consumer<EruptModule> consumer) {
         ERUPT_MODULES.forEach(it -> consumer.accept(EruptSpringUtil.getBean(it)));
     }

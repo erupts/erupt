@@ -100,7 +100,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             response.sendError(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
-        AdminUserinfo adminUserinfo = eruptUserService.getAdminUserInfo();
+        AdminUserinfo adminUserinfo = eruptUserService.getSimpleUserInfo();
         MetaContext.register(new MetaUser(adminUserinfo.getId() + "", adminUserinfo.getAccount(), adminUserinfo.getUsername()));
         //权限校验
         String authStr = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
