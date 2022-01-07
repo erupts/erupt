@@ -5,14 +5,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -31,19 +34,20 @@ public class UpmsDataLoadService implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) {
-        EruptModuleInvoke.invoke(module -> {
-//            if (null != module.menus()) new ProjectUtil().projectStartLoaded(module.info().getName(), first -> {
-//                if (first) {
-//                    for (MetaMenu metaMenu : module.menus()) {
-//                        metaMenu.setId(
-//                                eruptDao.persistIfNotExist(EruptMenu.class,
-//                                        EruptMenu.fromMetaMenu(metaMenu), EruptMenu.CODE, metaMenu.getCode()
-//                                ).getId()
-//                        );
-//                    }
-//                }
-//            });
-        });
+        EruptModuleInvoke.invoke(module -> Optional.ofNullable(module.initMenus()).ifPresent(metaMenus ->
+                new ProjectUtil().projectStartLoaded(module.info().getName(), first -> {
+                    if (first) {
+                        module.initFun();
+                        for (MetaMenu metaMenu : metaMenus) {
+                            metaMenu.setId(
+                                    eruptDao.persistIfNotExist(EruptMenu.class,
+                                            EruptMenu.fromMetaMenu(metaMenu), EruptMenu.CODE, metaMenu.getCode()
+                                    ).getId()
+                            );
+                        }
+                    }
+                })
+        ));
         new ProjectUtil().projectStartLoaded("erupt-upms-user", first -> {
             if (first) {
                 //用户
