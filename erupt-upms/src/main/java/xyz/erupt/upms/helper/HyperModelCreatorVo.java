@@ -3,6 +3,7 @@ package xyz.erupt.upms.helper;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
@@ -24,16 +25,18 @@ import java.util.Date;
 @MappedSuperclass
 public class HyperModelCreatorVo extends HyperModel {
 
-    @EruptField(
-            views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
-    )
-    private Date createTime;
-
     @ManyToOne
     @EruptField(
             views = @View(title = "创建人", width = "100px", column = "name"),
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
+    @EruptSmartSkipSerialize
     private EruptUserVo createUser;
+
+    @EruptField(
+            views = @View(title = "创建时间", sortable = true),
+            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+    )
+    @EruptSmartSkipSerialize
+    private Date createTime;
 }

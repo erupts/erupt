@@ -100,9 +100,7 @@ public class EruptRole extends BaseModel implements FilterHandler, DataProxy<Eru
     @Override
     public String filter(String condition, String[] params) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
-        if (eruptUser.getIsAdmin()) {
-            return null;
-        }
+        if (eruptUser.getIsAdmin()) return null;
         Set<String> roles = eruptUser.getRoles().stream().map(it -> it.getId().toString()).collect(Collectors.toSet());
         return String.format("id in (%s)", String.join(",", roles));
     }

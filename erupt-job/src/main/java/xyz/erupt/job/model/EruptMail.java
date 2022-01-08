@@ -112,7 +112,7 @@ public class EruptMail extends BaseModel implements DataProxy<EruptMail> {
         Erupts.requireNonNull(javaMailSender, "Sending mailbox not configured");
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
-        eruptMail.setCreateBy(MetaContext.get().getMetaUser().getName());
+        eruptMail.setCreateBy(MetaContext.getUser().getName());
         eruptMail.setCreateTime(new Date());
         helper.setSubject(eruptMail.getSubject());
         helper.setTo(eruptMail.getRecipient());

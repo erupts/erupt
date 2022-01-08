@@ -14,15 +14,15 @@ public class MetaDataProxy implements DataProxy<MetaModel> {
     @Override
     public void beforeAdd(MetaModel metaModel) {
         metaModel.setCreateTime(LocalDateTime.now());
-        metaModel.setUpdateBy(MetaContext.get().getMetaUser().getName());
+        metaModel.setCreateBy(MetaContext.getUser().getName());
         metaModel.setUpdateTime(metaModel.getCreateTime());
-        metaModel.setUpdateBy(MetaContext.get().getMetaUser().getName());
+        metaModel.setUpdateBy(metaModel.getCreateBy());
     }
 
     @Override
     public void beforeUpdate(MetaModel metaModel) {
         metaModel.setUpdateTime(LocalDateTime.now());
-        metaModel.setUpdateBy(MetaContext.get().getMetaUser().getName());
+        metaModel.setUpdateBy(MetaContext.getUser().getName());
     }
 
 }

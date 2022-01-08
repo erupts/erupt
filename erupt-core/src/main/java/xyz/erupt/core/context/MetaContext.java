@@ -19,13 +19,21 @@ public class MetaContext {
 
     private MetaUser metaUser;
 
-    public static MetaContext get() {
+    private static MetaContext get() {
         return Optional.ofNullable(threadLocal.get()).orElseGet(() -> {
             MetaContext metaContext = new MetaContext();
             metaContext.setMetaErupt(MetaErupt.builder().build());
             metaContext.setMetaUser(new MetaUser());
             return metaContext;
         });
+    }
+
+    public static MetaErupt getErupt() {
+        return get().getMetaErupt();
+    }
+
+    public static MetaUser getUser() {
+        return get().getMetaUser();
     }
 
     //注册erupt上下文
