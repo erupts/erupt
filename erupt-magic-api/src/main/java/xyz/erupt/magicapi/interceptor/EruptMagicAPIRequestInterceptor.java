@@ -50,7 +50,6 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
      */
     @Override
     public Object preHandle(ApiInfo info, MagicScriptContext context, HttpServletRequest request, HttpServletResponse response) {
-
         String permission = Objects.toString(info.getOptionValue(Options.PERMISSION), "");
         String role = Objects.toString(info.getOptionValue(Options.ROLE), "");
         String login = Objects.toString(info.getOptionValue(Options.REQUIRE_LOGIN), "");
@@ -86,14 +85,5 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         return eruptUserService.getCurrentUid() != null
                 && eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + authorization.name()) != null;
     }
-
-//    @Override
-//    public MagicUser getUserByToken(String token) throws MagicLoginException {
-//        AdminUserinfo adminUserInfo = eruptUserService.getAdminUserInfo();
-//        if (null == token || null == adminUserInfo || !token.equals(eruptContextService.getCurrentToken())) {
-//            throw new EruptWebApiRuntimeException("用户权限不足");
-//        }
-//        return new MagicUser(adminUserInfo.getAccount(), adminUserInfo.getUsername(), this.eruptContextService.getCurrentToken());
-//    }
 
 }
