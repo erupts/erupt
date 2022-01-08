@@ -67,13 +67,11 @@ public class EruptUser extends LookerSelf {
     private Boolean status = true;
 
     @EruptField(
-            views = @View(title = "手机号码"),
             edit = @Edit(title = "手机号码", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.PHONE_REGEX))
     )
     private String phone;
 
     @EruptField(
-            views = @View(title = "邮箱"),
             edit = @Edit(title = "邮箱", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
     )
     private String email;
@@ -137,7 +135,6 @@ public class EruptUser extends LookerSelf {
     private Date resetPwdTime;
 
     @EruptField(
-            views = @View(title = "md5加密"),
             edit = @Edit(
                     title = "md5加密",
                     type = EditType.BOOLEAN,
