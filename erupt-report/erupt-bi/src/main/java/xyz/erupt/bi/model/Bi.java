@@ -10,6 +10,7 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
+import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
@@ -48,7 +49,7 @@ import java.util.Set;
 //                        operationHandler = CopyLinkHandler.class
 //                ),
         },
-//        linkTree = @LinkTree(field = "biGroup"),
+        linkTree = @LinkTree(field = "biGroup"),
         dataProxy = BiDataProxy.class,
         drills = {
                 @Drill(title = "图表配置", icon = "fa fa-pie-chart"
@@ -64,7 +65,7 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
 
     @EruptField(
             views = @View(title = "编码", sortable = true, width = "100px"),
-            edit = @Edit(title = "编码", search = @Search(vague = true), readonly = @Readonly(edit = false))
+            edit = @Edit(title = "编码", search = @Search(vague = true), readonly = @Readonly(add = false))
     )
     private String code;
 
@@ -77,7 +78,7 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     @ManyToOne
     @JoinColumn(name = "bi_group_id")
     @EruptField(
-            views = @View(title = "组别", column = "name"),
+            views = @View(title = "组别", column = "name", sortable = true),
             edit = @Edit(title = "组别", notNull = true, type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parent.id"), search = @Search)
     )

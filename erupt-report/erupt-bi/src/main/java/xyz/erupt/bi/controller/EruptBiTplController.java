@@ -50,6 +50,18 @@ public class EruptBiTplController {
 
     private final Configuration freemarker = new FreemarkerEngine().init();
 
+    private static final String HTML = "" +
+            "<!DOCTYPE html>\n" +
+            "<html lang=\"en\">\n" +
+            "<head>\n" +
+            "    <meta charset=\"UTF-8\">\n" +
+            "    <title></title>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            BiConst.SIMPLE_PLACEHOLDER +
+            "</body>\n" +
+            "</html>";
+
     @PostConstruct
     public void post() {
         freemarker.setTemplateLoader(new StringTemplateLoader());
@@ -70,11 +82,13 @@ public class EruptBiTplController {
         biService.verifyBiMenuPermissions(biChart.getBi(), code);
         if (null == biChart.getBiTpl()) throw new EruptWebApiRuntimeException("Tpl not config");
         Map<String, Object> map = new HashMap<>();
-        map.put("data", biService.startQuery(biChart.getSqlStatement(), biChart.getClassHandler(), biChart.getDataSource(), condition));
+        String data = "data";
+        map.put(data, biService.startQuery(biChart.getSqlStatement(), biChart.getClassHandler(), biChart.getDataSource(), condition));
+        map.put("dataJson", gson.toJson(map.get(data)));
         if (BiTpl.TYPE_ONLINE.equals(biChart.getBiTpl().getType())) {
             map.put("request", request);
             StringTemplateLoader stringTemplateLoader = (StringTemplateLoader) freemarker.getTemplateLoader();
-            stringTemplateLoader.putTemplate(biChart.getCode(), biChart.getBiTpl().getTpl());
+            stringTemplateLoader.putTemplate(biChart.getCode(), HTML.replace(BiConst.SIMPLE_PLACEHOLDER, biChart.getBiTpl().getTpl()));
             freemarker.getTemplate(biChart.getCode(), "utf-8").process(map, response.getWriter());
         } else if (BiTpl.TYPE_PATH.equals(biChart.getBiTpl().getType())) {
             eruptTplService.tplRender(Tpl.Engine.FreeMarker, biChart.getBiTpl().getPath(), map, response.getWriter());

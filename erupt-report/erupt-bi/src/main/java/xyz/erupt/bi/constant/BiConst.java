@@ -14,4 +14,6 @@ public class BiConst {
 
     public static final String SCRIPT_ENGINE = "nashorn";
 
+    public static final String SIMPLE_PLACEHOLDER = "{{}}";
+
 }
