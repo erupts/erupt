@@ -3,6 +3,7 @@ package xyz.erupt.jpa.model;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.tenant.model.EruptTenant;
 import xyz.erupt.tenant.service.RentDataLoadService;
 import xyz.erupt.upms.service.EruptContextService;
@@ -39,7 +40,7 @@ public class BaseTenantDataProxy implements DataProxy<BaseModel> {
     public String beforeFetch(List<Condition> conditions) {
         EruptTenant eruptTenant = findEruptRent();
         if (null != eruptTenant) {
-            return eruptContextService.getContextEruptClass().getSimpleName() + ".eruptTenant=" + eruptTenant.getId();
+            return MetaContext.getErupt().getName() + ".eruptTenant=" + eruptTenant.getId();
         }
         return null;
     }

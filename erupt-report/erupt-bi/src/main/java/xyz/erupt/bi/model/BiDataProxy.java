@@ -47,7 +47,7 @@ public class BiDataProxy implements DataProxy<Bi> {
                 bh.setSqlStatement(bbi.getSqlStatement());
                 bh.setOperateTime(new Date());
                 bh.setMark("Table");
-                bh.setOperateBy(MetaContext.get().getMetaUser().getName());
+                bh.setOperateBy(MetaContext.getUser().getName());
                 entityManager.persist(bh);
                 entityManager.flush();
             }
