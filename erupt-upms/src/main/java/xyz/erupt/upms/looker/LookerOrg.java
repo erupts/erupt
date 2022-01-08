@@ -2,7 +2,7 @@ package xyz.erupt.upms.looker;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
@@ -13,12 +13,12 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserPostVo;
-import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 @MappedSuperclass
 @PreDataProxy(LookerOrg.class)
-@Service
+@Component
 @Getter
 @Setter
 public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
@@ -70,22 +70,16 @@ public class LookerOrg extends BaseModel implements DataProxy<LookerOrg> {
 
     @Resource
     @Transient
-    private EruptContextService eruptContextService;
-
-    @Resource
-    @Transient
     private I18NTranslateService i18NTranslateService;
 
     @Override
     public String beforeFetch(List<Condition> conditions) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
-        if (eruptUser.getIsAdmin()) {
-            return null;
-        }
+        if (eruptUser.getIsAdmin()) return null;
         if (null == eruptUser.getEruptOrg()) {
             throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + i18NTranslateService.translate("未绑定的组织无法查看数据"));
         } else {
-            return eruptContextService.getContextEruptClass().getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
+            return MetaContext.getErupt().getName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
         }
     }
 

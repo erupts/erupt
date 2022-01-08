@@ -25,8 +25,9 @@ public class EruptContextService {
     private EruptSessionService sessionService;
 
     //获取erupt上下文对象
+    @Deprecated
     public Class<?> getContextEruptClass() {
-        return EruptCoreService.getErupt(MetaContext.get().getMetaErupt().getName()).getClazz();
+        return EruptCoreService.getErupt(MetaContext.getErupt().getName()).getClazz();
     }
 
     //获取当前请求token
@@ -41,7 +42,7 @@ public class EruptContextService {
     //获取当前菜单对象
     public EruptMenu getCurrentEruptMenu() {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
-                , MetaContext.get().getMetaErupt().getName(), EruptMenu.class);
+                , MetaContext.getErupt().getName(), EruptMenu.class);
     }
 
 }

@@ -21,6 +21,8 @@ public class LoginModel {
 
     private boolean pass; //校验是否通过
 
+    private boolean resetPwd = false; //重置密码
+
     private String reason;  //未校验通过原因
 
     private String token;

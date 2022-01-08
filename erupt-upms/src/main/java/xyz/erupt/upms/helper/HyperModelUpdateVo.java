@@ -25,13 +25,6 @@ import java.util.Date;
 @MappedSuperclass
 public class HyperModelUpdateVo extends HyperModel {
 
-    @EruptField(
-            views = @View(title = "更新时间", sortable = true),
-            edit = @Edit(title = "更新时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
-    )
-    @EruptSmartSkipSerialize
-    private Date updateTime;
-
     @ManyToOne
     @EruptField(
             views = @View(title = "更新人", width = "100px", column = "name"),
@@ -39,5 +32,12 @@ public class HyperModelUpdateVo extends HyperModel {
     )
     @EruptSmartSkipSerialize
     private EruptUserVo updateUser;
+
+    @EruptField(
+            views = @View(title = "更新时间", sortable = true),
+            edit = @Edit(title = "更新时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+    )
+    @EruptSmartSkipSerialize
+    private Date updateTime;
 
 }

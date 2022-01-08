@@ -2,13 +2,10 @@ package xyz.erupt.upms.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -18,16 +15,8 @@ import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.constant.RegexConst;
-import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.core.exception.EruptWebApiRuntimeException;
-import xyz.erupt.core.service.I18NTranslateService;
-import xyz.erupt.core.util.MD5Util;
-import xyz.erupt.core.view.EruptApiModel;
-import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.model.base.HyperModel;
-import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.upms.looker.LookerSelf;
 
-import javax.annotation.Resource;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -42,14 +31,13 @@ import java.util.Set;
 })
 @Erupt(
         name = "用户配置",
-        dataProxy = EruptUser.class,
+        dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg")
 )
 @EruptI18n
 @Getter
 @Setter
-@Component
-public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
+public class EruptUser extends LookerSelf {
 
     @EruptField(
             views = @View(title = "用户名", sortable = true),
@@ -197,18 +185,6 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
     )
     private String remark;
 
-    @Transient
-    @Resource
-    private EruptDao eruptDao;
-
-    @Transient
-    @Resource
-    private EruptUserService eruptUserService;
-
-    @Transient
-    @Resource
-    private I18NTranslateService i18NTranslateService;
-
     public EruptUser() {
     }
 
@@ -216,53 +192,4 @@ public class EruptUser extends HyperModel implements DataProxy<EruptUser> {
         this.setId(id);
     }
 
-
-    @Override
-    public void beforeAdd(EruptUser eruptUser) {
-        if (StringUtils.isBlank(eruptUser.getPasswordA())) {
-            throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, "密码必填", EruptApiModel.PromptWay.MESSAGE);
-        }
-        this.checkDataLegal(eruptUser);
-        if (eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
-            eruptUser.setIsAdmin(false);
-            eruptUser.setCreateTime(new Date());
-            if (eruptUser.getIsMd5()) {
-                eruptUser.setPassword(MD5Util.digest(eruptUser.getPasswordA()));
-            } else {
-                eruptUser.setPassword(eruptUser.getPasswordA());
-            }
-        } else {
-            throw new EruptWebApiRuntimeException(i18NTranslateService.translate("两次密码输入不一致"));
-        }
-    }
-
-    @Override
-    public void beforeUpdate(EruptUser eruptUser) {
-        eruptDao.getEntityManager().clear();
-        EruptUser eu = eruptDao.getEntityManager().find(EruptUser.class, eruptUser.getId());
-        if (!eruptUser.getIsMd5() && eu.getIsMd5()) {
-            throw new EruptWebApiRuntimeException(i18NTranslateService.translate("MD5不可逆", "MD5 irreversible"));
-        }
-        this.checkDataLegal(eruptUser);
-        if (StringUtils.isNotBlank(eruptUser.getPasswordA())) {
-            if (!eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
-                throw new EruptWebApiRuntimeException(i18NTranslateService.translate("两次密码输入不一致"));
-            }
-            if (eruptUser.getIsMd5()) {
-                eruptUser.setPassword(MD5Util.digest(eruptUser.getPasswordA()));
-            } else {
-                eruptUser.setPassword(eruptUser.getPasswordA());
-            }
-        }
-    }
-
-    private void checkDataLegal(EruptUser eruptUser) {
-        if (eruptUser.getEruptPost() != null && eruptUser.getEruptOrg() == null) {
-            throw new EruptWebApiRuntimeException("选择岗位时，所属组织必填");
-        }
-        EruptUser curr = eruptUserService.getCurrentEruptUser();
-        if (null == curr.isAdmin || !curr.isAdmin) {
-            throw new EruptWebApiRuntimeException(i18NTranslateService.translate("当前用户非超管，无法创建超管用户！"));
-        }
-    }
 }

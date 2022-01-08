@@ -83,6 +83,7 @@ public class EruptUserController {
             EruptUser eruptUser = loginModel.getEruptUser();
             loginModel.setToken(RandomStringUtils.random(16, true, true));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
+            loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
             eruptUserService.putUserInfo(eruptUser, loginModel.getToken());
             Optional.ofNullable(loginProxy).ifPresent(it -> it.loginSuccess(eruptUser, loginModel.getToken()));
             eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
