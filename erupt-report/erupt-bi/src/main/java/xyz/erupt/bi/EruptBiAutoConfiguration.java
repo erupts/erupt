@@ -62,7 +62,7 @@ public class EruptBiAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$mbi", "报表维护", "fa fa-table", 20));
+        menus.add(MetaMenu.createRootMenu("$mbi", "在线报表", "fa fa-table", 20));
         menus.add(MetaMenu.createEruptClassMenu(BiDataSource.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(BiClassHandler.class, menus.get(0), 20));
         menus.add(MetaMenu.createEruptClassMenu(BiTpl.class, menus.get(0), 30));
