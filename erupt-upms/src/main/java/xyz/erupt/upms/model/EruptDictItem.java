@@ -9,7 +9,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.*;
 
@@ -29,7 +29,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @EruptI18n
-public class EruptDictItem extends HyperModel {
+public class EruptDictItem extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "编码"),

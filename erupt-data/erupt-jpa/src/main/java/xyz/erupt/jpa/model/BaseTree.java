@@ -15,6 +15,7 @@ import javax.persistence.MappedSuperclass;
  * @author YuePeng
  * date 2018-10-11.
  */
+@Deprecated
 @Getter
 @Setter
 @MappedSuperclass
