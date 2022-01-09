@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * date 2021/8/20 14:44
  */
 @Component
-public class AdminPower implements PowerHandler {
+public class SuperAdminPower implements PowerHandler {
 
     @Resource
     private EruptUserService eruptUserService;

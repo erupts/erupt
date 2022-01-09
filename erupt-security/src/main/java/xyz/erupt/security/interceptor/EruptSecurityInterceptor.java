@@ -21,7 +21,6 @@ import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.tl.RequestBodyTL;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.model.EruptUserPostVo;
 import xyz.erupt.upms.model.log.EruptOperateLog;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
@@ -157,39 +156,42 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     @Override
     @Transactional
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        MetaContext.remove();
-        if (eruptSecurityProp.isRecordOperateLog()) {
-            if (handler instanceof HandlerMethod) {
-                HandlerMethod handlerMethod = (HandlerMethod) handler;
-                Optional.ofNullable(handlerMethod.getMethodAnnotation(EruptRecordOperate.class)).ifPresent(eruptRecordOperate -> {
-                    EruptOperateLog operate = new EruptOperateLog();
-                    if (eruptRecordOperate.dynamicConfig().isInterface()) {
-                        operate.setApiName(eruptRecordOperate.value());
-                    } else {
-                        String eruptName = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
-                        eruptName = Optional.ofNullable(eruptName).orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
-                        EruptRecordOperate.DynamicConfig dynamicConfig = EruptSpringUtil.getBean(eruptRecordOperate.dynamicConfig());
-                        if (!dynamicConfig.canRecord(eruptName, handlerMethod.getMethod())) return;
-                        operate.setApiName(dynamicConfig.naming(eruptRecordOperate.value(), eruptName, handlerMethod.getMethod()));
-                    }
-                    operate.setIp(IpUtil.getIpAddr(request));
-                    operate.setRegion(IpUtil.getCityInfo(operate.getIp()));
-                    operate.setStatus(true);
-                    operate.setReqMethod(request.getMethod());
-                    operate.setReqAddr(request.getRequestURL().toString());
-                    Optional.ofNullable(eruptUserService.getCurrentUid()).ifPresent(it -> operate.setEruptUser(new EruptUserPostVo(it)));
-                    operate.setCreateTime(new Date());
-                    operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
-                    Optional.ofNullable(ex).ifPresent(e -> {
-                        operate.setErrorInfo(ExceptionUtils.getStackTrace(e));
-                        operate.setStatus(false);
+        try {
+            if (eruptSecurityProp.isRecordOperateLog()) {
+                if (handler instanceof HandlerMethod) {
+                    HandlerMethod handlerMethod = (HandlerMethod) handler;
+                    Optional.ofNullable(handlerMethod.getMethodAnnotation(EruptRecordOperate.class)).ifPresent(eruptRecordOperate -> {
+                        EruptOperateLog operate = new EruptOperateLog();
+                        if (eruptRecordOperate.dynamicConfig().isInterface()) {
+                            operate.setApiName(eruptRecordOperate.value());
+                        } else {
+                            String eruptName = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
+                            eruptName = Optional.ofNullable(eruptName).orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
+                            EruptRecordOperate.DynamicConfig dynamicConfig = EruptSpringUtil.getBean(eruptRecordOperate.dynamicConfig());
+                            if (!dynamicConfig.canRecord(eruptName, handlerMethod.getMethod())) return;
+                            operate.setApiName(dynamicConfig.naming(eruptRecordOperate.value(), eruptName, handlerMethod.getMethod()));
+                        }
+                        operate.setIp(IpUtil.getIpAddr(request));
+                        operate.setRegion(IpUtil.getCityInfo(operate.getIp()));
+                        operate.setStatus(true);
+                        operate.setReqMethod(request.getMethod());
+                        operate.setReqAddr(request.getRequestURL().toString());
+                        operate.setOperateUser(MetaContext.getUser().getName());
+                        operate.setCreateTime(new Date());
+                        operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
+                        Optional.ofNullable(ex).ifPresent(e -> {
+                            operate.setErrorInfo(ExceptionUtils.getStackTrace(e));
+                            operate.setStatus(false);
+                        });
+                        Object param = RequestBodyTL.get().getBody();
+                        operate.setReqParam(null == param ? findRequestParamVal(request) : param.toString());
+                        RequestBodyTL.remove();
+                        entityManager.persist(operate);
                     });
-                    Object param = RequestBodyTL.get().getBody();
-                    operate.setReqParam(null == param ? findRequestParamVal(request) : param.toString());
-                    RequestBodyTL.remove();
-                    entityManager.persist(operate);
-                });
+                }
             }
+        } finally {
+            MetaContext.remove();
         }
     }
 
