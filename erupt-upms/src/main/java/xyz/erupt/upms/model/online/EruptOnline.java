@@ -9,15 +9,12 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.model.EruptUser;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -40,13 +37,11 @@ import java.util.Date;
 @Setter
 public class EruptOnline extends BaseModel {
 
-    @ManyToOne
     @EruptField(
-            views = @View(title = "用户", column = "name"),
-            edit = @Edit(title = "用户", type = EditType.REFERENCE_TABLE
-                    , search = @Search(vague = true))
+            views = @View(title = "用户"),
+            edit = @Edit(title = "用户", search = @Search(vague = true))
     )
-    private EruptUser eruptUser;
+    private String userName;
 
     @EruptField(
             views = @View(title = "登录时间", sortable = true),
