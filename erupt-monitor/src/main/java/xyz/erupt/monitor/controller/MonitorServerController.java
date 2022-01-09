@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.prop.EruptProp;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.monitor.constant.MonitorConstant;
 import xyz.erupt.monitor.vo.Platform;
@@ -41,7 +42,9 @@ public class MonitorServerController {
         Platform platform = new Platform();
         AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
         platform.setUploadPath(null == attachmentProxy ? eruptProp.getUploadPath() : attachmentProxy.fileDomain());
-        platform.setRedisSession(eruptProp.isRedisSession());
+        platform.setSessionStrategy(eruptProp.isRedisSession() ? "redis" : "servlet");
+        platform.setEruptCount(EruptCoreService.getEruptCount());
+        platform.setEruptModules(EruptCoreService.getModules());
         return platform;
     }
 
