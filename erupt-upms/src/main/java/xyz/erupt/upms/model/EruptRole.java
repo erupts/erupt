@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 public class EruptRole extends BaseModel implements FilterHandler, DataProxy<EruptRole> {
 
     @EruptField(
-            views = @View(title = "编码", width = "100px"),
+            views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true, readonly = @Readonly(add = false))
     )
     private String code;

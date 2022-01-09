@@ -20,17 +20,7 @@ public class Jvm {
 
     private String vendor;
 
-    private String total;
-
-    private String max;
-
-    private String used;
-
-    private String free;
-
     private String version;
-
-    private String usage;
 
     private String inputArgs;
 
@@ -42,15 +32,23 @@ public class Jvm {
 
     private int threadCount;
 
+    //-------------------- 内存
+    private String total;
+
+    private String used;
+
+    private String free;
+
+    private String usage;
+
+
     Jvm() {
-        this.setThreadCount(ManagementFactory.getThreadMXBean().getThreadCount());
         Properties props = System.getProperties();
-        long total = Runtime.getRuntime().maxMemory();
+        long total = Runtime.getRuntime().totalMemory();
         long free = Runtime.getRuntime().freeMemory();
-        this.setMax(SystemUtil.formatByte(Runtime.getRuntime().maxMemory()));
         this.setTotal(SystemUtil.formatByte(total));
-        this.setFree(SystemUtil.formatByte(free));
         this.setUsed(SystemUtil.formatByte(total - free));
+        this.setFree(SystemUtil.formatByte(free));
         this.setUsage(new DecimalFormat("#.##%").format((total - free) * 1.0 / total));
         this.setVersion(props.getProperty("java.version"));
         this.setHome(props.getProperty("java.home"));
@@ -59,6 +57,7 @@ public class Jvm {
         this.setName(props.getProperty("java.vm.name"));
         this.setVendor(props.getProperty("java.vendor"));
         this.setPath(props.getProperty("user.dir"));
+        this.setThreadCount(ManagementFactory.getThreadMXBean().getThreadCount());
 //        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
 //        System.out.println("堆内存信息: " + memoryMXBean);
 //        System.out.println("方法区内存信息: " + memoryMXBean);

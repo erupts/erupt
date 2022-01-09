@@ -26,10 +26,7 @@ import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author YuePeng
@@ -41,6 +38,16 @@ import java.util.Optional;
 public class EruptCoreService implements ApplicationRunner {
 
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
+
+    private static final List<String> modules = new ArrayList<>();
+
+    public static int getEruptCount() {
+        return ERUPTS.size();
+    }
+
+    public static List<String> getModules() {
+        return modules;
+    }
 
     public static EruptModel getErupt(String eruptName) {
         return ERUPTS.get(eruptName);
@@ -104,6 +111,7 @@ public class EruptCoreService implements ApplicationRunner {
         }, clazz -> ERUPTS.put(clazz.getSimpleName(), initEruptModel(clazz)));
         EruptModuleInvoke.invoke(it -> {
             it.run();
+            modules.add(it.info().getName());
             log.info("→ {} module completed", fillCharacter(it.info().getName(), 16));
         });
         log.info("Erupt initialization completed in {} ms", timeRecorder.recorder());

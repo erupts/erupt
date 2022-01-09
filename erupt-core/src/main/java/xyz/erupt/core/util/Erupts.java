@@ -49,7 +49,11 @@ public class Erupts {
     }
 
     public static String generateCode() {
-        return RandomStringUtils.randomAlphanumeric(8);
+        return generateCode(8);
+    }
+
+    public static String generateCode(int length) {
+        return RandomStringUtils.randomAlphanumeric(length);
     }
 
 }

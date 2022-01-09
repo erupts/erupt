@@ -30,6 +30,10 @@
             /*border-collapse: collapse;*/
         }
 
+        .table.content-center td {
+            text-align: center;
+        }
+
         .table th {
             border-width: 1px;
             padding: 8px;
@@ -54,14 +58,14 @@
 <div id="app" v-loading.fullscreen.lock="fullscreenLoading">
     <template>
         <el-row :gutter="16">
-            <el-col :span="12" :xs="24">
+            <el-col :span="8" :xs="24">
                 <el-card class="box-card" shadow="always">
                     <div class="clearfix" slot="header">
                         <span>CPU 信息</span>
                     </div>
-                    <table class="table">
+                    <table class="table content-center">
                         <tr>
-                            <th style="width:30%">属性</th>
+                            <th style="width:50%">属性</th>
                             <th>值</th>
                         </tr>
                         <tr>
@@ -83,13 +87,41 @@
                     </table>
                 </el-card>
             </el-col>
-
-            <el-col :span="12" :xs="24">
+            <el-col :span="8" :xs="24">
+                <el-card class="box-card" shadow="always">
+                    <div class="clearfix" slot="header">
+                        <span>ERUPT 应用信息</span>
+                    </div>
+                    <table class="table content-center">
+                        <tr>
+                            <th style="width:50%">属性</th>
+                            <th>值</th>
+                        </tr>
+                        <tr>
+                            <td>erupt 类数量</td>
+                            <td>{{platform.eruptCount}}</td>
+                        </tr>
+                        <tr>
+                            <td>erupt 模块数量</td>
+                            <td>{{platform.eruptModules.length}}</td>
+                        </tr>
+                        <tr>
+                            <td>Session 策略</td>
+                            <td>{{platform.sessionStrategy}}</td>
+                        </tr>
+                        <tr>
+                            <td>文件上传路径</td>
+                            <td>{{platform.uploadPath}}</td>
+                        </tr>
+                    </table>
+                </el-card>
+            </el-col>
+            <el-col :span="8" :xs="24">
                 <el-card class="box-card" shadow="always">
                     <div class="clearfix" slot="header">
                         <span>内存信息</span>
                     </div>
-                    <table class="table">
+                    <table class="table content-center">
                         <tr>
                             <th style="width:33.333%">属性</th>
                             <th style="width:33.333%">内存</th>
@@ -142,7 +174,7 @@
 
         <el-card class="box-card" shadow="always">
             <div class="clearfix" slot="header">
-                <span>Java 虚拟机信息</span>
+                <span>JVM 虚拟机信息</span>
             </div>
             <table class="table">
                 <tr>
@@ -158,8 +190,10 @@
                     <td>{{server.runDay}}</td>
                 </tr>
                 <tr>
+                    <th>实时线程</th>
+                    <td>{{server.jvm.threadCount}}</td>
                     <th>PID</th>
-                    <td colspan="3">{{server.jvm.pid}}</td>
+                    <td>{{server.jvm.pid}}</td>
                 </tr>
                 <tr>
                     <th>安装路径</th>
@@ -172,21 +206,6 @@
                 <tr>
                     <th>运行参数</th>
                     <td colspan="3">{{server.jvm.inputArgs}}</td>
-                </tr>
-            </table>
-        </el-card>
-        <el-card class="box-card" shadow="always">
-            <div class="clearfix" slot="header">
-                <span>平台参数</span>
-            </div>
-            <table class="table">
-                <tr>
-                    <th style="width: 16%">上传文件路径</th>
-                    <td>{{platform.uploadPath}}</td>
-                </tr>
-                <tr>
-                    <th>Session 策略</th>
-                    <td>{{platform.redisSession ? 'redis' : 'servlet'}}</td>
                 </tr>
             </table>
         </el-card>
