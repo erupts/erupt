@@ -14,12 +14,12 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.jpa.model.MetaModel;
 import xyz.erupt.upms.enums.MenuLimitEnum;
-import xyz.erupt.upms.model.base.HyperModel;
 import xyz.erupt.upms.service.EruptMenuService;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author YuePeng
@@ -36,7 +36,7 @@ import java.util.Date;
 @EruptI18n
 @Getter
 @Setter
-public class EruptMenu extends HyperModel {
+public class EruptMenu extends MetaModel {
 
     public static final String CODE = "code";
 
@@ -135,7 +135,7 @@ public class EruptMenu extends HyperModel {
         this.sort = sort;
         this.icon = icon;
         this.parentMenu = parentMenu;
-        this.setCreateTime(new Date());
+        this.setCreateTime(LocalDateTime.now());
     }
 
     public static EruptMenu fromMetaMenu(MetaMenu metaMenu) {
