@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-pro</artifactId>
-    <version>1.9.4</version>
+    <version>1.10.0-beta</version>
 
     <packaging>pom</packaging>
     <name>erupt-pro</name>
@@ -18,14 +18,6 @@
         <spring.boot.version>2.6.0</spring.boot.version>
     </properties>
 
-    <!--
-    在编译spring boot 等多模块项目的时候，往往出现
-    Non-resolvable parent POM: Could not find artifact
-    后面跟一串其它信息，网上大部分解决方案是修改relativePath配置项，
-    其实这是很不优雅的方式。这里介绍另一种解决方案。
-    解决办法如下，把父项目的modules里面的配置全部注释或者删除，
-    让后编译并打包并安装，在提示成功后，再把原来注释活删除的配置项还原即可，然后再编译即可成功。
-    -->
     <modules>
         <module>erupt-bi</module>
         <module>erupt-schema</module>
