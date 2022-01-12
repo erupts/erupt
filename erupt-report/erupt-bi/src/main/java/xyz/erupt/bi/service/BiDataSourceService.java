@@ -78,6 +78,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
     @Override
     public void beforeAdd(BiDataSource biDataSource) {
         try {
+            biDataSource.setCode(Erupts.generateCode());
             Class.forName(biDataSource.getDriver());
         } catch (ClassNotFoundException e) {
             throw new EruptApiErrorTip(i18NTranslateService.translate("找不到驱动类，请检查JDBC驱动包是否在项目内"));

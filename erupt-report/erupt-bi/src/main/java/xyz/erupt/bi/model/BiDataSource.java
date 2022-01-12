@@ -9,7 +9,10 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
-import xyz.erupt.annotation.sub_field.*;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
@@ -37,8 +40,7 @@ import java.util.stream.Stream;
 public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandler {
 
     @EruptField(
-            views = @View(title = "编码", sortable = true, width = "100px"),
-            edit = @Edit(title = "编码", notNull = true, readonly = @Readonly(add = false))
+            views = @View(title = "编码", sortable = true, width = "100px")
     )
     private String code;
 
