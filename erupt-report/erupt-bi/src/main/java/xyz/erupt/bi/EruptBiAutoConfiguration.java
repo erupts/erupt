@@ -53,10 +53,10 @@ public class EruptBiAutoConfiguration implements EruptModule {
     @Override
     @SneakyThrows
     public void initFun() {
-        String defaultFunctionCode = "simple_function";
-        eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(defaultFunctionCode,
+        String code = "BI_FUN";
+        eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(code, code,
                 StreamUtils.copyToString(EruptBiAutoConfiguration.class.getResourceAsStream("./BiDefaultFunction.js")
-                        , StandardCharsets.UTF_8)), "name", defaultFunctionCode);
+                        , StandardCharsets.UTF_8)), "code", code);
     }
 
     @Override

@@ -21,7 +21,7 @@ import javax.persistence.*;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi_dimension")
+@Table(name = "e_bi_dimension", uniqueConstraints = @UniqueConstraint(columnNames = {"code","bi_id"}))
 @Erupt(name = "查询维度")
 @Getter
 @Setter

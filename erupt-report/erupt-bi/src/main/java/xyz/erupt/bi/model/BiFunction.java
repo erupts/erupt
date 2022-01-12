@@ -20,10 +20,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.annotation.Resource;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -33,13 +30,19 @@ import javax.script.ScriptException;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi_function")
+@Table(name = "e_bi_function", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(name = "函数管理", dataProxy = BiFunction.class)
 @Getter
 @Setter
 @Service
 @EruptI18n
 public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunction> {
+
+    @EruptField(
+            views = @View(title = "编码", sortable = true),
+            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
+    )
+    private String code;
 
     @EruptField(
             views = @View(title = "名称", sortable = true),
@@ -57,7 +60,8 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
     private String jsFunction;
 
 
-    public BiFunction(String name, String jsFunction) {
+    public BiFunction(String code,String name, String jsFunction) {
+        this.code = code;
         this.name = name;
         this.jsFunction = jsFunction;
     }
