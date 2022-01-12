@@ -39,11 +39,8 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     if (first) {
                         module.initFun();
                         for (MetaMenu metaMenu : metaMenus) {
-                            metaMenu.setId(
-                                    eruptDao.persistIfNotExist(EruptMenu.class,
-                                            EruptMenu.fromMetaMenu(metaMenu), EruptMenu.CODE, metaMenu.getCode()
-                                    ).getId()
-                            );
+                            metaMenu.setId(eruptDao.persistIfNotExist(EruptMenu.class,
+                                    EruptMenu.fromMetaMenu(metaMenu), EruptMenu.CODE, metaMenu.getCode()).getId());
                         }
                     }
                 })

@@ -12,7 +12,7 @@ public class TimeRecorder {
         this.current = System.currentTimeMillis();
     }
 
-    public long recorder() {
+    public synchronized long recorder() {
         try {
             return System.currentTimeMillis() - this.current;
         } finally {

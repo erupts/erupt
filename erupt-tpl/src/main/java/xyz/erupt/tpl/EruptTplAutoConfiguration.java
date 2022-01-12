@@ -2,9 +2,15 @@ package xyz.erupt.tpl;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.ModuleInfo;
+import xyz.erupt.tpl.service.EruptTplService;
+
+import javax.annotation.Resource;
 
 /**
  * @author YuePeng
@@ -12,10 +18,20 @@ import xyz.erupt.core.module.ModuleInfo;
  */
 @Configuration
 @ComponentScan
+@Component
 public class EruptTplAutoConfiguration implements EruptModule {
 
     static {
         EruptModuleInvoke.addEruptModule(EruptTplAutoConfiguration.class);
+        MenuTypeEnum.addMenuType(new VLModel(EruptTplService.TPL, "模板", "tpl目录下文件名"));
+    }
+
+    @Resource
+    private EruptTplService eruptTplService;
+
+    @Override
+    public void run() {
+        eruptTplService.run();
     }
 
     @Override

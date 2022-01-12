@@ -105,6 +105,7 @@ public class EruptCoreService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        TimeRecorder totalRecorder = new TimeRecorder();
         TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(Erupt.class)
@@ -112,9 +113,9 @@ public class EruptCoreService implements ApplicationRunner {
         EruptModuleInvoke.invoke(it -> {
             it.run();
             modules.add(it.info().getName());
-            log.info("→ {} module completed", fillCharacter(it.info().getName(), 16));
+            log.info("→ {} module initialization completed in {}ms", fillCharacter(it.info().getName(), 18),timeRecorder.recorder());
         });
-        log.info("Erupt initialization completed in {} ms", timeRecorder.recorder());
+        log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
     }
 
     public String fillCharacter(String character, int targetWidth) {
