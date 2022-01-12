@@ -77,7 +77,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     private String reqParam;
 
     @EruptField(
-            views = @View(title = "是否成功"),
+            views = @View(title = "是否成功", sortable = true),
             edit = @Edit(title = "是否成功", search = @Search)
     )
     private Boolean status;
@@ -90,13 +90,13 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     private String errorInfo;
 
     @EruptField(
-            views = @View(title = "请求耗时", template = "value && value+'ms'"),
+            views = @View(title = "请求耗时", template = "value && value+'ms'", sortable = true),
             edit = @Edit(title = "请求耗时", search = @Search(vague = true))
     )
     private Long totalTime;
 
     @EruptField(
-            views = @View(title = "记录时间"),
+            views = @View(title = "记录时间", sortable = true),
             edit = @Edit(title = "记录时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
