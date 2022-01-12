@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.ssssssss</groupId>
             <artifactId>magic-api-spring-boot-starter</artifactId>
-            <version>1.7.4</version>
+            <version>1.7.5</version>
         </dependency>
     </dependencies>
 
