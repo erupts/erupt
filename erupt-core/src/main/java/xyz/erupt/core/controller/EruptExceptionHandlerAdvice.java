@@ -1,5 +1,7 @@
 package xyz.erupt.core.controller;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +22,7 @@ import java.util.Map;
  * date 2020-09-30
  */
 @ControllerAdvice
+@Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class EruptExceptionHandlerAdvice {
 
     @ResponseBody

@@ -1,5 +1,6 @@
 package xyz.erupt.core.controller;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +20,7 @@ import java.util.Map;
  * date 2022/1/9 01:55
  */
 @ControllerAdvice(EruptConst.BASE_PACKAGE)
+@Order
 public class EruptRuntimeExceptionAdvice {
 
     @ResponseBody
