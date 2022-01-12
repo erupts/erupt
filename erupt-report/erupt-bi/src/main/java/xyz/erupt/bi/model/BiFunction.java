@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.service.BiService;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -39,8 +40,7 @@ import javax.script.ScriptException;
 public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunction> {
 
     @EruptField(
-            views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
+            views = @View(title = "编码", sortable = true,width = "120px")
     )
     private String code;
 
@@ -60,7 +60,7 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
     private String jsFunction;
 
 
-    public BiFunction(String code,String name, String jsFunction) {
+    public BiFunction(String code, String name, String jsFunction) {
         this.code = code;
         this.name = name;
         this.jsFunction = jsFunction;
@@ -85,6 +85,11 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
         } catch (ScriptException e) {
             throw new EruptApiErrorTip(e.getMessage());
         }
+    }
+
+    @Override
+    public void beforeAdd(BiFunction biFunction) {
+        biFunction.setCode(Erupts.generateCode());
     }
 
     @Override

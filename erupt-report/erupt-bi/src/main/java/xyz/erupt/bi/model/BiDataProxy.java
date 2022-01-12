@@ -24,7 +24,7 @@ public class BiDataProxy implements DataProxy<Bi> {
     private EntityManager entityManager;
 
     @Override
-    public void addBehavior(Bi bi) {
+    public void beforeAdd(Bi bi) {
         bi.setCode(Erupts.generateCode());
     }
 

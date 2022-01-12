@@ -12,7 +12,10 @@ import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_field.*;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
@@ -64,8 +67,7 @@ import java.util.Set;
 public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiReleaseModal> {
 
     @EruptField(
-            views = @View(title = "编码", sortable = true, width = "100px"),
-            edit = @Edit(title = "编码", search = @Search(vague = true), readonly = @Readonly(add = false))
+            views = @View(title = "编码", width = "100px")
     )
     private String code;
 
