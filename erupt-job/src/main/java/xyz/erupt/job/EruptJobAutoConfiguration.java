@@ -3,6 +3,7 @@ package xyz.erupt.job;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
@@ -11,7 +12,9 @@ import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.job.model.EruptMail;
+import xyz.erupt.job.service.JobStartService;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +26,19 @@ import java.util.List;
 @ComponentScan
 @EntityScan
 @EruptScan
+@Component
 public class EruptJobAutoConfiguration implements EruptModule {
 
     static {
         EruptModuleInvoke.addEruptModule(EruptJobAutoConfiguration.class);
+    }
+
+    @Resource
+    private JobStartService jobStartService;
+
+    @Override
+    public void run() {
+        jobStartService.run();
     }
 
     @Override

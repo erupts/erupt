@@ -2,19 +2,14 @@ package xyz.erupt.tpl.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedCaseInsensitiveMap;
-import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_erupt.Tpl;
-import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.service.EruptApplication;
-import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
@@ -38,7 +33,7 @@ import java.util.Optional;
 @Order
 @Service
 @Slf4j
-public class EruptTplService implements ApplicationRunner {
+public class EruptTplService {
 
     public static String TPL = "tpl";
 
@@ -74,16 +69,12 @@ public class EruptTplService implements ApplicationRunner {
     @Resource
     private HttpServletResponse response;
 
-    @Override
-    public void run(ApplicationArguments args) {
-        TimeRecorder timeRecorder = new TimeRecorder();
+    public void run() {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AnnotationTypeFilter(EruptTpl.class)},
                 clazz -> Arrays.stream(clazz.getDeclaredMethods()).forEach(
                         method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(
                                 it -> tplActions.put(it.value(), method)))
         );
-        MenuTypeEnum.addMenuType(new VLModel(TPL, "模板", "tpl目录下文件名"));
-        log.info("Erupt tpl initialization completed in {} ms", timeRecorder.recorder());
     }
 
     public Method getAction(String name) {

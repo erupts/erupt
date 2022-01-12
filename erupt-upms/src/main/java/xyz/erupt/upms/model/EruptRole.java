@@ -11,7 +11,6 @@ import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
@@ -47,7 +46,7 @@ public class EruptRole extends BaseModel implements FilterHandler, DataProxy<Eru
 
     @EruptField(
             views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true, readonly = @Readonly(add = false))
+            edit = @Edit(title = "编码", notNull = true)
     )
     private String code;
 

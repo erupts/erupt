@@ -7,7 +7,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.service.I18NTranslateService;
-import xyz.erupt.core.toolkit.TimeRecorder;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -44,7 +43,6 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
     @Override
     @SneakyThrows
     public void run(ApplicationArguments args) {
-        TimeRecorder timeRecorder = new TimeRecorder();
         Enumeration<URL> urls = I18nProcess.class.getClassLoader().getResources("i18n/");
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
@@ -60,7 +58,6 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
         }
         i18NTranslateService.registerI18NMapping(langMappings);
         log.info("Erupt i18n total file size: {}kb", totalSize / 1000);
-        log.info("Erupt i18n initialization completed in {} ms", timeRecorder.recorder());
     }
 
     @SneakyThrows

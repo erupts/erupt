@@ -1,7 +1,7 @@
 package xyz.erupt.job.service;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.annotation.EruptHandlerNaming;
 import xyz.erupt.core.service.EruptApplication;
-import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.job.config.EruptJobProp;
 import xyz.erupt.job.handler.EruptJobHandler;
@@ -17,7 +16,6 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +26,7 @@ import java.util.List;
 @Service
 @Order
 @Slf4j
-public class JobStartService implements CommandLineRunner {
+public class JobStartService {
 
     @Resource
     private EruptDao eruptDao;
@@ -45,10 +43,8 @@ public class JobStartService implements CommandLineRunner {
         return loadedJobHandler;
     }
 
-    @Transactional
-    @Override
-    public void run(String... args) throws Exception {
-        TimeRecorder timeRecorder = new TimeRecorder();
+    @SneakyThrows
+    public void run() {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptJobHandler.class)}, clazz -> {
             EruptHandlerNaming eruptHandlerNaming = clazz.getAnnotation(EruptHandlerNaming.class);
             loadedJobHandler.add(new VLModel(clazz.getName(), (null == eruptHandlerNaming) ? clazz.getSimpleName() : eruptHandlerNaming.value()));
@@ -57,7 +53,6 @@ public class JobStartService implements CommandLineRunner {
             for (EruptJob job : eruptDao.queryEntityList(EruptJob.class, "status = true", null)) {
                 eruptJobService.modifyJob(job);
             }
-            log.info("Erupt job initialization completed in {} ms", timeRecorder.recorder());
         } else {
             log.info("Erupt job disable");
         }
