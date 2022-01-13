@@ -2,9 +2,12 @@ package xyz.erupt.core.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.SceneEnum;
 import xyz.erupt.annotation.config.QueryExpression;
@@ -259,32 +262,43 @@ public class EruptUtil {
                 }
             }
 
+
             if (null != value) {
-                //xss 注入处理
-                if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
-                    if (SecurityUtil.xssInspect(value.getAsString())) {
-                        return EruptApiModel.errorNoInterceptApi(field.getEruptField().edit().title() + "检测到有恶意跨站脚本，请重新编辑！");
-                    }
-                }
-                //数据类型校验
+                // xss 注入处理
+                String content;
+                // 数据类型校验
                 switch (edit.type()) {
                     case NUMBER:
                     case SLIDER:
                         if (!NumberUtils.isCreatable(value.getAsString())) {
-                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必须为数值");
+                            return EruptApiModel.errorNoInterceptMessage(
+                                    field.getEruptField().edit().title() + "必须为数值");
                         }
                         break;
                     case INPUT:
                         if (!AnnotationConst.EMPTY_STR.equals(edit.inputType().regex())) {
-                            String content = value.getAsString();
+                            content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "格式不正确");
+                                    return EruptApiModel.errorNoInterceptMessage(
+                                            field.getEruptField().edit().title() + "格式不正确");
                                 }
                             }
                         }
+                    case TEXTAREA:
+                        if (SecurityUtil.xssInspect(value.getAsString())) {
+                            return EruptApiModel.errorNoInterceptApi(
+                                    field.getEruptField().edit().title() + "检测到有恶意跨站脚本，请重新编辑！");
+                        }
+                        content = value.getAsString();
+                        value = new JsonPrimitive(pureStr(content));
+                        jsonObject.add(field.getFieldName(), value);
                         break;
-
+                    case HTML_EDITOR:
+                        content = value.getAsString();
+                        value = new JsonPrimitive(pureHtml(content));
+                        jsonObject.add(field.getFieldName(), value);
+                        break;
                 }
             }
         }
@@ -363,6 +377,16 @@ public class EruptUtil {
         } else if (LocalDate.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
             return true;
         } else return LocalDateTime.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName());
+    }
+
+    private static String pureStr(String str) {
+        return Jsoup.clean(str, "https://", Whitelist.none());
+    }
+
+    private static String pureHtml(String str) {
+        Whitelist whitelist = Whitelist.relaxed();
+        whitelist.preserveRelativeLinks(true);
+        return Jsoup.clean(str, "https://", whitelist);
     }
 
 }
