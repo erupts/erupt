@@ -10,12 +10,13 @@ import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.jpa.model.MetaModel;
-import xyz.erupt.upms.enums.MenuLimitEnum;
 import xyz.erupt.upms.service.EruptMenuService;
 
 import javax.persistence.*;
@@ -101,16 +102,6 @@ public class EruptMenu extends MetaModel {
             )
     )
     private String icon;
-
-    @EruptField(
-            edit = @Edit(
-                    title = "权限",
-                    type = EditType.TAGS,
-                    showBy = @ShowBy(dependField = "type", expr = "value=='tree'||value=='table'"),
-                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
-            )
-    )
-    private String powerOff;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
