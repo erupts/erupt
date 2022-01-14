@@ -4,13 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.util.UPMSUtil;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -39,8 +42,21 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     if (first) {
                         module.initFun();
                         for (MetaMenu metaMenu : metaMenus) {
-                            metaMenu.setId(eruptDao.persistIfNotExist(EruptMenu.class,
-                                    EruptMenu.fromMetaMenu(metaMenu), EruptMenu.CODE, metaMenu.getCode()).getId());
+                            EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.fromMetaMenu(metaMenu), EruptMenu.CODE, metaMenu.getCode());
+                            metaMenu.setId(eruptMenu.getId());
+                            if (null != eruptMenu.getType() && null != eruptMenu.getValue()) {
+                                if (MenuTypeEnum.TABLE.getCode().equals(eruptMenu.getType()) || MenuTypeEnum.TREE.getCode().equals(eruptMenu.getType())) {
+                                    int i = 0;
+                                    for (EruptFunPermissions value : EruptFunPermissions.values()) {
+                                        eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                                                UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
+                                                value.getName(), MenuTypeEnum.BUTTON.getCode(),
+                                                UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
+                                                eruptMenu, i += 10
+                                        ), EruptMenu.CODE, UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value));
+                                    }
+                                }
+                            }
                         }
                     }
                 })
@@ -59,17 +75,6 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     eruptUser.setName(DEFAULT_ACCOUNT);
                     eruptUser.setResetPwdTime(new Date());
                     eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
-                }
-            } else {
-                EruptUser eruptUser = eruptDao.queryEntity(EruptUser.class, "account = '" + DEFAULT_ACCOUNT + "'", null);
-                if (null != eruptUser) {
-                    String password = eruptUser.getPassword();
-                    if (!eruptUser.getIsMd5()) {
-                        password = MD5Util.digest(eruptUser.getPassword());
-                    }
-                    if (MD5Util.digest(DEFAULT_ACCOUNT).equals(password)) {
-                        log.warn("正在使用框架默认用户名密码，为了您的系统安全请尽快修改！");
-                    }
                 }
             }
         });

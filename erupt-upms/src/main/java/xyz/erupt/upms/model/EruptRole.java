@@ -13,10 +13,8 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.enums.MenuLimitEnum;
 import xyz.erupt.upms.handler.RoleMenuFilter;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -66,16 +64,6 @@ public class EruptRole extends BaseModel implements FilterHandler, DataProxy<Eru
             )
     )
     private Boolean status = true;
-
-    @EruptField(
-            views = @View(title = "操作权限", template = "value&&value.replace(/\\|/g,'<span class=\"text-red\"> | </span>')"),
-            edit = @Edit(
-                    title = "操作权限",
-                    type = EditType.TAGS,
-                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
-            )
-    )
-    private String powerOff;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
