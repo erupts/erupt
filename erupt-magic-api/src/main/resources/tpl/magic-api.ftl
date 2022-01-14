@@ -22,7 +22,7 @@
         }
     }
 </script>
-<iframe src="${request.contextPath}${web}"
+<iframe src="${request.contextPath}${web}?_random=${random}"
         style="border: 0" width="100%" height="100%"></iframe>
 </body>
 </html>
