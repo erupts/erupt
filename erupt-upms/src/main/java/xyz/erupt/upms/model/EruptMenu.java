@@ -150,7 +150,6 @@ public class EruptMenu extends MetaModel {
                 metaMenu.getSort(),
                 metaMenu.getIcon(),
                 fromMetaMenu(metaMenu.getParentMenu()));
-        eruptMenu.setId(metaMenu.getId());
         return eruptMenu;
     }
 

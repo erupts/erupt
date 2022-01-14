@@ -12,13 +12,13 @@ import lombok.Getter;
 public enum EruptFunPermissions {
 
     ADD("新增"),
-    DELETE("删除"),
     EDIT("修改"),
+    DELETE("删除"),
     QUERY("查询"),
     EXPORT("导出"),
-    IMPORT("导入"),
+    IMPORTABLE("导入"),
     VIEW_DETAIL("查看详情");
 
-    private String name;
+    private final String name;
 
 }

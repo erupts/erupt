@@ -76,14 +76,9 @@ public class EruptUserService {
                 valueMap.put(menu.getValue(), menu);
             }
         }
-        StringBuilder sb = new StringBuilder();
-        for (EruptRole role : eruptUser.getRoles()) {
-            sb.append(role.getPowerOff()).append("|");
-        }
         sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsConfig.getExpireTimeByLogin());
         sessionService.putMap(SessionKey.MENU_CODE_MAP + token, codeMap, eruptUpmsConfig.getExpireTimeByLogin());
         sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsConfig.getExpireTimeByLogin());
-        sessionService.put(SessionKey.ROLE_POWER + token, sb.toString(), eruptUpmsConfig.getExpireTimeByLogin());
     }
 
     public void putUserInfo(EruptUser eruptUser, String token) {

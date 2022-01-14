@@ -40,8 +40,11 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
      */
     @Override
     public boolean requireLogin() {
-        Optional.ofNullable(eruptUserService.getSimpleUserInfo()).ifPresent(adminUserInfo -> request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER,
-                new MagicUser(adminUserInfo.getAccount(), adminUserInfo.getUsername(), this.eruptContextService.getCurrentToken())));
+        try {
+            Optional.ofNullable(eruptUserService.getSimpleUserInfo()).ifPresent(adminUserInfo -> request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER,
+                    new MagicUser(adminUserInfo.getAccount(), adminUserInfo.getUsername(), this.eruptContextService.getCurrentToken())));
+        }catch (Exception ignored){
+        }
         return false;
     }
 

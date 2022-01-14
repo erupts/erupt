@@ -20,10 +20,6 @@ public class SessionKey {
     //菜单列表
     public static final String MENU_VIEW = AUTH_SPACE + "menu-view:";
 
-
-    //角色权限
-    public static final String ROLE_POWER = AUTH_SPACE + "role-power:";
-
     public static final String USER_TOKEN = AUTH_SPACE + "token:";
 
     public static final String LOGIN_ERROR = AUTH_SPACE + "login-error:";
