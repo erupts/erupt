@@ -15,6 +15,7 @@ import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.bi.model.BiFunction;
 import xyz.erupt.bi.view.BiColumn;
 import xyz.erupt.bi.view.BiData;
+import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
@@ -78,7 +79,7 @@ public class BiService {
 
     //校验请求id是否拥有菜单权限
     public void verifyBiMenuPermissions(Bi bi, String code) {
-        String biCode = Optional.ofNullable(request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY))
+        String biCode = Optional.ofNullable(request.getHeader(EruptMutualConst.ERUPT))
                 .orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
         if (!biCode.equals(bi.getCode()) || !code.equals(bi.getCode())) {
             throw new EruptNoLegalPowerException();
