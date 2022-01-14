@@ -20,6 +20,8 @@ public class MagicApiTpl {
 
     public static final String MAGIC_API_PERMISSION = "magic-api.ftl";
 
+    public static final String RANDOM = RandomStringUtils.randomAlphanumeric(6);
+
     @Resource
     private MagicAPIProperties magicAPIProperties;
 
@@ -27,7 +29,7 @@ public class MagicApiTpl {
     public Map<String, Object> magicApiAction() {
         Map<String, Object> map = new HashMap<>();
         map.put("web", magicAPIProperties.getWeb());
-        map.put("random", RandomStringUtils.randomAlphanumeric(6));
+        map.put("random", RANDOM);
         return map;
     }
 
