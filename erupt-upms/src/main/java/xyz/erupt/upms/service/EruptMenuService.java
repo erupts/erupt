@@ -4,10 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.constant.MenuStatus;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
@@ -66,6 +68,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         eruptMenu.setCode(Erupts.generateCode());
     }
 
+
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
@@ -73,6 +76,26 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         }
         EruptUserService eruptUserService = EruptSpringUtil.getBean(EruptUserService.class);
         eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
+        //add menu permissions
+        {
+            if (null != eruptMenu.getType() && null != eruptMenu.getValue()) {
+                if (MenuTypeEnum.TABLE.getCode().equals(eruptMenu.getType()) || MenuTypeEnum.TREE.getCode().equals(eruptMenu.getType())) {
+                    int i = 10;
+                    for (EruptFunPermissions value : EruptFunPermissions.values()) {
+                        eruptDao.persist(new EruptMenu(
+                                getEruptButtonCode(eruptMenu.getValue(), value),
+                                value.getName(), MenuTypeEnum.BUTTON.getCode(),
+                                getEruptButtonCode(eruptMenu.getValue(), value),
+                                eruptMenu, i += 10
+                        ));
+                    }
+                }
+            }
+        }
+    }
+
+    public String getEruptButtonCode(String eruptName, EruptFunPermissions eruptFunPermissions) {
+        return eruptName + "@" + eruptFunPermissions.name();
     }
 
     @Override
