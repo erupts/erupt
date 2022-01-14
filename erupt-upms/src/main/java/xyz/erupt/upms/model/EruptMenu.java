@@ -138,9 +138,20 @@ public class EruptMenu extends MetaModel {
         this.setCreateTime(LocalDateTime.now());
     }
 
+    public EruptMenu(String code, String name, String type, String value, EruptMenu parentMenu, Integer sort) {
+        this.code = code;
+        this.name = name;
+        this.parentMenu = parentMenu;
+        this.type = type;
+        this.value = value;
+        this.sort = sort;
+        this.setStatus(MenuStatus.OPEN.getValue());
+        this.setCreateTime(LocalDateTime.now());
+    }
+
     public static EruptMenu fromMetaMenu(MetaMenu metaMenu) {
         if (null == metaMenu) return null;
-        EruptMenu eruptMenu =  new EruptMenu(metaMenu.getCode(),
+        EruptMenu eruptMenu = new EruptMenu(metaMenu.getCode(),
                 metaMenu.getName(),
                 null == metaMenu.getType() ? null : metaMenu.getType(),
                 metaMenu.getValue(),
