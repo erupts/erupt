@@ -113,7 +113,7 @@ public class EruptCoreService implements ApplicationRunner {
         EruptModuleInvoke.invoke(it -> {
             it.run();
             modules.add(it.info().getName());
-            log.info("→ {} module initialization completed in {}ms", fillCharacter(it.info().getName(), 18),timeRecorder.recorder());
+            log.info("-> {} module initialization completed in {}ms", fillCharacter(it.info().getName(), 18),timeRecorder.recorder());
         });
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
     }

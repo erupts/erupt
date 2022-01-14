@@ -57,7 +57,7 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
             }
         }
         i18NTranslateService.registerI18NMapping(langMappings);
-        log.info("Erupt i18n total file size: {}kb", totalSize / 1000);
+        log.info("Erupt i18n total file size: {}kb", totalSize.doubleValue() / 1000);
     }
 
     @SneakyThrows
