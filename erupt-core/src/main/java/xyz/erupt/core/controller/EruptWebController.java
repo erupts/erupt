@@ -12,7 +12,7 @@ import xyz.erupt.core.util.EruptPropUtil;
 public class EruptWebController {
 
 
-    @RequestMapping({"/", "/index.htm"})
+    @RequestMapping({"/", "index", "/index.htm"})
     public String index() {
         return "index.html?_v=" + EruptPropUtil.getEruptVersion();
     }
