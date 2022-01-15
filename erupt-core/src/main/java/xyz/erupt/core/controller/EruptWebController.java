@@ -11,10 +11,9 @@ import xyz.erupt.core.util.EruptPropUtil;
 @Controller
 public class EruptWebController {
 
-
-    @RequestMapping({"/", "index", "/index.htm"})
+    @RequestMapping({"/"})
     public String index() {
-        return "index.html?_v=" + EruptPropUtil.getEruptVersion();
+        return "forward:index.html?_v=" + EruptPropUtil.getEruptVersion();
     }
 
 }
