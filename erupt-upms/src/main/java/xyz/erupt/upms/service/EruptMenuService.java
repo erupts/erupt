@@ -66,17 +66,40 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void beforeAdd(EruptMenu eruptMenu) {
-        eruptMenu.setCode(Erupts.generateCode());
+        if (null == eruptMenu.getCode()) {
+            eruptMenu.setCode(Erupts.generateCode());
+        }
+        if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
+            throw new EruptWebApiRuntimeException("When selecting a menu type, the type value cannot be empty");
+        }
+    }
+
+    @Override
+    public void beforeUpdate(EruptMenu eruptMenu) {
+        this.beforeAdd(eruptMenu);
+    }
+
+    /**
+     * The reason for that:
+     * <p>
+     * The dependencies of some of the beans in the application context form a cycle:
+     * mvcInterceptor
+     * ↓
+     * eruptSecurityInterceptor
+     * ┌─────┐
+     * |  eruptUserService
+     * ↑     ↓
+     * |  eruptMenuService
+     * └─────┘
+     */
+    private void flushCache() {
+        EruptUserService eruptUserService = EruptSpringUtil.getBean(EruptUserService.class);
+        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
     }
 
 
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
-        if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
-            throw new EruptWebApiRuntimeException("When selecting a menu type, the type value cannot be empty");
-        }
-        EruptUserService eruptUserService = EruptSpringUtil.getBean(EruptUserService.class);
-        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
         //add menu permissions
         if (null != eruptMenu.getType() && null != eruptMenu.getValue()) {
             if (MenuTypeEnum.TABLE.getCode().equals(eruptMenu.getType()) || MenuTypeEnum.TREE.getCode().equals(eruptMenu.getType())) {
@@ -91,17 +114,17 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
                 }
             }
         }
+        this.flushCache();
     }
-
 
     @Override
     public void afterUpdate(EruptMenu eruptMenu) {
-        this.afterAdd(eruptMenu);
+        this.flushCache();
     }
 
     @Override
     public void afterDelete(EruptMenu eruptMenu) {
-        this.afterAdd(eruptMenu);
+        this.flushCache();
     }
 
 }
