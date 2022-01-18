@@ -142,15 +142,10 @@ public class EruptMenu extends MetaModel {
 
     public static EruptMenu fromMetaMenu(MetaMenu metaMenu) {
         if (null == metaMenu) return null;
-        EruptMenu eruptMenu = new EruptMenu(metaMenu.getCode(),
-                metaMenu.getName(),
-                null == metaMenu.getType() ? null : metaMenu.getType(),
-                metaMenu.getValue(),
-                null == metaMenu.getStatus() ? null : metaMenu.getStatus().getValue(),
-                metaMenu.getSort(),
-                metaMenu.getIcon(),
-                fromMetaMenu(metaMenu.getParentMenu()));
-        return eruptMenu;
+        return new EruptMenu(metaMenu.getCode(),
+                metaMenu.getName(), null == metaMenu.getType() ? null : metaMenu.getType(),
+                metaMenu.getValue(), null == metaMenu.getStatus() ? null : metaMenu.getStatus().getValue(),
+                metaMenu.getSort(), metaMenu.getIcon(), fromMetaMenu(metaMenu.getParentMenu()));
     }
 
 }
