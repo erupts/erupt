@@ -18,12 +18,12 @@ public interface EruptModule {
 
     }
 
-    @Comment("初始化菜单")
+    @Comment("初始化菜单 → 仅执行一次，标识文件位置.erupt/.${moduleName}")
     default List<MetaMenu> initMenus() {
         return null;
     }
 
-    @Comment("初始化方法")
+    @Comment("初始化方法 → 仅执行一次，标识文件位置.erupt/.${moduleName}")
     default void initFun() {
 
     }
