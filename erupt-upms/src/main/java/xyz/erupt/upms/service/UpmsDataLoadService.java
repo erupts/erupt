@@ -4,9 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
@@ -19,6 +21,7 @@ import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author YuePeng
@@ -46,15 +49,20 @@ public class UpmsDataLoadService implements CommandLineRunner {
                             metaMenu.setId(eruptMenu.getId());
                             if (null != eruptMenu.getType() && null != eruptMenu.getValue()) {
                                 if (MenuTypeEnum.TABLE.getCode().equals(eruptMenu.getType()) || MenuTypeEnum.TREE.getCode().equals(eruptMenu.getType())) {
-                                    int i = 0;
-                                    for (EruptFunPermissions value : EruptFunPermissions.values()) {
-                                        eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
-                                                UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
-                                                value.getName(), MenuTypeEnum.BUTTON.getCode(),
-                                                UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
-                                                eruptMenu, i += 10
-                                        ), EruptMenu.CODE, UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value));
-                                    }
+                                    AtomicInteger i = new AtomicInteger();
+                                    Optional.ofNullable(EruptCoreService.getErupt(eruptMenu.getValue())).ifPresent(it -> {
+                                        Power power = it.getErupt().power();
+                                        for (EruptFunPermissions value : EruptFunPermissions.values()) {
+                                            if (value.verifyPower(power)) {
+                                                eruptDao.persistIfNotExist(EruptMenu.class, new EruptMenu(
+                                                        UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
+                                                        value.getName(), MenuTypeEnum.BUTTON.getCode(),
+                                                        UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
+                                                        eruptMenu, i.addAndGet(10)
+                                                ), EruptMenu.CODE, UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value));
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         }

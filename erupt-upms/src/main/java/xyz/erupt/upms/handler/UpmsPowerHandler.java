@@ -30,13 +30,11 @@ public class UpmsPowerHandler implements PowerHandler {
     @Override
     public void handler(PowerObject power) {
         power.setAdd(powerOff(EruptFunPermissions.ADD));
-        power.setQuery(powerOff(EruptFunPermissions.QUERY));
         power.setDelete(powerOff(EruptFunPermissions.DELETE));
         power.setEdit(powerOff(EruptFunPermissions.EDIT));
         power.setViewDetails(powerOff(EruptFunPermissions.VIEW_DETAIL));
         power.setExport(powerOff(EruptFunPermissions.EXPORT));
         power.setImportable(powerOff(EruptFunPermissions.IMPORTABLE));
-
     }
 
     public boolean powerOff(EruptFunPermissions eruptFunPermissions) {
