@@ -3,6 +3,7 @@ package xyz.erupt.magicapi.action;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 import org.ssssssss.magicapi.spring.boot.starter.MagicAPIProperties;
+import xyz.erupt.core.util.EruptPropUtil;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 
@@ -29,7 +30,7 @@ public class MagicApiTpl {
     public Map<String, Object> magicApiAction() {
         Map<String, Object> map = new HashMap<>();
         map.put("web", magicAPIProperties.getWeb());
-        map.put("random", RANDOM);
+        map.put("random", EruptPropUtil.getEruptVersion());
         return map;
     }
 
