@@ -20,7 +20,7 @@ import java.util.List;
 @MappedSuperclass
 @PreDataProxy(LookerSelf.class)
 @Component
-public class LookerSelf extends HyperModelCreatorVo implements DataProxy<Object> {
+public class LookerSelf extends HyperModelCreatorVo implements DataProxy<Void> {
 
     @Resource
     @Transient

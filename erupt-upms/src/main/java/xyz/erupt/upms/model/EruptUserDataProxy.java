@@ -3,8 +3,6 @@ package xyz.erupt.upms.model;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.query.Condition;
-import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.I18NTranslateService;
@@ -15,7 +13,6 @@ import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author YuePeng
@@ -32,14 +29,6 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
 
     @Resource
     private I18NTranslateService i18NTranslateService;
-
-    @Override
-    public String beforeFetch(List<Condition> conditions) {
-        if (eruptUserService.getCurrentEruptUser().getIsAdmin()) {
-            return null;
-        }
-        return MetaContext.getErupt().getName() + ".createUser.id = " + eruptUserService.getCurrentUid();
-    }
 
     @Override
     public void beforeAdd(EruptUser eruptUser) {

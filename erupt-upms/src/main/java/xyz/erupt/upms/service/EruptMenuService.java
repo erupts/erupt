@@ -43,32 +43,25 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     }
 
     public List<EruptMenu> getUserAllMenu(EruptUser eruptUser) {
-        List<EruptMenu> menus;
         if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
-            menus = eruptDao.getEntityManager().createQuery("from EruptMenu order by sort", EruptMenu.class).getResultList();
+            return eruptDao.queryEntityList(EruptMenu.class, "1=1 order by sort");
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
-            eruptUser.getRoles().stream().filter(EruptRole::getStatus)
-                    .map(EruptRole::getMenus).forEach(menuSet::addAll);
-            menus = menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
+            eruptUser.getRoles().stream().filter(EruptRole::getStatus).map(EruptRole::getMenus).forEach(menuSet::addAll);
+            return menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
         }
-        return menus;
     }
 
     @Override
     public void addBehavior(EruptMenu eruptMenu) {
-        Integer obj = (Integer) eruptDao.getEntityManager()
-                .createQuery("select max(sort) from " + EruptMenu.class.getSimpleName())
-                .getSingleResult();
+        Integer obj = (Integer) eruptDao.getEntityManager().createQuery("select max(sort) from " + EruptMenu.class.getSimpleName()).getSingleResult();
         Optional.ofNullable(obj).ifPresent(it -> eruptMenu.setSort(it + 10));
         eruptMenu.setStatus(MenuStatus.OPEN.getValue());
     }
 
     @Override
     public void beforeAdd(EruptMenu eruptMenu) {
-        if (null == eruptMenu.getCode()) {
-            eruptMenu.setCode(Erupts.generateCode());
-        }
+        if (null == eruptMenu.getCode()) eruptMenu.setCode(Erupts.generateCode());
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
             throw new EruptWebApiRuntimeException("When selecting a menu type, the type value cannot be empty");
         }
@@ -100,16 +93,13 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
-        //add menu permissions
         if (null != eruptMenu.getType() && null != eruptMenu.getValue()) {
             if (MenuTypeEnum.TABLE.getCode().equals(eruptMenu.getType()) || MenuTypeEnum.TREE.getCode().equals(eruptMenu.getType())) {
                 int i = 0;
                 for (EruptFunPermissions value : EruptFunPermissions.values()) {
                     eruptDao.persist(new EruptMenu(
-                            UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
-                            value.getName(), MenuTypeEnum.BUTTON.getCode(),
-                            UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
-                            eruptMenu, i += 10
+                            UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value), value.getName(), MenuTypeEnum.BUTTON.getCode(),
+                            UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value), eruptMenu, i += 10
                     ));
                 }
             }
@@ -119,7 +109,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void afterUpdate(EruptMenu eruptMenu) {
-        this.afterAdd(eruptMenu);
+        this.flushCache();
     }
 
     @Override
