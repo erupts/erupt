@@ -118,6 +118,9 @@ public class BiService {
 
     private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
 
+    //先不使用缓存，如果用户id作为变量，那么结果将不可控
+//    private final EruptCache<Map<String, Object>> eruptCache = EruptCache.factory();
+
     @SneakyThrows
     public List<Map<String, Object>> startQuery(String express, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
         EruptBiHandler biHandler = null;
