@@ -6,7 +6,7 @@ import java.util.function.Function;
  * @author YuePeng
  * date 2021/12/30 00:04
  */
-public interface MetaCache<V> {
+public interface IMetaCache<V> {
 
     V get(String key, Function<String, V> function);
 

@@ -55,9 +55,13 @@
     <meta name="theme-color" content="#1976d2">
 <link rel="stylesheet" href="styles.28522aea86fd21b4c1a9.css"></head>
 <body>
-<link rel="stylesheet" href="app.css">
-<script src="app.js"></script>
-<script type="module" src="app.module.js"></script>
+<script>
+    //创建一个script标签
+    var t = new Date().getTime();
+    document.write("<link rel=\"stylesheet\" href=\"app.css?_=" + t + "\" type=\"text/css\"/>");
+    document.write("<script type=\"text/javascript\" src=\"app.js?_" + t + "\"><\/script>");
+    document.write("<script type=\"module\" src=\"app.module.js?_" + t + "\" ><\/script>");
+</script>
 <!--[if lt IE 11]>
 <style>
     .preloader {

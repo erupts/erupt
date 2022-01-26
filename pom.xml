@@ -30,6 +30,7 @@
     <modules>
         <module>erupt-annotation</module>
         <module>erupt-core</module>
+        <module>erupt-toolkit</module>
         <module>erupt-tpl</module>
 
         <module>erupt-tpl-ui/ant-design</module>
