@@ -5,7 +5,7 @@ import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.util.EruptAssert;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.cache.CaffeineEruptCache;
+import xyz.erupt.toolkit.cache.EruptCache;
 import xyz.erupt.upms.constant.FetchConst;
 import xyz.erupt.upms.model.EruptDictItem;
 
@@ -23,15 +23,15 @@ public class DictChoiceFetchHandler implements ChoiceFetchHandler {
     @Resource
     private EruptDao eruptDao;
 
-    private final CaffeineEruptCache<List<VLModel>> dictCache = new CaffeineEruptCache<>();
+    private final EruptCache<List<VLModel>> dictCache = EruptCache.factory();
 
     @Override
     public List<VLModel> fetch(String[] params) {
         EruptAssert.notNull(params, DictChoiceFetchHandler.class.getSimpleName() + " → params[0] must dict → code");
-        dictCache.init(params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME);
-        return dictCache.get(DictChoiceFetchHandler.class.getName() + ":" + params[0], (key) ->
-                eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = '" + params[0] + "'")
-                        .stream().map((item) -> new VLModel(item.getId(), item.getName())).collect(Collectors.toList()));
+        return dictCache.getAndSet(DictChoiceFetchHandler.class.getName() + ":" + params[0],
+                params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME, (key) ->
+                        eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = '" + params[0] + "'")
+                                .stream().map((item) -> new VLModel(item.getId(), item.getName())).collect(Collectors.toList()));
     }
 
 }
