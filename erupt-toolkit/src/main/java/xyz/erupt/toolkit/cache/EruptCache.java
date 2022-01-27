@@ -4,6 +4,7 @@ import xyz.erupt.toolkit.cache.impl.EruptStandaloneCache;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author YuePeng
@@ -19,8 +20,8 @@ public abstract class EruptCache<V> {
 
     protected abstract V get(String key);
 
-    public V getAndSet(String key, long timeout, Function<String, V> function) {
-        return Optional.ofNullable(this.get(key)).orElse(this.put(key, timeout, function.apply(key)));
+    public V getAndSet(String key, long timeout, Supplier<V> supplier) {
+        return Optional.ofNullable(this.get(key)).orElse(this.put(key, timeout, supplier.get()));
     }
 
 }
