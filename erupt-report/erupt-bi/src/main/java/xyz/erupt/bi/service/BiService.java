@@ -1,5 +1,6 @@
 package xyz.erupt.bi.service;
 
+import com.google.gson.Gson;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,11 +16,13 @@ import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.bi.model.BiFunction;
 import xyz.erupt.bi.view.BiColumn;
 import xyz.erupt.bi.view.BiData;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.toolkit.cache.EruptCache;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -32,6 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.ResultSetMetaData;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -60,6 +65,8 @@ public class BiService {
 
     @Resource
     private BiDataSourceService dataSourceService;
+
+    private Gson gson = GsonFactory.getGson();
 
     private String getLimitSql(BiDataSource biDataSource) {
         if (null == biDataSource) {
@@ -102,7 +109,7 @@ public class BiService {
                     .replace(DBTypeEnum.$SQL, bi.getSqlStatement())
                     .replace(DBTypeEnum.$SIZE, String.valueOf(pageSize))
                     .replace(DBTypeEnum.$SKIP, String.valueOf((pageIndex - 1) * pageSize));
-            List<Map<String, Object>> list = startQuery(sql, bi.getClassHandler(), bi.getDataSource(), query);
+            List<Map<String, Object>> list = startQuery(sql, bi.getCacheTime().longValue(), bi.getClassHandler(), bi.getDataSource(), query);
             if (null != list && list.size() > 0) {
                 List<BiColumn> biColumns = new LinkedList<>();
                 Map<String, Object> map = list.get(0);
@@ -118,11 +125,11 @@ public class BiService {
 
     private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
 
-    //先不使用缓存，如果用户id作为变量，那么结果将不可控
-//    private final EruptCache<Map<String, Object>> eruptCache = EruptCache.factory();
+
+    private final EruptCache<List<Map<String, Object>>> eruptCache = EruptCache.factory();
 
     @SneakyThrows
-    public List<Map<String, Object>> startQuery(String express, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
+    public List<Map<String, Object>> startQuery(String express, Long timeout, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
         EruptBiHandler biHandler = null;
         this.putCommonContextParam(query);
         express = processPlaceHolder(express, query);
@@ -130,10 +137,21 @@ public class BiService {
             biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), EruptBiHandler.class);
             express = biHandler.exprHandler(classHandler.getParam(), query, express);
         }
-        NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(biDataSource);
-        List<Map<String, Object>> list = jdbcQuery(jdbcTemplate, express, query);
-        Optional.ofNullable(biHandler).ifPresent(it -> it.resultHandler(classHandler.getParam(), query, list));
-        return list;
+        {
+            String finalExpress = express;
+            EruptBiHandler finalBiHandler = biHandler;
+            Supplier<List<Map<String, Object>>> supplier = () -> {
+                NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(biDataSource);
+                List<Map<String, Object>> list = jdbcQuery(jdbcTemplate, finalExpress, query);
+                Optional.ofNullable(finalBiHandler).ifPresent(it -> it.resultHandler(classHandler.getParam(), query, list));
+                return list;
+            };
+            if (null == timeout) {
+                return supplier.get();
+            } else {
+                return eruptCache.getAndSet(express + gson.toJson(query), timeout * 1000, supplier);
+            }
+        }
     }
 
     public Object evalScript(String script, Bindings bindings) throws ScriptException {

@@ -139,7 +139,7 @@ public class EruptBiController {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
         biService.verifyBiMenuPermissions(dimension.getBi(), code);
         BiDimensionReference reference = dimension.getBiDimensionReference();
-        List<Map<String, Object>> list = biService.startQuery(reference.getRefSql(), reference.getClassHandler(), reference.getDataSource(), query);
+        List<Map<String, Object>> list = biService.startQuery(reference.getRefSql(), null, reference.getClassHandler(), reference.getDataSource(), query);
         List<Reference> references = new ArrayList<>();
         for (Map<String, Object> map : list) {
             if (map.keySet().size() == 1) {
@@ -163,7 +163,7 @@ public class EruptBiController {
                                              @PathVariable String code) {
         BiChart chart = entityManager.find(BiChart.class, chartId);
         biService.verifyBiMenuPermissions(chart.getBi(), code);
-        return biService.startQuery(chart.getSqlStatement(), chart.getClassHandler(), chart.getDataSource(), query);
+        return biService.startQuery(chart.getSqlStatement(), chart.getCacheTime().longValue(), chart.getClassHandler(), chart.getDataSource(), query);
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
