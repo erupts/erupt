@@ -29,7 +29,7 @@ public class DictCodeChoiceFetchHandler implements ChoiceFetchHandler {
     public List<VLModel> fetch(String[] params) {
         EruptAssert.notNull(params, DictCodeChoiceFetchHandler.class.getSimpleName() + " → params[0] must dict → code");
         return dictCache.getAndSet(DictCodeChoiceFetchHandler.class.getName() + ":" + params[0],
-                params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME, (key) ->
+                params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME, () ->
                         eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = '" + params[0] + "'", null)
                                 .stream().map((item) -> new VLModel(item.getCode(), item.getName())).collect(Collectors.toList()));
     }

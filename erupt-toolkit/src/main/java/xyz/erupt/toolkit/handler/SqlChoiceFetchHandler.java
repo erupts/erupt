@@ -27,7 +27,7 @@ public class SqlChoiceFetchHandler implements ChoiceFetchHandler {
         EruptAssert.notNull(params, SqlChoiceFetchHandler.class.getSimpleName() + " → params not found");
         return eruptCache.getAndSet(SqlChoiceFetchHandler.class.getName() + ":" + params[0],
                 params.length == 2 ? Long.parseLong(params[1]) : 3000,
-                (key) -> jdbcTemplate.query(params[0], (rs, i) -> {
+                () -> jdbcTemplate.query(params[0], (rs, i) -> {
                     if (rs.getMetaData().getColumnCount() == 1) {
                         return new VLModel(rs.getString(1), rs.getString(1));
                     } else {
