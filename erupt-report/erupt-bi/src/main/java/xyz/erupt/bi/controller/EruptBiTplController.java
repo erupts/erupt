@@ -83,7 +83,7 @@ public class EruptBiTplController {
         if (null == biChart.getBiTpl()) throw new EruptWebApiRuntimeException("Tpl not config");
         Map<String, Object> map = new HashMap<>();
         String data = "data";
-        map.put(data, biService.startQuery(biChart.getSqlStatement(), biChart.getCacheTime().longValue(), biChart.getClassHandler(), biChart.getDataSource(), condition));
+        map.put(data, biService.startQuery(biChart.getSqlStatement(), biChart.getCacheTime(), biChart.getClassHandler(), biChart.getDataSource(), condition));
         map.put("dataJson", gson.toJson(map.get(data)));
         if (BiTpl.TYPE_ONLINE.equals(biChart.getBiTpl().getType())) {
             map.put("request", request);

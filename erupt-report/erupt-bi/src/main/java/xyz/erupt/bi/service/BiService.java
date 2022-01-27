@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.ResultSetMetaData;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,7 +65,7 @@ public class BiService {
     @Resource
     private BiDataSourceService dataSourceService;
 
-    private Gson gson = GsonFactory.getGson();
+    private final Gson gson = GsonFactory.getGson();
 
     private String getLimitSql(BiDataSource biDataSource) {
         if (null == biDataSource) {
@@ -92,6 +91,9 @@ public class BiService {
             throw new EruptNoLegalPowerException();
         }
     }
+    private final EruptCache<List<Map<String, Object>>> eruptCache = EruptCache.newInstance();
+
+    private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
 
     public BiData queryBiData(Bi bi, int pageIndex, int pageSize,
                               Map<String, Object> query, boolean export) {
@@ -109,7 +111,7 @@ public class BiService {
                     .replace(DBTypeEnum.$SQL, bi.getSqlStatement())
                     .replace(DBTypeEnum.$SIZE, String.valueOf(pageSize))
                     .replace(DBTypeEnum.$SKIP, String.valueOf((pageIndex - 1) * pageSize));
-            List<Map<String, Object>> list = startQuery(sql, bi.getCacheTime().longValue(), bi.getClassHandler(), bi.getDataSource(), query);
+            List<Map<String, Object>> list = startQuery(sql, bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query);
             if (null != list && list.size() > 0) {
                 List<BiColumn> biColumns = new LinkedList<>();
                 Map<String, Object> map = list.get(0);
@@ -123,13 +125,8 @@ public class BiService {
         return biData;
     }
 
-    private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
-
-
-    private final EruptCache<List<Map<String, Object>>> eruptCache = EruptCache.factory();
-
     @SneakyThrows
-    public List<Map<String, Object>> startQuery(String express, Long timeout, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
+    public List<Map<String, Object>> startQuery(String express, Integer timeout, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
         EruptBiHandler biHandler = null;
         this.putCommonContextParam(query);
         express = processPlaceHolder(express, query);

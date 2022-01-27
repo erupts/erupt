@@ -59,12 +59,6 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
     private Integer height = 340;
 
     @EruptField(
-            views = @View(title = "缓存时间", sortable = true, template = "value&&value+'s'"),
-            edit = @Edit(title = "缓存时间（秒）")
-    )
-    private Integer cacheTime = 1;
-
-    @EruptField(
             views = @View(title = "显示顺序", sortable = true),
             edit = @Edit(title = "显示顺序")
     )
@@ -82,6 +76,12 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
             edit = @Edit(title = "数据源", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private BiDataSource dataSource;
+
+    @EruptField(
+            views = @View(title = "缓存时间", sortable = true, template = "value&&value+'s'"),
+            edit = @Edit(title = "缓存时间（秒）")
+    )
+    private Integer cacheTime = 1;
 
     /**
      * 单数值

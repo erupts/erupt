@@ -163,7 +163,7 @@ public class EruptBiController {
                                              @PathVariable String code) {
         BiChart chart = entityManager.find(BiChart.class, chartId);
         biService.verifyBiMenuPermissions(chart.getBi(), code);
-        return biService.startQuery(chart.getSqlStatement(), chart.getCacheTime().longValue(), chart.getClassHandler(), chart.getDataSource(), query);
+        return biService.startQuery(chart.getSqlStatement(), chart.getCacheTime(), chart.getClassHandler(), chart.getDataSource(), query);
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
