@@ -20,7 +20,7 @@ public class SqlChoiceFetchHandler implements ChoiceFetchHandler {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    private final EruptCache<List<VLModel>> eruptCache = EruptCache.factory();
+    private final EruptCache<List<VLModel>> eruptCache = EruptCache.newInstance();
 
     @Override
     public List<VLModel> fetch(String[] params) {

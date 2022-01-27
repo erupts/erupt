@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>erupt</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <meta name="renderer" content="webkit">
+
     <style type="text/css">
         .preloader {
             position: fixed;
@@ -48,20 +49,12 @@
             color: #fff;
             text-align: center
         }
-
     </style>
     <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1976d2">
 <link rel="stylesheet" href="styles.28522aea86fd21b4c1a9.css"></head>
 <body>
-<script>
-    //创建一个script标签
-    var t = new Date().getTime();
-    document.write("<link rel=\"stylesheet\" href=\"app.css?_=" + t + "\" type=\"text/css\"/>");
-    document.write("<script type=\"text/javascript\" src=\"app.js?_" + t + "\"><\/script>");
-    document.write("<script type=\"module\" src=\"app.module.js?_" + t + "\" ><\/script>");
-</script>
 <!--[if lt IE 11]>
 <style>
     .preloader {
@@ -83,5 +76,15 @@
         </div>
     </div>
 </div>
-<script src="runtime-es2015.17feea0dd6afb34c81b8.js" type="module"></script><script src="runtime-es5.17feea0dd6afb34c81b8.js" nomodule defer></script><script src="polyfills-es5.2717f3aff28fcf929549.js" nomodule defer></script><script src="polyfills-es2015.1d476200748f6caf09c2.js" type="module"></script><script src="scripts.b993e8b98ac7c2ea2917.js" defer></script><script src="main-es2015.34040c9fce9afeb4c9c9.js" type="module"></script><script src="main-es5.34040c9fce9afeb4c9c9.js" nomodule defer></script></body>
+<script>
+    (function (date) {
+        var __t__ = '' + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours();
+        document.write(
+            "<link rel=\"stylesheet\" href=\"app.css?_=" + __t__ + "\" type=\"text/css\"/>" +
+            "<script type=\"text/javascript\" src=\"app.js?_=" + __t__ + "\"><\/script>" +
+            "<script type=\"module\" src=\"app.module.js?_=" + __t__ + "\" ><\/script>"
+        );
+    })(new Date())
+</script>
+<script src="runtime-es2015.f3a069513159526cc687.js" type="module"></script><script src="runtime-es5.f3a069513159526cc687.js" nomodule defer></script><script src="polyfills-es5.2717f3aff28fcf929549.js" nomodule defer></script><script src="polyfills-es2015.1d476200748f6caf09c2.js" type="module"></script><script src="scripts.b993e8b98ac7c2ea2917.js" defer></script><script src="main-es2015.34040c9fce9afeb4c9c9.js" type="module"></script><script src="main-es5.34040c9fce9afeb4c9c9.js" nomodule defer></script></body>
 </html>
