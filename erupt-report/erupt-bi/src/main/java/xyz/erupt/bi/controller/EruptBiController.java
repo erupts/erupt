@@ -12,7 +12,6 @@ import xyz.erupt.bi.model.*;
 import xyz.erupt.bi.service.BiService;
 import xyz.erupt.bi.view.*;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.controller.EruptExceptionHandlerAdvice;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.util.*;
@@ -35,7 +34,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping(BiConst.BATH_PATH)
-@ControllerAdvice("xyz.erupt.bi.controller")
 public class EruptBiController {
 
     @Resource
@@ -49,12 +47,6 @@ public class EruptBiController {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @ResponseBody
-    @ExceptionHandler(value = RuntimeException.class)
-    public Map<String, Object> biErrorHandler(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        return new EruptExceptionHandlerAdvice().eruptWebApiRuntimeException(ex, request, response);
-    }
 
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
