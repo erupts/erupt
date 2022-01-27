@@ -50,11 +50,6 @@ public class EruptSpringUtil implements ApplicationContextAware {
         }
     }
 
-    public static <T> T getBean(T t) {
-        return (T) getBean(t.getClass());
-    }
-
-
     //通过name,以及Clazz返回指定的Bean
     public static <T> T getProperty(String key, Class<T> clazz) {
         return getApplicationContext().getEnvironment().getProperty(key, clazz);

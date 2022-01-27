@@ -23,7 +23,7 @@ public class DictChoiceFetchHandler implements ChoiceFetchHandler {
     @Resource
     private EruptDao eruptDao;
 
-    private final EruptCache<List<VLModel>> dictCache = EruptCache.factory();
+    private final EruptCache<List<VLModel>> dictCache = EruptCache.newInstance();
 
     @Override
     public List<VLModel> fetch(String[] params) {
