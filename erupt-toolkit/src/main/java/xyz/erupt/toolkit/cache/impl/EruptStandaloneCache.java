@@ -10,9 +10,10 @@ import xyz.erupt.toolkit.cache.EruptCache;
  */
 public class EruptStandaloneCache<V> extends EruptCache<V> {
 
-    private final TimedCache<String, V> cache = CacheUtil.newTimedCache(1000);
+    private final TimedCache<String, V> cache;
 
     public EruptStandaloneCache() {
+        cache = CacheUtil.newTimedCache(1000);
         cache.schedulePrune(1000 * 60);
     }
 
