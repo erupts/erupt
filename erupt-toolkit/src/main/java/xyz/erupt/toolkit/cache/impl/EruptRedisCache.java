@@ -12,11 +12,13 @@ import javax.annotation.Resource;
  * @author YuePeng
  * date 2022/1/26 22:41
  */
-@Component
 public class EruptRedisCache<V> extends EruptCache<V> {
 
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
+
+    public EruptRedisCache(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     @Override
     protected V put(String key, long timeout, V v) {
