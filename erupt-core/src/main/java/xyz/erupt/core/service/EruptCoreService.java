@@ -39,6 +39,8 @@ public class EruptCoreService implements ApplicationRunner {
 
     private static final Map<String, EruptModel> ERUPTS = new LinkedCaseInsensitiveMap<>();
 
+    private static final List<EruptModel> ERUPT_LIST = new ArrayList<>();
+
     private static final List<String> modules = new ArrayList<>();
 
     public static int getEruptCount() {
@@ -47,6 +49,10 @@ public class EruptCoreService implements ApplicationRunner {
 
     public static List<String> getModules() {
         return modules;
+    }
+
+    public static List<EruptModel> getErupts() {
+        return ERUPT_LIST;
     }
 
     public static EruptModel getErupt(String eruptName) {
@@ -109,11 +115,15 @@ public class EruptCoreService implements ApplicationRunner {
         TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(Erupt.class)
-        }, clazz -> ERUPTS.put(clazz.getSimpleName(), initEruptModel(clazz)));
+        }, clazz -> {
+            EruptModel eruptModel = initEruptModel(clazz);
+            ERUPTS.put(clazz.getSimpleName(), eruptModel);
+            ERUPT_LIST.add(eruptModel);
+        });
         EruptModuleInvoke.invoke(it -> {
             it.run();
             modules.add(it.info().getName());
-            log.info("-> {} module initialization completed in {}ms", fillCharacter(it.info().getName(), 18),timeRecorder.recorder());
+            log.info("-> {} module initialization completed in {}ms", fillCharacter(it.info().getName(), 18), timeRecorder.recorder());
         });
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
     }
