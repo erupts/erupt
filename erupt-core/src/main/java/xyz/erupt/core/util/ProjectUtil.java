@@ -36,7 +36,7 @@ public class ProjectUtil {
         } else {
             first.accept(true);
             if (file.createNewFile()) {
-                FileUtils.writeStringToFile(file, EruptPropUtil.getEruptVersion(), StandardCharsets.UTF_8);
+                FileUtils.writeStringToFile(file, EruptInformation.getEruptVersion(), StandardCharsets.UTF_8);
             } else {
                 log.warn(dirFile + warnTxt);
             }
