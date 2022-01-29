@@ -22,6 +22,8 @@ public class HyperDataProxy implements DataProxy<HyperModel> {
     public void beforeAdd(HyperModel hyperModel) {
         hyperModel.setCreateTime(new Date());
         hyperModel.setCreateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
+        hyperModel.setUpdateTime(new Date());
+        hyperModel.setUpdateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
     }
 
     @Override
