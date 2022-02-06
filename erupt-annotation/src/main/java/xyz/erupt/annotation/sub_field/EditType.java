@@ -62,7 +62,7 @@ public enum EditType {
     EMPTY,
 
     @Comment("==================================")
-    @Comment("以下对象修饰于复杂对象上")
+    @Comment("以下组件修饰于复杂对象上")
 
     @EditTypeSearch
     @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用（多对一)", allowType = {JavaTypeEnum.object})

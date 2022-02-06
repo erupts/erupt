@@ -3,8 +3,6 @@ package xyz.erupt.core.view;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
@@ -15,6 +13,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
+import xyz.erupt.core.proxy.AnnotationProxy;
+import xyz.erupt.core.proxy.field.EruptFieldAnnotationProxy;
 import xyz.erupt.core.util.*;
 
 import java.lang.reflect.Field;
@@ -34,6 +34,8 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
     private transient Field field;
 
     private transient String fieldReturnName;
+
+    private transient AnnotationProxy<EruptField> eruptFieldAnnotationProxy = new EruptFieldAnnotationProxy();
 
     private String fieldName;
 
@@ -66,6 +68,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
                 break;
         }
         this.eruptAutoConfig();
+        this.eruptField = eruptFieldAnnotationProxy.newProxy(this.eruptField, field);
         this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
@@ -111,7 +114,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
                 }
                 if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName.toLowerCase())) {
                     viewValues.put(TYPE, ViewType.BOOLEAN);
-                } else if (EruptUtil.isDateField(this)) {
+                } else if (EruptUtil.isDateField(this.getFieldReturnName())) {
                     viewValues.put(TYPE, ViewType.DATE);
                 } else if (this.eruptField.edit().type() == EditType.DATE) {
                     viewValues.put(TYPE, ViewType.DATE);
@@ -123,23 +126,23 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
             }
         }
         // edit auto
-        if (StringUtils.isNotBlank(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
-            Map<String, Object> editValues = AnnotationUtil.getAnnotationMap(this.eruptField.edit());
-            //根据返回类型推断
-            if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName)) {
-                editValues.put(TYPE, EditType.BOOLEAN);
-            } else if (EruptUtil.isDateField(this)) {
-                editValues.put(TYPE, EditType.DATE);
-            } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
-                editValues.put(TYPE, EditType.NUMBER);
-            } else {
-                editValues.put(TYPE, EditType.INPUT);
-            }
-            //根据属性名推断
-            if (ArrayUtils.contains(AnnotationUtil.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), this.fieldName.toLowerCase())) {
-                editValues.put(TYPE, EditType.TEXTAREA);
-            }
-        }
+//        if (StringUtils.isNotBlank(this.eruptField.edit().title()) && EditType.AUTO == this.eruptField.edit().type()) {
+//            Map<String, Object> editValues = AnnotationUtil.getAnnotationMap(this.eruptField.edit());
+//            //根据返回类型推断
+//            if (boolean.class.getSimpleName().equalsIgnoreCase(this.fieldReturnName)) {
+//                editValues.put(TYPE, EditType.BOOLEAN);
+//            } else if (EruptUtil.isDateField(this.getFieldReturnName())) {
+//                editValues.put(TYPE, EditType.DATE);
+//            } else if (JavaType.NUMBER.equals(this.fieldReturnName)) {
+//                editValues.put(TYPE, EditType.NUMBER);
+//            } else {
+//                editValues.put(TYPE, EditType.INPUT);
+//            }
+//            //根据属性名推断
+//            if (ArrayUtils.contains(AnnotationUtil.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), this.fieldName.toLowerCase())) {
+//                editValues.put(TYPE, EditType.TEXTAREA);
+//            }
+//        }
     }
 
 }
