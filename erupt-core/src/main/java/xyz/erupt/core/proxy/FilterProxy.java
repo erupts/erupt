@@ -10,9 +10,7 @@ import xyz.erupt.core.util.EruptSpringUtil;
  * @author YuePeng
  * date 2022/2/6 19:38
  */
-public class FilterAnnotationProxy extends AnnotationProxy<Filter> {
-
-
+public class FilterProxy extends AnnotationProxy<Filter> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
