@@ -14,7 +14,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.proxy.AnnotationProxy;
-import xyz.erupt.core.proxy.field.EruptFieldAnnotationProxy;
+import xyz.erupt.core.proxy.erupt_field.EruptFieldAnnotationProxy;
 import xyz.erupt.core.util.*;
 
 import java.lang.reflect.Field;
