@@ -1,4 +1,4 @@
-package xyz.erupt.core.proxy.field;
+package xyz.erupt.core.proxy.erupt_field;
 
 import lombok.SneakyThrows;
 import org.aopalliance.intercept.MethodInvocation;
@@ -13,9 +13,14 @@ import xyz.erupt.core.proxy.AnnotationProxy;
  */
 public class EruptFieldAnnotationProxy extends AnnotationProxy<EruptField> {
 
-    public final AnnotationProxy<Edit> editAnnotationProxy = new EditAnnotationProxy();
+    private final AnnotationProxy<Edit> editAnnotationProxy = new EditAnnotationProxy();
 
-    public final AnnotationProxy<View> viewAnnotationProxy = new ViewAnnotationProxy();
+    private final AnnotationProxy<View> viewAnnotationProxy = new ViewAnnotationProxy();
+
+    //代理池对象
+//    private final Map<Edit, Edit> editPool = new HashMap<>();
+//
+//    private final Map<View, View> viewPool = new HashMap<>();
 
     @Override
     @SneakyThrows
@@ -24,11 +29,11 @@ public class EruptFieldAnnotationProxy extends AnnotationProxy<EruptField> {
             return editAnnotationProxy.newProxy((Edit) this.invoke(invocation), this.field);
         } else if ("views".equals(invocation.getMethod().getName())) {
             View[] views = (View[]) this.invoke(invocation);
-            View[] newViews = new View[views.length];
+            View[] proxyViews = new View[views.length];
             for (int i = 0; i < views.length; i++) {
-                newViews[i] = viewAnnotationProxy.newProxy(views[i], this.field);
+                proxyViews[i] = viewAnnotationProxy.newProxy(views[i], this.field);
             }
-            return newViews;
+            return proxyViews;
         } else {
             return this.invoke(invocation);
         }
