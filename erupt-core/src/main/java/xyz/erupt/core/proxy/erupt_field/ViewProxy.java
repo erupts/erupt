@@ -1,10 +1,13 @@
 package xyz.erupt.core.proxy.erupt_field;
 
 import org.aopalliance.intercept.MethodInvocation;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.constant.JavaType;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.util.EruptUtil;
 
@@ -12,17 +15,18 @@ import xyz.erupt.core.util.EruptUtil;
  * @author YuePeng
  * date 2022/2/6 10:13
  */
-public class ViewAnnotationProxy extends AnnotationProxy<View> {
+public class ViewProxy extends AnnotationProxy<View> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
         Object rtn = this.invoke(invocation);
         if ("type".equals(invocation.getMethod().getName())) {
             if (ViewType.AUTO.name().equals(rtn.toString())) {
-                if (!AnnotationConst.EMPTY_STR.equals(this.eruptField.edit().title())) {
-                    switch (this.eruptField.edit().type()) {
+                Edit edit = ((EruptField) this.parent.proxyAnnotation).edit();
+                if (!AnnotationConst.EMPTY_STR.equals(edit.title())) {
+                    switch (edit.type()) {
                         case ATTACHMENT:
-                            if (this.eruptField.edit().attachmentType().type() == AttachmentType.Type.IMAGE) {
+                            if (edit.attachmentType().type() == AttachmentType.Type.IMAGE) {
                                 return ViewType.IMAGE;
                             } else {
                                 return ViewType.ATTACHMENT;

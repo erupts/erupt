@@ -12,7 +12,7 @@ import xyz.erupt.core.util.TypeUtil;
  * @author YuePeng
  * date 2022/2/6 10:13
  */
-public class EditAnnotationProxy extends AnnotationProxy<Edit> {
+public class EditProxy extends AnnotationProxy<Edit> {
 
     @Override
     @SneakyThrows

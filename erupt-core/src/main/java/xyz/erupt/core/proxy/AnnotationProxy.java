@@ -22,28 +22,42 @@ public abstract class AnnotationProxy<Annotation> {
     protected Field field;
 
     // 原始未代理注解
-    protected Annotation rawAnnotation;
+    public Annotation rawAnnotation;
+    public Annotation proxyAnnotation;
+    //向上引用
+    protected AnnotationProxy<?> parent;
 
     protected abstract Object invocation(MethodInvocation invocation);
 
     //创建注解注解代理类
-    public Annotation newProxy(Annotation annotation, Class<?> clazz, Field field) {
+    public Annotation newProxy(Annotation annotation, AnnotationProxy<?> parent, Class<?> clazz, Field field) {
         this.clazz = clazz;
         this.field = field;
+        this.parent = parent;
         this.rawAnnotation = annotation;
         ProxyFactory proxyFactory = new ProxyFactory(annotation);
         proxyFactory.addAdvice((MethodInterceptor) this::invocation);
         Object proxy = proxyFactory.getProxy(AnnotationProxy.class.getClassLoader());
-        return (Annotation) proxy;
+        this.proxyAnnotation = (Annotation) proxy;
+        return this.proxyAnnotation;
+    }
+
+    public Annotation newProxy(Annotation annotation, AnnotationProxy<?> parent, Field field) {
+        return this.newProxy(annotation, parent, null, field);
+    }
+
+    public Annotation newProxy(Annotation annotation, AnnotationProxy<?> parent, Class<?> clazz) {
+        return this.newProxy(annotation, parent, clazz, null);
     }
 
     public Annotation newProxy(Annotation annotation, Field field) {
-        return this.newProxy(annotation, null, field);
+        return this.newProxy(annotation, null, null, field);
     }
 
     public Annotation newProxy(Annotation annotation, Class<?> clazz) {
-        return this.newProxy(annotation, clazz, null);
+        return this.newProxy(annotation, null, clazz, null);
     }
+
 
     // 调用注解方法
     @SneakyThrows
