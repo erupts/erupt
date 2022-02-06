@@ -228,7 +228,7 @@ public class EruptExcelService {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), this.getStringCellValue(cell));
                             } else if (JavaType.NUMBER.equals(rn)) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
-                            } else if (EruptUtil.isDateField(eruptFieldModel)) {
+                            } else if (EruptUtil.isDateField(eruptFieldModel.getFieldReturnName())) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getSimpleFormatDate(cell.getDateCellValue()));
                             }
                             break;

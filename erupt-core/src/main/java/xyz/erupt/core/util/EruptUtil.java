@@ -170,7 +170,7 @@ public class EruptUtil {
         Edit edit = eruptFieldModel.getEruptField().edit();
         switch (edit.type()) {
             case DATE:
-                if (isDateField(eruptFieldModel)) {
+                if (isDateField(eruptFieldModel.getFieldReturnName())) {
                     return DateUtil.getDate(str);
                 } else {
                     return str;
@@ -362,12 +362,14 @@ public class EruptUtil {
     }
 
     //是否为时间字段
-    public static boolean isDateField(EruptFieldModel eruptFieldModel) {
-        if (Date.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
+    public static boolean isDateField(String fieldType) {
+        if (Date.class.getSimpleName().equals(fieldType)) {
             return true;
-        } else if (LocalDate.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
+        } else if (LocalDate.class.getSimpleName().equals(fieldType)) {
             return true;
-        } else return LocalDateTime.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName());
+        } else {
+            return LocalDateTime.class.getSimpleName().equals(fieldType);
+        }
     }
 
     public static OutputStream downLoadFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
