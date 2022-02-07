@@ -21,10 +21,13 @@ public abstract class AnnotationProxy<Annotation> {
     // 注解修饰的字段
     protected Field field;
 
-    // 原始未代理注解
+    // 原始注解
     public Annotation rawAnnotation;
+
+    // 代理后新注解
     public Annotation proxyAnnotation;
-    //向上引用
+
+    // 向上引用
     protected AnnotationProxy<?> parent;
 
     protected abstract Object invocation(MethodInvocation invocation);
@@ -36,7 +39,8 @@ public abstract class AnnotationProxy<Annotation> {
         this.parent = parent;
         this.rawAnnotation = annotation;
         ProxyFactory proxyFactory = new ProxyFactory(annotation);
-        proxyFactory.addAdvice((MethodInterceptor) this::invocation);
+        MethodInterceptor interceptor = this::invocation;
+        proxyFactory.addAdvice(interceptor);
         Object proxy = proxyFactory.getProxy(AnnotationProxy.class.getClassLoader());
         this.proxyAnnotation = (Annotation) proxy;
         return this.proxyAnnotation;
@@ -50,16 +54,7 @@ public abstract class AnnotationProxy<Annotation> {
         return this.newProxy(annotation, parent, clazz, null);
     }
 
-    public Annotation newProxy(Annotation annotation, Field field) {
-        return this.newProxy(annotation, null, null, field);
-    }
-
-    public Annotation newProxy(Annotation annotation, Class<?> clazz) {
-        return this.newProxy(annotation, null, clazz, null);
-    }
-
-
-    // 调用注解方法
+    // annotation method invoke
     @SneakyThrows
     public Object invoke(MethodInvocation invocation) {
         return invocation.getMethod().invoke(invocation.getThis());

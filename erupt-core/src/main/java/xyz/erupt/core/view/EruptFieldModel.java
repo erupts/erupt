@@ -64,7 +64,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
                 this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
                 break;
         }
-        this.eruptField = eruptFieldAnnotationProxy.newProxy(this.eruptField, field);
+        this.eruptField = eruptFieldAnnotationProxy.newProxy(this.eruptField, null, field);
         this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);

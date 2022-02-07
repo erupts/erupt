@@ -22,4 +22,8 @@ public class EruptModuleInvoke {
         ERUPT_MODULES.forEach(it -> consumer.accept(EruptSpringUtil.getBean(it)));
     }
 
+    public static int moduleNum() {
+        return ERUPT_MODULES.size();
+    }
+
 }
