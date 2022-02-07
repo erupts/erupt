@@ -17,14 +17,12 @@ public class AnnotationProxyPool {
      * generic 1 raw annotation
      * generic 2 proxy annotation
      */
-    private static final Map<Annotation, Annotation> annotationMap = new HashMap<>();
+    private static final Map<Annotation, Annotation> annotationPool = new HashMap<>();
 
     public static <A extends Annotation> A getOrPut(A rawAnnotation, Function<A, A> function) {
-        if (annotationMap.containsKey(rawAnnotation)) {
-            return (A) annotationMap.get(rawAnnotation);
-        }
+        if (annotationPool.containsKey(rawAnnotation)) return (A) annotationPool.get(rawAnnotation);
         A proxyAnnotation = function.apply(rawAnnotation);
-        annotationMap.put(rawAnnotation, proxyAnnotation);
+        annotationPool.put(rawAnnotation, proxyAnnotation);
         return proxyAnnotation;
     }
 
