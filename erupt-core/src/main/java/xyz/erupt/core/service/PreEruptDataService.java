@@ -4,12 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.Expr;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.TreeModel;
@@ -57,7 +57,9 @@ public class PreEruptDataService {
                 conditionStrings.add(condition);
             }
         }));
-        conditionStrings.addAll(AnnotationUtil.switchFilterConditionToStr(eruptModel.getErupt().filter()));
+        for (Filter filter : eruptModel.getErupt().filter()) {
+            conditionStrings.add(filter.value());
+        }
         Optional.ofNullable(query.getConditionStrings()).ifPresent(conditionStrings::addAll);
         String orderBy = StringUtils.isNotBlank(query.getOrderBy()) ? query.getOrderBy() : eruptModel.getErupt().orderBy();
         Collection<Map<String, Object>> result = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())

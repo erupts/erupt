@@ -3,29 +3,25 @@ package xyz.erupt.core.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import xyz.erupt.annotation.config.AutoFill;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.config.ToMap;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.fun.FilterHandler;
-import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeMapping;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
 
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author YuePeng
@@ -37,9 +33,9 @@ public class AnnotationUtil {
 
     private static final String[] ANNOTATION_STRING_TYPE = {"String", "byte", "char"};
 
-    private static final String EMPTY_ARRAY = "[]";
-
     private static final ExpressionParser parser = new SpelExpressionParser();
+
+    private static final String EMPTY_ARRAY = "[]";
 
     private static final String VALUE_VAR = "value";
 
@@ -73,16 +69,6 @@ public class AnnotationUtil {
                 Object r = parser.parseExpression(match.value()).getValue(evaluationContext);
                 if (null == r || !(Boolean) r) {
                     continue;
-                }
-            }
-            AutoFill autoFill = method.getAnnotation(AutoFill.class);
-            if (null != autoFill) {
-                EvaluationContext evaluationContext = new StandardEvaluationContext();
-                if (AnnotationConst.EMPTY_STR.equals(result)) {
-                    evaluationContext.setVariable(ITEM_VAR, annotation);
-                    evaluationContext.setVariable(VALUE_VAR, result);
-                    result = parser.parseExpression(autoFill.value()).getValue(evaluationContext);
-                    AnnotationUtil.getAnnotationMap(annotation).put(methodName, result);
                 }
             }
             if (returnType.endsWith(EMPTY_ARRAY)) {
@@ -146,54 +132,24 @@ public class AnnotationUtil {
         return jsonObject;
     }
 
-//    @Deprecated
-//    public static String annotationToJsonByReplace(String annotationStr) {
-//        String convertStr = annotationStr
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.sub_attachment\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_view\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
-//                .replaceAll("@xyz\\.erupt\\.annotation\\.\\w+", "")
-//                //屏蔽类信息
-//                .replaceAll("class [a-zA-Z0-9.]+", "")
-//                .replace("=,", "='',")
-//                .replace("=)", "='')")
-//                .replace("=", ":")
-//                .replace("(", "{")
-//                .replace(")", "}");
-//        return new JSONObject(convertStr).toString();
-//    }
-
-    @SneakyThrows
-    public static Map<String, Object> getAnnotationMap(Annotation annotation) {
-        InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
-        Field field = invocationHandler.getClass().getDeclaredField("memberValues");
-        field.setAccessible(true);
-//        Unsafe unsafe = Unsafe.getUnsafe();
-//        long offset = unsafe.objectFieldOffset(field);
-//        Object o = unsafe.getObject(annotation,offset);
-        return (Map) field.get(invocationHandler);
-    }
-
-    public static String switchFilterConditionToStr(Filter filter) {
-        String condition = filter.value();
-        if (!filter.conditionHandler().isInterface()) {
-            FilterHandler ch = EruptSpringUtil.getBean(filter.conditionHandler());
-            condition = ch.filter(condition, filter.params());
-        }
-        return condition;
-    }
-
-    public static List<String> switchFilterConditionToStr(Filter[] filters) {
-        List<String> list = new ArrayList<>();
-        for (Filter filter : filters) {
-            String filterStr = AnnotationUtil.switchFilterConditionToStr(filter);
-            if (StringUtils.isNotBlank(filterStr)) {
-                list.add(filterStr);
-            }
-        }
-        return list;
+    // 最原始注解序列化实现，收藏 ✨
+    @Deprecated
+    public static String annotationToJsonByReplace(String annotationStr) throws JSONException {
+        String convertStr = annotationStr
+                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.sub_attachment\\.\\w+", "")
+                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_edit\\.\\w+", "")
+                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.sub_view\\.\\w+", "")
+                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
+                .replaceAll("@xyz\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
+                .replaceAll("@xyz\\.erupt\\.annotation\\.\\w+", "")
+                //屏蔽类信息
+                .replaceAll("class [a-zA-Z0-9.]+", "")
+                .replace("=,", "='',")
+                .replace("=)", "='')")
+                .replace("=", ":")
+                .replace("(", "{")
+                .replace(")", "}");
+        return new JSONObject(convertStr).toString();
     }
 
     public static EditTypeMapping getEditTypeMapping(EditType editType) {

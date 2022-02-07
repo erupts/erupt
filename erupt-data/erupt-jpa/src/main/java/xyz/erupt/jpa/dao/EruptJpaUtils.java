@@ -2,11 +2,11 @@ package xyz.erupt.jpa.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -143,9 +143,9 @@ public class EruptJpaUtils {
                 }
             }
         }
-        AnnotationUtil.switchFilterConditionToStr(eruptModel.getErupt().filter()).forEach(it -> {
-            if (StringUtils.isNotBlank(it)) hql.append(AND).append(it);
-        });
+        for (Filter filter : eruptModel.getErupt().filter()) {
+            hql.append(AND).append(filter.value());
+        }
         Optional.ofNullable(customCondition).ifPresent(it -> it.forEach(str -> {
             if (StringUtils.isNotBlank(str)) hql.append(EruptJpaUtils.AND).append(str);
         }));

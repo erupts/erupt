@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -13,7 +14,6 @@ import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.core.service.IEruptDataService;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -185,7 +185,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         hql.append(" where 1 = 1 ");
         Optional.ofNullable(query.getConditions()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it.getKey()).append('=').append(it.getValue())));
         Optional.ofNullable(query.getConditionStrings()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it)));
-        Arrays.stream(eruptModel.getErupt().filter()).map(AnnotationUtil::switchFilterConditionToStr)
+        Arrays.stream(eruptModel.getErupt().filter()).map(Filter::value)
                 .filter(StringUtils::isNotBlank).forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
         if (StringUtils.isNotBlank(query.getOrderBy())) {
             hql.append(" order by ").append(query.getOrderBy());
