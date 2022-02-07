@@ -111,6 +111,11 @@ public class EruptCoreService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+//        try {
+//            Class.forName("org.springframework.boot.devtools.RemoteSpringApplication", false, this.getClass().getClassLoader());
+//        } catch (ClassNotFoundException e) {
+//            throw new RuntimeException("");
+//        }
         TimeRecorder totalRecorder = new TimeRecorder();
         TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
@@ -123,16 +128,16 @@ public class EruptCoreService implements ApplicationRunner {
         EruptModuleInvoke.invoke(it -> {
             it.run();
             modules.add(it.info().getName());
-            log.info("-> {} module initialization completed in {}ms", fillCharacter(it.info().getName(), 18), timeRecorder.recorder());
+            log.info("-> {} module initialization completed in {}ms", fillCharacter(it.info().getName(), EruptModuleInvoke.moduleNum() > 1 ? 20 : 0), timeRecorder.recorder());
         });
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
     }
 
-    public String fillCharacter(String character, int targetWidth) {
+    private String fillCharacter(String character, int targetWidth) {
         return character + repeat(targetWidth - character.length());
     }
 
-    public String repeat(int num) {
+    private String repeat(int num) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < num; i++) {
             sb.append(" ");
