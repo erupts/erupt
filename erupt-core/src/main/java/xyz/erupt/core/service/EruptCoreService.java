@@ -112,7 +112,7 @@ public class EruptCoreService implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
 //        try {
-//            Class.forName("org.springframework.boot.devtools.RemoteSpringApplication", false, this.getClass().getClassLoader());
+//            Class.forName("org.springframework.boot.devtools.RemoteSpringApplication", false, EruptCoreService.class.getClassLoader());
 //        } catch (ClassNotFoundException e) {
 //            throw new RuntimeException("");
 //        }

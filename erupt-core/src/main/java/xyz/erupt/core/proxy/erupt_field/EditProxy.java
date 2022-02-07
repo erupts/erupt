@@ -7,6 +7,7 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.proxy.AnnotationProxy;
+import xyz.erupt.core.proxy.AnnotationProxyPool;
 import xyz.erupt.core.proxy.FilterProxy;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -39,10 +40,15 @@ public class EditProxy extends AnnotationProxy<Edit> {
                 }
                 return EditType.INPUT;
             }
+        } else if ("filter".equals(invocation.getMethod().getName())) {
+            Filter[] filters = (Filter[]) this.invoke(invocation);
+            Filter[] proxyFilters = new Filter[filters.length];
+            for (int i = 0; i < filters.length; i++) {
+                proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter ->
+                        filterProxy.newProxy(filter, this, this.clazz));
+            }
+            return proxyFilters;
         }
-//        else if ("filter".equals(invocation.getMethod().getName())) {
-//            return AnnotationProxyPool.getOrPut((Filter) rtn, filter -> filterProxy.newProxy(filter, this, this.field));
-//        }
         return rtn;
     }
 
