@@ -152,22 +152,14 @@ public class AnnotationUtil {
         return new JSONObject(convertStr).toString();
     }
 
+    @SneakyThrows
     public static EditTypeMapping getEditTypeMapping(EditType editType) {
-        try {
-            return EditType.class.getDeclaredField(editType.name()).getAnnotation(EditTypeMapping.class);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return EditType.class.getDeclaredField(editType.name()).getAnnotation(EditTypeMapping.class);
     }
 
+    @SneakyThrows
     public static EditTypeSearch getEditTypeSearch(EditType editType) {
-        try {
-            return EditType.class.getDeclaredField(editType.name()).getAnnotation(EditTypeSearch.class);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return EditType.class.getDeclaredField(editType.name()).getAnnotation(EditTypeSearch.class);
     }
 
 }
