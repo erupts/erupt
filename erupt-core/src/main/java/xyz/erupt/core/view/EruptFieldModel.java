@@ -72,6 +72,8 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
     }
 
-    public static final String TYPE = "type";
+    public void jsonViewer() {
+        this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
+    }
 
 }

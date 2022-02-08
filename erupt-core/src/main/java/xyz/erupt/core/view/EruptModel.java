@@ -51,7 +51,7 @@ public final class EruptModel implements Cloneable {
         });
     }
 
-    public void reset() {
+    public void jsonViewer() {
         this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
     }
 
