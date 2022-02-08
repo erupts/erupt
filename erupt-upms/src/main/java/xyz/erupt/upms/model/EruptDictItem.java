@@ -7,6 +7,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
@@ -52,7 +53,8 @@ public class EruptDictItem extends MetaModelUpdateVo {
     @EruptField(
             views = @View(title = "备注"),
             edit = @Edit(
-                    title = "备注"
+                    title = "备注",
+                    type = EditType.TEXTAREA
             )
     )
     private String remark;
