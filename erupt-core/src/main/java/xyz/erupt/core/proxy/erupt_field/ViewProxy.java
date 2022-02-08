@@ -15,13 +15,13 @@ import xyz.erupt.core.util.EruptUtil;
  * @author YuePeng
  * date 2022/2/6 10:13
  */
-public class ViewProxy extends AnnotationProxy<View> {
+public class ViewProxy extends AnnotationProxy<View, EruptField> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
         if ("type".equals(invocation.getMethod().getName())) {
             if (ViewType.AUTO == this.rawAnnotation.type()) {
-                Edit edit = ((EruptField) this.parent.proxyAnnotation).edit();
+                Edit edit = this.parent.proxyAnnotation.edit();
                 if (!AnnotationConst.EMPTY_STR.equals(edit.title())) {
                     switch (edit.type()) {
                         case ATTACHMENT:

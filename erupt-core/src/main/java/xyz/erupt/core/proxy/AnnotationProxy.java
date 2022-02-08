@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
  * @author YuePeng
  * date 2022/2/5 14:20
  */
-public abstract class AnnotationProxy<Annotation> {
+public abstract class AnnotationProxy<Annotation, Parent> {
 
     // 注解修饰的类
     protected Class<?> clazz;
@@ -28,12 +28,12 @@ public abstract class AnnotationProxy<Annotation> {
     public Annotation proxyAnnotation;
 
     // 向上引用
-    protected AnnotationProxy<?> parent;
+    protected AnnotationProxy<Parent, ?> parent;
 
     protected abstract Object invocation(MethodInvocation invocation);
 
     //创建注解注解代理类
-    public Annotation newProxy(Annotation annotation, AnnotationProxy<?> parent, Class<?> clazz, Field field) {
+    public Annotation newProxy(Annotation annotation, AnnotationProxy<Parent, ?> parent, Class<?> clazz, Field field) {
         this.clazz = clazz;
         this.field = field;
         this.parent = parent;
@@ -46,11 +46,11 @@ public abstract class AnnotationProxy<Annotation> {
         return this.proxyAnnotation;
     }
 
-    public Annotation newProxy(Annotation annotation, AnnotationProxy<?> parent, Field field) {
+    public Annotation newProxy(Annotation annotation, AnnotationProxy<Parent, ?> parent, Field field) {
         return this.newProxy(annotation, parent, null, field);
     }
 
-    public Annotation newProxy(Annotation annotation, AnnotationProxy<?> parent, Class<?> clazz) {
+    public Annotation newProxy(Annotation annotation, AnnotationProxy<Parent, ?> parent, Class<?> clazz) {
         return this.newProxy(annotation, parent, clazz, null);
     }
 

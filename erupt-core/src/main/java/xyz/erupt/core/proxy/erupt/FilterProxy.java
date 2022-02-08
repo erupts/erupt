@@ -1,16 +1,17 @@
-package xyz.erupt.core.proxy;
+package xyz.erupt.core.proxy.erupt;
 
 import org.aopalliance.intercept.MethodInvocation;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.util.EruptSpringUtil;
 
 /**
  * @author YuePeng
  * date 2022/2/6 19:38
  */
-public class FilterProxy extends AnnotationProxy<Filter> {
+public class FilterProxy<P> extends AnnotationProxy<Filter, P> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {

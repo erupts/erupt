@@ -32,7 +32,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private transient String fieldReturnName;
 
-    private transient AnnotationProxy<EruptField> eruptFieldAnnotationProxy = new EruptFieldProxy();
+    private transient AnnotationProxy<EruptField, Void> eruptFieldAnnotationProxy = new EruptFieldProxy();
 
     private String fieldName;
 
