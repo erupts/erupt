@@ -13,11 +13,10 @@ public class RowOperationProxy extends AnnotationProxy<RowOperation> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
-        switch (invocation.getMethod().getName()){
-            case "code":
-                if (AnnotationConst.EMPTY_STR.equals(this.rawAnnotation.code())){
-                    return Integer.toString(this.rawAnnotation.title().hashCode());
-                }
+        if ("code".equals(invocation.getMethod().getName())) {
+            if (AnnotationConst.EMPTY_STR.equals(this.rawAnnotation.code())) {
+                return Integer.toString(this.rawAnnotation.title().hashCode());
+            }
         }
         return this.invoke(invocation);
     }
