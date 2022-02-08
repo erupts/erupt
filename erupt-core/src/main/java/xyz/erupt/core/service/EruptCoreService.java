@@ -37,14 +37,10 @@ public class EruptCoreService implements ApplicationRunner {
 
     private static final List<EruptModel> ERUPT_LIST = new ArrayList<>();
 
-    private static final List<String> modules = new ArrayList<>();
-
-    public static int getEruptCount() {
-        return ERUPTS.size();
-    }
+    private static final List<String> MODULES = new ArrayList<>();
 
     public static List<String> getModules() {
-        return modules;
+        return MODULES;
     }
 
     public static List<EruptModel> getErupts() {
@@ -106,8 +102,10 @@ public class EruptCoreService implements ApplicationRunner {
         });
         EruptModuleInvoke.invoke(it -> {
             it.run();
-            modules.add(it.info().getName());
-            log.info("-> {} module initialization completed in {}ms", fillCharacter(it.info().getName(), EruptModuleInvoke.moduleNum() > 1 ? 18 : 0), timeRecorder.recorder());
+            MODULES.add(it.info().getName());
+            log.info("-> {} module initialization completed in {}ms",
+                    fillCharacter(it.info().getName(), EruptModuleInvoke.moduleNum() > 1 ? 18 : 0),
+                    timeRecorder.recorder());
         });
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
     }
