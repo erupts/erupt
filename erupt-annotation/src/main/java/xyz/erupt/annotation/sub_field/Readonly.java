@@ -1,5 +1,7 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.Comment;
+
 import java.beans.Transient;
 
 /**
@@ -19,6 +21,7 @@ public @interface Readonly {
     Class<? extends ReadonlyHandler> exprHandler() default ReadonlyHandler.class;
 
     @Deprecated
+    @Comment("未实现")
     interface ReadonlyHandler {
 
         boolean add(boolean add, String[] params);
