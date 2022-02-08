@@ -24,10 +24,9 @@ public class EruptProxy extends AnnotationProxy<Erupt> {
     @Override
     @SneakyThrows
     protected Object invocation(MethodInvocation invocation) {
-        Object rtn = this.invoke(invocation);
         switch (invocation.getMethod().getName()) {
             case "filter":
-                Filter[] filters = (Filter[]) rtn;
+                Filter[] filters = this.rawAnnotation.filter();
                 Filter[] proxyFilters = new Filter[filters.length];
                 for (int i = 0; i < filters.length; i++) {
                     proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter ->
@@ -35,7 +34,7 @@ public class EruptProxy extends AnnotationProxy<Erupt> {
                 }
                 return proxyFilters;
             case "rowOperation":
-                RowOperation[] rowOperations = (RowOperation[]) rtn;
+                RowOperation[] rowOperations = this.rawAnnotation.rowOperation();
                 RowOperation[] proxyOperations = new RowOperation[rowOperations.length];
                 for (int i = 0; i < rowOperations.length; i++) {
                     proxyOperations[i] = AnnotationProxyPool.getOrPut(rowOperations[i], it ->
@@ -43,7 +42,7 @@ public class EruptProxy extends AnnotationProxy<Erupt> {
                 }
                 return proxyOperations;
             case "drills":
-                Drill[] drills = (Drill[]) rtn;
+                Drill[] drills = this.rawAnnotation.drills();
                 Drill[] proxyDrills = new Drill[drills.length];
                 for (int i = 0; i < drills.length; i++) {
                     proxyDrills[i] = AnnotationProxyPool.getOrPut(drills[i], it ->
@@ -51,7 +50,7 @@ public class EruptProxy extends AnnotationProxy<Erupt> {
                 }
                 return proxyDrills;
         }
-        return rtn;
+        return this.invoke(invocation);
     }
 
 }

@@ -19,9 +19,8 @@ public class ViewProxy extends AnnotationProxy<View> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
-        Object rtn = this.invoke(invocation);
         if ("type".equals(invocation.getMethod().getName())) {
-            if (ViewType.AUTO.name().equals(rtn.toString())) {
+            if (ViewType.AUTO == this.rawAnnotation.type()) {
                 Edit edit = ((EruptField) this.parent.proxyAnnotation).edit();
                 if (!AnnotationConst.EMPTY_STR.equals(edit.title())) {
                     switch (edit.type()) {
@@ -59,7 +58,7 @@ public class ViewProxy extends AnnotationProxy<View> {
                 return ViewType.TEXT;
             }
         }
-        return rtn;
+        return this.invoke(invocation);
     }
 
 }

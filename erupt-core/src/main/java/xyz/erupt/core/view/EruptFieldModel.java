@@ -40,8 +40,10 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private Object value;
 
+    //仅前端使用
     private List<VLModel> choiceList;
 
+    //仅前端使用
     private List<String> tagList;
 
     public EruptFieldModel(Field field) {

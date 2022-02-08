@@ -14,8 +14,8 @@ import java.util.function.Function;
 public class AnnotationProxyPool {
 
     /**
-     * generic 1 raw annotation
-     * generic 2 proxy annotation
+     * generic key raw annotation
+     * generic value proxy annotation
      */
     private static final Map<Annotation, Annotation> annotationPool = new HashMap<>();
 
