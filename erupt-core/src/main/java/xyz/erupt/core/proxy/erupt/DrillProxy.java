@@ -13,11 +13,10 @@ public class DrillProxy extends AnnotationProxy<Drill> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
-        Object rtn = this.invoke(invocation);
         if ("code".equals(invocation.getMethod().getName()) && AnnotationConst.EMPTY_STR.equals(this.rawAnnotation.code())) {
             return Integer.toString(this.rawAnnotation.title().hashCode());
         }
-        return rtn;
+        return this.invoke(invocation);
     }
 
 }
