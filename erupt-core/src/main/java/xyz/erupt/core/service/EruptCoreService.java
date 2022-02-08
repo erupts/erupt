@@ -55,7 +55,6 @@ public class EruptCoreService implements ApplicationRunner {
         return ERUPTS.get(eruptName);
     }
 
-    //需要动态构建的EruptModel视图属性
     @SneakyThrows
     public static EruptModel getEruptView(String eruptName) {
         EruptModel em = getErupt(eruptName).clone();
@@ -72,7 +71,7 @@ public class EruptCoreService implements ApplicationRunner {
     }
 
     private static EruptModel initEruptModel(Class<?> clazz) {
-        //erupt class data to memory
+        // erupt class data to memory
         EruptModel eruptModel = new EruptModel(clazz);
         // erupt field data to memory
         eruptModel.setEruptFieldModels(new ArrayList<>());
