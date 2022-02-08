@@ -30,7 +30,6 @@ public class EditProxy extends AnnotationProxy<Edit> {
         switch (invocation.getMethod().getName()) {
             case "type":
                 if (EditType.AUTO == this.rawAnnotation.type()) {
-                    // 根据返回值类型推断
                     String returnType = this.field.getType().getSimpleName();
                     if (boolean.class.getSimpleName().equalsIgnoreCase(returnType)) {
                         return EditType.BOOLEAN;
@@ -41,8 +40,8 @@ public class EditProxy extends AnnotationProxy<Edit> {
                     } else if (ArrayUtils.contains(AnnotationUtil.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), returnType)) {
                         return EditType.TEXTAREA; //属性名推断
                     }
-                    return EditType.INPUT;
                 }
+                return this.rawAnnotation.type();
             case "filter":
                 Filter[] filters = this.rawAnnotation.filter();
                 Filter[] proxyFilters = new Filter[filters.length];
