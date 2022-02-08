@@ -1,6 +1,7 @@
 package xyz.erupt.core.proxy.erupt_field;
 
 import org.aopalliance.intercept.MethodInvocation;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -11,7 +12,7 @@ import xyz.erupt.core.util.EruptSpringUtil;
  * @author YuePeng
  * date 2022/2/6 20:36
  */
-public class ReadonlyProxy extends AnnotationProxy<Readonly> {
+public class ReadonlyProxy extends AnnotationProxy<Readonly, Edit> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {

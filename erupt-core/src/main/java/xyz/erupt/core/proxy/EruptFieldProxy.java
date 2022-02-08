@@ -12,11 +12,11 @@ import xyz.erupt.core.proxy.erupt_field.ViewProxy;
  * @author YuePeng
  * date 2022/2/5 14:19
  */
-public class EruptFieldProxy extends AnnotationProxy<EruptField> {
+public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
 
-    private final AnnotationProxy<Edit> editAnnotationProxy = new EditProxy();
+    private final AnnotationProxy<Edit, EruptField> editAnnotationProxy = new EditProxy();
 
-    private final AnnotationProxy<View> viewAnnotationProxy = new ViewProxy();
+    private final AnnotationProxy<View, EruptField> viewAnnotationProxy = new ViewProxy();
 
     @Override
     @SneakyThrows
@@ -24,13 +24,15 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField> {
         switch (invocation.getMethod().getName()) {
             case "edit":
                 return AnnotationProxyPool.getOrPut(this.rawAnnotation.edit(), annotation ->
-                        editAnnotationProxy.newProxy(annotation, this, this.field));
+                        editAnnotationProxy.newProxy(annotation, this, this.field)
+                );
             case "views":
                 View[] views = this.rawAnnotation.views();
                 View[] proxyViews = new View[views.length];
                 for (int i = 0; i < views.length; i++) {
                     proxyViews[i] = AnnotationProxyPool.getOrPut(views[i], annotation ->
-                            viewAnnotationProxy.newProxy(annotation, this, this.field));
+                            viewAnnotationProxy.newProxy(annotation, this, this.field)
+                    );
                 }
                 return proxyViews;
         }

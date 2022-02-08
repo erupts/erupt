@@ -26,7 +26,7 @@ public final class EruptModel implements Cloneable {
 
     private transient Erupt erupt;
 
-    private transient AnnotationProxy<Erupt> eruptAnnotationProxy = new EruptProxy();
+    private transient AnnotationProxy<Erupt, Void> eruptAnnotationProxy = new EruptProxy();
 
     private transient Map<String, EruptFieldModel> eruptFieldMap;
 

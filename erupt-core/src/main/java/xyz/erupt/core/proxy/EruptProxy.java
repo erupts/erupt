@@ -7,19 +7,20 @@ import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.proxy.erupt.DrillProxy;
+import xyz.erupt.core.proxy.erupt.FilterProxy;
 import xyz.erupt.core.proxy.erupt.RowOperationProxy;
 
 /**
  * @author YuePeng
  * date 2022/2/5 14:19
  */
-public class EruptProxy extends AnnotationProxy<Erupt> {
+public class EruptProxy extends AnnotationProxy<Erupt, Void> {
 
-    private final AnnotationProxy<Filter> filterProxy = new FilterProxy();
+    private final AnnotationProxy<Filter, Erupt> filterProxy = new FilterProxy<>();
 
-    private final AnnotationProxy<Drill> drillProxy = new DrillProxy();
+    private final AnnotationProxy<Drill, Erupt> drillProxy = new DrillProxy();
 
-    private final AnnotationProxy<RowOperation> rowOperationProxy = new RowOperationProxy();
+    private final AnnotationProxy<RowOperation, Erupt> rowOperationProxy = new RowOperationProxy();
 
     @Override
     @SneakyThrows
@@ -30,7 +31,8 @@ public class EruptProxy extends AnnotationProxy<Erupt> {
                 Filter[] proxyFilters = new Filter[filters.length];
                 for (int i = 0; i < filters.length; i++) {
                     proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter ->
-                            filterProxy.newProxy(filter, this, this.clazz));
+                            filterProxy.newProxy(filter, this, this.clazz)
+                    );
                 }
                 return proxyFilters;
             case "rowOperation":
@@ -38,7 +40,8 @@ public class EruptProxy extends AnnotationProxy<Erupt> {
                 RowOperation[] proxyOperations = new RowOperation[rowOperations.length];
                 for (int i = 0; i < rowOperations.length; i++) {
                     proxyOperations[i] = AnnotationProxyPool.getOrPut(rowOperations[i], it ->
-                            rowOperationProxy.newProxy(it, this, this.clazz));
+                            rowOperationProxy.newProxy(it, this, this.clazz)
+                    );
                 }
                 return proxyOperations;
             case "drills":
@@ -46,7 +49,8 @@ public class EruptProxy extends AnnotationProxy<Erupt> {
                 Drill[] proxyDrills = new Drill[drills.length];
                 for (int i = 0; i < drills.length; i++) {
                     proxyDrills[i] = AnnotationProxyPool.getOrPut(drills[i], it ->
-                            drillProxy.newProxy(it, this, this.clazz));
+                            drillProxy.newProxy(it, this, this.clazz)
+                    );
                 }
                 return proxyDrills;
         }
