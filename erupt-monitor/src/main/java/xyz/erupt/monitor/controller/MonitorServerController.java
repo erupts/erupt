@@ -43,7 +43,7 @@ public class MonitorServerController {
         AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
         platform.setUploadPath(null == attachmentProxy ? eruptProp.getUploadPath() : attachmentProxy.fileDomain());
         platform.setSessionStrategy(eruptProp.isRedisSession() ? "redis" : "servlet");
-        platform.setEruptCount(EruptCoreService.getEruptCount());
+        platform.setEruptCount(EruptCoreService.getErupts().size());
         platform.setEruptModules(EruptCoreService.getModules());
         return platform;
     }
