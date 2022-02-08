@@ -18,6 +18,7 @@ public @interface Readonly {
     @Transient
     Class<? extends ReadonlyHandler> exprHandler() default ReadonlyHandler.class;
 
+    @Deprecated
     interface ReadonlyHandler {
 
         boolean add(boolean add, String[] params);

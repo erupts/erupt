@@ -42,7 +42,6 @@ public final class EruptModel implements Cloneable {
         this.clazz = eruptClazz;
         this.erupt = eruptAnnotationProxy.newProxy(eruptClazz.getAnnotation(Erupt.class), null, eruptClazz);
         this.eruptName = eruptClazz.getSimpleName();
-        this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
         DataProxyInvoke.invoke(this, it -> {
             try {
                 it.getClass().getDeclaredMethod("extraRow", List.class);
@@ -50,6 +49,10 @@ public final class EruptModel implements Cloneable {
             } catch (NoSuchMethodException ignored) {
             }
         });
+    }
+
+    public void reset() {
+        this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
     }
 
     @Override
