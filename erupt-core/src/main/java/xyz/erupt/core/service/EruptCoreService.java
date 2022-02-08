@@ -98,11 +98,12 @@ public class EruptCoreService implements ApplicationRunner {
         // erupt field data to memory
         eruptModel.setEruptFieldModels(new ArrayList<>());
         eruptModel.setEruptFieldMap(new LinkedCaseInsensitiveMap<>());
-        ReflectUtil.findClassAllFields(clazz, field -> Optional.ofNullable(field.getAnnotation(EruptField.class)).ifPresent(ignore -> {
-            EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
-            eruptModel.getEruptFieldModels().add(eruptFieldModel);
-            eruptModel.getEruptFieldMap().put(field.getName(), eruptFieldModel);
-        }));
+        ReflectUtil.findClassAllFields(clazz, field -> Optional.ofNullable(field.getAnnotation(EruptField.class))
+                .ifPresent(ignore -> {
+                    EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
+                    eruptModel.getEruptFieldModels().add(eruptFieldModel);
+                    eruptModel.getEruptFieldMap().put(field.getName(), eruptFieldModel);
+                }));
         eruptModel.getEruptFieldModels().sort(Comparator.comparingInt((a) -> a.getEruptField().sort()));
         // erupt annotation validate
         EruptAnnotationException.validateEruptInfo(eruptModel);
@@ -128,7 +129,7 @@ public class EruptCoreService implements ApplicationRunner {
         EruptModuleInvoke.invoke(it -> {
             it.run();
             modules.add(it.info().getName());
-            log.info("-> {} module initialization completed in {}ms", fillCharacter(it.info().getName(), EruptModuleInvoke.moduleNum() > 1 ? 20 : 0), timeRecorder.recorder());
+            log.info("-> {} module initialization completed in {}ms", fillCharacter(it.info().getName(), EruptModuleInvoke.moduleNum() > 1 ? 18 : 0), timeRecorder.recorder());
         });
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
     }
