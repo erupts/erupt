@@ -54,7 +54,6 @@ public class EruptCoreService implements ApplicationRunner {
     @SneakyThrows
     public static EruptModel getEruptView(String eruptName) {
         EruptModel em = getErupt(eruptName).clone();
-        em.jsonViewer();
         for (EruptFieldModel fieldModel : em.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
             if (edit.type() == EditType.CHOICE) {

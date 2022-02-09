@@ -67,12 +67,11 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
                 break;
         }
         this.eruptField = eruptFieldAnnotationProxy.newProxy(this.eruptField, null, field);
-        this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
     }
 
-    public void jsonViewer() {
+    public void serializable() {
         this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
     }
 
