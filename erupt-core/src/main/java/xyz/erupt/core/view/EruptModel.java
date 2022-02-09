@@ -51,14 +51,12 @@ public final class EruptModel implements Cloneable {
         });
     }
 
-    public void jsonViewer() {
-        this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
-    }
-
     @Override
     public final EruptModel clone() throws CloneNotSupportedException {
         EruptModel eruptModel = (EruptModel) super.clone();
-        eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone).collect(Collectors.toList());
+        eruptModel.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
+        eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone)
+                .peek(EruptFieldModel::serializable).collect(Collectors.toList());
         return eruptModel;
     }
 

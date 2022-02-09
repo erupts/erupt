@@ -33,7 +33,8 @@ public class SqlChoiceFetchHandler implements ChoiceFetchHandler {
                     } else {
                         return new VLModel(rs.getString(1), rs.getString(2));
                     }
-                }));
+                })
+        );
     }
 
 }

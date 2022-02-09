@@ -61,6 +61,7 @@ public class PreEruptDataService {
             conditionStrings.add(filter.value());
         }
         Optional.ofNullable(query.getConditionStrings()).ifPresent(conditionStrings::addAll);
+        conditionStrings.removeIf(Objects::isNull);
         String orderBy = StringUtils.isNotBlank(query.getOrderBy()) ? query.getOrderBy() : eruptModel.getErupt().orderBy();
         Collection<Map<String, Object>> result = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryColumn(eruptModel, columns, EruptQuery.builder()

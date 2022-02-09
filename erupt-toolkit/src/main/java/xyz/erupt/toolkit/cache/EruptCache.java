@@ -17,8 +17,6 @@ public abstract class EruptCache<V> {
 
     public static <V> EruptCache<V> newInstance() {
         return new EruptStandaloneCache<>();
-//        if (EruptSpringUtil.getBean(EruptProp.class).isStandaloneCache())
-//        return new EruptRedisCache<>(EruptSpringUtil.getBean(StringRedisTemplate.class));
     }
 
     public V getAndSet(String key, long timeout, Supplier<V> supplier) {

@@ -19,7 +19,6 @@ import xyz.erupt.annotation.sub_field.EditTypeSearch;
 
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -43,11 +42,6 @@ public class AnnotationUtil {
 
     @SneakyThrows
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
-        return annotationToJson(annotation);
-    }
-
-    private static JsonObject annotationToJson(Annotation annotation)
-            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         JsonObject jsonObject = new JsonObject();
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
@@ -96,12 +90,12 @@ public class AnnotationUtil {
                         } else {
                             Annotation ann = (Annotation) res;
                             if (null != toMap) {
-                                JsonObject jo = annotationToJson((Annotation) res);
+                                JsonObject jo = annotationToJsonByReflect((Annotation) res);
                                 String key = ann.annotationType().getMethod(toMap.key()).invoke(res).toString();
                                 jo.remove(toMap.key());
                                 jsonMap.add(key, jo);
                             } else {
-                                jsonArray.add(annotationToJson(ann));
+                                jsonArray.add(annotationToJsonByReflect(ann));
                             }
                         }
                     }
@@ -123,7 +117,7 @@ public class AnnotationUtil {
                 } else if (method.getReturnType().isEnum()) {
                     jsonObject.addProperty(methodName, result.toString());
                 } else if (method.getReturnType().isAnnotation()) {
-                    jsonObject.add(methodName, annotationToJson((Annotation) result));
+                    jsonObject.add(methodName, annotationToJsonByReflect((Annotation) result));
                 } else if (Class.class.getSimpleName().equals(returnType)) {
                     jsonObject.addProperty(methodName, ((Class<?>) result).getSimpleName());
                 }
