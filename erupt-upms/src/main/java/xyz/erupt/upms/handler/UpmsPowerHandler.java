@@ -29,15 +29,27 @@ public class UpmsPowerHandler implements PowerHandler {
 
     @Override
     public void handler(PowerObject power) {
-        power.setAdd(powerOff(EruptFunPermissions.ADD));
-        power.setDelete(powerOff(EruptFunPermissions.DELETE));
-        power.setEdit(powerOff(EruptFunPermissions.EDIT));
-        power.setViewDetails(powerOff(EruptFunPermissions.VIEW_DETAIL));
-        power.setExport(powerOff(EruptFunPermissions.EXPORT));
-        power.setImportable(powerOff(EruptFunPermissions.IMPORTABLE));
+        if (power.isAdd()) {
+            power.setAdd(powerOff(EruptFunPermissions.ADD));
+        }
+        if (power.isDelete()) {
+            power.setDelete(powerOff(EruptFunPermissions.DELETE));
+        }
+        if (power.isEdit()) {
+            power.setEdit(powerOff(EruptFunPermissions.EDIT));
+        }
+        if (power.isViewDetails()) {
+            power.setViewDetails(powerOff(EruptFunPermissions.VIEW_DETAIL));
+        }
+        if (power.isExport()) {
+            power.setExport(powerOff(EruptFunPermissions.EXPORT));
+        }
+        if (power.isImportable()) {
+            power.setImportable(powerOff(EruptFunPermissions.IMPORTABLE));
+        }
     }
 
-    public boolean powerOff(EruptFunPermissions eruptFunPermissions) {
+    private boolean powerOff(EruptFunPermissions eruptFunPermissions) {
         return null != eruptUserService.getEruptMenuByValue(UPMSUtil.getEruptFunPermissionsCode(MetaContext.getErupt().getName(), eruptFunPermissions));
     }
 
