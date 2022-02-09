@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
  * @author YuePeng
  * date 2022/2/5 14:20
  */
-public abstract class AnnotationProxy<Annotation, Parent> {
+public abstract class AnnotationProxy<A, PA> {
 
     // 注解修饰的类
     protected Class<?> clazz;
@@ -22,18 +22,18 @@ public abstract class AnnotationProxy<Annotation, Parent> {
     protected Field field;
 
     // 原始注解
-    public Annotation rawAnnotation;
+    public A rawAnnotation;
 
     // 代理后新注解
-    public Annotation proxyAnnotation;
+    public A proxyAnnotation;
 
     // 向上引用
-    protected AnnotationProxy<Parent, ?> parent;
+    protected AnnotationProxy<PA, ?> parent;
 
     protected abstract Object invocation(MethodInvocation invocation);
 
     //创建注解注解代理类
-    public Annotation newProxy(Annotation annotation, AnnotationProxy<Parent, ?> parent, Class<?> clazz, Field field) {
+    public A newProxy(A annotation, AnnotationProxy<PA, ?> parent, Class<?> clazz, Field field) {
         this.clazz = clazz;
         this.field = field;
         this.parent = parent;
@@ -41,16 +41,15 @@ public abstract class AnnotationProxy<Annotation, Parent> {
         ProxyFactory proxyFactory = new ProxyFactory(annotation);
         MethodInterceptor interceptor = this::invocation;
         proxyFactory.addAdvice(interceptor);
-        Object proxy = proxyFactory.getProxy(AnnotationProxy.class.getClassLoader());
-        this.proxyAnnotation = (Annotation) proxy;
+        this.proxyAnnotation = (A) proxyFactory.getProxy(this.getClass().getClassLoader());
         return this.proxyAnnotation;
     }
 
-    public Annotation newProxy(Annotation annotation, AnnotationProxy<Parent, ?> parent, Field field) {
+    public A newProxy(A annotation, AnnotationProxy<PA, ?> parent, Field field) {
         return this.newProxy(annotation, parent, null, field);
     }
 
-    public Annotation newProxy(Annotation annotation, AnnotationProxy<Parent, ?> parent, Class<?> clazz) {
+    public A newProxy(A annotation, AnnotationProxy<PA, ?> parent, Class<?> clazz) {
         return this.newProxy(annotation, parent, clazz, null);
     }
 

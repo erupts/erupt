@@ -32,7 +32,8 @@ public enum EruptFunPermissions {
             return true;
         } else if (power.importable() && EruptFunPermissions.IMPORTABLE == this) {
             return true;
-        } else return power.viewDetails() && EruptFunPermissions.VIEW_DETAIL == this;
+        }
+        return power.viewDetails() && EruptFunPermissions.VIEW_DETAIL == this;
     }
 
 }
