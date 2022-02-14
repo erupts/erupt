@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>erupt-core</artifactId>
 
-    <description>erupt core impl</description>
+    <description>core realize</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
