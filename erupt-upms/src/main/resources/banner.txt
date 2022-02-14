@@ -1,4 +1,4 @@
-${AnsiColor.BRIGHT_YELLOW}
+${AnsiColor.BRIGHT_BLUE}
                              __
                             /\ \__   
    __   _ __   __  __  _____\ \ ,_\  
@@ -6,8 +6,8 @@ ${AnsiColor.BRIGHT_YELLOW}
 /\  __/\ \ \/ \ \ \_\ \ \ \L\ \ \ \_ 
 \ \____\\ \_\  \ \____/\ \ ,__/\ \__\
  \/____/ \/_/   \/___/  \ \ \/  \/__/
-                         \ \_\       
+                         \ \_\
                           \/_/
 
-:: Spring Boot     ::  v(${spring-boot.version})
-:: Erupt Framework ::  v(${project.version}) ${AnsiColor.DEFAULT}
+:: Spring Boot     :: v(${spring-boot.version})
+:: Erupt Framework :: v(${project.version}) ${AnsiColor.DEFAULT}
