@@ -80,7 +80,6 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>erupt-core.properties</include>
-                    <include>banner.txt</include>
                 </includes>
             </resource>
             <resource>
