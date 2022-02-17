@@ -30,6 +30,8 @@ public class EruptApi {
 
     @GetMapping("/erupt-app")
     public EruptAppProp eruptApp() {
+        eruptAppProp.setHash(this.hashCode());
+        eruptAppProp.setVersion(EruptInformation.getEruptVersion());
         return eruptAppProp;
     }
 
