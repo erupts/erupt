@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Configuration
 @Controller
-public class EruptWebAutoConfiguration {
+public class EruptWebConfig {
 
     @RequestMapping("/")
     public String index() {
-        return "forward:index.html?v=" + EruptWebAutoConfiguration.class.hashCode();
+        return "forward:index.html?v=" + EruptWebConfig.class.hashCode();
     }
 
 }
