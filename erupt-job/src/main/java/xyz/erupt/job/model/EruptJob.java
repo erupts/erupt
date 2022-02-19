@@ -50,7 +50,7 @@ import java.util.List;
 public class EruptJob extends MetaModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
 
     @EruptField(
-            views = @View(title = "编码",width = "100px")
+            views = @View(title = "编码", width = "100px")
     )
     private String code;
 
@@ -92,7 +92,7 @@ public class EruptJob extends MetaModel implements DataProxy<EruptJob>, Operatio
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "任务参数"),
-            edit = @Edit(title = "任务参数", type = EditType.TEXTAREA)
+            edit = @Edit(title = "任务参数", type = EditType.CODE_EDITOR)
     )
     private String handlerParam;
 
