@@ -6,8 +6,10 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
+import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
@@ -93,14 +95,22 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void afterAdd(EruptMenu eruptMenu) {
-        if (null != eruptMenu.getType() && null != eruptMenu.getValue()) {
+        if (null != eruptMenu.getValue()) {
             if (MenuTypeEnum.TABLE.getCode().equals(eruptMenu.getType()) || MenuTypeEnum.TREE.getCode().equals(eruptMenu.getType())) {
                 int i = 0;
-                for (EruptFunPermissions value : EruptFunPermissions.values()) {
-                    eruptDao.persist(new EruptMenu(
-                            UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value), value.getName(), MenuTypeEnum.BUTTON.getCode(),
-                            UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value), eruptMenu, i += 10
-                    ));
+                Integer counter = eruptDao.getJdbcTemplate().queryForObject(
+                        String.format("select count(*) from e_upms_menu where parent_menu_id = %d", eruptMenu.getId()), Integer.class
+                );
+                if (null != counter && counter <= 0) {
+                    EruptModel eruptModel = EruptCoreService.getErupt(eruptMenu.getValue());
+                    for (EruptFunPermissions value : EruptFunPermissions.values()) {
+                        if (eruptModel == null || value.verifyPower(eruptModel.getErupt().power())) {
+                            eruptDao.persist(new EruptMenu(
+                                    Erupts.generateCode(), value.getName(), MenuTypeEnum.BUTTON.getCode(),
+                                    UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value), eruptMenu, i += 10)
+                            );
+                        }
+                    }
                 }
             }
         }
