@@ -9,8 +9,9 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.InputType;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.bi.handler.BiHandlerChoice;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.Column;
@@ -36,16 +37,17 @@ public class BiClassHandler extends MetaModelUpdateVo {
     private String name;
 
     @EruptField(
-            views = @View(title = "处理类路径", sortable = true),
-            edit = @Edit(title = "处理类路径", notNull = true,
-                    desc = "需实现xyz.erupt.bi.fun.EruptBiHandler接口", inputType = @InputType(fullSpan = true))
+            views = @View(title = "处理类", sortable = true),
+            edit = @Edit(title = "处理类", notNull = true, type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = BiHandlerChoice.class),
+                    desc = "实现xyz.erupt.bi.fun.EruptBiHandler接口")
     )
     private String handlerPath;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "自定义参数"),
-            edit = @Edit(title = "自定义参数", type = EditType.TEXTAREA)
+            views = @View(title = "处理类参数"),
+            edit = @Edit(title = "处理类参数", desc = "可在处理类exprHandler param参数中获取", type = EditType.CODE_EDITOR)
     )
     private String param;
 
