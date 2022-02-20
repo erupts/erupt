@@ -11,7 +11,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -37,7 +37,7 @@ import javax.persistence.UniqueConstraint;
 )
 @Getter
 @Setter
-public class EruptDict extends HyperModel {
+public class EruptDict extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "编码", sortable = true),

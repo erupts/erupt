@@ -82,6 +82,15 @@ public class EruptSessionService {
         }
     }
 
+//    public <T> Map<String, T> getMap(String key, Class<T> type) {
+//        if (eruptProp.isRedisSession()) {
+//            return stringRedisTemplate.boundHashOps(key).entries();
+//        } else {
+//            return (Map<String, T>) request.getSession().getAttribute(key);
+//        }
+//    }
+
+
     public <T> T getMapValue(String key, String mapKey, Class<T> type) {
         if (eruptProp.isRedisSession()) {
             Object obj = stringRedisTemplate.boundHashOps(key).get(mapKey);

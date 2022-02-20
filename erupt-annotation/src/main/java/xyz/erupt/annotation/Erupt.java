@@ -37,11 +37,9 @@ public @interface Erupt {
     @Comment("操作权限配置")
     Power power() default @Power;
 
-    //    @ToMap(key = "code")
     @Comment("自定义功能按钮")
     RowOperation[] rowOperation() default {};
 
-    //    @ToMap(key = "code")
     @Comment("数据钻取功能")
     Drill[] drills() default {};
 

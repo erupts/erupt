@@ -16,7 +16,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.generator.base.GeneratorType;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.jpa.model.MetaModel;
 
 import javax.persistence.*;
 import java.util.Map;
@@ -36,7 +36,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-public class GeneratorClass extends HyperModel implements Tpl.TplHandler {
+public class GeneratorClass extends MetaModel implements Tpl.TplHandler {
 
     @EruptField(
             views = @View(title = "名称"),

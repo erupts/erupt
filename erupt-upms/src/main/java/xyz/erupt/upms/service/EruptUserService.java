@@ -20,7 +20,6 @@ import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
-import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.util.IpUtil;
 import xyz.erupt.upms.vo.AdminUserinfo;
@@ -77,14 +76,9 @@ public class EruptUserService {
                 valueMap.put(menu.getValue(), menu);
             }
         }
-        StringBuilder sb = new StringBuilder();
-        for (EruptRole role : eruptUser.getRoles()) {
-            sb.append(role.getPowerOff()).append("|");
-        }
         sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsConfig.getExpireTimeByLogin());
         sessionService.putMap(SessionKey.MENU_CODE_MAP + token, codeMap, eruptUpmsConfig.getExpireTimeByLogin());
         sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsConfig.getExpireTimeByLogin());
-        sessionService.put(SessionKey.ROLE_POWER + token, sb.toString(), eruptUpmsConfig.getExpireTimeByLogin());
     }
 
     public void putUserInfo(EruptUser eruptUser, String token) {
@@ -183,7 +177,7 @@ public class EruptUserService {
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
         EruptLoginLog loginLog = new EruptLoginLog();
         loginLog.setToken(token);
-        loginLog.setEruptUser(new EruptUserVo(user.getId()));
+        loginLog.setUserName(user.getName());
         loginLog.setLoginTime(new Date());
         loginLog.setIp(IpUtil.getIpAddr(request));
         loginLog.setSystemName(userAgent.getOperatingSystem().getName());
@@ -212,7 +206,9 @@ public class EruptUserService {
                 return EruptApiModel.errorNoInterceptApi("修改失败，新密码不能和原始密码一样");
             }
             eruptUser.setPassword(newPwd);
+            eruptUser.setResetPwdTime(new Date());
             eruptDao.getEntityManager().merge(eruptUser);
+            if (null != loginProxy) loginProxy.afterChangePwd(eruptUser, pwd, newPwd);
             return EruptApiModel.successApi();
         } else {
             return EruptApiModel.errorNoInterceptApi("密码错误");
@@ -237,17 +233,17 @@ public class EruptUserService {
 
     //获取当前用户ID
     public Long getCurrentUid() {
-        AdminUserinfo adminUserinfo = getAdminUserInfo();
+        AdminUserinfo adminUserinfo = getSimpleUserInfo();
         return null == adminUserinfo ? null : adminUserinfo.getId();
     }
 
-    //获取当前登录用户基础信息
-    public AdminUserinfo getAdminUserInfo() {
+    //获取当前登录用户基础信息（缓存中查找）
+    public AdminUserinfo getSimpleUserInfo() {
         Object info = sessionService.get(SessionKey.USER_TOKEN + eruptContextService.getCurrentToken());
         return null == info ? null : gson.fromJson(info.toString(), AdminUserinfo.class);
     }
 
-    //获取当前登录用户对象
+    //获取当前登录用户对象(数据库中查找)
     public EruptUser getCurrentEruptUser() {
         Long uid = this.getCurrentUid();
         return null == uid ? null : eruptDao.getEntityManager().find(EruptUser.class, uid);

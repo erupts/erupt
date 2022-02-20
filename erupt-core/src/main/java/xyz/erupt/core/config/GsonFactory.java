@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class GsonFactory {
 
-    private final static Gson gson = new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
+    private final static GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
             .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context)
                     -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME))))
             .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, typeOfSrc, context)
@@ -22,12 +22,17 @@ public class GsonFactory {
                     -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)))
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
-            .setLongSerializationPolicy(LongSerializationPolicy.STRING).setExclusionStrategies(new GsonExclusionStrategies())
-            .setExclusionStrategies(new GsonExclusionStrategies())
-            .serializeNulls().create();
+            .setLongSerializationPolicy(LongSerializationPolicy.STRING)
+            .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
+
+    private static final Gson gson = gsonBuilder.create();
 
     public static Gson getGson() {
         return gson;
+    }
+
+    public static GsonBuilder getGsonBuilder() {
+        return gsonBuilder;
     }
 
     private GsonFactory() {

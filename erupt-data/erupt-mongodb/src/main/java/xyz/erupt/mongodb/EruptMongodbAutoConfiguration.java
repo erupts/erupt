@@ -2,6 +2,9 @@ package xyz.erupt.mongodb;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import xyz.erupt.core.module.EruptModule;
+import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.ModuleInfo;
 
 /**
  * @author YuePeng
@@ -9,5 +12,15 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan
-public class EruptMongodbAutoConfiguration {
+public class EruptMongodbAutoConfiguration implements EruptModule {
+
+    static {
+        EruptModuleInvoke.addEruptModule(EruptMongodbAutoConfiguration.class);
+    }
+
+    @Override
+    public ModuleInfo info() {
+        return ModuleInfo.builder().name("erupt-mongodb").build();
+    }
+
 }

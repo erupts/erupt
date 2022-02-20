@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * @author YuePeng
  * date 2021/1/22 10:11
  */
@@ -23,6 +22,10 @@ public class EruptAppProp {
 
     //登录密码是否加密传输
     private Boolean pwdTransferEncrypt = true;
+
+    private Integer hash;
+
+    private String version;
 
     //多语言配置
     private String[] locales = {

@@ -20,8 +20,8 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.service.EruptService;
 import xyz.erupt.core.service.I18NTranslateService;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
-import xyz.erupt.core.util.HttpUtil;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
@@ -58,14 +58,14 @@ public class EruptExcelController {
 
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
-    @EruptRouter(verifyMethod = EruptRouter.VerifyMethod.PARAM, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request, HttpServletResponse response) {
-        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
-            return;
-        }
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request,
+                                 HttpServletResponse response) throws IOException {
+        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable);
-        dataFileService.createExcelTemplate(eruptModel, request, response);
+        dataFileService.createExcelTemplate(eruptModel).write(EruptUtil.downLoadFile(request, response,
+                eruptModel.getErupt().name() + "_template" + EruptExcelService.XLS_FORMAT));
     }
 
     //导出
@@ -74,8 +74,7 @@ public class EruptExcelController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName,
                            @RequestBody(required = false) List<Condition> conditions,
-                           HttpServletRequest request,
-                           HttpServletResponse response) throws IOException {
+                           HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
             return;
         }
@@ -88,7 +87,7 @@ public class EruptExcelController {
         Page page = eruptService.getEruptData(eruptModel, tableQueryVo, null);
         Workbook wb = dataFileService.exportExcel(eruptModel, page);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
-        wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLS_FORMAT));
+        wb.write(EruptUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLSX_FORMAT));
     }
 
     //导入

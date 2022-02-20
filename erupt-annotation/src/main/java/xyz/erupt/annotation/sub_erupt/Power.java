@@ -13,9 +13,9 @@ public @interface Power {
 
     boolean add() default true;
 
-    boolean delete() default true;
-
     boolean edit() default true;
+
+    boolean delete() default true;
 
     boolean query() default true;
 

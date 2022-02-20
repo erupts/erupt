@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>erupt-core</artifactId>
 
-    <description>erupt core impl</description>
+    <description>core realize</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.9.3</version>
+        <version>1.10.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -22,6 +22,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -75,7 +80,6 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>erupt-core.properties</include>
-                    <include>banner.txt</include>
                 </includes>
             </resource>
             <resource>

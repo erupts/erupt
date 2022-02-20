@@ -92,7 +92,7 @@ public @interface Edit {
     CheckboxType checkboxType() default @CheckboxType;
 
     @Match("#item.type().toString()=='CODE_EDITOR'")
-    CodeEditorType codeEditType() default @CodeEditorType(language = "sql");
+    CodeEditorType codeEditType() default @CodeEditorType(language = "text");
 
     @Transient
     Tpl tplType() default @Tpl(path = "");

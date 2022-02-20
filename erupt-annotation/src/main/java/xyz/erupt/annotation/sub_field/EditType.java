@@ -37,7 +37,7 @@ public enum EditType {
     @EditTypeMapping(mapping = AutoCompleteType.class, desc = "自动完成", allowType = {JavaTypeEnum.String})
     AUTO_COMPLETE,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
-    @EditTypeMapping(desc = "多行文本框", allowType = {JavaTypeEnum.String}, nameInfer = {"desc", "remark"})
+    @EditTypeMapping(desc = "多行文本框", allowType = {JavaTypeEnum.String}, nameInfer = {"remark"})
     TEXTAREA,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
     @EditTypeMapping(mapping = HtmlEditorType.class, desc = "富文本编辑器", allowType = {JavaTypeEnum.String})
@@ -56,13 +56,13 @@ public enum EditType {
     TPL,
     @EditTypeMapping(desc = "横向分割线与描述", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     DIVIDE,
-    @EditTypeMapping(desc = "隐藏", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    @EditTypeMapping(desc = "隐藏", allowType = {JavaTypeEnum.any}, excelOperator = false)
     HIDDEN,
     @EditTypeMapping(desc = "空（仍占据组件位置）", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     EMPTY,
 
     @Comment("==================================")
-    @Comment("以下对象修饰于复杂对象上")
+    @Comment("以下组件修饰于复杂对象上")
 
     @EditTypeSearch
     @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用（多对一)", allowType = {JavaTypeEnum.object})

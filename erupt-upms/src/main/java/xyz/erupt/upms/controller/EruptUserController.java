@@ -4,11 +4,11 @@ import com.google.gson.reflect.TypeToken;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.prop.EruptAppProp;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.SessionKey;
@@ -81,8 +81,9 @@ public class EruptUserController {
         }
         if (loginModel.isPass()) {
             EruptUser eruptUser = loginModel.getEruptUser();
-            loginModel.setToken(RandomStringUtils.random(16, true, true));
+            loginModel.setToken(Erupts.generateCode(16));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
+            loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
             eruptUserService.putUserInfo(eruptUser, loginModel.getToken());
             Optional.ofNullable(loginProxy).ifPresent(it -> it.loginSuccess(eruptUser, loginModel.getToken()));
             eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
@@ -95,7 +96,7 @@ public class EruptUserController {
     @GetMapping("/userinfo")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public AdminUserinfo userinfo() {
-        AdminUserinfo adminUserinfo = eruptUserService.getAdminUserInfo();
+        AdminUserinfo adminUserinfo = eruptUserService.getSimpleUserInfo();
         adminUserinfo.setId(null);
         return adminUserinfo;
     }

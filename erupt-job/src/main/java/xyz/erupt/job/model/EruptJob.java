@@ -21,9 +21,10 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.job.service.ChoiceFetchEruptJobHandler;
 import xyz.erupt.job.service.EruptJobService;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.jpa.model.MetaModel;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
@@ -46,11 +47,10 @@ import java.util.List;
 @Component
 @Getter
 @Setter
-public class EruptJob extends HyperModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
+public class EruptJob extends MetaModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
 
     @EruptField(
-            views = @View(title = "任务编码"),
-            edit = @Edit(title = "任务编码", notNull = true, search = @Search)
+            views = @View(title = "编码", width = "100px")
     )
     private String code;
 
@@ -68,7 +68,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
 
     @EruptField(
             views = @View(title = "JOB处理类"),
-            edit = @Edit(title = "JOB处理类", desc = "需实现EruptJobHandler接口",
+            edit = @Edit(title = "JOB处理类", desc = "实现EruptJobHandler接口即可",
                     choiceType = @ChoiceType(fetchHandler = ChoiceFetchEruptJobHandler.class)
                     , notNull = true, search = @Search, type = EditType.CHOICE)
     )
@@ -92,7 +92,7 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "任务参数"),
-            edit = @Edit(title = "任务参数", type = EditType.TEXTAREA)
+            edit = @Edit(title = "任务参数", type = EditType.CODE_EDITOR)
     )
     private String handlerParam;
 
@@ -114,6 +114,9 @@ public class EruptJob extends HyperModel implements DataProxy<EruptJob>, Operati
 
     @Override
     public void beforeAdd(EruptJob eruptJob) {
+        if (null == eruptJob.getCode()) {
+            eruptJob.setCode(Erupts.generateCode());
+        }
         try {
             eruptJobService.modifyJob(eruptJob);
         } catch (SchedulerException | ParseException e) {

@@ -19,15 +19,14 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
+import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DateUtil;
-import xyz.erupt.core.util.*;
+import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.ExcelUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -99,9 +98,9 @@ public class EruptExcelService {
                         Optional.ofNullable(val).ifPresent(it -> {
                             String str = it.toString();
                             if (edit.type() == EditType.BOOLEAN || view.type() == ViewType.BOOLEAN) {
-                                if (Boolean.parseBoolean(str)) {
+                                if (edit.boolType().trueText().equals(str)) {
                                     cell.setCellValue(edit.boolType().trueText());
-                                } else {
+                                } else if (edit.boolType().falseText().equals(str)) {
                                     cell.setCellValue(edit.boolType().falseText());
                                 }
                             } else {
@@ -229,7 +228,7 @@ public class EruptExcelService {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), this.getStringCellValue(cell));
                             } else if (JavaType.NUMBER.equals(rn)) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
-                            } else if (EruptUtil.isDateField(eruptFieldModel)) {
+                            } else if (EruptUtil.isDateField(eruptFieldModel.getFieldReturnName())) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getSimpleFormatDate(cell.getDateCellValue()));
                             }
                             break;
@@ -248,7 +247,7 @@ public class EruptExcelService {
 
 
     //模板的格式和edit输入框一致
-    public void createExcelTemplate(EruptModel eruptModel, HttpServletRequest request, HttpServletResponse response) {
+    public Workbook createExcelTemplate(EruptModel eruptModel) {
         Workbook wb = new HSSFWorkbook();
         //基本信息
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
@@ -320,12 +319,7 @@ public class EruptExcelService {
                 cellNum++;
             }
         }
-        try {
-            wb.write(HttpUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_导入模板" + XLS_FORMAT));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        return wb;
     }
 
     private DataValidation generateValidation(int colIndex, String errHint, DataValidationConstraint constraint) {

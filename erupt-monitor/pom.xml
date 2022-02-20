@@ -5,22 +5,16 @@
 
     <artifactId>erupt-monitor</artifactId>
 
-    <description>erupt monitor → redis / server / online user </description>
+    <description>erupt monitor → redis / server </description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.9.3</version>
+        <version>1.10.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-upms</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
@@ -30,6 +24,10 @@
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl-ui.element-ui</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
 </project>

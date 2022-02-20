@@ -13,16 +13,19 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.9.3</version>
+        <version>1.10.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
+    <properties>
+        <magic-api.version>1.7.5</magic-api.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-upms</artifactId>
             <version>${project.parent.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
@@ -36,7 +39,7 @@
         <dependency>
             <groupId>org.ssssssss</groupId>
             <artifactId>magic-api-spring-boot-starter</artifactId>
-            <version>1.7.1</version>
+            <version>${magic-api.version}</version>
         </dependency>
     </dependencies>
 

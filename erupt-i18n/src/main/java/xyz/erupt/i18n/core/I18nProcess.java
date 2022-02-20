@@ -7,7 +7,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.service.I18NTranslateService;
-import xyz.erupt.core.toolkit.TimeRecorder;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -33,7 +32,7 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
     //语言文件对应文字映射
     private static final I18nProcess langMappings = new I18nProcess();
     private static final String I18N_EXT = "properties";
-    private static Long totalSize = 0L;
+
     @Resource
     private I18NTranslateService i18NTranslateService;
 
@@ -44,7 +43,6 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
     @Override
     @SneakyThrows
     public void run(ApplicationArguments args) {
-        TimeRecorder timeRecorder = new TimeRecorder();
         Enumeration<URL> urls = I18nProcess.class.getClassLoader().getResources("i18n/");
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
@@ -59,8 +57,6 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
             }
         }
         i18NTranslateService.registerI18NMapping(langMappings);
-        log.info("Erupt i18n total file size: {}kb", totalSize / 1000);
-        log.info("Erupt i18n initialization completed in {} ms", timeRecorder.recorder());
     }
 
     @SneakyThrows
@@ -73,7 +69,6 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
                 @Cleanup FileInputStream fileInputStream = new FileInputStream(file);
                 @Cleanup InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
                 properties.load(inputStreamReader);
-                totalSize += fileInputStream.available();
                 if (langMappings.containsKey(lang)) {
                     langMappings.get(lang).putAll(properties);
                 } else {
@@ -92,7 +87,6 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
             final JarEntry entry = jarEntryEnumeration.nextElement();
             if (entry.getName().endsWith(I18N_EXT)) {
                 String lang = this.getFileLang(entry.getName());
-                totalSize += entry.getSize();
                 Properties properties = new Properties();
                 try (InputStreamReader inputStreamReader = new InputStreamReader(
                         jar.getInputStream(entry), StandardCharsets.UTF_8)) {
