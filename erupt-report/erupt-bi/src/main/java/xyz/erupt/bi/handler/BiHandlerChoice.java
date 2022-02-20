@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class BiHandlerChoice implements ChoiceFetchHandler {
 
-    private static List<VLModel> biHandlerList = null;
+    private static List<VLModel> biHandlerList;
 
     @Override
     public synchronized List<VLModel> fetch(String[] params) {
