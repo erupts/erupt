@@ -7,11 +7,12 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.i18n.constant.I18nConstant;
-import xyz.erupt.upms.service.EruptContextService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,13 +32,10 @@ public class EruptBuildAop {
     @Resource
     private HttpServletRequest request;
 
-    @Resource
-    private EruptContextService eruptContextService;
-
     @AfterReturning(pointcut = POINT_CUT, returning = "eruptBuildModel")
     public void doAfterReturning(EruptBuildModel eruptBuildModel) {
         if (StringUtils.isNotBlank(request.getHeader(LANG_HEADER))) {
-            Optional.ofNullable(eruptContextService.getContextEruptClass()).ifPresent(eruptClass -> {
+            Optional.ofNullable(EruptCoreService.getErupt(MetaContext.getErupt().getName()).getClazz()).ifPresent(eruptClass -> {
                 EruptI18n eruptI18n = eruptClass.getAnnotation(EruptI18n.class);
                 if (null != eruptI18n && eruptI18n.enable()) {
                     Optional.ofNullable(I18nProcess.getLangMapping(request.getHeader(LANG_HEADER).toLowerCase())).ifPresent(it -> {

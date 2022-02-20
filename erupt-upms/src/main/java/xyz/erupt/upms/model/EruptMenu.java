@@ -10,15 +10,17 @@ import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
+import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
-import xyz.erupt.upms.enums.MenuLimitEnum;
-import xyz.erupt.upms.enums.MenuStatus;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.core.module.MetaMenu;
+import xyz.erupt.jpa.model.MetaModel;
 import xyz.erupt.upms.service.EruptMenuService;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author YuePeng
@@ -27,7 +29,7 @@ import java.util.Date;
 @Entity
 @Table(name = "e_upms_menu", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
-        name = "菜单配置",
+        name = "菜单管理",
         orderBy = "EruptMenu.sort asc",
         tree = @Tree(pid = "parentMenu.id"),
         dataProxy = EruptMenuService.class
@@ -35,12 +37,10 @@ import java.util.Date;
 @EruptI18n
 @Getter
 @Setter
-public class EruptMenu extends HyperModel {
+public class EruptMenu extends MetaModel {
 
-    @EruptField(
-            views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true)
-    )
+    public static final String CODE = "code";
+
     private String code;
 
     @EruptField(
@@ -62,6 +62,16 @@ public class EruptMenu extends HyperModel {
     )
     private Integer status;
 
+    @ManyToOne
+    @EruptField(
+            edit = @Edit(
+                    title = "上级菜单",
+                    type = EditType.REFERENCE_TREE,
+                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
+            )
+    )
+    private EruptMenu parentMenu;
+
     @EruptField(
             edit = @Edit(
                     title = "菜单类型",
@@ -78,7 +88,6 @@ public class EruptMenu extends HyperModel {
     )
     private String value;
 
-
     @EruptField(
             edit = @Edit(
                     title = "顺序"
@@ -88,37 +97,17 @@ public class EruptMenu extends HyperModel {
 
     @EruptField(
             edit = @Edit(
-                    title = "权限",
-                    type = EditType.TAGS,
-                    showBy = @ShowBy(dependField = "type", expr = "value=='tree'||value=='table'"),
-                    tagsType = @TagsType(fetchHandler = MenuLimitEnum.MenuLimitFetch.class, allowExtension = false)
-            )
-    )
-    private String powerOff;
-
-    @EruptField(
-            edit = @Edit(
                     title = "图标",
                     desc = "请参考图标库font-awesome"
             )
     )
     private String icon;
 
-    @ManyToOne
-    @EruptField(
-            edit = @Edit(
-                    title = "上级菜单",
-                    type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
-            )
-    )
-    private EruptMenu parentMenu;
-
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
                     title = "自定义参数",
-                    desc = "json格式",
+                    desc = "json格式，通过上下文获取，根据业务需求解析",
                     type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "json")
             )
@@ -137,6 +126,28 @@ public class EruptMenu extends HyperModel {
         this.sort = sort;
         this.icon = icon;
         this.parentMenu = parentMenu;
-        this.setCreateTime(new Date());
+        this.setCreateTime(LocalDateTime.now());
     }
+
+    public EruptMenu(String code, String name, String type, String value, EruptMenu parentMenu, Integer sort) {
+        this.code = code;
+        this.name = name;
+        this.parentMenu = parentMenu;
+        this.type = type;
+        this.value = value;
+        this.sort = sort;
+        this.setStatus(MenuStatus.OPEN.getValue());
+        this.setCreateTime(LocalDateTime.now());
+    }
+
+    public static EruptMenu fromMetaMenu(MetaMenu metaMenu) {
+        if (null == metaMenu) return null;
+        EruptMenu eruptMenu = new EruptMenu(metaMenu.getCode(),
+                metaMenu.getName(), null == metaMenu.getType() ? null : metaMenu.getType(),
+                metaMenu.getValue(), null == metaMenu.getStatus() ? null : metaMenu.getStatus().getValue(),
+                metaMenu.getSort(), metaMenu.getIcon(), fromMetaMenu(metaMenu.getParentMenu()));
+        eruptMenu.setId(metaMenu.getId());
+        return eruptMenu;
+    }
+
 }

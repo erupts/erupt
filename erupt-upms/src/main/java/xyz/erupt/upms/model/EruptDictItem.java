@@ -7,9 +7,10 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.*;
 
@@ -23,21 +24,22 @@ import javax.persistence.*;
 @Erupt(
         name = "字典项",
         orderBy = "sort",
+//        linkTree = @LinkTree(dependNode = true, field = "eruptDict"),
         power = @Power(export = true)
 )
 @Getter
 @Setter
 @EruptI18n
-public class EruptDictItem extends HyperModel {
+public class EruptDictItem extends MetaModelUpdateVo {
 
     @EruptField(
-            views = @View(title = "编码"),
+            views = @View(title = "编码", sortable = true),
             edit = @Edit(title = "编码", notNull = true, search = @Search)
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
+            views = @View(title = "名称", sortable = true),
             edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
@@ -51,7 +53,8 @@ public class EruptDictItem extends HyperModel {
     @EruptField(
             views = @View(title = "备注"),
             edit = @Edit(
-                    title = "备注"
+                    title = "备注",
+                    type = EditType.TEXTAREA
             )
     )
     private String remark;

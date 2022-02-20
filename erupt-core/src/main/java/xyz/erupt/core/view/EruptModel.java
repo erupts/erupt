@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.proxy.AnnotationProxy;
+import xyz.erupt.core.proxy.EruptProxy;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.CloneSupport;
 
@@ -24,6 +26,8 @@ public final class EruptModel implements Cloneable {
 
     private transient Erupt erupt;
 
+    private transient AnnotationProxy<Erupt, Void> eruptAnnotationProxy = new EruptProxy();
+
     private transient Map<String, EruptFieldModel> eruptFieldMap;
 
     private String eruptName;
@@ -36,10 +40,8 @@ public final class EruptModel implements Cloneable {
 
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;
-        this.erupt = eruptClazz.getAnnotation(Erupt.class);
+        this.erupt = eruptAnnotationProxy.newProxy(eruptClazz.getAnnotation(Erupt.class), null, eruptClazz);
         this.eruptName = eruptClazz.getSimpleName();
-        this.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
-
         DataProxyInvoke.invoke(this, it -> {
             try {
                 it.getClass().getDeclaredMethod("extraRow", List.class);
@@ -52,7 +54,9 @@ public final class EruptModel implements Cloneable {
     @Override
     public final EruptModel clone() throws CloneNotSupportedException {
         EruptModel eruptModel = (EruptModel) super.clone();
-        eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone).collect(Collectors.toList());
+        eruptModel.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
+        eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone)
+                .peek(EruptFieldModel::serializable).collect(Collectors.toList());
         return eruptModel;
     }
 

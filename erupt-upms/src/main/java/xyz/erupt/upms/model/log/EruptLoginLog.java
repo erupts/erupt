@@ -7,15 +7,12 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.upms.model.EruptUserVo;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -28,7 +25,7 @@ import java.util.Date;
 @Erupt(
         name = "登录日志",
         power = @Power(add = false, edit = false, viewDetails = false, delete = false,
-                export = true, powerHandler = AdminPower.class),
+                export = true, powerHandler = SuperAdminPower.class),
         orderBy = "loginTime desc"
 )
 @EruptI18n
@@ -36,13 +33,11 @@ import java.util.Date;
 @Setter
 public class EruptLoginLog extends BaseModel {
 
-    @ManyToOne
     @EruptField(
-            views = @View(title = "用户", column = "name"),
-            edit = @Edit(title = "用户", type = EditType.REFERENCE_TABLE
-                    , search = @Search(vague = true))
+            views = @View(title = "用户"),
+            edit = @Edit(title = "用户", search = @Search(vague = true))
     )
-    private EruptUserVo eruptUser;
+    private String userName;
 
     @EruptField(
             views = @View(title = "登录时间", sortable = true),

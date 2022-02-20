@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>magic-api</title>
+    <title>erupt-magic-api</title>
     <style>
         html, body {
             padding: 0;
@@ -19,10 +19,19 @@
                 config.headers.token = parent.getAppToken().token;
                 return config;
             }
-        }
+        },
+        header: {
+            skin: true,
+            document: true,
+            repo: false,
+            qqGroup: false
+        },
+        checkUpdate: false,
+        title: 'erupt-magic-api'
     }
 </script>
-<iframe src="${request.contextPath}${web}"
+<script src="${request.contextPath}/app.js?v=${hash}"></script>
+<iframe src="${request.contextPath}${web}?v=${v}"
         style="border: 0" width="100%" height="100%"></iframe>
 </body>
 </html>

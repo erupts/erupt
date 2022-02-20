@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author YuePeng
  * date 2021/1/31 20:09
@@ -15,6 +17,10 @@ public class Platform {
 
     private String uploadPath;
 
-    private Boolean redisSession;
+    private String sessionStrategy;
+
+    private int eruptCount; //erupt类数量
+
+    private List<String> eruptModules; //模块列表
 
 }

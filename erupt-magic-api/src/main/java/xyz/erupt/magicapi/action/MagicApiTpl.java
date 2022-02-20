@@ -2,6 +2,7 @@ package xyz.erupt.magicapi.action;
 
 import org.springframework.stereotype.Component;
 import org.ssssssss.magicapi.spring.boot.starter.MagicAPIProperties;
+import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 
@@ -26,6 +27,8 @@ public class MagicApiTpl {
     public Map<String, Object> magicApiAction() {
         Map<String, Object> map = new HashMap<>();
         map.put("web", magicAPIProperties.getWeb());
+        map.put("v", EruptInformation.getEruptVersion());
+        map.put("hash", this.hashCode());
         return map;
     }
 

@@ -6,6 +6,8 @@ package xyz.erupt.annotation.constant;
  */
 public class AnnotationConst {
 
+    public static final String VALUE = "value";
+
     public static final String ID = "id";
 
     public static final String LABEL = "name";

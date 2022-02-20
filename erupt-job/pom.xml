@@ -10,7 +10,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.9.3</version>
+        <version>1.10.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-upms</artifactId>
+            <artifactId>erupt-jpa</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>

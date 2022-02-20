@@ -21,7 +21,7 @@ public class AdminUserinfo {
 
     private String org;  //所属组织
 
-    private String post; //所诉岗位
+    private String post; //所属岗位
 
     private boolean superAdmin; //是否为超级管理员
 

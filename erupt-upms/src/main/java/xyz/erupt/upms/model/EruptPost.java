@@ -21,20 +21,20 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "e_upms_post", uniqueConstraints = {
         @UniqueConstraint(columnNames = "code")
 })
-@Erupt(name = "用户岗位", orderBy = "weight desc")
+@Erupt(name = "岗位维护", orderBy = "weight desc")
 @EruptI18n
 @Getter
 @Setter
 public class EruptPost extends BaseModel {
 
     @EruptField(
-            views = @View(title = "岗位编码"),
+            views = @View(title = "岗位编码", width = "120px", sortable = true),
             edit = @Edit(title = "岗位编码", notNull = true)
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "岗位名称"),
+            views = @View(title = "岗位名称", sortable = true),
             edit = @Edit(title = "岗位名称", notNull = true)
     )
     private String name;

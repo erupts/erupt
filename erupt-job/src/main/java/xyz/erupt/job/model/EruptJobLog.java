@@ -26,7 +26,7 @@ import java.util.Date;
 @Erupt(
         orderBy = "startTime desc",
         name = "任务日志",
-        power = @Power(export = true, add = false, delete = false, edit = false, viewDetails = false)
+        power = @Power(export = true, add = false, edit = false, viewDetails = false)
 )
 @Entity
 @Table(name = "e_job_log")

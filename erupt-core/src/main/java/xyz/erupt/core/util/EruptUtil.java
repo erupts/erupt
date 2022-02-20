@@ -29,7 +29,12 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -165,7 +170,7 @@ public class EruptUtil {
         Edit edit = eruptFieldModel.getEruptField().edit();
         switch (edit.type()) {
             case DATE:
-                if (isDateField(eruptFieldModel)) {
+                if (isDateField(eruptFieldModel.getFieldReturnName())) {
                     return DateUtil.getDate(str);
                 } else {
                     return str;
@@ -357,12 +362,27 @@ public class EruptUtil {
     }
 
     //是否为时间字段
-    public static boolean isDateField(EruptFieldModel eruptFieldModel) {
-        if (Date.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
+    public static boolean isDateField(String fieldType) {
+        if (Date.class.getSimpleName().equals(fieldType)) {
             return true;
-        } else if (LocalDate.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName())) {
+        } else if (LocalDate.class.getSimpleName().equals(fieldType)) {
             return true;
-        } else return LocalDateTime.class.getSimpleName().equals(eruptFieldModel.getFieldReturnName());
+        } else {
+            return LocalDateTime.class.getSimpleName().equals(fieldType);
+        }
+    }
+
+    public static OutputStream downLoadFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
+        try {
+            String headStr = "attachment; filename=" + java.net.URLEncoder.encode(fileName, StandardCharsets.UTF_8.name());
+            response.setContentType("application/x-download");
+            response.setHeader("Content-Disposition", headStr);
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+            return response.getOutputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

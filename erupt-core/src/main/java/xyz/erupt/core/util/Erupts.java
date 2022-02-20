@@ -1,5 +1,6 @@
 package xyz.erupt.core.util;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -47,5 +48,12 @@ public class Erupts {
         if (obj != null) throw new EruptWebApiRuntimeException(message);
     }
 
+    public static String generateCode() {
+        return generateCode(8);
+    }
+
+    public static String generateCode(int length) {
+        return RandomStringUtils.randomAlphanumeric(length);
+    }
 
 }

@@ -5,7 +5,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- *
  * @author YuePeng
  * date 2021/3/28 18:51
  */
@@ -13,4 +12,5 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 @EnableConfigurationProperties
 public class EruptCoreAutoConfiguration {
+
 }

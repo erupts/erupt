@@ -8,7 +8,7 @@ import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.prop.EruptAppProp;
-import xyz.erupt.core.util.EruptPropUtil;
+import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.MD5Util;
 
 /**
@@ -25,11 +25,13 @@ public class EruptApi {
     //获取当前Erupt版本号
     @GetMapping("/version")
     public String version() {
-        return EruptPropUtil.getEruptVersion();
+        return EruptInformation.getEruptVersion();
     }
 
     @GetMapping("/erupt-app")
     public EruptAppProp eruptApp() {
+        eruptAppProp.setHash(this.hashCode());
+        eruptAppProp.setVersion(EruptInformation.getEruptVersion());
         return eruptAppProp;
     }
 
