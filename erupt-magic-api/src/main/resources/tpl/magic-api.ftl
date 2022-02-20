@@ -26,10 +26,12 @@
             repo: false,
             qqGroup: false
         },
+        checkUpdate: false,
         title: 'erupt-magic-api'
     }
 </script>
-<iframe src="${request.contextPath}${web}?_random=${random}"
+<script src="${request.contextPath}/app.js?v=${hash}"></script>
+<iframe src="${request.contextPath}${web}?v=${v}"
         style="border: 0" width="100%" height="100%"></iframe>
 </body>
 </html>
