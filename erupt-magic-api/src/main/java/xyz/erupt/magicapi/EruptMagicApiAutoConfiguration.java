@@ -9,6 +9,8 @@ import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
+import xyz.erupt.magicapi.action.MagicApiTpl;
+import xyz.erupt.tpl.service.EruptTplService;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -54,9 +56,9 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
         menus.put(Authorization.UNLOCK, "解锁");
         AtomicInteger sort = new AtomicInteger();
         List<MetaMenu> metaMenus = new ArrayList<>();
-        metaMenus.add(MetaMenu.createRootMenu(menuKey, "接口配置", "fa fa-cube", 50));
-        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + FUNCTION, "函数", MAGIC_API_MENU_PREFIX + FUNCTION, metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
-        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + DATASOURCE, "数据源", MAGIC_API_MENU_PREFIX + DATASOURCE, metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu(menuKey, "接口配置", MagicApiTpl.MAGIC_API_PERMISSION, null, 50, EruptTplService.TPL));
+        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + FUNCTION, "函数", MAGIC_API_MENU_PREFIX + FUNCTION.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + DATASOURCE, "数据源", MAGIC_API_MENU_PREFIX + DATASOURCE.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
         menus.forEach((key, value) -> metaMenus.add(MetaMenu.createSimpleMenu(
                 menuKey + "-" + key.name().toLowerCase(), value,
                 MAGIC_API_MENU_PREFIX + key.name(),
