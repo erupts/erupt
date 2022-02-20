@@ -7,10 +7,7 @@ import org.ssssssss.magicapi.interceptor.Authorization;
 import org.ssssssss.magicapi.interceptor.AuthorizationInterceptor;
 import org.ssssssss.magicapi.interceptor.MagicUser;
 import org.ssssssss.magicapi.interceptor.RequestInterceptor;
-import org.ssssssss.magicapi.model.ApiInfo;
-import org.ssssssss.magicapi.model.Constants;
-import org.ssssssss.magicapi.model.JsonBean;
-import org.ssssssss.magicapi.model.Options;
+import org.ssssssss.magicapi.model.*;
 import org.ssssssss.script.MagicScriptContext;
 import xyz.erupt.magicapi.EruptMagicApiAutoConfiguration;
 import xyz.erupt.upms.service.EruptContextService;
@@ -43,7 +40,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         try {
             Optional.ofNullable(eruptUserService.getSimpleUserInfo()).ifPresent(adminUserInfo -> request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER,
                     new MagicUser(adminUserInfo.getAccount(), adminUserInfo.getUsername(), this.eruptContextService.getCurrentToken())));
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
         }
         return false;
     }
@@ -89,4 +86,19 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
                 && eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + authorization.name()) != null;
     }
 
+    @Override
+    public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, DataSourceInfo dataSourceInfo) {
+        if (Authorization.SAVE == authorization || Authorization.DELETE == authorization) {
+            return eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + EruptMagicApiAutoConfiguration.DATASOURCE) != null;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, FunctionInfo functionInfo) {
+        if (Authorization.SAVE == authorization || Authorization.DELETE == authorization) {
+            return eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + EruptMagicApiAutoConfiguration.FUNCTION) != null;
+        }
+        return true;
+    }
 }

@@ -1,6 +1,5 @@
 package xyz.erupt.magicapi.action;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 import org.ssssssss.magicapi.spring.boot.starter.MagicAPIProperties;
 import xyz.erupt.core.util.EruptInformation;
@@ -21,8 +20,6 @@ public class MagicApiTpl {
 
     public static final String MAGIC_API_PERMISSION = "magic-api.ftl";
 
-    public static final String RANDOM = RandomStringUtils.randomAlphanumeric(6);
-
     @Resource
     private MagicAPIProperties magicAPIProperties;
 
@@ -30,7 +27,8 @@ public class MagicApiTpl {
     public Map<String, Object> magicApiAction() {
         Map<String, Object> map = new HashMap<>();
         map.put("web", magicAPIProperties.getWeb());
-        map.put("random", EruptInformation.getEruptVersion());
+        map.put("v", EruptInformation.getEruptVersion());
+        map.put("hash", this.hashCode());
         return map;
     }
 
