@@ -94,6 +94,9 @@ public class EruptUserService {
     }
 
     public static LoginProxy findEruptLogin() {
+        if (null == EruptApplication.getPrimarySource()) {
+            throw new RuntimeException("Not found '@EruptScan' Annotation");
+        }
         EruptLogin eruptLogin = EruptApplication.getPrimarySource().getAnnotation(EruptLogin.class);
         if (null != eruptLogin) {
             return EruptSpringUtil.getBean(eruptLogin.value());
