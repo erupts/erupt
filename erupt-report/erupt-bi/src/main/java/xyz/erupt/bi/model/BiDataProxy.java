@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.Erupts;
-import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Date;
@@ -20,8 +20,8 @@ import java.util.Map;
 @Component
 public class BiDataProxy implements DataProxy<Bi> {
 
-    @Resource
-    private EruptDao eruptDao;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public void beforeAdd(Bi bi) {
@@ -31,26 +31,24 @@ public class BiDataProxy implements DataProxy<Bi> {
     @Override
     @Transactional
     public void beforeUpdate(Bi bi) {
-        // TODO 在一对多的映射情况下，多的一方如果存有一的一方对象，那么这个对象必须赋值否则会出现多的一方数据无法保存的问题
+        entityManager.clear();
+        Bi bbi = entityManager.find(Bi.class, bi.getId());
+        // 在一对多的映射情况下，多的一方如果存有一的一方对象，那么这个对象必须赋值否则会出现多的一方数据无法保存的问题
         if (null != bi.getBiDimension()) {
             for (BiDimension dimension : bi.getBiDimension()) {
                 dimension.setBi(bi);
             }
         }
-    }
-
-    @Override
-    public void afterUpdate(Bi bi) {
-        Bi bbi = eruptDao.getEntityManager().find(Bi.class, bi.getId());
         if (StringUtils.isNotBlank(bi.getSqlStatement()) && StringUtils.isNotBlank(bbi.getSqlStatement())) {
             if (!bi.getSqlStatement().equals(bbi.getSqlStatement())) {
-                BiHistory bh = new BiHistory();
-                bh.setBi(bi);
-                bh.setSqlStatement(bbi.getSqlStatement());
-                bh.setOperateTime(new Date());
-                bh.setMark("Table");
-                bh.setOperateBy(MetaContext.getUser().getName());
-                eruptDao.persistAndFlush(bh);
+                BiHistory history = new BiHistory();
+                history.setSqlStatement(bbi.getSqlStatement());
+                history.setOperateTime(new Date());
+                history.setMark("Table");
+                history.setBi(bi);
+                history.setOperateBy(MetaContext.getUser().getName());
+                entityManager.persist(history);
+                entityManager.flush();
             }
         }
     }
