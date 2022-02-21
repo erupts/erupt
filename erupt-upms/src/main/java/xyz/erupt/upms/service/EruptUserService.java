@@ -208,7 +208,9 @@ public class EruptUserService {
             eruptUser.setPassword(newPwd);
             eruptUser.setResetPwdTime(new Date());
             eruptDao.getEntityManager().merge(eruptUser);
-            if (null != loginProxy) loginProxy.afterChangePwd(eruptUser, pwd, newPwd);
+            if (null != loginProxy) {
+                loginProxy.afterChangePwd(eruptUser, pwd, newPwd);
+            }
             return EruptApiModel.successApi();
         } else {
             return EruptApiModel.errorNoInterceptApi("密码错误");
