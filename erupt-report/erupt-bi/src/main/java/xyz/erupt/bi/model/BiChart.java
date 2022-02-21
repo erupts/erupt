@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.handler.ChartType;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
@@ -167,8 +168,7 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
     }
 
     @Override
-    public void beforeUpdate(BiChart biChart) {
-        eruptDao.getEntityManager().clear();
+    public void afterUpdate(BiChart biChart) {
         BiChart hbc = eruptDao.getEntityManager().find(BiChart.class, biChart.getId());
         if (!biChart.getSqlStatement().equals(hbc.getSqlStatement())) {
             BiHistory history = new BiHistory();
@@ -176,9 +176,8 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
             history.setSqlStatement(hbc.getSqlStatement());
             history.setOperateTime(new Date());
             history.setMark(biChart.getName());
-            history.setOperateBy("adf");
+            history.setOperateBy(MetaContext.getUser().getName());
             eruptDao.persistAndFlush(history);
         }
     }
-
 }
