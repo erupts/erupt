@@ -172,7 +172,7 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
         BiChart hbc = eruptDao.getEntityManager().find(BiChart.class, biChart.getId());
         if (!biChart.getSqlStatement().equals(hbc.getSqlStatement())) {
             BiHistory history = new BiHistory();
-            history.setBi(biChart.getBi());
+            history.setBi(new BaseBi(biChart.getBi().getId()));
             history.setSqlStatement(hbc.getSqlStatement());
             history.setOperateTime(new Date());
             history.setMark(biChart.getName());

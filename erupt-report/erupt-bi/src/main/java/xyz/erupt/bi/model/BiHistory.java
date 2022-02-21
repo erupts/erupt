@@ -29,7 +29,7 @@ import java.util.Date;
 @Table(name = "e_bi_history")
 @Erupt(
         name = "修改记录",
-        orderBy = "operateTime desc",
+        orderBy = "BiHistory.operateTime desc",
         power = @Power(edit = false, add = false, viewDetails = false)
 )
 @Getter
@@ -64,5 +64,6 @@ public class BiHistory extends BaseModel {
     private String sqlStatement;
 
     @ManyToOne
-    private Bi bi;
+    private BaseBi bi;
+
 }

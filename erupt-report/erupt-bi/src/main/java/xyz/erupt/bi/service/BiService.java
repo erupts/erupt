@@ -91,6 +91,7 @@ public class BiService {
             throw new EruptNoLegalPowerException();
         }
     }
+
     private final EruptCache<List<Map<String, Object>>> eruptCache = EruptCache.newInstance();
 
     private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
@@ -134,21 +135,15 @@ public class BiService {
             biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), EruptBiHandler.class);
             express = biHandler.exprHandler(classHandler.getParam(), query, express);
         }
-        {
-            String finalExpress = express;
-            EruptBiHandler finalBiHandler = biHandler;
-            Supplier<List<Map<String, Object>>> supplier = () -> {
-                NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(biDataSource);
-                List<Map<String, Object>> list = jdbcQuery(jdbcTemplate, finalExpress, query);
-                Optional.ofNullable(finalBiHandler).ifPresent(it -> it.resultHandler(classHandler.getParam(), query, list));
-                return list;
-            };
-            if (null == timeout) {
-                return supplier.get();
-            } else {
-                return eruptCache.getAndSet(express + gson.toJson(query), timeout * 1000, supplier);
-            }
-        }
+        String finalExpress = express;
+        EruptBiHandler finalBiHandler = biHandler;
+        Supplier<List<Map<String, Object>>> supplier = () -> {
+            NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(biDataSource);
+            List<Map<String, Object>> list = jdbcQuery(jdbcTemplate, finalExpress, query);
+            Optional.ofNullable(finalBiHandler).ifPresent(it -> it.resultHandler(classHandler.getParam(), query, list));
+            return list;
+        };
+        return null == timeout ? supplier.get() : eruptCache.getAndSet(express + gson.toJson(query), timeout * 1000, supplier);
     }
 
     public Object evalScript(String script, Bindings bindings) throws ScriptException {
