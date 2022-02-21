@@ -32,4 +32,5 @@ public interface LoginProxy {
     @Comment("完成修改密码")
     default void afterChangePwd(EruptUser eruptUser, String originPwd, String newPwd) {
     }
+
 }
