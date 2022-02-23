@@ -69,15 +69,12 @@ public class EruptUserService {
     public void cacheUserInfo(EruptUser eruptUser, String token) {
         List<EruptMenu> eruptMenus = eruptMenuService.getUserAllMenu(eruptUser);
         Map<String, Object> valueMap = new HashMap<>();
-        Map<String, Object> codeMap = new HashMap<>();
         for (EruptMenu menu : eruptMenus) {
-            codeMap.put(menu.getCode(), menu);
             if (null != menu.getValue()) {
-                valueMap.put(menu.getValue(), menu);
+                valueMap.put(menu.getValue().toLowerCase(), menu);
             }
         }
         sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsConfig.getExpireTimeByLogin());
-        sessionService.putMap(SessionKey.MENU_CODE_MAP + token, codeMap, eruptUpmsConfig.getExpireTimeByLogin());
         sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsConfig.getExpireTimeByLogin());
     }
 
@@ -226,14 +223,9 @@ public class EruptUserService {
         }});
     }
 
-    //当前用户菜单中，通过编码获取菜单
-    public EruptMenu getEruptMenuByCode(String menuValue) {
-        return sessionService.getMapValue(SessionKey.MENU_CODE_MAP + eruptContextService.getCurrentToken(), menuValue, EruptMenu.class);
-    }
-
     //当前用户菜单中，通过菜单类型值获取菜单
     public EruptMenu getEruptMenuByValue(String menuValue) {
-        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken(), menuValue, EruptMenu.class);
+        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken(), menuValue.toLowerCase(), EruptMenu.class);
     }
 
     //获取当前用户ID

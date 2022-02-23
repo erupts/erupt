@@ -139,7 +139,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
-                if (!authStr.equals(eruptModel.getEruptName())) {
+                if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
                     response.setStatus(HttpStatus.NOT_FOUND.value());
                     return false;
                 }
