@@ -12,9 +12,11 @@ import xyz.erupt.bi.model.*;
 import xyz.erupt.bi.service.BiService;
 import xyz.erupt.bi.view.*;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.util.*;
+import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
@@ -120,6 +122,7 @@ public class EruptBiController {
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
             this.put("code", code);
         }});
+        this.validateQuery(bi, query);
         biService.verifyBiMenuPermissions(bi, code);
         return biService.queryBiData(bi, pageIndex, pageSize, query, false);
     }
@@ -155,6 +158,7 @@ public class EruptBiController {
                                              @PathVariable String code) {
         BiChart chart = entityManager.find(BiChart.class, chartId);
         biService.verifyBiMenuPermissions(chart.getBi(), code);
+        this.validateQuery(chart.getBi(), query);
         return biService.startQuery(chart.getSqlStatement(), chart.getCacheTime(), chart.getClassHandler(), chart.getDataSource(), query);
     }
 
@@ -162,14 +166,15 @@ public class EruptBiController {
     @RequestMapping("/{code}/excel/{id}")
     public void exportExcel(@PathVariable("id") Long id,
                             @PathVariable("code") String code,
-                            @RequestBody Map<String, Object> condition,
+                            @RequestBody Map<String, Object> query,
                             HttpServletRequest request,
                             HttpServletResponse response) throws ClassNotFoundException, IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         Bi bi = biService.findBi(id);
+        this.validateQuery(bi, query);
         biService.verifyBiMenuPermissions(bi, code);
         Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
-        BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, condition, true);
+        BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, query, true);
         Workbook wb = new SXSSFWorkbook();
         //基本信息
         Sheet sheet = wb.createSheet(bi.getName());
@@ -209,9 +214,19 @@ public class EruptBiController {
         if (null != bi.getClassHandler()) {
             BiClassHandler biClassHandler = bi.getClassHandler();
             EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
-            biHandler.exportHandler(biClassHandler.getParam(), condition, wb);
+            biHandler.exportHandler(biClassHandler.getParam(), query, wb);
         }
         wb.write(EruptUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLSX_FORMAT));
+    }
+
+    //校验查询参数
+    private void validateQuery(Bi bi, Map<String, Object> query) {
+        for (BiDimension dimension : bi.getBiDimension()) {
+            if (dimension.getNotNull()) {
+                Optional.ofNullable(query.get(dimension.getCode())).orElseThrow(() ->
+                        new EruptApiErrorTip(EruptApiModel.Status.WARNING, dimension.getTitle() + "必填！", EruptApiModel.PromptWay.MESSAGE));
+            }
+        }
     }
 
 }

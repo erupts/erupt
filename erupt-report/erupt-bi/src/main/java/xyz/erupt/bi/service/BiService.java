@@ -155,6 +155,7 @@ public class BiService {
     }
 
     private static final String TOTAL_KEY = "count";
+
     @Resource
     private EruptDao eruptDao;
 
