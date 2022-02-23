@@ -223,8 +223,10 @@ public class EruptBiController {
     private void validateQuery(Bi bi, Map<String, Object> query) {
         for (BiDimension dimension : bi.getBiDimension()) {
             if (dimension.getNotNull()) {
-                Optional.ofNullable(query.get(dimension.getCode())).orElseThrow(() ->
-                        new EruptApiErrorTip(EruptApiModel.Status.WARNING, dimension.getTitle() + "必填！", EruptApiModel.PromptWay.MESSAGE));
+                if (null == query || null == query.get(dimension.getCode())) {
+                    throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, dimension.getTitle() + "必填！",
+                            EruptApiModel.PromptWay.MESSAGE);
+                }
             }
         }
     }

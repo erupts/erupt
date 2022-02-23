@@ -19,7 +19,8 @@ public class ChartType implements ChoiceFetchHandler {
     @Override
     public List<VLModel> fetch(String[] params) {
         List<VLModel> list = new ArrayList<>();
-        list.add(new VLModel(TABLE,"数据表","返回任意列数"));
+        list.add(new VLModel(TABLE, "数据表", "返回任意列数"));
+        list.add(new VLModel(TPL, "组件模板"));
         return list;
     }
 }
