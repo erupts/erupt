@@ -1,10 +1,12 @@
 package xyz.erupt.upms.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
@@ -19,6 +21,8 @@ import xyz.erupt.upms.util.UPMSUtil;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,6 +44,16 @@ public class UpmsDataLoadService implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) {
+        Optional.ofNullable(eruptDao.getJdbcTemplate()
+                .queryForObject("select count(*) from e_upms_user", Integer.class)).ifPresent(it -> {
+            if (it <= 0) {
+                try {
+                    FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/" + EruptConst.ERUPT_DIR));
+                } catch (IOException e) {
+                    log.error("Table 'e_upms_user' no user data. Re-initialization failed ：" + e.getMessage());
+                }
+            }
+        });
         EruptModuleInvoke.invoke(module -> Optional.ofNullable(module.initMenus()).ifPresent(metaMenus ->
                 new ProjectUtil().projectStartLoaded(module.info().getName(), first -> {
                     if (first) {
