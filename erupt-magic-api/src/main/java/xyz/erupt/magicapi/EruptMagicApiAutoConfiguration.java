@@ -29,9 +29,9 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
 
     public static final String MAGIC_API_MENU_PREFIX = "ERUPT_MAGIC_";
 
-    public static final String DATASOURCE = "datasource";
+    public static final String DATASOURCE = "DATASOURCE";
 
-    public static final String FUNCTION = "function";
+    public static final String FUNCTION = "FUNCTION";
 
     static {
         EruptModuleInvoke.addEruptModule(EruptMagicApiAutoConfiguration.class);
@@ -57,8 +57,8 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
         AtomicInteger sort = new AtomicInteger();
         List<MetaMenu> metaMenus = new ArrayList<>();
         metaMenus.add(MetaMenu.createSimpleMenu(menuKey, "接口配置", MagicApiTpl.MAGIC_API_PERMISSION, null, 50, EruptTplService.TPL));
-        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + FUNCTION, "函数", MAGIC_API_MENU_PREFIX + FUNCTION.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
-        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + DATASOURCE, "数据源", MAGIC_API_MENU_PREFIX + DATASOURCE.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + FUNCTION.toLowerCase(), "函数", MAGIC_API_MENU_PREFIX + FUNCTION.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu(menuKey + "-" + DATASOURCE.toLowerCase(), "数据源", MAGIC_API_MENU_PREFIX + DATASOURCE.toUpperCase(), metaMenus.get(0), sort.addAndGet(10), MenuTypeEnum.BUTTON.getCode()));
         menus.forEach((key, value) -> metaMenus.add(MetaMenu.createSimpleMenu(
                 menuKey + "-" + key.name().toLowerCase(), value,
                 MAGIC_API_MENU_PREFIX + key.name(),

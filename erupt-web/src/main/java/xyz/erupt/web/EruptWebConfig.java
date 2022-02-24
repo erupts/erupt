@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author YuePeng
  * date 2021/3/28 18:51
@@ -13,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class EruptWebConfig {
 
     @RequestMapping("/")
-    public String index() {
+    public String index(HttpServletResponse response) {
+        response.setHeader("Expires","0");
+        response.setHeader("Pragma","no-cache");
+        response.setHeader("Cache-Control","no-cache");
         return "forward:index.html?v=" + EruptWebConfig.class.hashCode();
     }
 

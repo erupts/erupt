@@ -117,7 +117,6 @@ public class EruptUserController {
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
         sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
-        sessionService.remove(SessionKey.MENU_CODE_MAP + token);
         sessionService.remove(SessionKey.MENU_VIEW + token);
         sessionService.remove(SessionKey.USER_TOKEN + token);
         return EruptApiModel.successApi();
@@ -143,9 +142,9 @@ public class EruptUserController {
     @RequestMapping("/code-img")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("image/jpeg"); // 设置响应的类型格式为图片格式
+        response.setDateHeader("Expires", 0);
         response.setHeader("Pragma", "no-cache"); // 禁止图像缓存。
         response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
         Captcha captcha = new SpecCaptcha(150, 38, 4);
         sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60, TimeUnit.SECONDS);
         captcha.out(response.getOutputStream());
