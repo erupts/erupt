@@ -16,8 +16,6 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
 
     private final AnnotationProxy<Edit, EruptField> editAnnotationProxy = new EditProxy();
 
-    private final AnnotationProxy<View, EruptField> viewAnnotationProxy = new ViewProxy();
-
     @Override
     @SneakyThrows
     protected Object invocation(MethodInvocation invocation) {
@@ -31,7 +29,7 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
                 View[] proxyViews = new View[views.length];
                 for (int i = 0; i < views.length; i++) {
                     proxyViews[i] = AnnotationProxyPool.getOrPut(views[i], annotation ->
-                            viewAnnotationProxy.newProxy(annotation, this, this.field)
+                            new ViewProxy().newProxy(annotation, this, this.field)
                     );
                 }
                 return proxyViews;

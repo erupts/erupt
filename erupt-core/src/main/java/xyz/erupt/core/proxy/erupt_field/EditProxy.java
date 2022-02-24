@@ -7,7 +7,6 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.AnnotationProxyPool;
 import xyz.erupt.core.proxy.erupt.FilterProxy;
@@ -20,10 +19,6 @@ import xyz.erupt.core.util.TypeUtil;
  * date 2022/2/6 10:13
  */
 public class EditProxy extends AnnotationProxy<Edit, EruptField> {
-
-    private final AnnotationProxy<Filter, Edit> filterProxy = new FilterProxy<>();
-
-    private final AnnotationProxy<Readonly, Edit> readonlyProxy = new ReadonlyProxy();
 
     @Override
     @SneakyThrows
@@ -50,13 +45,13 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
                 Filter[] proxyFilters = new Filter[filters.length];
                 for (int i = 0; i < filters.length; i++) {
                     proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter ->
-                            filterProxy.newProxy(filter, this, this.clazz)
+                            new FilterProxy<Edit>().newProxy(filter, this, this.clazz)
                     );
                 }
                 return proxyFilters;
             case "readonly":
                 return AnnotationProxyPool.getOrPut(this.rawAnnotation.readonly(), readonly ->
-                        readonlyProxy.newProxy(readonly, this, this.clazz)
+                        new ReadonlyProxy().newProxy(readonly, this, this.clazz)
                 );
         }
         return this.invoke(invocation);
