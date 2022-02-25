@@ -2,18 +2,24 @@ package xyz.erupt.upms.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.upms.handler.RoleMenuFilter;
-import xyz.erupt.upms.looker.LookerSelf;
+import xyz.erupt.upms.helper.HyperModelCreatorVo;
+import xyz.erupt.upms.service.EruptUserService;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,11 +30,12 @@ import java.util.Set;
 @Table(name = "e_upms_role", uniqueConstraints = {
         @UniqueConstraint(columnNames = "code")
 })
-@Erupt(name = "角色管理")
+@Erupt(name = "角色管理", dataProxy = EruptRole.class)
 @EruptI18n
 @Getter
 @Setter
-public class EruptRole extends LookerSelf {
+@Component
+public class EruptRole extends HyperModelCreatorVo implements DataProxy<EruptRole> {
 
     @EruptField(
             views = @View(title = "编码", width = "100px"),
@@ -67,5 +74,15 @@ public class EruptRole extends LookerSelf {
             )
     )
     private Set<EruptMenu> menus;
+
+    @Resource
+    @Transient
+    private EruptUserService eruptUserService;
+
+    @Override
+    public String beforeFetch(List<Condition> conditions) {
+        if (eruptUserService.getCurrentEruptUser().getIsAdmin()) return null;
+        return "EruptRole.createUser.id = " + eruptUserService.getCurrentUid();
+    }
 
 }
