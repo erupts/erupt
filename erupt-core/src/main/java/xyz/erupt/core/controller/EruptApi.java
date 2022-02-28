@@ -22,7 +22,6 @@ public class EruptApi {
 
     private final EruptAppProp eruptAppProp;
 
-    //获取当前Erupt版本号
     @GetMapping("/version")
     public String version() {
         return EruptInformation.getEruptVersion();
