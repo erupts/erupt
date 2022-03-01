@@ -305,6 +305,7 @@ public class EruptUtil {
             boolean readonly = sceneEnum == SceneEnum.EDIT ? eruptField.edit().readonly().edit() : eruptField.edit().readonly().add();
             if (StringUtils.isNotBlank(eruptField.edit().title()) && !readonly) {
                 try {
+                    f.setAccessible(true);
                     if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
                         Collection<?> s = (Collection<?>) f.get(target);
                         if (null == s) {
