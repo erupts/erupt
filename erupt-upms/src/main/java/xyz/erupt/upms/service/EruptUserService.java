@@ -228,6 +228,14 @@ public class EruptUserService {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken(), menuValue.toLowerCase(), EruptMenu.class);
     }
 
+    public List<String> getEruptMenuValues() {
+        return sessionService.getMapKeys(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken());
+    }
+
+    public Map<String, Boolean> getEruptMenuValuesMap() {
+        return getEruptMenuValues().stream().collect(Collectors.toMap(it -> it, it -> true));
+    }
+
     //获取当前用户ID
     public Long getCurrentUid() {
         AdminUserinfo adminUserinfo = getSimpleUserInfo();

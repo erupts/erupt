@@ -10,8 +10,12 @@ import xyz.erupt.core.prop.EruptProp;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -90,6 +94,19 @@ public class EruptSessionService {
 //        }
 //    }
 
+    //获取map的所有key
+    public List<String> getMapKeys(String key) {
+        if (eruptProp.isRedisSession()) {
+            Set<Object> set = stringRedisTemplate.opsForHash().keys(key);
+            return set.stream().map(Object::toString).collect(Collectors.toList());
+        } else {
+            Map<String, Object> map = (Map<String, Object>) request.getSession().getAttribute(key);
+            if (null == map) {
+                return null;
+            }
+            return new ArrayList<>(map.keySet());
+        }
+    }
 
     public <T> T getMapValue(String key, String mapKey, Class<T> type) {
         if (eruptProp.isRedisSession()) {
