@@ -263,7 +263,6 @@ public class EruptUtil {
                     return eam;
                 }
             }
-
             if (null != value) {
                 //xss 注入处理
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
@@ -289,7 +288,6 @@ public class EruptUtil {
                             }
                         }
                         break;
-
                 }
             }
         }
@@ -297,38 +295,33 @@ public class EruptUtil {
     }
 
     public static Object toEruptId(EruptModel eruptModel, String id) {
-        Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz()
-                , eruptModel.getErupt().primaryKeyCol());
+        Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol());
         return TypeUtil.typeStrConvertObject(id, primaryField.getType());
     }
 
     //将对象A的非空数据源覆盖到对象B中
     public static Object dataTarget(EruptModel eruptModel, Object data, Object target, SceneEnum sceneEnum) {
-        ReflectUtil.findClassAllFields(eruptModel.getClazz(), (field) -> {
-            EruptField eruptField = field.getAnnotation(EruptField.class);
-            if (null != eruptField) {
-                boolean readonly = sceneEnum == SceneEnum.EDIT ? eruptField.edit().readonly().edit() : eruptField.edit().readonly().add();
-                if (StringUtils.isNotBlank(eruptField.edit().title()) && !readonly) {
-                    try {
-                        Field f = ReflectUtil.findClassField(eruptModel.getClazz(), field.getName());
-                        if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
-                            Collection<?> s = (Collection<?>) f.get(target);
-                            if (null == s) {
-                                f.set(target, f.get(data));
-                            } else {
-                                s.clear();
-                                s.addAll((Collection) f.get(data));
-                                f.set(target, s);
-                            }
-                        } else {
+        ReflectUtil.findClassAllFields(eruptModel.getClazz(), f -> Optional.ofNullable(f.getAnnotation(EruptField.class)).ifPresent(eruptField -> {
+            boolean readonly = sceneEnum == SceneEnum.EDIT ? eruptField.edit().readonly().edit() : eruptField.edit().readonly().add();
+            if (StringUtils.isNotBlank(eruptField.edit().title()) && !readonly) {
+                try {
+                    if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
+                        Collection<?> s = (Collection<?>) f.get(target);
+                        if (null == s) {
                             f.set(target, f.get(data));
+                        } else {
+                            s.clear();
+                            s.addAll((Collection) f.get(data));
+                            f.set(target, s);
                         }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                    } else {
+                        f.set(target, f.get(data));
                     }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
             }
-        });
+        }));
         return target;
     }
 
@@ -355,10 +348,7 @@ public class EruptUtil {
      */
     public static AttachmentProxy findAttachmentProxy() {
         EruptAttachmentUpload eruptAttachmentUpload = EruptApplication.getPrimarySource().getAnnotation(EruptAttachmentUpload.class);
-        if (null != eruptAttachmentUpload) {
-            return EruptSpringUtil.getBean(eruptAttachmentUpload.value());
-        }
-        return null;
+        return null == eruptAttachmentUpload ? null : EruptSpringUtil.getBean(eruptAttachmentUpload.value());
     }
 
     //是否为时间字段
