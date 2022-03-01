@@ -22,18 +22,18 @@ public class MetaContext {
     private static MetaContext get() {
         return Optional.ofNullable(threadLocal.get()).orElseGet(() -> {
             MetaContext metaContext = new MetaContext();
-            metaContext.setMetaErupt(MetaErupt.builder().build());
+            metaContext.setMetaErupt(new MetaErupt());
             metaContext.setMetaUser(new MetaUser());
             return metaContext;
         });
     }
 
     public static MetaErupt getErupt() {
-        return get().getMetaErupt();
+        return Optional.ofNullable(get().getMetaErupt()).orElse(new MetaErupt());
     }
 
     public static MetaUser getUser() {
-        return get().getMetaUser();
+        return Optional.ofNullable(get().getMetaUser()).orElse(new MetaUser());
     }
 
     //注册erupt上下文
