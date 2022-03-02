@@ -9,6 +9,7 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
@@ -40,8 +41,6 @@ import java.time.LocalDateTime;
 public class EruptMenu extends MetaModel {
 
     public static final String CODE = "code";
-
-    private String code;
 
     @EruptField(
             views = @View(title = "名称"),
@@ -102,6 +101,13 @@ public class EruptMenu extends MetaModel {
             )
     )
     private String icon;
+
+    @EruptField(
+            edit = @Edit(
+                    title = "编码", readonly = @Readonly
+            )
+    )
+    private String code;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
