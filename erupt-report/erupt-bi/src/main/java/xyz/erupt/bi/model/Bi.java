@@ -22,6 +22,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.core.constant.MenuStatus;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
@@ -162,6 +163,9 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     @Override
     @Transactional
     public String exec(List<Bi> data, BiReleaseModal biReleaseModal, String[] param) {
+        if (!eruptUserService.getSimpleUserInfo().isSuperAdmin()) {
+            throw new EruptWebApiRuntimeException("报表发布请联系 '超级管理员' 操作！");
+        }
         Bi bi = data.get(0);
         Erupts.requireNull(eruptDao.queryEntity(EruptMenu.class, String.format("code = '%s'", bi.getCode())),
                 "菜单已存在请勿重复发布");
