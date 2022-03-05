@@ -19,36 +19,44 @@ public class MetaContext {
 
     private MetaUser metaUser;
 
-    private static MetaContext get() {
+    private String token;
+
+    private static MetaContext getContext() {
         return Optional.ofNullable(threadLocal.get()).orElseGet(() -> {
             MetaContext metaContext = new MetaContext();
             metaContext.setMetaErupt(new MetaErupt());
             metaContext.setMetaUser(new MetaUser());
+            threadLocal.set(metaContext);
             return metaContext;
         });
     }
 
     public static MetaErupt getErupt() {
-        return Optional.ofNullable(get().getMetaErupt()).orElse(new MetaErupt());
+        return Optional.ofNullable(getContext().metaErupt).orElse(new MetaErupt());
     }
 
     public static MetaUser getUser() {
-        return Optional.ofNullable(get().getMetaUser()).orElse(new MetaUser());
+        return Optional.ofNullable(getContext().metaUser).orElse(new MetaUser());
+    }
+
+    public static String getToken() {
+        return getContext().token;
     }
 
     //注册erupt上下文
     public static void register(MetaErupt metaErupt) {
-        MetaContext metaContext = Optional.ofNullable(threadLocal.get()).orElse(new MetaContext());
-        metaContext.setMetaErupt(metaErupt);
-        threadLocal.set(metaContext);
+        getContext().setMetaErupt(metaErupt);
     }
 
     //注册用户上下文
     public static void register(MetaUser metaUser) {
-        MetaContext metaContext = Optional.ofNullable(threadLocal.get()).orElse(new MetaContext());
-        metaContext.setMetaUser(metaUser);
-        threadLocal.set(metaContext);
+        getContext().setMetaUser(metaUser);
     }
+
+    public static void registerToken(String token) {
+        getContext().setToken(token);
+    }
+
 
     public static void remove() {
         threadLocal.remove();
