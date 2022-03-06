@@ -1,4 +1,4 @@
-package xyz.erupt.core.controller;
+package xyz.erupt.core.controller.advice;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class EruptRuntimeExceptionAdvice {
 
     @ResponseBody
     @ExceptionHandler(RuntimeException.class)
-    public Map<String, Object> eruptWebApiRuntimeException(Exception e, HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> eruptRuntimeException(Exception e, HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         Map<String, Object> map = new HashMap<>();
         map.put("error", "erupt runtime exception");
