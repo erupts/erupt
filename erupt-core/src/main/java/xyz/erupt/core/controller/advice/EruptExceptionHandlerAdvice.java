@@ -1,4 +1,4 @@
-package xyz.erupt.core.controller;
+package xyz.erupt.core.controller.advice;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -25,18 +25,23 @@ import java.util.Map;
 @Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class EruptExceptionHandlerAdvice {
 
+
     @ResponseBody
     @ExceptionHandler(EruptWebApiRuntimeException.class)
-    public Map<String, Object> eruptWebApiRuntimeException(Exception e, HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> eruptWebApiRuntimeException(EruptWebApiRuntimeException e, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        map.put("error", "erupt web api error");
-        map.put("message", e.getMessage());
-        map.put("timestamp", new Date());
-        map.put("path", request.getServletPath());
-        map.put("status", response.getStatus());
-        e.printStackTrace();
-        return map;
+        if (e.isPrintStackTrace()) e.printStackTrace();
+        if (null == e.getErrorMap()) {
+            map.put("error", "erupt web api error");
+            map.put("message", e.getMessage());
+            map.put("timestamp", new Date());
+            map.put("path", request.getServletPath());
+            map.put("status", response.getStatus());
+            return map;
+        } else {
+            return e.getErrorMap();
+        }
     }
 
     @ExceptionHandler(EruptApiErrorTip.class)
