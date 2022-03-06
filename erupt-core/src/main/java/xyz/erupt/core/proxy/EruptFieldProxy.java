@@ -8,6 +8,9 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.proxy.erupt_field.EditProxy;
 import xyz.erupt.core.proxy.erupt_field.ViewProxy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author YuePeng
  * date 2022/2/5 14:19
@@ -26,13 +29,13 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
                 );
             case "views":
                 View[] views = this.rawAnnotation.views();
-                View[] proxyViews = new View[views.length];
-                for (int i = 0; i < views.length; i++) {
-                    proxyViews[i] = AnnotationProxyPool.getOrPut(views[i], annotation ->
+                List<View> proxyViews = new ArrayList<>();
+                for (View view : views) {
+                    proxyViews.add(AnnotationProxyPool.getOrPut(view, annotation ->
                             new ViewProxy().newProxy(annotation, this, this.field)
-                    );
+                    ));
                 }
-                return proxyViews;
+                return proxyViews.toArray(new View[0]);
         }
         return this.invoke(invocation);
     }
