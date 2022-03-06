@@ -46,13 +46,15 @@ public class EruptProxy extends AnnotationProxy<Erupt, Void> {
                 return proxyOperations.toArray(new RowOperation[0]);
             case "drills":
                 Drill[] drills = this.rawAnnotation.drills();
-                Drill[] proxyDrills = new Drill[drills.length];
-                for (int i = 0; i < drills.length; i++) {
-                    proxyDrills[i] = AnnotationProxyPool.getOrPut(drills[i], it ->
-                            new DrillProxy().newProxy(it, this, this.clazz)
-                    );
+                List<Drill> proxyDrills = new ArrayList<>();
+                for (Drill drill : drills) {
+                    if (ExprInvoke.getExpr(drill.show())) {
+                        proxyDrills.add(AnnotationProxyPool.getOrPut(drill, it ->
+                                new DrillProxy().newProxy(it, this, this.clazz)
+                        ));
+                    }
                 }
-                return proxyDrills;
+                return proxyDrills.toArray(new Drill[0]);
         }
         return this.invoke(invocation);
     }
