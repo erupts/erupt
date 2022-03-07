@@ -7,6 +7,7 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptMenu;
 
@@ -21,6 +22,7 @@ public class BiReleaseModal extends BaseModel {
 
     @EruptField(
             edit = @Edit(
+                    search = @Search,
                     title = "菜单位置", desc = "发布至根目录可跳过此选项", type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
             )
