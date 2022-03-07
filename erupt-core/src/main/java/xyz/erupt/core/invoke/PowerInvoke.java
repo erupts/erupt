@@ -24,11 +24,15 @@ public class PowerInvoke {
     //动态获取erupt power值
     public static PowerObject getPowerObject(EruptModel eruptModel) {
         Power power = eruptModel.getErupt().power();
-        PowerObject powerBean = new PowerObject(power);
         if (eruptModel.getErupt().authVerify()) {
-            powerHandlerStack.forEach(ph -> EruptSpringUtil.getBean(ph).handler(powerBean));
+            PowerObject powerBean = new PowerObject(power);
+            if (eruptModel.getErupt().authVerify()) {
+                powerHandlerStack.forEach(ph -> EruptSpringUtil.getBean(ph).handler(powerBean));
+            }
+            if (!power.powerHandler().isInterface()) EruptSpringUtil.getBean(power.powerHandler()).handler(powerBean);
+            return powerBean;
+        } else {
+            return new PowerObject(power);
         }
-        if (!power.powerHandler().isInterface()) EruptSpringUtil.getBean(power.powerHandler()).handler(powerBean);
-        return powerBean;
     }
 }

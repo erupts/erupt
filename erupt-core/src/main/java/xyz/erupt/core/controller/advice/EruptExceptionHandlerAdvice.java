@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -28,20 +29,17 @@ public class EruptExceptionHandlerAdvice {
 
     @ResponseBody
     @ExceptionHandler(EruptWebApiRuntimeException.class)
-    public Map<String, Object> eruptWebApiRuntimeException(EruptWebApiRuntimeException e, HttpServletRequest request, HttpServletResponse response) {
+    public Object eruptWebApiRuntimeException(EruptWebApiRuntimeException e, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         if (e.isPrintStackTrace()) e.printStackTrace();
-        if (null == e.getErrorMap()) {
-            map.put("error", "erupt web api error");
-            map.put("message", e.getMessage());
-            map.put("timestamp", new Date());
-            map.put("path", request.getServletPath());
-            map.put("status", response.getStatus());
-            return map;
-        } else {
-            return e.getErrorMap();
-        }
+        map.put("error", "erupt web api error");
+        map.put("message", e.getMessage());
+        map.put("timestamp", new Date());
+        map.put("path", request.getServletPath());
+        map.put("status", response.getStatus());
+        Optional.ofNullable(e.getExtraMap()).ifPresent(map::putAll);
+        return map;
     }
 
     @ExceptionHandler(EruptApiErrorTip.class)
