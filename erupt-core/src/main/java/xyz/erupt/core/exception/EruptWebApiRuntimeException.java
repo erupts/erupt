@@ -13,7 +13,8 @@ public class EruptWebApiRuntimeException extends RuntimeException {
 
     private boolean printStackTrace;
 
-    private Map<String, Object> errorMap;
+    //异常信息扩展
+    private Map<String, Object> extraMap;
 
     public EruptWebApiRuntimeException(String message) {
         this(message, true);
@@ -24,12 +25,13 @@ public class EruptWebApiRuntimeException extends RuntimeException {
         this.printStackTrace = printStackTrace;
     }
 
-    public EruptWebApiRuntimeException(Map<String, Object> errorMap, boolean printStackTrace) {
+    public EruptWebApiRuntimeException(Map<String, Object> extraMap, boolean printStackTrace) {
         this.printStackTrace = printStackTrace;
-        this.errorMap = errorMap;
+        this.extraMap = extraMap;
     }
 
     public EruptWebApiRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }
