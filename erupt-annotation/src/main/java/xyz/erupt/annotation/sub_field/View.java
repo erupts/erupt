@@ -26,9 +26,11 @@ public @interface View {
 
     boolean show() default true;
 
+    @Comment("排序列")
     boolean sortable() default false;
 
     @Transient
+    @Comment("导出列")
     boolean export() default true;
 
     @Comment("样式类名")

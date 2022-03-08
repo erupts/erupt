@@ -2,10 +2,8 @@ package xyz.erupt.jpa.service;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
-import org.springframework.core.annotation.Order;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
@@ -27,8 +25,7 @@ import java.util.function.Function;
  * date 2020-01-13
  */
 @Service
-@Order
-public class EntityManagerService implements ApplicationRunner {
+public class EntityManagerService implements DisposableBean {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -36,14 +33,12 @@ public class EntityManagerService implements ApplicationRunner {
     @Resource
     private EruptProp eruptProp;
 
-    private Map<String, EntityManagerFactory> entityManagerMap;
+    private final Map<String, EntityManagerFactory> entityManagerFactoryMap = new HashMap<>();
 
-    @Override
-    public void run(ApplicationArguments args) {
-        if (null != eruptProp.getDbs()) {
-            //多数据源处理
-            entityManagerMap = new HashMap<>();
-            for (EruptPropDb prop : eruptProp.getDbs()) {
+    private synchronized EntityManagerFactory getEntityManagerFactory(String dbName) {
+        if (entityManagerFactoryMap.containsKey(dbName)) return entityManagerFactoryMap.get(dbName);
+        for (EruptPropDb prop : eruptProp.getDbs()) {
+            if (dbName.equals(prop.getDatasource().getName())) {
                 Objects.requireNonNull(prop.getDatasource().getName(), "dbs configuration Must specify name → dbs.datasource.name");
                 Objects.requireNonNull(prop.getScanPackages(), String.format("%s DataSource not found 'scanPackages' configuration", prop.getDatasource().getName()));
                 LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
@@ -70,16 +65,18 @@ public class EntityManagerService implements ApplicationRunner {
                     factory.setPackagesToScan(prop.getScanPackages());
                     factory.afterPropertiesSet();
                 }
-                entityManagerMap.put(prop.getDatasource().getName(), factory.getObject());
+                entityManagerFactoryMap.put(prop.getDatasource().getName(), factory.getObject());
+                return factory.getObject();
             }
         }
+        throw new RuntimeException("Failed to match data source '" + dbName + "'");
     }
 
 
     public <R> R getEntityManager(Class<?> eruptClass, Function<EntityManager, R> function) {
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) return function.apply(entityManager);
-        EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
+        EntityManager em = this.getEntityManagerFactory(eruptDataSource.value()).createEntityManager();
         try {
             return function.apply(em);
         } finally {
@@ -94,7 +91,7 @@ public class EntityManagerService implements ApplicationRunner {
             consumer.accept(entityManager);
             return;
         }
-        EntityManager em = entityManagerMap.get(eruptDataSource.value()).createEntityManager();
+        EntityManager em = this.getEntityManagerFactory(eruptDataSource.value()).createEntityManager();
         try {
             em.getTransaction().begin();
             consumer.accept(em);
@@ -109,6 +106,15 @@ public class EntityManagerService implements ApplicationRunner {
 
     @Comment("必须手动执行 close() 方法")
     public EntityManager findEntityManager(String name) {
-        return entityManagerMap.get(name).createEntityManager();
+        return this.getEntityManagerFactory(name).createEntityManager();
     }
+
+
+    @Override
+    public void destroy() throws Exception {
+        for (EntityManagerFactory value : entityManagerFactoryMap.values()) {
+            value.close();
+        }
+    }
+
 }

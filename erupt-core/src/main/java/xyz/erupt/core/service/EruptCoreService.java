@@ -23,6 +23,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author YuePeng
@@ -85,11 +86,6 @@ public class EruptCoreService implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-//        try {
-//            Class.forName("org.springframework.boot.devtools.RemoteSpringApplication", false, EruptCoreService.class.getClassLoader());
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException("");
-//        }
         TimeRecorder totalRecorder = new TimeRecorder();
         TimeRecorder timeRecorder = new TimeRecorder();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
@@ -99,25 +95,33 @@ public class EruptCoreService implements ApplicationRunner {
             ERUPTS.put(clazz.getSimpleName(), eruptModel);
             ERUPT_LIST.add(eruptModel);
         });
+        log.info("<" + repeat("===", 20) + ">");
+        AtomicInteger moduleMaxCharLength = new AtomicInteger();
+        EruptModuleInvoke.invoke(it -> {
+            int length = it.info().getName().length();
+            if (length > moduleMaxCharLength.get()) {
+                moduleMaxCharLength.set(length);
+            }
+        });
         EruptModuleInvoke.invoke(it -> {
             it.run();
             MODULES.add(it.info().getName());
-            log.info("🚀 -> {} module initialization completed in {}ms",
-                    fillCharacter(it.info().getName(), EruptModuleInvoke.moduleNum() > 1 ? 18 : 0),
-                    timeRecorder.recorder());
+            String moduleName = fillCharacter(it.info().getName(), moduleMaxCharLength.get());
+            log.info("🚀 -> {} module initialization completed in {}ms", moduleName, timeRecorder.recorder());
         });
+        log.info("Erupt modules : " + MODULES.size());
+        log.info("Erupt classes : " + ERUPTS.size());
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
+        log.info("<" + repeat("===", 20) + ">");
     }
 
     private String fillCharacter(String character, int targetWidth) {
-        return character + repeat(targetWidth - character.length());
+        return character + repeat(" ", targetWidth - character.length());
     }
 
-    private String repeat(int num) {
+    private String repeat(String space, int num) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < num; i++) {
-            sb.append(" ");
-        }
+        for (int i = 0; i < num; i++) sb.append(space);
         return sb.toString();
     }
 }

@@ -87,6 +87,29 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     }
 
     @Override
+    public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, ApiInfo apiInfo) {
+        return AuthorizationInterceptor.super.allowVisit(magicUser, request, authorization, apiInfo);
+    }
+
+    @Override
+    public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, Group group) {
+        if (group.getOptions().size() > 0) {
+            AdminUserinfo adminUserInfo = eruptUserService.getSimpleUserInfo();
+            for (BaseDefinition option : group.getOptions()) {
+                if (null != option.getValue() && StringUtils.isNotBlank(option.getValue().toString())) {
+                    if (Options.ROLE.getValue().equals(option.getName())) {
+                        return adminUserInfo.getRoles().stream().anyMatch(it -> it.equals(option.getValue()));
+                    } else if (Options.PERMISSION.getValue().equals(option.getName())) {
+                        return null != eruptUserService.getEruptMenuByValue(option.getValue().toString());
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    //数据源
+    @Override
     public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, DataSourceInfo dataSourceInfo) {
         if (Authorization.SAVE == authorization || Authorization.DELETE == authorization) {
             return eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + EruptMagicApiAutoConfiguration.DATASOURCE) != null;
@@ -94,6 +117,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         return true;
     }
 
+    //函数
     @Override
     public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, FunctionInfo functionInfo) {
         if (Authorization.SAVE == authorization || Authorization.DELETE == authorization) {
