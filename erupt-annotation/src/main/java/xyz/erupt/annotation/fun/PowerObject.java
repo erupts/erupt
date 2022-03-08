@@ -35,4 +35,8 @@ public class PowerObject {
         this.export = power.export();
         this.importable = power.importable();
     }
+
+    public PowerObject() {
+
+    }
 }

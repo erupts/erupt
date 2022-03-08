@@ -17,8 +17,6 @@ public class MetaUser {
 
     private String name; //用户姓名
 
-
-
     public MetaUser(String uid, String account, String name) {
         this.uid = uid;
         this.account = account;

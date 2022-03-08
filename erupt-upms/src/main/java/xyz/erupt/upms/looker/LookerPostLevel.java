@@ -26,7 +26,6 @@ import javax.annotation.Resource;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
 
@@ -35,11 +34,10 @@ import java.util.List;
  * date 2021/3/10 11:30
  */
 @MappedSuperclass
-@PreDataProxy(LookerPostLevel.class)
-@Component
+@PreDataProxy(LookerPostLevel.Comp.class)
 @Getter
 @Setter
-public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLevel> {
+public class LookerPostLevel extends BaseModel {
 
     @ManyToOne
     @EruptField(
@@ -68,36 +66,40 @@ public class LookerPostLevel extends BaseModel implements DataProxy<LookerPostLe
     @EruptSmartSkipSerialize
     private EruptUser updateUser;
 
-    @Resource
-    @Transient
-    private EruptUserService eruptUserService;
+    @Component
+    static class Comp implements DataProxy<LookerPostLevel> {
 
-    @Resource
-    @Transient
-    private I18NTranslateService i18NTranslateService;
+        @Resource
+        private EruptUserService eruptUserService;
 
-    @Override
-    public String beforeFetch(List<Condition> conditions) {
-        EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
-        if (eruptUser.getIsAdmin()) return null;
-        if (null == eruptUser.getEruptOrg() || null == eruptUser.getEruptPost()) {
-            throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + i18NTranslateService.translate("未绑定的岗位无法查看数据"));
+        @Resource
+        private I18NTranslateService i18NTranslateService;
+
+        @Override
+        public String beforeFetch(List<Condition> conditions) {
+            EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
+            if (eruptUser.getIsAdmin()) return null;
+            if (null == eruptUser.getEruptOrg() || null == eruptUser.getEruptPost()) {
+                throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + i18NTranslateService.translate("未绑定的岗位无法查看数据"));
+            }
+            String eruptName = MetaContext.getErupt().getName();
+            return "(" + eruptName + ".createUser.id = " + eruptUserService.getCurrentUid()
+                    + " or " + eruptName + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
+                    + eruptName + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
         }
-        String eruptName = MetaContext.getErupt().getName();
-        return "(" + eruptName + ".createUser.id = " + eruptUserService.getCurrentUid()
-                + " or " + eruptName + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
-                + eruptName + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";
+
+        @Override
+        public void beforeAdd(LookerPostLevel lookerPostLevel) {
+            lookerPostLevel.setCreateTime(new Date());
+            lookerPostLevel.setCreateUser(new EruptUserPostVo(eruptUserService.getCurrentUid()));
+        }
+
+        @Override
+        public void beforeUpdate(LookerPostLevel lookerPostLevel) {
+            lookerPostLevel.setUpdateTime(new Date());
+            lookerPostLevel.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
+        }
     }
 
-    @Override
-    public void beforeAdd(LookerPostLevel lookerPostLevel) {
-        lookerPostLevel.setCreateTime(new Date());
-        lookerPostLevel.setCreateUser(new EruptUserPostVo(eruptUserService.getCurrentUid()));
-    }
 
-    @Override
-    public void beforeUpdate(LookerPostLevel lookerPostLevel) {
-        lookerPostLevel.setUpdateTime(new Date());
-        lookerPostLevel.setUpdateUser(new EruptUser(eruptUserService.getCurrentUid()));
-    }
 }

@@ -10,6 +10,7 @@ import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.UPMSUtil;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * 全局菜单权限控制
@@ -29,28 +30,29 @@ public class UpmsPowerHandler implements PowerHandler {
 
     @Override
     public void handler(PowerObject power) {
+        Map<String, Boolean> permissionMap = eruptUserService.getEruptMenuValuesMap();
         if (power.isAdd()) {
-            power.setAdd(powerOff(EruptFunPermissions.ADD));
+            power.setAdd(powerOff(EruptFunPermissions.ADD, permissionMap));
         }
         if (power.isDelete()) {
-            power.setDelete(powerOff(EruptFunPermissions.DELETE));
+            power.setDelete(powerOff(EruptFunPermissions.DELETE, permissionMap));
         }
         if (power.isEdit()) {
-            power.setEdit(powerOff(EruptFunPermissions.EDIT));
+            power.setEdit(powerOff(EruptFunPermissions.EDIT, permissionMap));
         }
         if (power.isViewDetails()) {
-            power.setViewDetails(powerOff(EruptFunPermissions.VIEW_DETAIL));
+            power.setViewDetails(powerOff(EruptFunPermissions.VIEW_DETAIL, permissionMap));
         }
         if (power.isExport()) {
-            power.setExport(powerOff(EruptFunPermissions.EXPORT));
+            power.setExport(powerOff(EruptFunPermissions.EXPORT, permissionMap));
         }
         if (power.isImportable()) {
-            power.setImportable(powerOff(EruptFunPermissions.IMPORTABLE));
+            power.setImportable(powerOff(EruptFunPermissions.IMPORTABLE, permissionMap));
         }
     }
 
-    private boolean powerOff(EruptFunPermissions eruptFunPermissions) {
-        return null != eruptUserService.getEruptMenuByValue(UPMSUtil.getEruptFunPermissionsCode(MetaContext.getErupt().getName(), eruptFunPermissions));
+    private boolean powerOff(EruptFunPermissions eruptFunPermissions, Map<String, Boolean> permissionMap) {
+        return permissionMap.containsKey(UPMSUtil.getEruptFunPermissionsCode(MetaContext.getErupt().getName(), eruptFunPermissions).toLowerCase());
     }
 
 }

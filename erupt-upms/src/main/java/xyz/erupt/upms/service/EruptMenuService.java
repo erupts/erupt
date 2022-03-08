@@ -66,6 +66,8 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         if (null == eruptMenu.getCode()) eruptMenu.setCode(Erupts.generateCode());
         if (StringUtils.isNotBlank(eruptMenu.getType()) && StringUtils.isBlank(eruptMenu.getValue())) {
             throw new EruptWebApiRuntimeException("When selecting a menu type, the type value cannot be empty");
+        } else if (StringUtils.isNotBlank(eruptMenu.getValue()) && StringUtils.isBlank(eruptMenu.getType())) {
+            throw new EruptWebApiRuntimeException("When has menu value, the menu type cannot be empty");
         }
     }
 

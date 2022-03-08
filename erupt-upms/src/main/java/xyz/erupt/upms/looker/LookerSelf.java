@@ -18,17 +18,22 @@ import java.util.List;
  * date 2021/3/10 11:30
  */
 @MappedSuperclass
-@PreDataProxy(LookerSelf.class)
-@Component
+@PreDataProxy(LookerSelf.Comp.class)
 public class LookerSelf extends HyperModelCreatorVo implements DataProxy<Void> {
 
-    @Resource
-    @Transient
-    private EruptUserService eruptUserService;
+    @Component
+    static class Comp implements DataProxy<Void> {
 
-    @Override
-    public String beforeFetch(List<Condition> conditions) {
-        if (eruptUserService.getCurrentEruptUser().getIsAdmin()) return null;
-        return MetaContext.getErupt().getName() + ".createUser.id = " + eruptUserService.getCurrentUid();
+        @Resource
+        @Transient
+        private EruptUserService eruptUserService;
+
+        @Override
+        public String beforeFetch(List<Condition> conditions) {
+            if (eruptUserService.getCurrentEruptUser().getIsAdmin()) return null;
+            return MetaContext.getErupt().getName() + ".createUser.id = " + eruptUserService.getCurrentUid();
+        }
+
     }
+
 }

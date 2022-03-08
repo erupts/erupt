@@ -1,4 +1,4 @@
-package xyz.erupt.core.controller;
+package xyz.erupt.core.controller.advice;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -25,17 +26,19 @@ import java.util.Map;
 @Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class EruptExceptionHandlerAdvice {
 
+
     @ResponseBody
     @ExceptionHandler(EruptWebApiRuntimeException.class)
-    public Map<String, Object> eruptWebApiRuntimeException(Exception e, HttpServletRequest request, HttpServletResponse response) {
+    public Object eruptWebApiRuntimeException(EruptWebApiRuntimeException e, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> map = new HashMap<>();
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        if (e.isPrintStackTrace()) e.printStackTrace();
         map.put("error", "erupt web api error");
         map.put("message", e.getMessage());
         map.put("timestamp", new Date());
         map.put("path", request.getServletPath());
         map.put("status", response.getStatus());
-        e.printStackTrace();
+        Optional.ofNullable(e.getExtraMap()).ifPresent(map::putAll);
         return map;
     }
 

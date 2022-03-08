@@ -33,10 +33,7 @@ public class EruptContextService {
     //获取当前请求token
     public String getCurrentToken() {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
-        if (StringUtils.isBlank(token)) {
-            return request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
-        }
-        return token;
+        return StringUtils.isNotBlank(token) ? token : request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
     }
 
     //获取当前菜单对象

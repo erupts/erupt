@@ -35,8 +35,11 @@ public @interface RowOperation {
     @Comment("功能类型")
     Type type() default Type.ERUPT;
 
-    @Comment("控制按钮显示与隐藏（JS表达式），变量：item 获取整行数据")
+    @Comment("控制按钮显示与隐藏 或 能否点击（JS表达式），变量：item 获取整行数据")
     String ifExpr() default "";
+
+    @Comment("控制 ifExpr 的结果是控制按钮的 显示与隐藏 还是 能否点击")
+    IfExprBehavior ifExprBehavior() default IfExprBehavior.DISABLE;
 
     @Comment("type为tpl时可用，可在模板中使用rows变量，可获取选中行的数据")
     @Transient
@@ -67,5 +70,12 @@ public @interface RowOperation {
         ERUPT,
         @Comment("通过自定义模板渲染")
         TPL
+    }
+
+    enum IfExprBehavior {
+        @Comment("IfExpr处理按钮显示或隐藏")
+        HIDE,
+        @Comment("IfExpr处理按钮可否点击")
+        DISABLE
     }
 }
