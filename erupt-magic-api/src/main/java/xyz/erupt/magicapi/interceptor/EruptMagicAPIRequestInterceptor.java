@@ -9,10 +9,10 @@ import org.ssssssss.magicapi.interceptor.MagicUser;
 import org.ssssssss.magicapi.interceptor.RequestInterceptor;
 import org.ssssssss.magicapi.model.*;
 import org.ssssssss.script.MagicScriptContext;
+import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.magicapi.EruptMagicApiAutoConfiguration;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
-import xyz.erupt.upms.vo.AdminUserinfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,13 +62,13 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
             if (!isLogin) {
                 return new JsonBean<Void>(401, "用户未登录");
             } else {
-                AdminUserinfo adminUserInfo = eruptUserService.getSimpleUserInfo();
+                MetaUserinfo metaUserInfo = eruptUserService.getSimpleUserInfo();
                 // 权限判断
                 if (StringUtils.isNotBlank(permission) && eruptUserService.getEruptMenuByValue(permission) == null) {
                     return new JsonBean<Void>(403, "用户权限不足");
                 }
                 // 角色判断
-                if (StringUtils.isNotBlank(role) && adminUserInfo.getRoles().stream().noneMatch(role::equals)) {
+                if (StringUtils.isNotBlank(role) && metaUserInfo.getRoles().stream().noneMatch(role::equals)) {
                     return new JsonBean<Void>(403, "用户权限不足");
                 }
             }
@@ -94,11 +94,11 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     @Override
     public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, Group group) {
         if (group.getOptions().size() > 0) {
-            AdminUserinfo adminUserInfo = eruptUserService.getSimpleUserInfo();
+            MetaUserinfo metaUserInfo = eruptUserService.getSimpleUserInfo();
             for (BaseDefinition option : group.getOptions()) {
                 if (null != option.getValue() && StringUtils.isNotBlank(option.getValue().toString())) {
                     if (Options.ROLE.getValue().equals(option.getName())) {
-                        return adminUserInfo.getRoles().stream().anyMatch(it -> it.equals(option.getValue()));
+                        return metaUserInfo.getRoles().stream().anyMatch(it -> it.equals(option.getValue()));
                     } else if (Options.PERMISSION.getValue().equals(option.getName())) {
                         return null != eruptUserService.getEruptMenuByValue(option.getValue().toString());
                     }

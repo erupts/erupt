@@ -1,4 +1,4 @@
-package xyz.erupt.upms.vo;
+package xyz.erupt.core.module;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class AdminUserinfo {
+public class MetaUserinfo {
 
     private Long id; //用户id
 
