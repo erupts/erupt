@@ -18,7 +18,6 @@ import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
-import xyz.erupt.upms.vo.AdminUserinfo;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
@@ -92,16 +91,7 @@ public class EruptUserController {
         return loginModel;
     }
 
-    //当前登录用户基本信息
-    @GetMapping("/userinfo")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public AdminUserinfo userinfo() {
-        AdminUserinfo adminUserinfo = eruptUserService.getSimpleUserInfo();
-        adminUserinfo.setId(null);
-        return adminUserinfo;
-    }
-
-    //获取菜单
+    //获取菜单列表
     @GetMapping("/menu")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public List<EruptMenuVo> getMenu() {
@@ -130,11 +120,6 @@ public class EruptUserController {
                                    @RequestParam("newPwd") String newPwd,
                                    @RequestParam("newPwd2") String newPwd2) {
         return eruptUserService.changePwd(account, pwd, newPwd, newPwd2);
-    }
-
-    @GetMapping("/token-valid")
-    public boolean tokenValid() {
-        return sessionService.get(eruptContextService.getCurrentToken()) != null;
     }
 
     // 生成验证码
