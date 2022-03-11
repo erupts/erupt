@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class BiColumn {
+public class BiColumnVo {
     private String name;
 }

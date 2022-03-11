@@ -14,7 +14,7 @@ import java.util.Map;
 @Setter
 public class BiData {
 
-    private List<BiColumn> columns;
+    private List<BiColumnVo> columns;
 
     private List<Map<String, Object>> list;
 

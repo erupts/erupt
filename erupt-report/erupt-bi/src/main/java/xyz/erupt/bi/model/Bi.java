@@ -16,10 +16,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
-import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -113,6 +110,15 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     )
     private Integer refreshTime;
 
+    @EruptField(
+            views = @View(title = "分页方式", sortable = true),
+            edit = @Edit(title = "分页方式", notNull = true, type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
+                    @VL(value = BiConst.PAGE_END, label = "服务端分页"),
+                    @VL(value = BiConst.PAGE_FRONT, label = "前端分页"),
+                    @VL(value = BiConst.PAGE_NONE, label = "不分页"),
+            }))
+    )
+    private String pageType = BiConst.PAGE_END;
 
     @EruptField(
             views = @View(title = "导出", sortable = true),
@@ -139,6 +145,13 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "bi_id")
     private Set<BiChart> biCharts;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "bi_id")
+    @EruptField(
+            edit = @Edit(title = "表格列", type = EditType.TAB_TABLE_ADD)
+    )
+    private Set<BiColumn> biColumns;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bi_id")

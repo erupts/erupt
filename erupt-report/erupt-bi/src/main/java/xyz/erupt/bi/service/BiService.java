@@ -14,7 +14,7 @@ import xyz.erupt.bi.model.Bi;
 import xyz.erupt.bi.model.BiClassHandler;
 import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.bi.model.BiFunction;
-import xyz.erupt.bi.view.BiColumn;
+import xyz.erupt.bi.view.BiColumnVo;
 import xyz.erupt.bi.view.BiData;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptMutualConst;
@@ -114,10 +114,10 @@ public class BiService {
                     .replace(DBTypeEnum.$SKIP, String.valueOf((pageIndex - 1) * pageSize));
             List<Map<String, Object>> list = startQuery(sql, bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query);
             if (null != list && list.size() > 0) {
-                List<BiColumn> biColumns = new LinkedList<>();
+                List<BiColumnVo> biColumnVos = new LinkedList<>();
                 Map<String, Object> map = list.get(0);
-                map.keySet().forEach(key -> biColumns.add(new BiColumn(key)));
-                biData.setColumns(biColumns);
+                map.keySet().forEach(key -> biColumnVos.add(new BiColumnVo(key)));
+                biData.setColumns(biColumnVos);
             }
             biData.setList(list);
         } else {

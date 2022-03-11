@@ -188,7 +188,7 @@ public class EruptBiController {
         headStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
         headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         for (int i = 0; i < biData.getColumns().size(); i++) {
-            BiColumn biColumn = biData.getColumns().get(i);
+            BiColumnVo biColumn = biData.getColumns().get(i);
             Cell cell = headRow.createCell(i);
             cell.setCellStyle(headStyle);
             sheet.setColumnWidth(i, (biColumn.getName().length() + 10) * 256);

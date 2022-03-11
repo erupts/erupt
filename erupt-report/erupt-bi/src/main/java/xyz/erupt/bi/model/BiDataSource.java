@@ -89,7 +89,8 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
                     desc = "分页变量：\n" +
                             "@sql：sql语句\n" +
                             "@size：展示条数\n" +
-                            "@skip：跳过行数",
+                            "@skip：跳过行数\n"+
+                            "@sort：字段排序",
                     showBy = @ShowBy(dependField = "type", expr = "value === 'Other'")
             )
     )
