@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.AnnotationProxyPool;
+import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.proxy.erupt.FilterProxy;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -26,7 +27,7 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
         switch (invocation.getMethod().getName()) {
             case "type":
                 if (EditType.AUTO == this.rawAnnotation.type()) {
-                    String returnType = this.field.getType().getSimpleName();
+                    String returnType = ProxyContext.getField().getType().getSimpleName();
                     if (boolean.class.getSimpleName().equalsIgnoreCase(returnType)) {
                         return EditType.BOOLEAN;
                     } else if (TypeUtil.isNumberType(returnType)) {
@@ -45,13 +46,13 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
                 Filter[] proxyFilters = new Filter[filters.length];
                 for (int i = 0; i < filters.length; i++) {
                     proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter ->
-                            new FilterProxy<Edit>().newProxy(filter, this, this.clazz)
+                            new FilterProxy<Edit>().newProxy(filter, this)
                     );
                 }
                 return proxyFilters;
             case "readonly":
                 return AnnotationProxyPool.getOrPut(this.rawAnnotation.readonly(), readonly ->
-                        new ReadonlyProxy().newProxy(readonly, this, this.clazz)
+                        new ReadonlyProxy().newProxy(readonly, this)
                 );
         }
         return this.invoke(invocation);

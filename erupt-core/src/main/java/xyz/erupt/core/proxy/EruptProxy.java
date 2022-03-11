@@ -29,7 +29,7 @@ public class EruptProxy extends AnnotationProxy<Erupt, Void> {
                 Filter[] proxyFilters = new Filter[filters.length];
                 for (int i = 0; i < filters.length; i++) {
                     proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter ->
-                            new FilterProxy<Erupt>().newProxy(filter, this, this.clazz)
+                            new FilterProxy<Erupt>().newProxy(filter, this)
                     );
                 }
                 return proxyFilters;
@@ -39,7 +39,7 @@ public class EruptProxy extends AnnotationProxy<Erupt, Void> {
                 for (RowOperation rowOperation : rowOperations) {
                     if (ExprInvoke.getExpr(rowOperation.show())) {
                         proxyOperations.add(AnnotationProxyPool.getOrPut(rowOperation, it ->
-                                new RowOperationProxy().newProxy(it, this, this.clazz)
+                                new RowOperationProxy().newProxy(it, this)
                         ));
                     }
                 }
@@ -50,7 +50,7 @@ public class EruptProxy extends AnnotationProxy<Erupt, Void> {
                 for (Drill drill : drills) {
                     if (ExprInvoke.getExpr(drill.show())) {
                         proxyDrills.add(AnnotationProxyPool.getOrPut(drill, it ->
-                                new DrillProxy().newProxy(it, this, this.clazz)
+                                new DrillProxy().newProxy(it, this)
                         ));
                     }
                 }
