@@ -9,6 +9,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.core.proxy.AnnotationProxy;
+import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.util.EruptUtil;
 
 /**
@@ -47,7 +48,7 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                             return ViewType.TAB_VIEW;
                     }
                 }
-                String returnType = this.field.getType().getSimpleName();
+                String returnType = ProxyContext.getField().getType().getSimpleName();
                 if (boolean.class.getSimpleName().equalsIgnoreCase(returnType.toLowerCase())) {
                     return ViewType.BOOLEAN;
                 } else if (EruptUtil.isDateField(returnType)) {
