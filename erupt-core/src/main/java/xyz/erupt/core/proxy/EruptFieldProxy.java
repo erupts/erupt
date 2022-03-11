@@ -24,6 +24,9 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
     protected Object invocation(MethodInvocation invocation) {
         switch (invocation.getMethod().getName()) {
             case "edit":
+//                if (AnnotationConst.EMPTY_STR.equals(this.rawAnnotation.edit().title())) {
+//                    return null;
+//                }
                 return AnnotationProxyPool.getOrPut(this.rawAnnotation.edit(), annotation ->
                         editAnnotationProxy.newProxy(annotation, this, this.field)
                 );

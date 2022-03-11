@@ -263,7 +263,7 @@ public class EruptUtil {
                     return eam;
                 }
             }
-            if (null != value) {
+            if (null != value && !AnnotationConst.EMPTY_STR.equals(edit.title())) {
                 //xss 注入处理
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
                     if (SecurityUtil.xssInspect(value.getAsString())) {
