@@ -12,5 +12,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class BiColumnVo {
+
     private String name;
+
+    private Integer width;
+
+    private Boolean orderBy;
+
 }

@@ -10,10 +10,7 @@ import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.constant.ScriptPlaceholderConst;
 import xyz.erupt.bi.fun.EruptBiHandler;
-import xyz.erupt.bi.model.Bi;
-import xyz.erupt.bi.model.BiClassHandler;
-import xyz.erupt.bi.model.BiDataSource;
-import xyz.erupt.bi.model.BiFunction;
+import xyz.erupt.bi.model.*;
 import xyz.erupt.bi.view.BiColumnVo;
 import xyz.erupt.bi.view.BiData;
 import xyz.erupt.core.config.GsonFactory;
@@ -96,7 +93,7 @@ public class BiService {
 
     private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
 
-    public BiData queryBiData(Bi bi, int pageIndex, int pageSize,
+    public BiData queryBiData(Bi bi, int pageIndex, int pageSize, String sort,
                               Map<String, Object> query, boolean export) {
         Erupts.requireTrue(StringUtils.isNotBlank(bi.getSqlStatement()), "express not found");
         query.put(ScriptPlaceholderConst.EXPORT_PLACEHOLDER, export);
@@ -104,24 +101,40 @@ public class BiService {
         query.put(ScriptPlaceholderConst.PAGE_INDEX_PLACEHOLDER, pageIndex);
         this.putCommonContextParam(query);
         BiData biData = new BiData();
-        if (!export) {
-            biData.setTotal(this.getTotal(bi, query));
-        }
-        if (null == biData.getTotal() || biData.getTotal() > 0) {
-            String sql = this.getLimitSql(bi.getDataSource())
-                    .replace(DBTypeEnum.$SQL, bi.getSqlStatement())
-                    .replace(DBTypeEnum.$SIZE, String.valueOf(pageSize))
-                    .replace(DBTypeEnum.$SKIP, String.valueOf((pageIndex - 1) * pageSize));
-            List<Map<String, Object>> list = startQuery(sql, bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query);
-            if (null != list && list.size() > 0) {
-                List<BiColumnVo> biColumnVos = new LinkedList<>();
-                Map<String, Object> map = list.get(0);
-                map.keySet().forEach(key -> biColumnVos.add(new BiColumnVo(key)));
-                biData.setColumns(biColumnVos);
-            }
-            biData.setList(list);
+        biData.setPageType(Optional.ofNullable(bi.getPageType()).orElse(BiConst.PAGE_END));
+        if (BiConst.PAGE_NONE.equals(bi.getPageType()) || BiConst.PAGE_FRONT.equals(bi.getPageType()) || export) {
+            biData.setList(startQuery(bi.getSqlStatement(), bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query));
+            biData.setTotal((long) biData.getList().size());
         } else {
-            biData.setList(new ArrayList<>(0));
+            biData.setTotal(this.getTotal(bi, query));
+            if (biData.getTotal() > 0) {
+                biData.setList(startQuery(this.getLimitSql(bi.getDataSource())
+                                .replace(DBTypeEnum.$SQL, bi.getSqlStatement())
+                                .replace(DBTypeEnum.$SORT, sort + "")
+                                .replace(DBTypeEnum.$SIZE, String.valueOf(pageSize))
+                                .replace(DBTypeEnum.$SKIP, String.valueOf((pageIndex - 1) * pageSize)),
+                        bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query)
+                );
+            } else {
+                biData.setList(new ArrayList<>(0));
+            }
+        }
+        if (null != biData.getList() && biData.getList().size() > 0) {
+            List<BiColumnVo> biColumnVos = new LinkedList<>();
+            Map<String, Object> map = biData.getList().get(0);
+            Map<String, BiColumn> columnMap = new HashMap<>();
+            Optional.ofNullable(bi.getBiColumns()).ifPresent(it -> {
+                bi.getBiColumns().forEach(column -> columnMap.put(column.getName(), column));
+            });
+            map.keySet().forEach(key -> {
+                if (columnMap.containsKey(key)) {
+                    BiColumn biColumn = columnMap.get(key);
+                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getOrderBy()));
+                } else {
+                    biColumnVos.add(new BiColumnVo(key, null, false));
+                }
+            });
+            biData.setColumns(biColumnVos);
         }
         return biData;
     }

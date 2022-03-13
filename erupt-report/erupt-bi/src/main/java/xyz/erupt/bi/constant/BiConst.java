@@ -17,7 +17,7 @@ public class BiConst {
     public static final String SIMPLE_PLACEHOLDER = "{{}}";
 
 
-    public static final String PAGE_END = "end";
+    public static final String PAGE_END = "backend";
 
     public static final String PAGE_FRONT = "front";
 

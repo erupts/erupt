@@ -124,7 +124,7 @@ public class EruptBiController {
         }});
         this.validateQuery(bi, query);
         biService.verifyBiMenuPermissions(bi, code);
-        return biService.queryBiData(bi, pageIndex, pageSize, query, false);
+        return biService.queryBiData(bi, pageIndex, pageSize, sort, query, false);
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
@@ -174,7 +174,7 @@ public class EruptBiController {
         this.validateQuery(bi, query);
         biService.verifyBiMenuPermissions(bi, code);
         Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
-        BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, query, true);
+        BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, null, query, true);
         Workbook wb = new SXSSFWorkbook();
         //基本信息
         Sheet sheet = wb.createSheet(bi.getName());
