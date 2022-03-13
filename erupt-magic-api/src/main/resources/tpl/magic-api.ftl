@@ -26,6 +26,9 @@
             repo: false,
             qqGroup: false
         },
+        getMagicTokenValue: function () {
+            return parent.getAppToken().token;
+        },
         checkUpdate: false,
         title: 'erupt-magic-api'
     }

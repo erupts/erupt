@@ -248,6 +248,11 @@ public class EruptUserService {
         return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
     }
 
+    public MetaUserinfo getSimpleUserInfoByToken(String token) {
+        Object info = sessionService.get(SessionKey.USER_TOKEN + token);
+        return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
+    }
+
     //获取当前登录用户对象(数据库中查找)
     public EruptUser getCurrentEruptUser() {
         Long uid = this.getCurrentUid();

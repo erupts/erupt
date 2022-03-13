@@ -48,7 +48,7 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                             return ViewType.TAB_VIEW;
                     }
                 }
-                String returnType = ProxyContext.getField().getType().getSimpleName();
+                String returnType = ProxyContext.get().getField().getType().getSimpleName();
                 if (boolean.class.getSimpleName().equalsIgnoreCase(returnType.toLowerCase())) {
                     return ViewType.BOOLEAN;
                 } else if (EruptUtil.isDateField(returnType)) {
