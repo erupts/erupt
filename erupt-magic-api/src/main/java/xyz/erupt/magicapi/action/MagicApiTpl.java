@@ -1,7 +1,7 @@
 package xyz.erupt.magicapi.action;
 
 import org.springframework.stereotype.Component;
-import org.ssssssss.magicapi.spring.boot.starter.MagicAPIProperties;
+import org.ssssssss.magicapi.core.config.MagicAPIProperties;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;

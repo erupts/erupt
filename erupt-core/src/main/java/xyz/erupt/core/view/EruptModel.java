@@ -7,7 +7,6 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.EruptProxy;
-import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.CloneSupport;
 
@@ -41,8 +40,8 @@ public final class EruptModel implements Cloneable {
 
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;
-        ProxyContext.setClazz(eruptClazz);
-        this.erupt = eruptAnnotationProxy.newProxy(eruptClazz.getAnnotation(Erupt.class), null);
+        this.erupt = eruptClazz.getAnnotation(Erupt.class);
+        this.erupt = eruptAnnotationProxy.newProxy(this.getErupt(), null);
         this.eruptName = eruptClazz.getSimpleName();
         DataProxyInvoke.invoke(this, it -> {
             try {
@@ -53,11 +52,14 @@ public final class EruptModel implements Cloneable {
         });
     }
 
+    public Erupt getErupt() {
+        return erupt;
+    }
+
     @Override
     public final EruptModel clone() throws CloneNotSupportedException {
         EruptModel eruptModel = (EruptModel) super.clone();
-        ProxyContext.setClazz(clazz);
-        eruptModel.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
+        eruptModel.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.getErupt());
         eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone)
                 .peek(EruptFieldModel::serializable).collect(Collectors.toList());
         return eruptModel;

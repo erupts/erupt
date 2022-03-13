@@ -3,8 +3,6 @@ package xyz.erupt.core.context;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
-
 /**
  * @author YuePeng
  * date 2021/12/26 23:57
@@ -13,7 +11,12 @@ import java.util.Optional;
 @Setter
 public class MetaContext {
 
-    private static final ThreadLocal<MetaContext> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<MetaContext> threadLocal = ThreadLocal.withInitial(() -> {
+        MetaContext metaContext = new MetaContext();
+        metaContext.setMetaErupt(new MetaErupt());
+        metaContext.setMetaUser(new MetaUser());
+        return metaContext;
+    });
 
     private MetaErupt metaErupt;
 
@@ -22,21 +25,15 @@ public class MetaContext {
     private String token;
 
     private static MetaContext getContext() {
-        return Optional.ofNullable(threadLocal.get()).orElseGet(() -> {
-            MetaContext metaContext = new MetaContext();
-            metaContext.setMetaErupt(new MetaErupt());
-            metaContext.setMetaUser(new MetaUser());
-            threadLocal.set(metaContext);
-            return metaContext;
-        });
+        return threadLocal.get();
     }
 
     public static MetaErupt getErupt() {
-        return Optional.ofNullable(getContext().metaErupt).orElse(new MetaErupt());
+        return getContext().metaErupt;
     }
 
     public static MetaUser getUser() {
-        return Optional.ofNullable(getContext().metaUser).orElse(new MetaUser());
+        return getContext().metaUser;
     }
 
     public static String getToken() {
@@ -56,7 +53,6 @@ public class MetaContext {
     public static void registerToken(String token) {
         getContext().setToken(token);
     }
-
 
     public static void remove() {
         threadLocal.remove();

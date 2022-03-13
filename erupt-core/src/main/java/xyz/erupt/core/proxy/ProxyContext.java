@@ -1,31 +1,44 @@
 package xyz.erupt.core.proxy;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.lang.reflect.Field;
 
 /**
  * 代理类上下文
+ *
  * @author YuePeng
  * date 2022/3/12 00:13
  */
+@Getter
+@Setter
 public class ProxyContext {
 
-    private static Field field;
+    private static final ThreadLocal<ProxyContext> proxyContextThreadLocal = ThreadLocal.withInitial(ProxyContext::new);
 
-    private static Class<?> clazz;
+    private Class<?> clazz;
 
-    public static Field getField() {
-        return field;
+    private Field field;
+
+//    public static void set(Class<?> clazz) {
+//        if (null == proxyContextThreadLocal.get()) {
+//            proxyContextThreadLocal.set(new ProxyContext(clazz, null));
+//        } else {
+//            proxyContextThreadLocal.get().setClazz(clazz);
+//        }
+//    }
+
+    public static void set(Field field) {
+        proxyContextThreadLocal.get().setField(field);
     }
 
-    public static void setField(Field fieldContext) {
-        ProxyContext.field = fieldContext;
+    public static void remove() {
+        proxyContextThreadLocal.remove();
     }
 
-    public static Class<?> getClazz() {
-        return clazz;
+    public static ProxyContext get() {
+        return proxyContextThreadLocal.get();
     }
 
-    public static void setClazz(Class<?> clazz) {
-        ProxyContext.clazz = clazz;
-    }
 }
