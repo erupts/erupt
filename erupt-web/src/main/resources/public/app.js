@@ -6,6 +6,7 @@ window.eruptSiteConfig = {
     dialogLogin: false,
     copyright: true, //是否保留显示版权信息
     logoPath: null,
+    loginLogoPath: null,
     logoText: "Erupt",
     registerPage: null,
     amapKey: null,
