@@ -2,7 +2,7 @@ package xyz.erupt.magicapi;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.ssssssss.magicapi.interceptor.Authorization;
+import org.ssssssss.magicapi.core.interceptor.Authorization;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;

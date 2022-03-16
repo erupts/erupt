@@ -10,6 +10,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.EruptFieldProxy;
+import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.CloneSupport;
 import xyz.erupt.core.util.ReflectUtil;
@@ -66,13 +67,18 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
                 this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
                 break;
         }
-        this.eruptField = eruptFieldAnnotationProxy.newProxy(this.eruptField, null, field);
+        this.eruptField = eruptFieldAnnotationProxy.newProxy(this.getEruptField(), null);
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
     }
 
+    public EruptField getEruptField() {
+        ProxyContext.set(field);
+        return eruptField;
+    }
+
     public void serializable() {
-        this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.eruptField);
+        this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.getEruptField());
     }
 
 }

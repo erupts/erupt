@@ -5,6 +5,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.prop.EruptAppProp;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptApplication;
@@ -22,7 +23,6 @@ import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.util.IpUtil;
-import xyz.erupt.upms.vo.AdminUserinfo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -79,15 +79,15 @@ public class EruptUserService {
     }
 
     public void putUserInfo(EruptUser eruptUser, String token) {
-        AdminUserinfo adminUserinfo = new AdminUserinfo();
-        adminUserinfo.setId(eruptUser.getId());
-        adminUserinfo.setSuperAdmin(eruptUser.getIsAdmin());
-        adminUserinfo.setAccount(eruptUser.getAccount());
-        adminUserinfo.setUsername(eruptUser.getName());
-        adminUserinfo.setRoles(eruptUser.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList()));
-        Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> adminUserinfo.setPost(it.getCode()));
-        Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> adminUserinfo.setOrg(it.getCode()));
-        sessionService.put(SessionKey.USER_TOKEN + token, gson.toJson(adminUserinfo), eruptUpmsConfig.getExpireTimeByLogin());
+        MetaUserinfo metaUserinfo = new MetaUserinfo();
+        metaUserinfo.setId(eruptUser.getId());
+        metaUserinfo.setSuperAdmin(eruptUser.getIsAdmin());
+        metaUserinfo.setAccount(eruptUser.getAccount());
+        metaUserinfo.setUsername(eruptUser.getName());
+        metaUserinfo.setRoles(eruptUser.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList()));
+        Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> metaUserinfo.setPost(it.getCode()));
+        Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> metaUserinfo.setOrg(it.getCode()));
+        sessionService.put(SessionKey.USER_TOKEN + token, gson.toJson(metaUserinfo), eruptUpmsConfig.getExpireTimeByLogin());
     }
 
     public static LoginProxy findEruptLogin() {
@@ -223,7 +223,7 @@ public class EruptUserService {
         }});
     }
 
-    //当前用户菜单中，通过菜单类型值获取菜单
+    //从当前用户菜单中，通过菜单类型值获取菜单
     public EruptMenu getEruptMenuByValue(String menuValue) {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken(), menuValue.toLowerCase(), EruptMenu.class);
     }
@@ -238,14 +238,19 @@ public class EruptUserService {
 
     //获取当前用户ID
     public Long getCurrentUid() {
-        AdminUserinfo adminUserinfo = getSimpleUserInfo();
-        return null == adminUserinfo ? null : adminUserinfo.getId();
+        MetaUserinfo metaUserinfo = getSimpleUserInfo();
+        return null == metaUserinfo ? null : metaUserinfo.getId();
     }
 
     //获取当前登录用户基础信息（缓存中查找）
-    public AdminUserinfo getSimpleUserInfo() {
+    public MetaUserinfo getSimpleUserInfo() {
         Object info = sessionService.get(SessionKey.USER_TOKEN + eruptContextService.getCurrentToken());
-        return null == info ? null : gson.fromJson(info.toString(), AdminUserinfo.class);
+        return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
+    }
+
+    public MetaUserinfo getSimpleUserInfoByToken(String token) {
+        Object info = sessionService.get(SessionKey.USER_TOKEN + token);
+        return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
     }
 
     //获取当前登录用户对象(数据库中查找)

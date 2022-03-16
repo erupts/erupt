@@ -1,10 +1,11 @@
 package xyz.erupt.magicapi.action;
 
 import org.springframework.stereotype.Component;
-import org.ssssssss.magicapi.spring.boot.starter.MagicAPIProperties;
+import org.ssssssss.magicapi.core.config.MagicAPIProperties;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
+import xyz.erupt.upms.service.EruptContextService;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -23,10 +24,14 @@ public class MagicApiTpl {
     @Resource
     private MagicAPIProperties magicAPIProperties;
 
+    @Resource
+    private EruptContextService eruptContextService;
+
     @TplAction(MAGIC_API_PERMISSION)
     public Map<String, Object> magicApiAction() {
         Map<String, Object> map = new HashMap<>();
         map.put("web", magicAPIProperties.getWeb());
+        map.put("token", eruptContextService.getCurrentToken());
         map.put("v", EruptInformation.getEruptVersion());
         map.put("hash", this.hashCode());
         return map;
