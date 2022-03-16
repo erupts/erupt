@@ -23,19 +23,19 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
     @SneakyThrows
     protected Object invocation(MethodInvocation invocation) {
         switch (invocation.getMethod().getName()) {
-            case "edit":
-                return AnnotationProxyPool.getOrPut(this.rawAnnotation.edit(), annotation ->
-                        editAnnotationProxy.newProxy(annotation, this, this.field)
-                );
             case "views":
                 View[] views = this.rawAnnotation.views();
                 List<View> proxyViews = new ArrayList<>();
                 for (View view : views) {
                     proxyViews.add(AnnotationProxyPool.getOrPut(view, annotation ->
-                            new ViewProxy().newProxy(annotation, this, this.field)
+                            new ViewProxy().newProxy(annotation, this)
                     ));
                 }
                 return proxyViews.toArray(new View[0]);
+            case "edit":
+                return AnnotationProxyPool.getOrPut(this.rawAnnotation.edit(), annotation ->
+                        editAnnotationProxy.newProxy(annotation, this)
+                );
         }
         return this.invoke(invocation);
     }

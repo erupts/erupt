@@ -40,7 +40,8 @@ public final class EruptModel implements Cloneable {
 
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;
-        this.erupt = eruptAnnotationProxy.newProxy(eruptClazz.getAnnotation(Erupt.class), null, eruptClazz);
+        this.erupt = eruptClazz.getAnnotation(Erupt.class);
+        this.erupt = eruptAnnotationProxy.newProxy(this.getErupt(), null);
         this.eruptName = eruptClazz.getSimpleName();
         DataProxyInvoke.invoke(this, it -> {
             try {
@@ -51,10 +52,14 @@ public final class EruptModel implements Cloneable {
         });
     }
 
+    public Erupt getErupt() {
+        return erupt;
+    }
+
     @Override
     public final EruptModel clone() throws CloneNotSupportedException {
         EruptModel eruptModel = (EruptModel) super.clone();
-        eruptModel.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.erupt);
+        eruptModel.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.getErupt());
         eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone)
                 .peek(EruptFieldModel::serializable).collect(Collectors.toList());
         return eruptModel;
