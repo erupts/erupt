@@ -16,7 +16,7 @@
     window.MAGIC_EDITOR_CONFIG = {
         request: {
             beforeSend: function (config) {
-                config.headers.token = parent.getAppToken().token;
+                config.headers.token = '${token}';
                 return config;
             }
         },
@@ -27,7 +27,7 @@
             qqGroup: false
         },
         getMagicTokenValue: function () {
-            return parent.getAppToken().token;
+            return '${token}';
         },
         checkUpdate: false,
         title: 'erupt-magic-api'

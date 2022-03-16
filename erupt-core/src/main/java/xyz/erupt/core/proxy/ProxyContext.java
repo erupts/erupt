@@ -21,13 +21,9 @@ public class ProxyContext {
 
     private Field field;
 
-//    public static void set(Class<?> clazz) {
-//        if (null == proxyContextThreadLocal.get()) {
-//            proxyContextThreadLocal.set(new ProxyContext(clazz, null));
-//        } else {
-//            proxyContextThreadLocal.get().setClazz(clazz);
-//        }
-//    }
+    public static void set(Class<?> clazz) {
+        proxyContextThreadLocal.get().setClazz(clazz);
+    }
 
     public static void set(Field field) {
         proxyContextThreadLocal.get().setField(field);
