@@ -23,7 +23,7 @@ public enum DBTypeEnum {
 
     public static final String $SORT = "@sort";
 
-    public static final String GENERAL_LIMIT = "select * from (" + $SQL + ") t order by " + $SORT + " limit " + $SIZE + " offset " + $SKIP;
+    public static final String GENERAL_LIMIT = "select * from (" + $SQL + ") _t order by " + $SORT + " limit " + $SIZE + " offset " + $SKIP;
 
     private static final String ORACLE_LIMIT = "SELECT t.* FROM (  \n" +
             "SELECT ROWNUM RN,temp.*                               \n" +

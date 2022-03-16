@@ -10,9 +10,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -44,15 +42,12 @@ public class BiColumn extends BaseModel {
             views = @View(title = "排序", sortable = true),
             edit = @Edit(title = "排序", notNull = true)
     )
-    private Boolean orderBy = true;
+    private Boolean sortable = true;
 
-    @EruptField(
-            views = @View(title = "固定列", sortable = true),
-            edit = @Edit(title = "固定列", notNull = true)
-    )
-    private Boolean fixed = false;
-
-    @ManyToOne(cascade = CascadeType.DETACH)
-    private Bi bi;
+//    @EruptField(
+//            views = @View(title = "固定列", sortable = true),
+//            edit = @Edit(title = "固定列", notNull = true)
+//    )
+//    private Boolean fixed = false;
 
 }

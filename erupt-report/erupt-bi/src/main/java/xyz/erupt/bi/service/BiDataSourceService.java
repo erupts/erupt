@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -13,6 +14,7 @@ import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.core.util.Erupts;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ import java.util.Properties;
  * date 2020-02-28
  */
 @Service
-public class BiDataSourceService implements DataProxy<BiDataSource> {
+public class BiDataSourceService implements DataProxy<BiDataSource>, DisposableBean {
 
     private final Map<String, NamedParameterJdbcTemplate> templateMap = new HashMap<>();
 
@@ -73,6 +75,16 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
         }
     }
 
+    @Override
+    public void destroy() throws Exception {
+        for (NamedParameterJdbcTemplate jdbcTemplate : templateMap.values()) {
+            DataSource dataSource = jdbcTemplate.getJdbcTemplate().getDataSource();
+            if (dataSource instanceof HikariDataSource) {
+                HikariDataSource hikariDataSource = (HikariDataSource) dataSource;
+                hikariDataSource.close();
+            }
+        }
+    }
 
     @SneakyThrows
     @Override
@@ -110,4 +122,5 @@ public class BiDataSourceService implements DataProxy<BiDataSource> {
     public void afterDelete(BiDataSource biDataSource) {
         afterUpdate(biDataSource);
     }
+
 }

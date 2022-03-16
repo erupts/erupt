@@ -17,6 +17,6 @@ public class BiColumnVo {
 
     private Integer width;
 
-    private Boolean orderBy;
+    private Boolean sortable;
 
 }

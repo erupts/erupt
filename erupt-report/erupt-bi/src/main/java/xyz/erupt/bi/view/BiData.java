@@ -20,6 +20,4 @@ public class BiData {
 
     private Long total;
 
-    private String pageType;
-
 }

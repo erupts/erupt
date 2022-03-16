@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import xyz.erupt.bi.config.EruptBiProp;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.constant.ScriptPlaceholderConst;
@@ -62,6 +63,9 @@ public class BiService {
     @Resource
     private BiDataSourceService dataSourceService;
 
+    @Resource
+    private EruptBiProp eruptBiProp;
+
     private final Gson gson = GsonFactory.getGson();
 
     private String getLimitSql(BiDataSource biDataSource) {
@@ -101,14 +105,14 @@ public class BiService {
         query.put(ScriptPlaceholderConst.PAGE_INDEX_PLACEHOLDER, pageIndex);
         this.putCommonContextParam(query);
         BiData biData = new BiData();
-        biData.setPageType(Optional.ofNullable(bi.getPageType()).orElse(BiConst.PAGE_END));
         if (BiConst.PAGE_NONE.equals(bi.getPageType()) || BiConst.PAGE_FRONT.equals(bi.getPageType()) || export) {
-            biData.setList(startQuery(bi.getSqlStatement(), bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query));
+            biData.setList(startQuery(bi.getName(), String.format("select * from (%s) _t order by %s", bi.getSqlStatement(), sort),
+                    bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query));
             biData.setTotal((long) biData.getList().size());
         } else {
             biData.setTotal(this.getTotal(bi, query));
             if (biData.getTotal() > 0) {
-                biData.setList(startQuery(this.getLimitSql(bi.getDataSource())
+                biData.setList(startQuery(bi.getName(), this.getLimitSql(bi.getDataSource())
                                 .replace(DBTypeEnum.$SQL, bi.getSqlStatement())
                                 .replace(DBTypeEnum.$SORT, sort + "")
                                 .replace(DBTypeEnum.$SIZE, String.valueOf(pageSize))
@@ -123,13 +127,12 @@ public class BiService {
             List<BiColumnVo> biColumnVos = new LinkedList<>();
             Map<String, Object> map = biData.getList().get(0);
             Map<String, BiColumn> columnMap = new HashMap<>();
-            Optional.ofNullable(bi.getBiColumns()).ifPresent(it -> {
-                bi.getBiColumns().forEach(column -> columnMap.put(column.getName(), column));
-            });
+            Optional.ofNullable(bi.getBiColumns()).ifPresent(it ->
+                    bi.getBiColumns().forEach(column -> columnMap.put(column.getName(), column)));
             map.keySet().forEach(key -> {
                 if (columnMap.containsKey(key)) {
                     BiColumn biColumn = columnMap.get(key);
-                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getOrderBy()));
+                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable()));
                 } else {
                     biColumnVos.add(new BiColumnVo(key, null, false));
                 }
@@ -140,7 +143,7 @@ public class BiService {
     }
 
     @SneakyThrows
-    public List<Map<String, Object>> startQuery(String express, Integer timeout, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
+    public List<Map<String, Object>> startQuery(String key, String express, Integer timeout, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
         EruptBiHandler biHandler = null;
         this.putCommonContextParam(query);
         express = processPlaceHolder(express, query);
@@ -150,13 +153,20 @@ public class BiService {
         }
         String finalExpress = express;
         EruptBiHandler finalBiHandler = biHandler;
+        if (eruptBiProp.getQueryLog()) {
+            log.info("{}: {}", key, express);
+        }
         Supplier<List<Map<String, Object>>> supplier = () -> {
             NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(biDataSource);
-            List<Map<String, Object>> list = jdbcQuery(jdbcTemplate, finalExpress, query);
+            List<Map<String, Object>> list = this.jdbcQuery(jdbcTemplate, finalExpress, query);
             Optional.ofNullable(finalBiHandler).ifPresent(it -> it.resultHandler(classHandler.getParam(), query, list));
             return list;
         };
-        return null == timeout ? supplier.get() : eruptCache.getAndSet(express + gson.toJson(query), timeout * 1000, supplier);
+        if (eruptBiProp.getEnableCache()) {
+            return null == timeout ? supplier.get() : eruptCache.getAndSet(express + gson.toJson(query), timeout * 1000, supplier);
+        } else {
+            return supplier.get();
+        }
     }
 
     public Object evalScript(String script, Bindings bindings) throws ScriptException {
@@ -186,9 +196,6 @@ public class BiService {
     }
 
     private List<Map<String, Object>> jdbcQuery(NamedParameterJdbcTemplate jdbcTemplate, String express, Map<String, Object> query) {
-        if (log.isDebugEnabled()) {
-            log.debug(express);
-        }
         return jdbcTemplate.query(express, query, (rs, i) -> {
             Map<String, Object> map = new LinkedHashMap<>();
             ResultSetMetaData metaData = rs.getMetaData();

@@ -65,7 +65,8 @@ import java.util.Set;
 public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiReleaseModal> {
 
     @EruptField(
-            views = @View(title = "编码", width = "100px")
+            views = @View(title = "编码", width = "100px"),
+            edit = @Edit(title = "编码", search = @Search, show = false)
     )
     private String code;
 
@@ -113,7 +114,7 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     @EruptField(
             views = @View(title = "分页方式", sortable = true),
             edit = @Edit(title = "分页方式", notNull = true, type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
-                    @VL(value = BiConst.PAGE_END, label = "服务端分页"),
+                    @VL(value = BiConst.PAGE_END, label = "后端分页"),
                     @VL(value = BiConst.PAGE_FRONT, label = "前端分页"),
                     @VL(value = BiConst.PAGE_NONE, label = "不分页"),
             }))
@@ -148,18 +149,18 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bi_id")
-    @EruptField(
-            edit = @Edit(title = "表格列", type = EditType.TAB_TABLE_ADD)
-    )
-    private Set<BiColumn> biColumns;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "bi_id")
     @OrderBy("sort")
     @EruptField(
             edit = @Edit(title = "查询维度", type = EditType.TAB_TABLE_ADD)
     )
     private Set<BiDimension> biDimension;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "bi_id")
+    @EruptField(
+            edit = @Edit(title = "表格列", type = EditType.TAB_TABLE_ADD)
+    )
+    private Set<BiColumn> biColumns;
 
     @Resource
     @Transient

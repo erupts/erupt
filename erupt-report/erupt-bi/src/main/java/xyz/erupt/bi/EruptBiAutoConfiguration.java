@@ -2,6 +2,7 @@ package xyz.erupt.bi;
 
 import lombok.SneakyThrows;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,7 @@ import java.util.List;
 @EntityScan
 @EruptScan
 @Component
+@EnableConfigurationProperties
 public class EruptBiAutoConfiguration implements EruptModule {
 
     static {
@@ -75,4 +77,5 @@ public class EruptBiAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createEruptClassMenu(BiHistory.class, bi, 0, MenuStatus.HIDE));
         return menus;
     }
+
 }

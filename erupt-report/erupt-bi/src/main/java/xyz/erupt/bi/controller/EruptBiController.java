@@ -61,6 +61,7 @@ public class EruptBiController {
             return null;
         }
         BiVo biVo = new BiVo();
+        biVo.setPageType(Optional.ofNullable(bi.getPageType()).orElse(BiConst.PAGE_END));
         if (StringUtils.isBlank(bi.getSqlStatement())) {
             biVo.setTable(false);
             biVo.setExport(false);
@@ -116,7 +117,8 @@ public class EruptBiController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 2)
     public BiData queryData(@RequestParam("index") int pageIndex,
                             @RequestParam("size") int pageSize,
-                            @RequestParam(value = "sort", required = false) String sort,
+                            @RequestParam(value = "sort", required = false) String sortField,
+                            @RequestParam(value = "direction", required = false) Boolean direction,
                             @RequestBody Map<String, Object> query, @PathVariable String code) {
         pageSize = pageSize > 100 ? 100 : pageSize;
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
@@ -124,7 +126,10 @@ public class EruptBiController {
         }});
         this.validateQuery(bi, query);
         biService.verifyBiMenuPermissions(bi, code);
-        return biService.queryBiData(bi, pageIndex, pageSize, sort, query, false);
+        if (null != sortField) {
+            sortField += " " + (direction ? "asc" : "desc");
+        }
+        return biService.queryBiData(bi, pageIndex, pageSize, sortField, query, false);
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
@@ -134,7 +139,7 @@ public class EruptBiController {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
         biService.verifyBiMenuPermissions(dimension.getBi(), code);
         BiDimensionReference reference = dimension.getBiDimensionReference();
-        List<Map<String, Object>> list = biService.startQuery(reference.getRefSql(), null, reference.getClassHandler(), reference.getDataSource(), query);
+        List<Map<String, Object>> list = biService.startQuery(reference.getName(), reference.getRefSql(), null, reference.getClassHandler(), reference.getDataSource(), query);
         List<Reference> references = new ArrayList<>();
         for (Map<String, Object> map : list) {
             if (map.keySet().size() == 1) {
@@ -159,7 +164,7 @@ public class EruptBiController {
         BiChart chart = entityManager.find(BiChart.class, chartId);
         biService.verifyBiMenuPermissions(chart.getBi(), code);
         this.validateQuery(chart.getBi(), query);
-        return biService.startQuery(chart.getSqlStatement(), chart.getCacheTime(), chart.getClassHandler(), chart.getDataSource(), query);
+        return biService.startQuery(chart.getName(), chart.getSqlStatement(), chart.getCacheTime(), chart.getClassHandler(), chart.getDataSource(), query);
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)

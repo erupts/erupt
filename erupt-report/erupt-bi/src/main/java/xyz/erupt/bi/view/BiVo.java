@@ -17,6 +17,8 @@ public class BiVo {
 
     private String code;
 
+    private String pageType;
+
     private boolean export;
 
     private boolean table;
