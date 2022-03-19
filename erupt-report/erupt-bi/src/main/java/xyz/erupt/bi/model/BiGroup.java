@@ -54,7 +54,7 @@ public class BiGroup extends MetaModelUpdateVo implements DataProxy<BiGroup> {
     @Column(length = 5000)
     @EruptField(
             views = @View(title = "备注", sortable = true),
-            edit = @Edit(title = "备注")
+            edit = @Edit(title = "备注", type = EditType.HTML_EDITOR)
     )
     private String remark;
 
