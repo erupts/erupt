@@ -124,6 +124,7 @@ public class EruptUserService {
                 }
             }
             if (checkPwd(eruptUser, pwd)) {
+                request.getSession().invalidate();
                 sessionService.put(SessionKey.LOGIN_ERROR + requestIp, "0", eruptUpmsConfig.getExpireTimeByLogin());
                 return new LoginModel(true, eruptUser);
             } else {
