@@ -68,16 +68,16 @@ public class BiService {
 
     private final Gson gson = GsonFactory.getGson();
 
-    private String getLimitSql(BiDataSource biDataSource) {
+    private String getLimitSql(BiDataSource biDataSource, String sql, String sort, Integer index, Integer size) {
         if (null == biDataSource) {
-            return DBTypeEnum.GENERAL_LIMIT;
+            return DBTypeEnum.MySQL.processDialect(sql, sort, index, size);
         }
         if (StringUtils.isNotBlank(biDataSource.getLimitSql())) {
-            return biDataSource.getLimitSql();
+            return DBTypeEnum.Other.processDialect(biDataSource.getLimitSql(), sql, sort, index, size);
         }
         return Stream.of(DBTypeEnum.values())
                 .filter(it -> it.name().equals(biDataSource.getType()))
-                .findFirst().orElse(DBTypeEnum.MySQL).getLimitSql();
+                .findFirst().orElse(DBTypeEnum.MySQL).processDialect(sql, sort, index, size);
     }
 
     public Bi findBi(Long id) {
@@ -106,17 +106,13 @@ public class BiService {
         this.putCommonContextParam(query);
         BiData biData = new BiData();
         if (BiConst.PAGE_NONE.equals(bi.getPageType()) || BiConst.PAGE_FRONT.equals(bi.getPageType()) || export) {
-            biData.setList(startQuery(bi.getName(), String.format("select * from (%s) _t order by %s", bi.getSqlStatement(), sort),
-                    bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query));
+            String sql = StringUtils.isBlank(sort) ? bi.getSqlStatement() : String.format("select * from (%s) _t order by %s", bi.getSqlStatement(), sort);
+            biData.setList(startQuery(bi.getName(), sql, bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query));
             biData.setTotal((long) biData.getList().size());
         } else {
             biData.setTotal(this.getTotal(bi, query));
             if (biData.getTotal() > 0) {
-                biData.setList(startQuery(bi.getName(), this.getLimitSql(bi.getDataSource())
-                                .replace(DBTypeEnum.$SQL, bi.getSqlStatement())
-                                .replace(DBTypeEnum.$SORT, sort + "")
-                                .replace(DBTypeEnum.$SIZE, String.valueOf(pageSize))
-                                .replace(DBTypeEnum.$SKIP, String.valueOf((pageIndex - 1) * pageSize)),
+                biData.setList(startQuery(bi.getName(), this.getLimitSql(bi.getDataSource(), bi.getSqlStatement(), sort, pageIndex, pageSize),
                         bi.getCacheTime(), bi.getClassHandler(), bi.getDataSource(), query)
                 );
             } else {
