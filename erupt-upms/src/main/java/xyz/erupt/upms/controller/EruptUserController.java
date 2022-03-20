@@ -102,10 +102,11 @@ public class EruptUserController {
     //登出
     @PostMapping("/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel logout() {
+    public EruptApiModel logout(HttpServletRequest request) {
         String token = eruptContextService.getCurrentToken();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
+        request.getSession().invalidate();
         sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
         sessionService.remove(SessionKey.MENU_VIEW + token);
         sessionService.remove(SessionKey.USER_TOKEN + token);

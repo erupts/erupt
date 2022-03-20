@@ -1,6 +1,7 @@
 package xyz.erupt.upms.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.annotation.EruptRouter;
@@ -30,9 +31,9 @@ public class EruptUPMSController {
     }
 
     //校验菜单类型值权限
-    @RequestMapping(EruptRestPath.ERUPT_CODE_PERMISSION)
+    @RequestMapping(EruptRestPath.ERUPT_CODE_PERMISSION + "/{value}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public boolean eruptPermission(String menuValue) {
+    public boolean eruptPermission(@PathVariable("value") String menuValue) {
         return null != eruptUserService.getEruptMenuByValue(menuValue);
     }
 
