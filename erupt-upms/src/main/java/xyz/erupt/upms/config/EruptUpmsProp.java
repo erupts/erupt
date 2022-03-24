@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "erupt.upms", ignoreUnknownFields = false)
-public class EruptUpmsConfig {
+public class EruptUpmsProp {
 
     //redis session时长
     private Integer expireTimeByLogin = 100;
+
+    private EruptSsoProp eruptSsoProp;
 
 }
