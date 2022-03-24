@@ -1,7 +1,9 @@
 package xyz.erupt.upms.fun;
 
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.service.EruptUserService;
 
 /**
  * @author YuePeng
@@ -13,7 +15,9 @@ public interface LoginProxy {
     @Comment("为安全考虑pwd是加密的，加密逻辑：md5(md5(pwd)+ Calendar.DAY_OF_MONTH +account)")
     @Comment("Calendar.DAY_OF_MONTH → Calendar.getInstance().get(Calendar.DAY_OF_MONTH) //今天月的哪一天")
     @Comment("如果不希望加密，请前往配置文件，将：erupt-app.pwdTransferEncrypt 设置为 false 即可")
-    EruptUser login(String account, String pwd);
+    default EruptUser login(String account, String pwd) {
+        return EruptSpringUtil.getBean(EruptUserService.class).login(account, pwd).getEruptUser();
+    }
 
     @Comment("登录成功")
     default void loginSuccess(EruptUser eruptUser, String token) {
