@@ -11,7 +11,17 @@ public enum DBTypeEnum {
     达梦(DBTypeEnum.ORACLE_LIMIT),
     人大金仓(DBTypeEnum.GENERAL_LIMIT),
     Clickhouse(DBTypeEnum.GENERAL_LIMIT),
-    Impala(DBTypeEnum.GENERAL_LIMIT),
+    Impala(DBTypeEnum.GENERAL_LIMIT) {
+        @Override
+        public String processDialect(String dialect, String sql, String sort, Integer index, Integer size) {
+            if (null == sort) {
+                dialect = dialect.replace($SORT, "order by null");
+            } else {
+                dialect = dialect.replace($SORT, "order by " + sort);
+            }
+            return super.processDialect(dialect, sql, sort, index, size);
+        }
+    },
     StarRocks(DBTypeEnum.GENERAL_LIMIT),
     Other(null);
 

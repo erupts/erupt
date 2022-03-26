@@ -72,7 +72,7 @@ public class BiService {
         if (null == biDataSource) {
             return DBTypeEnum.MySQL.processDialect(sql, sort, index, size);
         }
-        if (StringUtils.isNotBlank(biDataSource.getLimitSql())) {
+        if (DBTypeEnum.Other.name().equals(biDataSource.getType())){
             return DBTypeEnum.Other.processDialect(biDataSource.getLimitSql(), sql, sort, index, size);
         }
         return Stream.of(DBTypeEnum.values())
