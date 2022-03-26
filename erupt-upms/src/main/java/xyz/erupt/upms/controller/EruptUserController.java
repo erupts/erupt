@@ -7,12 +7,10 @@ import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.prop.EruptAppProp;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
-import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
@@ -50,23 +48,7 @@ public class EruptUserController {
     private EruptContextService eruptContextService;
 
     @Resource
-    private EruptUpmsProp eruptUpmsProp;
-
-    @Resource
     private HttpServletRequest request;
-
-    // 单点登录
-    @SneakyThrows
-    @PostMapping("/sso")
-    public LoginModel sso(@RequestParam("account") String account, @RequestParam("pwd") String pwd) {
-        if (eruptUpmsProp.getEruptSsoProp().isEnable()) {
-            LoginModel loginModel = this.login(account, pwd);
-            if (loginModel.isPass()) {
-
-            }
-        }
-        throw new EruptWebApiRuntimeException("SSO Disable");
-    }
 
     //登录
     @SneakyThrows
@@ -100,7 +82,7 @@ public class EruptUserController {
                     loginModel.setEruptUser(eruptUser);
                     loginModel.setPass(true);
                 }
-            }  catch (Exception e) {
+            } catch (Exception e) {
                 if (0 == eruptAppProp.getVerifyCodeCount()) {
                     loginModel.setUseVerifyCode(true);
                 }

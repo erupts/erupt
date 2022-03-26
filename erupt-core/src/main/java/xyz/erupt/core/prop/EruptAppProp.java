@@ -23,6 +23,9 @@ public class EruptAppProp {
     //登录密码是否加密传输
     private Boolean pwdTransferEncrypt = true;
 
+    //自定义登录页路径
+    private String loginPagePath;
+
     private Integer hash;
 
     private String version;
