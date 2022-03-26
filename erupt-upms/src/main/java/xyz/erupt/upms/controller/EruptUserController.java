@@ -92,7 +92,6 @@ public class EruptUserController {
         } else {
             loginModel = new LoginModel();
             try {
-                loginProxy.getClass().getDeclaredMethod("login", String.class, String.class);
                 EruptUser eruptUser = loginProxy.login(account, pwd);
                 if (null == eruptUser) {
                     loginModel.setReason("账号或密码错误");
@@ -101,9 +100,7 @@ public class EruptUserController {
                     loginModel.setEruptUser(eruptUser);
                     loginModel.setPass(true);
                 }
-            } catch (NoSuchMethodException ignored) {
-                loginModel = eruptUserService.login(account, pwd);
-            } catch (Exception e) {
+            }  catch (Exception e) {
                 if (0 == eruptAppProp.getVerifyCodeCount()) {
                     loginModel.setUseVerifyCode(true);
                 }
