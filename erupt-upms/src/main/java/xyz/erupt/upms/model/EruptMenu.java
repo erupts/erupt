@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
 @Erupt(
         name = "菜单管理",
         orderBy = "EruptMenu.sort asc",
-        tree = @Tree(pid = "parentMenu.id"),
+        tree = @Tree(pid = "parentMenu.id", expandLevel = 5),
         dataProxy = EruptMenuService.class
 )
 @EruptI18n
@@ -66,7 +66,7 @@ public class EruptMenu extends MetaModel {
             edit = @Edit(
                     title = "上级菜单",
                     type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
+                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id", expandLevel = 3)
             )
     )
     private EruptMenu parentMenu;
