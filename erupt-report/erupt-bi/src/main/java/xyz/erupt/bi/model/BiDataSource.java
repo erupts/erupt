@@ -57,6 +57,13 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     private String driver;
 
     @EruptField(
+            views = @View(title = "数据库类型", sortable = true),
+            edit = @Edit(title = "数据库类型", notNull = true, type = EditType.CHOICE,
+                    choiceType = @ChoiceType(fetchHandler = BiDataSource.class))
+    )
+    private String type;
+
+    @EruptField(
             views = @View(title = "连接字符串"),
             edit = @Edit(title = "连接字符串", type = EditType.TEXTAREA, notNull = true)
     )
@@ -72,13 +79,6 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
             edit = @Edit(title = "密码", inputType = @InputType(type = "password"))
     )
     private String password;
-
-    @EruptField(
-            views = @View(title = "数据库类型", sortable = true),
-            edit = @Edit(title = "数据库类型", notNull = true, type = EditType.CHOICE,
-                    choiceType = @ChoiceType(fetchHandler = BiDataSource.class))
-    )
-    private String type;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
