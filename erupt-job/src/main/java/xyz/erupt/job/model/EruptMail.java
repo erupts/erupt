@@ -24,7 +24,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.Erupts;
-import xyz.erupt.job.constant.JobConst;
 import xyz.erupt.jpa.model.BaseModel;
 
 import javax.mail.internet.MimeMessage;
@@ -62,7 +61,7 @@ public class EruptMail extends BaseModel implements DataProxy<EruptMail> {
     private String recipient;
 
     @EruptField(
-            views = @View(title = "抄送人", template = JobConst.BEAUTIFUL_TAG),
+            views = @View(title = "抄送人"),
             edit = @Edit(title = "抄送人", type = EditType.TAGS)
     )
     private String cc;
