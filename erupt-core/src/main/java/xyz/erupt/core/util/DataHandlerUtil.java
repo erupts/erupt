@@ -1,10 +1,8 @@
 package xyz.erupt.core.util;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
@@ -83,13 +81,6 @@ public class DataHandlerUtil {
         if (null == value) return null;
         Edit edit = fieldModel.getEruptField().edit();
         switch (edit.type()) {
-            case DATE:
-                if (edit.dateType().type() == DateType.Type.DATE) {
-                    if (StringUtils.isNotBlank(value.toString())) {
-                        return value.toString().substring(0, 10);
-                    }
-                }
-                break;
             case CHOICE:
                 Map<String, String> cm = choiceItems.get(fieldModel.getFieldName());
                 if (null == cm) {

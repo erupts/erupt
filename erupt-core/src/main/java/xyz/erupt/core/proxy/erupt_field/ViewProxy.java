@@ -8,6 +8,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.util.EruptUtil;
@@ -34,7 +35,11 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                         case CHOICE:
                             return ViewType.TEXT;
                         case DATE:
-                            return ViewType.DATE;
+                            if (edit.dateType().type() == DateType.Type.DATE_TIME) {
+                                return ViewType.DATE_TIME;
+                            } else {
+                                return ViewType.DATE;
+                            }
                         case HTML_EDITOR:
                             return ViewType.HTML;
                         case CODE_EDITOR:
