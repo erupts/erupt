@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>401</title>
+    <title>500</title>
 
     <style>
         body, html {
             margin: 0 auto;
             padding: 0;
             font-weight: 800;
+            background: url(/error/error-bg.svg)
         }
 
         body {
             font-family: cursive;
-            background: url(/error/error-bg.svg)
         }
 
         svg {
@@ -95,7 +95,7 @@
 <body>
 <svg viewBox="0 0 960 300">
     <symbol id="s-text">
-        <text text-anchor="middle" x="50%" y="80%">401</text>
+        <text text-anchor="middle" x="50%" y="80%">500</text>
     </symbol>
 
     <g class="g-ants">
@@ -107,8 +107,11 @@
     </g>
 </svg>
 <div class="content">
-    <h1>授权过期，请重新登录</h1>
-    <a href="javascript:" onclick="window.parent.location = '/#/'">返回首页</a>
+    <h1>访问出错！</h1>
+    <a href="javascript:"
+       onclick="window.parent.location.href = window.parent.location.origin + window.parent.location.pathname">
+        返回首页
+    </a>
 </div>
 </body>
 </html>

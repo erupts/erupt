@@ -2,6 +2,7 @@ package xyz.erupt.upms.handler;
 
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.FilterHandler;
+import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
@@ -23,10 +24,13 @@ public class RoleMenuFilter implements FilterHandler {
     @Resource
     private EruptUserService eruptUserService;
 
+    @Resource
+    private EruptUpmsProp eruptUpmsProp;
+
     @Override
     public String filter(String condition, String[] params) {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
-        if (eruptUser.getIsAdmin()) {
+        if (eruptUser.getIsAdmin() || !eruptUpmsProp.isStrictRoleMenuLegal()) {
             return null;
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();

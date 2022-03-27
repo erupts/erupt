@@ -54,12 +54,12 @@ public class EruptJobLog extends BaseModel {
     private Boolean status;
 
     @EruptField(
-            views = @View(title = "开始时间")
+            views = @View(title = "开始时间", type = ViewType.DATE_TIME)
     )
     private Date startTime;
 
     @EruptField(
-            views = @View(title = "结束时间")
+            views = @View(title = "结束时间",type = ViewType.DATE_TIME)
     )
     private Date endTime;
 

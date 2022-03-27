@@ -17,16 +17,17 @@ import xyz.erupt.jpa.model.BaseModel;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * @author YuePeng
  * date 2020-04-08
  */
 @Entity
-@Table(name = "e_upms_org")
+@Table(name = "e_upms_org", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Erupt(
         name = "组织维护",
-        tree = @Tree(pid = "parentOrg.id"),
+        tree = @Tree(pid = "parentOrg.id", expandLevel = 5),
         orderBy = "EruptOrg.sort asc"
 )
 @EruptI18n
@@ -52,7 +53,7 @@ public class EruptOrg extends BaseModel {
             edit = @Edit(
                     title = "上级组织",
                     type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id")
+                    referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id", expandLevel = 3)
             )
     )
     private EruptOrg parentOrg;
