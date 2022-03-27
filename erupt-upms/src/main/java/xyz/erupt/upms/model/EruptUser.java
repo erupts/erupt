@@ -130,7 +130,7 @@ public class EruptUser extends LookerSelf {
     private String passwordB;
 
     @EruptField(
-            views = @View(title = "重置密码时间")
+            views = @View(title = "重置密码时间",width = "100px")
     )
     private Date resetPwdTime;
 

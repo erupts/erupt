@@ -35,6 +35,8 @@ public enum ViewType {
     ATTACHMENT_DIALOG,
     @Comment("时间")
     DATE,
+    @Comment("时间日期")
+    DATE_TIME,
     @Comment("开关")
     BOOLEAN,
     @Comment("数值")

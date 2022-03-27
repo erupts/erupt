@@ -14,7 +14,7 @@ import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
-import xyz.erupt.upms.config.EruptUpmsConfig;
+import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.EruptLogin;
 import xyz.erupt.upms.fun.LoginProxy;
@@ -54,7 +54,7 @@ public class EruptUserService {
     private EruptProp eruptProp;
 
     @Resource
-    private EruptUpmsConfig eruptUpmsConfig;
+    private EruptUpmsProp eruptUpmsProp;
 
     @Resource
     private EruptContextService eruptContextService;
@@ -74,8 +74,8 @@ public class EruptUserService {
                 valueMap.put(menu.getValue().toLowerCase(), menu);
             }
         }
-        sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsConfig.getExpireTimeByLogin());
-        sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsConfig.getExpireTimeByLogin());
+        sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsProp.getExpireTimeByLogin());
+        sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsProp.getExpireTimeByLogin());
     }
 
     public void putUserInfo(EruptUser eruptUser, String token) {
@@ -87,7 +87,7 @@ public class EruptUserService {
         metaUserinfo.setRoles(eruptUser.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList()));
         Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> metaUserinfo.setPost(it.getCode()));
         Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> metaUserinfo.setOrg(it.getCode()));
-        sessionService.put(SessionKey.USER_TOKEN + token, gson.toJson(metaUserinfo), eruptUpmsConfig.getExpireTimeByLogin());
+        sessionService.put(SessionKey.USER_TOKEN + token, gson.toJson(metaUserinfo), eruptUpmsProp.getExpireTimeByLogin());
     }
 
     public static LoginProxy findEruptLogin() {
@@ -107,7 +107,7 @@ public class EruptUserService {
         if (null != loginError) {
             loginErrorCount = Integer.parseInt(loginError.toString());
         }
-        sessionService.put(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "", eruptUpmsConfig.getExpireTimeByLogin());
+        sessionService.put(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "", eruptUpmsProp.getExpireTimeByLogin());
         return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
     }
 
@@ -124,7 +124,8 @@ public class EruptUserService {
                 }
             }
             if (checkPwd(eruptUser, pwd)) {
-                sessionService.put(SessionKey.LOGIN_ERROR + requestIp, "0", eruptUpmsConfig.getExpireTimeByLogin());
+                request.getSession().invalidate();
+                sessionService.put(SessionKey.LOGIN_ERROR + requestIp, "0", eruptUpmsProp.getExpireTimeByLogin());
                 return new LoginModel(true, eruptUser);
             } else {
                 return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
@@ -148,7 +149,7 @@ public class EruptUserService {
 
     public LocalDateTime getExpireTime() {
         if (eruptProp.isRedisSession()) {
-            return LocalDateTime.now().plusMinutes(eruptUpmsConfig.getExpireTimeByLogin());
+            return LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin());
         } else {
             return LocalDateTime.now().plusSeconds(request.getSession().getMaxInactiveInterval());
         }

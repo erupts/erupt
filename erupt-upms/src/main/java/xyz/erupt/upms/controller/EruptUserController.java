@@ -47,12 +47,15 @@ public class EruptUserController {
     @Resource
     private EruptContextService eruptContextService;
 
+    @Resource
+    private HttpServletRequest request;
+
     //登录
     @SneakyThrows
     @PostMapping("/login")
-    public LoginModel login(@RequestParam("account") String account,
-                            @RequestParam("pwd") String pwd,
-                            @RequestParam(name = "verifyCode", required = false) String verifyCode) {
+    public LoginModel login(@RequestParam("account") String account, @RequestParam("pwd") String pwd,
+                            @RequestParam(name = "verifyCode", required = false) String verifyCode
+    ) {
         if (!eruptUserService.checkVerifyCode(verifyCode)) {
             LoginModel loginModel = new LoginModel();
             loginModel.setUseVerifyCode(true);
@@ -60,6 +63,10 @@ public class EruptUserController {
             loginModel.setPass(false);
             return loginModel;
         }
+        return this.login(account, pwd);
+    }
+
+    public LoginModel login(String account, String pwd) {
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         LoginModel loginModel;
         if (null == loginProxy) {
@@ -68,8 +75,13 @@ public class EruptUserController {
             loginModel = new LoginModel();
             try {
                 EruptUser eruptUser = loginProxy.login(account, pwd);
-                loginModel.setEruptUser(eruptUser);
-                loginModel.setPass(true);
+                if (null == eruptUser) {
+                    loginModel.setReason("账号或密码错误");
+                    loginModel.setPass(false);
+                } else {
+                    loginModel.setEruptUser(eruptUser);
+                    loginModel.setPass(true);
+                }
             } catch (Exception e) {
                 if (0 == eruptAppProp.getVerifyCodeCount()) {
                     loginModel.setUseVerifyCode(true);
@@ -79,12 +91,15 @@ public class EruptUserController {
             }
         }
         if (loginModel.isPass()) {
+            request.getSession().invalidate();
             EruptUser eruptUser = loginModel.getEruptUser();
             loginModel.setToken(Erupts.generateCode(16));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
             eruptUserService.putUserInfo(eruptUser, loginModel.getToken());
-            Optional.ofNullable(loginProxy).ifPresent(it -> it.loginSuccess(eruptUser, loginModel.getToken()));
+            if (null != loginProxy) {
+                loginProxy.loginSuccess(eruptUser, loginModel.getToken());
+            }
             eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
@@ -102,10 +117,11 @@ public class EruptUserController {
     //登出
     @PostMapping("/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel logout() {
+    public EruptApiModel logout(HttpServletRequest request) {
         String token = eruptContextService.getCurrentToken();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
+        request.getSession().invalidate();
         sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
         sessionService.remove(SessionKey.MENU_VIEW + token);
         sessionService.remove(SessionKey.USER_TOKEN + token);
