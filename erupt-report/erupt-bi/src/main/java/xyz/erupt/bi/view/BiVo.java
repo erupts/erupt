@@ -28,4 +28,5 @@ public class BiVo {
     private List<BiDimensionVo> dimensions;
 
     private List<BiChartVo> charts;
+
 }
