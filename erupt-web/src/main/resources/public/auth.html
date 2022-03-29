@@ -2,22 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Auth</title>
+    <title>Authing</title>
 </head>
 <body>
 <script>
-    function getQueryParam(key) {
-        var query = location.search.substring(1)
-        var arr = query.split('&')
-        for (var i = 0; i < arr.length; i++) {
-            var pair = arr[i].split('=')
-            if (pair[0] === key) {
-                return pair[1]
-            }
-        }
-        return null;
-    }
-    var auth = JSON.parse(window.atob(getQueryParam("auth")));
+    var auth = JSON.parse(window.decodeURIComponent(window.atob(location.search.substring(1))));
     localStorage.setItem("user", JSON.stringify({
         name: auth.userName,
         indexPath: auth.indexPath
