@@ -22,7 +22,9 @@ import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.tl.RequestBodyTL;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
+import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.log.EruptOperateLog;
+import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.IpUtil;
@@ -53,6 +55,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
     private EruptSecurityProp eruptSecurityProp;
+
+    @Resource
+    private EruptContextService eruptContextService;
 
     private static final String ERUPT_PARENT_HEADER_KEY = "eruptParent";
 
@@ -170,7 +175,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                             eruptName = Optional.ofNullable(eruptName).orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
                             EruptRecordOperate.DynamicConfig dynamicConfig = EruptSpringUtil.getBean(eruptRecordOperate.dynamicConfig());
                             if (!dynamicConfig.canRecord(eruptName, handlerMethod.getMethod())) return;
-                            operate.setApiName(dynamicConfig.naming(eruptRecordOperate.value(), eruptName, handlerMethod.getMethod()));
+                            operate.setApiName(dynamicConfig.naming(eruptRecordOperate.value(),
+                                    Optional.ofNullable(eruptContextService.getCurrentEruptMenu()).orElse(new EruptMenu()).getName(),
+                                    eruptName, handlerMethod.getMethod()));
                         }
                         operate.setIp(IpUtil.getIpAddr(request));
                         operate.setRegion(IpUtil.getCityInfo(operate.getIp()));

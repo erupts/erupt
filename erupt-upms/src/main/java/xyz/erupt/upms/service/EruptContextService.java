@@ -39,7 +39,7 @@ public class EruptContextService {
     //获取当前菜单对象
     public EruptMenu getCurrentEruptMenu() {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
-                , MetaContext.getErupt().getName(), EruptMenu.class);
+                , MetaContext.getErupt().getName().toLowerCase(), EruptMenu.class);
     }
 
 }
