@@ -28,7 +28,7 @@ public class BiColumn extends BaseModel {
 
     @EruptField(
             views = @View(title = "列名", sortable = true),
-            edit = @Edit(title = "列名", notNull = true, desc = "设置列特殊属性时配置")
+            edit = @Edit(title = "列名", notNull = true, desc = "列为动态渲染，不做列相关配置时可忽略该选项")
     )
     private String name;
 
@@ -39,10 +39,23 @@ public class BiColumn extends BaseModel {
     private Integer width;
 
     @EruptField(
+            views = @View(title = "是否显示", sortable = true),
+            edit = @Edit(title = "是否显示", notNull = true)
+    )
+    private Boolean show;
+
+    @EruptField(
             views = @View(title = "排序", sortable = true),
             edit = @Edit(title = "排序", notNull = true)
     )
     private Boolean sortable = true;
+
+//    @EruptField(
+//            views = @View(title = "下钻", sortable = true),
+//            edit = @Edit(title = "下钻", notNull = true, type = EditType.CODE_EDITOR,
+//                    codeEditType = @CodeEditorType(language = "sql"))
+//    )
+//    private String drill;
 
 //    @EruptField(
 //            views = @View(title = "固定列", sortable = true),

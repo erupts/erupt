@@ -130,16 +130,14 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
-            views = {
-                    @View(title = "SQL语句")
-            },
+            views = @View(title = "SQL语句"),
             edit = @Edit(title = "SQL语句", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
     @Transient
     @EruptField(
-            views = @View(title = "效果预览", type = ViewType.LINK_DIALOG, desc = "需提前设置菜单权限")
+            views = @View(title = "效果预览", type = ViewType.LINK_DIALOG, desc = "需提前配置菜单权限")
     )
     private String view;
 
