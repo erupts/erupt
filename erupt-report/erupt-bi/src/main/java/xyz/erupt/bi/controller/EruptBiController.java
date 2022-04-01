@@ -192,12 +192,16 @@ public class EruptBiController {
         headStyle.setFont(headFont);
         headStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
         headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        int order = 0;
         for (int i = 0; i < biData.getColumns().size(); i++) {
             BiColumnVo biColumn = biData.getColumns().get(i);
-            Cell cell = headRow.createCell(i);
-            cell.setCellStyle(headStyle);
-            sheet.setColumnWidth(i, (biColumn.getName().length() + 10) * 256);
-            cell.setCellValue(biColumn.getName());
+            if (biColumn.getDisplay()) {
+                Cell cell = headRow.createCell(order);
+                cell.setCellStyle(headStyle);
+                sheet.setColumnWidth(order, (biColumn.getName().length() + 10) * 256);
+                cell.setCellValue(biColumn.getName());
+                order++;
+            }
         }
 
         CellStyle style = ExcelUtil.beautifyExcelStyle(wb);
@@ -207,12 +211,16 @@ public class EruptBiController {
         for (int i = 0; i < biData.getList().size(); i++) {
             Row row = sheet.createRow(i + 1);
             Map<String, Object> map = biData.getList().get(i);
+            order = 0;
             for (int j = 0; j < biData.getColumns().size(); j++) {
-                Object value = map.get(biData.getColumns().get(j).getName());
-                if (null != value) {
-                    Cell cell = row.createCell(j);
-                    cell.setCellStyle(style);
-                    cell.setCellValue(value.toString());
+                if (biData.getColumns().get(j).getDisplay()) {
+                    Object value = map.get(biData.getColumns().get(j).getName());
+                    if (null != value) {
+                        Cell cell = row.createCell(order);
+                        cell.setCellStyle(style);
+                        cell.setCellValue(value.toString());
+                    }
+                    order++;
                 }
             }
         }

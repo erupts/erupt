@@ -38,11 +38,11 @@ public class BiColumn extends BaseModel {
     )
     private Integer width;
 
-//    @EruptField(
-//            views = @View(title = "是否显示", sortable = true),
-//            edit = @Edit(title = "是否显示", notNull = true)
-//    )
-//    private Boolean showed = true;
+    @EruptField(
+            views = @View(title = "是否显示", sortable = true),
+            edit = @Edit(title = "是否显示", notNull = true)
+    )
+    private Boolean display = true;
 
     @EruptField(
             views = @View(title = "排序", sortable = true),

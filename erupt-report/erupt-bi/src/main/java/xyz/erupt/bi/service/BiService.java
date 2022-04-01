@@ -72,7 +72,7 @@ public class BiService {
         if (null == biDataSource) {
             return DBTypeEnum.MySQL.processDialect(sql, sort, index, size);
         }
-        if (DBTypeEnum.Other.name().equals(biDataSource.getType())){
+        if (DBTypeEnum.Other.name().equals(biDataSource.getType())) {
             return DBTypeEnum.Other.processDialect(biDataSource.getLimitSql(), sql, sort, index, size);
         }
         return Stream.of(DBTypeEnum.values())
@@ -128,9 +128,9 @@ public class BiService {
             map.keySet().forEach(key -> {
                 if (columnMap.containsKey(key)) {
                     BiColumn biColumn = columnMap.get(key);
-                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable()));
+                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable(), biColumn.getDisplay()));
                 } else {
-                    biColumnVos.add(new BiColumnVo(key, null, false));
+                    biColumnVos.add(new BiColumnVo(key, null, false, true));
                 }
             });
             biData.setColumns(biColumnVos);

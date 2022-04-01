@@ -1,6 +1,5 @@
 package xyz.erupt.bi.view;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@AllArgsConstructor
 public class BiColumnVo {
 
     private String name;
@@ -19,4 +17,12 @@ public class BiColumnVo {
 
     private Boolean sortable;
 
+    private Boolean display;
+
+    public BiColumnVo(String name, Integer width, Boolean sortable, Boolean display) {
+        this.name = name;
+        this.width = width;
+        this.sortable = sortable;
+        this.display = display == null || display;
+    }
 }
