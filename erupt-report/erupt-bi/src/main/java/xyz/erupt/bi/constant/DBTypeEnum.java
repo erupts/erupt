@@ -6,6 +6,7 @@ public enum DBTypeEnum {
     MySQL(DBTypeEnum.GENERAL_LIMIT),
     MariaDB(DBTypeEnum.GENERAL_LIMIT),
     PostgreSQL(DBTypeEnum.GENERAL_LIMIT),
+    TiDB(DBTypeEnum.GENERAL_LIMIT),
     Oracle(DBTypeEnum.ORACLE_LIMIT),
     SQLServer2012(DBTypeEnum.SQL_SERVER_2012_LIMIT),
     达梦(DBTypeEnum.ORACLE_LIMIT),
