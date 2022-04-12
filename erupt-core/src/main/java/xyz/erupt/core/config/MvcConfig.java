@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.core.constant.EruptConst;
@@ -52,11 +53,13 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String uploadPath = eruptProp.getUploadPath();
-        if (!eruptProp.getUploadPath().endsWith("/")) {
-            uploadPath += "/";
+        String uploadPath = eruptProp.getUploadPath().endsWith("/") ? eruptProp.getUploadPath() : eruptProp.getUploadPath() + "/";
+        ResourceHandlerRegistration resourceHandlerRegistration = registry.addResourceHandler(EruptRestPath.ERUPT_ATTACHMENT + "/**");
+        if (uploadPath.contains(":")) {
+            resourceHandlerRegistration.addResourceLocations(uploadPath);
+        } else {
+            resourceHandlerRegistration.addResourceLocations("file:" + uploadPath);
         }
-        registry.addResourceHandler(EruptRestPath.ERUPT_ATTACHMENT + "/**").addResourceLocations("file:" + uploadPath);
     }
 
 }
