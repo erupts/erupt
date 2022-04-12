@@ -22,6 +22,9 @@ public class EruptProp {
     //附件存储根路径
     private String uploadPath = "/opt/erupt-attachment";
 
+    //应用空间前缀
+    private String appSpacePrefix = "erupt-app:";
+
     //是否使用redis管理session
     private boolean redisSession = false;
 
