@@ -21,4 +21,8 @@ public class EruptBiProp {
     // 开启缓存功能
     private Boolean enableCache = true;
 
+    private Integer[] pageSizeOptions = {10, 20, 30, 50, 100};
+
+    private Integer pageSize = 20;
+
 }

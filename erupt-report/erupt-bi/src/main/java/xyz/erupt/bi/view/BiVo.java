@@ -29,4 +29,8 @@ public class BiVo {
 
     private List<BiChartVo> charts;
 
+    private Integer[] pageSizeOptions;
+
+    private Integer pageSize;
+
 }

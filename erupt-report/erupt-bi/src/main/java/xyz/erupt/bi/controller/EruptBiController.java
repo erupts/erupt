@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import xyz.erupt.bi.config.EruptBiProp;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.*;
@@ -49,6 +50,9 @@ public class EruptBiController {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Resource
+    private EruptBiProp eruptBiProp;
 
     @RequestMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
@@ -110,6 +114,8 @@ public class EruptBiController {
         biVo.setCode(bi.getCode());
         biVo.setCharts(biChartVos.stream().sorted(Comparator.comparing(BiChartVo::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
         biVo.setDimensions(biDimensionVos.stream().sorted(Comparator.comparing(BiDimensionVo::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
+        biVo.setPageSize(eruptBiProp.getPageSize());
+        biVo.setPageSizeOptions(eruptBiProp.getPageSizeOptions());
         return biVo;
     }
 
