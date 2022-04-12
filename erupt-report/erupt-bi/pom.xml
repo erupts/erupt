@@ -31,6 +31,10 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+        </dependency>
+        <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
             <version>${project.parent.version}</version>

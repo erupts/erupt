@@ -14,7 +14,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.constant.BiConst;
-import xyz.erupt.bi.service.BiService;
+import xyz.erupt.bi.service.FunctionService;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
@@ -75,7 +75,7 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
 
     @Resource
     @Transient
-    private BiService biService;
+    private FunctionService functionService;
 
     private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
 
@@ -95,7 +95,7 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
     @Override
     public void afterAdd(BiFunction biFunction) {
         this.testFunction(biFunction);
-        biService.flushFunction();
+        functionService.flushFunction();
     }
 
     @Override
@@ -105,6 +105,6 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
 
     @Override
     public void afterDelete(BiFunction biFunction) {
-        biService.flushFunction();
+        functionService.flushFunction();
     }
 }

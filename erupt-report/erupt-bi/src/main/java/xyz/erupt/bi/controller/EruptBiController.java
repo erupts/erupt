@@ -14,6 +14,7 @@ import xyz.erupt.bi.service.BiService;
 import xyz.erupt.bi.view.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.util.*;
@@ -126,7 +127,9 @@ public class EruptBiController {
                             @RequestParam(value = "sort", required = false) String sortField,
                             @RequestParam(value = "direction", required = false) Boolean direction,
                             @RequestBody Map<String, Object> query, @PathVariable String code) {
-        pageSize = pageSize > 100 ? 100 : pageSize;
+        if (pageSize >= eruptBiProp.getSingleMaxResultNum()) {
+            throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
+        }
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
             this.put("code", code);
         }});

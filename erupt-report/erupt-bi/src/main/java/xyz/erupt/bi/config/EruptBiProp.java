@@ -21,8 +21,13 @@ public class EruptBiProp {
     // 开启缓存功能
     private Boolean enableCache = true;
 
+    //指定每页可以显示多少条
     private Integer[] pageSizeOptions = {10, 30, 50, 100};
 
+    //每页条数
     private Integer pageSize = 10;
+
+    //后端分页场景下单次查询最大结果集
+    private Integer singleMaxResultNum = 500;
 
 }

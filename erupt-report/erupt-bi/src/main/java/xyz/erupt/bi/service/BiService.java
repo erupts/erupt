@@ -11,7 +11,10 @@ import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.constant.ScriptPlaceholderConst;
 import xyz.erupt.bi.fun.EruptBiHandler;
-import xyz.erupt.bi.model.*;
+import xyz.erupt.bi.model.Bi;
+import xyz.erupt.bi.model.BiClassHandler;
+import xyz.erupt.bi.model.BiColumn;
+import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.bi.view.BiColumnVo;
 import xyz.erupt.bi.view.BiData;
 import xyz.erupt.core.config.GsonFactory;
@@ -24,7 +27,6 @@ import xyz.erupt.toolkit.cache.EruptCache;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -49,8 +51,6 @@ public class BiService {
     @Resource
     private EruptUserService eruptUserService;
 
-    private static String DEFINE_FUNCTIONS = "";
-
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -65,6 +65,9 @@ public class BiService {
 
     @Resource
     private EruptBiProp eruptBiProp;
+
+    @Resource
+    private FunctionService functionService;
 
     private final Gson gson = GsonFactory.getGson();
 
@@ -217,23 +220,14 @@ public class BiService {
         Bindings bindings = new SimpleBindings();
         Optional.ofNullable(param).ifPresent(it -> it.forEach((key, value) -> bindings.put(key, it.get(key))));
         Matcher m = EXPRESS_PATTERN.matcher(express);
+        String fun = functionService.getFunction();
         while (m.find()) {
             String exp = m.group();
-            Object result = scriptEngine.eval(DEFINE_FUNCTIONS + "\n" + exp, bindings);
+            Object result = scriptEngine.eval(fun + "\n" + exp, bindings);
             result = Optional.ofNullable(result).orElse("");
             express = express.replace("${" + exp + "}", result.toString());
         }
         return express;
-    }
-
-    @PostConstruct
-    public void flushFunction() {
-        List<Object[]> list = eruptDao.queryObjectList(BiFunction.class, null, null, "jsFunction");
-        StringBuilder sb = new StringBuilder();
-        for (Object o : list) {
-            sb.append((String) o).append("\n");
-        }
-        DEFINE_FUNCTIONS = sb.toString();
     }
 
 }
