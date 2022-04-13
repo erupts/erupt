@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class TableQueryVo {
 
-    private static final int maxPageSize = 200;
+    private static final int maxPageSize = 1000;
 
     private boolean dataExport = false;
 
