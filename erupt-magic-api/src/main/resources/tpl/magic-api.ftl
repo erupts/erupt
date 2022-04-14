@@ -35,6 +35,6 @@
 </script>
 <script src="${request.contextPath}/app.js?v=${hash}"></script>
 <iframe src="${request.contextPath}${web}?v=${v}"
-        style="border: 0" width="100%" height="100%"></iframe>
+        style="border: 0;vertical-align: bottom;" width="100%" height="100%"></iframe>
 </body>
 </html>
