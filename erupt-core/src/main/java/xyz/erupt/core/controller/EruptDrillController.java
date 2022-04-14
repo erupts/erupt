@@ -8,6 +8,8 @@ import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.naming.EruptOperateConfig;
@@ -51,6 +53,7 @@ public class EruptDrillController {
         field.setAccessible(true);
         Object val = field.get(data);
         if (null == val) return new Page();
+        MetaContext.register(new MetaErupt(link.linkErupt().getSimpleName()));
         return eruptService.getEruptData(
                 EruptCoreService.getErupt(link.linkErupt().getSimpleName()), tableQueryVo, null,
                 String.format("%s = '%s'", link.linkErupt().getSimpleName() + "." + link.joinColumn(), val)
@@ -80,6 +83,7 @@ public class EruptDrillController {
         } else {
             jo.addProperty(joinColumn, val.toString());
         }
+        MetaContext.register(new MetaErupt(link.linkErupt().getSimpleName()));
         return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, jo, request);
     }
 
