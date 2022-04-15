@@ -100,7 +100,7 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
                     choiceType = @ChoiceType(
                             type = ChoiceType.Type.RADIO,
                             vl = {
-//                                    @VL(label = "数值统计", value = "Number"),
+                                    @VL(label = "数值统计", value = "Number"),
                                     //------------
                                     @VL(label = "折线图", value = "Line"),
                                     @VL(label = "阶梯折线图", value = "StepLine"),
