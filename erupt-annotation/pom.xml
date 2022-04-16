@@ -11,7 +11,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.10.6</version>
+        <version>1.10.7</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -20,7 +20,6 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>5.0.0</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

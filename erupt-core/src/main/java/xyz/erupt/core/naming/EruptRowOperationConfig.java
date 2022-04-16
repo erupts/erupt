@@ -23,7 +23,7 @@ public class EruptRowOperationConfig implements EruptRecordOperate.DynamicConfig
     private HttpServletRequest request;
 
     @Override
-    public String naming(String desc, String eruptName, Method method) {
+    public String naming(String desc, String menuName, String eruptName, Method method) {
         EruptModel erupt = EruptCoreService.getErupt(eruptName);
         RowOperation operation = findRowOperation(erupt);
         return operation.title() + " | " + erupt.getErupt().name();

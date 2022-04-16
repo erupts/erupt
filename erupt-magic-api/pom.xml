@@ -13,12 +13,12 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.10.6</version>
+        <version>1.10.7</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
-        <magic-api.version>2.0.0</magic-api.version>
+        <magic-api.version>2.0.1</magic-api.version>
     </properties>
 
     <dependencies>

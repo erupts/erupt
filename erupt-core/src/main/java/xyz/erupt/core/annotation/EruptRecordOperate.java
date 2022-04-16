@@ -21,7 +21,7 @@ public @interface EruptRecordOperate {
     Class<? extends DynamicConfig> dynamicConfig() default DynamicConfig.class;
 
     interface DynamicConfig {
-        String naming(String desc, String eruptName, Method method);
+        String naming(String desc, String menuName, String eruptName, Method method);
 
         default boolean canRecord(String eruptName, Method method) {
             return true;
