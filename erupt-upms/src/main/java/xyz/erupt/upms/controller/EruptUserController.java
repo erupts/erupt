@@ -52,7 +52,7 @@ public class EruptUserController {
 
     //登录
     @SneakyThrows
-    @PostMapping("/login")
+    @RequestMapping("/login")
     public LoginModel login(@RequestParam("account") String account, @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode
     ) {
@@ -63,10 +63,6 @@ public class EruptUserController {
             loginModel.setPass(false);
             return loginModel;
         }
-        return this.login(account, pwd);
-    }
-
-    public LoginModel login(String account, String pwd) {
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         LoginModel loginModel;
         if (null == loginProxy) {

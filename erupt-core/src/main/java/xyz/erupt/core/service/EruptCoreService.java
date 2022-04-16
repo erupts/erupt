@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author YuePeng
  * date 9/28/18.
  */
-@Order
+@Order(100)
 @Service
 @Slf4j
 public class EruptCoreService implements ApplicationRunner {
