@@ -1,8 +1,10 @@
 package xyz.erupt.magicapi.interceptor;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.ssssssss.magicapi.core.config.Constants;
 import org.ssssssss.magicapi.core.context.MagicUser;
 import org.ssssssss.magicapi.core.exception.MagicLoginException;
 import org.ssssssss.magicapi.core.interceptor.Authorization;
@@ -20,6 +22,7 @@ import xyz.erupt.upms.service.EruptUserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * magic-api UI鉴权、接口鉴权
@@ -29,6 +32,8 @@ import java.util.Objects;
 public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, AuthorizationInterceptor {
 
     private final EruptUserService eruptUserService;
+
+    private final HttpServletRequest request;
 
     private static final String NO_PERMISSION = "权限不足！";
 
@@ -72,11 +77,17 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
      */
     @Override
     public boolean requireLogin() {
+        Optional.ofNullable(request.getHeader(Constants.MAGIC_TOKEN_HEADER)).ifPresent(it -> {
+            if (!"unauthorization".equals(it)) {
+                request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER, getUserByToken(it));
+            }
+        });
         return false;
     }
 
     @Override
-    public MagicUser getUserByToken(String token) throws MagicLoginException {
+    @SneakyThrows
+    public MagicUser getUserByToken(String token) {
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfoByToken(token);
         if (null == metaUserinfo) {
             throw new MagicLoginException(LOGIN_EXPIRE);
