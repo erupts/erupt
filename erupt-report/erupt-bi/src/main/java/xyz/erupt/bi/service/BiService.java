@@ -71,6 +71,10 @@ public class BiService {
 
     private final Gson gson = GsonFactory.getGson();
 
+    public BiService(EruptDao eruptDao) {
+        this.eruptDao = eruptDao;
+    }
+
     private String getLimitSql(BiDataSource biDataSource, String sql, String sort, Integer index, Integer size) {
         if (null == biDataSource) {
             return DBTypeEnum.MySQL.processDialect(sql, sort, index, size);
