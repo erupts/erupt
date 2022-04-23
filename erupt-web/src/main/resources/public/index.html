@@ -77,13 +77,19 @@
             left: 0;
             right: 0;
             bottom: 26px;
-            animation: tipFadeIn 7s;
+            animation: tipFadeIn 5s;
         }
     </style>
     <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1976d2">
     <script>
+        //如果固定周期内未成功启动则重新刷新页面
+        window.setTimeout(function () {
+            if (!window.eruptWebSuccess){
+                location.reload(true)
+            }
+        }, 1000 * 10);
         (function (date) {
             var __t__ = '' + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours() + date.getMinutes();
             document.write(
@@ -119,5 +125,5 @@
         页面长时间处于加载状态，可使用 ctrl + shift + r 清空缓存重新加载
     </div>
 </div>
-<script src="runtime-es2015.98f09082c825675a5fb1.js" type="module"></script><script src="runtime-es5.98f09082c825675a5fb1.js" nomodule defer></script><script src="polyfills-es5.b5446e3dc41fd400c97e.js" nomodule defer></script><script src="polyfills-es2015.442a1416f7887a11583e.js" type="module"></script><script src="scripts.b993e8b98ac7c2ea2917.js" defer></script><script src="main-es2015.b5994c89637f637b50ab.js" type="module"></script><script src="main-es5.b5994c89637f637b50ab.js" nomodule defer></script></body>
+<script src="runtime-es2015.98f09082c825675a5fb1.js" type="module"></script><script src="runtime-es5.98f09082c825675a5fb1.js" nomodule defer></script><script src="polyfills-es5.b5446e3dc41fd400c97e.js" nomodule defer></script><script src="polyfills-es2015.442a1416f7887a11583e.js" type="module"></script><script src="scripts.b993e8b98ac7c2ea2917.js" defer></script><script src="main-es2015.a51dc1b3fa584de0b5ee.js" type="module"></script><script src="main-es5.a51dc1b3fa584de0b5ee.js" nomodule defer></script></body>
 </html>
