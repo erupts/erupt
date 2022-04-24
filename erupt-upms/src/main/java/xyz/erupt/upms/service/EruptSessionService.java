@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.prop.EruptProp;
+import xyz.erupt.upms.config.EruptUpmsProp;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,9 @@ public class EruptSessionService {
     private HttpServletRequest request;
 
     @Resource
+    private EruptUpmsProp eruptUpmsProp;
+
+    @Resource
     private StringRedisTemplate stringRedisTemplate;
 
     private final Gson gson = GsonFactory.getGson();
@@ -52,6 +56,12 @@ public class EruptSessionService {
             stringRedisTemplate.delete(key);
         } else {
             request.getSession().removeAttribute(key);
+        }
+    }
+
+    public void refresh(String key) {
+        if (eruptProp.isRedisSession() && eruptProp.isRedisSessionRefresh()) {
+            stringRedisTemplate.boundValueOps(key).expire(eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
         }
     }
 
