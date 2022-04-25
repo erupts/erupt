@@ -156,6 +156,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 }
                 break;
         }
+        sessionService.refresh(SessionKey.USER_TOKEN + token);
         return true;
     }
 
