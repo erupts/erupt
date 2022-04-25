@@ -14,6 +14,7 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.module.MetaUserinfo;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -52,6 +53,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
     private EntityManager entityManager;
+
+    @Resource
+    private EruptProp eruptProp;
 
     @Resource
     private EruptSecurityProp eruptSecurityProp;
@@ -156,7 +160,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 }
                 break;
         }
-        sessionService.refresh(SessionKey.USER_TOKEN + token);
+        if (eruptProp.isRedisSessionRefresh()) {
+            sessionService.expire(SessionKey.USER_TOKEN + token);
+        }
         return true;
     }
 

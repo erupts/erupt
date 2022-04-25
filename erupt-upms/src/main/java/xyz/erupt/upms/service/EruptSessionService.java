@@ -59,9 +59,9 @@ public class EruptSessionService {
         }
     }
 
-    public void refresh(String key) {
-        if (eruptProp.isRedisSession() && eruptProp.isRedisSessionRefresh()) {
-            stringRedisTemplate.boundValueOps(key).expire(eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
+    public void expire(String key) {
+        if (eruptProp.isRedisSession()) {
+            stringRedisTemplate.expire(key, eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
         }
     }
 
