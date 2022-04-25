@@ -28,7 +28,7 @@ public class EruptProp {
     //是否使用redis管理session
     private boolean redisSession = false;
 
-    //是否刷新token有效期
+    //是否刷新token有效期（redisSession为true时有效）
     private boolean redisSessionRefresh = false;
 
     //是否开启csrf校验
