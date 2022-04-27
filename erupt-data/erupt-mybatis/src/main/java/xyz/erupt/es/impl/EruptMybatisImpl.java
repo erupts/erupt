@@ -1,4 +1,4 @@
-package xyz.erupt.mybatis.impl;
+package xyz.erupt.es.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -13,7 +13,7 @@ import xyz.erupt.core.service.IEruptDataService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.mybatis.annotation.EruptMybatisORM;
+import xyz.erupt.es.annotation.EruptMybatisORM;
 
 import java.io.Serializable;
 import java.util.Collection;

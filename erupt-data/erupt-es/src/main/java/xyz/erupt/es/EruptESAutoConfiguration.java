@@ -1,4 +1,4 @@
-package xyz.erupt.mybatis;
+package xyz.erupt.es;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +12,10 @@ import xyz.erupt.core.module.ModuleInfo;
  */
 @Configuration
 @ComponentScan
-public class EruptMybatisAutoConfiguration implements EruptModule {
+public class EruptESAutoConfiguration implements EruptModule {
 
     static {
-        EruptModuleInvoke.addEruptModule(EruptMybatisAutoConfiguration.class);
+        EruptModuleInvoke.addEruptModule(EruptESAutoConfiguration.class);
     }
 
     @Override
