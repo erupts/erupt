@@ -40,6 +40,7 @@
         <module>erupt-data/erupt-jpa</module><!-- Hibernate JPA 数据实现 -->
         <module>erupt-data/erupt-mybatis</module><!-- Hibernate JPA 数据实现 -->
         <module>erupt-data/erupt-mongodb</module><!-- MongoDB   数据实现 -->
+        <module>erupt-data/erupt-es</module><!-- Elasticsearch   数据实现 -->
 
         <module>erupt-upms</module><!--用户权限管理-->
         <module>erupt-security</module><!--API 接口安全-->

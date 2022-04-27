@@ -1,4 +1,4 @@
-package xyz.erupt.mybatis.annotation;
+package xyz.erupt.es.annotation;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 

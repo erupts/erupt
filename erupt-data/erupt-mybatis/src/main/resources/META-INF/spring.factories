@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=xyz.erupt.mybatis.EruptMybatisAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=xyz.erupt.es.EruptMybatisAutoConfiguration
