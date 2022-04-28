@@ -54,7 +54,7 @@ public class EruptElasticSearchImpl implements IEruptDataService {
 //                .withQuery(QueryBuilders.rangeQuery("date").lte(new Date()));
         page.setTotal(elasticsearchRestTemplate.count(nativeSearchQuery.build(), eruptModel.getClazz()));
 //        nativeSearchQuery.withSorts(SortBuilder.);
-        nativeSearchQuery.withPageable(PageRequest.of(page.getPageIndex(), page.getPageSize()));
+        nativeSearchQuery.withPageable(PageRequest.of(page.getPageIndex() - 1, page.getPageSize()));
         SearchHits<?> search = elasticsearchRestTemplate.search(nativeSearchQuery.build(), eruptModel.getClazz());
         List<Map<String, Object>> list = new ArrayList<>();
         for (SearchHit<?> hit : search.getSearchHits()) {
@@ -62,6 +62,23 @@ public class EruptElasticSearchImpl implements IEruptDataService {
         }
         page.setList(list);
         return page;
+    }
+
+    @Override
+    public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery eruptQuery) {
+        NativeSearchQueryBuilder nativeSearchQuery = new NativeSearchQueryBuilder();
+        List<String> fields = new ArrayList<>(columns.size());
+        for (Column column : columns) {
+            fields.add(column.getName());
+        }
+        nativeSearchQuery.withFields(fields);
+        this.addQueryCondition(eruptQuery, nativeSearchQuery);
+        List<Map<String, Object>> list = new ArrayList<>();
+        SearchHits<?> search = elasticsearchRestTemplate.search(nativeSearchQuery.build(), eruptModel.getClazz());
+        for (SearchHit<?> hit : search.getSearchHits()) {
+            list.add(objectToMap(hit.getContent()));
+        }
+        return list;
     }
 
     @SneakyThrows
@@ -79,10 +96,7 @@ public class EruptElasticSearchImpl implements IEruptDataService {
         for (Condition condition : eruptQuery.getConditions()) {
             switch (condition.getExpression()) {
                 case EQ:
-                    nativeSearchQuery.withQuery(QueryBuilders.termQuery(condition.getKey(), condition.getValue()));
-                    break;
-                case LIKE:
-                    nativeSearchQuery.withQuery(QueryBuilders.matchPhraseQuery(condition.getKey(), condition.getValue()));
+                    nativeSearchQuery.withQuery(QueryBuilders.matchQuery(condition.getKey(), condition.getValue().toString()));
                     break;
                 case RANGE:
                     nativeSearchQuery.withQuery(QueryBuilders.rangeQuery(condition.getKey())
@@ -94,6 +108,9 @@ public class EruptElasticSearchImpl implements IEruptDataService {
 //                    nativeSearchQuery.with(QueryBuilders. (condition.getKey()));
                     break;
             }
+        }
+        for (String string : eruptQuery.getConditionStrings()) {
+            nativeSearchQuery.withQuery(QueryBuilders.queryStringQuery(string));
         }
     }
 
@@ -112,12 +129,6 @@ public class EruptElasticSearchImpl implements IEruptDataService {
     @Override
     public void deleteData(EruptModel eruptModel, Object object) {
         elasticsearchRestTemplate.delete(object);
-    }
-
-    @Override
-    public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery eruptQuery) {
-//        elasticsearchRestTemplate.
-        return null;
     }
 
 }
