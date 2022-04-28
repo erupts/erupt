@@ -1,12 +1,15 @@
 package xyz.erupt.es.impl;
 
 import lombok.SneakyThrows;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
@@ -16,9 +19,8 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 
 import javax.annotation.Resource;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * @author YuePeng
@@ -45,6 +47,7 @@ public class EruptElasticSearchImpl implements IEruptDataService {
     @Override
     public Page queryList(EruptModel eruptModel, Page page, EruptQuery eruptQuery) {
         NativeSearchQueryBuilder nativeSearchQuery = new NativeSearchQueryBuilder();
+        this.addQueryCondition(eruptQuery, nativeSearchQuery);
 //                .withQuery(QueryBuilders.multiMatchQuery("哈哈哈哈", "content", "type"))
 //                .withQuery(QueryBuilders.matchQuery("content", "ははab"))
 //                .withQuery(QueryBuilders.matchPhrasePrefixQuery("str", "abc"))
@@ -53,27 +56,46 @@ public class EruptElasticSearchImpl implements IEruptDataService {
 //        nativeSearchQuery.withSorts(SortBuilder.);
         nativeSearchQuery.withPageable(PageRequest.of(page.getPageIndex(), page.getPageSize()));
         SearchHits<?> search = elasticsearchRestTemplate.search(nativeSearchQuery.build(), eruptModel.getClazz());
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (SearchHit<?> hit : search.getSearchHits()) {
+            list.add(objectToMap(hit.getContent()));
+        }
+        page.setList(list);
         return page;
     }
 
-//    public void addQueryCondition(EruptQuery eruptQuery, QueryWrapper queryWrapper) {
-//        for (Condition condition : eruptQuery.getConditions()) {
-//            switch (condition.getExpression()) {
-//                case EQ:
-//
-//                    break;
-//                case LIKE:
-//
-//                    break;
-//                case RANGE:
-//
-//                    break;
-//                case IN:
-//
-//                    break;
-//            }
-//        }
-//    }
+    @SneakyThrows
+    private Map<String, Object> objectToMap(Object obj) {
+        Map<String, Object> map = new HashMap<>();
+        Class<?> clazz = obj.getClass();
+        for (Field field : clazz.getDeclaredFields()) {
+            field.setAccessible(true);
+            map.put(field.getName(), field.get(obj));
+        }
+        return map;
+    }
+
+    private void addQueryCondition(EruptQuery eruptQuery, NativeSearchQueryBuilder nativeSearchQuery) {
+        for (Condition condition : eruptQuery.getConditions()) {
+            switch (condition.getExpression()) {
+                case EQ:
+                    nativeSearchQuery.withQuery(QueryBuilders.termQuery(condition.getKey(), condition.getValue()));
+                    break;
+                case LIKE:
+                    nativeSearchQuery.withQuery(QueryBuilders.matchPhraseQuery(condition.getKey(), condition.getValue()));
+                    break;
+                case RANGE:
+                    nativeSearchQuery.withQuery(QueryBuilders.rangeQuery(condition.getKey())
+                            .lte(condition.getValue())
+                            .gte(condition.getValue())
+                    );
+                    break;
+                case IN:
+//                    nativeSearchQuery.with(QueryBuilders. (condition.getKey()));
+                    break;
+            }
+        }
+    }
 
 
     @Override
@@ -85,13 +107,6 @@ public class EruptElasticSearchImpl implements IEruptDataService {
     public void editData(EruptModel eruptModel, Object object) {
         Document document = Document.parse(GsonFactory.getGson().toJson(object));
         elasticsearchRestTemplate.indexOps(eruptModel.getClazz()).putMapping(document);
-//        UpdateQuery query = UpdateQuery
-//                .builder(String.valueOf(updateId))
-//                .withDocument(document)
-//                .build();
-//        IndexCoordinates indexCoordinates = elasticsearchRestTemplate.getIndexCoordinatesFor(eruptModel.getClazz());
-//        elasticsearchRestTemplate.update(updateQuery, indexCoordinates);
-//        elasticsearchRestTemplate.update(updateQuery, object);
     }
 
     @Override
