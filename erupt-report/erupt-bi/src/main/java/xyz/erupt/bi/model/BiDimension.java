@@ -5,6 +5,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -12,6 +13,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.*;
@@ -21,12 +23,12 @@ import javax.persistence.*;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi_dimension", uniqueConstraints = @UniqueConstraint(columnNames = {"code","bi_id"}))
-@Erupt(name = "查询维度")
+@Table(name = "e_bi_dimension", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
+@Erupt(name = "查询维度", dataProxy = BiDimension.class)
 @Getter
 @Setter
 @EruptI18n
-public class BiDimension extends BaseModel {
+public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
 
     @EruptField(
             views = @View(title = "维度编码", sortable = true),
@@ -109,5 +111,16 @@ public class BiDimension extends BaseModel {
     @ManyToOne(cascade = CascadeType.DETACH)
     private Bi bi;
 
+    @Override
+    public void beforeAdd(BiDimension biDimension) {
+        if (type.endsWith("REFERENCE") && null == biDimension.getBiDimensionReference()) {
+            throw new EruptWebApiRuntimeException("参照维度必填");
+        }
+    }
+
+    @Override
+    public void beforeUpdate(BiDimension biDimension) {
+        this.beforeAdd(biDimension);
+    }
 }
 

@@ -147,18 +147,18 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bi_id")
-    @EruptField(
-            edit = @Edit(title = "表格列", type = EditType.TAB_TABLE_ADD)
-    )
-    private Set<BiColumn> biColumns;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "bi_id")
     @OrderBy("sort")
     @EruptField(
             edit = @Edit(title = "查询维度", type = EditType.TAB_TABLE_ADD)
     )
     private Set<BiDimension> biDimension;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "bi_id")
+    @EruptField(
+            edit = @Edit(title = "表格列", type = EditType.TAB_TABLE_ADD)
+    )
+    private Set<BiColumn> biColumns;
 
     @Resource
     @Transient
