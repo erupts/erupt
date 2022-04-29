@@ -1,4 +1,4 @@
-package xyz.erupt.es;
+package xyz.erupt.mybatis;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class EruptMybatisAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-mongodb").build();
+        return ModuleInfo.builder().name("erupt-mybatis").build();
     }
 
 }

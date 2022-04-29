@@ -1,4 +1,4 @@
-package xyz.erupt.es.impl;
+package xyz.erupt.mybatis.process;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -28,7 +28,7 @@ import java.util.Map;
  * date 2020-03-06.
  */
 @Service
-public class EruptMybatisImpl implements IEruptDataService {
+public class EruptMybatisProcess implements IEruptDataService {
 
     public static final String MYBATIS_PROCESS = "mybatis";
 
@@ -39,7 +39,7 @@ public class EruptMybatisImpl implements IEruptDataService {
     private SqlSessionTemplate sqlSessionTemplate;
 
     static {
-        DataProcessorManager.register(MYBATIS_PROCESS, EruptMybatisImpl.class);
+        DataProcessorManager.register(MYBATIS_PROCESS, EruptMybatisProcess.class);
     }
 
     @SneakyThrows
