@@ -65,6 +65,12 @@ public class EruptSessionService {
         }
     }
 
+    public void expireMap(String key) {
+        if (eruptProp.isRedisSession()) {
+            stringRedisTemplate.boundHashOps(key).expire(eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
+        }
+    }
+
     public Object get(String key) {
         if (eruptProp.isRedisSession()) {
             return stringRedisTemplate.opsForValue().get(key);

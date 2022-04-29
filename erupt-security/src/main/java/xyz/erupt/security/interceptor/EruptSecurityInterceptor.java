@@ -162,6 +162,8 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         }
         if (eruptProp.isRedisSessionRefresh()) {
             sessionService.expire(SessionKey.USER_TOKEN + token);
+            sessionService.expire(SessionKey.MENU_VIEW + token);
+            sessionService.expireMap(SessionKey.MENU_VALUE_MAP + token);
         }
         return true;
     }
