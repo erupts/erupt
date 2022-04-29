@@ -1,4 +1,4 @@
-package xyz.erupt.es.impl;
+package xyz.erupt.es.process;
 
 import lombok.SneakyThrows;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -27,12 +27,12 @@ import java.util.*;
  * date 2020-03-06.
  */
 @Service
-public class EruptElasticSearchImpl implements IEruptDataService {
+public class EruptElasticSearchProcess implements IEruptDataService {
 
     public static final String ELASTICSEARCH_PROCESS = "es";
 
     static {
-        DataProcessorManager.register(ELASTICSEARCH_PROCESS, EruptElasticSearchImpl.class);
+        DataProcessorManager.register(ELASTICSEARCH_PROCESS, EruptElasticSearchProcess.class);
     }
 
     @Resource

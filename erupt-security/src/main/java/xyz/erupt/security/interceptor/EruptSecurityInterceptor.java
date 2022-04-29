@@ -21,6 +21,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.tl.RequestBodyTL;
+import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author YuePeng
@@ -56,6 +58,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
     private EruptProp eruptProp;
+
+    @Resource
+    private EruptUpmsProp eruptUpmsProp;
 
     @Resource
     private EruptSecurityProp eruptSecurityProp;
@@ -161,9 +166,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 break;
         }
         if (eruptProp.isRedisSessionRefresh()) {
-            sessionService.expire(SessionKey.USER_TOKEN + token);
-            sessionService.expire(SessionKey.MENU_VIEW + token);
-            sessionService.expireMap(SessionKey.MENU_VALUE_MAP + token);
+            for (String uk : SessionKey.USER_KEY_GROUP) {
+                sessionService.expire(uk + token, eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
+            }
         }
         return true;
     }
