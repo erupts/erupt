@@ -148,6 +148,9 @@ public class EruptBiController {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
         biService.verifyBiMenuPermissions(dimension.getBi(), code);
         BiDimensionReference reference = dimension.getBiDimensionReference();
+        if (null == reference) {
+            throw new RuntimeException("未绑定查询维度");
+        }
         List<Map<String, Object>> list = biService.startQuery(reference.getName(), reference.getRefSql(), null, reference.getClassHandler(), reference.getDataSource(), query);
         List<Reference> references = new ArrayList<>();
         for (Map<String, Object> map : list) {

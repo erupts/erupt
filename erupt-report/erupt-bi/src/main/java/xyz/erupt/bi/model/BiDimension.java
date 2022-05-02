@@ -24,7 +24,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "e_bi_dimension", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
-@Erupt(name = "查询维度", dataProxy = BiDimension.class)
+@Erupt(name = "查询维度")
 @Getter
 @Setter
 @EruptI18n
@@ -122,5 +122,6 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
     public void beforeUpdate(BiDimension biDimension) {
         this.beforeAdd(biDimension);
     }
+
 }
 
