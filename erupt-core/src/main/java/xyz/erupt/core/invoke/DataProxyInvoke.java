@@ -35,7 +35,7 @@ public class DataProxyInvoke {
     }
 
     private static DataProxy<Object> getInstanceBean(Class<? extends DataProxy<?>> dataProxy) {
-        return (DataProxy<Object>) EruptSpringUtil.getBean(dataProxy);
+        return (DataProxy) EruptSpringUtil.getBean(dataProxy);
     }
 
 }
