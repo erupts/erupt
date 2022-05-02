@@ -13,7 +13,7 @@ import java.util.Map;
  * @author YuePeng
  * date 2018-10-09.
  */
-public interface DataProxy<@Comment("Erupt类对象") MODEL> extends EruptProxy<MODEL> {
+public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<MODEL> {
 
     @Comment("增加前")
     default void beforeAdd(MODEL model) {
