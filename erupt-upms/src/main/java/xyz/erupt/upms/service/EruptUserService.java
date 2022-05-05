@@ -191,7 +191,7 @@ public class EruptUserService {
     @Transactional
     public EruptApiModel changePwd(String account, String pwd, String newPwd, String newPwd2) {
         if (!newPwd.equals(newPwd2)) {
-            return EruptApiModel.errorNoInterceptApi("修改失败，新密码与确认密码不匹配");
+            return EruptApiModel.errorNoInterceptMessage("修改失败，新密码与确认密码不匹配");
         }
         EruptUser eruptUser = findEruptUserByAccount(account);
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
@@ -204,7 +204,7 @@ public class EruptUserService {
         }
         if (eruptUser.getPassword().equals(pwd)) {
             if (newPwd.equals(eruptUser.getPassword())) {
-                return EruptApiModel.errorNoInterceptApi("修改失败，新密码不能和原始密码一样");
+                return EruptApiModel.errorNoInterceptMessage("修改失败，新密码不能和原始密码一样");
             }
             eruptUser.setPassword(newPwd);
             eruptUser.setResetPwdTime(new Date());
@@ -214,7 +214,7 @@ public class EruptUserService {
             }
             return EruptApiModel.successApi();
         } else {
-            return EruptApiModel.errorNoInterceptApi("密码错误");
+            return EruptApiModel.errorNoInterceptMessage("密码错误");
         }
     }
 
