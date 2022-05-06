@@ -30,7 +30,7 @@ import java.util.Set;
 @Table(name = "e_upms_role", uniqueConstraints = {
         @UniqueConstraint(columnNames = "code")
 })
-@Erupt(name = "角色管理", dataProxy = EruptRole.class)
+@Erupt(name = "角色管理", dataProxy = EruptRole.class, orderBy = "EruptRole.sort asc")
 @EruptI18n
 @Getter
 @Setter
