@@ -14,7 +14,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.upms.handler.RoleMenuFilter;
-import xyz.erupt.upms.helper.HyperModelCreatorVo;
+import xyz.erupt.upms.helper.HyperModelUpdateVo;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -35,7 +35,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Component
-public class EruptRole extends HyperModelCreatorVo implements DataProxy<EruptRole> {
+public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole> {
 
     @EruptField(
             views = @View(title = "编码", width = "100px"),
@@ -48,6 +48,12 @@ public class EruptRole extends HyperModelCreatorVo implements DataProxy<EruptRol
             edit = @Edit(title = "名称", notNull = true)
     )
     private String name;
+
+    @EruptField(
+            views = @View(title = "展示顺序"),
+            edit = @Edit(title = "展示顺序", desc = "数值越小，越靠前", notNull = true)
+    )
+    private Integer sort;
 
     @EruptField(
             views = @View(title = "状态"),
