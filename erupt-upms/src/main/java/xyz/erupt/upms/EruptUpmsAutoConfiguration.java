@@ -44,7 +44,7 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createEruptClassMenu(EruptMenu.class, menus.get(0), 0, MenuTypeEnum.TREE));
         menus.add(MetaMenu.createEruptClassMenu(EruptRole.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(EruptOrg.class, menus.get(0), 20, MenuTypeEnum.TREE));
-        menus.add(MetaMenu.createEruptClassMenu(EruptPost.class, menus.get(0), 30));
+        menus.add(MetaMenu.createEruptClassMenu(EruptPost.class, menus.get(0), 30, MenuTypeEnum.TREE));
         menus.add(MetaMenu.createEruptClassMenu(EruptUser.class, menus.get(0), 40));
         menus.add(MetaMenu.createEruptClassMenu(EruptDict.class, menus.get(0), 50));
         menus.add(MetaMenu.createEruptClassMenu(EruptDictItem.class, menus.get(0), 60, MenuStatus.HIDE));
