@@ -51,7 +51,7 @@ public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole
 
     @EruptField(
             views = @View(title = "展示顺序"),
-            edit = @Edit(title = "展示顺序", desc = "数值越小，越靠前", notNull = true)
+            edit = @Edit(title = "展示顺序", desc = "数值越小，越靠前")
     )
     private Integer sort;
 
