@@ -21,6 +21,9 @@ public class EruptBiProp {
     // 开启缓存功能
     private Boolean enableCache = true;
 
+    // 超管用户才有报表发布权限
+    private Boolean superAdminPublish = false;
+
     //指定每页可以显示多少条
     private Integer[] pageSizeOptions = {10, 30, 50, 100};
 

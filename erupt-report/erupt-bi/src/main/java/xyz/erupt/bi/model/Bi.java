@@ -17,6 +17,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.bi.config.EruptBiProp;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -24,12 +25,15 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.model.EruptMenu;
+import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -166,6 +170,10 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
 
     @Resource
     @Transient
+    private EruptBiProp eruptBiProp;
+
+    @Resource
+    @Transient
     private EruptUserService eruptUserService;
 
     @Resource
@@ -175,7 +183,7 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     @Override
     @Transactional
     public String exec(List<Bi> data, BiReleaseModal biReleaseModal, String[] param) {
-        if (!eruptUserService.getSimpleUserInfo().isSuperAdmin()) {
+        if (eruptBiProp.getSuperAdminPublish() && !eruptUserService.getSimpleUserInfo().isSuperAdmin()) {
             throw new EruptWebApiRuntimeException("报表发布请联系 '超级管理员' 操作！");
         }
         Bi bi = data.get(0);
@@ -186,6 +194,22 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
         EruptMenu eruptMenu = new EruptMenu(bi.getCode(), bi.getName(), BiConst.MENU_TYPE,
                 bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());
         eruptDao.persist(eruptMenu);
+        //在既定角色中也保存一份
+        {
+            String biRoleName = "bi_view_role@auto";
+            EruptRole eruptRole = new EruptRole();
+            eruptRole.setCode(biRoleName);
+            eruptRole.setName("报表查看角色");
+            eruptRole.setStatus(true);
+            eruptRole.setSort(20);
+            eruptRole.setCreateTime(new Date());
+            EruptRole biRole = eruptDao.persistIfNotExist(EruptRole.class, eruptRole, "code", biRoleName);
+            if (null == biRole.getMenus()) {
+                biRole.setMenus(new HashSet<>());
+            }
+            biRole.getMenus().add(eruptMenu);
+            eruptDao.persist(biRole);
+        }
         //刷新当前用户菜单
         eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
         return null;
