@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.handler.RoleMenuFilter;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
 import xyz.erupt.upms.service.EruptUserService;
@@ -50,7 +51,7 @@ public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole
     private String name;
 
     @EruptField(
-            views = @View(title = "展示顺序"),
+            views = @View(title = "展示顺序", sortable = true),
             edit = @Edit(title = "展示顺序", desc = "数值越小，越靠前")
     )
     private Integer sort;
@@ -85,10 +86,23 @@ public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole
     @Transient
     private EruptUserService eruptUserService;
 
+    @Resource
+    @Transient
+    private EruptDao eruptDao;
+
     @Override
     public String beforeFetch(List<Condition> conditions) {
         if (eruptUserService.getCurrentEruptUser().getIsAdmin()) return null;
         return "EruptRole.createUser.id = " + eruptUserService.getCurrentUid();
     }
 
+    @Override
+    public void addBehavior(EruptRole eruptRole) {
+        Integer max = (Integer) eruptDao.getEntityManager().createQuery("select max(sort) from " + EruptRole.class.getSimpleName()).getSingleResult();
+        if (null == max) {
+            eruptRole.setSort(10);
+        } else {
+            eruptRole.setSort(max + 10);
+        }
+    }
 }
