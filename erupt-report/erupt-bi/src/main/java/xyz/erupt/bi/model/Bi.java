@@ -160,7 +160,7 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bi_id")
     @EruptField(
-            edit = @Edit(title = "表格列", type = EditType.TAB_TABLE_ADD)
+            edit = @Edit(title = "表格列配置", type = EditType.TAB_TABLE_ADD)
     )
     private Set<BiColumn> biColumns;
 
@@ -191,7 +191,7 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
                 "菜单已存在请勿重复发布");
         Integer max = (Integer) eruptDao.getEntityManager()
                 .createQuery("select max(sort) from " + EruptMenu.class.getSimpleName()).getSingleResult();
-        EruptMenu eruptMenu = new EruptMenu(bi.getCode(), bi.getName(), BiConst.MENU_TYPE,
+        EruptMenu eruptMenu = new EruptMenu(bi.getCode(), biReleaseModal.getName(), BiConst.MENU_TYPE,
                 bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());
         eruptDao.persist(eruptMenu);
         //在既定角色中也保存一份

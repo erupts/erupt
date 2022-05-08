@@ -1,6 +1,7 @@
 package xyz.erupt.bi.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -17,8 +18,14 @@ import xyz.erupt.upms.model.EruptMenu;
  */
 @Erupt(name = "报表发布弹窗")
 @Getter
+@Setter
 @EruptI18n
 public class BiReleaseModal extends BaseModel {
+
+    @EruptField(
+            edit = @Edit(title = "菜单名称", notNull = true)
+    )
+    private String name;
 
     @EruptField(
             edit = @Edit(
@@ -28,5 +35,6 @@ public class BiReleaseModal extends BaseModel {
             )
     )
     private EruptMenu eruptMenu;
+
 
 }
