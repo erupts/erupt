@@ -10,6 +10,7 @@ import xyz.erupt.upms.constant.FetchConst;
 import xyz.erupt.upms.model.EruptDictItem;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,9 @@ public class DictChoiceFetchHandler implements ChoiceFetchHandler {
         EruptAssert.notNull(params, DictChoiceFetchHandler.class.getSimpleName() + " → params[0] must dict → code");
         return dictCache.getAndSet(DictChoiceFetchHandler.class.getName() + ":" + params[0],
                 params.length == 2 ? Long.parseLong(params[1]) : FetchConst.DEFAULT_CACHE_TIME, () ->
-                        eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = '" + params[0] + "'")
-                                .stream().map((item) -> new VLModel(item.getId(), item.getName())).collect(Collectors.toList()));
+                        eruptDao.queryEntityList(EruptDictItem.class, "eruptDict.code = :code order by sort", new HashMap<String, Object>() {{
+                            this.put("code", params[0]);
+                        }}).stream().map((item) -> new VLModel(item.getId(), item.getName())).collect(Collectors.toList()));
     }
 
 }
