@@ -135,9 +135,9 @@ public class BiService {
             map.keySet().forEach(key -> {
                 if (columnMap.containsKey(key)) {
                     BiColumn biColumn = columnMap.get(key);
-                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable(), biColumn.getDisplay()));
+                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable(), biColumn.getDisplay(), StringUtils.isNotBlank(biColumn.getDrillExpress())));
                 } else {
-                    biColumnVos.add(new BiColumnVo(key, null, false, true));
+                    biColumnVos.add(new BiColumnVo(key, null, false, true, false));
                 }
             });
             biData.setColumns(biColumnVos);
@@ -145,6 +145,15 @@ public class BiService {
         return biData;
     }
 
+    /**
+     * @param key          查询标识
+     * @param express      查询表达式
+     * @param timeout      缓存时间（秒）
+     * @param classHandler 处理类
+     * @param biDataSource 数据源
+     * @param query        查询参数对象
+     * @return 查询结果
+     */
     @SneakyThrows
     public List<Map<String, Object>> startQuery(String key, String express, Integer timeout, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
         EruptBiHandler biHandler = null;

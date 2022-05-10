@@ -141,6 +141,33 @@ public class EruptBiController {
         return biService.queryBiData(bi, pageIndex, pageSize, sortField, query, false);
     }
 
+    @PostMapping("/drill/data/{code}/{drillCode}")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 3)
+    public BiData drillData(@PathVariable String code,
+                            @PathVariable Integer drillCode,
+                            @RequestParam("pageIndex") int pageIndex,
+                            @RequestParam("pageSize") int pageSize,
+                            @RequestBody Map<String, Object> query) {
+        if (pageSize >= eruptBiProp.getSingleMaxResultNum()) {
+            throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
+        }
+        Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
+            this.put("code", code);
+        }});
+        for (BiColumn biColumn : bi.getBiColumns()) {
+            if (drillCode == biColumn.getName().hashCode()) {
+                BiData biData = new BiData();
+                biData.setList(biService.startQuery(biColumn.getName() + "-drill", biColumn.getDrillExpress(), 1, null, bi.getDataSource(), query));
+                List<BiColumnVo> biColumnVos = new LinkedList<>();
+                biData.getList().get(0).keySet().forEach(key -> biColumnVos.add(new BiColumnVo(key, null, false, true, false)));
+                biData.setColumns(biColumnVos);
+                biData.setTotal(100L);
+                return biData;
+            }
+        }
+        throw new EruptWebApiRuntimeException("column not found");
+    }
+
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @RequestMapping("/{code}/reference/{id}")
     public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code,

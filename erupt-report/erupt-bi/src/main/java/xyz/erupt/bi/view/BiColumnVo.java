@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 public class BiColumnVo {
 
+    private int code;
+
     private String name;
 
     private Integer width;
@@ -19,10 +21,14 @@ public class BiColumnVo {
 
     private Boolean display;
 
-    public BiColumnVo(String name, Integer width, Boolean sortable, Boolean display) {
+    private Boolean drill;
+
+    public BiColumnVo(String name, Integer width, Boolean sortable, Boolean display, Boolean drill) {
+        this.code = name.hashCode();
         this.name = name;
         this.width = width;
         this.sortable = sortable;
         this.display = display == null || display;
+        this.drill = drill;
     }
 }
