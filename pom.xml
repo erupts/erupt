@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.10.8-beta</version>
+    <version>1.10.8-beta.2</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -31,9 +31,9 @@
         <module>erupt-annotation</module>
         <module>erupt-core</module>
         <module>erupt-toolkit</module>
-        <module>erupt-tpl</module>
         <module>erupt-i18n</module> <!-- 多语言 -->
 
+        <module>erupt-tpl</module>
         <module>erupt-tpl-ui/ant-design</module>
         <module>erupt-tpl-ui/element-ui</module>
         <module>erupt-tpl-ui/amis</module>
