@@ -11,7 +11,7 @@
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
         <version>1.10.8-beta</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <dependencies>
