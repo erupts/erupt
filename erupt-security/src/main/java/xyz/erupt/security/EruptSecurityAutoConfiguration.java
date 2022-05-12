@@ -1,5 +1,6 @@
 package xyz.erupt.security;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.module.EruptModule;
@@ -12,6 +13,7 @@ import xyz.erupt.core.module.ModuleInfo;
  */
 @Configuration
 @ComponentScan
+@EnableConfigurationProperties
 public class EruptSecurityAutoConfiguration implements EruptModule {
 
     static {

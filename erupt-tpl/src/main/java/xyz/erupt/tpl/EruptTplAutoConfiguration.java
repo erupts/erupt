@@ -1,5 +1,6 @@
 package xyz.erupt.tpl;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import javax.annotation.Resource;
 @Configuration
 @ComponentScan
 @Component
+@EnableConfigurationProperties
 public class EruptTplAutoConfiguration implements EruptModule {
 
     static {
