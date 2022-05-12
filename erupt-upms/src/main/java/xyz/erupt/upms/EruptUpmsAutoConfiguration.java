@@ -1,6 +1,7 @@
 package xyz.erupt.upms;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import xyz.erupt.core.annotation.EruptScan;
@@ -26,6 +27,7 @@ import java.util.List;
 @ComponentScan
 @EntityScan
 @EruptScan
+@EnableConfigurationProperties
 public class EruptUpmsAutoConfiguration implements EruptModule {
 
     static {
