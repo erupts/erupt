@@ -145,27 +145,30 @@ public class EruptBiController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 3)
     public BiData drillData(@PathVariable String code,
                             @PathVariable Integer drillCode,
-                            @RequestParam("pageIndex") int pageIndex,
-                            @RequestParam("pageSize") int pageSize,
+                            @RequestParam int pageIndex,
+                            @RequestParam int pageSize,
                             @RequestBody Map<String, Object> query) {
-        if (pageSize >= eruptBiProp.getSingleMaxResultNum()) {
-            throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
-        }
+        if (pageSize >= eruptBiProp.getSingleMaxResultNum())  throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
             this.put("code", code);
         }});
         for (BiColumn biColumn : bi.getBiColumns()) {
             if (drillCode == biColumn.getName().hashCode()) {
                 BiData biData = new BiData();
-                biData.setList(biService.startQuery(biColumn.getName() + "-drill", biColumn.getDrillExpress(), 1, null, bi.getDataSource(), query));
-                List<BiColumnVo> biColumnVos = new LinkedList<>();
-                biData.getList().get(0).keySet().forEach(key -> biColumnVos.add(new BiColumnVo(key, null, false, true, false)));
-                biData.setColumns(biColumnVos);
-                biData.setTotal(100L);
+                biData.setTotal(biService.getTotal(biColumn.getDrillExpress(), bi.getDataSource(), query));
+                if (biData.getTotal() > 0) {
+                    biData.setList(biService.startQuery(biColumn.getName() + "-drill",
+                            biService.getLimitSql(bi.getDataSource(), biColumn.getDrillExpress(), null, pageIndex, pageSize),
+                            1, null, bi.getDataSource(), query));
+                    List<BiColumnVo> biColumnVos = new LinkedList<>();
+                    biData.getList().get(0).keySet().forEach(key ->
+                            biColumnVos.add(new BiColumnVo(key, null, false, true, false)));
+                    biData.setColumns(biColumnVos);
+                }
                 return biData;
             }
         }
-        throw new EruptWebApiRuntimeException("column not found");
+        throw new EruptWebApiRuntimeException(drillCode + " column not found");
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)

@@ -22,7 +22,6 @@ import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
-import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.toolkit.cache.EruptCache;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.service.EruptUserService;
@@ -71,11 +70,7 @@ public class BiService {
 
     private final Gson gson = GsonFactory.getGson();
 
-    public BiService(EruptDao eruptDao) {
-        this.eruptDao = eruptDao;
-    }
-
-    private String getLimitSql(BiDataSource biDataSource, String sql, String sort, Integer index, Integer size) {
+    public String getLimitSql(BiDataSource biDataSource, String sql, String sort, Integer index, Integer size) {
         if (null == biDataSource) {
             return DBTypeEnum.MySQL.processDialect(sql, sort, index, size);
         }
@@ -191,11 +186,8 @@ public class BiService {
 
     private static final String TOTAL_KEY = "count";
 
-    @Resource
-    private EruptDao eruptDao;
-
     @SneakyThrows
-    private Long getTotal(Bi bi, Map<String, Object> query) {
+    public Long getTotal(Bi bi, Map<String, Object> query) {
         String express = processPlaceHolder(bi.getSqlStatement(), query);
         BiClassHandler biClassHandler = bi.getClassHandler();
         if (null != biClassHandler) {
@@ -203,6 +195,12 @@ public class BiService {
                     .exprHandler(biClassHandler.getParam(), query, express);
         }
         return Long.valueOf(dataSourceService.getJdbcTemplate(bi.getDataSource())
+                .queryForMap(String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express), query)
+                .get(TOTAL_KEY).toString());
+    }
+
+    public Long getTotal(String express, BiDataSource biDataSource, Map<String, Object> query) {
+        return Long.valueOf(dataSourceService.getJdbcTemplate(biDataSource)
                 .queryForMap(String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express), query)
                 .get(TOTAL_KEY).toString());
     }
