@@ -82,6 +82,19 @@ public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole
     )
     private Set<EruptMenu> menus;
 
+    @JoinTable(name = "e_upms_user_role",
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    @ManyToMany
+    @EruptField(
+            views = @View(title = "包含用户"),
+            edit = @Edit(
+                    title = "包含用户",
+                    type = EditType.TAB_TABLE_REFER
+            )
+    )
+    private Set<EruptUserByRoleView> users;
+
     @Resource
     @Transient
     private EruptUserService eruptUserService;
