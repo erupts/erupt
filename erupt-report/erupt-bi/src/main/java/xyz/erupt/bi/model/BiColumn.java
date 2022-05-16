@@ -2,15 +2,22 @@ package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
+import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.bi.constant.ColumnType;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.Entity;
@@ -23,12 +30,12 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "e_bi_column")
-@Erupt(name = "列配置")
+@Erupt(name = "列配置", dataProxy = BiColumn.class)
 @Getter
 @Setter
 @Component
 @EruptI18n
-public class BiColumn extends BaseModel {
+public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
 
     @EruptField(
             views = @View(title = "列名", sortable = true),
@@ -54,28 +61,45 @@ public class BiColumn extends BaseModel {
     )
     private Integer width;
 
-    //下钻方式
-//    @EruptField(
-//            views = @View(title = "下钻", sortable = true),
-//            edit = @Edit(title = "下钻", type = EditType.CHOICE, choiceType = @ChoiceType(
-//                    vl = {
-//                            @VL(value = "", label = "关闭"),
-//                            @VL(value = "table", label = "表格")
-//                    }
-//            ))
-//    )
-//    private String drillType = "close";
+    @EruptField(
+            views = @View(title = "类型", sortable = true),
+            edit = @Edit(title = "类型", type = EditType.CHOICE, notNull = true, choiceType = @ChoiceType(
+                    vl = {
+                            @VL(value = ColumnType.STRING, label = "字符串"),
+                            @VL(value = ColumnType.NUMBER, label = "数值"),
+                            @VL(value = ColumnType.DATE, label = "时间"),
+                            @VL(value = ColumnType.DRILL, label = "下钻"),
+                    }
+            ))
+    )
+    private String type = ColumnType.STRING;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "下钻SQL"),
             edit = @Edit(title = "下钻SQL", type = EditType.CODE_EDITOR,
+                    showBy = @ShowBy(dependField = "type", expr = "value == '" + ColumnType.DRILL + "'"),
                     codeEditType = @CodeEditorType(language = "sql"))
     )
     private String drillExpress;
 
-//    @EruptField(
+    @Override
+    public void beforeAdd(BiColumn biColumn) {
+        if (ColumnType.DRILL.equals(biColumn.type)) {
+            if (StringUtils.isBlank(biColumn.drillExpress)) {
+                throw new EruptWebApiRuntimeException("下钻SQL必填");
+            }
+        }
+    }
+
+    @Override
+    public void beforeUpdate(BiColumn biColumn) {
+        this.beforeAdd(biColumn);
+    }
+
+
+    //    @EruptField(
 //            views = @View(title = "下钻", sortable = true),
 //            edit = @Edit(title = "下钻", notNull = true, type = EditType.CODE_EDITOR,
 //                    codeEditType = @CodeEditorType(language = "sql"))

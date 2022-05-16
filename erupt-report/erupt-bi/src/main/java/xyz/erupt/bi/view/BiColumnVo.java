@@ -21,14 +21,16 @@ public class BiColumnVo {
 
     private Boolean display;
 
+    private String type;
+
     private Boolean drill;
 
-    public BiColumnVo(String name, Integer width, Boolean sortable, Boolean display, Boolean drill) {
+    public BiColumnVo(String name, Integer width, Boolean sortable, Boolean display, String type) {
         this.code = name.hashCode();
         this.name = name;
         this.width = width;
         this.sortable = sortable;
         this.display = display == null || display;
-        this.drill = drill;
+        this.type = type;
     }
 }

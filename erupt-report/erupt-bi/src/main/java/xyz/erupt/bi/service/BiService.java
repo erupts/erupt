@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.bi.config.EruptBiProp;
 import xyz.erupt.bi.constant.BiConst;
+import xyz.erupt.bi.constant.ColumnType;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.constant.ScriptPlaceholderConst;
 import xyz.erupt.bi.fun.EruptBiHandler;
@@ -130,9 +131,9 @@ public class BiService {
             map.keySet().forEach(key -> {
                 if (columnMap.containsKey(key)) {
                     BiColumn biColumn = columnMap.get(key);
-                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable(), biColumn.getDisplay(), StringUtils.isNotBlank(biColumn.getDrillExpress())));
+                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable(), biColumn.getDisplay(), biColumn.getType()));
                 } else {
-                    biColumnVos.add(new BiColumnVo(key, null, false, true, false));
+                    biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING));
                 }
             });
             biData.setColumns(biColumnVos);

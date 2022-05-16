@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.bi.config.EruptBiProp;
 import xyz.erupt.bi.constant.BiConst;
+import xyz.erupt.bi.constant.ColumnType;
 import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.*;
 import xyz.erupt.bi.service.BiService;
@@ -162,7 +163,7 @@ public class EruptBiController {
                             1, null, bi.getDataSource(), query));
                     List<BiColumnVo> biColumnVos = new LinkedList<>();
                     biData.getList().get(0).keySet().forEach(key ->
-                            biColumnVos.add(new BiColumnVo(key, null, false, true, false)));
+                            biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING)));
                     biData.setColumns(biColumnVos);
                 }
                 return biData;
