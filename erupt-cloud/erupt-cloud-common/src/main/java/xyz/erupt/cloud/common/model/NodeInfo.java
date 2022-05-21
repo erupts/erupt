@@ -17,6 +17,7 @@ import java.util.List;
 @Setter
 public class NodeInfo implements Serializable {
 
+    //实例唯一ID
     private String instanceId;
 
     //版本

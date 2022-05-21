@@ -51,9 +51,6 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
 
     private boolean errorConnect = false;
 
-
-
-
     @Override
     public void run(ApplicationArguments args) {
         Thread register = new Thread(this);
@@ -74,7 +71,6 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
         if (null == eruptNodeProp.getAccessToken()) {
             throw new RuntimeException(EruptNodeProp.SPACE + ".accessToken not config");
         }
-
         log.info(ansi().fg(Ansi.Color.BLUE) + " \n" +
                 "                         _    \n" +
                 "  ____  ____ _   _ ____ | |_  \n" +
