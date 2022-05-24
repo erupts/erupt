@@ -28,7 +28,7 @@ import javax.persistence.UniqueConstraint;
 public class EruptPost extends BaseModel {
 
     @EruptField(
-            views = @View(title = "岗位编码", width = "120px", sortable = true),
+            views = @View(title = "岗位编码", sortable = true),
             edit = @Edit(title = "岗位编码", notNull = true)
     )
     private String code;
