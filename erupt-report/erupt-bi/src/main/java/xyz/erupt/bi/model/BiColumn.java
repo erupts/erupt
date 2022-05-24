@@ -77,7 +77,6 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
-            views = @View(title = "下钻SQL"),
             edit = @Edit(title = "下钻SQL", type = EditType.CODE_EDITOR,
                     showBy = @ShowBy(dependField = "type", expr = "value == '" + ColumnType.DRILL + "'"),
                     codeEditType = @CodeEditorType(language = "sql"))
