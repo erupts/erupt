@@ -203,10 +203,12 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
             eruptRole.setStatus(true);
             eruptRole.setSort(20);
             eruptRole.setCreateTime(new Date());
+            eruptRole.setUpdateTime(new Date());
             EruptRole biRole = eruptDao.persistIfNotExist(EruptRole.class, eruptRole, "code", biRoleName);
             if (null == biRole.getMenus()) {
                 biRole.setMenus(new HashSet<>());
             }
+            biRole.setUpdateTime(new Date());
             biRole.getMenus().add(eruptMenu);
             eruptDao.persist(biRole);
         }
