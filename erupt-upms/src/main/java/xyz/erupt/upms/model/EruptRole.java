@@ -39,7 +39,7 @@ import java.util.Set;
 public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole> {
 
     @EruptField(
-            views = @View(title = "编码", width = "100px"),
+            views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true)
     )
     private String code;
