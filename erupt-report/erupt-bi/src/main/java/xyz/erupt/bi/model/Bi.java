@@ -199,7 +199,7 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
             String biRoleName = "bi_view_role@auto";
             EruptRole eruptRole = new EruptRole();
             eruptRole.setCode(biRoleName);
-            eruptRole.setName("报表查看角色");
+            eruptRole.setName("报表查询角色");
             eruptRole.setStatus(true);
             eruptRole.setSort(20);
             eruptRole.setCreateTime(new Date());
