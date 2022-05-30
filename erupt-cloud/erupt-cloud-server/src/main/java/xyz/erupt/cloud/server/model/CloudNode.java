@@ -191,15 +191,17 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                 map.put("eruptNum", metaNode.getErupts().size());
                 map.put("instanceNum", metaNode.getLocations().size());
             }
-            if (NodeRegisterType.AUTO.equals(map.get(REGISTER_TYPE))) {
-                if (null != metaNode && null != metaNode.getLocations()) {
-                    map.put(ADDRESSES, String.join("|", metaNode.getLocations()));
-                } else {
-                    map.put(ADDRESSES, null);
-                }
+            String registerAddress = "";
+            if (NodeRegisterType.MANUAL.equals(map.get(REGISTER_TYPE))) {
+                registerAddress = map.get(ADDRESSES).toString().replace("|", "<br/>");
             }
-            Optional.ofNullable(map.get(ADDRESSES)).ifPresent(it ->
-                    map.put(ADDRESSES, it.toString().replace("|", "<br/>")));
+            if (null != metaNode && null != metaNode.getLocations()) {
+                if (StringUtils.isNotBlank(registerAddress)) {
+                    registerAddress += "<hr/>";
+                }
+                registerAddress += String.join("<br/>", metaNode.getLocations());
+            }
+            map.put(ADDRESSES, registerAddress);
         }
     }
 
