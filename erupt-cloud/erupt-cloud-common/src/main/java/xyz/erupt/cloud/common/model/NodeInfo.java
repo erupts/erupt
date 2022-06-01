@@ -23,17 +23,14 @@ public class NodeInfo implements Serializable {
     //版本
     private String version;
 
-    //端口
-    private Integer port;
-
     //节点名
     private String nodeName;
 
     //访问令牌
     private String accessToken;
 
-    //应用上下文
-    private String contextPath;
+    //node节点手动配置的地址
+    private String[] nodeAddress;
 
     //服务所管理的erupt清单
     private List<String> erupts = new ArrayList<>();

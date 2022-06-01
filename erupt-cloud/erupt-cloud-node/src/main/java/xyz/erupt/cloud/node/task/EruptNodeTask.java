@@ -22,6 +22,7 @@ import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.view.EruptModel;
 
 import javax.annotation.Resource;
+import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -88,9 +89,13 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
             nodeInfo.setInstanceId(instanceId);
             nodeInfo.setNodeName(eruptNodeProp.getNodeName());
             nodeInfo.setAccessToken(eruptNodeProp.getAccessToken());
-            nodeInfo.setPort(serverProperties.getPort());
             nodeInfo.setVersion(EruptInformation.getEruptVersion());
-            nodeInfo.setContextPath(serverProperties.getServlet().getContextPath());
+            if (null != eruptNodeProp.getHostAddress() && eruptNodeProp.getHostAddress().length > 0) {
+                nodeInfo.setNodeAddress(eruptNodeProp.getHostAddress());
+            } else {
+                String contextPath = serverProperties.getServlet().getContextPath() == null ? "" : serverProperties.getServlet().getContextPath();
+                nodeInfo.setNodeAddress(new String[]{"http://" + Inet4Address.getLocalHost().getHostAddress() + ":" + serverProperties.getPort() + contextPath});
+            }
             nodeInfo.setErupts(EruptCoreService.getErupts().stream().map(EruptModel::getEruptName).collect(Collectors.toList()));
             String address = eruptNodeProp.getBalanceAddress();
             try {

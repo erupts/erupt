@@ -1,7 +1,9 @@
 package xyz.erupt.cloud.server.config;
 
-import cn.hutool.http.*;
-import lombok.SneakyThrows;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.http.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +41,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.net.ConnectException;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -160,9 +161,13 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         return str.startsWith("{") && str.endsWith("}");
     }
 
-    @SneakyThrows
+    private int count = 0;
+
     public HttpResponse httpProxy(HttpServletRequest request, MetaNode metaNode, String path, String eruptName) {
-        String location = metaNode.getLocations().toArray(new String[0])[metaNode.getCount() <= 1 ? 0 : (metaNode.getCount() % metaNode.getLocations().size())];
+        if (count >= Integer.MAX_VALUE) {
+            count = 0;
+        }
+        String location = metaNode.getLocations().toArray(new String[0])[metaNode.getLocations().size() <= 1 ? 0 : (count++ % metaNode.getLocations().size())];
         Map<String, String> headers = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -186,7 +191,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 log.warn("{} -> {}", location + path, httpResponse.body());
             }
             return httpResponse;
-        } catch (ConnectException | HttpException e) {
+        } catch (Exception e) {
             throw new EruptWebApiRuntimeException(location + " -> " + e.getMessage());
         }
     }

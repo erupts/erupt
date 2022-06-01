@@ -101,26 +101,11 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
     )
     private Integer instanceNum;
 
-//    @EruptField(
-//            views = @View(title = "注册方式"),
-//            edit = @Edit(title = "注册方式", notNull = true, type = EditType.CHOICE,
-//                    choiceType = @ChoiceType(
-//                            vl = {
-//                                    @VL(value = NodeRegisterType.AUTO, label = "自动注册"),
-//                                    @VL(value = NodeRegisterType.MANUAL, label = "手动录入"),
-//                            }
-//                    )
-//            )
-//    )
-//    private String registerType = NodeRegisterType.AUTO;
-//
-//    @EruptField(
-//            views = @View(title = "节点地址", type = ViewType.HTML),
-//            edit = @Edit(title = "节点地址", type = EditType.TAGS,
-//                    showBy = @ShowBy(dependField = REGISTER_TYPE, expr = "value=='" + NodeRegisterType.MANUAL + "'")
-//            )
-//    )
-//    private String addresses;
+    @Transient
+    @EruptField(
+            views = @View(title = "版本", className = "text-center", width = "110px")
+    )
+    private String version;
 
     @EruptField(
             views = @View(title = "负责人", sortable = true),
@@ -186,8 +171,10 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
             if (null == metaNode) {
                 map.put("eruptNum", '-');
                 map.put("instanceNum", '-');
+                map.put("version", '-');
             } else {
-                map.put("eruptNum", metaNode.getErupts().size());
+                map.put("version", metaNode.getVersion());
+                map.put("eruptNum", String.format("<a href='javascript:alert(\"%s\");'>%d</a>", metaNode.getErupts(), metaNode.getErupts().size()));
                 map.put("instanceNum", metaNode.getLocations().size());
             }
             String registerAddress = "";
