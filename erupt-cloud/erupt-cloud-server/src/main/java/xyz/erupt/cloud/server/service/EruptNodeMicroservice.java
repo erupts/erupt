@@ -1,7 +1,6 @@
 package xyz.erupt.cloud.server.service;
 
 import org.springframework.stereotype.Service;
-import xyz.erupt.cloud.server.base.NodeRegisterType;
 import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
@@ -11,7 +10,6 @@ import xyz.erupt.upms.util.IpUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
@@ -55,9 +53,6 @@ public class EruptNodeMicroservice {
     }
 
     public void registerNode(CloudNode cloudNode, MetaNode metaNode) {
-        if (NodeRegisterType.MANUAL.equals(cloudNode.getRegisterType())) {
-            metaNode.setManualLocations(Arrays.asList(cloudNode.getAddresses().split("\\|")));
-        }
         Optional.ofNullable(nodeManager.getNode(metaNode.getNodeName())).ifPresent(it -> metaNode.getLocations().addAll(it.getLocations()));
         metaNode.getLocations().add(geneNodeLocation(metaNode));
         metaNode.getErupts().forEach(it -> metaNode.getEruptMap().put(it, it));

@@ -17,7 +17,7 @@ public class EruptNodeProp {
 
     public static final String SPACE = "erupt.cloud-node";
 
-    //接入应用名称，用于分组隔离，推荐填写 本 Java 项目名称
+    //接入应用名称，推荐填写当前 Java 项目名称
     private String nodeName;
 
     //客户端秘钥（在服务端界面生成）
@@ -25,6 +25,12 @@ public class EruptNodeProp {
 
     //服务端地址（支持集群）
     private String[] serverAddresses;
+
+    /**
+     * 当前服务地址（支持集群，非必填）
+     * 正常情况下无需配置，多层代理等复杂网络环境下需配置此参数，目的是让server端准确寻址到node
+     */
+    private String[] hostAddress;
 
     //心跳时间(毫秒)
     private int heartbeatTime = 15 * 1000;
