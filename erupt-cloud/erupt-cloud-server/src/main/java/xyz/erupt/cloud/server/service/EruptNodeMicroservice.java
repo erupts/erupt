@@ -6,10 +6,10 @@ import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
 import xyz.erupt.cloud.server.node.NodeWorker;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.util.IpUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
@@ -46,16 +46,9 @@ public class EruptNodeMicroservice {
         return cloudNode;
     }
 
-    //生成节点地址
-    private String geneNodeLocation(MetaNode metaNode) {
-        return request.getScheme() + "://" + IpUtil.getIpAddr(request) + ":" + metaNode.getPort() +
-                (metaNode.getContextPath() == null ? "" : metaNode.getContextPath());
-    }
-
     public void registerNode(CloudNode cloudNode, MetaNode metaNode) {
         Optional.ofNullable(nodeManager.getNode(metaNode.getNodeName())).ifPresent(it -> metaNode.getLocations().addAll(it.getLocations()));
-        metaNode.getLocations().add(geneNodeLocation(metaNode));
-        metaNode.getErupts().forEach(it -> metaNode.getEruptMap().put(it, it));
+        metaNode.getLocations().addAll(Arrays.asList(metaNode.getNodeAddress()));
         metaNode.setRegisterTime(new Date());
         nodeManager.putNode(metaNode);
     }
