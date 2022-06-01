@@ -162,12 +162,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     @SneakyThrows
     public HttpResponse httpProxy(HttpServletRequest request, MetaNode metaNode, String path, String eruptName) {
-        String location;
-        if (null != metaNode.getManualLocations()) {
-            location = metaNode.getManualLocations().toArray(new String[0])[metaNode.getCount() % metaNode.getManualLocations().size()];
-        } else {
-            location = metaNode.getLocations().toArray(new String[0])[metaNode.getCount() % metaNode.getLocations().size()];
-        }
+        String location = metaNode.getLocations().toArray(new String[0])[metaNode.getCount() <= 1 ? 0 : (metaNode.getCount() % metaNode.getLocations().size())];
         Map<String, String> headers = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {

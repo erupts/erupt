@@ -16,12 +16,14 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.cloud.server.base.CloudServerConst;
 import xyz.erupt.cloud.server.base.NodeRegisterType;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
-import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
@@ -99,26 +101,26 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
     )
     private Integer instanceNum;
 
-    @EruptField(
-            views = @View(title = "注册方式"),
-            edit = @Edit(title = "注册方式", notNull = true, type = EditType.CHOICE,
-                    choiceType = @ChoiceType(
-                            vl = {
-                                    @VL(value = NodeRegisterType.AUTO, label = "自动注册"),
-                                    @VL(value = NodeRegisterType.MANUAL, label = "手动录入"),
-                            }
-                    )
-            )
-    )
-    private String registerType = NodeRegisterType.AUTO;
-
-    @EruptField(
-            views = @View(title = "节点地址", type = ViewType.HTML),
-            edit = @Edit(title = "节点地址", type = EditType.TAGS,
-                    showBy = @ShowBy(dependField = REGISTER_TYPE, expr = "value=='" + NodeRegisterType.MANUAL + "'")
-            )
-    )
-    private String addresses;
+//    @EruptField(
+//            views = @View(title = "注册方式"),
+//            edit = @Edit(title = "注册方式", notNull = true, type = EditType.CHOICE,
+//                    choiceType = @ChoiceType(
+//                            vl = {
+//                                    @VL(value = NodeRegisterType.AUTO, label = "自动注册"),
+//                                    @VL(value = NodeRegisterType.MANUAL, label = "手动录入"),
+//                            }
+//                    )
+//            )
+//    )
+//    private String registerType = NodeRegisterType.AUTO;
+//
+//    @EruptField(
+//            views = @View(title = "节点地址", type = ViewType.HTML),
+//            edit = @Edit(title = "节点地址", type = EditType.TAGS,
+//                    showBy = @ShowBy(dependField = REGISTER_TYPE, expr = "value=='" + NodeRegisterType.MANUAL + "'")
+//            )
+//    )
+//    private String addresses;
 
     @EruptField(
             views = @View(title = "负责人", sortable = true),
@@ -165,9 +167,6 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
     public void beforeAdd(CloudNode cloudNode) {
         if (null == cloudNode.getAccessToken()) {
             cloudNode.setAccessToken(Erupts.generateCode(16).toUpperCase());
-        }
-        if (NodeRegisterType.MANUAL.equals(cloudNode.getRegisterType()) && StringUtils.isBlank(cloudNode.getAddresses())) {
-            throw new EruptWebApiRuntimeException("注册方式为手动，节点地址必填");
         }
     }
 
