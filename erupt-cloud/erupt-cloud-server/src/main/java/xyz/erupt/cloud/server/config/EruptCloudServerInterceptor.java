@@ -116,7 +116,8 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             MetaContext.register(new MetaUser(metaUserinfo.getId() + "", metaUserinfo.getAccount(), metaUserinfo.getUsername()));
             MetaContext.register(new MetaErupt(erupt));
             MetaContext.registerToken(token);
-            HttpResponse httpResponse = this.httpProxy(request, metaNode, request.getRequestURI().replace(erupt, eruptName), eruptName);
+            String path = request.getRequestURI().replace(erupt, eruptName);
+            HttpResponse httpResponse = this.httpProxy(request, metaNode, path.substring(path.indexOf(EruptRestPath.ERUPT_API)), eruptName);
             Optional.ofNullable(httpResponse.header("Content-Type")).ifPresent(response::setContentType);
             for (String transferHeader : TRANSFER_HEADERS) {
                 Optional.ofNullable(httpResponse.header(transferHeader)).ifPresent(it -> response.addHeader(transferHeader, it));
