@@ -73,14 +73,11 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
             throw new RuntimeException(EruptNodeProp.SPACE + ".accessToken not config");
         }
         log.info(ansi().fg(Ansi.Color.BLUE) + " \n" +
-                "                         _    \n" +
-                "  ____  ____ _   _ ____ | |_  \n" +
-                " / _  )/ ___) | | |  _ \\|  _) \n" +
-                "( (/ /| |   | |_| | | | | |__ \n" +
-                " \\____)_|    \\____| ||_/ \\___)\n" +
-                "                  |_|\n" +
-                "\n" +
-                ":: Erupt Cloud Version :: " + EruptInformation.getEruptVersion() + "\n" +
+                "                 _                _     \n" +
+                " ___ ___ _ _ ___| |_    ___ ___ _| |___ \n" +
+                "| -_|  _| | | . |  _|  |   | . | . | -_|\n" +
+                "|___|_| |___|  _|_|    |_|_|___|___|___|\n" +
+                "            |_|        " + EruptInformation.getEruptVersion() + "\n" +
                 ansi().fg(Ansi.Color.DEFAULT)
         );
         log.info("Erupt Cloud Node completed");
@@ -94,7 +91,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 nodeInfo.setNodeAddress(eruptNodeProp.getHostAddress());
             } else {
                 String contextPath = serverProperties.getServlet().getContextPath() == null ? "" : serverProperties.getServlet().getContextPath();
-                nodeInfo.setNodeAddress(new String[]{"http://" + Inet4Address.getLocalHost().getHostAddress() + ":" + serverProperties.getPort() + contextPath});
+                nodeInfo.setNodeAddress(new String[]{eruptNodeProp.getSchema() + "://" + Inet4Address.getLocalHost().getHostAddress() + ":" + serverProperties.getPort() + contextPath});
             }
             nodeInfo.setErupts(EruptCoreService.getErupts().stream().map(EruptModel::getEruptName).collect(Collectors.toList()));
             String address = eruptNodeProp.getBalanceAddress();
