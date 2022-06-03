@@ -17,7 +17,7 @@ public class PowerInvoke {
 
     private static final List<Class<? extends PowerHandler>> powerHandlerStack = new ArrayList<>();
 
-    public static void RegisterPowerHandler(Class<? extends PowerHandler> powerHandler) {
+    public static void registerPowerHandler(Class<? extends PowerHandler> powerHandler) {
         powerHandlerStack.add(powerHandler);
     }
 
