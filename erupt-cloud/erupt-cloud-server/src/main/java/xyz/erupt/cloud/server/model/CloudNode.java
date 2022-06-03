@@ -2,7 +2,6 @@ package xyz.erupt.cloud.server.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
@@ -21,7 +20,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.cloud.server.base.CloudServerConst;
-import xyz.erupt.cloud.server.base.NodeRegisterType;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
 import xyz.erupt.core.util.Erupts;
@@ -173,21 +171,10 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                 map.put("instanceNum", '-');
                 map.put("version", '-');
             } else {
-                map.put("version", metaNode.getVersion());
                 map.put("eruptNum", String.format("<a href='javascript:alert(\"%s\");'>%d</a>", metaNode.getErupts(), metaNode.getErupts().size()));
-                map.put("instanceNum", metaNode.getLocations().size());
+                map.put("instanceNum", String.format("<a href='javascript:alert(\"%s\");'>%d</a>", metaNode.getLocations(), metaNode.getLocations().size()));
+                map.put("version", metaNode.getVersion());
             }
-            String registerAddress = "";
-            if (NodeRegisterType.MANUAL.equals(map.get(REGISTER_TYPE))) {
-                registerAddress = map.get(ADDRESSES).toString().replace("|", "<br/>");
-            }
-            if (null != metaNode && null != metaNode.getLocations()) {
-                if (StringUtils.isNotBlank(registerAddress)) {
-                    registerAddress += "<hr/>";
-                }
-                registerAddress += String.join("<br/>", metaNode.getLocations());
-            }
-            map.put(ADDRESSES, registerAddress);
         }
     }
 

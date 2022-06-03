@@ -26,6 +26,9 @@ public class EruptNodeProp {
     //服务端地址（支持集群）
     private String[] serverAddresses;
 
+    //自动注册时协议前缀
+    private String schema = "http";
+
     /**
      * 当前服务地址（支持集群，非必填）
      * 正常情况下无需配置，多层代理等复杂网络环境下需配置此参数，目的是让server端准确寻址到node

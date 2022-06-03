@@ -29,7 +29,7 @@ public class NodeInfo implements Serializable {
     //访问令牌
     private String accessToken;
 
-    //node节点手动配置的地址
+    //node节点地址
     private String[] nodeAddress;
 
     //服务所管理的erupt清单
