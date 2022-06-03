@@ -1,6 +1,5 @@
 package xyz.erupt.cloud.node.invoke;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.http.HttpUtil;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.PowerHandler;
@@ -24,7 +23,7 @@ import javax.annotation.Resource;
 public class NodePowerInvoke implements PowerHandler {
 
     static {
-        PowerInvoke.RegisterPowerHandler(NodePowerInvoke.class);
+        PowerInvoke.registerPowerHandler(NodePowerInvoke.class);
     }
 
     @Resource
@@ -40,7 +39,25 @@ public class NodePowerInvoke implements PowerHandler {
                 .form("nodeName", eruptNodeProp.getNodeName())
                 .form("eruptName", eruptModel.getEruptName())
                 .header(EruptMutualConst.TOKEN, MetaContext.getToken()).execute().body();
-        BeanUtil.copyProperties(GsonFactory.getGson().fromJson(powerObjectString, PowerObject.class), power);
+        PowerObject remotePowerObject = GsonFactory.getGson().fromJson(powerObjectString, PowerObject.class);
+        if (power.isAdd()) {
+            power.setAdd(remotePowerObject.isAdd());
+        }
+        if (power.isDelete()) {
+            power.setDelete(remotePowerObject.isDelete());
+        }
+        if (power.isEdit()) {
+            power.setEdit(remotePowerObject.isEdit());
+        }
+        if (power.isViewDetails()) {
+            power.setViewDetails(remotePowerObject.isViewDetails());
+        }
+        if (power.isExport()) {
+            power.setExport(remotePowerObject.isExport());
+        }
+        if (power.isImportable()) {
+            power.setImportable(remotePowerObject.isImportable());
+        }
     }
 
 }
