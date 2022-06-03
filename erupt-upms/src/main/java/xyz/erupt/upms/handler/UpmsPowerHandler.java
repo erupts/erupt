@@ -22,7 +22,7 @@ import java.util.Map;
 public class UpmsPowerHandler implements PowerHandler {
 
     static {
-        PowerInvoke.RegisterPowerHandler(UpmsPowerHandler.class);
+        PowerInvoke.registerPowerHandler(UpmsPowerHandler.class);
     }
 
     @Resource
