@@ -1,5 +1,6 @@
 package xyz.erupt.cloud.server.config;
 
+import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
@@ -178,6 +179,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         headers.put(CloudCommonConst.ACCESS_TOKEN, metaNode.getAccessToken());
         headers.put(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken());
         headers.put(EruptMutualConst.ERUPT, eruptName);
+        headers.put(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())));
         HttpRequest httpRequest = HttpUtil.createRequest(Method.valueOf(request.getMethod()), location + path + (null == request.getQueryString() ? "" : "?" + request.getQueryString()));
         try {
             if (null != request.getContentType() && request.getContentType().contains("multipart/form-data")) {

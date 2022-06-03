@@ -9,6 +9,8 @@ public class EruptMutualConst {
 
     public static final String ERUPT = "erupt";
 
+    public static final String USER = "user";
+
     public static final String TOKEN = "token";
 
 }
