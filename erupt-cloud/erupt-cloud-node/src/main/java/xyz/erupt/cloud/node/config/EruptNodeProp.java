@@ -17,6 +17,9 @@ public class EruptNodeProp {
 
     public static final String SPACE = "erupt.cloud-node";
 
+    //是否开启NODE节点注册
+    private boolean enableRegister = true;
+
     //接入应用名称，推荐填写当前 Java 项目名称
     private String nodeName;
 
