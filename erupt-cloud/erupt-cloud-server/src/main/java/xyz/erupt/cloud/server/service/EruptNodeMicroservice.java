@@ -8,7 +8,6 @@ import xyz.erupt.cloud.server.node.NodeWorker;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,9 +24,6 @@ public class EruptNodeMicroservice {
     private EruptDao eruptDao;
 
     @Resource
-    private HttpServletRequest request;
-
-    @Resource
     private NodeManager nodeManager;
 
     @Resource
@@ -38,7 +34,7 @@ public class EruptNodeMicroservice {
             this.put(CloudNode.NODE_NAME, nodeName);
         }});
         if (null == cloudNode) {
-            throw new RuntimeException(nodeName + " not found");
+            throw new RuntimeException("NodeName: '" + nodeName + "' not found");
         }
         if (!cloudNode.getAccessToken().equals(accessToken)) {
             throw new RuntimeException(cloudNode.getNodeName() + " Access token invalid");
@@ -55,7 +51,7 @@ public class EruptNodeMicroservice {
 
     public void removeInstance(String nodeName, String accessToken) {
         this.findNodeByAppName(nodeName, accessToken);
-        nodeWorker.run();
+        nodeWorker.run(); // 轮询nodeName下所有ip节点可用情况
     }
 
 }

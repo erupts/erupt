@@ -54,10 +54,22 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
 
     @Override
     public void run(ApplicationArguments args) {
-        Thread register = new Thread(this);
-        register.setName("erupt-node-register");
-        register.setDaemon(true);
-        register.start();
+        log.info(ansi().fg(Ansi.Color.BLUE) + " \n" +
+                "                 _                _     \n" +
+                " ___ ___ _ _ ___| |_    ___ ___ _| |___ \n" +
+                "| -_|  _| | | . |  _|  |   | . | . | -_|\n" +
+                "|___|_| |___|  _|_|    |_|_|___|___|___|\n" +
+                "            |_|        " + EruptInformation.getEruptVersion() + "\n" +
+                ansi().fg(Ansi.Color.DEFAULT)
+        );
+        if (eruptNodeProp.isEnableRegister()) {
+            Thread register = new Thread(this);
+            register.setName("erupt-node-register");
+            register.setDaemon(true);
+            register.start();
+        } else {
+            log.warn("erupt-node registration disabled");
+        }
     }
 
     @SneakyThrows
@@ -72,15 +84,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
         if (null == eruptNodeProp.getAccessToken()) {
             throw new RuntimeException(EruptNodeProp.SPACE + ".accessToken not config");
         }
-        log.info(ansi().fg(Ansi.Color.BLUE) + " \n" +
-                "                 _                _     \n" +
-                " ___ ___ _ _ ___| |_    ___ ___ _| |___ \n" +
-                "| -_|  _| | | . |  _|  |   | . | . | -_|\n" +
-                "|___|_| |___|  _|_|    |_|_|___|___|___|\n" +
-                "            |_|        " + EruptInformation.getEruptVersion() + "\n" +
-                ansi().fg(Ansi.Color.DEFAULT)
-        );
-        log.info("Erupt Cloud Node completed");
+        log.info("erupt-cloud-node initialization completed");
         while (this.runner) {
             NodeInfo nodeInfo = new NodeInfo();
             nodeInfo.setInstanceId(instanceId);
