@@ -17,4 +17,12 @@ public class SessionKey {
     public static final String USER_TOKEN = AUTH_SPACE + "token:";
 
     public static final String LOGIN_ERROR = AUTH_SPACE + "login-error:";
+
+    //用户相关KEY
+    public static final String[] USER_KEY_GROUP = {
+            MENU_VIEW,
+            MENU_VALUE_MAP,
+            USER_TOKEN
+    };
+
 }

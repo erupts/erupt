@@ -12,6 +12,12 @@ window.eruptSiteConfig = {
     amapKey: null,
     login: function (e) {
 
+    },
+    upload: function (eruptName, eruptFieldName) {
+        return {
+            url: "",
+            headers: {}
+        }
     }
 };
 
