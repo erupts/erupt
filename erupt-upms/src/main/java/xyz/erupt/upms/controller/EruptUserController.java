@@ -118,9 +118,9 @@ public class EruptUserController {
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
         request.getSession().invalidate();
-        sessionService.remove(SessionKey.MENU_VALUE_MAP + token);
-        sessionService.remove(SessionKey.MENU_VIEW + token);
-        sessionService.remove(SessionKey.USER_TOKEN + token);
+        for (String uk : SessionKey.USER_KEY_GROUP) {
+            sessionService.remove(uk + token);
+        }
         return EruptApiModel.successApi();
     }
 

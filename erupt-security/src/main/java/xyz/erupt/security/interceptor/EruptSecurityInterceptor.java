@@ -14,12 +14,14 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.module.MetaUserinfo;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.tl.RequestBodyTL;
+import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author YuePeng
@@ -52,6 +55,12 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
     private EntityManager entityManager;
+
+    @Resource
+    private EruptProp eruptProp;
+
+    @Resource
+    private EruptUpmsProp eruptUpmsProp;
 
     @Resource
     private EruptSecurityProp eruptSecurityProp;
@@ -155,6 +164,11 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     return false;
                 }
                 break;
+        }
+        if (eruptProp.isRedisSessionRefresh()) {
+            for (String uk : SessionKey.USER_KEY_GROUP) {
+                sessionService.expire(uk + token, eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
+            }
         }
         return true;
     }

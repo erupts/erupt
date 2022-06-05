@@ -55,6 +55,13 @@ public class EruptSessionService {
         }
     }
 
+    //延长key过期时间
+    public void expire(String key, long timeout, final TimeUnit unit) {
+        if (eruptProp.isRedisSession()) {
+            stringRedisTemplate.expire(key, timeout, unit);
+        }
+    }
+
     public Object get(String key) {
         if (eruptProp.isRedisSession()) {
             return stringRedisTemplate.opsForValue().get(key);

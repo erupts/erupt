@@ -7,6 +7,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.EruptProxy;
+import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.CloneSupport;
 
@@ -53,6 +54,7 @@ public final class EruptModel implements Cloneable {
     }
 
     public Erupt getErupt() {
+        ProxyContext.set(clazz);
         return erupt;
     }
 

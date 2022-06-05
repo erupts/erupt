@@ -55,7 +55,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String uploadPath = eruptProp.getUploadPath().endsWith("/") ? eruptProp.getUploadPath() : eruptProp.getUploadPath() + "/";
         ResourceHandlerRegistration resourceHandlerRegistration = registry.addResourceHandler(EruptRestPath.ERUPT_ATTACHMENT + "/**");
-        if (uploadPath.contains(":")) {
+        if (uploadPath.startsWith("classpath:")) {
             resourceHandlerRegistration.addResourceLocations(uploadPath);
         } else {
             resourceHandlerRegistration.addResourceLocations("file:" + uploadPath);

@@ -1,0 +1,14 @@
+${AnsiColor.BRIGHT_YELLOW}
+                             __
+                            /\ \__
+   __   _ __   __  __  _____\ \ __\
+ / __ \/\  __\/\ \/\ \/\  __ \ \ \
+/\  __/\ \ \/ \ \ \_\ \ \ \_\ \ \ \__
+\ \____\\ \_\  \ \____/\ \ ___/\ \___\
+ \/____/ \/_/   \/___/  \ \ \/  \/___/
+                         \ \_\
+                          \/_/
+
+:: Spring Boot     ::  v(${spring-boot.version})
+:: Erupt Framework ::  v(${project.version})
+:: Erupt Cloud     ::  v(${project.version}) ${AnsiColor.DEFAULT}
