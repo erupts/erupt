@@ -166,13 +166,24 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                 map.put(ACCESS_TOKEN, token.substring(0, 3) + "******" + token.substring(token.length() - 3));
             });
             MetaNode metaNode = nodeManager.getNode(map.get(NODE_NAME).toString());
+
+            String eruptNumStr = "eruptNum";
+            String instanceNumStr = "instanceNum";
             if (null == metaNode) {
-                map.put("eruptNum", '-');
-                map.put("instanceNum", '-');
+                map.put(eruptNumStr, '-');
+                map.put(instanceNumStr, '-');
                 map.put("version", '-');
             } else {
-                map.put("eruptNum", String.format("<a href='javascript:alert(\"%s\");'>%d</a>", metaNode.getErupts(), metaNode.getErupts().size()));
-                map.put("instanceNum", String.format("<a href='javascript:alert(\"%s\");'>%d</a>", metaNode.getLocations(), metaNode.getLocations().size()));
+                if (null != metaNode.getErupts()) {
+                    map.put(eruptNumStr, String.format("<a href='javascript:alert(\"%s\");'>%d</a>", String.join("\\u000a", metaNode.getErupts()), metaNode.getErupts().size()));
+                } else {
+                    map.put(eruptNumStr, 0);
+                }
+                if (null != metaNode.getLocations()) {
+                    map.put(instanceNumStr, String.format("<a href='javascript:alert(\"%s\");'>%d</a>", String.join("\\u000a", metaNode.getLocations()), metaNode.getLocations().size()));
+                } else {
+                    map.put(instanceNumStr, 0);
+                }
                 map.put("version", metaNode.getVersion());
             }
         }
