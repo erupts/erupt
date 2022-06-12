@@ -18,6 +18,7 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptExcelService;
+import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.*;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
@@ -228,7 +229,6 @@ public class EruptBiController {
         Sheet sheet = wb.createSheet(bi.getName());
         sheet.createFreezePane(0, 1, 1, 1);
         Row headRow = sheet.createRow(0);
-
         CellStyle headStyle = ExcelUtil.beautifyExcelStyle(wb);
         Font headFont = wb.createFont();
         headFont.setColor(IndexedColors.WHITE.index);
@@ -246,7 +246,6 @@ public class EruptBiController {
                 order++;
             }
         }
-
         CellStyle style = ExcelUtil.beautifyExcelStyle(wb);
         Font font = wb.createFont();
         font.setColor(IndexedColors.BLACK1.index);
@@ -272,7 +271,7 @@ public class EruptBiController {
             EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
             biHandler.exportHandler(biClassHandler.getParam(), query, wb);
         }
-        wb.write(EruptUtil.downLoadFile(request, response, bi.getName() + EruptExcelService.XLSX_FORMAT));
+        wb.write(EruptUtil.downLoadFile(request, response, bi.getName() + "_" + DateUtil.getSimpleFormatDate(new Date()) + EruptExcelService.XLSX_FORMAT));
     }
 
     //校验查询参数
