@@ -72,11 +72,15 @@ public class EruptTplService {
     private HttpServletResponse response;
 
     public void run() {
-        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AnnotationTypeFilter(EruptTpl.class)},
-                clazz -> Arrays.stream(clazz.getDeclaredMethods()).forEach(
-                        method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(
-                                it -> tplActions.put(it.value(), method)))
-        );
+        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(),
+                new TypeFilter[]{new AnnotationTypeFilter(EruptTpl.class)},
+                this::registerTpl);
+    }
+
+    public void registerTpl(Class<?> tplClass) {
+        Arrays.stream(tplClass.getDeclaredMethods()).forEach(
+                method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(
+                        it -> tplActions.put(it.value(), method)));
     }
 
     public Method getAction(String name) {
