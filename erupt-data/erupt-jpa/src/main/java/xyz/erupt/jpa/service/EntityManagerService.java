@@ -19,7 +19,6 @@ import javax.persistence.PersistenceContext;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -34,9 +33,9 @@ public class EntityManagerService implements DisposableBean {
     @Resource
     private EruptProp eruptProp;
 
-    private List<EntityManager> extEntityManagers = new ArrayList<>();
-
     private final Map<String, EntityManagerFactory> entityManagerFactoryMap = new HashMap<>();
+
+    private final List<EntityManager> extEntityManagers = new ArrayList<>();
 
     private synchronized EntityManagerFactory getEntityManagerFactory(String dbName) {
         if (entityManagerFactoryMap.containsKey(dbName)) return entityManagerFactoryMap.get(dbName);
@@ -76,29 +75,32 @@ public class EntityManagerService implements DisposableBean {
         throw new RuntimeException("Failed to match data source '" + dbName + "'");
     }
 
+    //注册扩展的EntityManager
     public void addExtEntityManager(EntityManager entityManager) {
         if (!extEntityManagers.contains(entityManager)) {
             extEntityManagers.add(entityManager);
         }
     }
 
+    //移除扩展的EntityManager
     public void removeExtEntityManager(EntityManager entityManager) {
-        if (extEntityManagers.contains(entityManager)) {
-            extEntityManagers.remove(entityManager);
-        }
+        extEntityManagers.remove(entityManager);
+    }
+
+    private EntityManager getExtEntityManager(Class<?> eruptClass) {
+        if (extEntityManagers.isEmpty()) return null;
+        return extEntityManagers.stream().findFirst().filter(em -> {
+            try {
+                return em.getMetamodel().entity(eruptClass) != null;
+            } catch (Exception e) {
+                return false;
+            }
+        }).orElse(null);
     }
 
     public <R> R getEntityManager(Class<?> eruptClass, Function<EntityManager, R> function) {
-        if (!extEntityManagers.isEmpty()) {
-            List<EntityManager> ems = extEntityManagers.stream().filter(em -> {
-                try {
-                    return em.getMetamodel().entity(eruptClass) != null;
-                } catch (Exception e) {
-                    return false;
-                }
-            }).collect(Collectors.toList());
-            if (ems != null && !ems.isEmpty()) return function.apply(ems.get(0));
-        }
+        EntityManager extEntityManager = getExtEntityManager(eruptClass);
+        if (null != extEntityManager) return function.apply(extEntityManager);
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) return function.apply(entityManager);
         EntityManager em = this.getEntityManagerFactory(eruptDataSource.value()).createEntityManager();
@@ -111,18 +113,10 @@ public class EntityManagerService implements DisposableBean {
 
 
     public void entityManagerTran(Class<?> eruptClass, Consumer<EntityManager> consumer) {
-        if (!extEntityManagers.isEmpty()) {
-            List<EntityManager> ems = extEntityManagers.stream().filter(em -> {
-                try {
-                    return em.getMetamodel().entity(eruptClass) != null;
-                } catch (Exception e) {
-                    return false;
-                }
-            }).collect(Collectors.toList());
-            if (ems != null && !ems.isEmpty()) {
-                consumer.accept(ems.get(0));
-                return;
-            }
+        EntityManager extEntityManager = getExtEntityManager(eruptClass);
+        if (null != extEntityManager) {
+            consumer.accept(extEntityManager);
+            return;
         }
         EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);
         if (null == eruptDataSource) {
