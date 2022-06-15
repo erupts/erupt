@@ -62,6 +62,12 @@ public class EruptCoreService implements ApplicationRunner {
         ERUPT_LIST.add(eruptModel);
     }
 
+    //移除容器内所维护的Erupt
+    public static void unregisterErupt(Class<?> eruptClazz) {
+        ERUPTS.remove(eruptClazz.getSimpleName());
+        ERUPT_LIST.removeIf(model -> model.getEruptName().equals(eruptClazz.getSimpleName()));
+    }
+
     @SneakyThrows
     public static EruptModel getEruptView(String eruptName) {
         EruptModel em = getErupt(eruptName).clone();
