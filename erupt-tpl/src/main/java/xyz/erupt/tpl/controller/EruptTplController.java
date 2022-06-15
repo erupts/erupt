@@ -46,7 +46,7 @@ public class EruptTplController {
     @Resource
     private EruptTplService eruptTplService;
 
-    @GetMapping(value = "/{name}", produces = {"text/html;charset=utf-8"})
+    @GetMapping(value = "/{name}/**", produces = {"text/html;charset=utf-8"})
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void eruptTplPage(@PathVariable("name") String fileName, HttpServletResponse response) throws Exception {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
