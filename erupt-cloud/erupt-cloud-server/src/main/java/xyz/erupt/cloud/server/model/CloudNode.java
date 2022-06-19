@@ -169,10 +169,11 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
 
             String eruptNumStr = "eruptNum";
             String instanceNumStr = "instanceNum";
+            String version = "version";
             if (null == metaNode) {
                 map.put(eruptNumStr, '-');
                 map.put(instanceNumStr, '-');
-                map.put("version", '-');
+                map.put(version, '-');
             } else {
                 if (null != metaNode.getErupts()) {
                     map.put(eruptNumStr, String.format("<a href='javascript:alert(\"%s\");'>%d</a>", String.join("\\u000a", metaNode.getErupts()), metaNode.getErupts().size()));
@@ -184,7 +185,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                 } else {
                     map.put(instanceNumStr, 0);
                 }
-                map.put("version", metaNode.getVersion());
+                map.put(version, metaNode.getVersion());
             }
         }
     }
