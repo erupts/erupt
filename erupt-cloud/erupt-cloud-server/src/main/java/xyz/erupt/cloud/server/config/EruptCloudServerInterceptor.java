@@ -176,6 +176,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             String name = headerNames.nextElement();
             headers.put(name, request.getHeader(name));
         }
+        headers.remove("host");
         headers.put(CloudCommonConst.ACCESS_TOKEN, metaNode.getAccessToken());
         headers.put(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken());
         headers.put(EruptMutualConst.ERUPT, eruptName);
