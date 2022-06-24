@@ -89,13 +89,13 @@ public class EntityManagerService implements DisposableBean {
 
     private EntityManager getExtEntityManager(Class<?> eruptClass) {
         if (extEntityManagers.isEmpty()) return null;
-        return extEntityManagers.stream().findFirst().filter(em -> {
+        return extEntityManagers.stream().filter(em -> {
             try {
                 return em.getMetamodel().entity(eruptClass) != null;
             } catch (Exception e) {
                 return false;
             }
-        }).orElse(null);
+        }).findFirst().orElse(null);
     }
 
     public <R> R getEntityManager(Class<?> eruptClass, Function<EntityManager, R> function) {
