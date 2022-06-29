@@ -22,9 +22,6 @@ public class EruptProp {
     //附件存储根路径
     private String uploadPath = "/opt/erupt-attachment";
 
-    //应用空间前缀
-    private String appSpacePrefix = "erupt-app:";
-
     //是否使用redis管理session
     private boolean redisSession = false;
 
@@ -38,7 +35,10 @@ public class EruptProp {
     private boolean keepUploadFileName = false;
 
     //true 单机缓存，false基于redis分布式缓存
-    private boolean standaloneCache = true;
+//    private boolean standaloneCache = true;
+
+    //应用空间前缀
+//    private String appSpacePrefix = "erupt-app:";
 
     //指定哪些包内的类通过gson实现序列化
     private String[] gsonHttpMessageConvertersPackages;
