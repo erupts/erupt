@@ -5,6 +5,9 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
@@ -203,6 +206,14 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     private void eruptBuildProcess(EruptBuildModel eruptBuildModel, String nodeName) {
         String prefix = nodeName + ".";
         eruptBuildModel.getEruptModel().setEruptName(prefix + eruptBuildModel.getEruptModel().getEruptName());
+        //修改Drill的值
+        JsonArray drills = eruptBuildModel.getEruptModel().getEruptJson().getAsJsonArray("drills");
+        if (drills.size() > 0) {
+            for (JsonElement drill : drills) {
+                JsonObject link = drill.getAsJsonObject().get("link").getAsJsonObject();
+                link.addProperty("linkErupt", prefix + link.get("linkErupt").getAsString());
+            }
+        }
         Optional.ofNullable(eruptBuildModel.getOperationErupts()).ifPresent(it -> {
             for (EruptModel value : it.values()) {
                 value.setEruptName(prefix + value.getEruptName());

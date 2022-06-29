@@ -8,7 +8,10 @@ import xyz.erupt.annotation.config.Comment;
  */
 public @interface CodeEditorType {
 
-    @Comment("语言类型")
+    @Comment("语言")
     String language();
+
+    @Comment("编辑器高度")
+    int height() default 300;
 
 }
