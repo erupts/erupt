@@ -25,7 +25,6 @@ public @interface Erupt {
     @Comment("功能名称")
     String name();
 
-    @Transient
     @Comment("功能描述")
     String desc() default "";
 

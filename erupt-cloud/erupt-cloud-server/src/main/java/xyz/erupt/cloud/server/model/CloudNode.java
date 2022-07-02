@@ -42,7 +42,7 @@ import java.util.Optional;
 @Setter
 @Entity
 @Table(name = "e_cloud_node", uniqueConstraints = @UniqueConstraint(columnNames = CloudNode.NODE_NAME))
-@Erupt(name = "节点配置", dataProxy = CloudNode.class,
+@Erupt(name = "节点配置", desc = "管理与监控 node 节点状态", dataProxy = CloudNode.class,
         rowOperation = @RowOperation(
                 title = "查看令牌", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
                 show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
@@ -166,14 +166,26 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                 map.put(ACCESS_TOKEN, token.substring(0, 3) + "******" + token.substring(token.length() - 3));
             });
             MetaNode metaNode = nodeManager.getNode(map.get(NODE_NAME).toString());
+
+            String eruptNumStr = "eruptNum";
+            String instanceNumStr = "instanceNum";
+            String version = "version";
             if (null == metaNode) {
-                map.put("eruptNum", '-');
-                map.put("instanceNum", '-');
-                map.put("version", '-');
+                map.put(eruptNumStr, '-');
+                map.put(instanceNumStr, '-');
+                map.put(version, '-');
             } else {
-                map.put("eruptNum", String.format("<a href='javascript:alert(\"%s\");'>%d</a>", metaNode.getErupts(), metaNode.getErupts().size()));
-                map.put("instanceNum", String.format("<a href='javascript:alert(\"%s\");'>%d</a>", metaNode.getLocations(), metaNode.getLocations().size()));
-                map.put("version", metaNode.getVersion());
+                if (null != metaNode.getErupts()) {
+                    map.put(eruptNumStr, String.format("<a href='javascript:alert(\"%s\");'>%d</a>", String.join("\\u000a", metaNode.getErupts()), metaNode.getErupts().size()));
+                } else {
+                    map.put(eruptNumStr, 0);
+                }
+                if (null != metaNode.getLocations()) {
+                    map.put(instanceNumStr, String.format("<a href='javascript:alert(\"%s\");'>%d</a>", String.join("\\u000a", metaNode.getLocations()), metaNode.getLocations().size()));
+                } else {
+                    map.put(instanceNumStr, 0);
+                }
+                map.put(version, metaNode.getVersion());
             }
         }
     }

@@ -25,7 +25,7 @@ import java.util.Set;
 @EruptI18n
 @Erupt(name = "生成Erupt代码",
         rowOperation = @RowOperation(
-                code = "preview", title = "代码预览", icon = "fa fa-code",
+                title = "代码预览", icon = "fa fa-code",
                 mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,
                 tpl = @Tpl(path = "generator/erupt-code-skeleton.ftl",
                         engine = Tpl.Engine.FreeMarker,
