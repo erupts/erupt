@@ -36,6 +36,7 @@ import java.util.Map;
 @EruptI18n
 @Erupt(
         name = "操作日志",
+        desc = "记录平台内各用户操作过程",
         power = @Power(add = false, edit = false, viewDetails = false,
                 delete = false, powerHandler = SuperAdminPower.class),
         orderBy = "createTime desc",
