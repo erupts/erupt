@@ -72,11 +72,23 @@ public class EruptTplService {
     private HttpServletResponse response;
 
     public void run() {
-        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AnnotationTypeFilter(EruptTpl.class)},
-                clazz -> Arrays.stream(clazz.getDeclaredMethods()).forEach(
-                        method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(
-                                it -> tplActions.put(it.value(), method)))
-        );
+        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(),
+                new TypeFilter[]{new AnnotationTypeFilter(EruptTpl.class)},
+                this::registerTpl);
+    }
+
+    //注册模板
+    public void registerTpl(Class<?> tplClass) {
+        Arrays.stream(tplClass.getDeclaredMethods()).forEach(
+                method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(
+                        it -> tplActions.put(it.value(), method)));
+    }
+
+    //移除模板
+    public void unregisterTpl(Class<?> tplClass) {
+        Arrays.stream(tplClass.getDeclaredMethods()).forEach(
+                method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(
+                        it -> tplActions.remove(it.value())));
     }
 
     public Method getAction(String name) {
