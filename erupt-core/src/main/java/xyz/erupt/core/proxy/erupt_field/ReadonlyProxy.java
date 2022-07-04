@@ -23,7 +23,7 @@ public class ReadonlyProxy extends AnnotationProxy<Readonly, Edit> {
                 case "add":
                     return readonlyHandler.add(readonly.add(), readonly.params());
                 case "edit":
-                    return readonlyHandler.add(readonly.edit(), readonly.params());
+                    return readonlyHandler.edit(readonly.edit(), readonly.params());
             }
         }
         return this.invoke(invocation);
