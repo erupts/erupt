@@ -91,6 +91,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
             nodeInfo.setNodeName(eruptNodeProp.getNodeName());
             nodeInfo.setAccessToken(eruptNodeProp.getAccessToken());
             nodeInfo.setVersion(EruptInformation.getEruptVersion());
+            nodeInfo.setEruptModules(EruptCoreService.getModules());
             if (null != eruptNodeProp.getHostAddress() && eruptNodeProp.getHostAddress().length > 0) {
                 nodeInfo.setNodeAddress(eruptNodeProp.getHostAddress());
             } else {
