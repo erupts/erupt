@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * @author YuePeng
@@ -92,6 +93,12 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
             views = @View(title = "Erupt 类数量", className = "text-center", width = "120px")
     )
     private Integer eruptNum;
+
+    @Transient
+    @EruptField(
+            views = @View(title = "模块数", className = "text-center", width = "70px")
+    )
+    private Integer eruptModuleNum;
 
     @Transient
     @EruptField(
@@ -170,20 +177,29 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
             String eruptNumStr = "eruptNum";
             String instanceNumStr = "instanceNum";
             String version = "version";
+            String eruptModuleNum = "eruptModuleNum";
             if (null == metaNode) {
                 map.put(eruptNumStr, '-');
                 map.put(instanceNumStr, '-');
                 map.put(version, '-');
+                map.put(eruptModuleNum, '-');
             } else {
+                Function<Collection<String>, String> function = (it) ->
+                        String.format("<a href='javascript:alert(\"%s\");'>%d</a>", String.join("\\u000a", it), it.size());
                 if (null != metaNode.getErupts()) {
-                    map.put(eruptNumStr, String.format("<a href='javascript:alert(\"%s\");'>%d</a>", String.join("\\u000a", metaNode.getErupts()), metaNode.getErupts().size()));
+                    map.put(eruptNumStr, function.apply(metaNode.getErupts()));
                 } else {
                     map.put(eruptNumStr, 0);
                 }
                 if (null != metaNode.getLocations()) {
-                    map.put(instanceNumStr, String.format("<a href='javascript:alert(\"%s\");'>%d</a>", String.join("\\u000a", metaNode.getLocations()), metaNode.getLocations().size()));
+                    map.put(instanceNumStr, function.apply(metaNode.getLocations()));
                 } else {
                     map.put(instanceNumStr, 0);
+                }
+                if (null != metaNode.getEruptModules()) {
+                    map.put(eruptModuleNum, function.apply(metaNode.getEruptModules()));
+                } else {
+                    map.put(eruptModuleNum, 0);
                 }
                 map.put(version, metaNode.getVersion());
             }
