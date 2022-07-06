@@ -47,7 +47,7 @@ public class EruptUserByRoleView extends BaseModel {
     private String name;
 
     @EruptField(
-            views = @View(title = "账户状态"),
+            views = @View(title = "账户状态", sortable = true),
             edit = @Edit(
                     title = "账户状态",
                     search = @Search,
@@ -62,7 +62,7 @@ public class EruptUserByRoleView extends BaseModel {
     private Boolean status = true;
 
     @EruptField(
-            views = @View(title = "超管用户"),
+            views = @View(title = "超管用户", sortable = true),
             edit = @Edit(
                     title = "超管用户", notNull = true
             )
