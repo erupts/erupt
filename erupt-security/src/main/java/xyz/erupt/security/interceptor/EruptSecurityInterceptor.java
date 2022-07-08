@@ -118,52 +118,60 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         MetaContext.register(new MetaUser(metaUserinfo.getId() + "", metaUserinfo.getAccount(), metaUserinfo.getUsername()));
         //权限校验
         String authStr = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
-        switch (eruptRouter.verifyType()) {
-            case LOGIN:
-                break;
-            case MENU:
-                if (null == eruptUserService.getEruptMenuByValue(authStr)) {
-                    response.setStatus(HttpStatus.FORBIDDEN.value());
-                    response.sendError(HttpStatus.FORBIDDEN.value());
-                    return false;
-                }
-                break;
-            case ERUPT:
-                EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-                $ep:
-                if (StringUtils.isNotBlank(parentEruptName)) {
-                    EruptModel eruptParentModel = EruptCoreService.getErupt(parentEruptName);
-                    for (EruptFieldModel model : eruptParentModel.getEruptFieldModels()) {
-                        if (eruptModel.getEruptName().equals(model.getFieldReturnName())) {
-                            if (authStr.equals(eruptModel.getEruptName())) {
-                                authStr = eruptParentModel.getEruptName();
-                            }
-                            eruptModel = eruptParentModel;
-                            break $ep;
-                        }
+        if (eruptRouter.verifyHandler().isInterface()) {
+            switch (eruptRouter.verifyType()) {
+                case LOGIN:
+                    break;
+                case MENU:
+                    if (null == eruptUserService.getEruptMenuByValue(authStr)) {
+                        response.setStatus(HttpStatus.FORBIDDEN.value());
+                        response.sendError(HttpStatus.FORBIDDEN.value());
+                        return false;
                     }
-                    for (RowOperation operation : eruptParentModel.getErupt().rowOperation()) {
-                        if (void.class != operation.eruptClass()) {
-                            if (eruptModel.getEruptName().equals(operation.eruptClass().getSimpleName())) {
-                                authStr = eruptParentModel.getEruptName();
+                    break;
+                case ERUPT:
+                    EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+                    $ep:
+                    if (StringUtils.isNotBlank(parentEruptName)) {
+                        EruptModel eruptParentModel = EruptCoreService.getErupt(parentEruptName);
+                        for (EruptFieldModel model : eruptParentModel.getEruptFieldModels()) {
+                            if (eruptModel.getEruptName().equals(model.getFieldReturnName())) {
+                                if (authStr.equals(eruptModel.getEruptName())) {
+                                    authStr = eruptParentModel.getEruptName();
+                                }
                                 eruptModel = eruptParentModel;
                                 break $ep;
                             }
                         }
+                        for (RowOperation operation : eruptParentModel.getErupt().rowOperation()) {
+                            if (void.class != operation.eruptClass()) {
+                                if (eruptModel.getEruptName().equals(operation.eruptClass().getSimpleName())) {
+                                    authStr = eruptParentModel.getEruptName();
+                                    eruptModel = eruptParentModel;
+                                    break $ep;
+                                }
+                            }
+                        }
+                        response.setStatus(HttpStatus.NOT_FOUND.value());
+                        return false;
                     }
-                    response.setStatus(HttpStatus.NOT_FOUND.value());
-                    return false;
-                }
-                if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
-                    response.setStatus(HttpStatus.NOT_FOUND.value());
-                    return false;
-                }
-                if (null == eruptUserService.getEruptMenuByValue(eruptModel.getEruptName())) {
-                    response.setStatus(HttpStatus.FORBIDDEN.value());
-                    response.sendError(HttpStatus.FORBIDDEN.value());
-                    return false;
-                }
-                break;
+                    if (!authStr.equalsIgnoreCase(eruptModel.getEruptName())) {
+                        response.setStatus(HttpStatus.NOT_FOUND.value());
+                        return false;
+                    }
+                    if (null == eruptUserService.getEruptMenuByValue(eruptModel.getEruptName())) {
+                        response.setStatus(HttpStatus.FORBIDDEN.value());
+                        response.sendError(HttpStatus.FORBIDDEN.value());
+                        return false;
+                    }
+                    break;
+            }
+        } else {
+            if (!EruptSpringUtil.getBean(eruptRouter.verifyHandler()).verify(eruptRouter, request)) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.sendError(HttpStatus.FORBIDDEN.value());
+                return false;
+            }
         }
         if (eruptProp.isRedisSessionRefresh()) {
             for (String uk : SessionKey.USER_KEY_GROUP) {
