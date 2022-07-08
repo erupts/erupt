@@ -12,6 +12,7 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.jpa.dao.EruptDao;
 
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -100,4 +101,12 @@ public class EruptJobService {
     public void saveJobLog(EruptJobLog eruptJobLog) {
         eruptDao.persist(eruptJobLog);
     }
+
+    @PreDestroy
+    public void destroy() throws SchedulerException {
+        for (StdSchedulerFactory value : schedulerFactoryMap.values()) {
+            value.getScheduler().shutdown();
+        }
+    }
+
 }
