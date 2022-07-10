@@ -97,7 +97,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             parentEruptName = request.getHeader(ERUPT_PARENT_PARAM_KEY);
         }
         if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
-            MetaContext.register(new MetaErupt(eruptName));
+            MetaContext.register(new MetaErupt(eruptName, eruptName));
             EruptModel erupt = EruptCoreService.getErupt(eruptName);
             if (null == erupt) {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -128,6 +128,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                         response.sendError(HttpStatus.FORBIDDEN.value());
                         return false;
                     }
+                    MetaContext.register(new MetaErupt(null, authStr));
                     break;
                 case ERUPT:
                     EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
