@@ -40,10 +40,10 @@ public @interface EruptRouter {
     enum VerifyType {
         @Comment("仅验证是否登录")
         LOGIN,
-        @Comment("验证登录与erupt权限")
-        ERUPT,
         @Comment("验证登录与菜单权限")
-        MENU
+        MENU,
+        @Comment("验证登录与erupt权限")
+        ERUPT
     }
 
     interface VerifyHandler {
