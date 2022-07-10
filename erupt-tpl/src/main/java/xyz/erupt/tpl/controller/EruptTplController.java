@@ -47,23 +47,21 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
     @Resource
     private EruptTplService eruptTplService;
 
-    @Resource
-    private HttpServletRequest request;
-
-    @GetMapping(value = "/{name}/**", produces = {"text/html;charset=utf-8"})
+    @GetMapping(value = "/**", produces = {"text/html;charset=utf-8"})
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyHandler = EruptTplController.class,
             verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void eruptTplPage(@PathVariable("name") String fileName, HttpServletResponse response) throws Exception {
+    public void eruptTplPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        Method method = eruptTplService.getAction(fileName);
+        String path = request.getRequestURI().split(ERUPT_API + EruptTplController.TPL + "/")[1];
+        Method method = eruptTplService.getAction(path);
         if (null == method) {
-            eruptTplService.tplRender(Tpl.Engine.Native, TPL + "/" + fileName, null, response.getWriter());
+            eruptTplService.tplRender(Tpl.Engine.Native, TPL + "/" + path, null, response.getWriter());
             return;
         }
         Object obj = EruptSpringUtil.getBean(method.getDeclaringClass());
         EruptTpl eruptTpl = obj.getClass().getAnnotation(EruptTpl.class);
         TplAction tplAction = method.getAnnotation(TplAction.class);
-        String path = TPL + "/" + fileName;
+        path = TPL + "/" + path;
         if (StringUtils.isNotBlank(tplAction.path())) {
             path = tplAction.path();
         }
