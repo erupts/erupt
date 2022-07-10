@@ -17,7 +17,7 @@ import java.util.Arrays;
  * date 2021/5/7 10:28
  */
 @Component
-public class EruptRowOperationConfig implements EruptRecordOperate.DynamicConfig {
+public class EruptRowOperationNaming implements EruptRecordOperate.DynamicConfig {
 
     @Resource
     private HttpServletRequest request;
@@ -25,8 +25,10 @@ public class EruptRowOperationConfig implements EruptRecordOperate.DynamicConfig
     @Override
     public String naming(String desc, String menuName, String eruptName, Method method) {
         EruptModel erupt = EruptCoreService.getErupt(eruptName);
-        RowOperation operation = findRowOperation(erupt);
-        return operation.title() + " | " + erupt.getErupt().name();
+        if (null == erupt) {
+            return menuName + " | @RowOperation";
+        }
+        return findRowOperation(erupt).title() + " | " + erupt.getErupt().name();
     }
 
     private RowOperation findRowOperation(EruptModel eruptModel) {

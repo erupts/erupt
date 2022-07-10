@@ -3,6 +3,7 @@ package xyz.erupt.upms.service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
@@ -38,8 +39,10 @@ public class EruptContextService {
 
     //获取当前菜单对象
     public EruptMenu getCurrentEruptMenu() {
+        MetaErupt metaErupt = MetaContext.getErupt();
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
-                , MetaContext.getErupt().getMenuValue().toLowerCase(), EruptMenu.class);
+                , (metaErupt.getMenuValue() == null ? metaErupt.getName() : metaErupt.getMenuValue()).toLowerCase(),
+                EruptMenu.class);
     }
 
 }

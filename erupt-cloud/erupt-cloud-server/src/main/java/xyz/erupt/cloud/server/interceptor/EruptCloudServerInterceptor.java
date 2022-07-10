@@ -1,4 +1,4 @@
-package xyz.erupt.cloud.server.config;
+package xyz.erupt.cloud.server.interceptor;
 
 import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.http.HttpRequest;
@@ -36,6 +36,7 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.interceptor.EruptSecurityInterceptor;
+import xyz.erupt.security.service.OperationService;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
@@ -75,6 +76,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     @Resource
     private EruptUserService eruptUserService;
+
+    @Resource
+    private OperationService operationService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -136,9 +140,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             }
             if (httpResponse.getStatus() != HttpStatus.OK.value()) {
                 response.sendError(httpResponse.getStatus());
-                eruptSecurityInterceptor.afterCompletion(request, response, handler, new Exception(httpResponse.body()));
+                operationService.record(handler, new Exception(httpResponse.body()));
             } else {
-                eruptSecurityInterceptor.afterCompletion(request, response, handler, null);
+                operationService.record(handler, null);
             }
             if ((EruptRestPath.ERUPT_BUILD + "/" + erupt).equals(request.getServletPath())) {
                 EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(httpResponse.body(), EruptBuildModel.class);
