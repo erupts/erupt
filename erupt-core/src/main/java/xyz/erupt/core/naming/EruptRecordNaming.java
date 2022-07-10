@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
  * date 2021/5/7 10:28
  */
 @Component
-public class EruptOperateConfig implements EruptRecordOperate.DynamicConfig {
+public class EruptRecordNaming implements EruptRecordOperate.DynamicConfig {
 
     @Override
     public String naming(String desc, String menuName, String eruptName, Method method) {
@@ -27,7 +27,7 @@ public class EruptOperateConfig implements EruptRecordOperate.DynamicConfig {
                 return prefix + eruptName;
             }
         } else {
-            throw new RuntimeException("Incorrect use " + EruptOperateConfig.class.getSimpleName());
+            throw new RuntimeException("incorrect use " + EruptRecordNaming.class.getSimpleName());
         }
     }
 
