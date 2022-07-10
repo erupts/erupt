@@ -33,7 +33,12 @@ public class NativeEngine extends EngineTemplate<Void> {
     @Override
     public void render(Void unused, String filePath, Map<String, Object> bindingMap, Writer out) {
         @Cleanup InputStream inputStream = this.getClass().getResourceAsStream(filePath);
-        String html = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+        String html = "";
+        if (null == inputStream) {
+            html = "<h1 align='center'>404 not found</h1>";
+        } else {
+            html = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+        }
         HttpServletRequest request = (HttpServletRequest) bindingMap.get(EngineConst.INJECT_REQUEST);
         out.write(html.replace(baseDir, request.getContextPath()));
     }
