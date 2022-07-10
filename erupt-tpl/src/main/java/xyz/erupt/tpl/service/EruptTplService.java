@@ -85,13 +85,13 @@ public class EruptTplService {
     public void registerTpl(Class<?> tplClass) {
         Arrays.stream(tplClass.getDeclaredMethods()).forEach(method -> Optional.ofNullable(method.getAnnotation(TplAction.class))
                 .ifPresent(it -> {
-                    if (pathMatcher.isPattern(it.value())) {
-                        tplMatcherActions.put(it.value(), method);
-                    } else {
-                        tplActions.put(it.value(), method);
-                    }
-                })
-        );
+                            if (pathMatcher.isPattern(it.value())) {
+                                tplMatcherActions.put(it.value(), method);
+                            } else {
+                                tplActions.put(it.value(), method);
+                            }
+                        }
+                ));
     }
 
     //移除模板
