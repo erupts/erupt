@@ -34,6 +34,9 @@ public class EruptProp {
     //是否保留上传文件原始名称
     private boolean keepUploadFileName = false;
 
+    //初始化检测方式
+    private InitMethodEnum initMethodEnum = InitMethodEnum.FILE;
+
     //true 单机缓存，false基于redis分布式缓存
 //    private boolean standaloneCache = true;
 
