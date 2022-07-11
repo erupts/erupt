@@ -76,7 +76,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource>, DisposableB
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         for (NamedParameterJdbcTemplate jdbcTemplate : templateMap.values()) {
             DataSource dataSource = jdbcTemplate.getJdbcTemplate().getDataSource();
             if (dataSource instanceof HikariDataSource) {
@@ -90,7 +90,9 @@ public class BiDataSourceService implements DataProxy<BiDataSource>, DisposableB
     @Override
     public void beforeAdd(BiDataSource biDataSource) {
         try {
-            biDataSource.setCode(Erupts.generateCode());
+            if (null == biDataSource.getId()) {
+                biDataSource.setCode(Erupts.generateCode());
+            }
             Class.forName(biDataSource.getDriver());
         } catch (ClassNotFoundException e) {
             throw new EruptApiErrorTip(i18NTranslateService.translate("找不到驱动类，请检查JDBC驱动包是否在项目内"));

@@ -1,9 +1,7 @@
 package xyz.erupt.bi.service;
 
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.bi.model.BiFunction;
-import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
@@ -18,12 +16,6 @@ public class FunctionService {
 
     @Resource
     private EruptDao eruptDao;
-
-    @Resource
-    private EruptProp eruptProp;
-
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
 
     public void flushFunction() {
 //        List<Object[]> list = eruptDao.queryObjectList(BiFunction.class, null, null, "jsFunction");
