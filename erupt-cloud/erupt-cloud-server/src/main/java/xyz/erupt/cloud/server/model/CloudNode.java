@@ -108,7 +108,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
 
     @Transient
     @EruptField(
-            views = @View(title = "版本", className = "text-center", width = "110px")
+            views = @View(title = "版本", className = "text-center", width = "120px")
     )
     private String version;
 
@@ -155,9 +155,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
 
     @Override
     public void beforeAdd(CloudNode cloudNode) {
-        if (null == cloudNode.getAccessToken()) {
-            cloudNode.setAccessToken(Erupts.generateCode(16).toUpperCase());
-        }
+        if (null == cloudNode.getAccessToken()) cloudNode.setAccessToken(Erupts.generateCode(16).toUpperCase());
     }
 
     @Override
@@ -172,36 +170,27 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                 String token = it.toString();
                 map.put(ACCESS_TOKEN, token.substring(0, 3) + "******" + token.substring(token.length() - 3));
             });
-            MetaNode metaNode = nodeManager.getNode(map.get(NODE_NAME).toString());
-
             String eruptNumStr = "eruptNum";
             String instanceNumStr = "instanceNum";
             String version = "version";
             String eruptModuleNum = "eruptModuleNum";
-            if (null == metaNode) {
-                map.put(eruptNumStr, '-');
-                map.put(instanceNumStr, '-');
-                map.put(version, '-');
-                map.put(eruptModuleNum, '-');
-            } else {
-                Function<Collection<String>, String> function = (it) ->
-                        String.format("<a href='javascript:alert(\"%s\");'>%d</a>", String.join("\\u000a", it), it.size());
-                if (null != metaNode.getErupts()) {
+            map.put(eruptNumStr, '-');
+            map.put(instanceNumStr, '-');
+            map.put(version, '-');
+            map.put(eruptModuleNum, '-');
+            try {
+                MetaNode metaNode = nodeManager.getNode(map.get(NODE_NAME).toString());
+                Optional.ofNullable(nodeManager.getNode(map.get(NODE_NAME).toString())).ifPresent(metaNode1 -> {
+                    Function<Collection<String>, Object> function = (it) -> null == it ? 0 : String.format("<a href='javascript:alert(\"%s\");'>%d</a>",
+                            String.join("\\u000a", it), it.size());
                     map.put(eruptNumStr, function.apply(metaNode.getErupts()));
-                } else {
-                    map.put(eruptNumStr, 0);
-                }
-                if (null != metaNode.getLocations()) {
                     map.put(instanceNumStr, function.apply(metaNode.getLocations()));
-                } else {
-                    map.put(instanceNumStr, 0);
-                }
-                if (null != metaNode.getEruptModules()) {
                     map.put(eruptModuleNum, function.apply(metaNode.getEruptModules()));
-                } else {
-                    map.put(eruptModuleNum, 0);
-                }
-                map.put(version, metaNode.getVersion());
+                    map.put(version, metaNode.getVersion());
+                });
+            } catch (Exception e) {
+                map.put(version, String.format("<span style='color:#f00'>%s</span>", e.getMessage()));
+                e.printStackTrace();
             }
         }
     }
