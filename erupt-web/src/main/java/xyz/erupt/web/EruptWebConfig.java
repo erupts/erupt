@@ -16,9 +16,9 @@ public class EruptWebConfig {
 
     @RequestMapping("/")
     public String index(HttpServletResponse response) {
-        response.setHeader("Expires","0");
-        response.setHeader("Pragma","no-cache");
-        response.setHeader("Cache-Control","no-cache");
+        response.setHeader("Expires", "0");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
         return "forward:index.html?v=" + EruptWebConfig.class.hashCode();
     }
 
