@@ -19,7 +19,7 @@ public class EruptWebConfig {
         response.setHeader("Expires", "0");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
-        return "forward:index.html?v=" + EruptWebConfig.class.hashCode();
+        return "forward:index.html?v=" + this.getClass().hashCode();
     }
 
 }
