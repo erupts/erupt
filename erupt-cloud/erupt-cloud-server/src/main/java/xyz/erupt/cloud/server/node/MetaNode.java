@@ -17,6 +17,8 @@ import java.util.Set;
 @Setter
 public class MetaNode extends NodeInfo implements Serializable {
 
+    public static final long serialVersionUID = -10086;
+
     //服务注册时间
     private Date registerTime;
 

@@ -20,6 +20,7 @@ import xyz.erupt.tpl.engine.EngineConst;
 import xyz.erupt.tpl.service.EruptTplService;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -39,36 +40,42 @@ import static xyz.erupt.core.constant.EruptRestPath.ERUPT_API;
  */
 @RestController
 @RequestMapping(ERUPT_API + EruptTplController.TPL)
-public class EruptTplController {
+public class EruptTplController implements EruptRouter.VerifyHandler {
 
     static final String TPL = "/tpl";
 
     @Resource
     private EruptTplService eruptTplService;
 
-    @GetMapping(value = "/{name}/**", produces = {"text/html;charset=utf-8"})
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void eruptTplPage(@PathVariable("name") String fileName, HttpServletResponse response) throws Exception {
+    @GetMapping(value = "/**", produces = {"text/html;charset=utf-8"})
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyHandler = EruptTplController.class,
+            verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public void eruptTplPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        Method method = eruptTplService.getAction(fileName);
+        String path = request.getRequestURI().split(ERUPT_API + EruptTplController.TPL + "/")[1];
+        Method method = eruptTplService.getAction(path);
         if (null == method) {
-            eruptTplService.tplRender(Tpl.Engine.Native, TPL + "/" + fileName, null, response.getWriter());
+            eruptTplService.tplRender(Tpl.Engine.Native, TPL + "/" + path, null, response.getWriter());
             return;
         }
         Object obj = EruptSpringUtil.getBean(method.getDeclaringClass());
         EruptTpl eruptTpl = obj.getClass().getAnnotation(EruptTpl.class);
         TplAction tplAction = method.getAnnotation(TplAction.class);
-        String path = TPL + "/" + fileName;
+        path = TPL + "/" + path;
         if (StringUtils.isNotBlank(tplAction.path())) {
             path = tplAction.path();
         }
         eruptTplService.tplRender(eruptTpl.engine(), path, (Map) method.invoke(obj), response.getWriter());
     }
 
+    @Override
+    public String convertAuthStr(EruptRouter eruptRouter, HttpServletRequest request, String authStr) {
+        return request.getRequestURI().split(ERUPT_API + EruptTplController.TPL + "/")[1];
+    }
+
     @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=UTF-8"})
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void getEruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field,
-                                  HttpServletResponse response) {
+    public void getEruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field, HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         Tpl tpl = eruptModel.getEruptFieldMap().get(field).getEruptField().edit().tplType();
@@ -78,8 +85,7 @@ public class EruptTplController {
     @GetMapping(value = "/operation_tpl/{erupt}/{code}", produces = {"text/html;charset=utf-8"})
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void getOperationTpl(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
-                                @RequestParam(value = "ids", required = false) String[] ids,
-                                HttpServletResponse response) {
+                                @RequestParam(value = "ids", required = false) String[] ids, HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         RowOperation operation = Arrays.stream(eruptModel.getErupt().rowOperation()).filter(it ->
                 it.code().equals(code)).findFirst().orElseThrow(EruptNoLegalPowerException::new);

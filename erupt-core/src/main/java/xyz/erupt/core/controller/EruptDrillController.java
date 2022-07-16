@@ -12,7 +12,7 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.invoke.DataProcessorManager;
-import xyz.erupt.core.naming.EruptOperateConfig;
+import xyz.erupt.core.naming.EruptRecordNaming;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptService;
 import xyz.erupt.core.util.EruptUtil;
@@ -61,7 +61,7 @@ public class EruptDrillController {
     }
 
     @PostMapping("/add/{erupt}/drill/{code}/{id}")
-    @EruptRecordOperate(value = "新增", dynamicConfig = EruptOperateConfig.class)
+    @EruptRecordOperate(value = "新增", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel drillAdd(@PathVariable("erupt") String erupt, @PathVariable("code") String code,
                                   @PathVariable("id") String id, @RequestBody JsonObject data,

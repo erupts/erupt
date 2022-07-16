@@ -1,14 +1,12 @@
 package xyz.erupt.security.interceptor;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
@@ -20,26 +18,19 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.config.EruptSecurityProp;
-import xyz.erupt.security.tl.RequestBodyTL;
+import xyz.erupt.security.service.OperationService;
 import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.model.EruptMenu;
-import xyz.erupt.upms.model.log.EruptOperateLog;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
-import xyz.erupt.upms.util.IpUtil;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -67,6 +58,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
     private EruptContextService eruptContextService;
+
+    @Resource
+    private OperationService operationService;
 
     private static final String ERUPT_PARENT_HEADER_KEY = "eruptParent";
 
@@ -97,7 +91,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             parentEruptName = request.getHeader(ERUPT_PARENT_PARAM_KEY);
         }
         if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
-            MetaContext.register(new MetaErupt(eruptName));
+            MetaContext.register(new MetaErupt(eruptName, eruptName));
             EruptModel erupt = EruptCoreService.getErupt(eruptName);
             if (null == erupt) {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -107,7 +101,6 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 return true;
             }
         }
-
         if (null == token || null == sessionService.get(SessionKey.USER_TOKEN + token)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.sendError(HttpStatus.UNAUTHORIZED.value());
@@ -122,11 +115,15 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             case LOGIN:
                 break;
             case MENU:
+                if (!eruptRouter.verifyHandler().isInterface()) {
+                    authStr = EruptSpringUtil.getBean(eruptRouter.verifyHandler()).convertAuthStr(eruptRouter, request, authStr);
+                }
                 if (null == eruptUserService.getEruptMenuByValue(authStr)) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
                 }
+                MetaContext.register(new MetaErupt(null, authStr));
                 break;
             case ERUPT:
                 EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
@@ -174,55 +171,14 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     }
 
     @Override
-    @Transactional
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         try {
-            if (eruptSecurityProp.isRecordOperateLog()) {
-                if (handler instanceof HandlerMethod) {
-                    HandlerMethod handlerMethod = (HandlerMethod) handler;
-                    Optional.ofNullable(handlerMethod.getMethodAnnotation(EruptRecordOperate.class)).ifPresent(eruptRecordOperate -> {
-                        EruptOperateLog operate = new EruptOperateLog();
-                        if (eruptRecordOperate.dynamicConfig().isInterface()) {
-                            operate.setApiName(eruptRecordOperate.value());
-                        } else {
-                            String eruptName = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
-                            eruptName = Optional.ofNullable(eruptName).orElse(request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY));
-                            EruptRecordOperate.DynamicConfig dynamicConfig = EruptSpringUtil.getBean(eruptRecordOperate.dynamicConfig());
-                            if (!dynamicConfig.canRecord(eruptName, handlerMethod.getMethod())) return;
-                            operate.setApiName(dynamicConfig.naming(eruptRecordOperate.value(),
-                                    Optional.ofNullable(eruptContextService.getCurrentEruptMenu()).orElse(new EruptMenu()).getName(),
-                                    eruptName, handlerMethod.getMethod()));
-                        }
-                        operate.setIp(IpUtil.getIpAddr(request));
-                        operate.setRegion(IpUtil.getCityInfo(operate.getIp()));
-                        operate.setStatus(true);
-                        operate.setReqMethod(request.getMethod());
-                        operate.setReqAddr(request.getRequestURL().toString());
-                        operate.setOperateUser(MetaContext.getUser().getName());
-                        operate.setCreateTime(new Date());
-                        operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
-                        Optional.ofNullable(ex).ifPresent(e -> {
-                            operate.setErrorInfo(ExceptionUtils.getStackTrace(e));
-                            operate.setStatus(false);
-                        });
-                        Object param = RequestBodyTL.get().getBody();
-                        operate.setReqParam(null == param ? findRequestParamVal(request) : param.toString());
-                        RequestBodyTL.remove();
-                        entityManager.persist(operate);
-                    });
-                }
-            }
+            operationService.record(handler, ex);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             MetaContext.remove();
         }
     }
 
-    public String findRequestParamVal(HttpServletRequest request) {
-        if (request.getParameterMap().size() > 0) {
-            StringBuilder sb = new StringBuilder();
-            request.getParameterMap().forEach((key, value) -> sb.append(key).append("=").append(Arrays.toString(value)).append("\n"));
-            return sb.toString();
-        }
-        return null;
-    }
 }
