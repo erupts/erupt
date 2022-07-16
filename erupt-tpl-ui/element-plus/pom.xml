@@ -12,7 +12,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.10.10-beta2</version>
+        <version>1.10.10</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 </project>
