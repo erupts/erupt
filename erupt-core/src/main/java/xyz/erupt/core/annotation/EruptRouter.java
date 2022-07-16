@@ -2,6 +2,7 @@ package xyz.erupt.core.annotation;
 
 import xyz.erupt.annotation.config.Comment;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.*;
 
 /**
@@ -26,6 +27,13 @@ public @interface EruptRouter {
     @Comment("权限校验方式")
     VerifyMethod verifyMethod() default EruptRouter.VerifyMethod.HEADER;
 
+    @Comment("定义路由校验规则")
+    Class<? extends VerifyHandler> verifyHandler() default VerifyHandler.class;
+
+
+    @Comment("自定义参数")
+    String[] params() default {};
+
     enum VerifyMethod {
         @Comment("token必须放在请求头")
         HEADER,
@@ -36,10 +44,29 @@ public @interface EruptRouter {
     enum VerifyType {
         @Comment("仅验证是否登录")
         LOGIN,
-        @Comment("验证登录与erupt权限")
-        ERUPT,
         @Comment("验证登录与菜单权限")
-        MENU
+        MENU,
+        @Comment("验证登录与erupt权限")
+        ERUPT
+    }
+
+    interface VerifyHandler {
+
+//        /**
+//         * @return true 校验通过 | false 校验失败
+//         */
+//        boolean verify(EruptRouter eruptRouter, HttpServletRequest request);
+
+        /**
+         * 动态转换授权菜单权限标识字符
+         *
+         * @param authStr 原始权限标识字符
+         * @return 新的权限字符
+         */
+        default String convertAuthStr(EruptRouter eruptRouter, HttpServletRequest request, String authStr) {
+            return authStr;
+        }
+
     }
 
 }

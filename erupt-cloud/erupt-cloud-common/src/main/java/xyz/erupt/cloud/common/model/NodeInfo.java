@@ -32,6 +32,9 @@ public class NodeInfo implements Serializable {
     //node节点地址
     private String[] nodeAddress;
 
+    //服务所管理的模块清单
+    private List<String> eruptModules = new ArrayList<>();
+
     //服务所管理的erupt清单
     private List<String> erupts = new ArrayList<>();
 

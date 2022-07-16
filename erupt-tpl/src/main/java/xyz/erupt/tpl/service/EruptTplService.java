@@ -6,8 +6,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedCaseInsensitiveMap;
+import org.springframework.util.PathMatcher;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -37,8 +39,6 @@ public class EruptTplService {
 
     public static String TPL = "tpl";
 
-    public static String TPL_MICRO = "tpl-micro-app";
-
     private static final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
 
     private static final Class<?>[] engineTemplates = {
@@ -65,6 +65,10 @@ public class EruptTplService {
 
     private final Map<String, Method> tplActions = new LinkedCaseInsensitiveMap<>();
 
+    private final Map<String, Method> tplMatcherActions = new LinkedCaseInsensitiveMap<>();
+
+    private final PathMatcher pathMatcher = new AntPathMatcher();
+
     @Resource
     private HttpServletRequest request;
 
@@ -79,20 +83,41 @@ public class EruptTplService {
 
     //注册模板
     public void registerTpl(Class<?> tplClass) {
-        Arrays.stream(tplClass.getDeclaredMethods()).forEach(
-                method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(
-                        it -> tplActions.put(it.value(), method)));
+        Arrays.stream(tplClass.getDeclaredMethods()).forEach(method -> Optional.ofNullable(method.getAnnotation(TplAction.class))
+                .ifPresent(it -> {
+                            if (pathMatcher.isPattern(it.value())) {
+                                tplMatcherActions.put(it.value(), method);
+                            } else {
+                                tplActions.put(it.value(), method);
+                            }
+                        }
+                ));
     }
 
     //移除模板
     public void unregisterTpl(Class<?> tplClass) {
         Arrays.stream(tplClass.getDeclaredMethods()).forEach(
                 method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(
-                        it -> tplActions.remove(it.value())));
+                        it -> {
+                            tplActions.remove(it.value());
+                            tplMatcherActions.remove(it.value());
+                        }
+                )
+        );
     }
 
-    public Method getAction(String name) {
-        return tplActions.get(name);
+    public Method getAction(String path) {
+        if (tplActions.containsKey(path)) {
+            return tplActions.get(path);
+        } else {
+            // 从模糊匹配中查询资源路径
+            for (Map.Entry<String, Method> entry : tplMatcherActions.entrySet()) {
+                if (pathMatcher.match(entry.getKey(), path)) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return null;
     }
 
     public Object getEngine(Tpl.Engine engine) {

@@ -5,6 +5,7 @@ import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.quartz.simpl.SimpleThreadPool;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.Properties;
  * date 2019-12-26
  */
 @Service
-public class EruptJobService {
+public class EruptJobService implements DisposableBean {
 
     /**
      * 执行任务线程.
@@ -100,4 +101,12 @@ public class EruptJobService {
     public void saveJobLog(EruptJobLog eruptJobLog) {
         eruptDao.persist(eruptJobLog);
     }
+
+    @Override
+    public void destroy() throws SchedulerException {
+        for (StdSchedulerFactory value : schedulerFactoryMap.values()) {
+            value.getScheduler().shutdown();
+        }
+    }
+
 }
