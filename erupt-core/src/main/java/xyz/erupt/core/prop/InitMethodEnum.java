@@ -8,8 +8,8 @@ package xyz.erupt.core.prop;
  */
 public enum InitMethodEnum {
 
-    NONE,    //不进行初始化
-    EVERY,   //每次都进行初始化
-    FILE     //通过文件是否存在判断
+    NONE,    //不执行初始化代码
+    EVERY,   //每次启动都进行初始化
+    FILE     //通过标识文件判断是否需要初始化
 
 }
