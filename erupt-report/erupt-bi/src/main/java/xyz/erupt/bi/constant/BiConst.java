@@ -12,6 +12,8 @@ public class BiConst {
 
     public static final String BATH_PATH = EruptRestPath.ERUPT_API + "/bi";
 
+    public static final String BI_VIEW = EruptRestPath.ERUPT_API + "/bi-view";
+
     public static final String SCRIPT_ENGINE = "nashorn";
 
     public static final String SIMPLE_PLACEHOLDER = "{{}}";
