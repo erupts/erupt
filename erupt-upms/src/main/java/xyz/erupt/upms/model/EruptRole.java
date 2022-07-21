@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.handler.RoleMenuFilter;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
@@ -40,13 +41,13 @@ public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole
 
     @EruptField(
             views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true)
+            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
             views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true)
+            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
@@ -62,6 +63,7 @@ public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole
                     title = "状态",
                     type = EditType.BOOLEAN,
                     notNull = true,
+                    search = @Search(vague = true),
                     boolType = @BoolType(trueText = "启用", falseText = "禁用")
             )
     )
