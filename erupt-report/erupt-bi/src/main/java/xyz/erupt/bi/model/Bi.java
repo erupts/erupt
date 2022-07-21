@@ -104,13 +104,13 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     private BiClassHandler classHandler;
 
     @EruptField(
-            views = @View(title = "缓存时间", sortable = true, template = "value&&value+'s'"),
+            views = @View(title = "缓存时间", width = "100px", sortable = true, template = "value&&value+'s'"),
             edit = @Edit(title = "缓存时间（秒）")
     )
     private Integer cacheTime = 1;
 
     @EruptField(
-            views = @View(title = "自刷周期", sortable = true, template = "value&&value+'s'"),
+            views = @View(title = "自刷周期", width = "100px", sortable = true, template = "value&&value+'s'"),
             edit = @Edit(title = "自动刷新周期（秒）")
     )
     private Integer refreshTime;
