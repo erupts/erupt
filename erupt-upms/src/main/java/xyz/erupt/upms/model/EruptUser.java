@@ -39,6 +39,7 @@ import java.util.Set;
 @Setter
 public class EruptUser extends LookerSelf {
 
+    @Column(length = 64)
     @EruptField(
             views = @View(title = "用户名", sortable = true),
             edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true, search = @Search(vague = true))
@@ -79,7 +80,7 @@ public class EruptUser extends LookerSelf {
     @EruptField(
             views = @View(title = "超管用户", sortable = true),
             edit = @Edit(
-                    title = "超管用户", notNull = true
+                    title = "超管用户", notNull = true, search = @Search(vague = true)
             )
     )
     private Boolean isAdmin = false;
@@ -105,7 +106,7 @@ public class EruptUser extends LookerSelf {
     @ManyToOne
     @EruptField(
             views = @View(title = "岗位", column = "name"),
-            edit = @Edit(title = "岗位", type = EditType.REFERENCE_TREE)
+            edit = @Edit(title = "岗位", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private EruptPost eruptPost;
 
@@ -130,7 +131,7 @@ public class EruptUser extends LookerSelf {
     private String passwordB;
 
     @EruptField(
-            views = @View(title = "重置密码时间",width = "100px")
+            views = @View(title = "重置密码时间", width = "100px")
     )
     private Date resetPwdTime;
 
