@@ -102,6 +102,7 @@ public class EruptMenu extends MetaModel {
     )
     private String icon;
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             edit = @Edit(
                     title = "编码", readonly = @Readonly

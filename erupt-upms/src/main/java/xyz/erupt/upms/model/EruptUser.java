@@ -39,7 +39,7 @@ import java.util.Set;
 @Setter
 public class EruptUser extends LookerSelf {
 
-    @Column(length = 64)
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "用户名", sortable = true),
             edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true, search = @Search(vague = true))

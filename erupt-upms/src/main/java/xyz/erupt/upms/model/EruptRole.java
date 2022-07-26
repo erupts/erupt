@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Filter;
@@ -39,6 +40,7 @@ import java.util.Set;
 @Component
 public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole> {
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码"),
             edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
