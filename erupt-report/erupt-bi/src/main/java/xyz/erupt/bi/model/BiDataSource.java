@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 @EruptI18n
 public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandler {
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", sortable = true, width = "100px")
     )

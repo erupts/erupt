@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -22,18 +23,20 @@ import javax.persistence.*;
 
 /**
  * 管理报表元数据
+ *
  * @author YuePeng
  * date 2022/7/19 07:19
  */
-@Entity
-@Table(name = "e_bi_view_meta", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "报表配置", linkTree = @LinkTree(field = "biGroup"), dataProxy = BiViewMeta.class)
+//@Entity
+@Table(name = "e_bi_view_meta")
+@Erupt(name = "BI可视化元数据", linkTree = @LinkTree(field = "biGroup"), dataProxy = BiViewMeta.class)
 @Getter
 @Setter
 @Component
 @EruptI18n
 public class BiViewMeta extends MetaModelUpdateVo implements DataProxy<BiViewMeta> {
 
+    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "编码", width = "100px"),
             edit = @Edit(title = "编码", search = @Search, show = false)
@@ -87,4 +90,5 @@ public class BiViewMeta extends MetaModelUpdateVo implements DataProxy<BiViewMet
     public void beforeAdd(BiViewMeta biViewMeta) {
         biViewMeta.setCode(Erupts.generateCode());
     }
+
 }

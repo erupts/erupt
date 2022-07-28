@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -17,6 +18,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -38,6 +40,7 @@ public class BiTpl extends MetaModelUpdateVo implements DataProxy<BiTpl> {
 
     public static final String TYPE_PATH = "path";
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", width = "100px")
     )

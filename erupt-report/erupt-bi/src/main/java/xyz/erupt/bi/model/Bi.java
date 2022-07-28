@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
@@ -68,6 +69,7 @@ import java.util.Set;
 @EruptI18n
 public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiReleaseModal> {
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", width = "100px"),
             edit = @Edit(title = "编码", search = @Search, show = false)

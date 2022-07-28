@@ -4,10 +4,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.bi.constant.BiConst;
+import xyz.erupt.bi.model.BiView;
 import xyz.erupt.bi.view.BiViewVo;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -28,8 +30,8 @@ public class EruptBiViewController {
     }
 
     //预览
-    @RequestMapping("/preview/{code}")
-    public void preview(@PathVariable String code) {
+    @RequestMapping("/preview/{id}")
+    public void preview(@PathVariable Long id) {
 
     }
 
@@ -52,21 +54,30 @@ public class EruptBiViewController {
     }
 
     //重命名
+    @Transactional
     @RequestMapping("rename/{id}")
     public void rename(@PathVariable Long id, String name) {
-
+        BiView biView = eruptDao.getEntityManager().find(BiView.class, id);
+        biView.setName(name);
+        eruptDao.mergeAndFlush(biView);
     }
 
     //发布
+    @Transactional
     @RequestMapping("/publish/{id}")
     public void publish(@PathVariable Long id) {
-
+        BiView biView = eruptDao.getEntityManager().find(BiView.class, id);
+        biView.setPublish(true);
+        eruptDao.mergeAndFlush(biView);
     }
 
     //取消发布
+    @Transactional
     @RequestMapping("/cancel-publish/{id}")
     public void cancelPublish(@PathVariable Long id) {
-
+        BiView biView = eruptDao.getEntityManager().find(BiView.class, id);
+        biView.setPublish(false);
+        eruptDao.mergeAndFlush(biView);
     }
 
     //克隆
@@ -77,6 +88,7 @@ public class EruptBiViewController {
 
     //删除
     @RequestMapping("/delete/{id}")
+    @Transactional
     public void delete(@PathVariable Long id) {
         eruptDao.getEntityManager().remove(new BiViewVo() {{
             this.setId(id);

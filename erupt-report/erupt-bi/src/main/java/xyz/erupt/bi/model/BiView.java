@@ -4,11 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
+import javax.persistence.Column;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.util.Date;
 
 /**
@@ -18,12 +19,13 @@ import java.util.Date;
 @Getter
 @Setter
 //@Entity
-@Table(name = "e_bi_view", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_bi_view")
 @Where(clause = "deleteTime is null")
 @SQLDelete(sql = "update e_bi_view set deleteTime = now() where id = ?")
 public class BiView extends MetaModelUpdateVo {
 
     //编码
+    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     private String code;
 
     //名称

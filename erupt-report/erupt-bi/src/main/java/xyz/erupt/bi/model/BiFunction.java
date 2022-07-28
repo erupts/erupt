@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -39,6 +40,7 @@ import javax.script.ScriptException;
 @EruptI18n
 public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunction> {
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", sortable = true, width = "120px"),
             edit = @Edit(title = "编码", search = @Search(vague = true), show = false)

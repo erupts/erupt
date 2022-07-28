@@ -5,6 +5,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -30,6 +31,7 @@ import javax.persistence.*;
 @EruptI18n
 public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "维度编码", sortable = true),
             edit = @Edit(title = "维度编码", notNull = true)

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -31,6 +32,7 @@ import javax.persistence.*;
 @EruptI18n
 public class BiGroup extends MetaModelUpdateVo implements DataProxy<BiGroup> {
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", sortable = true),
             edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
