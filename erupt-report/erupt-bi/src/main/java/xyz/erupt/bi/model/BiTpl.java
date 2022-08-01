@@ -86,10 +86,4 @@ public class BiTpl extends MetaModelUpdateVo implements DataProxy<BiTpl> {
 
     }
 
-    @Override
-    public void beforeUpdate(BiTpl biTpl) {
-//        if (TYPE_ONLINE.equals(biTpl.getType())&& StringUtils.isBlank(biTpl.getTpl())) {
-//            throw new EruptWebApiRuntimeException("template code i");
-//        }
-    }
 }
