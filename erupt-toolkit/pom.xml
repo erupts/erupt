@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <hutool.version>5.7.17</hutool.version>
+        <hutool.version>5.8.3</hutool.version>
     </properties>
 
     <dependencies>
