@@ -48,8 +48,7 @@ public class EruptExcelService {
      * @return Workbook
      */
     public Workbook exportExcel(EruptModel eruptModel, Page page) {
-//        XSSFWorkbook
-//        SXSSFWorkbook
+        // XSSFWorkbook、SXSSFWorkbook
         Workbook wb = new SXSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         sheet.setZoom(160);

@@ -56,6 +56,11 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<M
     default void editBehavior(MODEL model) {
     }
 
+    @Comment("默认查询条件")
+    default void searchCondition(MODEL model) {
+
+    }
+
     @Comment("excel导出")
     default void excelExport(@Comment("POI文档对象") Workbook wb) {
     }
