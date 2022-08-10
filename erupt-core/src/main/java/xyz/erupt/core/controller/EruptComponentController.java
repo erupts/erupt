@@ -5,10 +5,12 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 
 import java.util.List;
@@ -41,7 +43,12 @@ public class EruptComponentController {
         if (val.length() < autoCompleteType.triggerLength()) {
             throw new EruptWebApiRuntimeException("char length must >= " + autoCompleteType.triggerLength());
         }
-        return EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(formData, val, autoCompleteType.param());
+        try {
+            return EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(formData, val, autoCompleteType.param());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new EruptApiErrorTip(e.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+        }
     }
 
     //Gets the CHOICE component drop-down list
