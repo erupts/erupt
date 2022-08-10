@@ -61,7 +61,7 @@ public @interface RowOperation {
         SINGLE,
         @Comment("依赖多行数据")
         MULTI,
-        @Comment("无需依赖数据")
+        @Comment("不依赖行数据")
         BUTTON
     }
 
