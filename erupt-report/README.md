@@ -6,4 +6,5 @@ erupt-generator  代码生成器（已开源）
 erupt-bi  智能报表功能，支持sql动态写入
 erupt-monitor 服务器监控模块
 erupt-tenant 多租户模块
+erupt-cloud-gateway 云网关 
 

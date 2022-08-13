@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-pro</artifactId>
-    <version>1.10.10</version>
+    <version> 1.10.11</version>
 
     <packaging>pom</packaging>
     <name>erupt-pro</name>
@@ -23,7 +23,6 @@
         <module>erupt-schema</module>
         <module>erupt-tenant</module>
         <module>erupt-flow</module>
-        <module>erupt-rpc</module>
     </modules>
 
     <dependencyManagement>
