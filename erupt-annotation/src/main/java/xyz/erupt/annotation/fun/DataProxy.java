@@ -56,6 +56,12 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<M
     default void editBehavior(MODEL model) {
     }
 
+    //必须用参数的形式传递model, 因为dataProxy可出现多层定义，返回值方式无法多层传递对象
+    @Comment("默认查询条件")
+    default void searchCondition(Map<String, Object> condition) {
+
+    }
+
     @Comment("excel导出")
     default void excelExport(@Comment("POI文档对象") Workbook wb) {
     }

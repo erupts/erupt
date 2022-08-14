@@ -3,6 +3,7 @@ package xyz.erupt.annotation.fun;
 import xyz.erupt.annotation.config.Comment;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author YuePeng
@@ -10,6 +11,8 @@ import java.util.List;
  */
 public interface AutoCompleteHandler {
 
-    List<Object> completeHandler(@Comment("前端输入值") String val, @Comment("注解回传参数") String[] param);
+    List<Object> completeHandler(@Comment("前端整个表单对象") Map<String,Object> formData,
+                                 @Comment("前端输入值") String val,
+                                 @Comment("注解回传参数") String[] param);
 
 }
