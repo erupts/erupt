@@ -37,6 +37,9 @@ public final class EruptModel implements Cloneable {
 
     private List<EruptFieldModel> eruptFieldModels;
 
+    //默认查询条件
+    private Map<String, Object> searchCondition;
+
     private boolean extraRow = false;
 
     public EruptModel(Class<?> eruptClazz) {

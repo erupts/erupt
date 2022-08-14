@@ -5,10 +5,13 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -27,21 +30,22 @@ import javax.persistence.UniqueConstraint;
 @Setter
 public class EruptPost extends BaseModel {
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "岗位编码", sortable = true),
-            edit = @Edit(title = "岗位编码", notNull = true)
+            edit = @Edit(title = "岗位编码", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
             views = @View(title = "岗位名称", sortable = true),
-            edit = @Edit(title = "岗位名称", notNull = true)
+            edit = @Edit(title = "岗位名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
             views = @View(title = "岗位权重"),
-            edit = @Edit(title = "岗位权重", desc = "数值越高，岗位级别越高", notNull = true)
+            edit = @Edit(title = "岗位权重", desc = "数值越高，岗位级别越高")
     )
     private Integer weight;
 

@@ -49,6 +49,7 @@ import java.util.List;
 @Setter
 public class EruptJob extends MetaModel implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
 
+    @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", width = "100px")
     )
