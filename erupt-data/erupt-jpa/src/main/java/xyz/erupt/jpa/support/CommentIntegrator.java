@@ -82,9 +82,10 @@ public class CommentIntegrator implements Integrator {
         try {
             Field field = ReflectUtil.findClassField(persistentClass.getMappedClass(), columnName);
             if (field.isAnnotationPresent(EruptField.class)
+                    && !field.isAnnotationPresent(OneToOne.class)
                     && !field.isAnnotationPresent(OneToMany.class)
                     && !field.isAnnotationPresent(ManyToMany.class)
-                    && !field.isAnnotationPresent(OneToOne.class)) {
+            ) {
                 EruptField eruptField = field.getAnnotation(EruptField.class);
                 String comment = eruptField.edit().title();
                 if (StringUtils.isBlank(comment) && eruptField.views().length > 0) {
