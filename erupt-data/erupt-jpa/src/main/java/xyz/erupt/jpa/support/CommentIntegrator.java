@@ -14,6 +14,7 @@ import xyz.erupt.core.util.ReflectUtil;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Optional;
@@ -79,10 +80,11 @@ public class CommentIntegrator implements Integrator {
      */
     private void fieldComment(PersistentClass persistentClass, String columnName) {
         try {
-            Field field = ReflectUtil.findClassField(persistentClass.getMappedClass(),columnName);
+            Field field = ReflectUtil.findClassField(persistentClass.getMappedClass(), columnName);
             if (field.isAnnotationPresent(EruptField.class)
                     && !field.isAnnotationPresent(OneToMany.class)
-                    && !field.isAnnotationPresent(ManyToMany.class)) {
+                    && !field.isAnnotationPresent(ManyToMany.class)
+                    && !field.isAnnotationPresent(OneToOne.class)) {
                 EruptField eruptField = field.getAnnotation(EruptField.class);
                 String comment = eruptField.edit().title();
                 if (StringUtils.isBlank(comment) && eruptField.views().length > 0) {
