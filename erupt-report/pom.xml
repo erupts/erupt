@@ -20,9 +20,9 @@
 
     <modules>
         <module>erupt-bi</module>
+        <module>erupt-workflow</module>
         <module>erupt-schema</module>
         <module>erupt-tenant</module>
-        <module>erupt-flow</module>
     </modules>
 
     <dependencyManagement>

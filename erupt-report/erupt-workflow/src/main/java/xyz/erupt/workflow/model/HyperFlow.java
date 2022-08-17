@@ -1,4 +1,4 @@
-package xyz.erupt.flow.model;
+package xyz.erupt.workflow.model;
 
 import lombok.Getter;
 import lombok.Setter;
