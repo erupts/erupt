@@ -56,7 +56,7 @@
         <module>erupt-cloud/erupt-cloud-common</module>
         <module>erupt-cloud/erupt-cloud-server</module> <!-- 主服务节点 -->
         <module>erupt-cloud/erupt-cloud-node</module> <!-- 云node节点 -->
-        <module>erupt-cloud/erupt-cloud-node-jpa</module>
+        <module>erupt-cloud/erupt-cloud-node-jpa</module>  <!-- 云node节点（聚合jpa） -->
     </modules>
 
     <dependencyManagement>
