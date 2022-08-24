@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.10.12</version>
+    <version>1.10.13</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -30,6 +30,7 @@
     <modules>
         <module>erupt-annotation</module>
         <module>erupt-core</module>
+        <module>erupt-excel</module>
         <module>erupt-toolkit</module>
         <module>erupt-i18n</module> <!-- 多语言 -->
 
@@ -55,6 +56,7 @@
         <module>erupt-cloud/erupt-cloud-common</module>
         <module>erupt-cloud/erupt-cloud-server</module> <!-- 主服务节点 -->
         <module>erupt-cloud/erupt-cloud-node</module> <!-- 云node节点 -->
+        <module>erupt-cloud/erupt-cloud-node-jpa</module>
     </modules>
 
     <dependencyManagement>
