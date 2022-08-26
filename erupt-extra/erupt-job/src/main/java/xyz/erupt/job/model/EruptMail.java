@@ -27,13 +27,11 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.model.BaseModel;
 
 import javax.mail.internet.MimeMessage;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -86,8 +84,7 @@ public class EruptMail extends BaseModel implements DataProxy<EruptMail> {
     )
     private String content;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = 5000)
     private String errorInfo;
 
     @EruptField(
@@ -124,6 +121,7 @@ public class EruptMail extends BaseModel implements DataProxy<EruptMail> {
         } catch (Exception e) {
             e.printStackTrace();
             eruptMail.setStatus(false);
+            Optional.ofNullable(e.toString()).ifPresent(it -> eruptMail.setErrorInfo(it.substring(0, 5000)));
         }
     }
 }
