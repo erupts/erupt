@@ -74,7 +74,7 @@ public class IpUtil {
     @SneakyThrows
     public static String getCityInfo(String ip) {
         if (!Util.isIpAddress(ip)) {
-            log.warn("Error: Invalid ip address ({})",ip);
+            log.warn("Error: Invalid ip address: {}",ip);
             return "";
         }
         return new DbSearcher(new DbConfig(), fileByte).memorySearch(ip).getRegion();
