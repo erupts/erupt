@@ -81,6 +81,7 @@ public class CommentIntegrator implements Integrator {
     private void fieldComment(PersistentClass persistentClass, String columnName) {
         try {
             Field field = ReflectUtil.findClassField(persistentClass.getMappedClass(), columnName);
+            if (null == field) return;
             if (field.isAnnotationPresent(EruptField.class)
                     && !field.isAnnotationPresent(OneToOne.class)
                     && !field.isAnnotationPresent(OneToMany.class)
