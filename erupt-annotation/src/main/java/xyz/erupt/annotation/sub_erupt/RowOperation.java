@@ -45,6 +45,9 @@ public @interface RowOperation {
     @Transient
     Tpl tpl() default @Tpl(path = "");
 
+    @Comment("tpl模板弹出层宽度")
+    String tplWidth() default "";
+
     @Comment("按钮提交时，需要填写的表单信息")
     Class<?> eruptClass() default void.class;
 
