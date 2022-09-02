@@ -42,7 +42,7 @@ public class EruptApplication implements ImportBeanDefinitionRegistrar {
         EruptScan eruptScan = clazz.getAnnotation(EruptScan.class);
         try {
             Class.forName("org.springframework.boot.devtools.RemoteUrlPropertyExtractor");
-            log.error("spring-boot-devtools 与 erupt 同时存在会出现各种奇怪的异常，建议移除！");
+            log.error("spring-boot-devtools 与 erupt 同时存在会出现各种奇怪的异常，建议移除该依赖！");
         } catch (ClassNotFoundException ignored) {
         }
         if (eruptScan.value().length == 0) {
