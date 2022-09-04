@@ -1,6 +1,5 @@
 package xyz.erupt.annotation.fun;
 
-import org.apache.poi.ss.usermodel.Workbook;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.model.Row;
 import xyz.erupt.annotation.query.Condition;
@@ -63,7 +62,7 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<M
     }
 
     @Comment("excel导出")
-    default void excelExport(@Comment("POI文档对象") Workbook wb) {
+    default void excelExport(@Comment("POI文档对象") Object workbook) {
     }
 
     @Deprecated

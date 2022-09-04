@@ -31,7 +31,7 @@ public @interface Edit {
     @EruptProperty(alias = "readOnly")
     Readonly readonly() default @Readonly(add = false, edit = false);
 
-    @Comment("输入字段预期值的提示信息")
+    @Comment("表单提示信息")
     String placeHolder() default "";
 
     @Match("#value.dependField() != ''")

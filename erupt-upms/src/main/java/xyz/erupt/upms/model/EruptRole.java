@@ -7,22 +7,17 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.handler.RoleMenuFilter;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
-import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.upms.model.data_proxy.EruptRoleDataProxy;
 
-import javax.annotation.Resource;
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,12 +28,12 @@ import java.util.Set;
 @Table(name = "e_upms_role", uniqueConstraints = {
         @UniqueConstraint(columnNames = "code")
 })
-@Erupt(name = "角色管理", dataProxy = EruptRole.class, orderBy = "EruptRole.sort asc")
+@Erupt(name = "角色管理", dataProxy = EruptRoleDataProxy.class, orderBy = "EruptRole.sort asc")
 @EruptI18n
 @Getter
 @Setter
 @Component
-public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole> {
+public class EruptRole extends HyperModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
@@ -99,27 +94,5 @@ public class EruptRole extends HyperModelUpdateVo implements DataProxy<EruptRole
     )
     private Set<EruptUserByRoleView> users;
 
-    @Resource
-    @Transient
-    private EruptUserService eruptUserService;
 
-    @Resource
-    @Transient
-    private EruptDao eruptDao;
-
-    @Override
-    public String beforeFetch(List<Condition> conditions) {
-        if (eruptUserService.getCurrentEruptUser().getIsAdmin()) return null;
-        return "EruptRole.createUser.id = " + eruptUserService.getCurrentUid();
-    }
-
-    @Override
-    public void addBehavior(EruptRole eruptRole) {
-        Integer max = (Integer) eruptDao.getEntityManager().createQuery("select max(sort) from " + EruptRole.class.getSimpleName()).getSingleResult();
-        if (null == max) {
-            eruptRole.setSort(10);
-        } else {
-            eruptRole.setSort(max + 10);
-        }
-    }
 }

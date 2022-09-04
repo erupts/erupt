@@ -9,7 +9,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.10.12</version>
+        <version>1.10.13</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -35,6 +35,11 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-toolkit</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-excel</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <!--根据请求头获取浏览器信息-->

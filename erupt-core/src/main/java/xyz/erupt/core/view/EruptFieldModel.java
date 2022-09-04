@@ -8,6 +8,7 @@ import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
+import xyz.erupt.core.exception.ExceptionAnsi;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.EruptFieldProxy;
 import xyz.erupt.core.proxy.ProxyContext;
@@ -64,7 +65,11 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
             case TAB_TABLE_ADD:
             case TAB_TABLE_REFER:
             case CHECKBOX:
-                this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
+                try {
+                    this.fieldReturnName = ReflectUtil.getFieldGenericName(field).get(0);
+                } catch (Exception e) {
+                    throw ExceptionAnsi.styleEruptFieldException(this, "Component modification field is incorrect");
+                }
                 break;
         }
         this.eruptField = eruptFieldAnnotationProxy.newProxy(this.getEruptField(), null);

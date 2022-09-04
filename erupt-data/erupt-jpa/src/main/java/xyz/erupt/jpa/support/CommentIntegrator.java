@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.support;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.Metadata;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -14,6 +15,7 @@ import xyz.erupt.core.util.ReflectUtil;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Optional;
@@ -24,6 +26,7 @@ import java.util.Optional;
  * @author YuePeng
  * date 2022/8/3 21:42
  */
+@Slf4j
 public class CommentIntegrator implements Integrator {
 
     /**
@@ -79,10 +82,13 @@ public class CommentIntegrator implements Integrator {
      */
     private void fieldComment(PersistentClass persistentClass, String columnName) {
         try {
-            Field field = ReflectUtil.findClassField(persistentClass.getMappedClass(),columnName);
+            Field field = ReflectUtil.findClassField(persistentClass.getMappedClass(), columnName);
+            if (null == field) return;
             if (field.isAnnotationPresent(EruptField.class)
+                    && !field.isAnnotationPresent(OneToOne.class)
                     && !field.isAnnotationPresent(OneToMany.class)
-                    && !field.isAnnotationPresent(ManyToMany.class)) {
+                    && !field.isAnnotationPresent(ManyToMany.class)
+            ) {
                 EruptField eruptField = field.getAnnotation(EruptField.class);
                 String comment = eruptField.edit().title();
                 if (StringUtils.isBlank(comment) && eruptField.views().length > 0) {
@@ -101,6 +107,8 @@ public class CommentIntegrator implements Integrator {
                 }
             }
         } catch (SecurityException ignored) {
+        } catch (Exception e) {
+            log.warn(e.getMessage());
         }
     }
 

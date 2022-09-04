@@ -7,13 +7,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.util.UrlPathHelper;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.prop.EruptProp;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +63,14 @@ public class MvcConfig implements WebMvcConfigurer {
         } else {
             resourceHandlerRegistration.addResourceLocations("file:" + uploadPath);
         }
+    }
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        UrlPathHelper helper = new UrlPathHelper();
+        helper.setUrlDecode(false);
+        helper.setDefaultEncoding(StandardCharsets.UTF_8.name());
+        configurer.setUrlPathHelper(helper);
     }
 
 }
