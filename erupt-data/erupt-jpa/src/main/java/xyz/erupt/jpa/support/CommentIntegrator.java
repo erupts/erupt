@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.support;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.Metadata;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -25,6 +26,7 @@ import java.util.Optional;
  * @author YuePeng
  * date 2022/8/3 21:42
  */
+@Slf4j
 public class CommentIntegrator implements Integrator {
 
     /**
@@ -105,6 +107,8 @@ public class CommentIntegrator implements Integrator {
                 }
             }
         } catch (SecurityException ignored) {
+        } catch (Exception e) {
+            log.warn(e.getMessage());
         }
     }
 
