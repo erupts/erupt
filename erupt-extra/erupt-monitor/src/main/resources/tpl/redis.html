@@ -11,6 +11,7 @@
             background: #fff;
             padding: 12px;
         }
+
         .d-flex {
             display: flex;
         }
@@ -78,6 +79,18 @@
 <script src="element/element.min.js"></script>
 <script src="element/axios.min.js"></script>
 <script>
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] === variable) {
+                return pair[1];
+            }
+        }
+        return false;
+    }
+    var token = getQueryVariable("_token");
     var commandPie, keySizeLine;
     var keySizeArr = [];
     var vue = new Vue({
@@ -97,7 +110,7 @@
             function load() {
                 axios.get("erupt-api/erupt-monitor/redis.html/info", {
                     headers: {
-                        token: parent.getAppToken().token
+                        token: token
                     }
                 }).then(function (res) {
                     if (res.status === 401) {

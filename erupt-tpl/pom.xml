@@ -10,7 +10,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.10.12</version>
+        <version>1.10.13</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,20 +32,20 @@
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
+            <artifactId>velocity-engine-core</artifactId>
+            <version>2.3</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.6.1.RELEASE</version>
+            <version>3.10.0.RELEASE</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.jfinal</groupId>
             <artifactId>enjoy</artifactId>
-            <version>4.9.16</version>
+            <version>5.0.0</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

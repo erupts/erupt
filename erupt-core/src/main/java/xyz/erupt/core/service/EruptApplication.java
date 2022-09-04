@@ -1,6 +1,7 @@
 package xyz.erupt.core.service;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
  * @author YuePeng
  * date 2020-09-09
  */
+@Slf4j
 public class EruptApplication implements ImportBeanDefinitionRegistrar {
 
     private static Class<?> primarySource;
@@ -38,6 +40,11 @@ public class EruptApplication implements ImportBeanDefinitionRegistrar {
         Class<?> clazz = ClassUtils.forName(importingClassMetadata.getClassName(), ClassUtils.getDefaultClassLoader());
         Optional.ofNullable(clazz.getAnnotation(SpringBootApplication.class)).ifPresent(it -> primarySource = clazz);
         EruptScan eruptScan = clazz.getAnnotation(EruptScan.class);
+        try {
+            Class.forName("org.springframework.boot.devtools.RemoteUrlPropertyExtractor");
+            log.error("spring-boot-devtools 与 erupt 同时存在会出现各种奇怪的问题，建议移除该依赖！！！");
+        } catch (ClassNotFoundException ignored) {
+        }
         if (eruptScan.value().length == 0) {
             scanPackage.add(clazz.getPackage().getName());
         } else {

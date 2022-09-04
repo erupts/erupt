@@ -1,4 +1,4 @@
-package xyz.erupt.core.util;
+package xyz.erupt.excel.util;
 
 import org.apache.poi.ss.usermodel.*;
 

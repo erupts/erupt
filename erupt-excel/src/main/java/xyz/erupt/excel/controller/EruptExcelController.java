@@ -1,4 +1,4 @@
-package xyz.erupt.core.controller;
+package xyz.erupt.excel.controller;
 
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +12,13 @@ import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.core.annotation.EruptRecordOperate;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.controller.EruptModifyController;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.naming.EruptRecordNaming;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.service.EruptExcelService;
 import xyz.erupt.core.service.EruptService;
-import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecurityUtil;
@@ -27,6 +26,7 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQueryVo;
+import xyz.erupt.excel.service.EruptExcelService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,8 +53,6 @@ public class EruptExcelController {
     private final EruptModifyController eruptModifyController;
 
     private final EruptService eruptService;
-
-    private final I18NTranslateService i18NTranslateService;
 
     //模板下载
     @RequestMapping(value = "/template/{erupt}")
