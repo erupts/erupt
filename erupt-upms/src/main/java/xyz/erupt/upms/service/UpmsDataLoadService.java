@@ -49,8 +49,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) {
-        Optional.ofNullable(eruptDao.getJdbcTemplate()
-                .queryForObject("select count(*) from e_upms_user", Integer.class)).ifPresent(it -> {
+        Optional.of(Integer.valueOf(eruptDao.getEntityManager().createNativeQuery("select count(*) from e_upms_user").getSingleResult().toString())).ifPresent(it -> {
             if (it <= 0) {
                 try {
                     FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/" + EruptConst.ERUPT_DIR));

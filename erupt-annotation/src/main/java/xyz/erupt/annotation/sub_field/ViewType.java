@@ -29,7 +29,7 @@ public enum ViewType {
     LINK_DIALOG,
     @Comment("下载")
     DOWNLOAD,
-    @Comment("在新标签页中查看，不同于下载，特殊mine类型可以在网页中直接预览，如：pdf,mp4,svg,png等")
+    @Comment("在新标签页中查看，不同于下载，特殊mime类型可以在网页中直接预览，如：pdf,mp4,svg,png等")
     ATTACHMENT,
     @Comment("对话框方式展示附件")
     ATTACHMENT_DIALOG,
