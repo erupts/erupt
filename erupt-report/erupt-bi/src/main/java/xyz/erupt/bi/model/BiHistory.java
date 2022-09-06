@@ -15,9 +15,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -63,7 +63,7 @@ public class BiHistory extends BaseModel {
     )
     private String sqlStatement;
 
-    @ManyToOne
-    private BaseBi bi;
+    @Column(name = "bi_id")
+    private Long biId;
 
 }

@@ -61,7 +61,7 @@ import java.util.Set;
                 @Drill(title = "图表配置", icon = "fa fa-pie-chart"
                         , link = @Link(linkErupt = BiChart.class, joinColumn = "bi.id")),
                 @Drill(title = "修改记录", icon = "fa fa-history text-green"
-                        , link = @Link(linkErupt = BiHistory.class, joinColumn = "bi.id"))
+                        , link = @Link(linkErupt = BiHistory.class, joinColumn = "biId"))
         })
 @Getter
 @Setter
