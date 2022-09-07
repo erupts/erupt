@@ -55,6 +55,7 @@ import java.util.Set;
 //                        operationHandler = CopyLinkHandler.class
 //                ),
         },
+        orderBy = "createTime desc",
         linkTree = @LinkTree(field = "biGroup"),
         dataProxy = BiDataProxy.class,
         drills = {

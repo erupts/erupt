@@ -15,10 +15,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -26,7 +23,7 @@ import java.util.Date;
  * date 2019-08-26.
  */
 @Entity
-@Table(name = "e_bi_history")
+@Table(name = "e_bi_history", indexes = @Index(columnList = "bi_id"))
 @Erupt(
         name = "修改记录",
         orderBy = "BiHistory.operateTime desc",
@@ -38,7 +35,7 @@ import java.util.Date;
 public class BiHistory extends BaseModel {
 
     @EruptField(
-            views = @View(title = "来源",width = "120px"),
+            views = @View(title = "来源", width = "120px"),
             edit = @Edit(title = "来源", search = @Search(vague = true))
     )
     private String mark;

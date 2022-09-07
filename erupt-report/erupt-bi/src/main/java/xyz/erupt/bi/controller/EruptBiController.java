@@ -151,7 +151,8 @@ public class EruptBiController {
                             @RequestParam int pageIndex,
                             @RequestParam int pageSize,
                             @RequestBody Map<String, Object> query) {
-        if (pageSize >= eruptBiProp.getSingleMaxResultNum())  throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
+        if (pageSize >= eruptBiProp.getSingleMaxResultNum())
+            throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
             this.put("code", code);
         }});
@@ -225,54 +226,55 @@ public class EruptBiController {
         biService.verifyBiMenuPermissions(bi, code);
         Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
         BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, null, query, true);
-        Workbook wb = new SXSSFWorkbook();
-        //基本信息
-        Sheet sheet = wb.createSheet(bi.getName());
-        sheet.createFreezePane(0, 1, 1, 1);
-        Row headRow = sheet.createRow(0);
-        CellStyle headStyle = ExcelUtil.beautifyExcelStyle(wb);
-        Font headFont = wb.createFont();
-        headFont.setColor(IndexedColors.WHITE.index);
-        headStyle.setFont(headFont);
-        headStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
-        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        int order = 0;
-        for (int i = 0; i < biData.getColumns().size(); i++) {
-            BiColumnVo biColumn = biData.getColumns().get(i);
-            if (biColumn.getDisplay()) {
-                Cell cell = headRow.createCell(order);
-                cell.setCellStyle(headStyle);
-                sheet.setColumnWidth(order, (biColumn.getName().length() + 10) * 256);
-                cell.setCellValue(biColumn.getName());
-                order++;
-            }
-        }
-        CellStyle style = ExcelUtil.beautifyExcelStyle(wb);
-        Font font = wb.createFont();
-        font.setColor(IndexedColors.BLACK1.index);
-        style.setFont(font);
-        for (int i = 0; i < biData.getList().size(); i++) {
-            Row row = sheet.createRow(i + 1);
-            Map<String, Object> map = biData.getList().get(i);
-            order = 0;
-            for (int j = 0; j < biData.getColumns().size(); j++) {
-                if (biData.getColumns().get(j).getDisplay()) {
-                    Object value = map.get(biData.getColumns().get(j).getName());
-                    if (null != value) {
-                        Cell cell = row.createCell(order);
-                        cell.setCellStyle(style);
-                        cell.setCellValue(value.toString());
-                    }
+        try (Workbook wb = new SXSSFWorkbook()) {
+            //基本信息
+            Sheet sheet = wb.createSheet(bi.getName());
+            sheet.createFreezePane(0, 1, 1, 1);
+            Row headRow = sheet.createRow(0);
+            CellStyle headStyle = ExcelUtil.beautifyExcelStyle(wb);
+            Font headFont = wb.createFont();
+            headFont.setColor(IndexedColors.WHITE.index);
+            headStyle.setFont(headFont);
+            headStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
+            headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            int order = 0;
+            for (int i = 0; i < biData.getColumns().size(); i++) {
+                BiColumnVo biColumn = biData.getColumns().get(i);
+                if (biColumn.getDisplay()) {
+                    Cell cell = headRow.createCell(order);
+                    cell.setCellStyle(headStyle);
+                    sheet.setColumnWidth(order, (biColumn.getName().length() + 10) * 256);
+                    cell.setCellValue(biColumn.getName());
                     order++;
                 }
             }
+            CellStyle style = ExcelUtil.beautifyExcelStyle(wb);
+            Font font = wb.createFont();
+            font.setColor(IndexedColors.BLACK1.index);
+            style.setFont(font);
+            for (int i = 0; i < biData.getList().size(); i++) {
+                Row row = sheet.createRow(i + 1);
+                Map<String, Object> map = biData.getList().get(i);
+                order = 0;
+                for (int j = 0; j < biData.getColumns().size(); j++) {
+                    if (biData.getColumns().get(j).getDisplay()) {
+                        Object value = map.get(biData.getColumns().get(j).getName());
+                        if (null != value) {
+                            Cell cell = row.createCell(order);
+                            cell.setCellStyle(style);
+                            cell.setCellValue(value.toString());
+                        }
+                        order++;
+                    }
+                }
+            }
+            if (null != bi.getClassHandler()) {
+                BiClassHandler biClassHandler = bi.getClassHandler();
+                EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
+                biHandler.exportHandler(biClassHandler.getParam(), query, wb);
+            }
+            wb.write(EruptUtil.downLoadFile(request, response, bi.getName() + "_" + DateUtil.getSimpleFormatDate(new Date()) + EruptExcelService.XLSX_FORMAT));
         }
-        if (null != bi.getClassHandler()) {
-            BiClassHandler biClassHandler = bi.getClassHandler();
-            EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
-            biHandler.exportHandler(biClassHandler.getParam(), query, wb);
-        }
-        wb.write(EruptUtil.downLoadFile(request, response, bi.getName() + "_" + DateUtil.getSimpleFormatDate(new Date()) + EruptExcelService.XLSX_FORMAT));
     }
 
     //校验查询参数
