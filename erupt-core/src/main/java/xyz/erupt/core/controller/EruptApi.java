@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.prop.EruptAppProp;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.MD5Util;
 
@@ -20,18 +19,9 @@ import xyz.erupt.core.util.MD5Util;
 @RequiredArgsConstructor
 public class EruptApi {
 
-    private final EruptAppProp eruptAppProp;
-
     @GetMapping("/version")
     public String version() {
         return EruptInformation.getEruptVersion();
-    }
-
-    @GetMapping("/erupt-app")
-    public EruptAppProp eruptApp() {
-        eruptAppProp.setHash(this.hashCode());
-        eruptAppProp.setVersion(EruptInformation.getEruptVersion());
-        return eruptAppProp;
     }
 
     @GetMapping(value = "/erupt-machine-code")

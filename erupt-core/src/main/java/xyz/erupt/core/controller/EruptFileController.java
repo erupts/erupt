@@ -177,7 +177,7 @@ public class EruptFileController {
     }
 
 
-    @RequestMapping("/upload-ueditor/{erupt}/{field}")
+    @GetMapping("/upload-ueditor/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
     public void uploadUEditorImage(@PathVariable("erupt") String eruptName,
                                    @PathVariable("field") String fieldName,
@@ -202,7 +202,7 @@ public class EruptFileController {
 
     private static final String DOWNLOAD_PATH = "/download-attachment";
 
-    @RequestMapping(value = DOWNLOAD_PATH + "/**", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @GetMapping(value = DOWNLOAD_PATH + "/**", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public void downloadAttachment(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = request.getServletPath().replace(EruptRestPath.ERUPT_FILE + DOWNLOAD_PATH, "");
         if (!path.startsWith(FS_SEP)) {
