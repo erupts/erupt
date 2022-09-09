@@ -202,11 +202,16 @@ public class EruptBiController {
         return references;
     }
 
+    /**
+     * @param chartId 图表ID
+     * @param code    报表编码
+     * @param query   查询条件
+     */
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @RequestMapping("/{code}/chart/{id}")
     public List<Map<String, Object>> biChart(@PathVariable("id") Long chartId,
-                                             @RequestBody(required = false) Map<String, Object> query,
-                                             @PathVariable String code) {
+                                             @PathVariable("code") String code,
+                                             @RequestBody(required = false) Map<String, Object> query) {
         BiChart chart = entityManager.find(BiChart.class, chartId);
         biService.verifyBiMenuPermissions(chart.getBi(), code);
         this.validateQuery(chart.getBi(), query);
