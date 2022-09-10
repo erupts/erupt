@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.ssssssss.magicapi.core.config.Constants;
 import org.ssssssss.magicapi.core.context.MagicUser;
 import org.ssssssss.magicapi.core.exception.MagicLoginException;
 import org.ssssssss.magicapi.core.interceptor.Authorization;
@@ -22,7 +21,6 @@ import xyz.erupt.upms.service.EruptUserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * magic-api UI鉴权、接口鉴权
@@ -32,8 +30,6 @@ import java.util.Optional;
 public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, AuthorizationInterceptor {
 
     private final EruptUserService eruptUserService;
-
-    private final HttpServletRequest request;
 
     private static final String NO_PERMISSION = "权限不足！";
 
@@ -48,9 +44,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         String role = Objects.toString(info.getOptionValue(Options.ROLE), "");
         String login = Objects.toString(info.getOptionValue(Options.REQUIRE_LOGIN), "");
         boolean isLogin = eruptUserService.getCurrentUid() != null;
-        if (StringUtils.isNotBlank(login) && !isLogin) {
-            return new JsonBean<>(401, LOGIN_EXPIRE);
-        }
+        if (StringUtils.isNotBlank(login) && !isLogin) return new JsonBean<>(401, LOGIN_EXPIRE);
         if (StringUtils.isNotBlank(role) || StringUtils.isNotBlank(permission)) {
             // 未登录
             if (!isLogin) {
@@ -77,11 +71,6 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
      */
     @Override
     public boolean requireLogin() {
-        Optional.ofNullable(request.getHeader(Constants.MAGIC_TOKEN_HEADER)).ifPresent(it -> {
-            if (!"unauthorization".equals(it)) {
-                request.setAttribute(Constants.ATTRIBUTE_MAGIC_USER, getUserByToken(it));
-            }
-        });
         return false;
     }
 
@@ -89,9 +78,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     @SneakyThrows
     public MagicUser getUserByToken(String token) {
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfoByToken(token);
-        if (null == metaUserinfo) {
-            throw new MagicLoginException(LOGIN_EXPIRE);
-        }
+        if (null == metaUserinfo) throw new MagicLoginException(LOGIN_EXPIRE);
         return new MagicUser(metaUserinfo.getAccount(), metaUserinfo.getUsername(), token);
     }
 
@@ -100,9 +87,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
      */
     @Override
     public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization) {
-        if (Authorization.RELOAD == authorization) {
-            return true;
-        }
+        if (Authorization.RELOAD == authorization) return true;
         if (eruptUserService.getCurrentUid() == null) {
             throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
         } else if (null == eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + authorization.name())) {
@@ -113,9 +98,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
 
     @Override
     public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, Group group) {
-        if (null == eruptUserService.getCurrentUid()) {
-            throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
-        }
+        if (null == eruptUserService.getCurrentUid()) throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
         if (!eruptUserService.getSimpleUserInfo().isSuperAdmin()) {
             if (group.getOptions().size() > 0) {
                 MetaUserinfo metaUserInfo = eruptUserService.getSimpleUserInfo();
