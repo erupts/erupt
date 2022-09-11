@@ -11,12 +11,13 @@ import java.util.stream.Stream;
 @Getter
 public enum MenuTypeEnum {
 
-    TABLE("table", "表格", "填erupt类名"),
-    TREE("tree", "树", "填erupt类名"),
-    BUTTON("button", "按钮", null),
-    LINK("link", "链接", "互联网地址"),
-    NEW_WINDOW("newWindow", "新页签", "互联网地址"),
+    TABLE("table", "表格视图", "填erupt类名"),
+    TREE("tree", "树状视图", "填erupt类名"),
+    BUTTON("button", "功能按钮", null),
     API("api", "接口名称", null),
+    LINK("link", "框架内打开链接", "互联网地址"),
+    NEW_WINDOW("newWindow", "新窗口打开链接", "互联网地址"),
+    THIS_WINDOW("selfWindow", "当前窗口打开链接", "互联网地址"),
     FILL("fill", "充满屏幕", "需要充满屏幕的路由地址"),
     ROUTER("router", "页面路由", null);
 
