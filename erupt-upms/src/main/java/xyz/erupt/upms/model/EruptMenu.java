@@ -114,7 +114,7 @@ public class EruptMenu extends MetaModel {
     @EruptField(
             edit = @Edit(
                     title = "自定义参数",
-                    desc = "json格式，通过上下文获取，根据业务需求解析",
+                    desc = "json格式，通过上下文获取，根据业务需求自助解析",
                     type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "json")
             )
