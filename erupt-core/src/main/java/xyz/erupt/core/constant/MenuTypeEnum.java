@@ -17,9 +17,9 @@ public enum MenuTypeEnum {
     API("api", "接口名称", null),
     LINK("link", "框架内打开链接", "互联网地址"),
     NEW_WINDOW("newWindow", "新窗口打开链接", "互联网地址"),
-    THIS_WINDOW("selfWindow", "当前窗口打开链接", "互联网地址"),
+    THIS_WINDOW("selfWindow", "本窗口打开链接", "互联网地址"),
     FILL("fill", "充满屏幕", "需要充满屏幕的路由地址"),
-    ROUTER("router", "页面路由", null);
+    ROUTER("router", "页面路由", "前端开发时的路由地址");
 
     private final String code;
     private final String name;
