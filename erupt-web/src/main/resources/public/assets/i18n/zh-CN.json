@@ -48,7 +48,7 @@
   "tree.base": "基本信息",
   "tree.update": "更新",
   "tree.add_button": "新增",
-  "tree.add": "增加",
+  "tree.add": "保存",
   "tree.add_children": "增加下级",
   "tree.delete": "删除",
   "tree.validate.no_this_parent": "不可以选择自己作为父级",
