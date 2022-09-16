@@ -26,9 +26,6 @@ public class EruptAppProp {
     //自定义登录页路径
     private String loginPagePath;
 
-    //新用户强制修改密码
-    private boolean forceResetPwd = true;
-
     private Integer hash;
 
     private String version;
