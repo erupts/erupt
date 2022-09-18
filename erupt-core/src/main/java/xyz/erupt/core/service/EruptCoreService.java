@@ -142,4 +142,5 @@ public class EruptCoreService implements ApplicationRunner {
         for (int i = 0; i < num; i++) sb.append(space);
         return sb.toString();
     }
+
 }
