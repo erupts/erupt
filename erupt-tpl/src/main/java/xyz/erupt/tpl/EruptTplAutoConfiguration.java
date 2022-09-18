@@ -25,7 +25,7 @@ public class EruptTplAutoConfiguration implements EruptModule {
 
     static {
         EruptModuleInvoke.addEruptModule(EruptTplAutoConfiguration.class);
-        MenuTypeEnum.addMenuType(new VLModel(EruptTplService.TPL, "模板", "tpl目录下文件名"));
+        MenuTypeEnum.addMenuType(new VLModel(EruptTplService.TPL, "自定义模板", "tpl目录下文件名"));
 //        MenuTypeEnum.addMenuType(new VLModel(EruptTplService.TPL_MICRO, "模板（微前端 Beta）", "tpl目录下文件名"));
     }
 
