@@ -17,7 +17,7 @@ public class EruptAppProp {
 
     public static final String DEFAULT_LANG = "zh-CN";
 
-    //登录失败几次出现验证码
+    //登录失败几次出现验证码，0表示一直要求输入验证码
     private Integer verifyCodeCount = 2;
 
     //登录密码是否加密传输
