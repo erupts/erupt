@@ -1,5 +1,6 @@
 package xyz.erupt.core.util;
 
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Arrays;
@@ -20,6 +21,7 @@ public class TypeUtil {
     /**
      * 将未知类型转换为目标类型
      */
+    @SneakyThrows
     public static Object typeStrConvertObject(Object obj, Class<?> targetType) {
         String str = obj.toString();
         if (NumberUtils.isCreatable(str)) {
@@ -39,6 +41,8 @@ public class TypeUtil {
             return Double.valueOf(str);
         } else if (boolean.class == targetType || Boolean.class == targetType) {
             return Boolean.valueOf(str);
+        } else if (targetType.isEnum()) {
+            return targetType.getMethod("valueOf", String.class).invoke(targetType, str);
         } else {
             return str;
         }
