@@ -55,7 +55,7 @@ public class EruptExcelController {
     private final EruptService eruptService;
 
     //模板下载
-    @RequestMapping(value = "/template/{erupt}")
+    @GetMapping(value = "/template/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request,
                                  HttpServletResponse response) throws IOException {
