@@ -7,10 +7,11 @@ import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.prop.EruptAppProp;
+import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.config.EruptAppProp;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
@@ -50,9 +51,16 @@ public class EruptUserController {
     @Resource
     private HttpServletRequest request;
 
+    @GetMapping("/erupt-app")
+    public EruptAppProp eruptApp() {
+        eruptAppProp.setHash(this.hashCode());
+        eruptAppProp.setVersion(EruptInformation.getEruptVersion());
+        return eruptAppProp;
+    }
+
     //登录
     @SneakyThrows
-    @RequestMapping("/login")
+    @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
     public LoginModel login(@RequestParam("account") String account, @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode
     ) {
@@ -111,7 +119,7 @@ public class EruptUserController {
     }
 
     //登出
-    @PostMapping("/logout")
+    @RequestMapping(value = "/logout", method = {RequestMethod.GET, RequestMethod.POST})
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel logout(HttpServletRequest request) {
         String token = eruptContextService.getCurrentToken();
@@ -125,7 +133,7 @@ public class EruptUserController {
     }
 
     // 修改密码
-    @PostMapping("/change-pwd")
+    @RequestMapping(value = "/change-pwd", method = {RequestMethod.GET, RequestMethod.POST})
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel changePwd(@RequestParam("account") String account,
                                    @RequestParam("pwd") String pwd,
@@ -135,8 +143,7 @@ public class EruptUserController {
     }
 
     // 生成验证码
-    @GetMapping
-    @RequestMapping("/code-img")
+    @GetMapping("/code-img")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("image/jpeg"); // 设置响应的类型格式为图片格式
         response.setDateHeader("Expires", 0);

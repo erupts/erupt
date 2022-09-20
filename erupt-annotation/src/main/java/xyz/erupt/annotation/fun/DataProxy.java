@@ -61,13 +61,12 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<M
 
     }
 
-    @Comment("excel导出")
+    @Comment("excel导出，参数需要强转为WorkBook对象")
     default void excelExport(@Comment("POI文档对象") Object workbook) {
     }
 
-    @Deprecated
-    @Comment("excel导入，请使用beforeAdd代替该方法")
-    default void excelImport(MODEL model) {
+    @Comment("excel导入，参数需要强转为WorkBook对象")
+    default void excelImport(@Comment("POI文档对象") Object workbook) {
     }
 
     @Comment("自定义行，可实现行计算等能力")

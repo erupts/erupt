@@ -52,7 +52,7 @@ public class EruptComponentController {
     }
 
     //Gets the CHOICE component drop-down list
-    @RequestMapping("/choice-item/{erupt}/{field}")
+    @GetMapping("/choice-item/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<VLModel> findChoiceItem(@PathVariable("erupt") String eruptName,
                                         @PathVariable("field") String field) {
@@ -61,7 +61,7 @@ public class EruptComponentController {
     }
 
     //Gets the TAGS component list data
-    @RequestMapping("/tags-item/{erupt}/{field}")
+    @GetMapping("/tags-item/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<String> findTagsItem(@PathVariable("erupt") String eruptName,
                                      @PathVariable("field") String field) {

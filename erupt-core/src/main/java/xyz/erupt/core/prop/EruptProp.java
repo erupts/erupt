@@ -22,12 +22,6 @@ public class EruptProp {
     //附件存储根路径
     private String uploadPath = "/opt/erupt-attachment";
 
-    //是否使用redis管理session
-    private boolean redisSession = false;
-
-    //是否刷新token有效期（redisSession为true时有效）
-    private boolean redisSessionRefresh = false;
-
     //是否开启csrf校验
     private boolean csrfInspect = true;
 
@@ -40,12 +34,14 @@ public class EruptProp {
     //指定哪些包内的类通过gson实现序列化
     private String[] gsonHttpMessageConvertersPackages;
 
+    //是否使用redis管理session
+    private boolean redisSession = false;
+
+    //是否刷新token有效期（redisSession为true时有效）
+    private boolean redisSessionRefresh = false;
+
     //多数据源
     private EruptPropDb[] dbs;
-
-
-//    //true 单机缓存，false基于redis分布式缓存
-//    private boolean standaloneCache = true;
 //
 //    //应用空间前缀
 //    private String appSpacePrefix = "erupt-app:";
