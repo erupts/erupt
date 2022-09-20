@@ -66,6 +66,7 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
             } else {
                 eruptUser.setPassword(eruptUser.getPasswordA());
             }
+            eruptUser.setResetPwdTime(null);
         }
     }
 

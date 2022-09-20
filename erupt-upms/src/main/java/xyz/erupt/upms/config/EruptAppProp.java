@@ -1,4 +1,4 @@
-package xyz.erupt.core.prop;
+package xyz.erupt.upms.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ public class EruptAppProp {
 
     public static final String DEFAULT_LANG = "zh-CN";
 
-    //登录失败几次出现验证码
+    //登录失败几次出现验证码，0表示一直要求输入验证码
     private Integer verifyCodeCount = 2;
 
     //登录密码是否加密传输
@@ -25,9 +25,6 @@ public class EruptAppProp {
 
     //自定义登录页路径
     private String loginPagePath;
-
-    //新用户强制修改密码
-    private boolean forceResetPwd = true;
 
     private Integer hash;
 

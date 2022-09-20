@@ -1,25 +1,23 @@
 package xyz.erupt.upms.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
-
 /**
  * @author YuePeng
  * date 2022/3/9 19:18
  */
 @RestController
+@AllArgsConstructor
 public class EruptUPMSController {
 
-    @Resource
-    private EruptUserService eruptUserService;
+    private final EruptUserService eruptUserService;
 
     //用户信息
     @GetMapping(EruptRestPath.USERINFO)
@@ -31,7 +29,7 @@ public class EruptUPMSController {
     }
 
     //校验菜单类型值权限
-    @RequestMapping(EruptRestPath.ERUPT_CODE_PERMISSION + "/{value}")
+    @GetMapping(EruptRestPath.ERUPT_CODE_PERMISSION + "/{value}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public boolean eruptPermission(@PathVariable("value") String menuValue) {
         return null != eruptUserService.getEruptMenuByValue(menuValue);

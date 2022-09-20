@@ -55,15 +55,16 @@ public class EruptExcelController {
     private final EruptService eruptService;
 
     //模板下载
-    @RequestMapping(value = "/template/{erupt}")
+    @GetMapping(value = "/template/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request,
                                  HttpServletResponse response) throws IOException {
         if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable);
-        dataFileService.createExcelTemplate(eruptModel).write(EruptUtil.downLoadFile(request, response,
-                eruptModel.getErupt().name() + "_template" + EruptExcelService.XLS_FORMAT));
+        try (Workbook wb = dataFileService.createExcelTemplate(eruptModel)) {
+            wb.write(EruptUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_template" + EruptExcelService.XLS_FORMAT));
+        }
     }
 
     //导出
@@ -83,9 +84,10 @@ public class EruptExcelController {
         tableQueryVo.setDataExport(true);
         Optional.ofNullable(conditions).ifPresent(tableQueryVo::setCondition);
         Page page = eruptService.getEruptData(eruptModel, tableQueryVo, null);
-        Workbook wb = dataFileService.exportExcel(eruptModel, page);
-        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
-        wb.write(EruptUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLSX_FORMAT));
+        try (Workbook wb = dataFileService.exportExcel(eruptModel, page)) {
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
+            wb.write(EruptUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLSX_FORMAT));
+        }
     }
 
     //导入
@@ -101,13 +103,17 @@ public class EruptExcelController {
         int i = 1;
         try {
             i++;
+            Workbook wb;
             if (file.getOriginalFilename().endsWith(EruptExcelService.XLS_FORMAT)) {
-                list = dataFileService.excelToEruptObject(eruptModel, new HSSFWorkbook(file.getInputStream()));
+                wb = new HSSFWorkbook(file.getInputStream());
             } else if (file.getOriginalFilename().endsWith(EruptExcelService.XLSX_FORMAT)) {
-                list = dataFileService.excelToEruptObject(eruptModel, new XSSFWorkbook(file.getInputStream()));
+                wb = new XSSFWorkbook(file.getInputStream());
             } else {
                 throw new EruptWebApiRuntimeException("上传文件格式必须为Excel");
             }
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelImport(wb)));
+            list = dataFileService.excelToEruptObject(eruptModel, wb);
+            wb.close();
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage(), e);
         }
