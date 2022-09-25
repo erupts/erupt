@@ -71,7 +71,7 @@ public class EruptUserService {
         Map<String, Object> valueMap = new HashMap<>();
         for (EruptMenu menu : eruptMenus) {
             if (null != menu.getValue()) {
-                valueMap.put(menu.getValue().toLowerCase(), menu);
+                valueMap.put(menu.getValue().toLowerCase().split("\\?")[0], menu);
             }
         }
         sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsProp.getExpireTimeByLogin());
