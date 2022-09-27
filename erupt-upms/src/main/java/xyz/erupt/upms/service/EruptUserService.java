@@ -71,7 +71,8 @@ public class EruptUserService {
         Map<String, Object> valueMap = new HashMap<>();
         for (EruptMenu menu : eruptMenus) {
             if (null != menu.getValue()) {
-                valueMap.put(menu.getValue().toLowerCase(), menu);
+                // 当菜单是TPL时，类型值中有可能有参数（如：amis.html?code=test），这里需要把参数(?code=test)去除
+                valueMap.put(menu.getValue().toLowerCase().split("\\?")[0], menu);
             }
         }
         sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsProp.getExpireTimeByLogin());
