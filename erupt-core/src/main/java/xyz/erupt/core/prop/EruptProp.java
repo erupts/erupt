@@ -39,9 +39,6 @@ public class EruptProp {
 
     //是否刷新token有效期（redisSession为true时有效）
     private boolean redisSessionRefresh = false;
-
-    //多数据源
-    private EruptPropDb[] dbs;
 //
 //    //应用空间前缀
 //    private String appSpacePrefix = "erupt-app:";
