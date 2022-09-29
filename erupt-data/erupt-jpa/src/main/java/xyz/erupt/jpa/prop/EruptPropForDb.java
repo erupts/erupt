@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
-import xyz.erupt.core.config.HikariCpConfig;
+import xyz.erupt.jpa.config.HikariCpConfig;
 
 /**
  * @author YuePeng
@@ -16,7 +16,7 @@ import xyz.erupt.core.config.HikariCpConfig;
 @Setter
 @Component
 @ConfigurationProperties("erupt")
-public class EruptPropByDb {
+public class EruptPropForDb {
 
     //多数据源
     private DB[] dbs;

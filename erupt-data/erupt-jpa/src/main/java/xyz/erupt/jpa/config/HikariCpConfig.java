@@ -1,4 +1,4 @@
-package xyz.erupt.core.config;
+package xyz.erupt.jpa.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import lombok.Getter;
