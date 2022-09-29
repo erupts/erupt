@@ -13,8 +13,6 @@ import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
-import xyz.erupt.upms.config.EruptAppProp;
-import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.EruptLogin;
 import xyz.erupt.upms.fun.LoginProxy;
@@ -22,6 +20,8 @@ import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
+import xyz.erupt.upms.prop.EruptAppProp;
+import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.util.IpUtil;
 
 import javax.annotation.Resource;
