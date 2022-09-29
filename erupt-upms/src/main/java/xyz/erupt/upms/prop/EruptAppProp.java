@@ -1,4 +1,4 @@
-package xyz.erupt.upms.config;
+package xyz.erupt.upms.prop;
 
 import lombok.Getter;
 import lombok.Setter;
