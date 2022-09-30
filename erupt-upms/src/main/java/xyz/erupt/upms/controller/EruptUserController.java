@@ -64,7 +64,7 @@ public class EruptUserController {
     public LoginModel login(@RequestParam("account") String account, @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode
     ) {
-        if (!eruptUserService.checkVerifyCode(verifyCode)) {
+        if (!eruptUserService.checkVerifyCode(account, verifyCode)) {
             LoginModel loginModel = new LoginModel();
             loginModel.setUseVerifyCode(true);
             loginModel.setReason("验证码错误");

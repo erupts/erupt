@@ -102,13 +102,14 @@ public class EruptUserService {
         return null;
     }
 
-    private boolean loginErrorCountPlus(String ip) {
-        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + ip);
+    private boolean loginErrorCountPlus(String account, String ip) {
+        String key = SessionKey.LOGIN_ERROR + account + ":" + ip;
+        Object loginError = sessionService.get(key);
         int loginErrorCount = 0;
         if (null != loginError) {
             loginErrorCount = Integer.parseInt(loginError.toString());
         }
-        sessionService.put(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "", eruptUpmsProp.getExpireTimeByLogin());
+        sessionService.put(key, ++loginErrorCount + "", eruptUpmsProp.getExpireTimeByLogin());
         return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
     }
 
@@ -116,9 +117,7 @@ public class EruptUserService {
         String requestIp = IpUtil.getIpAddr(request);
         EruptUser eruptUser = this.findEruptUserByAccount(account);
         if (null != eruptUser) {
-            if (!eruptUser.getStatus()) {
-                return new LoginModel(false, "账号已锁定!");
-            }
+            if (!eruptUser.getStatus()) return new LoginModel(false, "账号已锁定!");
             if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
                 if (Arrays.stream(eruptUser.getWhiteIp().split("\n")).noneMatch(ip -> ip.equals(requestIp))) {
                     return new LoginModel(false, "当前 ip 无权访问");
@@ -126,13 +125,13 @@ public class EruptUserService {
             }
             if (checkPwd(eruptUser, pwd)) {
                 request.getSession().invalidate();
-                sessionService.put(SessionKey.LOGIN_ERROR + requestIp, "0", eruptUpmsProp.getExpireTimeByLogin());
+                sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
                 return new LoginModel(true, eruptUser);
             } else {
-                return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
+                return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(account, requestIp));
             }
         } else {
-            return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
+            return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(account, requestIp));
         }
     }
 
@@ -156,9 +155,9 @@ public class EruptUserService {
         }
     }
 
-    public boolean checkVerifyCode(String verifyCode) {
+    public boolean checkVerifyCode(String account, String verifyCode) {
         String requestIp = IpUtil.getIpAddr(request);
-        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + requestIp);
+        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
         long loginErrorCount = 0;
         if (null != loginError) {
             loginErrorCount = Long.parseLong(loginError.toString());
