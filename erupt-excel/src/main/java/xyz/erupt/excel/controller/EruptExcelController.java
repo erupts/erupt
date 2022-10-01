@@ -98,7 +98,7 @@ public class EruptExcelController {
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable, "Not import permission");
-        if (file.isEmpty()) return EruptApiModel.errorApi("上传失败，请选择文件");
+        if (file.isEmpty() || null == file.getOriginalFilename()) return EruptApiModel.errorApi("上传失败，请选择文件");
         List<JsonObject> list;
         int i = 1;
         try {
