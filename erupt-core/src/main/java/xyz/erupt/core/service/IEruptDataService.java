@@ -28,6 +28,9 @@ public interface IEruptDataService {
     @Comment("添加数据")
     void addData(EruptModel eruptModel, @Comment("数据对象") Object object);
 
+    @Comment("批量添加数据")
+    void batchAddData(EruptModel eruptModel, @Comment("数据对象") List<Object> objectList);
+
     @Comment("修改数据")
     void editData(EruptModel eruptModel, @Comment("数据对象") Object object);
 
