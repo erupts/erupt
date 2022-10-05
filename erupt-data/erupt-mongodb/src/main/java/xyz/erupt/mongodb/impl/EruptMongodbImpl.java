@@ -103,6 +103,11 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
     }
 
     @Override
+    public void batchAddData(EruptModel eruptModel, List<Object> objectList) {
+        mongoTemplate.insertAll(objectList);
+    }
+
+    @Override
     public void editData(EruptModel eruptModel, Object object) {
         mongoTemplate.save(object);
     }
