@@ -1,7 +1,6 @@
 package xyz.erupt.toolkit.cache.impl;
 
-import cn.hutool.cache.CacheUtil;
-import cn.hutool.cache.impl.TimedCache;
+import xyz.erupt.core.toolkit.LRUCache;
 import xyz.erupt.toolkit.cache.EruptCache;
 
 /**
@@ -10,21 +9,16 @@ import xyz.erupt.toolkit.cache.EruptCache;
  */
 public class EruptStandaloneCache<V> extends EruptCache<V> {
 
-    private final TimedCache<String, V> cache;
-
-    public EruptStandaloneCache() {
-        cache = CacheUtil.newTimedCache(1000);
-        cache.schedulePrune(1000 * 60);
-    }
+    private final LRUCache<V> LRUCache = new LRUCache<>(2000);
 
     @Override
-    protected V put(String key, long timeout, V v) {
-        cache.put(key, v, timeout);
+    protected V put(String key, long ttl, V v) {
+        LRUCache.put(key, v, ttl);
         return v;
     }
 
     @Override
     protected V get(String key) {
-        return cache.get(key);
+        return LRUCache.get(key);
     }
 }

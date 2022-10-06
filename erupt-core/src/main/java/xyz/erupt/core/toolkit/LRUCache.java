@@ -1,4 +1,4 @@
-package xyz.erupt.toolkit.cache;
+package xyz.erupt.core.toolkit;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -10,13 +10,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author mxd
  */
-public class EruptLRUCache<V> extends LinkedHashMap<String, EruptLRUCache.ExpireNode<V>> {
+public class LRUCache<V> extends LinkedHashMap<String, LRUCache.ExpireNode<V>> {
 
     private final int capacity;
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public EruptLRUCache(int capacity) {
+    public LRUCache(int capacity) {
         super((int) Math.ceil(capacity / 0.75) + 1, 0.75f, true);
         // 容量
         this.capacity = capacity;
@@ -35,7 +35,7 @@ public class EruptLRUCache<V> extends LinkedHashMap<String, EruptLRUCache.Expire
         }
     }
 
-    public Object get(String key) {
+    public V get(String key) {
         lock.readLock().lock();
         ExpireNode<V> expireNode;
         try {
