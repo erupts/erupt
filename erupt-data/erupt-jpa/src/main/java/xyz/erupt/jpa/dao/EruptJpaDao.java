@@ -36,7 +36,7 @@ public class EruptJpaDao {
         });
     }
 
-    public void batchAddEntity(Class<?> eruptClass, List<Object> entityList) {
+    public void batchAddEntity(Class<?> eruptClass, List<?> entityList) {
         for (int i = 0; i < entityList.size(); i++) {
             Object entity = entityList.get(i);
             entityManagerService.entityManagerTran(eruptClass, (em) -> {
@@ -56,6 +56,21 @@ public class EruptJpaDao {
             em.merge(entity);
             em.flush();
         });
+    }
+
+    public void batchEditEntity(Class<?> eruptClass, List<?> entityList) {
+        for (int i = 0; i < entityList.size(); i++) {
+            Object entity = entityList.get(i);
+            entityManagerService.entityManagerTran(eruptClass, (em) -> {
+                em.merge(entity);
+            });
+            if (i % BATCH_SIZE == 0) {
+                entityManagerService.entityManagerTran(eruptClass, EntityManager::flush);
+            }
+        }
+        if (entityList.size() % BATCH_SIZE != 0) {
+            entityManagerService.entityManagerTran(eruptClass, EntityManager::flush);
+        }
     }
 
     public void removeEntity(Class<?> eruptClass, Object entity) {
