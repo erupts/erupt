@@ -1,7 +1,5 @@
 package xyz.erupt.toolkit.cache;
 
-import xyz.erupt.toolkit.cache.impl.EruptStandaloneCache;
-
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -15,8 +13,9 @@ public abstract class EruptCache<V> {
 
     protected abstract V get(String key);
 
+
     public static <V> EruptCache<V> newInstance() {
-        return new EruptStandaloneCache<>();
+        return eruptStandaloneCache;
     }
 
     public V getAndSet(String key, long timeout, Supplier<V> supplier) {

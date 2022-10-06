@@ -39,9 +39,8 @@ public class Erupts {
         if (!bool) throw new EruptWebApiRuntimeException(message);
     }
 
-    public static <T> T requireNonNull(T t, String message) {
+    public static <T> void requireNonNull(T t, String message) {
         if (t == null) throw new EruptWebApiRuntimeException(message);
-        return t;
     }
 
     public static void requireNull(Object obj, String message) {
