@@ -77,14 +77,19 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     }
 
     @Override
-    @Transactional
-    public void batchInsert(EruptModel eruptModel, List<?> objectList) {
+    public void batchAddData(EruptModel eruptModel, List<?> objectList) {
         try {
             for (Object data : objectList) {
                 this.loadSupport(data);
                 this.jpaManyToOneConvert(eruptModel, data);
             }
-            eruptJpaDao.batchAddEntity(eruptModel.getClazz(), objectList);
+            entityManagerService.entityManagerTran(eruptModel.getClazz(), (em) -> {
+                for (int i = 0; i < objectList.size(); i++) {
+                    Object entity = objectList.get(i);
+                    em.persist(entity);
+                    if (i % 500 == 0) em.flush();
+                }
+            });
         } catch (Exception e) {
             handlerException(e, eruptModel);
         }

@@ -11,7 +11,6 @@ import xyz.erupt.core.view.Page;
 import xyz.erupt.jpa.service.EntityManagerService;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,28 +26,11 @@ public class EruptJpaDao {
     @Resource
     private EntityManagerService entityManagerService;
 
-    public static final int BATCH_SIZE = 500;
-
     public void addEntity(Class<?> eruptClass, Object entity) {
         entityManagerService.entityManagerTran(eruptClass, (em) -> {
             em.persist(entity);
             em.flush();
         });
-    }
-
-    public void batchAddEntity(Class<?> eruptClass, List<?> entityList) {
-        for (int i = 0; i < entityList.size(); i++) {
-            Object entity = entityList.get(i);
-            entityManagerService.entityManagerTran(eruptClass, (em) -> {
-                em.persist(entity);
-            });
-            if (i % BATCH_SIZE == 0) {
-                entityManagerService.entityManagerTran(eruptClass, EntityManager::flush);
-            }
-        }
-        if (entityList.size() % BATCH_SIZE != 0) {
-            entityManagerService.entityManagerTran(eruptClass, EntityManager::flush);
-        }
     }
 
     public void editEntity(Class<?> eruptClass, Object entity) {
@@ -58,20 +40,6 @@ public class EruptJpaDao {
         });
     }
 
-    public void batchEditEntity(Class<?> eruptClass, List<?> entityList) {
-        for (int i = 0; i < entityList.size(); i++) {
-            Object entity = entityList.get(i);
-            entityManagerService.entityManagerTran(eruptClass, (em) -> {
-                em.merge(entity);
-            });
-            if (i % BATCH_SIZE == 0) {
-                entityManagerService.entityManagerTran(eruptClass, EntityManager::flush);
-            }
-        }
-        if (entityList.size() % BATCH_SIZE != 0) {
-            entityManagerService.entityManagerTran(eruptClass, EntityManager::flush);
-        }
-    }
 
     public void removeEntity(Class<?> eruptClass, Object entity) {
         entityManagerService.entityManagerTran(eruptClass, (em) -> {

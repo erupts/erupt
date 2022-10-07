@@ -3,9 +3,10 @@ package xyz.erupt.upms.handler;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.core.cache.EruptCache;
+import xyz.erupt.core.cache.EruptCacheLRU;
 import xyz.erupt.core.util.EruptAssert;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.toolkit.cache.EruptCache;
 import xyz.erupt.upms.constant.FetchConst;
 import xyz.erupt.upms.model.EruptDictItem;
 
@@ -24,7 +25,7 @@ public class DictChoiceFetchHandler implements ChoiceFetchHandler {
     @Resource
     private EruptDao eruptDao;
 
-    private final EruptCache<List<VLModel>> dictCache = EruptCache.newInstance();
+    private final EruptCache<List<VLModel>> dictCache = new EruptCacheLRU<>(500);
 
     @Override
     public List<VLModel> fetch(String[] params) {

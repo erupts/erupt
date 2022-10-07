@@ -22,7 +22,6 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQueryVo;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.stream.Stream;
 
@@ -64,8 +63,7 @@ public class EruptDrillController {
     @EruptRecordOperate(value = "新增", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel drillAdd(@PathVariable("erupt") String erupt, @PathVariable("code") String code,
-                                  @PathVariable("id") String id, @RequestBody JsonObject data,
-                                  HttpServletRequest request) throws Exception {
+                                  @PathVariable("id") String id, @RequestBody JsonObject data) throws Exception {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Link link = findDrillLink(eruptModel.getErupt(), code);
         eruptService.verifyIdPermissions(eruptModel, id);
@@ -84,7 +82,7 @@ public class EruptDrillController {
             jo.addProperty(joinColumn, val.toString());
         }
         MetaContext.register(new MetaErupt(link.linkErupt().getSimpleName()));
-        return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, jo, request);
+        return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, jo);
     }
 
     private Link findDrillLink(Erupt erupt, String code) {
