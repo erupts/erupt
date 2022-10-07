@@ -77,6 +77,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     }
 
     @Override
+    @Transactional
     public void batchInsert(EruptModel eruptModel, List<?> objectList) {
         try {
             for (Object data : objectList) {
