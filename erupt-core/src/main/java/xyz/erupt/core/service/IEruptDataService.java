@@ -35,7 +35,7 @@ public interface IEruptDataService {
     void deleteData(EruptModel eruptModel, @Comment("数据对象") Object object);
 
     @Comment("批量插入")
-    default void batchInsert(EruptModel eruptModel, @Comment("数据对象") List<?> objects) {
+    default void batchAddData(EruptModel eruptModel, @Comment("数据对象") List<?> objects) {
         for (Object o : objects) this.addData(eruptModel, o);
     }
 

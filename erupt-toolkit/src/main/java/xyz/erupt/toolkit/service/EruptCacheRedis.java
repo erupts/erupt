@@ -1,33 +1,30 @@
-package xyz.erupt.toolkit.cache.impl;
+package xyz.erupt.toolkit.service;
 
 import com.google.gson.reflect.TypeToken;
+import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import xyz.erupt.core.cache.EruptCache;
 import xyz.erupt.core.config.GsonFactory;
-import xyz.erupt.toolkit.cache.EruptCache;
-
-import javax.annotation.Resource;
 
 /**
  * @author YuePeng
  * date 2022/1/26 22:41
  */
-public class EruptRedisCache<V> extends EruptCache<V> {
+@Component
+@AllArgsConstructor
+public class EruptCacheRedis<V> implements EruptCache<V> {
 
     private final StringRedisTemplate stringRedisTemplate;
 
-    public EruptRedisCache(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
-    }
-
     @Override
-    protected V put(String key, long timeout, V v) {
+    public V put(String key, V v, long ttl) {
         stringRedisTemplate.opsForValue().set(key, GsonFactory.getGson().toJson(v));
         return v;
     }
 
     @Override
-    protected V get(String key) {
+    public V get(String key) {
         return GsonFactory.getGson().fromJson(stringRedisTemplate.opsForValue().get(key), new TypeToken<V>() {
         }.getType());
     }

@@ -1,4 +1,4 @@
-package xyz.erupt.core.toolkit;
+package xyz.erupt.core.cache;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -10,13 +10,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author mxd
  */
-public class LRUCache<V> extends LinkedHashMap<String, LRUCache.ExpireNode<V>> {
+public class EruptCacheLRU<V> extends LinkedHashMap<String, EruptCacheLRU.ExpireNode<V>> implements EruptCache<V> {
 
     private final int capacity;
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public LRUCache(int capacity) {
+    public EruptCacheLRU(int capacity) {
         super((int) Math.ceil(capacity / 0.75) + 1, 0.75f, true);
         // 容量
         this.capacity = capacity;
@@ -25,16 +25,19 @@ public class LRUCache<V> extends LinkedHashMap<String, LRUCache.ExpireNode<V>> {
     /**
      * @param ttl 单位：毫秒
      */
-    public void put(String key, V value, long ttl) {
+    @Override
+    public V put(String key, V v, long ttl) {
         long expireTime = ttl > 0 ? (System.currentTimeMillis() + ttl) : Long.MAX_VALUE;
         lock.writeLock().lock();
         try {
-            this.put(key, new ExpireNode<>(expireTime, value));
+            this.put(key, new ExpireNode<>(expireTime, v));
+            return v;
         } finally {
             lock.writeLock().unlock();
         }
     }
 
+    @Override
     public V get(String key) {
         lock.readLock().lock();
         ExpireNode<V> expireNode;
