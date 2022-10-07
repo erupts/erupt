@@ -18,12 +18,13 @@ import xyz.erupt.bi.model.BiColumn;
 import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.bi.view.BiColumnVo;
 import xyz.erupt.bi.view.BiData;
+import xyz.erupt.core.cache.EruptCache;
+import xyz.erupt.core.cache.EruptCacheLRU;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
-import xyz.erupt.toolkit.cache.EruptCache;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -96,7 +97,7 @@ public class BiService {
         }
     }
 
-    private final EruptCache<List<Map<String, Object>>> eruptCache = EruptCache.newInstance();
+    private final EruptCache<List<Map<String, Object>>> eruptCache = new EruptCacheLRU<>(500);
 
     private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
 
