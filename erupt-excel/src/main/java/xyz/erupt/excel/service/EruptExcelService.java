@@ -185,7 +185,7 @@ public class EruptExcelService {
         List<JsonObject> listObject = new ArrayList<>();
         for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
             Row row = sheet.getRow(rowNum);
-            if (row.getPhysicalNumberOfCells() == 0) {
+            if (null == row || row.getPhysicalNumberOfCells() == 0) {
                 continue;
             }
             JsonObject jsonObject = new JsonObject();
