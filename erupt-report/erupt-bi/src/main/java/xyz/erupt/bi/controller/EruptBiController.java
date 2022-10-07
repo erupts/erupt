@@ -18,7 +18,9 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.DateUtil;
-import xyz.erupt.core.util.*;
+import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.core.util.Erupts;
+import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.excel.service.EruptExcelService;
 import xyz.erupt.excel.util.ExcelUtil;
@@ -278,7 +280,7 @@ public class EruptBiController {
                 EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
                 biHandler.exportHandler(biClassHandler.getParam(), query, wb);
             }
-            wb.write(EruptUtil.downLoadFile(request, response, bi.getName() + "_" + DateUtil.getSimpleFormatDate(new Date()) + EruptExcelService.XLSX_FORMAT));
+            wb.write(ExcelUtil.downLoadFile(request, response, bi.getName() + "_" + DateUtil.getSimpleFormatDate(new Date()) + EruptExcelService.XLSX_FORMAT));
         }
     }
 
