@@ -60,7 +60,7 @@ public class EruptBiController {
     @Resource
     private EruptBiProp eruptBiProp;
 
-    @RequestMapping("/{code}")
+    @GetMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     public BiVo getBuilder(@PathVariable("code") String code, HttpServletResponse response) {
         Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
@@ -178,7 +178,7 @@ public class EruptBiController {
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
-    @RequestMapping("/{code}/reference/{id}")
+    @PostMapping("/{code}/reference/{id}")
     public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code,
                                     @RequestBody Map<String, Object> query) {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
@@ -210,7 +210,7 @@ public class EruptBiController {
      * @param query   查询条件
      */
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
-    @RequestMapping("/{code}/chart/{id}")
+    @PostMapping("/{code}/chart/{id}")
     public List<Map<String, Object>> biChart(@PathVariable("id") Long chartId,
                                              @PathVariable("code") String code,
                                              @RequestBody(required = false) Map<String, Object> query) {
@@ -221,7 +221,7 @@ public class EruptBiController {
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
-    @RequestMapping("/{code}/excel/{id}")
+    @PostMapping("/{code}/excel/{id}")
     public void exportExcel(@PathVariable("id") Long id,
                             @PathVariable("code") String code,
                             @RequestBody Map<String, Object> query,
