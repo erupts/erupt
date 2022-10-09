@@ -1,5 +1,6 @@
 package xyz.erupt.monitor.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.fun.AttachmentProxy;
@@ -25,19 +26,13 @@ public class MonitorServerController {
     @Resource
     private EruptProp eruptProp;
 
-    @RequestMapping("/info")
+    @GetMapping("/info")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
     public Server info() {
         return new Server();
     }
 
-    @RequestMapping("/gc")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
-    public void gc() {
-        System.gc();
-    }
-
-    @RequestMapping("/platform")
+    @GetMapping("/platform")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
     public Platform getPlatformInfo() {
         Platform platform = new Platform();

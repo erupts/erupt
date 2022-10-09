@@ -1,6 +1,6 @@
 package xyz.erupt.cloud.node.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 
@@ -11,7 +11,7 @@ import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 @RestController
 public class NodeController {
 
-    @RequestMapping(CloudRestApiConst.NODE_HEALTH)
+    @GetMapping(CloudRestApiConst.NODE_HEALTH)
     public void health() {
     }
 
