@@ -68,6 +68,9 @@ public @interface Erupt {
     @Comment("自定义扩展参数")
     KV[] param() default {};
 
+    @Comment("画册视图定义")
+    CardView cardView() default @CardView(enable = false, viewFields = {});
+
     @Deprecated
     @Transient
     Class<? extends Annotation> extra() default Annotation.class;
