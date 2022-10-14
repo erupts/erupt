@@ -18,7 +18,6 @@ public @interface CardView {
     @Comment("封面效果")
     GalleryCover galleryCover() default GalleryCover.FIT;
 
-
     @Comment("字段")
     String[] viewFields();
 
