@@ -13,7 +13,7 @@ public @interface CardView {
     boolean enable() default true;
 
     @Comment("封面字段")
-    String galleryField() default "";
+    String galleryField();
 
     @Comment("封面效果")
     GalleryCover galleryCover() default GalleryCover.FIT;

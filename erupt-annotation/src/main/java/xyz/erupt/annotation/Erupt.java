@@ -69,7 +69,7 @@ public @interface Erupt {
     KV[] param() default {};
 
     @Comment("画册视图定义")
-    CardView cardView() default @CardView(enable = false, viewFields = {});
+    CardView cardView() default @CardView(enable = false, galleryField = "", viewFields = {});
 
     @Deprecated
     @Transient
