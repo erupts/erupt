@@ -70,7 +70,8 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     )
     private String apiName;
 
-    @Column(length = 4000)
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "请求参数", type = ViewType.CODE),
             edit = @Edit(title = "请求参数", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
@@ -83,8 +84,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     )
     private Boolean status;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = 4000)
     @EruptField(
             views = @View(title = "错误信息", type = ViewType.HTML)
     )

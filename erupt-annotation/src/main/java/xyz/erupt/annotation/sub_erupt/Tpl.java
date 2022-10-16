@@ -12,8 +12,6 @@ import java.util.Map;
  */
 public @interface Tpl {
 
-    boolean enable() default true;
-
     @Transient
     @Comment("模板文件路径")
     String path();

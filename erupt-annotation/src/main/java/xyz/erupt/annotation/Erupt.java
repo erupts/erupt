@@ -65,9 +65,11 @@ public @interface Erupt {
     LinkTree linkTree() default @LinkTree(field = "");
 
     @Comment("自定义页头")
-    Tpl header() default @Tpl(path = "", enable = false);
+    @Match("#value.path() != ''")
+    Tpl header() default @Tpl(path = "");
 
     @Comment("画册视图定义")
+    @Match("#value.enable() == true")
     CardView cardView() default @CardView(enable = false, galleryField = "", viewFields = {});
 
     @ToMap(key = "key")

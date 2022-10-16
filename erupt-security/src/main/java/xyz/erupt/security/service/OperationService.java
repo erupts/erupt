@@ -68,7 +68,8 @@ public class OperationService {
                     operate.setCreateTime(new Date());
                     operate.setTotalTime(operate.getCreateTime().getTime() - RequestBodyTL.get().getDate());
                     Optional.ofNullable(ex).ifPresent(e -> {
-                        operate.setErrorInfo(ExceptionUtils.getStackTrace(e));
+                        String errorInfo = ExceptionUtils.getStackTrace(e);
+                        operate.setErrorInfo(errorInfo.length() > 4000 ? errorInfo.substring(0, 4000) : errorInfo);
                         operate.setStatus(false);
                     });
                     Object param = RequestBodyTL.get().getBody();
