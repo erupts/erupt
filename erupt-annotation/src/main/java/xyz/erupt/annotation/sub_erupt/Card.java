@@ -2,14 +2,17 @@ package xyz.erupt.annotation.sub_erupt;
 
 import xyz.erupt.annotation.config.Comment;
 
+import java.beans.Transient;
+
 /**
  * 画册视图
  *
  * @author YuePeng
  * date 2022/10/9 23:52
  */
-public @interface CardView {
+public @interface Card {
 
+    @Transient
     boolean enable() default true;
 
     @Comment("封面字段")
