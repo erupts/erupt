@@ -36,9 +36,6 @@ public @interface Erupt {
     @Comment("操作权限配置")
     Power power() default @Power;
 
-//    @Comment("多页签配置")
-//    Tab[] tabs() default {};
-
     @Comment("自定义功能按钮")
     RowOperation[] rowOperation() default {};
 
@@ -70,7 +67,7 @@ public @interface Erupt {
 
     @Comment("画册视图定义")
     @Match("#value.enable() == true")
-    CardView cardView() default @CardView(enable = false, galleryField = "", viewFields = {});
+    Card cardView() default @Card(enable = false, galleryField = "", viewFields = {});
 
     @ToMap(key = "key")
     @Comment("自定义扩展参数")
