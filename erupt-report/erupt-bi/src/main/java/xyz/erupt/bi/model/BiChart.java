@@ -51,7 +51,7 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
     @EruptField(
             views = @View(title = "栅格数"),
             edit = @Edit(title = "栅格数", search = @Search(vague = true), type = EditType.SLIDER, desc = "图表占据的栅格数，24代表一行", notNull = true,
-                    sliderType = @SliderType(max = 24, markPoints = {2, 3, 4, 6, 8, 12, 16, 18, 21, 24}, dots = true))
+                    sliderType = @SliderType(max = 24, markPoints = {3, 4, 6, 8, 12, 16, 18, 20, 21, 24}, dots = true))
     )
     private Integer grid = 24;
 
