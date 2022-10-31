@@ -107,6 +107,26 @@ public class EruptDao {
         return t;
     }
 
+    /**
+     * 使用多参数条件判断实体如果不存在则新增
+     * @param eruptClass
+     * @param obj
+     * @param expr
+     * @param param
+     * @param <T>
+     * @return
+     * @throws NonUniqueResultException
+     */
+    public <T> T persistIfNotExist(Class<T> eruptClass, T obj, String expr, Map<String, Object> param) throws NonUniqueResultException {
+        T t = (T) queryEntity(eruptClass, expr, param);
+        if (null == t) {
+            entityManager.persist(obj);
+            entityManager.flush();
+            return obj;
+        }
+        return t;
+    }
+
     //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
     public List<Map<String, Object>> queryMapList(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) {
         return simpleQuery(eruptClass, true, expr, param, cols).getResultList();
