@@ -19,7 +19,7 @@ public @interface Card {
     String galleryField();
 
     @Comment("封面效果")
-    GalleryCover galleryCover() default GalleryCover.FIT;
+    GalleryCover galleryCover() default GalleryCover.CLIP;
 
     @Comment("字段")
     String[] viewFields();
