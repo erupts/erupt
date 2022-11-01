@@ -39,7 +39,7 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
 
     @EruptField(
             views = @View(title = "列名", sortable = true),
-            edit = @Edit(title = "列名", notNull = true, desc = "列为动态渲染，不做列相关配置请忽略列配置下各选项")
+            edit = @Edit(title = "列名", notNull = true)
     )
     private String name;
 
