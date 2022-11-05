@@ -8,6 +8,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptApplication;
+import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
@@ -118,6 +119,11 @@ public class EruptUserService {
         EruptUser eruptUser = this.findEruptUserByAccount(account);
         if (null != eruptUser) {
             if (!eruptUser.getStatus()) return new LoginModel(false, "账号已锁定!");
+            if (null != eruptUser.getExpireDate()) {
+                if (eruptUser.getExpireDate().getTime() < System.currentTimeMillis()) {
+                    return new LoginModel(false, String.format("账号在 %s 失效", DateUtil.getSimpleFormatDate(eruptUser.getExpireDate())));
+                }
+            }
             if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
                 if (Arrays.stream(eruptUser.getWhiteIp().split("\n")).noneMatch(ip -> ip.equals(requestIp))) {
                     return new LoginModel(false, "当前 ip 无权访问");
