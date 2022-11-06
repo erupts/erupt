@@ -65,9 +65,9 @@ public @interface Erupt {
     @Match("#value.path() != ''")
     Tpl header() default @Tpl(path = "");
 
-    @Comment("画册视图定义")
-    @Match("#value.enable() == true")
-    Card cardView() default @Card(enable = false, galleryField = "", viewFields = {});
+//    @Comment("画册视图定义")
+//    @Match("#value.enable() == true")
+//    Card cardView() default @Card(enable = false, galleryField = "", viewFields = {});
 
     @ToMap(key = "key")
     @Comment("自定义扩展参数")
