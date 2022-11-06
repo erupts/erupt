@@ -19,7 +19,7 @@ public class ViaMenuValueNodeCtrl implements ExprBool.ExprHandler {
 
     @Override
     public boolean handler(boolean expr, String[] params) {
-        return serverRemoteService.getMenuCodePermission(params[0], MetaContext.getToken());
+        return serverRemoteService.getMenuCodePermission(params[0]);
     }
 
 }

@@ -8,13 +8,12 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptApplication;
+import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
-import xyz.erupt.upms.config.EruptAppProp;
-import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.EruptLogin;
 import xyz.erupt.upms.fun.LoginProxy;
@@ -22,6 +21,8 @@ import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
+import xyz.erupt.upms.prop.EruptAppProp;
+import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.util.IpUtil;
 
 import javax.annotation.Resource;
@@ -71,7 +72,8 @@ public class EruptUserService {
         Map<String, Object> valueMap = new HashMap<>();
         for (EruptMenu menu : eruptMenus) {
             if (null != menu.getValue()) {
-                valueMap.put(menu.getValue().toLowerCase(), menu);
+                // 当菜单是TPL时，类型值中有可能有参数（如：amis.html?code=test），这里需要把参数(?code=test)去除
+                valueMap.put(menu.getValue().toLowerCase().split("\\?")[0], menu);
             }
         }
         sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsProp.getExpireTimeByLogin());
@@ -101,13 +103,14 @@ public class EruptUserService {
         return null;
     }
 
-    private boolean loginErrorCountPlus(String ip) {
-        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + ip);
+    private boolean loginErrorCountPlus(String account, String ip) {
+        String key = SessionKey.LOGIN_ERROR + account + ":" + ip;
+        Object loginError = sessionService.get(key);
         int loginErrorCount = 0;
         if (null != loginError) {
             loginErrorCount = Integer.parseInt(loginError.toString());
         }
-        sessionService.put(SessionKey.LOGIN_ERROR + ip, ++loginErrorCount + "", eruptUpmsProp.getExpireTimeByLogin());
+        sessionService.put(key, ++loginErrorCount + "", eruptUpmsProp.getExpireTimeByLogin());
         return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
     }
 
@@ -115,8 +118,11 @@ public class EruptUserService {
         String requestIp = IpUtil.getIpAddr(request);
         EruptUser eruptUser = this.findEruptUserByAccount(account);
         if (null != eruptUser) {
-            if (!eruptUser.getStatus()) {
-                return new LoginModel(false, "账号已锁定!");
+            if (!eruptUser.getStatus()) return new LoginModel(false, "账号已锁定!");
+            if (null != eruptUser.getExpireDate()) {
+                if (eruptUser.getExpireDate().getTime() < System.currentTimeMillis()) {
+                    return new LoginModel(false, String.format("账号在 %s 失效", DateUtil.getSimpleFormatDate(eruptUser.getExpireDate())));
+                }
             }
             if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
                 if (Arrays.stream(eruptUser.getWhiteIp().split("\n")).noneMatch(ip -> ip.equals(requestIp))) {
@@ -125,13 +131,13 @@ public class EruptUserService {
             }
             if (checkPwd(eruptUser, pwd)) {
                 request.getSession().invalidate();
-                sessionService.put(SessionKey.LOGIN_ERROR + requestIp, "0", eruptUpmsProp.getExpireTimeByLogin());
+                sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
                 return new LoginModel(true, eruptUser);
             } else {
-                return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
+                return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(account, requestIp));
             }
         } else {
-            return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(requestIp));
+            return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(account, requestIp));
         }
     }
 
@@ -155,9 +161,9 @@ public class EruptUserService {
         }
     }
 
-    public boolean checkVerifyCode(String verifyCode) {
+    public boolean checkVerifyCode(String account, String verifyCode) {
         String requestIp = IpUtil.getIpAddr(request);
-        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + requestIp);
+        Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
         long loginErrorCount = 0;
         if (null != loginError) {
             loginErrorCount = Long.parseLong(loginError.toString());

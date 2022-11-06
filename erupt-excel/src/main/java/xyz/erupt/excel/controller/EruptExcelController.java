@@ -19,7 +19,6 @@ import xyz.erupt.core.naming.EruptRecordNaming;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptService;
-import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
@@ -27,6 +26,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQueryVo;
 import xyz.erupt.excel.service.EruptExcelService;
+import xyz.erupt.excel.util.ExcelUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +63,7 @@ public class EruptExcelController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable);
         try (Workbook wb = dataFileService.createExcelTemplate(eruptModel)) {
-            wb.write(EruptUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_template" + EruptExcelService.XLS_FORMAT));
+            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_template" + EruptExcelService.XLS_FORMAT));
         }
     }
 
@@ -86,7 +86,7 @@ public class EruptExcelController {
         Page page = eruptService.getEruptData(eruptModel, tableQueryVo, null);
         try (Workbook wb = dataFileService.exportExcel(eruptModel, page)) {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
-            wb.write(EruptUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLSX_FORMAT));
+            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLSX_FORMAT));
         }
     }
 
@@ -98,7 +98,7 @@ public class EruptExcelController {
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable, "Not import permission");
-        if (file.isEmpty()) return EruptApiModel.errorApi("上传失败，请选择文件");
+        if (file.isEmpty() || null == file.getOriginalFilename()) return EruptApiModel.errorApi("上传失败，请选择文件");
         List<JsonObject> list;
         int i = 1;
         try {
@@ -115,13 +115,14 @@ public class EruptExcelController {
             list = dataFileService.excelToEruptObject(eruptModel, wb);
             wb.close();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage(), e);
         }
-        for (int j = 0; j < list.size(); j++) {
-            EruptApiModel eruptApiModel = eruptModifyController.addEruptData(eruptName, list.get(j), null, request);
-            if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-                throw new EruptWebApiRuntimeException("数据入库异常，出错行数：" + (j + 1) + "，原因：" + eruptApiModel.getMessage());
-            }
+        try {
+            eruptModifyController.batchAddEruptData(eruptModel, list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new EruptWebApiRuntimeException("数据导入异常，原因：" + e.getMessage());
         }
         return EruptApiModel.successApi();
     }

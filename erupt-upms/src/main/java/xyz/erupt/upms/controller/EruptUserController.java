@@ -11,10 +11,10 @@ import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
-import xyz.erupt.upms.config.EruptAppProp;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
@@ -64,7 +64,7 @@ public class EruptUserController {
     public LoginModel login(@RequestParam("account") String account, @RequestParam("pwd") String pwd,
                             @RequestParam(name = "verifyCode", required = false) String verifyCode
     ) {
-        if (!eruptUserService.checkVerifyCode(verifyCode)) {
+        if (!eruptUserService.checkVerifyCode(account, verifyCode)) {
             LoginModel loginModel = new LoginModel();
             loginModel.setUseVerifyCode(true);
             loginModel.setReason("验证码错误");

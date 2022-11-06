@@ -36,13 +36,10 @@ public @interface Erupt {
     @Comment("操作权限配置")
     Power power() default @Power;
 
-//    @Comment("多页签配置")
-//    Tab[] tabs() default {};
-
     @Comment("自定义功能按钮")
     RowOperation[] rowOperation() default {};
 
-    @Comment("数据钻取功能")
+    @Comment("数据钻取")
     Drill[] drills() default {};
 
     @Transient
@@ -57,12 +54,20 @@ public @interface Erupt {
     @Comment("数据行为代理接口，对增、删、改、查等行为做逻辑处理")
     Class<? extends DataProxy<?>>[] dataProxy() default {};
 
-    @Comment("树节点配置")
+    @Comment("树视图配置")
     Tree tree() default @Tree;
 
     @Match("#value.field() != ''")
     @Comment("左树右表配置项")
     LinkTree linkTree() default @LinkTree(field = "");
+
+    @Comment("自定义页头")
+    @Match("#value.path() != ''")
+    Tpl header() default @Tpl(path = "");
+
+//    @Comment("画册视图定义")
+//    @Match("#value.enable() == true")
+//    Card cardView() default @Card(enable = false, galleryField = "", viewFields = {});
 
     @ToMap(key = "key")
     @Comment("自定义扩展参数")

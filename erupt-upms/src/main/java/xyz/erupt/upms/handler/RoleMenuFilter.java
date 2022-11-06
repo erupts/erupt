@@ -2,10 +2,10 @@ package xyz.erupt.upms.handler;
 
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.FilterHandler;
-import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;

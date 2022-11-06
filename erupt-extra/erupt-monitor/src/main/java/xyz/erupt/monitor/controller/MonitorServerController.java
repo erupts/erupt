@@ -1,11 +1,13 @@
 package xyz.erupt.monitor.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.monitor.constant.MonitorConstant;
 import xyz.erupt.monitor.vo.Platform;
@@ -24,19 +26,13 @@ public class MonitorServerController {
     @Resource
     private EruptProp eruptProp;
 
-    @RequestMapping("/info")
+    @GetMapping("/info")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
     public Server info() {
         return new Server();
     }
 
-    @RequestMapping("/gc")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
-    public void gc() {
-        System.gc();
-    }
-
-    @RequestMapping("/platform")
+    @GetMapping("/platform")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
     public Platform getPlatformInfo() {
         Platform platform = new Platform();
@@ -45,6 +41,7 @@ public class MonitorServerController {
         platform.setSessionStrategy(eruptProp.isRedisSession() ? "redis" : "servlet");
         platform.setEruptCount(EruptCoreService.getErupts().size());
         platform.setEruptModules(EruptCoreService.getModules());
+        platform.setEruptVersion(EruptInformation.getEruptVersion());
         return platform;
     }
 

@@ -17,17 +17,14 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
-import xyz.erupt.security.config.EruptSecurityProp;
 import xyz.erupt.security.service.OperationService;
-import xyz.erupt.upms.config.EruptUpmsProp;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
-import xyz.erupt.upms.service.EruptContextService;
+import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -45,19 +42,10 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     private EruptUserService eruptUserService;
 
     @Resource
-    private EntityManager entityManager;
-
-    @Resource
     private EruptProp eruptProp;
 
     @Resource
     private EruptUpmsProp eruptUpmsProp;
-
-    @Resource
-    private EruptSecurityProp eruptSecurityProp;
-
-    @Resource
-    private EruptContextService eruptContextService;
 
     @Resource
     private OperationService operationService;
@@ -175,6 +163,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         try {
             operationService.record(handler, ex);
         } catch (Exception e) {
+            //TODO 失败后抛出异常（版本兼容原因未抛出）
             e.printStackTrace();
         } finally {
             MetaContext.remove();

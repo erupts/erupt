@@ -2,8 +2,8 @@ package xyz.erupt.cloud.server.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
@@ -29,7 +29,7 @@ public class EruptMicroserviceController {
 
     private final EruptNodeMicroservice eruptNodeMicroservice;
 
-    @RequestMapping(CloudRestApiConst.REGISTER_NODE)
+    @PostMapping(CloudRestApiConst.REGISTER_NODE)
     public R registerNode(@RequestBody MetaNode metaNode, HttpServletRequest request, HttpServletResponse response) {
         CloudNode cloudNode = eruptNodeMicroservice.findNodeByAppName(metaNode.getNodeName(), metaNode.getAccessToken());
         if (!cloudNode.getStatus()) {
@@ -42,7 +42,7 @@ public class EruptMicroserviceController {
     }
 
     //移除实例
-    @RequestMapping(CloudRestApiConst.REMOVE_INSTANCE_NODE)
+    @PostMapping(CloudRestApiConst.REMOVE_INSTANCE_NODE)
     public void removeInstanceNode(@RequestParam String nodeName, @RequestParam String accessToken, HttpServletRequest request) {
         Optional.ofNullable(CloudServerUtil.findEruptCloudServerAnnotation()).ifPresent(it -> it.removeNode(nodeName, request));
         eruptNodeMicroservice.removeInstance(nodeName, accessToken);
