@@ -108,6 +108,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     )
     private String reqAddr;
 
+    @Column(length = 64)
     @EruptField(
             views = @View(title = "请求方法")
     )
