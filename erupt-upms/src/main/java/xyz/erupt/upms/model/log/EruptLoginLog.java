@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
@@ -45,6 +46,7 @@ public class EruptLoginLog extends BaseModel {
     )
     private Date loginTime;
 
+    @Column(length = 64)
     @EruptField(
             views = @View(title = "IP地址"),
             edit = @Edit(title = "IP地址", search = @Search)
