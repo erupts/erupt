@@ -49,13 +49,9 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
             query.limit(page.getPageSize());
             query.skip((long) (page.getPageIndex() - 1) * page.getPageSize());
             if (StringUtils.isNotBlank(page.getSort())) {
-                for (String s : page.getSort().split(",")) {
-                    if (s.split(" ")[1].contains("desc")) {
-                        query.with(Sort.by(Sort.Direction.DESC, s.split(" ")[0]));
-                    } else {
-                        query.with(Sort.by(Sort.Direction.ASC, s.split(" ")[0]));
-                    }
-                }
+                this.orderByTokenToQuery(query, page.getSort());
+            } else if (!"".equals(eruptModel.getErupt().orderBy())) {
+                this.orderByTokenToQuery(query, eruptModel.getErupt().orderBy());
             }
             List<Map<String, Object>> newList = new ArrayList<>();
             for (Object obj : mongoTemplate.find(query, eruptModel.getClazz())) {
@@ -64,6 +60,17 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
             page.setList(newList);
         }
         return page;
+    }
+
+    private void orderByTokenToQuery(Query query, String orderByStr) {
+        for (String s : orderByStr.split(",")) {
+            String[] orderBy = s.split(" ");
+            if (orderBy.length > 1 && orderBy[1].contains("desc")) {
+                query.with(Sort.by(Sort.Direction.DESC, orderBy[0]));
+            } else {
+                query.with(Sort.by(Sort.Direction.ASC, orderBy[0]));
+            }
+        }
     }
 
     public void addQueryCondition(EruptQuery eruptQuery, Query query) {

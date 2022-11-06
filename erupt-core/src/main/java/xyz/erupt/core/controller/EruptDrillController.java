@@ -22,8 +22,9 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQueryVo;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -64,12 +65,11 @@ public class EruptDrillController {
     @EruptRecordOperate(value = "新增", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel drillAdd(@PathVariable("erupt") String erupt, @PathVariable("code") String code,
-                                  @PathVariable("id") String id, @RequestBody JsonObject data,
-                                  HttpServletRequest request) throws Exception {
+                                  @PathVariable("id") String id, @RequestBody JsonObject data) throws Exception {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Link link = findDrillLink(eruptModel.getErupt(), code);
         eruptService.verifyIdPermissions(eruptModel, id);
-        JsonObject jo = new JsonObject();
+        Map<String, Object> extraData = new HashMap<>();
         String joinColumn = link.joinColumn();
         Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
         field.setAccessible(true);
@@ -79,12 +79,12 @@ public class EruptDrillController {
             String[] jc = joinColumn.split("\\.");
             JsonObject jo2 = new JsonObject();
             jo2.addProperty(jc[1], val.toString());
-            jo.add(jc[0], jo2);
+            extraData.put(jc[0], jo2);
         } else {
-            jo.addProperty(joinColumn, val.toString());
+            extraData.put(joinColumn, val.toString());
         }
         MetaContext.register(new MetaErupt(link.linkErupt().getSimpleName()));
-        return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, jo, request);
+        return eruptModifyController.addEruptData(link.linkErupt().getSimpleName(), data, extraData);
     }
 
     private Link findDrillLink(Erupt erupt, String code) {

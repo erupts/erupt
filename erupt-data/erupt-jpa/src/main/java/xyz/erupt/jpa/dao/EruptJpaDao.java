@@ -40,6 +40,7 @@ public class EruptJpaDao {
         });
     }
 
+
     public void removeEntity(Class<?> eruptClass, Object entity) {
         entityManagerService.entityManagerTran(eruptClass, (em) -> {
             EruptDataSource eruptDataSource = eruptClass.getAnnotation(EruptDataSource.class);

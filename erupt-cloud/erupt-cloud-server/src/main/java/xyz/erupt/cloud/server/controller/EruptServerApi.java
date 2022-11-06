@@ -1,7 +1,8 @@
 package xyz.erupt.cloud.server.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
@@ -33,8 +34,8 @@ public class EruptServerApi {
     @Resource
     private EruptDao eruptDao;
 
-    @RequestMapping(CloudRestApiConst.ERUPT_POWER)
-    public PowerObject eruptPower(String eruptName, String nodeName) {
+    @GetMapping(CloudRestApiConst.ERUPT_POWER)
+    public PowerObject eruptPower(@RequestParam String eruptName,@RequestParam String nodeName) {
         PowerObject powerObject = new PowerObject();
         List<String> values = eruptSessionService.getMapKeys(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken());
         Map<String, Boolean> permissionMap = values.stream().collect(Collectors.toMap(it -> it, it -> true));
@@ -50,16 +51,16 @@ public class EruptServerApi {
         return powerObject;
     }
 
-    @RequestMapping(CloudRestApiConst.NODE_CONFIG + "/{nodeName}")
-    public String getNodeConfig(@PathVariable String nodeName, String accessToken) {
+    @GetMapping(CloudRestApiConst.NODE_CONFIG + "/{nodeName}")
+    public String getNodeConfig(@PathVariable String nodeName,@RequestParam String accessToken) {
         return (String) eruptDao.getEntityManager()
                 .createQuery("select config from CloudNode where nodeName = :nodeName and accessToken = :accessToken")
                 .setParameter("nodeName", nodeName)
                 .setParameter("accessToken", accessToken).getSingleResult();
     }
 
-    @RequestMapping(CloudRestApiConst.NODE_GROUP_CONFIG + "/{nodeName}")
-    public String getNodeGroupConfig(@PathVariable String nodeName, String accessToken) {
+    @GetMapping(CloudRestApiConst.NODE_GROUP_CONFIG + "/{nodeName}")
+    public String getNodeGroupConfig(@PathVariable String nodeName,@RequestParam String accessToken) {
         return (String) eruptDao.getEntityManager()
                 .createQuery("select cloudNodeGroup.config from CloudNode where nodeName = :nodeName and accessToken = :accessToken")
                 .setParameter("nodeName", nodeName)

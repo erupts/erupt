@@ -1,5 +1,6 @@
 package xyz.erupt.core.util;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
@@ -22,6 +23,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
@@ -29,12 +31,7 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -343,6 +340,30 @@ public class EruptUtil {
     }
 
     /**
+     * 将JSON串转换为erupt实体对象
+     *
+     * @param json      json对象
+     * @param extraData 额外填充的反射数据
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    public static Object jsonToEruptEntity(EruptModel eruptModel, JsonObject json, Map<String, Object> extraData) throws InstantiationException, IllegalAccessException {
+        Gson gson = GsonFactory.getGson();
+        Object o = gson.fromJson(json.toString(), eruptModel.getClazz());
+        EruptUtil.clearObjectDefaultValueByJson(o, json);
+        Object obj = EruptUtil.dataTarget(eruptModel, o, eruptModel.getClazz().newInstance(), SceneEnum.ADD);
+        if (null != extraData) {
+            for (String key : extraData.keySet()) {
+                Field field = ReflectUtil.findClassField(eruptModel.getClazz(), key);
+                field.setAccessible(true);
+                field.set(obj, gson.fromJson(extraData.get(key).toString(), field.getType()));
+            }
+        }
+        return obj;
+    }
+
+    /**
      * 获取附件上传代理器
      *
      * @return AttachmentProxy
@@ -360,19 +381,6 @@ public class EruptUtil {
             return true;
         } else {
             return LocalDateTime.class.getSimpleName().equals(fieldType);
-        }
-    }
-
-    public static OutputStream downLoadFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
-        try {
-            String headStr = "attachment; filename=" + java.net.URLEncoder.encode(fileName, StandardCharsets.UTF_8.name());
-            response.setContentType("application/x-download");
-            response.setHeader("Content-Disposition", headStr);
-            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-            return response.getOutputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 

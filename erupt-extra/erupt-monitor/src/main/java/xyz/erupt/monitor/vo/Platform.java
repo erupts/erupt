@@ -19,6 +19,8 @@ public class Platform {
 
     private String sessionStrategy;
 
+    private String eruptVersion;
+
     private int eruptCount; //erupt类数量
 
     private List<String> eruptModules; //模块列表

@@ -9,8 +9,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.core.annotation.EruptDataSource;
-import xyz.erupt.core.prop.EruptProp;
-import xyz.erupt.core.prop.EruptPropDb;
+import xyz.erupt.jpa.prop.EruptPropForDb;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -31,7 +30,7 @@ public class EntityManagerService implements DisposableBean {
     private EntityManager entityManager;
 
     @Resource
-    private EruptProp eruptProp;
+    private EruptPropForDb eruptPropForDb;
 
     private final Map<String, EntityManagerFactory> entityManagerFactoryMap = new HashMap<>();
 
@@ -39,7 +38,7 @@ public class EntityManagerService implements DisposableBean {
 
     private synchronized EntityManagerFactory getEntityManagerFactory(String dbName) {
         if (entityManagerFactoryMap.containsKey(dbName)) return entityManagerFactoryMap.get(dbName);
-        for (EruptPropDb prop : eruptProp.getDbs()) {
+        for (EruptPropForDb.DB prop : eruptPropForDb.getDbs()) {
             if (dbName.equals(prop.getDatasource().getName())) {
                 Objects.requireNonNull(prop.getDatasource().getName(), "dbs configuration Must specify name → dbs.datasource.name");
                 Objects.requireNonNull(prop.getScanPackages(), String.format("%s DataSource not found 'scanPackages' configuration",
@@ -143,7 +142,7 @@ public class EntityManagerService implements DisposableBean {
 
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         for (EntityManagerFactory value : entityManagerFactoryMap.values()) {
             value.close();
         }

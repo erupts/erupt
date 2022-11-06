@@ -131,7 +131,7 @@ public class EruptUser extends LookerSelf {
     private String passwordB;
 
     @EruptField(
-            views = @View(title = "重置密码时间", width = "100px")
+            views = @View(title = "重置密码时间", width = "130px", sortable = true)
     )
     private Date resetPwdTime;
 
@@ -147,6 +147,12 @@ public class EruptUser extends LookerSelf {
             )
     )
     private Boolean isMd5 = true;
+
+    @EruptField(
+            views = @View(title = "失效时间", sortable = true),
+            edit = @Edit(title = "账号失效时间")
+    )
+    private Date expireDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

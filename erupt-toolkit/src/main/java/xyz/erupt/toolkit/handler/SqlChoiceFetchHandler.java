@@ -4,8 +4,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.core.cache.EruptCache;
+import xyz.erupt.core.cache.EruptCacheLRU;
 import xyz.erupt.core.util.EruptAssert;
-import xyz.erupt.toolkit.cache.EruptCache;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,7 +21,7 @@ public class SqlChoiceFetchHandler implements ChoiceFetchHandler {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    private final EruptCache<List<VLModel>> eruptCache = EruptCache.newInstance();
+    private final EruptCache<List<VLModel>> eruptCache = new EruptCacheLRU<>(500);
 
     @Override
     public List<VLModel> fetch(String[] params) {

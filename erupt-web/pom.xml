@@ -11,7 +11,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.10.14</version>
+        <version>1.10.15</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -25,10 +25,9 @@
     <build>
         <resources>
             <resource>
-                <directory>src/main/java/xyz/erupt/web/controller</directory>
-                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
                 <includes>
-                    <include>EruptWebController.java</include>
+                    <include>**/**</include>
                 </includes>
             </resource>
         </resources>

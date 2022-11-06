@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.10.14</version>
+    <version>1.10.15</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>1.8</java.version>
-        <spring.boot.version>2.7.2</spring.boot.version>
+        <spring.boot.version>2.7.5</spring.boot.version>
     </properties>
 
     <!--
@@ -42,7 +42,6 @@
 
         <module>erupt-data/erupt-jpa</module><!-- Hibernate JPA 数据实现 -->
         <module>erupt-data/erupt-mongodb</module><!-- MongoDB 数据实现 -->
-        <module>erupt-data/erupt-elasticsearch</module><!-- Elasticsearch 数据实现 -->
 
         <module>erupt-upms</module><!--用户权限管理-->
         <module>erupt-security</module><!--API 接口安全-->
