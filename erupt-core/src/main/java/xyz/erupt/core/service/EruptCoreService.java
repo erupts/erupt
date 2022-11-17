@@ -92,7 +92,7 @@ public class EruptCoreService implements ApplicationRunner {
                 .ifPresent(ignore -> {
                     EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
                     eruptModel.getEruptFieldModels().add(eruptFieldModel);
-                    if(!eruptModel.getEruptFieldMap().containsKey(field.getName())){
+                    if (!eruptModel.getEruptFieldMap().containsKey(field.getName())) {
                         eruptModel.getEruptFieldMap().put(field.getName(), eruptFieldModel);
                     }
                 }));
@@ -117,15 +117,14 @@ public class EruptCoreService implements ApplicationRunner {
         AtomicInteger moduleMaxCharLength = new AtomicInteger();
         EruptModuleInvoke.invoke(it -> {
             int length = it.info().getName().length();
-            if (length > moduleMaxCharLength.get()) {
-                moduleMaxCharLength.set(length);
-            }
+            if (length > moduleMaxCharLength.get()) moduleMaxCharLength.set(length);
         });
         EruptModuleInvoke.invoke(it -> {
             it.run();
             MODULES.add(it.info().getName());
-            String moduleName = fillCharacter(it.info().getName(), moduleMaxCharLength.get());
-            log.info("🚀 -> {} module initialization completed in {}ms", moduleName, timeRecorder.recorder());
+            log.info("🚀 -> {} module initialization completed in {}ms", fillCharacter(it.info().getName(),
+                    moduleMaxCharLength.get()), timeRecorder.recorder()
+            );
         });
         log.info("Erupt modules : " + MODULES.size());
         log.info("Erupt classes : " + ERUPTS.size());

@@ -344,9 +344,6 @@ public class EruptUtil {
      *
      * @param json      json对象
      * @param extraData 额外填充的反射数据
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
      */
     public static Object jsonToEruptEntity(EruptModel eruptModel, JsonObject json, Map<String, Object> extraData) throws InstantiationException, IllegalAccessException {
         Gson gson = GsonFactory.getGson();
