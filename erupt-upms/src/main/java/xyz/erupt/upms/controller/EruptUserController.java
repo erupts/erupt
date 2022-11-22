@@ -18,7 +18,6 @@ import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
-import xyz.erupt.upms.util.IpUtil;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
@@ -58,13 +57,21 @@ public class EruptUserController {
         return eruptAppProp;
     }
 
-    //登录
+    /**
+     * 登录
+     *
+     * @param account        用户名
+     * @param pwd            密码
+     * @param verifyCode     验证码
+     * @param verifyCodeMark 验证码标识
+     */
     @SneakyThrows
     @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
-    public LoginModel login(@RequestParam("account") String account, @RequestParam("pwd") String pwd,
-                            @RequestParam(name = "verifyCode", required = false) String verifyCode
+    public LoginModel login(@RequestParam String account, @RequestParam String pwd,
+                            @RequestParam(required = false) String verifyCode,
+                            @RequestParam(required = false) String verifyCodeMark
     ) {
-        if (!eruptUserService.checkVerifyCode(account, verifyCode)) {
+        if (!eruptUserService.checkVerifyCode(account, verifyCode, verifyCodeMark)) {
             LoginModel loginModel = new LoginModel();
             loginModel.setUseVerifyCode(true);
             loginModel.setReason("验证码错误");
@@ -142,15 +149,19 @@ public class EruptUserController {
         return eruptUserService.changePwd(account, pwd, newPwd, newPwd2);
     }
 
-    // 生成验证码
+    /**
+     * 生成验证码
+     *
+     * @param mark 生成验证码标记值
+     */
     @GetMapping("/code-img")
-    public void createCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void createCode(HttpServletResponse response, @RequestParam String mark) throws Exception {
         response.setContentType("image/jpeg"); // 设置响应的类型格式为图片格式
         response.setDateHeader("Expires", 0);
-        response.setHeader("Pragma", "no-cache"); // 禁止图像缓存。
+        response.setHeader("Pragma", "no-cache"); // 禁止图像缓存
         response.setHeader("Cache-Control", "no-cache");
         Captcha captcha = new SpecCaptcha(150, 38, 4);
-        sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60, TimeUnit.SECONDS);
+        sessionService.put(SessionKey.VERIFY_CODE + mark, captcha.text(), 60, TimeUnit.SECONDS);
         captcha.out(response.getOutputStream());
     }
 

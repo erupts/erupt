@@ -161,19 +161,16 @@ public class EruptUserService {
         }
     }
 
-    public boolean checkVerifyCode(String account, String verifyCode) {
+    public boolean checkVerifyCode(String account, String verifyCode, String verifyCodeMark) {
         String requestIp = IpUtil.getIpAddr(request);
         Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
         long loginErrorCount = 0;
-        if (null != loginError) {
-            loginErrorCount = Long.parseLong(loginError.toString());
-        }
+        if (null != loginError) loginErrorCount = Long.parseLong(loginError.toString());
         if (loginErrorCount >= eruptAppProp.getVerifyCodeCount()) {
-            if (StringUtils.isBlank(verifyCode)) {
-                return false;
-            }
-            Object vc = sessionService.get(SessionKey.VERIFY_CODE + requestIp);
-            sessionService.remove(SessionKey.VERIFY_CODE + requestIp);
+            if (StringUtils.isBlank(verifyCode)) return false;
+            String key = SessionKey.VERIFY_CODE + verifyCodeMark;
+            Object vc = sessionService.get(key);
+            sessionService.remove(key);
             return vc != null && vc.toString().equalsIgnoreCase(verifyCode);
         }
         return true;
