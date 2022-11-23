@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.EruptProxy;
 import xyz.erupt.core.proxy.ProxyContext;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.CloneSupport;
 
 import java.util.List;
@@ -62,9 +62,9 @@ public final class EruptModel implements Cloneable {
     }
 
     @Override
-    public final EruptModel clone() throws CloneNotSupportedException {
+    public EruptModel clone() throws CloneNotSupportedException {
         EruptModel eruptModel = (EruptModel) super.clone();
-        eruptModel.eruptJson = AnnotationUtil.annotationToJsonByReflect(this.getErupt());
+        eruptModel.eruptJson = AnnotationProcess.annotationToJsonByReflect(this.getErupt());
         eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone)
                 .peek(EruptFieldModel::serializable).collect(Collectors.toList());
         return eruptModel;

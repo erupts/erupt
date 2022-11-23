@@ -9,10 +9,10 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.exception.ExceptionAnsi;
+import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.EruptFieldProxy;
 import xyz.erupt.core.proxy.ProxyContext;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.CloneSupport;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
@@ -83,7 +83,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
     }
 
     public void serializable() {
-        this.eruptFieldJson = AnnotationUtil.annotationToJsonByReflect(this.getEruptField());
+        this.eruptFieldJson = AnnotationProcess.annotationToJsonByReflect(this.getEruptField());
     }
 
 }

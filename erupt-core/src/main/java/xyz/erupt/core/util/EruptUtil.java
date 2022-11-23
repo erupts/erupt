@@ -25,6 +25,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptApiModel;
@@ -197,7 +198,7 @@ public class EruptUtil {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(condition.getKey());
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
-                    EditTypeSearch editTypeSearch = AnnotationUtil.getEditTypeSearch(edit.type());
+                    EditTypeSearch editTypeSearch = AnnotationProcess.getEditTypeSearch(edit.type());
                     if (null != editTypeSearch && editTypeSearch.value()) {
                         if (edit.search().value() && null != condition.getValue()) {
                             if (condition.getValue() instanceof Collection) {

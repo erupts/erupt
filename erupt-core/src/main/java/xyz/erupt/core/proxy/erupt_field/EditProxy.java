@@ -7,11 +7,11 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.AnnotationProxyPool;
 import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.proxy.erupt.FilterProxy;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.TypeUtil;
 
@@ -34,7 +34,7 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
                         return EditType.NUMBER;
                     } else if (EruptUtil.isDateField(returnType)) {
                         return EditType.DATE;
-                    } else if (ArrayUtils.contains(AnnotationUtil.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), returnType)) {
+                    } else if (ArrayUtils.contains(AnnotationProcess.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), returnType)) {
                         return EditType.TEXTAREA; //属性名推断
                     } else {
                         return EditType.INPUT;
