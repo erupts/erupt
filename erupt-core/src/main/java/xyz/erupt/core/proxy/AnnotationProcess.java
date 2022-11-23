@@ -1,4 +1,4 @@
-package xyz.erupt.core.util;
+package xyz.erupt.core.proxy;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -16,6 +16,7 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeMapping;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
+import xyz.erupt.core.util.TypeUtil;
 
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
@@ -26,7 +27,7 @@ import java.util.Arrays;
  * @author YuePeng
  * date 2019-02-28.
  */
-public class AnnotationUtil {
+public class AnnotationProcess {
 
     private static final String[] ANNOTATION_NUMBER_TYPE = {"short", "int", "long", "float", "double"};
 
