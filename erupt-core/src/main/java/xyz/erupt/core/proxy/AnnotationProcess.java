@@ -46,9 +46,7 @@ public class AnnotationProcess {
         JsonObject jsonObject = new JsonObject();
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
-            if (null != tran && tran.value()) {
-                continue;
-            }
+            if (null != tran && tran.value()) continue;
             String methodName = method.getName();
             EruptProperty eruptProperty = method.getAnnotation(EruptProperty.class);
             if (null != eruptProperty && !AnnotationConst.EMPTY_STR.equals(eruptProperty.alias())) {
@@ -62,9 +60,7 @@ public class AnnotationProcess {
                 evaluationContext.setVariable(VALUE_VAR, result);
                 evaluationContext.setVariable(ITEM_VAR, annotation);
                 Object r = parser.parseExpression(match.value()).getValue(evaluationContext);
-                if (null == r || !(Boolean) r) {
-                    continue;
-                }
+                if (null == r || !(Boolean) r) continue;
             }
             if (returnType.endsWith(EMPTY_ARRAY)) {
                 returnType = returnType.substring(0, returnType.length() - 2);
@@ -104,9 +100,7 @@ public class AnnotationProcess {
                 if (null == toMap) {
                     jsonObject.add(methodName, jsonArray);
                 } else {
-                    if (jsonMap.size() > 0) {
-                        jsonObject.add(methodName, jsonMap);
-                    }
+                    if (jsonMap.size() > 0) jsonObject.add(methodName, jsonMap);
                 }
             } else {
                 if (Arrays.asList(ANNOTATION_STRING_TYPE).contains(returnType)) {
@@ -127,7 +121,7 @@ public class AnnotationProcess {
         return jsonObject;
     }
 
-    // 最原始注解序列化实现，收藏 ✨
+    // erupt annotation 最原始序列化实现，收藏 ✨
     @Deprecated
     public static String annotationToJsonByReplace(String annotationStr) throws JSONException {
         String convertStr = annotationStr
