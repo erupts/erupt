@@ -10,6 +10,7 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.R;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
@@ -19,6 +20,7 @@ import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.vo.EruptMenuVo;
+import xyz.erupt.upms.vo.EruptUserinfo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -115,6 +117,23 @@ public class EruptUserController {
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
         return loginModel;
+    }
+
+    //查询登录用户基础数据
+    @GetMapping("/userinfo")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public R<EruptUserinfo> queryAdminInfo() {
+        EruptUserinfo eruptUserinfo = new EruptUserinfo();
+        eruptUserinfo.setEruptMenuVos(
+                sessionService.get(SessionKey.MENU_VIEW + eruptContextService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
+                }.getType())
+        );
+        EruptUser eruptUser = this.eruptUserService.getCurrentEruptUser();
+        eruptUserinfo.setNickname(eruptUser.getName());
+        eruptUserinfo.setIndexMenuValue(eruptUser.getEruptMenu().getValue());
+        eruptUserinfo.setIndexMenuType(eruptUser.getEruptMenu().getType());
+        eruptUserinfo.setResetPwd(null == eruptUser.getResetPwdTime());
+        return R.ok(eruptUserinfo);
     }
 
     //获取菜单列表
