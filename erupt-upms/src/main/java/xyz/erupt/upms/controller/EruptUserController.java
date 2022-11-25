@@ -120,7 +120,7 @@ public class EruptUserController {
     }
 
     //查询登录用户基础数据
-    @GetMapping("/userinfo")
+    @GetMapping("/information")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public R<EruptUserinfo> queryAdminInfo() {
         EruptUserinfo eruptUserinfo = new EruptUserinfo();
