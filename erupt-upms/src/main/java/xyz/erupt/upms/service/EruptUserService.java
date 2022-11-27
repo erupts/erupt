@@ -78,9 +78,6 @@ public class EruptUserService {
         }
         sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsProp.getExpireTimeByLogin());
         sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsProp.getExpireTimeByLogin());
-    }
-
-    public void putUserInfo(EruptUser eruptUser, String token) {
         MetaUserinfo metaUserinfo = new MetaUserinfo();
         metaUserinfo.setId(eruptUser.getId());
         metaUserinfo.setSuperAdmin(eruptUser.getIsAdmin());
@@ -89,8 +86,9 @@ public class EruptUserService {
         metaUserinfo.setRoles(eruptUser.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList()));
         Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> metaUserinfo.setPost(it.getCode()));
         Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> metaUserinfo.setOrg(it.getCode()));
-        sessionService.put(SessionKey.USER_TOKEN + token, gson.toJson(metaUserinfo), eruptUpmsProp.getExpireTimeByLogin());
+        sessionService.put(SessionKey.USER_INFO + token, gson.toJson(metaUserinfo), eruptUpmsProp.getExpireTimeByLogin());
     }
+
 
     public static LoginProxy findEruptLogin() {
         if (null == EruptApplication.getPrimarySource()) {
@@ -248,12 +246,12 @@ public class EruptUserService {
 
     //获取当前登录用户基础信息（缓存中查找）
     public MetaUserinfo getSimpleUserInfo() {
-        Object info = sessionService.get(SessionKey.USER_TOKEN + eruptContextService.getCurrentToken());
+        Object info = sessionService.get(SessionKey.USER_INFO + eruptContextService.getCurrentToken());
         return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
     }
 
     public MetaUserinfo getSimpleUserInfoByToken(String token) {
-        Object info = sessionService.get(SessionKey.USER_TOKEN + token);
+        Object info = sessionService.get(SessionKey.USER_INFO + token);
         return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
     }
 

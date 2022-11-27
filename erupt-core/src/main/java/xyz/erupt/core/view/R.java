@@ -12,21 +12,26 @@ import java.io.Serializable;
 @Setter
 public class R<T> implements Serializable {
 
+    //消息
     private String msg;
 
-    private boolean success;
-
+    //数据
     private T data;
 
-    public static R<Void> ok() {
-        return ok(null);
-    }
+    //是否成功
+    private boolean success;
+
+    //状态
+    private EruptApiModel.Status status;
+
+    //提示方式
+    private EruptApiModel.PromptWay promptWay = EruptApiModel.PromptWay.MESSAGE;
 
     public static <T> R<T> ok(T data) {
         return new R<T>() {{
             this.setSuccess(true);
-            this.setMsg("success");
             this.setData(data);
+            this.setStatus(EruptApiModel.Status.SUCCESS);
         }};
     }
 
@@ -34,7 +39,16 @@ public class R<T> implements Serializable {
         return new R<Void>() {{
             this.setSuccess(false);
             this.setMsg(msg);
+            this.setStatus(EruptApiModel.Status.ERROR);
         }};
+    }
+
+    public enum Status {
+        SUCCESS, ERROR, INFO, WARNING
+    }
+
+    public enum PromptWay {
+        DIALOG, MESSAGE, NOTIFY, NONE
     }
 
 }

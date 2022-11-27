@@ -2,6 +2,7 @@ package xyz.erupt.cloud.node.service;
 
 import cn.hutool.http.HttpUtil;
 import org.springframework.stereotype.Service;
+import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 import xyz.erupt.cloud.node.config.EruptNodeProp;
 import xyz.erupt.core.config.GsonFactory;
@@ -31,20 +32,22 @@ public class ServerRemoteService {
     }
 
     public MetaUserinfo getRemoteUserInfo() {
-        String userinfo = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + EruptRestPath.USERINFO)
-                .header(EruptMutualConst.TOKEN, MetaContext.getToken()).execute().body();
+        String userinfo = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_USER_INFO + eruptNodeProp.getNodeName())
+                .header(EruptMutualConst.TOKEN, MetaContext.getToken())
+                .header(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
+                .execute().body();
         return GsonFactory.getGson().fromJson(userinfo, MetaUserinfo.class);
     }
 
     public String getNodeConfig() {
         return HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.NODE_CONFIG + "/" + eruptNodeProp.getNodeName())
-                .form("accessToken", eruptNodeProp.getAccessToken())
+                .header(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
                 .execute().body();
     }
 
     public String getNodeGroupConfig() {
         return HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.NODE_GROUP_CONFIG + "/" + eruptNodeProp.getNodeName())
-                .form("accessToken", eruptNodeProp.getAccessToken())
+                .form(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
                 .execute().body();
     }
 

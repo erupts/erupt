@@ -107,7 +107,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             if (!erupt.contains(".")) return true;
             if (null != EruptCoreService.getErupt(erupt)) return true;
             String token = eruptContextService.getCurrentToken();
-            if (null == token || null == eruptSessionService.get(SessionKey.USER_TOKEN + token)) {
+            if (null == token || null == eruptSessionService.get(SessionKey.TOKEN_OLINE + token)) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 response.sendError(HttpStatus.UNAUTHORIZED.value());
                 return false;
@@ -184,7 +184,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             headers.put(name, request.getHeader(name));
         }
         headers.remove("host");
-        headers.put(CloudCommonConst.ACCESS_TOKEN, metaNode.getAccessToken());
+        headers.put(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken());
         headers.put(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken());
         headers.put(EruptMutualConst.ERUPT, eruptName);
         headers.put(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())));
