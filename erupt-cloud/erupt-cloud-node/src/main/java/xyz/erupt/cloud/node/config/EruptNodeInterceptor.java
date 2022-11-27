@@ -39,7 +39,7 @@ public class EruptNodeInterceptor implements WebMvcConfigurer, AsyncHandlerInter
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (!eruptNodeProp.getAccessToken().equals(request.getHeader(CloudCommonConst.ACCESS_TOKEN))) {
+        if (!eruptNodeProp.getAccessToken().equals(request.getHeader(CloudCommonConst.HEADER_ACCESS_TOKEN))) {
             throw new EruptWebApiRuntimeException("AccessToken incorrect");
         }
         MetaContext.registerToken(request.getHeader(EruptMutualConst.TOKEN));

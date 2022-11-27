@@ -99,13 +99,13 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     @Override
     public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, Group group) {
         if (null == eruptUserService.getCurrentUid()) throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
-        if (!eruptUserService.getSimpleUserInfo().isSuperAdmin()) {
+        MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
+        if (!metaUserinfo.isSuperAdmin()) {
             if (group.getOptions().size() > 0) {
-                MetaUserinfo metaUserInfo = eruptUserService.getSimpleUserInfo();
                 for (BaseDefinition option : group.getOptions()) {
                     if (null != option.getValue() && StringUtils.isNotBlank(option.getValue().toString())) {
                         if (Options.ROLE.getValue().equals(option.getName())) {
-                            return metaUserInfo.getRoles().stream().anyMatch(it -> it.equals(option.getValue()));
+                            return metaUserinfo.getRoles().stream().anyMatch(it -> it.equals(option.getValue()));
                         } else if (Options.PERMISSION.getValue().equals(option.getName())) {
                             return null != eruptUserService.getEruptMenuByValue(option.getValue().toString());
                         }

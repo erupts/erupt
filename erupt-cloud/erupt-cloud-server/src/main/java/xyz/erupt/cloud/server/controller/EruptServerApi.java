@@ -1,16 +1,18 @@
 package xyz.erupt.cloud.server.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.PowerObject;
+import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
+import xyz.erupt.cloud.server.service.EruptNodeMicroservice;
+import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
+import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.UPMSUtil;
 
 import javax.annotation.Resource;
@@ -26,16 +28,22 @@ import java.util.stream.Collectors;
 public class EruptServerApi {
 
     @Resource
+    private EruptDao eruptDao;
+
+    @Resource
     private EruptSessionService eruptSessionService;
 
     @Resource
     private EruptContextService eruptContextService;
 
     @Resource
-    private EruptDao eruptDao;
+    private EruptUserService eruptUserService;
+
+    @Resource
+    private EruptNodeMicroservice eruptNodeMicroservice;
 
     @GetMapping(CloudRestApiConst.ERUPT_POWER)
-    public PowerObject eruptPower(@RequestParam String eruptName,@RequestParam String nodeName) {
+    public PowerObject eruptPower(@RequestParam String eruptName, @RequestParam String nodeName) {
         PowerObject powerObject = new PowerObject();
         List<String> values = eruptSessionService.getMapKeys(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken());
         Map<String, Boolean> permissionMap = values.stream().collect(Collectors.toMap(it -> it, it -> true));
@@ -52,7 +60,7 @@ public class EruptServerApi {
     }
 
     @GetMapping(CloudRestApiConst.NODE_CONFIG + "/{nodeName}")
-    public String getNodeConfig(@PathVariable String nodeName,@RequestParam String accessToken) {
+    public String getNodeConfig(@PathVariable String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
         return (String) eruptDao.getEntityManager()
                 .createQuery("select config from CloudNode where nodeName = :nodeName and accessToken = :accessToken")
                 .setParameter("nodeName", nodeName)
@@ -60,11 +68,19 @@ public class EruptServerApi {
     }
 
     @GetMapping(CloudRestApiConst.NODE_GROUP_CONFIG + "/{nodeName}")
-    public String getNodeGroupConfig(@PathVariable String nodeName,@RequestParam String accessToken) {
+    public String getNodeGroupConfig(@PathVariable String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
         return (String) eruptDao.getEntityManager()
                 .createQuery("select cloudNodeGroup.config from CloudNode where nodeName = :nodeName and accessToken = :accessToken")
                 .setParameter("nodeName", nodeName)
                 .setParameter("accessToken", accessToken).getSingleResult();
+    }
+
+    //用户信息
+    @GetMapping(CloudRestApiConst.ERUPT_USER_INFO + "/{nodeName}")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public MetaUserinfo userinfo(@PathVariable String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
+        eruptNodeMicroservice.findNodeByAppName(nodeName, accessToken);
+        return eruptUserService.getSimpleUserInfo();
     }
 
     private boolean powerOff(EruptFunPermissions eruptFunPermissions, Map<String, Boolean> permissionMap, String name) {

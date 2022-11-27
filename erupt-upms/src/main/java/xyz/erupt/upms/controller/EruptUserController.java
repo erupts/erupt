@@ -10,17 +10,17 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptApiModel;
-import xyz.erupt.core.view.R;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
+import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.vo.EruptMenuVo;
-import xyz.erupt.upms.vo.EruptUserinfo;
+import xyz.erupt.upms.vo.EruptUserinfoVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +51,9 @@ public class EruptUserController {
 
     @Resource
     private HttpServletRequest request;
+
+    @Resource
+    private EruptUpmsProp eruptUpmsProp;
 
     @GetMapping("/erupt-app")
     public EruptAppProp eruptApp() {
@@ -96,9 +99,7 @@ public class EruptUserController {
                     loginModel.setPass(true);
                 }
             } catch (Exception e) {
-                if (0 == eruptAppProp.getVerifyCodeCount()) {
-                    loginModel.setUseVerifyCode(true);
-                }
+                if (0 == eruptAppProp.getVerifyCodeCount()) loginModel.setUseVerifyCode(true);
                 loginModel.setReason(e.getMessage());
                 loginModel.setPass(false);
             }
@@ -109,31 +110,28 @@ public class EruptUserController {
             loginModel.setToken(Erupts.generateCode(16));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
-            eruptUserService.putUserInfo(eruptUser, loginModel.getToken());
-            if (null != loginProxy) {
-                loginProxy.loginSuccess(eruptUser, loginModel.getToken());
-            }
+            if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
+            sessionService.put(SessionKey.TOKEN_OLINE + loginModel.getToken(), eruptUser.getAccount(), eruptUpmsProp.getExpireTimeByLogin());
             eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
         return loginModel;
     }
 
-    //查询登录用户基础数据
-    @GetMapping("/information")
+
+    //用户信息
+    @GetMapping("/userinfo")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public R<EruptUserinfo> queryAdminInfo() {
-        EruptUserinfo eruptUserinfo = new EruptUserinfo();
-        eruptUserinfo.setEruptMenuVos(
-                sessionService.get(SessionKey.MENU_VIEW + eruptContextService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
-                }.getType())
-        );
-        EruptUser eruptUser = this.eruptUserService.getCurrentEruptUser();
-        eruptUserinfo.setNickname(eruptUser.getName());
-        eruptUserinfo.setIndexMenuValue(eruptUser.getEruptMenu().getValue());
-        eruptUserinfo.setIndexMenuType(eruptUser.getEruptMenu().getType());
-        eruptUserinfo.setResetPwd(null == eruptUser.getResetPwdTime());
-        return R.ok(eruptUserinfo);
+    public EruptUserinfoVo userinfo() {
+        EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
+        EruptUserinfoVo userinfoVo = new EruptUserinfoVo();
+        userinfoVo.setNickname(eruptUser.getName());
+        userinfoVo.setResetPwd(null == eruptUser.getResetPwdTime());
+        Optional.ofNullable(eruptUser.getEruptMenu()).ifPresent(it -> {
+            userinfoVo.setIndexMenuType(it.getType());
+            userinfoVo.setIndexMenuValue(it.getValue());
+        });
+        return userinfoVo;
     }
 
     //获取菜单列表
@@ -158,13 +156,18 @@ public class EruptUserController {
         return EruptApiModel.successApi();
     }
 
-    // 修改密码
+    /**
+     * 修改密码
+     *
+     * @param account 用户名
+     * @param pwd     旧密码
+     * @param newPwd  新密码
+     * @param newPwd2 确认新密码
+     */
     @RequestMapping(value = "/change-pwd", method = {RequestMethod.GET, RequestMethod.POST})
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel changePwd(@RequestParam("account") String account,
-                                   @RequestParam("pwd") String pwd,
-                                   @RequestParam("newPwd") String newPwd,
-                                   @RequestParam("newPwd2") String newPwd2) {
+    public EruptApiModel changePwd(@RequestParam("account") String account, @RequestParam("pwd") String pwd,
+                                   @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
         return eruptUserService.changePwd(account, pwd, newPwd, newPwd2);
     }
 
@@ -183,5 +186,6 @@ public class EruptUserController {
         sessionService.put(SessionKey.VERIFY_CODE + mark, captcha.text(), 60, TimeUnit.SECONDS);
         captcha.out(response.getOutputStream());
     }
+
 
 }

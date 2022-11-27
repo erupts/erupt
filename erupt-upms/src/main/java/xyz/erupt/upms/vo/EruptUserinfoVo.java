@@ -3,19 +3,13 @@ package xyz.erupt.upms.vo;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 /**
  * @author YuePeng
  * date 2022/11/24 19:44
  */
 @Getter
 @Setter
-public class EruptUserinfo {
-
-
-    //用户菜单
-    private List<EruptMenuVo> eruptMenuVos;
+public class EruptUserinfoVo {
 
     //用户名
     private String nickname;

@@ -6,6 +6,6 @@ package xyz.erupt.cloud.common.consts;
  */
 public class CloudCommonConst {
 
-    public static final String ACCESS_TOKEN = "Access-Token";
+    public static final String HEADER_ACCESS_TOKEN = "Access-Token";
 
 }

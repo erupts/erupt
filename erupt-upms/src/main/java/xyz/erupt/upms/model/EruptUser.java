@@ -6,6 +6,8 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.fun.FilterHandler;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -37,7 +39,7 @@ import java.util.Set;
 @EruptI18n
 @Getter
 @Setter
-public class EruptUser extends LookerSelf {
+public class EruptUser extends LookerSelf implements FilterHandler {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
@@ -91,7 +93,8 @@ public class EruptUser extends LookerSelf {
             edit = @Edit(
                     title = "首页菜单",
                     type = EditType.REFERENCE_TREE,
-                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id")
+                    referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id"),
+                    filter = @Filter(conditionHandler = EruptUser.class)
             )
     )
     private EruptMenu eruptMenu;
@@ -196,4 +199,12 @@ public class EruptUser extends LookerSelf {
         this.setId(id);
     }
 
+    @Override
+    public String filter(String condition, String[] params) {
+//        List<String> nts = new ArrayList<>();
+//        nts.add("'" + MenuTypeEnum.API.getCode() + "'");
+//        nts.add("'" + MenuTypeEnum.BUTTON.getCode() + "'");
+//        return String.format("EruptMenu.type not in (%s)", String.join(",", nts));
+        return null;
+    }
 }
