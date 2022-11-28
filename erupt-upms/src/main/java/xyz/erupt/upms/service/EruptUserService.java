@@ -225,6 +225,12 @@ public class EruptUserService {
         }});
     }
 
+    //获取登录用户名
+    public String getCurrentAccount() {
+        Object account = sessionService.get(SessionKey.TOKEN_OLINE + eruptContextService.getCurrentToken());
+        return null == account ? null : account.toString();
+    }
+
     //从当前用户菜单中，通过菜单类型值获取菜单
     public EruptMenu getEruptMenuByValue(String menuValue) {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken(), menuValue.toLowerCase(), EruptMenu.class);
