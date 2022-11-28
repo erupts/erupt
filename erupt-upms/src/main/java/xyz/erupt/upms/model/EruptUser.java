@@ -16,11 +16,14 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.upms.looker.LookerSelf;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -201,10 +204,9 @@ public class EruptUser extends LookerSelf implements FilterHandler {
 
     @Override
     public String filter(String condition, String[] params) {
-//        List<String> nts = new ArrayList<>();
-//        nts.add("'" + MenuTypeEnum.API.getCode() + "'");
-//        nts.add("'" + MenuTypeEnum.BUTTON.getCode() + "'");
-//        return String.format("EruptMenu.type not in (%s)", String.join(",", nts));
-        return null;
+        List<String> nts = new ArrayList<>();
+        nts.add("'" + MenuTypeEnum.API.getCode() + "'");
+        nts.add("'" + MenuTypeEnum.BUTTON.getCode() + "'");
+        return String.format("EruptMenu.type not in (%s) or EruptMenu.type is null", String.join(",", nts));
     }
 }
