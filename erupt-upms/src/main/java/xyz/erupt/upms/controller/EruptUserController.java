@@ -71,7 +71,7 @@ public class EruptUserController {
      * @param verifyCodeMark 验证码标识
      */
     @SneakyThrows
-    @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
+    @GetMapping(value = "/login")
     public LoginModel login(@RequestParam String account, @RequestParam String pwd,
                             @RequestParam(required = false) String verifyCode,
                             @RequestParam(required = false) String verifyCodeMark
@@ -159,16 +159,15 @@ public class EruptUserController {
     /**
      * 修改密码
      *
-     * @param account 用户名
      * @param pwd     旧密码
      * @param newPwd  新密码
      * @param newPwd2 确认新密码
      */
-    @RequestMapping(value = "/change-pwd", method = {RequestMethod.GET, RequestMethod.POST})
+    @GetMapping(value = "/change-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel changePwd(@RequestParam("account") String account, @RequestParam("pwd") String pwd,
+    public EruptApiModel changePwd(@RequestParam("pwd") String pwd,
                                    @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
-        return eruptUserService.changePwd(account, pwd, newPwd, newPwd2);
+        return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 
     /**

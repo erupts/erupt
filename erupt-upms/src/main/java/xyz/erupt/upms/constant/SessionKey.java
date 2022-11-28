@@ -16,7 +16,6 @@ public class SessionKey {
 
     public static final String TOKEN_OLINE = AUTH_SPACE + "token:"; //存储TOKEN使用情况
 
-
     public static final String USER_INFO = AUTH_SPACE + "user:"; //缓存用户信息
     //用户相关KEY
     public static final String[] USER_KEY_GROUP = {
