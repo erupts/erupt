@@ -18,7 +18,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.constant.RegexConst;
+import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.looker.LookerSelf;
+import xyz.erupt.upms.model.online.EruptOnline;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -205,8 +207,8 @@ public class EruptUser extends LookerSelf implements FilterHandler {
     @Override
     public String filter(String condition, String[] params) {
         List<String> nts = new ArrayList<>();
-        nts.add("'" + MenuTypeEnum.API.getCode() + "'");
-        nts.add("'" + MenuTypeEnum.BUTTON.getCode() + "'");
-        return String.format("EruptMenu.type not in (%s) or EruptMenu.type is null", String.join(",", nts));
+        nts.add(MenuTypeEnum.API.getCode());
+        nts.add(MenuTypeEnum.BUTTON.getCode());
+        return String.format("EruptMenu.type not in ('%s') or EruptMenu.type is null", String.join("','", nts));
     }
 }
