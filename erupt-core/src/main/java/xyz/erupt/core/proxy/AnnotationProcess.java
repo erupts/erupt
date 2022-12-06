@@ -33,13 +33,13 @@ public class AnnotationProcess {
 
     private static final String[] ANNOTATION_STRING_TYPE = {"String", "byte", "char"};
 
-    private static final ExpressionParser parser = new SpelExpressionParser();
-
     private static final String EMPTY_ARRAY = "[]";
 
     private static final String VALUE_VAR = "value";
 
     private static final String ITEM_VAR = "item";
+
+    private static final ExpressionParser parser = new SpelExpressionParser();
 
     @SneakyThrows
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
