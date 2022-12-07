@@ -53,7 +53,7 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
                             editAnnotationProxy.newProxy(annotation, this)
                     );
                 } else {
-                    return tplEruptField;
+                    return tplEruptField.edit();
                 }
         }
         return this.invoke(invocation);
