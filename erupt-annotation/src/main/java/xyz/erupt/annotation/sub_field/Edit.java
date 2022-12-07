@@ -29,7 +29,7 @@ public @interface Edit {
     boolean show() default true;
 
     @Comment("动态渲染配置")
-    ExprBool iif() default @ExprBool;
+    ExprBool ifRender() default @ExprBool;
 
     @Comment("是否只读")
     @EruptProperty(alias = "readOnly")
