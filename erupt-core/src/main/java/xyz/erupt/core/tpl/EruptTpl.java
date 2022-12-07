@@ -9,6 +9,6 @@ import xyz.erupt.annotation.EruptField;
 public class EruptTpl {
 
     @EruptField
-    private int EruptField;
+    public byte EruptField;
 
 }
