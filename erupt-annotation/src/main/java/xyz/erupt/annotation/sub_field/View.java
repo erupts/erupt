@@ -26,7 +26,7 @@ public @interface View {
     ViewType type() default ViewType.AUTO;
 
     @Comment("动态渲染配置")
-    ExprBool iif() default @ExprBool;
+    ExprBool ifRender() default @ExprBool;
 
     boolean show() default true;
 
