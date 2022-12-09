@@ -72,7 +72,7 @@ public class EruptUserService {
         Map<String, Object> valueMap = new HashMap<>();
         for (EruptMenu menu : eruptMenus) {
             if (null != menu.getValue()) {
-                // 当菜单是TPL时，类型值中有可能有参数（如：amis.html?code=test），这里需要把参数(?code=test)去除
+                // 当菜单是TPL时，类型值中有可能有参数（如：xxx.html?code=test），这里需要把参数(?code=test)去除
                 valueMap.put(menu.getValue().toLowerCase().split("\\?")[0], menu);
             }
         }

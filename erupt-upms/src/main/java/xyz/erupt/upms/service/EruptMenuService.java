@@ -46,11 +46,11 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     public List<EruptMenu> getUserAllMenu(EruptUser eruptUser) {
         if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
-            return eruptDao.queryEntityList(EruptMenu.class, "1=1 order by sort");
+            return eruptDao.queryEntityList(EruptMenu.class, "1 = 1 order by sort");
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
             eruptUser.getRoles().stream().filter(EruptRole::getStatus).map(EruptRole::getMenus).forEach(menuSet::addAll);
-            return menuSet.stream().sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
+            return menuSet.stream().filter(it -> it.getStatus() != MenuStatus.DISABLE.getValue()).sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
         }
     }
 
@@ -103,8 +103,8 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
                 Integer counter = eruptDao.getJdbcTemplate().queryForObject(
                         String.format("select count(*) from e_upms_menu where parent_menu_id = %d", eruptMenu.getId()), Integer.class
                 );
-                if (null != counter){
-                    if (counter > 0){
+                if (null != counter) {
+                    if (counter > 0) {
                         // 查询有权限菜单
                         Integer realCounter = eruptDao.getJdbcTemplate().queryForObject(
                                 String.format("select count(*) from e_upms_menu where parent_menu_id = %d and value like '%s@%%'", eruptMenu.getId(), eruptMenu.getValue()), Integer.class
@@ -115,7 +115,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
                             counter = 0;
                         }
                     }
-                    if (counter <= 0){
+                    if (counter <= 0) {
                         EruptModel eruptModel = EruptCoreService.getErupt(eruptMenu.getValue());
                         for (EruptFunPermissions value : EruptFunPermissions.values()) {
                             if (eruptModel == null || value.verifyPower(eruptModel.getErupt().power())) {
