@@ -299,9 +299,11 @@ public class EruptUtil {
 
     //将对象A的非空数据源覆盖到对象B中
     public static Object dataTarget(EruptModel eruptModel, Object data, Object target, SceneEnum sceneEnum) {
-        ReflectUtil.findClassAllFields(eruptModel.getClazz(), f -> Optional.ofNullable(f.getAnnotation(EruptField.class)).ifPresent(eruptField -> {
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            EruptField eruptField = fieldModel.getEruptField();
             boolean readonly = sceneEnum == SceneEnum.EDIT ? eruptField.edit().readonly().edit() : eruptField.edit().readonly().add();
             if (StringUtils.isNotBlank(eruptField.edit().title()) && !readonly) {
+                Field f = fieldModel.getField();
                 try {
                     f.setAccessible(true);
                     if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
@@ -320,7 +322,7 @@ public class EruptUtil {
                     e.printStackTrace();
                 }
             }
-        }));
+        }
         return target;
     }
 

@@ -19,8 +19,6 @@ import java.util.List;
  */
 public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
 
-    private final AnnotationProxy<Edit, EruptField> editAnnotationProxy = new EditProxy();
-
     private static final EruptField tplEruptField;
 
     static {
@@ -50,7 +48,7 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
                 Edit edit = this.rawAnnotation.edit();
                 if (ExprInvoke.getExpr(edit.ifRender())) {
                     return AnnotationProxyPool.getOrPut(edit, annotation ->
-                            editAnnotationProxy.newProxy(annotation, this)
+                            new EditProxy().newProxy(annotation, this)
                     );
                 } else {
                     return tplEruptField.edit();
