@@ -95,7 +95,8 @@ public class EruptCoreService implements ApplicationRunner {
                     if (!eruptModel.getEruptFieldMap().containsKey(field.getName())) {
                         eruptModel.getEruptFieldMap().put(field.getName(), eruptFieldModel);
                     }
-                }));
+                })
+        );
         eruptModel.getEruptFieldModels().sort(Comparator.comparingInt((a) -> a.getEruptField().sort()));
         // erupt annotation validate
         EruptAnnotationException.validateEruptInfo(eruptModel);
