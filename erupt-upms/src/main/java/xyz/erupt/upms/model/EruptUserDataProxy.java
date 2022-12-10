@@ -12,7 +12,6 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 /**
  * @author YuePeng
@@ -37,8 +36,6 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
         }
         this.checkDataLegal(eruptUser);
         if (eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
-            eruptUser.setIsAdmin(false);
-            eruptUser.setCreateTime(new Date());
             if (eruptUser.getIsMd5()) {
                 eruptUser.setPassword(MD5Util.digest(eruptUser.getPasswordA()));
             } else {
