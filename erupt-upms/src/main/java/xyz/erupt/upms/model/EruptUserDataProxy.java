@@ -54,17 +54,6 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
             throw new EruptWebApiRuntimeException(i18NTranslateService.translate("MD5不可逆", "MD5 irreversible"));
         }
         this.checkDataLegal(eruptUser);
-        if (StringUtils.isNotBlank(eruptUser.getPasswordA())) {
-            if (!eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
-                throw new EruptWebApiRuntimeException(i18NTranslateService.translate("两次密码输入不一致"));
-            }
-            if (eruptUser.getIsMd5()) {
-                eruptUser.setPassword(MD5Util.digest(eruptUser.getPasswordA()));
-            } else {
-                eruptUser.setPassword(eruptUser.getPasswordA());
-            }
-            eruptUser.setResetPwdTime(null);
-        }
     }
 
     private void checkDataLegal(EruptUser eruptUser) {

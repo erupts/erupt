@@ -9,8 +9,10 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
@@ -18,9 +20,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.constant.RegexConst;
-import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.looker.LookerSelf;
-import xyz.erupt.upms.model.online.EruptOnline;
+import xyz.erupt.upms.model.input.ResetPassword;
+import xyz.erupt.upms.model.input.ResetPasswordExec;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -39,7 +41,12 @@ import java.util.Set;
 @Erupt(
         name = "用户配置",
         dataProxy = EruptUserDataProxy.class,
-        linkTree = @LinkTree(field = "eruptOrg")
+        linkTree = @LinkTree(field = "eruptOrg"),
+        rowOperation = @RowOperation(title = "重置密码",
+                icon = "fa fa-refresh",
+                mode = RowOperation.Mode.SINGLE,
+                eruptClass = ResetPassword.class,
+                operationHandler = ResetPasswordExec.class)
 )
 @EruptI18n
 @Getter
@@ -128,13 +135,13 @@ public class EruptUser extends LookerSelf implements FilterHandler {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "密码")
+            edit = @Edit(title = "密码", readonly = @Readonly(add = false))
     )
     private String passwordA;
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "确认密码")
+            edit = @Edit(title = "确认密码", readonly = @Readonly(add = false))
     )
     private String passwordB;
 
@@ -145,9 +152,8 @@ public class EruptUser extends LookerSelf implements FilterHandler {
 
     @EruptField(
             edit = @Edit(
-                    title = "md5加密",
-                    type = EditType.BOOLEAN,
-                    notNull = true,
+                    title = "md5加密", type = EditType.BOOLEAN, notNull = true,
+                    readonly = @Readonly(add = false),
                     boolType = @BoolType(
                             trueText = "加密",
                             falseText = "不加密"
@@ -211,4 +217,5 @@ public class EruptUser extends LookerSelf implements FilterHandler {
         nts.add(MenuTypeEnum.BUTTON.getCode());
         return String.format("EruptMenu.type not in ('%s') or EruptMenu.type is null", String.join("','", nts));
     }
+
 }
