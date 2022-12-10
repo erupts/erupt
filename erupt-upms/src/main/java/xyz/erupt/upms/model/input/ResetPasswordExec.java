@@ -31,6 +31,7 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
         EruptUser eruptUser = data.get(0);
         if (resetPassword.getPassword().equals(resetPassword.getPassword2())) {
             eruptUser.setResetPwdTime(null);
+            eruptUser.setIsMd5(resetPassword.getIsMd5());
             if (resetPassword.getIsMd5()) {
                 eruptUser.setPassword(MD5Util.digest(resetPassword.getPassword()));
             } else {
