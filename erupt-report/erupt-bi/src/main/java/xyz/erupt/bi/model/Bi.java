@@ -163,7 +163,7 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bi_id")
     @EruptField(
-            edit = @Edit(title = "表格列配置", desc = "列为动态渲染，不做列相关配置请忽略列配置该配置", type = EditType.TAB_TABLE_ADD)
+            edit = @Edit(title = "表格列配置", desc = "列会根据表达式动态渲染，不做列相关配置请忽略此项", type = EditType.TAB_TABLE_ADD)
     )
     private Set<BiColumn> biColumns;
 
