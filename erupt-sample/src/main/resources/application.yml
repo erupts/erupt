@@ -1,0 +1,11 @@
+# TODO 根据实际情况将数据源改成mysql等数据库
+spring:
+  datasource:
+    url: jdbc:h2:file:./erupt;AUTO_SERVER=TRUE
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    database: h2
