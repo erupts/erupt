@@ -43,7 +43,7 @@ import java.util.function.Function;
 @Setter
 @Entity
 @Table(name = "e_cloud_node", uniqueConstraints = @UniqueConstraint(columnNames = CloudNode.NODE_NAME))
-@Erupt(name = "节点配置", desc = "管理与监控 node 节点状态", dataProxy = CloudNode.class,
+@Erupt(name = "节点配置", dataProxy = CloudNode.class,
         rowOperation = @RowOperation(
                 title = "查看令牌", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
                 show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
