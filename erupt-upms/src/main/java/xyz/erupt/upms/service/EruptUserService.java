@@ -72,15 +72,12 @@ public class EruptUserService {
         Map<String, Object> valueMap = new HashMap<>();
         for (EruptMenu menu : eruptMenus) {
             if (null != menu.getValue()) {
-                // 当菜单是TPL时，类型值中有可能有参数（如：amis.html?code=test），这里需要把参数(?code=test)去除
+                //根据URL规则?后的均是参数如：eruptTest?code=test，把参数 ?code=test 去除
                 valueMap.put(menu.getValue().toLowerCase().split("\\?")[0], menu);
             }
         }
         sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsProp.getExpireTimeByLogin());
         sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsProp.getExpireTimeByLogin());
-    }
-
-    public void putUserInfo(EruptUser eruptUser, String token) {
         MetaUserinfo metaUserinfo = new MetaUserinfo();
         metaUserinfo.setId(eruptUser.getId());
         metaUserinfo.setSuperAdmin(eruptUser.getIsAdmin());
@@ -89,8 +86,9 @@ public class EruptUserService {
         metaUserinfo.setRoles(eruptUser.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList()));
         Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> metaUserinfo.setPost(it.getCode()));
         Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> metaUserinfo.setOrg(it.getCode()));
-        sessionService.put(SessionKey.USER_TOKEN + token, gson.toJson(metaUserinfo), eruptUpmsProp.getExpireTimeByLogin());
+        sessionService.put(SessionKey.USER_INFO + token, gson.toJson(metaUserinfo), eruptUpmsProp.getExpireTimeByLogin());
     }
+
 
     public static LoginProxy findEruptLogin() {
         if (null == EruptApplication.getPrimarySource()) {
@@ -161,19 +159,16 @@ public class EruptUserService {
         }
     }
 
-    public boolean checkVerifyCode(String account, String verifyCode) {
+    public boolean checkVerifyCode(String account, String verifyCode, String verifyCodeMark) {
         String requestIp = IpUtil.getIpAddr(request);
         Object loginError = sessionService.get(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
         long loginErrorCount = 0;
-        if (null != loginError) {
-            loginErrorCount = Long.parseLong(loginError.toString());
-        }
+        if (null != loginError) loginErrorCount = Long.parseLong(loginError.toString());
         if (loginErrorCount >= eruptAppProp.getVerifyCodeCount()) {
-            if (StringUtils.isBlank(verifyCode)) {
-                return false;
-            }
-            Object vc = sessionService.get(SessionKey.VERIFY_CODE + requestIp);
-            sessionService.remove(SessionKey.VERIFY_CODE + requestIp);
+            if (StringUtils.isBlank(verifyCode)) return false;
+            String key = SessionKey.VERIFY_CODE + verifyCodeMark;
+            Object vc = sessionService.get(key);
+            sessionService.remove(key);
             return vc != null && vc.toString().equalsIgnoreCase(verifyCode);
         }
         return true;
@@ -230,6 +225,12 @@ public class EruptUserService {
         }});
     }
 
+    //获取登录用户名
+    public String getCurrentAccount() {
+        Object account = sessionService.get(SessionKey.TOKEN_OLINE + eruptContextService.getCurrentToken());
+        return null == account ? null : account.toString();
+    }
+
     //从当前用户菜单中，通过菜单类型值获取菜单
     public EruptMenu getEruptMenuByValue(String menuValue) {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken(), menuValue.toLowerCase(), EruptMenu.class);
@@ -251,12 +252,12 @@ public class EruptUserService {
 
     //获取当前登录用户基础信息（缓存中查找）
     public MetaUserinfo getSimpleUserInfo() {
-        Object info = sessionService.get(SessionKey.USER_TOKEN + eruptContextService.getCurrentToken());
+        Object info = sessionService.get(SessionKey.USER_INFO + eruptContextService.getCurrentToken());
         return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
     }
 
     public MetaUserinfo getSimpleUserInfoByToken(String token) {
-        Object info = sessionService.get(SessionKey.USER_TOKEN + token);
+        Object info = sessionService.get(SessionKey.USER_INFO + token);
         return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
     }
 

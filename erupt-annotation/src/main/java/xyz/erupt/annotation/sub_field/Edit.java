@@ -3,6 +3,7 @@ package xyz.erupt.annotation.sub_field;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
+import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.AutoCompleteHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
@@ -26,6 +27,9 @@ public @interface Edit {
 
     @Comment("是否显示")
     boolean show() default true;
+
+    @Comment("动态渲染配置")
+    ExprBool ifRender() default @ExprBool;
 
     @Comment("是否只读")
     @EruptProperty(alias = "readOnly")

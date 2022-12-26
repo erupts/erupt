@@ -26,7 +26,6 @@ import java.util.Optional;
 @Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class EruptExceptionHandlerAdvice {
 
-
     @ResponseBody
     @ExceptionHandler(EruptWebApiRuntimeException.class)
     public Object eruptWebApiRuntimeException(EruptWebApiRuntimeException e, HttpServletRequest request, HttpServletResponse response) {

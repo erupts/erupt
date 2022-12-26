@@ -15,11 +15,12 @@ import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
+import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
-import xyz.erupt.upms.util.IpUtil;
 import xyz.erupt.upms.vo.EruptMenuVo;
+import xyz.erupt.upms.vo.EruptUserinfoVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +52,9 @@ public class EruptUserController {
     @Resource
     private HttpServletRequest request;
 
+    @Resource
+    private EruptUpmsProp eruptUpmsProp;
+
     @GetMapping("/erupt-app")
     public EruptAppProp eruptApp() {
         eruptAppProp.setHash(this.hashCode());
@@ -58,13 +62,21 @@ public class EruptUserController {
         return eruptAppProp;
     }
 
-    //登录
+    /**
+     * 登录
+     *
+     * @param account        用户名
+     * @param pwd            密码
+     * @param verifyCode     验证码
+     * @param verifyCodeMark 验证码标识
+     */
     @SneakyThrows
-    @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
-    public LoginModel login(@RequestParam("account") String account, @RequestParam("pwd") String pwd,
-                            @RequestParam(name = "verifyCode", required = false) String verifyCode
+    @GetMapping(value = "/login")
+    public LoginModel login(@RequestParam String account, @RequestParam String pwd,
+                            @RequestParam(required = false) String verifyCode,
+                            @RequestParam(required = false) String verifyCodeMark
     ) {
-        if (!eruptUserService.checkVerifyCode(account, verifyCode)) {
+        if (!eruptUserService.checkVerifyCode(account, verifyCode, verifyCodeMark)) {
             LoginModel loginModel = new LoginModel();
             loginModel.setUseVerifyCode(true);
             loginModel.setReason("验证码错误");
@@ -87,9 +99,7 @@ public class EruptUserController {
                     loginModel.setPass(true);
                 }
             } catch (Exception e) {
-                if (0 == eruptAppProp.getVerifyCodeCount()) {
-                    loginModel.setUseVerifyCode(true);
-                }
+                if (0 == eruptAppProp.getVerifyCodeCount()) loginModel.setUseVerifyCode(true);
                 loginModel.setReason(e.getMessage());
                 loginModel.setPass(false);
             }
@@ -100,14 +110,28 @@ public class EruptUserController {
             loginModel.setToken(Erupts.generateCode(16));
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
-            eruptUserService.putUserInfo(eruptUser, loginModel.getToken());
-            if (null != loginProxy) {
-                loginProxy.loginSuccess(eruptUser, loginModel.getToken());
-            }
+            if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
+            sessionService.put(SessionKey.TOKEN_OLINE + loginModel.getToken(), eruptUser.getAccount(), eruptUpmsProp.getExpireTimeByLogin());
             eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
         return loginModel;
+    }
+
+
+    //用户信息
+    @GetMapping("/userinfo")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public EruptUserinfoVo userinfo() {
+        EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
+        EruptUserinfoVo userinfoVo = new EruptUserinfoVo();
+        userinfoVo.setNickname(eruptUser.getName());
+        userinfoVo.setResetPwd(null == eruptUser.getResetPwdTime());
+        Optional.ofNullable(eruptUser.getEruptMenu()).ifPresent(it -> {
+            userinfoVo.setIndexMenuType(it.getType());
+            userinfoVo.setIndexMenuValue(it.getValue());
+        });
+        return userinfoVo;
     }
 
     //获取菜单列表
@@ -132,26 +156,35 @@ public class EruptUserController {
         return EruptApiModel.successApi();
     }
 
-    // 修改密码
-    @RequestMapping(value = "/change-pwd", method = {RequestMethod.GET, RequestMethod.POST})
+    /**
+     * 修改密码
+     *
+     * @param pwd     旧密码
+     * @param newPwd  新密码
+     * @param newPwd2 确认新密码
+     */
+    @GetMapping(value = "/change-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel changePwd(@RequestParam("account") String account,
-                                   @RequestParam("pwd") String pwd,
-                                   @RequestParam("newPwd") String newPwd,
-                                   @RequestParam("newPwd2") String newPwd2) {
-        return eruptUserService.changePwd(account, pwd, newPwd, newPwd2);
+    public EruptApiModel changePwd(@RequestParam("pwd") String pwd,
+                                   @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
+        return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 
-    // 生成验证码
+    /**
+     * 生成验证码
+     *
+     * @param mark 生成验证码标记值
+     */
     @GetMapping("/code-img")
-    public void createCode(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void createCode(HttpServletResponse response, @RequestParam String mark) throws Exception {
         response.setContentType("image/jpeg"); // 设置响应的类型格式为图片格式
         response.setDateHeader("Expires", 0);
-        response.setHeader("Pragma", "no-cache"); // 禁止图像缓存。
+        response.setHeader("Pragma", "no-cache"); // 禁止图像缓存
         response.setHeader("Cache-Control", "no-cache");
         Captcha captcha = new SpecCaptcha(150, 38, 4);
-        sessionService.put(SessionKey.VERIFY_CODE + IpUtil.getIpAddr(request), captcha.text(), 60, TimeUnit.SECONDS);
+        sessionService.put(SessionKey.VERIFY_CODE + mark, captcha.text(), 60, TimeUnit.SECONDS);
         captcha.out(response.getOutputStream());
     }
+
 
 }

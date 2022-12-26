@@ -16,6 +16,8 @@ public class CloudRestApiConst {
 
     public static final String ERUPT_POWER = ERUPT_CLOUD_API + "/erupt-power";
 
+    public static final String ERUPT_USER_INFO = ERUPT_CLOUD_API + "/userinfo";
+
     public static final String NODE_CONFIG = ERUPT_CLOUD_API + "/node-config";
 
     public static final String NODE_GROUP_CONFIG = ERUPT_CLOUD_API + "/node-group-config";
