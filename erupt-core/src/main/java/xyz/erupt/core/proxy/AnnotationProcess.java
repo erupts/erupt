@@ -1,4 +1,4 @@
-package xyz.erupt.core.util;
+package xyz.erupt.core.proxy;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -16,6 +16,7 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeMapping;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
+import xyz.erupt.core.util.TypeUtil;
 
 import java.beans.Transient;
 import java.lang.annotation.Annotation;
@@ -26,13 +27,11 @@ import java.util.Arrays;
  * @author YuePeng
  * date 2019-02-28.
  */
-public class AnnotationUtil {
+public class AnnotationProcess {
 
     private static final String[] ANNOTATION_NUMBER_TYPE = {"short", "int", "long", "float", "double"};
 
     private static final String[] ANNOTATION_STRING_TYPE = {"String", "byte", "char"};
-
-    private static final ExpressionParser parser = new SpelExpressionParser();
 
     private static final String EMPTY_ARRAY = "[]";
 
@@ -40,14 +39,14 @@ public class AnnotationUtil {
 
     private static final String ITEM_VAR = "item";
 
+    private static final ExpressionParser parser = new SpelExpressionParser();
+
     @SneakyThrows
     public static JsonObject annotationToJsonByReflect(Annotation annotation) {
         JsonObject jsonObject = new JsonObject();
         for (Method method : annotation.annotationType().getDeclaredMethods()) {
             Transient tran = method.getAnnotation(Transient.class);
-            if (null != tran && tran.value()) {
-                continue;
-            }
+            if (null != tran && tran.value()) continue;
             String methodName = method.getName();
             EruptProperty eruptProperty = method.getAnnotation(EruptProperty.class);
             if (null != eruptProperty && !AnnotationConst.EMPTY_STR.equals(eruptProperty.alias())) {
@@ -61,9 +60,7 @@ public class AnnotationUtil {
                 evaluationContext.setVariable(VALUE_VAR, result);
                 evaluationContext.setVariable(ITEM_VAR, annotation);
                 Object r = parser.parseExpression(match.value()).getValue(evaluationContext);
-                if (null == r || !(Boolean) r) {
-                    continue;
-                }
+                if (null == r || !(Boolean) r) continue;
             }
             if (returnType.endsWith(EMPTY_ARRAY)) {
                 returnType = returnType.substring(0, returnType.length() - 2);
@@ -103,9 +100,7 @@ public class AnnotationUtil {
                 if (null == toMap) {
                     jsonObject.add(methodName, jsonArray);
                 } else {
-                    if (jsonMap.size() > 0) {
-                        jsonObject.add(methodName, jsonMap);
-                    }
+                    if (jsonMap.size() > 0) jsonObject.add(methodName, jsonMap);
                 }
             } else {
                 if (Arrays.asList(ANNOTATION_STRING_TYPE).contains(returnType)) {
@@ -126,7 +121,7 @@ public class AnnotationUtil {
         return jsonObject;
     }
 
-    // 最原始注解序列化实现，收藏 ✨
+    // erupt annotation 最原始序列化实现，收藏 ✨
     @Deprecated
     public static String annotationToJsonByReplace(String annotationStr) throws JSONException {
         String convertStr = annotationStr

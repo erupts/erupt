@@ -29,9 +29,6 @@ public class EruptRestPath {
     //附件虚拟路径
     public static final String ERUPT_ATTACHMENT = "/erupt-attachment";
 
-    //登录用户基础信息
-    public static final String USERINFO = ERUPT_API + "/userinfo";
-
     //菜单类型值权限
     public static final String ERUPT_CODE_PERMISSION = ERUPT_API + "/erupt-permission";
 

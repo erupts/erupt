@@ -2,6 +2,7 @@ package xyz.erupt.annotation.sub_field;
 
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptProperty;
+import xyz.erupt.annotation.expr.ExprBool;
 
 import java.beans.Transient;
 
@@ -23,6 +24,9 @@ public @interface View {
 
     @EruptProperty(alias = "viewType")
     ViewType type() default ViewType.AUTO;
+
+    @Comment("动态渲染配置")
+    ExprBool ifRender() default @ExprBool;
 
     boolean show() default true;
 

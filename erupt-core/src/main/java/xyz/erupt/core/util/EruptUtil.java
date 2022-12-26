@@ -25,6 +25,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptApiModel;
@@ -197,7 +198,7 @@ public class EruptUtil {
                 EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(condition.getKey());
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
-                    EditTypeSearch editTypeSearch = AnnotationUtil.getEditTypeSearch(edit.type());
+                    EditTypeSearch editTypeSearch = AnnotationProcess.getEditTypeSearch(edit.type());
                     if (null != editTypeSearch && editTypeSearch.value()) {
                         if (edit.search().value() && null != condition.getValue()) {
                             if (condition.getValue() instanceof Collection) {
@@ -298,9 +299,11 @@ public class EruptUtil {
 
     //将对象A的非空数据源覆盖到对象B中
     public static Object dataTarget(EruptModel eruptModel, Object data, Object target, SceneEnum sceneEnum) {
-        ReflectUtil.findClassAllFields(eruptModel.getClazz(), f -> Optional.ofNullable(f.getAnnotation(EruptField.class)).ifPresent(eruptField -> {
+        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+            EruptField eruptField = fieldModel.getEruptField();
             boolean readonly = sceneEnum == SceneEnum.EDIT ? eruptField.edit().readonly().edit() : eruptField.edit().readonly().add();
             if (StringUtils.isNotBlank(eruptField.edit().title()) && !readonly) {
+                Field f = fieldModel.getField();
                 try {
                     f.setAccessible(true);
                     if (eruptField.edit().type() == EditType.TAB_TABLE_ADD) {
@@ -319,7 +322,7 @@ public class EruptUtil {
                     e.printStackTrace();
                 }
             }
-        }));
+        }
         return target;
     }
 
@@ -344,9 +347,6 @@ public class EruptUtil {
      *
      * @param json      json对象
      * @param extraData 额外填充的反射数据
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
      */
     public static Object jsonToEruptEntity(EruptModel eruptModel, JsonObject json, Map<String, Object> extraData) throws InstantiationException, IllegalAccessException {
         Gson gson = GsonFactory.getGson();

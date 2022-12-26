@@ -6,16 +6,13 @@
 </head>
 <body>
 <script>
-    var auth = JSON.parse(window.decodeURIComponent(window.atob(location.search.substring(1))));
-    localStorage.setItem("user", JSON.stringify({
-        name: auth.userName,
-        indexPath: auth.indexPath
-    }));
-    localStorage.setItem("_token", JSON.stringify({
-        token: auth.token,
-        account: auth.userName,
-        indexPath: auth.indexPath
-    }));
+    let param = {};
+    let paramsArr = location.search.substring(1).split('&')
+    for (let i = 0, len = paramsArr.length; i < len; i++) {
+        let arr = paramsArr[i].split('=')
+        param[arr[0]] = arr[1];
+    }
+    localStorage.setItem("_token", param["token"]);
     window.location = "./index.html";
 </script>
 </body>

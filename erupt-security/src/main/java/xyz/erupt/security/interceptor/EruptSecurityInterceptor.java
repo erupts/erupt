@@ -85,11 +85,9 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
-            if (!erupt.getErupt().authVerify()) {
-                return true;
-            }
+            if (!erupt.getErupt().authVerify()) return true;
         }
-        if (null == token || null == sessionService.get(SessionKey.USER_TOKEN + token)) {
+        if (null == token || null == sessionService.get(SessionKey.TOKEN_OLINE + token)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.sendError(HttpStatus.UNAUTHORIZED.value());
             return false;

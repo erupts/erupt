@@ -17,11 +17,11 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.IEruptDataService;
-import xyz.erupt.core.util.AnnotationUtil;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -260,7 +260,7 @@ public class EruptExcelService {
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
             if (edit.show() && !edit.readonly().add() && StringUtils.isNotBlank(edit.title())
-                    && AnnotationUtil.getEditTypeMapping(edit.type()).excelOperator()) {
+                    && AnnotationProcess.getEditTypeMapping(edit.type()).excelOperator()) {
                 Cell cell = headRow.createCell(cellNum);
                 //256表格一个字节的宽度
                 sheet.setColumnWidth(cellNum, (edit.title().length() + 10) * 256);
