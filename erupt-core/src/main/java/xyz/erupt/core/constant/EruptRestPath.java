@@ -16,6 +16,8 @@ public class EruptRestPath {
 
     //数据增删改操作
     public static final String ERUPT_DATA_MODIFY = ERUPT_DATA + "/modify";
+    public static final String ERUPT_DATA_UPDATE = ERUPT_DATA + "/update";
+    public static final String ERUPT_DATA_DELETE = ERUPT_DATA + "/delete";
 
     //组件
     public static final String ERUPT_COMP = ERUPT_API + "/comp";
