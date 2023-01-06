@@ -11,6 +11,9 @@ public @interface HtmlEditorType {
     @Comment("富文本编辑器类型")
     Type value();
 
+    @Comment("定义独享存储空间，便于文件查找")
+    String path() default "";
+
     enum Type {
         CKEDITOR, UEDITOR
     }
