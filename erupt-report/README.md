@@ -1,10 +1,10 @@
-# erupt-pro
+# erupt-bi
 
-#### 介绍
-erupt-tpl 模板功能，支持在erupt中自定义页面图表等（已开源）
-erupt-generator  代码生成器（已开源）
-erupt-bi  智能报表功能，支持sql动态写入
-erupt-monitor 服务器监控模块
-erupt-tenant 多租户模块
-erupt-cloud-gateway 云网关 
+## 注意事项
+请勿将源码泄漏给他人！！
 
+## 文档
+[《erupt-bi使用文档》](https://www.yuque.com/docs/share/3abfdea0-631f-4775-a158-7a79d8a5a68c?#)密码：tcrk
+
+## 编译成果
+在项目`版本发布`栏目中有各版本的jar
