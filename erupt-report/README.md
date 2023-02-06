@@ -7,4 +7,4 @@
 [《erupt-bi使用文档》](https://www.yuque.com/docs/share/3abfdea0-631f-4775-a158-7a79d8a5a68c?#)密码：tcrk
 
 ## 编译成果
-在项目`版本发布`栏目中有各版本的jar
+在项目`Git标签`栏目中有各版本的jar
