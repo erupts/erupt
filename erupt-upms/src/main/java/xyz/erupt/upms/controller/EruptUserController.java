@@ -175,15 +175,17 @@ public class EruptUserController {
     /**
      * 生成验证码
      *
-     * @param mark 生成验证码标记值
+     * @param mark   生成验证码标记值
+     * @param height 验证码高度
      */
     @GetMapping("/code-img")
-    public void createCode(HttpServletResponse response, @RequestParam String mark) throws Exception {
+    public void createCode(HttpServletResponse response, @RequestParam long mark,
+                           @RequestParam(required = false, defaultValue = "38") Integer height) throws Exception {
         response.setContentType("image/jpeg"); // 设置响应的类型格式为图片格式
         response.setDateHeader("Expires", 0);
         response.setHeader("Pragma", "no-cache"); // 禁止图像缓存
         response.setHeader("Cache-Control", "no-cache");
-        Captcha captcha = new SpecCaptcha(150, 38, 4);
+        Captcha captcha = new SpecCaptcha(150, height, 4);
         sessionService.put(SessionKey.VERIFY_CODE + mark, captcha.text(), 60, TimeUnit.SECONDS);
         captcha.out(response.getOutputStream());
     }
