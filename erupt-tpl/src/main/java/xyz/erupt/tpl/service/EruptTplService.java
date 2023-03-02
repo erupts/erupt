@@ -133,7 +133,8 @@ public class EruptTplService {
     public void tplRender(Tpl tpl, Map<String, Object> map, Writer writer) {
         if (!tpl.tplHandler().isInterface()) {
             Tpl.TplHandler tplHandler = EruptSpringUtil.getBean(tpl.tplHandler());
-            tplHandler.bindTplData(Optional.ofNullable(map).orElse(new HashMap<>()), tpl.params());
+            map = Optional.ofNullable(map).orElse(new HashMap<>());
+            tplHandler.bindTplData(map, tpl.params());
         }
         this.tplRender(tpl.engine(), tpl.path(), map, writer);
     }
