@@ -115,7 +115,7 @@ public class EruptFileController {
                 break;
             case HTML_EDITOR:
                 HtmlEditorType htmlEditorType = edit.htmlEditorType();
-                if(!"".equals(htmlEditorType.path())){
+                if (!"".equals(htmlEditorType.path())) {
                     path = htmlEditorType.path() + path;
                 }
                 break;
@@ -182,7 +182,7 @@ public class EruptFileController {
     }
 
 
-    @GetMapping("/upload-ueditor/{erupt}/{field}")
+    @PostMapping("/upload-ueditor/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
     public void uploadUEditorImage(@PathVariable("erupt") String eruptName,
                                    @PathVariable("field") String fieldName,
