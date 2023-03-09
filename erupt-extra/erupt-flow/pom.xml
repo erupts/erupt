@@ -21,7 +21,7 @@
         <pagehelper.version>1.2.10</pagehelper.version>
         <fastjson.version>1.2.54</fastjson.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
-        <hutool.version>4.6.17</hutool.version>
+        <hutool.version>4.5.6</hutool.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <pagehelper.boot.version>1.4.6</pagehelper.boot.version>
     </properties>
@@ -66,11 +66,11 @@
             <version>${mysql.version}</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.belerweb</groupId>

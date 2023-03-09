@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -45,6 +44,7 @@ public class OaProcessDefinition {
      */
     @EruptField(views = @View(title = "表单ID"))
     private Long formId;
+
     /**
      * 表单名称
      */

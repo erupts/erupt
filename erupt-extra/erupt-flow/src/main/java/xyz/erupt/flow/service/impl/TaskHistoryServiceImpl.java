@@ -1,8 +1,8 @@
 package xyz.erupt.flow.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -21,7 +21,7 @@ public class TaskHistoryServiceImpl extends ServiceImpl<OaTaskHistoryMapper, OaT
     @Transactional(rollbackFor = Exception.class)
     public OaTaskHistory copyAndSave(OaTask task) {
         OaTaskHistory oaTaskHistory = new OaTaskHistory();
-        BeanUtil.copyProperties(task, oaTaskHistory);
+        BeanUtils.copyProperties(task, oaTaskHistory);
         super.saveOrUpdate(oaTaskHistory);
         return oaTaskHistory;
     }

@@ -1,6 +1,6 @@
 package xyz.erupt.flow.web;
 
-import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.toolkit.BeanUtils;
 import com.github.pagehelper.PageInfo;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.Page;
@@ -27,7 +27,7 @@ public class EruptApiPageModel extends EruptApiModel {
     public static <T> EruptApiModel successApi(List<T> list) {
         PageInfo page = new PageInfo(list);//转化为pageInfo
         List<Map<String, Object>> mapList = list.stream().map(t -> {
-            Map<String, Object> map = BeanUtil.beanToMap(t);
+            Map<String, Object> map = BeanUtils.beanToMap(t);
             return map;
         }).collect(Collectors.toList());
 

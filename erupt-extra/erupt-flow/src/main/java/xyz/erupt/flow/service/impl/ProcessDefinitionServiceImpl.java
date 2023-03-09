@@ -1,7 +1,5 @@
 package xyz.erupt.flow.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -9,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +47,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
-        if(CollectionUtil.isEmpty(list)) {
+        if(list==null || list.size()<=0) {
             return;
         }
         Set<Long> groupIds = new HashSet<>();
@@ -125,7 +124,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         queryWrapper.lambda().orderByDesc(OaProcessDefinition::getVersion);
         PageHelper.startPage(1, 1);//分页查询
         List<OaProcessDefinition> list = super.list(queryWrapper);
-        if(CollectionUtil.isEmpty(list)) {
+        if(list==null || list.size()<=0) {
             return null;
         }else {
             return list.get(0);
@@ -172,7 +171,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
     public void deploy(OaForms forms) {
         //创建新版本
         OaProcessDefinition oaProcessDefinition = new OaProcessDefinition();
-        BeanUtil.copyProperties(forms, oaProcessDefinition);
+        BeanUtils.copyProperties(forms, oaProcessDefinition);
         Date now = new Date();
         oaProcessDefinition.setCreated(now);
         OaProcessDefinition last = this.getLastVersionByFromId(forms.getFormId());
