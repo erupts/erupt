@@ -14,6 +14,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
@@ -69,5 +70,6 @@ public class OaProcessExecution extends BaseModel {
     private Date ended;
 
     @EruptField(views = @View(title = "流程详情", show = false))
+    @Column(columnDefinition = "json")//json类型
     private String process;
 }

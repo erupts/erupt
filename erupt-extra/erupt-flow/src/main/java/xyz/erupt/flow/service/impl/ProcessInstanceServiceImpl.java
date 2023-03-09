@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -28,10 +29,13 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
     private EruptUserService eruptUserService;
     @Autowired
     private ProcessInstanceHistoryService processInstanceHistoryService;
+    @Lazy
     @Autowired
     private ProcessActivityService processActivityService;
+    @Lazy
     @Autowired
     private ProcessExecutionService processExecutionService;
+    @Lazy
     @Autowired
     private TaskService taskService;
 

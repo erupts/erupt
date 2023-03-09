@@ -1,15 +1,14 @@
 package xyz.erupt.flow.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.flow.bean.entity.OaForms;
-import xyz.erupt.flow.bean.entity.OaProcessDefinition;
 import xyz.erupt.flow.mapper.OaFormsMapper;
 import xyz.erupt.flow.service.FormsService;
 import xyz.erupt.flow.service.ProcessDefinitionService;
@@ -23,6 +22,7 @@ import java.util.List;
 @Service
 public class FormsServiceImpl extends ServiceImpl<OaFormsMapper, OaForms> implements FormsService {
 
+    @Lazy
     @Autowired
     private ProcessDefinitionService processDefinitionService;
 

@@ -23,8 +23,7 @@
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <hutool.version>4.5.6</hutool.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
-        <pagehelper.boot.version>1.4.0</pagehelper.boot.version>
-        <activiti.version>6.0.0</activiti.version>
+        <pagehelper.boot.version>1.4.6</pagehelper.boot.version>
     </properties>
 
     <dependencies>

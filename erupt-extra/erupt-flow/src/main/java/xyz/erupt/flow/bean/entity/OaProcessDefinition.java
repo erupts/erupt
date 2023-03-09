@@ -66,6 +66,7 @@ public class OaProcessDefinition {
      * 设置项
      */
     @EruptField(views = @View(title = "设置项"))
+    @Column(columnDefinition = "json")//json类型
     private String settings;
     /**
      * 分组ID
@@ -77,15 +78,11 @@ public class OaProcessDefinition {
     @TableField(exist = false)
     @EruptField(views = @View(title = "分组"))
     private String groupName;
-    /**
-     * 表单设置内容
-     */
-    @Transient//标识虚拟列
-    @TableField(exist = false)
-    private String formItems;
+
     /**
      * 流程设置内容
      */
+    @Column(columnDefinition = "json")//json类型
     private String process;
     /**
      * 备注
