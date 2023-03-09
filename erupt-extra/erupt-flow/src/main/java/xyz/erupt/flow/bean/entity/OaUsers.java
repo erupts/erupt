@@ -1,16 +1,21 @@
 package xyz.erupt.flow.bean.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.io.Serializable;
+import java.util.Date;
 
+@Entity
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,10 +23,10 @@ import lombok.NoArgsConstructor;
 public class OaUsers implements Serializable {
     private static final long serialVersionUID = 771373304182417054L;
 
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
     @TableId(type = IdType.AUTO)
-    /**
-    * 用户id
-    */
     private Long userId;
     /**
     * 用户名

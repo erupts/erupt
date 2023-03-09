@@ -39,13 +39,19 @@ public class EruptFlowAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> metaMenus = new ArrayList<>();
         metaMenus.add(MetaMenu.createRootMenu(FlowConstant.SERVER_NAME, "流程服务", "fa fa-bandcamp", 80));
-        // 菜单的页面
-        metaMenus.add(MetaMenu.createSimpleMenu("erupt-flow/workSpace", "工作区", "erupt-flow/workSpace"
-                , metaMenus.get(0), 0, MenuTypeEnum.THIS_WINDOW.getCode()));
-        metaMenus.add(MetaMenu.createSimpleMenu("erupt-flow/formsPanel", "流程设计器", "erupt-flow/formsPanel"
-                , metaMenus.get(0), 10, MenuTypeEnum.THIS_WINDOW.getCode()));
-        metaMenus.add(MetaMenu.createSimpleMenu("erupt-flow/formsPanel", "工单管理", "erupt-flow/formsPanel"
-                , metaMenus.get(0), 20, MenuTypeEnum.THIS_WINDOW.getCode()));
+        // 添加菜单
+        metaMenus.add(MetaMenu.createSimpleMenu("erupt-flow", "流程服务基础权限", "erupt-flow"
+                , metaMenus.get(0), 0, MenuTypeEnum.BUTTON.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu("workSpace", "工作区", "erupt-flow/index.html#/workSpace"
+                , metaMenus.get(0), 10, MenuTypeEnum.LINK.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu("formsPanel", "后台管理", "erupt-flow/index.html#/formsPanel"
+                , metaMenus.get(0), 20, MenuTypeEnum.LINK.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu("OaProcessInstanceHistory", "流程实例", "OaProcessInstanceHistory"
+                , metaMenus.get(0), 30, MenuTypeEnum.TABLE.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu("OaTaskHistory", "任务", "OaTaskHistory"
+                , metaMenus.get(0), 40, MenuTypeEnum.TABLE.getCode()));
+        metaMenus.add(MetaMenu.createSimpleMenu("OaTaskOperation", "操作记录", "OaTaskOperation"
+                , metaMenus.get(0), 50, MenuTypeEnum.TABLE.getCode()));
         return metaMenus;
     }
 }

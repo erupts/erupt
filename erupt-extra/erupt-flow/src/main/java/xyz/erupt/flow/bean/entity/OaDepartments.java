@@ -9,8 +9,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import xyz.erupt.annotation.EruptField;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 
+@Entity
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,7 +26,10 @@ import lombok.NoArgsConstructor;
 public class OaDepartments implements Serializable {
     private static final long serialVersionUID = 457951701966938674L;
 
-    @TableId(type = IdType.AUTO)
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
     /**
     * 部门id
     */

@@ -6,11 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
-
+@Entity
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,9 +23,9 @@ import java.util.Date;
 public class OaForms implements Serializable {
     private static final long serialVersionUID = -40467384325438214L;
 
-    /**
-    * 表单ID
-    */
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
     @TableId(type = IdType.AUTO)
     private Long formId;
     /**
@@ -34,6 +39,7 @@ public class OaForms implements Serializable {
     /**
     * 设置项
     */
+    @Column(columnDefinition = "json")//json类型
     private String settings;
     /**
     * 分组ID
@@ -42,10 +48,12 @@ public class OaForms implements Serializable {
     /**
     * 表单设置内容
     */
+    @Column(columnDefinition = "json")//json类型
     private String formItems;
     /**
     * 流程设置内容
     */
+    @Column(columnDefinition = "json")//json类型
     private String process;
     /**
     * 备注
