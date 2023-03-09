@@ -50,6 +50,7 @@
         <module>erupt-extra/erupt-job</module><!--任务调度-->
         <module>erupt-extra/erupt-generator</module><!--代码生成-->
         <module>erupt-extra/erupt-monitor</module><!--服务监控-->
+        <module>erupt-extra/erupt-flow</module><!--流程服务-->
         <module>erupt-extra/erupt-magic-api</module><!-- magic-api 接口配置 -->
         <!-- erupt cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
