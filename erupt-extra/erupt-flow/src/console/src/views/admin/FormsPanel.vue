@@ -4,7 +4,7 @@
       <el-button icon="el-icon-back" type="info" size="mini" circle plain style="margin-right: 15px" @click="$router.push('/')"></el-button>
       <span>流程面板</span>
       <div>
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="newProcess(0)">新建表单</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="newProcess('')">新建表单</el-button>
         <el-button icon="el-icon-plus" @click="addGroup" size="mini">新建分组</el-button>
       </div>
     </div>
