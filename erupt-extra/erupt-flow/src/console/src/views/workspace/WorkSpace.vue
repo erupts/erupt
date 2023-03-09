@@ -12,30 +12,16 @@
         <el-collapse v-model="actives">
           <el-collapse-item v-for="(group, index) in formList.list" :key="index"
                             :title="group.groupName" :name="group.groupName"
-                            v-show="group.processDefs.length > 0 && group.groupId > 0">
-            <div>
-              <div v-for="(item, index) in group.processDefs" :key="index" class="form-item" @click="enterItem(item)">
-                <i :class="item.logo.icon" :style="'background: '+item.logo.background"></i>
-                <div>
-                  <ellipsis hover-tip :content="item.formName"/>
-                  <span>发起审批</span>
-                </div>
+                            v-show="group.groupId > 0">
+            <div v-for="(item, index) in group.processDefs" :key="index" class="form-item" @click="enterItem(item)">
+              <i :class="item.logo.icon" :style="'background: '+item.logo.background"></i>
+              <div>
+                <ellipsis hover-tip :content="item.formName"/>
+                <span>发起审批</span>
               </div>
             </div>
           </el-collapse-item>
         </el-collapse>
-        <!--<div>
-          <div v-for="(item, index) in formList.searchResult" :key="index" class="form-item" @click="enterItem(item)">
-            <i :class="item.icon" :style="'background: '+item.background"></i>
-            <div>
-              <span>{{ item.formName }}</span>
-              <span>发起审批</span>
-            </div>
-          </div>
-          <div class="no-data" v-show="formList.searchResult.length === 0 && formList.inputs !== ''">
-            没有找到相关的表单 😥
-          </div>
-        </div>-->
       </el-tab-pane>
       <el-tab-pane :label="'待我处理('+maxCount+')'" name="tab2">
         <el-row style="margin-bottom: 20px">
@@ -161,6 +147,7 @@ export default {
           })
         })
         this.groups = rsp.data
+        console.log(this.actives)
       }).catch(err => this.$message.error(err))
     },
     enterItem(item) {

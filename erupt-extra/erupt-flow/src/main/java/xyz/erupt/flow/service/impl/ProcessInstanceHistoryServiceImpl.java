@@ -1,7 +1,7 @@
 package xyz.erupt.flow.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ public class ProcessInstanceHistoryServiceImpl extends ServiceImpl<OaProcessInst
     @Transactional(rollbackFor = Exception.class)
     public OaProcessInstanceHistory copyAndSave(OaProcessInstance procInst) {
         OaProcessInstanceHistory oaProcessInstanceHistory = new OaProcessInstanceHistory();
-        BeanUtil.copyProperties(procInst, oaProcessInstanceHistory);//拷贝全部属性
+        BeanUtils.copyProperties(procInst, oaProcessInstanceHistory);//拷贝全部属性
         super.saveOrUpdate(oaProcessInstanceHistory);
         return oaProcessInstanceHistory;
     }

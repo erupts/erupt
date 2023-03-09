@@ -1,6 +1,5 @@
 package xyz.erupt.flow.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -253,7 +252,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
     public void triggerComplete(Long activityId) {
         OaProcessActivity byId = this.getById(activityId);
         List<OaTask> oaTasks = taskService.listByActivityId(activityId);
-        if(CollectionUtil.isNotEmpty(oaTasks)) {//如果还有任务需要执行，就不能完成此节点
+        if(oaTasks==null || oaTasks.size()<=0) {//如果还有任务需要执行，就不能完成此节点
             if(OaProcessActivity.SERIAL.equals(byId.getCompleteMode())) {//如果是串行模式，将下一个任务激活
                 taskService.activeTask(oaTasks.get(0).getId());
             }
