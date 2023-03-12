@@ -137,10 +137,19 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
-            views = @View(title = "SQL语句"),
-            edit = @Edit(title = "SQL语句", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
+            views = @View(title = "取值SQL"),
+            edit = @Edit(title = "取值SQL", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
+
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @EruptField(
+            edit = @Edit(title = "总条数SQL", desc = "计算数据总量，在取值SQL嵌套子查询count性能较低时使用",
+                    showBy = @ShowBy(dependField = "pageType", expr = "value == '" + BiConst.PAGE_END + "'"),
+                    type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql", height = 100))
+    )
+    private String countStatement;
 
     @Transient
     @EruptField(

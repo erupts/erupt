@@ -190,15 +190,24 @@ public class BiService {
 
     @SneakyThrows
     public Long getTotal(Bi bi, Map<String, Object> query) {
-        String express = processPlaceHolder(bi.getSqlStatement(), query);
+        String express;
+        if (StringUtils.isNotBlank(bi.getCountStatement())) {
+            express = processPlaceHolder(bi.getCountStatement(), query);
+        } else {
+            express = processPlaceHolder(bi.getSqlStatement(), query);
+        }
         BiClassHandler biClassHandler = bi.getClassHandler();
         if (null != biClassHandler) {
             express = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class)
                     .exprHandler(biClassHandler.getParam(), query, express);
         }
-        return Long.valueOf(dataSourceService.getJdbcTemplate(bi.getDataSource())
-                .queryForMap(String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express), query)
-                .get(TOTAL_KEY).toString());
+        if (StringUtils.isNotBlank(bi.getCountStatement())) {
+            return dataSourceService.getJdbcTemplate(bi.getDataSource()).queryForObject(express, query, Long.class);
+        } else {
+            return Long.valueOf(dataSourceService.getJdbcTemplate(bi.getDataSource())
+                    .queryForMap(String.format("select count(*) %s from (%s) count_", TOTAL_KEY, express), query)
+                    .get(TOTAL_KEY).toString());
+        }
     }
 
     public Long getTotal(String express, BiDataSource biDataSource, Map<String, Object> query) {

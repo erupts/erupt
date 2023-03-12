@@ -170,17 +170,20 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
         biChart.setCode(RandomStringUtils.randomAlphabetic(8));
     }
 
+
     @Override
-    public void afterUpdate(BiChart biChart) {
+    public void beforeUpdate(BiChart biChart) {
+        eruptDao.getEntityManager().clear();
         BiChart hbc = eruptDao.getEntityManager().find(BiChart.class, biChart.getId());
         if (!biChart.getSqlStatement().equals(hbc.getSqlStatement())) {
             BiHistory history = new BiHistory();
             history.setBiId(biChart.getBi().getId());
             history.setSqlStatement(hbc.getSqlStatement());
+            history.setAfterSqlStatement(biChart.getSqlStatement());
             history.setOperateTime(new Date());
             history.setMark(biChart.getName());
             history.setOperateBy(MetaContext.getUser().getName());
-            eruptDao.persistAndFlush(history);
+            eruptDao.persist(history);
         }
     }
 }

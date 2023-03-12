@@ -43,8 +43,9 @@ public class BiDataProxy implements DataProxy<Bi> {
             if (!bi.getSqlStatement().equals(bbi.getSqlStatement())) {
                 BiHistory history = new BiHistory();
                 history.setSqlStatement(bbi.getSqlStatement());
+                history.setAfterSqlStatement(bi.getSqlStatement());
                 history.setOperateTime(new Date());
-                history.setMark("Table");
+                history.setMark(bi.getName());
                 history.setBiId(bi.getId());
                 history.setOperateBy(MetaContext.getUser().getName());
                 eruptDao.persistAndFlush(history);
