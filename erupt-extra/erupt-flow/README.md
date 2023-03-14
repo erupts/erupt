@@ -200,6 +200,16 @@ src
 
 ## 使用自己的用户体系
 
-实现三个接口 OaUserHandler、OaDeptHandler、OaRoleHandler，并将他们注册到spring。
+实现 ``xyz.erupt.flow.process.userlink.UserLinkService`` 接口，并保证你的优先级`priority`大于0即可。
 
-> 不要忘记注释掉默认的实现（xyz.erupt.flow.handler.process），否则会报错。
+> 0是默认的用户体系实现，使用erupt-upms的用户体系。
+
+## 修改前端代码
+
+如果你想修改前端，并且继续保持前后端一体部署，那么你需要：
+
+1. 修改前端代码
+2. build前端 `vue-cli-service build`，产生dist目录
+3. build后端，将dist拷贝到最终的jar包中
+
+重启程序，就可以看到修改之后的前端了。

@@ -1,5 +1,6 @@
 package xyz.erupt.flow.bean.entity;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.service.impl.ProcessDefinitionServiceImpl;
 
 import javax.persistence.*;
@@ -84,6 +86,19 @@ public class OaProcessDefinition {
      */
     @Column(columnDefinition = "json")//json类型
     private String process;
+
+    /**
+     * 表单内容
+     */
+    @Column(columnDefinition = "json")//json类型
+    private String formItems;
+
+    public OaProcessNode getProcessNode() {
+        if(this.getProcess()==null) {
+            return null;
+        }
+        return JSON.parseObject(this.getProcess(), OaProcessNode.class);
+    }
     /**
      * 备注
      */

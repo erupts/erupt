@@ -8,18 +8,17 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.flow.bean.entity.*;
-import xyz.erupt.flow.constant.FlowConstant;
+import xyz.erupt.flow.bean.entity.OaProcessDefinition;
+import xyz.erupt.flow.bean.entity.OaProcessInstance;
+import xyz.erupt.flow.bean.entity.OaProcessInstanceHistory;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.mapper.OaProcessInstanceMapper;
 import xyz.erupt.flow.service.*;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptUserService;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMapper, OaProcessInstance>
@@ -88,11 +87,11 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
     @Transactional(rollbackFor = Exception.class)
     public boolean removeById(Serializable id) {
         //删除任务
-        taskService.removeByProcessInstId(id);
+        taskService.removeByProcessInstId((Long) id);
         //删除节点
-        processActivityService.removeByProcessInstId(id);
+        processActivityService.removeByProcessInstId((Long) id);
         //删除execution
-        processExecutionService.removeByProcessInstId(id);
+        processExecutionService.removeByProcessInstId((Long) id);
         //删除流程实例
         return super.removeById(id);
     }
@@ -109,13 +108,5 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
         QueryWrapper<OaProcessInstance> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(OaProcessInstance::getFormId, formId);
         return super.count(queryWrapper);
-    }
-
-    @Override
-    public void afterFetch(Collection<Map<String, Object>> list) {
-        list.forEach(m -> {
-            //拼接详情链接
-            m.put("detailLink", FlowConstant.SERVER_NAME+"/index.html#/detail/"+ m.get("id") +"/view");
-        });
     }
 }

@@ -91,7 +91,6 @@ export default {
       this.showOrgSelect = true
     },
     selected(select) {
-      console.log(select)
       this.showOrgSelect = false
       select.forEach(val => this.select.push(val))
     },

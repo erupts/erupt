@@ -294,7 +294,6 @@ export default {
     },
     //删除当前节点
     delNode(node){
-      console.log("删除节点", node)
       //获取该节点的父节点
       let parentNode = this.nodeMap.get(node.parentId)
       if (parentNode){

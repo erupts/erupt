@@ -37,7 +37,7 @@ public class ProcessInstanceHistoryServiceImpl extends ServiceImpl<OaProcessInst
         String currentToken = eruptContextService.getCurrentToken();
         list.forEach(m -> {
             //拼接详情链接
-            m.put("detailLink", FlowConstant.SERVER_NAME+"/index.html#/detail/"+ m.get("id") +"/view?_token="+currentToken);
+            m.put("detailLink", FlowConstant.SERVER_NAME+"/index.html#/detail/"+ m.get("id") +"/null/_/view?_token="+currentToken);
         });
     }
 }

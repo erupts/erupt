@@ -14,6 +14,7 @@ let Location = () => import('./components/Location.vue')
 let MoneyInput = () => import('./components/MoneyInput.vue')
 let DeptPicker = () => import('./components/DeptPicker.vue')
 let UserPicker = () => import('./components/UserPicker.vue')
+let RolePicker = () => import('./components/RolePicker.vue')
 let SignPanel = () => import('./components/SignPannel.vue')
 
 let SpanLayout = () => import('./components/SpanLayout.vue')
@@ -22,7 +23,7 @@ let TableList = () => import('./components/TableList.vue')
 export default {
   //基础组件
   TextInput, NumberInput, AmountInput, TextareaInput, SelectInput, MultipleSelect,
-  DateTime, DateTimeRange, UserPicker, DeptPicker,
+  DateTime, DateTimeRange, UserPicker, DeptPicker, RolePicker,
   //高级组件
   Description, FileUpload, ImageUpload, MoneyInput, Location, SignPanel,
   SpanLayout, TableList

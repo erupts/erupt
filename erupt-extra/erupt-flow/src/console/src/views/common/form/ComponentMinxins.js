@@ -17,6 +17,11 @@ export default{
   data(){
     return {}
   },
+  watch: {
+    _value(newValue, oldValue) {
+      this.$emit("change", newValue);
+    }
+  },
   computed: {
     _value: {
       get() {

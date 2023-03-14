@@ -31,6 +31,7 @@ import FileUpload from './config/FileUploadConfig.vue'
 import Description from './config/DescriptionConfig.vue'
 import MoneyInput from './config/MoneyInputConfig.vue'
 import DeptPicker from './config/OrgPickerConfig.vue'
+import RolePicker from './config/OrgPickerConfig.vue'
 import UserPicker from './config/OrgPickerConfig.vue'
 import TableList from './config/TableListConfig.vue'
 
@@ -51,6 +52,7 @@ export default {
     MoneyInput,
     DeptPicker,
     UserPicker,
+    RolePicker,
     TableList
   },
   props:{},

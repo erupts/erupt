@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaProcessActivity;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
-import xyz.erupt.flow.bean.entity.OaProcessNode;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,9 +23,9 @@ public interface ProcessActivityService extends IService<OaProcessActivity> {
 
     public int newActivities(OaProcessExecution execution, JSONObject formContent, OaProcessNode node);
 
-    public void removeByProcessInstId(Serializable procInstId);
+    public void removeByProcessInstId(Long procInstId);
 
-    public void activeByExecutionId(Long executionId);
+    public boolean activeByExecutionId(Long executionId);
 
     /**
      * 完成节点

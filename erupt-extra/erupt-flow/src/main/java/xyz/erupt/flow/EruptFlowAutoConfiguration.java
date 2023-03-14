@@ -4,6 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
@@ -24,6 +25,7 @@ import java.util.List;
 @EntityScan
 @EruptScan
 @MapperScan("xyz.erupt.flow.mapper")
+@EnableJpaRepositories
 public class EruptFlowAutoConfiguration implements EruptModule {
 
     static {
@@ -38,9 +40,10 @@ public class EruptFlowAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> metaMenus = new ArrayList<>();
-        metaMenus.add(MetaMenu.createRootMenu(FlowConstant.SERVER_NAME, "流程服务", "fa fa-bandcamp", 80));
+        //目录名和下面的权限名重复，所以加个后缀
+        metaMenus.add(MetaMenu.createRootMenu(FlowConstant.SERVER_NAME + "_root", "流程服务", "fa fa-bandcamp", 80));
         // 添加菜单
-        metaMenus.add(MetaMenu.createSimpleMenu("erupt-flow", "流程服务基础权限", "erupt-flow"
+        metaMenus.add(MetaMenu.createSimpleMenu(FlowConstant.SERVER_NAME, "流程服务基础权限", "erupt-flow"
                 , metaMenus.get(0), 0, MenuTypeEnum.BUTTON.getCode()));
         metaMenus.add(MetaMenu.createSimpleMenu("workSpace", "工作区", "erupt-flow/index.html#/workSpace"
                 , metaMenus.get(0), 10, MenuTypeEnum.LINK.getCode()));

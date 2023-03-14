@@ -1,15 +1,13 @@
 package xyz.erupt.flow.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.erupt.flow.bean.entity.OaProcessActivity;
 import xyz.erupt.flow.bean.entity.OaTask;
+import xyz.erupt.flow.bean.vo.TaskDetailVo;
 
-import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 public interface TaskService extends IService<OaTask> {
-
-    public List<OaTask> generateTask(OaProcessActivity activity);
 
     /**
      * 完成任务
@@ -18,16 +16,22 @@ public interface TaskService extends IService<OaTask> {
     public void complete(Long taskId, String remarks);
 
     /**
-     * 查询当前流程的待完成任务
-     * @param executionId
+     * 转办任务，只能是或签
+     * @param taskId
      */
-    public List<OaTask> listByExecutionId(Long executionId);
+    public void assign(Long taskId, Set<String> userIds, String remarks);
 
     /**
-     * 激活任务
-     * @param id
+     * 拒绝任务
+     * @param taskId
      */
-    void activeTask(Long id);
+    public void refuse(Long taskId, String remarks);
+
+    /**
+     * 查询当前流程的待完成任务
+     * @param instId
+     */
+    OaTask getStartTaskByInst(Long instId);
 
     /**
      * 分页查询我的任务
@@ -36,9 +40,30 @@ public interface TaskService extends IService<OaTask> {
      */
     List<OaTask> listMyTasks(String keywords);
 
-    void removeByProcessInstId(Serializable id);
+    void removeByProcessInstId(Long id);
 
-    void activeTaskByExecutionId(Long executionId);
+    boolean activeTaskByActivityId(Long activityId);
 
-    List<OaTask> listByActivityId(Long activityId);
+    List<OaTask> listByActivityId(Long activityId, boolean activied);
+
+    /**
+     * 尝试激活任务
+     */
+    void triggerTaskActive(OaTask task);
+
+    void saveBatchWithUserLink(List<OaTask> oaTasks);
+
+    /**
+     * 查看任务详情
+     * @param taskId
+     * @return
+     */
+    TaskDetailVo getTaskDetail(Long taskId);
+
+    /**
+     * 查看实例详情
+     * @param instId
+     * @return
+     */
+    TaskDetailVo getInstDetail(Long instId);
 }

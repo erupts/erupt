@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.*;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.mapper.OaProcessDefinitionMapper;
 import xyz.erupt.flow.service.*;
 
@@ -85,6 +86,13 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
     }
 
     @Override
+    public void updateByFormId(OaProcessDefinition update, Long formId) {
+        QueryWrapper<OaProcessDefinition> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(OaProcessDefinition::getFormId, formId);
+        super.update(update , queryWrapper);
+    }
+
+    @Override
     public void removeByFormId(Long formId) {
         //判断是否有流程实例存在，这里先不考虑历史数据
         long count = processInstanceService.countByFormId(formId);
@@ -99,7 +107,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OaProcessInstance startByFormId(String defId, String content) {
+    public OaProcessInstance startById(String defId, String content) {
         //根据formId查询出最新版
         OaProcessDefinition processDef = this.getById(defId);
         if(processDef==null) {
@@ -111,9 +119,12 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         //创建流程实例
         OaProcessInstance processInstance = processInstanceService.newProcessInstance(processDef, content);
         //查询主线程的任务
-        List<OaTask> oaTasks = taskService.listByExecutionId(processInstance.getId());
+        OaTask startTask = taskService.getStartTaskByInst(processInstance.getId());
+        if(startTask==null) {
+            throw new RuntimeException("找不到开始节点");
+        }
         //完成这些任务
-        oaTasks.forEach(t -> taskService.complete(t.getId(), "发起人节点自动完成"));
+        taskService.complete(startTask.getId(), "发起人节点自动完成");
         return processInstance;
     }
 
@@ -146,7 +157,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         OaProcessDefinition procDef = this.getById(inst.getProcessDefId());
         List<OaProcessActivityHistory> activities = new ArrayList<>();
         //查询出已完成的活动
-        List<OaProcessActivityHistory> histories = processActivityHistoryService.listFinishedActivitiesByProcInstId(instId);
+        List<OaProcessActivityHistory> histories = processActivityHistoryService.listByProcInstId(instId);
         //形成一个map
         Map<String, OaProcessActivityHistory> map =
                 histories.stream().collect(Collectors.toMap(OaProcessActivityHistory::getActivityKey, e -> e, (key1, key2) -> key1));

@@ -55,3 +55,19 @@ export function timeLine(instId) {
     method: 'post'
   });
 }
+
+// 查询任务详情
+export function getTaskDetail(taskId) {
+  return request({
+    url: '/task/detail/'+taskId,
+    method: 'get'
+  });
+}
+
+// 查询实例详情
+export function getInstDetail(instId) {
+  return request({
+    url: '/inst/detail/'+instId,
+    method: 'get'
+  });
+}

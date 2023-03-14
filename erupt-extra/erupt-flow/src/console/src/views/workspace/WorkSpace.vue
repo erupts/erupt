@@ -12,7 +12,7 @@
         <el-collapse v-model="actives">
           <el-collapse-item v-for="(group, index) in formList.list" :key="index"
                             :title="group.groupName" :name="group.groupName"
-                            v-show="group.groupId > 0">
+                            v-show="group.groupId >= 0">
             <div v-for="(item, index) in group.processDefs" :key="index" class="form-item" @click="enterItem(item)">
               <i :class="item.logo.icon" :style="'background: '+item.logo.background"></i>
               <div>
@@ -23,7 +23,7 @@
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
-      <el-tab-pane :label="'待我处理('+maxCount+')'" name="tab2">
+      <el-tab-pane :label="'待我处理('+(maxCount||0)+')'" name="tab2">
         <el-row style="margin-bottom: 20px">
           <el-col :xs="12" :sm="10" :md="8" :lg="6" :xl="4">
             <el-input size="medium" v-model="queryParam.keywords" placeholder="搜索我的工单" clearable>
@@ -53,7 +53,7 @@
                     <span class="taskCell" style="color: #909399;">{{task.businessTitle}}</span>
                   </el-col>
                   <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="8">
-                    <span class="taskCell" style="color: #909399;">{{task.taskOwner + ' 发起于 ' + task.createDate}}</span>
+                    <span class="taskCell" style="color: #909399;">{{task.instCreatorName + ' 发起于 ' + task.instCreateDate}}</span>
                   </el-col>
                 </el-row>
               </div>
@@ -72,7 +72,7 @@
       </el-tab-pane>
     </el-tabs>
 
-    <el-dialog title="发起审批" width="800px" :visible.sync="openItemDl" :close-on-click-modal="false">
+    <el-dialog title="发起审批" width="800px" top="20px" :visible.sync="openItemDl" :close-on-click-modal="false">
       <initiate-process ref="processForm" :code="selectForm.id" v-if="openItemDl"></initiate-process>
       <span slot="footer" class="dialog-footer">
 				<el-button @click="openItemDl = false">取 消</el-button>
@@ -117,9 +117,14 @@ export default {
       }
     }
   },
+  created() {
+    //重新设置token
+    sessionStorage.setItem("token", getToken());
+  },
   mounted() {
     //这句话加上之后，从详情返回，会查询2次数据
     //this.activeName = (this.$route.params && this.$route.params.activeName)||'tab1';
+
     this.getGroups();
     this.initMyWorks();
   },
@@ -147,8 +152,7 @@ export default {
           })
         })
         this.groups = rsp.data
-        console.log(this.actives)
-      }).catch(err => this.$message.error(err))
+      })
     },
     enterItem(item) {
       this.selectForm = item
@@ -157,11 +161,11 @@ export default {
     submitForm(){
       this.$refs.processForm.validate(valid => {
         if (valid) {
-          startByFormId(this.selectForm.id, this.$refs.processForm.getFormData()).then(rsp => {
+          startByFormId(this.selectForm.id, this.$refs.processForm.formData).then(rsp => {
             this.$message.success(rsp.message);
             this.openItemDl = false;
             this.initMyWorks()//重新查询一次
-          }).catch(err => this.$message.error(err))
+          })
         } else {
           this.$message.warning("请完善表单😥")
         }
