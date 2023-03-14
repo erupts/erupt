@@ -1,6 +1,5 @@
 package xyz.erupt.flow.process.userlink;
 
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeAssign;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 
 import java.util.LinkedHashMap;
@@ -62,4 +61,11 @@ public interface UserLinkService extends Comparable<UserLinkService> {
      * @return
      */
     LinkedHashSet<OrgTreeVo> getAdminUsers();
+
+    /**
+     * 根据用户查询他的角色列表
+     * @param userName
+     * @return
+     */
+    LinkedHashSet<String> getRoleIdsByUserId(String userName);
 }

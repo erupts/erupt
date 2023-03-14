@@ -344,7 +344,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
             case FlowConstant.ASSIGN_TYPE_LEADER_TOP://发起人的所有上级
                 //查询主管
                 LinkedHashMap<Integer, List<OrgTreeVo>> leaderMap =
-                        userLinkService.getLeaderMap(inst.getCreator(), 1, props.getLeaderTop().getEndLevel());
+                        userLinkService.getLeaderMap(inst.getCreator(), 1, props.getLeaderTop().getLevel());
                 this.forLeaders(execution, node, activity, props, leaderMap);
                 return;//这种情况不需要继续后续操作
             case FlowConstant.ASSIGN_TYPE_LEADER://特定层级主管

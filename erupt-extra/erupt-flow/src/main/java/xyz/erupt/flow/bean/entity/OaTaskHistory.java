@@ -6,18 +6,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.flow.service.impl.TaskHistoryServiceImpl;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -26,6 +26,7 @@ import java.util.Date;
 @Erupt(name = "历史任务"
         , power = @Power(export = true, add = false, edit = false)
         , orderBy = "createDate desc"
+        , dataProxy = TaskHistoryServiceImpl.class
 )
 @Table(name = "oa_hi_task")
 @TableName("oa_hi_task")
@@ -34,29 +35,14 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaTaskHistory extends BaseModel {
+public class OaTaskHistory {
 
-    @EruptField(views = @View(title = "节点id"))
-    private Long activityId;
-
-    @EruptField(views = @View(title = "节点key"))
-    private String activityKey;
-
-    @EruptField(views = @View(title = "线程id"))
-    private Long executionId;
-
-    @EruptField(views = @View(title = "流程实例id"))
-    private Long processInstId;
-
-    @Transient//标识虚拟列
-    @TableField(exist = false)
-    @EruptField(views = @View(title = "业务标题")
-            , edit = @Edit(title = "业务标题", search = @Search(vague = true))
-    )
-    private String businessTitle;
-
-    @EruptField(views = @View(title = "流程定义id"))
-    private String processDefId;
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField(views = @View(title = "任务ID"))
+    private Long id;
 
     @Transient//标识虚拟列
     @TableField(exist = false)
@@ -70,11 +56,45 @@ public class OaTaskHistory extends BaseModel {
     )
     private String taskName;
 
+    @EruptField(views = @View(title = "实例ID")
+            , edit = @Edit(title = "实例ID", type = EditType.NUMBER, search = @Search())
+    )
+    private Long processInstId;
+
+    @EruptField(views = @View(title = "节点id"))
+    private Long activityId;
+
+    @EruptField(views = @View(title = "节点key"))
+    private String activityKey;
+
+    @EruptField(views = @View(title = "线程id", show = false))
+    private Long executionId;
+
     @EruptField(views = @View(title = "所属人", desc = "任务持有人，最优先处理此任务"))
     private String taskOwner;//任务持有人，最优先处理此任务，优先级为1
 
     @EruptField(views = @View(title = "分配人", desc = "任务没有所属人时，分配人优先处理此任务"))
     private String assignee;//任务指定人，没有持有人时，指定人处理此任务，优先级为2
+
+    @Transient//标识虚拟列
+    @TableField(exist = false)
+    @EruptField(views = @View(title = "候选人", desc = "所属人和分配人为空时，由候选人处理任务"))
+    private String links;//激活状态，只有激活的任务可以被完成
+
+    @EruptField(views = @View(title = "是否激活", desc = "只有激活的任务可以被完成")
+            , edit = @Edit(title = "是否激活", search = @Search)
+    )
+    private Boolean active;//激活状态，只有激活的任务可以被完成
+
+    @Transient//标识虚拟列
+    @TableField(exist = false)
+    @EruptField(views = @View(title = "业务标题")
+            , edit = @Edit(title = "业务标题", search = @Search(vague = true))
+    )
+    private String businessTitle;
+
+    @EruptField(views = @View(title = "流程定义id", show = false))
+    private String processDefId;
 
     @EruptField(views = @View(title = "创建时间", type = ViewType.DATE_TIME)
             , edit = @Edit(title = "创建时间", search = @Search(vague = true))
@@ -106,14 +126,6 @@ public class OaTaskHistory extends BaseModel {
     private String taskDesc;
 
     /**
-     * 候选人，一对多进行关联。如任务没有持有人和指定人，候选人可以处理此任务，优先级为3
-     * USERS 关联多个用户，这些人中任意人都可以处理
-     * ROLES 关联多个角色，这些角色中任意人都可以处理此任务
-     */
-    @EruptField(views = @View(title = "候选人类型", desc = "所属人和分配人都没有人时，由候选人完成任务。USERS 多个用户候选; ROLES 多个角色候选"))
-    private String userLinkType;
-
-    /**
      * 任务执行模式
      * SERIAL 串行，即按照顺序，一个执行完之后，另一个任务才可以被执行，直到所有任务完成线程继续
      * PARALLEL 并行，即同一个线程（processExecutionId）下的任务，可以同时被执行，所有任务完成，线程继续
@@ -123,9 +135,4 @@ public class OaTaskHistory extends BaseModel {
 
     @EruptField(views = @View(title = "执行顺序", desc = "串行模式下按照顺序完成任务"))
     private Integer completeSort;//完成顺序，单任务和并行不需要关注顺序。串行模式下，每个任务执行完之后，取当前线程下顺序最小的一个任务执行
-
-    @EruptField(views = @View(title = "是否激活", desc = "只有激活的任务可以被完成")
-            , edit = @Edit(title = "是否激活", search = @Search)
-    )
-    private Boolean active;//激活状态，只有激活的任务可以被完成
 }

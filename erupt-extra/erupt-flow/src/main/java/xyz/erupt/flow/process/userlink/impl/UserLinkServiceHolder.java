@@ -2,7 +2,6 @@ package xyz.erupt.flow.process.userlink.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeAssign;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.process.userlink.UserLinkService;
 
@@ -53,6 +52,11 @@ public class UserLinkServiceHolder implements UserLinkService {
     @Override
     public LinkedHashSet<OrgTreeVo> getAdminUsers() {
         return this.userLinkService.getAdminUsers();
+    }
+
+    @Override
+    public LinkedHashSet<String> getRoleIdsByUserId(String userId) {
+        return this.userLinkService.getRoleIdsByUserId(userId);
     }
 
     /**

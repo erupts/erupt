@@ -12,4 +12,10 @@ public interface TaskUserLinkService {
     List<OaTaskUserLink> saveBatch(Collection<OaTaskUserLink> links);
 
     void removeByTaskId(Long id);
+
+    List<OaTaskUserLink> listByRoleIds(Collection<String> roleIds);
+
+    List<OaTaskUserLink> listByUserIds(Collection<String> roleIds);
+
+    List<OaTaskUserLink> listByTaskId(Long taskId);
 }

@@ -131,7 +131,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
             while (userIds.iterator().hasNext()) {
                 OaTaskUserLink link = new OaTaskUserLink();
                 link.setUserLinkType(OaTask.USER_LINK_USERS);
-                link.setUserId(userIds.iterator().next());
+                link.setLinkId(userIds.iterator().next());
                 links.add(link);
             }
             taskUserLinkService.saveBatch(links);
@@ -202,19 +202,21 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
                 orWrapper.eq(OaTask::getAssignee, userName);
             });
             // 其他2种，候选人包括我，或候选角色包括我的角色
-            wrapper.or(orWrapper -> {
-                orWrapper.isNull(OaTask::getTaskOwner);
-                orWrapper.isNull(OaTask::getAssignee);
-                orWrapper.and(andWrapper -> {
-                    andWrapper.or().apply("t.id in " +
-                            "(select task_id from oa_ru_task_user_link where user_link_type='USERS' and user_id={0})", userName);
-                    andWrapper.or().apply("t.id in (" +
-                            "SELECT task_id FROM oa_ru_task_user_link " +
-                            " WHERE user_link_type = 'ROLES' " +
-                            " AND role_id in (SELECT `code` FROM e_upms_user_role a LEFT JOIN e_upms_user b ON a.user_id = b.id left join e_upms_role c on a.role_id=c.id WHERE b.account = {0}')"
-                            ")", userName);
+            //查询本人为候选人的情况
+            List<OaTaskUserLink> links = taskUserLinkService.listByUserIds(Arrays.asList(userName));
+            LinkedHashSet<String> roleIds = userLinkService.getRoleIdsByUserId(userName);
+            if(!CollectionUtils.isEmpty(roleIds)) {
+                //查询本角色为候选角色的情况
+                links.addAll(taskUserLinkService.listByRoleIds(roleIds));
+            }
+            if(!CollectionUtils.isEmpty(links)) {//如果有数据，则作为条件查询
+                wrapper.or(orWrapper -> {
+                    orWrapper.isNull(OaTask::getTaskOwner);
+                    orWrapper.isNull(OaTask::getAssignee);
+                    orWrapper.in(OaTask::getId, links.stream().map(l -> l.getTaskId()).collect(Collectors.toSet()));
                 });
-            });
+            }
+
         });
         queryWrapper.orderByDesc(OaTask::getCreateDate);
         List<OaTask> list = this.baseMapper.selectJoinList(OaTask.class, queryWrapper);

@@ -66,7 +66,7 @@ public class TaskBuilder {
                 userLinks.addAll(this.linkUsers.stream().map(u -> {
                     OaTaskUserLink link = new OaTaskUserLink();
                     link.setUserLinkType(OaTask.USER_LINK_USERS);
-                    link.setUserId(u);
+                    link.setLinkId(u);
                     return link;
                 }).collect(Collectors.toList()));
             }
@@ -74,7 +74,7 @@ public class TaskBuilder {
                 userLinks.addAll(this.linkRoles.stream().map(u -> {
                     OaTaskUserLink link = new OaTaskUserLink();
                     link.setUserLinkType(OaTask.USER_LINK_ROLES);
-                    link.setRoleId(u);
+                    link.setLinkId(u);
                     return link;
                 }).collect(Collectors.toList()));
             }

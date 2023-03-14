@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -20,10 +21,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.flow.service.impl.ProcessInstanceHistoryServiceImpl;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -41,9 +39,16 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaProcessInstanceHistory extends BaseModel {
+public class OaProcessInstanceHistory {
 
-    @EruptField(views = @View(title = "流程定义id", show = true))
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField(views = @View(title = "实例ID"))
+    private Long id;
+
+    @EruptField(views = @View(title = "流程定义id"))
     private String processDefId;
 
     @EruptField(views = @View(title = "表单id", show = false))
