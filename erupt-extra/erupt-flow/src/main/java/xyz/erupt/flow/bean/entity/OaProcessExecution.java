@@ -1,5 +1,6 @@
 package xyz.erupt.flow.bean.entity;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.Column;
@@ -69,7 +71,14 @@ public class OaProcessExecution extends BaseModel {
     @EruptField(views = @View(title = "结束时间", type = ViewType.DATE_TIME))
     private Date ended;
 
-    @EruptField(views = @View(title = "流程详情", show = false))
+    @EruptField(views = @View(title = "节点配置", show = false))
     @Column(columnDefinition = "json")//json类型
     private String process;
+
+    public OaProcessNode getProcessNode() {
+        if(this.getProcess()==null) {
+            return null;
+        }
+        return JSON.parseObject(this.getProcess(), OaProcessNode.class);
+    }
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -15,12 +16,10 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.flow.handler.TaskCompleteHandler;
-import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 流程中需要用户处理的任务
@@ -40,10 +39,17 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaTask extends BaseModel {
+public class OaTask {
 
     public static final String USER_LINK_USERS = "USERS";
     public static final String USER_LINK_ROLES = "ROLES";
+
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField
+    private Long id;
 
     @EruptField(views = @View(title = "节点id"))
     private Long activityId;
@@ -119,8 +125,10 @@ public class OaTask extends BaseModel {
      * USERS 关联多个用户，这些人中任意人都可以处理
      * ROLES 关联多个角色，这些角色中任意人都可以处理此任务
      */
-    @EruptField(views = @View(title = "候选人类型", desc = "所属人和分配人都没有人时，由候选人完成任务。USERS 多个用户候选; ROLES 多个角色候选"))
-    private String userLinkType;
+    @Transient
+    @TableField(exist = false)
+    @EruptField(views = @View(title = "候选人列表", desc = "所属人和分配人都没有人时，由候选人完成任务。USERS 多个用户候选; ROLES 多个角色候选"))
+    private List<OaTaskUserLink> userLinks;
 
     /**
      * 任务执行模式
@@ -137,4 +145,19 @@ public class OaTask extends BaseModel {
         , edit = @Edit(title = "是否激活", search = @Search)
     )
     private Boolean active;//激活状态，只有激活的任务可以被完成
+
+    @Transient
+    @TableField(exist = false)
+    @EruptField(views = @View(title = "流程发起人ID"))
+    private String instCreator;
+
+    @Transient
+    @TableField(exist = false)
+    @EruptField(views = @View(title = "流程发起人"))
+    private String instCreatorName;
+
+    @Transient
+    @TableField(exist = false)
+    @EruptField(views = @View(title = "流程发起事件"))
+    private Date instCreateDate;
 }

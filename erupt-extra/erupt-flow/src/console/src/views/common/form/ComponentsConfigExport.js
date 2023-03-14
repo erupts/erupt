@@ -6,6 +6,7 @@ export const ValueType = {
   date: 'Date',
   user: 'User',
   dept: 'Dept',
+  role: 'Role',
   dateRange: 'DateRange'
 }
 
@@ -170,6 +171,18 @@ export const baseComponents = [
         icon: 'iconfont icon-map-site',
         value: [],
         valueType: ValueType.dept,
+        props: {
+          required: false,
+          enablePrint: true,
+          multiple: false
+        }
+      },
+      {
+        title: '角色选择',
+        name: 'RolePicker',
+        icon: 'el-icon-s-custom',
+        value: [],
+        valueType: ValueType.role,
         props: {
           required: false,
           enablePrint: true,

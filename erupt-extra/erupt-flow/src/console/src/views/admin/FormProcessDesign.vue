@@ -43,6 +43,7 @@ import FormBaseSetting from '@/views/admin/layout/FormBaseSetting'
 import FormDesign from '@/views/admin/layout/FormDesign'
 import ProcessDesign from '@/views/admin/layout/ProcessDesign'
 import FormProSetting from '@/views/admin/layout/FormProSetting'
+import {getToken} from "@/api/auth";
 
 export default {
   name: "FormProcessDesign",
@@ -240,14 +241,14 @@ export default {
         if (this.isNew || !this.$isNotEmpty(this.setup.formId)) {
           createForm(template).then(rsp => {
             this.$message.success("创建表单成功")
-            this.$router.push("/formsPanel")
+            this.$router.push("/formsPanel?_token="+getToken())
           }).catch(err => {
             this.$message.error(err)
           })
         } else {
           updateFormDetail(template).then(rsp => {
             this.$message.success("更新表单成功")
-            this.$router.push("/formsPanel")
+            this.$router.push("/formsPanel?_token="+getToken())
           }).catch(err => {
             this.$message.error(err)
           })

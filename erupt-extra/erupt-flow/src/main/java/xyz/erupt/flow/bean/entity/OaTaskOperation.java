@@ -32,10 +32,10 @@ import java.util.Date;
 public class OaTaskOperation extends BaseModel {
 
     public static final String COMPLETE = "COMPLETE";//完成
-    public static final String REJECT = "REJECT";//拒绝，流程会回到发起人
-    public static final String BACK = "BACK";//退回，流程回到上一节点（流程图中的上一节点，如果上一节点存在分支则不可退回）
+    public static final String REFUSE = "REFUSE";//拒绝，走拒绝策略
     public static final String JUMP = "JUMP";//跳转，指定节点进行跳转
     public static final String SHUTDOWN = "SHUTDOWN";//终止
+    public static final String ASSIGN = "ASSIGN";//转办
 
     @EruptField(views = @View(title = "流程实例id"))
     private Long processInstId;

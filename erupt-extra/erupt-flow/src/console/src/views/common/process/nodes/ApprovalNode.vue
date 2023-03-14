@@ -32,7 +32,7 @@ export default {
           if (config.assignedUser.length > 0){
             let texts = []
             config.assignedUser.forEach(org => texts.push(org.name))
-            return String(texts).replaceAll(',', '、')
+            return '指定用户：'+String(texts).replaceAll(',', '、')
           }else {
             return '请指定审批人'
           }
@@ -57,7 +57,9 @@ export default {
           }
         case "ROLE":
           if (config.role.length > 0){
-            return String(config.role).replaceAll(',', '、')
+            let texts = []
+            config.role.forEach(org => texts.push(org.name))
+            return '指定角色：'+String(texts).replaceAll(',', '、')
           }else {
             return '指定角色（未设置）'
           }

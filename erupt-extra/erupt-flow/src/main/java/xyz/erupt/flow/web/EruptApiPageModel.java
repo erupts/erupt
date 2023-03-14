@@ -1,10 +1,11 @@
 package xyz.erupt.flow.web;
 
-import com.baomidou.mybatisplus.core.toolkit.BeanUtils;
 import com.github.pagehelper.PageInfo;
+import org.springframework.cglib.beans.BeanMap;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.Page;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,17 +25,25 @@ public class EruptApiPageModel extends EruptApiModel {
      * @param <T>
      * @return
      */
-    public static <T> EruptApiModel successApi(List<T> list) {
+    public static <T> EruptApiModel successApi(List<T> list, int pageNum, int pageSize) {
         PageInfo page = new PageInfo(list);//转化为pageInfo
         List<Map<String, Object>> mapList = list.stream().map(t -> {
-            Map<String, Object> map = BeanUtils.beanToMap(t);
+            Map<String, Object> map = new HashMap<>();
+            BeanMap beanMap = BeanMap.create(t);
+            for (Object object : beanMap.entrySet()) {
+                if (object instanceof Map.Entry) {
+                    Map.Entry<String , Object> entry = (Map.Entry<String, Object>)object ;
+                    String key = entry.getKey();
+                    map.put(key, beanMap.get(key));
+                }
+            }
             return map;
         }).collect(Collectors.toList());
 
         Page p = new Page();
         p.setList(mapList);
-        p.setPageIndex(page.getPageNum());
-        p.setPageSize(page.getPageSize());
+        p.setPageIndex(pageNum);
+        p.setPageSize(pageSize);
         p.setTotal(page.getTotal());
         p.setTotalPage(page.getPages());//总页数
 

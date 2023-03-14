@@ -30,6 +30,8 @@
 
 <script>
 
+import {getToken} from "@/api/auth";
+
 export default {
   name: "LayoutHeader",
   props:{
@@ -69,7 +71,7 @@ export default {
     valid() {
       if (!this.$isNotEmpty(this.setup.group)) {
         this.$message.warning('请选择分组')
-        this.$router.push('/layout/baseSetup')
+        this.$router.push('/layout/baseSetup?_token='+getToken())
         return false;
       }
       return true;
@@ -82,7 +84,7 @@ export default {
       }).then(() => {
         //window.location.reload()
         //this.$store.commit('clearTemplate')
-        this.$router.push('/formsPanel')
+        this.$router.push('/formsPanel?_token='+getToken())
       })
     },
     to(path) {

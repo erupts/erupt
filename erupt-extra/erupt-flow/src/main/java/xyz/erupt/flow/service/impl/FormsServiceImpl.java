@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.flow.bean.entity.OaForms;
+import xyz.erupt.flow.bean.entity.OaProcessDefinition;
 import xyz.erupt.flow.mapper.OaFormsMapper;
 import xyz.erupt.flow.service.FormsService;
 import xyz.erupt.flow.service.ProcessDefinitionService;
@@ -30,8 +31,12 @@ public class FormsServiceImpl extends ServiceImpl<OaFormsMapper, OaForms> implem
     @Transactional(rollbackFor = Exception.class)
     public boolean updateById(OaForms entity) {
         entity.setIsStop(entity.getGroupId()==-1);
-        //需要同时修改对应的流程定义的锁定状态
-        processDefinitionService.updateStopByFormId(entity.getFormId(), entity.getIsStop());
+        //需要同时修改对应的流程定义的锁定状态和分组
+        OaProcessDefinition build = OaProcessDefinition.builder()
+                .isStop(entity.getIsStop())
+                .groupId(entity.getGroupId())
+                .build();
+        processDefinitionService.updateByFormId(build, entity.getFormId());
         return super.updateById(entity);
     }
 
@@ -44,6 +49,7 @@ public class FormsServiceImpl extends ServiceImpl<OaFormsMapper, OaForms> implem
         form.setCreated(now);
         form.setUpdated(now);
         super.save(form);//保存表单
+        processDefinitionService.deploy(form);
     }
 
     @Override

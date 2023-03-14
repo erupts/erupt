@@ -20,6 +20,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.flow.service.impl.ProcessInstanceHistoryServiceImpl;
 import xyz.erupt.jpa.model.BaseModel;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -98,6 +99,7 @@ public class OaProcessInstanceHistory extends BaseModel {
     @EruptField(views = {
             @View(title = "表单内容", show = false)
     })
+    @Column(columnDefinition = "json")//json类型
     private String formItems;
 
     @Transient//标识虚拟列

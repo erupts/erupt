@@ -1,3 +1,4 @@
+import request from "@/api/request";
 
 export function getToken() {
     return getQueryVariable("_token")
@@ -16,5 +17,16 @@ export function getQueryVariable(fieldName) {
             }
         }
     }
-    return null;
+    return null;//备用的万能token
+}
+
+/**
+ * 获取登陆人信息
+ * @returns
+ */
+export function getLoginInfo() {
+    return request({
+        url: '/userinfo',
+        method: 'get'
+    })
 }

@@ -2,6 +2,7 @@ package xyz.erupt.flow.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -9,17 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.flow.bean.entity.*;
+import xyz.erupt.flow.bean.entity.node.*;
+import xyz.erupt.flow.bean.vo.OrgTreeVo;
+import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaProcessActivityMapper;
-import xyz.erupt.flow.service.ProcessActivityHistoryService;
-import xyz.erupt.flow.service.ProcessActivityService;
-import xyz.erupt.flow.service.ProcessExecutionService;
-import xyz.erupt.flow.service.TaskService;
+import xyz.erupt.flow.process.engine.TaskBuilder;
+import xyz.erupt.flow.process.userlink.impl.UserLinkServiceHolder;
+import xyz.erupt.flow.service.*;
 
-import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMapper, OaProcessActivity>
@@ -34,6 +39,10 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
     @Lazy
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private UserLinkServiceHolder userLinkService;
+    @Autowired
+    private ProcessInstanceService processInstanceService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -60,7 +69,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
             }
             return 0;
         }else if("ROOT".equals(node.getType()) || "APPROVAL".equals(node.getType())) {//如果是用户任务
-            this.newActivity(execution, node, status);
+            this.newActivity(execution, node, status, null, 1);
             return 1;
         }else if("CONDITIONS".equals(node.getType())) {//如果是互斥分支
             //主线程先继续向前，并等待
@@ -88,7 +97,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void removeByProcessInstId(Serializable procInstId) {
+    public void removeByProcessInstId(Long procInstId) {
         QueryWrapper<OaProcessActivity> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(OaProcessActivity::getProcessInstId, procInstId);
         this.remove(queryWrapper);
@@ -96,45 +105,16 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void activeByExecutionId(Long executionId) {
-        QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("execution_id", executionId);
-        this.update(
-                OaProcessActivity.builder()
-                    .active(true)
-                    .build()
-                , queryWrapper
-        );
-        OaProcessActivityHistory build = OaProcessActivityHistory.builder()
-                .build();
+    public boolean activeByExecutionId(Long executionId) {
+        //查询下一个没激活的，进行激活
+        OaProcessActivity build = this.getNexActivity(executionId, false);
+        if(build==null) {
+            return false;
+        }
         build.setActive(true);
-        processActivityHistoryService.update(build, queryWrapper);//同步更新历史表
-        taskService.activeTaskByExecutionId(executionId);
-    }
-
-    private OaProcessActivity newActivity(OaProcessExecution execution, OaProcessNode node, String status) {
-        OaProcessActivity build = OaProcessActivity.builder()
-                .activityKey(node.getId())
-                .activityName(node.getName())
-                .executionId(execution.getId())
-                .processInstId(execution.getProcessInstId())
-                .processDefId(execution.getProcessDefId())
-                .completeCondition(OaProcessActivity.COMPLETE_CONDITION_ALL)//只有全部节点完成一种
-                .completeMode(OaProcessActivity.PARALLEL)//执行模式，默认并行
-                .createDate(new Date())
-                .active(OaProcessExecution.STATUS_RUNNING.equals(status))//如果线程状态是运行，活动才会被激活
-                .finished(false)
-                .finishDate(null)
-                .description(node.getDesc())
-                .build();
-        this.save(build);
-        OaProcessActivityHistory his = new OaProcessActivityHistory();
-        BeanUtils.copyProperties(build, his);
-        processActivityHistoryService.save(his);//同步保存历史表
-        taskService.generateTask(build);
-
-        processExecutionService.freshProcess(execution.getId(), JSON.toJSONString(node));//更新线程的数据
-        return build;
+        processActivityHistoryService.copyAndSave(build);//同步更新历史表
+        taskService.activeTaskByActivityId(build.getId());
+        return true;
     }
 
     /**
@@ -147,8 +127,13 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
     public OaProcessNode switchNode(JSONObject formContent, List<OaProcessNode> nodes) {
         //按照顺序判断是否满足条件
         for (OaProcessNode node : nodes) {
-            if(checkForGroups(formContent, node.getProps().getGroups(), node.getProps().getGroupsType())) {
-                return node;
+            try {
+                if(checkForGroups(formContent, node.getProps().getGroups(), node.getProps().getGroupsType())) {
+                    return node;
+                }
+            }catch (Exception e) {
+                log.debug("判断条件出错：" + e.getMessage());
+                break;
             }
         }
         //如果都不满足，默认走第一条
@@ -204,7 +189,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
         }
         if("Number".equals(condition.getValueType())) {//数值类型
             Double formValue = form.getDouble(condition.getId());//表单值
-            if(formValue==null) {
+            if(formValue==null) {//不能报错，因为可能是测试走流程
                 throw new RuntimeException("分支条件不能为空");
             }
             if("=".equals(condition.getCompare())) {
@@ -251,11 +236,9 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
     @Override
     public void triggerComplete(Long activityId) {
         OaProcessActivity byId = this.getById(activityId);
-        List<OaTask> oaTasks = taskService.listByActivityId(activityId);
-        if(oaTasks==null || oaTasks.size()<=0) {//如果还有任务需要执行，就不能完成此节点
-            if(OaProcessActivity.SERIAL.equals(byId.getCompleteMode())) {//如果是串行模式，将下一个任务激活
-                taskService.activeTask(oaTasks.get(0).getId());
-            }
+        //尝试激活下一个任务，如果激活成功则不能完成
+        boolean a = taskService.activeTaskByActivityId(activityId);
+        if(a) {
             return;
         }
         //否则删除当前节点，并修改历史表
@@ -265,8 +248,31 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
         history.setId(activityId);
         processActivityHistoryService.updateById(history);
         this.removeById(activityId);
+        //尝试激活下一个活动
+        boolean b = this.activeByExecutionId(byId.getExecutionId());
+        if(b) {//如果已经激活了，则不能继续
+            return;
+        }
         //然后触发线程的前进
         processExecutionService.triggerComplete(byId.getExecutionId());
+    }
+
+    /**
+     * 查询下一个激活的任务
+     * @param executionId
+     * @return
+     */
+    private OaProcessActivity getNexActivity(Long executionId, boolean actived) {
+        LambdaQueryWrapper<OaProcessActivity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OaProcessActivity::getExecutionId, executionId);
+        queryWrapper.eq(OaProcessActivity::getActive, actived);
+        queryWrapper.orderByAsc(OaProcessActivity::getSort);
+        List<OaProcessActivity> list = this.list(queryWrapper);
+        if(CollectionUtils.isEmpty(list)) {
+            return null;
+        }else {
+            return list.get(0);
+        }
     }
 
     @Override
@@ -275,5 +281,137 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
         queryWrapper.eq("execution_id", executionId);
         queryWrapper.eq("active", true);
         return this.getOne(queryWrapper);
+    }
+
+    /**
+     * 创建一个活动
+     * @param execution
+     * @param node
+     * @param status
+     * @return
+     */
+    private OaProcessActivity newActivity(OaProcessExecution execution, OaProcessNode node, String status, OaProcessNodeProps props, int sort) {
+        OaProcessActivity build = OaProcessActivity.builder()
+                .activityKey(node.getId())
+                .activityName(node.getName())
+                .executionId(execution.getId())
+                .processInstId(execution.getProcessInstId())
+                .processDefId(execution.getProcessDefId())
+                .completeCondition(OaProcessActivity.COMPLETE_CONDITION_ALL)//只有全部节点完成一种
+                .completeMode(OaProcessActivity.PARALLEL)//执行模式，默认并行
+                .createDate(new Date())
+                .active(OaProcessExecution.STATUS_RUNNING.equals(status))//如果线程状态是运行，活动才会被激活
+                .finished(false)
+                .finishDate(null)
+                .description(node.getDesc())
+                .sort(sort)
+                .build();
+        this.save(build);
+        OaProcessActivityHistory his = new OaProcessActivityHistory();
+        BeanUtils.copyProperties(build, his);
+        processActivityHistoryService.save(his);//同步保存历史表
+        if(props!=null) {
+            this.generateTask(execution, build, node, props);
+        }else {
+            this.generateTask(execution, build, node, node.getProps());
+        }
+        processExecutionService.freshProcess(execution.getId(), JSON.toJSONString(node));//更新线程的数据
+        return build;
+    }
+
+    private void generateTask(OaProcessExecution execution, OaProcessActivity activity, OaProcessNode node, OaProcessNodeProps props) {
+        TaskBuilder builder = new TaskBuilder(activity);
+        //查询出当前实例
+        OaProcessInstance inst = processInstanceService.getById(activity.getProcessInstId());
+        //设置会签模式
+        builder.setCompleteMode(props.getMode());
+        builder.setActive(activity.getActive());
+        /**
+         * 确定用户处理人
+         */
+        switch (props.getAssignedType()) {
+            case FlowConstant.ASSIGN_TYPE_USER://循环添加候选人
+                props.getAssignedUser().forEach(au -> builder.addUser(au.getId()));
+                break;
+            case FlowConstant.ASSIGN_TYPE_ROLE://循环添加候选角色
+                props.getRole().forEach(a -> builder.addLinkRole(a.getId()));
+                break;
+            case FlowConstant.ASSIGN_TYPE_SELF_SELECT://发起人自选，暂不支持
+                throw new RuntimeException("暂不支持发起人自选");
+            case FlowConstant.ASSIGN_TYPE_SELF:
+                builder.addUser(inst.getCreator());//将发起人作为审批人
+                break;
+            case FlowConstant.ASSIGN_TYPE_LEADER_TOP://发起人的所有上级
+                //查询主管
+                LinkedHashMap<Integer, List<OrgTreeVo>> leaderMap =
+                        userLinkService.getLeaderMap(inst.getCreator(), 1, props.getLeaderTop().getEndLevel());
+                this.forLeaders(execution, node, activity, props, leaderMap);
+                return;//这种情况不需要继续后续操作
+            case FlowConstant.ASSIGN_TYPE_LEADER://特定层级主管
+                //查询主管
+                LinkedHashMap<Integer, List<OrgTreeVo>> leaderMapNew =
+                        userLinkService.getLeaderMap(inst.getCreator(), props.getLeaderTop().getLevel(), props.getLeaderTop().getLevel());
+                this.forLeaders(execution, node, activity, props, leaderMapNew);
+                return;//这种情况不需要继续后续操作
+            case FlowConstant.ASSIGN_TYPE_FORM_USER:
+                //从表单中取值
+                JSONObject formContent = JSON.parseObject(inst.getFormItems());
+                List<JSONObject> users = formContent.getObject(props.getFormUser(), List.class);
+                if(CollectionUtils.isEmpty(users)) {
+                    throw new RuntimeException("从表单中获取联系人失败");
+                }
+                users.forEach(u -> {
+                    builder.addUser(u.getString("id"));//全部都是分配人
+                });
+                break;
+            default:
+                throw new RuntimeException("请指定审批人");
+        }
+        List<OaTask> oaTasks = builder.build();
+        if(CollectionUtils.isEmpty(oaTasks)) {
+            throw new RuntimeException("为活动"+activity.getActivityName()+"生成任务失败");
+        }
+        //保存任务列表
+        taskService.saveBatchWithUserLink(oaTasks);
+    }
+
+    /**
+     * 解析领导审批
+     * @param execution
+     * @param node
+     * @param props
+     * @param leaderMap
+     */
+    private void forLeaders(
+            OaProcessExecution execution, OaProcessNode node, OaProcessActivity activity
+            , OaProcessNodeProps props, LinkedHashMap<Integer, List<OrgTreeVo>> leaderMap) {
+        this.removeById(activity.getId());
+        processActivityHistoryService.removeById(activity.getId());
+        boolean first = true;
+        for (Integer integer : leaderMap.keySet()) {
+            List<OrgTreeVo> leaders = leaderMap.get(integer);
+            OaProcessNodeProps buildProps = new OaProcessNodeProps().builder()
+                    .assignedType(FlowConstant.ASSIGN_TYPE_USER)//分配给用户
+                    .assignedUser(
+                            leaders.stream().map(l -> {
+                                OaProcessNodeAssign assign = new OaProcessNodeAssign();
+                                assign.setId(l.getId());
+                                return assign;
+                            }).collect(Collectors.toList())
+                    )
+                    .mode(props.getMode())//沿用传入的会签模式
+                    .nobody(props.getNobody())
+                    .timeLimit(props.getTimeLimit())
+                    .refuse(props.getRefuse())
+                    .formPerms(props.getFormPerms())
+                    .build();
+            node.setDesc("第"+integer+"级主管审批");
+            if(first) {//只有第一个活动激活
+                this.newActivity(execution, node, OaProcessExecution.STATUS_RUNNING, buildProps, integer);
+                first = false;
+            }else {
+                this.newActivity(execution, node, OaProcessExecution.STATUS_WAITING, buildProps, integer);
+            }
+        }
     }
 }

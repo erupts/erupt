@@ -1,16 +1,16 @@
 <template>
-  <w-dialog :border="false" closeFree width="600px" @ok="selectOk" :title="title" v-model="visible">
+  <w-dialog :border="false" closeFree width="600px" @ok="selectOk" :title="_title" v-model="visible">
     <div class="picker">
       <div class="candidate" v-loading="loading">
         <div v-if="type !== 'role'">
           <el-input v-model="search" @input="searchUser" style="width: 95%;" size="small"
-                    clearable placeholder="搜索人员，支持拼音、姓名" prefix-icon="el-icon-search"/>
+                    clearable placeholder="搜索" prefix-icon="el-icon-search"/>
           <div v-show="!showUsers">
             <ellipsis hoverTip style="height: 18px; color: #8c8c8c; padding: 5px 0 0" :row="1" :content="deptStackStr">
               <i slot="pre" class="el-icon-office-building"></i>
             </ellipsis>
             <div style="margin-top: 5px">
-              <el-checkbox v-model="checkAll" @change="handleCheckAllChange" :disabled="!multiple">全选</el-checkbox>
+              <el-checkbox v-model="checkAll" @change="handleCheckAllChange" v-if="multiple">全选</el-checkbox>
               <span v-show="deptStack.length > 0" class="top-dept" @click="beforeNode">上一级</span>
             </div>
           </div>
@@ -19,24 +19,25 @@
           <div>系统角色</div>
         </div>
         <div class="org-items" :style="type === 'role' ? 'height: 350px':''">
-          <el-empty :image-size="100" description="似乎没有数据" v-show="orgs.length === 0"/>
-          <div v-for="(org, index) in orgs" :key="index" :class="orgItemClass(org)" @click="selectChange(org)">
-            <el-checkbox v-model="org.selected" :disabled="disableDept(org)"></el-checkbox>
-            <div v-if="org.type === 'dept'">
+          <el-empty :image-size="100" description="似乎没有数据" v-show="!nodes || nodes.length === 0"/>
+          <div v-for="(org, index) in nodes" :key="index" :class="orgItemClass(org)">
+            <!-- 符合当前类型的数据才可以多选 -->
+            <el-checkbox v-model="org.selected" v-if="org.type === type" @change="selectChange(org)"></el-checkbox>
+            <div v-if="org.type === 'dept'" @click="triggerCheckbox(org)">
               <i class="el-icon-folder-opened"></i>
-              <span class="name">{{ org.name }}</span>
-              <span @click.stop="nextNode(org)" :class="`next-dept${org.selected ? '-disable':''}`">
-                <i class="iconfont icon-map-site"></i>下级
+              <span class="name" :title="org.name">{{ org.name.substring(0, 12) }}</span>
+              <span @click.stop="org.selected?'':nextNode(org)" :class="`next-dept${org.selected ? '-disable':''}`">
+                <i class="iconfont icon-map-site"></i> 下级
               </span>
             </div>
-            <div v-else-if="org.type === 'user'" style="display: flex; align-items: center">
+            <div v-else-if="org.type === 'user'" style="display: flex; align-items: center" @click="triggerCheckbox(org)">
               <el-avatar :size="35" :src="org.avatar" v-if="$isNotEmpty(org.avatar)"/>
               <span v-else class="avatar">{{getShortName(org.name)}}</span>
-              <span class="name">{{ org.name }}</span>
+              <span class="name" :title="org.name">{{ org.name.substring(0, 12) }}</span>
             </div>
-            <div style="display: inline-block" v-else>
+            <div style="display: inline-block" v-else @click="triggerCheckbox(org)">
               <i class="iconfont icon-bumen"></i>
-              <span class="name">{{ org.name }}</span>
+              <span class="name" :title="org.name">{{ org.name.substring(0, 12) }}</span>
             </div>
           </div>
         </div>
@@ -71,7 +72,7 @@
 </template>
 
 <script>
-import {getOrgTree, getUserByName} from '@/api/org'
+import {getOrgTree, getOrgTreeUser, getRole} from '@/api/org'
 
 export default {
   name: "OrgPicker",
@@ -81,9 +82,9 @@ export default {
       default: '请选择',
       type: String
     },
-    type: {
-      default: 'org', //org选择部门/人员  user-选人  dept-选部门 role-选角色
-      type: String
+    type: {//user-选人  dept-选部门 role-选角色
+      type: String,
+      required: true
     },
     multiple: { //是否多选
       default: false,
@@ -105,27 +106,35 @@ export default {
       isIndeterminate: false,
       searchUsers: [],
       nodes: [],
-      select: [],
+      select: [],//最终返回的数据
       search: '',
       deptStack: []
     }
   },
   computed: {
+    _title() {
+      if(this.type==='user') {
+        return "请选择用户" + (this.multiple?"[多选]":"[单选]")
+      }else if(this.type==='dept') {
+        return "请选择部门" + (this.multiple?"[多选]":"[单选]")
+      }else if(this.type==='role') {
+        return "请选择角色" + (this.multiple?"[多选]":"[单选]")
+      }else {
+        return "-"
+      }
+    },
     deptStackStr() {
       return String(this.deptStack.map(v => v.name)).replaceAll(',', ' > ')
     },
-    orgs() {
-      return !this.search || this.search.trim() === '' ? this.nodes : this.searchUsers
-    },
     showUsers(){
       return this.search || this.search.trim() !== ''
-    }
+    },
   },
   methods: {
     show() {
       this.visible = true
       this.init()
-      this.getOrgList()
+      this.getDataList()
     },
     orgItemClass(org){
       return {
@@ -135,19 +144,28 @@ export default {
         'org-role-item': org.type === 'role'
       }
     },
-    disableDept(node) {
-      return this.type === 'user' && 'dept' === node.type
-    },
-    getOrgList() {
+    getDataList() {
       this.loading = true
-      getOrgTree({deptId: this.nowDeptId, type: this.type}).then(rsp => {
-        this.loading = false
-        this.nodes = rsp.data
-        this.selectToLeft()
-      }).catch(err => {
-        this.loading = false
-        this.$message.error("接口异常")
-      })
+      if(this.type==='user') {
+        getOrgTreeUser({deptId: this.nowDeptId, keywords: this.search}).then(rsp => {
+          this.loading = false
+          this.nodes = rsp.data
+          this.selectToLeft()
+        })
+        return "请选择用户"
+      }else if(this.type==='dept') {
+        getOrgTree({deptId: this.nowDeptId, keywords: this.search}).then(rsp => {
+          this.loading = false
+          this.nodes = rsp.data
+          this.selectToLeft()
+        })
+      }else if(this.type==='role') {
+        getRole({deptId: this.nowDeptId, keywords: this.search}).then(rsp => {
+          this.loading = false
+          this.nodes = rsp.data
+          this.selectToLeft()
+        })
+      }
     },
     getShortName(name) {
       if (name) {
@@ -156,17 +174,6 @@ export default {
       return '**'
     },
     searchUser() {
-      let userName = this.search.trim()
-      this.searchUsers = []
-      this.loading = true
-      getUserByName({userName: userName}).then(rsp => {
-        this.loading = false
-        this.searchUsers = rsp.data
-        this.selectToLeft()
-      }).catch(err => {
-        this.loading = false
-        this.$message.error("接口异常")
-      })
     },
     selectToLeft() {
       let nodes = this.search.trim() === '' ? this.nodes : this.searchUsers;
@@ -181,37 +188,30 @@ export default {
         }
       })
     },
+    //点击名字，触发选中
+    triggerCheckbox(node) {
+      if(node.type==this.type) {
+        node.selected = !node.selected;
+        this.selectChange(node);
+      }
+    },
+    //选中
     selectChange(node) {
       if (node.selected) {
+        if(!this.multiple) {//如果不是多选，就先取消所有选中
+          this.nodes.forEach(n => {
+            n.selected = false;
+          });
+          this.select = [];
+        }
+        node.selected = true;
+        this.select.push(node);
+      } else {//取消选中的逻辑
         this.checkAll = false;
         for (let i = 0; i < this.select.length; i++) {
           if (this.select[i].id === node.id) {
-            this.select.splice(i, 1);
+            this.select.splice(i, 1);//移除元素
             break;
-          }
-        }
-        node.selected = false;
-      } else if (!this.disableDept(node)) {
-        node.selected = true
-        let nodes = this.search.trim() === '' ? this.nodes : this.searchUsers;
-        if (!this.multiple) {
-          nodes.forEach(nd => {
-            if (node.id !== nd.id) {
-              nd.selected = false
-            }
-          })
-        }
-        if (node.type === 'dept') {
-          if (!this.multiple) {
-            this.select = [node]
-          } else {
-            this.select.unshift(node);
-          }
-        } else {
-          if (!this.multiple) {
-            this.select = [node]
-          } else {
-            this.select.push(node);
           }
         }
       }
@@ -233,7 +233,7 @@ export default {
     handleCheckAllChange() {
       this.nodes.forEach(node => {
         if (this.checkAll) {
-          if (!node.selected && !this.disableDept(node)) {
+          if (!node.selected && node.type==this.type) {
             node.selected = true
             this.select.push(node)
           }
@@ -251,7 +251,7 @@ export default {
     nextNode(node) {
       this.nowDeptId = node.id
       this.deptStack.push(node)
-      this.getOrgList()
+      this.getDataList()
     },
     beforeNode() {
       if (this.deptStack.length === 0) {
@@ -263,13 +263,14 @@ export default {
         this.nowDeptId = this.deptStack[this.deptStack.length - 2].id
       }
       this.deptStack.splice(this.deptStack.length - 1, 1);
-      this.getOrgList()
+      this.getDataList()
     },
     recover() {
       this.select = []
       this.nodes.forEach(nd => nd.selected = false)
     },
     selectOk() {
+      //触发选中回调
       this.$emit('ok', Object.assign([], this.select.map(v => {
         v.avatar = undefined
         return v
@@ -415,6 +416,9 @@ export default {
 
       .name {
         margin-left: 5px;
+        cursor: pointer;
+        width: 200px;
+        display: inline-block;
       }
 
       &:hover {

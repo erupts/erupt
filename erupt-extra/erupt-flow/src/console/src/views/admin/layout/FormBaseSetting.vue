@@ -47,15 +47,15 @@
         </el-select>
         <el-input size="medium" v-model="setup.settings.notify.title" style="width: 68%; float:right;" placeholder="消息通知标题"></el-input>
       </el-form-item>
-      <el-form-item v-if="setup.settings" label="谁可以管理此表单">
+      <!--<el-form-item v-if="setup.settings" label="谁可以管理此表单">
         <el-select v-model="setup.settings.admin" @click.native="selectUser('admin')" value-key="name"
                    class="select-u" placeholder="请选择可以管理此表单的人员"
                    size="medium" clearable multiple>
           <el-option v-for="(wc, index) in setup.settings.admin" :label="wc.name" :key="index" :value="wc"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
     </el-form>
-    <org-picker title="请选择可以管理此表单的人员" multiple ref="orgPicker" :selected="select" @ok="selected"></org-picker>
+    <org-picker title="请选择可以管理此表单的人员" multiple ref="orgPicker" type="user" :selected="select" @ok="selected"></org-picker>
   </div>
 </template>
 

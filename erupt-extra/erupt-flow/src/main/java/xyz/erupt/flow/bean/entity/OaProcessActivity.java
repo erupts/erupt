@@ -105,4 +105,9 @@ public class OaProcessActivity extends BaseModel {
     @Transient
     @TableField(exist = false)
     private List<OaTask> tasks;
+
+    @EruptField(views = @View(title = "完成顺序")
+            , edit = @Edit(title = "完成顺序", search = @Search)
+    )
+    private Integer sort;
 }

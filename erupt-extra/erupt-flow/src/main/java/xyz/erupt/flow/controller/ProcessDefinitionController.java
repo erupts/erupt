@@ -42,7 +42,7 @@ public class ProcessDefinitionController {
     @PostMapping("/process/start/form/{procDefId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel startById(@PathVariable String procDefId, @RequestBody JSONObject formContent) {
-        OaProcessInstance processInstance = processDefinitionService.startByFormId(procDefId, formContent.toJSONString());
+        OaProcessInstance processInstance = processDefinitionService.startById(procDefId, formContent.toJSONString());
         return EruptApiModel.successApi(processInstance);
     }
 

@@ -11,7 +11,7 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.OaProcessActivity;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.OaProcessInstance;
-import xyz.erupt.flow.bean.entity.OaProcessNode;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.mapper.OaProcessExecutionMapper;
 import xyz.erupt.flow.service.ProcessActivityService;
 import xyz.erupt.flow.service.ProcessExecutionService;
@@ -63,7 +63,7 @@ public class ProcessExecutionServiceImpl extends ServiceImpl<OaProcessExecutionM
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void removeByProcessInstId(Serializable procInstId) {
+    public void removeByProcessInstId(Long procInstId) {
         QueryWrapper<OaProcessExecution> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(OaProcessExecution::getProcessInstId, procInstId);
         this.remove(queryWrapper);

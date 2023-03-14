@@ -1,7 +1,7 @@
 //审批节点默认属性
 export const APPROVAL_PROPS = {
   assignedType: "ASSIGN_USER",
-  mode: "AND",
+  mode: "OR",//默认或签，即任意一个用户完成任务即可
   sign: false,
   nobody: {
     handler: "TO_PASS",

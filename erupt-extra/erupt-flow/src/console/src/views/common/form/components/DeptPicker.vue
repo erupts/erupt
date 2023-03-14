@@ -5,11 +5,13 @@
       <span class="placeholder"> {{placeholder}}</span>
     </div>
     <div v-else>
-      <el-button :disabled="formDisable" icon="iconfont icon-map-site" type="primary" size="mini" round @click="$refs.orgPicker.show()"> 选择部门</el-button>
-      <org-picker type="dept" :multiple="multiple" ref="orgPicker" :selected="_value" @ok="selected"/>
-      <span class="placeholder"> {{placeholder}}</span>
+      <div v-if="!formDisable || _value.length<=0">
+        <el-button :disabled="formDisable" icon="iconfont icon-map-site" type="primary" size="mini" round @click="$refs.orgPicker.show()"> 选择部门</el-button>
+        <org-picker type="dept" :multiple="multiple" ref="orgPicker" :selected="_value" @ok="selected"/>
+        <span class="placeholder"> {{placeholder}}</span>
+      </div>
       <div style="margin-top: 5px">
-        <el-tag size="mini" style="margin: 5px" closable v-for="(dept, i) in _value" @close="delDept(i)">{{dept.name}}</el-tag>
+        <el-tag style="margin: 5px;" :closable="!formDisable" v-for="(dept, i) in _value" @close="delDept(i)">{{dept.name}}</el-tag>
       </div>
     </div>
   </div>

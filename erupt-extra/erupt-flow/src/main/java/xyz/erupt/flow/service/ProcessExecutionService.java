@@ -3,7 +3,7 @@ package xyz.erupt.flow.service;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
-import xyz.erupt.flow.bean.entity.OaProcessNode;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 
 import java.io.Serializable;
 
@@ -25,7 +25,7 @@ public interface ProcessExecutionService extends IService<OaProcessExecution> {
      */
     public void triggerComplete(Long executionId);
 
-    void removeByProcessInstId(Serializable id);
+    void removeByProcessInstId(Long id);
 
     /**
      * 触发线程继续

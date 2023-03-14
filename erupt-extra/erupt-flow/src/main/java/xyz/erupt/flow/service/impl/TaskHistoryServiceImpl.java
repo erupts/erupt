@@ -11,7 +11,9 @@ import xyz.erupt.flow.bean.entity.OaTaskHistory;
 import xyz.erupt.flow.mapper.OaTaskHistoryMapper;
 import xyz.erupt.flow.service.TaskHistoryService;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskHistoryServiceImpl extends ServiceImpl<OaTaskHistoryMapper, OaTaskHistory>
@@ -24,6 +26,17 @@ public class TaskHistoryServiceImpl extends ServiceImpl<OaTaskHistoryMapper, OaT
         BeanUtils.copyProperties(task, oaTaskHistory);
         super.saveOrUpdate(oaTaskHistory);
         return oaTaskHistory;
+    }
+
+    @Override
+    public List<OaTaskHistory> copyAndSave(Collection<OaTask> tasks) {
+        List<OaTaskHistory> collect = tasks.stream().map(t -> {
+            OaTaskHistory hist = new OaTaskHistory();
+            BeanUtils.copyProperties(t, hist);
+            return hist;
+        }).collect(Collectors.toList());
+        this.saveOrUpdateBatch(collect);
+        return collect;
     }
 
     @Override

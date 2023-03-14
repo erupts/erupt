@@ -28,12 +28,6 @@ const router = new Router({
       meta: {title: '工作区', viewport: viewport}
     },
     {
-      path: "/detail/:dataId(\\w+)/:mode",
-      name: "processInstanceDetail",
-      component: () => import("@/views/workspace/ProcessDetail.vue"),
-      meta: {title: '表单详情', viewport: viewport}
-    },
-    {
       path: "/detail/:procInstId(\\w+)/:taskId(\\w+)/:activityKey(\\w+)/:mode",
       name: "taskDetail",
       component: () => import("@/views/workspace/TaskDetail.vue"),

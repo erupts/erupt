@@ -1,13 +1,16 @@
 <template>
   <div style="text-align: center">
-    <h4>先选择本次登录人员的身份，再进入相应的系统 😅</h4>
+    <h4 v-if="loginUser">{{'当前登陆人 ' + loginUser}}</h4>
+    <h4 v-else>请先登录 😅</h4>
 
     <div class="work-panel">
       <div class="user">
-        <el-button type="primary" round size="small" @click="$refs.orgPicker.show()" icon="el-icon-user">选择本次登录者</el-button>
+        <!--<el-button type="primary" round size="small" @click="$refs.orgPicker.show()" icon="el-icon-user">
+          选择本次登录者
+        </el-button>
         <div v-if="loginUser !== '' && loginUser !== null">
-          <span>{{loginUser.name}}</span>
-        </div>
+          <span>{{loginUser.nickName}}</span>
+        </div>-->
       </div>
       <div class="panel">
         <div class="panel-item" @click="to('/workSpace')">
@@ -36,6 +39,7 @@
 
 <script>
 import OrgPicker from "@/components/common/OrgPicker";
+import {getToken} from '@/api/auth';
 
 export default {
   name: "Index",
@@ -47,11 +51,15 @@ export default {
     }
   },
   mounted(){
-    let user = sessionStorage.getItem("user")
-    if (user !== null && user !== ''){
-      this.loginUser = JSON.parse(user)
-      this.select.push(this.loginUser)
-    }
+    getLoginInfo().then( res=> {
+      this.loginUser = res.nickname;
+      this.select.push({id: res.nickname, name: res.nickname, type: 'user'})
+    });
+    // let user = sessionStorage.getItem("user")
+    // if (user !== null && user !== ''){
+    //   this.loginUser = JSON.parse(user)
+    //   this.select.push(this.loginUser)
+    // }
   },
   methods:{
     selected(select){
@@ -63,9 +71,9 @@ export default {
     to(path){
       if (this.loginUser === null || this.loginUser === ''){
         this.$message.warning("未选择登陆人员")
-        this.$router.push(path)
+        this.$router.push(path+"?_token="+getToken())
       }else {
-        this.$router.push(path)
+        this.$router.push(path+"?_token="+getToken())
       }
     }
   }

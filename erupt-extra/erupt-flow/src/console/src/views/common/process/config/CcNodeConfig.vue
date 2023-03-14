@@ -42,7 +42,6 @@ export default {
       this.$refs.orgPicker.show()
     },
     selected(select) {
-      console.log(select)
       this.select = Object.assign([], select)
     },
     removeOrgItem(index){

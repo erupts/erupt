@@ -82,8 +82,14 @@
 <script>
 import draggable from "vuedraggable";
 import {
-  getFormGroups, groupItemsSort, groupSort,
-  createGroup, updateGroup, removeGroup, updateForm, removeForm
+  createGroup,
+  getFormGroups,
+  groupItemsSort,
+  groupSort,
+  removeForm,
+  removeGroup,
+  updateForm,
+  updateGroup
 } from '@/api/design'
 import {getToken} from "@/api/auth";
 
@@ -97,6 +103,10 @@ export default {
       visible: false,
       groups: []
     }
+  },
+  created() {
+    //重新设置token
+    sessionStorage.setItem("token", getToken());
   },
   mounted() {
     this.getGroups()
@@ -116,7 +126,7 @@ export default {
     newProcess(groupId) {
       this.$store.commit("setTemplate", this.getTemplateData());
       this.$store.commit("setIsEdit", false);
-      this.$router.push("/admin/design?groupId=" + groupId);//默认为其他分组
+      this.$router.push("/admin/design?_token="+getToken() +"&groupId=" + groupId);//默认为其他分组
     },
     groupSort() {
       if(this.groups.length<=0) {

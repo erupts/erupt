@@ -1,34 +1,35 @@
 package xyz.erupt.flow.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.flow.bean.entity.OaProcessActivity;
-import xyz.erupt.flow.bean.entity.OaProcessInstance;
-import xyz.erupt.flow.bean.entity.OaTask;
-import xyz.erupt.flow.bean.entity.OaTaskOperation;
+import xyz.erupt.flow.bean.entity.*;
+import xyz.erupt.flow.bean.entity.node.OaProcessNodeNobody;
+import xyz.erupt.flow.bean.entity.node.OaProcessNodeProps;
+import xyz.erupt.flow.bean.vo.OrgTreeVo;
+import xyz.erupt.flow.bean.vo.TaskDetailVo;
+import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaTaskMapper;
-import xyz.erupt.flow.service.ProcessActivityService;
-import xyz.erupt.flow.service.TaskHistoryService;
-import xyz.erupt.flow.service.TaskOperationService;
-import xyz.erupt.flow.service.TaskService;
+import xyz.erupt.flow.process.userlink.impl.UserLinkServiceHolder;
+import xyz.erupt.flow.service.*;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptUserService;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask>
-        implements TaskService, DataProxy<OaTask> {
+public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implements TaskService, DataProxy<OaTask> {
 
     @Autowired
     private TaskHistoryService taskHistoryService;
@@ -36,34 +37,23 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask>
     private TaskOperationService taskOperationService;
     @Autowired
     private EruptUserService eruptUserService;
+    @Lazy
     @Autowired
     private ProcessActivityService processActivityService;
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<OaTask> generateTask(OaProcessActivity activity) {
-        //创建任务，目前全部当作单任务处理
-        OaTask build = OaTask.builder()
-                .activityId(activity.getId())
-                .activityKey(activity.getActivityKey())
-                .executionId(activity.getExecutionId())
-                .processInstId(activity.getProcessInstId())
-                .processDefId(activity.getProcessDefId())
-                .taskName(activity.getActivityName())
-                .taskOwner(null)
-                .assignee(null)
-                .createDate(new Date())
-                .taskDesc(activity.getDescription())
-                .active(activity.getActive())
-                .finished(false)
-                .completeMode(activity.getCompleteMode())
-                .completeSort(1)
-                .taskOwner("erupt")//测试代码，先把所有任务分配给超管
-                .build();
-        super.save(build);
-        taskHistoryService.copyAndSave(build);//保存历史
-        return Arrays.asList(build);
-    }
+    @Lazy
+    @Autowired
+    private TaskUserLinkService taskUserLinkService;
+    @Lazy
+    @Autowired
+    private ProcessExecutionService processExecutionService;
+    @Autowired
+    private UserLinkServiceHolder userLinkService;
+    @Lazy
+    @Autowired
+    private ProcessDefinitionService processDefinitionService;
+    @Lazy
+    @Autowired
+    private ProcessInstanceService processInstanceService;
 
     /**
      * 完成任务
@@ -99,20 +89,85 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask>
     }
 
     @Override
-    public List<OaTask> listByExecutionId(Long executionId) {
-        QueryWrapper<OaTask> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OaTask::getExecutionId, executionId);
-        queryWrapper.lambda().orderByAsc(OaTask::getCompleteSort);//按照执行顺序排序
-        return this.list(queryWrapper);
+    public void assign(Long taskId, Set<String> userIds, String remarks) {
+        //查询任务，并进行判断
+        OaTask task = this.getById(taskId);
+        if(task==null) {
+            throw new EruptApiErrorTip("任务"+taskId+"不存在");
+        }
+        if(!task.getActive()) {
+            throw new EruptApiErrorTip("任务未激活，不可转办");
+        }
+        if(task.getFinished()) {
+            throw new EruptApiErrorTip("任务已完成");
+        }
+        //然后添加新的审批人
+        this.setAssigns(task, userIds);
+
+        //记录日志
+        taskOperationService.log(task, OaTaskOperation.COMPLETE, remarks);
+        //触发活动的完成
+        processActivityService.triggerComplete(task.getActivityId());
+    }
+
+    /**
+     * 设置处理人
+     * @param task
+     * @param userIds
+     */
+    private void setAssigns(OaTask task, Set<String> userIds) {
+        //移除所有的 持有人，审批人，候选人
+        this.cleanAllAssigns(task);
+
+        if(userIds.size()==1) {//只有一人，设置到处理人，否则设置到候选人
+            OaTask build = OaTask.builder()
+                    .assignee(userIds.iterator().next())
+                    .build();
+            build.setId(task.getId());
+            this.updateById(build);
+            taskHistoryService.copyAndSave(build);
+        }else {
+            List<OaTaskUserLink> links = new ArrayList<>();
+            while (userIds.iterator().hasNext()) {
+                OaTaskUserLink link = new OaTaskUserLink();
+                link.setUserLinkType(OaTask.USER_LINK_USERS);
+                link.setUserId(userIds.iterator().next());
+                links.add(link);
+            }
+            taskUserLinkService.saveBatch(links);
+        }
+    }
+
+    /**
+     * 清空处理人
+     * @param task
+     */
+    private void cleanAllAssigns(OaTask task) {
+        task.setTaskOwner(null);
+        task.setClaimDate(null);
+        task.setAssignee(null);
+        this.updateById(task);
+        taskHistoryService.copyAndSave(task);
+        taskUserLinkService.removeByTaskId(task.getId());
     }
 
     @Override
-    public void activeTask(Long taskId) {
-        OaTask build = OaTask.builder()
-                .active(true)
-                .build();
-        build.setId(taskId);
-        this.updateById(build);
+    public void refuse(Long taskId, String remarks) {
+        throw new RuntimeException("未配置拒绝策略");
+    }
+
+    /**
+     * 查询开始节点，开始节点只能有一个
+     * @param instId
+     * @return
+     */
+    @Override
+    public OaTask getStartTaskByInst(Long instId) {
+        QueryWrapper<OaTask> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(OaTask::getProcessInstId, instId);
+        queryWrapper.lambda().eq(OaTask::getActivityKey, "root");
+        queryWrapper.lambda().orderByAsc(OaTask::getCompleteSort);//按照执行顺序排序
+        return this.getOne(queryWrapper);
     }
 
     @Override
@@ -120,9 +175,14 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask>
         MPJLambdaWrapper<OaTask> queryWrapper = new MPJLambdaWrapper<OaTask>()
                 .leftJoin(OaProcessInstance.class, OaProcessInstance::getId, OaTask::getProcessInstId)//关联流程实例
                 .selectAll(OaTask.class)//查询任务全部字段
-                .selectAs(OaProcessInstance::getBusinessTitle, OaTask::getBusinessTitle)
-                .selectAs(OaProcessInstance::getFormName, OaTask::getFormName)
-                .eq(OaTask::getActive, true);//只查询激活的任务
+                .selectAs(OaProcessInstance::getCreator, OaTask::getInstCreator)
+                .selectAs(OaProcessInstance::getCreatorName, OaTask::getInstCreatorName)
+                .selectAs(OaProcessInstance::getCreateDate, OaTask::getInstCreateDate)
+                .select(OaProcessInstance::getBusinessTitle)
+                .select(OaProcessInstance::getFormName);
+        //只查询激活的任务
+        queryWrapper.eq(OaTask::getActive, true);
+        //关键字筛选
         if(StringUtils.isNotEmpty(keywords)) {
             queryWrapper.and(wrapper -> {
                 wrapper.or().like(OaTask::getTaskName, keywords);
@@ -131,7 +191,8 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask>
                 wrapper.or().like(OaTask::getFormName, keywords);
             });
         }
-        String userName = "erupt";
+        //我的任务
+        String userName = eruptUserService.getCurrentAccount();
         queryWrapper.and(wrapper -> {
             wrapper.or(orWrapper -> {//任务的所属人是我
                 orWrapper.eq(OaTask::getTaskOwner, userName);
@@ -140,7 +201,20 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask>
                 orWrapper.isNull(OaTask::getTaskOwner);
                 orWrapper.eq(OaTask::getAssignee, userName);
             });
-            //其他2种，候选人包括我，或者候选角色包括我的角色
+            // 其他2种，候选人包括我，或候选角色包括我的角色
+            wrapper.or(orWrapper -> {
+                orWrapper.isNull(OaTask::getTaskOwner);
+                orWrapper.isNull(OaTask::getAssignee);
+                orWrapper.and(andWrapper -> {
+                    andWrapper.or().apply("t.id in " +
+                            "(select task_id from oa_ru_task_user_link where user_link_type='USERS' and user_id={0})", userName);
+                    andWrapper.or().apply("t.id in (" +
+                            "SELECT task_id FROM oa_ru_task_user_link " +
+                            " WHERE user_link_type = 'ROLES' " +
+                            " AND role_id in (SELECT `code` FROM e_upms_user_role a LEFT JOIN e_upms_user b ON a.user_id = b.id left join e_upms_role c on a.role_id=c.id WHERE b.account = {0}')"
+                            ")", userName);
+                });
+            });
         });
         queryWrapper.orderByDesc(OaTask::getCreateDate);
         List<OaTask> list = this.baseMapper.selectJoinList(OaTask.class, queryWrapper);
@@ -149,29 +223,126 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask>
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void removeByProcessInstId(Serializable procInstId) {
+    public void removeByProcessInstId(Long procInstId) {
         QueryWrapper<OaTask> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(OaTask::getProcessInstId, procInstId);
         this.remove(queryWrapper);
     }
 
     @Override
-    public void activeTaskByExecutionId(Long executionId) {
-        QueryWrapper<OaTask> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OaTask::getExecutionId, executionId);
+    public boolean activeTaskByActivityId(Long activityId) {
+        List<OaTask> oaTasks = this.listByActivityId(activityId, false);
+        for (int i = 0; i < oaTasks.size(); i++) {
+            OaTask t = oaTasks.get(i);
+            t.setActive(true);
+            this.updateById(t);
+            //触发任务激活事件
+            this.triggerTaskActive(t);
+            if(OaProcessActivity.SERIAL.equals(t.getCompleteMode())) {//串行只能激活一个
+                break;
+            }
+        }
+        return oaTasks.size()>0;
+    }
 
-        this.update(
-                OaTask.builder()
-                        .active(true)
-                        .build()
-                , queryWrapper
-        );
+    /**
+     * 激活任务需要处理的事情
+     * 不激活任务，只做监听事件
+     * @param task
+     */
+    @Override
+    public void triggerTaskActive(OaTask task) {
+        //判断任务是否有人可以处理
+        if(
+                task.getTaskOwner()==null//没有所属人
+                && task.getAssignee()==null//没有分配人
+                && taskUserLinkService.countByTaskId(task.getId())<=0//没有候选人
+        ) {//触发无人审批事件
+            OaProcessExecution inst = processExecutionService.getById(task.getProcessInstId());
+            OaProcessNodeProps props = inst.getProcessNode().getProps();
+            OaProcessNodeNobody nobodyConf = props.getNobody();
+            if(FlowConstant.NOBODY_TO_PASS.equals(nobodyConf.getHandler())) {
+                //直接完成
+                this.complete(task.getId(), "无人处理，自动完成");
+            }else if(FlowConstant.NOBODY_TO_ADMIN.equals(nobodyConf.getHandler())) {//分配给超管用户
+                LinkedHashSet<OrgTreeVo> userIds = userLinkService.getAdminUsers();
+                if(CollectionUtils.isEmpty(userIds)) {
+                    throw new RuntimeException("未查询到超管用户");
+                }
+                //将任务转办给超管
+                this.assign(task.getId()
+                        , userIds.stream().map(OrgTreeVo::getId).collect(Collectors.toSet())
+                        , "无人处理，转办给超管用户");
+            }else if(FlowConstant.NOBODY_TO_USER.equals(nobodyConf.getHandler())) {
+                //将任务转办给超管
+                Set<String> userIds =
+                        nobodyConf.getAssignedUser().stream().map(au -> au.getId()).collect(Collectors.toSet());
+                this.assign(task.getId(), userIds, "无人处理，转办给指定用户");
+            }else if(FlowConstant.NOBODY_TO_REFUSE.equals(nobodyConf.getHandler())) {
+                //直接拒绝
+                this.refuse(task.getId(), "无人处理，自动拒绝");
+            }else {
+                throw new RuntimeException("请设置无人处理的审批方式");
+            }
+        }
     }
 
     @Override
-    public List<OaTask> listByActivityId(Long activityId) {
+    public void saveBatchWithUserLink(List<OaTask> oaTasks) {
+        this.saveBatch(oaTasks);
+        taskHistoryService.copyAndSave(oaTasks);
+        oaTasks.forEach(t -> {
+            t.getUserLinks().forEach(link -> link.setTaskId(t.getId()));
+            taskUserLinkService.saveBatch(t.getUserLinks());
+        });
+    }
+
+    @Override
+    public TaskDetailVo getTaskDetail(Long taskId) {
+        OaTask task = this.getById(taskId);
+        if(task==null) {
+            throw new EruptApiErrorTip("任务不存在或已被处理");
+        }
+        //创建一个vo，直接拷贝属性
+        TaskDetailVo taskDetail = new TaskDetailVo();
+        BeanUtils.copyProperties(task, taskDetail);
+        //再查询其他属性
+        OaProcessDefinition def = processDefinitionService.getById(task.getProcessDefId());
+        taskDetail.setFormItems(JSON.parseArray(def.getFormItems()));//表单配置
+        OaProcessInstance inst = processInstanceService.getById(task.getProcessInstId());
+        taskDetail.setFormData(JSON.parseObject(inst.getFormItems()));//表单内容
+        taskDetail.setInstCreator(inst.getCreator());
+        taskDetail.setInstCreatorName(inst.getCreatorName());
+        taskDetail.setInstCreateDate(inst.getCreateDate());
+        taskDetail.setBusinessTitle(inst.getBusinessTitle());
+        taskDetail.setFormName(inst.getFormName());
+        OaProcessExecution execution = processExecutionService.getById(task.getExecutionId());
+        taskDetail.setNodeConfig(JSON.parseObject(execution.getProcess()));//节点配置
+        return taskDetail;
+    }
+
+    @Override
+    public TaskDetailVo getInstDetail(Long instId) {
+        //创建一个空的vo
+        TaskDetailVo taskDetail = new TaskDetailVo();
+        //再查询其他属性
+        OaProcessInstance inst = processInstanceService.getById(instId);
+        taskDetail.setFormData(JSON.parseObject(inst.getFormItems()));//表单内容
+        taskDetail.setInstCreator(inst.getCreator());
+        taskDetail.setInstCreatorName(inst.getCreatorName());
+        taskDetail.setInstCreateDate(inst.getCreateDate());
+        taskDetail.setBusinessTitle(inst.getBusinessTitle());
+        taskDetail.setFormName(inst.getFormName());
+        OaProcessDefinition def = processDefinitionService.getById(inst.getProcessDefId());
+        taskDetail.setFormItems(JSON.parseArray(def.getFormItems()));//表单配置
+        return taskDetail;
+    }
+
+    @Override
+    public List<OaTask> listByActivityId(Long activityId, boolean actived) {
         QueryWrapper<OaTask> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(OaTask::getActivityId, activityId);
+        queryWrapper.lambda().eq(OaTask::getActive, actived);
         queryWrapper.lambda().orderByAsc(OaTask::getCompleteSort);
         return this.list(queryWrapper);
     }

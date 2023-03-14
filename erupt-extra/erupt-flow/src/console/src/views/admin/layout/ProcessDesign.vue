@@ -56,7 +56,6 @@ export default {
       return this.$refs["process-tree"].validateProcess()
     },
     nodeSelected(node){
-      console.log('配置节点', node)
       this.showConfig = true
     }
   },

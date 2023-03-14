@@ -180,7 +180,6 @@ export default {
       }
     },
     selected(select) {
-      console.log(select)
       this.users.length = 0
       select.forEach(u => this.users.push(u))
     },

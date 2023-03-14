@@ -2,9 +2,11 @@
   <!--渲染表单-->
   <el-form ref="form" class="process-form" label-position="top" :rules="rules" :model="_value">
     <el-form-item v-if="item.name !== 'SpanLayout' && item.name !== 'Description'" :prop="item.id" :label="item.title" v-for="(item, index) in forms" :key="item.name + index">
-      <form-design-render :ref="`sub-item_${item.id}`" v-model="_value[item.id]" :mode="mode" :formDisable="formDisable" :config="item"/>
+      <form-design-render :ref="`sub-item_${item.id}`" v-model="_value[item.id]" :mode="mode" :formDisable="formDisable" :config="item"
+        @change="change"
+      />
     </el-form-item>
-    <form-design-render ref="span-layout" v-else v-model="_value" :mode="mode" :editable="editable" :config="item"/>
+    <form-design-render ref="span-layout" v-else v-model="_value" :mode="mode" :formDisable="formDisable" :config="item"/>
   </el-form>
 </template>
 
@@ -54,6 +56,8 @@ export default {
       }
     }
   },
+  watch: {
+  },
   methods: {
     validate(call) {
       let success = true
@@ -93,6 +97,9 @@ export default {
           }
         }
       })
+    },
+    change(fieldName, val) {
+      this.$emit("change", fieldName, val)
     }
   }
 }

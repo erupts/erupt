@@ -1,9 +1,9 @@
 <template>
   <div>
-    <p class="desc">选择能发起该审批的人员/部门，不选则默认开放给所有人</p>
+    <p class="desc">选择能发起该审批的角色，不选则默认开放给所有人</p>
     <el-button size="mini" @click="selectOrg" icon="el-icon-plus" type="primary" round>请选择</el-button>
     <org-items v-model="select"/>
-    <org-picker title="请选择可发起本审批的人员/部门" multiple ref="orgPicker" :selected="select" @ok="selected"/>
+    <org-picker title="请选择可发起本审批的角色" type="role" multiple ref="orgPicker" :selected="select" @ok="selected"/>
   </div>
 </template>
 

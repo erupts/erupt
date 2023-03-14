@@ -14,6 +14,8 @@ public interface ProcessDefinitionService extends IService<OaProcessDefinition> 
      */
     void updateStopByFormId(Long formId, boolean isStop);
 
+    void updateByFormId(OaProcessDefinition update, Long formId);
+
     /**
      * 根据formId删除流程定义
      * @param id
@@ -25,7 +27,7 @@ public interface ProcessDefinitionService extends IService<OaProcessDefinition> 
      * @param procDefId
      * @return
      */
-    OaProcessInstance startByFormId(String procDefId, String content);
+    OaProcessInstance startById(String procDefId, String content);
 
     /**
      * 根据formId查询最新版
