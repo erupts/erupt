@@ -117,25 +117,25 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
      * 按照层级返回部门领导
      * @param userId 当前用户id
      * @param startLevel 从多少级主管开始查，小于1则取1
-     * @param limitLevel 最多查询到多少级主管，-1表示不限级
+     * @param endLevel 最多查询到多少级主管，0表示不限级
      * @return
      */
     @Override
-    public LinkedHashMap<Integer, List<OrgTreeVo>> getLeaderMap(String userId, int startLevel, int limitLevel) {
+    public LinkedHashMap<Integer, List<OrgTreeVo>> getLeaderMap(String userId, int startLevel, int endLevel) {
         //查询出当前用户的部门
         EruptUser eruptUser = eruptUserRepository.findByAccount(userId);
         if(eruptUser==null || eruptUser.getEruptOrg()==null) {
             throw new RuntimeException("用户"+userId+"不存在或没有部门");
         }
         LinkedHashMap<Integer, List<OrgTreeVo>> map = new LinkedHashMap<>();
-        EruptOrg org = eruptUser.getEruptOrg();
+        EruptOrg org = eruptUser.getEruptOrg().getParentOrg();//从当前部门的上一级部门开始
         while (true) {
-            if(org==null || startLevel>limitLevel) {
+            if(org==null || (endLevel>0 && startLevel>endLevel)) {
                 break;
             }
             List<OrgTreeVo> leaders = this.getLeadersByDeptId(org.getId());
-            map.put(startLevel, leaders);
-            org = org.getParentOrg();//这样能行吗
+            map.put(startLevel++, leaders);
+            org = org.getParentOrg();//这样可以
         }
         return map;
     }
@@ -183,5 +183,24 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
                     )
                 );
         return set;
+    }
+
+    /**
+     * 查询账号对用的角色列表
+     * @param userId
+     * @return
+     */
+    @Override
+    public LinkedHashSet<String> getRoleIdsByUserId(String userId) {
+        EruptUser user = eruptUserRepository.findByAccount(userId);
+        if(user==null) {
+            return new LinkedHashSet<>(0);
+        }
+        if(user.getRoles()==null || user.getRoles().size()<=0) {
+            return new LinkedHashSet<>(0);
+        }
+        LinkedHashSet<String> roleIds = new LinkedHashSet<>();
+        user.getRoles().stream().forEach(r -> roleIds.add(r.getCode()));
+        return roleIds;
     }
 }

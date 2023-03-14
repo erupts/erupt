@@ -114,7 +114,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
             throw new EruptApiErrorTip("流程"+defId+"不存在");
         }
         if(processDef.getIsStop()) {
-            throw new EruptApiErrorTip("流程暂时不可用");
+            throw new EruptApiErrorTip("流程可能已经过期，请刷新后重试");
         }
         //创建流程实例
         OaProcessInstance processInstance = processInstanceService.newProcessInstance(processDef, content);
