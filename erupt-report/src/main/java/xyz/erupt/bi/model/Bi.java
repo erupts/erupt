@@ -151,6 +151,13 @@ public class Bi extends MetaModelUpdateVo implements OperationHandler<Bi, BiRele
     )
     private String countStatement;
 
+    @Column(length = 2000)
+    @EruptField(
+            views = @View(title = "报表描述", type = ViewType.HTML),
+            edit = @Edit(title = "报表描述", type = EditType.TEXTAREA)
+    )
+    private String remark;
+
     @Transient
     @EruptField(
             views = @View(title = "效果预览", type = ViewType.LINK_DIALOG, desc = "需提前配置菜单权限")
