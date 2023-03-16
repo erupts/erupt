@@ -182,7 +182,7 @@ public class EruptFileController {
     }
 
 
-    @PostMapping("/upload-ueditor/{erupt}/{field}")
+    @RequestMapping("/upload-ueditor/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
     public void uploadUEditorImage(@PathVariable("erupt") String eruptName,
                                    @PathVariable("field") String fieldName,
