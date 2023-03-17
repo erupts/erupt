@@ -14,13 +14,25 @@ public interface TaskService extends IService<OaTask> {
      * 完成任务
      * @param taskId
      */
-    public void complete(Long taskId, String remarks);
+    public OaTask complete(Long taskId, String account, String accountName, String remarks);
+
+    /**
+     * 完成任务
+     * @param taskId
+     */
+    public OaTask complete(Long taskId, String remarks);
 
     /**
      * 转办任务，只能是或签
      * @param taskId
      */
     public void assign(Long taskId, Set<OrgTreeVo> userIds, String remarks);
+
+    /**
+     * 拒绝任务
+     * @param taskId
+     */
+    public void refuse(Long taskId, String account, String accountName , String remarks);
 
     /**
      * 拒绝任务

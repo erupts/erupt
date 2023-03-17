@@ -3,7 +3,9 @@
     <el-form label-position="top" label-width="90px">
       <el-form-item label="⚙ 选择审批人" prop="text" class="user-type">
         <el-radio-group v-model="nodeProps.assignedType">
-          <el-radio v-for="t in approvalTypes" :label="t.type" :key="t.type">{{ t.name }}</el-radio>
+          <el-radio v-for="t in approvalTypes" :label="t.type" :key="t.type"
+                    @input="assignedTypeChange(t)"
+          >{{ t.name }}</el-radio>
         </el-radio-group>
         <div v-if="nodeProps.assignedType === 'ASSIGN_USER'">
           <el-form-item label="指定人员" prop="text" class="approve-end">
@@ -42,7 +44,7 @@
             <el-input-number :min="1" :max="20" :step="1" size="mini"
                              v-model="nodeProps.leader.level"></el-input-number>
             <span> 级主管</span>
-            <div style="color: #409EFF; font-size: small;">👉 直接主管为 第 1 级主管</div>
+            <div style="color: #409EFF; font-size: small;">👉 1级主管为本部门主管，部门内排序第一的人为主管</div>
           </el-form-item>
         </div>
         <div v-else-if="nodeProps.assignedType === 'FORM_USER'">
@@ -154,6 +156,8 @@ export default {
         return {}
       }
     }
+  },
+  watch: {
   },
   data() {
     return {

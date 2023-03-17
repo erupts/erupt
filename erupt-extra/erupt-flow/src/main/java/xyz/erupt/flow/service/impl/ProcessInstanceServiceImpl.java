@@ -170,6 +170,21 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
     }
 
     @Override
+    public void stop(Long instId, String remarks) {
+
+    }
+
+    @Override
+    public void jumpTo(Long instId, String nodeId) {
+
+    }
+
+    @Override
+    public OaProcessActivity getLastActivity(OaProcessExecution execution) {
+        return null;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeById(Serializable id) {
         //删除任务

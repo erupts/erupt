@@ -14,8 +14,10 @@ import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.*;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeNobody;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeProps;
+import xyz.erupt.flow.bean.entity.node.OaProcessNodeRefuse;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.bean.vo.TaskDetailVo;
 import xyz.erupt.flow.constant.FlowConstant;
@@ -54,38 +56,27 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     @Lazy
     @Autowired
     private ProcessInstanceService processInstanceService;
+    @Lazy
+    @Autowired
+    private ProcessInstanceHistoryService processInstanceHistoryService;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public OaTask complete(Long taskId, String account, String accountName, String remarks) {
+        return this.finish(OaTaskOperation.COMPLETE, taskId, account, accountName, remarks);
+    }
 
     /**
      * 完成任务
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void complete(Long taskId, String remarks) {
-        //查询任务，并进行判断
-        OaTask task = this.getById(taskId);
-        if(task==null) {
-            throw new EruptApiErrorTip("任务"+taskId+"不存在");
-        }
-        if(!task.getActive()) {
-            throw new EruptApiErrorTip("任务未激活，不可完成");
-        }
-        if(task.getFinished()) {
-            throw new EruptApiErrorTip("任务已完成");
-        }
-        //任务标记为完成
+    public OaTask complete(Long taskId, String remarks) {
         EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
-        task.setFinished(true);
-        task.setFinishDate(new Date());
-        task.setFinishUser(currentEruptUser.getAccount());
-        task.setFinishUserName(currentEruptUser.getName());
-        //变更历史表
-        taskHistoryService.copyAndSave(task);
-        //删除运行时表
-        this.removeById(taskId);
-        //记录日志
-        taskOperationService.log(task, OaTaskOperation.COMPLETE, remarks);
+        OaTask task = this.complete(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
         //触发活动的完成
         processActivityService.triggerComplete(task.getActivityId());
+        return task;
     }
 
     @Override
@@ -103,9 +94,8 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         }
         //然后添加新的审批人
         this.setAssigns(task, users);
-
         //记录日志
-        taskOperationService.log(task, OaTaskOperation.COMPLETE, remarks);
+        taskOperationService.log(task, OaTaskOperation.ASSIGN, remarks);
         //触发活动的完成
         processActivityService.triggerComplete(task.getActivityId());
     }
@@ -154,8 +144,68 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void refuse(Long taskId, String remarks) {
-        throw new RuntimeException("未配置拒绝策略");
+        EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
+        this.refuse(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void refuse(Long taskId, String account, String accountName, String remarks) {
+        this.finish(OaTaskOperation.REFUSE, taskId, account, accountName, remarks);
+        //取得拒绝策略
+        OaProcessExecution execution = processExecutionService.getById(taskId);
+        OaProcessNode processNode = execution.getProcessNode();
+        OaProcessNodeRefuse refuse = processNode.getProps().getRefuse();
+        if(FlowConstant.REFUSE_TO_END.equals(refuse.getType())) {//流程的终止
+            processInstanceService.stop(execution.getProcessInstId(), accountName+" 审批拒绝");
+        }else if(FlowConstant.REFUSE_TO_BEFORE.equals(refuse.getType())) {//回到上一步
+            //获取本线程的上一步
+            OaProcessActivity activity = processInstanceService.getLastActivity(execution);
+            if(activity==null) {
+                throw new EruptApiErrorTip("流程没有上一步");
+            }
+            //将本流程实例跳转到指定步骤
+            processInstanceService.jumpTo(execution.getProcessInstId(), activity.getActivityKey());
+        }else if(FlowConstant.REFUSE_TO_NODE.equals(refuse.getType())) {
+            processInstanceService.jumpTo(execution.getProcessInstId(), refuse.getTarget());
+        }else {
+            throw new EruptApiErrorTip("无法识别拒绝策略"+refuse.getType());
+        }
+    }
+
+    /**
+     * 任务结束
+     * @param taskId
+     * @param account
+     * @param accountName
+     * @param remarks
+     */
+    private OaTask finish(String action, Long taskId, String account, String accountName, String remarks) {
+        //查询任务，并进行判断
+        OaTask task = this.getById(taskId);
+        if(task==null) {
+            throw new EruptApiErrorTip("任务"+taskId+"不存在");
+        }
+        if(!task.getActive()) {
+            throw new EruptApiErrorTip("任务未激活，禁止操作");
+        }
+        if(task.getFinished()) {
+            throw new EruptApiErrorTip("任务已完成");
+        }
+        //任务标记为完成
+        task.setFinished(true);
+        task.setFinishDate(new Date());
+        task.setFinishUser(account);
+        task.setFinishUserName(accountName);
+        //变更历史表
+        taskHistoryService.copyAndSave(task);
+        //删除运行时表
+        this.removeById(taskId);
+        //记录日志
+        taskOperationService.log(task, action, remarks);
+        return task;
     }
 
     /**
@@ -267,7 +317,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
             OaProcessNodeNobody nobodyConf = props.getNobody();
             if(FlowConstant.NOBODY_TO_PASS.equals(nobodyConf.getHandler())) {
                 //直接完成
-                this.complete(task.getId(), "无人处理，自动完成");
+                this.complete(task.getId(), null, "无人处理，自动完成", null);
             }else if(FlowConstant.NOBODY_TO_ADMIN.equals(nobodyConf.getHandler())) {//分配给超管用户
                 LinkedHashSet<OrgTreeVo> userIds = userLinkService.getAdminUsers();
                 if(CollectionUtils.isEmpty(userIds)) {
@@ -332,7 +382,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         //创建一个空的vo
         TaskDetailVo taskDetail = new TaskDetailVo();
         //再查询其他属性
-        OaProcessInstance inst = processInstanceService.getById(instId);
+        OaProcessInstanceHistory inst = processInstanceHistoryService.getById(instId);
         taskDetail.setFormData(JSON.parseObject(inst.getFormItems()));//表单内容
         taskDetail.setProcessInstId(instId);
         taskDetail.setInstCreator(inst.getCreator());

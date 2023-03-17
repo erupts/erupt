@@ -152,12 +152,21 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         List<OaProcessActivityHistory> activities = new ArrayList<>();
         //查询出已完成的活动
         List<OaProcessActivityHistory> histories = processActivityHistoryService.listByProcInstId(instId);
+        Collections.sort(
+                histories,
+                Comparator.nullsLast(
+                        Comparator.comparing(
+                                OaProcessActivityHistory::getFinishDate
+                                ,Comparator.nullsLast(Comparable::compareTo)
+                        )
+                )
+        );
         //形成一个map
         Map<String, List<OaProcessActivityHistory>> map =
                 histories.stream().collect(Collectors.groupingBy(OaProcessActivityHistory::getActivityKey));
         JSONObject formContent = JSON.parseObject(inst.getFormItems());
         this.preview(JSON.parseObject(procDef.getProcess(), OaProcessNode.class), formContent, activities, map);
-        return histories;
+        return activities;
     }
 
     @Override

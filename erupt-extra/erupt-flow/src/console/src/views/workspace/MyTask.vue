@@ -43,7 +43,7 @@
     </ul>
 
     <el-dialog :title="selectInst.businessTitle" width="800px" top="20px" :visible.sync="openItemDl" :close-on-click-modal="false">
-      <TaskDetail ref="taskDetail" :task-id="selectInst.id" mode="audit" v-if="openItemDl"></TaskDetail>
+      <TaskDetail ref="taskDetail" :task-id.sync="selectInst.id" mode="audit" v-if="openItemDl"></TaskDetail>
       <span slot="footer" class="dialog-footer" style="padding-right: 20px;">
         <el-button @click="openItemDl = false">关 闭</el-button>
         <el-button type="danger" @click="refuse(selectInst.id)">拒 绝</el-button>
@@ -132,6 +132,7 @@ export default {
       }).then(( comfirm ) => {
         completeTask(taskId, comfirm.value).then(rsp => {
           this.$message.success(rsp.message);
+          this.openItemDl = false;
           this.reloadDatas();
         });
       });
@@ -143,6 +144,7 @@ export default {
         cancelButtonText: '取消',
       }).then(( comfirm ) => {
         this.$message.warning("暂不支持驳回");
+        this.openItemDl = false;
         this.reloadDatas();
       });
     }

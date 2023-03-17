@@ -8,5 +8,5 @@ import java.util.List;
 public class OaProcessNodeLeaderTop {
 
     private String endCondition = "TOP";
-    private Integer level = 0;//为TOP时，表示最高层级(0表示不设限)，不为TOP时，表示特定层级
+    private Integer level = 1;//为TOP时，表示最高层级(0表示不设限)，不为TOP时，表示特定层级
 }
