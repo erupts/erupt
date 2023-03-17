@@ -41,9 +41,6 @@ import java.util.List;
 @NoArgsConstructor
 public class OaTask {
 
-    public static final String USER_LINK_USERS = "USERS";
-    public static final String USER_LINK_ROLES = "ROLES";
-
     @Id
     @GeneratedValue(generator = "generator")
     @GenericGenerator(name = "generator", strategy = "native")
@@ -84,6 +81,9 @@ public class OaTask {
             , edit = @Edit(title = "任务名", search = @Search(vague = true))
     )
     private String taskName;
+
+    @EruptField(views = @View(title = "任务类型：root开始节点，userTask用户任务，cc抄送"))
+    private String taskType;
 
     @EruptField(views = @View(title = "所属人", desc = "任务持有人，最优先处理此任务"))
     private String taskOwner;//任务持有人，最优先处理此任务，优先级为1

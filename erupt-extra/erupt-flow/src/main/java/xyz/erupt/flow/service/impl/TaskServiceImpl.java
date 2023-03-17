@@ -89,7 +89,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     }
 
     @Override
-    public void assign(Long taskId, Set<String> userIds, String remarks) {
+    public void assign(Long taskId, Set<OrgTreeVo> users, String remarks) {
         //查询任务，并进行判断
         OaTask task = this.getById(taskId);
         if(task==null) {
@@ -102,7 +102,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
             throw new EruptApiErrorTip("任务已完成");
         }
         //然后添加新的审批人
-        this.setAssigns(task, userIds);
+        this.setAssigns(task, users);
 
         //记录日志
         taskOperationService.log(task, OaTaskOperation.COMPLETE, remarks);
@@ -115,13 +115,13 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
      * @param task
      * @param userIds
      */
-    private void setAssigns(OaTask task, Set<String> userIds) {
+    private void setAssigns(OaTask task, Set<OrgTreeVo> userIds) {
         //移除所有的 持有人，审批人，候选人
         this.cleanAllAssigns(task);
 
         if(userIds.size()==1) {//只有一人，设置到处理人，否则设置到候选人
             OaTask build = OaTask.builder()
-                    .assignee(userIds.iterator().next())
+                    .assignee(userIds.iterator().next().getId())
                     .build();
             build.setId(task.getId());
             this.updateById(build);
@@ -130,8 +130,10 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
             List<OaTaskUserLink> links = new ArrayList<>();
             while (userIds.iterator().hasNext()) {
                 OaTaskUserLink link = new OaTaskUserLink();
-                link.setUserLinkType(OaTask.USER_LINK_USERS);
-                link.setLinkId(userIds.iterator().next());
+                OrgTreeVo next = userIds.iterator().next();
+                link.setUserLinkType(FlowConstant.USER_LINK_USERS);
+                link.setLinkId(next.getId());
+                link.setLinkName(next.getName());
                 links.add(link);
             }
             taskUserLinkService.saveBatch(links);
@@ -158,16 +160,16 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
 
     /**
      * 查询开始节点，开始节点只能有一个
-     * @param instId
+     * @param activityId
      * @return
      */
     @Override
-    public OaTask getStartTaskByInst(Long instId) {
+    public List<OaTask> getTasksByActivityId(Long activityId, String... types) {
         QueryWrapper<OaTask> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OaTask::getProcessInstId, instId);
-        queryWrapper.lambda().eq(OaTask::getActivityKey, "root");
+        queryWrapper.lambda().eq(OaTask::getActivityId, activityId);
+        queryWrapper.lambda().in(OaTask::getActivityKey, types);
         queryWrapper.lambda().orderByAsc(OaTask::getCompleteSort);//按照执行顺序排序
-        return this.getOne(queryWrapper);
+        return this.list(queryWrapper);
     }
 
     @Override
@@ -185,10 +187,10 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         //关键字筛选
         if(StringUtils.isNotEmpty(keywords)) {
             queryWrapper.and(wrapper -> {
-                wrapper.or().like(OaTask::getTaskName, keywords);
-                wrapper.or().like(OaTask::getTaskDesc, keywords);
-                wrapper.or().like(OaTask::getBusinessTitle, keywords);
-                wrapper.or().like(OaTask::getFormName, keywords);
+                wrapper.like(OaTask::getTaskName, keywords)
+                        .or().like(OaTask::getTaskDesc, keywords)
+                        .or().like(OaProcessInstance::getBusinessTitle, keywords)
+                        .or().like(OaProcessInstance::getFormName, keywords);
             });
         }
         //我的任务
@@ -258,7 +260,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         if(
                 task.getTaskOwner()==null//没有所属人
                 && task.getAssignee()==null//没有分配人
-                && taskUserLinkService.countByTaskId(task.getId())<=0//没有候选人
+                && taskUserLinkService.countUsersByTaskId(task.getId())<=0//候选人
         ) {//触发无人审批事件
             OaProcessExecution inst = processExecutionService.getById(task.getProcessInstId());
             OaProcessNodeProps props = inst.getProcessNode().getProps();
@@ -272,14 +274,16 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
                     throw new RuntimeException("未查询到超管用户");
                 }
                 //将任务转办给超管
-                this.assign(task.getId()
-                        , userIds.stream().map(OrgTreeVo::getId).collect(Collectors.toSet())
-                        , "无人处理，转办给超管用户");
+                this.assign(task.getId(), userIds, "无人处理，转办给超管用户");
             }else if(FlowConstant.NOBODY_TO_USER.equals(nobodyConf.getHandler())) {
                 //将任务转办给超管
-                Set<String> userIds =
-                        nobodyConf.getAssignedUser().stream().map(au -> au.getId()).collect(Collectors.toSet());
-                this.assign(task.getId(), userIds, "无人处理，转办给指定用户");
+                Set<OrgTreeVo> users =
+                        nobodyConf.getAssignedUser().stream().map(au -> OrgTreeVo.builder()
+                                .id(au.getId())
+                                .name(au.getName())
+                                .build()
+                        ).collect(Collectors.toSet());
+                this.assign(task.getId(), users, "无人处理，转办给指定用户");
             }else if(FlowConstant.NOBODY_TO_REFUSE.equals(nobodyConf.getHandler())) {
                 //直接拒绝
                 this.refuse(task.getId(), "无人处理，自动拒绝");
@@ -330,6 +334,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         //再查询其他属性
         OaProcessInstance inst = processInstanceService.getById(instId);
         taskDetail.setFormData(JSON.parseObject(inst.getFormItems()));//表单内容
+        taskDetail.setProcessInstId(instId);
         taskDetail.setInstCreator(inst.getCreator());
         taskDetail.setInstCreatorName(inst.getCreatorName());
         taskDetail.setInstCreateDate(inst.getCreateDate());

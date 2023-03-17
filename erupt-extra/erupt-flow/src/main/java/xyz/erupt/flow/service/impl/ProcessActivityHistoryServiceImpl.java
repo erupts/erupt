@@ -42,9 +42,9 @@ public class ProcessActivityHistoryServiceImpl extends ServiceImpl<OaProcessActi
         LambdaQueryWrapper<OaProcessActivityHistory> queryWrapper = new LambdaQueryWrapper<OaProcessActivityHistory>()
                 .eq(OaProcessActivityHistory::getProcessInstId, instId)
                 .eq(OaProcessActivityHistory::getActive, true)
-                .orderByDesc(OaProcessActivityHistory::getFinishDate);
+                .orderByAsc(OaProcessActivityHistory::getFinishDate);
         List<OaProcessActivityHistory> list = super.list(queryWrapper);
-        //查询历史
+        //查询任务历史
         list.forEach(h -> {
             List<OaTaskHistory> taskHistories = taskHistoryService.listByActivityId(h.getId());
             h.setTasks(taskHistories);

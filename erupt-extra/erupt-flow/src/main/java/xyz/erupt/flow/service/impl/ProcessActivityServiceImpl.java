@@ -68,10 +68,13 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
                 processExecutionService.triggerActive(execution.getParentId());//使父线程激活
             }
             return 0;
-        }else if("ROOT".equals(node.getType()) || "APPROVAL".equals(node.getType())) {//如果是用户任务
+        }else if(FlowConstant.NODE_TYPE_ROOT.equals(node.getType())
+                || FlowConstant.NODE_TYPE_APPROVAL.equals(node.getType())
+                || FlowConstant.NODE_TYPE_CC.equals(node.getType())//抄送也要创建任务
+        ) {//如果是用户任务
             this.newActivity(execution, node, status, null, 1);
             return 1;
-        }else if("CONDITIONS".equals(node.getType())) {//如果是互斥分支
+        }else if(FlowConstant.NODE_TYPE_CONDITIONS.equals(node.getType())) {//如果是互斥分支
             //主线程先继续向前，并等待
             int count = this.newActivities(
                     execution, formContent, node.getChildren(), OaProcessExecution.STATUS_WAITING);
@@ -80,7 +83,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
             processExecutionService.newExecution(
                     execution.getProcessDefId(), execution.getProcessInstId(), formContent, nextNode, execution);
             return count;
-        }else if("CONCURRENTS".equals(node.getType())) {//如果是并行分支
+        }else if(FlowConstant.NODE_TYPE_CONCURRENTS.equals(node.getType())) {//如果是并行分支
             //主线程先继续向前，并等待
             int count = this.newActivities(
                     execution, formContent, node.getChildren(), OaProcessExecution.STATUS_WAITING);
@@ -316,6 +319,15 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
             this.generateTask(execution, build, node, node.getProps());
         }
         processExecutionService.freshProcess(execution.getId(), JSON.toJSONString(node));//更新线程的数据
+        //完成其中的开始和抄送任务
+        List<OaTask> autoTasks = taskService.getTasksByActivityId(
+                build.getId(), FlowConstant.NODE_TYPE_ROOT, FlowConstant.NODE_TYPE_CC
+        );
+        if(!CollectionUtils.isEmpty(autoTasks)) {
+            autoTasks.forEach(t -> {
+                taskService.complete(t.getId(), t.getTaskType() + " 任务自动完成");
+            });
+        }
         return build;
     }
 
@@ -325,21 +337,27 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
         OaProcessInstance inst = processInstanceService.getById(activity.getProcessInstId());
         //设置会签模式
         builder.setCompleteMode(props.getMode());
+        builder.setTaskType(node.getType());
         builder.setActive(activity.getActive());
         /**
          * 确定用户处理人
          */
         switch (props.getAssignedType()) {
-            case FlowConstant.ASSIGN_TYPE_USER://循环添加候选人
-                props.getAssignedUser().forEach(au -> builder.addUser(au.getId()));
+            case FlowConstant.ASSIGN_TYPE_CC://抄送人和分配人一样的处理方式
+            case FlowConstant.ASSIGN_TYPE_USER://循环添加分配人
+                props.getAssignedUser().forEach(au -> builder.addUser(au));
                 break;
             case FlowConstant.ASSIGN_TYPE_ROLE://循环添加候选角色
-                props.getRole().forEach(a -> builder.addLinkRole(a.getId()));
+                props.getRole().forEach(a -> builder.addLinkRole(a));
                 break;
             case FlowConstant.ASSIGN_TYPE_SELF_SELECT://发起人自选，暂不支持
                 throw new RuntimeException("暂不支持发起人自选");
             case FlowConstant.ASSIGN_TYPE_SELF:
-                builder.addUser(inst.getCreator());//将发起人作为审批人
+                builder.addUser(
+                        OrgTreeVo.builder()
+                        .id(inst.getCreator())
+                        .name("发起人")
+                        .build());//将发起人作为审批人
                 break;
             case FlowConstant.ASSIGN_TYPE_LEADER_TOP://发起人的所有上级
                 //查询主管
@@ -361,7 +379,12 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
                     throw new RuntimeException("从表单中获取联系人失败");
                 }
                 users.forEach(u -> {
-                    builder.addUser(u.getString("id"));//全部都是分配人
+                    builder.addUser(
+                            OrgTreeVo.builder()
+                                .id(u.getString("id"))
+                                .name(u.getString("name"))
+                                .build()
+                    );//全部都是分配人
                 });
                 break;
             default:

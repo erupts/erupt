@@ -5,7 +5,7 @@
       <el-checkbox label="允许发起人添加抄送人" v-model="config.shouldAdd"></el-checkbox>
     </div>
     <org-items v-model="select"/>
-    <org-picker multiple ref="orgPicker" :selected="select" @ok="selected"/>
+    <org-picker multiple ref="orgPicker" type="user" :selected="select" @ok="selected"/>
   </div>
 </template>
 
@@ -42,6 +42,7 @@ export default {
       this.$refs.orgPicker.show()
     },
     selected(select) {
+      this.config.assignedType = "CC";//分配类型变为CC，即抄送人
       this.select = Object.assign([], select)
     },
     removeOrgItem(index){

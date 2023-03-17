@@ -2,6 +2,7 @@ package xyz.erupt.flow.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaTask;
+import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.bean.vo.TaskDetailVo;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface TaskService extends IService<OaTask> {
      * 转办任务，只能是或签
      * @param taskId
      */
-    public void assign(Long taskId, Set<String> userIds, String remarks);
+    public void assign(Long taskId, Set<OrgTreeVo> userIds, String remarks);
 
     /**
      * 拒绝任务
@@ -29,9 +30,8 @@ public interface TaskService extends IService<OaTask> {
 
     /**
      * 查询当前流程的待完成任务
-     * @param instId
      */
-    OaTask getStartTaskByInst(Long instId);
+    List<OaTask> getTasksByActivityId(Long activityId, String... types);
 
     /**
      * 分页查询我的任务

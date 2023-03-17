@@ -8,7 +8,12 @@ public class FlowConstant {
 
     public static final String SERVER_NAME = "erupt-flow";
 
+    public static final String USER_LINK_USERS = "USERS";
+    public static final String USER_LINK_ROLES = "ROLES";
+    public static final String USER_LINK_CC = "CC";
+
     public static final String ASSIGN_TYPE_USER = "ASSIGN_USER";//指定人员
+    public static final String ASSIGN_TYPE_CC = "CC";//指定抄送人
     public static final String ASSIGN_TYPE_ROLE = "ROLE";//指定角色
     public static final String ASSIGN_TYPE_SELF_SELECT = "SELF_SELECT";//发起人自选，暂时不支持
     public static final String ASSIGN_TYPE_SELF = "SELF";//发起人自己
@@ -39,4 +44,14 @@ public class FlowConstant {
     public static final String REFUSE_TO_END = "TO_END";//驳回规则 TO_END  TO_NODE  TO_BEFORE
     public static final String REFUSE_TO_BEFORE = "TO_BEFORE";
     public static final String REFUSE_TO_NODE = "TO_NODE";
+
+    public static final String NODE_TYPE_ROOT = "ROOT";//节点类型-开始
+    public static final String NODE_TYPE_APPROVAL = "APPROVAL";//节点类型-审批
+    public static final String NODE_TYPE_CC = "CC";//节点类型-抄送
+    public static final String NODE_TYPE_CONDITIONS = "CONDITIONS";//节点类型-条件分支
+    public static final String NODE_TYPE_CONDITION = "CONDITION";//节点类型-条件
+    public static final String NODE_TYPE_CONCURRENTS = "CONCURRENTS";//节点类型-并行分支
+    public static final String NODE_TYPE_CONCURRENT = "CONCURRENT";//节点类型-并行
+
+    public static final String NODE_TYPE_ROOT_VALUE = "root";//节点类型-开始
 }
