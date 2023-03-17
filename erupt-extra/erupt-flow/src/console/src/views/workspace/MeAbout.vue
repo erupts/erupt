@@ -28,18 +28,21 @@
               <el-col :xs="20" :sm="8" :md="8" :lg="6" :xl="4">
                 <el-link @click="showDetail(inst)" :underline="false" style="font: 18px large;">{{inst.businessTitle}}</el-link>
               </el-col>
-              <el-col :xs="4" :sm="8" :md="8" :lg="6" :xl="4">
+              <el-col :xs="4" :sm="8" :md="8" :lg="6" :xl="8">
                 <el-tag :type="getStatus(inst).type"  style="margin-left: 10px;">
                   {{ getStatus(inst).text }}
                 </el-tag>
+                <span v-if="inst.status==='FINISHED' || inst.status==='SHUTDOWN'" style="color: #909399;">
+                  {{'结束于 ' + inst.finishDate}}
+                </span>
               </el-col>
-              <el-col :xs="0" :sm="8" :md="8" :lg="12" :xl="16">
+              <el-col :xs="0" :sm="8" :md="8" :lg="12" :xl="12">
                 <el-button style="float: right; padding: 3px 0" type="text"
                       @click="showDetail(inst)">详情</el-button>
               </el-col>
             </el-row>
           </div>
-          <div class="text item">
+          <div class="text item" style="padding-left: 10px;">
             <el-row>
               <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="4">
                 <i class="el-icon-eleme ic avator"> </i>
@@ -202,9 +205,10 @@ export default {
         span {
           position: absolute;
           display: inline-block;
+          font-size: 10px;
           color: #fff;
           width: 100%;
-          bottom: 4px;
+          bottom: 6px;
           left: 0;
           text-align: center;
         }
