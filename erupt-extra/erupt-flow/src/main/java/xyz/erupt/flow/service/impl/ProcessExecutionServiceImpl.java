@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.flow.bean.entity.OaProcessActivity;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.OaProcessInstance;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
@@ -17,7 +16,6 @@ import xyz.erupt.flow.service.ProcessActivityService;
 import xyz.erupt.flow.service.ProcessExecutionService;
 import xyz.erupt.flow.service.ProcessInstanceService;
 
-import java.io.Serializable;
 import java.util.Date;
 
 @Service
@@ -78,10 +76,10 @@ public class ProcessExecutionServiceImpl extends ServiceImpl<OaProcessExecutionM
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void triggerComplete(Long executionId) {
-        //如果当前线程还有激活的活动，不会继续
-        OaProcessActivity activity = processActivityService.getByExecutionId(executionId);
-        if(activity!=null) {//这种情况要报错，因为一个线程同时有2个活动是异常的
-            throw new RuntimeException("当前线程还有活动未完成");
+        //尝试激活下一个活动
+        boolean b = processActivityService.activeByExecutionId(executionId);
+        if(b) {//如果已经激活了，则不能继续
+            return;
         }
         //否则判断是否满足继续的条件
         int count = this.countRunningChildren(executionId);

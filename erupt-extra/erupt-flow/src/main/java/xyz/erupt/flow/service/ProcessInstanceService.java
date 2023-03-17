@@ -1,9 +1,7 @@
 package xyz.erupt.flow.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.erupt.flow.bean.entity.OaProcessDefinition;
-import xyz.erupt.flow.bean.entity.OaProcessInstance;
-import xyz.erupt.flow.bean.entity.OaProcessInstanceHistory;
+import xyz.erupt.flow.bean.entity.*;
 
 import java.util.List;
 
@@ -32,4 +30,26 @@ public interface ProcessInstanceService extends IService<OaProcessInstance> {
      * @return
      */
     List<OaProcessInstanceHistory> getMineAbout(String keywords, int pageNum, int pageSize);
+
+    /**
+     * 流程终止
+     * @param instId
+     * @param remarks
+     */
+    void stop(Long instId, String remarks);
+
+    /**
+     * 流程跳转
+     * @param instId
+     * @param nodeId
+     */
+    void jumpTo(Long instId, String nodeId);
+
+    /**
+     * 获得本流程的最后一个节点
+     * 如果前一个节点是并行网关则禁止
+     * @param execution
+     * @return
+     */
+    OaProcessActivity getLastActivity(OaProcessExecution execution);
 }
