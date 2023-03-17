@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.11.2</version>
+    <version>1.11.3</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
