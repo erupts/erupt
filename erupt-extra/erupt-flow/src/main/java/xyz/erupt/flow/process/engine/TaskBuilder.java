@@ -19,12 +19,15 @@ import java.util.stream.Collectors;
 
 /**
  * 使用建造者模式创建任务
+ * 所有任务都是这个类生成的
  */
 @Data
 public class TaskBuilder {
 
     //会签模式 NEXT顺序会签 AND并行会签 OR或签
     private String completeMode;
+    //任务类型
+    private String taskType;
     //是否激活
     private Boolean active;
 
@@ -33,13 +36,13 @@ public class TaskBuilder {
     private OaProcessActivity activity;
 
     //任务分配用户，每个用户创建一个任务
-    private LinkedHashSet<String> users = new LinkedHashSet<>();
+    private LinkedHashSet<OrgTreeVo> users = new LinkedHashSet<>();
 
     //任务候选角色，创建一个任务，关联到候选人
-    private LinkedHashSet<String> linkRoles = new LinkedHashSet<>();
+    private LinkedHashSet<OrgTreeVo> linkRoles = new LinkedHashSet<>();
 
     //任务候选人，创建一个任务，关联到候选人
-    private LinkedHashSet<String> linkUsers = new LinkedHashSet<>();
+    private LinkedHashSet<OrgTreeVo> linkUsers = new LinkedHashSet<>();
 
     private UserLinkService userLinkService;
 
@@ -57,7 +60,7 @@ public class TaskBuilder {
                 if(this.users.size()>1) {//或签情况下，如果分配人大于1，自动转到候选人
                     this.linkUsers.addAll(this.users);
                 }else {//否则设置为分配人
-                    build.setAssignee(this.users.iterator().next());
+                    build.setAssignee(this.users.iterator().next().getId());
                 }
             }
             //候选人也可以继续设置，但是有分配人的情况下会优先分配人处理
@@ -65,16 +68,18 @@ public class TaskBuilder {
             if(!CollectionUtils.isEmpty(this.linkUsers)) {
                 userLinks.addAll(this.linkUsers.stream().map(u -> {
                     OaTaskUserLink link = new OaTaskUserLink();
-                    link.setUserLinkType(OaTask.USER_LINK_USERS);
-                    link.setLinkId(u);
+                    link.setUserLinkType(FlowConstant.USER_LINK_USERS);
+                    link.setLinkId(u.getId());
+                    link.setLinkName(u.getName());
                     return link;
                 }).collect(Collectors.toList()));
             }
             if(!CollectionUtils.isEmpty(this.linkRoles)) {
                 userLinks.addAll(this.linkRoles.stream().map(u -> {
                     OaTaskUserLink link = new OaTaskUserLink();
-                    link.setUserLinkType(OaTask.USER_LINK_ROLES);
-                    link.setLinkId(u);
+                    link.setUserLinkType(FlowConstant.USER_LINK_ROLES);
+                    link.setLinkId(u.getId());
+                    link.setLinkName(u.getName());
                     return link;
                 }).collect(Collectors.toList()));
             }
@@ -88,15 +93,15 @@ public class TaskBuilder {
                 this.users.addAll(this.linkUsers);//候选人直接转为审批人
             }
             if(!CollectionUtils.isEmpty(this.linkRoles)) {//候选角色则需要查询，然后转为审批人
-                LinkedHashSet<OrgTreeVo> userIdsByRoleIds =
+                LinkedHashSet<OrgTreeVo> users =
                         userLinkService.getUserIdsByRoleIds(this.linkRoles.toArray(new String[this.linkRoles.size()]));
-                this.users.addAll(userIdsByRoleIds.stream().map(OrgTreeVo::getId).collect(Collectors.toSet()));
+                this.users.addAll(users);
             }
             if(!CollectionUtils.isEmpty(this.users)) {
                 int i = 0;
                 while (this.users.iterator().hasNext()) {
                     OaTask oaTask = this.buildPrimeTask();
-                    oaTask.setAssignee(this.users.iterator().next());
+                    oaTask.setAssignee(this.users.iterator().next().getId());
                     if(this.active && i>0) {//当前任务需要激活时，串行只激活第一个，并行激活全部（无需处理）
                         oaTask.setActive(false);
                     }
@@ -111,8 +116,8 @@ public class TaskBuilder {
      * 添加审批人
      * @return
      */
-    public TaskBuilder addUser(String... ids) {
-        for (String id : ids) {
+    public TaskBuilder addUser(OrgTreeVo... vos) {
+        for (OrgTreeVo id : vos) {
             this.users.add(id);
         }
         return this;
@@ -122,8 +127,8 @@ public class TaskBuilder {
      * 添加候选人
      * @return
      */
-    public TaskBuilder addLinkUser(String... ids) {
-        for (String id : ids) {
+    public TaskBuilder addLinkUser(OrgTreeVo... vos) {
+        for (OrgTreeVo id : vos) {
             this.linkUsers.add(id);
         }
         return this;
@@ -133,34 +138,11 @@ public class TaskBuilder {
      * 添加候选角色
      * @return
      */
-    public TaskBuilder addLinkRole(String... ids) {
-        for (String id : ids) {
+    public TaskBuilder addLinkRole(OrgTreeVo... vos) {
+        for (OrgTreeVo id : vos) {
             this.linkRoles.add(id);
         }
         return this;
-    }
-
-    /**
-     * 自动解析处理人
-     * @param users
-     */
-    public void parseUsers1(List<String> users) {
-        if(this.completeMode==null) {
-            throw new RuntimeException("必须先指定会签模式");
-        }
-        if(CollectionUtils.isEmpty(users)) {
-            return;
-        }
-        if(users.size()==1) {//自动变为审批人
-            this.users.add(users.get(0));
-        }else if(
-                FlowConstant.COMPLETE_MODE_AND.equals(this.completeMode)
-                || FlowConstant.COMPLETE_MODE_NEXT.equals(this.completeMode)
-        ) {//多任务
-            this.users.addAll(users);
-        }else if(FlowConstant.COMPLETE_MODE_OR.equals(this.completeMode)) {//候选人
-            this.linkUsers.addAll(users);
-        }
     }
 
     private OaTask buildPrimeTask() {
@@ -175,9 +157,11 @@ public class TaskBuilder {
                 .createDate(new Date())
                 .finished(false)
                 .completeMode(
-                        this.completeMode.equals(FlowConstant.COMPLETE_MODE_AND) && this.completeMode.equals(FlowConstant.COMPLETE_MODE_OR)?
-                                OaProcessActivity.PARALLEL:OaProcessActivity.SERIAL
+                        this.completeMode.equals(FlowConstant.COMPLETE_MODE_NEXT)
+                                ? OaProcessActivity.SERIAL
+                                : OaProcessActivity.PARALLEL
                 )
+                .taskType(this.taskType)
                 .completeSort(sort++)
                 .active(active)
                 .build();

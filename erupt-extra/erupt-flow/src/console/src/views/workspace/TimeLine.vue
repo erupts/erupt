@@ -13,6 +13,7 @@
         <!-- 有任务的情况 -->
         <div slot="header" class="clearfix">
           <span>{{act.activityName}}</span>
+          <span style="font: 12px Extra Small; color: #909399; margin-left: 10px;">{{ (act.description||'')}}</span>
         </div>
         <div>
           <div style="display: inline-block; margin-left: 10px;" v-for="task in act.tasks">
@@ -30,6 +31,7 @@
       <el-card v-if="!act.tasks" shadow="never">
         <!-- 没有任务的情况 -->
         <span>{{act.activityName}}</span>
+        <span style="font: 12px Extra Small; color: #909399; margin-left: 10px;">{{ (act.description||'')}}</span>
       </el-card>
     </el-timeline-item>
   </el-timeline>

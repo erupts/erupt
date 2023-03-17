@@ -21,6 +21,7 @@ public class EruptApiPageModel extends EruptApiModel {
 
     /**
      * 为分页查询返回结果
+     * 必须是mybatis分页
      * @param list
      * @param <T>
      * @return

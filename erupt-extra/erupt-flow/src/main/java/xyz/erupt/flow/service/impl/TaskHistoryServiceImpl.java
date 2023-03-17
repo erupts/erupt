@@ -14,6 +14,7 @@ import xyz.erupt.flow.bean.entity.OaProcessDefinition;
 import xyz.erupt.flow.bean.entity.OaTask;
 import xyz.erupt.flow.bean.entity.OaTaskHistory;
 import xyz.erupt.flow.bean.entity.OaTaskUserLink;
+import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaTaskHistoryMapper;
 import xyz.erupt.flow.service.ProcessDefinitionService;
 import xyz.erupt.flow.service.TaskHistoryService;
@@ -57,16 +58,19 @@ public class TaskHistoryServiceImpl extends ServiceImpl<OaTaskHistoryMapper, OaT
                         taskUserLinkService.listByTaskId((Long) map.get("id"));
                 if(!CollectionUtils.isEmpty(links)) {
                     String str = null;
-                    if(links.get(0).getUserLinkType().equals(OaTask.USER_LINK_ROLES)) {
-                        str = "[角色]";
-                    }else {
-                        str = "[用户]";
-                    }
+
                     for (int i = 0; i < links.size(); i++) {
+                        if(links.get(i).getUserLinkType().equals(FlowConstant.USER_LINK_ROLES)) {
+                            str += "[角色]";
+                        }else if(links.get(i).getUserLinkType().equals(FlowConstant.USER_LINK_USERS)){
+                            str = "[用户]";
+                        }else if(links.get(i).getUserLinkType().equals(FlowConstant.USER_LINK_CC)){
+                            str = "[抄送]";
+                        }
                         if(i>0) {
-                            str += "," + links.get(i).getLinkId();
+                            str += "," + links.get(i).getLinkName();
                         }else {
-                            str += links.get(i).getLinkId();
+                            str += links.get(i).getLinkName();
                         }
                     }
                     map.put("links", str);

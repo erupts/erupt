@@ -1,7 +1,5 @@
 import request from '@/api/request.js'
 
-// 模拟流程步骤
-
 // 发起流程
 export function startByFormId(formId, data) {
   return request({
@@ -28,7 +26,7 @@ export function listMyTasks(params) {
   });
 }
 
-// 查询待我处理的工作
+// 完成任务
 export function completeTask(taskId, remarks) {
   return request({
     url: '/task/complete/'+taskId,
@@ -69,5 +67,14 @@ export function getInstDetail(instId) {
   return request({
     url: '/inst/detail/'+instId,
     method: 'get'
+  });
+}
+
+// 查询与我相关的工单
+export function getMineAbout(params) {
+  return request({
+    url: '/inst/mine/about',
+    method: 'get',
+    params: params
   });
 }

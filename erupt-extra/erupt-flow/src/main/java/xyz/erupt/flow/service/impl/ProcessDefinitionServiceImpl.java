@@ -15,6 +15,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.*;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
+import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaProcessDefinitionMapper;
 import xyz.erupt.flow.service.*;
 
@@ -118,13 +119,6 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         }
         //创建流程实例
         OaProcessInstance processInstance = processInstanceService.newProcessInstance(processDef, content);
-        //查询主线程的任务
-        OaTask startTask = taskService.getStartTaskByInst(processInstance.getId());
-        if(startTask==null) {
-            throw new RuntimeException("找不到开始节点");
-        }
-        //完成这些任务
-        taskService.complete(startTask.getId(), "发起人节点自动完成");
         return processInstance;
     }
 
@@ -159,11 +153,11 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         //查询出已完成的活动
         List<OaProcessActivityHistory> histories = processActivityHistoryService.listByProcInstId(instId);
         //形成一个map
-        Map<String, OaProcessActivityHistory> map =
-                histories.stream().collect(Collectors.toMap(OaProcessActivityHistory::getActivityKey, e -> e, (key1, key2) -> key1));
+        Map<String, List<OaProcessActivityHistory>> map =
+                histories.stream().collect(Collectors.groupingBy(OaProcessActivityHistory::getActivityKey));
         JSONObject formContent = JSON.parseObject(inst.getFormItems());
         this.preview(JSON.parseObject(procDef.getProcess(), OaProcessNode.class), formContent, activities, map);
-        return activities;
+        return histories;
     }
 
     @Override
@@ -209,15 +203,15 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         return this.list(wrapper);
     }
 
-    private void preview(OaProcessNode node, JSONObject formContent, List<OaProcessActivityHistory> activities, Map<String, OaProcessActivityHistory> map) {
+    private void preview(OaProcessNode node, JSONObject formContent, List<OaProcessActivityHistory> activities, Map<String, List<OaProcessActivityHistory>> map) {
         if(node == null || node.getId() == null) {//如果当前节点为空
             return;
-        }else if("ROOT".equals(node.getType())
-                || "APPROVAL".equals(node.getType())
+        }else if(FlowConstant.NODE_TYPE_ROOT.equals(node.getType())
+                || FlowConstant.NODE_TYPE_APPROVAL.equals(node.getType())
         ) {//如果是用户任务
             //优先从map中获取，获取不到才读取流程图
             if(map.get(node.getId())!=null) {
-                activities.add(map.get(node.getId()));
+                activities.addAll(map.get(node.getId()));
             }else {
                 activities.add(OaProcessActivityHistory
                         .builder()
@@ -227,12 +221,12 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
                         .build()
                 );
             }
-        }else if("CONDITIONS".equals(node.getType())) {//如果是互斥分支
+        }else if(FlowConstant.NODE_TYPE_CONDITIONS.equals(node.getType())) {//如果是互斥分支
             //根据条件选择一个分支
             OaProcessNode nextNode = processActivityService.switchNode(formContent, node.getBranchs());
             //先追加该分支
             this.preview(nextNode, formContent, activities, map);
-        }else if("CONCURRENTS".equals(node.getType())) {//如果是并行分支
+        }else if(FlowConstant.NODE_TYPE_CONCURRENTS.equals(node.getType())) {//如果是并行分支
             //循环为该虚拟分支增加节点
             //TODO 这里有点问题，应该把并行的分支同步追加，但是因为前端不好展示，这里先按顺序追加
             for (int i = 0; i < node.getBranchs().size(); i++) {

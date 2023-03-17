@@ -38,4 +38,5 @@ public class OaTaskUserLink extends BaseModel {
 
     private String linkId;//当候选人类型为USERS，表示用户id，当候选人类型为ROLES，表示角色id
 
+    private String linkName;
 }
