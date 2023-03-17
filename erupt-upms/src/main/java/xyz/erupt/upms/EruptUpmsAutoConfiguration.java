@@ -42,6 +42,8 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
+        menus.add(MetaMenu.createSimpleMenu("$home", "首页", "/", null,
+                0, "fa fa-home", MenuTypeEnum.ROUTER.getCode(), MenuStatus.OPEN));
         menus.add(MetaMenu.createRootMenu("$manager", "系统管理", "fa fa-cogs", 1));
         menus.add(MetaMenu.createEruptClassMenu(EruptMenu.class, menus.get(0), 0, MenuTypeEnum.TREE));
         menus.add(MetaMenu.createEruptClassMenu(EruptRole.class, menus.get(0), 10));

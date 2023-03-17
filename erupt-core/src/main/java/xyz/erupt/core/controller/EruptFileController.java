@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
+import xyz.erupt.annotation.sub_field.sub_edit.HtmlEditorType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -113,6 +114,10 @@ public class EruptFileController {
                 }
                 break;
             case HTML_EDITOR:
+                HtmlEditorType htmlEditorType = edit.htmlEditorType();
+                if (!"".equals(htmlEditorType.path())) {
+                    path = htmlEditorType.path() + path;
+                }
                 break;
             default:
                 return EruptApiModel.errorApi("上传失败，非法类型!");
@@ -177,7 +182,7 @@ public class EruptFileController {
     }
 
 
-    @GetMapping("/upload-ueditor/{erupt}/{field}")
+    @RequestMapping("/upload-ueditor/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyMethod = EruptRouter.VerifyMethod.PARAM, verifyType = EruptRouter.VerifyType.ERUPT)
     public void uploadUEditorImage(@PathVariable("erupt") String eruptName,
                                    @PathVariable("field") String fieldName,
