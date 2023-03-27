@@ -43,7 +43,7 @@ public interface ProcessInstanceService extends IService<OaProcessInstance> {
      * @param instId
      * @param nodeId
      */
-    void jumpTo(Long instId, String nodeId);
+    void jumpTo(OaProcessExecution instId, String nodeId);
 
     /**
      * 获得本流程的最后一个节点

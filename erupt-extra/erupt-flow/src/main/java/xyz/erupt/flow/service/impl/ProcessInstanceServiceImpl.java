@@ -1,10 +1,12 @@
 package xyz.erupt.flow.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,11 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
     private TaskOperationService taskOperationService;
     @Autowired
     private TaskUserLinkService taskUserLinkService;
+    @Autowired
+    private ProcessActivityHistoryService processActivityHistoryService;
+    @Autowired
+    @Lazy
+    private ProcessDefinitionService processDefinitionService;
 
     /**
      * 启动新的流程实例（instance），会级联创建线程（execution），并创建第一个节点（activity）
@@ -169,19 +176,64 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
         return list;
     }
 
+    /**
+     * 停止流程实例
+     * @param instId
+     * @param remarks
+     */
     @Override
     public void stop(Long instId, String remarks) {
-
+        OaProcessInstanceHistory build = OaProcessInstanceHistory.builder()
+                .status(OaProcessInstance.SHUTDOWN)
+                .finishDate(new Date())
+                .reason(remarks)
+                .id(instId)
+                .build();
+        processInstanceHistoryService.updateById(build);//同步更新历史表
+        this.removeById(instId);//删除运行时表
     }
 
+    /**
+     * 跳转到指定活动
+     * @param execution
+     * @param nodeId
+     */
     @Override
-    public void jumpTo(Long instId, String nodeId) {
-
+    public void jumpTo(OaProcessExecution execution, String nodeId) {
+        //跳转之前，要先确定是本线程跳转还是跨线程跳转
+        //本线程内的跳转，不需要停止全部
+        //processExecutionService.stopByInstId(execution.getProcessInstId(), "节点跳转");
+        processActivityService.stopByExecutionId(execution.getProcessInstId(), "节点跳转");
+        taskService.stopByExecutionId(execution.getProcessInstId(), "节点跳转");
+        //然后新启动一个线程，从跳转部分开始
+        OaProcessNode node =
+                processDefinitionService.readNode(execution.getProcessDefId(), nodeId);
+        OaProcessInstance inst = this.getById(execution.getProcessInstId());
+        JSONObject formContent = JSON.parseObject(inst.getFormItems());
+        //当前线程下，继续进行
+        processActivityService.newActivities(execution, formContent, node);
     }
 
+    /**
+     * 获取流程的上一步
+     * @param execution
+     * @return
+     */
     @Override
     public OaProcessActivity getLastActivity(OaProcessExecution execution) {
-        return null;
+        //查询已经完成的所有活动
+        List<OaProcessActivityHistory> histories =
+                processActivityHistoryService.listByProcInstId(execution.getProcessInstId(), false);
+        if(CollectionUtils.isEmpty(histories)) {
+            if(execution.getParentId()!=null) {
+                return this.getLastActivity(processExecutionService.getById(execution.getParentId()));
+            }
+            return null;
+        }
+        //获得最近完成的活动
+        OaProcessActivity activity = new OaProcessActivity();
+        BeanUtils.copyProperties(histories.get(0), activity);
+        return activity;
     }
 
     @Override
@@ -189,7 +241,7 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
     public boolean removeById(Serializable id) {
         //删除任务
         taskService.removeByProcessInstId((Long) id);
-        //删除节点
+        //删除活动
         processActivityService.removeByProcessInstId((Long) id);
         //删除execution
         processExecutionService.removeByProcessInstId((Long) id);

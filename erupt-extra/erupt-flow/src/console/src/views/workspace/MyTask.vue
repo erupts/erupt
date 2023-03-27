@@ -55,7 +55,7 @@
 
 <script>
 
-import {completeTask, listMyTasks} from "@/api/process";
+import {completeTask, refuseTask, listMyTasks} from "@/api/process";
 import TaskDetail from './TaskDetail';
 
 export default {
@@ -143,9 +143,11 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(( comfirm ) => {
-        this.$message.warning("暂不支持驳回");
-        this.openItemDl = false;
-        this.reloadDatas();
+        refuseTask(taskId, comfirm.value).then(rsp => {
+          this.$message.success(rsp.message);
+          this.openItemDl = false;
+          this.reloadDatas();
+        });
       });
     }
   }

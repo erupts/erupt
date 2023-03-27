@@ -45,4 +45,11 @@ public interface ProcessExecutionService extends IService<OaProcessExecution> {
      * @param toJSONString
      */
     void freshProcess(Long id, String toJSONString);
+
+    /**
+     * 中断所有线程
+     * @param instId
+     * @param reason
+     */
+    void stopByInstId(Long instId, String reason);
 }
