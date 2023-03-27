@@ -47,4 +47,11 @@ public interface ProcessActivityService extends IService<OaProcessActivity> {
      * @return
      */
     OaProcessNode switchNode(JSONObject formContent, List<OaProcessNode> nodes);
+
+    /**
+     * 中断所有线程
+     * @param executionId
+     * @param reason
+     */
+    void stopByExecutionId(Long executionId, String reason);
 }

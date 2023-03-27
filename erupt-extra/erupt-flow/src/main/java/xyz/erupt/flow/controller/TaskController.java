@@ -39,8 +39,19 @@ public class TaskController {
      */
     @PostMapping("/task/complete/{taskId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
-    public EruptApiModel listMyTasks(@PathVariable("taskId") Long taskId, String remarks) {
+    public EruptApiModel complete(@PathVariable("taskId") Long taskId, String remarks) {
         taskService.complete(taskId, remarks);
+        return EruptApiModel.successApi();
+    }
+
+    /**
+     * 拒绝任务
+     * @return
+     */
+    @PostMapping("/task/refuse/{taskId}")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    public EruptApiModel refuse(@PathVariable("taskId") Long taskId, String remarks) {
+        taskService.refuse(taskId, remarks);
         return EruptApiModel.successApi();
     }
 

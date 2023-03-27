@@ -17,7 +17,7 @@ public interface ProcessActivityHistoryService extends IService<OaProcessActivit
      * 查询流程实例中的所有活动
      * @param instId
      */
-    List<OaProcessActivityHistory> listByProcInstId(Long instId);
+    List<OaProcessActivityHistory> listByProcInstId(Long instId, boolean active);
 
     /**
      * 复制并更新

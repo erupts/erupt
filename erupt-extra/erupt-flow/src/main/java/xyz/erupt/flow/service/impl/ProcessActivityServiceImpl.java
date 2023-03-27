@@ -143,6 +143,28 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
         return nodes.get(0);
     }
 
+    @Override
+    public void stopByExecutionId(Long executionId, String reason) {
+        List<OaProcessActivity> activities = this.listByExecutionId(executionId, true);
+        if(CollectionUtils.isEmpty(activities)) {
+            return;
+        }
+        activities.forEach(e -> {
+            OaProcessActivity build = OaProcessActivity.builder()
+                    .active(false)
+                    .id(e.getId())
+                    .build();
+            this.updateById(build);
+            processActivityHistoryService.copyAndSave(build);
+        });
+    }
+
+    private List<OaProcessActivity> listByExecutionId(Long executionId, boolean active) {
+        LambdaQueryWrapper<OaProcessActivity> wrapper = new LambdaQueryWrapper<OaProcessActivity>()
+                .eq(OaProcessActivity::getExecutionId, executionId);
+        return this.list(wrapper);
+    }
+
     /**
      * 判断条件组
      * @param groups

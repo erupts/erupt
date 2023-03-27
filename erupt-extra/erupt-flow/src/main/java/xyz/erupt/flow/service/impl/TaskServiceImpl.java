@@ -1,6 +1,7 @@
 package xyz.erupt.flow.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
@@ -153,9 +154,10 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void refuse(Long taskId, String account, String accountName, String remarks) {
-        this.finish(OaTaskOperation.REFUSE, taskId, account, accountName, remarks);
+        //先完成当前任务
+        OaTask task = this.finish(OaTaskOperation.REFUSE, taskId, account, accountName, remarks);
         //取得拒绝策略
-        OaProcessExecution execution = processExecutionService.getById(taskId);
+        OaProcessExecution execution = processExecutionService.getById(task.getExecutionId());
         OaProcessNode processNode = execution.getProcessNode();
         OaProcessNodeRefuse refuse = processNode.getProps().getRefuse();
         if(FlowConstant.REFUSE_TO_END.equals(refuse.getType())) {//流程的终止
@@ -167,9 +169,9 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
                 throw new EruptApiErrorTip("流程没有上一步");
             }
             //将本流程实例跳转到指定步骤
-            processInstanceService.jumpTo(execution.getProcessInstId(), activity.getActivityKey());
+            processInstanceService.jumpTo(execution, activity.getActivityKey());
         }else if(FlowConstant.REFUSE_TO_NODE.equals(refuse.getType())) {
-            processInstanceService.jumpTo(execution.getProcessInstId(), refuse.getTarget());
+            processInstanceService.jumpTo(execution, refuse.getTarget());
         }else {
             throw new EruptApiErrorTip("无法识别拒绝策略"+refuse.getType());
         }
@@ -393,6 +395,23 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         OaProcessDefinition def = processDefinitionService.getById(inst.getProcessDefId());
         taskDetail.setFormItems(JSON.parseArray(def.getFormItems()));//表单配置
         return taskDetail;
+    }
+
+    @Override
+    public void stopByExecutionId(Long executionId, String reason) {
+        //所有未完成的任务
+        List<OaTask> tasks = this.listByExecutionId(executionId, false);
+        if(CollectionUtils.isEmpty(tasks)) {
+            return;
+        }
+        tasks.forEach(e -> this.finish(OaTaskOperation.SHUTDOWN, e.getId(), null, reason, reason));
+    }
+
+    private List<OaTask> listByExecutionId(Long executionId, boolean finished) {
+        LambdaQueryWrapper<OaTask> wrapper = new LambdaQueryWrapper<OaTask>()
+                .eq(OaTask::getExecutionId, executionId)
+                .eq(OaTask::getFinished, finished);
+        return this.list(wrapper);
     }
 
     @Override

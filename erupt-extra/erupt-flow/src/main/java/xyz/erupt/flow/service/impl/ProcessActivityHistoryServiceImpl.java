@@ -38,10 +38,10 @@ public class ProcessActivityHistoryServiceImpl extends ServiceImpl<OaProcessActi
     }
 
     @Override
-    public List<OaProcessActivityHistory> listByProcInstId(Long instId) {
+    public List<OaProcessActivityHistory> listByProcInstId(Long instId, boolean active) {
         LambdaQueryWrapper<OaProcessActivityHistory> queryWrapper = new LambdaQueryWrapper<OaProcessActivityHistory>()
                 .eq(OaProcessActivityHistory::getProcessInstId, instId)
-                .eq(OaProcessActivityHistory::getActive, true)
+                .eq(OaProcessActivityHistory::getActive, active)
                 .orderByAsc(OaProcessActivityHistory::getFinishDate);
         List<OaProcessActivityHistory> list = super.list(queryWrapper);
         //查询任务历史

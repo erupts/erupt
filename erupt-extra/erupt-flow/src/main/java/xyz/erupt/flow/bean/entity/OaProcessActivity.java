@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -15,9 +16,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaProcessActivity extends BaseModel {
+public class OaProcessActivity {
     /**
      * 任务完成条件
      * 暂时只支持所有任务全部完成
@@ -49,6 +48,13 @@ public class OaProcessActivity extends BaseModel {
      */
     public static final String SERIAL = "SERIAL";//串行，必须按照任务的顺序执行
     public static final String PARALLEL = "PARALLEL";//并行，可以同步完成所有任务
+
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField
+    private Long id;
 
     @EruptField(views = @View(title = "节点key"))
     private String activityKey;

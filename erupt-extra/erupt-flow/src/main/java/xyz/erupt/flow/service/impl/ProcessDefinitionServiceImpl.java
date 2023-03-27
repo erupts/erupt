@@ -31,8 +31,6 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
     @Autowired
     private FormGroupService formGroupService;
     @Autowired
-    private TaskService taskService;
-    @Autowired
     private ProcessActivityService processActivityService;
     @Autowired
     private ProcessActivityHistoryService processActivityHistoryService;
@@ -151,7 +149,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         OaProcessDefinition procDef = this.getById(inst.getProcessDefId());
         List<OaProcessActivityHistory> activities = new ArrayList<>();
         //查询出已完成的活动
-        List<OaProcessActivityHistory> histories = processActivityHistoryService.listByProcInstId(instId);
+        List<OaProcessActivityHistory> histories = processActivityHistoryService.listByProcInstId(instId, true);
         Collections.sort(
                 histories,
                 Comparator.nullsLast(
@@ -199,6 +197,11 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         //旧版本全部停用
         this.updateStopByFormId(forms.getFormId(), true);
         this.save(oaProcessDefinition);
+    }
+
+    @Override
+    public OaProcessNode readNode(String processDefId, String nodeId) {
+        return null;
     }
 
     private List<OaProcessDefinition> listByGroupId(Long groupId, String keywords) {

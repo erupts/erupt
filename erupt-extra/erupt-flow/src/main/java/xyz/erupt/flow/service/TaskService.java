@@ -78,4 +78,11 @@ public interface TaskService extends IService<OaTask> {
      * @return
      */
     TaskDetailVo getInstDetail(Long instId);
+
+    /**
+     * 中断所有线程
+     * @param executionId
+     * @param reason
+     */
+    void stopByExecutionId(Long executionId, String reason);
 }

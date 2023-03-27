@@ -2,11 +2,13 @@ package xyz.erupt.flow.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.OaProcessInstance;
@@ -17,6 +19,7 @@ import xyz.erupt.flow.service.ProcessExecutionService;
 import xyz.erupt.flow.service.ProcessInstanceService;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ProcessExecutionServiceImpl extends ServiceImpl<OaProcessExecutionMapper, OaProcessExecution>
@@ -140,6 +143,37 @@ public class ProcessExecutionServiceImpl extends ServiceImpl<OaProcessExecutionM
                 .build();
         build.setId(id);
         this.updateById(build);
+    }
+
+    @Override
+    public void stopByInstId(Long instId, String reason) {
+        Date now = new Date();
+        List<OaProcessExecution> executions = this.listByInstId(instId, true);
+        if(CollectionUtils.isEmpty(executions)) {
+            return;
+        }
+        executions.forEach(e -> {
+            OaProcessExecution build = OaProcessExecution.builder()
+                    .process("{}")
+                    .status(OaProcessExecution.STATUS_ENDED)
+                    .reason(reason)
+                    .ended(now)
+                    .updated(now)
+                    .id(e.getId())
+                    .build();
+            this.updateById(build);
+        });
+    }
+
+    private List<OaProcessExecution> listByInstId(Long instId, boolean active) {
+        LambdaQueryWrapper<OaProcessExecution> wrapper = new LambdaQueryWrapper<OaProcessExecution>()
+                .eq(OaProcessExecution::getProcessInstId, instId);
+        if(active) {
+            wrapper.in(OaProcessExecution::getStatus, OaProcessExecution.STATUS_RUNNING, OaProcessExecution.STATUS_WAITING);
+        }else {
+            wrapper.in(OaProcessExecution::getStatus, OaProcessExecution.STATUS_ENDED);
+        }
+        return this.list(wrapper);
     }
 
     /**
