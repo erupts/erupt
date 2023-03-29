@@ -9,7 +9,7 @@ public interface TaskUserLinkService {
 
     long countByTaskId(Long taskId);
 
-    List<OaTaskUserLink> saveBatch(Collection<OaTaskUserLink> links);
+    boolean saveBatch(Collection<OaTaskUserLink> links);
 
     void removeByTaskId(Long id);
 

@@ -5,12 +5,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaProcessActivity;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
+import xyz.erupt.flow.bean.entity.node.OaProcessNodeProps;
 
-import java.io.Serializable;
-import java.util.List;
+public interface ProcessActivityService extends IService<OaProcessActivity>, WithListener {
 
-public interface ProcessActivityService extends IService<OaProcessActivity> {
-
+    public int newActivitiesForExecution(OaProcessExecution execution);
     /**
      * 针对当前node创建节点
      * 如果当前节点不是用户任务，将会继续向前，直到下一个（或多个）用户任务
@@ -23,6 +22,8 @@ public interface ProcessActivityService extends IService<OaProcessActivity> {
 
     public int newActivities(OaProcessExecution execution, JSONObject formContent, OaProcessNode node);
 
+    public OaProcessActivity newActivity(OaProcessExecution execution, OaProcessNode node, String status, OaProcessNodeProps props, int sort);
+
     public void removeByProcessInstId(Long procInstId);
 
     public boolean activeByExecutionId(Long executionId);
@@ -31,7 +32,7 @@ public interface ProcessActivityService extends IService<OaProcessActivity> {
      * 完成节点
      * @param activityId
      */
-    void triggerComplete(Long activityId);
+    void complete(Long activityId);
 
     /**
      * 查询当前线程的节点
@@ -39,14 +40,6 @@ public interface ProcessActivityService extends IService<OaProcessActivity> {
      * @return
      */
     OaProcessActivity getByExecutionId(Long executionId);
-
-    /**
-     * 选择一个符合条件的节点，用于互斥分支
-     * @param formContent
-     * @param nodes
-     * @return
-     */
-    OaProcessNode switchNode(JSONObject formContent, List<OaProcessNode> nodes);
 
     /**
      * 中断所有线程

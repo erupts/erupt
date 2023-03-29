@@ -17,6 +17,7 @@ import xyz.erupt.flow.bean.entity.*;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaProcessDefinitionMapper;
+import xyz.erupt.flow.process.engine.ProcessHelper;
 import xyz.erupt.flow.service.*;
 
 import java.util.*;
@@ -36,6 +37,8 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
     private ProcessActivityHistoryService processActivityHistoryService;
     @Autowired
     private ProcessInstanceHistoryService processInstanceHistoryService;
+    @Autowired
+    private ProcessHelper processHelper;
 
     @Override
     public void beforeDelete(OaProcessDefinition oaProcessDefinition) {
@@ -235,7 +238,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
             }
         }else if(FlowConstant.NODE_TYPE_CONDITIONS.equals(node.getType())) {//如果是互斥分支
             //根据条件选择一个分支
-            OaProcessNode nextNode = processActivityService.switchNode(formContent, node.getBranchs());
+            OaProcessNode nextNode = processHelper.switchNode(formContent, node.getBranchs());
             //先追加该分支
             this.preview(nextNode, formContent, activities, map);
         }else if(FlowConstant.NODE_TYPE_CONCURRENTS.equals(node.getType())) {//如果是并行分支

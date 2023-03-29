@@ -8,7 +8,7 @@
         <form-authority-config/>
       </el-tab-pane>
     </el-tabs>
-    <!--<component @assignedTypeChange="assignedTypeChange" :is="(selectNode.type||'').toLowerCase()" v-else :config="selectNode.props"/>-->
+    <component @assignedTypeChange="assignedTypeChange" :is="(selectNode.type||'').toLowerCase()" v-else :config="selectNode.props"/>
   </div>
 </template>
 
