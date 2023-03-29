@@ -1,7 +1,7 @@
 <template>
   <div class="from-panel" ref="panel">
     <div class="from-title">
-      <el-button icon="el-icon-back" type="info" size="mini" circle plain style="margin-right: 15px" @click="$router.push('/')"></el-button>
+      <!--<el-button icon="el-icon-back" type="info" size="mini" circle plain style="margin-right: 15px" @click="$router.push('/')"></el-button>-->
       <span>流程面板</span>
       <div>
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="newProcess('')">新建表单</el-button>

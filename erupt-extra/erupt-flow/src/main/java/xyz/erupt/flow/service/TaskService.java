@@ -8,7 +8,7 @@ import xyz.erupt.flow.bean.vo.TaskDetailVo;
 import java.util.List;
 import java.util.Set;
 
-public interface TaskService extends IService<OaTask> {
+public interface TaskService extends IService<OaTask>, WithListener {
 
     /**
      * 完成任务
@@ -57,11 +57,6 @@ public interface TaskService extends IService<OaTask> {
     boolean activeTaskByActivityId(Long activityId);
 
     List<OaTask> listByActivityId(Long activityId, boolean activied);
-
-    /**
-     * 尝试激活任务
-     */
-    void triggerTaskActive(OaTask task);
 
     void saveBatchWithUserLink(List<OaTask> oaTasks);
 

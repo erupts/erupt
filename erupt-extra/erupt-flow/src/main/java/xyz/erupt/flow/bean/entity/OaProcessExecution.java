@@ -77,7 +77,7 @@ public class OaProcessExecution {
     @EruptField(views = @View(title = "结束时间", type = ViewType.DATE_TIME))
     private Date ended;
 
-    @EruptField(views = @View(title = "节点配置", show = false))
+    @EruptField(views = @View(title = "当前节点", show = false))
     @Column(columnDefinition = "json")//json类型
     private String process;
 

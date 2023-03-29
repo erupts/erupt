@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,16 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.*;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeNobody;
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeProps;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeRefuse;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.bean.vo.TaskDetailVo;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaTaskMapper;
+import xyz.erupt.flow.process.engine.ProcessHelper;
+import xyz.erupt.flow.process.listener.AfterActiveTaskListener;
+import xyz.erupt.flow.process.listener.AfterCompleteTaskListener;
+import xyz.erupt.flow.process.listener.AfterCreateTaskListener;
+import xyz.erupt.flow.process.listener.ExecutableNodeListener;
 import xyz.erupt.flow.process.userlink.impl.UserLinkServiceHolder;
 import xyz.erupt.flow.service.*;
 import xyz.erupt.upms.model.EruptUser;
@@ -32,7 +36,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Data
 public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implements TaskService, DataProxy<OaTask> {
+
+    private Map<Class<ExecutableNodeListener>, List<ExecutableNodeListener>> listenerMap = new HashMap<>();
 
     @Autowired
     private TaskHistoryService taskHistoryService;
@@ -60,6 +67,8 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     @Lazy
     @Autowired
     private ProcessInstanceHistoryService processInstanceHistoryService;
+    @Autowired
+    private ProcessHelper processHelper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -76,10 +85,17 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
         OaTask task = this.complete(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
         //触发活动的完成
-        processActivityService.triggerComplete(task.getActivityId());
+        this.listenerMap.get(AfterCompleteTaskListener.class).forEach(l -> l.execute(task));
+
         return task;
     }
 
+    /**
+     * 指派
+     * @param taskId
+     * @param users
+     * @param remarks
+     */
     @Override
     public void assign(Long taskId, Set<OrgTreeVo> users, String remarks) {
         //查询任务，并进行判断
@@ -97,8 +113,9 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         this.setAssigns(task, users);
         //记录日志
         taskOperationService.log(task, OaTaskOperation.ASSIGN, remarks);
-        //触发活动的完成
-        processActivityService.triggerComplete(task.getActivityId());
+
+        //触发后置监听
+        this.listenerMap.get(AfterCompleteTaskListener.class).forEach(l -> l.execute(task));
     }
 
     /**
@@ -164,7 +181,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
             processInstanceService.stop(execution.getProcessInstId(), accountName+" 审批拒绝");
         }else if(FlowConstant.REFUSE_TO_BEFORE.equals(refuse.getType())) {//回到上一步
             //获取本线程的上一步
-            OaProcessActivity activity = processInstanceService.getLastActivity(execution);
+            OaProcessActivity activity = processHelper.getLastActivity(execution);
             if(activity==null) {
                 throw new EruptApiErrorTip("流程没有上一步");
             }
@@ -198,6 +215,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         }
         //任务标记为完成
         task.setFinished(true);
+        task.setActive(false);
         task.setFinishDate(new Date());
         task.setFinishUser(account);
         task.setFinishUserName(accountName);
@@ -292,8 +310,14 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
             OaTask t = oaTasks.get(i);
             t.setActive(true);
             this.updateById(t);
-            //触发任务激活事件
-            this.triggerTaskActive(t);
+            if(OaProcessActivity.SERIAL.equals(t.getCompleteMode())) {//串行只能激活一个
+                break;
+            }
+        }
+        //一次性触发所有监听器，这里先不在循环里触发
+        for (int i = 0; i < oaTasks.size(); i++) {
+            OaTask t = oaTasks.get(i);
+            this.listenerMap.get(AfterActiveTaskListener.class).forEach(l -> l.execute(t));
             if(OaProcessActivity.SERIAL.equals(t.getCompleteMode())) {//串行只能激活一个
                 break;
             }
@@ -301,57 +325,19 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         return oaTasks.size()>0;
     }
 
-    /**
-     * 激活任务需要处理的事情
-     * 不激活任务，只做监听事件
-     * @param task
-     */
-    @Override
-    public void triggerTaskActive(OaTask task) {
-        //判断任务是否有人可以处理
-        if(
-                task.getTaskOwner()==null//没有所属人
-                && task.getAssignee()==null//没有分配人
-                && taskUserLinkService.countUsersByTaskId(task.getId())<=0//候选人
-        ) {//触发无人审批事件
-            OaProcessExecution inst = processExecutionService.getById(task.getProcessInstId());
-            OaProcessNodeProps props = inst.getProcessNode().getProps();
-            OaProcessNodeNobody nobodyConf = props.getNobody();
-            if(FlowConstant.NOBODY_TO_PASS.equals(nobodyConf.getHandler())) {
-                //直接完成
-                this.complete(task.getId(), null, "无人处理，自动完成", null);
-            }else if(FlowConstant.NOBODY_TO_ADMIN.equals(nobodyConf.getHandler())) {//分配给超管用户
-                LinkedHashSet<OrgTreeVo> userIds = userLinkService.getAdminUsers();
-                if(CollectionUtils.isEmpty(userIds)) {
-                    throw new RuntimeException("未查询到超管用户");
-                }
-                //将任务转办给超管
-                this.assign(task.getId(), userIds, "无人处理，转办给超管用户");
-            }else if(FlowConstant.NOBODY_TO_USER.equals(nobodyConf.getHandler())) {
-                //将任务转办给超管
-                Set<OrgTreeVo> users =
-                        nobodyConf.getAssignedUser().stream().map(au -> OrgTreeVo.builder()
-                                .id(au.getId())
-                                .name(au.getName())
-                                .build()
-                        ).collect(Collectors.toSet());
-                this.assign(task.getId(), users, "无人处理，转办给指定用户");
-            }else if(FlowConstant.NOBODY_TO_REFUSE.equals(nobodyConf.getHandler())) {
-                //直接拒绝
-                this.refuse(task.getId(), "无人处理，自动拒绝");
-            }else {
-                throw new RuntimeException("请设置无人处理的审批方式");
-            }
-        }
-    }
-
     @Override
     public void saveBatchWithUserLink(List<OaTask> oaTasks) {
         this.saveBatch(oaTasks);
         taskHistoryService.copyAndSave(oaTasks);
+
         oaTasks.forEach(t -> {
             t.getUserLinks().forEach(link -> link.setTaskId(t.getId()));
             taskUserLinkService.saveBatch(t.getUserLinks());
+        });
+        //这里需要考虑一个问题，就是其中一个任务的监听导致其他任务不存在的情况
+        oaTasks.forEach(t -> {
+            //触发后置事件
+            this.listenerMap.get(AfterCreateTaskListener.class).forEach(l -> l.execute(t));
         });
     }
 

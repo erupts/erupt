@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.process.userlink.UserLinkService;
 import xyz.erupt.flow.repository.EruptOrgRepository;
@@ -147,6 +148,9 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
     private List<OrgTreeVo> getLeadersByDeptId(Long deptId) {
         //假设部门内排第一个的人是主管
         List<EruptUser> users = eruptUserRepository.findByEruptOrgId(deptId);//先取本部门全部人员作为管理员
+        if(CollectionUtils.isEmpty(users)) {
+            return new ArrayList<>(0);
+        }
         EruptUser first = Optional.ofNullable(users).orElse(new ArrayList<>()).stream()
                 .findFirst().get();
         return Arrays.asList(OrgTreeVo.builder()

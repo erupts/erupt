@@ -5,40 +5,62 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.flow.bean.entity.OaProcessDefinition;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.OaProcessInstance;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.mapper.OaProcessExecutionMapper;
+import xyz.erupt.flow.process.listener.AfterCreateExecutionListener;
+import xyz.erupt.flow.process.listener.AfterFinishExecutionListener;
+import xyz.erupt.flow.process.listener.ExecutableNodeListener;
 import xyz.erupt.flow.service.ProcessActivityService;
+import xyz.erupt.flow.service.ProcessDefinitionService;
 import xyz.erupt.flow.service.ProcessExecutionService;
 import xyz.erupt.flow.service.ProcessInstanceService;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Data
 @Service
 public class ProcessExecutionServiceImpl extends ServiceImpl<OaProcessExecutionMapper, OaProcessExecution>
         implements ProcessExecutionService {
+
+    private Map<Class<ExecutableNodeListener>, List<ExecutableNodeListener>> listenerMap = new HashMap<>();
 
     @Autowired
     private ProcessInstanceService processInstanceService;
     @Autowired
     private ProcessActivityService processActivityService;
+    @Autowired
+    private ProcessDefinitionService processDefinitionService;
 
     @Override
-    public OaProcessExecution newExecution(String defId, Long instanceId, JSONObject formContent, OaProcessNode startNode, OaProcessExecution parent) {
+    @Transactional(rollbackFor = Exception.class)
+    public OaProcessExecution newExecutionForInstance(OaProcessInstance inst) {
+        OaProcessDefinition def = processDefinitionService.getById(inst.getProcessDefId());
+        return this.newExecution(def.getId(), inst.getId(), def.getProcessNode(), null);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public OaProcessExecution newExecution(String defId, Long instanceId, OaProcessNode startNode, OaProcessExecution parent) {
         //创建线程
         OaProcessExecution execution = OaProcessExecution.builder()
                 .processInstId(instanceId)
                 .processDefId(defId)
                 .startNodeId(startNode.getId())
                 .startNodeName(startNode.getName())
-                .status(OaProcessExecution.STATUS_RUNNING)
+                .process(JSON.toJSONString(startNode))
+                .status(OaProcessExecution.STATUS_RUNNING)//直接就是运行状态
                 .created(new Date())
                 .build();
         if(parent==null) {
@@ -49,8 +71,44 @@ public class ProcessExecutionServiceImpl extends ServiceImpl<OaProcessExecutionM
             execution.setParentId(parent.getId());
         }
         super.save(execution);
-        processActivityService.newActivities(execution, formContent, startNode, OaProcessExecution.STATUS_RUNNING);
+
+        //创建后置监听
+        this.listenerMap.get(AfterCreateExecutionListener.class).forEach(l -> l.execute(execution));
+
         return execution;
+    }
+
+    /**
+     * 线程前进
+     * @param executionId
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void step(Long executionId, OaProcessNode currentNode) {
+        //判断是否满足继续的条件
+        int count = this.countRunningChildren(executionId);
+        if(count>0) {
+            //如果还有运行中的子线程，禁止前进
+            return;
+        }
+        OaProcessExecution execution = this.getById(executionId);
+        if(!OaProcessExecution.STATUS_RUNNING.equals(execution.getStatus())) {
+            throw new EruptApiErrorTip("当前线程状态"+execution.getStatus()+"不可完成");
+        }
+
+        //获取下一个节点
+        OaProcessNode nextNode = null;
+        if(execution.getProcess()!=null) {
+            nextNode = currentNode.getChildren();
+        }
+
+        if(nextNode==null || nextNode.getId()==null) {//没有下一步，当前线程结束了
+            this.finish(execution);//调用结束
+        }else {//当前线程没结束，生成下一批活动
+            OaProcessInstance inst = processInstanceService.getById(execution.getProcessInstId());
+            JSONObject jsonObject = JSON.parseObject(inst.getFormItems());
+            processActivityService.newActivities(execution, jsonObject, nextNode, OaProcessExecution.STATUS_RUNNING);
+        }
     }
 
     private int countRunningChildren(Long parentId) {
@@ -70,68 +128,19 @@ public class ProcessExecutionServiceImpl extends ServiceImpl<OaProcessExecutionM
         this.remove(queryWrapper);
     }
 
-    /**
-     * 当有任务完成时触发此方法
-     * 判断当前线程是否还有任务需要完成，如果没有，则进行下一步
-     * 暂时只支持一种完成方式，即线程内的所有任务全部完成
-     * @param executionId
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void triggerComplete(Long executionId) {
-        //尝试激活下一个活动
-        boolean b = processActivityService.activeByExecutionId(executionId);
-        if(b) {//如果已经激活了，则不能继续
-            return;
-        }
-        //否则判断是否满足继续的条件
-        int count = this.countRunningChildren(executionId);
-        if(count>0) {
-            return;
-        }
-        OaProcessExecution execution = this.getById(executionId);
-        if(!OaProcessExecution.STATUS_RUNNING.equals(execution.getStatus())) {
-            throw new EruptApiErrorTip("当前线程状态"+execution.getStatus()+"不可完成");
-        }
-        //判断当前线程是否结束
-        boolean executionFinished = false;
-        OaProcessNode nextNode = null;
-        if(execution.getProcess()==null) {
-            executionFinished = true;
-        }else {
-            nextNode = JSON.parseObject(execution.getProcess(), OaProcessNode.class).getChildren();
-            if(nextNode==null || nextNode.getId()==null) {
-                executionFinished = true;
-            }
-        }
-
-        if(executionFinished) {//当前线程结束了
-            this.finish(execution);
-            //尝试完成父线程
-            if(execution.getParentId()!=null) {
-                this.triggerComplete(execution.getParentId());
-            }else {//直接完成流程实例
-                processInstanceService.finish(execution.getProcessInstId());
-            }
-            return;
-        }else {//当前线程没结束
-            //生成下一批任务
-            OaProcessInstance inst = processInstanceService.getById(execution.getProcessInstId());
-            JSONObject jsonObject = JSON.parseObject(inst.getFormItems());
-            processActivityService.newActivities(execution, jsonObject, nextNode, OaProcessExecution.STATUS_RUNNING);
-        }
-    }
-
     //完成一个线程
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finish(OaProcessExecution execution) {
+        //线程结束
         Date now = new Date();
         execution.setProcess("{}");
         execution.setStatus(OaProcessExecution.STATUS_ENDED);
         execution.setEnded(now);
         execution.setUpdated(new Date());
         this.updateById(execution);
+        //触发结束后置监听
+        this.listenerMap.get(AfterFinishExecutionListener.class).forEach(l -> l.execute(execution));
     }
 
     @Override
@@ -182,7 +191,7 @@ public class ProcessExecutionServiceImpl extends ServiceImpl<OaProcessExecutionM
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void triggerActive(Long executionId) {
+    public void active(Long executionId) {
         //否则判断是否满足继续的条件
         int count = this.countRunningChildren(executionId);
         if(count>0) {

@@ -1,5 +1,6 @@
 package xyz.erupt.flow.bean.entity;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -14,12 +15,11 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 流程的节点
@@ -116,4 +116,15 @@ public class OaProcessActivity {
             , edit = @Edit(title = "完成顺序", search = @Search)
     )
     private Integer sort;
+
+    @EruptField(views = @View(title = "节点"))
+    @Column(columnDefinition = "json")//json类型
+    private String node;
+
+    public OaProcessNode getProcessNode() {
+        if(this.node==null) {
+            return null;
+        }
+        return JSON.parseObject(this.node, OaProcessNode.class);
+    }
 }

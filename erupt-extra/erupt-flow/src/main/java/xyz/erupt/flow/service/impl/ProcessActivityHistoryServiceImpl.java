@@ -24,20 +24,6 @@ public class ProcessActivityHistoryServiceImpl extends ServiceImpl<OaProcessActi
     private TaskHistoryService taskHistoryService;
 
     @Override
-    public List<OaProcessActivityHistory> listFinishedActivitiesByProcInstId(Long instId) {
-        LambdaQueryWrapper<OaProcessActivityHistory> queryWrapper = new LambdaQueryWrapper<OaProcessActivityHistory>()
-                .eq(OaProcessActivityHistory::getProcessInstId, instId)
-                .eq(OaProcessActivityHistory::getFinished, true)
-                .orderByDesc(OaProcessActivityHistory::getFinishDate);
-        List<OaProcessActivityHistory> list = super.list(queryWrapper);
-        list.forEach(h -> {
-            List<OaTaskHistory> taskHistories = taskHistoryService.listByActivityId(h.getId());
-            h.setTasks(taskHistories);
-        });
-        return list;
-    }
-
-    @Override
     public List<OaProcessActivityHistory> listByProcInstId(Long instId, boolean active) {
         LambdaQueryWrapper<OaProcessActivityHistory> queryWrapper = new LambdaQueryWrapper<OaProcessActivityHistory>()
                 .eq(OaProcessActivityHistory::getProcessInstId, instId)
