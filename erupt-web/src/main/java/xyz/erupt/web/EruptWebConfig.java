@@ -22,14 +22,14 @@ public class EruptWebConfig {
 
     public EruptWebConfig() {
         try (InputStream input = EruptWebConfig.class.getClassLoader().getResourceAsStream("public/index.html")) {
-            if (null == input) throw new RuntimeException("erupt-web resource not found");
+            if (null == input) throw new RuntimeException("erupt-web resources not found");
             this.passport = StreamUtils.copyToString(input, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @GetMapping(value = "/", produces = {"text/html;charset=utf-8"})
+    @GetMapping(value = {"/", "/index.html"}, produces = {"text/html;charset=utf-8"})
     public String index(HttpServletResponse response) {
         response.setHeader("Expires", "0");
         response.setHeader("Pragma", "no-cache");
