@@ -47,4 +47,6 @@ public interface ProcessActivityService extends IService<OaProcessActivity>, Wit
      * @param reason
      */
     void stopByExecutionId(Long executionId, String reason);
+
+    void stopByInstId(Long processInstId, String reason);
 }

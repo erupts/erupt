@@ -16,17 +16,12 @@ import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.*;
-import xyz.erupt.flow.bean.entity.node.OaProcessNode;
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeRefuse;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.bean.vo.TaskDetailVo;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaTaskMapper;
 import xyz.erupt.flow.process.engine.ProcessHelper;
-import xyz.erupt.flow.process.listener.AfterActiveTaskListener;
-import xyz.erupt.flow.process.listener.AfterCompleteTaskListener;
-import xyz.erupt.flow.process.listener.AfterCreateTaskListener;
-import xyz.erupt.flow.process.listener.ExecutableNodeListener;
+import xyz.erupt.flow.process.listener.*;
 import xyz.erupt.flow.process.userlink.impl.UserLinkServiceHolder;
 import xyz.erupt.flow.service.*;
 import xyz.erupt.upms.model.EruptUser;
@@ -70,12 +65,6 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     @Autowired
     private ProcessHelper processHelper;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public OaTask complete(Long taskId, String account, String accountName, String remarks) {
-        return this.finish(OaTaskOperation.COMPLETE, taskId, account, accountName, remarks);
-    }
-
     /**
      * 完成任务
      */
@@ -84,9 +73,15 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     public OaTask complete(Long taskId, String remarks) {
         EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
         OaTask task = this.complete(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
+        return task;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public OaTask complete(Long taskId, String account, String accountName, String remarks) {
+        OaTask task = this.finish(OaTaskOperation.COMPLETE, taskId, account, accountName, remarks);
         //触发活动的完成
         this.listenerMap.get(AfterCompleteTaskListener.class).forEach(l -> l.execute(task));
-
         return task;
     }
 
@@ -115,7 +110,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         taskOperationService.log(task, OaTaskOperation.ASSIGN, remarks);
 
         //触发后置监听
-        this.listenerMap.get(AfterCompleteTaskListener.class).forEach(l -> l.execute(task));
+        this.listenerMap.get(AfterAssignTaskListener.class).forEach(l -> l.execute(task));
     }
 
     /**
@@ -158,7 +153,8 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         task.setAssignee(null);
         this.updateById(task);
         taskHistoryService.copyAndSave(task);
-        taskUserLinkService.removeByTaskId(task.getId());
+        //这里暂时不能删，考虑加个历史表
+        //taskUserLinkService.removeByTaskId(task.getId());
     }
 
     @Override
@@ -173,25 +169,10 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     public void refuse(Long taskId, String account, String accountName, String remarks) {
         //先完成当前任务
         OaTask task = this.finish(OaTaskOperation.REFUSE, taskId, account, accountName, remarks);
-        //取得拒绝策略
-        OaProcessExecution execution = processExecutionService.getById(task.getExecutionId());
-        OaProcessNode processNode = execution.getProcessNode();
-        OaProcessNodeRefuse refuse = processNode.getProps().getRefuse();
-        if(FlowConstant.REFUSE_TO_END.equals(refuse.getType())) {//流程的终止
-            processInstanceService.stop(execution.getProcessInstId(), accountName+" 审批拒绝");
-        }else if(FlowConstant.REFUSE_TO_BEFORE.equals(refuse.getType())) {//回到上一步
-            //获取本线程的上一步
-            OaProcessActivity activity = processHelper.getLastActivity(execution);
-            if(activity==null) {
-                throw new EruptApiErrorTip("流程没有上一步");
-            }
-            //将本流程实例跳转到指定步骤
-            processInstanceService.jumpTo(execution, activity.getActivityKey());
-        }else if(FlowConstant.REFUSE_TO_NODE.equals(refuse.getType())) {
-            processInstanceService.jumpTo(execution, refuse.getTarget());
-        }else {
-            throw new EruptApiErrorTip("无法识别拒绝策略"+refuse.getType());
-        }
+        //进行拒绝
+        processHelper.refuse(task, accountName);
+        //触发拒绝后置事件
+        this.listenerMap.get(AfterRefuseTaskListener.class).forEach(l -> l.execute(task));
     }
 
     /**
@@ -338,6 +319,12 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         oaTasks.forEach(t -> {
             //触发后置事件
             this.listenerMap.get(AfterCreateTaskListener.class).forEach(l -> l.execute(t));
+            //触发后置事件
+            this.listenerMap.get(AfterActiveTaskListener.class).forEach(l -> {
+                if(t.getActive()) {
+                    l.execute(t);
+                }
+            });
         });
     }
 
@@ -391,6 +378,28 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
             return;
         }
         tasks.forEach(e -> this.finish(OaTaskOperation.SHUTDOWN, e.getId(), null, reason, reason));
+    }
+
+    @Override
+    public void stopByInstId(Long instId, String reason) {
+        //所有未完成的任务
+        List<OaTask> tasks = this.list(
+                new LambdaQueryWrapper<OaTask>()
+                    .eq(OaTask::getProcessInstId, instId)
+                    .eq(OaTask::getFinished, false)
+        );
+        if(CollectionUtils.isEmpty(tasks)) {
+            return;
+        }
+        tasks.forEach(e -> this.finish(OaTaskOperation.SHUTDOWN, e.getId(), null, reason, reason));
+    }
+
+    @Override
+    public List<OaTask> listByInstanceId(Long instId) {
+        return this.list(
+                new LambdaQueryWrapper<OaTask>()
+                    .eq(OaTask::getProcessInstId, instId)
+        );
     }
 
     private List<OaTask> listByExecutionId(Long executionId, boolean finished) {

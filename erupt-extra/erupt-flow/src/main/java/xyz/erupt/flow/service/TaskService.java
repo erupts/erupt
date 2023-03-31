@@ -80,4 +80,12 @@ public interface TaskService extends IService<OaTask>, WithListener {
      * @param reason
      */
     void stopByExecutionId(Long executionId, String reason);
+
+    void stopByInstId(Long instId, String reason);
+
+    /**
+     *
+     * @param id
+     */
+    List<OaTask> listByInstanceId(Long id);
 }

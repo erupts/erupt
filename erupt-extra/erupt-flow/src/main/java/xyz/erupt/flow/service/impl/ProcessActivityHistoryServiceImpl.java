@@ -46,4 +46,19 @@ public class ProcessActivityHistoryServiceImpl extends ServiceImpl<OaProcessActi
         super.saveOrUpdate(oaTaskHistory);
         return oaTaskHistory;
     }
+
+    @Override
+    public List<OaProcessActivityHistory> listFinishedByExecutionId(Long executionId) {
+        LambdaQueryWrapper<OaProcessActivityHistory> queryWrapper = new LambdaQueryWrapper<OaProcessActivityHistory>()
+                .eq(OaProcessActivityHistory::getExecutionId, executionId)
+                .eq(OaProcessActivityHistory::getFinished, true)
+                .orderByAsc(OaProcessActivityHistory::getFinishDate);
+        List<OaProcessActivityHistory> list = super.list(queryWrapper);
+        //查询任务历史
+        list.forEach(h -> {
+            List<OaTaskHistory> taskHistories = taskHistoryService.listByActivityId(h.getId());
+            h.setTasks(taskHistories);
+        });
+        return list;
+    }
 }
