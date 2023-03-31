@@ -130,12 +130,16 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
         }
         LinkedHashMap<Integer, List<OrgTreeVo>> map = new LinkedHashMap<>();
         EruptOrg org = eruptUser.getEruptOrg();//从当前部门开始
+        int i=1;
         while (true) {
-            if(org==null || (endLevel>0 && startLevel>endLevel)) {
+            if(org==null || (endLevel>0 && i>endLevel)) {
                 break;
             }
-            List<OrgTreeVo> leaders = this.getLeadersByDeptId(org.getId());
-            map.put(startLevel++, leaders);
+            if(i>=startLevel) {
+                List<OrgTreeVo> leaders = this.getLeadersByDeptId(org.getId());
+                map.put(i, leaders);
+            }
+            i++;
             org = org.getParentOrg();//这样可以
         }
         return map;

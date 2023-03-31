@@ -106,7 +106,7 @@ public class NewTaskListener implements AfterCreateActivityListener {
                 case FlowConstant.ASSIGN_TYPE_LEADER://特定层级主管
                     //查询主管
                     LinkedHashMap<Integer, List<OrgTreeVo>> leaderMapNew =
-                            userLinkService.getLeaderMap(inst.getCreator(), props.getLeaderTop().getLevel(), props.getLeaderTop().getLevel());
+                            userLinkService.getLeaderMap(inst.getCreator(), props.getLeader().getLevel(), props.getLeader().getLevel());
                     this.forLeaders(execution, node, activity, props, leaderMapNew);
                     return;//这种情况不需要继续后续操作
                 case FlowConstant.ASSIGN_TYPE_FORM_USER:

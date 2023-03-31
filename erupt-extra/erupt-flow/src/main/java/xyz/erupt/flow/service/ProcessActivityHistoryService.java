@@ -19,4 +19,7 @@ public interface ProcessActivityHistoryService extends IService<OaProcessActivit
      * @param build
      */
     OaProcessActivityHistory copyAndSave(OaProcessActivity build);
+
+
+    List<OaProcessActivityHistory> listFinishedByExecutionId(Long processInstId);
 }

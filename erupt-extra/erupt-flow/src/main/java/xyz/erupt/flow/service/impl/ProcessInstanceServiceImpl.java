@@ -5,13 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.*;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaProcessInstanceMapper;
 import xyz.erupt.flow.process.listener.AfterCreateInstanceListener;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Data
+@Slf4j
 public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMapper, OaProcessInstance>
         implements ProcessInstanceService, DataProxy<OaProcessInstance> {
 
@@ -43,6 +47,8 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
     private TaskOperationService taskOperationService;
     @Autowired
     private TaskUserLinkService taskUserLinkService;
+    @Autowired
+    private TaskService taskService;
 
     /**
      * 启动新的流程实例（instance）
@@ -77,6 +83,10 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
 
         //触发所有创建后监听器
         this.listenerMap.get(AfterCreateInstanceListener.class).stream().forEach(l -> l.execute(inst));
+
+        //手动完成所有开始任务
+        List<OaTask> tasks = taskService.listByInstanceId(inst.getId());
+        tasks.forEach(t -> taskService.complete(t.getId(), "开始节点自动完成"));
 
         return inst;
     }
@@ -195,27 +205,6 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
             }
         });
         return list;
-    }
-
-    /**
-     * 跳转到指定活动
-     * @param execution
-     * @param nodeId
-     */
-    @Override
-    public void jumpTo(OaProcessExecution execution, String nodeId) {
-        //跳转之前，要先确定是本线程跳转还是跨线程跳转
-        //本线程内的跳转，不需要停止全部
-        //processExecutionService.stopByInstId(execution.getProcessInstId(), "节点跳转");
-//        processActivityService.stopByExecutionId(execution.getProcessInstId(), "节点跳转");
-//        taskService.stopByExecutionId(execution.getProcessInstId(), "节点跳转");
-//        //然后新启动一个线程，从跳转部分开始
-//        OaProcessNode node =
-//                processDefinitionService.readNode(execution.getProcessDefId(), nodeId);
-//        OaProcessInstance inst = this.getById(execution.getProcessInstId());
-//        JSONObject formContent = JSON.parseObject(inst.getFormItems());
-//        //当前线程下，继续进行
-//        processActivityService.newActivities(execution, formContent, node);
     }
 
     @Override

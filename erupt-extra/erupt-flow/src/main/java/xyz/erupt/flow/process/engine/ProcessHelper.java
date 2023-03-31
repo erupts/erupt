@@ -1,22 +1,27 @@
 package xyz.erupt.flow.process.engine;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import xyz.erupt.flow.bean.entity.OaProcessActivity;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.OaProcessActivityHistory;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
+import xyz.erupt.flow.bean.entity.OaProcessInstance;
+import xyz.erupt.flow.bean.entity.OaTask;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeCondition;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeGroup;
-import xyz.erupt.flow.service.ProcessActivityHistoryService;
-import xyz.erupt.flow.service.ProcessExecutionService;
+import xyz.erupt.flow.bean.entity.node.OaProcessNodeRefuse;
+import xyz.erupt.flow.constant.FlowConstant;
+import xyz.erupt.flow.service.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @Slf4j
@@ -27,28 +32,136 @@ public class ProcessHelper {
     private ProcessActivityHistoryService processActivityHistoryService;
     @Lazy
     @Autowired
+    private ProcessInstanceService processInstanceService;
+    @Lazy
+    @Autowired
+    private ProcessActivityService processActivityService;
+    @Lazy
+    @Autowired
     private ProcessExecutionService processExecutionService;
+    @Lazy
+    @Autowired
+    private TaskService taskService;
 
     /**
-     * 获取流程的上一步
-     * @param execution
-     * @return
+     * 跳转到指定活动
+     * @param source
+     * @param target
      */
-    public OaProcessActivity getLastActivity(OaProcessExecution execution) {
-        //查询已经完成的所有活动
-        List<OaProcessActivityHistory> histories =
-                processActivityHistoryService.listByProcInstId(execution.getProcessInstId(), false);
-        if(CollectionUtils.isEmpty(histories)) {
-            if(execution.getParentId()!=null) {
-                execution = processExecutionService.getById(execution.getParentId());
-                return this.getLastActivity(execution);
-            }
+    public void jumpTo(OaTask task, String source, String target) {
+        if(source.equals(target)) {
+            throw new EruptApiErrorTip("禁止跳转到当前节点");
+        }
+        //跳转之前，要先确定是本线程跳转还是跨线程跳转
+        OaProcessInstance inst = processInstanceService.getById(task.getProcessInstId());
+        OaProcessNode nextNode = this.findByKey(inst.getProcessNode(), target);
+        boolean inOneExecution = this.isSameExecution(inst.getProcessNode(), source, target);
+        //本线程内的跳转，只需要将本线程内的所有活动全部终止
+        if(inOneExecution) {
+            //这两个强行删除，不触发事件
+            processActivityService.stopByExecutionId(task.getExecutionId(), "节点跳转");
+            taskService.stopByExecutionId(task.getExecutionId(), "节点跳转");
+            OaProcessExecution execution = processExecutionService.getById(task.getExecutionId());
+            //当前线程下，继续进行
+            processActivityService.newActivities(execution, JSON.parseObject(inst.getFormItems()), nextNode);
+        }
+        //跨线程跳转，要将本实例所有线程全部终止
+        else {
+            //这样有问题暂时先不支持跨线程跳转
+            throw new EruptApiErrorTip("禁止跨线程跳转");
+//            processExecutionService.stopByInstId(task.getProcessInstId(), "节点跳转");
+//            processActivityService.stopByInstId(task.getProcessInstId(), "节点跳转");
+//            taskService.stopByInstId(task.getProcessInstId(), "节点跳转");
+            //然后启动新线程执行
+        }
+    }
+
+    private OaProcessNode findByKey(OaProcessNode processNode, String target) {
+        if(processNode==null || processNode.getId()==null) {
             return null;
         }
-        //获得最近完成的活动
-        OaProcessActivity activity = new OaProcessActivity();
-        BeanUtils.copyProperties(histories.get(0), activity);
-        return activity;
+        if(processNode.getId()==target) {
+            return processNode;
+        }
+        //先遍历分支
+        if(processNode.getBranchs()!=null) {
+            for (OaProcessNode branch : processNode.getBranchs()) {
+                OaProcessNode tmpNode = this.findByKey(branch, target);
+                if(tmpNode!=null) {
+                    return tmpNode;
+                }
+            }
+        }
+        //再向前
+        return this.findByKey(processNode.getChildren(), target);
+    }
+
+    private boolean isSameExecution(OaProcessNode processNode, String source, String target) {
+        //首先找到第一个节点
+        OaProcessNode firstNode = this.findFirst(processNode, source, target);
+        if(firstNode==null) {
+            throw new EruptApiErrorTip("跳转的节点不存在");
+        }
+        //然后以第一个节点出发寻找另一个节点（只招当前线程）
+        OaProcessNode second = null;
+        if(source.equals(firstNode)) {
+            second = this.findByKey(firstNode, target);
+        }else {
+            second = this.findByKey(firstNode, source);
+        }
+        return second!=null;
+    }
+
+    private OaProcessNode findFirst(OaProcessNode processNode, String source, String target) {
+        if(processNode==null || processNode.getId()==null) {
+            return null;
+        }
+        if(processNode.getId()==source || processNode.getId()==target) {
+            return processNode;
+        }
+        //先遍历分支
+        if(processNode.getBranchs()!=null) {
+            for (OaProcessNode branch : processNode.getBranchs()) {
+                OaProcessNode tmpNode = this.findFirst(branch, source, target);
+                if(tmpNode!=null) {
+                    return tmpNode;
+                }
+            }
+        }
+        //再向前
+        return this.findFirst(processNode.getChildren(), source, target);
+    }
+
+    /**
+     * 获取流程的上一个用户任务
+     * 只能从流程图上获取，而不能按照实际执行获取
+     * @param activityKey
+     * @return
+     */
+    public void getPreUserTasks(OaProcessNode currentNode, OaProcessNode lastUserTask, String activityKey, Set<OaProcessNode> preNodes) {
+        if(FlowConstant.NODE_TYPE_ROOT.equals(currentNode.getType())
+                || FlowConstant.NODE_TYPE_APPROVAL.equals(currentNode.getType())
+        ) {//这几种情况要刷新最后的用户任务
+            lastUserTask = currentNode;
+        }
+
+        List<OaProcessNode> branchs = currentNode.getBranchs();
+        if(!CollectionUtils.isEmpty(branchs)) {//如果有分支，要先进分支
+            for (OaProcessNode branch : branchs) {//否则遍历
+                this.getPreUserTasks(branch, lastUserTask, activityKey, preNodes);
+            }
+        }else {
+            if(currentNode.getChildren()==null) {//没有子节点，就到头了
+                return;
+            }else {//有子节点就继续
+                //命中就返回
+                if(activityKey.equals(currentNode.getChildren().getId())) {
+                    preNodes.add(lastUserTask);
+                }else {//不命中，继续向下
+                    this.getPreUserTasks(currentNode.getChildren(), lastUserTask, activityKey, preNodes);
+                }
+            }
+        }
     }
 
     /**
@@ -160,5 +273,34 @@ public class ProcessHelper {
             throw new RuntimeException("不支持此类条件判断"+condition.getValueType());
         }
         return false;
+    }
+
+    /**
+     * 审批拒绝
+     */
+    public void refuse(OaTask task, String accountName) {
+        //取得拒绝策略
+        OaProcessActivityHistory activityHistory = processActivityHistoryService.getById(task.getActivityId());
+        OaProcessNode processNode = activityHistory.getProcessNode();
+        OaProcessNodeRefuse refuse = processNode.getProps().getRefuse();
+        if(FlowConstant.REFUSE_TO_END.equals(refuse.getType())) {//流程的终止
+            processInstanceService.stop(activityHistory.getProcessInstId(), accountName+" 审批拒绝");
+        }else if(FlowConstant.REFUSE_TO_BEFORE.equals(refuse.getType())) {//回到上一步
+            //获取本线程的上一步
+            OaProcessInstance inst = processInstanceService.getById(task.getProcessInstId());
+            Set<OaProcessNode> preNodes = new HashSet<>();
+            this.getPreUserTasks(inst.getProcessNode(), null, activityHistory.getActivityKey(), preNodes);
+            if(preNodes==null || preNodes.size()<=0) {
+                throw new EruptApiErrorTip("流程没有上一步");
+            }else if(preNodes.size()>1) {
+                throw new EruptApiErrorTip("流程的前置节点不唯一，无法回退");
+            }
+            //将本流程实例跳转到指定步骤
+            this.jumpTo(task, task.getActivityKey(), preNodes.stream().findAny().get().getId());
+        }else if(FlowConstant.REFUSE_TO_NODE.equals(refuse.getType())) {
+            this.jumpTo(task, task.getActivityKey(), refuse.getTarget());
+        }else {
+            throw new EruptApiErrorTip("无法识别拒绝策略"+refuse.getType());
+        }
     }
 }

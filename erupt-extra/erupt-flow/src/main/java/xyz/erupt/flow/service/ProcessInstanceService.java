@@ -36,13 +36,6 @@ public interface ProcessInstanceService extends IService<OaProcessInstance>, Wit
     void stop(Long instId, String remarks);
 
     /**
-     * 流程跳转
-     * @param instId
-     * @param nodeId
-     */
-    void jumpTo(OaProcessExecution instId, String nodeId);
-
-    /**
      * 查询与我相关的流程
      * 即我处理过的，或者抄送我的
      * @return

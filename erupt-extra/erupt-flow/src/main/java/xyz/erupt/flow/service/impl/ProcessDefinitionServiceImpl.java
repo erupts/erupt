@@ -32,8 +32,6 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
     @Autowired
     private FormGroupService formGroupService;
     @Autowired
-    private ProcessActivityService processActivityService;
-    @Autowired
     private ProcessActivityHistoryService processActivityHistoryService;
     @Autowired
     private ProcessInstanceHistoryService processInstanceHistoryService;
@@ -141,7 +139,6 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
     public List<OaProcessActivityHistory> preview(String formDefId, JSONObject formContent) {
         OaProcessDefinition procDef = this.getById(formDefId);
         List<OaProcessActivityHistory> activities = new ArrayList<>();
-        Map<String, OaProcessActivityHistory> map;
         this.preview(JSON.parseObject(procDef.getProcess(), OaProcessNode.class), formContent, activities, new HashMap<>());
         return activities;
     }
@@ -223,6 +220,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
             return;
         }else if(FlowConstant.NODE_TYPE_ROOT.equals(node.getType())
                 || FlowConstant.NODE_TYPE_APPROVAL.equals(node.getType())
+                || FlowConstant.NODE_TYPE_CC.equals(node.getType())
         ) {//如果是用户任务
             //优先从map中获取，获取不到才读取流程图
             if(map.get(node.getId())!=null) {
