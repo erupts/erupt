@@ -43,6 +43,13 @@ function In(field, code) {
  */
 function range(field, code) {
     var val = eval(code);
-    return val && val.length && " and " + field + " >= '" + val[0] + "' and " + field + " <= '" + val[1] + "'"
+    if (val && val.length) {
+        if (!val[0] && val[0] !== 0) {
+            return " and " + field + " <= '" + val[1] + "'"
+        } else if (!val[1] && val[1] !== 0) {
+            return " and " + field + " >= '" + val[0] + "'"
+        }
+        return " and " + field + " between '" + val[0] + "' and " + "'" + val[1] + "'"
+    }
 }
 

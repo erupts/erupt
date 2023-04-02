@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author YuePeng
  * date 2021/3/28 18:51
  */
@@ -60,6 +59,11 @@ public class EruptBiAutoConfiguration implements EruptModule {
         eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(code, code,
                 StreamUtils.copyToString(EruptBiAutoConfiguration.class.getResourceAsStream("BiDefaultFunction.js")
                         , StandardCharsets.UTF_8)), "code", code);
+        BiGroup biGroup = new BiGroup();
+        biGroup.setCode("default");
+        biGroup.setName("默认分组");
+        eruptDao.persistIfNotExist(BiGroup.class, biGroup, "code", biGroup.getCode());
+
     }
 
     @Override
