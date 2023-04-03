@@ -186,7 +186,7 @@ export default {
     },
     nodeOptions() {//筛选跳转的目标节点
       let values = []
-      const excType = ['ROOT', 'EMPTY', "CONDITION", "CONDITIONS", "CONCURRENT", "CONCURRENTS"]
+      const excType = ['EMPTY', "CONDITION", "CONDITIONS", "CONCURRENT", "CONCURRENTS"]//这里不排除'ROOT'
       this.$store.state.nodeMap.forEach((v) => {
         if (excType.indexOf(v.type) === -1) {
           values.push({id: v.id, name: v.name})

@@ -68,7 +68,7 @@ public class ProcessHelper {
         //跨线程跳转，要将本实例所有线程全部终止
         else {
             //这样有问题暂时先不支持跨线程跳转
-            throw new EruptApiErrorTip("禁止跨线程跳转");
+            throw new EruptApiErrorTip("暂不支持跨线程跳转");
 //            processExecutionService.stopByInstId(task.getProcessInstId(), "节点跳转");
 //            processActivityService.stopByInstId(task.getProcessInstId(), "节点跳转");
 //            taskService.stopByInstId(task.getProcessInstId(), "节点跳转");
