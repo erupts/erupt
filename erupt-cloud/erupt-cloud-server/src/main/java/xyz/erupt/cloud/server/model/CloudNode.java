@@ -102,7 +102,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
 
     @Transient
     @EruptField(
-            views = @View(title = "实例数量", className = "text-center", width = "60px")
+            views = @View(title = "实例数", className = "text-center", width = "60px")
     )
     private Integer instanceNum;
 
