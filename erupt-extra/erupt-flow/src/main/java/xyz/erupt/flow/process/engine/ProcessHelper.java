@@ -49,13 +49,19 @@ public class ProcessHelper {
      * @param target
      */
     public void jumpTo(OaTask task, String source, String target) {
+        if(1==1) {
+            throw new EruptApiErrorTip("暂不支持此功能");
+        }
+
         if(source.equals(target)) {
             throw new EruptApiErrorTip("禁止跳转到当前节点");
         }
+        //跳转之前，应该停止掉所有的目标节点的后续节点和分支
+
+
         //跳转之前，要先确定是本线程跳转还是跨线程跳转
         OaProcessInstance inst = processInstanceService.getById(task.getProcessInstId());
-        OaProcessNode nextNode = this.findByKey(inst.getProcessNode(), target);
-        boolean inOneExecution = this.isSameExecution(inst.getProcessNode(), source, target);
+        boolean inOneExecution = true;//先假设都是线程内跳转 //this.isSameExecution(inst.getProcessNode(), source, target);
         //本线程内的跳转，只需要将本线程内的所有活动全部终止
         if(inOneExecution) {
             //这两个强行删除，不触发事件
@@ -63,6 +69,7 @@ public class ProcessHelper {
             taskService.stopByExecutionId(task.getExecutionId(), "节点跳转");
             OaProcessExecution execution = processExecutionService.getById(task.getExecutionId());
             //当前线程下，继续进行
+            OaProcessNode nextNode = this.findByKey(inst.getProcessNode(), target);
             processActivityService.newActivities(execution, JSON.parseObject(inst.getFormItems()), nextNode);
         }
         //跨线程跳转，要将本实例所有线程全部终止
@@ -94,42 +101,6 @@ public class ProcessHelper {
         }
         //再向前
         return this.findByKey(processNode.getChildren(), target);
-    }
-
-    private boolean isSameExecution(OaProcessNode processNode, String source, String target) {
-        //首先找到第一个节点
-        OaProcessNode firstNode = this.findFirst(processNode, source, target);
-        if(firstNode==null) {
-            throw new EruptApiErrorTip("跳转的节点不存在");
-        }
-        //然后以第一个节点出发寻找另一个节点（只招当前线程）
-        OaProcessNode second = null;
-        if(source.equals(firstNode)) {
-            second = this.findByKey(firstNode, target);
-        }else {
-            second = this.findByKey(firstNode, source);
-        }
-        return second!=null;
-    }
-
-    private OaProcessNode findFirst(OaProcessNode processNode, String source, String target) {
-        if(processNode==null || processNode.getId()==null) {
-            return null;
-        }
-        if(processNode.getId()==source || processNode.getId()==target) {
-            return processNode;
-        }
-        //先遍历分支
-        if(processNode.getBranchs()!=null) {
-            for (OaProcessNode branch : processNode.getBranchs()) {
-                OaProcessNode tmpNode = this.findFirst(branch, source, target);
-                if(tmpNode!=null) {
-                    return tmpNode;
-                }
-            }
-        }
-        //再向前
-        return this.findFirst(processNode.getChildren(), source, target);
     }
 
     /**
