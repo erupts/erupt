@@ -112,7 +112,7 @@ public class ProcessHelper {
         if(processNode==null || processNode.getId()==null) {
             return null;
         }
-        if(processNode.getId()==target) {
+        if(target.equals(processNode.getId())) {
             return processNode;
         }
         //先遍历分支

@@ -51,17 +51,16 @@ public class OaTaskHistory {
     )
     private String formName;
 
-    @Transient
-    @TableField(exist = false)
-    @EruptField(views = @View(title = "类型标识：发起，审批，抄送", export = false))
-    private String tag;
-
     @EruptField(views = @View(title = "任务名")
             , edit = @Edit(title = "任务名", search = @Search(vague = true))
     )
     private String taskName;
 
-    @EruptField(views = @View(title = "任务类型：root开始节点，userTask用户任务，cc抄送"))
+    @TableField(exist = false)
+    @Transient
+    private String tag;
+
+    @EruptField(views = @View(title = "任务类型", desc = "root开始节点，userTask用户任务，cc抄送"))
     private String taskType;
 
     @EruptField(views = @View(title = "实例ID")

@@ -113,8 +113,7 @@ public class OaProcessInstanceHistory {
     @EruptField(views = @View(title = "详情", type = ViewType.LINK))
     private String detailLink;
 
-    @Transient
     @TableField(exist = false)
-    @EruptField(views = @View(title = "类型标识：发起，审批，抄送", export = false))
+    @Transient
     private String tag;
 }
