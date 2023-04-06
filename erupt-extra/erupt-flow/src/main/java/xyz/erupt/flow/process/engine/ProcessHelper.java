@@ -16,9 +16,7 @@ import xyz.erupt.flow.bean.entity.node.*;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.service.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -42,23 +40,22 @@ public class ProcessHelper {
 
     /**
      * 跳转到指定活动
+     * 跳转后本流程会到达目标活动，并且只激活它
+     * 其他目前激活的活动会终止
+     * 并且要保证 唯一激活的这个活动，后续能够正常完成
+     * 实现方案分2种
+     * 如果是同一线程内：直接跳转就可以了
+     * 如果是不同线程：需要从开始节点开始正向模拟，除了目标节点外，其他活动全部自动完成
      * @param source
      * @param target
      */
     public void jumpTo(OaTask task, String source, String target) {
-        if(1==1) {
-            throw new EruptApiErrorTip("暂不支持此功能");
-        }
-
         if(source.equals(target)) {
             throw new EruptApiErrorTip("禁止跳转到当前节点");
         }
-        //跳转之前，应该停止掉所有的目标节点的后续节点和分支
-
-
         //跳转之前，要先确定是本线程跳转还是跨线程跳转
         OaProcessInstance inst = processInstanceService.getById(task.getProcessInstId());
-        boolean inOneExecution = true;//先假设都是线程内跳转 //this.isSameExecution(inst.getProcessNode(), source, target);
+        boolean inOneExecution = this.isSameExecution(inst.getProcessNode(), Arrays.asList(new String[]{source, target}), Arrays.asList(new String[]{source, target}));
         //本线程内的跳转，只需要将本线程内的所有活动全部终止
         if(inOneExecution) {
             //这两个强行删除，不触发事件
@@ -71,12 +68,43 @@ public class ProcessHelper {
         }
         //跨线程跳转，要将本实例所有线程全部终止
         else {
-            //这样有问题暂时先不支持跨线程跳转
             throw new EruptApiErrorTip("暂不支持跨线程跳转");
-//            processExecutionService.stopByInstId(task.getProcessInstId(), "节点跳转");
-//            processActivityService.stopByInstId(task.getProcessInstId(), "节点跳转");
-//            taskService.stopByInstId(task.getProcessInstId(), "节点跳转");
-            //然后启动新线程执行
+        }
+    }
+
+    /**
+     * 先判断是否同一线程
+     * @param processNode
+     * @param allKeys 完整的key
+     * @param noFoundKeys 等待判断的key，这两个数组都不能为空
+     * @return
+     */
+    private boolean isSameExecution(OaProcessNode processNode, List<String> allKeys, List<String> noFoundKeys) {
+        if(processNode==null || processNode.getId()==null) {
+            return false;
+        }
+        List<String> newNoFoundKeys = new ArrayList<>();
+        for (String key : noFoundKeys) {
+            if(!processNode.getId().equals(key)) {
+                newNoFoundKeys.add(key);//没有命中的，保留下来
+            }
+        }
+        if(newNoFoundKeys.size()<=0) {//表示全部命中了，返回true
+            return true;
+        }else {//否则赋值
+            noFoundKeys = newNoFoundKeys;
+        }
+        //然后继续判断
+        if(!CollectionUtils.isEmpty(processNode.getBranchs())) {//有分支，则分支内要包含有全部的节点
+            for (OaProcessNode branch : processNode.getBranchs()) {
+                if(this.isSameExecution(branch, allKeys, allKeys)) {
+                    return true;
+                }
+            }
+            //如果分支内没找到，继续向前，附带全部key
+            return this.isSameExecution(processNode.getChildren(), allKeys, allKeys);
+        }else {//其他情况继续向前
+            return this.isSameExecution(processNode.getChildren(), allKeys, noFoundKeys);
         }
     }
 
