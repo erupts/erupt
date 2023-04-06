@@ -70,7 +70,7 @@ public class NewTaskListener implements AfterCreateActivityListener {
         //如果是开始节点，直接指定处理人
         if(FlowConstant.NODE_TYPE_ROOT_VALUE.equals(activity.getActivityKey())) {
             builder.addUser(OrgTreeVo.builder()
-                    .id(eruptUserService.getCurrentAccount())
+                    .id(inst.getCreator())
                     .build());
         }else {
             /**
