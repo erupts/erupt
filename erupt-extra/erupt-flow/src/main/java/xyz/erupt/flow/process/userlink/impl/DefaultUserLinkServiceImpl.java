@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.process.userlink.UserLinkService;
 import xyz.erupt.flow.repository.EruptOrgRepository;
@@ -126,7 +127,7 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
         //查询出当前用户的部门
         EruptUser eruptUser = eruptUserRepository.findByAccount(userId);
         if(eruptUser==null || eruptUser.getEruptOrg()==null) {
-            throw new RuntimeException("用户"+userId+"不存在或没有部门");
+            throw new EruptApiErrorTip("用户"+userId+"不存在或没有部门");
         }
         LinkedHashMap<Integer, List<OrgTreeVo>> map = new LinkedHashMap<>();
         EruptOrg org = eruptUser.getEruptOrg();//从当前部门开始

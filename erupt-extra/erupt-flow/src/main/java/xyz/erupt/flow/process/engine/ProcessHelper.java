@@ -12,10 +12,7 @@ import xyz.erupt.flow.bean.entity.OaProcessActivityHistory;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.OaProcessInstance;
 import xyz.erupt.flow.bean.entity.OaTask;
-import xyz.erupt.flow.bean.entity.node.OaProcessNode;
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeCondition;
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeGroup;
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeRefuse;
+import xyz.erupt.flow.bean.entity.node.*;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.service.*;
 
@@ -253,7 +250,14 @@ public class ProcessHelper {
         //取得拒绝策略
         OaProcessActivityHistory activityHistory = processActivityHistoryService.getById(task.getActivityId());
         OaProcessNode processNode = activityHistory.getProcessNode();
-        OaProcessNodeRefuse refuse = processNode.getProps().getRefuse();
+        OaProcessNodeProps props = processNode.getProps();
+        if(props==null) {
+            throw new EruptApiErrorTip("请先配置拒绝策略");
+        }
+        OaProcessNodeRefuse refuse = props.getRefuse();
+        if(refuse==null) {
+            throw new EruptApiErrorTip("请先配置拒绝策略");
+        }
         if(FlowConstant.REFUSE_TO_END.equals(refuse.getType())) {//流程的终止
             processInstanceService.stop(activityHistory.getProcessInstId(), accountName+" 审批拒绝");
         }else if(FlowConstant.REFUSE_TO_BEFORE.equals(refuse.getType())) {//回到上一步
