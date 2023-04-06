@@ -25,6 +25,7 @@ public @interface View {
     @EruptProperty(alias = "viewType")
     ViewType type() default ViewType.AUTO;
 
+    @Transient
     @Comment("动态渲染配置")
     ExprBool ifRender() default @ExprBool;
 
