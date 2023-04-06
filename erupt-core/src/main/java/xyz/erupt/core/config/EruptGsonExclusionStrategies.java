@@ -23,9 +23,14 @@ public class EruptGsonExclusionStrategies implements ExclusionStrategy {
         MetaErupt metaErupt = MetaContext.getErupt();
         if (null == metaErupt || null == metaErupt.getName()) return false;
         if (null == f.getAnnotation(EruptSmartSkipSerialize.class)) return false;
-        Field ff = ReflectUtil.findClassField(EruptCoreService.getErupt(metaErupt.getName()).getClazz(), f.getName());
-        if (null == ff) return false;
-        return !f.getDeclaringClass().getName().equals(ff.getDeclaringClass().getName());
+        Class<?> currEruptClass = EruptCoreService.getErupt(metaErupt.getName()).getClazz();
+        if (f.getDeclaringClass().isAssignableFrom(currEruptClass)) {
+            Field ff = ReflectUtil.findClassField(currEruptClass, f.getName());
+            if (null == ff) return false;
+            return !f.getDeclaringClass().getName().equals(ff.getDeclaringClass().getName());
+        } else {
+            return true;
+        }
     }
 
     @Override

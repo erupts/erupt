@@ -20,7 +20,7 @@ public class EruptUserinfoVo {
     //用户首页菜单值
     private String indexMenuValue;
 
-    //是否强制重置密码
+    //是否需要重置密码
     private boolean resetPwd = false;
 
 }
