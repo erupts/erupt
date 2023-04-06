@@ -74,9 +74,7 @@ public class EruptExcelController {
     public void exportData(@PathVariable("erupt") String eruptName,
                            @RequestBody(required = false) List<Condition> conditions,
                            HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) {
-            return;
-        }
+        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isExport);
         TableQueryVo tableQueryVo = new TableQueryVo();

@@ -23,4 +23,15 @@ public class EruptBuildModel {
     private Map<String, EruptModel> operationErupts;
 
     private PowerObject power;
+
+    @Getter
+    @Setter
+    public static class Ext {
+
+        private String field;
+
+        private EruptModel eruptModel;
+
+    }
+
 }

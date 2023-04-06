@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.11.3</version>
+    <version>1.11.4</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>1.8</java.version>
-        <spring.boot.version>2.7.5</spring.boot.version>
+        <spring.boot.version>2.7.10</spring.boot.version>
     </properties>
 
     <!--
@@ -50,12 +50,16 @@
         <module>erupt-extra/erupt-job</module><!--任务调度-->
         <module>erupt-extra/erupt-generator</module><!--代码生成-->
         <module>erupt-extra/erupt-monitor</module><!--服务监控-->
+        <module>erupt-extra/erupt-flow</module><!--流程服务-->
         <module>erupt-extra/erupt-magic-api</module><!-- magic-api 接口配置 -->
         <!-- erupt cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
         <module>erupt-cloud/erupt-cloud-server</module> <!-- 主服务节点 -->
         <module>erupt-cloud/erupt-cloud-node</module> <!-- 云node节点 -->
         <module>erupt-cloud/erupt-cloud-node-jpa</module>  <!-- 云node节点（聚合jpa） -->
+
+        <!--使用H2作为数据源的示例项目-->
+        <module>erupt-sample</module>
     </modules>
 
     <dependencyManagement>
