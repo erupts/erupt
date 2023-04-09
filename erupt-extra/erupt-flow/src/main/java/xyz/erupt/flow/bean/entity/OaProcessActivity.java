@@ -1,11 +1,13 @@
 package xyz.erupt.flow.bean.entity;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -13,14 +15,11 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 流程的节点
@@ -37,7 +36,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaProcessActivity extends BaseModel {
+public class OaProcessActivity {
     /**
      * 任务完成条件
      * 暂时只支持所有任务全部完成
@@ -49,6 +48,13 @@ public class OaProcessActivity extends BaseModel {
      */
     public static final String SERIAL = "SERIAL";//串行，必须按照任务的顺序执行
     public static final String PARALLEL = "PARALLEL";//并行，可以同步完成所有任务
+
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField
+    private Long id;
 
     @EruptField(views = @View(title = "节点key"))
     private String activityKey;
@@ -110,4 +116,15 @@ public class OaProcessActivity extends BaseModel {
             , edit = @Edit(title = "完成顺序", search = @Search)
     )
     private Integer sort;
+
+    @EruptField(views = @View(title = "节点"))
+    @Column(columnDefinition = "json")//json类型
+    private String node;
+
+    public OaProcessNode getProcessNode() {
+        if(this.node==null) {
+            return null;
+        }
+        return JSON.parseObject(this.node, OaProcessNode.class);
+    }
 }

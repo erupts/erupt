@@ -34,7 +34,7 @@ public interface EruptUserRepository extends JpaRepository<EruptUser, Long> {
      * @param roleIds
      * @return
      */
-    @Query("from EruptUser where id in (select userId from EruptUserRole where roleId in :roleIds ) ")
+    @Query("from EruptUser where id in (select userId from EruptUserRole where roleId in (select id from EruptRole where code in :roleIds) ) ")
     List<EruptUser> findByRoleIds(Collection<String> roleIds);
 
     /**

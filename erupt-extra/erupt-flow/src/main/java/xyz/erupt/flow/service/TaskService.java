@@ -8,19 +8,31 @@ import xyz.erupt.flow.bean.vo.TaskDetailVo;
 import java.util.List;
 import java.util.Set;
 
-public interface TaskService extends IService<OaTask> {
+public interface TaskService extends IService<OaTask>, WithListener {
 
     /**
      * 完成任务
      * @param taskId
      */
-    public void complete(Long taskId, String remarks);
+    public OaTask complete(Long taskId, String account, String accountName, String remarks);
+
+    /**
+     * 完成任务
+     * @param taskId
+     */
+    public OaTask complete(Long taskId, String remarks);
 
     /**
      * 转办任务，只能是或签
      * @param taskId
      */
     public void assign(Long taskId, Set<OrgTreeVo> userIds, String remarks);
+
+    /**
+     * 拒绝任务
+     * @param taskId
+     */
+    public void refuse(Long taskId, String account, String accountName , String remarks);
 
     /**
      * 拒绝任务
@@ -46,11 +58,6 @@ public interface TaskService extends IService<OaTask> {
 
     List<OaTask> listByActivityId(Long activityId, boolean activied);
 
-    /**
-     * 尝试激活任务
-     */
-    void triggerTaskActive(OaTask task);
-
     void saveBatchWithUserLink(List<OaTask> oaTasks);
 
     /**
@@ -66,4 +73,19 @@ public interface TaskService extends IService<OaTask> {
      * @return
      */
     TaskDetailVo getInstDetail(Long instId);
+
+    /**
+     * 中断所有线程
+     * @param executionId
+     * @param reason
+     */
+    void stopByExecutionId(Long executionId, String reason);
+
+    void stopByInstId(Long instId, String reason);
+
+    /**
+     *
+     * @param id
+     */
+    List<OaTask> listByInstanceId(Long id);
 }

@@ -1,13 +1,11 @@
 package xyz.erupt.flow.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
+import xyz.erupt.flow.bean.entity.OaProcessInstance;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 
-import java.io.Serializable;
-
-public interface ProcessExecutionService extends IService<OaProcessExecution> {
+public interface ProcessExecutionService extends IService<OaProcessExecution>, WithListener {
 
     /**
      * 新建线程
@@ -17,13 +15,13 @@ public interface ProcessExecutionService extends IService<OaProcessExecution> {
      * @param parent
      * @return
      */
-    public OaProcessExecution newExecution(String defId, Long instanceId, JSONObject formContent, OaProcessNode currentNode, OaProcessExecution parent);
+    public OaProcessExecution newExecution(String defId, Long instanceId, OaProcessNode currentNode, OaProcessExecution parent);
 
     /**
-     * 触发线程的完成
+     * 线程继续向前
      * @param executionId
      */
-    public void triggerComplete(Long executionId);
+    public void step(Long executionId, OaProcessNode currentNode);
 
     void removeByProcessInstId(Long id);
 
@@ -31,7 +29,7 @@ public interface ProcessExecutionService extends IService<OaProcessExecution> {
      * 触发线程继续
      * @param parentId
      */
-    void triggerActive(Long parentId);
+    void active(Long parentId);
 
     /**
      * 结束流程
@@ -45,4 +43,17 @@ public interface ProcessExecutionService extends IService<OaProcessExecution> {
      * @param toJSONString
      */
     void freshProcess(Long id, String toJSONString);
+
+    /**
+     * 中断所有线程
+     * @param instId
+     * @param reason
+     */
+    void stopByInstId(Long instId, String reason);
+
+    /**
+     * 启动新线程
+     * @param inst
+     */
+    OaProcessExecution newExecutionForInstance(OaProcessInstance inst);
 }

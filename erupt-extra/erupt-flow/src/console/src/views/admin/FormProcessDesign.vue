@@ -139,7 +139,7 @@ export default {
           parentId: null,
           type: "ROOT",
           name: "发起人",
-          desc: "任何人",
+          desc: "",
           props: {
             assignedUser: [],
             formPerms: []
