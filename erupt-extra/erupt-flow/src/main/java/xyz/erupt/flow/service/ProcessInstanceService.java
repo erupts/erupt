@@ -2,12 +2,13 @@ package xyz.erupt.flow.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaProcessDefinition;
+import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.OaProcessInstance;
 import xyz.erupt.flow.bean.entity.OaProcessInstanceHistory;
 
 import java.util.List;
 
-public interface ProcessInstanceService extends IService<OaProcessInstance> {
+public interface ProcessInstanceService extends IService<OaProcessInstance>, WithListener {
 
     long countByProcessDefinitionId(String procDefId);
 
@@ -26,6 +27,14 @@ public interface ProcessInstanceService extends IService<OaProcessInstance> {
      * @param processInstId
      */
     void finish(Long processInstId);
+
+    /**
+     * 流程终止
+     * @param instId
+     * @param remarks
+     */
+    void stop(Long instId, String remarks);
+
     /**
      * 查询与我相关的流程
      * 即我处理过的，或者抄送我的

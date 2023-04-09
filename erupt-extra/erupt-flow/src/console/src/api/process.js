@@ -37,6 +37,17 @@ export function completeTask(taskId, remarks) {
   });
 }
 
+// 拒绝任务
+export function refuseTask(taskId, remarks) {
+  return request({
+    url: '/task/refuse/'+taskId,
+    method: 'post',
+    params: {
+      remarks: remarks
+    }
+  });
+}
+
 // 预览流程时间线
 export function timeLinePreview(defId, content) {
   return request({

@@ -10,12 +10,10 @@ import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
-import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.flow.handler.TaskCompleteHandler;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,10 +25,6 @@ import java.util.List;
  */
 @Erupt(name = "任务"
         , power = @Power(export = true, add = false, edit = false)
-        , rowOperation = @RowOperation(
-            title = "完成", icon = "fa fa-check", mode = RowOperation.Mode.SINGLE,
-            operationHandler = TaskCompleteHandler.class
-        )
 )
 @Table(name = "oa_ru_task")
 @TableName("oa_ru_task")

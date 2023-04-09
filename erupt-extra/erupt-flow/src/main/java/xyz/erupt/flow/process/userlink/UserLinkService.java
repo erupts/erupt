@@ -45,7 +45,7 @@ public interface UserLinkService extends Comparable<UserLinkService> {
     /**
      * 查询指定用户的所有主管
      * @param userId 当前用户id
-     * @param startLevel 从多少级主管开始查，小于1则取1
+     * @param startLevel 从多少级主管开始查，1表示当前部门的主管
      * @param limitLevel 最多查询到多少级主管，-1表示不限级
      * @return key=主管的级别，value=该级主管列表
      */
