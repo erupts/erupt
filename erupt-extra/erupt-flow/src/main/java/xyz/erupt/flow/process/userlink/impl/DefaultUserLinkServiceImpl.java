@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.process.userlink.UserLinkService;
 import xyz.erupt.flow.repository.EruptOrgRepository;
@@ -116,7 +118,7 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
     /**
      * 按照层级返回部门领导
      * @param userId 当前用户id
-     * @param startLevel 从多少级主管开始查，小于1则取1
+     * @param startLevel 从多少级主管开始查，小于1则取1，1就是当前层级的领导
      * @param endLevel 最多查询到多少级主管，0表示不限级
      * @return
      */
@@ -125,16 +127,20 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
         //查询出当前用户的部门
         EruptUser eruptUser = eruptUserRepository.findByAccount(userId);
         if(eruptUser==null || eruptUser.getEruptOrg()==null) {
-            throw new RuntimeException("用户"+userId+"不存在或没有部门");
+            throw new EruptApiErrorTip("用户"+userId+"不存在或没有部门");
         }
         LinkedHashMap<Integer, List<OrgTreeVo>> map = new LinkedHashMap<>();
-        EruptOrg org = eruptUser.getEruptOrg().getParentOrg();//从当前部门的上一级部门开始
+        EruptOrg org = eruptUser.getEruptOrg();//从当前部门开始
+        int i=1;
         while (true) {
-            if(org==null || (endLevel>0 && startLevel>endLevel)) {
+            if(org==null || (endLevel>0 && i>endLevel)) {
                 break;
             }
-            List<OrgTreeVo> leaders = this.getLeadersByDeptId(org.getId());
-            map.put(startLevel++, leaders);
+            if(i>=startLevel) {
+                List<OrgTreeVo> leaders = this.getLeadersByDeptId(org.getId());
+                map.put(i, leaders);
+            }
+            i++;
             org = org.getParentOrg();//这样可以
         }
         return map;
@@ -145,14 +151,17 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
      * @return
      */
     private List<OrgTreeVo> getLeadersByDeptId(Long deptId) {
+        //假设部门内排第一个的人是主管
         List<EruptUser> users = eruptUserRepository.findByEruptOrgId(deptId);//先取本部门全部人员作为管理员
-        List<OrgTreeVo> collect = Optional.ofNullable(users).orElse(new ArrayList<>()).stream().map(
-                l -> OrgTreeVo.builder()
-                        .id(l.getAccount())
-                        .name(l.getName())
-                        .build()
-        ).collect(Collectors.toList());
-        return collect;
+        if(CollectionUtils.isEmpty(users)) {
+            return new ArrayList<>(0);
+        }
+        EruptUser first = Optional.ofNullable(users).orElse(new ArrayList<>()).stream()
+                .findFirst().get();
+        return Arrays.asList(OrgTreeVo.builder()
+                .id(first.getAccount())
+                .name(first.getName())
+                .build());
     }
 
     /**

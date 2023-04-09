@@ -24,24 +24,10 @@ public class ProcessActivityHistoryServiceImpl extends ServiceImpl<OaProcessActi
     private TaskHistoryService taskHistoryService;
 
     @Override
-    public List<OaProcessActivityHistory> listFinishedActivitiesByProcInstId(Long instId) {
+    public List<OaProcessActivityHistory> listByProcInstId(Long instId, boolean active) {
         LambdaQueryWrapper<OaProcessActivityHistory> queryWrapper = new LambdaQueryWrapper<OaProcessActivityHistory>()
                 .eq(OaProcessActivityHistory::getProcessInstId, instId)
-                .eq(OaProcessActivityHistory::getFinished, true)
-                .orderByDesc(OaProcessActivityHistory::getFinishDate);
-        List<OaProcessActivityHistory> list = super.list(queryWrapper);
-        list.forEach(h -> {
-            List<OaTaskHistory> taskHistories = taskHistoryService.listByActivityId(h.getId());
-            h.setTasks(taskHistories);
-        });
-        return list;
-    }
-
-    @Override
-    public List<OaProcessActivityHistory> listByProcInstId(Long instId) {
-        LambdaQueryWrapper<OaProcessActivityHistory> queryWrapper = new LambdaQueryWrapper<OaProcessActivityHistory>()
-                .eq(OaProcessActivityHistory::getProcessInstId, instId)
-                .eq(OaProcessActivityHistory::getActive, true)
+                .eq(OaProcessActivityHistory::getActive, active)
                 .orderByAsc(OaProcessActivityHistory::getFinishDate);
         List<OaProcessActivityHistory> list = super.list(queryWrapper);
         //查询任务历史
@@ -59,5 +45,20 @@ public class ProcessActivityHistoryServiceImpl extends ServiceImpl<OaProcessActi
         BeanUtils.copyProperties(activity, oaTaskHistory);
         super.saveOrUpdate(oaTaskHistory);
         return oaTaskHistory;
+    }
+
+    @Override
+    public List<OaProcessActivityHistory> listFinishedByExecutionId(Long executionId) {
+        LambdaQueryWrapper<OaProcessActivityHistory> queryWrapper = new LambdaQueryWrapper<OaProcessActivityHistory>()
+                .eq(OaProcessActivityHistory::getExecutionId, executionId)
+                .eq(OaProcessActivityHistory::getFinished, true)
+                .orderByAsc(OaProcessActivityHistory::getFinishDate);
+        List<OaProcessActivityHistory> list = super.list(queryWrapper);
+        //查询任务历史
+        list.forEach(h -> {
+            List<OaTaskHistory> taskHistories = taskHistoryService.listByActivityId(h.getId());
+            h.setTasks(taskHistories);
+        });
+        return list;
     }
 }

@@ -1,11 +1,14 @@
 package xyz.erupt.flow.bean.entity;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -16,13 +19,10 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.service.impl.ProcessInstanceServiceImpl;
-import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -40,13 +40,20 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaProcessInstance extends BaseModel {
+public class OaProcessInstance {
 
     //RUNNING:运行中 PAUSE:暂停 FINISHED:结束 SHUTDOWN:中止
     public final static String RUNNING = "RUNNING";
     public final static String PAUSE = "PAUSE";
     public final static String FINISHED = "FINISHED";
     public final static String SHUTDOWN = "SHUTDOWN";
+
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField
+    private Long id;
 
     @EruptField(views = @View(title = "流程定义id", show = true))
     private String processDefId;
@@ -101,14 +108,28 @@ public class OaProcessInstance extends BaseModel {
     )
     private Date finishDate;
 
+    @EruptField(views = @View(title = "结束原因"))
+    private String reason;
+
     @EruptField(views = {
             @View(title = "表单内容", show = false)
     })
     @Column(columnDefinition = "json")//json类型
     private String formItems;
 
+    @Column(columnDefinition = "json")//json类型
+    private String process;
+
     @Transient//标识虚拟列
     @TableField(exist = false)
     @EruptField(views = @View(title = "详情", type = ViewType.LINK))
     private String detailLink;
+
+    public JSONObject getFormContent() {
+        return JSON.parseObject(this.formItems);
+    }
+
+    public OaProcessNode getProcessNode() {
+        return JSON.parseObject(this.process, OaProcessNode.class);
+    }
 }

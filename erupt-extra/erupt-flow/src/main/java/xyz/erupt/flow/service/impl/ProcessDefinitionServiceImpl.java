@@ -17,6 +17,7 @@ import xyz.erupt.flow.bean.entity.*;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaProcessDefinitionMapper;
+import xyz.erupt.flow.process.engine.ProcessHelper;
 import xyz.erupt.flow.service.*;
 
 import java.util.*;
@@ -31,13 +32,11 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
     @Autowired
     private FormGroupService formGroupService;
     @Autowired
-    private TaskService taskService;
-    @Autowired
-    private ProcessActivityService processActivityService;
-    @Autowired
     private ProcessActivityHistoryService processActivityHistoryService;
     @Autowired
     private ProcessInstanceHistoryService processInstanceHistoryService;
+    @Autowired
+    private ProcessHelper processHelper;
 
     @Override
     public void beforeDelete(OaProcessDefinition oaProcessDefinition) {
@@ -140,7 +139,6 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
     public List<OaProcessActivityHistory> preview(String formDefId, JSONObject formContent) {
         OaProcessDefinition procDef = this.getById(formDefId);
         List<OaProcessActivityHistory> activities = new ArrayList<>();
-        Map<String, OaProcessActivityHistory> map;
         this.preview(JSON.parseObject(procDef.getProcess(), OaProcessNode.class), formContent, activities, new HashMap<>());
         return activities;
     }
@@ -151,13 +149,22 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         OaProcessDefinition procDef = this.getById(inst.getProcessDefId());
         List<OaProcessActivityHistory> activities = new ArrayList<>();
         //查询出已完成的活动
-        List<OaProcessActivityHistory> histories = processActivityHistoryService.listByProcInstId(instId);
+        List<OaProcessActivityHistory> histories = processActivityHistoryService.listByProcInstId(instId, true);
+        Collections.sort(
+                histories,
+                Comparator.nullsLast(
+                        Comparator.comparing(
+                                OaProcessActivityHistory::getFinishDate
+                                ,Comparator.nullsLast(Comparable::compareTo)
+                        )
+                )
+        );
         //形成一个map
         Map<String, List<OaProcessActivityHistory>> map =
                 histories.stream().collect(Collectors.groupingBy(OaProcessActivityHistory::getActivityKey));
         JSONObject formContent = JSON.parseObject(inst.getFormItems());
         this.preview(JSON.parseObject(procDef.getProcess(), OaProcessNode.class), formContent, activities, map);
-        return histories;
+        return activities;
     }
 
     @Override
@@ -192,6 +199,11 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         this.save(oaProcessDefinition);
     }
 
+    @Override
+    public OaProcessNode readNode(String processDefId, String nodeId) {
+        return null;
+    }
+
     private List<OaProcessDefinition> listByGroupId(Long groupId, String keywords) {
         LambdaQueryWrapper<OaProcessDefinition> wrapper = new LambdaQueryWrapper<OaProcessDefinition>()
                 .eq(OaProcessDefinition::getGroupId, groupId)
@@ -208,6 +220,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
             return;
         }else if(FlowConstant.NODE_TYPE_ROOT.equals(node.getType())
                 || FlowConstant.NODE_TYPE_APPROVAL.equals(node.getType())
+                || FlowConstant.NODE_TYPE_CC.equals(node.getType())
         ) {//如果是用户任务
             //优先从map中获取，获取不到才读取流程图
             if(map.get(node.getId())!=null) {
@@ -223,7 +236,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
             }
         }else if(FlowConstant.NODE_TYPE_CONDITIONS.equals(node.getType())) {//如果是互斥分支
             //根据条件选择一个分支
-            OaProcessNode nextNode = processActivityService.switchNode(formContent, node.getBranchs());
+            OaProcessNode nextNode = processHelper.switchNode(formContent, node.getBranchs());
             //先追加该分支
             this.preview(nextNode, formContent, activities, map);
         }else if(FlowConstant.NODE_TYPE_CONCURRENTS.equals(node.getType())) {//如果是并行分支

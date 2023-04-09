@@ -1,6 +1,6 @@
 <template>
   <div class="workspace">
-    <el-tabs type="border-card" v-model="activeName" @before-leave="changeTab">
+    <el-tabs type="border-card" v-model="activeName" @tab-click="changeTab">
       <el-tab-pane label="发起工单" name="tab1">
         <el-row style="margin-bottom: 20px">
           <el-col :xs="12" :sm="10" :md="8" :lg="6" :xl="4">
@@ -31,7 +31,7 @@
       </el-tab-pane>
     </el-tabs>
 
-    <el-dialog title="发起审批" width="800px" top="20px" :visible.sync="openItemDl" :close-on-click-modal="false">
+    <el-dialog :title="formTitle" width="800px" top="20px" :visible.sync="openItemDl" :close-on-click-modal="false">
       <initiate-process ref="processForm" :code="selectForm.id" v-if="openItemDl"></initiate-process>
       <span slot="footer" class="dialog-footer">
 				<el-button @click="openItemDl = false">取 消</el-button>
@@ -55,8 +55,9 @@ export default {
     return {
       dataList: [],
       loading: false,
-      activeName: 'tab1',
       openItemDl: false,
+      formTitle: '',
+      activeName: 'tab1',
       selectForm: {},
       formItem: {},
       actives: [],
@@ -88,6 +89,7 @@ export default {
       })
     },
     enterItem(item) {
+      this.formTitle = item.formName;
       this.selectForm = item
       this.openItemDl = true
     },
@@ -97,7 +99,9 @@ export default {
           startByFormId(this.selectForm.id, this.$refs.processForm.formData).then(rsp => {
             this.$message.success(rsp.message);
             this.openItemDl = false;
-            this.$refs.myTask.reloadDatas()//重新查询一次
+            //重新查询一次，待办和已办
+            this.$refs.myTask.reloadDatas()
+            this.$refs.meAbout.reloadDatas();
           })
         } else {
           this.$message.warning("请完善表单😥")
@@ -107,10 +111,9 @@ export default {
     setMyTaskCount(count) {
       this.myTaskCount = count;
     },
-    changeTab(newTab, oldTab) {
-      if('tab3'===newTab) {
-        this.$ref.meAbout.reloadDatas();
-      }
+    changeTab(tab) {
+      this.$refs.myTask.reloadDatas()
+      this.$refs.meAbout.reloadDatas();
       return true;
     }
   }

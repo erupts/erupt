@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -16,9 +17,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -36,11 +35,18 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaProcessExecution extends BaseModel {
+public class OaProcessExecution {
 
     public static final String STATUS_RUNNING = "RUNNING";
     public static final String STATUS_WAITING = "WAITING";
     public static final String STATUS_ENDED = "ENDED";
+
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField
+    private Long id;
 
     @EruptField(views = @View(title = "父线程id"))
     private Long parentId;
@@ -71,9 +77,12 @@ public class OaProcessExecution extends BaseModel {
     @EruptField(views = @View(title = "结束时间", type = ViewType.DATE_TIME))
     private Date ended;
 
-    @EruptField(views = @View(title = "节点配置", show = false))
+    @EruptField(views = @View(title = "当前节点", show = false))
     @Column(columnDefinition = "json")//json类型
     private String process;
+
+    @EruptField(views = @View(title = "结束原因", show = false))
+    private String reason;
 
     public OaProcessNode getProcessNode() {
         if(this.getProcess()==null) {
