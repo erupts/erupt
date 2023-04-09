@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface OaTaskRepository extends JpaRepository<OaTask, Long> {
 
-    @Query("from OaTask where processInstId=:instId and active=true and activityKey='root' order by completeSort asc")
+    @Query("from OaTask where processInstId=:instId and active=true and activityKey='root'" +
+            " order by completeSort asc")
     OaTask getStartTaskByInst(Long instId);
 
     @Query("from OaTask where (1=2" +
