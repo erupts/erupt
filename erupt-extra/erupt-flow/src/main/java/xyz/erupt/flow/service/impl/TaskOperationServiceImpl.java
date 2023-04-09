@@ -1,12 +1,14 @@
 package xyz.erupt.flow.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.flow.bean.entity.OaTask;
 import xyz.erupt.flow.bean.entity.OaTaskOperation;
-import xyz.erupt.flow.repository.OaTaskOperationRepository;
+import xyz.erupt.flow.mapper.OaTaskOperationMapper;
 import xyz.erupt.flow.service.TaskOperationService;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptUserService;
@@ -15,12 +17,11 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class TaskOperationServiceImpl implements TaskOperationService, DataProxy<OaTaskOperation> {
+public class TaskOperationServiceImpl extends ServiceImpl<OaTaskOperationMapper, OaTaskOperation>
+        implements TaskOperationService, DataProxy<OaTaskOperation> {
 
     @Autowired
     private EruptUserService eruptUserService;
-    @Autowired
-    private OaTaskOperationRepository taskOperationRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -37,7 +38,7 @@ public class TaskOperationServiceImpl implements TaskOperationService, DataProxy
                 .remarks(remarks)
                 .operationDate(new Date())
                 .build();
-        taskOperationRepository.save(build);
+        this.save(build);
     }
 
     @Override
@@ -57,12 +58,14 @@ public class TaskOperationServiceImpl implements TaskOperationService, DataProxy
                 .targetNodeId(nodeId)
                 .targetNodeName(nodeName)
                 .build();
-        taskOperationRepository.save(build);
+        this.save(build);
     }
 
     @Override
     public List<OaTaskOperation> listByOperator(String account) {
-        List<OaTaskOperation> list = taskOperationRepository.findAllByOperatorOrderByOperationDateDesc(account);
-        return list;
+        return this.list(new LambdaQueryWrapper<OaTaskOperation>()
+                .eq(OaTaskOperation::getOperator, account)
+                .orderByDesc(OaTaskOperation::getOperationDate)
+        );
     }
 }

@@ -17,9 +17,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
-import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.flow.service.impl.ProcessInstanceHistoryServiceImpl;
-import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -101,6 +99,9 @@ public class OaProcessInstanceHistory {
     )
     private Date finishDate;
 
+    @EruptField(views = @View(title = "结束原因"))
+    private String reason;
+
     @EruptField(views = {
             @View(title = "表单内容", show = false)
     })
@@ -112,8 +113,7 @@ public class OaProcessInstanceHistory {
     @EruptField(views = @View(title = "详情", type = ViewType.LINK))
     private String detailLink;
 
-    @Transient
     @TableField(exist = false)
-    @EruptField(views = @View(title = "类型标识：发起，审批，抄送", export = false))
+    @Transient
     private String tag;
 }

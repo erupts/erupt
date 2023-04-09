@@ -1,13 +1,15 @@
 package xyz.erupt.flow.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import xyz.erupt.flow.bean.entity.OaTaskUserLink;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.constant.FlowConstant;
+import xyz.erupt.flow.mapper.OaTaskUserLinkMapper;
 import xyz.erupt.flow.process.userlink.impl.UserLinkServiceHolder;
-import xyz.erupt.flow.repository.OaTaskUserLinkRepository;
 import xyz.erupt.flow.service.TaskUserLinkService;
 
 import java.util.ArrayList;
@@ -17,26 +19,25 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class TaskUserLinkServiceImpl implements TaskUserLinkService {
+public class TaskUserLinkServiceImpl extends ServiceImpl<OaTaskUserLinkMapper, OaTaskUserLink> implements TaskUserLinkService {
 
-    @Autowired
-    private OaTaskUserLinkRepository repository;
     @Autowired
     private UserLinkServiceHolder userLinkServiceHolder;
 
     @Override
     public long countByTaskId(Long taskId) {
-        return repository.countByTaskId(taskId);
-    }
-
-    @Override
-    public List<OaTaskUserLink> saveBatch(Collection<OaTaskUserLink> links) {
-        return repository.saveAll(links);
+        return this.count(
+                new LambdaQueryWrapper<OaTaskUserLink>()
+                    .eq(OaTaskUserLink::getTaskId, taskId)
+        );
     }
 
     @Override
     public void removeByTaskId(Long taskId) {
-        repository.deleteByTaskId(taskId);
+        this.remove(
+                new LambdaQueryWrapper<OaTaskUserLink>()
+                        .eq(OaTaskUserLink::getTaskId, taskId)
+        );
     }
 
     @Override
@@ -44,7 +45,10 @@ public class TaskUserLinkServiceImpl implements TaskUserLinkService {
         if(CollectionUtils.isEmpty(roleIds)) {
             return new ArrayList<>(0);
         }
-        return repository.findAllByUserLinkTypeAndLinkIdIn("ROLES", roleIds);
+        return this.list(new LambdaQueryWrapper<OaTaskUserLink>()
+                .eq(OaTaskUserLink::getUserLinkType, "ROLES")
+                .in(OaTaskUserLink::getLinkId, roleIds)
+        );
     }
 
     @Override
@@ -52,12 +56,18 @@ public class TaskUserLinkServiceImpl implements TaskUserLinkService {
         if(CollectionUtils.isEmpty(userIds)) {
             return new ArrayList<>(0);
         }
-        return repository.findAllByUserLinkTypeAndLinkIdIn("USERS", userIds);
+        return this.list(new LambdaQueryWrapper<OaTaskUserLink>()
+                .eq(OaTaskUserLink::getUserLinkType, "USERS")
+                .in(OaTaskUserLink::getLinkId, userIds)
+        );
     }
 
     @Override
     public List<OaTaskUserLink> listByTaskId(Long taskId) {
-        return repository.findAllByTaskId(taskId);
+        return this.list(
+                new LambdaQueryWrapper<OaTaskUserLink>()
+                        .eq(OaTaskUserLink::getTaskId, taskId)
+        );
     }
 
     /**
@@ -68,7 +78,7 @@ public class TaskUserLinkServiceImpl implements TaskUserLinkService {
      */
     @Override
     public int countUsersByTaskId(Long taskId) {
-        List<OaTaskUserLink> links = repository.findAllByTaskId(taskId);
+        List<OaTaskUserLink> links = this.listByTaskId(taskId);
         if(CollectionUtils.isEmpty(links)) {
             return 0;
         }
@@ -89,5 +99,10 @@ public class TaskUserLinkServiceImpl implements TaskUserLinkService {
             userIds.addAll(users.stream().map(u -> u.getId()).collect(Collectors.toSet()));
         }
         return userIds.size();
+    }
+
+    @Override
+    public boolean saveBatch(Collection<OaTaskUserLink> entityList) {
+        return super.saveBatch(entityList);
     }
 }

@@ -1,9 +1,11 @@
 package xyz.erupt.flow.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +16,12 @@ import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.*;
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeNobody;
-import xyz.erupt.flow.bean.entity.node.OaProcessNodeProps;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.bean.vo.TaskDetailVo;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaTaskMapper;
+import xyz.erupt.flow.process.engine.ProcessHelper;
+import xyz.erupt.flow.process.listener.*;
 import xyz.erupt.flow.process.userlink.impl.UserLinkServiceHolder;
 import xyz.erupt.flow.service.*;
 import xyz.erupt.upms.model.EruptUser;
@@ -29,7 +31,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Data
 public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implements TaskService, DataProxy<OaTask> {
+
+    private Map<Class<ExecutableNodeListener>, List<ExecutableNodeListener>> listenerMap = new HashMap<>();
 
     @Autowired
     private TaskHistoryService taskHistoryService;
@@ -54,40 +59,38 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     @Lazy
     @Autowired
     private ProcessInstanceService processInstanceService;
+    @Lazy
+    @Autowired
+    private ProcessInstanceHistoryService processInstanceHistoryService;
+    @Autowired
+    private ProcessHelper processHelper;
 
     /**
      * 完成任务
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void complete(Long taskId, String remarks) {
-        //查询任务，并进行判断
-        OaTask task = this.getById(taskId);
-        if(task==null) {
-            throw new EruptApiErrorTip("任务"+taskId+"不存在");
-        }
-        if(!task.getActive()) {
-            throw new EruptApiErrorTip("任务未激活，不可完成");
-        }
-        if(task.getFinished()) {
-            throw new EruptApiErrorTip("任务已完成");
-        }
-        //任务标记为完成
+    public OaTask complete(Long taskId, String remarks) {
         EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
-        task.setFinished(true);
-        task.setFinishDate(new Date());
-        task.setFinishUser(currentEruptUser.getAccount());
-        task.setFinishUserName(currentEruptUser.getName());
-        //变更历史表
-        taskHistoryService.copyAndSave(task);
-        //删除运行时表
-        this.removeById(taskId);
-        //记录日志
-        taskOperationService.log(task, OaTaskOperation.COMPLETE, remarks);
-        //触发活动的完成
-        processActivityService.triggerComplete(task.getActivityId());
+        OaTask task = this.complete(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
+        return task;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public OaTask complete(Long taskId, String account, String accountName, String remarks) {
+        OaTask task = this.finish(OaTaskOperation.COMPLETE, taskId, account, accountName, remarks);
+        //触发活动的完成
+        this.listenerMap.get(AfterCompleteTaskListener.class).forEach(l -> l.execute(task));
+        return task;
+    }
+
+    /**
+     * 指派
+     * @param taskId
+     * @param users
+     * @param remarks
+     */
     @Override
     public void assign(Long taskId, Set<OrgTreeVo> users, String remarks) {
         //查询任务，并进行判断
@@ -103,11 +106,11 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         }
         //然后添加新的审批人
         this.setAssigns(task, users);
-
         //记录日志
-        taskOperationService.log(task, OaTaskOperation.COMPLETE, remarks);
-        //触发活动的完成
-        processActivityService.triggerComplete(task.getActivityId());
+        taskOperationService.log(task, OaTaskOperation.ASSIGN, remarks);
+
+        //触发后置监听
+        this.listenerMap.get(AfterAssignTaskListener.class).forEach(l -> l.execute(task));
     }
 
     /**
@@ -150,12 +153,60 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         task.setAssignee(null);
         this.updateById(task);
         taskHistoryService.copyAndSave(task);
-        taskUserLinkService.removeByTaskId(task.getId());
+        //这里暂时不能删，考虑加个历史表
+        //taskUserLinkService.removeByTaskId(task.getId());
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void refuse(Long taskId, String remarks) {
-        throw new RuntimeException("未配置拒绝策略");
+        EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
+        this.refuse(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void refuse(Long taskId, String account, String accountName, String remarks) {
+        //先完成当前任务
+        OaTask task = this.finish(OaTaskOperation.REFUSE, taskId, account, accountName, remarks);
+        //进行拒绝
+        processHelper.refuse(task, accountName);
+        //触发拒绝后置事件
+        this.listenerMap.get(AfterRefuseTaskListener.class).forEach(l -> l.execute(task));
+    }
+
+    /**
+     * 任务结束
+     * @param taskId
+     * @param account
+     * @param accountName
+     * @param remarks
+     */
+    private OaTask finish(String action, Long taskId, String account, String accountName, String remarks) {
+        //查询任务，并进行判断
+        OaTask task = this.getById(taskId);
+        if(task==null) {
+            throw new EruptApiErrorTip("任务"+taskId+"不存在");
+        }
+        if(!task.getActive()) {
+            throw new EruptApiErrorTip("任务未激活，禁止操作");
+        }
+        if(task.getFinished()) {
+            throw new EruptApiErrorTip("任务已完成");
+        }
+        //任务标记为完成
+        task.setFinished(true);
+        task.setActive(false);
+        task.setFinishDate(new Date());
+        task.setFinishUser(account);
+        task.setFinishUserName(accountName);
+        //变更历史表
+        taskHistoryService.copyAndSave(task);
+        //删除运行时表
+        this.removeById(taskId);
+        //记录日志
+        taskOperationService.log(task, action, remarks);
+        return task;
     }
 
     /**
@@ -240,8 +291,14 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
             OaTask t = oaTasks.get(i);
             t.setActive(true);
             this.updateById(t);
-            //触发任务激活事件
-            this.triggerTaskActive(t);
+            if(OaProcessActivity.SERIAL.equals(t.getCompleteMode())) {//串行只能激活一个
+                break;
+            }
+        }
+        //一次性触发所有监听器，这里先不在循环里触发
+        for (int i = 0; i < oaTasks.size(); i++) {
+            OaTask t = oaTasks.get(i);
+            this.listenerMap.get(AfterActiveTaskListener.class).forEach(l -> l.execute(t));
             if(OaProcessActivity.SERIAL.equals(t.getCompleteMode())) {//串行只能激活一个
                 break;
             }
@@ -249,57 +306,25 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         return oaTasks.size()>0;
     }
 
-    /**
-     * 激活任务需要处理的事情
-     * 不激活任务，只做监听事件
-     * @param task
-     */
-    @Override
-    public void triggerTaskActive(OaTask task) {
-        //判断任务是否有人可以处理
-        if(
-                task.getTaskOwner()==null//没有所属人
-                && task.getAssignee()==null//没有分配人
-                && taskUserLinkService.countUsersByTaskId(task.getId())<=0//候选人
-        ) {//触发无人审批事件
-            OaProcessExecution inst = processExecutionService.getById(task.getProcessInstId());
-            OaProcessNodeProps props = inst.getProcessNode().getProps();
-            OaProcessNodeNobody nobodyConf = props.getNobody();
-            if(FlowConstant.NOBODY_TO_PASS.equals(nobodyConf.getHandler())) {
-                //直接完成
-                this.complete(task.getId(), "无人处理，自动完成");
-            }else if(FlowConstant.NOBODY_TO_ADMIN.equals(nobodyConf.getHandler())) {//分配给超管用户
-                LinkedHashSet<OrgTreeVo> userIds = userLinkService.getAdminUsers();
-                if(CollectionUtils.isEmpty(userIds)) {
-                    throw new RuntimeException("未查询到超管用户");
-                }
-                //将任务转办给超管
-                this.assign(task.getId(), userIds, "无人处理，转办给超管用户");
-            }else if(FlowConstant.NOBODY_TO_USER.equals(nobodyConf.getHandler())) {
-                //将任务转办给超管
-                Set<OrgTreeVo> users =
-                        nobodyConf.getAssignedUser().stream().map(au -> OrgTreeVo.builder()
-                                .id(au.getId())
-                                .name(au.getName())
-                                .build()
-                        ).collect(Collectors.toSet());
-                this.assign(task.getId(), users, "无人处理，转办给指定用户");
-            }else if(FlowConstant.NOBODY_TO_REFUSE.equals(nobodyConf.getHandler())) {
-                //直接拒绝
-                this.refuse(task.getId(), "无人处理，自动拒绝");
-            }else {
-                throw new RuntimeException("请设置无人处理的审批方式");
-            }
-        }
-    }
-
     @Override
     public void saveBatchWithUserLink(List<OaTask> oaTasks) {
         this.saveBatch(oaTasks);
         taskHistoryService.copyAndSave(oaTasks);
+
         oaTasks.forEach(t -> {
             t.getUserLinks().forEach(link -> link.setTaskId(t.getId()));
             taskUserLinkService.saveBatch(t.getUserLinks());
+        });
+        //这里需要考虑一个问题，就是其中一个任务的监听导致其他任务不存在的情况
+        oaTasks.forEach(t -> {
+            //触发后置事件
+            this.listenerMap.get(AfterCreateTaskListener.class).forEach(l -> l.execute(t));
+            //触发后置事件
+            this.listenerMap.get(AfterActiveTaskListener.class).forEach(l -> {
+                if(t.getActive()) {
+                    l.execute(t);
+                }
+            });
         });
     }
 
@@ -332,7 +357,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         //创建一个空的vo
         TaskDetailVo taskDetail = new TaskDetailVo();
         //再查询其他属性
-        OaProcessInstance inst = processInstanceService.getById(instId);
+        OaProcessInstanceHistory inst = processInstanceHistoryService.getById(instId);
         taskDetail.setFormData(JSON.parseObject(inst.getFormItems()));//表单内容
         taskDetail.setProcessInstId(instId);
         taskDetail.setInstCreator(inst.getCreator());
@@ -343,6 +368,45 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
         OaProcessDefinition def = processDefinitionService.getById(inst.getProcessDefId());
         taskDetail.setFormItems(JSON.parseArray(def.getFormItems()));//表单配置
         return taskDetail;
+    }
+
+    @Override
+    public void stopByExecutionId(Long executionId, String reason) {
+        //所有未完成的任务
+        List<OaTask> tasks = this.listByExecutionId(executionId, false);
+        if(CollectionUtils.isEmpty(tasks)) {
+            return;
+        }
+        tasks.forEach(e -> this.finish(OaTaskOperation.SHUTDOWN, e.getId(), null, reason, reason));
+    }
+
+    @Override
+    public void stopByInstId(Long instId, String reason) {
+        //所有未完成的任务
+        List<OaTask> tasks = this.list(
+                new LambdaQueryWrapper<OaTask>()
+                    .eq(OaTask::getProcessInstId, instId)
+                    .eq(OaTask::getFinished, false)
+        );
+        if(CollectionUtils.isEmpty(tasks)) {
+            return;
+        }
+        tasks.forEach(e -> this.finish(OaTaskOperation.SHUTDOWN, e.getId(), null, reason, reason));
+    }
+
+    @Override
+    public List<OaTask> listByInstanceId(Long instId) {
+        return this.list(
+                new LambdaQueryWrapper<OaTask>()
+                    .eq(OaTask::getProcessInstId, instId)
+        );
+    }
+
+    private List<OaTask> listByExecutionId(Long executionId, boolean finished) {
+        LambdaQueryWrapper<OaTask> wrapper = new LambdaQueryWrapper<OaTask>()
+                .eq(OaTask::getExecutionId, executionId)
+                .eq(OaTask::getFinished, finished);
+        return this.list(wrapper);
     }
 
     @Override

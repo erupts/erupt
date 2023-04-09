@@ -43,6 +43,7 @@ export default {
   },
   data() {
     return {
+      myInstId: null,
       loading: false,
       formDisable: true,//是否禁用编辑
       taskDetail: {
@@ -56,10 +57,11 @@ export default {
   mounted() {
     this.loading = true
     this.formDisable = true;
+    this.myInstId = this.instId;
     if(this.taskId) {//有任务，则使用任务刷新
       this.loadByTaskId(this.taskId);
-    }else if(this.instId){//否则使用实例刷新
-      this.loadByInstId(this.instId);
+    }else if(this.myInstId){//否则使用实例刷新
+      this.loadByInstId(this.myInstId);
     }
   },
   computed: {
@@ -71,19 +73,19 @@ export default {
       getTaskDetail(taskId).then( res => {
         this.loading = false;
         this.taskDetail = res.data || {};
-        this.instId = res.data.processInstId;
+        this.myInstId = res.data.processInstId;
       }).then(() => {
-        this.$refs.timeLine.freshForInst(this.instId);
+        this.$refs.timeLine.freshForInst(this.myInstId);
       }).finally(() => this.loading=false);
     },
     //根据实例查询数据
-    loadByInstId(instId) {
+    loadByInstId(myInstId) {
       this.loading = true
-      getInstDetail(instId).then( res => {
+      getInstDetail(myInstId).then( res => {
         this.loading = false
         this.taskDetail = res.data || {};
       }).then(() => {
-        this.$refs.timeLine.freshForInst(this.instId);
+        this.$refs.timeLine.freshForInst(this.myInstId);
       }).finally(() => this.loading=false);
     },
     validate(call) {

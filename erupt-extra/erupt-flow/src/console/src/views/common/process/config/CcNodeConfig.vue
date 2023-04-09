@@ -2,7 +2,7 @@
   <div>
     <el-button size="mini" icon="el-icon-plus" type="primary" @click="selectOrg" round>选择抄送人</el-button>
     <div class="option">
-      <el-checkbox label="允许发起人添加抄送人" v-model="config.shouldAdd"></el-checkbox>
+      <!--<el-checkbox label="允许发起人添加抄送人" v-model="config.shouldAdd"></el-checkbox>-->
     </div>
     <org-items v-model="select"/>
     <org-picker multiple ref="orgPicker" type="user" :selected="select" @ok="selected"/>

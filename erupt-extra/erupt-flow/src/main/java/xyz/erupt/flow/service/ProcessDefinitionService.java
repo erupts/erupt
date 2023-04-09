@@ -3,6 +3,7 @@ package xyz.erupt.flow.service;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.*;
+import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 
 import java.util.List;
 
@@ -63,4 +64,12 @@ public interface ProcessDefinitionService extends IService<OaProcessDefinition> 
      * @param oaForms
      */
     void deploy(OaForms oaForms);
+
+    /**
+     * 读取节点
+     * @param processDefId
+     * @param nodeId
+     * @return
+     */
+    OaProcessNode readNode(String processDefId, String nodeId);
 }
