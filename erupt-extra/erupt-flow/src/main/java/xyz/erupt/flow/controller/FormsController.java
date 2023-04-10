@@ -24,7 +24,7 @@ public class FormsController {
      * @return
      */
     @PostMapping("/admin/form")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel createForm(@RequestBody OaForms form){
         formsService.createForm(form);
         return EruptApiModel.successApi();
@@ -47,7 +47,7 @@ public class FormsController {
      * @return 操作结果
      */
     @PutMapping("/admin/form/{formId}")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel updateForm(@PathVariable Long formId, @RequestBody OaForms oaForms){
         oaForms.setFormId(formId);
         formsService.updateById(oaForms);
@@ -60,7 +60,7 @@ public class FormsController {
      * @return 操作结果
      */
     @DeleteMapping("/admin/form/{formId}")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel removeForm(@PathVariable Long formId){
         formsService.removeById(formId);
         return EruptApiModel.successApi();
@@ -72,7 +72,7 @@ public class FormsController {
      * @return 修改结果
      */
     @PutMapping("/admin/form/detail")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel updateFormDetail(@RequestBody OaForms template){
         formsService.updateFormDetail(template);
         return EruptApiModel.successApi();
@@ -84,7 +84,7 @@ public class FormsController {
      * @return 排序结果
      */
     @PutMapping("/admin/form/sort")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel formsSort(@RequestBody List<Long> formIds){
         formsService.formsSort(formIds);
         return EruptApiModel.successApi();
