@@ -25,7 +25,7 @@
 
 流程可以分支、并行、多任务。
 丰富的任务分配类型：用户、角色、多级连续审批等。
-支持流程驳回、退回、撤销、转办、终止等。
+支持流程驳回、转办、终止等。
 
 - **方便**
 
@@ -34,8 +34,8 @@
 
 - **扩展**
 
-动态表单虽然方便，毕竟难以应对复杂多变的需求。
-你也可以使用本流程+自研表单。
+可以对任何环节增加监听，以实现自己的逻辑。
+
 
 ![](./img/QQ截图20230308172610.png "")
 
@@ -87,18 +87,23 @@
 
 ````
 src   
- ├── console                                   // 前端代码          
- │    ├── api                                  // 调用后端接口
+ ├── console                                  // 前端代码          
+ │    ├── api                                 // 调用后端接口
  │    └── views
  │         ├── common                         // 通用工具
  │         ├── admin                          // 管理端，流程图绘制，动态表单等
  │         └── workspace                      // 用户端，发起工单，审批工单等
  │
- ├── xyz.erupt.flow                            // 后端代码
- │       ├── bean                              // 核心模块
- │       ├── constant                          // 权限范围
+ ├── xyz.erupt.flow                           // 后端代码
+ │       ├── bean                              
+ │       ├── conf                             // 配置类，如：注册监听器链
+ │       ├── constant                          
  │       ├── controller
- │       ├── handler                           // erupt的按钮处理
+ │       ├── process                          // 流程引擎核心代码
+ │       │     ├─ builder                     // 
+ │       │     ├─ engine                     
+ │       │     ├─ listener                     
+ │       │     └─ userlink                     
  │       ├── mapper
  │       ├── service
  │       ├── web                               // 对一些erupt的类进行增强
@@ -198,11 +203,76 @@ src
 ![](./img/ru.png "运行时表") ![](./img/hi.png "历史表")
 
 
-## 使用自己的用户体系
+## 修改用户体系
 
-实现 ``xyz.erupt.flow.process.userlink.UserLinkService`` 接口，并保证你的优先级`priority`大于0即可。
+默认使用erupt的用户体系，有一些预设的地方，如：假定部门排序第一的人即是本部门管理员。
 
-> 0是默认的用户体系实现，使用erupt-upms的用户体系。
+你可以实现 ``xyz.erupt.flow.process.userlink.UserLinkService`` 接口，来改造用户体系。
+
+但这要实现很多方法，或者继承默认的用户service `xyz.erupt.flow.process.userlink.impl.DefaultUserLinkServiceImpl` 是一个更好的选择。
+
+```java
+import org.springframework.stereotype.Service;
+import xyz.erupt.flow.bean.vo.OrgTreeVo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class CustomUserLinkServiceImpl extends DefaultUserLinkServiceImpl {
+
+    /**
+     * 自定义的用户体系service要重写优先级，并且返回值要大于0
+     * @return
+     */
+    @Override
+    public int priority() {
+        return 1;
+    }
+
+
+    /**
+     * 针对某些方法进行改写
+     * 返回指定部门的主管
+     * @return
+     */
+    private List<OrgTreeVo> getLeadersByDeptId(Long deptId) {
+        //直接没有部门主管
+        return new ArrayList<>(0);
+    }
+}
+
+```
+
+
+## 添加监听
+
+在各个实例、线程、活动、任务的启动、激活等时间点，程序会按顺序调用所有的监听器。你也可以实现适当的监听器，来扩展能力。
+
+```java
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import xyz.erupt.flow.bean.entity.OaTask;
+import xyz.erupt.flow.process.listener.AfterCreateTaskListener;
+
+/**
+ * 监听器需要注册到spring
+ */
+@Component
+@Slf4j
+public class ConsoleListener implements AfterCreateTaskListener {
+    @Override
+    public void execute(OaTask task) {
+        log.info("==> 有新任务{}", task.getId());
+    }
+}
+
+```
+
+可用的监听器都在`xyz.erupt.flow.process.listener`包下。
+
+![](./img/QQ截图20230407173606.png "监听器")
 
 ## 修改前端代码
 
