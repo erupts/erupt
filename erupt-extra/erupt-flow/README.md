@@ -67,19 +67,16 @@
 
 **2. 分配菜单**
 
-默认会添加2个菜单
+默认会添加2个菜单：
 
-后台管理: 绘制流程图
-
-工作区: 发起、处理工单
+- 后台管理: 绘制流程图
+- 工作区: 发起、处理工单
 
 你也可以遵循erupt风格，创建任何你需要的菜单。`xyz.erupt.flow.bean.entity` 包下的类都可以。
 
 ## 项目结构
 
-项目还在开发中，你可以了解一下项目的基本情况，继续你的开发。
-
-目录结构如下，前后端是一起的：
+目录结构如下，前后端一体：
 
 ````
 src   
@@ -118,10 +115,12 @@ src
 
 ## 核心概念
 
+了解这些概念帮助你快速上手。
+
 - **节点 Node**
 
-流程图中的元素，绘制好的流程图，会以节点集合的形式（json格式）保存在数据库。
-一个节点描述工单流转到此处时，应该做什么。
+流程图中的基本元素，一个节点描述工单流转到此处时应该做什么。
+流程图会以节点集合的形式（json格式）保存在数据库。
 
 ![](./img/node.png "")
 
@@ -152,9 +151,9 @@ src
 
 - **流程实例 ProcessInstance**
 
-在某个流程定义下，发起业务，会产生一个流程实例。一个流程定义可以产生多个流程实例。
+在某个流程定义下发起业务，会产生一个流程实例。一个流程定义可以产生多个流程实例。
 
-一个流程实例，也叫做一个工单。
+一个流程实例也叫做一个工单。
 
 > 流程定义与流程实例的关系，就像“类”与“对象”的关系。
 
@@ -163,11 +162,11 @@ src
 
 - **线程 Execution**
 
-流程实例发起后会进行流转，通常是单线程流转，即一个节点处理完再处理下一个。
+流程实例发起后会根据流程图进行流转，通常是单线程流转，即一个节点处理完再处理下一个。
 
 当流程图中有分支时，会产生子线程，多个子线程可能会并行，但是此时主线程必须等待。
 
-子线程结束后并入主线程。
+所有子线程结束后并入主线程，主线程继续。
 
 ![](./img/execution.jpg "线程")
 
@@ -201,11 +200,10 @@ src
 
 ## 修改用户体系
 
-默认使用erupt的用户体系，有一些预设的地方，如：假定部门排序第一的人即是本部门管理员。
+默认使用erupt的用户体系，有一些预设的地方，如：假定部门排序第一的人即是本部门管理员。这可能不符合你的需求。
 
 你可以实现 ``xyz.erupt.flow.process.userlink.UserLinkService`` 接口，来改造用户体系。
-
-但这要实现很多方法，或者继承默认的用户service `xyz.erupt.flow.process.userlink.impl.DefaultUserLinkServiceImpl` 是一个更好的选择。
+但这要实现很多方法，继承默认的用户service `xyz.erupt.flow.process.userlink.impl.DefaultUserLinkServiceImpl` 是一个更好的选择。
 
 ```java
 import org.springframework.stereotype.Service;
@@ -218,7 +216,7 @@ import java.util.List;
 public class CustomUserLinkServiceImpl extends DefaultUserLinkServiceImpl {
 
     /**
-     * 自定义的用户体系service要重写优先级，并且返回值要大于0
+     * 自定义的用户体系service要重写优先级，值要大于0
      * @return
      */
     @Override
@@ -276,6 +274,6 @@ public class ConsoleListener implements AfterCreateTaskListener {
 
 1. 修改前端代码
 2. build前端 `vue-cli-service build`，产生dist目录
-3. build后端，将dist拷贝到最终的jar包中
+3. build后端，自动将dist拷贝到最终的jar包中
 
 重启程序，就可以看到修改之后的前端了。
