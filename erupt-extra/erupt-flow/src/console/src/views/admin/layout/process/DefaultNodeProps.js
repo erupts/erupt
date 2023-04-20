@@ -48,12 +48,27 @@ export const ROOT_PROPS = {
 
 //条件节点默认属性
 export const CONDITION_PROPS = {
+  isDefault: false,
   groupsType:"OR", //条件组逻辑关系 OR、AND
   groups:[
     {
       groupType:"AND", //条件组内条件关系 OR、AND
       cids:[], //条件ID集合
-      conditions:[] //组内子条件
+      conditions:[], //组内子条件
+    }
+  ],
+  expression: "" //自定义表达式，灵活构建逻辑关系
+}
+
+//条件节点默认属性
+export const CONDITION_PROPS_DEFAULT = {
+  isDefault: true,
+  groupsType:"OR", //条件组逻辑关系 OR、AND
+  groups:[
+    {
+      groupType:"AND", //条件组内条件关系 OR、AND
+      cids:[], //条件ID集合
+      conditions:[], //组内子条件
     }
   ],
   expression: "" //自定义表达式，灵活构建逻辑关系
@@ -108,5 +123,5 @@ export const DELAY_PROPS = {
 }
 
 export default {
-  APPROVAL_PROPS, CC_PROPS, DELAY_PROPS, CONDITION_PROPS, ROOT_PROPS, TRIGGER_PROPS
+  APPROVAL_PROPS, CC_PROPS, DELAY_PROPS, CONDITION_PROPS, CONDITION_PROPS_DEFAULT, ROOT_PROPS, TRIGGER_PROPS
 }

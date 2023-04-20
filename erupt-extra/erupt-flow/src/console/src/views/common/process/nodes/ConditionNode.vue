@@ -73,6 +73,8 @@ export default {
   },
   computed: {
     content() {
+      console.log(this.config.props)
+      if(this.config.props.isDefault) return '默认条件';
       const groups = this.config.props.groups
       let confitions = []
       groups.forEach(group => {
@@ -99,7 +101,8 @@ export default {
         confitions.push(subConditions.length > 1 ? `(${subConditionsStr})` : subConditionsStr)
       })
       //构建最终描述
-      return String(confitions).replaceAll(',', (this.config.props.groupsType === 'AND' ? ' 且 ' : ' 或 '))
+      let str = String(confitions).replaceAll(',', (this.config.props.groupsType === 'AND' ? ' 且 ' : ' 或 '));
+      return str;
     }
   },
   methods: {
@@ -129,6 +132,9 @@ export default {
     //校验数据配置的合法性
     validate(err) {
       const props = this.config.props
+      if(props.isDefault) {//默认条件无需设置
+        return true;
+      }
       if (props.groups.length <= 0){
         this.showError = true
         this.errorInfo = '请设置分支条件'
