@@ -32,7 +32,7 @@
                <span v-if="condition.valueType === ValueType.string">
                 <el-select size="small" placeholder="判断符" style="width: 120px;" v-model="condition.compare" @change="condition.value = []">
                   <el-option label="等于" value="="></el-option>
-                  <el-option label="包含在" value="IN"></el-option>
+                  <el-option label="包含在" value="IN" v-if="getOptions(condition.id).length>0"></el-option>
                 </el-select>
                  <span v-if="isSelect(condition.id)" style="margin-left: 10px">
                    <el-select v-if="condition.compare === 'IN'" style="width: 280px;" clearable multiple size="small" v-model="condition.value" placeholder="选择值">
@@ -62,17 +62,38 @@
                   </span>
                 </span>
               </span>
+
               <span v-else-if="condition.valueType === ValueType.user">
-                <span class="item-desc" style="margin-right: 20px">属于某部门 / 为某些人其中之一</span>
+                <!--<span class="item-desc" style="margin-right: 20px">属于某部门 / 为某些人其中之一</span>-->
+                <el-select size="small" placeholder="判断符" style="width: 120px; margin-right: 10px;" v-model="condition.compare">
+                  <el-option label="为某些人其中之一" value="user"/>
+                  <!--<el-option label="dept" value="dept">为某部门或其下属部门之一</el-option>-->
+                </el-select>
                 <el-button size="mini" icon="el-icon-plus" type="primary" @click="selectUser(condition.value, 'user')" round>选择人员/部门</el-button>
                 <org-items v-model="condition.value"/>
               </span>
+
               <span v-else-if="condition.valueType === ValueType.dept">
                 <span class="item-desc" style="margin-right: 20px">为某部门 / 某部门下的部门</span>
                 <el-button size="mini" icon="el-icon-plus" type="primary" @click="selectUser(condition.value, 'dept')" round>选择部门</el-button>
                 <org-items v-model="condition.value"/>
               </span>
-              <span v-else-if="condition.valueType === ValueType.date"></span>
+
+              <span v-else-if="condition.valueType === ValueType.date">
+                <el-select size="small" placeholder="判断符" style="width: 120px;" v-model="condition.compare">
+                  <el-option :label="exp.label" :value="exp.value" :key="exp.value" v-for="exp in explains"></el-option>
+                </el-select>
+                <span style="margin-left: 10px">
+                  <el-date-picker style="width: 280px;" value-format="yyyy-MM-dd" v-if="conditionValType(condition.compare) === 0" size="small" placeholder="输入比较值" type="date" v-model="condition.value[0]"/>
+                  <span v-else>
+                    <el-date-picker style="width: 130px;" value-format="yyyy-MM-dd" size="small" type="date" placeholder="输入比较值" v-model="condition.value[0]"/>
+                    <span> ~
+                      <el-date-picker style="width: 130px;" value-format="yyyy-MM-dd" size="small" type="date" placeholder="输入比较值" v-model="condition.value[1]"/>
+                    </span>
+                  </span>
+                </span>
+              </span>
+
               <i class="el-icon-delete" @click="rmSubCondition(group, cindex)"></i>
             </el-form-item>
           </el-form>
@@ -99,7 +120,7 @@ export default {
       showOrgSelect: false,
       //groupConditions: [],
       groupNames: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
-      supportTypes:[ValueType.number, ValueType.string, ValueType.date, ValueType.dept, ValueType.user],
+      supportTypes:[ValueType.number, ValueType.string, ValueType.date, ValueType.dept, ValueType.user],//这些字段可以用作条件
       explains:[
         {label: '等于', value:'='},
         {label: '大于', value:'>'},

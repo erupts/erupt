@@ -241,8 +241,8 @@ export default {
           id: this.getRandomId(),
           parentId: parentNode.children.id,
           type: "CONDITION",
-          props: this.$deepCopy(DefaultProps.CONDITION_PROPS),
-          name: "条件2",
+          props: this.$deepCopy(DefaultProps.CONDITION_PROPS_DEFAULT),
+          name: "默认条件",
           children:{}
         }
       ])
