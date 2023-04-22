@@ -65,7 +65,7 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     private String type;
 
     @EruptField(
-            views = @View(title = "连接字符串"),
+            views = @View(title = "连接字符串",type = ViewType.HTML),
             edit = @Edit(title = "连接字符串", type = EditType.TEXTAREA, notNull = true)
     )
     private String url;

@@ -20,6 +20,7 @@ import xyz.erupt.bi.constant.ColumnType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -82,6 +83,12 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
                     codeEditType = @CodeEditorType(language = "sql"))
     )
     private String drillExpress;
+
+    @Column(length = 1000)
+    @EruptField(
+            edit = @Edit(title = "描述", type = EditType.TEXTAREA)
+    )
+    private String remark;
 
     @Override
     public void beforeAdd(BiColumn biColumn) {
