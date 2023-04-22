@@ -15,13 +15,15 @@ public @interface Card {
     @Transient
     boolean enable() default true;
 
+    boolean showTitle() default false;
+
     @Comment("封面字段")
     String galleryField();
 
     @Comment("封面效果")
     GalleryCover galleryCover() default GalleryCover.CLIP;
 
-    @Comment("字段")
+    @Comment("显示字段")
     String[] viewFields();
 
     enum GalleryCover {
