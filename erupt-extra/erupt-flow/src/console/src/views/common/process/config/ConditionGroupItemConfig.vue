@@ -67,14 +67,18 @@
                 <!--<span class="item-desc" style="margin-right: 20px">属于某部门 / 为某些人其中之一</span>-->
                 <el-select size="small" placeholder="判断符" style="width: 120px; margin-right: 10px;" v-model="condition.compare">
                   <el-option label="为某些人其中之一" value="user"/>
-                  <!--<el-option label="dept" value="dept">为某部门或其下属部门之一</el-option>-->
+                  <el-option label="为某部门或其下属部门之一" value="dept"></el-option>
+                  <el-option label="为某角色其中之一" value="role"></el-option>
                 </el-select>
-                <el-button size="mini" icon="el-icon-plus" type="primary" @click="selectUser(condition.value, 'user')" round>选择人员/部门</el-button>
+                <el-button size="mini" icon="el-icon-plus" type="primary" @click="selectUser(condition.value, condition.compare)" round>选择范围</el-button>
                 <org-items v-model="condition.value"/>
               </span>
 
               <span v-else-if="condition.valueType === ValueType.dept">
-                <span class="item-desc" style="margin-right: 20px">为某部门 / 某部门下的部门</span>
+                <el-select size="small" placeholder="判断符" style="width: 120px; margin-right: 10px;" v-model="condition.compare">
+                  <el-option label="为某部门或其下属部门之一" value="dept"></el-option>
+                </el-select>
+                <!--<span class="item-desc" style="margin-right: 20px">为某部门 / 某部门下的部门</span>-->
                 <el-button size="mini" icon="el-icon-plus" type="primary" @click="selectUser(condition.value, 'dept')" round>选择部门</el-button>
                 <org-items v-model="condition.value"/>
               </span>
@@ -189,9 +193,16 @@ export default {
       }
     },
     selectUser(value, orgType) {
+      if(this.orgType === orgType) {
+        this.users = value;
+      }else {
+        value.length = 0;//清空选项
+        this.users = value;
+      }
       this.orgType = orgType
-      this.users = value
-      this.$refs.orgPicker.show()
+      this.$nextTick(() => {//必须赋值完毕之后打开
+        this.$refs.orgPicker.show()
+      })
     },
     filterCondition(item, list){
       if (item.name === 'SpanLayout'){
@@ -202,7 +213,7 @@ export default {
     },
     selected(select) {
       this.users.length = 0
-      select.forEach(u => this.users.push(u))
+      select.forEach(u => this.users.push(u));
     },
     delGroup(index) {
       this.selectedNode.props.groups.splice(index, 1)
@@ -217,7 +228,6 @@ export default {
         if (0 > group.conditions.findIndex(cd => cd.id === cid)){
           //新增条件
           let condition = {...this.conditionList[index]}
-          console.log(condition, this.conditionList, index)
           condition.compare = '';
           condition.value = []
           group.conditions.push(condition)
