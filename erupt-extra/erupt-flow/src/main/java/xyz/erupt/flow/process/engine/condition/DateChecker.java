@@ -2,6 +2,7 @@ package xyz.erupt.flow.process.engine.condition;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
+import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeCondition;
 
 import java.text.ParseException;
@@ -14,7 +15,7 @@ public class DateChecker implements ConditionChecker {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
-    public boolean check(JSONObject form, OaProcessNodeCondition condition) throws ParseException {
+    public boolean check(OaProcessExecution execution, JSONObject form, OaProcessNodeCondition condition) throws ParseException {
         Date formValue = form.getDate(condition.getId());//表单值
 
         String[] value = condition.getValue();//对照值

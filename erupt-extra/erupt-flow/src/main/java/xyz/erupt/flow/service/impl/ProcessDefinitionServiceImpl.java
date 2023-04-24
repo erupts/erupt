@@ -229,7 +229,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
             }
         }else if(FlowConstant.NODE_TYPE_CONDITIONS.equals(node.getType())) {//如果是互斥分支
             //根据条件选择一个分支
-            OaProcessNode nextNode = processHelper.switchNode(formContent, node.getBranchs());
+            OaProcessNode nextNode = processHelper.switchNode(null, formContent, node.getBranchs());
             //先追加该分支
             this.preview(nextNode, formContent, activities, map);
         }else if(FlowConstant.NODE_TYPE_CONCURRENTS.equals(node.getType())) {//如果是并行分支

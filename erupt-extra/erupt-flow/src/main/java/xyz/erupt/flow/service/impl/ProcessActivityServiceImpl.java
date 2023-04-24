@@ -90,7 +90,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
             int count = this.newActivities(
                     execution, formContent, node.getChildren(), OaProcessExecution.STATUS_WAITING);
             //根据条件选择一个分支并启动新线程
-            OaProcessNode nextNode = processHelper.switchNode(formContent, node.getBranchs());
+            OaProcessNode nextNode = processHelper.switchNode(execution, formContent, node.getBranchs());
             processExecutionService.newExecution(
                     execution.getProcessDefId(), execution.getProcessInstId(), nextNode, execution);
             return count;
