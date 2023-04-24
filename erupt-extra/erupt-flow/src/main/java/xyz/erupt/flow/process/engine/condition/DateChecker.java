@@ -1,6 +1,7 @@
 package xyz.erupt.flow.process.engine.condition;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeCondition;
@@ -10,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class DateChecker implements ConditionChecker {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -20,10 +22,12 @@ public class DateChecker implements ConditionChecker {
 
         String[] value = condition.getValue();//对照值
         if(value==null || value.length<=0) {
-            throw new RuntimeException("条件没有对照值");
+            log.error("条件没有对照值");
+            return false;
         }
         if(formValue==null) {//不能报错，因为可能是测试走流程
-            throw new RuntimeException("分支条件不能为空");
+            log.error("分支条件不能为空");
+            return false;
         }
         if("=".equals(condition.getCompare())) {
             return formValue.compareTo(dateFormat.parse(value[0]))==0;
