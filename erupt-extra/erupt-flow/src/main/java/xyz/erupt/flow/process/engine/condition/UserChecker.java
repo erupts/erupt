@@ -3,6 +3,7 @@ package xyz.erupt.flow.process.engine.condition;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
@@ -14,6 +15,7 @@ import xyz.erupt.upms.service.EruptUserService;
 import java.util.*;
 
 @Component
+@Slf4j
 public class UserChecker implements ConditionChecker {
 
     @Autowired
@@ -50,10 +52,12 @@ public class UserChecker implements ConditionChecker {
         }
         String[] value = condition.getValue();//对照值
         if(value==null || value.length<=0) {
-            throw new RuntimeException("条件没有对照值");
+            log.error("条件没有对照值");
+            return false;
         }
         if(formValues==null) {//不能报错，因为可能是测试走流程
-            throw new RuntimeException("分支条件不能为空");
+            log.error("分支条件不能为空");
+            return false;
         }
         // 判断 所选的用户 是否属于 参考值
         Iterator<String> iterator = formValues.iterator();
