@@ -17,6 +17,7 @@ import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.process.engine.condition.*;
 import xyz.erupt.flow.service.*;
 
+import java.text.ParseException;
 import java.util.*;
 
 @Component
@@ -187,7 +188,7 @@ public class ProcessHelper {
      * @param nodes
      * @return
      */
-    public OaProcessNode switchNode(JSONObject formContent, List<OaProcessNode> nodes) {
+    public OaProcessNode switchNode(OaProcessExecution execution, JSONObject formContent, List<OaProcessNode> nodes) {
         //按照顺序判断是否满足条件
         OaProcessNode defaultNode = null;
         for (OaProcessNode node : nodes) {
@@ -196,12 +197,13 @@ public class ProcessHelper {
                     if(defaultNode==null) {
                         defaultNode = node;
                     }
-                }else if(checkForGroups(formContent, node.getProps().getGroups(), node.getProps().getGroupsType())) {
+                }else if(checkForGroups(execution, formContent, node.getProps().getGroups(), node.getProps().getGroupsType())) {
                     return node;
                 }
             }catch (Exception e) {
+                e.printStackTrace();
                 log.debug("判断条件出错：" + e.getMessage());
-                break;
+                //break;
             }
         }
         //如果都不满足，走第一个默认条件
@@ -217,17 +219,17 @@ public class ProcessHelper {
      * @param groupsType
      * @return
      */
-    private boolean checkForGroups(JSONObject form, List<OaProcessNodeGroup> groups, String groupsType) {
+    private boolean checkForGroups(OaProcessExecution execution, JSONObject form, List<OaProcessNodeGroup> groups, String groupsType) {
         if("OR".equals(groupsType)) {
             for (OaProcessNodeGroup group : groups) {
-                if(checkForConditions(form, group.getConditions(), group.getGroupType())) {
+                if(checkForConditions(execution, form, group.getConditions(), group.getGroupType())) {
                     return true;//任何一个条件满足即可
                 }
             }
             return false;
         }else {//必须满足所有条件
             for (OaProcessNodeGroup group : groups) {
-                if(!checkForConditions(form, group.getConditions(), group.getGroupType())) {
+                if(!checkForConditions(execution, form, group.getConditions(), group.getGroupType())) {
                     return false;//任何一个不满足就返回false
                 }
             }
@@ -235,17 +237,17 @@ public class ProcessHelper {
         }
     }
 
-    private boolean checkForConditions(JSONObject form, List<OaProcessNodeCondition> conditions, String groupType) {
+    private boolean checkForConditions(OaProcessExecution execution, JSONObject form, List<OaProcessNodeCondition> conditions, String groupType) {
         if("OR".equals(groupType)) {//任何一个条件满足即可
             for (OaProcessNodeCondition condition : conditions) {
-                if(checkForCondition(form, condition)) {
+                if(checkForCondition(execution, form, condition)) {
                     return true;
                 }
             }
             return false;
         }else {//必须满足所有条件
             for (OaProcessNodeCondition condition : conditions) {
-                if(!checkForCondition(form, condition)) {
+                if(!checkForCondition(execution, form, condition)) {
                     return false;
                 }
             }
@@ -253,12 +255,17 @@ public class ProcessHelper {
         }
     }
 
-    private boolean checkForCondition(JSONObject form, OaProcessNodeCondition condition) {
+    private boolean checkForCondition(OaProcessExecution execution, JSONObject form, OaProcessNodeCondition condition) {
         ConditionChecker conditionChecker = this.checkerMap.get(condition.getValueType());
         if(conditionChecker==null) {//数值类型
             throw new RuntimeException("不支持此类条件判断"+condition.getValueType());
         }
-        return conditionChecker.check(form, condition);
+        try {
+            return conditionChecker.check(execution, form, condition);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
