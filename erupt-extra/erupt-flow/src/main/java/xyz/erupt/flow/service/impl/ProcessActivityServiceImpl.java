@@ -74,7 +74,9 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
     @Transactional(rollbackFor = Exception.class)
     public int newActivities(OaProcessExecution execution, JSONObject formContent, OaProcessNode node, String status) {
         if(node == null || node.getId() == null) {//如果当前节点为空，表示当前线程已结束
-            processExecutionService.finish(execution);//调用线程结束方法
+            if(OaProcessExecution.STATUS_RUNNING.equals(status)) {
+                processExecutionService.finish(execution);//调用线程结束方法
+            }
             return 0;
         }
         if(FlowConstant.NODE_TYPE_ROOT.equals(node.getType())

@@ -73,7 +73,6 @@ export default {
   },
   computed: {
     content() {
-      console.log(this.config.props)
       if(this.config.props.isDefault) return '默认条件';
       const groups = this.config.props.groups
       let confitions = []
@@ -84,7 +83,16 @@ export default {
           switch (subCondition.valueType) {
             case ValueType.dept:
             case ValueType.user:
-              subConditionStr = `${subCondition.title}属于[${String(subCondition.value.map(u => u.name)).replaceAll(',', '. ')}]之一`
+              if(subCondition.compare == 'user') {
+                subConditionStr = `${subCondition.title}属于[${String(subCondition.value.map(u => u.name)).replaceAll(',', '. ')}]之一`
+              }else if(subCondition.compare == 'dept'){
+                subConditionStr = `${subCondition.title}部门属于[${String(subCondition.value.map(u => u.name)).replaceAll(',', '. ')}]之一`
+              }else if(subCondition.compare == 'role'){
+                subConditionStr = `${subCondition.title}角色属于[${String(subCondition.value.map(u => u.name)).replaceAll(',', '. ')}]之一`
+              }else {
+                console.log(subCondition);
+                subConditionStr = '未知'
+              }
               break;
             case ValueType.number:
             case ValueType.string:
