@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeCondition;
+import xyz.erupt.flow.repository.EruptOrgRepository;
+import xyz.erupt.upms.model.EruptOrg;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,14 +18,18 @@ import java.util.Set;
 @Component
 @Slf4j
 public class DeptChecker implements ConditionChecker {
+
+    @Autowired
+    private EruptOrgRepository eruptOrgRepository;
+
     @Override
     public boolean check(OaProcessExecution execution, JSONObject form, OaProcessNodeCondition condition) {
         /** 获取选中的值 */
-        Set<String> formValues = new HashSet<>();
+        Set<Long> formValues = new HashSet<>();
         JSONArray jsonArray = form.getJSONArray(condition.getId());
         if(jsonArray!=null && jsonArray.size()>0) {
             for (int i = 0; i < jsonArray.size(); i++) {
-                formValues.add(jsonArray.getJSONObject(i).getString("id"));
+                formValues.add(jsonArray.getJSONObject(i).getLongValue("id"));
             }
         }else {
             return false;//如果没有选值，则一定不符合要求
@@ -46,17 +53,20 @@ public class DeptChecker implements ConditionChecker {
         return false;
     }
 
-    public boolean compareForDept(Set<String> formValues, String[] value) {
+    public boolean compareForDept(Set<Long> formValues, String[] value) {
         if(formValues==null || formValues.size()<=0) {
             return false;
         }
-        Iterator<String> iterator = formValues.iterator();
+        Iterator<Long> iterator = formValues.iterator();
         while(iterator.hasNext()) {
-            String next = iterator.next();//取出所选用户
+            Long next = iterator.next();//取出所选用户
             boolean found = false;
             for (int i = 0; i < value.length; i++) {//循环匹配参考值
                 //部门id是long型的
-                if(next.equals(JSON.parseObject(value[i]).getString("id"))) {
+                if(next.equals(JSON.parseObject(value[i]).getLongValue("id"))) {
+                    found = true;
+                    break;
+                }else if(instanceOfDept(next, JSON.parseObject(value[i]).getLongValue("id"))) {
                     found = true;
                     break;
                 }
@@ -66,5 +76,19 @@ public class DeptChecker implements ConditionChecker {
             }
         }
         return true;
+    }
+
+    /**
+     * 判断A部门的所有上级中有没有B部门
+     * @return
+     */
+    public boolean instanceOfDept(Long deptId, Long parentId) {
+        EruptOrg dept = eruptOrgRepository.findById(deptId).get();
+        while((dept = dept.getParentOrg())!=null) {
+            if(parentId.equals(dept.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
