@@ -17,6 +17,7 @@ import xyz.erupt.upms.service.EruptUserService;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -29,6 +30,8 @@ public class UserChecker implements ConditionChecker {
     private EruptUserService eruptUserService;
     @Autowired
     private EruptUserRepository eruptUserRepository;
+    @Autowired
+    private DeptChecker deptChecker;
 
     /**
      * 所选用户分为2种，发起人，或者人员选择字段
@@ -105,14 +108,19 @@ public class UserChecker implements ConditionChecker {
         if(formValues==null || formValues.size()<=0) {
             return false;
         }
-        Iterator<String> iterator = formValues.iterator();
-        while(iterator.hasNext()) {
-            String next = iterator.next();//取出所选用户
-            EruptUser account = eruptUserRepository.findByAccount(next);//查询用户信息
+        List<EruptUser> users = eruptUserRepository.findByAccountIn(formValues);
+        for (EruptUser user : users) {
+            if(user.getEruptOrg()==null) {//任意用户没有部门则返回false
+                return false;
+            }
+            Long deptId = user.getEruptOrg().getId();
             boolean found = false;
             for (int i = 0; i < value.length; i++) {//循环匹配参考值
                 //部门id是long型的
-                if(account.getEruptOrg()!=null && account.getEruptOrg().getId().equals(JSON.parseObject(value[i]).getLong("id"))) {
+                if(deptId.equals(JSON.parseObject(value[i]).getLongValue("id"))) {
+                    found = true;
+                    break;
+                }else if(deptChecker.instanceOfDept(deptId, JSON.parseObject(value[i]).getLongValue("id"))) {
                     found = true;
                     break;
                 }
