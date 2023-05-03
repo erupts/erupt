@@ -1,8 +1,12 @@
 package xyz.erupt.core.util;
 
 import lombok.SneakyThrows;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -29,11 +33,20 @@ public class DateUtil {
     }
 
     @SneakyThrows
-    public static Date getDate(String str) {
-        if (str.length() == 10) {
-            return new SimpleDateFormat(DATE).parse(str);
+    public static Object getDate(Class<?> targetDateType, String str) {
+        if (targetDateType == Date.class) {
+            if (str.length() == 10) {
+                return new SimpleDateFormat(DATE).parse(str);
+            } else {
+                return new SimpleDateFormat(DATE_TIME).parse(str);
+            }
+        } else if (targetDateType == LocalDate.class) {
+            return LocalDate.parse(str, DateTimeFormatter.ofPattern(DATE));
+        } else if (targetDateType == LocalDateTime.class) {
+            return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(DATE_TIME));
         } else {
-            return new SimpleDateFormat(DATE_TIME).parse(str);
+            throw new EruptWebApiRuntimeException("Unsupported date type");
         }
     }
+
 }
