@@ -59,7 +59,7 @@ public class EruptJobDataProxy implements DataProxy<EruptJob>, OperationHandler<
     @Override
     public String exec(List<EruptJob> eruptJob, Void param, String[] operationParam) {
         try {
-            eruptJobService.triggerJob(eruptJob.get(0));
+            for (EruptJob job : eruptJob) eruptJobService.triggerJob(job);
             return null;
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException(e.getMessage());

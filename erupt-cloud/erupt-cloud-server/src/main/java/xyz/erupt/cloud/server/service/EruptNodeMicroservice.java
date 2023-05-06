@@ -1,6 +1,7 @@
 package xyz.erupt.cloud.server.service;
 
 import org.springframework.stereotype.Service;
+import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
@@ -29,6 +30,9 @@ public class EruptNodeMicroservice {
     @Resource
     private NodeWorker nodeWorker;
 
+    @Resource
+    private EruptCloudServerProp eruptCloudServerProp;
+
     public CloudNode findNodeByAppName(String nodeName, String accessToken) {
         CloudNode cloudNode = eruptDao.queryEntity(CloudNode.class, CloudNode.NODE_NAME + " = :" + CloudNode.NODE_NAME, new HashMap<String, Object>() {{
             this.put(CloudNode.NODE_NAME, nodeName);
@@ -36,8 +40,10 @@ public class EruptNodeMicroservice {
         if (null == cloudNode) {
             throw new RuntimeException("NodeName: '" + nodeName + "' not found");
         }
-        if (!cloudNode.getAccessToken().equals(accessToken)) {
-            throw new RuntimeException(cloudNode.getNodeName() + " Access token invalid");
+        if (eruptCloudServerProp.isValidateAccessToken()) {
+            if (!cloudNode.getAccessToken().equals(accessToken)) {
+                throw new RuntimeException(cloudNode.getNodeName() + " Access token invalid");
+            }
         }
         return cloudNode;
     }

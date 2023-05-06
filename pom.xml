@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.11.2</version>
+    <version>1.11.5</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>1.8</java.version>
-        <spring.boot.version>2.7.5</spring.boot.version>
+        <spring.boot.version>2.7.10</spring.boot.version>
     </properties>
 
     <!--
@@ -57,6 +57,9 @@
         <module>erupt-cloud/erupt-cloud-server</module> <!-- 主服务节点 -->
         <module>erupt-cloud/erupt-cloud-node</module> <!-- 云node节点 -->
         <module>erupt-cloud/erupt-cloud-node-jpa</module>  <!-- 云node节点（聚合jpa） -->
+
+        <!--使用H2作为数据源的示例项目-->
+        <module>erupt-sample</module>
     </modules>
 
     <dependencyManagement>
