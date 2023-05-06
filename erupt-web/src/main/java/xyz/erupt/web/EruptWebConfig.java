@@ -1,25 +1,40 @@
 package xyz.erupt.web;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Controller;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author YuePeng
  * date 2021/3/28 18:51
  */
 @Configuration
-@Controller
+@RestController
 public class EruptWebConfig {
 
-    @GetMapping("/")
+    private String passport;
+
+    public EruptWebConfig() {
+        try (InputStream input = EruptWebConfig.class.getClassLoader().getResourceAsStream("public/index.html")) {
+            if (null == input) throw new RuntimeException("erupt-web resources not found");
+            this.passport = StreamUtils.copyToString(input, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping(value = {"/", "/index.html"}, produces = {"text/html;charset=utf-8"})
     public String index(HttpServletResponse response) {
         response.setHeader("Expires", "0");
         response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        return "forward:index.html?v=" + this.getClass().hashCode();
+        response.setHeader("Cache-Control", "no-cache, no-store");
+        return passport;
     }
 
 }

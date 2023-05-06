@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.constant.AnnotationValue;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -100,9 +101,17 @@ public class EruptExcelService {
                             String str = it.toString();
                             if (edit.type() == EditType.BOOLEAN || view.type() == ViewType.BOOLEAN) {
                                 if (edit.boolType().trueText().equals(str)) {
-                                    cell.setCellValue(edit.boolType().trueText());
+                                    if (AnnotationValue.Y.equals(edit.boolType().trueText())) {
+                                        cell.setCellValue("是");
+                                    } else {
+                                        cell.setCellValue(edit.boolType().trueText());
+                                    }
                                 } else if (edit.boolType().falseText().equals(str)) {
-                                    cell.setCellValue(edit.boolType().falseText());
+                                    if (AnnotationValue.N.equals(edit.boolType().falseText())) {
+                                        cell.setCellValue("否");
+                                    } else {
+                                        cell.setCellValue(edit.boolType().falseText());
+                                    }
                                 }
                             } else {
                                 cell.setCellValue(str);

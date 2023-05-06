@@ -144,7 +144,9 @@ public class EruptJpaUtils {
             }
         }
         for (Filter filter : eruptModel.getErupt().filter()) {
-            hql.append(AND).append(filter.value());
+            if (null != filter.value()) {
+                hql.append(AND).append(filter.value());
+            }
         }
         Optional.ofNullable(customCondition).ifPresent(it -> it.forEach(str -> {
             if (StringUtils.isNotBlank(str)) hql.append(EruptJpaUtils.AND).append(str);

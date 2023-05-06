@@ -22,6 +22,7 @@ public class EruptApiPageModel extends EruptApiModel {
     /**
      * 为分页查询返回结果
      * 必须是mybatis分页
+     *
      * @param list
      * @param <T>
      * @return
@@ -33,7 +34,7 @@ public class EruptApiPageModel extends EruptApiModel {
             BeanMap beanMap = BeanMap.create(t);
             for (Object object : beanMap.entrySet()) {
                 if (object instanceof Map.Entry) {
-                    Map.Entry<String , Object> entry = (Map.Entry<String, Object>)object ;
+                    Map.Entry<String, Object> entry = (Map.Entry<String, Object>) object;
                     String key = entry.getKey();
                     map.put(key, beanMap.get(key));
                 }
