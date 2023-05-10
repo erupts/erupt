@@ -9,7 +9,7 @@
 
     </div>
     <div v-else>
-      <el-input-number style="width: 100%;" :min="0" controls-position="right" :precision="precision" size="medium" :disabled="formDisable" clearable v-model="_value" :placeholder="placeholder"/>
+      <el-input-number style="width: 100%;" :min="min || 0" :max="max" controls-position="right" :precision="precision" size="medium" :disabled="formDisable" clearable v-model="_value" :placeholder="placeholder"/>
       <div v-show="showChinese">
         <span>大写：</span>
         <span class="chinese">{{chinese}}</span>
