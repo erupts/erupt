@@ -108,11 +108,6 @@ public class OaProcessInstanceHistory {
     @Column(columnDefinition = "json")//json类型
     private String formItems;
 
-    @Transient//标识虚拟列
-    @TableField(exist = false)
-    @EruptField(views = @View(title = "详情", type = ViewType.LINK))
-    private String detailLink;
-
     @TableField(exist = false)
     @Transient
     private String tag;

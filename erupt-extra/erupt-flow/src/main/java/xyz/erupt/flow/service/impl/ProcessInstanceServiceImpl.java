@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.*;
-import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.mapper.OaProcessInstanceMapper;
 import xyz.erupt.flow.process.listener.AfterCreateInstanceListener;
@@ -47,6 +45,7 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
     private TaskOperationService taskOperationService;
     @Autowired
     private TaskUserLinkService taskUserLinkService;
+    @Lazy
     @Autowired
     private TaskService taskService;
 
