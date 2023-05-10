@@ -122,7 +122,7 @@ export default {
 
 <style lang="less" scoped>
 .workspace {
-  padding: 50px 20px;
+  padding: 18px;
   position: relative;
 
   .back {
@@ -156,13 +156,13 @@ export default {
   }
 
   .form-item {
-    padding: 15px 10px;
+    padding: 8px;
     width: 200px;
     cursor: pointer;
     border: 1px solid #d9dada;
     border-radius: 5px;
     float: left;
-    margin: 5px 10px;
+    margin-right: 8px;
     height: 37px;
 
     &:hover {
