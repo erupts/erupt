@@ -32,4 +32,20 @@ export default{
       }
     }
   },
+  methods: {
+    _opValue(op) {
+      if(typeof(op)==='object') {
+        return op.value;
+      }else {
+        return op;
+      }
+    },
+    _opLabel(op) {
+      if(typeof(op)==='object') {
+        return op.label;
+      }else {
+        return op;
+      }
+    }
+  }
 }

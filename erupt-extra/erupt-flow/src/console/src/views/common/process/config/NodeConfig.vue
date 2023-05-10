@@ -8,7 +8,7 @@
         <form-authority-config/>
       </el-tab-pane>
     </el-tabs>
-    <component @assignedTypeChange="assignedTypeChange" :is="(selectNode.type||'').toLowerCase()" v-else :config="selectNode.props"/>
+    <component :is="(selectNode.type||'').toLowerCase()" v-else :config="selectNode.props"/>
   </div>
 </template>
 
@@ -56,10 +56,6 @@ export default {
           return null;
       }
     },
-    //审批人类型变更
-    assignedTypeChange(prop){
-      console.log(prop);
-    }
   },
   methods: {}
 }

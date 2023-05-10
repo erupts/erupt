@@ -2,7 +2,6 @@ package xyz.erupt.flow.bean.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -119,11 +118,6 @@ public class OaProcessInstance {
 
     @Column(columnDefinition = "json")//json类型
     private String process;
-
-    @Transient//标识虚拟列
-    @TableField(exist = false)
-    @EruptField(views = @View(title = "详情", type = ViewType.LINK))
-    private String detailLink;
 
     public JSONObject getFormContent() {
         return JSON.parseObject(this.formItems);

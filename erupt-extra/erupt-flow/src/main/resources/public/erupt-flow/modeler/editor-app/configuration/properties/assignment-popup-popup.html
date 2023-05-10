@@ -1,0 +1,53 @@
+<div class="modal" ng-controller="KisBpmChoseAssignmentCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
+                <h2 translate>PROPERTY.ASSIGNMENT.TITLE</h2>
+            </div>
+            <div class="modal-body">
+            	 <div class="row row-no-gutter">
+				      <div class="col-xs-3">
+							<div class="stencils" id="z_tree">
+				                    <div ng-repeat="role in roles">
+				                        <ul class="stencil-group"  ng-class="{collapsed: !group.expanded, 'first': $first}">
+											<li>
+				                            	<span ng-click="getAllAccountByRole(role.id)" ng-value="{{role.id}}">
+											        {{role.name}}
+											    </span>
+				                            </li>
+				                        </ul>
+				                    </div>
+						     </div>
+					</div>
+					<div class="col-xs-8">
+					    <table class="table table-bordered table-condensed">
+					    	<thead>
+					    		<tr>
+					    			<th><input ng-if="choseAssignmentFlag=='assignees'" type="checkbox" ng-click="selectAll($event)"></th>
+					    			<th>工号</th>
+					    			<th>姓名</th>
+					    		</tr>
+					    	</thead>
+					    	<tbody>
+					    		<tr ng-repeat="account in accounts">
+					    			<td>
+					    				<input ng-if="choseAssignmentFlag=='assignee'" type="radio" ng-model="formData.assignee" name="accountId" ng-value="{{account.id}}">
+										<input ng-if="choseAssignmentFlag=='assignees'" type="checkbox" ng-model="account.selected" ne-true-value="{{account.id}}" 
+												ng-false-value="false">
+					    			</td>
+					    			<td>{{account.code}}</td>
+					    			<td ng-model="formData.assignee.name" ng-value="{{account.name}}">{{account.name}}</td>
+					    		</tr>
+					    	</tbody>
+					    </table>
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="close()"  translate>ACTION.CANCEL</button>
+                <button ng-click="save()"  translate>ACTION.SAVE</button>
+            </div>
+        </div>
+    </div>
+</div>

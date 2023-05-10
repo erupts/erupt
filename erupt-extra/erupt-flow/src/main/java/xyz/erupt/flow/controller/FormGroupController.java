@@ -52,7 +52,7 @@ public class FormGroupController {
      * @return 排序结果
      */
     @PutMapping("/admin/form/group/sort")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel formGroupsSort(@RequestBody List<Long> groups){
         formGroupService.formGroupsSort(groups);
         return EruptApiModel.successApi();
@@ -65,7 +65,7 @@ public class FormGroupController {
      * @return 修改结果
      */
     @PutMapping("/admin/form/group")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel updateFormGroupName(@RequestParam Long id,
                                        @RequestParam String name){
         formGroupService.updateFormGroupName(id, name);
@@ -78,7 +78,7 @@ public class FormGroupController {
      * @return 添加结果
      */
     @PostMapping("/admin/form/group")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel createFormGroup(@RequestParam String groupName){
         formGroupService.createFormGroup(groupName);
         return EruptApiModel.successApi();
@@ -90,7 +90,7 @@ public class FormGroupController {
      * @return 删除结果
      */
     @DeleteMapping("/admin/form/group/{groupId}")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel deleteFormGroup(@PathVariable Long groupId){
         formGroupService.deleteFormGroup(groupId);
         return EruptApiModel.successApi();
