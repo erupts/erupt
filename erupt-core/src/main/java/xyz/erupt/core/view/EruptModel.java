@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
-public final class EruptModel implements Cloneable {
+public class EruptModel implements Cloneable {
 
     private transient Class<?> clazz;
 
