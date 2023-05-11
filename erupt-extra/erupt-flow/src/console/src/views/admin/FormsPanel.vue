@@ -273,10 +273,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-body {
-  background: #ffffff !important;
-}
-
 .undrag {
   background: #ebecee !important;
 }
@@ -285,8 +281,6 @@ body {
   padding: 50px 100px;
   min-width: 500px;
   background: #ffffff;
-  height: 100vh;
-
   /deep/ .from-title {
     div {
       float: right;
@@ -296,8 +290,6 @@ body {
       }
     }
   }
-
-  //height: 100vh;
 }
 
 .choose {

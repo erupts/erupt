@@ -12,7 +12,7 @@
         <el-collapse v-model="actives">
           <el-collapse-item v-for="(group, index) in formList.list" :key="index"
                             :title="group.groupName" :name="group.groupName"
-                            v-show="group.groupId >= 0">
+                            v-show="group.groupId >= 0 && group.processDefs.length > 0">
             <div v-for="(item, index) in group.processDefs" :key="index" class="form-item" @click="enterItem(item)">
               <i :class="item.logo.icon" :style="'background: '+item.logo.background"></i>
               <div>
@@ -93,7 +93,7 @@ export default {
       this.selectForm = item
       this.openItemDl = true
     },
-    submitForm(){
+    submitForm() {
       this.$refs.processForm.validate(valid => {
         if (valid) {
           startByFormId(this.selectForm.id, this.$refs.processForm.formData).then(rsp => {
@@ -139,15 +139,11 @@ export default {
   }
 
   /deep/ .el-collapse {
-    padding: 0 15px;
+    padding: 12px 8px;
     background: #ffffff;
 
     .el-collapse-item__header {
       font-size: medium;
-    }
-
-    .el-collapse-item__wrap {
-      padding: 20px 10px;
     }
 
     .el-tabs--border-card .el-tabs__content {
@@ -163,6 +159,7 @@ export default {
     border-radius: 5px;
     float: left;
     margin-right: 8px;
+    margin-bottom: 8px;
     height: 37px;
 
     &:hover {
@@ -188,7 +185,7 @@ export default {
       height: 35px;
       line-height: 35px;
 
-      div{
+      div {
         display: inline-block;
         margin-left: 10px;
         width: 100px;
@@ -219,6 +216,7 @@ export default {
     margin: 5px 0px;
     padding: 5px;
   }
+
   .ic {
     padding: 8px;
     border-radius: 8px;
@@ -229,6 +227,7 @@ export default {
     height: 20px;
     line-height: 20px;
   }
+
   .taskCell {
     height: 35px;
     line-height: 35px;
