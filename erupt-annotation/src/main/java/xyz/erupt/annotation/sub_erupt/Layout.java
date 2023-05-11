@@ -8,10 +8,14 @@ public @interface Layout {
     //表格宽度，为0则自动计算
     int tableWidth() default 0;
 
+    int tableLeftFixed() default 0;
+
+    int tableRightFixed() default 0;
+
 
     enum FormSize {
         DEFAULT,
-        SMALL
+        FULL_LINE //整行
     }
 
 }
