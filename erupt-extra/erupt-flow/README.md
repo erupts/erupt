@@ -2,17 +2,12 @@
 
 更人性化的自定义流程，可自定义表单，多种审批模式。
 
-前端来自于另一个开源项目 <https://willianfu.github.io/wflow/>，感谢大佬。
-
-基于vue+elemntui开发，风格参考于钉钉的审批。
-
-该作者也有收费版本，有全部的前后端代码以及更强大的功能。
-
-本项目只是完成了流程的基础功能，并且还在开发中。
+前端来自于另一个开源项目 <https://willianfu.github.io/wflow/>，感谢大佬。前端基于vue+elemntui开发，风格参考于钉钉的审批。
 
 后端代码是基于erupt框架的自研流程引擎，设计思路基本上照搬acvititi。
 
-更加轻量化，突出核心功能，而淡化边缘功能。更方便地集成到项目中。
+- 演示地址：http://119.23.65.238:8080/
+- 账号密码：erupt/erupt123（请勿修改密码！）
 
 ## 特点
 
@@ -25,17 +20,18 @@
 
 流程可以分支、并行、多任务。
 丰富的任务分配类型：用户、角色、多级连续审批等。
-支持流程驳回、退回、撤销、转办、终止等。
+支持流程驳回、转办、终止等。
 
-- **方便**
+- **便捷**
 
 基于erupt的插件，但不需要改任何代码，引入即用（甚至不需要建表）。
 如需要使用自己的用户体系，实现几个简单的接口即可。
 
 - **扩展**
 
-动态表单虽然方便，毕竟难以应对复杂多变的需求。
-你也可以使用本流程+自研表单。
+可以对任何环节增加监听，以实现自己的逻辑。
+
+## 截图
 
 ![](./img/QQ截图20230308172610.png "")
 
@@ -71,34 +67,36 @@
 
 **2. 分配菜单**
 
-默认会添加2个菜单
+默认会添加2个菜单：
 
-后台管理: 绘制流程图
-
-工作区: 发起、处理工单
+- 后台管理: 绘制流程图
+- 工作区: 发起、处理工单
 
 你也可以遵循erupt风格，创建任何你需要的菜单。`xyz.erupt.flow.bean.entity` 包下的类都可以。
 
 ## 项目结构
 
-项目还在开发中，你可以了解一下项目的基本情况，继续你的开发。
-
-目录结构如下，前后端是一起的：
+目录结构如下，前后端一体：
 
 ````
 src   
- ├── console                                   // 前端代码          
- │    ├── api                                  // 调用后端接口
+ ├── console                                  // 前端代码          
+ │    ├── api                                 // 调用后端接口
  │    └── views
  │         ├── common                         // 通用工具
  │         ├── admin                          // 管理端，流程图绘制，动态表单等
  │         └── workspace                      // 用户端，发起工单，审批工单等
  │
- ├── xyz.erupt.flow                            // 后端代码
- │       ├── bean                              // 核心模块
- │       ├── constant                          // 权限范围
+ ├── xyz.erupt.flow                           // 后端代码
+ │       ├── bean                              
+ │       ├── conf                             // 配置类，如：注册监听器链
+ │       ├── constant                          
  │       ├── controller
- │       ├── handler                           // erupt的按钮处理
+ │       ├── process                          // 流程引擎核心代码
+ │       │     ├─ builder                     // 
+ │       │     ├─ engine                     
+ │       │     ├─ listener                     
+ │       │     └─ userlink                     
  │       ├── mapper
  │       ├── service
  │       ├── web                               // 对一些erupt的类进行增强
@@ -117,10 +115,12 @@ src
 
 ## 核心概念
 
+了解这些概念帮助你快速上手。
+
 - **节点 Node**
 
-流程图中的元素，绘制好的流程图，会以节点集合的形式（json格式）保存在数据库。
-一个节点描述工单流转到此处时，应该做什么。
+流程图中的基本元素，一个节点描述工单流转到此处时应该做什么。
+流程图会以节点集合的形式（json格式）保存在数据库。
 
 ![](./img/node.png "")
 
@@ -151,9 +151,9 @@ src
 
 - **流程实例 ProcessInstance**
 
-在某个流程定义下，发起业务，会产生一个流程实例。一个流程定义可以产生多个流程实例。
+在某个流程定义下发起业务，会产生一个流程实例。一个流程定义可以产生多个流程实例。
 
-一个流程实例，也叫做一个工单。
+一个流程实例也叫做一个工单。
 
 > 流程定义与流程实例的关系，就像“类”与“对象”的关系。
 
@@ -162,11 +162,11 @@ src
 
 - **线程 Execution**
 
-流程实例发起后会进行流转，通常是单线程流转，即一个节点处理完再处理下一个。
+流程实例发起后会根据流程图进行流转，通常是单线程流转，即一个节点处理完再处理下一个。
 
 当流程图中有分支时，会产生子线程，多个子线程可能会并行，但是此时主线程必须等待。
 
-子线程结束后并入主线程。
+所有子线程结束后并入主线程，主线程继续。
 
 ![](./img/execution.jpg "线程")
 
@@ -198,11 +198,75 @@ src
 ![](./img/ru.png "运行时表") ![](./img/hi.png "历史表")
 
 
-## 使用自己的用户体系
+## 修改用户体系
 
-实现 ``xyz.erupt.flow.process.userlink.UserLinkService`` 接口，并保证你的优先级`priority`大于0即可。
+默认使用erupt的用户体系，有一些预设的地方，如：假定部门排序第一的人即是本部门管理员。这可能不符合你的需求。
 
-> 0是默认的用户体系实现，使用erupt-upms的用户体系。
+你可以实现 ``xyz.erupt.flow.process.userlink.UserLinkService`` 接口，来改造用户体系。
+但这要实现很多方法，继承默认的用户service `xyz.erupt.flow.process.userlink.impl.DefaultUserLinkServiceImpl` 是一个更好的选择。
+
+```java
+import org.springframework.stereotype.Service;
+import xyz.erupt.flow.bean.vo.OrgTreeVo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class CustomUserLinkServiceImpl extends DefaultUserLinkServiceImpl {
+
+    /**
+     * 自定义的用户体系service要重写优先级，值要大于0
+     * @return
+     */
+    @Override
+    public int priority() {
+        return 1;
+    }
+
+
+    /**
+     * 针对某些方法进行改写
+     * 返回指定部门的主管
+     * @return
+     */
+    private List<OrgTreeVo> getLeadersByDeptId(Long deptId) {
+        //直接没有部门主管
+        return new ArrayList<>(0);
+    }
+}
+
+```
+
+
+## 添加监听
+
+在各个实例、线程、活动、任务的启动、激活等时间点，程序会按顺序调用所有的监听器。你也可以实现适当的监听器，来扩展能力。
+
+```java
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import xyz.erupt.flow.bean.entity.OaTask;
+import xyz.erupt.flow.process.listener.AfterCreateTaskListener;
+
+/**
+ * 监听器需要注册到spring
+ */
+@Component
+@Slf4j
+public class ConsoleListener implements AfterCreateTaskListener {
+    @Override
+    public void execute(OaTask task) {
+        log.info("==> 有新任务{}", task.getId());
+    }
+}
+
+```
+
+可用的监听器都在`xyz.erupt.flow.process.listener`包下。
+
+![](./img/QQ截图20230407173606.png "监听器")
 
 ## 修改前端代码
 
@@ -210,6 +274,6 @@ src
 
 1. 修改前端代码
 2. build前端 `vue-cli-service build`，产生dist目录
-3. build后端，将dist拷贝到最终的jar包中
+3. build后端，自动将dist拷贝到最终的jar包中
 
 重启程序，就可以看到修改之后的前端了。

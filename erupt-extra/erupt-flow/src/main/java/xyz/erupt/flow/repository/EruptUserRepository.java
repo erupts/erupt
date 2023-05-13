@@ -50,4 +50,9 @@ public interface EruptUserRepository extends JpaRepository<EruptUser, Long> {
      * @return
      */
     EruptUser findByAccount(String userId);
+
+    /**
+     * 根据账号集合查询
+     */
+    List<EruptUser> findByAccountIn(Collection<String> accounts);
 }

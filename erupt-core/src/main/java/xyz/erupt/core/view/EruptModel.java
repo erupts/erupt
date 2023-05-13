@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
-public final class EruptModel implements Cloneable {
+public class EruptModel implements Cloneable {
 
     private transient Class<?> clazz;
 
@@ -45,7 +45,7 @@ public final class EruptModel implements Cloneable {
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
-        this.erupt = eruptAnnotationProxy.newProxy(this.getErupt(), null);
+        this.erupt = eruptAnnotationProxy.newProxy(this.getErupt());
         this.eruptName = eruptClazz.getSimpleName();
         DataProxyInvoke.invoke(this, it -> {
             try {

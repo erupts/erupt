@@ -12,6 +12,8 @@ public class EngineConst {
 
     public static final String INJECT_BASE = "base";
 
-    public static final String INJECT_ROWS = "rows"; //行数据列表
+    public static final String INJECT_ROWS = "rows"; //多行数据值
+
+    public static final String INJECT_ROW = "row"; //单行数据值
 
 }

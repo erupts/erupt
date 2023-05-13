@@ -73,6 +73,7 @@ export default {
   },
   computed: {
     content() {
+      if(this.config.props.isDefault) return '默认条件';
       const groups = this.config.props.groups
       let confitions = []
       groups.forEach(group => {
@@ -82,7 +83,16 @@ export default {
           switch (subCondition.valueType) {
             case ValueType.dept:
             case ValueType.user:
-              subConditionStr = `${subCondition.title}属于[${String(subCondition.value.map(u => u.name)).replaceAll(',', '. ')}]之一`
+              if(subCondition.compare == 'user') {
+                subConditionStr = `${subCondition.title}属于[${String(subCondition.value.map(u => u.name)).replaceAll(',', '. ')}]之一`
+              }else if(subCondition.compare == 'dept'){
+                subConditionStr = `${subCondition.title}部门属于[${String(subCondition.value.map(u => u.name)).replaceAll(',', '. ')}]之一`
+              }else if(subCondition.compare == 'role'){
+                subConditionStr = `${subCondition.title}角色属于[${String(subCondition.value.map(u => u.name)).replaceAll(',', '. ')}]之一`
+              }else {
+                console.log(subCondition);
+                subConditionStr = '未知'
+              }
               break;
             case ValueType.number:
             case ValueType.string:
@@ -99,7 +109,8 @@ export default {
         confitions.push(subConditions.length > 1 ? `(${subConditionsStr})` : subConditionsStr)
       })
       //构建最终描述
-      return String(confitions).replaceAll(',', (this.config.props.groupsType === 'AND' ? ' 且 ' : ' 或 '))
+      let str = String(confitions).replaceAll(',', (this.config.props.groupsType === 'AND' ? ' 且 ' : ' 或 '));
+      return str;
     }
   },
   methods: {
@@ -129,6 +140,9 @@ export default {
     //校验数据配置的合法性
     validate(err) {
       const props = this.config.props
+      if(props.isDefault) {//默认条件无需设置
+        return true;
+      }
       if (props.groups.length <= 0){
         this.showError = true
         this.errorInfo = '请设置分支条件'

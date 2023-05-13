@@ -1,6 +1,7 @@
 package xyz.erupt.tpl.controller;
 
 
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
@@ -44,10 +45,12 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
 
     static final String TPL = "/tpl";
 
+    private static final String HTML_MIME_TYPE = "text/html;charset=utf-8";
+
     @Resource
     private EruptTplService eruptTplService;
 
-    @GetMapping(value = "/**", produces = {"text/html;charset=utf-8"})
+    @GetMapping(value = "/**", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU, verifyHandler = EruptTplController.class,
             verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void eruptTplPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -73,18 +76,18 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
         return request.getRequestURI().split(ERUPT_API + EruptTplController.TPL + "/")[1];
     }
 
-    @GetMapping(value = "/html-field/{erupt}/{field}", produces = {"text/html;charset=UTF-8"})
+    @GetMapping(value = "/html-field/{erupt}/{field}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.MENU, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void getEruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field, HttpServletResponse response) {
+    public void eruptFieldHtml(@PathVariable("erupt") String eruptName, @PathVariable("field") String field, HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         Tpl tpl = eruptModel.getEruptFieldMap().get(field).getEruptField().edit().tplType();
         eruptTplService.tplRender(tpl, null, response);
     }
 
-    @GetMapping(value = "/operation_tpl/{erupt}/{code}", produces = {"text/html;charset=utf-8"})
+    @GetMapping(value = "/operation_tpl/{erupt}/{code}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void getOperationTpl(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
+    public void operationTpl(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
                                 @RequestParam(value = "ids", required = false) String[] ids, HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         RowOperation operation = Arrays.stream(eruptModel.getErupt().rowOperation()).filter(it ->
@@ -99,4 +102,15 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
                 .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id))).collect(Collectors.toList()));
         eruptTplService.tplRender(operation.tpl(), map, response);
     }
+
+    @GetMapping(value = "/view_tpl/{erupt}/{field}", produces = HTML_MIME_TYPE)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public void viewTpl(@PathVariable("erupt") String eruptName, @PathVariable("field") String field, @RequestParam JsonObject row, HttpServletResponse response) {
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        Tpl tpl = eruptModel.getEruptFieldMap().get(field).getEruptField().views()[0].tpl();
+        Map<String, Object> map = new HashMap<>();
+        map.put(EngineConst.INJECT_ROW, row);
+        eruptTplService.tplRender(tpl, map, response);
+    }
+
 }

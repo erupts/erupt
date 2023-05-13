@@ -3,9 +3,7 @@
     <el-form label-position="top" label-width="90px">
       <el-form-item label="⚙ 选择审批人" prop="text" class="user-type">
         <el-radio-group v-model="nodeProps.assignedType">
-          <el-radio v-for="t in approvalTypes" :label="t.type" :key="t.type"
-                    @input="assignedTypeChange(t)"
-          >{{ t.name }}</el-radio>
+          <el-radio v-for="t in approvalTypes" :label="t.type" :key="t.type">{{ t.name }}</el-radio>
         </el-radio-group>
         <div v-if="nodeProps.assignedType === 'ASSIGN_USER'">
           <el-form-item label="指定人员" prop="text" class="approve-end">

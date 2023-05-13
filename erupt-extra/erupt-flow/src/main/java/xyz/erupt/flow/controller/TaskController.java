@@ -38,7 +38,7 @@ public class TaskController {
      * @return
      */
     @PostMapping("/task/complete/{taskId}")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel complete(@PathVariable("taskId") Long taskId, String remarks) {
         taskService.complete(taskId, remarks);
         return EruptApiModel.successApi();
@@ -49,7 +49,7 @@ public class TaskController {
      * @return
      */
     @PostMapping("/task/refuse/{taskId}")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU)
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel refuse(@PathVariable("taskId") Long taskId, String remarks) {
         taskService.refuse(taskId, remarks);
         return EruptApiModel.successApi();
