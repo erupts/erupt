@@ -12,6 +12,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.Erupts;
+import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.SessionKey;
@@ -169,6 +170,9 @@ public class EruptUserController {
     @GetMapping(value = "/change-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel changePwd(@RequestParam("pwd") String pwd, @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
+        pwd = SecretUtil.decodeSecret(pwd, 3);
+        newPwd = SecretUtil.decodeSecret(newPwd, 3);
+        newPwd2 = SecretUtil.decodeSecret(newPwd2, 3);
         return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 

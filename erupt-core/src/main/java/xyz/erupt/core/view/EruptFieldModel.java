@@ -72,7 +72,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
                 }
                 break;
         }
-        this.eruptField = eruptFieldAnnotationProxy.newProxy(this.getEruptField(), null);
+        this.eruptField = eruptFieldAnnotationProxy.newProxy(this.getEruptField());
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
     }

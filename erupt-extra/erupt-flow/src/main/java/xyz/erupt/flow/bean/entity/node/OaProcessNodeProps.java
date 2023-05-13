@@ -95,4 +95,6 @@ public class OaProcessNodeProps {
      * 拒绝配置
      */
     OaProcessNodeRefuse refuse;
+
+    boolean isDefault;//是否默认分支
 }

@@ -158,18 +158,14 @@ public class EruptUtil {
     }
 
     public static Object convertObjectType(EruptFieldModel eruptFieldModel, Object obj) {
-        if (null == obj) {
-            return null;
-        }
-        if (null == eruptFieldModel) {
-            return obj.toString();
-        }
+        if (null == obj) return null;
+        if (null == eruptFieldModel) return obj.toString();
         String str = obj.toString();
         Edit edit = eruptFieldModel.getEruptField().edit();
         switch (edit.type()) {
             case DATE:
                 if (isDateField(eruptFieldModel.getFieldReturnName())) {
-                    return DateUtil.getDate(str);
+                    return DateUtil.getDate(eruptFieldModel.getField().getType(), str);
                 } else {
                     return str;
                 }

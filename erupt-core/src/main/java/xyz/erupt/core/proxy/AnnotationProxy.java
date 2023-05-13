@@ -24,6 +24,10 @@ public abstract class AnnotationProxy<A, PA> {
 
     protected abstract Object invocation(MethodInvocation invocation);
 
+    public A newProxy(A annotation) {
+        return this.newProxy(annotation, null);
+    }
+
     //创建注解注解代理类
     public A newProxy(A annotation, AnnotationProxy<PA, ?> parent) {
         this.parent = parent;

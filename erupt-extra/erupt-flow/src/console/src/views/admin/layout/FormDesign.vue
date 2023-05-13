@@ -3,8 +3,9 @@
     <el-aside>
       <div class="components-nav">
         <span @click="libSelect = 0">组件库</span>
+        <!--<span v-if="eruptForms&&eruptForms.length>0" @click="libSelect = 1">Erupt表单</span>-->
       </div>
-      <div>
+      <div v-show="libSelect==0">
         <div class="components" v-for="(group, i) in baseComponents" :key="i">
           <p>{{group.name}}</p>
           <ul>
@@ -16,6 +17,17 @@
                 <span>{{ cp.title }}</span>
               </li>
             </draggable>
+          </ul>
+        </div>
+        <div class="components" v-if="eruptForms&&eruptForms.length>0">
+          <p>Erupt表单</p>
+          <ul>
+            <div class="drag">
+              <li v-for="(ef, id) in eruptForms" :key="id" @click="useForm(ef)" style="cursor:pointer;" :title="'生成《'+ef.name+'》表单'">
+                <i class="el-icon-s-order"></i>
+                <span>{{ ef.name }}</span>
+              </li>
+            </div>
           </ul>
         </div>
       </div>
@@ -96,6 +108,7 @@ import FormRender from '@/views/common/form/FormRender'
 import FormDesignRender from '@/views/admin/layout/form/FormDesignRender'
 import FormComponentConfig from '@/views/common/form/FormComponentConfig'
 import {baseComponents} from '@/views/common/form/ComponentsConfigExport'
+import {getEruptForms} from '@/api/design';
 
 export default {
   name: "FormDesign",
@@ -110,6 +123,7 @@ export default {
       baseComponents,
       select: null,
       drag: false,
+      eruptForms: []//Erupt的表单
     }
   },
   computed: {
@@ -128,6 +142,13 @@ export default {
       return this.$store.state.nodeMap
     }
   },
+  created() {
+    getEruptForms().then(rsp => {
+      this.eruptForms = rsp.data;
+    }).catch(err => {
+      this.$message.error(err)
+    });
+  },
   methods: {
     copy(node, index) {
       this.form.splice(index + 1, 0, Object.assign({}, node))
@@ -142,19 +163,18 @@ export default {
         cancelButtonText: '取 消',
         type: 'warning'
       }).then(() => {
-        if (this.forms[index].name === 'SpanLayout'){
-          //删除的是分栏则遍历删除分栏内所有子组件
-          this.forms[index].props.items.forEach(item => {
-            this.removeFormItemAbout(item)
-          })
-          this.forms[index].props.items.length = 0
-        }else {
-          this.removeFormItemAbout(this.forms[index])
-        }
-        this.forms.splice(index, 1)
+        this.removeFormItemAbout(index, this.forms[index]);
       })
     },
-    async removeFormItemAbout(item){
+    async removeFormItemAbout(index, item){
+      if(item.name === 'SpanLayout') {
+        //删除的是分栏则遍历删除分栏内所有子组件
+        this.forms[index].props.items.forEach(item => {
+          this.removeFormItemAbout(index, item)
+        })
+        this.forms.splice(index, 1);
+        return;
+      }
       this.nodeMap.forEach(node => {
         //搜寻条件，进行移除
         if (node.type === 'CONDITION'){
@@ -174,6 +194,7 @@ export default {
           }
         }
       })
+      this.forms.splice(index, 1);
     },
     clone(obj) {
       obj.id = this.getId()
@@ -222,6 +243,22 @@ export default {
         err.push('表单为空，请添加组件')
       }
       return err
+    },
+    useForm(ef) {
+      this.$confirm('生成《'+ef.name+'》表单，将会覆盖现有组件，是否继续?', '提示', {
+        confirmButtonText: '确 定',
+        cancelButtonText: '取 消',
+        type: 'warning'
+      }).then(() => {
+        //清空所有组件
+        for(let index in this.forms) {
+          this.removeFormItemAbout(index, this.forms[index]);
+        }
+        //循环添加组件
+        ef.formItems.forEach(item => {
+          this.forms.push(item);
+        });
+      })
     }
   }
 }

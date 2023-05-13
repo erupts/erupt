@@ -1,6 +1,5 @@
 import request from '@/api/request.js'
 
-
 // 查询表单组
 export function getFormGroups(param) {
   return request({
@@ -114,5 +113,13 @@ export function removeForm(param) {
     url: '/admin/form/'+param.formId,
     method: 'delete',
     data: param
+  })
+}
+
+// 查询已加载的EruptForm
+export function getEruptForms() {
+  return request({
+    url: '/forms',
+    method: 'get'
   })
 }

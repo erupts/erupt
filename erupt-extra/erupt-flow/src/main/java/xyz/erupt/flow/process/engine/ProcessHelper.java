@@ -14,8 +14,10 @@ import xyz.erupt.flow.bean.entity.OaProcessInstance;
 import xyz.erupt.flow.bean.entity.OaTask;
 import xyz.erupt.flow.bean.entity.node.*;
 import xyz.erupt.flow.constant.FlowConstant;
+import xyz.erupt.flow.process.engine.condition.*;
 import xyz.erupt.flow.service.*;
 
+import java.text.ParseException;
 import java.util.*;
 
 @Component
@@ -37,6 +39,26 @@ public class ProcessHelper {
     @Lazy
     @Autowired
     private TaskService taskService;
+
+    private Map<String, ConditionChecker> checkerMap = new HashMap<>();
+
+    @Autowired
+    public ProcessHelper(ConditionChecker... checkers) {
+        //将所有的检查者编成map
+        for (ConditionChecker checker : checkers) {
+            if(checker instanceof NumberChecker) {
+                this.checkerMap.put("Number", checker);
+            }else if(checker instanceof DateChecker) {
+                this.checkerMap.put("Date", checker);
+            }else if(checker instanceof StringChecker) {
+                this.checkerMap.put("String", checker);
+            }else if(checker instanceof UserChecker) {
+                this.checkerMap.put("User", checker);
+            }else if(checker instanceof DeptChecker) {
+                this.checkerMap.put("Dept", checker);
+            }
+        }
+    }
 
     /**
      * 跳转到指定活动
@@ -166,20 +188,29 @@ public class ProcessHelper {
      * @param nodes
      * @return
      */
-    public OaProcessNode switchNode(JSONObject formContent, List<OaProcessNode> nodes) {
+    public OaProcessNode switchNode(OaProcessExecution execution, JSONObject formContent, List<OaProcessNode> nodes) {
         //按照顺序判断是否满足条件
+        OaProcessNode defaultNode = null;
         for (OaProcessNode node : nodes) {
             try {
-                if(checkForGroups(formContent, node.getProps().getGroups(), node.getProps().getGroupsType())) {
+                if(node.getProps().isDefault()) {//默认条件无需判断
+                    if(defaultNode==null) {
+                        defaultNode = node;
+                    }
+                }else if(checkForGroups(execution, formContent, node.getProps().getGroups(), node.getProps().getGroupsType())) {
                     return node;
                 }
             }catch (Exception e) {
+                e.printStackTrace();
                 log.debug("判断条件出错：" + e.getMessage());
-                break;
+                //break;
             }
         }
-        //如果都不满足，默认走第一条
-        return nodes.get(0);
+        //如果都不满足，走第一个默认条件
+        if(defaultNode==null) {
+            throw new EruptApiErrorTip("没有符合的条件，请联系管理员");
+        }
+        return defaultNode;
     }
 
     /**
@@ -188,17 +219,17 @@ public class ProcessHelper {
      * @param groupsType
      * @return
      */
-    private boolean checkForGroups(JSONObject form, List<OaProcessNodeGroup> groups, String groupsType) {
+    private boolean checkForGroups(OaProcessExecution execution, JSONObject form, List<OaProcessNodeGroup> groups, String groupsType) {
         if("OR".equals(groupsType)) {
             for (OaProcessNodeGroup group : groups) {
-                if(checkForConditions(form, group.getConditions(), group.getGroupType())) {
+                if(checkForConditions(execution, form, group.getConditions(), group.getGroupType())) {
                     return true;//任何一个条件满足即可
                 }
             }
             return false;
         }else {//必须满足所有条件
             for (OaProcessNodeGroup group : groups) {
-                if(!checkForConditions(form, group.getConditions(), group.getGroupType())) {
+                if(!checkForConditions(execution, form, group.getConditions(), group.getGroupType())) {
                     return false;//任何一个不满足就返回false
                 }
             }
@@ -206,17 +237,17 @@ public class ProcessHelper {
         }
     }
 
-    private boolean checkForConditions(JSONObject form, List<OaProcessNodeCondition> conditions, String groupType) {
+    private boolean checkForConditions(OaProcessExecution execution, JSONObject form, List<OaProcessNodeCondition> conditions, String groupType) {
         if("OR".equals(groupType)) {//任何一个条件满足即可
             for (OaProcessNodeCondition condition : conditions) {
-                if(checkForCondition(form, condition)) {
+                if(checkForCondition(execution, form, condition)) {
                     return true;
                 }
             }
             return false;
         }else {//必须满足所有条件
             for (OaProcessNodeCondition condition : conditions) {
-                if(!checkForCondition(form, condition)) {
+                if(!checkForCondition(execution, form, condition)) {
                     return false;
                 }
             }
@@ -224,51 +255,17 @@ public class ProcessHelper {
         }
     }
 
-    private boolean checkForCondition(JSONObject form, OaProcessNodeCondition condition) {
-        String[] value = condition.getValue();//对照值
-        if(value==null || value.length<=0) {
-            throw new RuntimeException("条件没有对照值");
-        }
-        if("Number".equals(condition.getValueType())) {//数值类型
-            Double formValue = form.getDouble(condition.getId());//表单值
-            if(formValue==null) {//不能报错，因为可能是测试走流程
-                throw new RuntimeException("分支条件不能为空");
-            }
-            if("=".equals(condition.getCompare())) {
-                return formValue.compareTo(Double.valueOf(value[0]))==0;
-            }else if(">".equals(condition.getCompare())) {
-                return formValue.compareTo(Double.valueOf(value[0]))>0;
-            }else if("<".equals(condition.getCompare())) {
-                return formValue.compareTo(Double.valueOf(value[0]))<0;
-            }else if(">=".equals(condition.getCompare())) {
-                return formValue.compareTo(Double.valueOf(value[0]))>=0;
-            }else if("<=".equals(condition.getCompare())) {
-                return formValue.compareTo(Double.valueOf(value[0]))<=0;
-            }else if("IN".equals(condition.getCompare())) {//等于任意一个
-                for (String s : value) {
-                    if(formValue.compareTo(Double.valueOf(s))==0) {
-                        return true;
-                    }
-                }
-                return false;
-            }else {
-                if(value==null || value.length!=2) {
-                    throw new RuntimeException("必须有2个对照值");
-                }
-                if("B".equals(condition.getCompare())) {//x < 值 < x，左右都是开区间
-                    return formValue.compareTo(Double.valueOf(value[0]))>0 && formValue.compareTo(Double.valueOf(value[1]))<0;
-                }else if("'AB'".equals(condition.getCompare())) {//x ≤ 值 < x，左闭右开
-                    return formValue.compareTo(Double.valueOf(value[0]))>=0 && formValue.compareTo(Double.valueOf(value[1]))<0;
-                }else if("'BA'".equals(condition.getCompare())) {//x < 值 ≤ x，左开右闭
-                    return formValue.compareTo(Double.valueOf(value[0]))>0 && formValue.compareTo(Double.valueOf(value[1]))<=0;
-                }else if("'ABA'".equals(condition.getCompare())) {//x ≤ 值 ≤ x，左右都是闭区间
-                    return formValue.compareTo(Double.valueOf(value[0]))>=0 && formValue.compareTo(Double.valueOf(value[1]))<=0;
-                }
-            }
-        }else {
+    private boolean checkForCondition(OaProcessExecution execution, JSONObject form, OaProcessNodeCondition condition) {
+        ConditionChecker conditionChecker = this.checkerMap.get(condition.getValueType());
+        if(conditionChecker==null) {//数值类型
             throw new RuntimeException("不支持此类条件判断"+condition.getValueType());
         }
-        return false;
+        try {
+            return conditionChecker.check(execution, form, condition);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**

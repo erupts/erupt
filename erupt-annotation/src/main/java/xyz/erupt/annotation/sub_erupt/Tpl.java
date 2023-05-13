@@ -28,6 +28,9 @@ public @interface Tpl {
     @Comment("模板引擎")
     Engine engine() default Engine.FreeMarker;
 
+//    @Comment("模板宽度")
+//    int width() default 0;
+
     @Getter
     enum Engine {
         @Comment("原生H5, Native模式下不支持tplHandler")

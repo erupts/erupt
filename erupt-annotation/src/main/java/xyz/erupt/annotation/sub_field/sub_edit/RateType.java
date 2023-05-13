@@ -12,6 +12,7 @@ public @interface RateType {
     //是否允许半选
     boolean allowHalf() default false;
 
+    //star 总数
     int count() default 5;
 
 }
