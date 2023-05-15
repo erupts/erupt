@@ -182,7 +182,7 @@ public class Simple extends BaseModel {
     <tr>
         <td></td>
         <td>传统 Spring Web 开发</td>
-        <td>RouYi</td>
+        <td>代码生成器</td>
         <td>Axelor</td>
         <td>Erupt</td>
     </tr>
@@ -212,7 +212,7 @@ public class Simple extends BaseModel {
         <td>接口 + 实现</td>
         <td>代码生成</td>
         <td>代码生成</td>
-        <td>动态处理</td>
+        <td>内置 + 按需实现</td>
     </tr>
     <tr>
         <td>业务逻辑</td>
