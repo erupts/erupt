@@ -299,7 +299,7 @@ public class Simple extends BaseModel {
 </dependency>
 ```
 
-[详细使用步骤](https://www.yuque.com/yuepeng/erupt/tpq1l9)
+[详细使用步骤](https://www.yuque.com/erupts/erupt/tpq1l9)
 
 
 ## 🥏 模块说明 | Module
