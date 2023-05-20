@@ -7,7 +7,7 @@ package xyz.erupt.annotation.sub_field.sub_edit;
 public @interface PasswordType {
 
     //加密次数
-    int encryptCount();
+    int encryptCount() default 3;
 
 
 }
