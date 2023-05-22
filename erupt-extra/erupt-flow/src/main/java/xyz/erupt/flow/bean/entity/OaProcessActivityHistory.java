@@ -98,7 +98,8 @@ public class OaProcessActivityHistory {
     private List<OaTaskHistory> tasks;
 
     @EruptField(views = @View(title = "节点"))
-    @Column(columnDefinition = "json")//json类型
+    @Lob
+    @Column//json类型
     private String node;
 
     public OaProcessNode getProcessNode() {
