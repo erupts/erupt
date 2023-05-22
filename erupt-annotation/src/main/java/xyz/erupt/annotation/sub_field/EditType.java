@@ -22,6 +22,9 @@ public enum EditType {
     @EditTypeMapping(mapping = SliderType.class, desc = "数字滑块", allowType = {JavaTypeEnum.number})
     SLIDER,
     @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
+    @EditTypeMapping(mapping = RateType.class, desc = "评分", allowType = {JavaTypeEnum.number})
+    RATE,
+    @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
     @EditTypeMapping(mapping = DateType.class, desc = "日期", allowType = {JavaTypeEnum.String, JavaTypeEnum.date})
     DATE,
     @EditTypeSearch

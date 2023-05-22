@@ -3,6 +3,7 @@ package xyz.erupt.annotation.sub_field;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.expr.ExprBool;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 
 import java.beans.Transient;
 
@@ -15,6 +16,9 @@ public @interface View {
     String title();
 
     String desc() default "";
+
+    @Comment("可在模板中使用row变量，获取当前行的数据")
+    Tpl tpl() default @Tpl(path = "");
 
     @Comment("列宽度（请指定单位如：%,px）")
     String width() default "";

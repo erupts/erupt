@@ -57,7 +57,7 @@ public class EruptJob extends MetaModelUpdateVo {
     private String name;
 
     @EruptField(
-            views = @View(title = "Cron表达式"),
+            views = @View(title = "Cron表达式", width = "150px"),
             edit = @Edit(title = "Cron表达式", notNull = true)
     )
     private String cron;

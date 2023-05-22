@@ -5,7 +5,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.11.5</version>
+        <version>1.11.6</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -68,52 +68,6 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            <!-- 前端的插件 npm install && npm run build -->
-<!--            <plugin>-->
-<!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>exec-maven-plugin</artifactId>-->
-<!--                <version>1.6.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>exec-npm-run-build</id>-->
-<!--                        <phase>generate-resources</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>exec</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <executable>npm</executable>-->
-<!--                            <arguments>-->
-<!--                                <argument>run</argument>-->
-<!--                                <argument>build</argument>-->
-<!--                            </arguments>-->
-<!--                            <workingDirectory>${basedir}/src/console</workingDirectory>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-resources-plugin</artifactId>-->
-<!--                <version>3.2.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>copy-resource</id>-->
-<!--                        <phase>generate-resources</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>copy-resources</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <outputDirectory>${basedir}/target/classes/public/erupt-flow</outputDirectory>-->
-<!--                            <resources>-->
-<!--                                <resource>-->
-<!--                                    <directory>${basedir}/src/console/dist</directory>-->
-<!--                                </resource>-->
-<!--                            </resources>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 </project>

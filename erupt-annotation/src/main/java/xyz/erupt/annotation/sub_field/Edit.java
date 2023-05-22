@@ -66,6 +66,9 @@ public @interface Edit {
     @Match("#item.type().toString()=='SLIDER'")
     SliderType sliderType() default @SliderType(max = 999);
 
+    @Match("#item.type().toString()=='RATE'")
+    RateType rateType() default @RateType;
+
     @Match("#item.type().toString()=='DATE'")
     DateType dateType() default @DateType;
 
