@@ -24,7 +24,7 @@ public @interface EruptField {
     Edit edit() default @Edit(title = "");
 
     @Transient
-    @Comment("显示顺序，默认按照字段排列顺序排序")
+    @Comment("显示顺序")
     int sort() default 1000;
 
     @ToMap(key = "key")

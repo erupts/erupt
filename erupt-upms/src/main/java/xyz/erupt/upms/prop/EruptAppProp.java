@@ -17,6 +17,9 @@ public class EruptAppProp {
 
     public static final String DEFAULT_LANG = "zh-CN";
 
+    //是否显示水印
+    private boolean waterMark = true;
+
     //登录失败几次出现验证码，0表示一直要求输入验证码
     private Integer verifyCodeCount = 2;
 
