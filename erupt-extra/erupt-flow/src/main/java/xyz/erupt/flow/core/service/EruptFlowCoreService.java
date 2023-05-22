@@ -41,7 +41,7 @@ public class EruptFlowCoreService implements ApplicationRunner {
         TimeRecorder totalRecorder = new TimeRecorder();
         /*
          * 扫描所有@EruptFlowForm注解
-         * 将其解析为表单对象（EruptFlowForm），保存到缓存中（ERUPT_FLOW_MAP、ERUPT_FLOW_LIST）
+         * 将其解析为表单对象（EruptFormModel），保存到缓存中（ERUPT_FLOW_MAP、ERUPT_FLOW_LIST）
          */
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(EruptFlowForm.class)
@@ -162,8 +162,9 @@ public class EruptFlowCoreService implements ApplicationRunner {
         if ("AmountInput".equals(componentName)) {
             json.put("min", edit.numberType().min());
             json.put("max", edit.numberType().max());
-        } else if ("DateTime".equals(componentName)) {
-            if (DateType.Type.DATE.equals(edit.dateType().type())) {
+            json.put("showChinese", false);
+        }else if("DateTime".equals(componentName)) {
+            if(DateType.Type.DATE.equals(edit.dateType().type())) {
                 json.put("format", "yyyy-MM-dd");
             } else if (DateType.Type.TIME.equals(edit.dateType().type())) {
                 json.put("format", "HH:mm:ss");

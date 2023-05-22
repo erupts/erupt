@@ -105,7 +105,8 @@ public class OaProcessInstanceHistory {
     @EruptField(views = {
             @View(title = "表单内容", show = false)
     })
-    @Column(columnDefinition = "json")//json类型
+    @Lob
+    @Column//json类型
     private String formItems;
 
     @TableField(exist = false)

@@ -194,7 +194,24 @@ export default {
           }
         }
       })
-      this.forms.splice(index, 1);
+      this.forms.splice(index, 1);//移除元素
+    },
+    removeFormItemAboutAll() {
+      this.nodeMap.forEach(node => {
+        //搜寻条件，进行移除
+        if (node.type === 'CONDITION'){
+          node.props.groups.forEach(group => {
+            group.cids.length=0;
+            group.conditions.length=0;
+          })
+        }
+        //搜寻权限，进行移除
+        if (node.type === 'ROOT' || node.type === 'APPROVAL' || node.type === 'CC'){
+          node.props.formPerms.length=0;
+          node.props.formUser = ''
+        }
+      });
+      this.forms.length=0;//清空
     },
     clone(obj) {
       obj.id = this.getId()
@@ -251,14 +268,12 @@ export default {
         type: 'warning'
       }).then(() => {
         //清空所有组件
-        for(let index in this.forms) {
-          this.removeFormItemAbout(index, this.forms[index]);
-        }
+        this.removeFormItemAboutAll();
         //循环添加组件
-        ef.formItems.forEach(item => {
+        return ef.formItems.forEach(item => {
           this.forms.push(item);
         });
-      })
+      });
     }
   }
 }
