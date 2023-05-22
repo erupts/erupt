@@ -69,7 +69,7 @@
                 </configuration>
             </plugin>
 
-            <!-- 这2插件，修改了前端之后再打开。同时记得把前端打包结果放到 resources/erupt-api/erupt-flow目录下 -->
+            <!-- 这2插件，修改了前端之后再打开，然后重新install -->
 <!--            <plugin>-->
 <!--                <groupId>org.codehaus.mojo</groupId>-->
 <!--                <artifactId>exec-maven-plugin</artifactId>-->
