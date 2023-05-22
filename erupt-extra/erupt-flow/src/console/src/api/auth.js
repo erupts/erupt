@@ -26,7 +26,7 @@ export function getQueryVariable(fieldName) {
  */
 export function getLoginInfo() {
     return request({
-        url: '/userinfo',
+        url: 'userinfo',
         method: 'get'
     })
 }
