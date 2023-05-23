@@ -51,10 +51,6 @@ export default {
     }
   },
   mounted(){
-    getLoginInfo().then( res=> {
-      this.loginUser = res.nickname;
-      this.select.push({id: res.nickname, name: res.nickname, type: 'user'})
-    });
     // let user = sessionStorage.getItem("user")
     // if (user !== null && user !== ''){
     //   this.loginUser = JSON.parse(user)
