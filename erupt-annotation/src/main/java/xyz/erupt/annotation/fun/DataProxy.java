@@ -47,6 +47,9 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<M
     default void afterFetch(@Comment("查询结果") Collection<Map<String, Object>> list) {
     }
 
+    @Comment("下钻数据数据新增行为。下钻数据新增前会先调用这个方法，然后调用下面的方法")
+    default void addBehavior(MODEL model, Object drillParentId) {
+    }
 
     @Comment("数据新增行为，可对数据做初始化等操作")
     default void addBehavior(MODEL model) {
