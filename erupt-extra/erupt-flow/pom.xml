@@ -105,7 +105,7 @@
 <!--                            <goal>copy-resources</goal>-->
 <!--                        </goals>-->
 <!--                        <configuration>-->
-<!--                            <outputDirectory>${basedir}/target/classes/public/erupt-api/erupt-flow</outputDirectory>-->
+<!--                            <outputDirectory>${basedir}/target/classes/public/erupt-flow</outputDirectory>-->
 <!--                            <resources>-->
 <!--                                <resource>-->
 <!--                                    <directory>${basedir}/src/console/dist</directory>-->
