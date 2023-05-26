@@ -6,7 +6,7 @@ import xyz.erupt.flow.bean.entity.OaForms;
 
 /**
  * @author : willian fu
- * @date : 2022/6/27
+ * date : 2022/6/27
  */
 @Mapper
 public interface OaFormsMapper extends BaseMapper<OaForms> {
