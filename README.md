@@ -33,6 +33,13 @@
 
 ---
 
+<p align="center">
+    <a href="https://www.yuque.com/erupts/erupt/ggbcv9">Erupt Cloud【私有云配置中心】</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/erupts/erupt/sd27r9o1pex1s5xn">Erupt Flow 【工作流】</a>
+</p>
+
+---
+
 ## 🚀 简介 | Intro
 Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能。
 
