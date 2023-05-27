@@ -42,7 +42,7 @@ public class EruptFlowAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> metaMenus = new ArrayList<>();
         //目录名和下面的权限名重复，所以加个后缀
-        metaMenus.add(MetaMenu.createRootMenu(FlowConstant.SERVER_NAME + "_root", "流程服务", "fa fa-bandcamp", 80));
+        metaMenus.add(MetaMenu.createRootMenu(FlowConstant.SERVER_NAME + "_root", "流程服务", "fa fa-send", 80));
         // 添加菜单
         metaMenus.add(MetaMenu.createSimpleMenu(FlowConstant.SERVER_NAME, "流程服务基础权限", "erupt-flow"
                 , metaMenus.get(0), 0, MenuTypeEnum.BUTTON.getCode()));
