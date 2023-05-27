@@ -39,7 +39,8 @@ public class OaForms implements Serializable {
     /**
     * 设置项
     */
-    @Column(columnDefinition = "json")//json类型
+    @Lob
+    @Column//json类型
     private String settings;
     /**
     * 分组ID
@@ -48,12 +49,14 @@ public class OaForms implements Serializable {
     /**
     * 表单设置内容
     */
-    @Column(columnDefinition = "json")//json类型
+    @Lob
+    @Column//json类型
     private String formItems;
     /**
     * 流程设置内容
     */
-    @Column(columnDefinition = "json")//json类型
+    @Lob
+    @Column//json类型
     private String process;
     /**
     * 备注

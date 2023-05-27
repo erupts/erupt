@@ -31,7 +31,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '请输入金额'
+      default: '请输入'
     },
     showChinese: {
       type: Boolean,

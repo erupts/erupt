@@ -10,7 +10,7 @@
         <el-menu-item index="proSetting" @click="to('proSetting')">④ 扩展设置</el-menu-item>
       </el-menu>
       <div class="publish">
-        <el-button size="mini" @click="preview"><i class="el-icon-view"></i>预览</el-button>
+<!--        <el-button size="mini" @click="preview"><i class="el-icon-view"></i>预览</el-button>-->
         <el-button size="mini" type="primary" @click="publish"><i class="el-icon-s-promotion"></i>发布</el-button>
       </div>
       <div class="back">
