@@ -14,8 +14,6 @@
     <description>flow erupt code</description>
 
     <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-        <!--依赖控制-->
         <fastjson.version>1.2.83</fastjson.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <pagehelper.version>1.4.6</pagehelper.version>
