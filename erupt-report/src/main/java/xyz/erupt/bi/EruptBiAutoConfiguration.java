@@ -63,7 +63,6 @@ public class EruptBiAutoConfiguration implements EruptModule {
         biGroup.setCode("default");
         biGroup.setName("默认分组");
         eruptDao.persistIfNotExist(BiGroup.class, biGroup, "code", biGroup.getCode());
-
     }
 
     @Override

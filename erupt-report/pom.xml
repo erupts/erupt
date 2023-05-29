@@ -49,12 +49,6 @@
     <build>
         <resources>
             <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.js</include>
-                </includes>
-            </resource>
-            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/**</include>
