@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.11.6</version>
+    <version>1.11.7</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -34,12 +34,6 @@
         <module>erupt-toolkit</module>
         <module>erupt-i18n</module> <!-- 多语言 -->
 
-        <module>erupt-tpl</module>
-        <module>erupt-tpl-ui/ant-design</module>
-        <module>erupt-tpl-ui/element-ui</module>
-        <module>erupt-tpl-ui/amis</module>
-        <module>erupt-tpl-ui/element-plus</module>
-
         <module>erupt-data/erupt-jpa</module><!-- Hibernate JPA 数据实现 -->
         <module>erupt-data/erupt-mongodb</module><!-- MongoDB 数据实现 -->
 
@@ -47,11 +41,17 @@
         <module>erupt-security</module><!--API 接口安全-->
         <module>erupt-web</module><!--前端代码-->
 
+        <module>erupt-tpl</module>
+        <module>erupt-tpl-ui/ant-design</module>
+        <module>erupt-tpl-ui/element-ui</module>
+        <module>erupt-tpl-ui/amis</module>
+        <module>erupt-tpl-ui/element-plus</module>
+
         <module>erupt-extra/erupt-job</module><!--任务调度-->
         <module>erupt-extra/erupt-generator</module><!--代码生成-->
         <module>erupt-extra/erupt-monitor</module><!--服务监控-->
-        <module>erupt-extra/erupt-flow</module><!--流程服务-->
         <module>erupt-extra/erupt-magic-api</module><!-- magic-api 接口配置 -->
+        <module>erupt-extra/erupt-flow</module><!--流程服务-->
         <!-- erupt cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
         <module>erupt-cloud/erupt-cloud-server</module> <!-- 主服务节点 -->

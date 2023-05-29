@@ -2,7 +2,7 @@
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用配置管理框架 </h1>
-<h3 align="center">零前端代码，几行 Java 注解，搞定后台管理系统</h3>
+<h3 align="center">零前端代码，急速开发通用管理系统</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
 
 ---
@@ -26,6 +26,15 @@
     <a href="https://www.erupt.xyz/#!/module" target="_blank">框架生态</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts" target="_blank"><b>📕 使用文档</b></a>
 </p>
+
+---
+
+<p align="center">
+    <a href="https://www.yuque.com/erupts/erupt/ggbcv9">Erupt Cloud【分布式多维配置中心】</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/erupts/erupt/sd27r9o1pex1s5xn">Erupt Flow 【工作流】</a>
+</p>
+
+---
 
 <p align="center">
     QQ交流群：<a href="https://jq.qq.com/?_wv=1027&k=MCd4plZ0">821389129 🔥</a>
@@ -182,7 +191,7 @@ public class Simple extends BaseModel {
     <tr>
         <td></td>
         <td>传统 Spring Web 开发</td>
-        <td>RouYi</td>
+        <td>代码生成器</td>
         <td>Axelor</td>
         <td>Erupt</td>
     </tr>
@@ -212,7 +221,7 @@ public class Simple extends BaseModel {
         <td>接口 + 实现</td>
         <td>代码生成</td>
         <td>代码生成</td>
-        <td>动态处理</td>
+        <td>内置 + 按需实现</td>
     </tr>
     <tr>
         <td>业务逻辑</td>
@@ -299,7 +308,7 @@ public class Simple extends BaseModel {
 </dependency>
 ```
 
-[详细使用步骤](https://www.yuque.com/yuepeng/erupt/tpq1l9)
+[详细使用步骤](https://www.yuque.com/erupts/erupt/tpq1l9)
 
 
 ## 🥏 模块说明 | Module

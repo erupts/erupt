@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0e9937"],{"8db7":function(n,e,t){"use strict";t.r(e);var a=function(){var n=this,e=n._self._c;return e("div")},c=[],o={name:"SignPannel",components:{},data(){return{}},methods:{}},s=o,u=t("2877"),r=Object(u["a"])(s,a,c,!1,null,"75be689c",null);e["default"]=r.exports}}]);
-//# sourceMappingURL=chunk-2d0e9937.39401443.js.map

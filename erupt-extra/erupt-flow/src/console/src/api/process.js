@@ -3,7 +3,7 @@ import request from '@/api/request.js'
 // 发起流程
 export function startByFormId(formId, data) {
   return request({
-    url: '/process/start/form/'+formId,
+    url: '../erupt-api/erupt-flow/process/start/form/'+formId,
     method: 'post',
     data: data
   })
@@ -12,7 +12,7 @@ export function startByFormId(formId, data) {
 // 查询实例
 export function getProcessInstance(procInstId) {
   return request({
-    url: '/data/OaProcessInstance/'+procInstId,
+    url: '../erupt-api/erupt-flow/data/OaProcessInstance/'+procInstId,
     method: 'get'
   });
 }
@@ -20,7 +20,7 @@ export function getProcessInstance(procInstId) {
 // 查询待我处理的工作
 export function listMyTasks(params) {
   return request({
-    url: '/task/mine',
+    url: '../erupt-api/erupt-flow/task/mine',
     method: 'get',
     params: params
   });
@@ -29,7 +29,7 @@ export function listMyTasks(params) {
 // 完成任务
 export function completeTask(taskId, remarks) {
   return request({
-    url: '/task/complete/'+taskId,
+    url: '../erupt-api/erupt-flow/task/complete/'+taskId,
     method: 'post',
     params: {
       remarks: remarks
@@ -40,7 +40,7 @@ export function completeTask(taskId, remarks) {
 // 拒绝任务
 export function refuseTask(taskId, remarks) {
   return request({
-    url: '/task/refuse/'+taskId,
+    url: '../erupt-api/erupt-flow/task/refuse/'+taskId,
     method: 'post',
     params: {
       remarks: remarks
@@ -51,7 +51,7 @@ export function refuseTask(taskId, remarks) {
 // 预览流程时间线
 export function timeLinePreview(defId, content) {
   return request({
-    url: '/process/timeline/preview/'+defId,
+    url: '../erupt-api/erupt-flow/process/timeline/preview/'+defId,
     method: 'post',
     data: content
   });
@@ -60,7 +60,7 @@ export function timeLinePreview(defId, content) {
 // 查看流程实例的时间线
 export function timeLine(instId) {
   return request({
-    url: '/process/timeline/'+instId,
+    url: '../erupt-api/erupt-flow/process/timeline/'+instId,
     method: 'post'
   });
 }
@@ -68,7 +68,7 @@ export function timeLine(instId) {
 // 查询任务详情
 export function getTaskDetail(taskId) {
   return request({
-    url: '/task/detail/'+taskId,
+    url: '../erupt-api/erupt-flow/task/detail/'+taskId,
     method: 'get'
   });
 }
@@ -76,7 +76,7 @@ export function getTaskDetail(taskId) {
 // 查询实例详情
 export function getInstDetail(instId) {
   return request({
-    url: '/inst/detail/'+instId,
+    url: '../erupt-api/erupt-flow/inst/detail/'+instId,
     method: 'get'
   });
 }
@@ -84,7 +84,7 @@ export function getInstDetail(instId) {
 // 查询与我相关的工单
 export function getMineAbout(params) {
   return request({
-    url: '/inst/mine/about',
+    url: '../erupt-api/erupt-flow/inst/mine/about',
     method: 'get',
     params: params
   });
