@@ -5,7 +5,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.11.6</version>
+        <version>1.11.7</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -14,8 +14,6 @@
     <description>flow erupt code</description>
 
     <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-        <!--依赖控制-->
         <fastjson.version>1.2.83</fastjson.version>
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <pagehelper.version>1.4.6</pagehelper.version>
@@ -57,17 +55,4 @@
             <version>${mybatis-plus-join.version}</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

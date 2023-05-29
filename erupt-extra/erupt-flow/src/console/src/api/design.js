@@ -3,16 +3,16 @@ import request from '@/api/request.js'
 // 查询表单组
 export function getFormGroups(param) {
   return request({
-    url: '/admin/form/group',
+    url: '../erupt-api/erupt-flow/admin/form/group',
     method: 'get',
     params: param
   })
 }
 
-// 查询表单组
+// 查询表单
 export function getFormGroupsWithProcDef(param) {
   return request({
-    url: '/process/groups',
+    url: '../erupt-api/erupt-flow/process/groups',
     method: 'get',
     params: param
   })
@@ -21,7 +21,7 @@ export function getFormGroupsWithProcDef(param) {
 // 表单排序
 export function groupItemsSort(param) {
   return request({
-    url: '/admin/form/sort',
+    url: '../erupt-api/erupt-flow/admin/form/sort',
     method: 'put',
     data: param
   })
@@ -30,7 +30,7 @@ export function groupItemsSort(param) {
 // 表单分组排序
 export function groupSort(param) {
   return request({
-    url: '/admin/form/group/sort',
+    url: '../erupt-api/erupt-flow/admin/form/group/sort',
     method: 'put',
     data: param
   })
@@ -39,7 +39,7 @@ export function groupSort(param) {
 // 创建表单组
 export function createGroup(groupName) {
   return request({
-    url: '/admin/form/group',
+    url: '../erupt-api/erupt-flow/admin/form/group',
     method: 'post',
     params: {
       groupName: groupName
@@ -50,7 +50,7 @@ export function createGroup(groupName) {
 // 创建表单组
 export function updateGroup(groupId, param) {
   return request({
-    url: '/admin/form/group/'+groupId,
+    url: '../erupt-api/erupt-flow/admin/form/group/'+groupId,
     method: 'put',
     data: param
   })
@@ -59,7 +59,7 @@ export function updateGroup(groupId, param) {
 // 删除表单组
 export function removeGroup(groupId) {
   return request({
-    url: '/admin/form/group/'+groupId,
+    url: '../erupt-api/erupt-flow/admin/form/group/'+groupId,
     method: 'delete'
   })
 }
@@ -67,7 +67,7 @@ export function removeGroup(groupId) {
 // 获取表单分组
 export function getGroup() {
   return request({
-    url: '/admin/form/group/list',
+    url: '../erupt-api/erupt-flow/admin/form/group/list',
     method: 'get'
   })
 }
@@ -75,7 +75,7 @@ export function getGroup() {
 // 更新表单
 export function updateForm(formId, param) {
   return request({
-    url: '/admin/form/'+formId,
+    url: '../erupt-api/erupt-flow/admin/form/'+formId,
     method: 'put',
     data: param
   })
@@ -84,7 +84,7 @@ export function updateForm(formId, param) {
 //创建表单
 export function createForm(param){
   return request({
-    url: '/admin/form',
+    url: '../erupt-api/erupt-flow/admin/form',
     method: 'post',
     data: param
   })
@@ -93,7 +93,7 @@ export function createForm(param){
 // 查询表单详情
 export function getFormDetail(id) {
   return request({
-    url: '/admin/form/detail/' + id,
+    url: '../erupt-api/erupt-flow/admin/form/detail/' + id,
     method: 'get'
   })
 }
@@ -101,7 +101,7 @@ export function getFormDetail(id) {
 // 更新表单详情
 export function updateFormDetail(param) {
   return request({
-    url: '/admin/form/detail',
+    url: '../erupt-api/erupt-flow/admin/form/detail',
     method: 'put',
     data: param
   })
@@ -110,7 +110,7 @@ export function updateFormDetail(param) {
 // 更新表单详情
 export function removeForm(param) {
   return request({
-    url: '/admin/form/'+param.formId,
+    url: '../erupt-api/erupt-flow/admin/form/'+param.formId,
     method: 'delete',
     data: param
   })
@@ -119,7 +119,7 @@ export function removeForm(param) {
 // 查询已加载的EruptForm
 export function getEruptForms() {
   return request({
-    url: '/forms',
+    url: '../erupt-api/erupt-flow/forms',
     method: 'get'
   })
 }

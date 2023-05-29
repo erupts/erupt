@@ -25,10 +25,7 @@ import xyz.erupt.flow.core.annotation.EruptFlowForm;
 import xyz.erupt.flow.core.view.EruptFormModel;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Order(1000)
 @Service
@@ -42,47 +39,40 @@ public class EruptFlowCoreService implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         TimeRecorder totalRecorder = new TimeRecorder();
-        /**
+        /*
          * 扫描所有@EruptFlowForm注解
-         * 将其解析为表单对象（EruptFlowForm），保存到缓存中（ERUPT_FLOW_MAP、ERUPT_FLOW_LIST）
+         * 将其解析为表单对象（EruptFormModel），保存到缓存中（ERUPT_FLOW_MAP、ERUPT_FLOW_LIST）
          */
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(EruptFlowForm.class)
         }, clazz -> {
-            String clazzName = clazz.getSimpleName();
-            EruptModel eruptModel = EruptCoreService.getErupt(clazzName);
-            if(eruptModel!=null) {
+            Optional.ofNullable(EruptCoreService.getErupt(clazz.getSimpleName())).ifPresent(eruptModel -> {
                 EruptFormModel eruptFormModel = new EruptFormModel(eruptModel);
                 eruptFormModel.setFormItems(this.parseFormItems(eruptModel));
-                ERUPT_FLOW_FORM_MAP.put(clazzName, eruptFormModel);
+                ERUPT_FLOW_FORM_MAP.put(clazz.getSimpleName(), eruptFormModel);
                 ERUPT_FLOW_FORM_LIST.add(eruptFormModel);
-            }
+            });
         });
-        /**
-         * 打印横幅
-         */
-        log.info("<" + repeat("===", 20) + ">");
+        log.info("<" + repeat("---", 20) + ">");
         log.info("Erupt Flow Form classes : " + ERUPT_FLOW_FORM_MAP.size());
         log.info("Erupt Flow Form initialization completed in {}ms", totalRecorder.recorder());
-        log.info("<" + repeat("===", 20) + ">");
+        log.info("<" + repeat("---", 20) + ">");
     }
 
     /**
      * 将erupt注解，解析为表单项
-     * @param eruptModel
-     * @return
      */
     private JSONArray parseFormItems(EruptModel eruptModel) {
         try {
             JSONArray jsons = new JSONArray();
             eruptModel.getEruptFieldMap().forEach((key, fieldModel) -> {
-                if(fieldModel.getEruptField().edit().title().length()<=0) {
+                if (fieldModel.getEruptField().edit().title().length() <= 0) {
                     return;//只处理有标题的字段
                 }
                 jsons.add(this.buildItem(fieldModel, fieldModel.getEruptField().edit()));
             });
             return jsons;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Load Erupt Form failed: " + eruptModel.getEruptName());
         }
     }
@@ -100,6 +90,7 @@ public class EruptFlowCoreService implements ApplicationRunner {
 
     /**
      * 根据字段配置解析对应的组件
+     *
      * @return
      */
     public String convertComponentName(EruptFieldModel fieldModel, Edit edit) {
@@ -108,13 +99,13 @@ public class EruptFlowCoreService implements ApplicationRunner {
                 return "TextInput";
             case NUMBER://数字输入
             case SLIDER://数字滑块
-                if(
-                        Double.class==fieldModel.getField().getType() || double.class==fieldModel.getField().getType()
-                                || Float.class==fieldModel.getField().getType() || float.class==fieldModel.getField().getType()
-                                || BigDecimal.class==fieldModel.getField().getType()
+                if (
+                        Double.class == fieldModel.getField().getType() || double.class == fieldModel.getField().getType()
+                                || Float.class == fieldModel.getField().getType() || float.class == fieldModel.getField().getType()
+                                || BigDecimal.class == fieldModel.getField().getType()
                 ) {//几种浮点数
                     return "AmountInput";
-                }else {//其他的用数字输入框
+                } else {//其他的用数字输入框
                     return "NumberInput";
                 }
             case DATE://日期
@@ -168,43 +159,44 @@ public class EruptFlowCoreService implements ApplicationRunner {
     private JSONObject buildProps(String componentName, EruptFieldModel fieldModel, Edit edit) {
         JSONObject json = new JSONObject();
         json.put("required", edit.notNull());
-        if("AmountInput".equals(componentName)) {
+        if ("AmountInput".equals(componentName)) {
             json.put("min", edit.numberType().min());
             json.put("max", edit.numberType().max());
-        }else if("DateTime".equals(componentName)) {
-            if(DateType.Type.DATE.equals(edit.dateType().type())) {
+            json.put("showChinese", false);
+        } else if ("DateTime".equals(componentName)) {
+            if (DateType.Type.DATE.equals(edit.dateType().type())) {
                 json.put("format", "yyyy-MM-dd");
-            }else if(DateType.Type.TIME.equals(edit.dateType().type())) {
+            } else if (DateType.Type.TIME.equals(edit.dateType().type())) {
                 json.put("format", "HH:mm:ss");
-            }else if(DateType.Type.DATE_TIME.equals(edit.dateType().type())) {
+            } else if (DateType.Type.DATE_TIME.equals(edit.dateType().type())) {
                 json.put("format", "yyyy-MM-dd HH:mm:ss");
-            }else if(DateType.Type.WEEK.equals(edit.dateType().type())) {
+            } else if (DateType.Type.WEEK.equals(edit.dateType().type())) {
                 throw new RuntimeException("Can not resolve DateType: " + fieldModel.getFieldName());
-            }else if(DateType.Type.MONTH.equals(edit.dateType().type())) {
+            } else if (DateType.Type.MONTH.equals(edit.dateType().type())) {
                 json.put("format", "yyyy-MM");
-            }else if(DateType.Type.YEAR.equals(edit.dateType().type())) {
+            } else if (DateType.Type.YEAR.equals(edit.dateType().type())) {
                 json.put("format", "yyyy");
-            }else {
+            } else {
                 throw new RuntimeException("Can not resolve DateType: " + fieldModel.getFieldName());
             }
-        }else if("SelectInput".equals(componentName)) {
-            if(
+        } else if ("SelectInput".equals(componentName)) {
+            if (
                     EditType.BOOLEAN.equals(edit.type())
-                    || Boolean.class.equals(fieldModel.getField().getType())
-                    || boolean.class.equals(fieldModel.getField().getType())
+                            || Boolean.class.equals(fieldModel.getField().getType())
+                            || boolean.class.equals(fieldModel.getField().getType())
             ) {
                 json.put("options", new String[]{
                         edit.boolType().trueText()
                         , edit.boolType().falseText()
                 });
-            }else {
-                if(ChoiceType.Type.RADIO.equals(edit.choiceType().type())) {
+            } else {
+                if (ChoiceType.Type.RADIO.equals(edit.choiceType().type())) {
                     json.put("expanding", true);//展开
-                }else {
+                } else {
                     json.put("expanding", false);//不展开
                 }
                 VL[] vls = edit.choiceType().vl();
-                if(vls==null || vls.length<=0) {
+                if (vls == null || vls.length <= 0) {
                     throw new RuntimeException("A SelectInput must with options: " + fieldModel.getFieldName());
                 }
                 JSONArray ops = new JSONArray();
@@ -213,9 +205,9 @@ public class EruptFlowCoreService implements ApplicationRunner {
                 }
                 json.put("options", ops);
             }
-        }else if("MultipleSelect".equals(componentName)) {
+        } else if ("MultipleSelect".equals(componentName)) {
             String[] vls = edit.tagsType().tags();
-            if(vls==null || vls.length<=0) {
+            if (vls == null || vls.length <= 0) {
                 throw new RuntimeException("A MultipleSelect must with options: " + fieldModel.getFieldName());
             }
             json.put("options", vls);//这个可以被直接识别
