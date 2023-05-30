@@ -1,0 +1,41 @@
+<div class="modal" ng-controller="KisBpmAssignmentPopupCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
+                <h2 translate>PROPERTY.ASSIGNMENT.TITLE</h2>
+            </div>
+            <div class="modal-body">
+            
+            	<div class="row row-no-gutter">
+            		<div class="form-group">
+            			<label for="assigneeField">{{'PROPERTY.ASSIGNMENT.ASSIGNEE' | translate}}</label>
+							<input type="text" id="assigneeField" class="form-control" ng-model="assignment.assignee" placeholder="{{'PROPERTY.ASSIGNMENT.ASSIGNEE_PLACEHOLDER' | translate}}" 
+            						ng-click="choseAssignment('assignee')" ng-value="candidateUser.choseAssignee"/>
+            		</div>
+            	</div>
+            	
+                <div class="row row-no-gutter">
+                    <div class="form-group">
+                    	<label for="userField">{{'PROPERTY.ASSIGNMENT.CANDIDATE_USERS' | translate}}</label>
+                        <div ng-repeat="candidateUser in assignment.candidateUsers">
+            	            <input id="userField" class="form-control" type="text" ng-model="candidateUser.value" ng-click="choseAssignment('assignees')" ng-value="candidateUser.value"/>
+                        </div>
+                   	</div>
+            
+                    <div class="form-group">
+                    	<label for="groupField">{{'PROPERTY.ASSIGNMENT.CANDIDATE_GROUPS' | translate}}</label>
+                        <div ng-repeat="candidateGroup in assignment.candidateGroups">
+                        	<input id="groupField" class="form-control" type="text" ng-model="candidateGroup.value" ng-click="choseCandidateGroups()"/>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="modal-footer">
+                <button ng-click="close()"  translate>ACTION.CANCEL</button>
+                <button ng-click="save()"  translate>ACTION.SAVE</button>
+            </div>
+        </div>
+    </div>
+</div>

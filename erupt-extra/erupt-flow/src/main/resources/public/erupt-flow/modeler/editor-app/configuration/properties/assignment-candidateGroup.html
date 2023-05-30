@@ -1,0 +1,40 @@
+<div class="modal" ng-controller="KisBpmChoseCandidateGroupsCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
+                <h2 translate>PROPERTY.ASSIGNMENT.TITLE</h2>
+            </div>
+            <div class="modal-body">
+            	 <div class="row row-no-gutter">
+            	 	<div class="col-xs-2"></div>
+					<div class="col-xs-8">
+					    <table class="table table-bordered table-condensed">
+					    	<thead>
+					    		<tr>
+					    			<th><input type="checkbox" ng-click="selectAll($event)"></th>
+					    			<th>组名</th>
+					    			<th>描述</th>
+					    		</tr>
+					    	</thead>
+					    	<tbody>
+					    		<tr ng-repeat="candidateGroup in candidateGroups">
+					    			<td>
+										<input type="checkbox" ng-model="candidateGroup.selected" ne-true-value="{{candidateGroup.id}}" ng-false-value="false">
+					    			</td>
+					    			<td>{{candidateGroup.name}}</td>
+					    			<td>{{candidateGroup.description}}</td>
+					    		</tr>
+					    	</tbody>
+					    </table>
+					</div>
+            	 	<div class="col-xs-2"></div>
+				</div>
+            </div>
+            <div class="modal-footer">
+                <button ng-click="close()"  translate>ACTION.CANCEL</button>
+                <button ng-click="save()"  translate>ACTION.SAVE</button>
+            </div>
+        </div>
+    </div>
+</div>
