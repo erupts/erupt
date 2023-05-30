@@ -227,7 +227,9 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     public List<OaTask> listMyTasks(String keywords) {
         MPJLambdaWrapper<OaTask> queryWrapper = new MPJLambdaWrapper<OaTask>()
                 .leftJoin(OaProcessInstance.class, OaProcessInstance::getId, OaTask::getProcessInstId)//关联流程实例
+                .leftJoin(OaProcessDefinition.class, OaProcessDefinition::getId, OaTask::getProcessDefId)//关联流程定义
                 .selectAll(OaTask.class)//查询任务全部字段
+                .selectAs(OaProcessDefinition::getLogo, OaTask::getLogo)
                 .selectAs(OaProcessInstance::getCreator, OaTask::getInstCreator)
                 .selectAs(OaProcessInstance::getCreatorName, OaTask::getInstCreatorName)
                 .selectAs(OaProcessInstance::getCreateDate, OaTask::getInstCreateDate)

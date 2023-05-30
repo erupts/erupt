@@ -154,4 +154,8 @@ public class OaTask {
     @TableField(exist = false)
     @EruptField(views = @View(title = "流程发起事件"))
     private Date instCreateDate;
+
+    @Transient
+    @TableField(exist = false)
+    private String logo;
 }
