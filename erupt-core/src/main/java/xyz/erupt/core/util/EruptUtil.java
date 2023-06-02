@@ -288,6 +288,22 @@ public class EruptUtil {
         return EruptApiModel.successApi();
     }
 
+    /**
+     * 前端数据处理逻辑
+     */
+    public static void processEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
+        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
+            JsonElement value = jsonObject.get(field.getFieldName());
+            if (null != value && !value.isJsonNull()) {
+                //代码编辑器类型加密传输后解密
+                if (field.getEruptField().edit().type() == EditType.CODE_EDITOR) {
+                    jsonObject.addProperty(field.getFieldName(), SecretUtil.decodeSecret(value.getAsString()));
+                }
+                //TODO 密码组件值加密传输后解密
+            }
+        }
+    }
+
     public static Object toEruptId(EruptModel eruptModel, String id) {
         Field primaryField = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol());
         return TypeUtil.typeStrConvertObject(id, primaryField.getType());
