@@ -17,6 +17,13 @@ public class SecretUtil {
         return new String(Base64.getDecoder().decode(str));
     }
 
+    /**
+     * 解密Base64
+     *
+     * @param str       加密字符串
+     * @param encodeNum 被加密了几次
+     * @return 原文
+     */
     @SneakyThrows
     public static String decodeSecret(String str, int encodeNum) {
         for (int i = 0; i < encodeNum; i++) {
