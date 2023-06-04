@@ -16,13 +16,13 @@ import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
-import javax.persistence.Transient;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 /**
+ * 发布到菜单的按钮逻辑
  * @author YuePeng
  * date 2023/6/4 17:51
  */
@@ -30,19 +30,15 @@ import java.util.List;
 public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
 
     @Resource
-    @Transient
     private EruptDao eruptDao;
 
     @Resource
-    @Transient
     private EruptBiProp eruptBiProp;
 
     @Resource
-    @Transient
     private EruptUserService eruptUserService;
 
     @Resource
-    @Transient
     private EruptContextService eruptContextService;
 
     @Override

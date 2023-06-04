@@ -2,26 +2,20 @@ package xyz.erupt.bi.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.handler.ChartType;
-import xyz.erupt.core.context.MetaContext;
-import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
-import javax.annotation.Resource;
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * @author YuePeng
@@ -29,12 +23,12 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "e_bi_chart", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
-@Erupt(name = "图表配置", orderBy = "sort", dataProxy = BiChart.class)
+@Erupt(name = "图表配置", orderBy = "sort", dataProxy = BiChartDataProxy.class)
 @Getter
 @Setter
 @EruptI18n
 @Component
-public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
+public class BiChart extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
@@ -156,34 +150,4 @@ public class BiChart extends MetaModelUpdateVo implements DataProxy<BiChart> {
     @ManyToOne
     private Bi bi;
 
-    @Resource
-    @Transient
-    private EruptDao eruptDao;
-
-    @Override
-    public void beforeAdd(BiChart biChart) {
-        if (null == biChart.getSort()) {
-            Integer obj = (Integer) eruptDao.getEntityManager().createQuery(
-                    "select max(sort) from " + BiChart.class.getSimpleName() + " where bi.id = " + biChart.getBi().getId()).getSingleResult();
-            biChart.setSort((obj == null) ? 10 : obj + 10);
-        }
-        biChart.setCode(RandomStringUtils.randomAlphabetic(8));
-    }
-
-
-    @Override
-    public void beforeUpdate(BiChart biChart) {
-        eruptDao.getEntityManager().clear();
-        BiChart hbc = eruptDao.getEntityManager().find(BiChart.class, biChart.getId());
-        if (!biChart.getSqlStatement().equals(hbc.getSqlStatement())) {
-            BiHistory history = new BiHistory();
-            history.setBiId(biChart.getBi().getId());
-            history.setSqlStatement(hbc.getSqlStatement());
-            history.setAfterSqlStatement(biChart.getSqlStatement());
-            history.setOperateTime(new Date());
-            history.setMark(biChart.getName());
-            history.setOperateBy(MetaContext.getUser().getName());
-            eruptDao.persist(history);
-        }
-    }
 }

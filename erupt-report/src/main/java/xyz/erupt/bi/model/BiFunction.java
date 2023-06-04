@@ -8,24 +8,14 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.bi.constant.BiConst;
-import xyz.erupt.bi.service.FunctionService;
-import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.core.util.Erupts;
-import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
-import javax.annotation.Resource;
 import javax.persistence.*;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 /**
  * @author YuePeng
@@ -33,12 +23,12 @@ import javax.script.ScriptException;
  */
 @Entity
 @Table(name = "e_bi_function", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "函数管理", dataProxy = BiFunction.class)
+@Erupt(name = "函数管理", dataProxy = BiFunctionDataProxy.class)
 @Getter
 @Setter
 @Service
 @EruptI18n
-public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunction> {
+public class BiFunction extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
@@ -72,42 +62,4 @@ public class BiFunction extends MetaModelUpdateVo implements DataProxy<BiFunctio
     public BiFunction() {
     }
 
-    @Resource
-    @Transient
-    private EruptDao eruptDao;
-
-    @Resource
-    @Transient
-    private FunctionService functionService;
-
-    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
-
-    private void testFunction(BiFunction biFunction) {
-        try {
-            scriptEngine.eval(biFunction.getJsFunction());
-        } catch (ScriptException e) {
-            throw new EruptApiErrorTip(e.getMessage());
-        }
-    }
-
-    @Override
-    public void beforeAdd(BiFunction biFunction) {
-        biFunction.setCode(Erupts.generateCode());
-    }
-
-    @Override
-    public void afterAdd(BiFunction biFunction) {
-        this.testFunction(biFunction);
-        functionService.flushFunction();
-    }
-
-    @Override
-    public void afterUpdate(BiFunction biFunction) {
-        this.afterAdd(biFunction);
-    }
-
-    @Override
-    public void afterDelete(BiFunction biFunction) {
-        functionService.flushFunction();
-    }
 }
