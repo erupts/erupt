@@ -118,6 +118,7 @@ public class EruptBiController {
         }
         biVo.setId(bi.getId());
         biVo.setCode(bi.getCode());
+        biVo.setRemark(bi.getRemark());
         biVo.setCharts(biChartVos.stream().sorted(Comparator.comparing(BiChartVo::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
         biVo.setDimensions(biDimensionVos.stream().sorted(Comparator.comparing(BiDimensionVo::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList()));
         biVo.setPageSize(eruptBiProp.getPageSize());
