@@ -47,7 +47,7 @@ import java.util.function.Function;
         rowOperation = @RowOperation(
                 title = "查看令牌", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
                 show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
-                type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/NodeInfo.ftl")
+                type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl")
         )
 )
 @Component
@@ -102,7 +102,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
 
     @Transient
     @EruptField(
-            views = @View(title = "实例数", className = "text-center", width = "70px")
+            views = @View(title = "实例数", className = "text-center", width = "70px", tpl = @Tpl(path = "/tpl/node-manager.ftl"))
     )
     private Integer instanceNum;
 
@@ -184,7 +184,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                     Function<Collection<String>, Object> function = (it) -> null == it ? 0 : String.format("<a href='javascript:alert(\"%s\");'>%d</a>",
                             String.join("\\u000a", it), it.size());
                     map.put(eruptNumStr, function.apply(metaNode.getErupts()));
-                    map.put(instanceNumStr, function.apply(metaNode.getLocations()));
+//                    map.put(instanceNumStr, function.apply(metaNode.getLocations()));
                     map.put(eruptModuleNum, function.apply(metaNode.getEruptModules()));
                     map.put(version, metaNode.getVersion());
                 });
