@@ -26,7 +26,7 @@
             </div>
             <el-row>
               <el-col :xs="20" :sm="8" :md="8" :lg="6" :xl="4">
-                <el-link @click="showDetail(inst)" :underline="false" style="font: 14px large;">{{inst.businessTitle}}</el-link>
+                <el-link @click="showDetail(inst)" :underline="false" style="font: 16px large;">{{inst.businessTitle}}</el-link>
               </el-col>
               <el-col :xs="4" :sm="8" :md="8" :lg="6" :xl="8">
                 <el-tag :type="getStatus(inst).type"  style="margin-left: 10px;">
@@ -229,7 +229,7 @@ export default {
     height: 35px;
     line-height: 35px;
     padding-left: 10px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .taskCardHeader {
     border-bottom: 1px solid #e3e3e3;

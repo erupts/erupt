@@ -96,6 +96,8 @@ export default {
     submitForm() {
       this.$refs.processForm.validate(valid => {
         if (valid) {
+          //console.log(this.$refs.processForm.formData);
+          //return;
           startByFormId(this.selectForm.id, this.$refs.processForm.formData).then(rsp => {
             this.$message.success(rsp.message);
             this.openItemDl = false;
