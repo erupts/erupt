@@ -3,11 +3,11 @@
     <div class="header">
       <el-menu :default-active="value" active-text-color="#409eff" class="el-menu-demo" mode="horizontal"
                @select="handleSelect">
-        <el-menu-item index="baseSetting" @click="to('baseSetting')">① 基础信息</el-menu-item>
-        <el-menu-item index="formSetting" @click="to('formSetting')">② 表单</el-menu-item>
-        <el-menu-item index="processDesign" @click="to('processDesign')">③ 审批流程
-        </el-menu-item>
-        <el-menu-item index="proSetting" @click="to('proSetting')">④ 扩展设置</el-menu-item>
+        <el-menu-item class="e1" index="baseSetting" @click="to('baseSetting')">① 基础信息     </el-menu-item>
+        <el-menu-item class="e1" index="formSetting" @click="to('formSetting')">② 表单         </el-menu-item>
+        <el-menu-item class="e1" index="processDesign" @click="to('processDesign')">③ 审批流程  </el-menu-item>
+        <!-- 暂不支持签字 -->
+<!--        <el-menu-item index="proSetting" @click="to('proSetting')">④ 扩展设置</el-menu-item>-->
       </el-menu>
       <div class="publish">
 <!--        <el-button size="mini" @click="preview"><i class="el-icon-view"></i>预览</el-button>-->
@@ -115,6 +115,11 @@ export default {
 /deep/ .header {
   min-width: 980px;
   position: relative;
+
+  .e1 {
+    min-width: 150px;
+    text-align: center;
+  }
 
   .el-menu {
     top: 0;

@@ -163,8 +163,8 @@ public class EruptFlowCoreService implements ApplicationRunner {
             json.put("min", edit.numberType().min());
             json.put("max", edit.numberType().max());
             json.put("showChinese", false);
-        }else if("DateTime".equals(componentName)) {
-            if(DateType.Type.DATE.equals(edit.dateType().type())) {
+        } else if ("DateTime".equals(componentName)) {
+            if (DateType.Type.DATE.equals(edit.dateType().type())) {
                 json.put("format", "yyyy-MM-dd");
             } else if (DateType.Type.TIME.equals(edit.dateType().type())) {
                 json.put("format", "HH:mm:ss");

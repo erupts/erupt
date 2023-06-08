@@ -111,5 +111,9 @@ public class OaProcessInstanceHistory {
 
     @TableField(exist = false)
     @Transient
+    private String logo;
+
+    @TableField(exist = false)
+    @Transient
     private String tag;
 }
