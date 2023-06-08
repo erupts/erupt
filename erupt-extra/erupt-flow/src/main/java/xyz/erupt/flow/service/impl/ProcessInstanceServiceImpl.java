@@ -47,6 +47,9 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
     private TaskUserLinkService taskUserLinkService;
     @Lazy
     @Autowired
+    private ProcessDefinitionService processDefinitionService;
+    @Lazy
+    @Autowired
     private TaskService taskService;
 
     /**
@@ -157,6 +160,13 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
                 .orderByDesc(OaProcessInstanceHistory::getCreateDate);
         PageHelper.startPage(pageNum, pageSize);//分页
         List<OaProcessInstanceHistory> list = processInstanceHistoryService.list(queryWrapper);
+        //查询所有对应的流程定义
+        List<OaProcessDefinition> procDefs = processDefinitionService.listByIds(list.stream().map(e -> e.getProcessDefId()).collect(Collectors.toSet()));
+        Map<String, OaProcessDefinition> procDefMap = procDefs.stream()
+                .collect(Collectors.toMap(OaProcessDefinition::getId, e -> e, (key1, key2) -> key1));
+        //循环设置logo
+        list.forEach(l -> l.setLogo(procDefMap.get(l.getProcessDefId()).getLogo()));
+
         //先把所有任务分类
         Map<Long, OaTaskHistory> taskMap
                 = tasks.stream().collect(Collectors.toMap(OaTaskHistory::getProcessInstId, e -> {
