@@ -19,7 +19,7 @@
           <div class="taskCardHeader">
             <el-row>
               <el-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
-                <el-link class="taskCell" :underline="false" @click="showDetail(task)" style="font: 14px large;">{{task.taskName}}</el-link>
+                <el-link class="taskCell" :underline="false" @click="showDetail(task)" style="font: 16px large;">{{task.taskName}}</el-link>
               </el-col>
               <el-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <span class="taskCell" style="color: #909399;"> {{task.createDate}}</span>
@@ -186,7 +186,7 @@ export default {
     height: 35px;
     line-height: 35px;
     padding-left: 10px;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .taskCardHeader {
