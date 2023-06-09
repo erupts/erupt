@@ -7,15 +7,15 @@
 <body>
 <div id="app">
     <template>
-        <a-list bordered :data-source="instances">
+        <a-list bordered :data-source="instances" style="border-radius: 0">
             <a-list-item slot="renderItem" slot-scope="item, index">
                 <div style="display: flex;justify-content: space-between;align-items: center;width: 100%">
                     <span>{{item}}</span>
-                    <span>
-                        <a-popconfirm title="确定要移除该实例吗？" @confirm="confirm">
-                            <a-icon type="delete" theme="twoTone" two-tone-color="#f00"/>
-                        </a-popconfirm>
-                    </span>
+<#--                    <span>-->
+<#--                        <a-popconfirm title="确定要移除该实例吗？" @confirm="confirm(item)">-->
+<#--                            <a-icon type="delete" theme="twoTone" two-tone-color="#f00"/>-->
+<#--                        </a-popconfirm>-->
+<#--                    </span>-->
                 </div>
             </a-list-item>
         </a-list>
@@ -33,8 +33,9 @@
             };
         },
         methods: {
-            confirm() {
-                alert(123)
+            confirm(item) {
+                console.log(item)
+                axios.get("www.baidu.com");
             }
         }
     });
