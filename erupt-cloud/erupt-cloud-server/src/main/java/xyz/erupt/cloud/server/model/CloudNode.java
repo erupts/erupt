@@ -101,8 +101,9 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
 
     @Transient
     @EruptField(
-            views = @View(title = "实例数", className = "text-center", width = "70px",
-                    tpl = @Tpl(path = "/tpl/node-instance.ftl", width = "400px", tplHandler = CloudNode.class))
+            views = @View(title = "实例数", className = "text-center", width = "70px"
+                    , tpl = @Tpl(path = "/tpl/node-instance.ftl", width = "400px", tplHandler = CloudNode.class)
+            )
     )
     private Integer instanceNum;
 
