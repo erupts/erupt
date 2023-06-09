@@ -22,17 +22,16 @@ import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.cloud.server.base.CloudServerConst;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
+import xyz.erupt.tpl.engine.EngineConst;
 import xyz.erupt.upms.handler.ViaMenuValueCtrl;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -51,7 +50,7 @@ import java.util.function.Function;
         )
 )
 @Component
-public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>, TagsFetchHandler {
+public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>, TagsFetchHandler, Tpl.TplHandler {
 
     public static final String NODE_NAME = "nodeName";
 
@@ -103,7 +102,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
     @Transient
     @EruptField(
             views = @View(title = "实例数", className = "text-center", width = "70px",
-                    tpl = @Tpl(path = "/tpl/node-instance.ftl"))
+                    tpl = @Tpl(path = "/tpl/node-instance.ftl", width = "400px", tplHandler = CloudNode.class))
     )
     private Integer instanceNum;
 
@@ -185,7 +184,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                     Function<Collection<String>, Object> function = (it) -> null == it ? 0 : String.format("<a href='javascript:alert(\"%s\");'>%d</a>",
                             String.join("\\u000a", it), it.size());
                     map.put(eruptNumStr, function.apply(metaNode.getErupts()));
-//                    map.put(instanceNumStr, function.apply(metaNode.getLocations()));
+                    map.put(instanceNumStr, metaNode.getLocations().size());
                     map.put(eruptModuleNum, function.apply(metaNode.getEruptModules()));
                     map.put(version, metaNode.getVersion());
                 });
@@ -205,4 +204,12 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
     public List<String> fetchTags(String[] params) {
         return eruptDao.getJdbcTemplate().queryForList("select name from e_upms_user", String.class);
     }
+
+    @Override
+    public void bindTplData(Map<String, Object> binding, String[] params) {
+        CloudNode cloudNode = (CloudNode) binding.get(EngineConst.INJECT_ROW);
+        MetaNode metaNode = nodeManager.getNode(cloudNode.getNodeName());
+        binding.put("instances", GsonFactory.getGson().toJson(null == metaNode ? new ArrayList<>() : metaNode.getLocations()));
+    }
+
 }
