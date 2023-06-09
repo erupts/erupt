@@ -42,6 +42,11 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-tpl-ui.ant-design</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
         </dependency>

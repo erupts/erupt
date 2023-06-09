@@ -52,11 +52,6 @@ public @interface EruptRouter {
 
     interface VerifyHandler {
 
-//        /**
-//         * @return true 校验通过 | false 校验失败
-//         */
-//        boolean verify(EruptRouter eruptRouter, HttpServletRequest request);
-
         /**
          * 动态转换授权菜单权限标识字符
          *
