@@ -61,11 +61,10 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         EruptRouter eruptRouter = null;
         if (handler instanceof HandlerMethod) {
-            eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            eruptRouter = handlerMethod.getMethodAnnotation(EruptRouter.class);
         }
-        if (null == eruptRouter) {
-            return true;
-        }
+        if (null == eruptRouter) return true;
         String token = null;
         String eruptName = null;
         String parentEruptName = null;
