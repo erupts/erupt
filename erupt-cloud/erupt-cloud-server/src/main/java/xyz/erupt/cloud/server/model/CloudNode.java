@@ -31,7 +31,10 @@ import xyz.erupt.upms.handler.ViaMenuValueCtrl;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -210,7 +213,11 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
     public void bindTplData(Map<String, Object> binding, String[] params) {
         CloudNode cloudNode = (CloudNode) binding.get(EngineConst.INJECT_ROW);
         MetaNode metaNode = nodeManager.getNode(cloudNode.getNodeName());
-        binding.put("instances", GsonFactory.getGson().toJson(null == metaNode ? new ArrayList<>() : metaNode.getLocations()));
+        if (null == metaNode) {
+            binding.put("instances", "[]");
+        } else {
+            binding.put("instances", GsonFactory.getGson().toJson(metaNode.getLocations()));
+        }
     }
 
 }

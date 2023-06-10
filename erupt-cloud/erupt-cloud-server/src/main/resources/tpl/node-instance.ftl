@@ -11,11 +11,11 @@
             <a-list-item slot="renderItem" slot-scope="item, index">
                 <div style="display: flex;justify-content: space-between;align-items: center;width: 100%">
                     <span>{{item}}</span>
-<#--                    <span>-->
-<#--                        <a-popconfirm title="确定要移除该实例吗？" @confirm="confirm(item)">-->
-<#--                            <a-icon type="delete" theme="twoTone" two-tone-color="#f00"/>-->
-<#--                        </a-popconfirm>-->
-<#--                    </span>-->
+                    <span>
+                        <a-popconfirm title="确定要移除该实例吗？" @confirm="confirm(item)">
+                            <a-icon type="delete" theme="twoTone" two-tone-color="#f00"/>
+                        </a-popconfirm>
+                    </span>
                 </div>
             </a-list-item>
         </a-list>
@@ -34,8 +34,28 @@
         },
         methods: {
             confirm(item) {
-                console.log(item)
-                axios.get("www.baidu.com");
+                let param = {};
+                let paramsArr = location.search.substring(1).split('&')
+                for (let i = 0, len = paramsArr.length; i < len; i++) {
+                    let arr = paramsArr[i].split('=')
+                    param[arr[0]] = arr[1];
+                }
+                axios.get("/erupt-cloud-api/remove-instance/${row.nodeName}?instance=" + item, {
+                    headers: {
+                        token: param["_token"]
+                    }
+                }).then(data => {
+                    window.location.reload();
+                }).catch((err) => {
+                    if (err.response.status === 401) {
+                        window.parent.location.reload();
+                    }
+                    if (err.response.status === 403) {
+                        this.$message.error("permission denied");
+                    } else {
+                        this.$message.info(err.response.statusText);
+                    }
+                });
             }
         }
     });
