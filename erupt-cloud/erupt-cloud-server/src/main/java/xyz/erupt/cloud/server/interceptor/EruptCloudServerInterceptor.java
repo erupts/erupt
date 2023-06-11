@@ -112,6 +112,11 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 response.sendError(HttpStatus.UNAUTHORIZED.value());
                 return false;
             }
+            if (null == eruptUserService.getEruptMenuByValue(erupt)) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.sendError(HttpStatus.FORBIDDEN.value());
+                return false;
+            }
             int point = erupt.lastIndexOf(".");
             String nodeName = erupt.substring(0, point);
             String eruptName = erupt.substring(point + 1);
