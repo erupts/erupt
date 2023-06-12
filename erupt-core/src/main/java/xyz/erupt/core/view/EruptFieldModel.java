@@ -42,11 +42,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private Object value;
 
-    //仅前端使用
-    private List<VLModel> choiceList;
-
-    //仅前端使用
-    private List<String> tagList;
+    private Object componentValue;
 
     public EruptFieldModel(Field field) {
         this.field = field;
