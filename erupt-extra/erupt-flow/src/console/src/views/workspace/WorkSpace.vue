@@ -32,7 +32,7 @@
     </el-tabs>
 
     <el-dialog :title="formTitle" width="800px" top="20px" :visible.sync="openItemDl" :close-on-click-modal="false">
-      <initiate-process ref="processForm" :code="selectForm.id" v-if="openItemDl"></initiate-process>
+      <initiate-process ref="processForm" :code="selectForm.formId" v-if="openItemDl"></initiate-process>
       <span slot="footer" class="dialog-footer">
 				<el-button @click="openItemDl = false">取 消</el-button>
 				<el-button type="primary" @click="submitForm">提 交</el-button>
