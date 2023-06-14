@@ -308,7 +308,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
 
     @Override
     public void saveBatchWithUserLink(List<OaTask> oaTasks) {
-        this.saveBatch(oaTasks);
+        oaTasks.forEach(this::save);
         taskHistoryService.copyAndSave(oaTasks);
 
         oaTasks.forEach(t -> {
