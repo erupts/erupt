@@ -1,6 +1,8 @@
 package xyz.erupt.flow.bean.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +46,7 @@ public class OaProcessInstanceHistory {
     @GenericGenerator(name = "generator", strategy = "native")
     @Column(name = "id")
     @EruptField(views = @View(title = "实例ID"))
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     @EruptField(views = @View(title = "流程定义id"))

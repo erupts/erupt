@@ -2,6 +2,8 @@ package xyz.erupt.flow.bean.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +54,7 @@ public class OaProcessInstance {
     @GenericGenerator(name = "generator", strategy = "native")
     @Column(name = "id")
     @EruptField
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     @EruptField(views = @View(title = "流程定义id", show = true))
