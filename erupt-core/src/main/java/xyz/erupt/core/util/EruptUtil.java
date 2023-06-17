@@ -291,13 +291,29 @@ public class EruptUtil {
     /**
      * 前端数据处理逻辑
      */
-    public static void processEruptValue(EruptModel eruptModel, JsonObject jsonObject) {
+    public static void processEruptWebValue(EruptModel eruptModel, JsonObject jsonObject) {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             JsonElement value = jsonObject.get(field.getFieldName());
+            Edit edit = field.getEruptField().edit();
             if (null != value && !value.isJsonNull()) {
                 //代码编辑器类型加密传输后解密
-                if (field.getEruptField().edit().type() == EditType.CODE_EDITOR) {
+                if (edit.type() == EditType.CODE_EDITOR) {
                     jsonObject.addProperty(field.getFieldName(), SecretUtil.decodeSecret(value.getAsString()));
+                } else {
+                    if (value.isJsonObject() && edit.type() == EditType.COMBINE) {
+                        processEruptWebValue(EruptCoreService.getErupt(field.getFieldReturnName()), value.getAsJsonObject());
+                    } else if (value.isJsonArray()) {
+                        switch (edit.type()) {
+                            case TAB_TABLE_ADD:
+                            case TAB_TABLE_REFER:
+                                value.getAsJsonArray().forEach(jsonElement ->
+                                        Optional.ofNullable(EruptCoreService.getErupt(field.getFieldReturnName())).ifPresent(it -> {
+                                            processEruptWebValue(it, jsonElement.getAsJsonObject());
+                                        })
+                                );
+                                break;
+                        }
+                    }
                 }
                 //TODO 密码组件值加密传输后解密
             }
