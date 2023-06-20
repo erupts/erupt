@@ -39,14 +39,14 @@
         <el-input placeholder="请输入表单说明" v-model="setup.remark" type="textarea" show-word-limit
                   :autosize="{ minRows: 2, maxRows: 5}" maxlength="500"></el-input>
       </el-form-item>
-      <el-form-item v-if="setup.settings" label="消息通知方式" :rules="getRule('请选择消息通知方式')">
-        <el-select v-model="setup.settings.notify.types" value-key="name"
-                   placeholder="选择消息通知方式" style="width: 30%;"
-                   size="medium" clearable multiple collapse-tags>
-          <el-option v-for="(wc, index) in notifyTypes" :label="wc.name" :key="index" :value="wc"></el-option>
-        </el-select>
-        <el-input size="medium" v-model="setup.settings.notify.title" style="width: 68%; float:right;" placeholder="消息通知标题"></el-input>
-      </el-form-item>
+<!--      <el-form-item v-if="setup.settings" label="消息通知方式" :rules="getRule('请选择消息通知方式')">-->
+<!--        <el-select v-model="setup.settings.notify.types" value-key="name"-->
+<!--                   placeholder="选择消息通知方式" style="width: 30%;"-->
+<!--                   size="medium" clearable multiple collapse-tags>-->
+<!--          <el-option v-for="(wc, index) in notifyTypes" :label="wc.name" :key="index" :value="wc"></el-option>-->
+<!--        </el-select>-->
+<!--        <el-input size="medium" v-model="setup.settings.notify.title" style="width: 68%; float:right;" placeholder="消息通知标题"></el-input>-->
+<!--      </el-form-item>-->
       <!--<el-form-item v-if="setup.settings" label="谁可以管理此表单">
         <el-select v-model="setup.settings.admin" @click.native="selectUser('admin')" value-key="name"
                    class="select-u" placeholder="请选择可以管理此表单的人员"

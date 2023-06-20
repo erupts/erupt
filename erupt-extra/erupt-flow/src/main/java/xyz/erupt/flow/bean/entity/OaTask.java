@@ -1,6 +1,8 @@
 package xyz.erupt.flow.bean.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,6 +42,7 @@ public class OaTask {
     @GenericGenerator(name = "generator", strategy = "native")
     @Column(name = "id")
     @EruptField
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     @EruptField(views = @View(title = "节点id"))
@@ -154,4 +157,8 @@ public class OaTask {
     @TableField(exist = false)
     @EruptField(views = @View(title = "流程发起事件"))
     private Date instCreateDate;
+
+    @Transient
+    @TableField(exist = false)
+    private String logo;
 }

@@ -72,4 +72,5 @@ public interface ProcessDefinitionService extends IService<OaProcessDefinition> 
      * @return
      */
     OaProcessNode readNode(String processDefId, String nodeId);
+
 }

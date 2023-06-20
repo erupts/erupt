@@ -60,7 +60,7 @@ export default {
         {title: '基础信息', description: '', icon: '', status: ''},
         {title: '审批表单', description: '', icon: '', status: ''},
         {title: '审批流程', description: '', icon: '', status: ''},
-        {title: '扩展设置', description: '', icon: '', status: ''}
+        /*{title: '扩展设置', description: '', icon: '', status: ''}*/
       ],
       validComponents: ['baseSetting', 'formSetting', 'processDesign', 'proSetting'],
     }
@@ -120,7 +120,7 @@ export default {
         formId: null,
         formName: "未命名表单",
         logo: {
-          icon: "el-icon-eleme",
+          icon: "iconfont icon-shiyongwendang",
           background: "#1e90ff"
         },
         settings: {
@@ -226,7 +226,7 @@ export default {
       this.validateDesign()
     },
     doPublish() {
-      this.$confirm('如果您只想预览请选择预览，确认发布后流程立即生效，是否继续?', '提示', {
+      this.$confirm('确认发布后流程立即生效，是否继续?', '提示', {
         confirmButtonText: '发布',
         cancelButtonText: '取消',
         type: 'warning'
