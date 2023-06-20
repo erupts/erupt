@@ -1,7 +1,9 @@
 <template>
   <!--渲染表单-->
   <el-form ref="form" class="process-form" label-position="top" :rules="rules" :model="_value">
-    <el-form-item v-if="item.name !== 'SpanLayout' && item.name !== 'Description'" :prop="item.id" :label="item.title" v-for="(item, index) in forms" :key="item.name + index">
+    <el-form-item
+        style="margin-bottom: 0px;"
+        v-if="item.name !== 'SpanLayout' && item.name !== 'Description'" :prop="item.id" :label="item.title" v-for="(item, index) in forms" :key="item.name + index">
       <form-design-render :ref="`sub-item_${item.id}`" v-model="_value[item.id]" :mode="mode" :formDisable="formDisable" :config="item"
         @change="change"
       />

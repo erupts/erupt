@@ -94,7 +94,7 @@ public class TaskBuilder {
             }
             if(!CollectionUtils.isEmpty(this.linkRoles)) {//候选角色则需要查询，然后转为审批人
                 LinkedHashSet<OrgTreeVo> users =
-                        userLinkService.getUserIdsByRoleIds(this.linkRoles.toArray(new String[this.linkRoles.size()]));
+                        userLinkService.getUserIdsByRoleIds(this.linkRoles.stream().map(l -> l.getId()).toArray(String[]::new));
                 this.users.addAll(users);
             }
             if(!CollectionUtils.isEmpty(this.users)) {
