@@ -2,6 +2,7 @@ package xyz.erupt.core.proxy;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.annotation.EruptI18n;
 
 import java.lang.reflect.Field;
 
@@ -21,12 +22,16 @@ public class ProxyContext {
 
     private Field field;
 
+    private boolean i18n = false;
+
     public static void set(Class<?> clazz) {
         proxyContextThreadLocal.get().setClazz(clazz);
+        proxyContextThreadLocal.get().setI18n(null != clazz.getAnnotation(EruptI18n.class));
     }
 
     public static void set(Field field) {
         proxyContextThreadLocal.get().setField(field);
+        ProxyContext.set(field.getDeclaringClass());
     }
 
     public static void remove() {
