@@ -63,6 +63,8 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                 }
                 return ViewType.TEXT;
             }
+        } else if ("title".equals(invocation.getMethod().getName())) {
+            return ProxyContext.translate(this.rawAnnotation.title());
         }
         return this.invoke(invocation);
     }

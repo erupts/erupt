@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.core.prop.EruptProp;
-import xyz.erupt.core.service.I18NTranslateService;
 
 import javax.annotation.Resource;
 import java.io.BufferedReader;
@@ -31,25 +31,27 @@ import java.util.jar.JarFile;
  */
 @Service
 @Slf4j
-public class I18nProcess extends HashMap<String, Map<String, String>> implements ApplicationRunner {
+public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> implements ApplicationRunner {
 
     //语言文件对应文字映射
-    private static final I18nProcess langMappings = new I18nProcess();
+    private static final I18nRunner langMappings = new I18nRunner();
+
     private static final String I18N_EXT = "i18n.csv";
     @Resource
     private EruptProp eruptProp;
-    @Resource
-    private I18NTranslateService i18NTranslateService;
 
-    public static Map<String, String> getLangMapping(String lang) {
-        return langMappings.get(lang);
+    public static String getI18nValue(String lang, String key) {
+        if (null == langMappings.get(lang)) {
+            return key;
+        }
+        return Optional.ofNullable(langMappings.get(lang).get(key)).orElse(key);
     }
 
     @Override
     @SneakyThrows
     public void run(ApplicationArguments args) {
         if (eruptProp.isI18n()) {
-            Enumeration<URL> urls = I18nProcess.class.getClassLoader().getResources("i18n/");
+            Enumeration<URL> urls = I18nRunner.class.getClassLoader().getResources("i18n/");
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
                 switch (url.getProtocol()) {
@@ -62,7 +64,6 @@ public class I18nProcess extends HashMap<String, Map<String, String>> implements
                         break;
                 }
             }
-//            i18NTranslateService.registerI18NMapping(langMappings);
         }
     }
 
@@ -74,7 +75,7 @@ public class I18nProcess extends HashMap<String, Map<String, String>> implements
             if (fileName.endsWith(I18N_EXT)) {
                 @Cleanup FileInputStream fileInputStream = new FileInputStream(file);
                 @Cleanup InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
-                this.putLang(inputStreamReader);
+                this.writeLang(inputStreamReader);
             }
         } else if (fileAttributes.isDirectory()) {
             Optional.ofNullable(file.listFiles()).ifPresent(files -> Arrays.stream(files).forEach(this::scanFile));
@@ -89,31 +90,33 @@ public class I18nProcess extends HashMap<String, Map<String, String>> implements
             if (entry.getName().endsWith(I18N_EXT)) {
                 try (InputStreamReader inputStreamReader = new InputStreamReader(
                         jar.getInputStream(entry), StandardCharsets.UTF_8)) {
-                    this.putLang(inputStreamReader);
+                    this.writeLang(inputStreamReader);
                 }
             }
         }
     }
 
     @SneakyThrows
-    private void putLang(InputStreamReader inputStreamReader) {
+    private void writeLang(InputStreamReader inputStreamReader) {
         @Cleanup BufferedReader reader = new BufferedReader(inputStreamReader);
         String line;
         List<String> header = new ArrayList<>();
+        boolean first = true;
         while ((line = reader.readLine()) != null) {
             String[] row = line.split(",");
             for (int i = 0; i < row.length; i++) {
-                if (header.size() == 0) {
+                if (first) {
                     header.add(row[i]);
                     if (!langMappings.containsKey(row[i])) {
                         langMappings.put(row[i], new HashMap<>());
                     }
                 } else {
-                    if (row.length == header.size()) {
+                    if (i <= header.size()) {
                         langMappings.get(header.get(i)).put(row[0], row[i]);
                     }
                 }
             }
+            first = false;
         }
     }
 
