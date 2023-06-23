@@ -31,6 +31,7 @@ public class I18nTranslate {
                 }
             }
         } catch (Exception ignored) {
+
         }
         return key;
     }
