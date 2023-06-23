@@ -50,6 +50,8 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
                 return proxyFilters;
             case "readonly":
                 return AnnotationProxyPool.getOrPut(this.rawAnnotation.readonly(), readonly -> new ReadonlyProxy().newProxy(readonly, this));
+            case "title":
+                return ProxyContext.translate(this.rawAnnotation.title());
         }
         return this.invoke(invocation);
     }

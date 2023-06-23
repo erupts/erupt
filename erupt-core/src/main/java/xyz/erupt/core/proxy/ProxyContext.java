@@ -3,6 +3,8 @@ package xyz.erupt.core.proxy;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.util.EruptSpringUtil;
 
 import java.lang.reflect.Field;
 
@@ -34,12 +36,20 @@ public class ProxyContext {
         ProxyContext.set(field.getDeclaringClass());
     }
 
+    public static ProxyContext get() {
+        return proxyContextThreadLocal.get();
+    }
+
     public static void remove() {
         proxyContextThreadLocal.remove();
     }
 
-    public static ProxyContext get() {
-        return proxyContextThreadLocal.get();
+    public static String translate(String key, Object... args) {
+        if (get().i18n) {
+            return EruptSpringUtil.getBean(I18nTranslate.class).translate(key, args);
+        } else {
+            return String.format(key, args);
+        }
     }
 
 }

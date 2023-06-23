@@ -56,7 +56,7 @@ public class I18nProcess extends HashMap<String, Properties> implements Applicat
                     break;
             }
         }
-        i18NTranslateService.registerI18NMapping(langMappings);
+//        i18NTranslateService.registerI18NMapping(langMappings);
     }
 
     @SneakyThrows
