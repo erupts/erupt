@@ -15,7 +15,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
-import xyz.erupt.core.service.I18NTranslateService;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserPostVo;
@@ -68,15 +68,12 @@ public class LookerOrg extends BaseModel {
         @Resource
         private EruptUserService eruptUserService;
 
-        @Resource
-        private I18NTranslateService i18NTranslateService;
-
         @Override
         public String beforeFetch(List<Condition> conditions) {
             EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
             if (eruptUser.getIsAdmin()) return null;
             if (null == eruptUser.getEruptOrg()) {
-                throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + i18NTranslateService.translate("未绑定的组织无法查看数据"));
+                throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + I18nTranslate.$translate("upms.no_bind_org"));
             } else {
                 return MetaContext.getErupt().getName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
             }

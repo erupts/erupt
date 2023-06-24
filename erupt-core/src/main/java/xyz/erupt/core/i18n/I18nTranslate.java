@@ -17,7 +17,7 @@ public class I18nTranslate {
     @Resource
     private HttpServletRequest request;
 
-    public static String translateByBean(String key, Object... args) {
+    public static String $translate(String key, Object... args) {
         return EruptSpringUtil.getBean(I18nTranslate.class).translate(key, args);
     }
 
@@ -34,6 +34,10 @@ public class I18nTranslate {
 
         }
         return key;
+    }
+
+    public String getLang() {
+        return request.getHeader("lang");
     }
 
 }
