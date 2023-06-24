@@ -25,6 +25,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
@@ -227,11 +228,11 @@ public class EruptUtil {
             if (edit.search().value() && edit.search().notNull()) {
                 Condition condition = conditionMap.get(fieldModel.getFieldName());
                 if (null == condition || null == condition.getValue()) {
-                    throw new EruptApiErrorTip(EruptApiModel.Status.INFO, edit.title() + "必填", EruptApiModel.PromptWay.MESSAGE);
+                    throw new EruptApiErrorTip(EruptApiModel.Status.INFO, edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
                 }
                 if (condition.getValue() instanceof List) {
                     if (((List<?>) condition.getValue()).size() == 0) {
-                        throw new EruptApiErrorTip(EruptApiModel.Status.INFO + edit.title() + "必填", EruptApiModel.PromptWay.MESSAGE);
+                        throw new EruptApiErrorTip(EruptApiModel.Status.INFO + edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
                     }
                 }
             }
@@ -244,10 +245,10 @@ public class EruptUtil {
             JsonElement value = jsonObject.get(field.getFieldName());
             if (field.getEruptField().edit().notNull()) {
                 if (null == value || value.isJsonNull()) {
-                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");
+                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
                 } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
-                        return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");
+                        return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
             }
@@ -261,7 +262,7 @@ public class EruptUtil {
                 //xss 注入处理
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
                     if (SecurityUtil.xssInspect(value.getAsString())) {
-                        return EruptApiModel.errorNoInterceptApi(field.getEruptField().edit().title() + "检测到有恶意跨站脚本，请重新编辑！");
+                        return EruptApiModel.errorNoInterceptApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
                     }
                 }
                 //数据类型校验
@@ -269,7 +270,7 @@ public class EruptUtil {
                     case NUMBER:
                     case SLIDER:
                         if (!NumberUtils.isCreatable(value.getAsString())) {
-                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必须为数值");
+                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title()  + " "+I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
                     case INPUT:
@@ -277,7 +278,7 @@ public class EruptUtil {
                             String content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "格式不正确");
+                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title()+" "+I18nTranslate.$translate("erupt.incorrect_format"));
                                 }
                             }
                         }

@@ -3,7 +3,7 @@ package xyz.erupt.upms.model.input;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
-import xyz.erupt.core.service.I18NTranslateService;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptUser;
@@ -22,9 +22,6 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
     @Resource
     private EruptDao eruptDao;
 
-    @Resource
-    private I18NTranslateService i18NTranslateService;
-
     @Override
     @Transactional
     public String exec(List<EruptUser> data, ResetPassword resetPassword, String[] param) {
@@ -39,7 +36,7 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
             }
             eruptDao.merge(eruptUser);
         } else {
-            throw new EruptWebApiRuntimeException(i18NTranslateService.translate("两次密码输入不一致"));
+            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("upms.pwd_two_inconsistent"));
         }
         return null;
     }

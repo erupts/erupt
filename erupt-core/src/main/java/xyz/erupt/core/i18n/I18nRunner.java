@@ -7,9 +7,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
-import xyz.erupt.core.prop.EruptProp;
 
-import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,8 +35,6 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> im
     private static final I18nRunner langMappings = new I18nRunner();
 
     private static final String I18N_EXT = "i18n.csv";
-    @Resource
-    private EruptProp eruptProp;
 
     public static String getI18nValue(String lang, String key) {
         if (null == langMappings.get(lang)) {
@@ -50,19 +46,17 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> im
     @Override
     @SneakyThrows
     public void run(ApplicationArguments args) {
-        if (eruptProp.isI18n()) {
-            Enumeration<URL> urls = I18nRunner.class.getClassLoader().getResources("i18n/");
-            while (urls.hasMoreElements()) {
-                URL url = urls.nextElement();
-                switch (url.getProtocol()) {
-                    case "file":
-                        scanFile(new File(URLDecoder.decode(url.getFile(), Charset.defaultCharset().name())));
-                        break;
-                    case "jar":
-                        JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
-                        scanJar(urlConnection.getJarFile());
-                        break;
-                }
+        Enumeration<URL> urls = I18nRunner.class.getClassLoader().getResources("i18n/");
+        while (urls.hasMoreElements()) {
+            URL url = urls.nextElement();
+            switch (url.getProtocol()) {
+                case "file":
+                    scanFile(new File(URLDecoder.decode(url.getFile(), Charset.defaultCharset().name())));
+                    break;
+                case "jar":
+                    JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
+                    scanJar(urlConnection.getJarFile());
+                    break;
             }
         }
     }
@@ -111,7 +105,7 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> im
                         langMappings.put(row[i], new HashMap<>());
                     }
                 } else {
-                    if (i <= header.size()) {
+                    if (i < header.size()) {
                         langMappings.get(header.get(i)).put(row[0], row[i]);
                     }
                 }

@@ -1,0 +1,59 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru_RU,es_ES
+创建人,创建人,創建人,Creator user
+创建时间,创建时间,創建時間,Creator time
+更新人,更新人,更新人,Update user
+更新时间,更新时间,更新時間,Update time
+编码,编码,編碼,Code
+名称,名称,名稱,Title
+备注,备注,備註,Remark
+用户名,用户名,用戶名,Account
+姓名,姓名,姓名,Name
+密码,密码,密碼,Password
+确认密码,确认密码,確認密碼,Confirm password
+md5加密,md5加密,md5加密,MD5 encrypt
+ip白名单,ip白名单,ip白名單,Ip white list
+所属角色,所属角色,所屬角色,Role
+手机号码,手机号码,手機號碼,Phone
+所属组织,所属组织,所屬組織,Org
+岗位,岗位,崗位,Post
+账户状态,账户状态,賬戶狀態,Status
+邮箱,邮箱,郵箱,Email
+首页菜单,首页菜单,首頁菜單,Home menu
+状态,状态,狀態,Status
+操作权限,操作权限,操作權限,Operation permissions
+菜单权限,菜单权限,菜單權限,Menu permissions
+包含用户,包含用户,包含用戶,Contain user
+菜单类型,菜单类型,菜單類型,Menu type
+类型值,类型值,類型值,Menu value
+顺序,顺序,順序,Order
+图标,图标,圖標,Icon
+上级菜单,上级菜单,上級菜單,Parent
+自定义参数,自定义参数,自定義參數,Customer param
+组织编码,组织编码,組織編碼,Org code
+组织名称,组织名称,組織名稱,Org name
+上级组织,上级组织,上級組織,Parent org
+显示顺序,显示顺序,顯示順序,Order
+岗位编码,岗位编码,崗位編碼,Code
+岗位名称,岗位名称,崗位名稱,Name
+岗位权重,岗位权重,崗位權重,Weight
+用户,用户,用戶,User
+登录时间,登录时间,登錄時間,Login time
+IP地址,IP地址,IP地址,Ip address
+IP来源,IP来源,IP來源,Op source
+操作系统,操作系统,操作系統,OS
+浏览器,浏览器,瀏覽器,Browser
+设备类型,设备类型,設備類型,Device type
+功能名称,功能名称,功能名稱,Function name
+请求参数,请求参数,請求參數,Req param
+是否成功,是否成功,是否成功,Is success
+请求耗时,请求耗时,請求耗時,Req time
+记录时间,记录时间,記錄時間,Record time
+请求地址,请求地址,請求地址,URL
+请求方法,请求方法,請求方法,Method
+强退,强退,強退,Strong back
+upms.pwd_required,密码必填,密碼必填,Password required,,,,,
+upms.pwd_two_inconsistent,两次密码输入不一致,兩次密碼輸入不一致,The two password entries are inconsistent,,,,,
+upms.no_bind_post,未绑定的岗位无法查看数据,未綁定的崗位無法查看數據,Unbound posts cannot view data,,,,,
+upms.no_bind_org,未绑定的组织无法查看数据,未綁定的組織無法查看數據,Unbound organizations cannot view data,,,,,
+upms.not_super_admin-unable_add,当前用户非超管，无法创建超管用户,當前用戶非超管，無法創建超管用戶,"The current user is not hypermanaged. Therefore, you cannot create an hypermanaged user",,,,,
+upms.position_no_org,选择岗位时，所属组织必填,選擇崗位時，所屬組織必填,"When selecting a position, the organization is required",,,,,

@@ -19,8 +19,6 @@ public class EruptProp {
     @Deprecated
     private boolean hotBuild = false;
 
-    private boolean i18n = true;
-
     //附件存储根路径
     private String uploadPath = "/opt/erupt-attachment";
 
