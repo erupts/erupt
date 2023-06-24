@@ -3,6 +3,7 @@ package xyz.erupt.upms.helper;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -23,6 +24,7 @@ import java.util.Date;
 @Getter
 @Setter
 @MappedSuperclass
+@EruptI18n
 public class HyperModelUpdateVo extends HyperModel {
 
     @ManyToOne

@@ -3,6 +3,7 @@ package xyz.erupt.jpa.model;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.Readonly;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
+@EruptI18n
 public class MetaModelCreateVo extends MetaModel {
 
     @EruptField(
