@@ -22,22 +22,22 @@ public class I18nTranslate {
     }
 
     public String translate(String key, Object... args) {
-        try {
-            String lang = request.getHeader("lang");
-            if (null != lang) {
-                String result = I18nRunner.getI18nValue(lang, key);
-                if (StringUtils.isNotBlank(result)) {
-                    return String.format(result, args);
-                }
+        String lang = getLang();
+        if (null != lang) {
+            String result = I18nRunner.getI18nValue(lang, key);
+            if (StringUtils.isNotBlank(result)) {
+                return String.format(result, args);
             }
-        } catch (Exception ignored) {
-
         }
         return key;
     }
 
     public String getLang() {
-        return request.getHeader("lang");
+        try {
+            return request.getHeader("lang");
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
 }

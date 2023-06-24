@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.TagsFetchHandler;
@@ -53,6 +54,7 @@ import java.util.function.Function;
         )
 )
 @Component
+@EruptI18n
 public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>, TagsFetchHandler, Tpl.TplHandler {
 
     public static final String NODE_NAME = "nodeName";

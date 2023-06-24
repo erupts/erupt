@@ -34,7 +34,7 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> im
     //语言文件对应文字映射
     private static final I18nRunner langMappings = new I18nRunner();
 
-    private static final String I18N_EXT = "i18n.csv";
+    private static final String I18N_EXT = ".csv";
 
     public static String getI18nValue(String lang, String key) {
         if (null == langMappings.get(lang)) {
