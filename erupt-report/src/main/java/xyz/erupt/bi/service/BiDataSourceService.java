@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.core.service.I18NTranslateService;
 import xyz.erupt.core.util.Erupts;
 
 import javax.annotation.Resource;
@@ -32,9 +31,6 @@ public class BiDataSourceService implements DataProxy<BiDataSource>, DisposableB
 
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-    @Resource
-    private I18NTranslateService i18NTranslateService;
 
     @SneakyThrows
     public NamedParameterJdbcTemplate getJdbcTemplate(BiDataSource biDataSource) {
@@ -95,7 +91,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource>, DisposableB
             }
             Class.forName(biDataSource.getDriver());
         } catch (ClassNotFoundException e) {
-            throw new EruptApiErrorTip(i18NTranslateService.translate("找不到驱动类，请检查JDBC驱动包是否在项目内"));
+            throw new EruptApiErrorTip(biDataSource.getName() + " JDBC Driver class not found");
         }
     }
 
