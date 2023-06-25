@@ -20,7 +20,7 @@ public @interface View {
     @Comment("可在模板中使用row变量，获取当前行的数据")
     Tpl tpl() default @Tpl(path = "", enable = false);
 
-    @Comment("列宽度（请指定单位如：%,px）")
+    @Comment("列宽度（请指定单位如：%、px）")
     String width() default "";
 
     @Comment("修饰类型为实体类对象时必须指定列名")

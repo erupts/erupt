@@ -45,7 +45,7 @@ public class ProxyContext {
     }
 
     public static String translate(String key, Object... args) {
-        if (get().i18n) {
+        if (ProxyContext.get().i18n) {
             return EruptSpringUtil.getBean(I18nTranslate.class).translate(key, args);
         } else {
             return String.format(key, args);

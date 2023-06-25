@@ -10,6 +10,7 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.TagsFetchHandler;
+import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -46,12 +47,13 @@ import java.util.function.Function;
 @Setter
 @Entity
 @Table(name = "e_cloud_node", uniqueConstraints = @UniqueConstraint(columnNames = CloudNode.NODE_NAME))
-@Erupt(name = "节点配置", dataProxy = CloudNode.class,
+@Erupt(
+        name = "节点配置", dataProxy = CloudNode.class,
         rowOperation = @RowOperation(
                 title = "查看令牌", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
                 show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
                 type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl")
-        )
+        ), layout = @Layout(tableLeftFixed = 1)
 )
 @Component
 @EruptI18n

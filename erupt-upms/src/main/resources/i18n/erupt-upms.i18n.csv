@@ -1,4 +1,11 @@
 key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru_RU,es_ES
+upms.pwd_required,密码必填,密碼必填,Password required,Mot de passe requis,パスワードは必ず入力します,비밀번호 필수,Пароль будет заполнен.,Contraseña es necesario
+upms.pwd_two_inconsistent,两次密码输入不一致,兩次密碼輸入不一致,The two password entries are inconsistent,Deux entrées de mot de passe incohérentes,パスワードの入力が2回一致しません,두 번 입력한 비밀번호가 일치하지 않습니다,Два непоследовательных ввода пароля,Dos contraseñas introducidas incoherentemente
+upms.no_bind_post,未绑定的岗位无法查看数据,未綁定的崗位無法查看數據,Unbound posts cannot view data,Les messages non liés ne peuvent pas voir les données,紐付けられていない部署はデータを見ることができません,바인딩되지 않은 직무는 데이터를 볼 수 없습니다,Несвязанные посты не могут просматривать данные,Las publicaciones no vinculadas no pueden ver los datos
+upms.no_bind_org,未绑定的组织无法查看数据,未綁定的組織無法查看數據,Unbound organizations cannot view data,Les organisations non liées ne peuvent pas voir les données,結合されていない組織はデータを見ることができません,바인딩되지 않은 조직은 데이터를 볼 수 없습니다,Несвязанные ткани не могут видеть данные,Las organizaciones no vinculadas no pueden ver los datos
+upms.not_super_admin-unable_add,当前用户非超管，无法创建超管用户,當前用戶非超管，無法創建超管用戶,"The current user is not hypermanaged. Therefore, you cannot create an hypermanaged user","L’utilisateur actuel n’est pas supertube, impossible de créer un utilisateur supertube",現在のユーザーはスーパーチューブではないので、スーパーチューブを作成できません。,현재 사용자는 초과 튜브가 아니므로 초과 튜브를 만들 수 없습니다,В настоящее время абонент не является гипертрубкой и не может создать пользователя,"El usuario actual no es supertube, no se puede crear un usuario supertube"
+upms.position_no_org,选择岗位时，所属组织必填,選擇崗位時，所屬組織必填,"When selecting a position, the organization is required",Obligatoire pour l’organisation affiliée lors de la sélection d’un poste,部署を選ぶとき、所属組織は必ず記入します。,부서 선택시 소속 조직은 필수이다,"При выборе места, принадлежащая организации заполняет его",Requerido por la organización al seleccionar un puesto
+[erupt],,,,,,,,
 创建人,创建人,創建人,Creator user,Le créateur,設立者です,창립자,Создатель.,creador
 创建时间,创建时间,創建時間,Creator time,Temps de création,作成時間です,만든 시간,Создание времени,Hora de creación
 更新人,更新人,更新人,Update user,Renouveler la personne,人を更新します,갱신자,Обновление.,Renovar la persona
@@ -35,11 +42,11 @@ ip白名单,ip白名单,ip白名單,Ip white list,Liste blanche ip,ホワイト�
 显示顺序,显示顺序,顯示順序,Order,Afficher la commande,表示順序です,표시 순서,Покажи последовательность.,Mostrar el orden
 岗位编码,岗位编码,崗位編碼,Code,Code du poste,ポストコードです,직위 인코딩,Код поста,Código de posición
 岗位名称,岗位名称,崗位名稱,Name,Nom du poste,持ち場の名前です,직책 명칭,Название поста,Nombre del post
-岗位权重,岗位权重,崗位權重,Weight,Poids du poste,ポジションの重みです。,일자리 가중치,Вес поста,Peso del post
+岗位权重,岗位权重,崗位權重,Weight,Poids du poste,ポジションの重みです。,직위의 영향력,Вес поста,Peso del post
 用户,用户,用戶,User,Les utilisateurs,ユーザーです,사용자,пользовател,El usuario
 登录时间,登录时间,登錄時間,Login time,Temps de connexion,登録時間です,로그인 시간,Время входа.,Hora de inicio
 IP地址,IP地址,IP地址,Ip address,Votre adresse IP,IPアドレスです,ip 주소,IP адрес.,Dirección IP
-IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 원천,IP-адрес.,Origen de IP
+IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,IP-адрес.,Origen de IP
 操作系统,操作系统,操作系統,OS,Le système d’exploitation,osです,오퍼레이션 시스템,Операционная система,Sistema operativo
 浏览器,浏览器,瀏覽器,Browser,navigateur,ブラウザです,브라우저,браузер,explorador
 设备类型,设备类型,設備類型,Device type,Type de matériel,装置の種類です,장치 종류,Тип оборудования,Tipos de equipos
@@ -51,9 +58,30 @@ IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 원천,I
 请求地址,请求地址,請求地址,URL,Adresse de demande,請求先です,주소 요청,Запрашиваю адрес.,Dirección de solicitud
 请求方法,请求方法,請求方法,Method,Méthode de demande,請求方法です,요청 방법,Способ просьбы,Método de solicitud
 强退,强退,強退,Strong back,Forts de la restitution,強退です,강 퇴,Сильн назад,Denuncia fuerte
-upms.pwd_required,密码必填,密碼必填,Password required,Mot de passe requis,パスワードは必ず入力します,비밀번호 필수,Пароль будет заполнен.,Contraseña es necesario
-upms.pwd_two_inconsistent,两次密码输入不一致,兩次密碼輸入不一致,The two password entries are inconsistent,Deux entrées de mot de passe incohérentes,パスワードの入力が2回一致しません,두 번 입력한 비밀번호가 일치하지 않습니다,Два непоследовательных ввода пароля,Dos contraseñas introducidas incoherentemente
-upms.no_bind_post,未绑定的岗位无法查看数据,未綁定的崗位無法查看數據,Unbound posts cannot view data,Les messages non liés ne peuvent pas voir les données,紐付けられていない部署はデータを見ることができません,바인딩되지 않은 직무는 데이터를 볼 수 없습니다,Несвязанные посты не могут просматривать данные,Las publicaciones no vinculadas no pueden ver los datos
-upms.no_bind_org,未绑定的组织无法查看数据,未綁定的組織無法查看數據,Unbound organizations cannot view data,Les organisations non liées ne peuvent pas voir les données,結合されていない組織はデータを見ることができません,바인딩되지 않은 조직은 데이터를 볼 수 없습니다,Несвязанные ткани не могут видеть данные,Las organizaciones no vinculadas no pueden ver los datos
-upms.not_super_admin-unable_add,当前用户非超管，无法创建超管用户,當前用戶非超管，無法創建超管用戶,"The current user is not hypermanaged. Therefore, you cannot create an hypermanaged user","L’utilisateur actuel n’est pas supertube, impossible de créer un utilisateur supertube",現在のユーザーはスーパーチューブではないので、スーパーチューブを作成できません。,현재 사용자는 초과 튜브가 아니므로 초과 튜브를 만들 수 없습니다,В настоящее время абонент не является гипертрубкой и не может создать пользователя,"El usuario actual no es supertube, no se puede crear un usuario supertube"
-upms.position_no_org,选择岗位时，所属组织必填,選擇崗位時，所屬組織必填,"When selecting a position, the organization is required",Obligatoire pour l’organisation affiliée lors de la sélection d’un poste,部署を選ぶとき、所属組織は必ず記入します。,부서 선택시 소속 조직은 필수이다,"При выборе места, принадлежащая организации заполняет его",Requerido por la organización al seleccionar un puesto
+实体类名,实体类名,實體類名,Entity class name,Nom de classe d’entité,実体クラス名です,엔티티 클래스 이름,Настоящее имя класса,Nombre de clase de entidad
+表名,表名,表名,Table name,Tableau de,表名です,표 명,Час из,Tabla de
+简介,简介,簡介,intro,introduction,プロフィール,간단 한 소개,профил,perfil
+字段管理,字段管理,字段管理,Field management,Gestion des champs,フィールド管理です,필드 관리,Управление полем,Gestión de campos
+字段名,字段名,字段名,Field name,Nom du champ,フィールド名です,필드 이름,Имя поля.,Nombre del campo
+显示名称,显示名称,顯示名稱,Display name,Afficher le nom,名前を表示します,이름 보이기,Назовите имя.,Mostrar el nombre
+编辑类型,编辑类型,編輯類型,Edit type,Type de montage,編集タイプです,형식 편집,Редакторский тип,Tipo de edición
+查询项,查询项,查詢項,Query item,Rechercher un article,問い合わせ項目です,조회 항목,Запрос.,Buscar un artículo
+字段排序,字段排序,字段排序,Field sort,Trier par champs,フィールド並べ替えです,필드 정렬,Поле в порядке,Ordenar por campos
+关联实体类,关联实体类,關聯實體類,Associated entity class,Classe d’entité associée,関連実体クラスです,연결된 개체 클래스,Ассоциированный класс,Clase de entidad asociada
+是否必填,是否必填,是否必填,Required or not,Oui non obligatoire,必ず記入しますか,기입해야 하는지,Будет ли он заполнен?,Sí no requerido
+是否显示,是否显示,是否顯示,Show or not,Afficher ou non,表示されますか,표시할지 여부,Показать?,Mostrar sí no
+代码预览,代码预览,代碼預覽,Code preview,Aperçu du code,プレビューコードです,코드 미리보기,Предварительный просмотр кода,Vista previa del código
+[menu],,,,,,,,
+系统管理,系统管理,系統管理,System management,Gestion du système,システム管理です,시스템 관리,Управление системой,Administración del sistema
+菜单维护,菜单维护,菜單維護,Menu maintenance,Maintenance du menu,メニューメンテナンスです,메뉴 관리,Обслуживание меню,Mantenimiento del menú
+角色维护,角色维护,角色維護,Role maintenance,Maintien des rôles,キャラクターメンテナンスです,역할 관리,Уход за персонажами,Mantenimiento de roles
+组织维护,组织维护,組織維護,Organization maintenance,Organisation et maintenance,メンテナンス組織です,조직 유지,Организационное обслуживание,Organización y mantenimiento
+岗位维护,岗位维护,崗位維護,Post maintenance,Maintien des postes,雇用維持です,직무 유지,Уход за постом,Mantenimiento del puesto
+用户维护,用户维护,用戶維護,User maintenance,Maintenance des utilisateurs,ユーザーメンテナンス,사용자 보호,Обслуживание пользователя,Mantenimiento por usuarios
+字典维护,字典维护,字典維護,Dictionary maintenance,Maintenance du dictionnaire,辞書メンテナンスです,사전 관리,Уход за словарем,Mantenimiento del diccionario
+登录日志,登录日志,登錄日誌,Entry log,Log de connexion,ログを登録する,로그인 로그,Регистрационный журнал.,Iniciar sesión log
+在线用户,在线用户,在線用戶,Online user,Utilisateurs en ligne,オンラインユーザーです,온라인 사용자,Онлайн.,Usuarios en línea
+操作日志,操作日志,操作日誌,Operation log,Journal des opérations,操作履歴です,작업 로그,Журнал операций.,Registro de operaciones
+代码生成,代码生成,代碼生成,Code generation,Génération de code,コード生成です,코드 생성,Генерация кода,Generación de código
+生成Erupt代码,生成Erupt代码,生成Erupt代碼,Erupt code is generated,Générer du code Erupt,Eruptコードを生成します,erupt 코드를 생성한다,Генерирует код эрупта,Generando código Erupt
+,,,,,,,,
