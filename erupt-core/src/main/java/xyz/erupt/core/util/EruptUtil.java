@@ -11,7 +11,6 @@ import xyz.erupt.annotation.SceneEnum;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.AttachmentProxy;
-import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -125,29 +124,19 @@ public class EruptUtil {
         return map;
     }
 
-    public static Map<String, String> getChoiceMap(ChoiceType choiceType) {
+    public static Map<String, String> getChoiceMap(EruptModel eruptModel, ChoiceType choiceType) {
         Map<String, String> choiceMap = new LinkedHashMap<>();
-        for (xyz.erupt.annotation.sub_field.sub_edit.VL vl : choiceType.vl()) {
-            choiceMap.put(vl.value(), vl.label());
-        }
-        for (Class<? extends ChoiceFetchHandler> clazz : choiceType.fetchHandler()) {
-            if (!clazz.isInterface()) {
-                List<VLModel> vls = EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams());
-                if (null != vls) {
-                    for (VLModel vl : vls) {
-                        choiceMap.put(vl.getValue(), vl.getLabel());
-                    }
-                }
-            }
-        }
+        getChoiceList(eruptModel, choiceType).forEach(vl -> choiceMap.put(vl.getValue(), vl.getLabel()));
         return choiceMap;
     }
 
-    public static List<VLModel> getChoiceList(ChoiceType choiceType) {
+    public static List<VLModel> getChoiceList(EruptModel eruptModel, ChoiceType choiceType) {
         List<VLModel> vls = Stream.of(choiceType.vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).collect(Collectors.toList());
-        Stream.of(choiceType.fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz -> {
-            Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams())).ifPresent(vls::addAll);
-        });
+        Stream.of(choiceType.fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
+                Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams())).ifPresent(vls::addAll));
+        if (eruptModel.isI18n()) {
+            vls.forEach(vl -> vl.setLabel(I18nTranslate.$translate(vl.getLabel())));
+        }
         return vls;
     }
 
@@ -270,7 +259,7 @@ public class EruptUtil {
                     case NUMBER:
                     case SLIDER:
                         if (!NumberUtils.isCreatable(value.getAsString())) {
-                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title()  + " "+I18nTranslate.$translate("erupt.must.number"));
+                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
                     case INPUT:
@@ -278,7 +267,7 @@ public class EruptUtil {
                             String content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title()+" "+I18nTranslate.$translate("erupt.incorrect_format"));
+                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
                                 }
                             }
                         }
