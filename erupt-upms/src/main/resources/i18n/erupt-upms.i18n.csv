@@ -6,10 +6,6 @@ upms.no_bind_org,未绑定的组织无法查看数据,未綁定的組織無法�
 upms.not_super_admin-unable_add,当前用户非超管，无法创建超管用户,當前用戶非超管，無法創建超管用戶,"The current user is not hypermanaged. Therefore, you cannot create an hypermanaged user","L’utilisateur actuel n’est pas supertube, impossible de créer un utilisateur supertube",現在のユーザーはスーパーチューブではないので、スーパーチューブを作成できません。,현재 사용자는 초과 튜브가 아니므로 초과 튜브를 만들 수 없습니다,В настоящее время абонент не является гипертрубкой и не может создать пользователя,"El usuario actual no es supertube, no se puede crear un usuario supertube"
 upms.position_no_org,选择岗位时，所属组织必填,選擇崗位時，所屬組織必填,"When selecting a position, the organization is required",Obligatoire pour l’organisation affiliée lors de la sélection d’un poste,部署を選ぶとき、所属組織は必ず記入します。,부서 선택시 소속 조직은 필수이다,"При выборе места, принадлежащая организации заполняет его",Requerido por la organización al seleccionar un puesto
 [erupt],,,,,,,,
-创建人,创建人,創建人,Creator user,Le créateur,設立者です,창립자,Создатель.,creador
-创建时间,创建时间,創建時間,Creator time,Temps de création,作成時間です,만든 시간,Создание времени,Hora de creación
-更新人,更新人,更新人,Update user,Renouveler la personne,人を更新します,갱신자,Обновление.,Renovar la persona
-更新时间,更新时间,更新時間,Update time,Temps de mise à jour,更新時間です,업데이트 시간,Время обновления.,Hora de actualización
 编码,编码,編碼,Code,codage,コード化です,인 코딩,закодирова,codificación
 名称,名称,名稱,Title,dénomination,名前です,이름,назван,El nombre
 备注,备注,備註,Remark,remarques,備考です,비고,примечан,comentar
@@ -18,6 +14,10 @@ upms.position_no_org,选择岗位时，所属组织必填,選擇崗位時，所�
 密码,密码,密碼,Password,Les mots de passe,パスワードです,암호,код,La contraseña
 确认密码,确认密码,確認密碼,Confirm password,Confirmer le mot de passe,パスワードを確認します,비밀번호 확인,Подтвердите код.,Confirme su contraseña
 md5加密,md5加密,md5加密,MD5 encrypt,Cryptage avec md5,md5暗号化です,md5 암호화,Md5 зашифровано,Cifrado con md5
+重置密码时间,重置密码时间,重置密碼時間,Reset password time,Réinitialiser le mot de passe time,パスワード時間をリセットします,비밀번호 초기화 시간,Перезагрузка.,Restablecer tiempo de contraseña
+账号失效时间,账号失效时间,賬號失效時間,Account expiration time,Temps d’expiration du compte,アカウント失効期間です,계정 유효기간,Время истечения срока действия счета,Tiempo de caducidad de cuenta
+超管用户,超管用户,超管用戶,Overpipe user,Surtube pour les utilisateurs,スーパーチューブ利用者です,하이퍼튜브 사용자,Пользователь с перетрубкой,Supertube para usuarios
+,,,,,,,,
 ip白名单,ip白名单,ip白名單,Ip white list,Liste blanche ip,ホワイトリストです,ip 화이트 리스트,Белый ip-список,Lista blanca de ip
 所属角色,所属角色,所屬角色,Role,Le rôle affilié,所属しています,소속배역,Принадлежность к роли,Rol al que pertenece
 手机号码,手机号码,手機號碼,Phone,Numéro de téléphone,携帯電話番号です,핸드폰 번호,Номер телефона.,Teléfono móvil
@@ -44,6 +44,8 @@ ip白名单,ip白名单,ip白名單,Ip white list,Liste blanche ip,ホワイト�
 岗位名称,岗位名称,崗位名稱,Name,Nom du poste,持ち場の名前です,직책 명칭,Название поста,Nombre del post
 岗位权重,岗位权重,崗位權重,Weight,Poids du poste,ポジションの重みです。,직위의 영향력,Вес поста,Peso del post
 用户,用户,用戶,User,Les utilisateurs,ユーザーです,사용자,пользовател,El usuario
+操作人,操作人,操作人,operator,Les opérateurs,人を操作します,오퍼레이터,Оператор.,operador
+错误信息,错误信息,錯誤信息,Error message,Message d’erreur message,エラー情報です,오류 메시지,Ложная информация.,Mensaje de error
 登录时间,登录时间,登錄時間,Login time,Temps de connexion,登録時間です,로그인 시간,Время входа.,Hora de inicio
 IP地址,IP地址,IP地址,Ip address,Votre adresse IP,IPアドレスです,ip 주소,IP адрес.,Dirección IP
 IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,IP-адрес.,Origen de IP
@@ -84,4 +86,5 @@ IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,I
 操作日志,操作日志,操作日誌,Operation log,Journal des opérations,操作履歴です,작업 로그,Журнал операций.,Registro de operaciones
 代码生成,代码生成,代碼生成,Code generation,Génération de code,コード生成です,코드 생성,Генерация кода,Generación de código
 生成Erupt代码,生成Erupt代码,生成Erupt代碼,Erupt code is generated,Générer du code Erupt,Eruptコードを生成します,erupt 코드를 생성한다,Генерирует код эрупта,Generando código Erupt
+,,,,,,,,
 ,,,,,,,,

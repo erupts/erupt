@@ -163,7 +163,7 @@ public class EruptUser extends LookerSelf implements FilterHandler {
     private Boolean isMd5 = true;
 
     @EruptField(
-            views = @View(title = "失效时间", sortable = true),
+            views = @View(title = "账号失效时间", sortable = true),
             edit = @Edit(title = "账号失效时间")
     )
     private Date expireDate;

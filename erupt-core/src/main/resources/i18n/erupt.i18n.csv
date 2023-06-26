@@ -23,4 +23,14 @@ erupt.data.limit_length,内容超出数据库限制长度,內容超出數據庫�
 更新人,更新人,更新人,regenerator,Renouveler la personne,人を更新します,갱신자,Обновление.,Renovar la persona
 更新时间,更新时间,更新時間,Update time,Temps de mise à jour,更新時間です,업데이트 시간,Время обновления.,Hora de actualización
 数据审计,数据审计,數據審計,Data audit,Audit des données,データ監査です,데이터 감사,Проверка данных,Auditoría de datos
-,,,,,,,,
+表格视图,表格视图,表格視圖,Table view,Vue de table,テーブルグラフです,테이블 보기,Вид на таблицу,Vista de tabla
+树状视图,树状视图,樹狀視圖,Tree view,Vue en arbre,樹形図です,트리 보기,Вид на дерево,Vista en árbol
+功能按钮,功能按钮,功能按鈕,Function button,Bouton de fonction,機能ボタンです,기능 단추,Функциональная кнопка,Botón de función
+接口名称,接口名称,接口名稱,Interface name,Nom de l’interface,インタフェース名です,인터페이스 이름,Имя интерфейса,Nombre de interfaz
+框架内打开链接,框架内打开链接,框架內打開鏈接,Open the link in the frame,Ouvrir le lien dans le cadre,リンクを開きます,프레임에서 링크를 엽니다,Откройте связь внутри фреймворка,Enlace abierto dentro del marco
+新窗口打开链接,新窗口打开链接,新窗口打開鏈接,A new window opens the link,Nouvelle fenêtre ouvrir le lien,新しいウィンドウを開きますリンク,새 창이 링크를 엽니다,Новое окно открывает связь,Nueva ventana abre el enlace
+本窗口打开链接,本窗口打开链接,本窗口打開鏈接,This window opens the link,Cette fenêtre ouvre le lien,このウィンドウはリンクを開きます。,이 창에서 링크를 엽니다,Это окно открывает связь,Esta ventana abre el enlace
+充满屏幕,充满屏幕,充滿屏幕,Fill the screen,Remplissez votre écran,スクリーンいっぱいです,화면 채우기,Полный экран.,Llena la pantalla
+页面路由,页面路由,頁面路由,Page routing,Itinéraire des pages,ページルーティングです,페이지 라우팅,Маршрутизация страницы,Ruta de páginas
+自定义模板,自定义模板,自定義模板,Custom template,Personnalisez votre template,カスタムテンプレートです,사용자 정의 템플릿,Самоопределение шаблона,Personaliza tu plantilla
+多维报表,多维报表,多維報表,Multidimensional report,Rapports multidimensionnels,多次元レポートです,다웨이 보고서,Многомерный отчет,Informes multidimensionales
