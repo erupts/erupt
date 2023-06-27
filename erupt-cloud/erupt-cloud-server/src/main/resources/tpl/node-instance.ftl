@@ -12,7 +12,7 @@
                 <div style="display: flex;justify-content: space-between;align-items: center;width: 100%">
                     <span>{{item}}</span>
                     <span>
-                        <a-popconfirm title="确定要移除该实例吗？" @confirm="confirm(item)">
+                        <a-popconfirm title="Are you remove Instance?" @confirm="confirm(item)">
                             <a-icon type="delete" theme="twoTone" two-tone-color="#f00"/>
                         </a-popconfirm>
                     </span>
