@@ -96,7 +96,7 @@ public class BiChart extends MetaModelUpdateVo {
                     choiceType = @ChoiceType(
                             type = ChoiceType.Type.RADIO,
                             vl = {
-                                    @VL(label = "数值统计", value = "Number"),
+                                    @VL(label = "数值统计", value = "Number", desc = "需要2个数据列：名称，值"),
                                     //------------
                                     @VL(label = "折线图", value = "Line"),
                                     @VL(label = "阶梯折线图", value = "StepLine"),
@@ -117,7 +117,6 @@ public class BiChart extends MetaModelUpdateVo {
                                     @VL(label = "气泡图", value = "Bubble", desc = "需要4个数据列：x / y / series / size"),
                                     @VL(label = "瀑布图", value = "Waterfall", desc = "需要2个数据列：x:名称 y:增加或减少的值"),
                                     @VL(label = "漏斗图", value = "Funnel"),
-                                    //@VL(label = "热力图", value = "Heatmap", desc = "最少需要3个数据列，size可选：x / y / value / [size]"),
 
                                     @VL(label = "词云", value = "WordCloud", desc = "x:名称, y:数值, [color:颜色]"),
                                     @VL(label = "桑基图", value = "Sankey", desc = "需要3个数据列：source:名称, y:值,target:目标节点"),
