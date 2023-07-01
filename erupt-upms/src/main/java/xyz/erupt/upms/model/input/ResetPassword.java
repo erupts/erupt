@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
@@ -14,6 +15,7 @@ import xyz.erupt.jpa.model.BaseModel;
  * date 2022/12/10 14:29
  */
 @Erupt(name = "重置密码")
+@EruptI18n
 @Getter
 @Setter
 public class ResetPassword extends BaseModel {

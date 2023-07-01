@@ -46,7 +46,7 @@ public enum MenuTypeEnum {
 
         @Override
         public List<VLModel> fetch(String[] params) {
-            return menuTypes;
+            return menuTypes.stream().map(it -> new VLModel(it.getValue(), it.getLabel(), it.getDesc())).collect(Collectors.toList());
         }
 
     }

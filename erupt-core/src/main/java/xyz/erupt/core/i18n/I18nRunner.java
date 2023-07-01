@@ -106,7 +106,12 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> im
                     }
                 } else {
                     if (i < header.size()) {
-                        langMappings.get(header.get(i)).put(row[0], row[i]);
+                        if (null != row[i]) {
+                            if (row[i].startsWith("\"") && row[i].endsWith("\"")) {
+                                row[i] = row[i].substring(1, row[i].length() - 1);
+                            }
+                            langMappings.get(header.get(i)).put(row[0], row[i]);
+                        }
                     }
                 }
             }

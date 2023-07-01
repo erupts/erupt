@@ -17,6 +17,14 @@ md5加密,md5加密,md5加密,MD5 encrypt,Cryptage avec md5,md5暗号化です,m
 重置密码时间,重置密码时间,重置密碼時間,Reset password time,Réinitialiser le mot de passe time,パスワード時間をリセットします,비밀번호 초기화 시간,Перезагрузка.,Restablecer tiempo de contraseña
 账号失效时间,账号失效时间,賬號失效時間,Account expiration time,Temps d’expiration du compte,アカウント失効期間です,계정 유효기간,Время истечения срока действия счета,Tiempo de caducidad de cuenta
 超管用户,超管用户,超管用戶,Overpipe user,Surtube pour les utilisateurs,スーパーチューブ利用者です,하이퍼튜브 사용자,Пользователь с перетрубкой,Supertube para usuarios
+重置密码,重置密码,重置密碼,Reset password,Réinitialiser votre mot de passe,パスワードをリセットします,비밀번호 초기화,Перезагрузка.,Restablecer la contraseña
+加密,加密,加密,encipher,chiffrement,暗号化です,암호화,зашифрова,cifrado
+不加密,不加密,不加密,No encryption,Pas de cryptage,暗号化しません,암호화하지 않음,Нет.,Sin encriptación
+激活,激活,激活,Activate,l’activation,活性化します,활성화,активирова,activar
+锁定,锁定,鎖定,lock,verrouillage,ロックです,잠금,блокировк,cerrado
+启用,启用,啟用,enable,Le lancement,起用します,사용 하기,открыт,activar
+禁用,禁用,禁用,forbidden,interdits,無効です,사용 안 함,отключ,deshabilitar
+隐藏,隐藏,隱藏,Hidden,cachée,隠します,숨기기,спрята,ocultar
 ,,,,,,,,
 ip白名单,ip白名单,ip白名單,Ip white list,Liste blanche ip,ホワイトリストです,ip 화이트 리스트,Белый ip-список,Lista blanca de ip
 所属角色,所属角色,所屬角色,Role,Le rôle affilié,所属しています,소속배역,Принадлежность к роли,Rol al que pertenece
@@ -86,5 +94,4 @@ IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,I
 操作日志,操作日志,操作日誌,Operation log,Journal des opérations,操作履歴です,작업 로그,Журнал операций.,Registro de operaciones
 代码生成,代码生成,代碼生成,Code generation,Génération de code,コード生成です,코드 생성,Генерация кода,Generación de código
 生成Erupt代码,生成Erupt代码,生成Erupt代碼,Erupt code is generated,Générer du code Erupt,Eruptコードを生成します,erupt 코드를 생성한다,Генерирует код эрупта,Generando código Erupt
-,,,,,,,,
 ,,,,,,,,
