@@ -42,6 +42,7 @@ import java.util.Set;
         name = "用户配置",
         dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg"),
+        orderBy = "EruptUser.id",
         rowOperation = @RowOperation(title = "重置密码",
                 icon = "fa fa-refresh",
                 mode = RowOperation.Mode.SINGLE,
@@ -174,6 +175,7 @@ public class EruptUser extends LookerSelf implements FilterHandler {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
+    @OrderBy
     @EruptField(
             views = @View(title = "所属角色"),
             edit = @Edit(

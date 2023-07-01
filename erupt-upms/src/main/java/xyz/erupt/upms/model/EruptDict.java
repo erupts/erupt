@@ -31,6 +31,7 @@ import javax.persistence.UniqueConstraint;
 @Erupt(
         name = "数据字典",
         power = @Power(export = true),
+        orderBy = "EruptDict.updateTime desc",
         drills = @Drill(
                 title = "字典项",
                 link = @Link(
