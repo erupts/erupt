@@ -49,8 +49,8 @@ public class EruptRole extends HyperModelUpdateVo {
     private String name;
 
     @EruptField(
-            views = @View(title = "展示顺序", sortable = true),
-            edit = @Edit(title = "展示顺序", desc = "数值越小，越靠前")
+            views = @View(title = "显示顺序", sortable = true),
+            edit = @Edit(title = "显示顺序")
     )
     private Integer sort;
 
