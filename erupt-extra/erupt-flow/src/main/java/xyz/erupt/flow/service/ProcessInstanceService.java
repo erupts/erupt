@@ -2,7 +2,6 @@ package xyz.erupt.flow.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaProcessDefinition;
-import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.OaProcessInstance;
 import xyz.erupt.flow.bean.entity.OaProcessInstanceHistory;
 
@@ -41,4 +40,11 @@ public interface ProcessInstanceService extends IService<OaProcessInstance>, Wit
      * @return
      */
     List<OaProcessInstanceHistory> getMineAbout(String keywords, int pageNum, int pageSize);
+
+    /**
+     * 更新表单数据
+     * @param processInstId
+     * @param content
+     */
+    void updateDataById(Long processInstId, String content);
 }

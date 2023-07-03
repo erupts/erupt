@@ -1,9 +1,6 @@
 <template>
   <!-- 树形选择组件 -->
   <div>
-    <el-select class="max-fill" v-show="false" v-model="_value" multiple size="medium" clearable :placeholder="placeholder">
-      <el-option v-for="(op, index) in selectOptions" v-if="op" :key="index" :value="_opValue(op)" :label="_opLabel(op)"></el-option>
-    </el-select>
     <div class="buttons">
       <el-button size="small" @click="checkAll">全选</el-button>
       <el-button size="small" @click="resetChecked">清空</el-button>
@@ -53,20 +50,11 @@ export default {
     },
   },
   mounted() {
-    this.readOptions(this.options);
     this.handleCheckChange();//刷新一次选中节点
   },
   computed: {
   },
   methods: {
-    readOptions(ops) {
-      ops.forEach(op => {
-        this.selectOptions.push(op);
-        if(op.children) {
-          this.selectOptions.push(this.readOptions(op.children));
-        }
-      });
-    },
     handleCheckChange(data, checked, indeterminate) {
       //选中事件
       this._value = this.$refs.tree.getCheckedKeys();
@@ -83,7 +71,6 @@ export default {
   },
   data() {
     return {
-      selectOptions: []
     };
   }
 }

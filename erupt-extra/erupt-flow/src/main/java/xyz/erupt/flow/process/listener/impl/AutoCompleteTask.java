@@ -24,7 +24,7 @@ public class AutoCompleteTask implements AfterCreateTaskListener {
     @Override
     public void execute(OaTask task) {
         if(FlowConstant.NODE_TYPE_CC.equals(task.getTaskType())) {
-            taskService.complete(task.getId(), null, "抄送节点自动完成", "抄送节点自动完成");
+            taskService.complete(task.getId(), null, "抄送节点自动完成", "抄送节点自动完成", null);
         }
     }
 }

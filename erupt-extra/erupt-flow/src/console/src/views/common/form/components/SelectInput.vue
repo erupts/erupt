@@ -7,7 +7,7 @@
       </el-radio-group>
     </div>
     <div v-else>
-      <el-select :disabled="formDisable" class="max-fill" v-if="!expanding" v-model="_value" size="medium" clearable :placeholder="placeholder">
+      <el-select :disabled="!editable" class="max-fill" v-if="!expanding" v-model="_value" size="medium" clearable :placeholder="placeholder">
         <el-option v-for="(op, index) in options" :key="index" :value="_opValue(op)" :label="_opLabel(op)"></el-option>
       </el-select>
       <el-radio-group v-model="_value" v-else>
