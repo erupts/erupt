@@ -137,10 +137,20 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(( comfirm ) => {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
         completeTask(taskId, comfirm.value, this.$refs.taskDetail.taskDetail.formData).then(rsp => {
+          loading.close();
           this.$message.success(rsp.message);
           this.openItemDl = false;
           this.reloadDatas();
+        }).catch(e => {
+          loading.close();
+          this.$message.error(e.message);
         });
       });
     },
@@ -150,10 +160,20 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(( comfirm ) => {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
         refuseTask(taskId, comfirm.value, this.$refs.taskDetail.taskDetail.formData).then(rsp => {
+          loading.close();
           this.$message.success(rsp.message);
           this.openItemDl = false;
           this.reloadDatas();
+        }).catch(e => {
+          loading.close();
+          this.$message.error(e.message);
         });
       });
     }
