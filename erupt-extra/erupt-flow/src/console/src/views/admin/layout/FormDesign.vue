@@ -3,7 +3,6 @@
     <el-aside>
       <div class="components-nav">
         <span @click="libSelect = 0">组件库</span>
-        <!--<span v-if="eruptForms&&eruptForms.length>0" @click="libSelect = 1">Erupt表单</span>-->
       </div>
       <div v-show="libSelect==0">
         <div class="components" v-for="(group, i) in baseComponents" :key="i">

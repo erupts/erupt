@@ -137,7 +137,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(( comfirm ) => {
-        completeTask(taskId, comfirm.value).then(rsp => {
+        completeTask(taskId, comfirm.value, this.$refs.taskDetail.taskDetail.formData).then(rsp => {
           this.$message.success(rsp.message);
           this.openItemDl = false;
           this.reloadDatas();
@@ -150,7 +150,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(( comfirm ) => {
-        refuseTask(taskId, comfirm.value).then(rsp => {
+        refuseTask(taskId, comfirm.value, this.$refs.taskDetail.taskDetail.formData).then(rsp => {
           this.$message.success(rsp.message);
           this.openItemDl = false;
           this.reloadDatas();

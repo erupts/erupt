@@ -5,9 +5,9 @@ export default{
       type: String,
       default: 'DESIGN'
     },
-    formDisable:{
+    editable:{
       type: Boolean,
-      default: false
+      default: true
     },
     required:{
       type: Boolean,
