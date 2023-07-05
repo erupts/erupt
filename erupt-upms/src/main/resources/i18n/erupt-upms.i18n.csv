@@ -1,4 +1,4 @@
-key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru_RU,es_ES
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES
 upms.pwd_required,密码必填,密碼必填,Password required,Mot de passe requis,パスワードは必ず入力します,비밀번호 필수,Пароль будет заполнен.,Contraseña es necesario
 upms.pwd_two_inconsistent,两次密码输入不一致,兩次密碼輸入不一致,The two password entries are inconsistent,Deux entrées de mot de passe incohérentes,パスワードの入力が2回一致しません,두 번 입력한 비밀번호가 일치하지 않습니다,Два непоследовательных ввода пароля,Dos contraseñas introducidas incoherentemente
 upms.no_bind_post,未绑定的岗位无法查看数据,未綁定的崗位無法查看數據,Unbound posts cannot view data,Les messages non liés ne peuvent pas voir les données,紐付けられていない部署はデータを見ることができません,바인딩되지 않은 직무는 데이터를 볼 수 없습니다,Несвязанные посты не могут просматривать данные,Las publicaciones no vinculadas no pueden ver los datos
