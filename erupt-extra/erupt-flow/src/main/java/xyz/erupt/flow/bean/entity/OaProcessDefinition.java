@@ -41,7 +41,7 @@ public class OaProcessDefinition {
     @Id
     @Column(name = "id")
     @EruptField(views = @View(title = "流程定义ID", sortable = true))
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     private String id;
 
     /**

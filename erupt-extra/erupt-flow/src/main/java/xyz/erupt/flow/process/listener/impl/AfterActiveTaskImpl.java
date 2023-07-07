@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.OaProcessActivity;
-import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.OaTask;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeNobody;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeProps;
@@ -14,7 +13,6 @@ import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.process.listener.AfterCreateTaskListener;
 import xyz.erupt.flow.process.userlink.impl.UserLinkServiceHolder;
 import xyz.erupt.flow.service.ProcessActivityService;
-import xyz.erupt.flow.service.ProcessExecutionService;
 import xyz.erupt.flow.service.TaskService;
 import xyz.erupt.flow.service.TaskUserLinkService;
 
@@ -61,10 +59,10 @@ public class AfterActiveTaskImpl implements AfterCreateTaskListener {
             }
             if(FlowConstant.NOBODY_TO_PASS.equals(nobodyConf.getHandler())) {
                 //直接完成
-                taskService.complete(task.getId(), null, "无人处理，自动完成", null);
+                taskService.complete(task.getId(), null, "无人处理，自动完成", null, null);
             }else if(FlowConstant.NOBODY_TO_REFUSE.equals(nobodyConf.getHandler())) {
                 //直接拒绝
-                taskService.refuse(task.getId(), "无人处理，自动拒绝");
+                taskService.refuse(task.getId(), "无人处理，自动拒绝", null);
             }else if(FlowConstant.NOBODY_TO_ADMIN.equals(nobodyConf.getHandler())) {//分配给超管用户
                 LinkedHashSet<OrgTreeVo> userIds = userLinkService.getAdminUsers();
                 if(CollectionUtils.isEmpty(userIds)) {

@@ -14,13 +14,13 @@ public interface TaskService extends IService<OaTask>, WithListener {
      * 完成任务
      * @param taskId
      */
-    public OaTask complete(Long taskId, String account, String accountName, String remarks);
+    public OaTask complete(Long taskId, String account, String accountName, String remarks, String content);
 
     /**
      * 完成任务
      * @param taskId
      */
-    public OaTask complete(Long taskId, String remarks);
+    public OaTask complete(Long taskId, String remarks, String content);
 
     /**
      * 转办任务，只能是或签
@@ -32,13 +32,13 @@ public interface TaskService extends IService<OaTask>, WithListener {
      * 拒绝任务
      * @param taskId
      */
-    public void refuse(Long taskId, String account, String accountName , String remarks);
+    public void refuse(Long taskId, String account, String accountName , String remarks, String content);
 
     /**
      * 拒绝任务
      * @param taskId
      */
-    public void refuse(Long taskId, String remarks);
+    public void refuse(Long taskId, String remarks, String content);
 
     /**
      * 查询当前流程的待完成任务

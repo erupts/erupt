@@ -11,7 +11,6 @@ import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
-import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.*;
 
@@ -28,7 +27,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaTaskUserLink extends BaseModel {
+public class OaTaskUserLink {
 
     @Id
     @GeneratedValue(generator = "generator")

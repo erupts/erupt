@@ -88,7 +88,7 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
 
         //手动完成所有开始任务
         List<OaTask> tasks = taskService.listByInstanceId(inst.getId());
-        tasks.forEach(t -> taskService.complete(t.getId(), "开始节点自动完成"));
+        tasks.forEach(t -> taskService.complete(t.getId(), "开始节点自动完成", null));
 
         return inst;
     }
@@ -214,6 +214,16 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
             }
         });
         return list;
+    }
+
+    @Override
+    public void updateDataById(Long processInstId, String content) {
+        OaProcessInstance inst = OaProcessInstance.builder()
+                .formItems(content)
+                .id(processInstId)
+                .build();
+        processInstanceHistoryService.copyAndSave(inst);//同步更新历史表
+        this.updateById(inst);
     }
 
     @Override
