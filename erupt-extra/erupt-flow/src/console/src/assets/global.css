@@ -1,0 +1,36 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+/*路由切换动画*/
+.router-fade-enter-active {
+    transition: all 0.3s cubic-bezier(0.6, 0.5, 0.3, 0.1);
+}
+
+.router-fade-leave-active {
+    transition: all 0.3s cubic-bezier(0.5, 0.5, 0.5, 0.5);
+}
+
+.router-fade-enter {
+    transform: translateX(0px);
+    opacity: 0;
+}
+
+.router-fade-leave-to {
+    transform: translateX(50px);
+    opacity: 0;
+}
+
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.tl{
+    text-align: left;
+}
+.tr{
+    text-align: right;
+}
