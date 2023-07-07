@@ -4,7 +4,7 @@
       <el-input size="medium" disabled :placeholder="placeholder"/>
     </div>
     <div v-else>
-      <el-input size="medium" :disabled="formDisable" clearable v-model="_value" :placeholder="placeholder"/>
+      <el-input size="medium" :disabled="!editable" clearable v-model="_value" :placeholder="placeholder"/>
     </div>
   </div>
 </template>

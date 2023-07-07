@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   lintOnSave: false,
-  outputDir: "../main/resources/public/erupt-flow",
+  //outputDir: "../main/resources/public/erupt-flow",
   // 开发环境显示报错位置 生产环境设置为false减少打包体积
   productionSourceMap: true,
   // 资源文件路径的前缀，/=从项目根目录开始 ./从当前页面的相对目录开始

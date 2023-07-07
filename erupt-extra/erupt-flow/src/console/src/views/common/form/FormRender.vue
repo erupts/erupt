@@ -1,14 +1,20 @@
 <template>
   <!--渲染表单-->
   <el-form ref="form" class="process-form" label-position="top" :rules="rules" :model="_value">
-    <el-form-item
-        style="margin-bottom: 0px;"
-        v-if="item.name !== 'SpanLayout' && item.name !== 'Description'" :prop="item.id" :label="item.title" v-for="(item, index) in forms" :key="item.name + index">
-      <form-design-render :ref="`sub-item_${item.id}`" v-model="_value[item.id]" :mode="mode" :formDisable="formDisable" :config="item"
-        @change="change"
+    <el-form-item v-for="(item, index) in forms"
+        style="margin-bottom: 8px;"
+        v-show="item.props.perm!='H'"
+        :prop="item.id" :label="item.name !== 'SpanLayout'?item.title+'['+item.props.perm+']':''" :key="item.name + index">
+
+      <!-- 普通内容 -->
+      <form-design-render :ref="`sub-item_${item.id}`" v-model="_value[item.id]" :mode="mode" :config="item" @change="change"
+        v-if="item.name !== 'SpanLayout' && item.name !== 'Description'"
       />
+
+      <!-- 布局容器 -->
+      <form-design-render ref="`span-layou_${item.id}`" v-else v-model="_value" :mode="mode" :config="item"/>
+
     </el-form-item>
-    <form-design-render ref="span-layout" v-else v-model="_value" :mode="mode" :formDisable="formDisable" :config="item"/>
   </el-form>
 </template>
 
@@ -34,10 +40,6 @@ export default {
     mode: {
       type: String,
       default: "PC"
-    },
-    formDisable: {//表单是否可编辑，默认是
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -45,7 +47,7 @@ export default {
       rules: {},
     }
   },
-  created() {
+  mounted() {
     this.loadFormConfig(this.forms)
   },
   computed: {
@@ -85,6 +87,11 @@ export default {
       });
     },
     loadFormConfig(forms){
+      // console.log("==获取到权限==")
+      // this.forms.forEach(item => {
+      //   console.log(item);
+      //   console.log(item.title + ": " + item.props.perm);
+      // })
       forms.forEach(item => {
         if (item.name === 'SpanLayout'){
           this.loadFormConfig(item.props.items)
@@ -97,6 +104,8 @@ export default {
               message: `请填写${item.title}`, trigger: 'blur'
             }])
           }
+          //let itemPerm = this.getPermsMap()[item.id];
+          //item.props.perm = itemPerm || 'R';//默认只可读取
         }
       })
     },

@@ -70,7 +70,8 @@ export const baseComponents = [
         props: {
           required: false,
           enablePrint: true,
-          showChinese: true
+          showChinese: true,
+          precision: 2,//默认保留2位小树
         }
       },
       {

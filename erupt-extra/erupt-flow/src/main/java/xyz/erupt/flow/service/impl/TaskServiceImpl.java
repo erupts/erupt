@@ -70,16 +70,20 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OaTask complete(Long taskId, String remarks) {
+    public OaTask complete(Long taskId, String remarks, String content) {
         EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
-        OaTask task = this.complete(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
+        OaTask task = this.complete(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks, content);
         return task;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OaTask complete(Long taskId, String account, String accountName, String remarks) {
+    public OaTask complete(Long taskId, String account, String accountName, String remarks, String content) {
         OaTask task = this.finish(OaTaskOperation.COMPLETE, taskId, account, accountName, remarks);
+        //更新表单
+        if(!StringUtils.isBlank(content)) {
+            processInstanceService.updateDataById(task.getProcessInstId(), content);
+        }
         //触发活动的完成
         this.listenerMap.get(AfterCompleteTaskListener.class).forEach(l -> l.execute(task));
         return task;
@@ -159,16 +163,20 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void refuse(Long taskId, String remarks) {
+    public void refuse(Long taskId, String remarks, String content) {
         EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
-        this.refuse(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
+        this.refuse(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks, content);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void refuse(Long taskId, String account, String accountName, String remarks) {
+    public void refuse(Long taskId, String account, String accountName, String remarks, String content) {
         //先完成当前任务
         OaTask task = this.finish(OaTaskOperation.REFUSE, taskId, account, accountName, remarks);
+        //更新表单
+        if(!StringUtils.isBlank(content)) {
+            processInstanceService.updateDataById(task.getProcessInstId(), content);
+        }
         //进行拒绝
         processHelper.refuse(task, accountName);
         //触发拒绝后置事件
