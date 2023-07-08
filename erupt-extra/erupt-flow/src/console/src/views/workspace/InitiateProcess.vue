@@ -43,12 +43,12 @@ export default {
         formItems: [],
         process: {},
         remark: ""
-      }
+      },
+      perms: []
     }
   },
   mounted() {
     this.loadFormInfo(this.code);
-    //this.formChange()//刷新一次时间线
   },
   computed: {
     forms() {
@@ -67,6 +67,14 @@ export default {
         form.settings = JSON.parse(form.settings)
         form.formItems = JSON.parse(form.formItems)
         form.process = JSON.parse(form.process)
+
+        //处理权限
+        let permMap = {};
+        form.process.props.formPerms.forEach(p => {
+          permMap[p.id] = p.perm;
+        })
+        this.setPerms(form.formItems, permMap);
+
         this.form = form
         //构建表单及校验规则
         this.$store.state.design = form
@@ -74,6 +82,19 @@ export default {
         this.loading = false
         this.$message.error(err)
       });
+    },
+    setPerms(items, permMap) {
+      items.forEach(item => {
+        item.props.perm = permMap[item.id] || 'R';//默认可编辑
+        if(item.props.perm=='E') {//可编辑
+          item.props.editable = true;
+        }else {//其他情况全部只读
+          item.props.editable = false;
+        }
+        if(item.props.items) {
+          this.setPerms(item.props.items, permMap);
+        }
+      })
     },
     validate(call) {
       this.$refs.form.validate(call);

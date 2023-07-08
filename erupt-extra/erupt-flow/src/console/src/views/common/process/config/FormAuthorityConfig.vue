@@ -90,6 +90,7 @@ export default {
               id: form.id,
               title: form.title,
               required: form.props.required,
+              //根节点默认可编辑，其他节点默认只读
               perm: this.$store.state.selectedNode.type === 'ROOT' ? 'E' : 'R'
             })
           }

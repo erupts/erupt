@@ -32,7 +32,7 @@
     </el-tabs>
 
     <el-dialog :title="formTitle" width="800px" top="20px" :visible.sync="openItemDl" :close-on-click-modal="false">
-      <initiate-process ref="processForm" :code="selectForm.formId" v-if="openItemDl"></initiate-process>
+      <initiate-process ref="processForm" :code="selectForm.id" v-if="openItemDl"></initiate-process>
       <span slot="footer" class="dialog-footer">
 				<el-button @click="openItemDl = false">取 消</el-button>
 				<el-button type="primary" @click="submitForm">提 交</el-button>
@@ -96,15 +96,23 @@ export default {
     submitForm() {
       this.$refs.processForm.validate(valid => {
         if (valid) {
-          //console.log(this.$refs.processForm.formData);
-          //return;
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           startByFormId(this.selectForm.id, this.$refs.processForm.formData).then(rsp => {
+            loading.close();
             this.$message.success(rsp.message);
             this.openItemDl = false;
             //重新查询一次，待办和已办
             this.$refs.myTask.reloadDatas()
             this.$refs.meAbout.reloadDatas();
-          })
+          }).catch(e => {
+            loading.close();
+            this.$message.error(e.message);
+          });
         } else {
           this.$message.warning("请完善表单😥")
         }
