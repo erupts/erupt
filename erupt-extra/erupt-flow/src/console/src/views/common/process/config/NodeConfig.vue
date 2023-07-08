@@ -4,8 +4,7 @@
       <el-tab-pane :label="name" name="properties">
         <component :is="(selectNode.type||'').toLowerCase()" :config="selectNode.props"/>
       </el-tab-pane>
-      <!-- 暂时不开放此权限 -->
-      <el-tab-pane label="表单权限设置" name="permissions" v-if="false">
+      <el-tab-pane label="表单权限设置" name="permissions">
         <form-authority-config/>
       </el-tab-pane>
     </el-tabs>

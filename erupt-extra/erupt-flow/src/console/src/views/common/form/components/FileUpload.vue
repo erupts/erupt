@@ -11,10 +11,10 @@
                  :on-preview="handleDownload"
                  :before-upload="beforeUpload"
                  :on-success="onSuccess"
-                 :disabled="formDisable"
+                 :disabled="!editable"
                  :auto-upload="true"
       >
-        <el-button :disabled="formDisable" size="small" icon="el-icon-paperclip" round>选择文件</el-button>
+        <el-button :disabled="!editable" size="small" icon="el-icon-paperclip" round>选择文件</el-button>
         <ellipsis :row="1" :content="placeholder + sizeTip" hoverTip slot="tip" class="el-upload__tip"/>
       </el-upload>
     </div>

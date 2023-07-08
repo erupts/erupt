@@ -4,7 +4,7 @@
       <el-date-picker size="medium" disabled :type="type" :placeholder="placeholder"></el-date-picker>
     </div>
     <div v-else>
-      <el-date-picker v-model="_value" :value-format="format" size="medium" :disabled="formDisable" clearable :type="type" :placeholder="placeholder"></el-date-picker>
+      <el-date-picker v-model="_value" :value-format="format" size="medium" :disabled="!editable" clearable :type="type" :placeholder="placeholder"></el-date-picker>
     </div>
   </div>
 </template>

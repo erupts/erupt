@@ -11,7 +11,7 @@ Vue.prototype.$axios = axios;
 // 字体图标
 
 const service = axios.create({
-	//baseURL: process.env.VUE_APP_BASE_API,//因为所有请求都有../所以这个参数没用
+	baseURL: process.env.VUE_APP_BASE_API,
 	timeout: 50000
 });
 

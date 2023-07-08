@@ -27,23 +27,25 @@ export function listMyTasks(params) {
 }
 
 // 完成任务
-export function completeTask(taskId, remarks) {
+export function completeTask(taskId, remarks, data) {
   return request({
     url: '../erupt-api/erupt-flow/task/complete/'+taskId,
     method: 'post',
-    params: {
-      remarks: remarks
+    data: {
+      remarks: remarks,
+      data: data
     }
   });
 }
 
 // 拒绝任务
-export function refuseTask(taskId, remarks) {
+export function refuseTask(taskId, remarks, data) {
   return request({
     url: '../erupt-api/erupt-flow/task/refuse/'+taskId,
     method: 'post',
-    params: {
-      remarks: remarks
+    data: {
+      remarks: remarks,
+      data: data
     }
   });
 }

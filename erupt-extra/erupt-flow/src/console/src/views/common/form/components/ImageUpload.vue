@@ -16,7 +16,7 @@
                  :data="uploadParams"
                  :before-upload="beforeUpload"
                  :on-success="onSuccess"
-                 :disabled="formDisable"
+                 :disabled="!editable"
                  accept=".jpg,.jepg,.png,.gif,.bmp,.svg"
       >
         <i slot="default" class="el-icon-plus"></i>
@@ -27,15 +27,15 @@
               <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
                 <i class="el-icon-zoom-in"></i>
               </span>
-              <span v-if="!formDisable" class="el-upload-list__item-delete" @click="handleDownload(file)">
+              <span v-if="editable" class="el-upload-list__item-delete" @click="handleDownload(file)">
                 <i class="el-icon-download"></i>
               </span>
-              <span v-if="!formDisable" class="el-upload-list__item-delete" @click="handleRemove(file)">
+              <span v-if="editable" class="el-upload-list__item-delete" @click="handleRemove(file)">
                 <i class="el-icon-delete"></i>
               </span>
             </span>
         </div>
-        <div v-if="!formDisable" slot="tip" class="el-upload__tip">{{ placeholder }} {{ sizeTip }}</div>
+        <div v-if="editable" slot="tip" class="el-upload__tip">{{ placeholder }} {{ sizeTip }}</div>
       </el-upload>
 
       <el-dialog title="" :visible.sync="viewImg" :destroy-on-close="true" append-to-body center>

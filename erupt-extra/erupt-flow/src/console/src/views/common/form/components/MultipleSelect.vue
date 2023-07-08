@@ -7,7 +7,7 @@
       </el-checkbox-group>
     </div>
     <div v-else>
-      <el-select :disabled="formDisable" class="max-fill" v-if="!expanding" v-model="_value" multiple size="medium" clearable :placeholder="placeholder">
+      <el-select :disabled="!editable" class="max-fill" v-if="!expanding" v-model="_value" multiple size="medium" clearable :placeholder="placeholder">
         <el-option v-for="(op, index) in options" :key="index" :value="_opValue(op)" :label="_opLabel(op)"></el-option>
       </el-select>
       <el-checkbox-group v-else v-model="_value">
