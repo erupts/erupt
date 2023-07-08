@@ -5,7 +5,7 @@ Create your own skin at http://designer.videojs.com
 */
 /* SKIN
 ================================================================================
-The main class name for all skin-specific styles. To make your own skin,
+The default class name for all skin-specific styles. To make your own skin,
 replace all occurances of 'vjs-default-skin' with a new name. Then add your new
 skin name to your video tag instead of the default skin.
 e.g. <video class="video-js my-skin-name">
@@ -640,7 +640,7 @@ control positioning and full window mode. **
   /*  display: table-cell; */
   /*This works in Safari but not Firefox.*/
 
-  /* Provide some basic defaults for fonts */
+  /* Provide some default defaults for fonts */
 
   font-weight: normal;
   font-style: normal;

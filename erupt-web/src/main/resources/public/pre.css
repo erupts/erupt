@@ -1,0 +1,64 @@
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #1890ff;
+    z-index: 9999;
+    transition: opacity 1s
+}
+
+.cs-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%
+}
+
+.cs-loader-inner {
+    transform: translateY(-50%);
+    top: 45%;
+    position: absolute;
+    width: 100%;
+    color: #fff;
+    text-align: center
+}
+
+.preloader-hidden-add {
+    opacity: 1;
+    display: block
+}
+
+.preloader-hidden-add-active {
+    opacity: 0
+}
+
+.preloader-hidden {
+    display: none
+}
+
+@keyframes tipFadeIn {
+    0% {
+        opacity: 0;
+    }
+    90% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+#preloader-tip {
+    text-align: center;
+    color: #fff;
+    font-size: 1.1em;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 26px;
+    animation: tipFadeIn 5s;
+}
