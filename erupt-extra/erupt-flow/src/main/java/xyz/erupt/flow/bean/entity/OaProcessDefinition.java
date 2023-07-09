@@ -1,7 +1,9 @@
 package xyz.erupt.flow.bean.entity;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +41,7 @@ public class OaProcessDefinition {
     @Id
     @Column(name = "id")
     @EruptField(views = @View(title = "流程定义ID", sortable = true))
+    @TableId(type = IdType.ASSIGN_ID)
     private String id;
 
     /**

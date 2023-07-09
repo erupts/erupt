@@ -19,7 +19,7 @@ import javax.persistence.MappedSuperclass;
 @Getter
 @Setter
 @MappedSuperclass
-public class BaseTree <T> extends BaseModel {
+public class BaseTree<T> extends BaseModel {
 
     @EruptField(
             views = @View(title = "名称"),

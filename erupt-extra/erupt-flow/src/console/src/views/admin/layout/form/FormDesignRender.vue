@@ -1,5 +1,5 @@
 <template>
-  <component ref="form" :is="config.name" :mode="mode" :formDisable="formDisable" v-model="_value" v-bind="config.props"
+  <component ref="form" :is="config.name" :mode="mode" v-model="_value" v-bind="config.props"
     @change="change"
   />
 </template>
@@ -14,10 +14,6 @@ export default {
     mode:{
       type: String,
       default: 'DESIGN'
-    },
-    formDisable:{
-      type: Boolean,
-      default: false
     },
     value: {
       default: undefined

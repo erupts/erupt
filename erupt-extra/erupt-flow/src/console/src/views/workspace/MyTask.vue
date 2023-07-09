@@ -15,23 +15,30 @@
         v-infinite-scroll="loadDatas"
         infinite-scroll-disabled="disabled">
       <li v-for="(task, index) in dataList">
-        <el-card shadow="hover" class="taskCard">
-          <div slot="header" class="clearfix">
-            <el-link @click="showDetail(task)" :underline="false" style="font: 18px large;">{{task.taskName}}</el-link>
-            <span style="font: 12px Extra Small; color: #909399; padding-left: 20px;"> {{task.createDate}}</span>
-            <el-button style="float: right; padding: 3px 0" type="text"
-                       @click="showDetail(task)">详情</el-button>
-          </div>
-          <div class="text item">
+        <el-card shadow="hover" class="taskCard" :body-style="{ padding: '5px 10px' }">
+          <div class="taskCardHeader">
             <el-row>
-              <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="4">
-                <i class="el-icon-eleme ic avator" style="background: rgb(30, 144, 255);"> </i>
-                <span class="taskCell" style="color: #909399;">{{task.formName}}</span>
+              <el-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
+                <el-link class="taskCell" :underline="false" @click="showDetail(task)" style="font: 16px large;">{{task.taskName}}</el-link>
               </el-col>
-              <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="4">
+              <el-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
+                <span class="taskCell" style="color: #909399;"> {{task.createDate}}</span>
+              </el-col>
+              <el-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" style="text-align: right;">
+                <el-button class="taskCell" style="padding: 3px 20px" type="text" @click="showDetail(task)">详情</el-button>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="taskCardBody">
+            <el-row>
+              <el-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
+                <i :class="JSON.parse(task.logo).icon + ' ic avator'" :style="'background: '+JSON.parse(task.logo).background"></i>
+                <span @click="showDetail(task)" class="taskCell" style="color: #909399;">{{task.formName}}</span>
+              </el-col>
+              <el-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
                 <span class="taskCell" style="color: #909399;">{{task.businessTitle}}</span>
               </el-col>
-              <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="8">
+              <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                 <span class="taskCell" style="color: #909399;">{{task.instCreatorName + ' 发起于 ' + task.instCreateDate}}</span>
               </el-col>
             </el-row>
@@ -130,10 +137,20 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(( comfirm ) => {
-        completeTask(taskId, comfirm.value).then(rsp => {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        completeTask(taskId, comfirm.value, this.$refs.taskDetail.taskDetail.formData).then(rsp => {
+          loading.close();
           this.$message.success(rsp.message);
           this.openItemDl = false;
           this.reloadDatas();
+        }).catch(e => {
+          loading.close();
+          this.$message.error(e.message);
         });
       });
     },
@@ -143,10 +160,20 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(( comfirm ) => {
-        refuseTask(taskId, comfirm.value).then(rsp => {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        refuseTask(taskId, comfirm.value, this.$refs.taskDetail.taskDetail.formData).then(rsp => {
+          loading.close();
           this.$message.success(rsp.message);
           this.openItemDl = false;
           this.reloadDatas();
+        }).catch(e => {
+          loading.close();
+          this.$message.error(e.message);
         });
       });
     }
@@ -170,16 +197,24 @@ export default {
     padding: 8px;
     border-radius: 8px;
     float: left;
-    font-size: 20px;
+    font-size: 18px;
     color: #ffffff;
-    background: #38adff;
-    height: 20px;
-    line-height: 20px;
+    height: 18px;
+    line-height: 18px;
   }
   .taskCell {
     height: 35px;
     line-height: 35px;
     padding-left: 10px;
+    font-size: 14px;
+  }
+
+  .taskCardHeader {
+    border-bottom: 1px solid #e3e3e3;
+    padding: 5px 10px;
+  }
+  .taskCardBody {
+    padding: 10px;
   }
 }
 </style>

@@ -12,6 +12,8 @@ import java.util.Map;
  */
 public @interface Tpl {
 
+    boolean enable() default true;
+
     @Transient
     @Comment("模板文件路径")
     String path();
@@ -28,8 +30,8 @@ public @interface Tpl {
     @Comment("模板引擎")
     Engine engine() default Engine.FreeMarker;
 
-//    @Comment("模板宽度")
-//    int width() default 0;
+    @Comment("弹出层宽度")
+    String width() default "";
 
     @Getter
     enum Engine {

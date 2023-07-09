@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.proxy.AnnotationProxy;
@@ -31,6 +32,8 @@ public class EruptModel implements Cloneable {
 
     private transient Map<String, EruptFieldModel> eruptFieldMap;
 
+    private transient boolean i18n;
+
     private String eruptName;
 
     private JsonObject eruptJson;
@@ -47,6 +50,7 @@ public class EruptModel implements Cloneable {
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.erupt = eruptAnnotationProxy.newProxy(this.getErupt());
         this.eruptName = eruptClazz.getSimpleName();
+        this.i18n = null != clazz.getAnnotation(EruptI18n.class);
         DataProxyInvoke.invoke(this, it -> {
             try {
                 it.getClass().getDeclaredMethod("extraRow", List.class);

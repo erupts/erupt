@@ -74,9 +74,9 @@ public class EruptCoreService implements ApplicationRunner {
         for (EruptFieldModel fieldModel : em.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
             if (edit.type() == EditType.CHOICE) {
-                fieldModel.setChoiceList(EruptUtil.getChoiceList(edit.choiceType()));
+                fieldModel.setComponentValue(EruptUtil.getChoiceList(em, edit.choiceType()));
             } else if (edit.type() == EditType.TAGS) {
-                fieldModel.setTagList(EruptUtil.getTagList(edit.tagsType()));
+                fieldModel.setComponentValue(EruptUtil.getTagList(edit.tagsType()));
             }
         }
         return em;

@@ -1,10 +1,13 @@
 package xyz.erupt.flow.bean.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -12,10 +15,8 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Erupt(name = "任务操作日志"
@@ -29,13 +30,21 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaTaskOperation extends BaseModel {
+public class OaTaskOperation {
 
     public static final String COMPLETE = "COMPLETE";//完成
     public static final String REFUSE = "REFUSE";//拒绝，走拒绝策略
     public static final String JUMP = "JUMP";//跳转，指定节点进行跳转
     public static final String SHUTDOWN = "SHUTDOWN";//终止
     public static final String ASSIGN = "ASSIGN";//转办
+
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
     @EruptField(views = @View(title = "流程实例id"))
     private Long processInstId;

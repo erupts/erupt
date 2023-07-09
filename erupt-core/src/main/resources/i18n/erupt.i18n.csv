@@ -1,0 +1,36 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES
+Y,是,是,yes,oui,そうです,네,да,sí
+N,否,否,no,pas,違います,아니,не,no
+erupt.notnull,必填,必填,required,Qu’il remplit,必ず記入します,필수,обязательн,obligatorio
+erupt.attack.xss,检测到有恶意跨站脚本，请重新编辑！,檢測到有惡意跨站腳本，請重新編輯！,"Malicious cross-site script detected, please re-edit!",Détecté un script inter-site malveillant. Veuillez rééditer!,悪意のあるスクリプトを検知したら、再編集をお願いします!,악성 교차 스크립트가 발견되었습니다. 다시 편집하십시오!,Обнаружены злонамеренные трансстанционные скрипты.,Detectado un script de cross-site malicioso. ¡Vuelva a editar!
+erupt.must.number,必须为数值,必須為數值,Must be numeric,Doit être une valeur numérique,数値でなければなりません,값이어야 함,Это должно быть в числах,Debe ser un valor numérico
+erupt.incorrect_format,格式不正确,格式不正確,Incorrect format,Le format n’est pas correct,フォーマットが正しくありません。,형식이 올바르지 않습니다,Неправильный формат,El formato no es correcto
+erupt.select,请先选择,請先選擇,Please select first,Veuillez sélectionner d’abord,先にお願いします,먼저 선택하세요,Выбирайте.,Por favor seleccione primero
+erupt.exec_success,执行成功,執行成功,Executed successfully,Succès dans l’exécution,実行成功です。,실행 성공,Выполнено.,Éxito en ejecución
+erupt.exec_select_data,执行该操作时请至少选中一条数据,執行該操作時請至少選中一條數據,Select at least one piece of data when you perform this operation,Veuillez sélectionner au moins une donnée pour effectuer cette opération,この動作を実行する際には、少なくとも1つのデータを選択します。,이 작업을 수행할 때 데이터 중 적어도 하나를 선택하십시오,"При выполнении этой операции, пожалуйста, выберите хотя бы Один файл","Por favor, seleccione al menos un dato para realizar esta operación"
+erupt.upload_error,上传失败,上傳失敗,Upload failure,Le téléchargement a échoué,アップロード失敗しました,업로드 실패,Загрузка завершена.,La subida falló
+erupt.upload_error.cannot_created,上传失败，文件目录无法创建,上傳失敗，文件目錄無法創建,"The upload failed, and the file directory could not be created","Le téléchargement a échoué, le répertoire de fichiers n’a pas pu être créé",アップロードに失敗し、ファイルディレクトリが作成できません。,업로드에 실패했습니다. 파일 디렉터리를 만들 수 없습니다,"Загрузка не удалась, каталог файлов не был создан",La carga falló y el directorio de archivos no se pudo crear
+erupt.upload_error.file_format,上传失败，文件格式不允许为:%s,上傳失敗，文件格式不允許為:%s,Upload failed. The file format cannot be %s,"Le téléchargement a échoué, le format de fichier n’est pas autorisé comme :% S",アップロードに失敗した場合、ファイル形式は%sとすることができません。,업로드에 실패했습니다. 다음으로 파일 형식을 사용할 수 없습니다:%s,"Загрузка не удалась, формат файла не позволяет :%","La carga falló, el formato de archivo no está permitido como :%s"
+erupt.upload_error.size,上传失败，文件大小不能超过:%s,上傳失敗，文件大小不能超過:%s,The file size cannot exceed :%s. Procedure,"Le téléchargement a échoué, la taille du fichier ne peut pas dépasser :% S",アップロードに失敗した場合、ファイルサイズは%sを超えてはいけません。,업로드에 실패했습니다. 파일 크기는 다음과 같습니다:%s,"Загрузка не удалась, файл не может быть больше, чем %",La carga ha fallado. El tamaño del archivo no puede exceder :%s
+erupt.upload_error.not_image,获取图片流失败，请确认上传文件为图片,獲取圖片流失敗，請確認上傳文件為圖片,Failed to obtain the image stream. Please ensure that the uploaded file is an image,"Échec de l’obtention du flux d’images, veuillez confirmer que le fichier téléchargé est une image",画像ストリームの取得に失敗しました。アップロードされたファイルが画像であることを確認してください。,그림 스트림을 가져오는 데 실패했습니다. 파일을 그림으로 업로드했는지 확인하십시오,Подтвердите загрузку файла на изображение,"Error al obtener el flujo de imágenes. Por favor, asegúrese de subir el archivo como una imagen"
+erupt.upload_error.image_width,上传失败，图片宽度不在[%s]范围内,上傳失敗，圖片寬度不在[%s]範圍內,"Upload failed, image width is not in [%s] range","Le téléchargement a échoué, la largeur de l’image n’est pas dans la plage [% S]",アップロードに失敗した場合、画像の幅が[%s]範囲にありません。,그림 너비가 (%s) 범위에 없으므로 업로드에 실패했습니다,"Загрузка не удалась, ширина изображения не в пределах [%]","La carga falló, el ancho de la imagen no está dentro del [%s]"
+erupt.upload_error.image_height,上传失败，图片高度不在[%s]范围内,上傳失敗，圖片高度不在[%s]範圍內,"Upload failed, image height is not in [%s] range","Le téléchargement a échoué, la hauteur de l’image n’est pas dans la plage [% S]",アップロードに失敗した場合、画像の高さが[%s]範囲にありません。,그림 높이가 [%s] 범위에 없으므로 업로드에 실패했습니다,"Загрузка не удалась, высота изображения не в пределах [%] диапазона","La subida falló, la altura de la imagen no está dentro del [%s]"
+erupt.data.delete_fail_by_associated_data,删除失败，可能存在关联数据，无法直接删除,刪除失敗，可能存在關聯數據，無法直接刪除,The deletion fails because associated data may exist and cannot be directly deleted,"La suppression a échoué, des données liées peuvent exister et ne peuvent pas être supprimées directement",削除失敗、関連データがある可能性があり、直接削除できません。,삭제에 실패했습니다. 관련된 데이터가 있을 수 있으므로 직접 삭제할 수 없습니다,"Удаление провалов может иметь корреляционные данные, которые не могут быть удалены непосредственно","La eliminación falló, puede haber datos asociados y no se puede eliminar directamente"
+erupt.data.data_duplication,数据重复,數據重復,Data duplication,Duplication des données,データが重複します。,데이터가 중복되다.,Повторение данных,Duplicación de datos
+erupt.data.limit_length,内容超出数据库限制长度,內容超出數據庫限製長度,The content exceeds the database limit length,Contenu au-delà de la longueur limite de la base de données,コンテンツがデータベースの制限長を超えています,내용이 데이타베이스 제한을 초과했습니다,Содержание вне предельной длины базы данных,Contenido fuera del límite de longitud de base de datos
+创建人,创建人,創建人,founder,Le créateur,設立者です,창립자,Создатель.,creador
+创建时间,创建时间,創建時間,Creation time,Temps de création,作成時間です,만든 시간,Создание времени,Hora de creación
+更新人,更新人,更新人,regenerator,Renouveler la personne,人を更新します,갱신자,Обновление.,Renovar la persona
+更新时间,更新时间,更新時間,Update time,Temps de mise à jour,更新時間です,업데이트 시간,Время обновления.,Hora de actualización
+数据审计,数据审计,數據審計,Data audit,Audit des données,データ監査です,데이터 감사,Проверка данных,Auditoría de datos
+表格视图,表格视图,表格視圖,Table view,Vue de table,テーブルグラフです,테이블 보기,Вид на таблицу,Vista de tabla
+树状视图,树状视图,樹狀視圖,Tree view,Vue en arbre,樹形図です,트리 보기,Вид на дерево,Vista en árbol
+功能按钮,功能按钮,功能按鈕,Function button,Bouton de fonction,機能ボタンです,기능 단추,Функциональная кнопка,Botón de función
+接口名称,接口名称,接口名稱,Interface name,Nom de l’interface,インタフェース名です,인터페이스 이름,Имя интерфейса,Nombre de interfaz
+框架内打开链接,框架内打开链接,框架內打開鏈接,Open the link in the frame,Ouvrir le lien dans le cadre,リンクを開きます,프레임에서 링크를 엽니다,Откройте связь внутри фреймворка,Enlace abierto dentro del marco
+新窗口打开链接,新窗口打开链接,新窗口打開鏈接,A new window opens the link,Nouvelle fenêtre ouvrir le lien,新しいウィンドウを開きますリンク,새 창이 링크를 엽니다,Новое окно открывает связь,Nueva ventana abre el enlace
+本窗口打开链接,本窗口打开链接,本窗口打開鏈接,This window opens the link,Cette fenêtre ouvre le lien,このウィンドウはリンクを開きます。,이 창에서 링크를 엽니다,Это окно открывает связь,Esta ventana abre el enlace
+充满屏幕,充满屏幕,充滿屏幕,Fill the screen,Remplissez votre écran,スクリーンいっぱいです,화면 채우기,Полный экран.,Llena la pantalla
+页面路由,页面路由,頁面路由,Page routing,Itinéraire des pages,ページルーティングです,페이지 라우팅,Маршрутизация страницы,Ruta de páginas
+自定义模板,自定义模板,自定義模板,Custom template,Personnalisez votre template,カスタムテンプレートです,사용자 정의 템플릿,Самоопределение шаблона,Personaliza tu plantilla
+多维报表,多维报表,多維報表,Multidimensional report,Rapports multidimensionnels,多次元レポートです,다웨이 보고서,Многомерный отчет,Informes multidimensionales

@@ -55,7 +55,7 @@ public class EruptNodeMicroservice {
         nodeManager.putNode(metaNode);
     }
 
-    public void removeInstance(String nodeName, String accessToken) {
+    public void safeRemoveInstance(String nodeName, String accessToken) {
         this.findNodeByAppName(nodeName, accessToken);
         nodeWorker.run(); // 轮询nodeName下所有ip节点可用情况
     }

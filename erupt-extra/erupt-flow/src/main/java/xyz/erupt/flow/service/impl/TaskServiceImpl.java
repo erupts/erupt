@@ -70,16 +70,20 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OaTask complete(Long taskId, String remarks) {
+    public OaTask complete(Long taskId, String remarks, String content) {
         EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
-        OaTask task = this.complete(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
+        OaTask task = this.complete(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks, content);
         return task;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OaTask complete(Long taskId, String account, String accountName, String remarks) {
+    public OaTask complete(Long taskId, String account, String accountName, String remarks, String content) {
         OaTask task = this.finish(OaTaskOperation.COMPLETE, taskId, account, accountName, remarks);
+        //更新表单
+        if(!StringUtils.isBlank(content)) {
+            processInstanceService.updateDataById(task.getProcessInstId(), content);
+        }
         //触发活动的完成
         this.listenerMap.get(AfterCompleteTaskListener.class).forEach(l -> l.execute(task));
         return task;
@@ -159,16 +163,20 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void refuse(Long taskId, String remarks) {
+    public void refuse(Long taskId, String remarks, String content) {
         EruptUser currentEruptUser = eruptUserService.getCurrentEruptUser();
-        this.refuse(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks);
+        this.refuse(taskId, currentEruptUser.getAccount(), currentEruptUser.getName(), remarks, content);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void refuse(Long taskId, String account, String accountName, String remarks) {
+    public void refuse(Long taskId, String account, String accountName, String remarks, String content) {
         //先完成当前任务
         OaTask task = this.finish(OaTaskOperation.REFUSE, taskId, account, accountName, remarks);
+        //更新表单
+        if(!StringUtils.isBlank(content)) {
+            processInstanceService.updateDataById(task.getProcessInstId(), content);
+        }
         //进行拒绝
         processHelper.refuse(task, accountName);
         //触发拒绝后置事件
@@ -227,7 +235,9 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
     public List<OaTask> listMyTasks(String keywords) {
         MPJLambdaWrapper<OaTask> queryWrapper = new MPJLambdaWrapper<OaTask>()
                 .leftJoin(OaProcessInstance.class, OaProcessInstance::getId, OaTask::getProcessInstId)//关联流程实例
+                .leftJoin(OaProcessDefinition.class, OaProcessDefinition::getId, OaTask::getProcessDefId)//关联流程定义
                 .selectAll(OaTask.class)//查询任务全部字段
+                .selectAs(OaProcessDefinition::getLogo, OaTask::getLogo)
                 .selectAs(OaProcessInstance::getCreator, OaTask::getInstCreator)
                 .selectAs(OaProcessInstance::getCreatorName, OaTask::getInstCreatorName)
                 .selectAs(OaProcessInstance::getCreateDate, OaTask::getInstCreateDate)
@@ -308,7 +318,7 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
 
     @Override
     public void saveBatchWithUserLink(List<OaTask> oaTasks) {
-        this.saveBatch(oaTasks);
+        oaTasks.forEach(this::save);
         taskHistoryService.copyAndSave(oaTasks);
 
         oaTasks.forEach(t -> {

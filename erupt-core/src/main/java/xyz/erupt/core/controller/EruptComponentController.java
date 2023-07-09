@@ -12,6 +12,7 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
+import xyz.erupt.core.view.EruptModel;
 
 import java.util.List;
 import java.util.Map;
@@ -56,8 +57,9 @@ public class EruptComponentController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<VLModel> findChoiceItem(@PathVariable("erupt") String eruptName,
                                         @PathVariable("field") String field) {
-        EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
-        return EruptUtil.getChoiceList(fieldModel.getEruptField().edit().choiceType());
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        return EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit().choiceType());
     }
 
     //Gets the TAGS component list data

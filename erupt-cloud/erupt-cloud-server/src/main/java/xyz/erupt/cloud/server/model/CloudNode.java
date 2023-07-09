@@ -6,9 +6,11 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.TagsFetchHandler;
+import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -22,9 +24,11 @@ import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.cloud.server.base.CloudServerConst;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeManager;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
+import xyz.erupt.tpl.engine.EngineConst;
 import xyz.erupt.upms.handler.ViaMenuValueCtrl;
 
 import javax.annotation.Resource;
@@ -43,15 +47,17 @@ import java.util.function.Function;
 @Setter
 @Entity
 @Table(name = "e_cloud_node", uniqueConstraints = @UniqueConstraint(columnNames = CloudNode.NODE_NAME))
-@Erupt(name = "节点配置", dataProxy = CloudNode.class,
+@Erupt(
+        name = "节点配置", dataProxy = CloudNode.class,
         rowOperation = @RowOperation(
                 title = "查看令牌", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
                 show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
-                type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/NodeInfo.ftl")
-        )
+                type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl")
+        ), layout = @Layout(tableLeftFixed = 1)
 )
 @Component
-public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>, TagsFetchHandler {
+@EruptI18n
+public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>, TagsFetchHandler, Tpl.TplHandler {
 
     public static final String NODE_NAME = "nodeName";
 
@@ -102,7 +108,9 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
 
     @Transient
     @EruptField(
-            views = @View(title = "实例数", className = "text-center", width = "70px")
+            views = @View(title = "实例数", className = "text-center", width = "70px"
+                    , tpl = @Tpl(path = "/tpl/node-instance.ftl", width = "400px", tplHandler = CloudNode.class)
+            )
     )
     private Integer instanceNum;
 
@@ -184,7 +192,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                     Function<Collection<String>, Object> function = (it) -> null == it ? 0 : String.format("<a href='javascript:alert(\"%s\");'>%d</a>",
                             String.join("\\u000a", it), it.size());
                     map.put(eruptNumStr, function.apply(metaNode.getErupts()));
-                    map.put(instanceNumStr, function.apply(metaNode.getLocations()));
+                    map.put(instanceNumStr, metaNode.getLocations().size());
                     map.put(eruptModuleNum, function.apply(metaNode.getEruptModules()));
                     map.put(version, metaNode.getVersion());
                 });
@@ -204,4 +212,16 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
     public List<String> fetchTags(String[] params) {
         return eruptDao.getJdbcTemplate().queryForList("select name from e_upms_user", String.class);
     }
+
+    @Override
+    public void bindTplData(Map<String, Object> binding, String[] params) {
+        CloudNode cloudNode = (CloudNode) binding.get(EngineConst.INJECT_ROW);
+        MetaNode metaNode = nodeManager.getNode(cloudNode.getNodeName());
+        if (null == metaNode) {
+            binding.put("instances", "[]");
+        } else {
+            binding.put("instances", GsonFactory.getGson().toJson(metaNode.getLocations()));
+        }
+    }
+
 }

@@ -55,6 +55,13 @@ public class NodeManager {
         redisTemplate.delete(geneKey(nodeName));
     }
 
+    //移除指定实例
+    public void removeNodeInstance(String nodeName, String instanceAddress) {
+        MetaNode metaNode = getNode(nodeName);
+        metaNode.getLocations().removeIf(it -> it.equals(instanceAddress));
+        this.putNode(metaNode);
+    }
+
 
     public List<MetaNode> findAllNodes() {
         List<MetaNode> metaNodes = new ArrayList<>();

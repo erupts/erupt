@@ -9,7 +9,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.11.7</version>
+        <version>1.12.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -39,6 +39,11 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-tpl</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-tpl-ui.ant-design</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

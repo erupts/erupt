@@ -5,7 +5,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.11.7</version>
+    <version>1.12.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -32,13 +32,13 @@
         <module>erupt-core</module>
         <module>erupt-excel</module>
         <module>erupt-toolkit</module>
-        <module>erupt-i18n</module> <!-- 多语言 -->
 
         <module>erupt-data/erupt-jpa</module><!-- Hibernate JPA 数据实现 -->
         <module>erupt-data/erupt-mongodb</module><!-- MongoDB 数据实现 -->
 
         <module>erupt-upms</module><!--用户权限管理-->
         <module>erupt-security</module><!--API 接口安全-->
+        <module>erupt-admin</module>
         <module>erupt-web</module><!--前端代码-->
 
         <module>erupt-tpl</module>

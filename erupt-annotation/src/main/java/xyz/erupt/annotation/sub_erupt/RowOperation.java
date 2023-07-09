@@ -42,11 +42,7 @@ public @interface RowOperation {
     IfExprBehavior ifExprBehavior() default IfExprBehavior.DISABLE;
 
     @Comment("type为tpl时可用，可在模板中使用rows变量，可获取选中行的数据")
-    @Transient
     Tpl tpl() default @Tpl(path = "");
-
-    @Comment("tpl模板弹出层宽度")
-    String tplWidth() default "";
 
     @Comment("按钮提交时，需要填写的表单信息")
     Class<?> eruptClass() default void.class;

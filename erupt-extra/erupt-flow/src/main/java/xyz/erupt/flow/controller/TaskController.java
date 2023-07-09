@@ -1,5 +1,6 @@
 package xyz.erupt.flow.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +40,8 @@ public class TaskController {
      */
     @PostMapping("/task/complete/{taskId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel complete(@PathVariable("taskId") Long taskId, String remarks) {
-        taskService.complete(taskId, remarks);
+    public EruptApiModel complete(@PathVariable("taskId") Long taskId, @RequestBody JSONObject formContent) {
+        taskService.complete(taskId, formContent.getString("remarks"), formContent.getJSONObject("data").toJSONString());
         return EruptApiModel.successApi();
     }
 
@@ -50,8 +51,8 @@ public class TaskController {
      */
     @PostMapping("/task/refuse/{taskId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel refuse(@PathVariable("taskId") Long taskId, String remarks) {
-        taskService.refuse(taskId, remarks);
+    public EruptApiModel refuse(@PathVariable("taskId") Long taskId, @RequestBody JSONObject formContent) {
+        taskService.refuse(taskId, formContent.getString("remarks"), formContent.getJSONObject("data").toJSONString());
         return EruptApiModel.successApi();
     }
 

@@ -12,6 +12,7 @@ import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.AnnotationProxyPool;
 import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.proxy.erupt.FilterProxy;
+import xyz.erupt.core.proxy.erupt_field.type.BoolTypeProxy;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.TypeUtil;
 
@@ -50,6 +51,12 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
                 return proxyFilters;
             case "readonly":
                 return AnnotationProxyPool.getOrPut(this.rawAnnotation.readonly(), readonly -> new ReadonlyProxy().newProxy(readonly, this));
+            case "title":
+                return ProxyContext.translate(this.rawAnnotation.title());
+            case "desc":
+                return ProxyContext.translate(this.rawAnnotation.desc());
+            case "boolType":
+                return AnnotationProxyPool.getOrPut(this.rawAnnotation.boolType(), boolType -> new BoolTypeProxy().newProxy(boolType, this));
         }
         return this.invoke(invocation);
     }

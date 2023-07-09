@@ -75,6 +75,8 @@ public class EruptServerApi {
                 .setParameter("accessToken", accessToken).getSingleResult();
     }
 
+
+
     //用户信息
     @GetMapping(CloudRestApiConst.ERUPT_USER_INFO + "/{nodeName}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)

@@ -61,6 +61,9 @@ public @interface Erupt {
     @Comment("左树右表配置项")
     LinkTree linkTree() default @LinkTree(field = "");
 
+    //布局配置
+    Layout layout() default @Layout;
+
 //    @Comment("自定义页头")
 //    @Match("#value.path() != ''")
 //    Tpl header() default @Tpl(path = "");

@@ -8,8 +8,8 @@ document.createElement('audio');
 document.createElement('track');
 
 /**
- * Doubles as the main function for users to create a player instance and also
- * the main library object.
+ * Doubles as the default function for users to create a player instance and also
+ * the default library object.
  *
  * **ALIASES** videojs, _V_ (deprecated)
  *
@@ -1392,7 +1392,7 @@ vjs.Component.prototype.dispose = function(){
 };
 
 /**
- * Reference to main player instance
+ * Reference to default player instance
  *
  * @type {vjs.Player}
  * @private
@@ -4060,7 +4060,7 @@ vjs.Player.prototype.listenForUserActivity = function(){
 
 
 /**
- * Container of main controls
+ * Container of default controls
  * @param {vjs.Player|Object} player
  * @param {Object=} options
  * @class
@@ -5509,7 +5509,7 @@ vjs.Flash = vjs.MediaTechController.extend({
         // The one working method I found was to use the iframe's document.write() to create the swf object
         // This got around the security issue in all browsers except firefox.
         // I did find a hack where if I call the iframe's window.location.href='', it would get around the security error
-        // However, the main page would look like it was loading indefinitely (URL bar loading spinner would never stop)
+        // However, the default page would look like it was loading indefinitely (URL bar loading spinner would never stop)
         // Plus Firefox 3.6 didn't work no matter what I tried.
         // if (vjs.USER_AGENT.match('Firefox')) {
         //   iWin.location.href = '';
@@ -6250,7 +6250,7 @@ vjs.TextTrack.prototype.adjustFontSize = function(){
 };
 
 /**
- * Create basic div to hold cue text
+ * Create default div to hold cue text
  * @return {Element}
  */
 vjs.TextTrack.prototype.createEl = function(){

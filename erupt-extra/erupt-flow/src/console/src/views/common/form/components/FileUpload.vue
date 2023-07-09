@@ -5,9 +5,16 @@
       <ellipsis :row="1" :content="placeholder + sizeTip" hoverTip slot="tip" class="el-upload__tip"/>
     </div>
     <div v-else>
-      <el-upload :file-list="_value" action="#" :limit="maxSize" with-credentials :multiple="maxSize > 0" :data="uploadParams"
-                 :auto-upload="false" :before-upload="beforeUpload">
-        <el-button :disabled="formDisable" size="small" icon="el-icon-paperclip" round>选择文件</el-button>
+      <el-upload :file-list="_value" :action="uploadUrl" :limit="maxSize" :multiple="maxSize > 0" with-credentials
+                 :headers="{token: getToken()}"
+                 :data="uploadParams"
+                 :on-preview="handleDownload"
+                 :before-upload="beforeUpload"
+                 :on-success="onSuccess"
+                 :disabled="!editable"
+                 :auto-upload="true"
+      >
+        <el-button :disabled="!editable" size="small" icon="el-icon-paperclip" round>选择文件</el-button>
         <ellipsis :row="1" :content="placeholder + sizeTip" hoverTip slot="tip" class="el-upload__tip"/>
       </el-upload>
     </div>
@@ -16,6 +23,8 @@
 
 <script>
 import componentMinxins from '../ComponentMinxins'
+import {uploadUrl, deleteFile} from '@/api/fileUpload'
+import {getToken} from "@/api/auth";
 
 export default {
   mixins: [componentMinxins],
@@ -55,33 +64,67 @@ export default {
       return this.maxSize > 0 ? ` | 单个附件不超过${this.maxSize}MB` : ''
     }
   },
+  mounted() {
+  },
   data() {
     return {
-      disabled: false,
-      uploadParams: {}
+      uploadUrl: uploadUrl,
+      uploadParams: {},
     }
   },
   methods: {
+    getToken() {
+      return getToken();
+    },
     beforeUpload(file){
-      const alows = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
-      if (alows.indexOf(file.type) === -1){
-        this.$message.warning("存在不支持的图片格式")
+      const alows = [
+        'image/jpg',
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'audio/mpeg',
+        'video/mp4',
+        'application/x-mpegURL',
+        'video/x-ms-wmv',
+        'video/x-msvideo',
+        'video/x-flv',
+        'video/x-ms-wmv',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'text/plain',
+        'application/pdf',
+        'application/vnd.ms-powerpoint',
+        'application/zip',
+        'application/x-zip-compressed',
+        'application/x-rar',];
+      if (file.type && alows.indexOf(file.type) === -1){
+        this.$message.warning("禁止上传 "+file.type+" 文件")
       }else if(this.maxSize > 0 && file.size / 1024 / 1024 > this.maxSize){
-        this.$message.warning(`单张图片最大不超过 ${this.maxSize}MB`)
+        this.$message.warning(`单个文件最大不超过 ${this.maxSize}MB`)
       }else {
         return true
       }
       return false
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePictureCardPreview(file) {
-      console.log(file)
+      this._value=fileList;//删除前端文件
+      deleteFile({
+        path: file.url
+      });
     },
     handleDownload(file) {
-      console.log(file);
-    }
+      const link = document.createElement('a');
+      link.href = file.url;
+      link.setAttribute('download', file.name);
+      document.body.appendChild(link);
+      link.click();
+    },
+    onSuccess(res, file, fileList) {
+      file.url = res.data.url;//url设置为服务端的url
+      this._value=fileList;
+    },
   }
 }
 </script>

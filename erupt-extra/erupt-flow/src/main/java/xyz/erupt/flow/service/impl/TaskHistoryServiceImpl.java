@@ -95,7 +95,7 @@ public class TaskHistoryServiceImpl extends ServiceImpl<OaTaskHistoryMapper, OaT
             BeanUtils.copyProperties(t, hist);
             return hist;
         }).collect(Collectors.toList());
-        this.saveOrUpdateBatch(collect);
+        collect.forEach(this::saveOrUpdate);
         return collect;
     }
 

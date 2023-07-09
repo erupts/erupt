@@ -484,7 +484,7 @@ UE.I18N['en'] = {
             'lang_chart_align_same': 'Consistent with the X-axis Y-axis',
             'lang_chart_align_reverse': 'X-axis Y-axis opposite',
             'lang_chart_title': 'Title',
-            'lang_chart_main_title': 'main title:',
+            'lang_chart_main_title': 'default title:',
             'lang_chart_sub_title': 'sub title:',
             'lang_chart_x_title': 'X-axis title:',
             'lang_chart_y_title': 'Y-axis title:',
