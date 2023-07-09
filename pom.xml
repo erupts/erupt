@@ -38,6 +38,7 @@
 
         <module>erupt-upms</module><!--用户权限管理-->
         <module>erupt-security</module><!--API 接口安全-->
+        <module>erupt-admin</module>
         <module>erupt-web</module><!--前端代码-->
 
         <module>erupt-tpl</module>
