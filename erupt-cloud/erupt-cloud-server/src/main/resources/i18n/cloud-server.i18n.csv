@@ -1,0 +1,19 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES
+节点名,节点名,節點名,Node name,Nom du nœud,ノード名です,노드 이름,Имя узла,Nombre del nodo
+友好名称,友好名称,友好名稱,Friendly name,Un nom amical,友好名称です,친근한 이름,Дружеское имя,Nombre amistoso
+所属分组,所属分组,所屬分組,Owning group,Appartenance au groupe,所属グループです,속한 그룹,Место в группе,Pertenencia al grupo
+状态,状态,狀態,status,l’état,状態です,상태,состоян,El estado
+启用,启用,啟用,enable,Le lancement,起用します,사용 하기,открыт,activar
+禁用,禁用,禁用,forbidden,interdits,無効です,사용 안 함,отключ,deshabilitar
+Erupt 类数量,Erupt 类数量,Erupt 類數量,Erupt number,Nombre de classes Erupt,Eruptクラスの数です,erupt 클래스 수,Количество классов Erupt,Número de clases Erupt
+模块数,模块数,模塊數,Number of modules,Nombre de modules,モジュール数です,모듈 수,Модуль.,Número de módulos
+实例数,实例数,實例數,Number of instances,Nombre d’instances,インスタンス数です,인스턴스 개수,Практическое число,Número de instancias
+版本,版本,版本,edition,La version,バージョンです,버전,верс,versión
+负责人,负责人,負責人,Person in charge,Responsable de,責任者です,책임자,Главный.,jefe
+节点配置,节点配置,節點配置,Node configuration,Configuration des nœuds,ノードの配置です,노드 설정,Конфигурация узла,Configuración de nodos
+描述,描述,描述,Description,description,記述します,설명,описыва,descripción
+分组配置,分组配置,分組配置,Packet configuration,Configuration par groupes,グルーピング構成です,그룹 설정,Групповая компоновка,Configuración por grupos
+查看令牌,查看令牌,查看令牌,View token,Voir le token,トークンを調べます,토큰 보기,Проверь жетоны.,Ver el token
+微节点管理,微节点管理,微節點管理,Micronode management,Gestion des micro-noeuds,マイクロノード管理です,마이크로 노드 관리,Управление узлами,Gestión de micronodos
+节点组别,节点组别,節點組別,Node group,Le groupe noeud,ノードグループです,노드 그룹,узел,Grupo de nodos
+节点配置,节点配置,節點配置,Node configuration,Configuration des nœuds,ノードの配置です,노드 설정,Конфигурация узла,Configuración de nodos

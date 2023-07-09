@@ -2,7 +2,7 @@
   <div v-loading="loading" style="padding: 10px 20px;">
     <div v-if="!loading">
       <p style="font: 14px Base; color: #909399;">{{taskDetail.instCreatorName + " 发布于 " + taskDetail.instCreateDate}}</p>
-      <form-render class="process-form" ref="form" mode="PC" :formDisable="formDisable"
+      <form-render class="process-form" ref="form" mode="PC"
                    :forms="taskDetail.formItems"
                    v-model="taskDetail.formData" @input="valChange"/>
     </div>
@@ -20,9 +20,8 @@
 <script>
 import FormRender from '@/views/common/form/FormRender'
 import FormDesignRender from '@/views/admin/layout/form/FormDesignRender'
-import {completeTask, getInstDetail, getTaskDetail} from '@/api/process'
+import {getInstDetail, getTaskDetail} from '@/api/process'
 import TimeLine from '@/views/workspace/TimeLine'
-import {getToken} from "@/api/auth";
 
 export default {
   name: "InitiateProcess",
@@ -45,18 +44,16 @@ export default {
     return {
       myInstId: null,
       loading: false,
-      formDisable: true,//是否禁用编辑
       taskDetail: {
         formItems: [],
         formData: {}
       },
       showTimeLine: false,
-      count: 0,
+      count: 0
     }
   },
   mounted() {
     this.loading = true
-    this.formDisable = true;
     this.myInstId = this.instId;
     if(this.taskId) {//有任务，则使用任务刷新
       this.loadByTaskId(this.taskId);
@@ -72,18 +69,63 @@ export default {
       this.loading = true
       getTaskDetail(taskId).then( res => {
         this.loading = false;
-        this.taskDetail = res.data || {};
-        this.myInstId = res.data.processInstId;
+        let taskDetailTemp = res.data || {};
+        //处理权限
+        let node;
+        if(node=this.findNode(taskDetailTemp.activityKey, taskDetailTemp.nodeConfig)) {
+          let permMap = {};
+          node.props.formPerms.forEach(p => {
+            permMap[p.id] = p.perm;
+          });
+          this.setPerms(taskDetailTemp.formItems, permMap)
+        }
+        this.taskDetail = taskDetailTemp;
+        this.myInstId = this.taskDetail.processInstId;
       }).then(() => {
         this.$refs.timeLine.freshForInst(this.myInstId);
       }).finally(() => this.loading=false);
+    },
+    findNode(key, node) {
+      if(key==node.id) {
+        return node;
+      }else {
+        let target;
+        if(node.branchs && node.branchs.length>0) {
+          for(let i in node.branchs) {
+            if(target = this.findNode(key, node.branchs[i])) {
+              return target;
+            }
+          }
+        }else if(node.children) {
+          if(target = this.findNode(key, node.children)) {
+            return target;
+          }
+        }
+      }
+      return null;
+    },
+    setPerms(items, permMap) {
+      items.forEach(item => {
+        item.props.perm = permMap[item.id] || 'R';//默认只读
+        if(item.props.perm=='E') {//可编辑
+          item.props.editable = true;
+        }else {//其他情况全部只读
+          item.props.editable = false;
+        }
+        if(item.props.items) {
+          this.setPerms(item.props.items, permMap);
+        }
+      })
     },
     //根据实例查询数据
     loadByInstId(myInstId) {
       this.loading = true
       getInstDetail(myInstId).then( res => {
         this.loading = false
-        this.taskDetail = res.data || {};
+        let taskDetailTemp = res.data || {};
+        //处理权限
+        this.setPerms(taskDetailTemp.formItems, {})
+        this.taskDetail = taskDetailTemp;
       }).then(() => {
         this.$refs.timeLine.freshForInst(this.myInstId);
       }).finally(() => this.loading=false);

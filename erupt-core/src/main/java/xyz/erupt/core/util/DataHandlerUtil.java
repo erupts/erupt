@@ -65,26 +65,26 @@ public class DataHandlerUtil {
                         for (View view : fieldModel.getEruptField().views()) {
                             if (view.column().equals(_keys[_keys.length - 1])) {
                                 EruptFieldModel vef = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).getEruptFieldMap().get(view.column());
-                                map.put(entry.getKey(), convertColumnValue(vef, entry.getValue(), choiceItems));
+                                map.put(entry.getKey(), convertColumnValue(eruptModel, vef, entry.getValue(), choiceItems));
                             }
                         }
                         break;
                     default:
-                        map.put(entry.getKey(), convertColumnValue(fieldModel, entry.getValue(), choiceItems));
+                        map.put(entry.getKey(), convertColumnValue(eruptModel, fieldModel, entry.getValue(), choiceItems));
                         break;
                 }
             }
         }
     }
 
-    private static Object convertColumnValue(EruptFieldModel fieldModel, Object value, Map<String, Map<String, String>> choiceItems) {
+    private static Object convertColumnValue(EruptModel eruptModel, EruptFieldModel fieldModel, Object value, Map<String, Map<String, String>> choiceItems) {
         if (null == value) return null;
         Edit edit = fieldModel.getEruptField().edit();
         switch (edit.type()) {
             case CHOICE:
                 Map<String, String> cm = choiceItems.get(fieldModel.getFieldName());
                 if (null == cm) {
-                    cm = EruptUtil.getChoiceMap(edit.choiceType());
+                    cm = EruptUtil.getChoiceMap(eruptModel, edit.choiceType());
                     choiceItems.put(fieldModel.getFieldName(), cm);
                 }
                 return cm.get(value.toString());

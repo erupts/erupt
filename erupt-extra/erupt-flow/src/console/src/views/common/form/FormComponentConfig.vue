@@ -8,9 +8,10 @@
       <el-form-item label="必填项">
         <el-switch v-model="form.props.required"></el-switch>
       </el-form-item>
-      <el-form-item label="可打印">
-        <el-switch v-model="form.props.enablePrint"></el-switch>
-      </el-form-item>
+<!--      暂时不支持打印-->
+<!--      <el-form-item label="可打印">-->
+<!--        <el-switch v-model="form.props.enablePrint"></el-switch>-->
+<!--      </el-form-item>-->
     </el-form>
     <el-empty v-else description="当前组件不支持配置"></el-empty>
   </div>

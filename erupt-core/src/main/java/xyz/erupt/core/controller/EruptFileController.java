@@ -5,7 +5,6 @@ import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
@@ -18,6 +17,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.HtmlEditorType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
@@ -56,9 +56,6 @@ public class EruptFileController {
     @PostMapping("/upload/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty() || StringUtils.isBlank(file.getOriginalFilename())) {
-            return EruptApiModel.errorApi("上传失败，请选择文件");
-        }
         //生成存储路径
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isAdd());
@@ -80,7 +77,7 @@ public class EruptFileController {
                     String[] fileNameArr = file.getOriginalFilename().split("\\.");
                     String extensionName = fileNameArr[fileNameArr.length - 1];
                     if (Stream.of(attachmentType.fileTypes()).noneMatch(type -> extensionName.equalsIgnoreCase(type))) {
-                        return EruptApiModel.errorApi("上传失败，文件格式不允许为：" + extensionName);
+                        return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.file_format", extensionName));
                     }
                 }
                 if (!"".equals(attachmentType.path())) {
@@ -88,7 +85,7 @@ public class EruptFileController {
                 }
                 //校验文件大小
                 if (attachmentType.size() > 0 && file.getSize() / 1024 > attachmentType.size()) {
-                    return EruptApiModel.errorApi("上传失败，文件大小不能超过" + attachmentType.size() + "KB");
+                    return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.size", attachmentType.size() + "KB"));
                 }
                 switch (edit.attachmentType().type()) {
                     case IMAGE:
@@ -96,17 +93,15 @@ public class EruptFileController {
                         // 通过MultipartFile得到InputStream，从而得到BufferedImage
                         BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
                         if (bufferedImage == null) {
-                            return EruptApiModel.errorApi("获取图片流失败，请确认上传文件为图片");
+                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.not_image"));
                         }
                         int width = bufferedImage.getWidth();
                         int height = bufferedImage.getHeight();
                         if (imageType.minWidth() > width || imageType.maxWidth() < width) {
-                            return EruptApiModel.errorApi("上传失败，图片宽度不在["
-                                    + imageType.minWidth() + "," + imageType.maxWidth() + "]范围内");
+                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.image_width", imageType.minWidth() + "," + imageType.maxWidth()));
                         }
                         if (imageType.minHeight() > height || imageType.maxHeight() < height) {
-                            return EruptApiModel.errorApi("上传失败，图片高度不在["
-                                    + imageType.minHeight() + "," + imageType.maxHeight() + "]范围内");
+                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.image_height", imageType.minHeight() + "," + imageType.maxHeight()));
                         }
                         break;
                     case BASE:
@@ -119,8 +114,6 @@ public class EruptFileController {
                     path = htmlEditorType.path() + path;
                 }
                 break;
-            default:
-                return EruptApiModel.errorApi("上传失败，非法类型!");
         }
         try {
             boolean localSave = true;
@@ -133,7 +126,7 @@ public class EruptFileController {
                 File dest = new File(eruptProp.getUploadPath() + path);
                 if (!dest.getParentFile().exists()) {
                     if (!dest.getParentFile().mkdirs()) {
-                        return EruptApiModel.errorApi("上传失败，文件目录无法创建");
+                        return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.cannot_created"));
                     }
                 }
                 file.transferTo(dest);
@@ -141,7 +134,7 @@ public class EruptFileController {
             return EruptApiModel.successApi(path.replace("\\", "/"));
         } catch (Exception e) {
             e.printStackTrace();
-            return EruptApiModel.errorApi("上传失败，" + e.getMessage());
+            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error") + " " + e.getMessage());
         }
     }
 

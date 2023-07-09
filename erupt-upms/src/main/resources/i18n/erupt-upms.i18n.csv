@@ -1,0 +1,97 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES
+upms.pwd_required,密码必填,密碼必填,Password required,Mot de passe requis,パスワードは必ず入力します,비밀번호 필수,Пароль будет заполнен.,Contraseña es necesario
+upms.pwd_two_inconsistent,两次密码输入不一致,兩次密碼輸入不一致,The two password entries are inconsistent,Deux entrées de mot de passe incohérentes,パスワードの入力が2回一致しません,두 번 입력한 비밀번호가 일치하지 않습니다,Два непоследовательных ввода пароля,Dos contraseñas introducidas incoherentemente
+upms.no_bind_post,未绑定的岗位无法查看数据,未綁定的崗位無法查看數據,Unbound posts cannot view data,Les messages non liés ne peuvent pas voir les données,紐付けられていない部署はデータを見ることができません,바인딩되지 않은 직무는 데이터를 볼 수 없습니다,Несвязанные посты не могут просматривать данные,Las publicaciones no vinculadas no pueden ver los datos
+upms.no_bind_org,未绑定的组织无法查看数据,未綁定的組織無法查看數據,Unbound organizations cannot view data,Les organisations non liées ne peuvent pas voir les données,結合されていない組織はデータを見ることができません,바인딩되지 않은 조직은 데이터를 볼 수 없습니다,Несвязанные ткани не могут видеть данные,Las organizaciones no vinculadas no pueden ver los datos
+upms.not_super_admin-unable_add,当前用户非超管，无法创建超管用户,當前用戶非超管，無法創建超管用戶,"The current user is not hypermanaged. Therefore, you cannot create an hypermanaged user","L’utilisateur actuel n’est pas supertube, impossible de créer un utilisateur supertube",現在のユーザーはスーパーチューブではないので、スーパーチューブを作成できません。,현재 사용자는 초과 튜브가 아니므로 초과 튜브를 만들 수 없습니다,В настоящее время абонент не является гипертрубкой и не может создать пользователя,"El usuario actual no es supertube, no se puede crear un usuario supertube"
+upms.position_no_org,选择岗位时，所属组织必填,選擇崗位時，所屬組織必填,"When selecting a position, the organization is required",Obligatoire pour l’organisation affiliée lors de la sélection d’un poste,部署を選ぶとき、所属組織は必ず記入します。,부서 선택시 소속 조직은 필수이다,"При выборе места, принадлежащая организации заполняет его",Requerido por la organización al seleccionar un puesto
+[erupt],,,,,,,,
+编码,编码,編碼,Code,codage,コード化です,인 코딩,закодирова,codificación
+名称,名称,名稱,Title,dénomination,名前です,이름,назван,El nombre
+备注,备注,備註,Remark,remarques,備考です,비고,примечан,comentar
+用户名,用户名,用戶名,Account,Nom de l’utilisateur,ユーザー名です,사용자 이름,Имя пользователя.,Nombre de usuario
+姓名,姓名,姓名,Name,Le nom,名前です,이름,им,Los nombres
+密码,密码,密碼,Password,Les mots de passe,パスワードです,암호,код,La contraseña
+确认密码,确认密码,確認密碼,Confirm password,Confirmer le mot de passe,パスワードを確認します,비밀번호 확인,Подтвердите код.,Confirme su contraseña
+md5加密,md5加密,md5加密,MD5 encrypt,Cryptage avec md5,md5暗号化です,md5 암호화,Md5 зашифровано,Cifrado con md5
+重置密码时间,重置密码时间,重置密碼時間,Reset password time,Réinitialiser le mot de passe time,パスワード時間をリセットします,비밀번호 초기화 시간,Перезагрузка.,Restablecer tiempo de contraseña
+账号失效时间,账号失效时间,賬號失效時間,Account expiration time,Temps d’expiration du compte,アカウント失効期間です,계정 유효기간,Время истечения срока действия счета,Tiempo de caducidad de cuenta
+超管用户,超管用户,超管用戶,Overpipe user,Surtube pour les utilisateurs,スーパーチューブ利用者です,하이퍼튜브 사용자,Пользователь с перетрубкой,Supertube para usuarios
+重置密码,重置密码,重置密碼,Reset password,Réinitialiser votre mot de passe,パスワードをリセットします,비밀번호 초기화,Перезагрузка.,Restablecer la contraseña
+加密,加密,加密,encipher,chiffrement,暗号化です,암호화,зашифрова,cifrado
+不加密,不加密,不加密,No encryption,Pas de cryptage,暗号化しません,암호화하지 않음,Нет.,Sin encriptación
+激活,激活,激活,Activate,l’activation,活性化します,활성화,активирова,activar
+锁定,锁定,鎖定,lock,verrouillage,ロックです,잠금,блокировк,cerrado
+启用,启用,啟用,enable,Le lancement,起用します,사용 하기,открыт,activar
+禁用,禁用,禁用,forbidden,interdits,無効です,사용 안 함,отключ,deshabilitar
+隐藏,隐藏,隱藏,Hidden,cachée,隠します,숨기기,спрята,ocultar
+,,,,,,,,
+ip白名单,ip白名单,ip白名單,Ip white list,Liste blanche ip,ホワイトリストです,ip 화이트 리스트,Белый ip-список,Lista blanca de ip
+所属角色,所属角色,所屬角色,Role,Le rôle affilié,所属しています,소속배역,Принадлежность к роли,Rol al que pertenece
+手机号码,手机号码,手機號碼,Phone,Numéro de téléphone,携帯電話番号です,핸드폰 번호,Номер телефона.,Teléfono móvil
+所属组织,所属组织,所屬組織,Org,Les organisations affiliées,所属組織です,산하 조직,Принадлежность к организации,Organizaciones afiliadas
+岗位,岗位,崗位,Post,emplois,持ち場です,일자리를,пост,Puestos de trabajo
+账户状态,账户状态,賬戶狀態,Status,Statut du compte,口座状態です,계정 상태,Статус счета.,Estado de cuenta
+邮箱,邮箱,郵箱,Email,La boîte aux lettres,メールボックスです,메일 박스,Почтов ящик,dirección
+首页菜单,首页菜单,首頁菜單,Home menu,Accueil menu menu,トップページのメニューです,홈페이지 메뉴,Меню на первой странице,Página principal menú
+状态,状态,狀態,Status,l’état,状態です,상태,состоян,El estado
+操作权限,操作权限,操作權限,Operation permissions,Autorisations de fonctionnement,操作権限です,작업 권한,Доступ к операции,Permisos de operación
+菜单权限,菜单权限,菜單權限,Menu permissions,Accès au menu,メニュー権限です,메뉴 권한,Доступ к меню,Permisos de menú
+包含用户,包含用户,包含用戶,Contain user,Inclure un utilisateur,ユーザーを含みます,사용자 포함,Включать пользователей,Incluye un usuario
+菜单类型,菜单类型,菜單類型,Menu type,Type de menu,メニュータイプです。,메뉴 종류,Тип меню,Tipo de menú
+类型值,类型值,類型值,Menu value,Type valeur valeur,型値です,형식 값,Значение типа,Tipo valor valor
+顺序,顺序,順序,Order,La séquence,順番です,순서,последовательн,orden
+图标,图标,圖標,Icon,Les icônes,アイコンです,아이콘,иконк,El icono
+上级菜单,上级菜单,上級菜單,Parent,Le menu supérieur,上級メニュー,상위 메뉴,Меню начальства,Menú superior
+自定义参数,自定义参数,自定義參數,Customer param,Personnalisez vos paramètres,カスタムパラメータです,사용자 정의 인자,Самоопределение параметра,Personaliza tus parámetros
+组织编码,组织编码,組織編碼,Org code,Organisation et codage,組織コードです,조직 인코딩,Код ткани,Organización y codificación
+组织名称,组织名称,組織名稱,Org name,Nom de l’organisation,組織名です,조직 이름,Организационное имя,Nombre de la organización
+上级组织,上级组织,上級組織,Parent org,Les organisations supérieures,上級組織です,상급 조직,Организация высшего порядка,Organización superior
+显示顺序,显示顺序,顯示順序,Order,Afficher la commande,表示順序です,표시 순서,Покажи последовательность.,Mostrar el orden
+岗位编码,岗位编码,崗位編碼,Code,Code du poste,ポストコードです,직위 인코딩,Код поста,Código de posición
+岗位名称,岗位名称,崗位名稱,Name,Nom du poste,持ち場の名前です,직책 명칭,Название поста,Nombre del post
+岗位权重,岗位权重,崗位權重,Weight,Poids du poste,ポジションの重みです。,직위의 영향력,Вес поста,Peso del post
+用户,用户,用戶,User,Les utilisateurs,ユーザーです,사용자,пользовател,El usuario
+操作人,操作人,操作人,operator,Les opérateurs,人を操作します,오퍼레이터,Оператор.,operador
+错误信息,错误信息,錯誤信息,Error message,Message d’erreur message,エラー情報です,오류 메시지,Ложная информация.,Mensaje de error
+登录时间,登录时间,登錄時間,Login time,Temps de connexion,登録時間です,로그인 시간,Время входа.,Hora de inicio
+IP地址,IP地址,IP地址,Ip address,Votre adresse IP,IPアドレスです,ip 주소,IP адрес.,Dirección IP
+IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,IP-адрес.,Origen de IP
+操作系统,操作系统,操作系統,OS,Le système d’exploitation,osです,오퍼레이션 시스템,Операционная система,Sistema operativo
+浏览器,浏览器,瀏覽器,Browser,navigateur,ブラウザです,브라우저,браузер,explorador
+设备类型,设备类型,設備類型,Device type,Type de matériel,装置の種類です,장치 종류,Тип оборудования,Tipos de equipos
+功能名称,功能名称,功能名稱,Function name,Nom de fonction,機能名です,기능 이름,Функциональное имя,Nombre de función
+请求参数,请求参数,請求參數,Req param,Paramètres de requête,パラメータを要求します,요청 인자,Параметр запроса,Parámetros de solicitud
+是否成功,是否成功,是否成功,Is success,Avec ou sans succès,成功したかどうかです,성공 여부,Успех или нет?,Tener éxito o no
+请求耗时,请求耗时,請求耗時,Req time,La demande prend du temps,お願いには時間がかかります,요청 시간,Время запроса,La solicitud consume tiempo
+记录时间,记录时间,記錄時間,Record time,Temps de record,時間を記録します,기록 시간,Время записи.,Tiempo de grabación
+请求地址,请求地址,請求地址,URL,Adresse de demande,請求先です,주소 요청,Запрашиваю адрес.,Dirección de solicitud
+请求方法,请求方法,請求方法,Method,Méthode de demande,請求方法です,요청 방법,Способ просьбы,Método de solicitud
+强退,强退,強退,Strong back,Forts de la restitution,強退です,강 퇴,Сильн назад,Denuncia fuerte
+实体类名,实体类名,實體類名,Entity class name,Nom de classe d’entité,実体クラス名です,엔티티 클래스 이름,Настоящее имя класса,Nombre de clase de entidad
+表名,表名,表名,Table name,Tableau de,表名です,표 명,Час из,Tabla de
+简介,简介,簡介,intro,introduction,プロフィール,간단 한 소개,профил,perfil
+字段管理,字段管理,字段管理,Field management,Gestion des champs,フィールド管理です,필드 관리,Управление полем,Gestión de campos
+字段名,字段名,字段名,Field name,Nom du champ,フィールド名です,필드 이름,Имя поля.,Nombre del campo
+显示名称,显示名称,顯示名稱,Display name,Afficher le nom,名前を表示します,이름 보이기,Назовите имя.,Mostrar el nombre
+编辑类型,编辑类型,編輯類型,Edit type,Type de montage,編集タイプです,형식 편집,Редакторский тип,Tipo de edición
+查询项,查询项,查詢項,Query item,Rechercher un article,問い合わせ項目です,조회 항목,Запрос.,Buscar un artículo
+字段排序,字段排序,字段排序,Field sort,Trier par champs,フィールド並べ替えです,필드 정렬,Поле в порядке,Ordenar por campos
+关联实体类,关联实体类,關聯實體類,Associated entity class,Classe d’entité associée,関連実体クラスです,연결된 개체 클래스,Ассоциированный класс,Clase de entidad asociada
+是否必填,是否必填,是否必填,Required or not,Oui non obligatoire,必ず記入しますか,기입해야 하는지,Будет ли он заполнен?,Sí no requerido
+是否显示,是否显示,是否顯示,Show or not,Afficher ou non,表示されますか,표시할지 여부,Показать?,Mostrar sí no
+代码预览,代码预览,代碼預覽,Code preview,Aperçu du code,プレビューコードです,코드 미리보기,Предварительный просмотр кода,Vista previa del código
+[menu],,,,,,,,
+系统管理,系统管理,系統管理,System management,Gestion du système,システム管理です,시스템 관리,Управление системой,Administración del sistema
+菜单维护,菜单维护,菜單維護,Menu maintenance,Maintenance du menu,メニューメンテナンスです,메뉴 관리,Обслуживание меню,Mantenimiento del menú
+角色维护,角色维护,角色維護,Role maintenance,Maintien des rôles,キャラクターメンテナンスです,역할 관리,Уход за персонажами,Mantenimiento de roles
+组织维护,组织维护,組織維護,Organization maintenance,Organisation et maintenance,メンテナンス組織です,조직 유지,Организационное обслуживание,Organización y mantenimiento
+岗位维护,岗位维护,崗位維護,Post maintenance,Maintien des postes,雇用維持です,직무 유지,Уход за постом,Mantenimiento del puesto
+用户维护,用户维护,用戶維護,User maintenance,Maintenance des utilisateurs,ユーザーメンテナンス,사용자 보호,Обслуживание пользователя,Mantenimiento por usuarios
+字典维护,字典维护,字典維護,Dictionary maintenance,Maintenance du dictionnaire,辞書メンテナンスです,사전 관리,Уход за словарем,Mantenimiento del diccionario
+登录日志,登录日志,登錄日誌,Entry log,Log de connexion,ログを登録する,로그인 로그,Регистрационный журнал.,Iniciar sesión log
+在线用户,在线用户,在線用戶,Online user,Utilisateurs en ligne,オンラインユーザーです,온라인 사용자,Онлайн.,Usuarios en línea
+操作日志,操作日志,操作日誌,Operation log,Journal des opérations,操作履歴です,작업 로그,Журнал операций.,Registro de operaciones
+代码生成,代码生成,代碼生成,Code generation,Génération de code,コード生成です,코드 생성,Генерация кода,Generación de código
+生成Erupt代码,生成Erupt代码,生成Erupt代碼,Erupt code is generated,Générer du code Erupt,Eruptコードを生成します,erupt 코드를 생성한다,Генерирует код эрупта,Generando código Erupt
+,,,,,,,,

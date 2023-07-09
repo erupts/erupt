@@ -45,7 +45,7 @@ public class EruptMicroserviceController {
     @PostMapping(CloudRestApiConst.REMOVE_INSTANCE_NODE)
     public void removeInstanceNode(@RequestParam String nodeName, @RequestParam String accessToken, HttpServletRequest request) {
         Optional.ofNullable(CloudServerUtil.findEruptCloudServerAnnotation()).ifPresent(it -> it.removeNode(nodeName, request));
-        eruptNodeMicroservice.removeInstance(nodeName, accessToken);
+        eruptNodeMicroservice.safeRemoveInstance(nodeName, accessToken);
     }
 
 }

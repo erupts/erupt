@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecretUtil;
@@ -142,8 +143,10 @@ public class EruptUserController {
     @GetMapping("/menu")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public List<EruptMenuVo> getMenu() {
-        return sessionService.get(SessionKey.MENU_VIEW + eruptContextService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
+        List<EruptMenuVo> menus = sessionService.get(SessionKey.MENU_VIEW + eruptContextService.getCurrentToken(), new TypeToken<List<EruptMenuVo>>() {
         }.getType());
+        menus.forEach(it -> it.setName(I18nTranslate.$translate(it.getName())));
+        return menus;
     }
 
     //登出

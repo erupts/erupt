@@ -1,11 +1,11 @@
 package xyz.erupt.tpl.controller;
 
 
-import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
+import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.invoke.DataProcessorManager;
@@ -85,10 +85,17 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
         eruptTplService.tplRender(tpl, null, response);
     }
 
-    @GetMapping(value = "/operation_tpl/{erupt}/{code}", produces = HTML_MIME_TYPE)
+    /**
+     * 自定义按钮弹出层模板
+     *
+     * @param eruptName erupt
+     * @param code      模板标识
+     * @param ids       ID标识
+     */
+    @GetMapping(value = "/operation-tpl/{erupt}/{code}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     public void operationTpl(@PathVariable("erupt") String eruptName, @PathVariable("code") String code,
-                                @RequestParam(value = "ids", required = false) String[] ids, HttpServletResponse response) {
+                             @RequestParam(value = "ids", required = false) String[] ids, HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         RowOperation operation = Arrays.stream(eruptModel.getErupt().rowOperation()).filter(it ->
                 it.code().equals(code)).findFirst().orElseThrow(EruptNoLegalPowerException::new);
@@ -103,13 +110,28 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
         eruptTplService.tplRender(operation.tpl(), map, response);
     }
 
-    @GetMapping(value = "/view_tpl/{erupt}/{field}", produces = HTML_MIME_TYPE)
+    /**
+     * 表格视图@View注解触发的TPL
+     *
+     * @param eruptName erupt
+     * @param field     字段
+     * @param id        当前行数据的主键
+     */
+    @GetMapping(value = "/view-tpl/{erupt}/{field}/{id}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
-    public void viewTpl(@PathVariable("erupt") String eruptName, @PathVariable("field") String field, @RequestParam JsonObject row, HttpServletResponse response) {
+    public void viewTpl(@PathVariable("erupt") String eruptName, @PathVariable("field") String field,
+                        @PathVariable("id") String id, HttpServletResponse response) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        Tpl tpl = eruptModel.getEruptFieldMap().get(field).getEruptField().views()[0].tpl();
+        Tpl tpl = null;
+        for (View view : eruptModel.getEruptFieldMap().get(field).getEruptField().views()) {
+            if (StringUtils.isNotBlank(view.tpl().path())) {
+                tpl = view.tpl();
+                break;
+            }
+        }
         Map<String, Object> map = new HashMap<>();
-        map.put(EngineConst.INJECT_ROW, row);
+        map.put(EngineConst.INJECT_ROW, DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id)));
         eruptTplService.tplRender(tpl, map, response);
     }
 

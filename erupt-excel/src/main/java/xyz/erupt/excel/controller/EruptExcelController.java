@@ -69,7 +69,7 @@ public class EruptExcelController {
 
     //导出
     @PostMapping("/export/{erupt}")
-    @EruptRecordOperate(value = "导出Excel", dynamicConfig = EruptRecordNaming.class)
+    @EruptRecordOperate(value = "Export Excel", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void exportData(@PathVariable("erupt") String eruptName,
                            @RequestBody(required = false) List<Condition> conditions,
@@ -90,7 +90,7 @@ public class EruptExcelController {
 
     //导入
     @PostMapping("/import/{erupt}")
-    @EruptRecordOperate(value = "导入Excel", dynamicConfig = EruptRecordNaming.class)
+    @EruptRecordOperate(value = "Import Excel", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional(rollbackOn = Exception.class)
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file, HttpServletRequest request) {

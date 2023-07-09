@@ -15,8 +15,8 @@
         v-infinite-scroll="loadDatas"
         infinite-scroll-disabled="disabled">
       <li v-for="inst in dataList">
-        <el-card shadow="hover" class="taskCard">
-          <div slot="header" class="clearfix" style="padding-left: 10px;">
+        <el-card shadow="hover" class="taskCard" :body-style="{ padding: '5px 10px' }">
+          <div class="taskCardHeader" style="padding-left: 24px;">
             <div :class="{'angle_mark':true
                         , 'angle_mark_color1': inst.tag==='发起'
                          , 'angle_mark_color2': inst.tag==='审批'
@@ -26,7 +26,7 @@
             </div>
             <el-row>
               <el-col :xs="20" :sm="8" :md="8" :lg="6" :xl="4">
-                <el-link @click="showDetail(inst)" :underline="false" style="font: 18px large;">{{inst.businessTitle}}</el-link>
+                <el-link @click="showDetail(inst)" :underline="false" style="font: 16px large;">{{inst.businessTitle}}</el-link>
               </el-col>
               <el-col :xs="4" :sm="8" :md="8" :lg="6" :xl="8">
                 <el-tag :type="getStatus(inst).type"  style="margin-left: 10px;">
@@ -36,17 +36,16 @@
                   {{'结束于 ' + inst.finishDate}}
                 </span>
               </el-col>
-              <el-col :xs="0" :sm="8" :md="8" :lg="12" :xl="12">
-                <el-button style="float: right; padding: 3px 0" type="text"
-                      @click="showDetail(inst)">详情</el-button>
+              <el-col :xs="0" :sm="8" :md="8" :lg="12" :xl="12" style="text-align: right;">
+                <el-button class="taskCell" style="padding: 3px 20px" type="text" @click="showDetail(inst)">详情</el-button>
               </el-col>
             </el-row>
           </div>
-          <div class="text item" style="padding-left: 10px;">
+          <div class="taskCardBody">
             <el-row>
               <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="4">
-                <i class="el-icon-eleme ic avator"> </i>
-                <span class="taskCell" style="color: #909399;">{{inst.formName}}</span>
+                <i :class="JSON.parse(inst.logo).icon + ' ic avator'" :style="'background: '+JSON.parse(inst.logo).background"></i>
+                <span @click="showDetail(inst)" class="taskCell" style="color: #909399;">{{inst.formName}}</span>
               </el-col>
               <el-col :xs="18" :sm="18" :md="18" :lg="18" :xl="20">
                 <span class="taskCell" style="color: #909399;">{{inst.creatorName + ' 发起于 ' + inst.createDate}}</span>
@@ -230,6 +229,14 @@ export default {
     height: 35px;
     line-height: 35px;
     padding-left: 10px;
+    font-size: 14px;
+  }
+  .taskCardHeader {
+    border-bottom: 1px solid #e3e3e3;
+    padding: 5px 10px;
+  }
+  .taskCardBody {
+    padding: 10px;
   }
 }
 </style>

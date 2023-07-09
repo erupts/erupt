@@ -26,7 +26,7 @@ public class EruptAppProp {
     //登录密码是否加密传输
     private Boolean pwdTransferEncrypt = true;
 
-    //自定义登录页路径
+    //自定义登录页路径，支持http网络路径
     private String loginPagePath;
 
     private Integer hash;
@@ -35,11 +35,14 @@ public class EruptAppProp {
 
     //多语言配置
     private String[] locales = {
-            DEFAULT_LANG, //简体中文
-            "zh-TW",      //繁体中文
-            "en-US",      //English
-            "ja-JP",      //日本語
-            "ko-KR"       //한국어
+            DEFAULT_LANG, // 简体中文
+            "zh-TW",      // 繁体中文
+            "en-US",      // English
+            "fr-FR",      // En français
+            "ja-JP",      // 日本語
+            "ko-KR",      // 한국어
+            "ru_RU",      // русск
+            "es_ES"       // español
     };
 
 }

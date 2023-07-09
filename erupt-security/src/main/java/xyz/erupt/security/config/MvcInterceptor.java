@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.security.interceptor.EruptSecurityInterceptor;
+import xyz.erupt.security.interceptor.EruptSuperInterceptor;
 import xyz.erupt.security.interceptor.HttpServletRequestFilter;
 
 import javax.annotation.Resource;
@@ -22,8 +23,12 @@ public class MvcInterceptor implements WebMvcConfigurer {
     @Resource
     private EruptSecurityInterceptor eruptSecurityInterceptor;
 
+    @Resource
+    private EruptSuperInterceptor eruptSuperInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(eruptSuperInterceptor).addPathPatterns("/**");
         registry.addInterceptor(eruptSecurityInterceptor).addPathPatterns(EruptRestPath.ERUPT_API + "/**");
     }
 

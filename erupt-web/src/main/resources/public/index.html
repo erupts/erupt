@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
     <meta charset="utf-8">
     <title></title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
@@ -9,99 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <meta name="renderer" content="webkit">
-    <meta http-equiv="Expires" content="0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-control" content="no-cache">
-    <meta http-equiv="Cache" content="no-cache">
-
-    <style type="text/css">
-        .preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #fff;
-            z-index: 9999;
-            transition: opacity 1s
-        }
-
-        .preloader-hidden-add {
-            opacity: 1;
-            display: block
-        }
-
-        .preloader-hidden-add-active {
-            opacity: 0
-        }
-
-        .preloader-hidden {
-            display: none
-        }
-
-        .cs-loader {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%
-        }
-
-        .cs-loader-inner {
-            transform: translateY(-50%);
-            top: 45%;
-            position: absolute;
-            width: 100%;
-            color: #fff;
-            text-align: center
-        }
-
-        @keyframes tipFadeIn {
-            0% {
-                opacity: 0;
-            }
-            90% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        #preloader-tip {
-            text-align: center;
-            color: #fff;
-            font-size: 1.1em;
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 26px;
-            animation: tipFadeIn 5s;
-        }
-    </style>
-    <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+    <style>.preloader{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;background:#1890ff;z-index:9999;transition:opacity 1s}.cs-loader{position:absolute;top:0;left:0;height:100%;width:100%}.cs-loader-inner{transform:translateY(-50%);top:45%;position:absolute;width:100%;color:#fff;text-align:center}@keyframes tipFadeIn{0%{opacity:0}90%{opacity:0}100%{opacity:1}}#preloader-tip{text-align:center;color:#fff;font-size:1.1em;position:absolute;left:0;right:0;bottom:26px;animation:tipFadeIn 5s}</style><link href="pre.css" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="pre.css"></noscript>
+    <script src="pre.js"></script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1976d2">
-    <script>
-        //如果固定周期内未成功启动则重新刷新页面
-        window.setTimeout(function () {
-            if (!window.eruptWebSuccess){
-                location.reload(true)
-            }
-        }, 1000 * 10);
-        (function (date) {
-            var __t__ = '' + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours() + date.getMinutes();
-            document.write(
-                "<link rel=\"stylesheet\" href=\"app.css?_=" + __t__ + "\" type=\"text/css\"/>" +
-                "<script type=\"text/javascript\" src=\"app.js?_=" + __t__ + "\"><\/script>" +
-                "<script type=\"module\" src=\"app.module.js?_=" + __t__ + "\" ><\/script>"
-            );
-        })(new Date())
-    </script>
-<link rel="stylesheet" href="styles.c2702a2bd1574e849043.css"></head>
+<style>html,body{width:100%;height:100%}*,*:before,*:after{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;-ms-overflow-style:scrollbar;-webkit-tap-highlight-color:rgba(0,0,0,0)}body{margin:0;color:#000000d9;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-variant:tabular-nums;line-height:1.5715;background-color:#fff;font-feature-settings:"tnum"}html{--antd-wave-shadow-color:#1890ff;--scroll-bar:0}body{scrollbar-color:rgba(0,0,0,.3) #6e6e6e;scrollbar-width:thin}body::-webkit-scrollbar{width:6px;height:6px}body::-webkit-scrollbar-track{box-shadow:inset 0 0 6px #0000004d}body::-webkit-scrollbar-thumb{background-color:#6e6e6e;outline:1px solid #333}html{height:100%;direction:ltr;touch-action:manipulation}html,body,app-root{height:100%}body{color:#000000d9;background-color:#f5f7fa}</style><link rel="stylesheet" href="styles.99dbfde2643b93dc.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.99dbfde2643b93dc.css"></noscript></head>
 <body>
-<!--[if lt IE 11]>
+<div class="preloader">
+    <div class="cs-loader">
+        <div class="cs-loader-inner" id="preload"></div>
+        <script>
+            var SW = new SiriWave({
+                width: innerWidth < 512 ? innerWidth : 512,
+                height: 200,
+                wave: innerWidth < 512 ? 2 : new Date().getHours() % 6 + 2,
+                container: document.getElementById("preload")
+            });
+            SW.set(0.4, 0.2);
+            SW.start();
+        </script>
+    </div>
+    <div id="preloader-tip">
+        页面长时间处于加载状态，可使用 ctrl + shift + r 清空缓存重新加载
+    </div>
+</div>
+<!--[if lte IE 11]>
 <style>
     .preloader {
         display: none;
@@ -115,15 +45,6 @@
 </div>
 <![endif]-->
 <app-root></app-root>
-<div class="preloader" style="background: #34495E;">
-    <div class="cs-loader">
-        <div class="cs-loader-inner">
-            <img src="assets/image/loading.svg" alt="">
-        </div>
-    </div>
-    <div id="preloader-tip">
-        页面长时间处于加载状态，可使用 ctrl + shift + r 清空缓存重新加载
-    </div>
-</div>
-<script src="runtime-es2015.aff3ffda137e199019bb.js" type="module"></script><script src="runtime-es5.aff3ffda137e199019bb.js" nomodule defer></script><script src="polyfills-es5.928ec65dd9118268c862.js" nomodule defer></script><script src="polyfills-es2015.f5b66455e95546901881.js" type="module"></script><script src="scripts.b993e8b98ac7c2ea2917.js" defer></script><script src="main-es2015.46a8aebd9ad15f433cdc.js" type="module"></script><script src="main-es5.46a8aebd9ad15f433cdc.js" nomodule defer></script></body>
-</html>
+<script src="runtime.5cfb0b09918f9a87.js" type="module"></script><script src="polyfills.827684443b3599b2.js" type="module"></script><script src="main.035ca6e285068af6.js" type="module"></script>
+
+</body></html>

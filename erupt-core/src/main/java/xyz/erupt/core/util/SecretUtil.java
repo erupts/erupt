@@ -14,13 +14,20 @@ public class SecretUtil {
 
 
     public static String decodeSecret(String str) {
-        return new String(Base64.getDecoder().decode(str));
+        return decodeSecret(str, 1);
     }
 
+    /**
+     * 解密Base64
+     *
+     * @param str       加密字符串
+     * @param encodeNum 被加密了几次
+     * @return 原文
+     */
     @SneakyThrows
     public static String decodeSecret(String str, int encodeNum) {
         for (int i = 0; i < encodeNum; i++) {
-            str = decodeSecret(str);
+            str = new String(Base64.getDecoder().decode(str));
         }
         return URLDecoder.decode(str, StandardCharsets.UTF_8.name());
     }

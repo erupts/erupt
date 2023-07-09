@@ -11,7 +11,6 @@ import xyz.erupt.annotation.SceneEnum;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.AttachmentProxy;
-import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -25,6 +24,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptApiErrorTip;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
@@ -124,29 +124,19 @@ public class EruptUtil {
         return map;
     }
 
-    public static Map<String, String> getChoiceMap(ChoiceType choiceType) {
+    public static Map<String, String> getChoiceMap(EruptModel eruptModel, ChoiceType choiceType) {
         Map<String, String> choiceMap = new LinkedHashMap<>();
-        for (xyz.erupt.annotation.sub_field.sub_edit.VL vl : choiceType.vl()) {
-            choiceMap.put(vl.value(), vl.label());
-        }
-        for (Class<? extends ChoiceFetchHandler> clazz : choiceType.fetchHandler()) {
-            if (!clazz.isInterface()) {
-                List<VLModel> vls = EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams());
-                if (null != vls) {
-                    for (VLModel vl : vls) {
-                        choiceMap.put(vl.getValue(), vl.getLabel());
-                    }
-                }
-            }
-        }
+        getChoiceList(eruptModel, choiceType).forEach(vl -> choiceMap.put(vl.getValue(), vl.getLabel()));
         return choiceMap;
     }
 
-    public static List<VLModel> getChoiceList(ChoiceType choiceType) {
+    public static List<VLModel> getChoiceList(EruptModel eruptModel, ChoiceType choiceType) {
         List<VLModel> vls = Stream.of(choiceType.vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).collect(Collectors.toList());
-        Stream.of(choiceType.fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz -> {
-            Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams())).ifPresent(vls::addAll);
-        });
+        Stream.of(choiceType.fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
+                Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams())).ifPresent(vls::addAll));
+        if (eruptModel.isI18n()) {
+            vls.forEach(vl -> vl.setLabel(I18nTranslate.$translate(vl.getLabel())));
+        }
         return vls;
     }
 
@@ -227,11 +217,11 @@ public class EruptUtil {
             if (edit.search().value() && edit.search().notNull()) {
                 Condition condition = conditionMap.get(fieldModel.getFieldName());
                 if (null == condition || null == condition.getValue()) {
-                    throw new EruptApiErrorTip(EruptApiModel.Status.INFO, edit.title() + "必填", EruptApiModel.PromptWay.MESSAGE);
+                    throw new EruptApiErrorTip(EruptApiModel.Status.INFO, edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
                 }
                 if (condition.getValue() instanceof List) {
                     if (((List<?>) condition.getValue()).size() == 0) {
-                        throw new EruptApiErrorTip(EruptApiModel.Status.INFO + edit.title() + "必填", EruptApiModel.PromptWay.MESSAGE);
+                        throw new EruptApiErrorTip(EruptApiModel.Status.INFO + edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
                     }
                 }
             }
@@ -244,10 +234,10 @@ public class EruptUtil {
             JsonElement value = jsonObject.get(field.getFieldName());
             if (field.getEruptField().edit().notNull()) {
                 if (null == value || value.isJsonNull()) {
-                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");
+                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
                 } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
-                        return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必填");
+                        return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
             }
@@ -261,7 +251,7 @@ public class EruptUtil {
                 //xss 注入处理
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
                     if (SecurityUtil.xssInspect(value.getAsString())) {
-                        return EruptApiModel.errorNoInterceptApi(field.getEruptField().edit().title() + "检测到有恶意跨站脚本，请重新编辑！");
+                        return EruptApiModel.errorNoInterceptApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
                     }
                 }
                 //数据类型校验
@@ -269,7 +259,7 @@ public class EruptUtil {
                     case NUMBER:
                     case SLIDER:
                         if (!NumberUtils.isCreatable(value.getAsString())) {
-                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "必须为数值");
+                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
                     case INPUT:
@@ -277,7 +267,7 @@ public class EruptUtil {
                             String content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + "格式不正确");
+                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
                                 }
                             }
                         }
@@ -286,6 +276,38 @@ public class EruptUtil {
             }
         }
         return EruptApiModel.successApi();
+    }
+
+    /**
+     * 前端数据处理逻辑
+     */
+    public static void processEruptWebValue(EruptModel eruptModel, JsonObject jsonObject) {
+        for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
+            JsonElement value = jsonObject.get(field.getFieldName());
+            Edit edit = field.getEruptField().edit();
+            if (null != value && !value.isJsonNull()) {
+                //代码编辑器类型加密传输后解密
+                if (edit.type() == EditType.CODE_EDITOR) {
+                    jsonObject.addProperty(field.getFieldName(), SecretUtil.decodeSecret(value.getAsString()));
+                } else {
+                    if (value.isJsonObject() && edit.type() == EditType.COMBINE) {
+                        processEruptWebValue(EruptCoreService.getErupt(field.getFieldReturnName()), value.getAsJsonObject());
+                    } else if (value.isJsonArray()) {
+                        switch (edit.type()) {
+                            case TAB_TABLE_ADD:
+                            case TAB_TABLE_REFER:
+                                value.getAsJsonArray().forEach(jsonElement ->
+                                        Optional.ofNullable(EruptCoreService.getErupt(field.getFieldReturnName())).ifPresent(it -> {
+                                            processEruptWebValue(it, jsonElement.getAsJsonObject());
+                                        })
+                                );
+                                break;
+                        }
+                    }
+                }
+                //TODO 密码组件值加密传输后解密
+            }
+        }
     }
 
     public static Object toEruptId(EruptModel eruptModel, String id) {

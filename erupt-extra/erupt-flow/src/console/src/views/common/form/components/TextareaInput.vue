@@ -4,7 +4,7 @@
       <el-input size="medium" disabled :placeholder="placeholder" show-word-limit :rows="2" type="textarea"/>
     </div>
     <div v-else>
-      <el-input size="medium" v-model="_value" :disabled="formDisable" clearable :maxlength="255" :placeholder="placeholder" show-word-limit :rows="3" type="textarea"/>
+      <el-input size="medium" v-model="_value" :disabled="!editable" clearable :maxlength="255" :placeholder="placeholder" show-word-limit :rows="3" type="textarea"/>
     </div>
   </div>
 </template>

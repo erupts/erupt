@@ -32,11 +32,10 @@ public class FormsServiceImpl extends ServiceImpl<OaFormsMapper, OaForms> implem
     public boolean updateById(OaForms entity) {
         entity.setIsStop(entity.getGroupId()==-1);
         //需要同时修改对应的流程定义的锁定状态和分组
-        OaProcessDefinition build = OaProcessDefinition.builder()
-                .isStop(entity.getIsStop())
-                .groupId(entity.getGroupId())
-                .build();
-        processDefinitionService.updateByFormId(build, entity.getFormId());
+        OaProcessDefinition lastVersionByFromId = processDefinitionService.getLastVersionByFromId(entity.getFormId());
+        lastVersionByFromId.setIsStop(entity.getIsStop());
+        lastVersionByFromId.setGroupId(entity.getGroupId());
+        processDefinitionService.updateById(lastVersionByFromId);
         return super.updateById(entity);
     }
 

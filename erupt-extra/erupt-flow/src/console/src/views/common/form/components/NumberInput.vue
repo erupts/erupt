@@ -4,7 +4,7 @@
       <el-input size="medium" disabled :placeholder="placeholder" type="number"/>
     </div>
     <div v-else>
-      <el-input v-model="_value" size="medium" :disabled="formDisable" clearable :placeholder="placeholder" type="number"/>
+      <el-input v-model="_nvalue" size="medium" :disabled="!editable" clearable :placeholder="placeholder" type="number"/>
     </div>
   </div>
 </template>
@@ -18,12 +18,22 @@ export default {
   components: {},
   props:{
     value:{
-      type: Number,
+      type: String,
       default: null
     },
     placeholder:{
       type: String,
       default: '请输入数值'
+    },
+  },
+  computed: {
+    _nvalue: {
+      get() {
+        return Number(this.value);
+      },
+      set(val) {
+        this.$emit("input", val);
+      }
     }
   },
   data() {

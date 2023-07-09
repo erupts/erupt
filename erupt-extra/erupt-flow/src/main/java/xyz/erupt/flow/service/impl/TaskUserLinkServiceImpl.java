@@ -103,6 +103,7 @@ public class TaskUserLinkServiceImpl extends ServiceImpl<OaTaskUserLinkMapper, O
 
     @Override
     public boolean saveBatch(Collection<OaTaskUserLink> entityList) {
-        return super.saveBatch(entityList);
+        entityList.forEach(this::save);
+        return true;
     }
 }
