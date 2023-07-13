@@ -169,7 +169,7 @@ public class EruptBiController {
                             1, null, bi.getDataSource(), query));
                     List<BiColumnVo> biColumnVos = new LinkedList<>();
                     biData.getList().get(0).keySet().forEach(key ->
-                            biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING)));
+                            biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING, null)));
                     biData.setColumns(biColumnVos);
                 }
                 return biData;

@@ -132,9 +132,9 @@ public class BiService {
             map.keySet().forEach(key -> {
                 if (columnMap.containsKey(key)) {
                     BiColumn biColumn = columnMap.get(key);
-                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable(), biColumn.getDisplay(), biColumn.getType()));
+                    biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable(), biColumn.getDisplay(), biColumn.getType(), biColumn.getRemark()));
                 } else {
-                    biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING));
+                    biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING, null));
                 }
             });
             biData.setColumns(biColumnVos);
