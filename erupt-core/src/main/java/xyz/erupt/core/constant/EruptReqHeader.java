@@ -15,7 +15,7 @@ public class EruptReqHeader {
 
     public static final String DRILL_VALUE = "DrillValue";
 
-    public static final String SOURCE_ERUPT = "SourceErupt";
+    public static final String DRILL_SOURCE_ERUPT = "DrillSourceErupt";
 
 
 }

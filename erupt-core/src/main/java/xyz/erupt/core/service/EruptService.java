@@ -98,9 +98,9 @@ public class EruptService {
         String drill = request.getHeader(EruptReqHeader.DRILL);
         if (null != drill) {
             String drillValue = request.getHeader(EruptReqHeader.DRILL_VALUE);
-            String sourceErupt = request.getHeader(EruptReqHeader.SOURCE_ERUPT);
+            String sourceErupt = request.getHeader(EruptReqHeader.DRILL_SOURCE_ERUPT);
             if (null == drillValue || null == sourceErupt) {
-                throw new EruptWebApiRuntimeException("Drill Header Illegal ，Lack：" + EruptReqHeader.DRILL_VALUE + "," + EruptReqHeader.SOURCE_ERUPT);
+                throw new EruptWebApiRuntimeException("Drill Header Illegal ，Lack：" + EruptReqHeader.DRILL_VALUE + "," + EruptReqHeader.DRILL_SOURCE_ERUPT);
             }
             EruptModel sourceModel = EruptCoreService.getErupt(sourceErupt);
             Link link = findDrillLink(sourceModel.getErupt(), drill);
