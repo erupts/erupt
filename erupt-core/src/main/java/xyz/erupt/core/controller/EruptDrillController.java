@@ -38,27 +38,6 @@ public class EruptDrillController {
 
     private final EruptService eruptService;
 
-//    @PostMapping("{erupt}/drill/{code}/{id}")
-//    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
-//    public Page drill(@PathVariable("erupt") String eruptName,
-//                      @PathVariable("code") String code,
-//                      @PathVariable("id") String id,
-//                      @RequestBody TableQueryVo tableQueryVo) throws IllegalAccessException {
-//        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-//        Link link = findDrillLink(eruptModel.getErupt(), code);
-//        eruptService.verifyIdPermissions(eruptModel, id);
-//        Field field = ReflectUtil.findClassField(eruptModel.getClazz(), link.column());
-//        Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
-//        field.setAccessible(true);
-//        Object val = field.get(data);
-//        if (null == val) return new Page();
-//        MetaContext.register(new MetaErupt(link.linkErupt().getSimpleName()));
-//        return eruptService.getEruptData(
-//                EruptCoreService.getErupt(link.linkErupt().getSimpleName()), tableQueryVo, null,
-//                String.format("%s = '%s'", link.linkErupt().getSimpleName() + "." + link.joinColumn(), val)
-//        );
-//    }
-
     @PostMapping("/add/{erupt}/drill/{code}/{id}")
     @EruptRecordOperate(value = "新增", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
