@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
@@ -31,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 /**
@@ -64,7 +64,7 @@ public class EruptService {
                 conditionStrings.add(String.format("%s = '%s'", dependTree.field() + "." + treeErupt.getErupt().primaryKeyCol(), tableQueryVo.getLinkTreeVal()));
             }
         }
-        Optional.ofNullable(this.drillCondition(eruptModel)).ifPresent(conditionStrings::add); //Drill
+        this.drillProcess(eruptModel, (link, val) -> conditionStrings.add(String.format("%s = '%s'", link.linkErupt().getSimpleName() + "." + link.joinColumn(), val)));
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
@@ -74,6 +74,29 @@ public class EruptService {
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
         Optional.ofNullable(page.getList()).ifPresent(it -> DataHandlerUtil.convertDataToEruptView(eruptModel, it));
         return page;
+    }
+
+    @SneakyThrows
+    public void drillProcess(EruptModel eruptModel, BiConsumer<Link, Object> consumer) {
+        String drill = request.getHeader(EruptReqHeader.DRILL);
+        if (null != drill) {
+            String drillValue = request.getHeader(EruptReqHeader.DRILL_VALUE);
+            String sourceErupt = request.getHeader(EruptReqHeader.DRILL_SOURCE_ERUPT);
+            if (null == drillValue || null == sourceErupt) {
+                throw new EruptWebApiRuntimeException("Drill Header Illegal ，Lack：" + EruptReqHeader.DRILL_VALUE + "," + EruptReqHeader.DRILL_SOURCE_ERUPT);
+            }
+            EruptModel sourceModel = EruptCoreService.getErupt(sourceErupt);
+            Link link = Stream.of(sourceModel.getErupt().drills()).filter(it -> drill.equals(it.code()))
+                    .findFirst().orElseThrow(EruptNoLegalPowerException::new).link();
+            if (!link.linkErupt().getSimpleName().equals(eruptModel.getEruptName())) {
+                throw new EruptWebApiRuntimeException("Illegal erupt from " + drill);
+            }
+            Object data = DataProcessorManager.getEruptDataProcessor(sourceModel.getClazz()).findDataById(sourceModel, EruptUtil.toEruptId(sourceModel, drillValue));
+            Field field = ReflectUtil.findClassField(sourceModel.getClazz(), link.column());
+            field.setAccessible(true);
+            Object val = field.get(data);
+            consumer.accept(link, val);
+        }
     }
 
     /**
@@ -91,35 +114,6 @@ public class EruptService {
         if (page.getList().size() <= 0) {
             throw new EruptNoLegalPowerException();
         }
-    }
-
-    @SneakyThrows
-    private String drillCondition(EruptModel eruptModel) {
-        String drill = request.getHeader(EruptReqHeader.DRILL);
-        if (null != drill) {
-            String drillValue = request.getHeader(EruptReqHeader.DRILL_VALUE);
-            String sourceErupt = request.getHeader(EruptReqHeader.DRILL_SOURCE_ERUPT);
-            if (null == drillValue || null == sourceErupt) {
-                throw new EruptWebApiRuntimeException("Drill Header Illegal ，Lack：" + EruptReqHeader.DRILL_VALUE + "," + EruptReqHeader.DRILL_SOURCE_ERUPT);
-            }
-            EruptModel sourceModel = EruptCoreService.getErupt(sourceErupt);
-            Link link = findDrillLink(sourceModel.getErupt(), drill);
-            if (!link.linkErupt().getSimpleName().equals(eruptModel.getEruptName())) {
-                throw new EruptWebApiRuntimeException("Illegal erupt from " + drill);
-            }
-            this.verifyIdPermissions(sourceModel, drillValue);
-            Object data = DataProcessorManager.getEruptDataProcessor(sourceModel.getClazz()).findDataById(sourceModel, EruptUtil.toEruptId(sourceModel, drillValue));
-            Field field = ReflectUtil.findClassField(sourceModel.getClazz(), link.column());
-            field.setAccessible(true);
-            Object val = field.get(data);
-            return String.format("%s = '%s'", link.linkErupt().getSimpleName() + "." + link.joinColumn(), val);
-        }
-        return null;
-    }
-
-    private Link findDrillLink(Erupt erupt, String code) {
-        return Stream.of(erupt.drills()).filter(it -> code.equals(it.code()))
-                .findFirst().orElseThrow(EruptNoLegalPowerException::new).link();
     }
 
 }
