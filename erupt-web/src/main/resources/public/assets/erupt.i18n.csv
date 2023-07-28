@@ -5,8 +5,8 @@ finish,完成,完成,Finish,L’achèvement du,完了,완성,законч,comple
 global.today,今天,今天,Today,aujourd’hui,今日,오늘,сегодн,hoy
 global.date.last_7_day,近7天,近7天,Last  7 day,7 derniers jours,7日近くです,최근 7일,Почти семь дней.,Últimos 7 días
 global.date.last_30_day,近30天,近30天,Last  30 day,Près de 30 jours,30日近くです,근 30일,Почти 30 дней.,Casi 30 días
-global.date.this_month,本月,本月,This month,"Ce mois-ci,",今の月,지난,месяц,Este mes
-global.date.last_month,上月,上月,Last month,"Le mois dernier,",先月,지난달,Прошл месяц,El último mes
+global.date.this_month,本月,本月,This month,Ce mois-ci,今の月,지난,месяц,Este mes
+global.date.last_month,上月,上月,Last month,Le mois dernier,先月,지난달,Прошл месяц,El último mes
 global.home,首页,首頁,Home,La page de couverture,最初のページ,홈페이지,Главн страниц,En la primera página
 global.cancel,取消,取消,Cancel,La suppression des,キャンセル,취소,отмен,cancelación
 global.all,全部,全部,All,La totalité des,全部,전부,все,total
@@ -30,7 +30,7 @@ global.delete.hint.check,请选中要删除的数据,請選中要刪除的數據
 global.reset_pwd,修改密码,修改密碼,Change password,Changer votre mot de passe,パスワードを変更,비밀번호수정,Измени код.,Cambiar mi contraseña
 global.logout,退出登录,退出登錄,Log out,Déconnexion du login,ログアウト,로그인종료,Выход из системы.,Salir del login
 global.search.hint,搜索菜单,搜索菜單,Search menu,Rechercher le menu,検索メニュー,검색메뉴,Меню поиска.,Buscar el menú
-global.confirm_logout,确定注销并退出系统吗？,確定註銷並退出系統嗎？,Are you sure to log out and exit the system?,Sûr de se déconnecter et quitter le système?,ログアウトしてシステムを終了しますか？,로그아웃하고시스템을종료하시겠습니까?,"Вы уверены, что система списана и выведена из строя?",¿Seguro de salir y salir del sistema?
+global.confirm_logout,退出登录，是否继续?,退出系統，是否繼續?,Are you sure to log out and exit the system?,Sûr de se déconnecter et quitter le système?,ログアウトしてシステムを終了しますか？,로그아웃하고시스템을종료하시겠습니까?,"Вы уверены, что система списана и выведена из строя?",¿Seguro de salir y salir del sistema?
 global.confirm_delete,确认删除吗？,確認刪除嗎？,Are you sure to delete?,Confirmer la suppression?,削除を確認しますか？,삭제확인하시겠습니까?,Подтвердите удаление?,¿Confirmar la eliminación?
 global.update.loading..hint,数据加载中无法保存!,數據加載中無法保存!,Data cannot be saved while loading!,Les données ne peuvent pas être sauvegardées lors du chargement!,データ読み込み中に保存できません。,데이터불러오는중저장할수없습니다!,Данные не сохраняются в загрузке!,¡Los datos no se pueden guardar en la carga!
 global.no_data,暂无数据,無此資料,No Data,Aucune donnée,データがありません,데이터 없음,Приходящее множество доказательств,Datos aún no disponibles

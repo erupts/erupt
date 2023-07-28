@@ -107,6 +107,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             if (!erupt.contains(".")) {
                 return true;
             }
+//            if (request.getServletPath().contains(EruptRestPath.ERUPT_FILE)) {
+//                return true;
+//            }
             String token = eruptContextService.getCurrentToken();
             if (null == token || null == eruptSessionService.get(SessionKey.TOKEN_OLINE + token)) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
