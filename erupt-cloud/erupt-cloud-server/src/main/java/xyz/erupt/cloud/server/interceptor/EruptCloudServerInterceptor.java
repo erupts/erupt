@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -32,7 +33,6 @@ import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.module.MetaUserinfo;
-import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.interceptor.EruptSecurityInterceptor;
@@ -104,8 +104,12 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             if (erupt == null) {
                 return true;
             }
-            if (!erupt.contains(".")) return true;
-            if (null != EruptCoreService.getErupt(erupt)) return true;
+            if (!erupt.contains(".")) {
+                return true;
+            }
+//            if (request.getServletPath().contains(EruptRestPath.ERUPT_FILE)) {
+//                return true;
+//            }
             String token = eruptContextService.getCurrentToken();
             if (null == token || null == eruptSessionService.get(SessionKey.TOKEN_OLINE + token)) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -188,7 +192,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             String name = headerNames.nextElement();
             headers.put(name, request.getHeader(name));
         }
-        headers.remove("host");
+        headers.remove(HttpHeaders.HOST.toLowerCase());
         headers.put(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken());
         headers.put(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken());
         headers.put(EruptMutualConst.ERUPT, eruptName);

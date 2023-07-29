@@ -25,8 +25,7 @@ import javax.persistence.*;
 @Erupt(
         name = "字典项",
         orderBy = "sort",
-//        linkTree = @LinkTree(dependNode = true, field = "eruptDict"),
-        power = @Power(export = true)
+        power = @Power(export = true, importable = true)
 )
 @Getter
 @Setter
