@@ -384,7 +384,7 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 [`Jpom`：简而轻的低侵入式在线构建、自动部署、日常运维、项目监控软件](https://gitee.com/dromara/Jpom)
 
 ## 🧩 加入讨论
-QQ交流群：<a href="[https://jq.qq.com/?_wv=1027&k=MCd4plZ0](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DhReMX7b17i5e_xaImsIoYJ_JaskDA1H&authKey=%2Bkldm0OLuB9HRv56c5s21YJyvJj%2BqdKul1X7eyUVnF2yzWkks6QTFN%2Bxd4AE2DVX&noverify=0&group_code=836044286)">836044286 🔥</a>
+QQ交流群：<a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DhReMX7b17i5e_xaImsIoYJ_JaskDA1H&authKey=%2Bkldm0OLuB9HRv56c5s21YJyvJj%2BqdKul1X7eyUVnF2yzWkks6QTFN%2Bxd4AE2DVX&noverify=0&group_code=836044286">836044286 🔥</a>
 
 微信交流群：由于微信群二维码有效时间仅7日，关注 Erupt 官方公众号（EruptGuide），可获取最新群二维码
 
