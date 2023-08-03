@@ -27,7 +27,7 @@ public @interface RowOperation {
     String tip() default "";
 
     @Comment("图标请参考Font Awesome")
-    String icon() default "fa fa-ravelry";
+    String icon() default "fa fa-dot-circle-o";
 
     @Comment("功能模式")
     Mode mode() default Mode.MULTI;
