@@ -23,6 +23,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.core.annotation.EruptAttachmentUpload;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.proxy.AnnotationProcess;
@@ -80,7 +81,7 @@ public class EruptUtil {
                         for (View view : eruptField.views()) {
                             //修复表格列无法显示子类属性（例如xxx.yyy.zzz这样的列配置）的缺陷，要配合前端的bug修复。
                             //修复一对多情况下无法显示子类属性的问题 
-                            String columnKey = view.column().replace(".", "_");
+                            String columnKey = view.column().replace(EruptConst.DOT, "_");
                             Object columnValue = ReflectUtil.findFieldChain(view.column(), value);
                             referMap.put(columnKey, columnValue);
                             map.put(field.getName() + "_" + columnKey, columnValue);
@@ -149,7 +150,13 @@ public class EruptUtil {
 
     public static Object convertObjectType(EruptFieldModel eruptFieldModel, Object obj) {
         if (null == obj) return null;
-        if (null == eruptFieldModel) return obj.toString();
+        if (null == eruptFieldModel) {
+            if (obj instanceof Number) {
+                return obj;
+            } else {
+                return obj.toString();
+            }
+        }
         String str = obj.toString();
         Edit edit = eruptFieldModel.getEruptField().edit();
         switch (edit.type()) {

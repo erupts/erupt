@@ -1,6 +1,7 @@
 package xyz.erupt.core.exception;
 
 import org.fusesource.jansi.Ansi;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
@@ -15,7 +16,7 @@ public class ExceptionAnsi {
     public static EruptFieldAnnotationException styleEruptFieldException(EruptFieldModel eruptFieldModel, String message) {
         return new EruptFieldAnnotationException(
                 ansi().fg(Ansi.Color.RED).a(message).fg(Ansi.Color.BLUE)
-                        .a("(" + eruptFieldModel.getField().getDeclaringClass().getName() + "."
+                        .a("(" + eruptFieldModel.getField().getDeclaringClass().getName() + EruptConst.DOT
                                 + eruptFieldModel.getField().getName() + ")").reset().toString()
         );
     }

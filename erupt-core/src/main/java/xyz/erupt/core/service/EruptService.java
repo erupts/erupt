@@ -9,6 +9,7 @@ import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptReqHeader;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -61,10 +62,10 @@ public class EruptService {
                 if (dependTree.dependNode()) return new Page();
             } else {
                 EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
-                conditionStrings.add(String.format("%s = '%s'", dependTree.field() + "." + treeErupt.getErupt().primaryKeyCol(), tableQueryVo.getLinkTreeVal()));
+                conditionStrings.add(String.format("%s = '%s'", dependTree.field() + EruptConst.DOT + treeErupt.getErupt().primaryKeyCol(), tableQueryVo.getLinkTreeVal()));
             }
         }
-        this.drillProcess(eruptModel, (link, val) -> conditionStrings.add(String.format("%s = '%s'", link.linkErupt().getSimpleName() + "." + link.joinColumn(), val)));
+        this.drillProcess(eruptModel, (link, val) -> conditionStrings.add(String.format("%s = '%s'", link.linkErupt().getSimpleName() + EruptConst.DOT + link.joinColumn(), val)));
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);

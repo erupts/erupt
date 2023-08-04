@@ -6,6 +6,7 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -36,7 +37,7 @@ public class EruptJpaUtils {
 
     public static Set<String> getEruptColJpaKeys(EruptModel eruptModel) {
         Set<String> cols = new HashSet<>();
-        String eruptNameSymbol = eruptModel.getEruptName() + ".";
+        String eruptNameSymbol = eruptModel.getEruptName() + EruptConst.DOT;
         cols.add(eruptNameSymbol + eruptModel.getErupt().primaryKeyCol() + AS + eruptModel.getErupt().primaryKeyCol());
         eruptModel.getEruptFieldModels().forEach(field -> {
             if (null != field.getField().getAnnotation(OneToMany.class) || null != field.getField().getAnnotation(ManyToMany.class)) {
@@ -49,8 +50,8 @@ public class EruptJpaUtils {
                 if (view.column().length() == 0) {
                     cols.add(eruptNameSymbol + field.getFieldName() + AS + field.getFieldName());
                 } else {
-                    cols.add(eruptNameSymbol + field.getFieldName() + "." + view.column() + AS + field.getFieldName() + "_"
-                            + view.column().replace(".", "_"));
+                    cols.add(eruptNameSymbol + field.getFieldName() + EruptConst.DOT + view.column() + AS + field.getFieldName() + "_"
+                            + view.column().replace(EruptConst.DOT, "_"));
                 }
             }
         });
@@ -88,14 +89,14 @@ public class EruptJpaUtils {
                     View[] views = model.getEruptField().views();
                     for (View v : views) {
                         String columnPath = v.column();
-                        if (columnPath.contains(".")) {
-                            String path = eruptModel.getEruptName() + "." + field.getName() + "." + columnPath.substring(0, columnPath.lastIndexOf("."));
+                        if (columnPath.contains(EruptConst.DOT)) {
+                            String path = eruptModel.getEruptName() + EruptConst.DOT + field.getName() + EruptConst.DOT + columnPath.substring(0, columnPath.lastIndexOf(EruptConst.DOT));
                             if (!pathSet.contains(path)) {
                                 hql.append(LEFT_JOIN).append(path);
                                 pathSet.add(path);
                             }
                         } else {
-                            hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(".").append(field.getName()).append(AS).append(field.getName());
+                            hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(EruptConst.DOT).append(field.getName()).append(AS).append(field.getName());
                         }
                     }
                 }
@@ -114,10 +115,10 @@ public class EruptJpaUtils {
                 if (null != eruptFieldModel) {
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     if (edit.type() == EditType.REFERENCE_TREE) {
-                        hql.append(EruptJpaUtils.AND).append(condition.getKey()).append(".").append(edit.referenceTreeType().id()).append("=:").append(condition.getKey());
+                        hql.append(EruptJpaUtils.AND).append(condition.getKey()).append(EruptConst.DOT).append(edit.referenceTreeType().id()).append("=:").append(condition.getKey());
                         continue;
                     } else if (edit.type() == EditType.REFERENCE_TABLE) {
-                        hql.append(EruptJpaUtils.AND).append(condition.getKey()).append(".").append(edit.referenceTableType().id()).append("=:").append(condition.getKey());
+                        hql.append(EruptJpaUtils.AND).append(condition.getKey()).append(EruptConst.DOT).append(edit.referenceTableType().id()).append("=:").append(condition.getKey());
                         continue;
                     }
                     String _key = EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), condition.getKey());
@@ -139,7 +140,7 @@ public class EruptJpaUtils {
                             break;
                     }
                 } else {
-                    hql.append(EruptJpaUtils.AND).append(condition.getKey()).append("=:").append(condition.getKey());
+                    hql.append(EruptJpaUtils.AND).append(condition.getKey()).append("=:").append(condition.getKey().replace(EruptConst.DOT, "_"));
                 }
             }
         }
@@ -166,10 +167,10 @@ public class EruptJpaUtils {
 
     //在left join的情况下要求必须指定表信息，通过此方法生成；
     public static String completeHqlPath(String eruptName, String hqlPath) {
-        if (hqlPath.contains(".")) {
+        if (hqlPath.contains(EruptConst.DOT)) {
             return hqlPath;
         } else {
-            return eruptName + "." + hqlPath;
+            return eruptName + EruptConst.DOT + hqlPath;
         }
     }
 

@@ -14,9 +14,11 @@ import java.util.List;
 @Setter
 @Builder
 public class EruptQuery {
+
     List<Condition> conditions;
 
     List<String> conditionStrings;
 
     String orderBy;
+
 }
