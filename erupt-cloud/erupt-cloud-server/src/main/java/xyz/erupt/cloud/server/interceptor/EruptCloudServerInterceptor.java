@@ -26,6 +26,7 @@ import xyz.erupt.cloud.server.node.NodeContext;
 import xyz.erupt.cloud.server.node.NodeManager;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
@@ -104,7 +105,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             if (erupt == null) {
                 return true;
             }
-            if (!erupt.contains(".")) {
+            if (!erupt.contains(EruptConst.DOT)) {
                 return true;
             }
 //            if (request.getServletPath().contains(EruptRestPath.ERUPT_FILE)) {
@@ -121,7 +122,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 response.sendError(HttpStatus.FORBIDDEN.value());
                 return false;
             }
-            int point = erupt.lastIndexOf(".");
+            int point = erupt.lastIndexOf(EruptConst.DOT);
             String nodeName = erupt.substring(0, point);
             String eruptName = erupt.substring(point + 1);
             MetaNode metaNode = nodeManager.getNode(nodeName);
@@ -217,7 +218,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     }
 
     private void eruptBuildProcess(EruptBuildModel eruptBuildModel, String nodeName) {
-        String prefix = nodeName + ".";
+        String prefix = nodeName + EruptConst.DOT;
         eruptBuildModel.getEruptModel().setEruptName(prefix + eruptBuildModel.getEruptModel().getEruptName());
         //修改Drill的值
         JsonArray drills = eruptBuildModel.getEruptModel().getEruptJson().getAsJsonArray("drills");

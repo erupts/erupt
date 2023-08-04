@@ -12,17 +12,12 @@ public class Condition {
 
     private Object value;
 
-    private transient QueryExpression expression = QueryExpression.EQ;
+    private transient QueryExpression expression;
 
     public Condition(String key, Object value, QueryExpression expression) {
         this.key = key;
         this.value = value;
         this.expression = expression;
-    }
-
-    public Condition(String key, Object value) {
-        this.key = key;
-        this.value = value;
     }
 
 }

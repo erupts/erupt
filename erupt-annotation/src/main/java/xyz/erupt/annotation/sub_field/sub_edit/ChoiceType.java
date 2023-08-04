@@ -11,7 +11,6 @@ import java.beans.Transient;
  */
 public @interface ChoiceType {
 
-    @Comment("ui style")
     Type type() default Type.SELECT;
 
     @Transient
@@ -28,6 +27,13 @@ public @interface ChoiceType {
 
     @Comment("开启后在编辑等操作时会重新获取下拉列表")
     boolean anewFetch() default false;
+
+    //联动能力
+    @Comment("联动能力，依赖字段名")
+    String dependField() default "";
+
+    @Comment("联动过滤表达式，支持变量：value 表示依赖字段的值")
+    String dependExpr() default "true";
 
     enum Type {
         @Comment("下拉选择")
