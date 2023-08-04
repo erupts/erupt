@@ -15,6 +15,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.HtmlEditorType;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
@@ -67,7 +68,7 @@ public class EruptFileController {
         } else {
             String[] fileNameSplit = file.getOriginalFilename().split("\\.");
             path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE)
-                    + File.separator + RandomStringUtils.randomAlphabetic(12) + "." + fileNameSplit[fileNameSplit.length - 1];
+                    + File.separator + RandomStringUtils.randomAlphabetic(12) + EruptConst.DOT + fileNameSplit[fileNameSplit.length - 1];
         }
         switch (edit.type()) {
             case ATTACHMENT:

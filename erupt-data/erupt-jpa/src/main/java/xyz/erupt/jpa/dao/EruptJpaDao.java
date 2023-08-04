@@ -3,6 +3,7 @@ package xyz.erupt.jpa.dao;
 import org.springframework.stereotype.Repository;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.core.annotation.EruptDataSource;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptFieldModel;
@@ -63,6 +64,7 @@ public class EruptJpaDao {
             if (null != eruptQuery.getConditions()) {
                 for (Condition condition : eruptQuery.getConditions()) {
                     EruptFieldModel eruptFieldModel = eruptFieldMap.get(condition.getKey());
+                    condition.setKey(condition.getKey().replace(EruptConst.DOT, "_"));
                     switch (condition.getExpression()) {
                         case EQ:
                             countQuery.setParameter(condition.getKey(), EruptUtil.convertObjectType(eruptFieldModel, condition.getValue()));
