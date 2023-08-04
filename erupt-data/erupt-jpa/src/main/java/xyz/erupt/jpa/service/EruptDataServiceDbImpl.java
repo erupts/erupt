@@ -15,6 +15,7 @@ import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.IEruptDataService;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.util.TypeUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
@@ -194,12 +195,19 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 .append(") from ").append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                hql.append(" left outer join ").append(eruptModel.getEruptName()).append(".")
+                hql.append(" left outer join ").append(eruptModel.getEruptName()).append(EruptConst.DOT)
                         .append(field.getName()).append(" as ").append(field.getName());
             }
         });
         hql.append(" where 1 = 1 ");
-        Optional.ofNullable(query.getConditions()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it.getKey()).append('=').append(it.getValue())));
+        Optional.ofNullable(query.getConditions()).ifPresent(c -> c.forEach(it -> {
+            hql.append(EruptJpaUtils.AND).append(it.getKey()).append('=');
+            if (TypeUtil.isNumber(it.getValue())) {
+                hql.append(it.getValue());
+            } else {
+                hql.append("'").append(it.getValue()).append("'");
+            }
+        }));
         Optional.ofNullable(query.getConditionStrings()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it)));
         Arrays.stream(eruptModel.getErupt().filter()).map(Filter::value)
                 .filter(StringUtils::isNotBlank).forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
