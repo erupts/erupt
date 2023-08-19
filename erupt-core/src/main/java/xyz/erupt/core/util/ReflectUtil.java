@@ -1,5 +1,7 @@
 package xyz.erupt.core.util;
 
+import xyz.erupt.core.constant.EruptConst;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -38,7 +40,7 @@ public class ReflectUtil {
         for (String field : fields) {
             Field f = findClassField(obj.getClass(), field);
             if (f == null) {
-                throw new RuntimeException(obj.getClass().getName() + "." + fieldName + " not found");
+                throw new RuntimeException(obj.getClass().getName() + EruptConst.DOT + fieldName + " not found");
             }
             if (null == (obj = f.get(obj))) {
                 return null;

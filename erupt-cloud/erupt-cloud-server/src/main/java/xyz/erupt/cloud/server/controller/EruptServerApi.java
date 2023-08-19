@@ -6,6 +6,7 @@ import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 import xyz.erupt.cloud.server.service.EruptNodeMicroservice;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.SessionKey;
@@ -47,7 +48,7 @@ public class EruptServerApi {
         PowerObject powerObject = new PowerObject();
         List<String> values = eruptSessionService.getMapKeys(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken());
         Map<String, Boolean> permissionMap = values.stream().collect(Collectors.toMap(it -> it, it -> true));
-        String name = nodeName + "." + eruptName;
+        String name = nodeName + EruptConst.DOT + eruptName;
         powerObject.setQuery(permissionMap.containsKey(name.toLowerCase()));
         powerObject.setAdd(powerOff(EruptFunPermissions.ADD, permissionMap, name));
         powerObject.setDelete(powerOff(EruptFunPermissions.DELETE, permissionMap, name));

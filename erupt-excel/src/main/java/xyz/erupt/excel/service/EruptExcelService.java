@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.query.Column;
@@ -91,7 +92,7 @@ public class EruptExcelService {
                         cell.setCellStyle(style);
                         Object val;
                         if (StringUtils.isNotBlank(view.column())) {
-                            val = map.get(fieldModel.getFieldName() + "_" + view.column().replace(".", "_"));
+                            val = map.get(fieldModel.getFieldName() + "_" + view.column().replace(EruptConst.DOT, "_"));
                         } else {
                             val = map.get(fieldModel.getFieldName());
                         }

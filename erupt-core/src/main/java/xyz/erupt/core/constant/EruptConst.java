@@ -11,4 +11,6 @@ public class EruptConst {
     public static final String ERUPT_DIR = ".erupt";
 
     public static final String DEFAULT_DATA_PROCESSOR = "jpa";
+
+    public static final String DOT = ".";
 }

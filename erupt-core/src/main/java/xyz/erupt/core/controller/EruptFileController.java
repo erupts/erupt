@@ -15,6 +15,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.HtmlEditorType;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
@@ -67,7 +68,7 @@ public class EruptFileController {
         } else {
             String[] fileNameSplit = file.getOriginalFilename().split("\\.");
             path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE)
-                    + File.separator + RandomStringUtils.randomAlphabetic(12) + "." + fileNameSplit[fileNameSplit.length - 1];
+                    + File.separator + RandomStringUtils.randomAlphabetic(12) + EruptConst.DOT + fileNameSplit[fileNameSplit.length - 1];
         }
         switch (edit.type()) {
             case ATTACHMENT:
@@ -77,7 +78,7 @@ public class EruptFileController {
                     String[] fileNameArr = file.getOriginalFilename().split("\\.");
                     String extensionName = fileNameArr[fileNameArr.length - 1];
                     if (Stream.of(attachmentType.fileTypes()).noneMatch(type -> extensionName.equalsIgnoreCase(type))) {
-                        return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.file_format", extensionName));
+                        return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.file_format") + ":" + extensionName);
                     }
                 }
                 if (!"".equals(attachmentType.path())) {
@@ -85,7 +86,7 @@ public class EruptFileController {
                 }
                 //校验文件大小
                 if (attachmentType.size() > 0 && file.getSize() / 1024 > attachmentType.size()) {
-                    return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.size", attachmentType.size() + "KB"));
+                    return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.size") + ": " + attachmentType.size() + "KB");
                 }
                 switch (edit.attachmentType().type()) {
                     case IMAGE:
@@ -98,10 +99,10 @@ public class EruptFileController {
                         int width = bufferedImage.getWidth();
                         int height = bufferedImage.getHeight();
                         if (imageType.minWidth() > width || imageType.maxWidth() < width) {
-                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.image_width", imageType.minWidth() + "," + imageType.maxWidth()));
+                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.image_width") + String.format("[%s,%s]", imageType.minWidth(), imageType.maxWidth()));
                         }
                         if (imageType.minHeight() > height || imageType.maxHeight() < height) {
-                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.image_height", imageType.minHeight() + "," + imageType.maxHeight()));
+                            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.image_height") + String.format("[%s,%s]", imageType.minWidth(), imageType.maxWidth()));
                         }
                         break;
                     case BASE:
