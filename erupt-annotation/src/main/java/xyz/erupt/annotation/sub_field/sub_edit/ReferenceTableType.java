@@ -21,6 +21,6 @@ public @interface ReferenceTableType {
     String dependField() default "";
 
     @Transient
-    @Comment("与依赖字段值想关联的列名，dependField.value = this.dependColumn")
+    @Comment("与依赖字段值相关联的列名，dependField.value = this.dependColumn")
     String dependColumn() default AnnotationConst.ID;
 }

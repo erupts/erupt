@@ -81,5 +81,9 @@ public class TypeUtil {
         return Arrays.asList(NUMBER_TYPE).contains(typeName.toLowerCase());
     }
 
+    //判断是否为数值类型
+    public static boolean isNumber(Object obj) {
+        return obj instanceof Number || NumberUtils.isCreatable(obj.toString());
+    }
 
 }

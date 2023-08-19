@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.DateUtil;
@@ -47,7 +48,7 @@ public class EruptFlowFileController {
         } else {
             String[] fileNameSplit = file.getOriginalFilename().split("\\.");
             path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE)
-                    + File.separator + RandomStringUtils.randomAlphabetic(12) + "." + fileNameSplit[fileNameSplit.length - 1];
+                    + File.separator + RandomStringUtils.randomAlphabetic(12) + EruptConst.DOT + fileNameSplit[fileNameSplit.length - 1];
         }
         //加一个独享空间，方便查找
         path = File.separator + FlowConstant.SERVER_NAME + path;

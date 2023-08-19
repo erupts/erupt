@@ -44,11 +44,11 @@ public class ProxyContext {
         proxyContextThreadLocal.remove();
     }
 
-    public static String translate(String key, Object... args) {
+    public static String translate(String key) {
         if (ProxyContext.get().i18n) {
-            return EruptSpringUtil.getBean(I18nTranslate.class).translate(key, args);
+            return EruptSpringUtil.getBean(I18nTranslate.class).translate(key);
         } else {
-            return String.format(key, args);
+            return key;
         }
     }
 
