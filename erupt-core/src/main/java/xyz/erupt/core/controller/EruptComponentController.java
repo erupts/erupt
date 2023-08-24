@@ -3,6 +3,7 @@ package xyz.erupt.core.controller;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.sub_edit.AutoCompleteType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptApiErrorTip;
@@ -62,13 +63,23 @@ public class EruptComponentController {
         return EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit().choiceType());
     }
 
-    //Gets the TAGS component list data
+    //Gets the TAGS component data
     @GetMapping("/tags-item/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public List<String> findTagsItem(@PathVariable("erupt") String eruptName,
                                      @PathVariable("field") String field) {
         EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
         return EruptUtil.getTagList(fieldModel.getEruptField().edit().tagsType());
+    }
+
+    //Gets the CodeEdit component hint data
+    @GetMapping("/code-edit-hints/{erupt}/{field}")
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    public List<String> codeEditHints(@PathVariable("erupt") String eruptName,
+                                      @PathVariable("field") String field) {
+        EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
+        CodeEditorType codeEditType = fieldModel.getEruptField().edit().codeEditType();
+        return EruptSpringUtil.getBean(codeEditType.hint()).hint(codeEditType.hintParams());
     }
 
 }
