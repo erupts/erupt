@@ -11,6 +11,12 @@ public @interface Layout {
     //表格右侧列固定数量
     int tableRightFixed() default 0;
 
+    //分页大小
+    int pageSize() default 10;
+
+    //可选分页数
+    int[] pageSizes() default {10, 20, 30, 50, 100, 300, 500};
+
 
     enum FormSize {
         DEFAULT,  //默认

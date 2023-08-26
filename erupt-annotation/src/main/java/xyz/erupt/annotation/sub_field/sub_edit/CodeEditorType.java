@@ -15,6 +15,9 @@ public @interface CodeEditorType {
     @Comment("编辑器高度")
     int height() default 300;
 
+    @Comment("提示触发字符")
+    String[] triggerCharacters() default "$";
+
     @Comment("代码提示处理类参数")
     String[] hintParams() default {};
 
