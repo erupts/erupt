@@ -18,7 +18,7 @@
     </parent>
 
     <properties>
-        <magic-api.version>2.0.2</magic-api.version>
+        <magic-api.version>2.1.1</magic-api.version>
     </properties>
 
     <dependencies>

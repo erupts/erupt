@@ -5,21 +5,20 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.ssssssss.magicapi.core.context.MagicUser;
+import org.ssssssss.magicapi.core.context.RequestEntity;
 import org.ssssssss.magicapi.core.exception.MagicLoginException;
 import org.ssssssss.magicapi.core.interceptor.Authorization;
 import org.ssssssss.magicapi.core.interceptor.AuthorizationInterceptor;
 import org.ssssssss.magicapi.core.interceptor.RequestInterceptor;
 import org.ssssssss.magicapi.core.model.*;
+import org.ssssssss.magicapi.core.servlet.MagicHttpServletRequest;
 import org.ssssssss.magicapi.datasource.model.DataSourceInfo;
 import org.ssssssss.magicapi.function.model.FunctionInfo;
-import org.ssssssss.script.MagicScriptContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.magicapi.EruptMagicApiAutoConfiguration;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 /**
@@ -39,7 +38,8 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
      * 配置接口权限
      */
     @Override
-    public Object preHandle(ApiInfo info, MagicScriptContext context, HttpServletRequest request, HttpServletResponse response) {
+    public Object preHandle(RequestEntity requestEntity) {
+        ApiInfo info = requestEntity.getApiInfo();
         String permission = Objects.toString(info.getOptionValue(Options.PERMISSION), "");
         String role = Objects.toString(info.getOptionValue(Options.ROLE), "");
         String login = Objects.toString(info.getOptionValue(Options.REQUIRE_LOGIN), "");
@@ -82,11 +82,13 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         return new MagicUser(metaUserinfo.getAccount(), metaUserinfo.getUsername(), token);
     }
 
+
+
     /**
      * 配置UI鉴权
      */
     @Override
-    public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization) {
+    public boolean allowVisit(MagicUser magicUser, MagicHttpServletRequest request, Authorization authorization) {
         if (Authorization.RELOAD == authorization) return true;
         if (eruptUserService.getCurrentUid() == null) {
             throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
@@ -97,7 +99,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     }
 
     @Override
-    public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, Group group) {
+    public boolean allowVisit(MagicUser magicUser, MagicHttpServletRequest request, Authorization authorization, Group group) {
         if (null == eruptUserService.getCurrentUid()) throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         if (!metaUserinfo.isSuperAdmin()) {
@@ -117,7 +119,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     }
 
     @Override
-    public boolean allowVisit(MagicUser magicUser, HttpServletRequest request, Authorization authorization, MagicEntity entity) {
+    public boolean allowVisit(MagicUser magicUser, MagicHttpServletRequest request, Authorization authorization, MagicEntity entity) {
         if (entity instanceof FunctionInfo) {
             if (Authorization.SAVE == authorization || Authorization.DELETE == authorization) {
                 return eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + EruptMagicApiAutoConfiguration.FUNCTION) != null;
