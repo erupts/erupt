@@ -96,7 +96,7 @@ public @interface Edit {
     @Match("#item.type().toString()=='REFERENCE_TABLE'")
     ReferenceTableType referenceTableType() default @ReferenceTableType;
 
-    @Match("#item.type().toString()=='CHECKBOX'")
+    @Transient
     CheckboxType checkboxType() default @CheckboxType;
 
     @Match("#item.type().toString()=='CODE_EDITOR'")
