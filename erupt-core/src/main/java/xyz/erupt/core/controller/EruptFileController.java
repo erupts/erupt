@@ -77,7 +77,8 @@ public class EruptFileController {
                 if (attachmentType.fileTypes().length > 0) {
                     String[] fileNameArr = file.getOriginalFilename().split("\\.");
                     String extensionName = fileNameArr[fileNameArr.length - 1];
-                    if (Stream.of(attachmentType.fileTypes()).noneMatch(type -> extensionName.equalsIgnoreCase(type))) {
+                    String dotExtensionName = "." + extensionName;
+                    if (Stream.of(attachmentType.fileTypes()).noneMatch(type -> extensionName.equalsIgnoreCase(type) || dotExtensionName.equalsIgnoreCase(type))) {
                         return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.file_format") + ":" + extensionName);
                     }
                 }
