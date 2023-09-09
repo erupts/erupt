@@ -54,7 +54,7 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
             views = @View(title = "是否必填"),
             edit = @Edit(title = "是否必填", notNull = true)
     )
-    private Boolean notNull = true;
+    private Boolean notNull = false;
 
     @ManyToOne
     @EruptField(
