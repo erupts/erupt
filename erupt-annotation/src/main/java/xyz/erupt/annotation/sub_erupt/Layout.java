@@ -11,6 +11,9 @@ public @interface Layout {
     //表格右侧列固定数量
     int tableRightFixed() default 0;
 
+    //分页方式
+    PagingType pagingType() default PagingType.BACKEND;
+
     //分页大小
     int pageSize() default 10;
 
@@ -19,8 +22,19 @@ public @interface Layout {
 
 
     enum FormSize {
-        DEFAULT,  //默认
-        FULL_LINE //整行
+        //默认
+        DEFAULT,
+        //整行
+        FULL_LINE
+    }
+
+    enum PagingType {
+        //后端分页
+        BACKEND,
+        //前端分页
+        FRONT,
+        //不分页
+        NONE
     }
 
 }
