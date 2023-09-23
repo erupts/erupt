@@ -8,9 +8,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class TableQueryVo {
+public class TableQuery {
 
-    private static final int maxPageSize = 1000;
+    private static final int maxPageSize = 10000;
 
     private boolean dataExport = false;
 
