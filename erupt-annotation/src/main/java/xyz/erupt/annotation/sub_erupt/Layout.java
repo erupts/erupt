@@ -33,7 +33,7 @@ public @interface Layout {
         BACKEND,
         //前端分页
         FRONT,
-        //不分页
+        //不分页，最多显示：pageSizes[pageSizes.length - 1] * 10 条
         NONE
     }
 
