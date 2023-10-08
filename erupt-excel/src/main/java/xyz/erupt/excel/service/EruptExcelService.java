@@ -194,6 +194,7 @@ public class EruptExcelService {
                 Cell cell = row.getCell(cellNum);
                 EruptFieldModel eruptFieldModel = cellIndexMapping.get(cellNum);
                 if (null != cell && CellType.BLANK != cell.getCellType()) {
+                    String cellValue = this.getStringCellValue(cell);
                     Edit edit = eruptFieldModel.getEruptField().edit();
                     switch (edit.type()) {
                         case REFERENCE_TABLE:
@@ -208,7 +209,7 @@ public class EruptExcelService {
                                             cellIndexJoinEruptMap.get(cellNum).get(cell.getStringCellValue()).toString());
                                 }
                             } catch (Exception e) {
-                                throw new Exception(edit.title() + " -> " + this.getStringCellValue(cell) + "数据不存在");
+                                throw new Exception(edit.title() + " -> " + cellValue + "数据不存在");
                             }
                             jsonObject.add(eruptFieldModel.getFieldName(), jo);
                             break;
@@ -217,7 +218,7 @@ public class EruptExcelService {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cellIndexJoinEruptMap.get(cellNum)
                                         .get(cell.getStringCellValue()).toString());
                             } catch (Exception e) {
-                                throw new Exception(edit.title() + " -> " + this.getStringCellValue(cell) + "数据不存在");
+                                throw new Exception(edit.title() + " -> " + cellValue + "数据不存在");
                             }
                             break;
                         case BOOLEAN:
@@ -227,7 +228,7 @@ public class EruptExcelService {
                         default:
                             String rn = eruptFieldModel.getFieldReturnName();
                             if (String.class.getSimpleName().equals(rn)) {
-                                jsonObject.addProperty(eruptFieldModel.getFieldName(), this.getStringCellValue(cell));
+                                jsonObject.addProperty(eruptFieldModel.getFieldName(), cellValue);
                             } else if (JavaType.NUMBER.equals(rn)) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
                             } else if (EruptUtil.isDateField(eruptFieldModel.getFieldReturnName())) {
@@ -242,11 +243,23 @@ public class EruptExcelService {
         return listObject;
     }
 
-    public String getStringCellValue(Cell cell) {
-        cell.setCellType(CellType.STRING);
-        return cell.getStringCellValue() + "";
+    private String getStringCellValue(Cell cell) {
+        CellType cellType = cell.getCellType();
+        switch (cellType) {
+            case NUMERIC:
+            case STRING:
+                return cell.getStringCellValue();
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            case ERROR:
+                return String.valueOf(cell.getErrorCellValue());
+            case BLANK:
+            default:
+                return StringUtils.EMPTY;
+        }
     }
-
 
     //模板的格式和edit输入框一致
     public Workbook createExcelTemplate(EruptModel eruptModel) {
