@@ -115,9 +115,9 @@ public class EruptService {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, QueryExpression.EQ));
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                .queryList(eruptModel, new Page(0, 1),
+                .queryList(eruptModel, new Page(1, 1),
                         EruptQuery.builder().conditions(conditions).build());
-        if (page.getList().size() <= 0) {
+        if (page.getList().isEmpty()) {
             throw new EruptNoLegalPowerException();
         }
     }
