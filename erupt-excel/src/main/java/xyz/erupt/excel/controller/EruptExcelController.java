@@ -79,7 +79,7 @@ public class EruptExcelController {
         Erupts.powerLegal(eruptModel, PowerObject::isExport);
         TableQuery tableQuery = new TableQuery();
         tableQuery.setPageIndex(1);
-        tableQuery.setDataExport(true);
+        tableQuery.setPageSize(Page.PAGE_MAX_DATA);
         Optional.ofNullable(conditions).ifPresent(tableQuery::setCondition);
         Page page = eruptService.getEruptData(eruptModel, tableQuery, null);
         try (Workbook wb = dataFileService.exportExcel(eruptModel, page)) {
