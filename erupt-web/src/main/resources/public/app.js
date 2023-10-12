@@ -52,10 +52,49 @@ window.eruptSiteConfig = {
     login: function (e) {
 
     },
-    upload: function (eruptName, eruptFieldName) {
+    upload: function (files) {
         return {
             url: "",
             headers: {}
         }
     }
 };
+
+window.eruptRouterEvent = {
+    login: {
+        load() {
+            console.log("in login page");
+        },
+        unload() {
+            console.log("out login page");
+        }
+    },
+    $: {
+        load(e) {
+            // console.log('load', e)
+        },
+        unload(e) {
+            // console.log("unload ", e)
+        }
+    },
+    EruptDict: {
+        load(e) {
+            console.log(e)
+        },
+        unload(e) {
+            console.log("unload ", e)
+        }
+    }
+}
+
+let eruptEvent = {
+    login() {
+
+    },
+    logout() {
+
+    },
+    upload() {
+
+    }
+}

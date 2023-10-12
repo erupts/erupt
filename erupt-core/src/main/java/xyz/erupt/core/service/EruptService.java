@@ -48,7 +48,7 @@ public class EruptService {
 
     /**
      * @param eruptModel      eruptModel
-     * @param tableQuery    前端查询对象
+     * @param tableQuery      前端查询对象
      * @param serverCondition 自定义条件
      * @param customCondition 条件字符串
      */
@@ -75,8 +75,8 @@ public class EruptService {
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                .queryList(eruptModel, new Page(tableQuery.getPageIndex(), tableQuery.getPageSize(), tableQuery.getSort()),
-                        EruptQuery.builder().orderBy(tableQuery.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
+                .queryList(eruptModel, tableQuery, EruptQuery.builder().orderBy(tableQuery.getSort())
+                        .conditionStrings(conditionStrings).conditions(legalConditions).build());
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
         Optional.ofNullable(page.getList()).ifPresent(it -> DataHandlerUtil.convertDataToEruptView(eruptModel, it));
         return page;
@@ -115,9 +115,9 @@ public class EruptService {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, QueryExpression.EQ));
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                .queryList(eruptModel, new Page(0, 1, null),
+                .queryList(eruptModel, new Page(1, 1),
                         EruptQuery.builder().conditions(conditions).build());
-        if (page.getList().size() <= 0) {
+        if (page.getList().isEmpty()) {
             throw new EruptNoLegalPowerException();
         }
     }

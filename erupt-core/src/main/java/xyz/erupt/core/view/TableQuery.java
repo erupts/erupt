@@ -8,31 +8,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class TableQuery {
-
-    private static final int maxPageSize = 10000;
-
-    private boolean dataExport = false;
-
-    private Integer pageIndex;
-
-    private Integer pageSize;
-
-    private String sort;
+public class TableQuery extends Page {
 
     private Object linkTreeVal;
 
     private List<Condition> condition;
-
-    public Integer getPageSize() {
-        if (this.isDataExport()) {
-            pageSize = Page.PAGE_MAX_DATA;
-        } else {
-            if (pageSize > maxPageSize) {
-                pageSize = maxPageSize;
-            }
-        }
-        return pageSize;
-    }
 
 }
