@@ -12,6 +12,8 @@ public class AnnotationConst {
 
     public static final String LABEL = "name";
 
+    public static final String REMARK = "remark";
+
     public static final String PID = "pid";
 
     public static final String EMPTY_STR = "";

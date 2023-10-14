@@ -11,4 +11,7 @@ public @interface CheckboxType {
     @Comment("展示列")
     String label() default AnnotationConst.LABEL;
 
+    @Comment("描述列")
+    String remark() default AnnotationConst.EMPTY_STR;
+
 }

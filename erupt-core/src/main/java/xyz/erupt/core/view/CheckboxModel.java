@@ -9,15 +9,18 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class CheckboxModel {
+public class CheckboxModel<I, L, R> {
 
-    private Object id;
+    private I id;
 
-    private Object label;
+    private L label;
 
-    public CheckboxModel(Object id, Object label) {
+    private R remark;
+
+    public CheckboxModel(I id, L label, R remark) {
         this.id = id;
         this.label = label;
+        this.remark = remark;
     }
 
     public CheckboxModel() {

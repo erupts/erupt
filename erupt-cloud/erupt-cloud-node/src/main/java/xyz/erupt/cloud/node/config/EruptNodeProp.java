@@ -20,6 +20,9 @@ public class EruptNodeProp {
     //是否开启NODE节点注册
     private boolean enableRegister = true;
 
+    //是否开启附件上传代理，开启后上传能力全部交予server端实现【server端请求node端获取附件上传要求】
+//    private boolean attachmentProxy = true;
+
     //接入应用名称，推荐填写当前 Java 项目名称
     private String nodeName;
 
