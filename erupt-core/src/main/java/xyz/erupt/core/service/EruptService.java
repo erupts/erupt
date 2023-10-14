@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.constant.EruptConst;
@@ -22,7 +23,7 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
-import xyz.erupt.core.view.TableQueryVo;
+import xyz.erupt.core.view.TableQuery;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -47,31 +48,35 @@ public class EruptService {
 
     /**
      * @param eruptModel      eruptModel
-     * @param tableQueryVo    前端查询对象
+     * @param tableQuery      前端查询对象
      * @param serverCondition 自定义条件
      * @param customCondition 条件字符串
      */
-    public Page getEruptData(EruptModel eruptModel, TableQueryVo tableQueryVo, List<Condition> serverCondition, String... customCondition) {
+    public Page getEruptData(EruptModel eruptModel, TableQuery tableQuery, List<Condition> serverCondition, String... customCondition) {
         Erupts.powerLegal(eruptModel, PowerObject::isQuery);
-        List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQueryVo.getCondition());
+        List<Condition> legalConditions = EruptUtil.geneEruptSearchCondition(eruptModel, tableQuery.getCondition());
         List<String> conditionStrings = new ArrayList<>();
         //DependTree logic
         LinkTree dependTree = eruptModel.getErupt().linkTree();
         if (StringUtils.isNotBlank(dependTree.field())) {
-            if (null == tableQueryVo.getLinkTreeVal()) {
+            if (null == tableQuery.getLinkTreeVal()) {
                 if (dependTree.dependNode()) return new Page();
             } else {
                 EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
-                conditionStrings.add(String.format("%s = '%s'", dependTree.field() + EruptConst.DOT + treeErupt.getErupt().primaryKeyCol(), tableQueryVo.getLinkTreeVal()));
+                conditionStrings.add(String.format("%s = '%s'", dependTree.field() + EruptConst.DOT + treeErupt.getErupt().primaryKeyCol(), tableQuery.getLinkTreeVal()));
             }
+        }
+        Layout layout = eruptModel.getErupt().layout();
+        if (Layout.PagingType.FRONT == layout.pagingType() || Layout.PagingType.NONE == layout.pagingType()) {
+            tableQuery.setPageSize(layout.pageSizes()[layout.pageSizes().length - 1]);
         }
         this.drillProcess(eruptModel, (link, val) -> conditionStrings.add(String.format("%s = '%s'", link.linkErupt().getSimpleName() + EruptConst.DOT + link.joinColumn(), val)));
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                .queryList(eruptModel, new Page(tableQueryVo.getPageIndex(), tableQueryVo.getPageSize(), tableQueryVo.getSort()),
-                        EruptQuery.builder().orderBy(tableQueryVo.getSort()).conditionStrings(conditionStrings).conditions(legalConditions).build());
+                .queryList(eruptModel, tableQuery, EruptQuery.builder().orderBy(tableQuery.getSort())
+                        .conditionStrings(conditionStrings).conditions(legalConditions).build());
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
         Optional.ofNullable(page.getList()).ifPresent(it -> DataHandlerUtil.convertDataToEruptView(eruptModel, it));
         return page;
@@ -110,9 +115,9 @@ public class EruptService {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(new Condition(eruptModel.getErupt().primaryKeyCol(), id, QueryExpression.EQ));
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                .queryList(eruptModel, new Page(0, 1, null),
+                .queryList(eruptModel, new Page(1, 1),
                         EruptQuery.builder().conditions(conditions).build());
-        if (page.getList().size() <= 0) {
+        if (page.getList().isEmpty()) {
             throw new EruptNoLegalPowerException();
         }
     }

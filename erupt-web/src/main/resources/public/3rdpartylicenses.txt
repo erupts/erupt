@@ -269,9 +269,6 @@ ISC
 @antv/path-util
 ISC
 
-@antv/s2
-MIT
-
 @antv/scale
 MIT
 MIT License

@@ -13,6 +13,7 @@ public @interface AttachmentType {
     @Comment("附件大小限制，单位KB")
     long size() default -1;
 
+    @Transient
     @Comment("定义独享存储空间，便于文件查找")
     String path() default "";
 

@@ -37,7 +37,10 @@ public class EruptTabController {
     public EruptApiModel addTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
         EruptModel eruptModel = getTabErupt(erupt, tabName);
         Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
-        EruptApiModel eruptApiModel = this.tabValidate(eruptModel, data, dp -> dp.beforeAdd(obj));
+        EruptApiModel eruptApiModel = this.tabValidate(eruptModel, data, dp -> {
+            dp.beforeAdd(obj);
+            dp.afterAdd(obj);
+        });
         eruptApiModel.setData(obj);
         return eruptApiModel;
     }
@@ -48,7 +51,10 @@ public class EruptTabController {
     public EruptApiModel updateTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
         EruptModel eruptModel = getTabErupt(erupt, tabName);
         Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
-        EruptApiModel eruptApiModel = this.tabValidate(eruptModel, data, dp -> dp.beforeUpdate(obj));
+        EruptApiModel eruptApiModel = this.tabValidate(eruptModel, data, dp -> {
+            dp.beforeUpdate(obj);
+            dp.afterUpdate(obj);
+        });
         eruptApiModel.setData(obj);
         return eruptApiModel;
     }
@@ -59,7 +65,11 @@ public class EruptTabController {
     public EruptApiModel deleteTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
         EruptApiModel eruptApiModel = EruptApiModel.successApi();
         EruptModel eruptModel = getTabErupt(erupt, tabName);
-        DataProxyInvoke.invoke(eruptModel, dp -> dp.beforeDelete(gson.fromJson(data.toString(), eruptModel.getClazz())));
+        Object obj = gson.fromJson(data.toString(), eruptModel.getClazz());
+        DataProxyInvoke.invoke(eruptModel, dp -> {
+            dp.beforeDelete(obj);
+            dp.afterDelete(obj);
+        });
         eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
         return eruptApiModel;
     }

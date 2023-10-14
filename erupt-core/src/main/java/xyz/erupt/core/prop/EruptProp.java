@@ -40,6 +40,9 @@ public class EruptProp {
     //是否刷新token有效期（redisSession为true时有效）
     private boolean redisSessionRefresh = false;
 
+    //默认语言
+    public String defaultLocales = "zh-CN";
+
 //
 //    //应用空间前缀
 //    private String appSpacePrefix = "erupt-app:";
