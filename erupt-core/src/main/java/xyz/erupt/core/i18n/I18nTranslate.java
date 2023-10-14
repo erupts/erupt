@@ -1,6 +1,7 @@
 package xyz.erupt.core.i18n;
 
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
 
 import javax.annotation.Resource;
@@ -16,16 +17,16 @@ public class I18nTranslate {
     @Resource
     private HttpServletRequest request;
 
+    @Resource
+    private EruptProp eruptProp;
+
     public static String $translate(String key) {
         return EruptSpringUtil.getBean(I18nTranslate.class).translate(key);
     }
 
     public String translate(String key) {
         String lang = getLang();
-        if (null != lang) {
-            return I18nRunner.getI18nValue(lang, key);
-        }
-        return key;
+        return I18nRunner.getI18nValue(lang == null ? eruptProp.getDefaultLocales() : lang, key);
     }
 
     public String getLang() {
