@@ -23,6 +23,8 @@ import xyz.erupt.core.view.EruptModel;
 
 import javax.annotation.Resource;
 import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -51,6 +53,15 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
     private final String instanceId = RandomStringUtils.randomAlphabetic(6);
 
     private boolean errorConnect = false;
+
+    private String hostName;
+
+    public EruptNodeTask() {
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException ignore) {
+        }
+    }
 
     @Override
     public void run(ApplicationArguments args) {
@@ -81,9 +92,6 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
         if (null == eruptNodeProp.getNodeName()) {
             throw new RuntimeException(EruptNodeProp.SPACE + ".nodeName not config");
         }
-        if (null == eruptNodeProp.getAccessToken()) {
-            throw new RuntimeException(EruptNodeProp.SPACE + ".accessToken not config");
-        }
         log.info("erupt-cloud-node initialization completed");
         while (this.runner) {
             NodeInfo nodeInfo = new NodeInfo();
@@ -91,6 +99,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
             nodeInfo.setNodeName(eruptNodeProp.getNodeName());
             nodeInfo.setAccessToken(eruptNodeProp.getAccessToken());
             nodeInfo.setVersion(EruptInformation.getEruptVersion());
+            nodeInfo.setHostname(hostName);
             nodeInfo.setEruptModules(EruptCoreService.getModules());
             if (null != eruptNodeProp.getHostAddress() && eruptNodeProp.getHostAddress().length > 0) {
                 nodeInfo.setNodeAddress(eruptNodeProp.getHostAddress());
