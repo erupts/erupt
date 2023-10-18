@@ -113,7 +113,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 HttpResponse httpResponse = HttpUtil.createPost(address + CloudRestApiConst.REGISTER_NODE)
                         .body(gson.toJson(nodeInfo)).execute();
                 if (!httpResponse.isOk()) {
-                    log.error(address + " -> " + httpResponse.body());
+                    log.error(address + " -> Connection error: {}", httpResponse.body());
                 }
                 if (this.errorConnect) {
                     this.errorConnect = false;
@@ -121,7 +121,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 }
                 TimeUnit.MILLISECONDS.sleep(eruptNodeProp.getHeartbeatTime());
             } catch (Exception e) {
-                log.error(address + " -> {}", e.getMessage());
+                log.error(address + " -> Connection error: {}", e.getMessage());
                 this.errorConnect = true;
                 TimeUnit.MILLISECONDS.sleep(eruptNodeProp.getHeartbeatTime() / 2);
             }

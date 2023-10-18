@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
-import xyz.erupt.cloud.server.base.R;
 import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.service.EruptNodeMicroservice;
@@ -30,15 +29,19 @@ public class EruptMicroserviceController {
     private final EruptNodeMicroservice eruptNodeMicroservice;
 
     @PostMapping(CloudRestApiConst.REGISTER_NODE)
-    public R registerNode(@RequestBody MetaNode metaNode, HttpServletRequest request, HttpServletResponse response) {
+    public void registerNode(@RequestBody MetaNode metaNode, HttpServletRequest request, HttpServletResponse response) {
         CloudNode cloudNode = eruptNodeMicroservice.findNodeByAppName(metaNode.getNodeName(), metaNode.getAccessToken());
         if (!cloudNode.getStatus()) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return R.error(metaNode.getNodeName() + " prohibiting the registration");
+            throw new RuntimeException(metaNode.getNodeName() + " prohibiting the registration");
         }
         Optional.ofNullable(CloudServerUtil.findEruptCloudServerAnnotation()).ifPresent(it -> it.registerNode(metaNode, request));
+        for (String location : metaNode.getNodeAddress()) {
+             if (!CloudServerUtil.nodeHealth(metaNode.getNodeName(), location)) {
+                throw new RuntimeException("erupt-cloud-server cannot establish a connection with " + location);
+            }
+        }
         eruptNodeMicroservice.registerNode(cloudNode, metaNode);
-        return R.success();
     }
 
     //移除实例
