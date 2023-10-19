@@ -1,6 +1,7 @@
 package xyz.erupt.cloud.server.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ import java.util.Optional;
  */
 @RestController
 @AllArgsConstructor
+@Slf4j
 public class EruptMicroserviceController {
 
     private final EruptNodeMicroservice eruptNodeMicroservice;
@@ -37,8 +39,8 @@ public class EruptMicroserviceController {
         }
         Optional.ofNullable(CloudServerUtil.findEruptCloudServerAnnotation()).ifPresent(it -> it.registerNode(metaNode, request));
         for (String location : metaNode.getNodeAddress()) {
-             if (!CloudServerUtil.nodeHealth(metaNode.getNodeName(), location)) {
-                throw new RuntimeException("erupt-cloud-server cannot establish a connection with " + location);
+            if (!CloudServerUtil.nodeHealth(metaNode.getNodeName(), location)) {
+                throw new RuntimeException("Unable to establish a connection with " + location);
             }
         }
         eruptNodeMicroservice.registerNode(cloudNode, metaNode);

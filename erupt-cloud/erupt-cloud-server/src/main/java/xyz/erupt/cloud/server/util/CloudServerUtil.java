@@ -4,6 +4,7 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 import xyz.erupt.cloud.server.annotation.EruptCloudServer;
 import xyz.erupt.core.service.EruptApplication;
@@ -25,7 +26,11 @@ public class CloudServerUtil {
     public static boolean nodeHealth(String nodeName, String location) {
         try {
             HttpResponse httpResponse = HttpUtil.createGet(location + CloudRestApiConst.NODE_HEALTH).timeout(1000).execute();
-            //TODO 后续版本需要通过 httpResponse.body() 校验与 nodeName 是否匹配
+            String body = httpResponse.body();
+            if (StringUtils.isNotBlank(body) && !nodeName.equals(body)) {
+                log.warn("nodeName mismatch {} != {}", nodeName, body);
+                return false;
+            }
             return httpResponse.isOk();
         } catch (Exception e) {
             log.error(location, e);
