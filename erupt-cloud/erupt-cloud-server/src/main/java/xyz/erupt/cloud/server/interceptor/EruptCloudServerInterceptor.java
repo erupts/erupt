@@ -137,18 +137,18 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                     Optional.ofNullable(httpResponse.header(transferHeader)).ifPresent(it -> response.addHeader(transferHeader, it));
                 }
                 response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                String body = httpResponse.body();
                 if (httpResponse.getStatus() != HttpStatus.OK.value()) {
+                    log.error("{}: {} -> {}", metaNode.getNodeName(), path, body);
+                    operationService.record(handler, new Exception(body));
                     response.setStatus(httpResponse.getStatus());
-                    response.sendError(httpResponse.getStatus());
                     response.getOutputStream().write(httpResponse.bodyBytes());
-                    log.error("{}: {} -> {}", metaNode.getNodeName(), path, httpResponse.body());
-                    operationService.record(handler, new Exception(httpResponse.body()));
                     return false;
                 } else {
                     operationService.record(handler, null);
                 }
                 if ((EruptRestPath.ERUPT_BUILD + "/" + erupt).equals(request.getServletPath())) {
-                    EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(httpResponse.body(), EruptBuildModel.class);
+                    EruptBuildModel eruptBuildModel = GsonFactory.getGson().fromJson(body, EruptBuildModel.class);
                     this.eruptBuildProcess(eruptBuildModel, nodeName);
                     response.getOutputStream().write(GsonFactory.getGson().toJson(eruptBuildModel).getBytes(StandardCharsets.UTF_8));
                 } else {
