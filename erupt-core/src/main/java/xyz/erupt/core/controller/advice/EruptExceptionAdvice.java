@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.EruptExceptionVo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author YuePeng
@@ -39,18 +37,10 @@ public class EruptExceptionAdvice {
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    public Map<String, Object> eruptRuntimeException(Exception e, HttpServletRequest request, HttpServletResponse response) {
+    public EruptExceptionVo eruptException(Exception e, HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         log.error(ERE, e);
-        Map<String, Object> map = new HashMap<>();
-        map.put("error", ERE);
-        map.put("timestamp", new Date());
-        map.put("path", request.getServletPath());
-        map.put("status", response.getStatus());
-        if (e instanceof RuntimeException) {
-            map.put("message", e.getMessage());
-        }
-        return map;
+        return new EruptExceptionVo(request.getServletPath(), response.getStatus(), ERE, e instanceof RuntimeException ? e.getMessage() : null);
     }
 
 }
