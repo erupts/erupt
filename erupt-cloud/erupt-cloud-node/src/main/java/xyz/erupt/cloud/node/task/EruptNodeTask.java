@@ -23,8 +23,6 @@ import xyz.erupt.core.view.EruptModel;
 
 import javax.annotation.Resource;
 import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -56,12 +54,12 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
 
     private String hostName;
 
-    public EruptNodeTask() {
-        try {
-            hostName = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException ignore) {
-        }
-    }
+//    public EruptNodeTask() {
+//        try {
+//            hostName = InetAddress.getLocalHost().getHostName();
+//        } catch (UnknownHostException ignore) {
+//        }
+//    }
 
     @Override
     public void run(ApplicationArguments args) {
