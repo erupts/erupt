@@ -160,7 +160,7 @@ public class BiService {
             biHandler = EruptSpringUtil.getBeanByPath(classHandler.getHandlerPath(), EruptBiHandler.class);
             express = biHandler.exprHandler(classHandler.getParam(), query, express);
         }
-        String finalExpress = express;
+        String finalExpress = String.format("/* erupt bi query → %s */ ", key) + express;
         EruptBiHandler finalBiHandler = biHandler;
         if (eruptBiProp.getQueryLog()) {
             log.info("{}: {}", key, express);
