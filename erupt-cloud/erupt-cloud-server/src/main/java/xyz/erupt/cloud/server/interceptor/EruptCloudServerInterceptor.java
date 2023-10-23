@@ -20,6 +20,7 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
+import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.node.MetaNode;
 import xyz.erupt.cloud.server.node.NodeContext;
 import xyz.erupt.cloud.server.node.NodeManager;
@@ -79,6 +80,9 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
 
     @Resource
     private OperationService operationService;
+
+    @Resource
+    private EruptCloudServerProp eruptCloudServerProp;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -195,6 +199,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             } else {
                 httpRequest.body(StreamUtils.copyToByteArray(request.getInputStream()));
             }
+            httpRequest.timeout(eruptCloudServerProp.getNodeRequestTimeout());
             return httpRequest.addHeaders(headers).execute();
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException(location + " -> " + e.getMessage());
