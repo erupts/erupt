@@ -27,4 +27,7 @@ public class EruptCloudServerProp {
     // node 节点注册时是否校验 Access Token
     private boolean validateAccessToken = true;
 
+    // node 节点请求超时时间
+    private Integer nodeRequestTimeout = 1000 * 30;
+
 }
