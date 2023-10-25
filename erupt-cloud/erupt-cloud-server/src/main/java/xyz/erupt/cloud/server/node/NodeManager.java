@@ -43,7 +43,7 @@ public class NodeManager {
     }
 
     public void putNode(MetaNode metaNode) {
-        if (metaNode.getLocations().size() <= 0) {
+        if (metaNode.getLocations().isEmpty()) {
             this.removeNode(metaNode.getNodeName());
         } else {
             redisTemplate.opsForValue().set(geneKey(metaNode.getNodeName()), metaNode,

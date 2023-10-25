@@ -29,8 +29,6 @@ public class NodeInfo implements Serializable {
     //访问令牌
     private String accessToken;
 
-    private String hostname;
-
     //node节点地址
     private String[] nodeAddress;
 
