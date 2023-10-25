@@ -52,6 +52,15 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
 
     private boolean errorConnect = false;
 
+    private String hostName;
+
+//    public EruptNodeTask() {
+//        try {
+//            hostName = InetAddress.getLocalHost().getHostName();
+//        } catch (UnknownHostException ignore) {
+//        }
+//    }
+
     @Override
     public void run(ApplicationArguments args) {
         log.info(ansi().fg(Ansi.Color.BLUE) + " \n" +
@@ -81,9 +90,6 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
         if (null == eruptNodeProp.getNodeName()) {
             throw new RuntimeException(EruptNodeProp.SPACE + ".nodeName not config");
         }
-        if (null == eruptNodeProp.getAccessToken()) {
-            throw new RuntimeException(EruptNodeProp.SPACE + ".accessToken not config");
-        }
         log.info("erupt-cloud-node initialization completed");
         while (this.runner) {
             NodeInfo nodeInfo = new NodeInfo();
@@ -104,7 +110,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 HttpResponse httpResponse = HttpUtil.createPost(address + CloudRestApiConst.REGISTER_NODE)
                         .body(gson.toJson(nodeInfo)).execute();
                 if (!httpResponse.isOk()) {
-                    log.error(address + " -> " + httpResponse.body());
+                    log.error(address + " -> Connection error: {}", httpResponse.body());
                 }
                 if (this.errorConnect) {
                     this.errorConnect = false;
@@ -112,7 +118,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 }
                 TimeUnit.MILLISECONDS.sleep(eruptNodeProp.getHeartbeatTime());
             } catch (Exception e) {
-                log.error(address + " -> {}", e.getMessage());
+                log.error(address + " -> Connection error: {}", e.getMessage());
                 this.errorConnect = true;
                 TimeUnit.MILLISECONDS.sleep(eruptNodeProp.getHeartbeatTime() / 2);
             }
