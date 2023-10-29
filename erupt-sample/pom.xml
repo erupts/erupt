@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>xyz.erupt</groupId>
 		<artifactId>erupt</artifactId>
-		<version>1.12.4</version>
+		<version>1.12.5</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -21,12 +21,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>xyz.erupt</groupId>
-			<artifactId>erupt-upms</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>xyz.erupt</groupId>
-			<artifactId>erupt-security</artifactId>
+			<artifactId>erupt-admin</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
@@ -43,7 +38,6 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>2.2.220</version>
 		</dependency>
 	</dependencies>
 
