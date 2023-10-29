@@ -80,6 +80,7 @@ public class EruptMenu extends MetaModel {
     )
     private String type;
 
+    @Column(name = "`value`")
     @EruptField(
             edit = @Edit(
                     title = "类型值"
