@@ -40,7 +40,7 @@
                     let arr = paramsArr[i].split('=')
                     param[arr[0]] = arr[1];
                 }
-                axios.get("/erupt-cloud-api/remove-instance/${row.nodeName}?instance=" + item, {
+                axios.get("${request.contextPath}/erupt-cloud-api/remove-instance/${row.nodeName}?instance=" + item, {
                     headers: {
                         token: param["_token"]
                     }
