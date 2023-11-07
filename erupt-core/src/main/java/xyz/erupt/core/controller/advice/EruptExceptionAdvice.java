@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import xyz.erupt.core.exception.EruptApiErrorTip;
-import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.view.EruptExceptionVo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,21 +17,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author YuePeng
  * date 2020-09-30
  */
-@ControllerAdvice
 @Slf4j
 @Order(Ordered.LOWEST_PRECEDENCE - 1)
+@ControllerAdvice(EruptConst.BASE_PACKAGE)
 public class EruptExceptionAdvice {
-    public static final String API_ERROR = "erupt web api error";
     private static final String ERE = "erupt exception";
-
-    @ExceptionHandler(EruptApiErrorTip.class)
-    @ResponseStatus(value = HttpStatus.OK)
-    @ResponseBody
-    public EruptApiModel eruptApiErrorTip(EruptApiErrorTip e) {
-        log.error(API_ERROR, e);
-        e.eruptApiModel.setErrorIntercept(false);
-        return e.eruptApiModel;
-    }
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
