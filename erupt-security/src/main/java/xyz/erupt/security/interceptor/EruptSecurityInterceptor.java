@@ -50,10 +50,6 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     @Resource
     private OperationService operationService;
 
-    private static final String ERUPT_PARENT_HEADER_KEY = "eruptParent";
-
-    private static final String ERUPT_PARENT_PARAM_KEY = "_eruptParent";
-
     @Resource
     private EruptSessionService sessionService;
 
@@ -71,11 +67,11 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
             token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
             eruptName = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
-            parentEruptName = request.getHeader(ERUPT_PARENT_HEADER_KEY);
+            parentEruptName = request.getHeader(EruptReqHeaderConst.ERUPT_PARENT_HEADER_KEY);
         } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
             token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
             eruptName = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
-            parentEruptName = request.getHeader(ERUPT_PARENT_PARAM_KEY);
+            parentEruptName = request.getHeader(EruptReqHeaderConst.URL_ERUPT_PARENT_PARAM_KEY);
         }
         if (eruptRouter.verifyType().equals(EruptRouter.VerifyType.ERUPT)) {
             MetaContext.register(new MetaErupt(eruptName, eruptName));
