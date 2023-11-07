@@ -53,7 +53,7 @@ import java.util.function.Function;
                 title = "查看令牌", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
                 show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
                 type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl")
-        ), layout = @Layout(tableLeftFixed = 1)
+        ), layout = @Layout(tableLeftFixed = 1, pageSize = 30)
 )
 @Component
 @EruptI18n
