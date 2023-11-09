@@ -1,5 +1,6 @@
 package xyz.erupt.security.interceptor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 @Order
+@Slf4j
 public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
 
     @Resource
@@ -156,8 +158,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         try {
             operationService.record(handler, ex);
         } catch (Exception e) {
-            //TODO 失败后抛出异常（版本兼容原因未抛出）
-            e.printStackTrace();
+            log.error("operation record error", e);
         } finally {
             MetaContext.remove();
         }

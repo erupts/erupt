@@ -105,15 +105,18 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         if (null == eruptRouter) return true;
         if (EruptRouter.VerifyType.ERUPT == eruptRouter.verifyType()) {
             String erupt = null;
+            String authErupt = null;
             if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
-                erupt = request.getHeader(EruptReqHeaderConst.ERUPT_PARENT_HEADER_KEY);
-                if (StringUtils.isBlank(erupt)) {
-                    erupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
+                erupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
+                authErupt = request.getHeader(EruptReqHeaderConst.ERUPT_PARENT_HEADER_KEY);
+                if (StringUtils.isBlank(authErupt)) {
+                    authErupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
                 }
             } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
-                erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARENT_PARAM_KEY);
-                if (StringUtils.isBlank(erupt)) {
-                    erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
+                erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
+                authErupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARENT_PARAM_KEY);
+                if (StringUtils.isBlank(authErupt)) {
+                    authErupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
                 }
             }
             if (erupt == null) {
@@ -128,7 +131,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 response.sendError(HttpStatus.UNAUTHORIZED.value());
                 return false;
             }
-            if (null == eruptUserService.getEruptMenuByValue(erupt)) {
+            if (null == eruptUserService.getEruptMenuByValue(authErupt)) {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 response.sendError(HttpStatus.FORBIDDEN.value());
                 return false;
