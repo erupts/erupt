@@ -45,5 +45,8 @@ public class EruptAppProp {
             "es_ES"       // español
     };
 
+    //重置密码功能开关
+    private Boolean resetPwd = true;
+
 
 }
