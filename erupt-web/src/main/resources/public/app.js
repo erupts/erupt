@@ -69,14 +69,14 @@ window.eruptRouterEvent = {
             console.log("out login page");
         }
     },
-    $: {
-        load(e) {
-            // console.log('load', e)
-        },
-        unload(e) {
-            // console.log("unload ", e)
-        }
-    },
+    // $: {
+    //     load(e) {
+    //         // console.log('load', e)
+    //     },
+    //     unload(e) {
+    //         // console.log("unload ", e)
+    //     }
+    // },
     EruptDict: {
         load(e) {
             console.log(e)
