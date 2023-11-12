@@ -47,7 +47,7 @@ public class RedisInfo {
                             StringUtils.substringBetween(commandStats.getProperty(it), "calls=", ",usec"))).collect(Collectors.toList());
         });
         Optional.ofNullable(redisConnection.info()).ifPresent(properties -> {
-            this.setKeyNum(redisConnectionFactory.getConnection().serverCommands().dbSize());
+            this.setKeyNum(redisConnection.serverCommands().dbSize());
             this.setVersion(properties.getProperty("redis_version"));
             this.setUsedMem(properties.getProperty("used_memory_human"));
             if ("0".equals(properties.getProperty("maxmemory"))) {
@@ -68,5 +68,6 @@ public class RedisInfo {
                 this.setAOF(Integer.parseInt(aofEnabled) != 0);
             }
         });
+        redisConnection.close();
     }
 }

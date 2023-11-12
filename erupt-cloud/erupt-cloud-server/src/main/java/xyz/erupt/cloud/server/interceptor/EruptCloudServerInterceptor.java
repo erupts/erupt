@@ -9,6 +9,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +30,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptMutualConst;
+import xyz.erupt.core.constant.EruptReqHeader;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
@@ -38,6 +41,7 @@ import xyz.erupt.core.view.EruptBuildModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.security.interceptor.EruptSecurityInterceptor;
 import xyz.erupt.security.service.OperationService;
+import xyz.erupt.upms.constant.EruptReqHeaderConst;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
@@ -49,7 +53,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -101,9 +104,20 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         }
         if (null == eruptRouter) return true;
         if (EruptRouter.VerifyType.ERUPT == eruptRouter.verifyType()) {
-            String erupt = request.getHeader(EruptMutualConst.ERUPT);
-            if (erupt == null) {
-                erupt = request.getParameter("_" + EruptMutualConst.ERUPT);
+            String erupt = null;
+            String authErupt = null;
+            if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.HEADER) {
+                erupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
+                authErupt = request.getHeader(EruptReqHeaderConst.ERUPT_PARENT_HEADER_KEY);
+                if (StringUtils.isBlank(authErupt)) {
+                    authErupt = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_KEY);
+                }
+            } else if (eruptRouter.verifyMethod() == EruptRouter.VerifyMethod.PARAM) {
+                erupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
+                authErupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARENT_PARAM_KEY);
+                if (StringUtils.isBlank(authErupt)) {
+                    authErupt = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_KEY);
+                }
             }
             if (erupt == null) {
                 return true;
@@ -117,7 +131,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 response.sendError(HttpStatus.UNAUTHORIZED.value());
                 return false;
             }
-            if (null == eruptUserService.getEruptMenuByValue(erupt)) {
+            if (null == eruptUserService.getEruptMenuByValue(authErupt)) {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 response.sendError(HttpStatus.FORBIDDEN.value());
                 return false;
@@ -179,17 +193,26 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             count = 0;
         }
         String location = metaNode.getLocations().toArray(new String[0])[metaNode.getLocations().size() <= 1 ? 0 : (count++ % metaNode.getLocations().size())];
-        Map<String, String> headers = new HashMap<>();
+        Map<String, String> headers = new CaseInsensitiveMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String name = headerNames.nextElement();
             headers.put(name, request.getHeader(name));
         }
-        headers.remove(HttpHeaders.HOST.toLowerCase());
+        headers.remove(HttpHeaders.HOST);
         headers.put(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken());
         headers.put(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken());
         headers.put(EruptMutualConst.ERUPT, eruptName);
         headers.put(EruptMutualConst.USER, Base64Encoder.encode(GsonFactory.getGson().toJson(MetaContext.getUser())));
+        if (headers.containsKey(EruptReqHeader.DRILL_SOURCE_ERUPT)) {
+            String dse = headers.get(EruptReqHeader.DRILL_SOURCE_ERUPT);
+            headers.put(EruptReqHeader.DRILL_SOURCE_ERUPT, dse.substring(dse.lastIndexOf(".") + 1));
+        }
+        //process drill header
+        if (headers.containsKey(EruptReqHeader.DRILL_SOURCE_ERUPT)) {
+            String dse = headers.get(EruptReqHeader.DRILL_SOURCE_ERUPT);
+            headers.put(EruptReqHeader.DRILL_SOURCE_ERUPT, dse.substring(dse.lastIndexOf(".") + 1));
+        }
         HttpRequest httpRequest = HttpUtil.createRequest(Method.valueOf(request.getMethod()), location + path + (null == request.getQueryString() ? "" : "?" + request.getQueryString()));
         try {
             if (null != request.getContentType() && request.getContentType().contains("multipart/form-data")) {
@@ -211,7 +234,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
         eruptBuildModel.getEruptModel().setEruptName(prefix + eruptBuildModel.getEruptModel().getEruptName());
         //修改Drill的值
         JsonArray drills = eruptBuildModel.getEruptModel().getEruptJson().getAsJsonArray("drills");
-        if (drills.size() > 0) {
+        if (!drills.isEmpty()) {
             for (JsonElement drill : drills) {
                 JsonObject link = drill.getAsJsonObject().get("link").getAsJsonObject();
                 link.addProperty("linkErupt", prefix + link.get("linkErupt").getAsString());
