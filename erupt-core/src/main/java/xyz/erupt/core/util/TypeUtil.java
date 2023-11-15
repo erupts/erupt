@@ -3,6 +3,7 @@ package xyz.erupt.core.util;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -39,6 +40,8 @@ public class TypeUtil {
             return Float.valueOf(str);
         } else if (double.class == targetType || Double.class == targetType) {
             return Double.valueOf(str);
+        } else if (BigDecimal.class == targetType) {
+            return new BigDecimal(str);
         } else if (boolean.class == targetType || Boolean.class == targetType) {
             return Boolean.valueOf(str);
         } else if (targetType.isEnum()) {
