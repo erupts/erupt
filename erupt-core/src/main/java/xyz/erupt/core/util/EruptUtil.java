@@ -34,6 +34,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -117,7 +118,13 @@ public class EruptUtil {
                         map.put(field.getName(), list);
                         break;
                     default:
-                        map.put(field.getName(), value);
+                        if (fieldModel.getField().getType() == Long.class ||
+                                fieldModel.getField().getType() == Double.class ||
+                                fieldModel.getField().getType() == BigDecimal.class) {
+                            map.put(field.getName(), value.toString());
+                        } else {
+                            map.put(field.getName(), value);
+                        }
                         break;
                 }
             }
