@@ -44,7 +44,7 @@ public class EruptJobAction implements Job {
                 eruptJobLog.setResultInfo(result);
                 eruptJobLog.setStatus(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(eruptJob.getName() + " job error", e);
                 eruptJobLog.setStatus(false);
                 String exceptionTraceStr = ExceptionUtils.getStackTrace(e);
                 eruptJobLog.setErrorInfo(exceptionTraceStr);

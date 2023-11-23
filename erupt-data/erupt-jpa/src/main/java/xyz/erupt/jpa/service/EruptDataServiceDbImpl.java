@@ -132,7 +132,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         try {
             eruptJpaDao.removeEntity(eruptModel.getClazz(), object);
         } catch (DataIntegrityViolationException | ConstraintViolationException e) {
-            e.printStackTrace();
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.data.delete_fail_may_be_associated_data"));
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException(e.getMessage());

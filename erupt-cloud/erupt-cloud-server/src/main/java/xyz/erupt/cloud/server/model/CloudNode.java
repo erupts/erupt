@@ -2,6 +2,7 @@ package xyz.erupt.cloud.server.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
@@ -43,6 +44,7 @@ import java.util.function.Function;
  * @author YuePeng
  * date 2021/12/16 00:28
  */
+@Slf4j
 @Getter
 @Setter
 @Entity
@@ -199,7 +201,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                 });
             } catch (Exception e) {
                 map.put(version, String.format("<span style='color:#f00'>%s</span>", e.getMessage()));
-                e.printStackTrace();
+                log.warn("node warn → " + map.get(NODE_NAME), e);
             }
         }
     }
