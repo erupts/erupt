@@ -72,7 +72,6 @@ public class EruptFlowFileController {
             }
             return EruptApiModel.successApi(new FileUploadResult(file.getOriginalFilename(), EruptRestPath.ERUPT_ATTACHMENT+path.replace("\\", "/")));
         } catch (Exception e) {
-            e.printStackTrace();
             return EruptApiModel.errorApi("上传失败，" + e.getMessage());
         }
     }

@@ -1,5 +1,6 @@
 package xyz.erupt.core.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
  * @author YuePeng
  * date 2019-10-30.
  */
+@Slf4j
 public class SecurityUtil {
 
     // xss跨站脚本检测
@@ -99,7 +101,7 @@ public class SecurityUtil {
                 out.append(text);
                 throw new EruptWebApiRuntimeException(text);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("csrf inspect error", e);
             }
             return true;
         }
