@@ -35,9 +35,7 @@ import java.util.Set;
  * date 2018-11-22.
  */
 @Entity
-@Table(name = "e_upms_user", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "account")
-})
+@Table(name = "e_upms_user")
 @Erupt(
         name = "用户配置",
         dataProxy = EruptUserDataProxy.class,
@@ -54,7 +52,7 @@ import java.util.Set;
 @Setter
 public class EruptUser extends LookerSelf implements FilterHandler {
 
-    @Column(length = AnnotationConst.CODE_LENGTH)
+    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "用户名", sortable = true),
             edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true, search = @Search(vague = true))

@@ -46,7 +46,7 @@ import java.util.function.Function;
 @Getter
 @Setter
 @Entity
-@Table(name = "e_cloud_node", uniqueConstraints = @UniqueConstraint(columnNames = CloudNode.NODE_NAME))
+@Table(name = "e_cloud_node")
 @Erupt(
         name = "节点配置", dataProxy = CloudNode.class,
         rowOperation = @RowOperation(
@@ -67,6 +67,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
 
     public static final String ACCESS_TOKEN = "accessToken";
 
+    @Column(unique = true)
     @EruptField(
             views = @View(title = "节点名", sortable = true),
             edit = @Edit(title = "节点名", desc = "NodeName", notNull = true, search = @Search(vague = true))

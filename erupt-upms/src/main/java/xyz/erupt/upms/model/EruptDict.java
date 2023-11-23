@@ -18,7 +18,6 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 /**
  * @author YuePeng
@@ -26,7 +25,7 @@ import javax.persistence.UniqueConstraint;
  */
 
 @Entity
-@Table(name = "e_dict", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_dict")
 @EruptI18n
 @Erupt(
         name = "数据字典",
@@ -43,7 +42,7 @@ import javax.persistence.UniqueConstraint;
 @Setter
 public class EruptDict extends MetaModelUpdateVo {
 
-    @Column(length = AnnotationConst.CODE_LENGTH)
+    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "编码", sortable = true),
             edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
