@@ -128,8 +128,8 @@ public class EntityManagerService implements DisposableBean {
             consumer.accept(em);
             em.getTransaction().commit();
         } catch (Exception e) {
-            e.printStackTrace();
             em.getTransaction().rollback();
+            throw e;
         } finally {
             if (em.isOpen()) em.close();
         }
