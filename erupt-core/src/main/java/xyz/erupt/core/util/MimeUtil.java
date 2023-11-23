@@ -1,5 +1,6 @@
 package xyz.erupt.core.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 
@@ -11,6 +12,7 @@ import java.util.Properties;
  * @author YuePeng
  * date 2019-07-11.
  */
+@Slf4j
 public class MimeUtil {
 
     private static final Properties mimes = new Properties();
@@ -19,7 +21,7 @@ public class MimeUtil {
         try (InputStream in = MimeUtil.class.getClassLoader().getResourceAsStream("mime.properties")) {
             mimes.load(in);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("mime file load error", e);
         }
     }
 
