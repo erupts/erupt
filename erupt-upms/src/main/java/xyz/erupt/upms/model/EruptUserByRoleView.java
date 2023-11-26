@@ -16,16 +16,13 @@ import xyz.erupt.jpa.model.BaseModel;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 /**
  * @author YuePeng
  * date 2018-11-22.
  */
 @Entity
-@Table(name = "e_upms_user", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "account")
-})
+@Table(name = "e_upms_user")
 @Erupt(
         name = "用户配置"
 )

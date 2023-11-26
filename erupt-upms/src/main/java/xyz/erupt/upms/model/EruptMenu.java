@@ -20,7 +20,10 @@ import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.jpa.model.MetaModel;
 import xyz.erupt.upms.service.EruptMenuService;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -28,7 +31,7 @@ import java.time.LocalDateTime;
  * date 2018-11-22.
  */
 @Entity
-@Table(name = "e_upms_menu", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_upms_menu")
 @Erupt(
         name = "菜单管理",
         orderBy = "EruptMenu.sort asc",
@@ -80,7 +83,7 @@ public class EruptMenu extends MetaModel {
     )
     private String type;
 
-    @Column(name = "`value`")
+    @Column(name = "\"value\"")
     @EruptField(
             edit = @Edit(
                     title = "类型值"
@@ -103,7 +106,7 @@ public class EruptMenu extends MetaModel {
     )
     private String icon;
 
-    @Column(length = AnnotationConst.CODE_LENGTH)
+    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             edit = @Edit(
                     title = "编码", readonly = @Readonly

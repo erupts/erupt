@@ -14,23 +14,20 @@ import xyz.erupt.jpa.model.BaseModel;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 /**
  * @author YuePeng
  * date 2018-11-22.
  */
 @Entity
-@Table(name = "e_upms_post", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "code")
-})
+@Table(name = "e_upms_post")
 @Erupt(name = "岗位维护", orderBy = "weight desc")
 @EruptI18n
 @Getter
 @Setter
 public class EruptPost extends BaseModel {
 
-    @Column(length = AnnotationConst.CODE_LENGTH)
+    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "岗位编码", sortable = true),
             edit = @Edit(title = "岗位编码", notNull = true, search = @Search(vague = true))
