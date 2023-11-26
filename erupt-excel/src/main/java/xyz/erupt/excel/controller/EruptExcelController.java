@@ -113,13 +113,11 @@ public class EruptExcelController {
             list = dataFileService.excelToEruptObject(eruptModel, wb);
             wb.close();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage(), e);
         }
         try {
             eruptModifyController.batchAddEruptData(eruptModel, list);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new EruptWebApiRuntimeException("数据导入异常，原因：" + e.getMessage());
         }
         return EruptApiModel.successApi();

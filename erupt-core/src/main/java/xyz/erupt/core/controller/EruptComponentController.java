@@ -48,7 +48,6 @@ public class EruptComponentController {
         try {
             return EruptSpringUtil.getBean(autoCompleteType.handler()).completeHandler(formData, val, autoCompleteType.param());
         } catch (Exception e) {
-            e.printStackTrace();
             throw new EruptApiErrorTip(e.getMessage(), EruptApiModel.PromptWay.MESSAGE);
         }
     }

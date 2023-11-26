@@ -2,6 +2,7 @@ package xyz.erupt.cloud.server.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
@@ -43,10 +44,11 @@ import java.util.function.Function;
  * @author YuePeng
  * date 2021/12/16 00:28
  */
+@Slf4j
 @Getter
 @Setter
 @Entity
-@Table(name = "e_cloud_node", uniqueConstraints = @UniqueConstraint(columnNames = CloudNode.NODE_NAME))
+@Table(name = "e_cloud_node")
 @Erupt(
         name = "节点配置", dataProxy = CloudNode.class,
         rowOperation = @RowOperation(
@@ -67,6 +69,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
 
     public static final String ACCESS_TOKEN = "accessToken";
 
+    @Column(unique = true)
     @EruptField(
             views = @View(title = "节点名", sortable = true),
             edit = @Edit(title = "节点名", desc = "NodeName", notNull = true, search = @Search(vague = true))
@@ -198,7 +201,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                 });
             } catch (Exception e) {
                 map.put(version, String.format("<span style='color:#f00'>%s</span>", e.getMessage()));
-                e.printStackTrace();
+                log.warn("node warn → " + map.get(NODE_NAME), e);
             }
         }
     }

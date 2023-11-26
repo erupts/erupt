@@ -63,7 +63,6 @@ public class EruptApiModel {
     }
 
     public static EruptApiModel errorApi(Exception e) {
-        e.printStackTrace();
         return new EruptApiModel(Status.ERROR, e.getMessage(), null, PromptWay.DIALOG);
     }
 

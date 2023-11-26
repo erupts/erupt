@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,6 +45,7 @@ import java.util.stream.Stream;
  * @author YuePeng
  * date 10/15/18.
  */
+@Slf4j
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_FILE)
 @RequiredArgsConstructor
@@ -134,7 +136,7 @@ public class EruptFileController {
             }
             return EruptApiModel.successApi(path.replace("\\", "/"));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("erupt upload error", e);
             return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error") + " " + e.getMessage());
         }
     }

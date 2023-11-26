@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -36,6 +37,7 @@ import java.util.*;
  * @author YuePeng
  * date 2019-03-06.
  */
+@Slf4j
 @Service
 public class EruptDataServiceDbImpl implements IEruptDataService {
 
@@ -112,7 +114,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
 
     //优化异常提示类
     private void handlerException(Exception e, EruptModel eruptModel) {
-        e.printStackTrace();
         if (e instanceof DataIntegrityViolationException) {
             if (e.getMessage().contains("ConstraintViolationException")) {
                 throw new EruptWebApiRuntimeException(gcRepeatHint(eruptModel));
@@ -132,7 +133,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         try {
             eruptJpaDao.removeEntity(eruptModel.getClazz(), object);
         } catch (DataIntegrityViolationException | ConstraintViolationException e) {
-            e.printStackTrace();
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.data.delete_fail_may_be_associated_data"));
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException(e.getMessage());

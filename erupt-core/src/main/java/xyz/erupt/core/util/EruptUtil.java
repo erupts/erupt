@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import xyz.erupt.annotation.EruptField;
@@ -34,6 +35,7 @@ import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -45,6 +47,7 @@ import java.util.stream.Stream;
  * @author YuePeng
  * date 11/1/18.
  */
+@Slf4j
 public class EruptUtil {
 
     //将object中erupt标识的字段抽取出来放到map中
@@ -117,7 +120,13 @@ public class EruptUtil {
                         map.put(field.getName(), list);
                         break;
                     default:
-                        map.put(field.getName(), value);
+                        if (fieldModel.getField().getType() == Long.class ||
+                                fieldModel.getField().getType() == Double.class ||
+                                fieldModel.getField().getType() == BigDecimal.class) {
+                            map.put(field.getName(), value.toString());
+                        } else {
+                            map.put(field.getName(), value);
+                        }
                         break;
                 }
             }
@@ -344,7 +353,7 @@ public class EruptUtil {
                         f.set(target, f.get(data));
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    log.error("erupt data copy error", e);
                 }
             }
         }
@@ -362,7 +371,7 @@ public class EruptUtil {
                     }
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                log.error("erupt clear error", e);
             }
         });
     }

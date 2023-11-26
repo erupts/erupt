@@ -15,14 +15,17 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * @author YuePeng
  * date 2020-04-08
  */
 @Entity
-@Table(name = "e_upms_org", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_upms_org")
 @Erupt(
         name = "组织维护",
         tree = @Tree(pid = "parentOrg.id", expandLevel = 5),
@@ -34,7 +37,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class EruptOrg extends BaseModel {
 
-    @Column(length = AnnotationConst.CODE_LENGTH)
+    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "组织编码", sortable = true),
             edit = @Edit(title = "组织编码", notNull = true, search = @Search(vague = true))

@@ -22,13 +22,13 @@ public class IpUtil {
     public static String getIpAddr(HttpServletRequest request) {
         try {
             String ip = request.getHeader("x-forwarded-for");
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
                 ip = request.getHeader("Proxy-Client-IP");
             }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
                 ip = request.getHeader("WL-Proxy-Client-IP");
             }
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
                 ip = request.getRemoteAddr();
                 if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
                     // 根据网卡取本机配置的IP
@@ -53,7 +53,7 @@ public class IpUtil {
             }
             return ip;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("get ip error " + e.getMessage());
             return null;
         }
     }
@@ -67,14 +67,14 @@ public class IpUtil {
             }
             fileByte = StreamUtils.copyToByteArray(input);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("ip2region load error", e);
         }
     }
 
     @SneakyThrows
     public static String getCityInfo(String ip) {
         if (!Util.isIpAddress(ip)) {
-            log.warn("Error: Invalid ip address: {}",ip);
+            log.warn("Error: Invalid ip address: {}", ip);
             return "";
         }
         return new DbSearcher(new DbConfig(), fileByte).memorySearch(ip).getRegion();

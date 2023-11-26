@@ -14,7 +14,10 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModel;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 
 /**
  * @author YuePeng
@@ -23,11 +26,12 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "e_cloud_node_group", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_cloud_node_group")
 @Erupt(name = "分组配置")
 @EruptI18n
 public class CloudNodeGroup extends MetaModel {
 
+    @Column(unique = true)
     @EruptField(
             views = @View(title = "编码", sortable = true),
             edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))

@@ -18,14 +18,12 @@ import java.nio.charset.StandardCharsets;
 @RestController
 public class EruptWebConfig {
 
-    private String passport;
+    private final String passport;
 
-    public EruptWebConfig() {
+    public EruptWebConfig() throws IOException {
         try (InputStream input = EruptWebConfig.class.getClassLoader().getResourceAsStream("public/index.html")) {
             if (null == input) throw new RuntimeException("erupt-web resources not found");
             this.passport = StreamUtils.copyToString(input, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
