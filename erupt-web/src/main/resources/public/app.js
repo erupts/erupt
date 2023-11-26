@@ -1,11 +1,14 @@
 var start = true;
 window.eruptSiteConfig = {
     domain: "",
-    fileDomain: "https://oos.erupt.xyz",
+    fileDomain: "",
     title: "Erupt Framework",
     desc: "通用后台管理框架",
     dialogLogin: false,
     copyright: true, //是否保留显示版权信息
+    // copyrightTxt: () => {
+    //     return "x_x_x";
+    // },
     logoPath: null,
     loginLogoPath: null,
     logoText: "Erupt",
@@ -61,14 +64,6 @@ window.eruptSiteConfig = {
 };
 
 window.eruptRouterEvent = {
-    login: {
-        load() {
-            console.log("in login page");
-        },
-        unload() {
-            console.log("out login page");
-        }
-    },
     // $: {
     //     load(e) {
     //         // console.log('load', e)
@@ -77,14 +72,6 @@ window.eruptRouterEvent = {
     //         // console.log("unload ", e)
     //     }
     // },
-    EruptDict: {
-        load(e) {
-            console.log(e)
-        },
-        unload(e) {
-            console.log("unload ", e)
-        }
-    }
 }
 
 let eruptEvent = {
