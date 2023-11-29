@@ -25,11 +25,11 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.openjdk.nashorn</groupId>
-            <artifactId>nashorn-core</artifactId>
-            <version>15.4</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.openjdk.nashorn</groupId>-->
+<!--            <artifactId>nashorn-core</artifactId>-->
+<!--            <version>15.4</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-upms</artifactId>
