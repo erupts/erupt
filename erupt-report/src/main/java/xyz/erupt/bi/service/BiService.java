@@ -242,13 +242,13 @@ public class BiService {
         Bindings bindings = new SimpleBindings();
         Optional.ofNullable(param).ifPresent(it -> it.forEach((key, value) -> bindings.put(key, it.get(key))));
         Matcher m = EXPRESS_PATTERN.matcher(express);
-        String fun = null;
+        String fun = functionService.getFunction();
+        if (null != fun) {
+            scriptEngine.eval(fun, bindings);
+        }
         while (m.find()) {
-            if (null == fun) {
-                fun = functionService.getFunction();
-            }
             String exp = m.group();
-            Object result = scriptEngine.eval(fun + "\n" + exp, bindings);
+            Object result = scriptEngine.eval(exp, bindings);
             result = Optional.ofNullable(result).orElse("");
             express = express.replace("${" + exp + "}", result.toString());
         }
