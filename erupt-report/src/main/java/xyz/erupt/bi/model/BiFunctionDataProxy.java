@@ -3,7 +3,7 @@ package xyz.erupt.bi.model;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.bi.constant.BiConst;
-import xyz.erupt.bi.service.FunctionService;
+import xyz.erupt.bi.service.ScriptService;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.util.Erupts;
 
@@ -21,7 +21,7 @@ public class BiFunctionDataProxy implements DataProxy<BiFunction> {
 
     private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
     @Resource
-    private FunctionService functionService;
+    private ScriptService scriptService;
 
     private void testFunction(BiFunction biFunction) {
         try {
@@ -39,7 +39,7 @@ public class BiFunctionDataProxy implements DataProxy<BiFunction> {
     @Override
     public void afterAdd(BiFunction biFunction) {
         this.testFunction(biFunction);
-        functionService.flushFunction();
+        scriptService.flushFunction();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class BiFunctionDataProxy implements DataProxy<BiFunction> {
 
     @Override
     public void afterDelete(BiFunction biFunction) {
-        functionService.flushFunction();
+        scriptService.flushFunction();
     }
 
 }

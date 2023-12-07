@@ -14,16 +14,9 @@ import java.util.stream.Collectors;
  */
 public class ChartType implements ChoiceFetchHandler {
 
-    public static final String TPL = "tpl";
-
-    public static final String TABLE = "table";
-
     @Override
     public List<VLModel> fetch(String[] params) {
-        List<VLModel> list = Arrays.stream(ChartTypeEnum.values()).map(it ->
+        return Arrays.stream(ChartTypeEnum.values()).map(it ->
                 new VLModel(it.name(), it.getName(), it.getDesc())).collect(Collectors.toList());
-        list.add(new VLModel(TABLE, "数据表", "返回任意列数"));
-        list.add(new VLModel(TPL, "组件模板"));
-        return list;
     }
 }

@@ -12,6 +12,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.bi.constant.ChartTypeEnum;
 import xyz.erupt.bi.handler.ChartType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -80,14 +81,8 @@ public class BiChart extends MetaModelUpdateVo {
     )
     private Integer cacheTime = 1;
 
-    /**
-     * 单数值
-     * 饼图
-     * 柱状图
-     * 堆积图
-     * 线形图
-     * 蜘蛛图
-     */
+
+    @Enumerated(EnumType.STRING)
     @EruptField(
             views = @View(title = "图表类型"),
             edit = @Edit(title = "图表类型", notNull = true,
@@ -98,12 +93,12 @@ public class BiChart extends MetaModelUpdateVo {
                             fetchHandler = ChartType.class
                     ))
     )
-    private String type;
+    private ChartTypeEnum type;
 
     @ManyToOne
     @EruptField(
             edit = @Edit(title = "报表模板", type = EditType.REFERENCE_TABLE,
-                    showBy = @ShowBy(dependField = "type", expr = "value=='" + ChartType.TPL + "'"))
+                    showBy = @ShowBy(dependField = "type", expr = "value=='tpl'"))
     )
     private BiTpl biTpl;
 

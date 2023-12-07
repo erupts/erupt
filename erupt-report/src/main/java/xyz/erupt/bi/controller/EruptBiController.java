@@ -2,28 +2,22 @@ package xyz.erupt.bi.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.bi.config.EruptBiProp;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.constant.ColumnType;
-import xyz.erupt.bi.fun.EruptBiHandler;
 import xyz.erupt.bi.model.*;
 import xyz.erupt.bi.service.BiService;
+import xyz.erupt.bi.service.ScriptService;
 import xyz.erupt.bi.view.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.prop.EruptProp;
-import xyz.erupt.core.util.DateUtil;
-import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
-import xyz.erupt.excel.service.EruptExcelService;
-import xyz.erupt.excel.util.ExcelUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
@@ -60,6 +54,9 @@ public class EruptBiController {
     @Resource
     private EruptBiProp eruptBiProp;
 
+    @Resource
+    private ScriptService scriptService;
+
     @GetMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     public BiVo getBuilder(@PathVariable("code") String code, HttpServletResponse response) {
@@ -89,7 +86,7 @@ public class EruptBiController {
             biChartVo.setGrid(chart.getGrid());
             biChartVo.setHeight(chart.getHeight());
             biChartVo.setName(chart.getName());
-            biChartVo.setType(chart.getType());
+            biChartVo.setType(chart.getType().name());
             biChartVo.setSort((chart.getSort() == null) ? ++maxSort : chart.getSort());
             biChartVos.add(biChartVo);
             biVo.setCharts(biChartVos);
@@ -105,7 +102,7 @@ public class EruptBiController {
             dimension.setSort((dimension.getSort() == null) ? ++maxSort : dimension.getSort());
             if (StringUtils.isNotBlank(dimension.getDefaultValue())) {
                 try {
-                    biDimensionVo.setDefaultValue(biService.evalScript(dimension.getDefaultValue()));
+                    biDimensionVo.setDefaultValue(scriptService.eval(dimension.getDefaultValue()));
                 } catch (ScriptException e) {
                     log.error("{}.{} -> {}", bi.getName(), dimension.getCode(), e.getMessage());
                     throw new RuntimeException(e);
@@ -218,7 +215,27 @@ public class EruptBiController {
         BiChart chart = entityManager.find(BiChart.class, chartId);
         biService.verifyBiMenuPermissions(chart.getBi(), code);
         this.validateQuery(chart.getBi(), query);
-        return biService.startQuery(chart.getName(), chart.getSqlStatement(), chart.getCacheTime(), chart.getClassHandler(), chart.getDataSource(), query);
+        return biService.chartQuery(chart, query);
+    }
+
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
+    @PostMapping("/{code}/export/chart/{id}")
+    public void exportBiChart(@PathVariable("id") Long chartId,
+                              @PathVariable("code") String code,
+                              @RequestBody(required = false) Map<String, Object> query,
+                              HttpServletRequest request,
+                              HttpServletResponse response) {
+        if (eruptProp.isCsrfInspect() && SecurityUtil.csrfInspect(request, response)) return;
+        BiChart chart = entityManager.find(BiChart.class, chartId);
+        Bi bi = chart.getBi();
+        Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
+        biService.verifyBiMenuPermissions(chart.getBi(), code);
+        this.validateQuery(bi, query);
+        List<Map<String, Object>> list = biService.startQuery(chart.getName(), chart.getSqlStatement(), chart.getCacheTime(), chart.getClassHandler(), chart.getDataSource(), query);
+        if (!list.isEmpty()) {
+            List<KV<String, String>> header = list.get(0).keySet().stream().map(it -> new KV<>(it, it)).collect(Collectors.toList());
+            biService.exportExcel(bi.getName(), query, header, list, chart.getClassHandler(), request, response);
+        }
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
@@ -234,55 +251,8 @@ public class EruptBiController {
         biService.verifyBiMenuPermissions(bi, code);
         Erupts.requireTrue(bi.getExport(), bi.getName() + "禁止导出！");
         BiData biData = biService.queryBiData(bi, 1, Integer.MAX_VALUE, null, query, true);
-        try (Workbook wb = new SXSSFWorkbook()) {
-            //基本信息
-            Sheet sheet = wb.createSheet(bi.getName());
-            sheet.createFreezePane(0, 1, 1, 1);
-            Row headRow = sheet.createRow(0);
-            CellStyle headStyle = ExcelUtil.beautifyExcelStyle(wb);
-            Font headFont = wb.createFont();
-            headFont.setColor(IndexedColors.WHITE.index);
-            headStyle.setFont(headFont);
-            headStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
-            headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            int order = 0;
-            for (int i = 0; i < biData.getColumns().size(); i++) {
-                BiColumnVo biColumn = biData.getColumns().get(i);
-                if (biColumn.getDisplay()) {
-                    Cell cell = headRow.createCell(order);
-                    cell.setCellStyle(headStyle);
-                    sheet.setColumnWidth(order, (biColumn.getName().length() + 10) * 256);
-                    cell.setCellValue(biColumn.getName());
-                    order++;
-                }
-            }
-            CellStyle style = ExcelUtil.beautifyExcelStyle(wb);
-            Font font = wb.createFont();
-            font.setColor(IndexedColors.BLACK1.index);
-            style.setFont(font);
-            for (int i = 0; i < biData.getList().size(); i++) {
-                Row row = sheet.createRow(i + 1);
-                Map<String, Object> map = biData.getList().get(i);
-                order = 0;
-                for (int j = 0; j < biData.getColumns().size(); j++) {
-                    if (biData.getColumns().get(j).getDisplay()) {
-                        Object value = map.get(biData.getColumns().get(j).getName());
-                        if (null != value) {
-                            Cell cell = row.createCell(order);
-                            cell.setCellStyle(style);
-                            cell.setCellValue(value.toString());
-                        }
-                        order++;
-                    }
-                }
-            }
-            if (null != bi.getClassHandler()) {
-                BiClassHandler biClassHandler = bi.getClassHandler();
-                EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
-                biHandler.exportHandler(biClassHandler.getParam(), query, wb);
-            }
-            wb.write(ExcelUtil.downLoadFile(request, response, bi.getName() + "_" + DateUtil.getSimpleFormatDate(new Date()) + EruptExcelService.XLSX_FORMAT));
-        }
+        List<KV<String, String>> header = biData.getColumns().stream().filter(BiColumnVo::getDisplay).map(it -> new KV<>(it.getName(), it.getName())).collect(Collectors.toList());
+        biService.exportExcel(bi.getName(), query, header, biData.getList(), bi.getClassHandler(), request, response);
     }
 
     //校验查询参数
