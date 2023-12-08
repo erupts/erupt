@@ -27,4 +27,6 @@ public class BiChartVo {
 
     private String chartOption;
 
+    private String remark;
+
 }

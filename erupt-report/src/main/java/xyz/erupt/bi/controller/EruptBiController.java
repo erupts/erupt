@@ -88,6 +88,7 @@ public class EruptBiController {
             biChartVo.setName(chart.getName());
             biChartVo.setType(chart.getType().name());
             biChartVo.setSort((chart.getSort() == null) ? ++maxSort : chart.getSort());
+            biChartVo.setRemark(chart.getRemark());
             biChartVos.add(biChartVo);
             biVo.setCharts(biChartVos);
         }

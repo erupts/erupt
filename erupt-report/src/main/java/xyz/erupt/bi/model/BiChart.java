@@ -76,6 +76,12 @@ public class BiChart extends MetaModelUpdateVo {
     private BiDataSource dataSource;
 
     @EruptField(
+            views = @View(title = "描述"),
+            edit = @Edit(title = "描述")
+    )
+    private String remark;
+
+    @EruptField(
             views = @View(title = "缓存时间", sortable = true, template = "value&&value+'s'"),
             edit = @Edit(title = "缓存时间（秒）")
     )
