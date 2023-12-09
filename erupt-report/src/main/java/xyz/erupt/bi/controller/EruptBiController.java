@@ -69,13 +69,8 @@ public class EruptBiController {
         }
         BiVo biVo = new BiVo();
         biVo.setPageType(Optional.ofNullable(bi.getPageType()).orElse(BiConst.PAGE_END));
-        if (StringUtils.isBlank(bi.getSqlStatement())) {
-            biVo.setTable(false);
-            biVo.setExport(false);
-        } else {
-            biVo.setTable(true);
-            biVo.setExport(bi.getExport());
-        }
+        biVo.setExport(bi.getExport());
+        biVo.setTable(StringUtils.isNotBlank(bi.getSqlStatement()));
         int maxSort = 9999;
         List<BiChartVo> biChartVos = new ArrayList<>();
         for (BiChart chart : bi.getBiCharts()) {
@@ -235,7 +230,7 @@ public class EruptBiController {
         List<Map<String, Object>> list = biService.startQuery(chart.getName(), chart.getSqlStatement(), chart.getCacheTime(), chart.getClassHandler(), chart.getDataSource(), query);
         if (!list.isEmpty()) {
             List<KV<String, String>> header = list.get(0).keySet().stream().map(it -> new KV<>(it, it)).collect(Collectors.toList());
-            biService.exportExcel(bi.getName(), query, header, list, chart.getClassHandler(), request, response);
+            biService.exportExcel(chart.getName() + "-" + bi.getName(), query, header, list, chart.getClassHandler(), request, response);
         }
     }
 
