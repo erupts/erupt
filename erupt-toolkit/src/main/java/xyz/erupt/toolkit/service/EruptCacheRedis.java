@@ -28,4 +28,10 @@ public class EruptCacheRedis<V> implements EruptCache<V> {
         return GsonFactory.getGson().fromJson(stringRedisTemplate.opsForValue().get(key), new TypeToken<V>() {
         }.getType());
     }
+
+    @Override
+    public void delete(String key) {
+        stringRedisTemplate.delete(key);
+    }
+
 }

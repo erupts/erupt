@@ -17,4 +17,6 @@ public interface EruptCache<V> {
         return Optional.ofNullable(this.get(key)).orElseGet(() -> this.put(key, supplier.get(), timeout));
     }
 
+    void delete(String key);
+
 }
