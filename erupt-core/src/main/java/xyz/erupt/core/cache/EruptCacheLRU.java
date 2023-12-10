@@ -59,6 +59,7 @@ public class EruptCacheLRU<V> extends LinkedHashMap<String, EruptCacheLRU.Expire
         return expireNode.value;
     }
 
+    @Override
     public void delete(String key) {
         try {
             lock.writeLock().lock();
