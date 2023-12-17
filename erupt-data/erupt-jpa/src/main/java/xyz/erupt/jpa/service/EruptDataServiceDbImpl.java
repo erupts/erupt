@@ -31,6 +31,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -123,6 +124,13 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 throw new EruptWebApiRuntimeException(e.getMessage());
             }
         } else {
+            Throwable throwable = e;
+            while (null != throwable) {
+                throwable = throwable.getCause();
+                if (throwable instanceof SQLException) {
+                    throw new EruptWebApiRuntimeException(throwable.getMessage());
+                }
+            }
             throw new EruptWebApiRuntimeException(e.getMessage());
         }
     }
