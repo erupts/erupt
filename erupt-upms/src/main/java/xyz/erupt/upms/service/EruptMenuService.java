@@ -3,6 +3,7 @@ package xyz.erupt.upms.service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.web.vo.EruptMenuVo;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -16,7 +17,6 @@ import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.util.UPMSUtil;
-import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
 import java.util.*;

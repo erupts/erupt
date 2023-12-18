@@ -1,8 +1,8 @@
 package xyz.erupt.upms.fun;
 
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.web.base.LoginModel;
 import xyz.erupt.core.util.EruptSpringUtil;
-import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -19,7 +19,7 @@ public interface LoginProxy {
     default EruptUser login(String account, String pwd) {
         LoginModel loginModel = EruptSpringUtil.getBean(EruptUserService.class).login(account, pwd);
         if (loginModel.isPass()) {
-            return loginModel.getEruptUser();
+            return (EruptUser) loginModel.getEruptUser();
         } else {
             throw new RuntimeException(loginModel.getReason());
         }

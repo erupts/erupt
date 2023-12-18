@@ -1,4 +1,4 @@
-package xyz.erupt.upms.vo;
+package xyz.erupt.web.vo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,4 +23,10 @@ public class EruptUserinfoVo {
     //是否需要重置密码
     private boolean resetPwd = false;
 
+    public EruptUserinfoVo() {
+    }
+
+    public EruptUserinfoVo(String nickname) {
+        this.nickname = nickname;
+    }
 }

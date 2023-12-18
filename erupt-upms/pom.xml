@@ -28,6 +28,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-web</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>${erupt.groupId}</groupId>
             <artifactId>erupt-jpa</artifactId>
             <version>${project.parent.version}</version>

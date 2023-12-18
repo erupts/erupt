@@ -1,8 +1,7 @@
-package xyz.erupt.upms.base;
+package xyz.erupt.web.base;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.erupt.upms.model.EruptUser;
 
 import java.time.LocalDateTime;
 
@@ -26,9 +25,9 @@ public class LoginModel {
 
     private LocalDateTime expire;
 
-    private transient EruptUser eruptUser;
+    private transient Object eruptUser;
 
-    public LoginModel(boolean pass, EruptUser eruptUser) {
+    public LoginModel(boolean pass, Object eruptUser) {
         this.pass = pass;
         this.setEruptUser(eruptUser);
     }

@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=xyz.erupt.web.EruptWebConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+xyz.erupt.web.prop.EruptAppProp,\
+xyz.erupt.web.controller.EruptWebController

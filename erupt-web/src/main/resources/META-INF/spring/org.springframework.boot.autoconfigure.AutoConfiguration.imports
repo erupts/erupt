@@ -1,1 +1,2 @@
-xyz.erupt.web.EruptWebConfig
+xyz.erupt.web.prop.EruptAppProp
+xyz.erupt.web.controller.EruptWebController

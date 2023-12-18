@@ -1,4 +1,4 @@
-package xyz.erupt.upms.vo;
+package xyz.erupt.web.vo;
 
 import lombok.Getter;
 import lombok.Setter;

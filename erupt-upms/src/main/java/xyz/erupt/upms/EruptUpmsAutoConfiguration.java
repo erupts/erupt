@@ -1,9 +1,9 @@
 package xyz.erupt.upms;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
@@ -57,4 +57,9 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
         return menus;
     }
 
+    @Bean
+    @ConditionalOnMissingBean(EruptUpmsWebConfigurer.class)
+    public EruptUpmsWebConfigurer upmsAuthConfigurer() {
+        return new EruptUpmsWebConfigurer();
+    }
 }
