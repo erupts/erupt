@@ -156,7 +156,11 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         try {
-            operationService.record(handler, ex);
+            if (HttpStatus.OK.value() == response.getStatus()) {
+                operationService.record(handler, ex);
+            } else {
+                operationService.record(handler, null == ex ? new RuntimeException(response.toString()) : ex);
+            }
         } catch (Exception e) {
             log.error("operation record error", e);
         } finally {
