@@ -70,7 +70,7 @@ public class EruptService {
         if (Layout.PagingType.FRONT == layout.pagingType() || Layout.PagingType.NONE == layout.pagingType()) {
             tableQuery.setPageSize(layout.pageSizes()[layout.pageSizes().length - 1]);
         }
-        this.drillProcess(eruptModel, (link, val) -> conditionStrings.add(String.format("%s = '%s'", link.linkErupt().getSimpleName() + EruptConst.DOT + link.joinColumn(), val)));
+        this.drillProcess(eruptModel, (link, val) -> conditionStrings.add(String.format(val instanceof String ? "%s = '%s'" : "%s = %s", link.linkErupt().getSimpleName() + EruptConst.DOT + link.joinColumn(), val)));
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
