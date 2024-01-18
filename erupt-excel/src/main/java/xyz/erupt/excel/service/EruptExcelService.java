@@ -276,7 +276,7 @@ public class EruptExcelService {
             if (edit.show() && !edit.readonly().add() && StringUtils.isNotBlank(edit.title())
                     && AnnotationProcess.getEditTypeMapping(edit.type()).excelOperator()) {
                 Cell cell = headRow.createCell(cellNum);
-                //256表格一个字节的宽度
+                //单字节宽度为256
                 sheet.setColumnWidth(cellNum, (edit.title().length() + 10) * 256);
                 DataValidationHelper dvHelper = sheet.getDataValidationHelper();
                 switch (edit.type()) {
