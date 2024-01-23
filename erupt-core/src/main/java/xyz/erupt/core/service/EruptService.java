@@ -21,6 +21,7 @@ import xyz.erupt.core.util.DataHandlerUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQuery;
@@ -63,7 +64,12 @@ public class EruptService {
                 if (dependTree.dependNode()) return new Page();
             } else {
                 EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
-                conditionStrings.add(String.format("%s = '%s'", dependTree.field() + EruptConst.DOT + treeErupt.getErupt().primaryKeyCol(), tableQuery.getLinkTreeVal()));
+                EruptFieldModel pk = treeErupt.getEruptFieldMap().get(treeErupt.getErupt().primaryKeyCol());
+                if (pk.getField().getType() == String.class) {
+                    conditionStrings.add(String.format("%s = '%s'", dependTree.field() + EruptConst.DOT + pk.getFieldName(), tableQuery.getLinkTreeVal()));
+                } else {
+                    conditionStrings.add(String.format("%s = %s", dependTree.field() + EruptConst.DOT + pk.getFieldName(), tableQuery.getLinkTreeVal()));
+                }
             }
         }
         Layout layout = eruptModel.getErupt().layout();
