@@ -10,6 +10,7 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.constant.ChartTypeEnum;
@@ -33,7 +34,8 @@ public class BiChart extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "编码", sortable = true, width = "100px")
+            views = @View(title = "编码", sortable = true, width = "100px"),
+            edit = @Edit(title = "编码", readonly = @Readonly(add = false), notNull = true)
     )
     private String code;
 

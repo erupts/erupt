@@ -24,7 +24,7 @@ public class BiDataProxy implements DataProxy<Bi> {
     private EruptDao eruptDao;
 
     @Override
-    public void beforeAdd(Bi bi) {
+    public void addBehavior(Bi bi) {
         bi.setCode(Erupts.generateCode());
     }
 

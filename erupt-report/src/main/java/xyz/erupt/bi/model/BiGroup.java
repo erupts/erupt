@@ -11,6 +11,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Tree;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
@@ -25,7 +26,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "e_bi_group", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
-@Erupt(name = "分组管理", tree = @Tree(pid = "parent.id"))
+@Erupt(name = "分组管理", tree = @Tree(pid = "parent.id"), dataProxy = BiGroup.class)
 @Getter
 @Setter
 @Component
@@ -35,7 +36,7 @@ public class BiGroup extends MetaModelUpdateVo implements DataProxy<BiGroup> {
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true),readonly = @Readonly(add = false))
     )
     private String code;
 
@@ -61,7 +62,8 @@ public class BiGroup extends MetaModelUpdateVo implements DataProxy<BiGroup> {
     private String remark;
 
     @Override
-    public void beforeAdd(BiGroup biGroup) {
+    public void addBehavior(BiGroup biGroup) {
         biGroup.setCode(Erupts.generateCode());
     }
+
 }

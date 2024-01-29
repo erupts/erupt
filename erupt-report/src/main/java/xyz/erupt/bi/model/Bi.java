@@ -12,10 +12,7 @@ import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.handler.BiPublishMenu;
@@ -59,7 +56,7 @@ public class Bi extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", width = "100px"),
-            edit = @Edit(title = "编码", search = @Search, show = false)
+            edit = @Edit(title = "编码", readonly = @Readonly(add = false), search = @Search, notNull = true)
     )
     private String code;
 
@@ -100,7 +97,7 @@ public class Bi extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "自刷周期", width = "100px", sortable = true, template = "value&&value+'s'"),
-            edit = @Edit(title = "自动刷新周期（秒）")
+            edit = @Edit(title = "自动刷新周期（秒）",desc = "数据自动更新时间")
     )
     private Integer refreshTime;
 

@@ -20,13 +20,17 @@ public class BiChartDataProxy implements DataProxy<BiChart> {
     private EruptDao eruptDao;
 
     @Override
+    public void addBehavior(BiChart biChart) {
+        biChart.setCode(RandomStringUtils.randomAlphabetic(8));
+    }
+
+    @Override
     public void beforeAdd(BiChart biChart) {
         if (null == biChart.getSort()) {
             Integer obj = (Integer) eruptDao.getEntityManager().createQuery(
                     "select max(sort) from " + BiChart.class.getSimpleName() + " where bi.id = " + biChart.getBi().getId()).getSingleResult();
             biChart.setSort((obj == null) ? 10 : obj + 10);
         }
-        biChart.setCode(RandomStringUtils.randomAlphabetic(8));
     }
 
 
