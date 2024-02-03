@@ -31,7 +31,7 @@ public class BiDataProxy implements DataProxy<Bi> {
     @Override
     @Transactional
     public void beforeUpdate(Bi bi) {
-        Bi bbi = eruptDao.getEntityManager().find(Bi.class, bi.getId());
+        Bi bbi = eruptDao.findById(Bi.class, bi.getId());
         // 在一对多的映射情况下，多的一方如果存有一的一方对象，那么这个对象必须赋值否则会出现多的一方数据无法保存的问题
         if (null != bi.getBiDimension()) {
             for (BiDimension dimension : bi.getBiDimension()) {
