@@ -36,7 +36,6 @@ public class BiChartDataProxy implements DataProxy<BiChart> {
 
     @Override
     public void beforeUpdate(BiChart biChart) {
-        eruptDao.getEntityManager().clear();
         BiChart hbc = eruptDao.getEntityManager().find(BiChart.class, biChart.getId());
         if (!biChart.getSqlStatement().equals(hbc.getSqlStatement())) {
             BiHistory history = new BiHistory();
