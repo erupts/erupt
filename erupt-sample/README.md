@@ -1,6 +1,6 @@
 ## 源码编译方式演示
 
-    首先：建议使用jar方式依赖部署，可降低使用成本
+> 首先：建议使用jar方式依赖部署，可降低使用成本
 
 运行：执行`src/main/java/EruptSampleApplication.java` 文件中的main方法即可
 
