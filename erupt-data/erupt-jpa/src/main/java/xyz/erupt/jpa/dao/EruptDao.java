@@ -45,6 +45,11 @@ public class EruptDao {
 
     private static final String WHERE = " where ";
 
+    public <T> T findById(Class<T> clazz, Object id) {
+        entityManager.clear();
+        return entityManager.find(clazz, id);
+    }
+
     //修改
     public <T> T merge(T t) {
         return entityManager.merge(t);
