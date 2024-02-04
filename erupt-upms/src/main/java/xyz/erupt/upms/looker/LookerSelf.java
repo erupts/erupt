@@ -10,7 +10,6 @@ import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -25,7 +24,6 @@ public class LookerSelf extends HyperModelCreatorVo implements DataProxy<Void> {
     static class Comp implements DataProxy<Void> {
 
         @Resource
-        @Transient
         private EruptUserService eruptUserService;
 
         @Override

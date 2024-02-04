@@ -350,7 +350,11 @@ public class EruptUtil {
                             f.set(target, s);
                         }
                     } else {
-                        f.set(target, f.get(data));
+                        if (eruptField.edit().type() == EditType.INPUT && eruptField.edit().inputType().autoTrim() && null != f.get(data)) {
+                            f.set(target, f.get(data).toString().trim());
+                        } else {
+                            f.set(target, f.get(data));
+                        }
                     }
                 } catch (IllegalAccessException e) {
                     log.error("erupt data copy error", e);

@@ -76,7 +76,15 @@ public class EruptJob extends MetaModelUpdateVo {
                     trueText = "启用", falseText = "禁用"
             ), notNull = true, search = @Search)
     )
-    private Boolean status;
+    private Boolean status = true;
+
+    @EruptField(
+            views = @View(title = "记录日志"),
+            edit = @Edit(title = "记录日志", boolType = @BoolType(
+                    trueText = "是", falseText = "否"
+            ), notNull = true, search = @Search)
+    )
+    private Boolean recordLog = true;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(

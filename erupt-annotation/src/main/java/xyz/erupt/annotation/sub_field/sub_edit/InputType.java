@@ -10,17 +10,21 @@ import java.beans.Transient;
  */
 public @interface InputType {
 
-    @Comment("最大输入长度")
+    @Comment("Maximum input length")
     int length() default 255;
 
     String type() default "text";
 
-    @Comment("是否整行显示")
+    @Comment("Display the whole line")
     boolean fullSpan() default false;
 
     @Transient
-    @Comment("对提交内容进行正则校验")
+    @Comment("Regex the input value")
     String regex() default "";
+
+    @Transient
+    @Comment("Automatically trim input value")
+    boolean autoTrim() default true;
 
     VL[] prefix() default {};
 

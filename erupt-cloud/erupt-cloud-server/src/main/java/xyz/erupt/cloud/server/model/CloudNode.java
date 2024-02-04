@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.TagsFetchHandler;
@@ -134,7 +135,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "节点配置"),
-            edit = @Edit(title = "节点配置", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
+            edit = @Edit(title = "节点配置", desc = "配置后可在子节点中读取", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
     )
     private String config;
 
@@ -143,8 +144,7 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
     )
     private String accessToken;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "描述", type = ViewType.HTML),
             edit = @Edit(title = "描述", type = EditType.TEXTAREA)

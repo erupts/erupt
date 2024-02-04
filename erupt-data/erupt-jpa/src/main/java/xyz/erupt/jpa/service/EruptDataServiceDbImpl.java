@@ -31,6 +31,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -114,17 +115,19 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
 
     //优化异常提示类
     private void handlerException(Exception e, EruptModel eruptModel) {
-        if (e instanceof DataIntegrityViolationException) {
-            if (e.getMessage().contains("ConstraintViolationException")) {
-                throw new EruptWebApiRuntimeException(gcRepeatHint(eruptModel));
-            } else if (e.getMessage().contains("DataException")) {
-                throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.data.limit_length"));
-            } else {
-                throw new EruptWebApiRuntimeException(e.getMessage());
+        Throwable throwable = e;
+        while (null != throwable) {
+            throwable = throwable.getCause();
+            if (throwable instanceof SQLException) {
+                if (throwable.getMessage().contains("Data too long")) {
+                    throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.data.limit_length"));
+                } else if (throwable.getMessage().contains("Duplicate entry")) {
+                    throw new EruptWebApiRuntimeException(gcRepeatHint(eruptModel));
+                }
+                throw new EruptWebApiRuntimeException(throwable.getMessage());
             }
-        } else {
-            throw new EruptWebApiRuntimeException(e.getMessage());
         }
+        throw new EruptWebApiRuntimeException(e.getMessage());
     }
 
     @Transactional

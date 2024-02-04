@@ -138,6 +138,11 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     }
 
     @Override
+    public void beforeDelete(EruptMenu eruptMenu) {
+        eruptDao.getJdbcTemplate().update("delete from e_upms_role_menu where menu_id = " + eruptMenu.getId());
+    }
+
+    @Override
     public void afterDelete(EruptMenu eruptMenu) {
         this.flushCache();
     }

@@ -30,6 +30,8 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.excel.util.ExcelUtil;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -276,7 +278,7 @@ public class EruptExcelService {
             if (edit.show() && !edit.readonly().add() && StringUtils.isNotBlank(edit.title())
                     && AnnotationProcess.getEditTypeMapping(edit.type()).excelOperator()) {
                 Cell cell = headRow.createCell(cellNum);
-                //256表格一个字节的宽度
+                //单字节宽度为256
                 sheet.setColumnWidth(cellNum, (edit.title().length() + 10) * 256);
                 DataValidationHelper dvHelper = sheet.getDataValidationHelper();
                 switch (edit.type()) {
@@ -304,7 +306,9 @@ public class EruptExcelService {
                                         Integer.toString(edit.sliderType().min()), Integer.toString(edit.sliderType().max()))));
                         break;
                     case DATE:
-                        if (fieldModel.getFieldReturnName().equals(Date.class.getSimpleName())) {
+                        if (fieldModel.getFieldReturnName().equals(Date.class.getSimpleName())
+                                || fieldModel.getFieldReturnName().equals(LocalDate.class.getSimpleName())
+                                || fieldModel.getFieldReturnName().equals(LocalDateTime.class.getSimpleName())) {
                             sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间！"
                                     , dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN
                                             , "1900-01-01", "2999-12-31", "yyyy-MM-dd")));

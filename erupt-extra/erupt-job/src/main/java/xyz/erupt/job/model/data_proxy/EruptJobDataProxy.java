@@ -26,11 +26,6 @@ public class EruptJobDataProxy implements DataProxy<EruptJob>, OperationHandler<
     private EruptJobService eruptJobService;
 
     @Override
-    public void addBehavior(EruptJob eruptJob) {
-        eruptJob.setStatus(true);
-    }
-
-    @Override
     public void beforeAdd(EruptJob eruptJob) {
         if (null == eruptJob.getCode()) {
             eruptJob.setCode(Erupts.generateCode());

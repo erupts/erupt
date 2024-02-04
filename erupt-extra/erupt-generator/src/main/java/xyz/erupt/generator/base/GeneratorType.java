@@ -15,6 +15,7 @@ public enum GeneratorType {
     COLOR(EditType.INPUT, "颜色选择", String.class.getSimpleName(), "inputType = @InputType(type = \"color\")"),
     NUMBER(EditType.NUMBER, "数值框", Integer.class.getSimpleName(), "numberType = @NumberType"),
     SLIDER(EditType.SLIDER, "数字滑块", Integer.class.getSimpleName(), "sliderType = @SliderType(max = 999)"),
+    RATE(EditType.RATE, "评分", Short.class.getSimpleName(), "rateType = @RateType(count = 10)"),
     DATE(EditType.DATE, "日期", Date.class.getSimpleName(), "dateType = @DateType"),
     DATE_TIME(EditType.DATE, "日期时间", Date.class.getSimpleName(), "dateType = @DateType(type = DateType.Type.DATE_TIME)"),
     TIME(EditType.DATE, "时间", String.class.getSimpleName(), "dateType = @DateType(type = DateType.Type.TIME)"),

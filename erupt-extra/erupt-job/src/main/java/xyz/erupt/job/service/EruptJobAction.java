@@ -67,7 +67,9 @@ public class EruptJobAction implements Job {
             }
             eruptJobLog.setHandlerParam(eruptJob.getHandlerParam());
             eruptJobLog.setEndTime(new Date());
-            EruptSpringUtil.getBean(EruptJobService.class).saveJobLog(eruptJobLog);
+            if (null == eruptJob.getRecordLog() || eruptJob.getRecordLog()) {
+                EruptSpringUtil.getBean(EruptJobService.class).saveJobLog(eruptJobLog);
+            }
         }
     }
 }
