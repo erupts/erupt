@@ -38,16 +38,16 @@ public enum ChartTypeEnum {
     Bubble("气泡图", "4个数据列：x / y / series / size"),
 
     @ChartColumn({A.X, A.Y})
-    Pie("饼图", Number.desc),
+    Pie("饼图", "2 个数据列：名称 / 值"),
     @ChartColumn({A.X, A.Y})
-    Ring("环形图", Number.desc),
+    Ring("环形图", Pie.desc),
     @ChartColumn({A.X, A.Y})
-    Rose("玫瑰图", Line.desc),
+    Rose("玫瑰图", Pie.desc),
     @ChartColumn({A.X, A.Y, A.Z})
     RadialBar("玉珏图", Line.desc),
 
     @ChartColumn({A.X, A.Y})
-    Funnel("漏斗图", Number.desc),
+    Funnel("漏斗图", Pie.desc),
     @ChartColumn({A.X, A.Y})
     Waterfall("瀑布图", "2 个数据列：名称 / 增加或减少的值"),
     @ChartColumn({A.X, A.Y, A.Z})
