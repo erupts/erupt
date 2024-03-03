@@ -27,7 +27,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "e_upms_org")
 @Erupt(
-        name = "组织维护",
+        name = "组织管理",
         tree = @Tree(pid = "parentOrg.id", expandLevel = 5),
         orderBy = "EruptOrg.sort asc"
 )
