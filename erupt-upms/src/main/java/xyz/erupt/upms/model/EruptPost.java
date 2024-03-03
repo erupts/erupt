@@ -21,7 +21,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "e_upms_post")
-@Erupt(name = "岗位维护", orderBy = "weight desc")
+@Erupt(name = "岗位管理", orderBy = "weight desc")
 @EruptI18n
 @Getter
 @Setter
