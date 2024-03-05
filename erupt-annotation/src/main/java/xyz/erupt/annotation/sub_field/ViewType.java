@@ -9,8 +9,10 @@ import xyz.erupt.annotation.config.Comment;
 public enum ViewType {
     @Comment("根据返回值等特征自动判断")
     AUTO,
-    @Comment("普通文字")
+    @Comment("普通文文本")
     TEXT,
+    @Comment("安全文本渲染")
+    SAFE_TEXT,
     @Comment("图片")
     IMAGE,
     @Comment("图片BASE64")
