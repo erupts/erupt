@@ -3,7 +3,6 @@ package xyz.erupt.core.proxy.erupt_field;
 import org.aopalliance.intercept.MethodInvocation;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
@@ -12,6 +11,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.ProxyContext;
 import xyz.erupt.core.util.EruptUtil;
+import xyz.erupt.core.util.TypeUtil;
 
 /**
  * @author YuePeng
@@ -59,7 +59,7 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                         return ViewType.BOOLEAN;
                     } else if (EruptUtil.isDateField(returnType)) {
                         return ViewType.DATE;
-                    } else if (JavaType.NUMBER.equals(returnType)) {
+                    } else if (TypeUtil.isNumberType(returnType)) {
                         return ViewType.NUMBER;
                     }
                     return ViewType.TEXT;
