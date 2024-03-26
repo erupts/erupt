@@ -54,6 +54,7 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
         menus.put(Authorization.PUSH, "远程推送");
         menus.put(Authorization.LOCK, "锁定");
         menus.put(Authorization.UNLOCK, "解锁");
+        menus.put(Authorization.RELOAD, "资源重载");
         AtomicInteger sort = new AtomicInteger();
         List<MetaMenu> metaMenus = new ArrayList<>();
         metaMenus.add(MetaMenu.createSimpleMenu(menuKey, "接口配置", MagicApiTpl.MAGIC_API_PERMISSION, null, 50, EruptTplService.TPL));
