@@ -82,14 +82,11 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         return new MagicUser(metaUserinfo.getAccount(), metaUserinfo.getUsername(), token);
     }
 
-
-
     /**
      * 配置UI鉴权
      */
     @Override
     public boolean allowVisit(MagicUser magicUser, MagicHttpServletRequest request, Authorization authorization) {
-        if (Authorization.RELOAD == authorization) return true;
         if (eruptUserService.getCurrentUid() == null) {
             throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
         } else if (null == eruptUserService.getEruptMenuByValue(EruptMagicApiAutoConfiguration.MAGIC_API_MENU_PREFIX + authorization.name())) {
@@ -103,7 +100,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         if (null == eruptUserService.getCurrentUid()) throw new EruptWebApiRuntimeException(LOGIN_EXPIRE);
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         if (!metaUserinfo.isSuperAdmin()) {
-            if (group.getOptions().size() > 0) {
+            if (!group.getOptions().isEmpty()) {
                 for (BaseDefinition option : group.getOptions()) {
                     if (null != option.getValue() && StringUtils.isNotBlank(option.getValue().toString())) {
                         if (Options.ROLE.getValue().equals(option.getName())) {
