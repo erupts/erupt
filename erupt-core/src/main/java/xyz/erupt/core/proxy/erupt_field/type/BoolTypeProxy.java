@@ -14,11 +14,10 @@ public class BoolTypeProxy extends AnnotationProxy<BoolType, Edit> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
-        switch (invocation.getMethod().getName()) {
-            case "trueText":
-                return I18nTranslate.$translate(this.rawAnnotation.trueText());
-            case "falseText":
-                return I18nTranslate.$translate(this.rawAnnotation.falseText());
+        if (super.matchMethod(invocation, BoolType::trueText)) {
+            return I18nTranslate.$translate(this.rawAnnotation.trueText());
+        } else if (super.matchMethod(invocation, BoolType::falseText)) {
+            return I18nTranslate.$translate(this.rawAnnotation.falseText());
         }
         return this.invoke(invocation);
     }
