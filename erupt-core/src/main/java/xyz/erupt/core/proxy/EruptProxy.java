@@ -23,38 +23,37 @@ public class EruptProxy extends AnnotationProxy<Erupt, Void> {
     @Override
     @SneakyThrows
     protected Object invocation(MethodInvocation invocation) {
-        switch (invocation.getMethod().getName()) {
-            case "filter":
-                Filter[] filters = this.rawAnnotation.filter();
-                Filter[] proxyFilters = new Filter[filters.length];
-                for (int i = 0; i < filters.length; i++) {
-                    proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter ->
-                            new FilterProxy<Erupt>().newProxy(filter, this)
-                    );
+        if (super.matchMethod(invocation, Erupt::filter)) {
+            Filter[] filters = this.rawAnnotation.filter();
+            Filter[] proxyFilters = new Filter[filters.length];
+            for (int i = 0; i < filters.length; i++) {
+                proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter ->
+                        new FilterProxy<Erupt>().newProxy(filter, this)
+                );
+            }
+            return proxyFilters;
+        } else if (super.matchMethod(invocation, Erupt::rowOperation)) {
+            RowOperation[] rowOperations = this.rawAnnotation.rowOperation();
+            List<RowOperation> proxyOperations = new ArrayList<>();
+            for (RowOperation rowOperation : rowOperations) {
+                if (ExprInvoke.getExpr(rowOperation.show())) {
+                    proxyOperations.add(AnnotationProxyPool.getOrPut(rowOperation, it ->
+                            new RowOperationProxy().newProxy(it, this)
+                    ));
                 }
-                return proxyFilters;
-            case "rowOperation":
-                RowOperation[] rowOperations = this.rawAnnotation.rowOperation();
-                List<RowOperation> proxyOperations = new ArrayList<>();
-                for (RowOperation rowOperation : rowOperations) {
-                    if (ExprInvoke.getExpr(rowOperation.show())) {
-                        proxyOperations.add(AnnotationProxyPool.getOrPut(rowOperation, it ->
-                                new RowOperationProxy().newProxy(it, this)
-                        ));
-                    }
+            }
+            return proxyOperations.toArray(new RowOperation[0]);
+        } else if (super.matchMethod(invocation, Erupt::drills)) {
+            Drill[] drills = this.rawAnnotation.drills();
+            List<Drill> proxyDrills = new ArrayList<>();
+            for (Drill drill : drills) {
+                if (ExprInvoke.getExpr(drill.show())) {
+                    proxyDrills.add(AnnotationProxyPool.getOrPut(drill, it ->
+                            new DrillProxy().newProxy(it, this)
+                    ));
                 }
-                return proxyOperations.toArray(new RowOperation[0]);
-            case "drills":
-                Drill[] drills = this.rawAnnotation.drills();
-                List<Drill> proxyDrills = new ArrayList<>();
-                for (Drill drill : drills) {
-                    if (ExprInvoke.getExpr(drill.show())) {
-                        proxyDrills.add(AnnotationProxyPool.getOrPut(drill, it ->
-                                new DrillProxy().newProxy(it, this)
-                        ));
-                    }
-                }
-                return proxyDrills.toArray(new Drill[0]);
+            }
+            return proxyDrills.toArray(new Drill[0]);
         }
         return this.invoke(invocation);
     }

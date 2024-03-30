@@ -15,16 +15,14 @@ public class RowOperationProxy extends AnnotationProxy<RowOperation, Erupt> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
-        switch (invocation.getMethod().getName()) {
-            case "code":
-                if (AnnotationConst.EMPTY_STR.equals(this.rawAnnotation.code())) {
-                    return Integer.toString(this.rawAnnotation.title().hashCode());
-                }
-                break;
-            case "tip":
-                return ProxyContext.translate(this.rawAnnotation.tip());
-            case "title":
-                return ProxyContext.translate(this.rawAnnotation.title());
+        if (super.matchMethod(invocation, RowOperation::code)) {
+            if (AnnotationConst.EMPTY_STR.equals(this.rawAnnotation.code())) {
+                return Integer.toString(this.rawAnnotation.title().hashCode());
+            }
+        } else if (super.matchMethod(invocation, RowOperation::tip)) {
+            return ProxyContext.translate(this.rawAnnotation.tip());
+        } else if (super.matchMethod(invocation, RowOperation::title)) {
+            return ProxyContext.translate(this.rawAnnotation.title());
         }
         return this.invoke(invocation);
     }

@@ -1,6 +1,5 @@
 package xyz.erupt.annotation.sub_erupt;
 
-import xyz.erupt.annotation.config.AutoFill;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.OperationHandler;
@@ -15,8 +14,6 @@ import java.beans.Transient;
  */
 public @interface RowOperation {
 
-    @Deprecated
-    @AutoFill("T(Integer).toString(#item.title().hashCode())")
     String code() default "";
 
     String title();

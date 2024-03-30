@@ -32,27 +32,22 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
     @Override
     @SneakyThrows
     protected Object invocation(MethodInvocation invocation) {
-        switch (invocation.getMethod().getName()) {
-            case "views":
-                View[] views = this.rawAnnotation.views();
-                List<View> proxyViews = new ArrayList<>();
-                for (View view : views) {
-                    if (ExprInvoke.getExpr(view.ifRender())) {
-                        proxyViews.add(AnnotationProxyPool.getOrPut(view, annotation ->
-                                new ViewProxy().newProxy(annotation, this)
-                        ));
-                    }
+        if (super.matchMethod(invocation, EruptField::views)) {
+            View[] views = this.rawAnnotation.views();
+            List<View> proxyViews = new ArrayList<>();
+            for (View view : views) {
+                if (ExprInvoke.getExpr(view.ifRender())) {
+                    proxyViews.add(AnnotationProxyPool.getOrPut(view, annotation -> new ViewProxy().newProxy(annotation, this)));
                 }
-                return proxyViews.toArray(new View[0]);
-            case "edit":
-                Edit edit = this.rawAnnotation.edit();
-                if (ExprInvoke.getExpr(edit.ifRender())) {
-                    return AnnotationProxyPool.getOrPut(edit, annotation ->
-                            new EditProxy().newProxy(annotation, this)
-                    );
-                } else {
-                    return tplEruptField.edit();
-                }
+            }
+            return proxyViews.toArray(new View[0]);
+        } else if (super.matchMethod(invocation, EruptField::edit)) {
+            Edit edit = this.rawAnnotation.edit();
+            if (ExprInvoke.getExpr(edit.ifRender())) {
+                return AnnotationProxyPool.getOrPut(edit, annotation -> new EditProxy().newProxy(annotation, this));
+            } else {
+                return tplEruptField.edit();
+            }
         }
         return this.invoke(invocation);
     }
