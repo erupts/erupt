@@ -53,7 +53,7 @@ public class EruptJobAutoConfiguration implements EruptModule {
     @SneakyThrows
     public void run() {
         if (eruptJobProp.isEnable()) {
-            for (EruptJob job : eruptDao.queryEntityList(EruptJob.class, "status = true", null)) {
+            for (EruptJob job : eruptDao.lambdaQuery(EruptJob.class).eq(EruptJob::getStatus, true).list()) {
                 eruptJobService.modifyJob(job);
             }
         } else {
