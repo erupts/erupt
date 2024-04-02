@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.MenuTypeEnum;
+import xyz.erupt.core.lambda.LambdaReflect;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.prop.EruptProp;
@@ -99,8 +100,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
         }
         new ProjectUtil().projectStartLoaded("erupt-upms-user", first -> {
             if (first) {
-                //用户
-                if (eruptDao.queryEntityList(EruptUser.class, "isAdmin = true").size() <= 0) {
+                if (eruptDao.lambdaQuery(EruptUser.class).eq(EruptUser::getIsAdmin, true).list().isEmpty()) {
                     EruptUser eruptUser = new EruptUser();
                     eruptUser.setIsAdmin(true);
                     eruptUser.setIsMd5(true);
@@ -109,7 +109,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     eruptUser.setAccount(DEFAULT_ACCOUNT);
                     eruptUser.setPassword(MD5Util.digest(DEFAULT_ACCOUNT));
                     eruptUser.setName(DEFAULT_ACCOUNT);
-                    eruptDao.persistIfNotExist(EruptUser.class, eruptUser, "account", eruptUser.getAccount());
+                    eruptDao.persistIfNotExist(EruptUser.class, eruptUser, LambdaReflect.field(EruptUser::getAccount), eruptUser.getAccount());
                 }
             }
         });

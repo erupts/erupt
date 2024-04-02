@@ -11,6 +11,10 @@ public class LambdaReflect {
 
     private static final Map<SFunction<?, ?>, LambdaInfo> S_FUNCTION_CACHE = new HashMap<>();
 
+    public static <T, R> String field(SFunction<T, R> func) {
+        return info(func).getField();
+    }
+
     public static <T, R> LambdaInfo info(SFunction<T, R> func) {
         try {
             if (S_FUNCTION_CACHE.containsKey(func)) {
@@ -36,8 +40,10 @@ public class LambdaReflect {
             return new LambdaInfo(clazz, methodName, null);
         } else {
             String field = methodName;
-            if (methodName.startsWith(GET) && methodName.length() != GET.length()) field = methodName.substring(GET.length());
-            if (methodName.startsWith(IS) && methodName.length() != IS.length()) field = methodName.substring(IS.length());
+            if (methodName.startsWith(GET) && methodName.length() != GET.length())
+                field = methodName.substring(GET.length());
+            if (methodName.startsWith(IS) && methodName.length() != IS.length())
+                field = methodName.substring(IS.length());
             return new LambdaInfo(clazz, methodName, field.substring(0, 1).toLowerCase() + field.substring(1));
         }
     }
