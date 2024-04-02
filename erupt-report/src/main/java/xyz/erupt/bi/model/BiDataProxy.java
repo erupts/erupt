@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.lambda.LambdaReflect;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 
@@ -55,7 +56,7 @@ public class BiDataProxy implements DataProxy<Bi> {
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
         for (Map<String, Object> map : list) {
-            map.put("view", "#/fill/bi/" + map.get("code"));
+            map.put(LambdaReflect.field(Bi::getView), "#/fill/bi/" + map.get("code"));
         }
     }
 }
