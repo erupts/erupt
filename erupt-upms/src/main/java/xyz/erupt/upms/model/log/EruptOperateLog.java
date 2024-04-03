@@ -17,8 +17,8 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.core.lambda.LambdaReflect;
 import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.linq.lambda.LambdaReflect;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

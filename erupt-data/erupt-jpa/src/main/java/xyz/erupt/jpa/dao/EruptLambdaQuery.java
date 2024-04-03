@@ -3,10 +3,10 @@ package xyz.erupt.jpa.dao;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.RandomStringUtils;
-import xyz.erupt.core.lambda.LambdaInfo;
-import xyz.erupt.core.lambda.LambdaReflect;
-import xyz.erupt.core.lambda.SFunction;
 import xyz.erupt.jpa.constant.SqlLang;
+import xyz.erupt.linq.lambda.LambdaInfo;
+import xyz.erupt.linq.lambda.LambdaReflect;
+import xyz.erupt.linq.lambda.SFunction;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
