@@ -52,6 +52,11 @@
             <artifactId>jansi</artifactId>
             <version>2.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>${erupt.groupId}</groupId>
+            <artifactId>linq.j</artifactId>
+            <version>0.0.3</version>
+        </dependency>
     </dependencies>
 
     <build>
