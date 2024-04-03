@@ -4,8 +4,8 @@ import lombok.SneakyThrows;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.framework.ProxyFactory;
-import xyz.erupt.core.lambda.LambdaReflect;
-import xyz.erupt.core.lambda.SFunction;
+import xyz.erupt.linq.lambda.LambdaReflect;
+import xyz.erupt.linq.lambda.SFunction;
 
 import java.lang.annotation.Annotation;
 
