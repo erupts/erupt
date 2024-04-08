@@ -180,8 +180,8 @@ public class BiService {
         }
     }
 
-    public List<Map<String, Object>> startQuery(String key, String express, Integer timeout, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
-        return this.startQuery(key, express, timeout, classHandler, biDataSource, query, new NamedRowMapper());
+    public List<Map<String, Object>> startQuery(String key, String express, Integer cacheTime, BiClassHandler classHandler, BiDataSource biDataSource, Map<String, Object> query) {
+        return this.startQuery(key, express, cacheTime, classHandler, biDataSource, query, new NamedRowMapper());
     }
 
     @SneakyThrows

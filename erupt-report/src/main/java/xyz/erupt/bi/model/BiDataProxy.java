@@ -4,9 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.context.MetaContext;
-import xyz.erupt.core.lambda.LambdaReflect;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaReflect;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
