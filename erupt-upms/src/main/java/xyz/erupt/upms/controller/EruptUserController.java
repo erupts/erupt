@@ -18,6 +18,7 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.LoginProxy;
+import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -132,6 +134,9 @@ public class EruptUserController {
         EruptUserinfoVo userinfoVo = new EruptUserinfoVo();
         userinfoVo.setNickname(eruptUser.getName());
         userinfoVo.setResetPwd(null == eruptUser.getResetPwdTime());
+        Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> userinfoVo.setOrg(it.getCode()));
+        Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> userinfoVo.setPost(it.getCode()));
+        Optional.ofNullable(eruptUser.getRoles()).ifPresent(it -> userinfoVo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));
         Optional.ofNullable(eruptUser.getEruptMenu()).ifPresent(it -> {
             userinfoVo.setIndexMenuType(it.getType());
             userinfoVo.setIndexMenuValue(it.getValue());
