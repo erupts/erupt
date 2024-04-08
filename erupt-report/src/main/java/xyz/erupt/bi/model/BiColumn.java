@@ -104,18 +104,4 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
         this.beforeAdd(biColumn);
     }
 
-
-    //    @EruptField(
-//            views = @View(title = "下钻", sortable = true),
-//            edit = @Edit(title = "下钻", notNull = true, type = EditType.CODE_EDITOR,
-//                    codeEditType = @CodeEditorType(language = "sql"))
-//    )
-//    private String drill;
-
-//    @EruptField(
-//            views = @View(title = "固定列", sortable = true),
-//            edit = @Edit(title = "固定列", notNull = true)
-//    )
-//    private Boolean fixed = false;
-
 }

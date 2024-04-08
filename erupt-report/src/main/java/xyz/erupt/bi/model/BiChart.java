@@ -15,6 +15,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.constant.ChartTypeEnum;
 import xyz.erupt.bi.handler.ChartType;
+import xyz.erupt.bi.model.dataproxy.BiChartDataProxy;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.*;
@@ -58,18 +59,6 @@ public class BiChart extends MetaModelUpdateVo {
     )
     private Integer height = 340;
 
-    @EruptField(
-            views = @View(title = "显示顺序", sortable = true),
-            edit = @Edit(title = "显示顺序")
-    )
-    private Integer sort;
-
-    @ManyToOne
-    @EruptField(
-            edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
-    )
-    private BiClassHandler classHandler;
-
     @ManyToOne
     @EruptField(
             views = @View(title = "数据源", column = "name"),
@@ -77,17 +66,29 @@ public class BiChart extends MetaModelUpdateVo {
     )
     private BiDataSource dataSource;
 
+    @ManyToOne
     @EruptField(
-            views = @View(title = "描述"),
-            edit = @Edit(title = "描述")
+            edit = @Edit(title = "处理类", type = EditType.REFERENCE_TABLE)
     )
-    private String remark;
+    private BiClassHandler classHandler;
+
+    @EruptField(
+            views = @View(title = "显示顺序", sortable = true),
+            edit = @Edit(title = "显示顺序")
+    )
+    private Integer sort;
 
     @EruptField(
             views = @View(title = "缓存时间", sortable = true, template = "value&&value+'s'"),
             edit = @Edit(title = "缓存时间（秒）")
     )
     private Integer cacheTime = 1;
+
+    @EruptField(
+            views = @View(title = "描述"),
+            edit = @Edit(title = "描述", inputType = @InputType(fullSpan = true))
+    )
+    private String remark;
 
 
     @Enumerated(EnumType.STRING)

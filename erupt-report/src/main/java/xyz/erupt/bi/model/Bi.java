@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.handler.BiPublishMenu;
+import xyz.erupt.bi.model.dataproxy.BiDataProxy;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.*;
@@ -32,11 +33,7 @@ import java.util.Set;
                 @RowOperation(
                         title = "发布", mode = RowOperation.Mode.SINGLE, icon = "fa fa-send",
                         eruptClass = BiReleaseModal.class, operationHandler = BiPublishMenu.class
-                ),
-//                @RowOperation(
-//                        tip = "拷贝公开链接", title = "复制链接", mode = RowOperation.Mode.SINGLE, icon = "fa fa-link",
-//                        operationHandler = CopyLinkHandler.class
-//                ),
+                )
         },
         orderBy = "createTime desc",
         linkTree = @LinkTree(field = "biGroup"),
@@ -90,6 +87,16 @@ public class Bi extends MetaModelUpdateVo {
     private BiClassHandler classHandler;
 
     @EruptField(
+            views = @View(title = "分页方式", sortable = true),
+            edit = @Edit(title = "分页方式", notNull = true, type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
+                    @VL(value = BiConst.PAGE_END, label = "后端分页"),
+                    @VL(value = BiConst.PAGE_FRONT, label = "前端分页"),
+                    @VL(value = BiConst.PAGE_NONE, label = "不分页"),
+            }))
+    )
+    private String pageType = BiConst.PAGE_END;
+
+    @EruptField(
             views = @View(title = "缓存时间", width = "100px", sortable = true, template = "value&&value+'s'"),
             edit = @Edit(title = "缓存时间（秒）")
     )
@@ -100,16 +107,6 @@ public class Bi extends MetaModelUpdateVo {
             edit = @Edit(title = "自动刷新周期（秒）",desc = "数据自动更新时间")
     )
     private Integer refreshTime;
-
-    @EruptField(
-            views = @View(title = "分页方式", sortable = true),
-            edit = @Edit(title = "分页方式", notNull = true, type = EditType.CHOICE, choiceType = @ChoiceType(vl = {
-                    @VL(value = BiConst.PAGE_END, label = "后端分页"),
-                    @VL(value = BiConst.PAGE_FRONT, label = "前端分页"),
-                    @VL(value = BiConst.PAGE_NONE, label = "不分页"),
-            }))
-    )
-    private String pageType = BiConst.PAGE_END;
 
     @EruptField(
             views = @View(title = "导出", sortable = true),

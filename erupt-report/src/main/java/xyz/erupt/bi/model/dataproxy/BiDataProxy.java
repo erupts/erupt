@@ -1,8 +1,11 @@
-package xyz.erupt.bi.model;
+package xyz.erupt.bi.model.dataproxy;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.bi.model.Bi;
+import xyz.erupt.bi.model.BiDimension;
+import xyz.erupt.bi.model.BiHistory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
