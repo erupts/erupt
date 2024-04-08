@@ -144,8 +144,8 @@ public class EruptBiController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 3)
     public BiData drillData(@PathVariable String code,
                             @PathVariable Integer drillCode,
-                            @RequestParam int pageIndex,
-                            @RequestParam int pageSize,
+                            @RequestParam Integer pageIndex,
+                            @RequestParam Integer pageSize,
                             @RequestBody Map<String, Object> query) {
         if (pageSize >= eruptBiProp.getSingleMaxResultNum())
             throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
@@ -171,6 +171,7 @@ public class EruptBiController {
         throw new EruptWebApiRuntimeException(drillCode + " column not found");
     }
 
+    //参照列表接口
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @PostMapping("/{code}/reference/{id}")
     public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code,
@@ -196,6 +197,34 @@ public class EruptBiController {
             }
         }
         return references;
+    }
+
+    //参照表格接口
+    @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
+    @PostMapping("/{code}/reference-table/{id}")
+    public BiData refTableQuery(@PathVariable String code,
+                                @PathVariable("id") Long dimId,
+                                @RequestParam Integer pageIndex,
+                                @RequestParam Integer pageSize,
+                                @RequestParam String sort,
+                                @RequestBody Map<String, Object> query) {
+        BiDimension dimension = entityManager.find(BiDimension.class, dimId);
+        biService.verifyBiMenuPermissions(dimension.getBi(), code);
+        BiData biData = new BiData();
+        BiDimensionReference reference = dimension.getBiDimensionReference();
+        biData.setTotal(biService.getTotal(reference.getRefSql(), reference.getDataSource(), query));
+        if (biData.getTotal() > 0) {
+            biData.setList(biService.startQuery(
+                    reference.getName() + "-reference-table",
+                    biService.getLimitSql(reference.getDataSource(), reference.getRefSql(), sort, pageIndex, pageSize),
+                    1, null, reference.getDataSource(), query
+            ));
+            List<BiColumnVo> biColumnVos = new LinkedList<>();
+            biData.getList().get(0).keySet().forEach(key ->
+                    biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING, null)));
+            biData.setColumns(biColumnVos);
+        }
+        return biData;
     }
 
     /**
