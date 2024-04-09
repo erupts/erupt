@@ -174,6 +174,8 @@ public class BiService {
             return list;
         };
         if (eruptBiProp.getEnableCache()) {
+            query.remove(ScriptPlaceholderConst.REQUEST_PLACEHOLDER);
+            query.remove(ScriptPlaceholderConst.RESPONSE_PLACEHOLDER);
             return null == cacheTime || 0 == cacheTime ? supplier.get() : eruptCache.getAndSet(express + gson.toJson(query), cacheTime * 1000, supplier);
         } else {
             return supplier.get();

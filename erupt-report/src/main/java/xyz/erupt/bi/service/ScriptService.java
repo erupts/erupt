@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class ScriptService {
 
-    public static final String FUNCTION_CACHE_KEY = "function-cache-key";
+    public static final String FUNCTION_CACHE_KEY = "bi-function-cache-key";
     private final EruptCache<String> functionCache = new EruptCacheLRU<>(1);
     private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
     @Resource
