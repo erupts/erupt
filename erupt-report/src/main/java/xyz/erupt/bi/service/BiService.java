@@ -229,14 +229,14 @@ public class BiService {
             return dataSourceService.getJdbcTemplate(bi.getDataSource()).queryForObject(express, query, Long.class);
         } else {
             return Long.valueOf(dataSourceService.getJdbcTemplate(bi.getDataSource())
-                    .queryForMap(String.format("select count(1) %s from (%s) _count_", TOTAL_KEY, express), query)
+                    .queryForMap(String.format("select count(1) %s from (\n %s \n) _count_", TOTAL_KEY, express), query)
                     .get(TOTAL_KEY).toString());
         }
     }
 
     public Long getTotal(String express, BiDataSource biDataSource, Map<String, Object> query) {
         return Long.valueOf(dataSourceService.getJdbcTemplate(biDataSource)
-                .queryForMap(String.format("select count(1) %s from (%s) _count_", TOTAL_KEY, express), query)
+                .queryForMap(String.format("select count(1) %s from (\n %s \n) _count_", TOTAL_KEY, express), query)
                 .get(TOTAL_KEY).toString());
     }
 
