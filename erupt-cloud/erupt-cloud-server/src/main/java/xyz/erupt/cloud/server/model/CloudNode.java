@@ -30,7 +30,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-import xyz.erupt.linq.lambda.LambdaReflect;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.tpl.engine.EngineConst;
 import xyz.erupt.upms.handler.ViaMenuValueCtrl;
 
@@ -63,9 +63,9 @@ import java.util.function.Function;
 @EruptI18n
 public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>, TagsFetchHandler, Tpl.TplHandler {
 
-    public static final String NODE_NAME = LambdaReflect.field(CloudNode::getNodeName);
+    public static final String NODE_NAME = LambdaSee.field(CloudNode::getNodeName);
 
-    public static final String ACCESS_TOKEN = LambdaReflect.field(CloudNode::getAccessToken);
+    public static final String ACCESS_TOKEN = LambdaSee.field(CloudNode::getAccessToken);
 
     @Column(unique = true)
     @EruptField(
@@ -178,21 +178,21 @@ public class CloudNode extends MetaModelUpdateVo implements DataProxy<CloudNode>
                 String token = it.toString();
                 map.put(ACCESS_TOKEN, token.substring(0, 3) + "******" + token.substring(token.length() - 3));
             });
-            map.put(LambdaReflect.field(CloudNode::getEruptNum), '-');
-            map.put(LambdaReflect.field(CloudNode::getInstanceNum), '-');
-            map.put(LambdaReflect.field(CloudNode::getVersion), '-');
-            map.put(LambdaReflect.field(CloudNode::getEruptModuleNum), '-');
+            map.put(LambdaSee.field(CloudNode::getEruptNum), '-');
+            map.put(LambdaSee.field(CloudNode::getInstanceNum), '-');
+            map.put(LambdaSee.field(CloudNode::getVersion), '-');
+            map.put(LambdaSee.field(CloudNode::getEruptModuleNum), '-');
             try {
                 MetaNode metaNode = nodeManager.getNode(map.get(NODE_NAME).toString());
                 Optional.ofNullable(nodeManager.getNode(map.get(NODE_NAME).toString())).ifPresent(metaNode1 -> {
                     Function<Collection<String>, Object> function = (it) -> null == it ? 0 : String.format("<a href='javascript:alert(`%s`);'>%d</a>", String.join("\\u000a", it), it.size());
-                    map.put(LambdaReflect.field(CloudNode::getEruptNum), function.apply(metaNode.getErupts()));
-                    map.put(LambdaReflect.field(CloudNode::getInstanceNum), metaNode.getLocations().size());
-                    map.put(LambdaReflect.field(CloudNode::getEruptModuleNum), function.apply(metaNode.getEruptModules()));
-                    map.put(LambdaReflect.field(CloudNode::getVersion), metaNode.getVersion());
+                    map.put(LambdaSee.field(CloudNode::getEruptNum), function.apply(metaNode.getErupts()));
+                    map.put(LambdaSee.field(CloudNode::getInstanceNum), metaNode.getLocations().size());
+                    map.put(LambdaSee.field(CloudNode::getEruptModuleNum), function.apply(metaNode.getEruptModules()));
+                    map.put(LambdaSee.field(CloudNode::getVersion), metaNode.getVersion());
                 });
             } catch (Exception e) {
-                map.put(LambdaReflect.field(CloudNode::getVersion), String.format("<span style='color:#f00'>%s</span>", e.getMessage()));
+                map.put(LambdaSee.field(CloudNode::getVersion), String.format("<span style='color:#f00'>%s</span>", e.getMessage()));
                 log.warn("node warn → " + map.get(NODE_NAME), e);
             }
         }

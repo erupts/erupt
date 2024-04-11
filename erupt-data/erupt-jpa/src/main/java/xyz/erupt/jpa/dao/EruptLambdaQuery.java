@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.RandomStringUtils;
 import xyz.erupt.jpa.constant.SqlLang;
 import xyz.erupt.linq.lambda.LambdaInfo;
-import xyz.erupt.linq.lambda.LambdaReflect;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.linq.lambda.SFunction;
 
 import javax.persistence.EntityManager;
@@ -31,12 +31,12 @@ public class EruptLambdaQuery<T> {
     }
 
     public <R> EruptLambdaQuery<T> isNull(SFunction<T, R> field) {
-        querySchema.getWheres().add(LambdaReflect.info(field).getField() + " is null");
+        querySchema.getWheres().add(LambdaSee.info(field).getField() + " is null");
         return this;
     }
 
     public <R> EruptLambdaQuery<T> isNotNull(SFunction<T, R> field) {
-        querySchema.getWheres().add(LambdaReflect.info(field).getField() + " is not null");
+        querySchema.getWheres().add(LambdaSee.info(field).getField() + " is not null");
         return this;
     }
 
@@ -49,7 +49,7 @@ public class EruptLambdaQuery<T> {
 
     public <R> EruptLambdaQuery<T> ne(SFunction<T, R> field, Object val) {
         String placeholder = this.genePlaceholder();
-        querySchema.getWheres().add(LambdaReflect.info(field).getField() + " <> :" + placeholder);
+        querySchema.getWheres().add(LambdaSee.info(field).getField() + " <> :" + placeholder);
         querySchema.getParams().put(placeholder, val);
         return this;
     }
@@ -85,7 +85,7 @@ public class EruptLambdaQuery<T> {
     public <R> EruptLambdaQuery<T> between(SFunction<T, R> field, Object val1, Object val2) {
         String l = this.genePlaceholder();
         String r = this.genePlaceholder();
-        querySchema.getWheres().add(LambdaReflect.info(field).getField() + " between :" + l + " and " + ":" + r);
+        querySchema.getWheres().add(LambdaSee.info(field).getField() + " between :" + l + " and " + ":" + r);
         querySchema.getParams().put(l, val1);
         querySchema.getParams().put(r, val2);
         return this;
@@ -93,7 +93,7 @@ public class EruptLambdaQuery<T> {
 
     public <R> EruptLambdaQuery<T> in(SFunction<T, R> field, List<Object> val) {
         String placeholder = this.genePlaceholder();
-        querySchema.getWheres().add(LambdaReflect.info(field).getField() + " in (:" + placeholder + ")");
+        querySchema.getWheres().add(LambdaSee.info(field).getField() + " in (:" + placeholder + ")");
         querySchema.getParams().put(placeholder, val);
         return this;
     }
@@ -123,12 +123,12 @@ public class EruptLambdaQuery<T> {
     }
 
     public EruptLambdaQuery<T> orderBy(SFunction<T, ?> field) {
-        querySchema.getOrders().add(LambdaReflect.info(field).getField() + " asc");
+        querySchema.getOrders().add(LambdaSee.info(field).getField() + " asc");
         return this;
     }
 
     public EruptLambdaQuery<T> orderByDesc(SFunction<T, ?> field) {
-        querySchema.getOrders().add(LambdaReflect.info(field).getField() + " desc");
+        querySchema.getOrders().add(LambdaSee.info(field).getField() + " desc");
         return this;
     }
 
@@ -170,7 +170,7 @@ public class EruptLambdaQuery<T> {
     }
 
     private String geneField(SFunction<?, ?> field) {
-        LambdaInfo lambdaInfo = LambdaReflect.info(field);
+        LambdaInfo lambdaInfo = LambdaSee.info(field);
         return lambdaInfo.getClazz().getSimpleName() + "." + lambdaInfo.getField();
     }
 

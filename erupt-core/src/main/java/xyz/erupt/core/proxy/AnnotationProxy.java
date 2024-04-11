@@ -4,7 +4,7 @@ import lombok.SneakyThrows;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.framework.ProxyFactory;
-import xyz.erupt.linq.lambda.LambdaReflect;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.linq.lambda.SFunction;
 
 import java.lang.annotation.Annotation;
@@ -50,7 +50,7 @@ public abstract class AnnotationProxy<A, PA> {
     }
 
     public <T extends Annotation, R> boolean matchMethod(MethodInvocation invocation, SFunction<T, R> annoLambda) {
-        return invocation.getMethod().getName().equals(LambdaReflect.info(annoLambda).getMethod());
+        return invocation.getMethod().getName().equals(LambdaSee.info(annoLambda).getMethod());
     }
 
 }

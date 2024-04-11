@@ -18,7 +18,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
-import xyz.erupt.linq.lambda.LambdaReflect;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -121,10 +121,10 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
         builder.setPrettyPrinting();
         Gson gson = builder.create();
         for (Map<String, Object> map : list) {
-            Object reqParam = map.get(LambdaReflect.field(EruptOperateLog::getReqParam));
+            Object reqParam = map.get(LambdaSee.field(EruptOperateLog::getReqParam));
             if (null != reqParam) {
                 try {
-                    map.put(LambdaReflect.field(EruptOperateLog::getReqParam), gson.toJson(gson.fromJson(reqParam.toString(), Object.class)));
+                    map.put(LambdaSee.field(EruptOperateLog::getReqParam), gson.toJson(gson.fromJson(reqParam.toString(), Object.class)));
                 } catch (Exception ignore) {
                 }
             }
