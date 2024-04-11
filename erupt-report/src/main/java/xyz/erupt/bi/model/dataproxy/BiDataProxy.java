@@ -9,7 +9,7 @@ import xyz.erupt.bi.model.BiHistory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.linq.lambda.LambdaReflect;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -59,7 +59,7 @@ public class BiDataProxy implements DataProxy<Bi> {
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
         for (Map<String, Object> map : list) {
-            map.put(LambdaReflect.field(Bi::getView), "#/fill/bi/" + map.get("code"));
+            map.put(LambdaSee.field(Bi::getView), "#/fill/bi/" + map.get("code"));
         }
     }
 }
