@@ -16,7 +16,7 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.linq.lambda.LambdaReflect;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
@@ -109,7 +109,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     eruptUser.setAccount(DEFAULT_ACCOUNT);
                     eruptUser.setPassword(MD5Util.digest(DEFAULT_ACCOUNT));
                     eruptUser.setName(DEFAULT_ACCOUNT);
-                    eruptDao.persistIfNotExist(EruptUser.class, eruptUser, LambdaReflect.field(EruptUser::getAccount), eruptUser.getAccount());
+                    eruptDao.persistIfNotExist(EruptUser.class, eruptUser, LambdaSee.field(EruptUser::getAccount), eruptUser.getAccount());
                 }
             }
         });
