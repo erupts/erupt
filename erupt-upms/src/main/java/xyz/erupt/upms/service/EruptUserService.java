@@ -143,7 +143,7 @@ public class EruptUserService {
     public boolean checkPwd(EruptUser eruptUser, String pwd) {
         if (eruptAppProp.getPwdTransferEncrypt()) {
             String digestPwd = eruptUser.getIsMd5() ? eruptUser.getPassword() : MD5Util.digest(eruptUser.getPassword());
-            String calcPwd = MD5Util.digest(digestPwd + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + eruptUser.getAccount());
+            String calcPwd = MD5Util.digest(digestPwd + eruptUser.getAccount());
             return pwd.equalsIgnoreCase(calcPwd);
         } else {
             if (eruptUser.getIsMd5()) pwd = MD5Util.digest(pwd);
