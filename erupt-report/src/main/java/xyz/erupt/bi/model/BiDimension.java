@@ -88,17 +88,17 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
                                     @VL(value = "MONTH", label = "月"),
                                     @VL(value = "YEAR", label = "年"),
 
-                                    @VL(value = "REFERENCE_TABLE_RADIO", label = "单选表格参照", desc = "返回2～N列，第一列是查询列不会显示在前端"),
-                                    @VL(value = "REFERENCE_TABLE_MULTI", label = "多选表格参照", desc = "返回2～N列，第一列是查询列不会显示在前端"),
+                                    @VL(value = "REFERENCE", label = "单选参照", desc = "返回两列：id/label"),
+                                    @VL(value = "REFERENCE_MULTI", label = "多选参照", desc = "返回两列：id/label"),
+                                    @VL(value = "REFERENCE_RADIO", label = "Radio参照", desc = "返回两列：id/label"),
+                                    @VL(value = "REFERENCE_CHECKBOX", label = "Checkbox参照", desc = "返回两列：id/label"),
 
                                     @VL(value = "REFERENCE_TREE_RADIO", label = "单选树参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
                                     @VL(value = "REFERENCE_TREE_MULTI", label = "多选树参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
                                     @VL(value = "REFERENCE_CASCADE", label = "级联选择参照", desc = "返回三列：id/label/pid，pid为空代表树根节点"),
 
-                                    @VL(value = "REFERENCE", label = "单选参照"),
-                                    @VL(value = "REFERENCE_MULTI", label = "多选参照"),
-                                    @VL(value = "REFERENCE_RADIO", label = "Radio参照"),
-                                    @VL(value = "REFERENCE_CHECKBOX", label = "Checkbox参照")
+                                    @VL(value = "REFERENCE_TABLE_RADIO", label = "单选表格参照", desc = "返回2～N列，id/...，第一列是查询列不会显示在前端"),
+                                    @VL(value = "REFERENCE_TABLE_MULTI", label = "多选表格参照", desc = "返回2～N列，id/...，第一列是查询列不会显示在前端"),
                             }
                     )
             )

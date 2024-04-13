@@ -199,31 +199,32 @@ public class EruptBiController {
         return references;
     }
 
-    //参照表格接口
+    /**
+     * 参照表格接口
+     *
+     * @param code      报表编码
+     * @param id        维度 ID
+     * @return 表格对象
+     */
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @PostMapping("/{code}/reference-table/{id}")
     public BiData refTableQuery(@PathVariable String code,
-                                @PathVariable("id") Long dimId,
-                                @RequestParam Integer pageIndex,
-                                @RequestParam Integer pageSize,
-                                @RequestParam String sort,
-                                @RequestBody Map<String, Object> query) {
-        BiDimension dimension = entityManager.find(BiDimension.class, dimId);
+                                @PathVariable Long id) {
+        BiDimension dimension = entityManager.find(BiDimension.class, id);
         biService.verifyBiMenuPermissions(dimension.getBi(), code);
         BiData biData = new BiData();
         BiDimensionReference reference = dimension.getBiDimensionReference();
-        biData.setTotal(biService.getTotal(reference.getRefSql(), reference.getDataSource(), query));
-        if (biData.getTotal() > 0) {
-            biData.setList(biService.startQuery(
-                    reference.getName() + "-reference-table",
-                    biService.getLimitSql(reference.getDataSource(), reference.getRefSql(), sort, pageIndex, pageSize),
-                    1, null, reference.getDataSource(), query
-            ));
-            List<BiColumnVo> biColumnVos = new LinkedList<>();
-            biData.getList().get(0).keySet().forEach(key ->
-                    biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING, null)));
-            biData.setColumns(biColumnVos);
-        }
+        biData.setList(biService.startQuery(
+                reference.getName() + "-reference-table",
+                biService.getLimitSql(reference.getDataSource(), reference.getRefSql(), null, 1, 100000),
+                1, null, reference.getDataSource(), new HashMap<>()
+        ));
+        biData.setTotal((long) biData.getList().size());
+        List<BiColumnVo> biColumnVos = new LinkedList<>();
+        biData.getList().get(0).keySet().forEach(key ->
+                biColumnVos.add(new BiColumnVo(key, null, true, true, ColumnType.STRING, null)))
+        ;
+        biData.setColumns(biColumnVos);
         return biData;
     }
 
