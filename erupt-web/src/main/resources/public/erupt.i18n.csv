@@ -52,11 +52,10 @@ table.reset,重置条件,重置條件,Reset,Réinitialiser les conditions,条件
 table.select_delete_item,请选中要删除的数据！,請選中要刪除的數據！,Please select delete data!,Veuillez cocher les données que vous souhaitez supprimer!,削除するデータを選択してください。,삭제할데이터를선택하십시오!,"Пожалуйста, выберите удаленные данные!","Por favor, seleccione los datos que desea eliminar!"
 table.hint_delete_number,确定要删除这{}条数据吗？,確定要刪除這{}條數據嗎？,Are you sure want to delete this {} data?,Sûr de vouloir supprimer ces {} données?,この{}データを削除しますか？,이{}개의데이터를삭제하시겠습니까?,"Вы уверены, что хотите удалить эту информацию?",¿Seguro de que desea eliminar estos {} datos?
 table.require.select_one,执行该操作时请至少选中一条数据,執行該操作時請至少選中一條數據,Select at least one data before performing this operation,Veuillez sélectionner au moins une donnée pour effectuer cette opération,この操作を行う場合は、少なくとも一つのデータを選択してください。,이작업을수행할때최소한하나의데이터를선택하십시오,"При выполнении этой операции, пожалуйста, выберите хотя бы Один файл","Por favor, seleccione al menos un dato para realizar esta operación"
-table.hint.operation,请确认是否执行此操作,請確認是否執行此操作,Confirm whether to perform this operation,Veuillez confirmer si cette action est effectuée,この操作を実行するかどうか確認してください。,이동작을실행할지확인하십시오,"Пожалуйста, подтвердите выполнение этой операции",Confirme si realiza esta acción
 table.validate.required_one_select,执行该操作时请至少选中一条数据,執行該操作時請至少選中一條數據,Select at least one data before performing this operation,Veuillez sélectionner au moins une donnée pour effectuer cette opération,この操作を行う場合は、少なくとも一つのデータを選択してください。,이작업을수행할때최소한하나의데이터를선택하십시오,"При выполнении этой операции, пожалуйста, выберите хотя бы Один файл","Por favor, seleccione al menos un dato para realizar esta operación"
 tree.base,基本信息,基本信息,Basic information,Les informations essentielles,基本情報,기본정보,Основная информация.,La información básica
 tree.update,更新,更新,Update,Mise à jour,更新,업데이트,обновля,actualización
-tree.add_button,新增,新增,Add,nouveaux,追加,새로추가,нов,nuevos
+tree.add_button,新增,新增,Add,nouveaux,追加,새로추가,нов,nuevos``
 tree.add,保存,增加,Add,La conservation,増加,증가,сохран,guardar
 tree.add_children,增加下级,增加下級,Add subordinate,Ajouter un sous-niveau,部下を増やす,하급자증가,Увеличить нижний уровень.,Añadir un subnivel
 tree.delete,删除,刪除,Delete,supprimé,削除,삭제,удал,borrar
