@@ -1,5 +1,6 @@
 package xyz.erupt.mongodb.impl;
 
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -8,19 +9,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.Resource;
-
-import lombok.SneakyThrows;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.invoke.DataProcessorManager;
@@ -31,6 +19,11 @@ import xyz.erupt.core.util.TypeUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
+
+import javax.annotation.Resource;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author YuePeng
@@ -168,9 +161,15 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
         }
 
         EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(fieldName);
+        if (null == eruptFieldModel) {
+            return fieldName;
+        }
         Field eruptFieldModelField = eruptFieldModel.getField();
         org.springframework.data.mongodb.core.mapping.Field mongoFieldAnnotation = eruptFieldModelField.getAnnotation(org.springframework.data.mongodb.core.mapping.Field.class);
-        mongoField = Optional.ofNullable(mongoFieldAnnotation).map(obj -> StringUtils.defaultIfBlank(obj.value(), eruptFieldModelField.getName())).orElseThrow(() -> new EruptFieldAnnotationException("mongodb字段映射配置错误"));
+        if (null == mongoFieldAnnotation) {
+            return mongoField;
+        }
+        mongoField = Optional.of(mongoFieldAnnotation).map(obj -> StringUtils.defaultIfBlank(obj.value(), eruptFieldModelField.getName())).orElseThrow(() -> new EruptFieldAnnotationException("mongodb字段映射配置错误"));
         eruptFieldMongFieldMap.put(fieldName, mongoField);
         MODEL_CLASS_FIELD_MAPPING.put(eruptModel.getClazz(), eruptFieldMongFieldMap);
         return mongoField;
