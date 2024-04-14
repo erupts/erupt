@@ -6,7 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import xyz.erupt.core.annotation.EruptScan;
-import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
@@ -46,9 +45,9 @@ public class EruptFlowAutoConfiguration implements EruptModule {
         // 添加菜单
         metaMenus.add(MetaMenu.createSimpleMenu(FlowConstant.SERVER_NAME, "流程服务基础权限", "erupt-flow"
                 , metaMenus.get(0), 0, MenuTypeEnum.BUTTON.getCode()));
-        metaMenus.add(MetaMenu.createSimpleMenu("workSpace", "工作区", EruptRestPath.ERUPT_API + "/" + FlowConstant.SERVER_NAME+"/index.html#/workSpace"
+        metaMenus.add(MetaMenu.createSimpleMenu("workSpace", "工作区", FlowConstant.SERVER_NAME + "/index.html#/workSpace"
                 , metaMenus.get(0), 10, MenuTypeEnum.LINK.getCode()));
-        metaMenus.add(MetaMenu.createSimpleMenu("formsPanel", "后台管理", EruptRestPath.ERUPT_API + "/" + FlowConstant.SERVER_NAME+"/index.html#/formsPanel"
+        metaMenus.add(MetaMenu.createSimpleMenu("formsPanel", "后台管理", FlowConstant.SERVER_NAME + "/index.html#/formsPanel"
                 , metaMenus.get(0), 20, MenuTypeEnum.LINK.getCode()));
         metaMenus.add(MetaMenu.createSimpleMenu("OaProcessInstanceHistory", "流程实例", "OaProcessInstanceHistory"
                 , metaMenus.get(0), 30, MenuTypeEnum.TABLE.getCode()));

@@ -25,38 +25,37 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
     @Override
     @SneakyThrows
     protected Object invocation(MethodInvocation invocation) {
-        switch (invocation.getMethod().getName()) {
-            case "type":
-                if (EditType.AUTO == this.rawAnnotation.type()) {
-                    String returnType = ProxyContext.get().getField().getType().getSimpleName();
-                    if (boolean.class.getSimpleName().equalsIgnoreCase(returnType)) {
-                        return EditType.BOOLEAN;
-                    } else if (TypeUtil.isNumberType(returnType)) {
-                        return EditType.NUMBER;
-                    } else if (EruptUtil.isDateField(returnType)) {
-                        return EditType.DATE;
-                    } else if (ArrayUtils.contains(AnnotationProcess.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), returnType)) {
-                        return EditType.TEXTAREA; //属性名推断
-                    } else {
-                        return EditType.INPUT;
-                    }
+        if (super.matchMethod(invocation, Edit::type)) {
+            if (EditType.AUTO == this.rawAnnotation.type()) {
+                String returnType = ProxyContext.get().getField().getType().getSimpleName();
+                if (boolean.class.getSimpleName().equalsIgnoreCase(returnType)) {
+                    return EditType.BOOLEAN;
+                } else if (TypeUtil.isNumberType(returnType)) {
+                    return EditType.NUMBER;
+                } else if (EruptUtil.isDateField(returnType)) {
+                    return EditType.DATE;
+                } else if (ArrayUtils.contains(AnnotationProcess.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), returnType)) {
+                    return EditType.TEXTAREA; //属性名推断
+                } else {
+                    return EditType.INPUT;
                 }
-                return this.rawAnnotation.type();
-            case "filter":
-                Filter[] filters = this.rawAnnotation.filter();
-                Filter[] proxyFilters = new Filter[filters.length];
-                for (int i = 0; i < filters.length; i++) {
-                    proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter -> new FilterProxy<Edit>().newProxy(filter, this));
-                }
-                return proxyFilters;
-            case "readonly":
-                return AnnotationProxyPool.getOrPut(this.rawAnnotation.readonly(), readonly -> new ReadonlyProxy().newProxy(readonly, this));
-            case "title":
-                return ProxyContext.translate(this.rawAnnotation.title());
-            case "desc":
-                return ProxyContext.translate(this.rawAnnotation.desc());
-            case "boolType":
-                return AnnotationProxyPool.getOrPut(this.rawAnnotation.boolType(), boolType -> new BoolTypeProxy().newProxy(boolType, this));
+            }
+            return this.rawAnnotation.type();
+        } else if (super.matchMethod(invocation, Edit::filter)) {
+            Filter[] filters = this.rawAnnotation.filter();
+            Filter[] proxyFilters = new Filter[filters.length];
+            for (int i = 0; i < filters.length; i++) {
+                proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter -> new FilterProxy<Edit>().newProxy(filter, this));
+            }
+            return proxyFilters;
+        } else if (super.matchMethod(invocation, Edit::readonly)) {
+            return AnnotationProxyPool.getOrPut(this.rawAnnotation.readonly(), readonly -> new ReadonlyProxy().newProxy(readonly, this));
+        } else if (super.matchMethod(invocation, Edit::title)) {
+            return ProxyContext.translate(this.rawAnnotation.title());
+        } else if (super.matchMethod(invocation, Edit::desc)) {
+            return ProxyContext.translate(this.rawAnnotation.desc());
+        } else if (super.matchMethod(invocation, Edit::boolType)) {
+            return AnnotationProxyPool.getOrPut(this.rawAnnotation.boolType(), boolType -> new BoolTypeProxy().newProxy(boolType, this));
         }
         return this.invoke(invocation);
     }

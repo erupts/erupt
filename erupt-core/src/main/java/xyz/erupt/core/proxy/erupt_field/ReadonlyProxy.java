@@ -19,11 +19,10 @@ public class ReadonlyProxy extends AnnotationProxy<Readonly, Edit> {
         Readonly readonly = this.rawAnnotation;
         if (!readonly.exprHandler().isInterface()) {
             Readonly.ReadonlyHandler readonlyHandler = EruptSpringUtil.getBean(readonly.exprHandler());
-            switch (invocation.getMethod().getName()) {
-                case "add":
-                    return readonlyHandler.add(readonly.add(), readonly.params());
-                case "edit":
-                    return readonlyHandler.edit(readonly.edit(), readonly.params());
+            if (super.matchMethod(invocation, Readonly::add)) {
+                return readonlyHandler.add(readonly.add(), readonly.params());
+            } else if (super.matchMethod(invocation, Readonly::edit)) {
+                return readonlyHandler.edit(readonly.edit(), readonly.params());
             }
         }
         return this.invoke(invocation);

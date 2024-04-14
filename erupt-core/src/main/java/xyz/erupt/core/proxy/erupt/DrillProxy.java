@@ -15,14 +15,10 @@ public class DrillProxy extends AnnotationProxy<Drill, Erupt> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
-        switch (invocation.getMethod().getName()){
-            case "code":
-                if (AnnotationConst.EMPTY_STR.equals(this.rawAnnotation.code())) {
-                    return Integer.toString(this.rawAnnotation.title().hashCode());
-                }
-                break;
-            case "title":
-                return ProxyContext.translate(this.rawAnnotation.title());
+        if (super.matchMethod(invocation, Drill::code) && AnnotationConst.EMPTY_STR.equals(this.rawAnnotation.code())) {
+            return Integer.toString(this.rawAnnotation.title().hashCode());
+        } else if (super.matchMethod(invocation, Drill::title)) {
+            return ProxyContext.translate(this.rawAnnotation.title());
         }
         return this.invoke(invocation);
     }

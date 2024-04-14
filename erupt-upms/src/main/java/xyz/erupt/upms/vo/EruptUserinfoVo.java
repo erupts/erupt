@@ -3,6 +3,8 @@ package xyz.erupt.upms.vo;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  * @author YuePeng
  * date 2022/11/24 19:44
@@ -22,5 +24,14 @@ public class EruptUserinfoVo {
 
     //是否需要重置密码
     private boolean resetPwd = false;
+
+    //组织编码
+    private String org;
+
+    //岗位编码
+    private String post;
+
+    //角色列表
+    private List<String> roles;
 
 }
