@@ -1,7 +1,6 @@
 package xyz.erupt.core.proxy.erupt;
 
 import org.aopalliance.intercept.MethodInvocation;
-import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.proxy.AnnotationProxy;
@@ -15,7 +14,7 @@ public class FilterProxy<P> extends AnnotationProxy<Filter, P> {
 
     @Override
     protected Object invocation(MethodInvocation invocation) {
-        if (AnnotationConst.VALUE.equals(invocation.getMethod().getName())) {
+        if (super.matchMethod(invocation, Filter::value)) {
             String condition = this.rawAnnotation.value();
             if (!this.rawAnnotation.conditionHandler().isInterface()) {
                 FilterHandler ch = EruptSpringUtil.getBean(this.rawAnnotation.conditionHandler());

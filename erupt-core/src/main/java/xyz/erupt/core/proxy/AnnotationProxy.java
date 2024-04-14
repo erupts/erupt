@@ -4,6 +4,10 @@ import lombok.SneakyThrows;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.framework.ProxyFactory;
+import xyz.erupt.linq.lambda.LambdaSee;
+import xyz.erupt.linq.lambda.SFunction;
+
+import java.lang.annotation.Annotation;
 
 /**
  * 注解代理
@@ -43,6 +47,10 @@ public abstract class AnnotationProxy<A, PA> {
     @SneakyThrows
     public Object invoke(MethodInvocation invocation) {
         return invocation.getMethod().invoke(invocation.getThis());
+    }
+
+    public <T extends Annotation, R> boolean matchMethod(MethodInvocation invocation, SFunction<T, R> annoLambda) {
+        return invocation.getMethod().getName().equals(LambdaSee.info(annoLambda).getMethod());
     }
 
 }

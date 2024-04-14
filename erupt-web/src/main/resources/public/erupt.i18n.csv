@@ -88,7 +88,8 @@ setting.fixed-header,固定头和侧边栏,固定頭和側邊欄,Fixed Header & 
 setting.tab-reuse,多页签,多頁簽,MultiTab,Plusieurs onglets de page,何枚かのくじです,다중 탭,Подпиши несколько страниц.,Múltiples pestañas
 setting.nav,面包屑导航,面包屑導航,Breadcrumb nav,Navigation sur breadcrumb,パン粉ナビゲーション,빵부스러기내비게이션,Навигация по хлебным крошкам,Navegación por breadcrumb
 setting.table-border,表格边框,表格邊框,Table bordered,Bordure de table,表の境界線,표테두리,Табличная боковая рама,Borde de tabla
-setting.colorWeak,色弱模式,色弱模式,Color weak mode,Mode faible couleur,色弱モードです,색약 패턴,Слабая модель цвета,Modo débil de color
+setting.color-weak,色弱模式,色弱模式,Color weak mode,Mode faible couleur,色弱モードです,색약 패턴,Слабая модель цвета,Modo débil de color
+setting.color-gray,灰色模式,灰色模式,Grey mode,Le mode gris,グレーパターンです ,그레이 모드,Серая модель.,Andamento grigio
 setting.dark,夜间模式,夜間模式,Dark mode,Le mode nuit,ナイトモード,야간모드,Ночной режим,Modo nocturno
 setting.clear-cache,清理本地缓存,清理本地緩存,Clear Local Cache,Nettoyer votre cache local,로컬캐시지우기,로컬캐시청소,Очистка местного кэша,Limpiar el caché local
 setting.clear,清理,清理,Clear,nettoyage,整理する,청소,очист,limpieza

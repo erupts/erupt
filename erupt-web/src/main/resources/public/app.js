@@ -1,7 +1,7 @@
 var start = true;
 window.eruptSiteConfig = {
     domain: "",
-    fileDomain: "https://oos.erupt.xyz",
+    fileDomain: "",
     title: "Erupt Framework",
     desc: "通用后台管理框架",
     dialogLogin: false,
