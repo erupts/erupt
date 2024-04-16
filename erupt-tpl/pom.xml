@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.10.0.RELEASE</version>
+            <version>3.16.1.RELEASE</version>
             <optional>true</optional>
         </dependency>
         <dependency>
