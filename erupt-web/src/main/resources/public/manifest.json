@@ -27,6 +27,21 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        },
+        {
+            "src": "assert/logo-1x.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "assert/logo-2x.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "assert/logo-3x.png",
+            "sizes": "512x512",
+            "type": "image/png"
         }
     ]
 }
