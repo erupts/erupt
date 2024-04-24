@@ -12,19 +12,19 @@ import xyz.erupt.annotation.sub_erupt.Power;
 @Setter
 public class PowerObject {
 
-    private boolean add;
+    private boolean add = true;
 
-    private boolean delete;
+    private boolean delete = true;
 
-    private boolean edit;
+    private boolean edit = true;
 
-    private boolean query;
+    private boolean query = true;
 
-    private boolean viewDetails;
+    private boolean viewDetails = true;
 
-    private boolean export;
+    private boolean export = true;
 
-    private boolean importable;
+    private boolean importable = true;
 
     public PowerObject(Power power) {
         this.add = power.add();
@@ -39,4 +39,5 @@ public class PowerObject {
     public PowerObject() {
 
     }
+
 }
