@@ -32,32 +32,15 @@ public class NodePowerInvoke implements PowerHandler {
     @Override
     public void handler(PowerObject power) {
         EruptModel eruptModel = EruptCoreService.getErupt(MetaContext.getErupt().getName());
-        if (!eruptModel.getErupt().authVerify()) {
-            return;
-        }
-        String powerObjectString = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_POWER)
-                .form("nodeName", eruptNodeProp.getNodeName())
-                .form("eruptName", eruptModel.getEruptName())
-                .header(EruptMutualConst.TOKEN, MetaContext.getToken()).execute().body();
-        PowerObject remotePowerObject = GsonFactory.getGson().fromJson(powerObjectString, PowerObject.class);
-        if (power.isAdd()) {
-            power.setAdd(remotePowerObject.isAdd());
-        }
-        if (power.isDelete()) {
-            power.setDelete(remotePowerObject.isDelete());
-        }
-        if (power.isEdit()) {
-            power.setEdit(remotePowerObject.isEdit());
-        }
-        if (power.isViewDetails()) {
-            power.setViewDetails(remotePowerObject.isViewDetails());
-        }
-        if (power.isExport()) {
-            power.setExport(remotePowerObject.isExport());
-        }
-        if (power.isImportable()) {
-            power.setImportable(remotePowerObject.isImportable());
-        }
+        PowerObject remotePowerObject = GsonFactory.getGson().fromJson(HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_POWER)
+                .form("nodeName", eruptNodeProp.getNodeName()).form("eruptName", eruptModel.getEruptName())
+                .header(EruptMutualConst.TOKEN, MetaContext.getToken()).execute().body(), PowerObject.class);
+        if (power.isAdd()) power.setAdd(remotePowerObject.isAdd());
+        if (power.isDelete()) power.setDelete(remotePowerObject.isDelete());
+        if (power.isEdit()) power.setEdit(remotePowerObject.isEdit());
+        if (power.isViewDetails()) power.setViewDetails(remotePowerObject.isViewDetails());
+        if (power.isExport()) power.setExport(remotePowerObject.isExport());
+        if (power.isImportable()) power.setImportable(remotePowerObject.isImportable());
     }
 
 }
