@@ -21,7 +21,7 @@ public class PowerInvoke {
         powerHandlerStack.add(powerHandler);
     }
 
-    //动态获取erupt power值
+    //The erupt power value is processed dynamically
     public static PowerObject getPowerObject(EruptModel eruptModel) {
         Power power = eruptModel.getErupt().power();
         PowerObject powerBean = new PowerObject(power);
