@@ -14,9 +14,9 @@ public class PowerObject {
 
     private boolean add = true;
 
-    private boolean delete = true;
-
     private boolean edit = true;
+
+    private boolean delete = true;
 
     private boolean query = true;
 
@@ -37,7 +37,6 @@ public class PowerObject {
     }
 
     public PowerObject() {
-
     }
 
 }
