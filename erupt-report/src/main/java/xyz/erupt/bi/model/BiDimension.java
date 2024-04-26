@@ -25,7 +25,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "e_bi_dimension", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "bi_id"}))
-@Erupt(name = "查询维度")
+@Erupt(name = "查询维度", dataProxy = BiDimension.class)
 @Getter
 @Setter
 @EruptI18n
@@ -75,18 +75,21 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
                             type = ChoiceType.Type.RADIO,
                             vl = {
                                     @VL(value = "INPUT", label = "文本"),
-                                    @VL(value = "NUMBER", label = "数值"),
-                                    @VL(value = "NUMBER_RANGE", label = "数值区间"),
                                     @VL(value = "TAG", label = "标签"),
 
+                                    @VL(value = "NUMBER", label = "数值"),
+                                    @VL(value = "NUMBER_RANGE", label = "数值区间"),
+
                                     @VL(value = "DATE", label = "日期"),
-                                    @VL(value = "DATE_RANGE", label = "日期区间"),
-                                    @VL(value = "DATETIME", label = "日期时间"),
-                                    @VL(value = "DATETIME_RANGE", label = "日期时间区间"),
                                     @VL(value = "TIME", label = "时间"),
+                                    @VL(value = "DATETIME", label = "日期时间"),
+
                                     @VL(value = "WEEK", label = "周"),
                                     @VL(value = "MONTH", label = "月"),
                                     @VL(value = "YEAR", label = "年"),
+
+                                    @VL(value = "DATE_RANGE", label = "日期区间"),
+                                    @VL(value = "DATETIME_RANGE", label = "日期时间区间"),
 
                                     @VL(value = "REFERENCE", label = "单选参照", desc = "返回两列：id/label"),
                                     @VL(value = "REFERENCE_MULTI", label = "多选参照", desc = "返回两列：id/label"),
@@ -118,7 +121,7 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
 
     @Override
     public void beforeAdd(BiDimension biDimension) {
-        if (type.endsWith("REFERENCE") && null == biDimension.getBiDimensionReference()) {
+        if (biDimension.getType().startsWith("REFERENCE") && null == biDimension.getBiDimensionReference()) {
             throw new EruptWebApiRuntimeException("参照维度必填");
         }
     }
