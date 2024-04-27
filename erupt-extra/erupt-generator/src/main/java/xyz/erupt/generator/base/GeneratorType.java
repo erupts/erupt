@@ -12,7 +12,7 @@ import java.util.Set;
 public enum GeneratorType {
     INPUT(EditType.INPUT, "文本输入", String.class.getSimpleName(), "inputType = @InputType"),
     PASSWORD(EditType.INPUT, "密码输入", String.class.getSimpleName(), "inputType = @InputType(type = \"password\")"),
-    COLOR(EditType.INPUT, "颜色选择", String.class.getSimpleName(), "inputType = @InputType(type = \"color\")"),
+    COLOR(EditType.COLOR, "颜色选择", String.class.getSimpleName(), null),
     NUMBER(EditType.NUMBER, "数值框", Integer.class.getSimpleName(), "numberType = @NumberType"),
     SLIDER(EditType.SLIDER, "数字滑块", Integer.class.getSimpleName(), "sliderType = @SliderType(max = 999)"),
     RATE(EditType.RATE, "评分", Short.class.getSimpleName(), "rateType = @RateType(count = 10)"),

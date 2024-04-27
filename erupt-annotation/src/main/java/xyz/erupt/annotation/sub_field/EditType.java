@@ -21,6 +21,8 @@ public enum EditType {
     @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
     @EditTypeMapping(mapping = SliderType.class, desc = "数字滑块", allowType = {JavaTypeEnum.number})
     SLIDER,
+    @EditTypeMapping(desc = "颜色选择", allowType = {JavaTypeEnum.String})
+    COLOR,
     @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
     @EditTypeMapping(mapping = RateType.class, desc = "评分", allowType = {JavaTypeEnum.number})
     RATE,
@@ -66,6 +68,7 @@ public enum EditType {
 
     @Comment("==================================")
     @Comment("以下组件修饰于复杂对象上")
+    @Comment("==================================")
 
     @EditTypeSearch
     @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用（多对一)", allowType = {JavaTypeEnum.object})
