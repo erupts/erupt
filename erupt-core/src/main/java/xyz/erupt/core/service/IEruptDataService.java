@@ -1,6 +1,7 @@
 package xyz.erupt.core.service;
 
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.view.EruptModel;
@@ -15,6 +16,11 @@ import java.util.Map;
  * date 10/10/18.
  */
 public interface IEruptDataService {
+
+    @Comment("定义数据源能力")
+    default PowerObject power() {
+        return new PowerObject();
+    }
 
     @Comment("根据主键id获取数据")
     Object findDataById(EruptModel eruptModel, @Comment("主键值") Object id);

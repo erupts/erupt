@@ -21,18 +21,22 @@ public class PowerInvoke {
         powerHandlerStack.add(powerHandler);
     }
 
-    //动态获取erupt power值
+    //The erupt power value is processed dynamically
     public static PowerObject getPowerObject(EruptModel eruptModel) {
         Power power = eruptModel.getErupt().power();
+        PowerObject powerBean = new PowerObject(power);
         if (eruptModel.getErupt().authVerify()) {
-            PowerObject powerBean = new PowerObject(power);
-            if (eruptModel.getErupt().authVerify()) {
-                powerHandlerStack.forEach(ph -> EruptSpringUtil.getBean(ph).handler(powerBean));
-            }
+            powerHandlerStack.forEach(ph -> EruptSpringUtil.getBean(ph).handler(powerBean));
             if (!power.powerHandler().isInterface()) EruptSpringUtil.getBean(power.powerHandler()).handler(powerBean);
-            return powerBean;
-        } else {
-            return new PowerObject(power);
         }
+        PowerObject processorMaster = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).power();
+        if (!processorMaster.isAdd()) powerBean.setAdd(false);
+        if (!processorMaster.isDelete()) powerBean.setDelete(false);
+        if (!processorMaster.isEdit()) powerBean.setEdit(false);
+        if (!processorMaster.isQuery()) powerBean.setQuery(false);
+        if (!processorMaster.isViewDetails()) powerBean.setViewDetails(false);
+        if (!processorMaster.isExport()) powerBean.setExport(false);
+        if (!processorMaster.isImportable()) powerBean.setImportable(false);
+        return powerBean;
     }
 }

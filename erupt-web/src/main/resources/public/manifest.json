@@ -1,7 +1,7 @@
 {
     "name": "erupt",
     "short_name": "erupt",
-    "description": "General Admin framework",
+    "description": "Erupt Framework",
     "author": "YuePeng",
     "mode": "fullscreen",
     "theme_color": "#05192c",
@@ -11,22 +11,16 @@
     "start_url": "./",
     "icons": [
         {
-            "src": "assert/logo-1x.png",
-            "sizes": "128x128",
+            "src": "assets/logo-1x.png",
+            "sizes": "144*144",
             "type": "image/png",
-            "purpose": "maskable"
+            "purpose": "any"
         },
         {
-            "src": "assert/logo-2x.png",
-            "sizes": "256x256",
+            "src": "assets/logo-2x.png",
+            "sizes": "300x300",
             "type": "image/png",
-            "purpose": "maskable"
-        },
-        {
-            "src": "assert/logo-3x.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
+            "purpose": "any"
         }
     ]
 }

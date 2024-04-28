@@ -9,6 +9,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.linq.lambda.SFunction;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
-    public <R> EruptLambdaQuery<T> eq(SFunction<T, R> field, Object val) {
+    public <E, R> EruptLambdaQuery<T> eq(SFunction<E, R> field, Object val) {
         String placeholder = this.genePlaceholder();
         querySchema.getWheres().add(geneField(field) + " = :" + placeholder);
         querySchema.getParams().put(placeholder, val);
@@ -122,6 +123,17 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    public EruptLambdaQuery<T> addCondition(String condition, Map<String, Object> params) {
+        querySchema.getWheres().add(condition);
+        Optional.ofNullable(params).ifPresent(it -> querySchema.getParams().putAll(params));
+        return this;
+    }
+
+    public EruptLambdaQuery<T> addParam(String key, Object val) {
+        querySchema.getParams().put(key, val);
+        return this;
+    }
+
     public EruptLambdaQuery<T> orderBy(SFunction<T, ?> field) {
         querySchema.getOrders().add(LambdaSee.info(field).getField() + " asc");
         return this;
@@ -143,7 +155,11 @@ public class EruptLambdaQuery<T> {
     }
 
     public T one() {
-        return (T) this.geneQuery().getSingleResult();
+        try {
+            return (T) this.geneQuery().getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public List<T> list() {
