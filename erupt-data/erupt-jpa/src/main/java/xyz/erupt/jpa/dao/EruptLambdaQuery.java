@@ -9,6 +9,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.linq.lambda.SFunction;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -154,7 +155,11 @@ public class EruptLambdaQuery<T> {
     }
 
     public T one() {
-        return (T) this.geneQuery().getSingleResult();
+        try {
+            return (T) this.geneQuery().getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public List<T> list() {
