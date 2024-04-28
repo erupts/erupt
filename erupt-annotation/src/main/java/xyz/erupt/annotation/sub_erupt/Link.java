@@ -10,14 +10,13 @@ import java.beans.Transient;
  */
 public @interface Link {
 
-    @Comment("要关联的erupt类，注意：该类需要配置访问权限")
+    @Comment("erupt class to associate with. Note that this class needs to be configured with access permissions")
     Class<?> linkErupt();
 
     @Transient
-    @Comment("被关联列，this.joinColumn = linkErupt.column")
     String column() default "id";
 
     @Transient
-    @Comment("需要关联的列，this.joinColumn = linkErupt.column ")
+    @Comment("Column in linkErupt → this.column = linkErupt.joinColumn")
     String joinColumn();
 }
