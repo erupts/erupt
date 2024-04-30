@@ -41,7 +41,7 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
-    public <E, R> EruptLambdaQuery<T> eq(SFunction<E, R> field, Object val) {
+    public <R> EruptLambdaQuery<T> eq(SFunction<T, R> field, Object val) {
         String placeholder = this.genePlaceholder();
         querySchema.getWheres().add(geneField(field) + " = :" + placeholder);
         querySchema.getParams().put(placeholder, val);
