@@ -166,8 +166,44 @@ public class EruptLambdaQuery<T> {
         return this.geneQuery().getResultList();
     }
 
+    public Long count() {
+        this.querySchema.columns.add("count(*)");
+        return (Long) geneQuery().getSingleResult();
+    }
+
+    public Long count(SFunction<T, ?> field) {
+        this.querySchema.columns.add(getAggregateStr("count", field));
+        return (Long) geneQuery().getSingleResult();
+    }
+
+    public Object sum(SFunction<T, ?> field) {
+        this.querySchema.columns.add(getAggregateStr("sum", field));
+        return geneQuery().getSingleResult();
+    }
+
+    public Double avg(SFunction<T, ?> field) {
+        this.querySchema.columns.add(getAggregateStr("avg", field));
+        return (Double) geneQuery().getSingleResult();
+    }
+
+    public Object min(SFunction<T, ?> field) {
+        this.querySchema.columns.add(getAggregateStr("min", field));
+        return geneQuery().getSingleResult();
+    }
+
+    public Object max(SFunction<T, ?> field) {
+        this.querySchema.columns.add(getAggregateStr("max", field));
+        return geneQuery().getSingleResult();
+    }
+
     private Query geneQuery() {
-        StringBuilder expr = new StringBuilder(SqlLang.FROM + eruptClass.getSimpleName() + SqlLang.AS + eruptClass.getSimpleName());
+        StringBuilder select = new StringBuilder();
+        if (!querySchema.columns.isEmpty()) {
+            select.append("select ");
+            querySchema.getColumns().forEach(it -> select.append(it).append(","));
+            select.deleteCharAt(select.length() - 1).append(" ");
+        }
+        StringBuilder expr = new StringBuilder(select + SqlLang.FROM + eruptClass.getSimpleName() + SqlLang.AS + eruptClass.getSimpleName());
         if (!querySchema.getWheres().isEmpty()) {
             expr.append(SqlLang.WHERE).append(String.join(SqlLang.AND, querySchema.getWheres()));
         }
@@ -179,6 +215,10 @@ public class EruptLambdaQuery<T> {
         Optional.ofNullable(querySchema.getLimit()).ifPresent(query::setMaxResults);
         Optional.ofNullable(querySchema.getOffset()).ifPresent(query::setFirstResult);
         return query;
+    }
+
+    private String getAggregateStr(String function, SFunction<T, ?> field) {
+        return function + "(" + LambdaSee.field(field) + ")";
     }
 
     private String genePlaceholder() {
@@ -193,6 +233,8 @@ public class EruptLambdaQuery<T> {
     @Getter
     @Setter
     public static class QuerySchema {
+
+        private List<String> columns = new ArrayList<>();
 
         private Map<String, Object> params = new HashMap<>();
 
