@@ -19,4 +19,7 @@ public @interface Link {
     @Transient
     @Comment("Column in linkErupt → this.column = linkErupt.joinColumn")
     String joinColumn();
+
+    @Comment("Other conditions for the link")
+    String linkCondition() default "";
 }
