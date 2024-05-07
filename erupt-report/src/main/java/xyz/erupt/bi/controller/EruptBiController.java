@@ -60,9 +60,7 @@ public class EruptBiController {
     @GetMapping("/{code}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     public BiVo getBuilder(@PathVariable("code") String code, HttpServletResponse response) {
-        Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
-            this.put("code", code);
-        }});
+        Bi bi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getCode, code).one();
         if (null == bi) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;
@@ -129,9 +127,7 @@ public class EruptBiController {
         if (pageSize >= eruptBiProp.getSingleMaxResultNum()) {
             throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
         }
-        Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
-            this.put("code", code);
-        }});
+        Bi bi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getCode,code).one();
         this.validateQuery(bi, query);
         biService.verifyBiMenuPermissions(bi, code);
         if (null != sortField) {
@@ -149,9 +145,7 @@ public class EruptBiController {
                             @RequestBody Map<String, Object> query) {
         if (pageSize >= eruptBiProp.getSingleMaxResultNum())
             throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
-        Bi bi = eruptDao.queryEntity(Bi.class, "code = :code", new HashMap<String, Object>(1) {{
-            this.put("code", code);
-        }});
+        Bi bi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getCode,code).one();
         for (BiColumn biColumn : bi.getBiColumns()) {
             if (drillCode == biColumn.getName().hashCode()) {
                 BiData biData = new BiData();
@@ -202,8 +196,8 @@ public class EruptBiController {
     /**
      * 参照表格接口
      *
-     * @param code      报表编码
-     * @param id        维度 ID
+     * @param code 报表编码
+     * @param id   维度 ID
      * @return 表格对象
      */
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)

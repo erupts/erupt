@@ -23,6 +23,7 @@ import java.util.List;
 
 /**
  * 发布到菜单的按钮逻辑
+ *
  * @author YuePeng
  * date 2023/6/4 17:51
  */
@@ -48,10 +49,9 @@ public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
             throw new EruptWebApiRuntimeException("报表发布请联系 '超级管理员' 操作！");
         }
         Bi bi = data.get(0);
-        Erupts.requireNull(eruptDao.queryEntity(EruptMenu.class, String.format("code = '%s'", bi.getCode())),
+        Erupts.requireNull(eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, bi.getCode()),
                 "菜单已存在请勿重复发布");
-        Integer max = (Integer) eruptDao.getEntityManager()
-                .createQuery("select max(sort) from " + EruptMenu.class.getSimpleName()).getSingleResult();
+        Integer max = (Integer) eruptDao.lambdaQuery(EruptMenu.class).max(EruptMenu::getSort);;
         EruptMenu eruptMenu = new EruptMenu(bi.getCode(), biReleaseModal.getName(), BiConst.MENU_TYPE,
                 bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());
         eruptDao.persist(eruptMenu);
