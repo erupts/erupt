@@ -11,7 +11,6 @@ import xyz.erupt.jpa.dao.EruptDao;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -34,9 +33,7 @@ public class EruptNodeMicroservice {
     private EruptCloudServerProp eruptCloudServerProp;
 
     public CloudNode findNodeByAppName(String nodeName, String accessToken) {
-        CloudNode cloudNode = eruptDao.queryEntity(CloudNode.class, CloudNode.NODE_NAME + " = :" + CloudNode.NODE_NAME, new HashMap<String, Object>() {{
-            this.put(CloudNode.NODE_NAME, nodeName);
-        }});
+        CloudNode cloudNode = eruptDao.lambdaQuery(CloudNode.class).eq(CloudNode::getNodeName, nodeName).one();
         if (null == cloudNode) {
             throw new RuntimeException("NodeName: '" + nodeName + "' not found");
         }
