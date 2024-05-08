@@ -49,8 +49,7 @@ public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
             throw new EruptWebApiRuntimeException("报表发布请联系 '超级管理员' 操作！");
         }
         Bi bi = data.get(0);
-        Erupts.requireNull(eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, bi.getCode()),
-                "菜单已存在请勿重复发布");
+        Erupts.requireNull(eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, bi.getCode()).one(), "菜单已存在请勿重复发布");
         Integer max = (Integer) eruptDao.lambdaQuery(EruptMenu.class).max(EruptMenu::getSort);;
         EruptMenu eruptMenu = new EruptMenu(bi.getCode(), biReleaseModal.getName(), BiConst.MENU_TYPE,
                 bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());

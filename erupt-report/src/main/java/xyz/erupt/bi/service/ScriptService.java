@@ -22,8 +22,11 @@ import java.util.List;
 public class ScriptService {
 
     public static final String FUNCTION_CACHE_KEY = "bi-function-cache-key";
+
     private final EruptCache<String> functionCache = new EruptCacheLRU<>(1);
+
     private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(BiConst.SCRIPT_ENGINE);
+
     @Resource
     private EruptDao eruptDao;
 
@@ -49,10 +52,10 @@ public class ScriptService {
 
     public String findFunction() {
         return functionCache.getAndSet(FUNCTION_CACHE_KEY, 1500, () -> {
-            List<Object[]> list = eruptDao.queryObjectList(BiFunction.class, null, null, "jsFunction");
+            List<String> list = eruptDao.lambdaQuery(BiFunction.class).listSelect(BiFunction::getJsFunction);
             StringBuilder sb = new StringBuilder();
-            for (Object o : list) {
-                sb.append((String) o).append("\n");
+            for (String fun : list) {
+                sb.append(fun).append("\n");
             }
             return sb.toString();
         });
