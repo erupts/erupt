@@ -123,6 +123,12 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    /**
+     * 添加自定义条件
+     *
+     * @param condition :xxx 的占位符可以被 params参数运行时替换，防止 SQL 注入
+     * @param params    条件参数
+     */
     public EruptLambdaQuery<T> addCondition(String condition, Map<String, Object> params) {
         querySchema.getWheres().add(condition);
         Optional.ofNullable(params).ifPresent(it -> querySchema.getParams().putAll(params));
@@ -154,6 +160,7 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+
     public T one() {
         try {
             return (T) this.geneQuery().getSingleResult();
@@ -166,33 +173,63 @@ public class EruptLambdaQuery<T> {
         return this.geneQuery().getResultList();
     }
 
+    public final <S> S oneSelect(SFunction<T, S> field) {
+        this.querySchema.columns.add(LambdaSee.field(field));
+        try {
+            return (S) this.geneQuery().getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public final <S> List<S> listSelect(SFunction<T, S> field) {
+        this.querySchema.columns.add(LambdaSee.field(field));
+        return this.geneQuery().getResultList();
+    }
+
+    @SafeVarargs
+    public final List<Object[]> listSelects(SFunction<T, ?>... fields) {
+        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
+        return this.geneQuery().getResultList();
+    }
+
+    @SafeVarargs
+    public final Object[] oneSelects(SFunction<T, ?>... fields) {
+        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
+        try {
+            return (Object[]) this.geneQuery().getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
     public Long count() {
         this.querySchema.columns.add("count(*)");
         return (Long) geneQuery().getSingleResult();
     }
 
     public Long count(SFunction<T, ?> field) {
-        this.querySchema.columns.add(getAggregateStr("count", field));
+        this.querySchema.columns.add("count(" + LambdaSee.field(field) + ")");
         return (Long) geneQuery().getSingleResult();
     }
 
     public Object sum(SFunction<T, ?> field) {
-        this.querySchema.columns.add(getAggregateStr("sum", field));
+        this.querySchema.columns.add("sum(" + LambdaSee.field(field) + ")");
         return geneQuery().getSingleResult();
     }
 
     public Double avg(SFunction<T, ?> field) {
-        this.querySchema.columns.add(getAggregateStr("avg", field));
+        this.querySchema.columns.add("avg(" + LambdaSee.field(field) + ")");
         return (Double) geneQuery().getSingleResult();
     }
 
     public Object min(SFunction<T, ?> field) {
-        this.querySchema.columns.add(getAggregateStr("min", field));
+        this.querySchema.columns.add("min(" + LambdaSee.field(field) + ")");
         return geneQuery().getSingleResult();
     }
 
     public Object max(SFunction<T, ?> field) {
-        this.querySchema.columns.add(getAggregateStr("max", field));
+        this.querySchema.columns.add("max(" + LambdaSee.field(field) + ")");
         return geneQuery().getSingleResult();
     }
 
@@ -215,10 +252,6 @@ public class EruptLambdaQuery<T> {
         Optional.ofNullable(querySchema.getLimit()).ifPresent(query::setMaxResults);
         Optional.ofNullable(querySchema.getOffset()).ifPresent(query::setFirstResult);
         return query;
-    }
-
-    private String getAggregateStr(String function, SFunction<T, ?> field) {
-        return function + "(" + LambdaSee.field(field) + ")";
     }
 
     private String genePlaceholder() {
