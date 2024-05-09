@@ -56,8 +56,8 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void addBehavior(EruptMenu eruptMenu) {
-        Integer obj = (Integer) eruptDao.getEntityManager().createQuery("select max(sort) from " + EruptMenu.class.getSimpleName()).getSingleResult();
-        Optional.ofNullable(obj).ifPresent(it -> eruptMenu.setSort(it + 10));
+        Integer sort = (Integer) eruptDao.lambdaQuery(EruptMenu.class).max(EruptMenu::getSort);
+        Optional.ofNullable(sort).ifPresent(it -> eruptMenu.setSort(it + 10));
         eruptMenu.setStatus(MenuStatus.OPEN.getValue());
     }
 

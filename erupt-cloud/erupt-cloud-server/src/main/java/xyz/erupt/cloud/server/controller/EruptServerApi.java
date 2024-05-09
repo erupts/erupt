@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
+import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.cloud.server.service.EruptNodeMicroservice;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptConst;
@@ -62,10 +63,8 @@ public class EruptServerApi {
 
     @GetMapping(CloudRestApiConst.NODE_CONFIG + "/{nodeName}")
     public String getNodeConfig(@PathVariable String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
-        return (String) eruptDao.getEntityManager()
-                .createQuery("select config from CloudNode where nodeName = :nodeName and accessToken = :accessToken")
-                .setParameter("nodeName", nodeName)
-                .setParameter("accessToken", accessToken).getSingleResult();
+        return eruptDao.lambdaQuery(CloudNode.class).eq(CloudNode::getNodeName, nodeName)
+                .eq(CloudNode::getAccessToken, accessToken).oneSelect(CloudNode::getConfig);
     }
 
     @GetMapping(CloudRestApiConst.NODE_GROUP_CONFIG + "/{nodeName}")
@@ -75,7 +74,6 @@ public class EruptServerApi {
                 .setParameter("nodeName", nodeName)
                 .setParameter("accessToken", accessToken).getSingleResult();
     }
-
 
 
     //用户信息
