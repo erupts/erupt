@@ -8,11 +8,15 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.persistence.*;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +51,7 @@ public class EruptJpaUtils {
                 return;
             }
             for (View view : field.getEruptField().views()) {
-                if (view.column().length() == 0) {
+                if (view.column().isEmpty()) {
                     cols.add(eruptNameSymbol + field.getFieldName() + AS + field.getFieldName());
                 } else {
                     cols.add(eruptNameSymbol + field.getFieldName() + EruptConst.DOT + view.column() + AS + field.getFieldName() + "_"
@@ -81,28 +85,29 @@ public class EruptJpaUtils {
 
     public static String generateEruptJoinHql(EruptModel eruptModel) {
         StringBuffer hql = new StringBuffer();
-        ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
-            if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                EruptFieldModel model = eruptModel.getEruptFieldMap().get(field.getName());
-                if (model != null) {
-                    Set<String> pathSet = new HashSet<>();
-                    View[] views = model.getEruptField().views();
-                    for (View v : views) {
-                        String columnPath = v.column();
-                        if (columnPath.contains(EruptConst.DOT)) {
-                            String path = eruptModel.getEruptName() + EruptConst.DOT + field.getName() + EruptConst.DOT + columnPath.substring(0, columnPath.lastIndexOf(EruptConst.DOT));
-                            if (!pathSet.contains(path)) {
-                                hql.append(LEFT_JOIN).append(path);
-                                pathSet.add(path);
-                            }
-                        } else {
-                            hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(EruptConst.DOT).append(field.getName()).append(AS).append(field.getName());
-                        }
+        // 优化join语句的生成性能，使用已缓存的字段集合
+        eruptModel.getEruptFieldModels().forEach(eruptFieldModel -> generateEruptJoinHqlByField(eruptModel.getEruptName(), eruptFieldModel, hql));
+        return hql.toString();
+    }
+
+    private static void generateEruptJoinHqlByField(String eruptModelName, EruptFieldModel eruptFieldModel, StringBuffer hql) {
+        Field field = eruptFieldModel.getField();
+        if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
+            Set<String> pathSet = new HashSet<>();
+            View[] views = eruptFieldModel.getEruptField().views();
+            for (View v : views) {
+                String columnPath = v.column();
+                if (columnPath.contains(EruptConst.DOT)) {
+                    String path = eruptModelName + EruptConst.DOT + field.getName() + EruptConst.DOT + columnPath.substring(0, columnPath.lastIndexOf(EruptConst.DOT));
+                    if (!pathSet.contains(path)) {
+                        hql.append(LEFT_JOIN).append(path);
+                        pathSet.add(path);
                     }
+                } else {
+                    hql.append(LEFT_JOIN).append(eruptModelName).append(EruptConst.DOT).append(field.getName()).append(AS).append(field.getName());
                 }
             }
-        });
-        return hql.toString();
+        }
     }
 
     public static String geneEruptHqlCondition(EruptModel eruptModel, List<Condition> conditions, List<String> customCondition) {

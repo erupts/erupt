@@ -8,7 +8,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -51,13 +53,20 @@ public class ReflectUtil {
 
     public static void findClassAllFields(Class<?> clazz, Consumer<Field> fieldConsumer) {
         Class<?> tempClass = clazz;
+        Set<String> consumedFields = new HashSet<>();
         while (null != tempClass) {
             for (Field field : tempClass.getDeclaredFields()) {
+                // 从子类向上进行字段处理，父类中被子类复写的字段不做处理
+                if (consumedFields.contains(field.getName())) {
+                    continue;
+                }
                 int mod = field.getModifiers();
                 if (Modifier.isStatic(mod) || Modifier.isInterface(mod)) {
                     continue;
                 }
                 fieldConsumer.accept(field);
+                // 已经消费过的字段加入到集合中
+                consumedFields.add(field.getName());
             }
             tempClass = tempClass.getSuperclass();
         }
