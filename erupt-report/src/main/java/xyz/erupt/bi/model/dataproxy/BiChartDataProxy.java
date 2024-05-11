@@ -29,9 +29,8 @@ public class BiChartDataProxy implements DataProxy<BiChart> {
     @Override
     public void beforeAdd(BiChart biChart) {
         if (null == biChart.getSort()) {
-            Integer obj = (Integer) eruptDao.getEntityManager().createQuery(
-                    "select max(sort) from " + BiChart.class.getSimpleName() + " where bi.id = " + biChart.getBi().getId()).getSingleResult();
-            biChart.setSort((obj == null) ? 10 : obj + 10);
+            Integer sort = (Integer) eruptDao.lambdaQuery(BiChart.class).addCondition("bi.id = " + biChart.getBi().getId()).max(BiChart::getSort);
+            biChart.setSort((sort == null) ? 10 : sort + 10);
         }
     }
 
