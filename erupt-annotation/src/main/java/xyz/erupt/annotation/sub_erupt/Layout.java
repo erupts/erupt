@@ -20,6 +20,8 @@ public @interface Layout {
     //可选分页数
     int[] pageSizes() default {10, 20, 30, 50, 100, 300, 500};
 
+    //页面刷新时间
+    int refreshTime() default -1;
 
     enum FormSize {
         //默认
