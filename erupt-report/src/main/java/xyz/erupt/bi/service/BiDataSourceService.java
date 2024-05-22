@@ -11,6 +11,7 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.bi.model.BiDataSource;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.util.Erupts;
+import xyz.erupt.core.util.TypeUtil;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -57,7 +58,7 @@ public class BiDataSourceService implements DataProxy<BiDataSource>, DisposableB
                             try {
                                 Field field = HikariConfig.class.getDeclaredField(k.toString());
                                 field.setAccessible(true);
-                                field.set(hikariDataSource, v);
+                                field.set(hikariDataSource, TypeUtil.typeStrConvertObject(v, field.getType()));
                             } catch (IllegalAccessException | NoSuchFieldException ignored) {
                             }
                         });

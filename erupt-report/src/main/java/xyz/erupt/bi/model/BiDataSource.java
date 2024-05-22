@@ -100,7 +100,7 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            edit = @Edit(title = "连接池配置", desc = "参考hikari,key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
+            edit = @Edit(title = "连接池配置", desc = "参考hikari,格式：key=value", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "ini"))
     )
     private String poolConfig;
 
