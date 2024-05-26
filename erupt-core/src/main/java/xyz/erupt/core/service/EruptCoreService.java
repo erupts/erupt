@@ -120,6 +120,10 @@ public class EruptCoreService implements ApplicationRunner {
             int length = it.info().getName().length();
             if (length > moduleMaxCharLength.get()) moduleMaxCharLength.set(length);
         });
+//        if (eruptProp.isHotBuild()) {
+//            hotBuild = eruptProp.isHotBuild();
+//            log.info(ansi().fg(Ansi.Color.RED).a("Erupt Hot Build").reset().toString());
+//        }
         EruptModuleInvoke.invoke(it -> {
             it.run();
             MODULES.add(it.info().getName());
@@ -127,8 +131,8 @@ public class EruptCoreService implements ApplicationRunner {
                     moduleMaxCharLength.get()), timeRecorder.recorder()
             );
         });
-        log.info("Erupt modules : " + MODULES.size());
-        log.info("Erupt classes : " + ERUPTS.size());
+        log.info("Erupt modules : {}", MODULES.size());
+        log.info("Erupt classes : {}", ERUPTS.size());
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
         log.info("<" + repeat("===", 20) + ">");
     }
