@@ -79,7 +79,12 @@ public class EruptUtil {
                             label = referenceTableType.label();
                         }
                         Map<String, Object> referMap = new HashMap<>();
-                        referMap.put(id, ReflectUtil.findFieldChain(id, value));
+                        Object rid = ReflectUtil.findFieldChain(id, value);
+                        if (null == rid) {
+                            referMap.put(id, null);
+                        } else {
+                            referMap.put(id, rid.toString());
+                        }
                         referMap.put(label, ReflectUtil.findFieldChain(label, value));
                         for (View view : eruptField.views()) {
                             //修复表格列无法显示子类属性（例如xxx.yyy.zzz这样的列配置）的缺陷，要配合前端的bug修复。
@@ -99,7 +104,7 @@ public class EruptUtil {
                     case TAB_TREE:
                         EruptModel tabEruptModel = EruptCoreService.getErupt(fieldModel.getFieldReturnName());
                         Collection<?> collection = (Collection<?>) value;
-                        if (collection.size() > 0) {
+                        if (!collection.isEmpty()) {
                             Set<Object> idSet = new HashSet<>();
                             Field primaryField = ReflectUtil.findClassField(collection.iterator().next().getClass(),
                                     tabEruptModel.getErupt().primaryKeyCol());
@@ -121,6 +126,7 @@ public class EruptUtil {
                         break;
                     default:
                         if (fieldModel.getField().getType() == Long.class ||
+                                fieldModel.getField().getType() == Float.class ||
                                 fieldModel.getField().getType() == Double.class ||
                                 fieldModel.getField().getType() == BigDecimal.class) {
                             map.put(field.getName(), value.toString());

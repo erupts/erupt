@@ -6,7 +6,6 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.fun.FilterHandler;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
@@ -18,16 +17,14 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.upms.looker.LookerSelf;
+import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 import xyz.erupt.upms.model.input.ResetPassword;
 import xyz.erupt.upms.model.input.ResetPasswordExec;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,7 +47,7 @@ import java.util.Set;
 @EruptI18n
 @Getter
 @Setter
-public class EruptUser extends LookerSelf implements FilterHandler {
+public class EruptUser extends LookerSelf {
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
@@ -105,7 +102,7 @@ public class EruptUser extends LookerSelf implements FilterHandler {
                     title = "首页菜单",
                     type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id"),
-                    filter = @Filter(conditionHandler = EruptUser.class)
+                    filter = @Filter(conditionHandler = EruptMenuViewFilter.class)
             )
     )
     private EruptMenu eruptMenu;
@@ -208,14 +205,6 @@ public class EruptUser extends LookerSelf implements FilterHandler {
 
     public EruptUser(Long id) {
         this.setId(id);
-    }
-
-    @Override
-    public String filter(String condition, String[] params) {
-        List<String> nts = new ArrayList<>();
-        nts.add(MenuTypeEnum.API.getCode());
-        nts.add(MenuTypeEnum.BUTTON.getCode());
-        return String.format("EruptMenu.type not in ('%s') or EruptMenu.type is null", String.join("','", nts));
     }
 
 }
