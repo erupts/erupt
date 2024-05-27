@@ -220,9 +220,7 @@ public class EruptUserService {
     }
 
     private EruptUser findEruptUserByAccount(String account) {
-        return eruptDao.queryEntity(EruptUser.class, "account = :account", new HashMap<String, Object>(1) {{
-            this.put("account", account);
-        }});
+        return eruptDao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, account).one();
     }
 
     //获取登录用户名

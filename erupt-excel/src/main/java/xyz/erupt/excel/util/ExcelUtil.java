@@ -28,11 +28,14 @@ public class ExcelUtil {
         return style;
     }
 
+    private static final String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
+
     public static OutputStream downLoadFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
         try {
             String headStr = "attachment; filename=" + java.net.URLEncoder.encode(fileName, StandardCharsets.UTF_8.name());
             response.setContentType("application/x-download");
-            response.setHeader("Content-Disposition", headStr);
+            response.setHeader(CONTENT_DISPOSITION_HEADER, headStr);
+            response.addHeader("Access-Control-Expose-Headers", CONTENT_DISPOSITION_HEADER);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             return response.getOutputStream();
         } catch (IOException e) {

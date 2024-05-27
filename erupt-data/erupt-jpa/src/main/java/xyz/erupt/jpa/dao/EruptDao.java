@@ -41,8 +41,6 @@ public class EruptDao {
 
     private static final String AS = " as ";
 
-    private static final String EQU = " = ";
-
     private static final String WHERE = " where ";
 
     public <T> T findById(Class<T> clazz, Object id) {
@@ -63,10 +61,6 @@ public class EruptDao {
         }
     }
 
-    public void flush() {
-        entityManager.flush();
-    }
-
     //删除
     public void delete(Object obj) {
         entityManager.remove(obj);
@@ -82,8 +76,17 @@ public class EruptDao {
         this.flush();
     }
 
+    public void flush() {
+        entityManager.flush();
+    }
+
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    @Comment("根据数据源名称获取 EntityManager 注意：必须手动执行 entityManager.close() 方法")
+    public EntityManager getEntityManager(String name) {
+        return entityManagerService.findEntityManager(name);
     }
 
     public JdbcTemplate getJdbcTemplate() {
@@ -98,16 +101,15 @@ public class EruptDao {
         return new EruptLambdaQuery<>(entityManager, eruptClass);
     }
 
-    @Comment("根据数据源名称获取 EntityManager 注意：必须手动执行 entityManager.close() 方法")
-    public EntityManager getEntityManager(String name) {
-        return entityManagerService.findEntityManager(name);
+    public <T> EruptLambdaQuery<T> lambdaQuery(EntityManager entityManager, Class<T> eruptClass) {
+        return new EruptLambdaQuery<>(entityManager, eruptClass);
     }
 
     //不存在则新增
     public <T> T persistIfNotExist(Class<T> eruptClass, T obj, String field, String val) throws NonUniqueResultException {
-        T t = (T) queryEntity(eruptClass, field + EQU + " :val", new HashMap<String, Object>(1) {{
+        T t = (T) this.lambdaQuery(eruptClass).addCondition(field + " = :val", new HashMap<String, Object>(1) {{
             this.put("val", val);
-        }});
+        }}).one();
         if (null == t) {
             entityManager.persist(obj);
             entityManager.flush();
@@ -117,26 +119,32 @@ public class EruptDao {
     }
 
     //以下方法调用时需考虑sql注入问题，切勿随意传递expr参数值!!!
+    @Deprecated
     public List<Map<String, Object>> queryMapList(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) {
         return simpleQuery(eruptClass, true, expr, param, cols).getResultList();
     }
 
+    @Deprecated
     public List<Object[]> queryObjectList(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) {
         return simpleQuery(eruptClass, false, expr, param, cols).getResultList();
     }
 
+    @Deprecated
     public <T> List<T> queryEntityList(Class<T> eruptClass, String expr, Map<String, Object> param) {
         return simpleQuery(eruptClass, false, expr, param).getResultList();
     }
 
+    @Deprecated
     public <T> List<T> queryEntityList(Class<T> eruptClass, String expr) {
         return this.queryEntityList(eruptClass, expr, null);
     }
 
+    @Deprecated
     public <T> List<T> queryEntityList(Class<T> eruptClass) {
         return this.queryEntityList(eruptClass, null);
     }
 
+    @Deprecated
     public Map<String, Object> queryMap(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
         try {
             return (Map<String, Object>) simpleQuery(eruptClass, true, expr, param, cols).getSingleResult();
@@ -145,6 +153,7 @@ public class EruptDao {
         }
     }
 
+    @Deprecated
     public Object[] queryObject(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
         try {
             return (Object[]) simpleQuery(eruptClass, false, expr, param, cols).getSingleResult();
@@ -153,6 +162,7 @@ public class EruptDao {
         }
     }
 
+    @Deprecated
     public <T> T queryEntity(Class<T> eruptClass, String expr, Map<String, Object> param) throws NonUniqueResultException {
         try {
             return (T) simpleQuery(eruptClass, false, expr, param).getSingleResult();
@@ -161,14 +171,17 @@ public class EruptDao {
         }
     }
 
+    @Deprecated
     public <T> T queryEntity(Class<T> eruptClass, String expr) {
         return this.queryEntity(eruptClass, expr, null);
     }
 
+    @Deprecated
     public <T> T queryEntity(Class<T> eruptClass) {
         return this.queryEntity(eruptClass, null);
     }
 
+    @Deprecated
     private Query simpleQuery(Class<?> eruptClass, boolean isMap, String expr, Map<String, Object> paramMap, String... cols) {
         StringBuilder sb = new StringBuilder();
         if (cols.length > 0) {

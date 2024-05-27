@@ -2,6 +2,7 @@ package xyz.erupt.upms.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.constant.EruptReqHeader;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.service.EruptCoreService;
@@ -43,6 +44,14 @@ public class EruptContextService {
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
                 , (metaErupt.getMenuValue() == null ? metaErupt.getName() : metaErupt.getMenuValue()).toLowerCase(),
                 EruptMenu.class);
+    }
+
+    public String getDrillValue() {
+        return request.getHeader(EruptReqHeader.DRILL_VALUE);
+    }
+
+    public String getDrillSourceErupt() {
+        return request.getHeader(EruptReqHeader.DRILL_SOURCE_ERUPT);
     }
 
 }

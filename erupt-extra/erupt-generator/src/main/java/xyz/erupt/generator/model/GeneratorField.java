@@ -22,8 +22,9 @@ import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @EruptI18n
 @Erupt(name = "Erupt字段信息", dataProxy = GeneratorField.class)
@@ -63,8 +64,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
     @EruptField(
             views = @View(title = "关联实体类"),
             edit = @Edit(title = "关联实体类", showBy = @ShowBy(dependField = "type",
-                    expr = "value == 'REFERENCE_TREE'||value == 'REFERENCE_TABLE'||value == 'CHECKBOX'||" +
-                            "value == 'TAB_TREE'||value == 'TAB_TABLE_REFER'||value == 'TAB_TABLE_ADD'"))
+                    expr = "value.indexOf('REFERENCE') != -1 || value.indexOf('TAB') != -1 || value == 'CHECKBOX' || value == 'COMBINE'"))
     )
     private String linkClass;
 
@@ -95,11 +95,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
 
     @Override
     public List<VLModel> fetch(String[] params) {
-        List<VLModel> list = new ArrayList<>();
-        for (GeneratorType value : GeneratorType.values()) {
-            list.add(new VLModel(value.name(), value.getName()));
-        }
-        return list;
+        return Arrays.stream(GeneratorType.values()).map(it -> new VLModel(it.name(), it.getName(), it.name())).collect(Collectors.toList());
     }
 
     @SneakyThrows

@@ -12,6 +12,9 @@ import java.util.Set;
 public enum GeneratorType {
     INPUT(EditType.INPUT, "文本输入", String.class.getSimpleName(), "inputType = @InputType"),
     PASSWORD(EditType.INPUT, "密码输入", String.class.getSimpleName(), "inputType = @InputType(type = \"password\")"),
+    TEXTAREA(EditType.TEXTAREA, "多行文本框", String.class.getSimpleName(), null),
+    HTML_EDITOR(EditType.HTML_EDITOR, "富文本编辑器", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), "htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR)"),
+    CODE_EDITOR(EditType.CODE_EDITOR, "代码编辑器", HTML_EDITOR.type + String.class.getSimpleName(), "codeEditType = @CodeEditorType(language = \"sql\")"),
     COLOR(EditType.COLOR, "颜色选择", String.class.getSimpleName(), null),
     NUMBER(EditType.NUMBER, "数值框", Integer.class.getSimpleName(), "numberType = @NumberType"),
     SLIDER(EditType.SLIDER, "数字滑块", Integer.class.getSimpleName(), "sliderType = @SliderType(max = 999)"),
@@ -28,13 +31,30 @@ public enum GeneratorType {
     ATTACHMENT(EditType.ATTACHMENT, "附件", String.class.getSimpleName(), "attachmentType = @AttachmentType"),
     IMAGE(EditType.ATTACHMENT, "图片", String.class.getSimpleName(), "attachmentType = @AttachmentType(type = AttachmentType.Type.IMAGE)"),
     AUTO_COMPLETE(EditType.AUTO_COMPLETE, "自动补全", String.class.getSimpleName(), "autoCompleteType = @AutoCompleteType(handler = AutoCompleteHandler.class)"),
-    HTML_EDITOR(EditType.HTML_EDITOR, "富文本编辑器", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), "htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR)"),
-    TEXTAREA(EditType.TEXTAREA, "多行文本框", HTML_EDITOR.type, null),
-    CODE_EDITOR(EditType.CODE_EDITOR, "代码编辑器", HTML_EDITOR.type + String.class.getSimpleName(), "codeEditType = @CodeEditorType(language = \"sql\")"),
+    MAP(EditType.MAP, "地图", String.class.getSimpleName(), null),
+    DIVIDE(EditType.DIVIDE, "分割线", String.class.getSimpleName(), null) {
+        @Override
+        public String annotation(String thisErupt, String linkErupt) {
+            return "@" + Transient.class.getSimpleName();
+        }
+    },
+    @Ref COMBINE(EditType.COMBINE, "一对一新增", null, null) {
+        @Override
+        public String annotation(String thisErupt, String linkErupt) {
+            return "@OneToOne(cascade = CascadeType.ALL)\n" +
+                    "        @JoinColumn";
+        }
+
+        @Override
+        public String fieldType(String thisErupt, String linkErupt) {
+            return linkErupt;
+        }
+    },
     @Ref REFERENCE_TREE(EditType.REFERENCE_TREE, "树引用", null, "referenceTreeType = @ReferenceTreeType(id = \"id\", label = \"name\")") {
         @Override
         public String annotation(String thisErupt, String linkErupt) {
-            return "@ManyToOne";
+            return "@ManyToOne\n" +
+                    "        @JoinColumn";
         }
 
         @Override
@@ -51,6 +71,40 @@ public enum GeneratorType {
         @Override
         public String fieldType(String thisErupt, String linkErupt) {
             return REFERENCE_TREE.fieldType(thisErupt, linkErupt);
+        }
+    },
+    @Ref TAB_TABLE_REFER(EditType.TAB_TABLE_REFER, "一对多引用", null, null) {
+        @Override
+        public String annotation(String thisErupt, String linkErupt) {
+            return CHECKBOX.annotation(thisErupt, linkErupt);
+        }
+
+        @Override
+        public String fieldType(String thisErupt, String linkErupt) {
+            return CHECKBOX.fieldType(thisErupt, linkErupt);
+        }
+
+        @Override
+        public String importPackages() {
+            return CHECKBOX.importPackages();
+        }
+    },
+    @Ref TAB_TABLE_ADD(EditType.TAB_TABLE_ADD, "一对多新增", null, null) {
+        @Override
+        public String annotation(String thisErupt, String linkErupt) {
+            return "@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)\n" +
+                    "        @OrderBy\n" +
+                    "        @JoinColumn(name = \"" + humpToLine(thisErupt) + "_id\") ";
+        }
+
+        @Override
+        public String fieldType(String thisErupt, String linkErupt) {
+            return CHECKBOX.fieldType(thisErupt, linkErupt);
+        }
+
+        @Override
+        public String importPackages() {
+            return CHECKBOX.importPackages();
         }
     },
     @Ref CHECKBOX(EditType.CHECKBOX, "多选", null, "checkboxType = @CheckboxType(id = \"id\", label = \"name\")") {
@@ -90,53 +144,12 @@ public enum GeneratorType {
             return CHECKBOX.importPackages();
         }
     },
-    @Ref TAB_TABLE_REFER(EditType.TAB_TABLE_REFER, "一对多引用", null, null) {
-        @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return CHECKBOX.annotation(thisErupt, linkErupt);
-        }
-
-        @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return CHECKBOX.fieldType(thisErupt, linkErupt);
-        }
-
-        @Override
-        public String importPackages() {
-            return CHECKBOX.importPackages();
-        }
-    },
-    @Ref TAB_TABLE_ADD(EditType.TAB_TABLE_ADD, "一对多新增", null, null) {
-        @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return "@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)\n" +
-                    "        @OrderBy\n" +
-                    "        @JoinColumn(name = \"" + humpToLine(thisErupt) + "_id\") ";
-        }
-
-        @Override
-        public String fieldType(String thisErupt, String linkErupt) {
-            return CHECKBOX.fieldType(thisErupt, linkErupt);
-        }
-
-        @Override
-        public String importPackages() {
-            return CHECKBOX.importPackages();
-        }
-    },
-    MAP(EditType.MAP, "地图", String.class.getSimpleName(), null),
-    TPL(EditType.TPL, "自定义模板", String.class.getSimpleName(), "tplType = @Tpl(path = \"/xxx.ftl\")") {
-        @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return "@" + Transient.class.getSimpleName();
-        }
-    },
-    DIVIDE(EditType.DIVIDE, "分割线", String.class.getSimpleName(), null) {
-        @Override
-        public String annotation(String thisErupt, String linkErupt) {
-            return "@" + Transient.class.getSimpleName();
-        }
-    },
+//    TPL(EditType.TPL, "自定义模板", String.class.getSimpleName(), "tplType = @Tpl(path = \"/xxx.ftl\")") {
+//        @Override
+//        public String annotation(String thisErupt, String linkErupt) {
+//            return "@" + Transient.class.getSimpleName();
+//        }
+//    },
     HIDDEN(EditType.HIDDEN, "隐藏", String.class.getSimpleName(), null),
     EMPTY(EditType.EMPTY, "空", String.class.getSimpleName(), null);
 
