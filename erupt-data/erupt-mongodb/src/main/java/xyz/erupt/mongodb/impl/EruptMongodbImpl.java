@@ -81,30 +81,6 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
         }
     }
 
-    /**
-     * 废弃，该方法无法进行 {@link org.springframework.data.mongodb.core.mapping.Field} 映射, 请使用 {@link EruptMongodbImpl#addQueryCondition(EruptModel, EruptQuery, Query)}
-     */
-    @Deprecated
-    public void addQueryCondition(EruptQuery eruptQuery, Query query) {
-        for (Condition condition : eruptQuery.getConditions()) {
-            switch (condition.getExpression()) {
-                case EQ:
-                    query.addCriteria(Criteria.where(condition.getKey()).is(condition.getValue()));
-                    break;
-                case LIKE:
-                    query.addCriteria(Criteria.where(condition.getKey()).regex("^.*" + condition.getValue() + ".*$"));
-                    break;
-                case RANGE:
-                    List<?> list = (List<?>) condition.getValue();
-                    query.addCriteria(Criteria.where(condition.getKey()).gte(list.get(0)).lte(list.get(1)));
-                    break;
-                case IN:
-                    query.addCriteria(Criteria.where(condition.getKey()).in(condition.getValue()));
-                    break;
-            }
-        }
-    }
-
     public void addQueryCondition(EruptModel eruptModel, EruptQuery eruptQuery, Query query) {
         for (Condition condition : eruptQuery.getConditions()) {
             String conditionKey = condition.getKey();
