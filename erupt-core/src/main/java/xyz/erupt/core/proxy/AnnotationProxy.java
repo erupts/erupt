@@ -50,7 +50,7 @@ public abstract class AnnotationProxy<A, PA> {
     }
 
     public <T extends Annotation, R> boolean matchMethod(MethodInvocation invocation, SFunction<T, R> annoLambda) {
-        return invocation.getMethod().getName().equals(LambdaSee.info(annoLambda).getMethod());
+        return invocation.getMethod().getName().equals(LambdaSee.method(annoLambda));
     }
 
 }

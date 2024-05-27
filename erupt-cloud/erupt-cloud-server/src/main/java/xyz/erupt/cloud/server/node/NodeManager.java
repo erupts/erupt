@@ -71,7 +71,7 @@ public class NodeManager {
 
 
     public List<MetaNode> findAllNodes() {
-        List<String> keys = eruptDao.queryEntityList(CloudNode.class).stream().map(it ->
+        List<String> keys = eruptDao.lambdaQuery(CloudNode.class).list().stream().map(it ->
                 eruptCloudServerProp.getCloudNameSpace() + NODE_SPACE + it.getNodeName()
         ).collect(Collectors.toList());
         if (!keys.isEmpty()) {

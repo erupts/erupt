@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("erupt")
 public class EruptProp {
 
-    //热构建erupt,开启此功能后每次请求都会重新构建erupt，该功能方便启动时修改erupt代码
+    //热构建erupt, 开启此功能后每次请求都会重新构建erupt，该功能方便启动时修改erupt注解，生产环境请勿启用
     @Deprecated
     private boolean hotBuild = false;
 

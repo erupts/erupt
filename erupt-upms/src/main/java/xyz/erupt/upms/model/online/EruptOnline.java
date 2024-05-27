@@ -79,6 +79,9 @@ public class EruptOnline extends BaseModel {
     )
     private String deviceType;
 
+    @EruptField(
+            edit = @Edit(title = "Token", search = @Search)
+    )
     private String token;
 
 }

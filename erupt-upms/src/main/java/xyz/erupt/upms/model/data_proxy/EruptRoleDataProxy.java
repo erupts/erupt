@@ -34,7 +34,7 @@ public class EruptRoleDataProxy implements DataProxy<EruptRole> {
 
     @Override
     public void addBehavior(EruptRole eruptRole) {
-        Integer max = (Integer) eruptDao.getEntityManager().createQuery("select max(sort) from " + EruptRole.class.getSimpleName()).getSingleResult();
+        Integer max = (Integer) eruptDao.lambdaQuery(EruptRole.class).max(EruptRole::getSort);
         if (null == max) {
             eruptRole.setSort(10);
         } else {
