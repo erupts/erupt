@@ -50,7 +50,7 @@ public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
         }
         Bi bi = data.get(0);
         Erupts.requireNull(eruptDao.lambdaQuery(EruptMenu.class).eq(EruptMenu::getCode, bi.getCode()).one(), "菜单已存在请勿重复发布");
-        Integer max = (Integer) eruptDao.lambdaQuery(EruptMenu.class).max(EruptMenu::getSort);;
+        Integer max = (Integer) eruptDao.lambdaQuery(EruptMenu.class).max(EruptMenu::getSort);
         EruptMenu eruptMenu = new EruptMenu(bi.getCode(), biReleaseModal.getName(), BiConst.MENU_TYPE,
                 bi.getCode(), MenuStatus.OPEN.getValue(), max + 10, null, biReleaseModal.getEruptMenu());
         eruptDao.persist(eruptMenu);
@@ -75,5 +75,11 @@ public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
         //刷新当前用户菜单
         eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
         return null;
+    }
+
+    @Override
+    public BiReleaseModal eruptFormValue(List<Bi> data, BiReleaseModal biReleaseModal, String[] param) {
+        biReleaseModal.setName(data.get(0).getName());
+        return OperationHandler.super.eruptFormValue(data, biReleaseModal, param);
     }
 }
