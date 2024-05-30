@@ -41,4 +41,9 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
         return null;
     }
 
+    @Override
+    public ResetPassword eruptFormValue(List<EruptUser> data, ResetPassword resetPassword, String[] param) {
+        resetPassword.setIsMd5(data.get(0).getIsMd5());
+        return OperationHandler.super.eruptFormValue(data, resetPassword, param);
+    }
 }
