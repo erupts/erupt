@@ -8,6 +8,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.service.EruptJobService;
+import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
 import javax.persistence.Transient;
@@ -19,11 +20,14 @@ import java.util.List;
  * date 2022/9/8 21:59
  */
 @Service
-public class EruptJobDataProxy implements DataProxy<EruptJob>, OperationHandler<EruptJob, Void> {
+public class EruptJobDataProcess implements DataProxy<EruptJob>, OperationHandler<EruptJob, EruptJobExecDialog> {
 
     @Transient
     @Resource
     private EruptJobService eruptJobService;
+
+    @Resource
+    private EruptDao eruptDao;
 
     @Override
     public void beforeAdd(EruptJob eruptJob) {
@@ -52,13 +56,22 @@ public class EruptJobDataProxy implements DataProxy<EruptJob>, OperationHandler<
     }
 
     @Override
-    public String exec(List<EruptJob> eruptJob, Void param, String[] operationParam) {
+    public String exec(List<EruptJob> eruptJob, EruptJobExecDialog param, String[] operationParam) {
         try {
-            for (EruptJob job : eruptJob) eruptJobService.triggerJob(job);
+            eruptDao.getEntityManager().clear();
+            for (EruptJob job : eruptJob) {
+                job.setHandlerParam(param.getParam());
+                eruptJobService.triggerJob(job);
+            }
             return null;
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException(e.getMessage());
         }
     }
 
+    @Override
+    public EruptJobExecDialog eruptFormValue(List<EruptJob> data, EruptJobExecDialog eruptJobExecDialog, String[] param) {
+        eruptJobExecDialog.setParam(data.get(0).getHandlerParam());
+        return eruptJobExecDialog;
+    }
 }

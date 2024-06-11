@@ -13,7 +13,6 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.job.model.EruptMail;
 
 import javax.mail.internet.MimeMessage;
-import javax.persistence.Transient;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;
@@ -27,7 +26,6 @@ import java.util.Optional;
 @Service
 public class EruptMailDataProxy implements DataProxy<EruptMail> {
 
-    @Transient
     @Autowired(required = false)
     private JavaMailSenderImpl javaMailSender;
 
