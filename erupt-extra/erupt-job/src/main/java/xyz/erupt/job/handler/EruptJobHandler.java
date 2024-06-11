@@ -8,6 +8,11 @@ import xyz.erupt.annotation.config.Comment;
  */
 public interface EruptJobHandler {
 
+    @Comment("任务名称")
+    default String name() {
+        return this.getClass().getName();
+    }
+
     @Comment("任务处理类")
     String exec(@Comment("任务编码") String code, @Comment("任务参数") String param);
 

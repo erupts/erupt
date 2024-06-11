@@ -7,6 +7,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
@@ -17,7 +18,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
-import xyz.erupt.job.model.data_proxy.EruptJobDataProxy;
+import xyz.erupt.job.model.data_proxy.EruptJobDataProcess;
+import xyz.erupt.job.model.data_proxy.EruptJobExecDialog;
+import xyz.erupt.job.model.data_proxy.NotifyEmailRender;
 import xyz.erupt.job.service.ChoiceFetchEruptJobHandler;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -32,10 +35,10 @@ import javax.persistence.UniqueConstraint;
  */
 @EruptI18n
 @Erupt(
-        name = "任务维护",
-        dataProxy = EruptJobDataProxy.class,
-        drills = @Drill(title = "日志", icon = "fa fa-sliders", link = @Link(linkErupt = EruptJobLog.class, joinColumn = "eruptJob.id")),
-        rowOperation = @RowOperation(code = "action", icon = "fa fa-play", title = "执行一次任务", operationHandler = EruptJobDataProxy.class)
+        name = "任务配置",
+        dataProxy = EruptJobDataProcess.class,
+        drills = @Drill(title = "日志", icon = "fa fa-sliders", link = @Link(linkErupt = EruptJobLog.class, joinColumn = "jobId")),
+        rowOperation = @RowOperation(code = "action", icon = "fa fa-play", title = "执行一次任务", eruptClass = EruptJobExecDialog.class, operationHandler = EruptJobDataProcess.class)
 )
 @Entity
 @Table(name = "e_job", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
@@ -88,8 +91,8 @@ public class EruptJob extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "失败通知邮箱"),
-            edit = @Edit(title = "失败通知邮箱", desc = "使用此功能需配置发信邮箱", type = EditType.TAGS, tagsType = @TagsType)
+            views = @View(title = "失败通知邮箱", ifRender = @ExprBool(exprHandler = NotifyEmailRender.class)),
+            edit = @Edit(title = "失败通知邮箱", ifRender = @ExprBool(exprHandler = NotifyEmailRender.class), type = EditType.TAGS, tagsType = @TagsType)
     )
     private String notifyEmails;
 

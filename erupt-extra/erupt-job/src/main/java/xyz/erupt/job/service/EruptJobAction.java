@@ -34,7 +34,7 @@ public class EruptJobAction implements Job {
         String handler = eruptJob.getHandler();
         EruptJobLog eruptJobLog = new EruptJobLog();
         if (StringUtils.isNotBlank(handler)) {
-            eruptJobLog.setEruptJob(eruptJob);
+            eruptJobLog.setJobId(eruptJob.getId());
             eruptJobLog.setStartTime(new Date());
             EruptJobHandler jobHandler = null;
             try {

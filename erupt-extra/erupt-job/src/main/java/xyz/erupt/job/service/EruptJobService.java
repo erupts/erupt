@@ -14,7 +14,6 @@ import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,9 +96,8 @@ public class EruptJobService implements DisposableBean {
         return props;
     }
 
-    @Transactional
     public void saveJobLog(EruptJobLog eruptJobLog) {
-        eruptDao.persist(eruptJobLog);
+        eruptDao.persistAndFlush(eruptJobLog);
     }
 
     @Override

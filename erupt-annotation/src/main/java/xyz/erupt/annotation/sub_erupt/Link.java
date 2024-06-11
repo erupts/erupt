@@ -10,11 +10,11 @@ import java.beans.Transient;
  */
 public @interface Link {
 
-    @Comment("erupt class to associate with. Note that this class needs to be configured with access permissions")
-    Class<?> linkErupt();
-
     @Transient
     String column() default "id";
+
+    @Comment("erupt class to associate with. Note that this class needs to be configured with access permissions")
+    Class<?> linkErupt();
 
     @Transient
     @Comment("Column in linkErupt → this.column = linkErupt.joinColumn")
