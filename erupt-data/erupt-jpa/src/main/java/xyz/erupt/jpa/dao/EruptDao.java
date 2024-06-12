@@ -9,6 +9,7 @@ import xyz.erupt.jpa.service.EntityManagerService;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +49,23 @@ public class EruptDao {
         return entityManager.find(clazz, id);
     }
 
+    //新增
+    public void persist(Object obj) {
+        entityManager.persist(obj);
+    }
+
+    @Transactional
+    public void persistAndFlush(Object obj) {
+        this.persist(obj);
+        this.flush();
+    }
+
     //修改
     public <T> T merge(T t) {
         return entityManager.merge(t);
     }
 
+    @Transactional
     public <T> T mergeAndFlush(T t) {
         try {
             return this.merge(t);
@@ -66,14 +79,13 @@ public class EruptDao {
         entityManager.remove(obj);
     }
 
-    //新增
-    public void persist(Object obj) {
-        entityManager.persist(obj);
-    }
-
-    public void persistAndFlush(Object obj) {
-        this.persist(obj);
-        this.flush();
+    @Transactional
+    public void deleteAndFlush(Object obj) {
+        try {
+            this.delete(obj);
+        } finally {
+            this.flush();
+        }
     }
 
     public void flush() {

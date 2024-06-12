@@ -1,5 +1,6 @@
 package xyz.erupt.job.service;
 
+import lombok.Getter;
 import org.quartz.*;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
@@ -7,6 +8,7 @@ import org.quartz.impl.triggers.CronTriggerImpl;
 import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import xyz.erupt.job.model.EruptJob;
@@ -40,6 +42,10 @@ public class EruptJobService implements DisposableBean {
 
     @Autowired(required = false)
     private JavaMailSenderImpl javaMailSender;
+
+    @Getter
+    @Autowired(required = false)
+    private StringRedisTemplate stringRedisTemplate;
 
     public static final String MAIL_SENDER_KEY = "mailSensor";
 
