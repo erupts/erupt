@@ -51,7 +51,7 @@ public class BiDataProxy implements DataProxy<Bi> {
                 history.setMark(bi.getName());
                 history.setBiId(bi.getId());
                 history.setOperateBy(MetaContext.getUser().getName());
-                eruptDao.persistAndFlush(history);
+                eruptDao.persist(history);
             }
         }
     }

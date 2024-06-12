@@ -55,16 +55,16 @@ public class BiHistory extends BaseModel {
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
-            views = @View(title = "修改前表达式"),
-            edit = @Edit(title = "修改前表达式", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
+            views = @View(title = "修改前"),
+            edit = @Edit(title = "修改前", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
-            views = @View(title = "修改后表达式"),
-            edit = @Edit(title = "修改后表达式", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
+            views = @View(title = "修改后"),
+            edit = @Edit(title = "修改后", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String afterSqlStatement;
 
