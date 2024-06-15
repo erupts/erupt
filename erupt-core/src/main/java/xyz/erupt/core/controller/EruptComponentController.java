@@ -16,7 +16,7 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -68,12 +68,12 @@ public class EruptComponentController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> choiceTrigger(@PathVariable("erupt") String eruptName,
                                              @PathVariable("field") String field,
-                                             @RequestParam("field") String val) {
+                                             @RequestParam("val") Object val) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
         ChoiceType choiceType = fieldModel.getEruptField().edit().choiceType();
         if (choiceType.trigger().isInterface()) {
-            return new HashMap<>(0);
+            return Collections.emptyMap();
         } else {
             return EruptSpringUtil.getBean(choiceType.trigger()).trigger(val, choiceType.triggerParams());
         }
