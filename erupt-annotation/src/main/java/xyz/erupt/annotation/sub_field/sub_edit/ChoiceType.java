@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.ChoiceTrigger;
 
@@ -31,8 +32,8 @@ public @interface ChoiceType {
     String[] triggerParams() default {};
 
     @Comment("选择数据时触发动作")
+    @Match("#item.trigger().getSimpleName() != 'ChoiceTrigger'")
     Class<? extends ChoiceTrigger> trigger() default ChoiceTrigger.class;
-
 
     @Comment("开启后在编辑等操作时会重新获取下拉列表")
     boolean anewFetch() default false;
