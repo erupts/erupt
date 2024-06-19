@@ -21,7 +21,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
 import xyz.erupt.job.model.data_proxy.EruptJobDataProcess;
 import xyz.erupt.job.model.data_proxy.EruptJobExecDialog;
 import xyz.erupt.job.model.data_proxy.NotifyEmailRender;
-import xyz.erupt.job.service.ChoiceFetchEruptJobHandler;
+import xyz.erupt.job.service.EruptJobFetch;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.Column;
@@ -68,7 +68,7 @@ public class EruptJob extends MetaModelUpdateVo {
     @EruptField(
             views = @View(title = "JOB处理类"),
             edit = @Edit(title = "JOB处理类", desc = "实现EruptJobHandler接口即可",
-                    choiceType = @ChoiceType(fetchHandler = ChoiceFetchEruptJobHandler.class)
+                    choiceType = @ChoiceType(fetchHandler = EruptJobFetch.class)
                     , notNull = true, search = @Search, type = EditType.CHOICE)
     )
     private String handler;
