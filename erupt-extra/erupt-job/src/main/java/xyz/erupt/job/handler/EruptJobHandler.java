@@ -10,7 +10,7 @@ public interface EruptJobHandler {
 
     @Comment("任务名称")
     default String name() {
-        return this.getClass().getName();
+        return this.getClass().getSimpleName();
     }
 
     @Comment("任务处理类")

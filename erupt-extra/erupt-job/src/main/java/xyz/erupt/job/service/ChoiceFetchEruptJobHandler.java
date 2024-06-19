@@ -26,7 +26,11 @@ public class ChoiceFetchEruptJobHandler implements ChoiceFetchHandler {
             loadedJobHandler = new ArrayList<>();
             EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptJobHandler.class)}, clazz -> {
                 EruptHandlerNaming eruptHandlerNaming = clazz.getAnnotation(EruptHandlerNaming.class);
-                loadedJobHandler.add(new VLModel(clazz.getName(), (null == eruptHandlerNaming) ? clazz.getSimpleName() : eruptHandlerNaming.value()));
+                if (null == eruptHandlerNaming) {
+                    loadedJobHandler.add(new VLModel(clazz.getName(), ((EruptJobHandler) EruptSpringUtil.getBean(clazz)).name()));
+                } else {
+                    loadedJobHandler.add(new VLModel(clazz.getName(), eruptHandlerNaming.value()));
+                }
             });
         }
         return loadedJobHandler;
