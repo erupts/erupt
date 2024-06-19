@@ -16,6 +16,16 @@ public interface EruptJobHandler {
     @Comment("任务处理类")
     String exec(@Comment("任务编码") String code, @Comment("任务参数") String param);
 
+    default String cron() {
+        return "0 0 1 * * ?";
+    }
+
+    default String param() {
+        return null;
+    }
+
+    ;
+
     @Comment("任务执行成功时调用")
     default void success(@Comment("执行结果") String result, @Comment("任务参数") String param) {
     }

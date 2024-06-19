@@ -31,9 +31,6 @@ public class EruptJobDataProcess implements DataProxy<EruptJob>, OperationHandle
 
     @Override
     public void beforeAdd(EruptJob eruptJob) {
-        if (null == eruptJob.getCode()) {
-            eruptJob.setCode(Erupts.generateCode());
-        }
         try {
             eruptJobService.modifyJob(eruptJob);
         } catch (SchedulerException | ParseException e) {
@@ -73,5 +70,10 @@ public class EruptJobDataProcess implements DataProxy<EruptJob>, OperationHandle
     public EruptJobExecDialog eruptFormValue(List<EruptJob> data, EruptJobExecDialog eruptJobExecDialog, String[] param) {
         eruptJobExecDialog.setParam(data.get(0).getHandlerParam());
         return eruptJobExecDialog;
+    }
+
+    @Override
+    public void addBehavior(EruptJob eruptJob) {
+        eruptJob.setCode(Erupts.generateCode());
     }
 }

@@ -49,9 +49,18 @@ public class EruptJob extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "编码", width = "100px")
+            views = @View(title = "编码", width = "100px"),
+            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
     )
     private String code;
+
+    @EruptField(
+            views = @View(title = "任务执行器"),
+            edit = @Edit(title = "任务执行器", desc = "实现EruptJobHandler接口即可",
+                    choiceType = @ChoiceType(fetchHandler = EruptJobFetch.class, trigger = EruptJobFetch.class)
+                    , notNull = true, search = @Search, type = EditType.CHOICE)
+    )
+    private String handler;
 
     @EruptField(
             views = @View(title = "任务名称"),
@@ -64,14 +73,6 @@ public class EruptJob extends MetaModelUpdateVo {
             edit = @Edit(title = "Cron表达式", notNull = true)
     )
     private String cron;
-
-    @EruptField(
-            views = @View(title = "JOB处理类"),
-            edit = @Edit(title = "JOB处理类", desc = "实现EruptJobHandler接口即可",
-                    choiceType = @ChoiceType(fetchHandler = EruptJobFetch.class)
-                    , notNull = true, search = @Search, type = EditType.CHOICE)
-    )
-    private String handler;
 
     @EruptField(
             views = @View(title = "任务状态"),
