@@ -3,20 +3,22 @@ package xyz.erupt.job.service;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.fun.ChoiceTrigger;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.annotation.EruptHandlerNaming;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.job.handler.EruptJobHandler;
+import xyz.erupt.job.model.EruptJob;
+import xyz.erupt.linq.lambda.LambdaSee;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author YuePeng
  * date 2021/2/27 22:46
  */
-public class ChoiceFetchEruptJobHandler implements ChoiceFetchHandler {
+public class EruptJobFetch implements ChoiceFetchHandler, ChoiceTrigger {
 
     private static List<VLModel> loadedJobHandler;
 
@@ -36,4 +38,16 @@ public class ChoiceFetchEruptJobHandler implements ChoiceFetchHandler {
         return loadedJobHandler;
     }
 
+    @Override
+    public Map<String, Object> trigger(Object value, String[] params) {
+        for (VLModel vl : loadedJobHandler) {
+            if (vl.getValue().equals(value)) {
+                Map<String, Object> map = new HashMap<>();
+                map.put(LambdaSee.field(EruptJob::getHandlerParam), null);
+                map.put(LambdaSee.field(EruptJob::getCron), null);
+                return map;
+            }
+        }
+        return Collections.emptyMap();
+    }
 }
