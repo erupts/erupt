@@ -47,8 +47,12 @@ public class EruptJobFetch implements ChoiceFetchHandler, ChoiceTrigger {
                 Map<String, Object> map = new HashMap<>();
                 EruptJobHandler jobHandler = EruptSpringUtil.getBeanByPath(vl.getDesc(), EruptJobHandler.class);
                 map.put(LambdaSee.field(EruptJob::getName), vl.getLabel());
-                map.put(LambdaSee.field(EruptJob::getHandlerParam), jobHandler.param());
-                map.put(LambdaSee.field(EruptJob::getCron), jobHandler.cron());
+                if (null != jobHandler.param()) {
+                    map.put(LambdaSee.field(EruptJob::getHandlerParam), jobHandler.param());
+                }
+                if (null != jobHandler.cron()) {
+                    map.put(LambdaSee.field(EruptJob::getCron), jobHandler.cron());
+                }
                 return map;
             }
         }
