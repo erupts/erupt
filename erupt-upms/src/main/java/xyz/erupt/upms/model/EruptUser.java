@@ -34,7 +34,7 @@ import java.util.Set;
 @Entity
 @Table(name = "e_upms_user")
 @Erupt(
-        name = "用户配置",
+        name = "用户管理",
         dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg"),
         orderBy = "EruptUser.id",
