@@ -187,7 +187,6 @@ public class EruptUser extends LookerSelf {
                     desc = "ip与ip之间使用换行符间隔，不填表示不鉴权",
                     type = EditType.TEXTAREA
             )
-
     )
     private String whiteIp;
 
