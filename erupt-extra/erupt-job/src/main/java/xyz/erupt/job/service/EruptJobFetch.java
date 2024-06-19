@@ -1,5 +1,6 @@
 package xyz.erupt.job.service;
 
+import lombok.SneakyThrows;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
@@ -29,9 +30,9 @@ public class EruptJobFetch implements ChoiceFetchHandler, ChoiceTrigger {
             EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptJobHandler.class)}, clazz -> {
                 EruptHandlerNaming eruptHandlerNaming = clazz.getAnnotation(EruptHandlerNaming.class);
                 if (null == eruptHandlerNaming) {
-                    loadedJobHandler.add(new VLModel(clazz.getName(), ((EruptJobHandler) EruptSpringUtil.getBean(clazz)).name()));
+                    loadedJobHandler.add(new VLModel(clazz.getName(), ((EruptJobHandler) EruptSpringUtil.getBean(clazz)).name(), clazz.getName()));
                 } else {
-                    loadedJobHandler.add(new VLModel(clazz.getName(), eruptHandlerNaming.value()));
+                    loadedJobHandler.add(new VLModel(clazz.getName(), eruptHandlerNaming.value(), clazz.getName()));
                 }
             });
         }
@@ -39,12 +40,15 @@ public class EruptJobFetch implements ChoiceFetchHandler, ChoiceTrigger {
     }
 
     @Override
+    @SneakyThrows
     public Map<String, Object> trigger(Object value, String[] params) {
         for (VLModel vl : loadedJobHandler) {
             if (vl.getValue().equals(value)) {
                 Map<String, Object> map = new HashMap<>();
-                map.put(LambdaSee.field(EruptJob::getHandlerParam), null);
-                map.put(LambdaSee.field(EruptJob::getCron), null);
+                EruptJobHandler jobHandler = EruptSpringUtil.getBeanByPath(vl.getDesc(), EruptJobHandler.class);
+                map.put(LambdaSee.field(EruptJob::getName), vl.getLabel());
+                map.put(LambdaSee.field(EruptJob::getHandlerParam), jobHandler.param());
+                map.put(LambdaSee.field(EruptJob::getCron), jobHandler.cron());
                 return map;
             }
         }
