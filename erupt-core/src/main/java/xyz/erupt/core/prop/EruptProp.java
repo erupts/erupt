@@ -42,6 +42,9 @@ public class EruptProp {
     //默认语言
     public String defaultLocales = "zh-CN";
 
+    //日志采集功能开关
+    private boolean logTrack = true;
+
 //
 //    //应用空间前缀
 //    private String appSpacePrefix = "erupt-app:";
