@@ -26,6 +26,10 @@ public class EruptRestPath {
     //文件
     public static final String ERUPT_FILE = ERUPT_API + "/file";
 
+
+    //工具
+    public static final String ERUPT_TOOL = ERUPT_API + "/tool";
+
     //附件虚拟路径
     public static final String ERUPT_ATTACHMENT = "/erupt-attachment";
 
