@@ -6,16 +6,18 @@ import java.text.SimpleDateFormat;
 
 public class Formatter {
 
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
-    public final StringBuilder buf = new StringBuilder();
+    private final StringBuilder buf = new StringBuilder();
 
     public Formatter timestamp(Long timestamp) {
-        buf.append(DATE_FORMAT.format(timestamp));
+        synchronized (DATE_FORMAT) {
+            buf.append(DATE_FORMAT.format(timestamp));
+        }
         return this;
     }
 
-    public Formatter space(){
+    public Formatter space() {
         buf.append(" ");
         return this;
     }
@@ -47,4 +49,5 @@ public class Formatter {
     public String toString() {
         return buf.toString();
     }
+
 }
