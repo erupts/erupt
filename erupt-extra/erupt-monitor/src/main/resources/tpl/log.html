@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <base href="${base}/">
-    <title>erupt log</title>
-    <link rel="stylesheet" href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/xterm/4.11.0/xterm.css">
+    <title>erupt-log</title>
+    <link href="monitor/xterm.css" rel="stylesheet">
     <style>
         @font-face {
             font-family: "JetBrainsMono";
@@ -13,19 +13,19 @@
     </style>
 </head>
 <body style="margin: 0;">
-<div style="background: #1e1f22;padding: 0 12px">
-    <div id="terminal" style="height: 100vh;width: 100%">
+<div style="background: #1e1f22;padding: 0 12px;position: fixed;left: 0;right: 0;top: 0;bottom: 0">
+    <div id="terminal" style="width:100%;height:100%">
 
     </div>
 </div>
 <script src="element/axios.min.js"></script>
-<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/xterm/4.11.0/xterm.js"></script>
-<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/xterm/4.11.0/addons/fit/xterm-addon-fit.js"></script>
+<script src="monitor/xterm.js"></script>
+<script src="monitor/xterm-addon-fit.js"></script>
 <!--<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/xterm/4.11.0/addons/search/xterm-addon-search.js"></script>-->
 <script>
     const xterm = new Terminal({
-        convertEol: false,
-        fontFamily: `JetBrainsMono,Consolas,Courier New, 'Fira Mono', monospace`,
+        convertEol: true,
+        fontFamily: `JetBrainsMono, Consolas, Courier New, 'Fira Mono', monospace`,
         fontSize: 13,
         lineHeight: 1.1,
         fontWeight: 300,
