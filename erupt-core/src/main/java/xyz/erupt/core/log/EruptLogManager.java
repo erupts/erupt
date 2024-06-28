@@ -37,7 +37,7 @@ public class EruptLogManager {
 
     private static final Deque<LogMessage> EVENT_QUEUE = new ArrayDeque<>();
 
-    private static final int LOG_CACHE_SIZE = 3000;
+    private static final int LOG_CACHE_SIZE = 2000;
 
     public static void log(String message) {
         if (EVENT_QUEUE.size() > LOG_CACHE_SIZE) EVENT_QUEUE.poll();
@@ -53,7 +53,7 @@ public class EruptLogManager {
             } else if (message.getNum() > offset) {
                 result.add(message);
             }
-            if (++i > size) {
+            if (++i > size + (null == offset ? 0 : offset)) {
                 break;
             }
         }

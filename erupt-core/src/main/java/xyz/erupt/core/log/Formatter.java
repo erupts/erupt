@@ -1,8 +1,13 @@
 package xyz.erupt.core.log;
 
+import org.fusesource.jansi.Ansi;
+import org.slf4j.event.Level;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class Formatter {
 
@@ -22,8 +27,37 @@ public class Formatter {
         return this;
     }
 
+    public Formatter level(String level) {
+        Ansi ansi;
+        if (Level.INFO.name().equals(level)) {
+            ansi = ansi().fg(Ansi.Color.GREEN);
+        } else if (Level.WARN.name().equals(level)) {
+            ansi = ansi().fg(Ansi.Color.YELLOW);
+        } else if (Level.ERROR.name().equals(level)) {
+            ansi = ansi().fg(Ansi.Color.RED);
+        } else {
+            ansi = ansi().fg(Ansi.Color.CYAN);
+        }
+        buf.append(ansi);
+        this.alignment(level, 5);
+        buf.append(ansi().fg(Ansi.Color.DEFAULT));
+        return this;
+    }
+
     public Formatter value(String value) {
         buf.append(value);
+        return this;
+    }
+
+    public Formatter thread(String value) {
+        this.alignment(value, 15);
+        return this;
+    }
+
+    public Formatter name(String name) {
+        buf.append(ansi().fg(Ansi.Color.CYAN));
+        this.alignment(name, 40);
+        buf.append(ansi().fg(Ansi.Color.DEFAULT));
         return this;
     }
 
@@ -48,6 +82,17 @@ public class Formatter {
     @Override
     public String toString() {
         return buf.toString();
+    }
+
+    public void alignment(String text, int size) {
+        if (text.length() < size) {
+            for (int i = size - text.length(); i > 0; i--) {
+                buf.append(" ");
+            }
+            buf.append(text);
+        } else {
+            buf.append(text.substring(text.length() - size));
+        }
     }
 
 }
