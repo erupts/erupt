@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.dao;
 
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,15 +23,18 @@ import java.util.Optional;
 @Component
 public class EruptDao {
 
+    @Getter
     @PersistenceContext
     private EntityManager entityManager;
 
     @Resource
     private EntityManagerService entityManagerService;
 
+    @Getter
     @Resource
     private JdbcTemplate jdbcTemplate;
 
+    @Getter
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -45,7 +49,6 @@ public class EruptDao {
     private static final String WHERE = " where ";
 
     public <T> T findById(Class<T> clazz, Object id) {
-        entityManager.clear();
         return entityManager.find(clazz, id);
     }
 
@@ -92,21 +95,9 @@ public class EruptDao {
         entityManager.flush();
     }
 
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
     @Comment("根据数据源名称获取 EntityManager 注意：必须手动执行 entityManager.close() 方法")
     public EntityManager getEntityManager(String name) {
         return entityManagerService.findEntityManager(name);
-    }
-
-    public JdbcTemplate getJdbcTemplate() {
-        return jdbcTemplate;
-    }
-
-    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
-        return namedParameterJdbcTemplate;
     }
 
     public <T> EruptLambdaQuery<T> lambdaQuery(Class<T> eruptClass) {
