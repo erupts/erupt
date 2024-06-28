@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * @author YuePeng
+ * date 2024/6/27 21:58
+ */
 public class EruptLogbackAppender implements EruptAppender {
 
     @Override
