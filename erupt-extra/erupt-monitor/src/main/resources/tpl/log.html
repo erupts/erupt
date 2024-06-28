@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="${base}/">
+    <title>erupt log</title>
+    <link rel="stylesheet" href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/xterm/4.11.0/xterm.css">
+    <style>
+        @font-face {
+            font-family: "JetBrainsMono";
+            src: url("monitor/JetBrainsMono-Regular.bceff071.woff2");
+        }
+    </style>
+</head>
+<body style="margin: 0;">
+<div style="background: #1e1f22;padding: 0 12px">
+    <div id="terminal" style="height: 100vh;width: 100%">
+
+    </div>
+</div>
+<script src="element/axios.min.js"></script>
+<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/xterm/4.11.0/xterm.js"></script>
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/xterm/4.11.0/addons/fit/xterm-addon-fit.js"></script>
+<!--<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/xterm/4.11.0/addons/search/xterm-addon-search.js"></script>-->
+<script>
+    const xterm = new Terminal({
+        convertEol: false,
+        fontFamily: `JetBrainsMono,Consolas,Courier New, 'Fira Mono', monospace`,
+        fontSize: 13,
+        lineHeight: 1.1,
+        fontWeight: 300,
+        cursorBlink: true,
+        disableStdin: true,
+        theme: {
+            background: "#1e1f22", //背景色
+        }
+    });
+    var fitAddon = new FitAddon.FitAddon();
+    xterm.loadAddon(fitAddon)
+    // xterm.loadAddon(new SearchAddon());
+    xterm.open(document.getElementById('terminal'));
+    let offset = null;
+
+    function getLog() {
+        axios.get("erupt-api/tool/erupt-log", {
+            headers: {
+                token: parent.getAppToken().token,
+            },
+            params: {
+                size: 500,
+                offset: offset
+            }
+        }).then((res) => {
+            if (res.status === 401) {
+                window.parent.location.href = "${base}/"
+            } else if (res.status === 403) {
+                window.writeln("<h1 style='text-align: center'>权限不足<h1>")
+            } else {
+                for (let key in res.data) {
+                    xterm.writeln(res.data[key].content);
+                    offset = res.data[key].num;
+                }
+                if (res.data.length > 0) {
+                    fitAddon.fit()
+                }
+            }
+        })
+    }
+
+    getLog();
+    setInterval(function () {
+        getLog();
+    }, 1500)
+    window.onresize = function () {
+        fitAddon.fit()
+    }
+</script>
+</body>
+</html>

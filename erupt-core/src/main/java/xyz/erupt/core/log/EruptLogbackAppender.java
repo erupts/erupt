@@ -34,12 +34,12 @@ public class EruptLogbackAppender implements EruptAppender {
             Formatter formatter = new Formatter()
                     .timestamp(event.getTimeStamp())
                     .space()
-                    .value(event.getLevel().toString())
-                    .value(" --- [ ")
-                    .value(event.getThreadName())
-                    .value(" ] ")
-                    .value(event.getLoggerName())
-                    .value(": ")
+                    .level(event.getLevel().toString())
+                    .value(" --- [")
+                    .thread(event.getThreadName())
+                    .value("] ")
+                    .name(event.getLoggerName())
+                    .value("  : ")
                     .value(event.getFormattedMessage());
             if (proxy instanceof ThrowableProxy) {
                 formatter.throwable(((ThrowableProxy) proxy).getThrowable());

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.log.EruptLogManager;
 import xyz.erupt.core.log.LogMessage;
@@ -20,7 +19,7 @@ import java.util.List;
 public class EruptToolController {
 
     @GetMapping("/erupt-log")
-    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
+//    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
     public List<LogMessage> eruptLog(@RequestParam(defaultValue = "1000") Long size,
                                      @RequestParam(required = false) Long offset) {
         return EruptLogManager.getEventQueue(size, offset);
