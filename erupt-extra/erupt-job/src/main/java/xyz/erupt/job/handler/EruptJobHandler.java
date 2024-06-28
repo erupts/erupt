@@ -13,7 +13,7 @@ public interface EruptJobHandler {
         return this.getClass().getSimpleName();
     }
 
-    @Comment("任务处理类")
+    @Comment("任务处理方法体")
     String exec(@Comment("任务编码") String code, @Comment("任务参数") String param);
 
     default String cron() {
