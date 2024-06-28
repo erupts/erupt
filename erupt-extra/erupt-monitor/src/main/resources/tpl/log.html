@@ -7,8 +7,8 @@
     <link href="monitor/xterm.css" rel="stylesheet">
     <style>
         @font-face {
-            font-family: "JetBrainsMono";
-            src: url("monitor/JetBrainsMono-Regular.bceff071.woff2");
+            font-family: 'Courier New';
+            src: url('monitor/Courier-New.ttf');
         }
     </style>
 </head>
@@ -25,10 +25,9 @@
 <script>
     const xterm = new Terminal({
         convertEol: true,
-        fontFamily: `JetBrainsMono, Consolas, Courier New, 'Fira Mono', monospace`,
+        fontFamily: `Courier New, 'Fira Mono', monospace`,
         fontSize: 13,
-        lineHeight: 1.1,
-        fontWeight: 300,
+        lineHeight: 1.4,
         cursorBlink: true,
         disableStdin: true,
         theme: {
