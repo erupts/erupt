@@ -53,7 +53,7 @@
             if (res.status === 401) {
                 window.parent.location.href = "${base}/"
             } else if (res.status === 403) {
-                window.writeln("<h1 style='text-align: center'>权限不足<h1>")
+                document.write("<h1 style='text-align: center'>权限不足<h1>")
             } else {
                 for (let key in res.data) {
                     xterm.writeln(res.data[key].content);
