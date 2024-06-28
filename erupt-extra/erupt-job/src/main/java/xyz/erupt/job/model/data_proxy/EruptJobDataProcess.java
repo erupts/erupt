@@ -55,7 +55,6 @@ public class EruptJobDataProcess implements DataProxy<EruptJob>, OperationHandle
     @Override
     public String exec(List<EruptJob> eruptJob, EruptJobExecDialog param, String[] operationParam) {
         try {
-            eruptDao.getEntityManager().clear();
             for (EruptJob job : eruptJob) {
                 job.setHandlerParam(param.getParam());
                 eruptJobService.triggerJob(job);
