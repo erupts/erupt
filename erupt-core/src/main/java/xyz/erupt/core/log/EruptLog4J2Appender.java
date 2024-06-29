@@ -8,6 +8,7 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import xyz.erupt.core.constant.EruptConst;
 
 import java.nio.charset.StandardCharsets;
 
@@ -31,7 +32,7 @@ public class EruptLog4J2Appender implements EruptAppender {
     }
 
     private static AbstractAppender getLog4j2Appender(LoggerConfig logger, PatternLayout layout) {
-        AbstractAppender appender = new AbstractAppender("erupt", logger.getFilter(), layout, false, Property.EMPTY_ARRAY) {
+        AbstractAppender appender = new AbstractAppender(EruptConst.ERUPT, logger.getFilter(), layout, false, Property.EMPTY_ARRAY) {
             @Override
             public void append(LogEvent event) {
                 EruptLogManager.log(new Formatter()

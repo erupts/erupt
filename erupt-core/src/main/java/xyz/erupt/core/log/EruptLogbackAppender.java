@@ -7,6 +7,7 @@ import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.erupt.core.constant.EruptConst;
 
 
 /**
@@ -21,7 +22,7 @@ public class EruptLogbackAppender implements EruptAppender {
         ch.qos.logback.classic.Logger logger = context.getLogger(Logger.ROOT_LOGGER_NAME);
         Appender appender = new Appender();
         appender.setContext(context);
-        appender.setName("erupt");
+        appender.setName(EruptConst.ERUPT);
         appender.start();
         logger.addAppender(appender);
     }
