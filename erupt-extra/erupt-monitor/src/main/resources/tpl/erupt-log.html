@@ -50,20 +50,27 @@
                 offset: offset
             }
         }).then((res) => {
-            if (res.status === 401) {
-                window.parent.location.href = "${base}/"
-            } else if (res.status === 403) {
-                window.location.href = "${base}/error/403.html"
-            } else {
-                for (let key in res.data) {
-                    xterm.writeln(res.data[key].content);
-                    offset = res.data[key].num;
-                }
-                if (res.data.length > 0) {
-                    fitAddon.fit()
-                }
+            for (let key in res.data) {
+                xterm.writeln(res.data[key].content);
+                offset = res.data[key].num;
             }
-        })
+            if (res.data.length > 0) {
+                fitAddon.fit()
+            }
+        }, error => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    window.parent.location.reload();
+                } else if (error.response.status === 403) {
+                    window.location.href = "${base}/error/403.html"
+                } else {
+                    xterm.writeln(error.response.status + "→" + error.message);
+                }
+            } else {
+                xterm.writeln(error.message);
+                offset = null;
+            }
+        });
     }
 
     getLog();

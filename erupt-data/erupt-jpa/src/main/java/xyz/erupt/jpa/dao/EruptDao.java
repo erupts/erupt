@@ -49,7 +49,12 @@ public class EruptDao {
     private static final String WHERE = " where ";
 
     public <T> T findById(Class<T> clazz, Object id) {
+        this.entityManager.clear();
         return entityManager.find(clazz, id);
+    }
+
+    public void detach(Object obj) {
+        this.entityManager.detach(obj);
     }
 
     //新增
