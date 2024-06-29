@@ -8,6 +8,7 @@ import xyz.erupt.cloud.server.base.CloudServerConst;
 import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.cloud.server.model.CloudNodeGroup;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
@@ -50,7 +51,8 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
                 MetaMenu.createSimpleMenu(
                         CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, "节点管理",
                         CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, nodeMenu, 30, MenuTypeEnum.BUTTON.getCode()
-                )
+                ),
+                MetaMenu.createSimpleMenu(EruptConst.ERUPT_LOG, "日志查看", EruptConst.ERUPT_LOG, nodeMenu, 40, MenuTypeEnum.BUTTON.getCode())
         );
     }
 

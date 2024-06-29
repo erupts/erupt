@@ -9,6 +9,10 @@ import java.text.SimpleDateFormat;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * @author YuePeng
+ * date 2024/6/27 21:58
+ */
 public class Formatter {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -79,11 +83,6 @@ public class Formatter {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return buf.toString();
-    }
-
     public void alignment(String text, int size) {
         if (text.length() < size) {
             for (int i = size - text.length(); i > 0; i--) {
@@ -93,6 +92,12 @@ public class Formatter {
         } else {
             buf.append(text.substring(text.length() - size));
         }
+    }
+
+
+    @Override
+    public String toString() {
+        return buf.toString();
     }
 
 }
