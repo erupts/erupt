@@ -54,6 +54,9 @@ public @interface Erupt {
     @Comment("数据行为代理接口，对增、删、改、查等行为做逻辑处理")
     Class<? extends DataProxy<?>>[] dataProxy() default {};
 
+    @Comment("此值可在dataProxy内被DataProxyContext.get()方法中获取到")
+    String[] dataProxyParams() default {};
+
     @Comment("树视图配置")
     Tree tree() default @Tree;
 

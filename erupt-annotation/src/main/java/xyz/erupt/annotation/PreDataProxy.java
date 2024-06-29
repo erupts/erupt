@@ -1,5 +1,6 @@
 package xyz.erupt.annotation;
 
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.fun.DataProxy;
 
 import java.lang.annotation.*;
@@ -10,5 +11,8 @@ import java.lang.annotation.*;
 public @interface PreDataProxy {
 
     Class<? extends DataProxy<?>> value();
+
+    @Comment("此值可在dataProxy内被DataProxyContext.get()方法中获取到")
+    String[] params() default {};
 
 }
