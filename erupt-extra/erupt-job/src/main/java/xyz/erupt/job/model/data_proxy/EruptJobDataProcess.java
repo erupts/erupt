@@ -56,6 +56,7 @@ public class EruptJobDataProcess implements DataProxy<EruptJob>, OperationHandle
     public String exec(List<EruptJob> eruptJob, EruptJobExecDialog param, String[] operationParam) {
         try {
             for (EruptJob job : eruptJob) {
+                eruptDao.detach(job);
                 job.setHandlerParam(param.getParam());
                 eruptJobService.triggerJob(job);
             }

@@ -57,11 +57,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
 
     @Override
     public Object findDataById(EruptModel eruptModel, Object id) {
-        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> {
-            Object object = em.find(eruptModel.getClazz(), id);
-            em.detach(object);
-            return object;
-        });
+        return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> em.find(eruptModel.getClazz(), id));
     }
 
     @Override
