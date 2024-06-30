@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EruptToolController {
 
-    @GetMapping({EruptConst.ERUPT_LOG, EruptConst.ERUPT_LOG + ".html"})
+    @GetMapping(EruptConst.ERUPT_LOG)
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
     public List<LogMessage> eruptLog(@RequestParam(defaultValue = "1000") Long size,
                                      @RequestParam(required = false) Long offset) {

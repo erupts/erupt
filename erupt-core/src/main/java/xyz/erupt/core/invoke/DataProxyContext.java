@@ -8,7 +8,7 @@ public class DataProxyContext {
 
     private static final ThreadLocal<String[]> PRE_DATA_PROXY_THREADLOCAL = new ThreadLocal<>();
 
-    public static String[] get() {
+    public static String[] params() {
         return PRE_DATA_PROXY_THREADLOCAL.get();
     }
 
