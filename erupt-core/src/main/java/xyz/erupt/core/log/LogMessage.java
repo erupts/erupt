@@ -20,4 +20,7 @@ public class LogMessage {
         num = ++increment;
     }
 
+    public static long getMax() {
+        return increment;
+    }
 }
