@@ -38,11 +38,19 @@ import javax.persistence.*;
 @Table(name = "e_cloud_node")
 @Erupt(
         name = "节点配置", dataProxy = CloudNodeProcess.class,
-        rowOperation = @RowOperation(
-                title = "查看令牌", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
-                show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
-                type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl")
-        ), layout = @Layout(tableLeftFixed = 1, pageSize = 30)
+        rowOperation = {
+                @RowOperation(
+                        title = "查看令牌", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
+                        show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
+                        type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl")
+                ),
+                @RowOperation(
+                        title = "节点日志", mode = RowOperation.Mode.SINGLE,
+                        ifExpr = "item.version && item.version != '-'",
+                        show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.ERUPT_CLOUD_NODE_LOG),
+                        type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/erupt-log.html", width = "85%")
+                ),
+        }, layout = @Layout(tableLeftFixed = 1, pageSize = 30)
 )
 @Component
 @EruptI18n

@@ -58,9 +58,6 @@ public class Jvm {
         this.setVendor(props.getProperty("java.vendor"));
         this.setPath(props.getProperty("user.dir"));
         this.setThreadCount(ManagementFactory.getThreadMXBean().getThreadCount());
-//        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-//        System.out.println("堆内存信息: " + memoryMXBean);
-//        System.out.println("方法区内存信息: " + memoryMXBean);
     }
 
 }
