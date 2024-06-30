@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.core.prop.EruptProp;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -21,8 +20,16 @@ import java.util.List;
 @Component
 public class EruptLogManager {
 
-    @Resource
-    private EruptProp eruptProp;
+    private static final Deque<LogMessage> EVENT_QUEUE = new ArrayDeque<>();
+
+    private static int LOG_TRACK_CACHE_SIZE;
+
+    private final EruptProp eruptProp;
+
+    public EruptLogManager(EruptProp eruptProp) {
+        this.eruptProp = eruptProp;
+        LOG_TRACK_CACHE_SIZE = eruptProp.getLogTrackCacheSize();
+    }
 
     @PostConstruct
     public void appender() {
@@ -39,27 +46,19 @@ public class EruptLogManager {
         }
     }
 
-    private static final Deque<LogMessage> EVENT_QUEUE = new ArrayDeque<>();
-
-    private static final int LOG_CACHE_SIZE = 2000;
-
     public static void log(String message) {
-        if (EVENT_QUEUE.size() > LOG_CACHE_SIZE) EVENT_QUEUE.poll();
+        if (EVENT_QUEUE.size() > LOG_TRACK_CACHE_SIZE) EVENT_QUEUE.poll();
         EVENT_QUEUE.add(new LogMessage(message));
     }
 
     public static List<LogMessage> getEventQueue(Long size, Long offset) {
         List<LogMessage> result = new ArrayList<>();
+        if (null == offset) offset = 0L;
+        if (offset == LogMessage.getMax()) return result;
         int i = 0;
         for (LogMessage message : EVENT_QUEUE) {
-            if (null == offset) {
-                result.add(message);
-            } else if (message.getNum() > offset) {
-                result.add(message);
-            }
-            if (++i > size + (null == offset ? 0 : offset)) {
-                break;
-            }
+            if (message.getNum() >= offset) result.add(message);
+            if (++i > size + offset) break;
         }
         return result;
     }

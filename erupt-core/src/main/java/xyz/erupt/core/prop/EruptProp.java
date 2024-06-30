@@ -45,6 +45,9 @@ public class EruptProp {
     //日志采集功能开关
     private boolean logTrack = true;
 
+    //日志采集暂存行数
+    private Integer logTrackCacheSize = 2000;
+
 //
 //    //应用空间前缀
 //    private String appSpacePrefix = "erupt-app:";
