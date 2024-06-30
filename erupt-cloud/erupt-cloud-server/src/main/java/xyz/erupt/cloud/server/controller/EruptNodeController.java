@@ -46,17 +46,13 @@ public class EruptNodeController {
     //node节点日志
     @GetMapping("/erupt-cloud-node-log")
     @EruptMenuAuth(CloudServerConst.ERUPT_CLOUD_NODE_LOG)
-    public List<LogMessage> eruptNodeLog(@RequestParam Long size,
-                                         @RequestParam String nodeName,
-                                         @RequestParam(required = false) Long offset,
+    public List<LogMessage> eruptNodeLog(@RequestParam String nodeName, @RequestParam Long size, @RequestParam(required = false) Long offset,
                                          HttpServletResponse httpServletResponse) {
         MetaNode metaNode = nodeManager.getNode(nodeName);
-        if (null == metaNode || metaNode.getLocations().isEmpty()) {
+        if (null == metaNode || metaNode.getLocations().isEmpty())
             throw new EruptWebApiRuntimeException("'" + nodeName + "' node not ready");
-        }
         HttpResponse httpResponse = HttpUtil.createGet(metaNode.getLocations().iterator().next() + EruptRestPath.ERUPT_TOOL + "/" + EruptConst.ERUPT_LOG)
-                .header(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken())
-                .header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken())
+                .header(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken()).header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken())
                 .form("size", size).form("offset", offset).execute();
         if (httpResponse.getStatus() == 200) {
             return GsonFactory.getGson().fromJson(httpResponse.body(), new TypeToken<List<LogMessage>>() {

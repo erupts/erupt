@@ -80,7 +80,7 @@
                 } else if (error.response.status === 403) {
                     window.location.href = "${base}/error/403.html"
                 } else {
-                    xterm.writeln("status: " + error.response.status + " → " + error.message);
+                    xterm.writeln("status: " + error.response.status + " → " + error.response.data.message);
                 }
             } else {
                 xterm.writeln(error.message);
