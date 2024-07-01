@@ -44,7 +44,7 @@ public class EruptLog4J2Appender implements EruptAppender {
                         .value("] ")
                         .name(event.getLoggerName())
                         .value("(" + event.getSource().getLineNumber() + ")")
-                        .value("  : ")
+                        .value(" : ")
                         .value(event.getMessage().getFormattedMessage())
                         .throwable(event.getThrown())
                         .toString()

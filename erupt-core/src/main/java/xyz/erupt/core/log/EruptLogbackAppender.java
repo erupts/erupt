@@ -40,7 +40,7 @@ public class EruptLogbackAppender implements EruptAppender {
                     .thread(event.getThreadName())
                     .value("] ")
                     .name(event.getLoggerName())
-                    .value("  : ")
+                    .value(" : ")
                     .value(event.getFormattedMessage());
             if (proxy instanceof ThrowableProxy) {
                 formatter.throwable(((ThrowableProxy) proxy).getThrowable());
