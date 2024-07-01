@@ -36,7 +36,7 @@ public class EruptProp {
     //是否使用redis管理session
     private boolean redisSession = false;
 
-    //是否刷新token有效期（redisSession为true时有效）
+    //是否自动更新 redis 会话中 token 有效期（redisSession为true时有效）
     private boolean redisSessionRefresh = false;
 
     //默认语言
@@ -47,9 +47,5 @@ public class EruptProp {
 
     //日志采集暂存行数
     private Integer logTrackCacheSize = 2000;
-
-//
-//    //应用空间前缀
-//    private String appSpacePrefix = "erupt-app:";
 
 }

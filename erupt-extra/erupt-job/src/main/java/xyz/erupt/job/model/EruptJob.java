@@ -1,5 +1,6 @@
 package xyz.erupt.job.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
@@ -41,7 +43,7 @@ import javax.persistence.UniqueConstraint;
         name = "任务配置",
         dataProxy = EruptJobDataProcess.class,
         drills = @Drill(title = "日志", icon = "fa fa-sliders", link = @Link(linkErupt = EruptJobLog.class, joinColumn = "jobId")),
-        rowOperation = @RowOperation(code = "action", icon = "fa fa-play", title = "执行一次任务", eruptClass = EruptJobExecDialog.class, operationHandler = EruptJobDataProcess.class)
+        rowOperation = @RowOperation(code = "action", icon = "fa fa-play", title = "执行一次任务", mode = RowOperation.Mode.SINGLE, eruptClass = EruptJobExecDialog.class, operationHandler = EruptJobDataProcess.class)
 )
 @PreDataProxy(value = RedisNotifyDataProxy.class, params = JobMessageListener.JOB_TOPIC)
 @Entity
@@ -49,12 +51,13 @@ import javax.persistence.UniqueConstraint;
 @Component
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = false)
 public class EruptJob extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", width = "100px"),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true), readonly = @Readonly(add = false))
     )
     private String code;
 

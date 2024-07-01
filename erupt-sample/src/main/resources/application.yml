@@ -1,4 +1,4 @@
-# TODO 根据实际情况将数据源改成mysql等数据库
+# TODO 示例为 H2 数据库，可根据实际情况调整为mysql等数据库
 spring:
   datasource:
     url: jdbc:h2:file:./erupt;AUTO_SERVER=TRUE;MODE=MySQL
@@ -12,6 +12,6 @@ spring:
       settings:
         web-allow-others: true
   jpa:
-    show-sql: true
+    show-sql: false
     generate-ddl: true
     database: h2
