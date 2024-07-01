@@ -1,6 +1,7 @@
 package xyz.erupt.job.model.data_proxy;
 
 import org.quartz.SchedulerException;
+import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
@@ -31,6 +32,30 @@ public class EruptJobDataProcess implements DataProxy<EruptJob>, OperationHandle
 
     @Override
     public void beforeAdd(EruptJob eruptJob) {
+        CronTriggerImpl trigger = new CronTriggerImpl();
+        try {
+            trigger.setCronExpression(eruptJob.getCron());
+        } catch (Exception e) {
+            throw new EruptWebApiRuntimeException("Cron error " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void beforeUpdate(EruptJob eruptJob) {
+        beforeAdd(eruptJob);
+    }
+
+    @Override
+    public void afterAdd(EruptJob eruptJob) {
+        try {
+            eruptJobService.addJob(eruptJob);
+        } catch (SchedulerException | ParseException e) {
+            throw new EruptWebApiRuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void afterUpdate(EruptJob eruptJob) {
         try {
             eruptJobService.modifyJob(eruptJob);
         } catch (SchedulerException | ParseException e) {
@@ -39,12 +64,7 @@ public class EruptJobDataProcess implements DataProxy<EruptJob>, OperationHandle
     }
 
     @Override
-    public void beforeUpdate(EruptJob eruptJob) {
-        this.beforeAdd(eruptJob);
-    }
-
-    @Override
-    public void beforeDelete(EruptJob eruptJob) {
+    public void afterDelete(EruptJob eruptJob) {
         try {
             eruptJobService.deleteJob(eruptJob);
         } catch (SchedulerException e) {
@@ -62,7 +82,7 @@ public class EruptJobDataProcess implements DataProxy<EruptJob>, OperationHandle
             }
             return null;
         } catch (Exception e) {
-            throw new EruptWebApiRuntimeException(e.getMessage());
+            throw new EruptWebApiRuntimeException(e.getMessage(), e);
         }
     }
 
