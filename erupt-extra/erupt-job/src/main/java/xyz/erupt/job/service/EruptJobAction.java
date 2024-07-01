@@ -37,12 +37,9 @@ public class EruptJobAction implements Job {
 
     void trigger(EruptJob eruptJob, JavaMailSenderImpl javaMailSender) {
         if (EruptSpringUtil.getBean(EruptProp.class).isRedisSession()) {
-            StringRedisTemplate stringRedisTemplate = EruptSpringUtil.getBean(EruptJobService.class).getStringRedisTemplate();
-            if (null != stringRedisTemplate) {
-                if (Boolean.FALSE.equals(stringRedisTemplate.opsForValue().setIfAbsent(JOB_KEY + eruptJob.getCode(), eruptJob.getCode(), 999, TimeUnit.MILLISECONDS))) {
-                    log.info("The {} task has been executed in other nodes", eruptJob.getName());
-                    return;
-                }
+            if (Boolean.FALSE.equals(EruptSpringUtil.getBean(StringRedisTemplate.class).opsForValue().setIfAbsent(JOB_KEY + eruptJob.getCode(), eruptJob.getCode(), 999, TimeUnit.MILLISECONDS))) {
+                log.info("The {} task has been executed in other nodes", eruptJob.getName());
+                return;
             }
         }
         EruptJobLog eruptJobLog = new EruptJobLog();

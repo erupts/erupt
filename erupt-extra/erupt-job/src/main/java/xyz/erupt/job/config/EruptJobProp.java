@@ -17,6 +17,4 @@ public class EruptJobProp {
 
     private boolean enable = true;
 
-    private Integer distributedLockMaxTime = 1500;
-
 }

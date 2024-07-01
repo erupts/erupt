@@ -23,6 +23,7 @@ import xyz.erupt.job.model.data_proxy.EruptJobDataProcess;
 import xyz.erupt.job.model.data_proxy.EruptJobExecDialog;
 import xyz.erupt.job.model.data_proxy.NotifyEmailRender;
 import xyz.erupt.job.service.EruptJobFetch;
+import xyz.erupt.job.service.JobMessageListener;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.toolkit.notify.RedisNotifyDataProxy;
 
@@ -42,7 +43,7 @@ import javax.persistence.UniqueConstraint;
         drills = @Drill(title = "日志", icon = "fa fa-sliders", link = @Link(linkErupt = EruptJobLog.class, joinColumn = "jobId")),
         rowOperation = @RowOperation(code = "action", icon = "fa fa-play", title = "执行一次任务", eruptClass = EruptJobExecDialog.class, operationHandler = EruptJobDataProcess.class)
 )
-@PreDataProxy(value = RedisNotifyDataProxy.class, params = "erupt-job:data-proxy:notify")
+@PreDataProxy(value = RedisNotifyDataProxy.class, params = JobMessageListener.JOB_TOPIC)
 @Entity
 @Table(name = "e_job", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
 @Component
