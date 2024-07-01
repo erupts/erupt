@@ -7,6 +7,9 @@ import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProxyContext;
+import xyz.erupt.core.prop.EruptProp;
+
+import javax.annotation.Resource;
 
 /**
  * @author YuePeng
@@ -15,8 +18,11 @@ import xyz.erupt.core.invoke.DataProxyContext;
 @Component
 public class RedisNotifyDataProxy implements DataProxy<Object> {
 
-    @Autowired(required = false)
+    @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private EruptProp eruptProp;
 
     @Override
     public void afterAdd(Object o) {
@@ -35,13 +41,12 @@ public class RedisNotifyDataProxy implements DataProxy<Object> {
     }
 
     private void publish(DataAction action, Object data) {
-        if (null == stringRedisTemplate) {
-            throw new EruptWebApiRuntimeException("redis configuration not found");
+        if (eruptProp.isRedisSession()) {
+            if (null == DataProxyContext.params()[0]) {
+                throw new EruptWebApiRuntimeException("DataProxy params[0] not found → redis channel");
+            }
+            stringRedisTemplate.convertAndSend(DataProxyContext.params()[0], GsonFactory.getGson().toJson(new NotifyData<>(action, data)));
         }
-        if (null == DataProxyContext.params()[0]) {
-            throw new EruptWebApiRuntimeException("DataProxy params[0] not found → redis channel");
-        }
-        stringRedisTemplate.convertAndSend(DataProxyContext.params()[0], GsonFactory.getGson().toJson(new NotifyData<>(action, data)));
     }
 
 }

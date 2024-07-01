@@ -43,10 +43,6 @@ public class EruptJobService implements DisposableBean {
     @Autowired(required = false)
     private JavaMailSenderImpl javaMailSender;
 
-    @Getter
-    @Autowired(required = false)
-    private StringRedisTemplate stringRedisTemplate;
-
     public static final String MAIL_SENDER_KEY = "mailSensor";
 
     private final Map<String, StdSchedulerFactory> schedulerFactoryMap = new HashMap<>();
