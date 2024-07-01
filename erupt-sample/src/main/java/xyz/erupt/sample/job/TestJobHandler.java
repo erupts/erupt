@@ -1,10 +1,10 @@
-package xyz.erupt.sample.handler;
+package xyz.erupt.sample.job;
 
 import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.job.handler.EruptJobHandler;
 
 @Slf4j
-public class JobHandler implements EruptJobHandler {
+public class TestJobHandler implements EruptJobHandler {
 
     @Override
     public String name() {
