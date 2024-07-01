@@ -84,9 +84,8 @@ public class EruptJobService implements DisposableBean {
     }
 
     public synchronized void modifyJob(EruptJob eruptJob) throws SchedulerException, ParseException {
-        String code = eruptJob.getCode();
-        if (schedulerFactoryMap.containsKey(code)) {
-            if (eruptJob.equals(schedulerFactoryMap.get(code).getEruptJob())) {
+        if (schedulerFactoryMap.containsKey(eruptJob.getCode())) {
+            if (eruptJob.equals(schedulerFactoryMap.get(eruptJob.getCode()).getEruptJob())) {
                 return;
             } else {
                 this.deleteJob(eruptJob);
