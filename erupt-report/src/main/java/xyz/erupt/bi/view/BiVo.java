@@ -25,7 +25,7 @@ public class BiVo {
 
     private boolean table;
 
-    private int refreshTime;
+    private Integer refreshTime;
 
     private List<BiDimensionVo> dimensions;
 
