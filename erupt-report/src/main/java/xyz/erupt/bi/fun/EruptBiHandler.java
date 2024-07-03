@@ -17,7 +17,7 @@ public interface EruptBiHandler {
      *
      * @param param 参数
      * @param expr  表达式
-     * @return
+     * @return 返回新的表达式
      */
     @Comment("查询表达式动态处理")
     default String exprHandler(@Comment("处理类参数") String param,
