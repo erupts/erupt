@@ -1,5 +1,8 @@
 package xyz.erupt.job.service;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.quartz.*;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
@@ -7,6 +10,7 @@ import org.quartz.impl.triggers.CronTriggerImpl;
 import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import xyz.erupt.job.model.EruptJob;
@@ -14,11 +18,10 @@ import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author YuePeng
@@ -42,43 +45,59 @@ public class EruptJobService implements DisposableBean {
     @Autowired(required = false)
     private JavaMailSenderImpl javaMailSender;
 
+    @Resource
+    @Getter
+    StringRedisTemplate stringRedisTemplate;
+
     public static final String MAIL_SENDER_KEY = "mailSensor";
 
-    private final Map<String, StdSchedulerFactory> schedulerFactoryMap = new HashMap<>();
+    private final Map<String, EruptJobStdSchedulerFactory> schedulerFactoryMap = new ConcurrentHashMap<>();
 
     public void triggerJob(EruptJob eruptJob) {
         new EruptJobAction().trigger(eruptJob, javaMailSender);
     }
 
-    public void modifyJob(EruptJob eruptJob) throws SchedulerException, ParseException {
+    public synchronized void addJob(EruptJob eruptJob) throws SchedulerException, ParseException {
         String code = eruptJob.getCode();
-        if (schedulerFactoryMap.containsKey(code)) deleteJob(eruptJob);
-        if (eruptJob.getStatus()) {
-            StdSchedulerFactory ssf = new StdSchedulerFactory();
-            ssf.initialize(getSchedulerProp(code));
-            Scheduler scheduler = ssf.getScheduler();
-            // job
-            JobDetailImpl job = new JobDetailImpl();
-            JobDataMap jobDataMap = new JobDataMap();
-            jobDataMap.put(code, eruptJob);
-            jobDataMap.put(MAIL_SENDER_KEY, javaMailSender);
-            job.setJobDataMap(jobDataMap);
-            job.setName(code);
-            job.setJobClass(EruptJobAction.class);
-            // trigger
-            CronTriggerImpl trigger = new CronTriggerImpl();
-            trigger.setName(code);
-            trigger.setCronExpression(eruptJob.getCron());
-            scheduler.scheduleJob(job, trigger);
-            scheduler.start();
-            schedulerFactoryMap.put(code, ssf);
+        if (!schedulerFactoryMap.containsKey(code)) {
+            if (eruptJob.getStatus()) {
+                StdSchedulerFactory ssf = new StdSchedulerFactory();
+                ssf.initialize(getSchedulerProp(code));
+                Scheduler scheduler = ssf.getScheduler();
+                // job
+                JobDetailImpl job = new JobDetailImpl();
+                JobDataMap jobDataMap = new JobDataMap();
+                jobDataMap.put(code, eruptJob);
+                jobDataMap.put(MAIL_SENDER_KEY, javaMailSender);
+                job.setJobDataMap(jobDataMap);
+                job.setName(code);
+                job.setJobClass(EruptJobAction.class);
+                // trigger
+                CronTriggerImpl trigger = new CronTriggerImpl();
+                trigger.setName(code);
+                trigger.setCronExpression(eruptJob.getCron());
+                scheduler.scheduleJob(job, trigger);
+                scheduler.start();
+                schedulerFactoryMap.put(code, new EruptJobStdSchedulerFactory(eruptJob, ssf));
+            }
         }
     }
 
-    public void deleteJob(EruptJob eruptJob) throws SchedulerException {
-        SchedulerFactory sf = schedulerFactoryMap.get(eruptJob.getCode());
+    public synchronized void modifyJob(EruptJob eruptJob) throws SchedulerException, ParseException {
+        if (schedulerFactoryMap.containsKey(eruptJob.getCode())) {
+            if (eruptJob.equals(schedulerFactoryMap.get(eruptJob.getCode()).getEruptJob())) {
+                return;
+            } else {
+                this.deleteJob(eruptJob);
+            }
+        }
+        this.addJob(eruptJob);
+    }
+
+    public synchronized void deleteJob(EruptJob eruptJob) throws SchedulerException {
+        EruptJobStdSchedulerFactory sf = schedulerFactoryMap.get(eruptJob.getCode());
         if (null != sf) {
-            Scheduler scheduler = sf.getScheduler();
+            Scheduler scheduler = sf.getStdSchedulerFactory().getScheduler();
             scheduler.deleteJob(new JobKey(eruptJob.getCode()));
             if (!scheduler.isShutdown()) scheduler.shutdown();
             schedulerFactoryMap.remove(eruptJob.getCode());
@@ -97,15 +116,30 @@ public class EruptJobService implements DisposableBean {
         return props;
     }
 
-    @Transactional
     public void saveJobLog(EruptJobLog eruptJobLog) {
-        eruptDao.persist(eruptJobLog);
+        eruptDao.persistAndFlush(eruptJobLog);
     }
 
     @Override
     public void destroy() throws SchedulerException {
-        for (StdSchedulerFactory value : schedulerFactoryMap.values()) {
-            value.getScheduler().shutdown();
+        for (EruptJobStdSchedulerFactory value : schedulerFactoryMap.values()) {
+            value.getStdSchedulerFactory().getScheduler().shutdown();
+        }
+    }
+
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    private static class EruptJobStdSchedulerFactory {
+
+        private EruptJob eruptJob;
+
+        private StdSchedulerFactory stdSchedulerFactory;
+
+        public EruptJobStdSchedulerFactory(EruptJob eruptJob, StdSchedulerFactory stdSchedulerFactory) {
+            this.eruptJob = eruptJob;
+            this.stdSchedulerFactory = stdSchedulerFactory;
         }
     }
 

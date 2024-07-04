@@ -27,6 +27,7 @@ public class GsonFactory {
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
             .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
             .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
+//            .registerTypeAdapter(Integer.class, (JsonSerializer<Integer>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
             .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
             .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
 

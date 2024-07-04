@@ -7,7 +7,7 @@ package xyz.erupt.core.constant;
  */
 public class EruptMutualConst {
 
-    public static final String ERUPT = "erupt";
+    public static final String ERUPT = EruptConst.ERUPT;
 
     public static final String USER = "user";
 

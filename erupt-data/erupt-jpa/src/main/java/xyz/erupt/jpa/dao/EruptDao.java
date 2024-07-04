@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.dao;
 
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -9,6 +10,7 @@ import xyz.erupt.jpa.service.EntityManagerService;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +23,18 @@ import java.util.Optional;
 @Component
 public class EruptDao {
 
+    @Getter
     @PersistenceContext
     private EntityManager entityManager;
 
     @Resource
     private EntityManagerService entityManagerService;
 
+    @Getter
     @Resource
     private JdbcTemplate jdbcTemplate;
 
+    @Getter
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -44,8 +49,23 @@ public class EruptDao {
     private static final String WHERE = " where ";
 
     public <T> T findById(Class<T> clazz, Object id) {
-        entityManager.clear();
+        this.entityManager.clear();
         return entityManager.find(clazz, id);
+    }
+
+    public void detach(Object obj) {
+        this.entityManager.detach(obj);
+    }
+
+    //新增
+    public void persist(Object obj) {
+        entityManager.persist(obj);
+    }
+
+    @Transactional
+    public void persistAndFlush(Object obj) {
+        this.persist(obj);
+        this.flush();
     }
 
     //修改
@@ -53,6 +73,7 @@ public class EruptDao {
         return entityManager.merge(t);
     }
 
+    @Transactional
     public <T> T mergeAndFlush(T t) {
         try {
             return this.merge(t);
@@ -66,35 +87,22 @@ public class EruptDao {
         entityManager.remove(obj);
     }
 
-    //新增
-    public void persist(Object obj) {
-        entityManager.persist(obj);
-    }
-
-    public void persistAndFlush(Object obj) {
-        this.persist(obj);
-        this.flush();
+    @Transactional
+    public void deleteAndFlush(Object obj) {
+        try {
+            this.delete(obj);
+        } finally {
+            this.flush();
+        }
     }
 
     public void flush() {
         entityManager.flush();
     }
 
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
     @Comment("根据数据源名称获取 EntityManager 注意：必须手动执行 entityManager.close() 方法")
     public EntityManager getEntityManager(String name) {
         return entityManagerService.findEntityManager(name);
-    }
-
-    public JdbcTemplate getJdbcTemplate() {
-        return jdbcTemplate;
-    }
-
-    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
-        return namedParameterJdbcTemplate;
     }
 
     public <T> EruptLambdaQuery<T> lambdaQuery(Class<T> eruptClass) {
