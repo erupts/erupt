@@ -15,6 +15,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -49,7 +50,15 @@ public class EruptCoreService implements ApplicationRunner {
     }
 
     public static EruptModel getErupt(String eruptName) {
-        return ERUPTS.get(eruptName);
+        if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
+            if (null == ERUPTS.get(eruptName)) {
+                return null;
+            } else {
+                return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz());
+            }
+        } else {
+            return ERUPTS.get(eruptName);
+        }
     }
 
     //动态注册erupt类

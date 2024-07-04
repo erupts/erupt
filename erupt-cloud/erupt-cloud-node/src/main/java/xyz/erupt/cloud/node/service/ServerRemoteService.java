@@ -32,7 +32,7 @@ public class ServerRemoteService {
     }
 
     public MetaUserinfo getRemoteUserInfo() {
-        String userinfo = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_USER_INFO + eruptNodeProp.getNodeName())
+        String userinfo = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_USER_INFO + "/" + eruptNodeProp.getNodeName())
                 .header(EruptMutualConst.TOKEN, MetaContext.getToken())
                 .header(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
                 .execute().body();
@@ -47,9 +47,10 @@ public class ServerRemoteService {
 
     public String getNodeGroupConfig() {
         return HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.NODE_GROUP_CONFIG + "/" + eruptNodeProp.getNodeName())
+                // 添加请求头参数
+                .header(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
                 .form(CloudCommonConst.HEADER_ACCESS_TOKEN, eruptNodeProp.getAccessToken())
                 .execute().body();
     }
-
 
 }

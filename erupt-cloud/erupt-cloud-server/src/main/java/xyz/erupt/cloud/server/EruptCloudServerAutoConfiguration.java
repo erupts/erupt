@@ -43,14 +43,9 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
         MetaMenu nodeMenu = MetaMenu.createEruptClassMenu(CloudNode.class, nodeManager, 20);
         return Arrays.asList(nodeManager,
                 MetaMenu.createEruptClassMenu(CloudNodeGroup.class, nodeManager, 10, MenuTypeEnum.TREE), nodeMenu,
-                MetaMenu.createSimpleMenu(
-                        CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, "查看令牌",
-                        CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, nodeMenu, 20, MenuTypeEnum.BUTTON.getCode()
-                ),
-                MetaMenu.createSimpleMenu(
-                        CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, "节点管理",
-                        CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, nodeMenu, 30, MenuTypeEnum.BUTTON.getCode()
-                )
+                MetaMenu.createSimpleMenu(CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, "查看令牌", CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, nodeMenu, 110, MenuTypeEnum.BUTTON.getCode()),
+                MetaMenu.createSimpleMenu(CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, "节点管理", CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode()),
+                MetaMenu.createSimpleMenu(CloudServerConst.ERUPT_CLOUD_NODE_LOG, "节点日志", CloudServerConst.ERUPT_CLOUD_NODE_LOG, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode())
         );
     }
 

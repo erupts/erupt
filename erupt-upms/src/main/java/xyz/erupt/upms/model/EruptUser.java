@@ -34,7 +34,7 @@ import java.util.Set;
 @Entity
 @Table(name = "e_upms_user")
 @Erupt(
-        name = "用户配置",
+        name = "用户管理",
         dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg"),
         orderBy = "EruptUser.id",
@@ -187,7 +187,6 @@ public class EruptUser extends LookerSelf {
                     desc = "ip与ip之间使用换行符间隔，不填表示不鉴权",
                     type = EditType.TEXTAREA
             )
-
     )
     private String whiteIp;
 

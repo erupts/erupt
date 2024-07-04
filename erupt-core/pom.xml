@@ -10,7 +10,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.13</version>
+        <version>1.12.14</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -55,7 +55,12 @@
         <dependency>
             <groupId>${erupt.groupId}</groupId>
             <artifactId>linq.j</artifactId>
-            <version>0.0.5</version>
+            <version>0.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

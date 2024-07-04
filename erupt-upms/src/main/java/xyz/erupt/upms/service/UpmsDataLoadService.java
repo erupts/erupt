@@ -45,20 +45,18 @@ public class UpmsDataLoadService implements CommandLineRunner {
     @Resource
     private EruptProp eruptProp;
 
-    public static final String DEFAULT_ACCOUNT = "erupt";
+    public static final String DEFAULT_ACCOUNT = EruptConst.ERUPT;
 
     @Transactional
     @Override
     public void run(String... args) {
-        Optional.of(Integer.valueOf(eruptDao.getEntityManager().createNativeQuery("select count(*) from e_upms_user").getSingleResult().toString())).ifPresent(it -> {
-            if (it <= 0) {
-                try {
-                    FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/" + EruptConst.ERUPT_DIR));
-                } catch (IOException e) {
-                    log.error("Table 'e_upms_user' no user data. Re-initialization failed ：" + e.getMessage());
-                }
+        if (eruptDao.lambdaQuery(EruptUser.class).count() <= 0) {
+            try {
+                FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/" + EruptConst.ERUPT_DIR));
+            } catch (IOException e) {
+                log.error("Table 'e_upms_user' no user data. Re-initialization failed ：", e);
             }
-        });
+        }
         if (InitMethodEnum.NONE != eruptProp.getInitMethodEnum()) {
             EruptModuleInvoke.invoke(module -> Optional.ofNullable(module.initMenus()).ifPresent(metaMenus ->
                     new ProjectUtil().projectStartLoaded(module.info().getName(), first -> {

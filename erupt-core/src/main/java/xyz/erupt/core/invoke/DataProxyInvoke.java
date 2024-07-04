@@ -22,16 +22,28 @@ public class DataProxyInvoke {
         //本类及接口 @PreDataProxy
         DataProxyInvoke.actionInvokePreDataProxy(eruptModel.getClazz(), consumer);
         //@Erupt → DataProxy
-        Stream.of(eruptModel.getErupt().dataProxy()).forEach(proxy -> consumer.accept(getInstanceBean(proxy)));
+        Stream.of(eruptModel.getErupt().dataProxy()).forEach(proxy -> {
+            DataProxyContext.set(eruptModel.getErupt().dataProxyParams());
+            consumer.accept(getInstanceBean(proxy));
+            DataProxyContext.remove();
+        });
     }
 
     private static void actionInvokePreDataProxy(Class<?> clazz, Consumer<DataProxy<Object>> consumer) {
         //接口
         Stream.of(clazz.getInterfaces()).forEach(it -> Optional.ofNullable(it.getAnnotation(PreDataProxy.class))
-                .ifPresent(dataProxy -> consumer.accept(getInstanceBean(dataProxy.value()))));
+                .ifPresent(dataProxy -> {
+                    DataProxyContext.set(dataProxy.params());
+                    consumer.accept(getInstanceBean(dataProxy.value()));
+                    DataProxyContext.remove();
+                }));
         //类
         Optional.ofNullable(clazz.getAnnotation(PreDataProxy.class))
-                .ifPresent(dataProxy -> consumer.accept(getInstanceBean(dataProxy.value())));
+                .ifPresent(dataProxy -> {
+                    DataProxyContext.set(dataProxy.params());
+                    consumer.accept(getInstanceBean(dataProxy.value()));
+                    DataProxyContext.remove();
+                });
     }
 
     private static DataProxy<Object> getInstanceBean(Class<? extends DataProxy<?>> dataProxy) {
