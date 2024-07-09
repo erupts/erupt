@@ -31,24 +31,12 @@ public class UpmsPowerHandler implements PowerHandler {
     @Override
     public void handler(PowerObject power) {
         Map<String, Boolean> permissionMap = eruptUserService.getEruptMenuValuesMap();
-        if (power.isAdd()) {
-            power.setAdd(powerOff(EruptFunPermissions.ADD, permissionMap));
-        }
-        if (power.isDelete()) {
-            power.setDelete(powerOff(EruptFunPermissions.DELETE, permissionMap));
-        }
-        if (power.isEdit()) {
-            power.setEdit(powerOff(EruptFunPermissions.EDIT, permissionMap));
-        }
-        if (power.isViewDetails()) {
-            power.setViewDetails(powerOff(EruptFunPermissions.VIEW_DETAIL, permissionMap));
-        }
-        if (power.isExport()) {
-            power.setExport(powerOff(EruptFunPermissions.EXPORT, permissionMap));
-        }
-        if (power.isImportable()) {
-            power.setImportable(powerOff(EruptFunPermissions.IMPORTABLE, permissionMap));
-        }
+        if (power.isAdd()) power.setAdd(powerOff(EruptFunPermissions.ADD, permissionMap));
+        if (power.isDelete()) power.setDelete(powerOff(EruptFunPermissions.DELETE, permissionMap));
+        if (power.isEdit()) power.setEdit(powerOff(EruptFunPermissions.EDIT, permissionMap));
+        if (power.isViewDetails()) power.setViewDetails(powerOff(EruptFunPermissions.VIEW_DETAIL, permissionMap));
+        if (power.isExport()) power.setExport(powerOff(EruptFunPermissions.EXPORT, permissionMap));
+        if (power.isImportable()) power.setImportable(powerOff(EruptFunPermissions.IMPORTABLE, permissionMap));
     }
 
     private boolean powerOff(EruptFunPermissions eruptFunPermissions, Map<String, Boolean> permissionMap) {
