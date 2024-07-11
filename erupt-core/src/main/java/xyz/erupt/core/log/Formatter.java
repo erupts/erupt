@@ -12,12 +12,22 @@ import static org.fusesource.jansi.Ansi.ansi;
 /**
  * @author YuePeng
  * date 2024/6/27 21:58
+ * ref magic-api mdx
  */
 public class Formatter {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     private final StringBuilder buf = new StringBuilder();
+
+    private final static String[] SPACES = {
+            " ", // 1
+            "  ", // 2
+            "    ", // 4
+            "        ", // 8
+            "                ", // 16
+            "                                " // 32
+    };
 
     public Formatter timestamp(Long timestamp) {
         synchronized (DATE_FORMAT) {
@@ -85,11 +95,23 @@ public class Formatter {
 
     public void alignment(boolean leftPad, String text, int size) {
         if (text.length() < size) {
-            if (leftPad) for (int i = size - text.length(); i > 0; i--) buf.append(" ");
+            if (leftPad) this.spacePad(size - text.length());
             buf.append(text);
-            if (!leftPad) for (int i = size - text.length(); i > 0; i--) buf.append(" ");
+            if (!leftPad) this.spacePad(size - text.length());
         } else {
             buf.append(text.substring(text.length() - size));
+        }
+    }
+
+    private void spacePad(int length) {
+        while (length >= 32) {
+            buf.append(SPACES[5]);
+            length -= 32;
+        }
+        for (int i = 4; i >= 0; i--) {
+            if ((length & (1 << i)) != 0) {
+                buf.append(SPACES[i]);
+            }
         }
     }
 
