@@ -40,7 +40,7 @@ public class Formatter {
         } else if (Level.ERROR.name().equals(level)) {
             ansi = ansi().fg(Ansi.Color.RED);
         } else {
-            ansi = ansi().fg(Ansi.Color.CYAN);
+            ansi = ansi().fg(Ansi.Color.MAGENTA);
         }
         buf.append(ansi);
         this.alignment(level, 5);
