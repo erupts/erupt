@@ -43,7 +43,7 @@ public class Formatter {
             ansi = ansi().fg(Ansi.Color.MAGENTA);
         }
         buf.append(ansi);
-        this.alignment(level, 5);
+        this.alignment(true, level, 5);
         buf.append(ansi().fg(Ansi.Color.DEFAULT));
         return this;
     }
@@ -54,13 +54,13 @@ public class Formatter {
     }
 
     public Formatter thread(String value) {
-        this.alignment(value, 15);
+        this.alignment(true, value, 15);
         return this;
     }
 
     public Formatter name(String name) {
         buf.append(ansi().fg(Ansi.Color.CYAN));
-        this.alignment(name, 40);
+        this.alignment(false, name, 40);
         buf.append(ansi().fg(Ansi.Color.DEFAULT));
         return this;
     }
@@ -83,12 +83,11 @@ public class Formatter {
         return this;
     }
 
-    public void alignment(String text, int size) {
+    public void alignment(boolean leftPad, String text, int size) {
         if (text.length() < size) {
-            for (int i = size - text.length(); i > 0; i--) {
-                buf.append(" ");
-            }
+            if (leftPad) for (int i = size - text.length(); i > 0; i--) buf.append(" ");
             buf.append(text);
+            if (!leftPad) for (int i = size - text.length(); i > 0; i--) buf.append(" ");
         } else {
             buf.append(text.substring(text.length() - size));
         }
