@@ -79,10 +79,8 @@
                     window.parent.location.reload();
                 } else if (error.response.status === 403) {
                     window.location.href = "${base}/error/403.html"
-                } else if (error.response.status === 404) {
-                    window.location.href = "${base}/error/404.html"
                 } else {
-                    xterm.writeln("status: " + error.response.status + " → " + error.response.data.message);
+                    xterm.writeln("status: " + error.response.status + (error.response.data && (" → " + error.response.data.message)));
                 }
             } else {
                 xterm.writeln(error.message);
