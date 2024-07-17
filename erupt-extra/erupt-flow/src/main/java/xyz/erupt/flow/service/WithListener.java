@@ -8,4 +8,5 @@ import java.util.Map;
 public interface WithListener {
 
     Map<Class<ExecutableNodeListener>, List<ExecutableNodeListener>> getListenerMap();
+
 }

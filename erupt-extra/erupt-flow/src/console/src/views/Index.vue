@@ -1,6 +1,6 @@
 <template>
   <div style="text-align: center">
-    <h4 v-if="loginUser">{{'当前登录用户 ' + loginUser}}</h4>
+    <h4 v-if="loginUser">{{ '当前登录用户 ' + loginUser }}</h4>
     <h4 v-else>请先登录 😅</h4>
 
     <div class="work-panel">
@@ -43,33 +43,33 @@ import {getToken} from '@/api/auth';
 
 export default {
   name: "Index",
-  components:{OrgPicker},
-  data(){
-    return{
-      select:[],
+  components: {OrgPicker},
+  data() {
+    return {
+      select: [],
       loginUser: ''
     }
   },
-  mounted(){
+  mounted() {
     // let user = sessionStorage.getItem("user")
     // if (user !== null && user !== ''){
     //   this.loginUser = JSON.parse(user)
     //   this.select.push(this.loginUser)
     // }
   },
-  methods:{
-    selected(select){
+  methods: {
+    selected(select) {
       this.select = select
-      this.loginUser = select.length > 0 ? select[0]:''
+      this.loginUser = select.length > 0 ? select[0] : ''
       this.showUserSelect = false
       sessionStorage.setItem("user", JSON.stringify(this.loginUser))
     },
-    to(path){
-      if (this.loginUser === null || this.loginUser === ''){
+    to(path) {
+      if (this.loginUser === null || this.loginUser === '') {
         this.$message.warning("未选择登陆人员")
-        this.$router.push(path+"?_token="+getToken())
-      }else {
-        this.$router.push(path+"?_token="+getToken())
+        this.$router.push(path + "?_token=" + getToken())
+      } else {
+        this.$router.push(path + "?_token=" + getToken())
       }
     }
   }
@@ -79,16 +79,16 @@ export default {
 <style lang="less" scoped>
 
 h4 {
-  margin: 0 auto;
   color: #38adff;
-  margin-top: 150px;
+  margin: 150px auto 0;
 }
 
-.user{
+.user {
   position: absolute;
   left: 20%;
   margin-top: 20px;
-  div{
+
+  div {
     margin-left: 20px;
     display: inline-block;
   }
@@ -99,6 +99,7 @@ h4 {
   display: flex;
   justify-content: center;
   position: relative;
+
   .panel {
     margin-top: 80px;
     max-width: 840px;

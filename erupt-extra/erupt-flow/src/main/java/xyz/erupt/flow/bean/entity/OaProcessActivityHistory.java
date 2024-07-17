@@ -1,15 +1,7 @@
 package xyz.erupt.flow.bean.entity;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.*;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -18,6 +10,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
+import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,21 +20,13 @@ import java.util.List;
         , power = @Power(export = true, add = false, edit = false)
 )
 @Table(name = "oa_hi_process_activity")
-@TableName("oa_hi_process_activity")
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaProcessActivityHistory {
-
-    @Id
-    @GeneratedValue(generator = "generator")
-    @GenericGenerator(name = "generator", strategy = "native")
-    @Column(name = "id")
-    @EruptField
-    @TableId(type = IdType.AUTO)
-    private Long id;
+public class OaProcessActivityHistory extends BaseModel {
 
     @EruptField(views = @View(title = "节点key"))
     private String activityKey;
@@ -96,7 +81,6 @@ public class OaProcessActivityHistory {
     private Date finishDate;
 
     @Transient
-    @TableField(exist = false)
     private List<OaTaskHistory> tasks;
 
     @EruptField(views = @View(title = "节点"))

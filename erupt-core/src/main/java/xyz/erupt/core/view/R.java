@@ -35,8 +35,16 @@ public class R<T> implements Serializable {
         }};
     }
 
-    public static R<Void> error(String msg) {
-        return new R<Void>() {{
+
+    public static <T> R<T> ok() {
+        return new R<T>() {{
+            this.setSuccess(true);
+            this.setStatus(EruptApiModel.Status.SUCCESS);
+        }};
+    }
+
+    public static <T> R<T> error(String msg) {
+        return new R<T>() {{
             this.setSuccess(false);
             this.setMsg(msg);
             this.setStatus(EruptApiModel.Status.ERROR);

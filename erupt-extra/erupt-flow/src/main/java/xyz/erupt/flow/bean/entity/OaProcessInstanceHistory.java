@@ -1,14 +1,8 @@
 package xyz.erupt.flow.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -20,6 +14,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.flow.service.impl.ProcessInstanceHistoryServiceImpl;
+import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -33,21 +28,14 @@ import java.util.Date;
         , orderBy = "createDate desc"
 )
 @Table(name = "oa_hi_process_instance")
-@TableName("oa_hi_process_instance")
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaProcessInstanceHistory {
-
-    @Id
-    @GeneratedValue(generator = "generator")
-    @GenericGenerator(name = "generator", strategy = "native")
-    @Column(name = "id")
-    @EruptField(views = @View(title = "实例ID"))
-    @TableId(type = IdType.AUTO)
-    private Long id;
+@DynamicUpdate
+public class OaProcessInstanceHistory extends BaseModel {
 
     @EruptField(views = @View(title = "流程定义id"))
     private String processDefId;
@@ -112,11 +100,9 @@ public class OaProcessInstanceHistory {
     @Column//json类型
     private String formItems;
 
-    @TableField(exist = false)
     @Transient
     private String logo;
 
-    @TableField(exist = false)
     @Transient
     private String tag;
 }

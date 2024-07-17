@@ -1,6 +1,5 @@
 package xyz.erupt.flow.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaFormGroups;
 
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
  * @author : willian fu
  * date : 2022/7/4
  */
-public interface FormGroupService extends IService<OaFormGroups> {
+public interface FormGroupService {
 
     /**
      * 查询表单组

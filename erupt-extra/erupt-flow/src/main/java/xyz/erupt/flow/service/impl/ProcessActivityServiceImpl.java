@@ -2,10 +2,8 @@ package xyz.erupt.flow.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -20,7 +18,6 @@ import xyz.erupt.flow.bean.entity.OaProcessInstance;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.bean.entity.node.OaProcessNodeProps;
 import xyz.erupt.flow.constant.FlowConstant;
-import xyz.erupt.flow.mapper.OaProcessActivityMapper;
 import xyz.erupt.flow.process.engine.ProcessHelper;
 import xyz.erupt.flow.process.listener.AfterActiveActivityListener;
 import xyz.erupt.flow.process.listener.AfterCreateActivityListener;
@@ -28,15 +25,18 @@ import xyz.erupt.flow.process.listener.AfterFinishActivityListener;
 import xyz.erupt.flow.process.listener.ExecutableNodeListener;
 import xyz.erupt.flow.process.userlink.impl.UserLinkServiceHolder;
 import xyz.erupt.flow.service.*;
+import xyz.erupt.jpa.dao.EruptDao;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
-@Data
-public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMapper, OaProcessActivity>
+@Getter
+@Setter
+public class ProcessActivityServiceImpl
         implements ProcessActivityService, DataProxy<OaProcessActivity> {
 
     private Map<Class<ExecutableNodeListener>, List<ExecutableNodeListener>> listenerMap = new HashMap<>();
@@ -57,29 +57,32 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
     @Autowired
     private ProcessHelper processHelper;
 
+    @Resource
+    private EruptDao eruptDao;
+
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public int newActivitiesForExecution(OaProcessExecution execution) {
-        OaProcessInstance inst = processInstanceService.getById(execution.getProcessInstId());
+        OaProcessInstance inst = eruptDao.findById(OaProcessInstance.class, execution.getProcessInstId());
         return this.newActivities(execution, inst.getFormContent(), execution.getProcessNode());
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public int newActivities(OaProcessExecution execution, JSONObject formContent, OaProcessNode node) {
         return this.newActivities(execution, formContent, node, OaProcessExecution.STATUS_RUNNING);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public int newActivities(OaProcessExecution execution, JSONObject formContent, OaProcessNode node, String status) {
-        if(node == null || node.getId() == null) {//如果当前节点为空，表示当前线程已结束
-            if(OaProcessExecution.STATUS_RUNNING.equals(status)) {
+        if (node == null || node.getId() == null) {//如果当前节点为空，表示当前线程已结束
+            if (OaProcessExecution.STATUS_RUNNING.equals(status)) {
                 processExecutionService.finish(execution);//调用线程结束方法
             }
             return 0;
         }
-        if(FlowConstant.NODE_TYPE_ROOT.equals(node.getType())
+        if (FlowConstant.NODE_TYPE_ROOT.equals(node.getType())
                 || FlowConstant.NODE_TYPE_APPROVAL.equals(node.getType())
                 || FlowConstant.NODE_TYPE_CC.equals(node.getType())//抄送也要创建任务
         ) {//这几种情况需要创建活动
@@ -87,7 +90,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
             return 1;
         }
         //其他情况本节点都不会生成活动，而是会继续向前
-        if(FlowConstant.NODE_TYPE_CONDITIONS.equals(node.getType())) {//如果是互斥分支
+        if (FlowConstant.NODE_TYPE_CONDITIONS.equals(node.getType())) {//如果是互斥分支
             //主线程先继续向前，并等待
             int count = this.newActivities(
                     execution, formContent, node.getChildren(), OaProcessExecution.STATUS_WAITING);
@@ -96,7 +99,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
             processExecutionService.newExecution(
                     execution.getProcessDefId(), execution.getProcessInstId(), nextNode, execution);
             return count;
-        }else if(FlowConstant.NODE_TYPE_CONCURRENTS.equals(node.getType())) {//如果是并行分支
+        } else if (FlowConstant.NODE_TYPE_CONCURRENTS.equals(node.getType())) {//如果是并行分支
             //主线程先继续向前，并等待
             int count = this.newActivities(
                     execution, formContent, node.getChildren(), OaProcessExecution.STATUS_WAITING);
@@ -106,25 +109,25 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
                         execution.getProcessDefId(), execution.getProcessInstId(), branch, execution);
             }
             return count;
-        }else {//其他情况一律向前
+        } else {//其他情况一律向前
             return this.newActivities(execution, formContent, node.getChildren(), status);//则继续向前
         }
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void removeByProcessInstId(Long procInstId) {
-        QueryWrapper<OaProcessActivity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OaProcessActivity::getProcessInstId, procInstId);
-        this.remove(queryWrapper);
+        for (OaProcessActivity activity : eruptDao.lambdaQuery(OaProcessActivity.class).eq(OaProcessActivity::getProcessInstId, procInstId).list()) {
+            eruptDao.delete(activity);
+        }
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public boolean activeByExecutionId(Long executionId) {
         //查询下一个没激活的，进行激活
         OaProcessActivity build = this.getNexActivity(executionId, false);
-        if(build==null) {
+        if (build == null) {
             return false;
         }
         build.setActive(true);
@@ -138,14 +141,14 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
     @Override
     public void stopByExecutionId(Long executionId, String reason) {
         List<OaProcessActivity> activities = this.listByExecutionId(executionId, true);
-        if(CollectionUtils.isEmpty(activities)) {
+        if (CollectionUtils.isEmpty(activities)) {
             return;
         }
         activities.forEach(e -> {
             OaProcessActivity build = OaProcessActivity.builder()
                     .active(false)
-                    .id(e.getId())
                     .build();
+            build.setId(e.getId());
             this.updateById(build);
             processActivityHistoryService.copyAndSave(build);
         });
@@ -153,76 +156,75 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
 
     @Override
     public void stopByInstId(Long instId, String reason) {
-        List<OaProcessActivity> activities = this.list(
-                new LambdaQueryWrapper<OaProcessActivity>()
-                    .eq(OaProcessActivity::getProcessInstId, instId)
-                    .eq(OaProcessActivity::getFinished, false)
-        );
-        if(CollectionUtils.isEmpty(activities)) {
+        List<OaProcessActivity> activities = eruptDao.lambdaQuery(OaProcessActivity.class).eq(OaProcessActivity::getProcessInstId, instId)
+                .eq(OaProcessActivity::getFinished, false).list();
+        if (CollectionUtils.isEmpty(activities)) {
             return;
         }
         activities.forEach(e -> {
             OaProcessActivity build = OaProcessActivity.builder()
-                    .active(false)
-                    .id(e.getId())
-                    .build();
+                    .active(false).build();
+            build.setId(e.getId());
             this.updateById(build);
             processActivityHistoryService.copyAndSave(build);
         });
     }
 
+    @Override
+    public void removeById(Long id) {
+        eruptDao.delete(new OaProcessActivity() {{
+            this.setId(id);
+        }});
+    }
+
+    @Override
+    public OaProcessActivity getById(Long activityId) {
+        return eruptDao.findById(OaProcessActivity.class, activityId);
+    }
+
     private List<OaProcessActivity> listByExecutionId(Long executionId, boolean active) {
-        LambdaQueryWrapper<OaProcessActivity> wrapper = new LambdaQueryWrapper<OaProcessActivity>()
-                .eq(OaProcessActivity::getExecutionId, executionId);
-        return this.list(wrapper);
+        return eruptDao.lambdaQuery(OaProcessActivity.class).eq(OaProcessActivity::getExecutionId, executionId).list();
     }
 
     /**
      * 尝试完成一个节点
+     *
      * @param activityId
      */
     @Override
     public void complete(Long activityId) {
-        OaProcessActivity activity = this.getById(activityId);
+        OaProcessActivity activity = eruptDao.findById(OaProcessActivity.class, activityId);
         //删除当前节点，并修改历史表
         OaProcessActivityHistory history = new OaProcessActivityHistory();
         history.setFinished(true);
         history.setFinishDate(new Date());
         history.setId(activityId);
         processActivityHistoryService.updateById(history);
-        this.removeById(activityId);
+        eruptDao.delete(activity);
         //触发后置监听
         this.listenerMap.get(AfterFinishActivityListener.class).forEach(l -> l.execute(activity));
     }
 
     /**
      * 查询下一个激活的任务
+     *
      * @param executionId
      * @return
      */
     private OaProcessActivity getNexActivity(Long executionId, boolean actived) {
-        LambdaQueryWrapper<OaProcessActivity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(OaProcessActivity::getExecutionId, executionId);
-        queryWrapper.eq(OaProcessActivity::getActive, actived);
-        queryWrapper.orderByAsc(OaProcessActivity::getSort);
-        List<OaProcessActivity> list = this.list(queryWrapper);
-        if(CollectionUtils.isEmpty(list)) {
-            return null;
-        }else {
-            return list.get(0);
-        }
+        return eruptDao.lambdaQuery(OaProcessActivity.class).eq(OaProcessActivity::getExecutionId, executionId)
+                .eq(OaProcessActivity::getActive, actived).limit(1).orderByAsc(OaProcessActivity::getSort).one();
     }
 
     @Override
     public OaProcessActivity getByExecutionId(Long executionId) {
-        QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("execution_id", executionId);
-        queryWrapper.eq("active", true);
-        return this.getOne(queryWrapper);
+        return eruptDao.lambdaQuery(OaProcessActivity.class).eq(OaProcessActivity::getExecutionId, executionId)
+                .eq(OaProcessActivity::getActive, true).one();
     }
 
     /**
      * 创建一个活动
+     *
      * @param execution
      * @param node
      * @param status
@@ -230,7 +232,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
      */
     @Override
     public OaProcessActivity newActivity(OaProcessExecution execution, OaProcessNode node, String status, OaProcessNodeProps props, int sort) {
-        node.setProps(props==null? node.getProps(): props);//配置继承过来
+        node.setProps(props == null ? node.getProps() : props);//配置继承过来
         OaProcessActivity activity = OaProcessActivity.builder()
                 .activityKey(node.getId())
                 .activityName(node.getName())
@@ -247,7 +249,7 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
                 .description(node.getDesc())
                 .sort(sort)
                 .build();
-        this.save(activity);
+        eruptDao.persist(activity);
         processActivityHistoryService.copyAndSave(activity);//同步保存历史表
 
         //触发创建后置监听
@@ -256,12 +258,10 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
         return activity;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean updateById(OaProcessActivity entity) {
+    public void updateById(OaProcessActivity entity) {
         OaProcessActivityHistory history = new OaProcessActivityHistory();
         BeanUtils.copyProperties(entity, history);
         processActivityHistoryService.updateById(history);
-        return super.updateById(entity);
+        eruptDao.merge(entity);
     }
 }
