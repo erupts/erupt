@@ -84,7 +84,11 @@ public class EruptDao {
 
     //删除
     public void delete(Object obj) {
-        entityManager.remove(obj);
+        if (entityManager.contains(obj)) {
+            entityManager.remove(obj);
+        } else {
+            entityManager.remove(entityManager.merge(obj));
+        }
     }
 
     @Transactional

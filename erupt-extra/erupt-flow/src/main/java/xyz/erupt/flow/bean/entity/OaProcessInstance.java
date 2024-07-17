@@ -2,14 +2,8 @@ package xyz.erupt.flow.bean.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -22,8 +16,12 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.service.impl.ProcessInstanceServiceImpl;
+import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -35,13 +33,14 @@ import java.util.Date;
         , dataProxy = ProcessInstanceServiceImpl.class
 )
 @Table(name = "oa_ru_process_instance")
-@TableName("oa_ru_process_instance")
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaProcessInstance {
+@DynamicUpdate
+public class OaProcessInstance extends BaseModel {
 
     //RUNNING:运行中 PAUSE:暂停 FINISHED:结束 SHUTDOWN:中止
     public final static String RUNNING = "RUNNING";
@@ -49,15 +48,7 @@ public class OaProcessInstance {
     public final static String FINISHED = "FINISHED";
     public final static String SHUTDOWN = "SHUTDOWN";
 
-    @Id
-    @GeneratedValue(generator = "generator")
-    @GenericGenerator(name = "generator", strategy = "native")
-    @Column(name = "id")
-    @EruptField
-    @TableId(type = IdType.AUTO)
-    private Long id;
-
-    @EruptField(views = @View(title = "流程定义id", show = true))
+    @EruptField(views = @View(title = "流程定义id"))
     private String processDefId;
 
     @EruptField(views = @View(title = "表单id", show = false))
@@ -80,15 +71,15 @@ public class OaProcessInstance {
 
     @EruptField(views = @View(title = "状态", desc = "RUNNING:运行中 PAUSE:暂停 FINISHED:结束 SHUTDOWN:中止")
             , edit = @Edit(
-                    title = "状态", search = @Search, type = EditType.CHOICE
-                    , choiceType = @ChoiceType(
-                        vl = {
-                                @VL(label = "运行中", value = "RUNNING"),
-                                @VL(label = "暂停", value = "PAUSE"),
-                                @VL(label = "结束", value = "FINISHED"),
-                                @VL(label = "中止", value = "SHUTDOWN", disable = true),
-                        })
-            )
+            title = "状态", search = @Search, type = EditType.CHOICE
+            , choiceType = @ChoiceType(
+            vl = {
+                    @VL(label = "运行中", value = "RUNNING"),
+                    @VL(label = "暂停", value = "PAUSE"),
+                    @VL(label = "结束", value = "FINISHED"),
+                    @VL(label = "中止", value = "SHUTDOWN", disable = true),
+            })
+    )
     )
     private String status;
 
@@ -117,11 +108,11 @@ public class OaProcessInstance {
             @View(title = "表单内容", show = false)
     })
     @Lob
-    @Column//json类型
+    @Column //json类型
     private String formItems;
 
     @Lob
-    @Column//json类型
+    @Column //json类型
     private String process;
 
     public JSONObject getFormContent() {

@@ -1,10 +1,7 @@
 package xyz.erupt.flow.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +12,12 @@ import xyz.erupt.flow.bean.entity.OaTask;
 import xyz.erupt.flow.bean.entity.OaTaskHistory;
 import xyz.erupt.flow.bean.entity.OaTaskUserLink;
 import xyz.erupt.flow.constant.FlowConstant;
-import xyz.erupt.flow.mapper.OaTaskHistoryMapper;
 import xyz.erupt.flow.service.ProcessDefinitionService;
 import xyz.erupt.flow.service.TaskHistoryService;
 import xyz.erupt.flow.service.TaskUserLinkService;
+import xyz.erupt.jpa.dao.EruptDao;
 
+import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -27,14 +25,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class TaskHistoryServiceImpl extends ServiceImpl<OaTaskHistoryMapper, OaTaskHistory>
-        implements TaskHistoryService, DataProxy<OaTaskHistory> {
+public class TaskHistoryServiceImpl implements TaskHistoryService, DataProxy<OaTaskHistory> {
 
-    @Autowired
     @Lazy
+    @Resource
     private ProcessDefinitionService processDefinitionService;
-    @Autowired
+
+    @Resource
     private TaskUserLinkService taskUserLinkService;
+
+    @Resource
+    private EruptDao eruptDao;
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
@@ -42,68 +43,67 @@ public class TaskHistoryServiceImpl extends ServiceImpl<OaTaskHistoryMapper, OaT
 
         for (Map<String, Object> map : list) {
             OaProcessDefinition def = definitionMap.get(map.get("processDefId"));
-            if(def==null) {
+            if (def == null) {
                 def = processDefinitionService.getById((String) map.get("processDefId"));
                 definitionMap.put((String) map.get("processDefId")
-                        , def==null?new OaProcessDefinition():def);
+                        , def == null ? new OaProcessDefinition() : def);
             }
             map.put("formName", def.getFormName());//填充流程名
 
             //如果是未完成，且激活的任务，查询一下候选人
-            if(!(Boolean)map.get("finished") && (Boolean) map.get("active")
-                && StringUtils.isBlank((String)map.get("taskOwner"))
-                && StringUtils.isBlank((String) map.get("assignee"))
+            if (!(Boolean) map.get("finished") && (Boolean) map.get("active")
+                    && StringUtils.isBlank((String) map.get("taskOwner"))
+                    && StringUtils.isBlank((String) map.get("assignee"))
             ) {
                 List<OaTaskUserLink> links =
                         taskUserLinkService.listByTaskId((Long) map.get("id"));
-                if(!CollectionUtils.isEmpty(links)) {
-                    String str = null;
+                if (!CollectionUtils.isEmpty(links)) {
+                    StringBuilder str = null;
 
                     for (int i = 0; i < links.size(); i++) {
-                        if(links.get(i).getUserLinkType().equals(FlowConstant.USER_LINK_ROLES)) {
-                            str += "[角色]";
-                        }else if(links.get(i).getUserLinkType().equals(FlowConstant.USER_LINK_USERS)){
-                            str = "[用户]";
-                        }else if(links.get(i).getUserLinkType().equals(FlowConstant.USER_LINK_CC)){
-                            str = "[抄送]";
+                        if (links.get(i).getUserLinkType().equals(FlowConstant.USER_LINK_ROLES)) {
+                            str.append("[角色]");
+                        } else if (links.get(i).getUserLinkType().equals(FlowConstant.USER_LINK_USERS)) {
+                            str = new StringBuilder("[用户]");
+                        } else if (links.get(i).getUserLinkType().equals(FlowConstant.USER_LINK_CC)) {
+                            str = new StringBuilder("[抄送]");
                         }
-                        if(i>0) {
-                            str += "," + links.get(i).getLinkName();
-                        }else {
-                            str += links.get(i).getLinkName();
+                        if (i > 0) {
+                            str.append(",").append(links.get(i).getLinkName());
+                        } else {
+                            str.append(links.get(i).getLinkName());
                         }
                     }
-                    map.put("links", str);
+                    map.put("links", str.toString());
                 }
             }
         }
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public OaTaskHistory copyAndSave(OaTask task) {
         OaTaskHistory oaTaskHistory = new OaTaskHistory();
         BeanUtils.copyProperties(task, oaTaskHistory);
-        super.saveOrUpdate(oaTaskHistory);
+        eruptDao.persist(oaTaskHistory);
         return oaTaskHistory;
     }
 
     @Override
     public List<OaTaskHistory> copyAndSave(Collection<OaTask> tasks) {
-        List<OaTaskHistory> collect = tasks.stream().map(t -> {
+        return tasks.stream().map(t -> {
             OaTaskHistory hist = new OaTaskHistory();
             BeanUtils.copyProperties(t, hist);
+            eruptDao.persist(hist);
             return hist;
         }).collect(Collectors.toList());
-        collect.forEach(this::saveOrUpdate);
-        return collect;
     }
 
     @Override
     public List<OaTaskHistory> listByActivityId(Long activityId) {
-        return this.list(new LambdaQueryWrapper<OaTaskHistory>()
+        return eruptDao.lambdaQuery(OaTaskHistory.class)
                 .eq(OaTaskHistory::getActivityId, activityId)
-                .orderByAsc(OaTaskHistory::getCompleteSort)
-        );
+                .orderByAsc(OaTaskHistory::getCompleteSort).list();
     }
+
 }

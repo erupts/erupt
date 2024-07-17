@@ -19,7 +19,8 @@
             <el-dropdown>
               <el-button type="text" icon="el-icon-setting" style="color: #8c939d">编辑分组</el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item icon="el-icon-edit-outline" @click.native="editGroup(group)">修改名称</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-edit-outline" @click.native="editGroup(group)">修改名称
+                </el-dropdown-item>
                 <el-dropdown-item icon="el-icon-delete" @click.native="delGroup(group)">删除分组</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -31,7 +32,7 @@
                    :options="{animation: 300, chosenClass:'choose', scroll: true, sort:true}">
           <div :class="{'form-group-item':true, 'undrag': false}" v-for="(item, index) in group.items" :key="index">
             <div class="form-sort" title="长按拖动进行排序">
-              <i :class="item.logo.icon" :style="'background: '+item.logo.background"></i>
+              <i :class="item.logo?.icon" :style="'background: '+item.logo?.background"></i>
               <span>{{ item.formName }}</span>
             </div>
             <div class="desp">{{ item.remark }}</div>
@@ -125,9 +126,11 @@ export default {
         this.groups = rsp.data
         //解析图标json
         this.groups.forEach(group => {
-          group.items.forEach(item => {
-            item.logo = JSON.parse(item.logo)
-          })
+          if (group) {
+            group.items.forEach(item => {
+              item.logo = JSON.parse(item.logo)
+            })
+          }
         })
       });
     },
@@ -281,6 +284,7 @@ export default {
   padding: 50px 100px;
   min-width: 500px;
   background: #ffffff;
+
   /deep/ .from-title {
     div {
       float: right;

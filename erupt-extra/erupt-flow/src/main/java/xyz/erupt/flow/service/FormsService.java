@@ -1,11 +1,11 @@
 package xyz.erupt.flow.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaForms;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface FormsService extends IService<OaForms> {
+public interface FormsService {
 
     void updateFormDetail(OaForms forms);
 
@@ -14,4 +14,8 @@ public interface FormsService extends IService<OaForms> {
     List<OaForms> listByGroupId(Long groupId, String keywords);
 
     void formsSort(List<Long> formIds);
+
+    void updateById(OaForms entity);
+
+    void removeById(Serializable id);
 }

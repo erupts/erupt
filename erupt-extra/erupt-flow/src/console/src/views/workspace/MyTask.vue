@@ -117,6 +117,7 @@ export default {
     loadDatas () {
       this.loading = true
       listMyTasks(this.queryParam).then(res => {
+        console.log(res)
         this.loading = false
         res.data.list.map(t => {//追加到数据列表
           this.dataList.push(t);

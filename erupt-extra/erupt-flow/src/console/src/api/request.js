@@ -37,15 +37,15 @@ service.interceptors.response.use(
 				title: res.status,
 				message: res.statusText
 			})
-			return Promise.reject(res.data.message)
+			return Promise.reject(res.data.msg)
 		}
 		// 状态为SUCCESS或者为空都是成功
 		res.data.success = res.data.status === "SUCCESS" || !res.data.status;
-		res.data.message = res.data.message || "操作成功";
-		if(!res.data.success) {//
+		res.data.msg = res.data.msg || "操作成功";
+		if(!res.data.success) {
 			Notification({
 				title: res.data.status,
-				message: res.data.message,
+				message: res.data.msg,
 				type: "warning"
 			});
 			return res.data;
@@ -67,7 +67,7 @@ service.interceptors.response.use(
 				Message.warning("抱歉，您无权访问！")
 				break;
 			case 500:
-				Notification.error({ title: "操作失败", message: err.response.data.message });
+				Notification.error({ title: "操作失败", message: err.response.data.msg });
 				break;
 			case 404:
 				Notification({

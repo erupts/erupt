@@ -1,14 +1,14 @@
 package xyz.erupt.flow.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaProcessExecution;
 import xyz.erupt.flow.bean.entity.OaProcessInstance;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 
-public interface ProcessExecutionService extends IService<OaProcessExecution>, WithListener {
+public interface ProcessExecutionService extends WithListener {
 
     /**
      * 新建线程
+     *
      * @param defId
      * @param instanceId
      * @param currentNode
@@ -19,6 +19,7 @@ public interface ProcessExecutionService extends IService<OaProcessExecution>, W
 
     /**
      * 线程继续向前
+     *
      * @param executionId
      */
     public void step(Long executionId, OaProcessNode currentNode);
@@ -27,18 +28,21 @@ public interface ProcessExecutionService extends IService<OaProcessExecution>, W
 
     /**
      * 触发线程继续
+     *
      * @param parentId
      */
     void active(Long parentId);
 
     /**
      * 结束流程
+     *
      * @param execution
      */
     void finish(OaProcessExecution execution);
 
     /**
      * 刷新节点json
+     *
      * @param id
      * @param toJSONString
      */
@@ -46,6 +50,7 @@ public interface ProcessExecutionService extends IService<OaProcessExecution>, W
 
     /**
      * 中断所有线程
+     *
      * @param instId
      * @param reason
      */
@@ -53,7 +58,10 @@ public interface ProcessExecutionService extends IService<OaProcessExecution>, W
 
     /**
      * 启动新线程
+     *
      * @param inst
      */
     OaProcessExecution newExecutionForInstance(OaProcessInstance inst);
+
+    OaProcessExecution getById(Long id);
 }

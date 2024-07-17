@@ -44,6 +44,11 @@
 			<artifactId>erupt-job</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>xyz.erupt</groupId>
+			<artifactId>erupt-flow</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
