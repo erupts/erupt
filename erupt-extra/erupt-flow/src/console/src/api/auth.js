@@ -15,5 +15,5 @@ export function getQueryVariable(fieldName) {
             }
         }
     }
-    return '7gQTpNQ6WZLugJ8K';//备用的万能token
+    return null; //备用的万能token
 }

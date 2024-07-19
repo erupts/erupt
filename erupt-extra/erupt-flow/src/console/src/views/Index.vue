@@ -5,12 +5,7 @@
 
     <div class="work-panel">
       <div class="user">
-        <!--<el-button type="primary" round size="small" @click="$refs.orgPicker.show()" icon="el-icon-user">
-          选择本次登录者
-        </el-button>
-        <div v-if="loginUser !== '' && loginUser !== null">
-          <span>{{loginUser.nickName}}</span>
-        </div>-->
+
       </div>
       <div class="panel">
         <div class="panel-item" @click="to('/workSpace')">
@@ -33,7 +28,6 @@
         </div>
       </div>
     </div>
-    <org-picker type="user" ref="orgPicker" :selected="select" @ok="selected"></org-picker>
   </div>
 </template>
 
@@ -43,7 +37,6 @@ import {getToken} from '@/api/auth';
 
 export default {
   name: "Index",
-  components: {OrgPicker},
   data() {
     return {
       select: [],
