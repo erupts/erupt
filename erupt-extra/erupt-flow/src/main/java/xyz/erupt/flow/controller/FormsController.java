@@ -43,7 +43,7 @@ public class FormsController {
      */
     @GetMapping("/admin/form/detail/{id}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public R<OaForms> getFormById(@PathVariable String id) {
+    public R<OaForms> getFormById(@PathVariable Long id) {
         return R.ok(eruptDao.findById(OaForms.class, id));
     }
 
