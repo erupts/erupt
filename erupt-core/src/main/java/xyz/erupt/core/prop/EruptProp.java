@@ -46,6 +46,6 @@ public class EruptProp {
     private boolean logTrack = true;
 
     //日志采集暂存行数
-    private Integer logTrackCacheSize = 2000;
+    private Integer logTrackCacheSize = 1000;
 
 }

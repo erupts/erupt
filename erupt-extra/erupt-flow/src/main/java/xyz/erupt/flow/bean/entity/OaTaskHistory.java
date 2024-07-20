@@ -1,14 +1,6 @@
 package xyz.erupt.flow.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.*;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -18,8 +10,11 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.flow.service.impl.TaskHistoryServiceImpl;
+import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**
@@ -31,24 +26,16 @@ import java.util.Date;
         , dataProxy = TaskHistoryServiceImpl.class
 )
 @Table(name = "oa_hi_task")
-@TableName("oa_hi_task")
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaTaskHistory {
+public class OaTaskHistory extends BaseModel {
 
-    @Id
-    @GeneratedValue(generator = "generator")
-    @GenericGenerator(name = "generator", strategy = "native")
-    @Column(name = "id")
-    @EruptField(views = @View(title = "任务ID"))
-    @TableId(type = IdType.AUTO)
-    private Long id;
 
-    @Transient//标识虚拟列
-    @TableField(exist = false)
+    @Transient
     @EruptField(views = @View(title = "流程名称")
             , edit = @Edit(title = "流程名称", search = @Search(vague = true))
     )
@@ -59,7 +46,6 @@ public class OaTaskHistory {
     )
     private String taskName;
 
-    @TableField(exist = false)
     @Transient
     private String tag;
 
@@ -86,8 +72,7 @@ public class OaTaskHistory {
     @EruptField(views = @View(title = "分配人", desc = "任务没有所属人时，分配人优先处理此任务"))
     private String assignee;//任务指定人，没有持有人时，指定人处理此任务，优先级为2
 
-    @Transient//标识虚拟列
-    @TableField(exist = false)
+    @Transient //标识虚拟列
     @EruptField(views = @View(title = "候选人", desc = "所属人和分配人为空时，由候选人处理任务"))
     private String links;//激活状态，只有激活的任务可以被完成
 
@@ -97,7 +82,6 @@ public class OaTaskHistory {
     private Boolean active;//激活状态，只有激活的任务可以被完成
 
     @Transient//标识虚拟列
-    @TableField(exist = false)
     @EruptField(views = @View(title = "业务标题")
             , edit = @Edit(title = "业务标题", search = @Search(vague = true))
     )
@@ -145,4 +129,5 @@ public class OaTaskHistory {
 
     @EruptField(views = @View(title = "执行顺序", desc = "串行模式下按照顺序完成任务"))
     private Integer completeSort;//完成顺序，单任务和并行不需要关注顺序。串行模式下，每个任务执行完之后，取当前线程下顺序最小的一个任务执行
+
 }

@@ -31,7 +31,7 @@
             </div>
             <div v-else-if="org.type === 'user'" style="display: flex; align-items: center">
               <el-avatar :size="35" :src="org.avatar" v-if="$isNotEmpty(org.avatar)"/>
-              <span v-else class="avatar">{{getShortName(org.name)}}</span>
+              <span v-else class="avatar">{{ getShortName(org.name) }}</span>
               <span class="name">{{ org.name }}</span>
             </div>
             <div style="display: inline-block" v-else>
@@ -48,14 +48,14 @@
         </div>
         <div class="org-items" style="height: 350px;">
           <el-empty :image-size="100" description="请点击左侧列表选择数据" v-show="select.length === 0"/>
-          <div v-for="(org, index) in select" :key="index" :class="orgItemClass(org)" >
+          <div v-for="(org, index) in select" :key="index" :class="orgItemClass(org)">
             <div v-if="org.type === 'dept'">
               <i class="el-icon-folder-opened"></i>
               <span style="position: static" class="name">{{ org.name }}</span>
             </div>
             <div v-else-if="org.type === 'user'" style="display: flex; align-items: center">
               <el-avatar :size="35" :src="org.avatar" v-if="$isNotEmpty(org.avatar)"/>
-              <span v-else class="avatar">{{getShortName(org.name)}}</span>
+              <span v-else class="avatar">{{ getShortName(org.name) }}</span>
               <span class="name">{{ org.name }}</span>
             </div>
             <div v-else>
@@ -112,13 +112,13 @@ export default {
   },
   computed: {
     _title() {
-      if(this.type==='user') {
-        return "请选择用户" + (this.multiple?"[多选]":"[单选]")
-      }else if(this.type==='dept') {
-        return "请选择部门" + (this.multiple?"[多选]":"[单选]")
-      }else if(this.type==='role') {
-        return "请选择角色" + (this.multiple?"[多选]":"[单选]")
-      }else {
+      if (this.type === 'user') {
+        return "请选择用户" + (this.multiple ? "[多选]" : "[单选]")
+      } else if (this.type === 'dept') {
+        return "请选择部门" + (this.multiple ? "[多选]" : "[单选]")
+      } else if (this.type === 'role') {
+        return "请选择角色" + (this.multiple ? "[多选]" : "[单选]")
+      } else {
         return "-"
       }
     },
@@ -128,7 +128,7 @@ export default {
     orgs() {
       return !this.search || this.search.trim() === '' ? this.nodes : this.searchUsers
     },
-    showUsers(){
+    showUsers() {
       return this.search || this.search.trim() !== ''
     },
   },
@@ -142,7 +142,7 @@ export default {
       //只有类型和组件类型符合才可以多选
       return this.type === node.type;
     },
-    orgItemClass(org){
+    orgItemClass(org) {
       return {
         'org-item': true,
         'org-dept-item': org.type === 'dept',
@@ -155,20 +155,20 @@ export default {
     },
     getDataList() {
       this.loading = true
-      if(this.type==='user') {
+      if (this.type === 'user') {
         getOrgTreeUser({deptId: this.nowDeptId, keywords: this.search}).then(rsp => {
           this.loading = false
           this.nodes = rsp.data
           this.selectToLeft()
         })
         return "请选择用户"
-      }else if(this.type==='dept') {
+      } else if (this.type === 'dept') {
         getOrgTree({deptId: this.nowDeptId, keywords: this.search}).then(rsp => {
           this.loading = false
           this.nodes = rsp.data
           this.selectToLeft()
         })
-      }else if(this.type==='role') {
+      } else if (this.type === 'role') {
         getRole({deptId: this.nowDeptId, keywords: this.search}).then(rsp => {
           this.loading = false
           this.nodes = rsp.data
@@ -304,7 +304,7 @@ export default {
       this.visible = false
       this.recover()
     },
-    clearSelected(){
+    clearSelected() {
       this.$confirm('您确定要清空已选中的项?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -345,21 +345,23 @@ export default {
   height: 402px;
   position: relative;
   text-align: left;
+
   .candidate {
     left: 0;
     top: 0;
 
-    .role-header{
+    .role-header {
       padding: 10px !important;
       margin-bottom: 5px;
       border-bottom: 1px solid #e8e8e8;
     }
 
-    .top-dept{
+    .top-dept {
       margin-left: 20px;
       cursor: pointer;
-      color:#38adff;
+      color: #38adff;
     }
+
     .next-dept {
       float: right;
       color: @theme-primary;
@@ -393,6 +395,7 @@ export default {
       cursor: pointer;
       font-size: larger;
     }
+
     .org-dept-item {
       padding: 10px 5px;
 
@@ -436,6 +439,7 @@ export default {
       border-radius: 5px;
       position: relative;
       cursor: pointer;
+
       .el-checkbox {
         margin-right: 10px;
       }
@@ -460,6 +464,7 @@ export default {
     display: inline-block;
     border-bottom: 1px solid #e8e8e8;
     margin-bottom: 5px;
+
     & > span:nth-child(2) {
       float: right;
       color: #c75450;
@@ -472,7 +477,7 @@ export default {
   padding: 10px 20px;
 }
 
-.disabled{
+.disabled {
   cursor: not-allowed !important;
   color: #8c8c8c !important;
 }

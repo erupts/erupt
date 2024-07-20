@@ -42,7 +42,7 @@ service.interceptors.response.use(
 		// 状态为SUCCESS或者为空都是成功
 		res.data.success = res.data.status === "SUCCESS" || !res.data.status;
 		res.data.message = res.data.message || "操作成功";
-		if(!res.data.success) {//
+		if(!res.data.success) {
 			Notification({
 				title: res.data.status,
 				message: res.data.message,
