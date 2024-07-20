@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.R;
 import xyz.erupt.flow.bean.entity.OaFormGroups;
 import xyz.erupt.flow.bean.entity.OaProcessActivityHistory;
 import xyz.erupt.flow.bean.entity.OaProcessInstance;
@@ -24,47 +24,45 @@ public class ProcessDefinitionController {
     /**
      * 查询所有表单分组
      * 包含流程定义
+     *
      * @return
      */
     @GetMapping("/process/groups")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel getFormGroups(String keywords){
-        List<OaFormGroups> formGroups = processDefinitionService.getFormGroups(OaFormGroups.builder()
+    public R<List<OaFormGroups>> getFormGroups(String keywords) {
+        return R.ok(processDefinitionService.getFormGroups(OaFormGroups.builder()
                 .keywords(keywords)
-                .build());
-        return EruptApiModel.successApi(formGroups);
+                .build()));
     }
 
     /**
      * 启动流程，会启动当前流程的最新版本
+     *
      * @return
      */
     @PostMapping("/process/start/form/{procDefId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel startById(@PathVariable String procDefId, @RequestBody JSONObject formContent) {
-        OaProcessInstance processInstance = processDefinitionService.startById(procDefId, formContent.toJSONString());
-        return EruptApiModel.successApi(processInstance);
+    public R<OaProcessInstance> startById(@PathVariable String procDefId, @RequestBody JSONObject formContent) {
+        return R.ok(processDefinitionService.startById(procDefId, formContent.toJSONString()));
     }
 
     /**
      * 预览流程时间线
+     *
      * @return
      */
     @PostMapping("/process/timeline/preview/{formDefId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel preview(@PathVariable("formDefId") String formDefId, @RequestBody JSONObject formContent) {
-        List<OaProcessActivityHistory> activities = processDefinitionService.preview(formDefId, formContent);
-        return EruptApiModel.successApi(activities);
+    public R<List<OaProcessActivityHistory>> preview(@PathVariable("formDefId") String formDefId, @RequestBody JSONObject formContent) {
+        return R.ok(processDefinitionService.preview(formDefId, formContent));
     }
 
     /**
      * 查看流程实例的时间线
-     * @return
      */
     @PostMapping("/process/timeline/{instId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel timeline(@PathVariable("instId") Long instId) {
-        List<OaProcessActivityHistory> activities = processDefinitionService.preview(instId);
-        return EruptApiModel.successApi(activities);
+    public R<List<OaProcessActivityHistory>> timeline(@PathVariable("instId") Long instId) {
+        return R.ok(processDefinitionService.preview(instId));
     }
 }

@@ -1,14 +1,14 @@
 package xyz.erupt.flow.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.view.EruptApiModel;
+import xyz.erupt.core.view.R;
 import xyz.erupt.flow.bean.entity.OaFormGroups;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.service.FormGroupService;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,80 +19,81 @@ import java.util.List;
 @RequestMapping(EruptRestPath.ERUPT_API + "/" + FlowConstant.SERVER_NAME)
 public class FormGroupController {
 
-    @Autowired
+    @Resource
     private FormGroupService formGroupService;
 
     /**
      * 查询所有表单分组
-     * @return
      */
     @GetMapping("/admin/form/group")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel getFormGroups(String keywords){
+    public R<List<OaFormGroups>> getFormGroups(String keywords) {
         List<OaFormGroups> formGroups = formGroupService.getFormGroups(OaFormGroups.builder()
                 .keywords(keywords)
                 .build());
-        return EruptApiModel.successApi(formGroups);
+        return R.ok(formGroups);
     }
 
     /**
      * 查询所有表单分组
-     * @return
      */
     @GetMapping("/admin/form/group/list")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel getFormGroupList(){
-        List<OaFormGroups> formGroupList = formGroupService.getFormGroupList();
-        return EruptApiModel.successApi(formGroupList);
+    public R<List<OaFormGroups>> getFormGroupList() {
+        return R.ok(formGroupService.getFormGroupList());
     }
 
     /**
      * 表单分组排序
+     *
      * @param groups 分组数据
      * @return 排序结果
      */
     @PutMapping("/admin/form/group/sort")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel formGroupsSort(@RequestBody List<Long> groups){
+    public R<Void> formGroupsSort(@RequestBody List<Long> groups) {
         formGroupService.formGroupsSort(groups);
-        return EruptApiModel.successApi();
+        return R.ok();
     }
 
     /**
      * 修改分组
-     * @param id 分组ID
+     *
+     * @param id   分组ID
      * @param name 分组名
      * @return 修改结果
      */
     @PutMapping("/admin/form/group")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel updateFormGroupName(@RequestParam Long id,
-                                       @RequestParam String name){
+    public R<Void> updateFormGroupName(@RequestParam Long id,
+                                       @RequestParam String name) {
         formGroupService.updateFormGroupName(id, name);
-        return EruptApiModel.successApi();
+        return R.ok();
     }
 
     /**
      * 新增表单分组
+     *
      * @param groupName 分组名
      * @return 添加结果
      */
     @PostMapping("/admin/form/group")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel createFormGroup(@RequestParam String groupName){
+    public R<Void> createFormGroup(@RequestParam String groupName) {
         formGroupService.createFormGroup(groupName);
-        return EruptApiModel.successApi();
+        return R.ok();
     }
 
     /**
      * 删除分组
+     *
      * @param groupId 分组ID
      * @return 删除结果
      */
     @DeleteMapping("/admin/form/group/{groupId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel deleteFormGroup(@PathVariable Long groupId){
+    public R<Void> deleteFormGroup(@PathVariable Long groupId) {
         formGroupService.deleteFormGroup(groupId);
-        return EruptApiModel.successApi();
+        return R.ok();
     }
 }

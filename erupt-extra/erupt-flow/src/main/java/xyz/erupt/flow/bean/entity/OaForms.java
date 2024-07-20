@@ -1,12 +1,7 @@
 package xyz.erupt.flow.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,18 +10,18 @@ import java.util.Date;
 
 @Entity
 @Table(name = "oa_re_forms")
-@TableName("oa_re_forms")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
 public class OaForms implements Serializable {
     private static final long serialVersionUID = -40467384325438214L;
 
     @Id
     @GeneratedValue(generator = "generator")
     @GenericGenerator(name = "generator", strategy = "native")
-    @TableId(type = IdType.AUTO)
     private Long formId;
     /**
     * 表单名称
@@ -68,6 +63,7 @@ public class OaForms implements Serializable {
     private Boolean isStop;
 
     private Integer sort;
+
     /**
     * 创建时间
     */

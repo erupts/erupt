@@ -2,13 +2,8 @@ package xyz.erupt.flow.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -16,56 +11,61 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.flow.bean.entity.*;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.constant.FlowConstant;
-import xyz.erupt.flow.mapper.OaProcessDefinitionMapper;
 import xyz.erupt.flow.process.engine.ProcessHelper;
-import xyz.erupt.flow.service.*;
+import xyz.erupt.flow.service.FormGroupService;
+import xyz.erupt.flow.service.ProcessActivityHistoryService;
+import xyz.erupt.flow.service.ProcessDefinitionService;
+import xyz.erupt.flow.service.ProcessInstanceService;
+import xyz.erupt.jpa.dao.EruptDao;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitionMapper, OaProcessDefinition>
+public class ProcessDefinitionServiceImpl
         implements ProcessDefinitionService, DataProxy<OaProcessDefinition> {
 
-    @Autowired
+    @Resource
     private ProcessInstanceService processInstanceService;
-    @Autowired
+    @Resource
     private FormGroupService formGroupService;
-    @Autowired
+    @Resource
     private ProcessActivityHistoryService processActivityHistoryService;
-    @Autowired
-    private ProcessInstanceHistoryService processInstanceHistoryService;
-    @Autowired
+    @Resource
     private ProcessHelper processHelper;
+
+    @Resource
+    private EruptDao eruptDao;
 
     @Override
     public void beforeDelete(OaProcessDefinition oaProcessDefinition) {
         long count = processInstanceService.countByProcessDefinitionId(oaProcessDefinition.getId());
-        if(count>0) {
+        if (count > 0) {
             throw new EruptApiErrorTip("请先删除业务数据之后再删除流程");
         }
     }
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
-        if(list==null || list.size()<=0) {
+        if (list == null || list.size() <= 0) {
             return;
         }
         Set<Long> groupIds = new HashSet<>();
         for (Map<String, Object> map : list) {
-            if(map.get("groupId")!=null) {
+            if (map.get("groupId") != null) {
                 Long groupId = Long.valueOf(map.get("groupId").toString());
                 groupIds.add(groupId);
             }
         }
-        if(groupIds.size()>0) {
-            List<OaFormGroups> oaFormGroups = formGroupService.listByIds(groupIds);
-            if(oaFormGroups!=null) {
+        if (!groupIds.isEmpty()) {
+            List<OaFormGroups> oaFormGroups = eruptDao.lambdaQuery(OaFormGroups.class).in(OaFormGroups::getGroupId, groupIds).list();
+            if (oaFormGroups != null) {
                 Map<Long, OaFormGroups> groupsMap = oaFormGroups.stream()
                         .collect(Collectors.toMap(OaFormGroups::getGroupId, e -> e, (key1, key2) -> key1));
                 list.forEach(map -> {
                     OaFormGroups group = groupsMap.get(Long.valueOf(map.get("groupId").toString()));
-                    if(group!=null) {
+                    if (group != null) {
                         map.put("groupName", group.getGroupName());
                     }
                 });
@@ -75,69 +75,48 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
 
     @Override
     public void updateStopByFormId(Long formId, boolean isStop) {
-        QueryWrapper<OaProcessDefinition> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OaProcessDefinition::getFormId, formId);
+        List<OaProcessDefinition> oaProcessDefinition = eruptDao.lambdaQuery(OaProcessDefinition.class).eq(OaProcessDefinition::getFormId, formId).list();
         //批量修改禁用状态
-        super.update(
-                OaProcessDefinition.builder()
-                        .isStop(isStop)
-                        .build()
-                , queryWrapper);
-    }
-
-    @Override
-    public void updateByFormId(OaProcessDefinition update, Long formId) {
-        QueryWrapper<OaProcessDefinition> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OaProcessDefinition::getFormId, formId);
-        super.update(update , queryWrapper);
+        for (OaProcessDefinition definition : oaProcessDefinition) {
+            definition.setIsStop(isStop);
+        }
     }
 
     @Override
     public void removeByFormId(Long formId) {
         //判断是否有流程实例存在，这里先不考虑历史数据
         long count = processInstanceService.countByFormId(formId);
-        if(count>0) {
+        if (count > 0) {
             throw new EruptApiErrorTip("请先删除业务数据之后再删除流程");
         }
-        //删除
-        QueryWrapper<OaProcessDefinition> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OaProcessDefinition::getFormId, formId);
-        super.remove(queryWrapper);
+        OaProcessDefinition oaProcessDefinition = eruptDao.lambdaQuery(OaProcessDefinition.class).eq(OaProcessDefinition::getFormId, formId).one();
+        eruptDao.delete(oaProcessDefinition);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public OaProcessInstance startById(String defId, String content) {
         //根据formId查询出最新版
-        OaProcessDefinition processDef = this.getById(defId);
-        if(processDef==null) {
-            throw new EruptApiErrorTip("流程"+defId+"不存在");
+        OaProcessDefinition processDef = eruptDao.findById(OaProcessDefinition.class, defId);
+        if (processDef == null) {
+            throw new EruptApiErrorTip("流程" + defId + "不存在");
         }
-        if(processDef.getIsStop()) {
+        if (processDef.getIsStop()) {
             throw new EruptApiErrorTip("流程可能已经过期，请刷新后重试");
         }
         //创建流程实例
-        OaProcessInstance processInstance = processInstanceService.newProcessInstance(processDef, content);
-        return processInstance;
+        return processInstanceService.newProcessInstance(processDef, content);
     }
 
     @Override
     public OaProcessDefinition getLastVersionByFromId(Long formId) {
-        QueryWrapper<OaProcessDefinition> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(OaProcessDefinition::getFormId, formId);
-        queryWrapper.lambda().orderByDesc(OaProcessDefinition::getVersion);
-        PageHelper.startPage(1, 1);//分页查询
-        List<OaProcessDefinition> list = super.list(queryWrapper);
-        if(list==null || list.size()<=0) {
-            return null;
-        }else {
-            return list.get(0);
-        }
+        return eruptDao.lambdaQuery(OaProcessDefinition.class).eq(OaProcessDefinition::getFormId, formId)
+                .orderByDesc(OaProcessDefinition::getVersion).limit(1).one();
     }
 
     @Override
     public List<OaProcessActivityHistory> preview(String formDefId, JSONObject formContent) {
-        OaProcessDefinition procDef = this.getById(formDefId);
+        OaProcessDefinition procDef = eruptDao.findById(OaProcessDefinition.class, formDefId);
         List<OaProcessActivityHistory> activities = new ArrayList<>();
         this.preview(JSON.parseObject(procDef.getProcess(), OaProcessNode.class), formContent, activities, new HashMap<>());
         return activities;
@@ -145,7 +124,6 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
 
     @Override
     public List<OaProcessActivityHistory> preview(Long instId) {
-        OaProcessInstanceHistory inst = processInstanceHistoryService.getById(instId);
         //查询出已完成的活动
         List<OaProcessActivityHistory> histories = processActivityHistoryService.listByProcInstId(instId, true);
         Collections.sort(//按照结束时间排序，null排到最后
@@ -153,7 +131,7 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
                 Comparator.nullsLast(
                         Comparator.comparing(
                                 OaProcessActivityHistory::getFinishDate
-                                ,Comparator.nullsLast(Comparable::compareTo)
+                                , Comparator.nullsLast(Comparable::compareTo)
                         )
                 )
         );
@@ -180,16 +158,16 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         Date now = new Date();
         oaProcessDefinition.setCreated(now);
         OaProcessDefinition last = this.getLastVersionByFromId(forms.getFormId());
-        if(last==null) {
+        if (last == null) {
             oaProcessDefinition.setVersion(1);
-        }else {
-            oaProcessDefinition.setVersion(last.getVersion()+1);
+        } else {
+            oaProcessDefinition.setVersion(last.getVersion() + 1);
         }
         //表单id拼接版本，作为流程定义的id
-        oaProcessDefinition.setId(forms.getFormId()+"_"+oaProcessDefinition.getVersion());
+        oaProcessDefinition.setId(forms.getFormId() + "_" + oaProcessDefinition.getVersion());
         //旧版本全部停用
         this.updateStopByFormId(forms.getFormId(), true);
-        this.save(oaProcessDefinition);
+        eruptDao.persist(oaProcessDefinition);
     }
 
     @Override
@@ -197,28 +175,30 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
         return null;
     }
 
+    @Override
+    public OaProcessDefinition getById(String id) {
+        return eruptDao.findById(OaProcessDefinition.class, id);
+    }
+
     private List<OaProcessDefinition> listByGroupId(Long groupId, String keywords) {
-        LambdaQueryWrapper<OaProcessDefinition> wrapper = new LambdaQueryWrapper<OaProcessDefinition>()
+        return eruptDao.lambdaQuery(OaProcessDefinition.class)
                 .eq(OaProcessDefinition::getGroupId, groupId)
                 .eq(OaProcessDefinition::getIsStop, false)//只查询可用的
-                .orderByAsc(OaProcessDefinition::getSort);
-        if(StringUtils.isNotEmpty(keywords)) {
-            wrapper.like(OaProcessDefinition::getFormName, keywords);
-        }
-        return this.list(wrapper);
+                .like(StringUtils.isNotEmpty(keywords), OaProcessDefinition::getFormName, keywords)
+                .orderByAsc(OaProcessDefinition::getSort).list();
     }
 
     private void preview(OaProcessNode node, JSONObject formContent, List<OaProcessActivityHistory> activities, Map<String, List<OaProcessActivityHistory>> map) {
-        if(node == null || node.getId() == null) {//如果当前节点为空
+        if (node == null || node.getId() == null) {//如果当前节点为空
             return;
-        }else if(FlowConstant.NODE_TYPE_ROOT.equals(node.getType())
+        } else if (FlowConstant.NODE_TYPE_ROOT.equals(node.getType())
                 || FlowConstant.NODE_TYPE_APPROVAL.equals(node.getType())
                 || FlowConstant.NODE_TYPE_CC.equals(node.getType())
         ) {//如果是用户任务
             //优先从map中获取，获取不到才读取流程图
-            if(map.get(node.getId())!=null) {
+            if (map.get(node.getId()) != null) {
                 activities.addAll(map.get(node.getId()));
-            }else {
+            } else {
                 activities.add(OaProcessActivityHistory
                         .builder()
                         .activityKey(node.getId())
@@ -227,12 +207,12 @@ public class ProcessDefinitionServiceImpl extends ServiceImpl<OaProcessDefinitio
                         .build()
                 );
             }
-        }else if(FlowConstant.NODE_TYPE_CONDITIONS.equals(node.getType())) {//如果是互斥分支
+        } else if (FlowConstant.NODE_TYPE_CONDITIONS.equals(node.getType())) {//如果是互斥分支
             //根据条件选择一个分支
             OaProcessNode nextNode = processHelper.switchNode(null, formContent, node.getBranchs());
             //先追加该分支
             this.preview(nextNode, formContent, activities, map);
-        }else if(FlowConstant.NODE_TYPE_CONCURRENTS.equals(node.getType())) {//如果是并行分支
+        } else if (FlowConstant.NODE_TYPE_CONCURRENTS.equals(node.getType())) {//如果是并行分支
             //循环为该虚拟分支增加节点
             //TODO 这里有点问题，应该把并行的分支同步追加，但是因为前端不好展示，这里先按顺序追加
             for (int i = 0; i < node.getBranchs().size(); i++) {

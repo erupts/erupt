@@ -1,18 +1,16 @@
 package xyz.erupt.flow.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.flow.bean.entity.OaFormGroups;
 import xyz.erupt.flow.bean.entity.OaForms;
-import xyz.erupt.flow.mapper.OaFormGroupsMapper;
 import xyz.erupt.flow.service.FormGroupService;
 import xyz.erupt.flow.service.FormsService;
+import xyz.erupt.jpa.dao.EruptDao;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -22,10 +20,13 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class FormGroupServiceImpl extends ServiceImpl<OaFormGroupsMapper, OaFormGroups> implements FormGroupService {
+public class FormGroupServiceImpl implements FormGroupService {
 
-    @Autowired
+    @Resource
     private FormsService formsService;
+
+    @Resource
+    private EruptDao eruptDao;
 
     @Override
     public List<OaFormGroups> getFormGroups(OaFormGroups formGroupVo) {
@@ -40,57 +41,41 @@ public class FormGroupServiceImpl extends ServiceImpl<OaFormGroupsMapper, OaForm
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void formGroupsSort(List<Long> groups) {
-        List<OaFormGroups> updateList = new ArrayList<>();
-        for (int i1 = 0; i1 < groups.size(); i1++) {
-            updateList.add(
-                OaFormGroups.builder()
-                    .groupId(groups.get(i1))
-                    .sort(i1)
-                    .build()
-            );
+        for (int i = 0; i < groups.size(); i++) {
+            OaFormGroups oaFormGroups = eruptDao.findById(OaFormGroups.class, groups.get(i));
+            if (null != oaFormGroups) {
+                oaFormGroups.setSort(++i);
+                eruptDao.merge(oaFormGroups);
+            }
         }
-        super.updateBatchById(updateList);
-        return;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void updateFormGroupName(Long id, String name) {
-        super.updateById(OaFormGroups.builder().groupId(id).groupName(name).build());
+        eruptDao.findById(OaFormGroups.class, id).setGroupName(name);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void createFormGroup(String name) {
-        super.save(OaFormGroups.builder().sort(1).groupName(name).updated(new Date()).build());
+        eruptDao.persist(OaFormGroups.builder().sort(1).groupName(name).updated(new Date()).build());
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void deleteFormGroup(Long id) {
-        super.removeById(id);
+        eruptDao.delete(OaFormGroups.builder().groupId(id).build());
     }
 
     @Override
     public List<OaFormGroups> getFormGroupList() {
-        QueryWrapper<OaFormGroups> query = new QueryWrapper<OaFormGroups>()
-                .orderByAsc("sort");
-        List<OaFormGroups> list = super.list(query);
+        List<OaFormGroups> list = eruptDao.lambdaQuery(OaFormGroups.class).orderBy(OaFormGroups::getSort).list();
         //结尾添加两个固定分组
-        list.add(OaFormGroups.builder()
-                .groupId(0L)
-                .groupName("其他")
-                .sort(999)
-                .updated(new Date())
-                .build());
-        list.add(OaFormGroups.builder()
-                .groupId(-1L)
-                .groupName("已停用")
-                .sort(9999)
-                .updated(new Date())
-                .build());
+//        list.add(OaFormGroups.builder().groupId(0L).groupName("其他").sort(999).updated(new Date()).build());
+        list.add(OaFormGroups.builder().groupId(-1L).groupName("已停用").sort(9999).updated(new Date()).build());
         return list;
     }
 }

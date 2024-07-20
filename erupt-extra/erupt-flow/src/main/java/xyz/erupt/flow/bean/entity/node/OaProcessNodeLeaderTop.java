@@ -1,8 +1,11 @@
 package xyz.erupt.flow.bean.entity.node;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class OaProcessNodeLeaderTop {
 
     private String endCondition;//TOP表示所有上级，LEAVE表示特定层级上级

@@ -1,21 +1,18 @@
 package xyz.erupt.flow.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.*;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 
 import java.util.List;
 
-public interface ProcessDefinitionService extends IService<OaProcessDefinition> {
+public interface ProcessDefinitionService  {
 
     /**
      * 根据formId修改是否禁止
      * @param isStop
      */
     void updateStopByFormId(Long formId, boolean isStop);
-
-    void updateByFormId(OaProcessDefinition update, Long formId);
 
     /**
      * 根据formId删除流程定义
@@ -72,5 +69,7 @@ public interface ProcessDefinitionService extends IService<OaProcessDefinition> 
      * @return
      */
     OaProcessNode readNode(String processDefId, String nodeId);
+
+    OaProcessDefinition getById(String id);
 
 }

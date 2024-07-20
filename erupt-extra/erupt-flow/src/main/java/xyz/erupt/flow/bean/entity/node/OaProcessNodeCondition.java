@@ -1,8 +1,11 @@
 package xyz.erupt.flow.bean.entity.node;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class OaProcessNodeCondition {
     String id;
     String title;

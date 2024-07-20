@@ -137,14 +137,14 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
-    public <R> EruptLambdaQuery<T> in(SFunction<T, R> field, List<Object> val) {
+    public <R> EruptLambdaQuery<T> in(SFunction<T, R> field, Collection<?> val) {
         String placeholder = this.genePlaceholder();
         querySchema.getWheres().add(LambdaSee.field(field) + " in (:" + placeholder + ")");
-        querySchema.getParams().put(placeholder, val);
+        querySchema.getParams().put(placeholder, new ArrayList<>(val));
         return this;
     }
 
-    public <R> EruptLambdaQuery<T> in(boolean condition, SFunction<T, R> field, List<Object> val) {
+    public <R> EruptLambdaQuery<T> in(boolean condition, SFunction<T, R> field, Collection<?> val) {
         if (condition) return this.in(field, val);
         return this;
     }
@@ -214,6 +214,15 @@ public class EruptLambdaQuery<T> {
         if (condition) return this.orderBy(field);
         return this;
     }
+
+    public EruptLambdaQuery<T> orderByAsc(SFunction<T, ?> field) {
+        return orderBy(field);
+    }
+
+    public EruptLambdaQuery<T> orderByAsc(boolean condition, SFunction<T, ?> field) {
+        return orderBy(condition, field);
+    }
+
 
     public EruptLambdaQuery<T> orderByDesc(SFunction<T, ?> field) {
         querySchema.getOrders().add(LambdaSee.field(field) + " desc");
@@ -316,8 +325,10 @@ public class EruptLambdaQuery<T> {
             select.deleteCharAt(select.length() - 1).append(" ");
         }
         StringBuilder expr = new StringBuilder(select + SqlLang.FROM + eruptClass.getSimpleName() + SqlLang.AS + eruptClass.getSimpleName());
-        if (!querySchema.getWheres().isEmpty()) expr.append(SqlLang.WHERE).append(String.join(SqlLang.AND, querySchema.getWheres()));
-        if (!querySchema.getOrders().isEmpty()) expr.append(SqlLang.ORDER_BY).append(String.join(SqlLang.COMMA, querySchema.getOrders()));
+        if (!querySchema.getWheres().isEmpty())
+            expr.append(SqlLang.WHERE).append(String.join(SqlLang.AND, querySchema.getWheres()));
+        if (!querySchema.getOrders().isEmpty())
+            expr.append(SqlLang.ORDER_BY).append(String.join(SqlLang.COMMA, querySchema.getOrders()));
         Query query = entityManager.createQuery(expr.toString());
         querySchema.getParams().forEach(query::setParameter);
         Optional.ofNullable(querySchema.getLimit()).ifPresent(query::setMaxResults);

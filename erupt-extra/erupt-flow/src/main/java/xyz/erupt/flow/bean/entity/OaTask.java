@@ -1,14 +1,7 @@
 package xyz.erupt.flow.bean.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -16,8 +9,11 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
 
@@ -29,21 +25,15 @@ import java.util.List;
         , power = @Power(export = true, add = false, edit = false)
 )
 @Table(name = "oa_ru_task")
-@TableName("oa_ru_task")
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OaTask {
+@DynamicUpdate
+public class OaTask extends BaseModel {
 
-    @Id
-    @GeneratedValue(generator = "generator")
-    @GenericGenerator(name = "generator", strategy = "native")
-    @Column(name = "id")
-    @EruptField
-    @TableId(type = IdType.AUTO)
-    private Long id;
 
     @EruptField(views = @View(title = "节点id"))
     private Long activityId;
@@ -58,7 +48,6 @@ public class OaTask {
     private Long processInstId;
 
     @Transient//标识虚拟列
-    @TableField(exist = false)
     @EruptField(views = @View(title = "业务标题")
             , edit = @Edit(title = "业务标题", search = @Search(vague = true))
     )
@@ -68,7 +57,6 @@ public class OaTask {
     private String processDefId;
 
     @Transient//标识虚拟列
-    @TableField(exist = false)
     @EruptField(views = @View(title = "流程名称")
             , edit = @Edit(title = "流程名称", search = @Search(vague = true))
     )
@@ -123,7 +111,6 @@ public class OaTask {
      * ROLES 关联多个角色，这些角色中任意人都可以处理此任务
      */
     @Transient
-    @TableField(exist = false)
     @EruptField(views = @View(title = "候选人列表", desc = "所属人和分配人都没有人时，由候选人完成任务。USERS 多个用户候选; ROLES 多个角色候选"))
     private List<OaTaskUserLink> userLinks;
 
@@ -144,21 +131,17 @@ public class OaTask {
     private Boolean active;//激活状态，只有激活的任务可以被完成
 
     @Transient
-    @TableField(exist = false)
     @EruptField(views = @View(title = "流程发起人ID"))
     private String instCreator;
 
     @Transient
-    @TableField(exist = false)
     @EruptField(views = @View(title = "流程发起人"))
     private String instCreatorName;
 
     @Transient
-    @TableField(exist = false)
     @EruptField(views = @View(title = "流程发起事件"))
     private Date instCreateDate;
 
     @Transient
-    @TableField(exist = false)
     private String logo;
 }
