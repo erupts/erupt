@@ -29,6 +29,7 @@ public class GsonFactory {
             .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
 //            .registerTypeAdapter(Integer.class, (JsonSerializer<Integer>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
             .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
+            .setObjectToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
             .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
 
     @Getter
