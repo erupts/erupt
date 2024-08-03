@@ -24,6 +24,12 @@ public class BiChartApiVo {
 
         private String name;
 
+        public Column(String name) {
+            this.name = name;
+        }
+
+        public Column() {
+        }
     }
 
 }

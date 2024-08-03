@@ -239,9 +239,7 @@ public class EruptBiController {
         biChartApiVo.setData(biService.chartQuery(chart, query));
         if (null != biChartApiVo.getData() && !biChartApiVo.getData().isEmpty()) {
             List<BiChartApiVo.Column> biColumnVos = new ArrayList<>();
-            biChartApiVo.getData().get(0).forEach((k, v) -> biColumnVos.add(new BiChartApiVo.Column() {{
-                this.setName(k);
-            }}));
+            biChartApiVo.getData().get(0).keySet().forEach(key -> biColumnVos.add(new BiChartApiVo.Column(key)));
             biChartApiVo.setColumns(biColumnVos);
         }
         return biChartApiVo;
