@@ -25,10 +25,27 @@ public class GsonFactory {
                     -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)))
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
-            .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
-//            .registerTypeAdapter(Integer.class, (JsonSerializer<Integer>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
+            .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> {
+                if (src > Integer.MAX_VALUE || src < Integer.MIN_VALUE) {
+                    return new JsonPrimitive((src).toString());
+                } else {
+                    return new JsonPrimitive(src);
+                }
+            })
+            .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> {
+                if (src > Integer.MAX_VALUE || src < Integer.MIN_VALUE) {
+                    return new JsonPrimitive((src).toString());
+                } else {
+                    return new JsonPrimitive(src);
+                }
+            })
+            .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> {
+                if (src.longValue() > Integer.MAX_VALUE || src.longValue() < Integer.MIN_VALUE) {
+                    return new JsonPrimitive((src).toString());
+                } else {
+                    return new JsonPrimitive(src);
+                }
+            })
             .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
 
     @Getter
