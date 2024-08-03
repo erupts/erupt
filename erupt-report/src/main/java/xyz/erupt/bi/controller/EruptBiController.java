@@ -127,7 +127,7 @@ public class EruptBiController {
         if (pageSize >= eruptBiProp.getSingleMaxResultNum()) {
             throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
         }
-        Bi bi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getCode,code).one();
+        Bi bi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getCode, code).one();
         this.validateQuery(bi, query);
         biService.verifyBiMenuPermissions(bi, code);
         if (null != sortField) {
@@ -145,7 +145,7 @@ public class EruptBiController {
                             @RequestBody Map<String, Object> query) {
         if (pageSize >= eruptBiProp.getSingleMaxResultNum())
             throw new EruptWebApiRuntimeException("exceed single maximum 'pageSize'");
-        Bi bi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getCode,code).one();
+        Bi bi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getCode, code).one();
         for (BiColumn biColumn : bi.getBiColumns()) {
             if (drillCode == biColumn.getName().hashCode()) {
                 BiData biData = new BiData();
@@ -229,13 +229,22 @@ public class EruptBiController {
      */
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
     @PostMapping("/{code}/chart/{id}")
-    public List<Map<String, Object>> biChart(@PathVariable("id") Long chartId,
-                                             @PathVariable("code") String code,
-                                             @RequestBody(required = false) Map<String, Object> query) {
+    public BiChartApiVo biChart(@PathVariable("id") Long chartId,
+                                @PathVariable("code") String code,
+                                @RequestBody(required = false) Map<String, Object> query) {
         BiChart chart = entityManager.find(BiChart.class, chartId);
         biService.verifyBiMenuPermissions(chart.getBi(), code);
         this.validateQuery(chart.getBi(), query);
-        return biService.chartQuery(chart, query);
+        BiChartApiVo biChartApiVo = new BiChartApiVo();
+        biChartApiVo.setData(biService.chartQuery(chart, query));
+        if (null != biChartApiVo.getData() && !biChartApiVo.getData().isEmpty()) {
+            List<BiChartApiVo.Column> biColumnVos = new ArrayList<>();
+            biChartApiVo.getData().get(0).forEach((k, v) -> biColumnVos.add(new BiChartApiVo.Column() {{
+                this.setName(k);
+            }}));
+            biChartApiVo.setColumns(biColumnVos);
+        }
+        return biChartApiVo;
     }
 
     @EruptRouter(verifyType = EruptRouter.VerifyType.MENU, authIndex = 1)
