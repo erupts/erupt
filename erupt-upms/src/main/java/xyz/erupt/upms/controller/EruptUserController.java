@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecretUtil;
@@ -157,14 +158,12 @@ public class EruptUserController {
     //登出
     @GetMapping(value = "/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel logout(HttpServletRequest request) {
+    public EruptApiModel logout() {
         String token = eruptContextService.getCurrentToken();
+        MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
-        request.getSession().invalidate();
-        for (String uk : SessionKey.USER_KEY_GROUP) {
-            sessionService.remove(uk + token);
-        }
+        eruptUserService.logoutToken(metaUserinfo.getUsername(), token);
         return EruptApiModel.successApi();
     }
 

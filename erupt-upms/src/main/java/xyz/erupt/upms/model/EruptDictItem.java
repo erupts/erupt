@@ -19,7 +19,6 @@ import javax.persistence.*;
  * @author YuePeng
  * date 2018-12-07.
  */
-
 @Entity
 @Table(name = "e_dict_item", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "erupt_dict_id"}))
 @Erupt(
@@ -44,6 +43,12 @@ public class EruptDictItem extends MetaModelUpdateVo {
             edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
+
+    @EruptField(
+            views = @View(title = "值"),
+            edit = @Edit(title = "值", search = @Search(vague = true))
+    )
+    private String val;
 
     @EruptField(
             views = @View(title = "显示顺序", sortable = true),
