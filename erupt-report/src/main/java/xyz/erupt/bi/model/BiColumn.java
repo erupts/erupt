@@ -15,7 +15,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
-import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.bi.constant.ColumnType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
@@ -45,6 +44,18 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
     private String name;
 
     @EruptField(
+            views = @View(title = "类型", sortable = true),
+            edit = @Edit(title = "类型", type = EditType.CHOICE, notNull = true, choiceType = @ChoiceType(fetchHandler = ColumnType.Fetch.class))
+    )
+    private String type = ColumnType.STRING.getCode();
+
+    @EruptField(
+            views = @View(title = "宽度", sortable = true),
+            edit = @Edit(title = "宽度")
+    )
+    private Integer width;
+
+    @EruptField(
             views = @View(title = "是否显示", sortable = true),
             edit = @Edit(title = "是否显示", notNull = true)
     )
@@ -56,30 +67,11 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
     )
     private Boolean sortable = true;
 
-    @EruptField(
-            views = @View(title = "宽度", sortable = true),
-            edit = @Edit(title = "宽度")
-    )
-    private Integer width;
-
-    @EruptField(
-            views = @View(title = "类型", sortable = true),
-            edit = @Edit(title = "类型", type = EditType.CHOICE, notNull = true, choiceType = @ChoiceType(
-                    vl = {
-                            @VL(value = ColumnType.STRING, label = "字符串"),
-                            @VL(value = ColumnType.NUMBER, label = "数值"),
-                            @VL(value = ColumnType.DATE, label = "时间"),
-                            @VL(value = ColumnType.DRILL, label = "下钻"),
-                    }
-            ))
-    )
-    private String type = ColumnType.STRING;
-
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             edit = @Edit(title = "下钻SQL", type = EditType.CODE_EDITOR,
-                    showBy = @ShowBy(dependField = "type", expr = "value == '" + ColumnType.DRILL + "'"),
+                    showBy = @ShowBy(dependField = "type", expr = "value == 'drill'"),
                     codeEditType = @CodeEditorType(language = "sql"))
     )
     private String drillExpress;

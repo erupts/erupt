@@ -135,7 +135,7 @@ public class BiService {
                     BiColumn biColumn = columnMap.get(key);
                     biColumnVos.add(new BiColumnVo(key, biColumn.getWidth(), biColumn.getSortable(), biColumn.getDisplay(), biColumn.getType(), biColumn.getRemark()));
                 } else {
-                    biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING, null));
+                    biColumnVos.add(new BiColumnVo(key, null, false, true, ColumnType.STRING.getCode(), null));
                 }
             });
             biData.setColumns(biColumnVos);
@@ -265,12 +265,12 @@ public class BiService {
 
     @SneakyThrows
     public void exportExcel(String name,
-                             Map<String, Object> query,
-                             List<KV<String, String>> header,
-                             List<Map<String, Object>> data,
-                             BiClassHandler biClassHandler,
-                             HttpServletRequest request,
-                             HttpServletResponse response
+                            Map<String, Object> query,
+                            List<KV<String, String>> header,
+                            List<Map<String, Object>> data,
+                            BiClassHandler biClassHandler,
+                            HttpServletRequest request,
+                            HttpServletResponse response
     ) {
         try (Workbook wb = new SXSSFWorkbook()) {
             //基本信息
