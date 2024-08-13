@@ -354,7 +354,7 @@ public class EruptLambdaQuery<T> {
         if (!querySchema.columns.isEmpty()) {
             select.append(SqlLang.SELECT);
             querySchema.getColumns().forEach(it -> select.append(it).append(SqlLang.COMMA));
-            select.deleteCharAt(select.length() - 1).append(" ");
+            select.deleteCharAt(select.length() - 1);
         }
         StringBuilder expr = new StringBuilder(select + SqlLang.FROM + eruptClass.getSimpleName() + SqlLang.AS + eruptClass.getSimpleName());
         if (!querySchema.getWheres().isEmpty())

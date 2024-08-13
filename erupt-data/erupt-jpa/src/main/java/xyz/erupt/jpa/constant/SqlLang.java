@@ -17,6 +17,7 @@ public class SqlLang {
     public static final String WHERE = " where ";
 
     public static final String AND = " and ";
+
     public static final String ORDER_BY = " order by ";
 
 }
