@@ -2,6 +2,7 @@ package xyz.erupt.jpa.dao;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import xyz.erupt.jpa.constant.SqlLang;
 import xyz.erupt.linq.lambda.LambdaInfo;
@@ -11,6 +12,7 @@ import xyz.erupt.linq.lambda.SFunction;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -272,11 +274,30 @@ public class EruptLambdaQuery<T> {
     }
 
     @SafeVarargs
+    public final <R> List<R> listSelect(Class<R> requiredType, SFunction<T, ?>... fields) {
+        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
+        List<Object[]> objects = this.geneQuery().getResultList();
+        return objects.stream().map(it -> objectToClazz(requiredType, it, fields)).collect(Collectors.toList());
+    }
+
+    @SafeVarargs
+    public final <R> R oneSelect(Class<R> requiredType, SFunction<T, ?>... fields) {
+        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
+        try {
+            return objectToClazz(requiredType, (Object[]) this.geneQuery().getSingleResult(), fields);
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Deprecated
+    @SafeVarargs
     public final List<Object[]> listSelects(SFunction<T, ?>... fields) {
         for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
         return this.geneQuery().getResultList();
     }
 
+    @Deprecated
     @SafeVarargs
     public final Object[] oneSelects(SFunction<T, ?>... fields) {
         for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
@@ -285,6 +306,17 @@ public class EruptLambdaQuery<T> {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    @SneakyThrows
+    private <R> R objectToClazz(Class<R> clazz, Object[] objects, SFunction<?, ?>... fields) {
+        R r = clazz.newInstance();
+        for (int i = 0; i < fields.length; i++) {
+            Field f = clazz.getDeclaredField(LambdaSee.field(fields[i]));
+            f.setAccessible(true);
+            f.set(r, objects[i]);
+        }
+        return r;
     }
 
     public Long count() {
