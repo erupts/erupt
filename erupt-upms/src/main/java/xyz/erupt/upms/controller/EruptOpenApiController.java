@@ -13,8 +13,10 @@ import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptOpenApi;
 import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.upms.vo.OpenApiTokenVo;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 /**
  * @author YuePeng
@@ -40,19 +42,20 @@ public class EruptOpenApiController {
      */
     @GetMapping("/create-token")
     @Transactional
-    public R<String> createToken(@RequestParam("appid") String appid, @RequestParam("secret") String secret) {
+    public R<OpenApiTokenVo> createToken(@RequestParam("appid") String appid, @RequestParam("secret") String secret) {
         EruptOpenApi eruptOpenApi = eruptDao.lambdaQuery(EruptOpenApi.class).eq(EruptOpenApi::getAppid, appid).one();
         if (eruptOpenApi == null) throw new EruptWebApiRuntimeException("appid not found");
         if (!secret.equals(eruptOpenApi.getSecret())) throw new EruptWebApiRuntimeException("secret error");
         if (!eruptOpenApi.getStatus()) throw new EruptWebApiRuntimeException("locked down");
         String token = "ER" + RandomStringUtils.randomAlphanumeric(24).toUpperCase();
+        LocalDateTime expire = LocalDateTime.now().plusMinutes(eruptOpenApi.getExpire());
         eruptUserService.createToken(eruptOpenApi.getEruptUser(), token, eruptOpenApi.getExpire());
         if (null != eruptOpenApi.getCurrentToken()) {
             log.info("open-api remove old token {}", eruptOpenApi.getName());
             eruptUserService.logoutToken(eruptOpenApi.getName(), eruptOpenApi.getCurrentToken());
         }
         eruptOpenApi.setCurrentToken(token);
-        return R.ok(token);
+        return R.ok(new OpenApiTokenVo(token, expire));
     }
 
 }
