@@ -146,8 +146,10 @@ public class EruptFileController {
                 map.put("url", EruptRestPath.ERUPT_ATTACHMENT + eruptApiModel.getData());
             }
             map.put("uploaded", true);
+            map.put("state", "SUCCESS");
         } else {
             map.put("uploaded", false);
+            map.put("state", "ERROR");
             throw new EruptWebApiRuntimeException(eruptApiModel.getMessage());
         }
         return map;
@@ -170,9 +172,11 @@ public class EruptFileController {
                 response.getOutputStream().write((callback + "(" + json + ")").getBytes(StandardCharsets.UTF_8));
             }
         } else {
-            Map<String, Object> map = uploadHtmlEditorImage(eruptName, fieldName, file);
-            Boolean status = (Boolean) map.get("uploaded");
-            map.put("state", status ? "SUCCESS" : "ERROR");
+            Map<String, Object> map = this.uploadHtmlEditorImage(eruptName, fieldName, file);
+            map.put("filename", file.getName());
+            map.put("original", file.getOriginalFilename());
+            map.put("name", file.getName());
+            map.put("size", file.getSize());
             response.getOutputStream().write(new Gson().toJson(map).getBytes(StandardCharsets.UTF_8));
         }
     }

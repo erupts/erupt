@@ -983,9 +983,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 ng-zorro-antd
 MIT
 
-ngx-ueditor
-MIT
-
 pdfast
 MIT
 The MIT License (MIT)
