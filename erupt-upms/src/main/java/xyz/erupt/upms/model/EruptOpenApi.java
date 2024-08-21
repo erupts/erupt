@@ -30,7 +30,7 @@ import javax.persistence.Table;
 @Erupt(
         name = "Open API",
         dataProxy = EruptOpenApiDataProxy.class,
-        rowOperation = @RowOperation(title = "更新秘钥", operationHandler = EruptOpenApiDataProxy.class, mode = RowOperation.Mode.SINGLE)
+        rowOperation = @RowOperation(title = "更新秘钥", icon = "fa fa-refresh", operationHandler = EruptOpenApiDataProxy.class, mode = RowOperation.Mode.SINGLE)
 )
 @EruptI18n
 @Getter
@@ -72,6 +72,7 @@ public class EruptOpenApi extends MetaModelUpdateVo {
 
     @EruptField(
             sort = 2000,
+            views = @View(title = "秘钥"),
             edit = @Edit(title = "秘钥", readonly = @Readonly, inputType = @InputType(fullSpan = true))
     )
     private String secret;

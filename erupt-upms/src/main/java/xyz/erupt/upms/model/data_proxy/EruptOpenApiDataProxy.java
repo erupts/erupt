@@ -6,11 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.upms.model.EruptOpenApi;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -43,6 +46,15 @@ public class EruptOpenApiDataProxy implements DataProxy<EruptOpenApi>, Operation
     @Override
     public void afterDelete(EruptOpenApi eruptOpenApi) {
         this.logoutToken(eruptOpenApi);
+    }
+
+    @Override
+    public void afterFetch(Collection<Map<String, Object>> list) {
+        String secretField = LambdaSee.field(EruptOpenApi::getSecret);
+        for (Map<String, Object> map : list) {
+            String secret = map.get(secretField).toString();
+            map.put(secretField, secret.substring(0, 4) + "********" + secret.substring(secret.length() - 4));
+        }
     }
 
     private void logoutToken(EruptOpenApi eruptOpenApi) {
