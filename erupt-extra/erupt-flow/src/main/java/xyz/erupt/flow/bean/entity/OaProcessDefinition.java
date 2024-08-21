@@ -1,8 +1,14 @@
 package xyz.erupt.flow.bean.entity;
 
 import com.alibaba.fastjson.JSON;
-import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -11,7 +17,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
 import xyz.erupt.flow.service.impl.ProcessDefinitionServiceImpl;
-import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,17 +30,18 @@ import java.util.Date;
         , dataProxy = ProcessDefinitionServiceImpl.class
 )
 @Table(name = "oa_re_process_definition")
+@TableName("oa_re_process_definition")
 @Entity
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@DynamicUpdate
 public class OaProcessDefinition {
 
     @Id
-    @EruptField(views = @View(title = "流程ID", sortable = true))
+    @Column(name = "id")
+    @EruptField(views = @View(title = "流程定义ID", sortable = true))
+    @TableId(type = IdType.ASSIGN_ID)
     private String id;
 
     /**
@@ -74,7 +80,8 @@ public class OaProcessDefinition {
     @EruptField(views = @View(title = "分组ID", show = false))
     private Long groupId;
 
-    @Transient
+    @Transient//标识虚拟列
+    @TableField(exist = false)
     @EruptField(views = @View(title = "分组"))
     private String groupName;
 
@@ -93,12 +100,11 @@ public class OaProcessDefinition {
     private String formItems;
 
     public OaProcessNode getProcessNode() {
-        if (this.getProcess() == null) {
+        if(this.getProcess()==null) {
             return null;
         }
         return JSON.parseObject(this.getProcess(), OaProcessNode.class);
     }
-
     /**
      * 备注
      */

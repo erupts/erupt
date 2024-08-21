@@ -1,13 +1,15 @@
 package xyz.erupt.flow.bean.entity.node;
 
 import com.alibaba.fastjson.JSONObject;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import xyz.erupt.flow.constant.FlowConstant;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

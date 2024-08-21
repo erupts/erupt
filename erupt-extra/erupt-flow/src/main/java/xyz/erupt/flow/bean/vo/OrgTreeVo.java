@@ -1,14 +1,16 @@
 package xyz.erupt.flow.bean.vo;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 机构选择组件对象
  * 可以用于选机构，角色，人员等
  * @version : 1.0
  */
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

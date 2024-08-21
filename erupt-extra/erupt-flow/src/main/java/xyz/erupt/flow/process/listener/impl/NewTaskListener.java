@@ -22,7 +22,6 @@ import xyz.erupt.upms.service.EruptUserService;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -100,13 +99,13 @@ public class NewTaskListener implements AfterCreateActivityListener {
                         endLevel = -1;//不限制层级
                     }
                     //查询主管
-                    Map<Integer, List<OrgTreeVo>> leaderMap =
+                    LinkedHashMap<Integer, List<OrgTreeVo>> leaderMap =
                             userLinkService.getLeaderMap(inst.getCreator(), 1, endLevel);
                     this.forLeaders(execution, node, activity, props, leaderMap);
                     return;//这种情况不需要继续后续操作
                 case FlowConstant.ASSIGN_TYPE_LEADER://特定层级主管
                     //查询主管
-                    Map<Integer, List<OrgTreeVo>> leaderMapNew =
+                    LinkedHashMap<Integer, List<OrgTreeVo>> leaderMapNew =
                             userLinkService.getLeaderMap(inst.getCreator(), props.getLeader().getLevel(), props.getLeader().getLevel());
                     this.forLeaders(execution, node, activity, props, leaderMapNew);
                     return;//这种情况不需要继续后续操作
@@ -147,7 +146,7 @@ public class NewTaskListener implements AfterCreateActivityListener {
      */
     private void forLeaders(
             OaProcessExecution execution, OaProcessNode node, OaProcessActivity activity
-            , OaProcessNodeProps props, Map<Integer, List<OrgTreeVo>> leaderMap) {
+            , OaProcessNodeProps props, LinkedHashMap<Integer, List<OrgTreeVo>> leaderMap) {
         //这种情况要删除原本的活动
         processActivityService.removeById(activity.getId());
         processActivityHistoryService.removeById(activity.getId());

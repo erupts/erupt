@@ -64,7 +64,7 @@ public class AfterActiveTaskImpl implements AfterCreateTaskListener {
                 //直接拒绝
                 taskService.refuse(task.getId(), "无人处理，自动拒绝", null);
             }else if(FlowConstant.NOBODY_TO_ADMIN.equals(nobodyConf.getHandler())) {//分配给超管用户
-                Set<OrgTreeVo> userIds = userLinkService.getAdminUsers();
+                LinkedHashSet<OrgTreeVo> userIds = userLinkService.getAdminUsers();
                 if(CollectionUtils.isEmpty(userIds)) {
                     throw new EruptApiErrorTip("未查询到超管用户");
                 }

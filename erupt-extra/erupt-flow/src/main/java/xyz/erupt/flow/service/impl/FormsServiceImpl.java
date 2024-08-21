@@ -1,5 +1,7 @@
 package xyz.erupt.flow.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,83 +10,89 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.flow.bean.entity.OaForms;
 import xyz.erupt.flow.bean.entity.OaProcessDefinition;
+import xyz.erupt.flow.mapper.OaFormsMapper;
 import xyz.erupt.flow.service.FormsService;
 import xyz.erupt.flow.service.ProcessDefinitionService;
-import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Slf4j
 @Service
-public class FormsServiceImpl implements FormsService {
+public class FormsServiceImpl extends ServiceImpl<OaFormsMapper, OaForms> implements FormsService {
 
     @Lazy
     @Autowired
     private ProcessDefinitionService processDefinitionService;
 
-    @Resource
-    private EruptDao eruptDao;
-
     @Override
-    @Transactional
-    public void updateById(OaForms entity) {
-        entity.setIsStop(entity.getGroupId() == -1);
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateById(OaForms entity) {
+        entity.setIsStop(entity.getGroupId()==-1);
         //需要同时修改对应的流程定义的锁定状态和分组
         OaProcessDefinition lastVersionByFromId = processDefinitionService.getLastVersionByFromId(entity.getFormId());
         lastVersionByFromId.setIsStop(entity.getIsStop());
         lastVersionByFromId.setGroupId(entity.getGroupId());
-        eruptDao.merge(lastVersionByFromId);
-        eruptDao.merge(entity);
+        processDefinitionService.updateById(lastVersionByFromId);
+        return super.updateById(entity);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createForm(OaForms form) {
         Date now = new Date();
         form.setSort(0);
         form.setIsStop(false);
         form.setCreated(now);
         form.setUpdated(now);
-        eruptDao.persist(form);
+        super.save(form);//保存表单
         processDefinitionService.deploy(form);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateFormDetail(OaForms forms) {
         processDefinitionService.deploy(forms);
         //不更新的字段设为null
         forms.setSort(null);
         forms.setIsStop(null);
         forms.setUpdated(new Date());
-        eruptDao.merge(forms);
+        super.updateById(forms);
     }
 
     @Override
     public List<OaForms> listByGroupId(Long groupId, String keywords) {
-        return eruptDao.lambdaQuery(OaForms.class).eq(OaForms::getGroupId, groupId)
-                .orderBy(OaForms::getSort)
-                .like(StringUtils.isNotEmpty(keywords), OaForms::getFormName, keywords)
-                .list();
-    }
-
-    @Override
-    @Transactional
-    public void formsSort(List<Long> formIds) {
-        for (int i1 = 0; i1 < formIds.size(); i1++) {
-            OaForms oaForms = OaForms.builder().formId(formIds.get(i1)).sort(i1).build();
-            eruptDao.merge(oaForms);
+        QueryWrapper<OaForms> queryWrapper = new QueryWrapper<>(OaForms.builder()
+                .groupId(groupId)
+                .build()).orderByAsc("sort");
+        if(StringUtils.isNotEmpty(keywords)) {
+            queryWrapper.lambda().like(OaForms::getFormName, keywords);
         }
+        return super.list(queryWrapper);
     }
 
     @Override
-    @Transactional
-    public void removeById(Serializable id) {
+    @Transactional(rollbackFor = Exception.class)
+    public void formsSort(List<Long> formIds) {
+        List<OaForms> updateList = new ArrayList<>();
+        for (int i1 = 0; i1 < formIds.size(); i1++) {
+            updateList.add(
+                    OaForms.builder()
+                            .formId(formIds.get(i1))
+                            .sort(i1)
+                            .build()
+            );
+        }
+        super.updateBatchById(updateList);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean removeById(Serializable id) {
         //级联删除流程定义
         processDefinitionService.removeByFormId((Long) id);
-        eruptDao.delete(OaForms.builder().formId((Long) id).build());
+        return super.removeById(id);
     }
 }

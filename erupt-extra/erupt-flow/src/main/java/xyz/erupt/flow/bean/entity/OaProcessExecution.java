@@ -1,8 +1,14 @@
 package xyz.erupt.flow.bean.entity;
 
 import com.alibaba.fastjson.JSON;
-import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -11,12 +17,8 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
-import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -28,19 +30,25 @@ import java.util.Date;
         , power = @Power(export = true, add = false, edit = false)
 )
 @Table(name = "oa_ru_process_execution")
+@TableName("oa_ru_process_execution")
 @Entity
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@DynamicUpdate
-public class OaProcessExecution extends BaseModel {
+public class OaProcessExecution {
 
     public static final String STATUS_RUNNING = "RUNNING";
     public static final String STATUS_WAITING = "WAITING";
     public static final String STATUS_ENDED = "ENDED";
 
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
     @EruptField(views = @View(title = "父线程id"))
     private Long parentId;

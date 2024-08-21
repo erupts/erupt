@@ -1,8 +1,10 @@
 package xyz.erupt.flow;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
@@ -22,6 +24,8 @@ import java.util.List;
 @ComponentScan
 @EntityScan
 @EruptScan
+@MapperScan("xyz.erupt.flow.mapper")
+@EnableJpaRepositories
 public class EruptFlowAutoConfiguration implements EruptModule {
 
     static {

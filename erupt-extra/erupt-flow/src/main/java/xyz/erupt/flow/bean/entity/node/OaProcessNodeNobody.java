@@ -1,14 +1,11 @@
 package xyz.erupt.flow.bean.entity.node;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import xyz.erupt.flow.constant.FlowConstant;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class OaProcessNodeNobody {
     /**
      * 处理模式
