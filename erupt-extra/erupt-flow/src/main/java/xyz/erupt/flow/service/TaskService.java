@@ -1,5 +1,6 @@
 package xyz.erupt.flow.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.erupt.flow.bean.entity.OaTask;
 import xyz.erupt.flow.bean.vo.OrgTreeVo;
 import xyz.erupt.flow.bean.vo.TaskDetailVo;
@@ -7,39 +8,34 @@ import xyz.erupt.flow.bean.vo.TaskDetailVo;
 import java.util.List;
 import java.util.Set;
 
-public interface TaskService extends WithListener {
+public interface TaskService extends IService<OaTask>, WithListener {
 
     /**
      * 完成任务
-     *
      * @param taskId
      */
-     OaTask complete(Long taskId, String account, String accountName, String remarks, String content);
+    public OaTask complete(Long taskId, String account, String accountName, String remarks, String content);
 
     /**
      * 完成任务
-     *
      * @param taskId
      */
-     OaTask complete(Long taskId, String remarks, String content);
+    public OaTask complete(Long taskId, String remarks, String content);
 
     /**
      * 转办任务，只能是或签
-     *
      * @param taskId
      */
-     void assign(Long taskId, Set<OrgTreeVo> userIds, String remarks);
+    public void assign(Long taskId, Set<OrgTreeVo> userIds, String remarks);
 
     /**
      * 拒绝任务
-     *
      * @param taskId
      */
-    public void refuse(Long taskId, String account, String accountName, String remarks, String content);
+    public void refuse(Long taskId, String account, String accountName , String remarks, String content);
 
     /**
      * 拒绝任务
-     *
      * @param taskId
      */
     public void refuse(Long taskId, String remarks, String content);
@@ -51,11 +47,10 @@ public interface TaskService extends WithListener {
 
     /**
      * 分页查询我的任务
-     *
      * @param keywords
      * @return
      */
-    List<OaTask> listMyTasks(String keywords, int pageIndex, int pageSize);
+    List<OaTask> listMyTasks(String keywords);
 
     void removeByProcessInstId(Long id);
 
@@ -67,7 +62,6 @@ public interface TaskService extends WithListener {
 
     /**
      * 查看任务详情
-     *
      * @param taskId
      * @return
      */
@@ -75,7 +69,6 @@ public interface TaskService extends WithListener {
 
     /**
      * 查看实例详情
-     *
      * @param instId
      * @return
      */
@@ -83,7 +76,6 @@ public interface TaskService extends WithListener {
 
     /**
      * 中断所有线程
-     *
      * @param executionId
      * @param reason
      */
@@ -92,6 +84,7 @@ public interface TaskService extends WithListener {
     void stopByInstId(Long instId, String reason);
 
     /**
+     *
      * @param id
      */
     List<OaTask> listByInstanceId(Long id);

@@ -15,8 +15,7 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.view.R;
-import xyz.erupt.flow.bean.vo.FileUploadResult;
+import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.flow.constant.FlowConstant;
 
 import java.io.File;
@@ -32,15 +31,15 @@ public class EruptFlowFileController {
 
     /**
      * 上传图片
-     *
-     * @param file 文件
+     * @param file
+     * @return
      */
     @SneakyThrows
     @PostMapping("/upload")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public R<FileUploadResult> upload(@RequestParam("file") MultipartFile file) {
+    public EruptApiModel upload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty() || StringUtils.isBlank(file.getOriginalFilename())) {
-            return R.error("上传失败，请选择文件");
+            return EruptApiModel.errorApi("上传失败，请选择文件");
         }
         String path;
         if (eruptProp.isKeepUploadFileName()) {
@@ -66,33 +65,35 @@ public class EruptFlowFileController {
                 File dest = new File(eruptProp.getUploadPath() + path);
                 if (!dest.getParentFile().exists()) {
                     if (!dest.getParentFile().mkdirs()) {
-                        return R.error("上传失败，文件目录无法创建");
+                        return EruptApiModel.errorApi("上传失败，文件目录无法创建");
                     }
                 }
                 file.transferTo(dest);
             }
-            return R.ok(new FileUploadResult(file.getOriginalFilename(), EruptRestPath.ERUPT_ATTACHMENT + path.replace("\\", "/")));
+            return EruptApiModel.successApi(new FileUploadResult(file.getOriginalFilename(), EruptRestPath.ERUPT_ATTACHMENT+path.replace("\\", "/")));
         } catch (Exception e) {
-            return R.error("上传失败，" + e.getMessage());
+            return EruptApiModel.errorApi("上传失败，" + e.getMessage());
         }
     }
 
-    /**
-     * 删除文件
-     *
-     * @param path 路径
-     */
     @SneakyThrows
     @DeleteMapping("/file")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public R<Void> deleteFile(@RequestParam("path") String path) {
+    public EruptApiModel deleteFile(@RequestParam("path") String path) {
         path = eruptProp.getUploadPath() + path.replace(EruptRestPath.ERUPT_ATTACHMENT, "");
         File file = new File(path);
-        if (file.exists()) {
+        if(file.exists()) {
             FileUtils.delete(file);
         }
-        return R.ok();
+        return EruptApiModel.successApi();
     }
-
 }
 
+class FileUploadResult {
+    private String name;
+    private String url;
+    public FileUploadResult(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
+}

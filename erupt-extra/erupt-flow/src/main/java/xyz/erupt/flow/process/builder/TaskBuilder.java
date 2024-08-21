@@ -1,8 +1,6 @@
 package xyz.erupt.flow.process.builder;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.flow.bean.entity.OaProcessActivity;
@@ -13,15 +11,17 @@ import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.process.userlink.UserLinkService;
 import xyz.erupt.flow.process.userlink.impl.UserLinkServiceHolder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * 使用建造者模式创建任务
  * 所有任务都是这个类生成的
  */
-@Getter
-@Setter
+@Data
 public class TaskBuilder {
 
     //会签模式 NEXT顺序会签 AND并行会签 OR或签
@@ -93,7 +93,7 @@ public class TaskBuilder {
                 this.users.addAll(this.linkUsers);//候选人直接转为审批人
             }
             if(!CollectionUtils.isEmpty(this.linkRoles)) {//候选角色则需要查询，然后转为审批人
-                Set<OrgTreeVo> users =
+                LinkedHashSet<OrgTreeVo> users =
                         userLinkService.getUserIdsByRoleIds(this.linkRoles.stream().map(l -> l.getId()).toArray(String[]::new));
                 this.users.addAll(users);
             }

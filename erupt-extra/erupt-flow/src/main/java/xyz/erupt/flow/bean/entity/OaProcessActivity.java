@@ -1,9 +1,14 @@
 package xyz.erupt.flow.bean.entity;
 
-
 import com.alibaba.fastjson.JSON;
-import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -13,7 +18,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.flow.bean.entity.node.OaProcessNode;
-import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,14 +32,13 @@ import java.util.List;
         , power = @Power(export = true, add = false, edit = false)
 )
 @Table(name = "oa_ru_process_activity")
+@TableName("oa_ru_process_activity")
 @Entity
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@DynamicUpdate
-public class OaProcessActivity extends BaseModel {
+public class OaProcessActivity {
     /**
      * 任务完成条件
      * 暂时只支持所有任务全部完成
@@ -48,6 +51,13 @@ public class OaProcessActivity extends BaseModel {
     public static final String SERIAL = "SERIAL";//串行，必须按照任务的顺序执行
     public static final String PARALLEL = "PARALLEL";//并行，可以同步完成所有任务
 
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "native")
+    @Column(name = "id")
+    @EruptField
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
     @EruptField(views = @View(title = "节点key"))
     private String activityKey;
@@ -102,6 +112,7 @@ public class OaProcessActivity extends BaseModel {
     private Date finishDate;
 
     @Transient
+    @TableField(exist = false)
     private List<OaTask> tasks;
 
     @EruptField(views = @View(title = "完成顺序")

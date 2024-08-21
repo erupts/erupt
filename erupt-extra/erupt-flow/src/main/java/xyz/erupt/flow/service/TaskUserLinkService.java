@@ -11,6 +11,8 @@ public interface TaskUserLinkService {
 
     boolean saveBatch(Collection<OaTaskUserLink> links);
 
+    void removeByTaskId(Long id);
+
     List<OaTaskUserLink> listByRoleIds(Collection<String> roleIds);
 
     List<OaTaskUserLink> listByUserIds(Collection<String> roleIds);

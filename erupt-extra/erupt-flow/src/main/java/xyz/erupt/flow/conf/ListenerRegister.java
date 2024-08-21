@@ -101,9 +101,11 @@ public class ListenerRegister implements ApplicationContextAware {
     private void addListener(WithListener service, Class<ExecutableNodeListener> c) {
         String[] beanNamesForType = applicationContext.getBeanNamesForType(c);
         List<ExecutableNodeListener> listeners = new ArrayList<>();
-        for (String s : beanNamesForType) {
-            ExecutableNodeListener<OaProcessInstance> bean = applicationContext.getBean(s, c);
-            listeners.add(bean);
+        if(beanNamesForType!=null || beanNamesForType.length>0) {
+            for (String s : beanNamesForType) {
+                ExecutableNodeListener<OaProcessInstance> bean = applicationContext.getBean(s, c);
+                listeners.add(bean);
+            }
         }
         service.getListenerMap().put(c, listeners);
     }

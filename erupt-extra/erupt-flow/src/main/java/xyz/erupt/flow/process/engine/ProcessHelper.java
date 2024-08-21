@@ -16,9 +16,7 @@ import xyz.erupt.flow.bean.entity.node.*;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.process.engine.condition.*;
 import xyz.erupt.flow.service.*;
-import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import java.text.ParseException;
 import java.util.*;
 
@@ -28,17 +26,19 @@ public class ProcessHelper {
 
     @Lazy
     @Autowired
+    private ProcessActivityHistoryService processActivityHistoryService;
+    @Lazy
+    @Autowired
     private ProcessInstanceService processInstanceService;
     @Lazy
     @Autowired
     private ProcessActivityService processActivityService;
-
+    @Lazy
+    @Autowired
+    private ProcessExecutionService processExecutionService;
     @Lazy
     @Autowired
     private TaskService taskService;
-
-    @Resource
-    private EruptDao eruptDao;
 
     private Map<String, ConditionChecker> checkerMap = new HashMap<>();
 
@@ -77,14 +77,14 @@ public class ProcessHelper {
             throw new EruptApiErrorTip("禁止跳转到当前节点");
         }
         //跳转之前，要先确定是本线程跳转还是跨线程跳转
-        OaProcessInstance inst = eruptDao.findById(OaProcessInstance.class, task.getProcessInstId());
-        boolean inOneExecution = this.isSameExecution(inst.getProcessNode(), Arrays.asList(source, target), Arrays.asList(new String[]{source, target}));
+        OaProcessInstance inst = processInstanceService.getById(task.getProcessInstId());
+        boolean inOneExecution = this.isSameExecution(inst.getProcessNode(), Arrays.asList(new String[]{source, target}), Arrays.asList(new String[]{source, target}));
         //本线程内的跳转，只需要将本线程内的所有活动全部终止
         if (inOneExecution) {
             //这两个强行删除，不触发事件
             processActivityService.stopByExecutionId(task.getExecutionId(), "节点跳转");
             taskService.stopByExecutionId(task.getExecutionId(), "节点跳转");
-            OaProcessExecution execution = eruptDao.findById(OaProcessExecution.class, task.getExecutionId());
+            OaProcessExecution execution = processExecutionService.getById(task.getExecutionId());
             //当前线程下，继续进行
             OaProcessNode nextNode = this.findByKey(inst.getProcessNode(), target);
             processActivityService.newActivities(execution, JSON.parseObject(inst.getFormItems()), nextNode);
@@ -277,7 +277,7 @@ public class ProcessHelper {
      */
     public void refuse(OaTask task, String accountName) {
         //取得拒绝策略
-        OaProcessActivityHistory activityHistory = eruptDao.findById(OaProcessActivityHistory.class, task.getActivityId());
+        OaProcessActivityHistory activityHistory = processActivityHistoryService.getById(task.getActivityId());
         OaProcessNode processNode = activityHistory.getProcessNode();
         OaProcessNodeProps props = processNode.getProps();
         if (props == null) {
@@ -291,7 +291,7 @@ public class ProcessHelper {
             processInstanceService.stop(activityHistory.getProcessInstId(), accountName + " 审批拒绝");
         } else if (FlowConstant.REFUSE_TO_BEFORE.equals(refuse.getType())) {//回到上一步
             //获取本线程的上一步
-            OaProcessInstance inst = eruptDao.findById(OaProcessInstance.class, task.getProcessInstId());
+            OaProcessInstance inst = processInstanceService.getById(task.getProcessInstId());
             Set<OaProcessNode> preNodes = new HashSet<>();
             this.getPreUserTasks(inst.getProcessNode(), null, activityHistory.getActivityKey(), preNodes);
             if (preNodes == null || preNodes.size() <= 0) {
