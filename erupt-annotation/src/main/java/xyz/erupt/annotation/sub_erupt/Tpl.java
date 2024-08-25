@@ -33,6 +33,15 @@ public @interface Tpl {
     @Comment("弹出层宽度")
     String width() default "";
 
+    @Comment("弹出层高度")
+    String height() default "";
+
+    @Comment("弹出层打开方式")
+    OpenWay openWay() default OpenWay.MODAL;
+
+    @Comment("抽屉打开方向")
+    Placement drawerPlacement() default Placement.RIGHT;
+
     @Getter
     enum Engine {
         @Comment("原生H5, Native模式下不支持tplHandler")
