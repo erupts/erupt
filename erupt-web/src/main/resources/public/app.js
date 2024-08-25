@@ -7,7 +7,7 @@ window.eruptSiteConfig = {
     dialogLogin: false,
     copyright: true, //是否保留显示版权信息
     // copyrightTxt: () => {
-    //     return "x_x_x";
+    //     return "x_x_x<a>xxx</a>";
     // },
     logoPath: null,
     loginLogoPath: null,

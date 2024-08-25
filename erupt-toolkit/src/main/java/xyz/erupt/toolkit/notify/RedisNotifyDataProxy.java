@@ -1,6 +1,5 @@
 package xyz.erupt.toolkit.notify;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -42,9 +41,7 @@ public class RedisNotifyDataProxy implements DataProxy<Object> {
 
     private void publish(DataAction action, Object data) {
         if (eruptProp.isRedisSession()) {
-            if (null == DataProxyContext.params()[0]) {
-                throw new EruptWebApiRuntimeException("DataProxy params[0] not found → redis channel");
-            }
+            if (DataProxyContext.params().length == 0 || null == DataProxyContext.params()[0]) throw new EruptWebApiRuntimeException("DataProxy params[0] not found → redis channel");
             stringRedisTemplate.convertAndSend(DataProxyContext.params()[0], GsonFactory.getGson().toJson(new NotifyData<>(action, data)));
         }
     }

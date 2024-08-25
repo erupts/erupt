@@ -2,6 +2,7 @@ package xyz.erupt.jpa.dao;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import xyz.erupt.jpa.constant.SqlLang;
 import xyz.erupt.linq.lambda.LambdaInfo;
@@ -11,6 +12,7 @@ import xyz.erupt.linq.lambda.SFunction;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -137,14 +139,14 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
-    public <R> EruptLambdaQuery<T> in(SFunction<T, R> field, List<Object> val) {
+    public <R> EruptLambdaQuery<T> in(SFunction<T, R> field, Collection<?> val) {
         String placeholder = this.genePlaceholder();
         querySchema.getWheres().add(LambdaSee.field(field) + " in (:" + placeholder + ")");
-        querySchema.getParams().put(placeholder, val);
+        querySchema.getParams().put(placeholder, new ArrayList<>(val));
         return this;
     }
 
-    public <R> EruptLambdaQuery<T> in(boolean condition, SFunction<T, R> field, List<Object> val) {
+    public <R> EruptLambdaQuery<T> in(boolean condition, SFunction<T, R> field, Collection<?> val) {
         if (condition) return this.in(field, val);
         return this;
     }
@@ -215,6 +217,15 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    public EruptLambdaQuery<T> orderByAsc(SFunction<T, ?> field) {
+        return orderBy(field);
+    }
+
+    public EruptLambdaQuery<T> orderByAsc(boolean condition, SFunction<T, ?> field) {
+        return orderBy(condition, field);
+    }
+
+
     public EruptLambdaQuery<T> orderByDesc(SFunction<T, ?> field) {
         querySchema.getOrders().add(LambdaSee.field(field) + " desc");
         return this;
@@ -263,11 +274,30 @@ public class EruptLambdaQuery<T> {
     }
 
     @SafeVarargs
+    public final <R> List<R> listSelect(Class<R> requiredType, SFunction<T, ?>... fields) {
+        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
+        List<Object[]> objects = this.geneQuery().getResultList();
+        return objects.stream().map(it -> objectToClazz(requiredType, it, fields)).collect(Collectors.toList());
+    }
+
+    @SafeVarargs
+    public final <R> R oneSelect(Class<R> requiredType, SFunction<T, ?>... fields) {
+        for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
+        try {
+            return objectToClazz(requiredType, (Object[]) this.geneQuery().getSingleResult(), fields);
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Deprecated
+    @SafeVarargs
     public final List<Object[]> listSelects(SFunction<T, ?>... fields) {
         for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
         return this.geneQuery().getResultList();
     }
 
+    @Deprecated
     @SafeVarargs
     public final Object[] oneSelects(SFunction<T, ?>... fields) {
         for (SFunction<T, ?> field : fields) this.querySchema.columns.add(LambdaSee.field(field));
@@ -276,6 +306,17 @@ public class EruptLambdaQuery<T> {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    @SneakyThrows
+    private <R> R objectToClazz(Class<R> clazz, Object[] objects, SFunction<?, ?>... fields) {
+        R r = clazz.newInstance();
+        for (int i = 0; i < fields.length; i++) {
+            Field f = clazz.getDeclaredField(LambdaSee.field(fields[i]));
+            f.setAccessible(true);
+            f.set(r, objects[i]);
+        }
+        return r;
     }
 
     public Long count() {
@@ -313,11 +354,13 @@ public class EruptLambdaQuery<T> {
         if (!querySchema.columns.isEmpty()) {
             select.append(SqlLang.SELECT);
             querySchema.getColumns().forEach(it -> select.append(it).append(SqlLang.COMMA));
-            select.deleteCharAt(select.length() - 1).append(" ");
+            select.deleteCharAt(select.length() - 1);
         }
         StringBuilder expr = new StringBuilder(select + SqlLang.FROM + eruptClass.getSimpleName() + SqlLang.AS + eruptClass.getSimpleName());
-        if (!querySchema.getWheres().isEmpty()) expr.append(SqlLang.WHERE).append(String.join(SqlLang.AND, querySchema.getWheres()));
-        if (!querySchema.getOrders().isEmpty()) expr.append(SqlLang.ORDER_BY).append(String.join(SqlLang.COMMA, querySchema.getOrders()));
+        if (!querySchema.getWheres().isEmpty())
+            expr.append(SqlLang.WHERE).append(String.join(SqlLang.AND, querySchema.getWheres()));
+        if (!querySchema.getOrders().isEmpty())
+            expr.append(SqlLang.ORDER_BY).append(String.join(SqlLang.COMMA, querySchema.getOrders()));
         Query query = entityManager.createQuery(expr.toString());
         querySchema.getParams().forEach(query::setParameter);
         Optional.ofNullable(querySchema.getLimit()).ifPresent(query::setMaxResults);

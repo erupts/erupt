@@ -24,8 +24,6 @@ public interface EruptJobHandler {
         return null;
     }
 
-    ;
-
     @Comment("任务执行成功时调用")
     default void success(@Comment("执行结果") String result, @Comment("任务参数") String param) {
     }

@@ -5,7 +5,6 @@ import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
@@ -16,13 +15,12 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.sub_edit.AttachmentType;
 import xyz.erupt.annotation.sub_field.sub_edit.HtmlEditorType;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.util.DateUtil;
+import xyz.erupt.core.service.EruptFileService;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptApiModel;
@@ -38,7 +36,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -53,6 +54,8 @@ public class EruptFileController {
 
     private final EruptProp eruptProp;
 
+    private final EruptFileService eruptFileService;
+
     private static final String FS_SEP = "/";
 
     @SneakyThrows
@@ -63,15 +66,7 @@ public class EruptFileController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isAdd());
         Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
-        String path;
-        if (eruptProp.isKeepUploadFileName()) {
-            path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE) + File.separator + file.getOriginalFilename()
-                    .replaceAll("&|#|\\?|\\s", "").replace(edit.attachmentType().fileSeparator(), "");
-        } else {
-            String[] fileNameSplit = file.getOriginalFilename().split("\\.");
-            path = File.separator + DateUtil.getFormatDate(new Date(), DateUtil.DATE)
-                    + File.separator + RandomStringUtils.randomAlphabetic(12) + EruptConst.DOT + fileNameSplit[fileNameSplit.length - 1];
-        }
+        String path = eruptFileService.createPath(file).replace(edit.attachmentType().fileSeparator(), "");
         switch (edit.type()) {
             case ATTACHMENT:
                 AttachmentType attachmentType = edit.attachmentType();
@@ -118,27 +113,8 @@ public class EruptFileController {
                 }
                 break;
         }
-        try {
-            boolean localSave = true;
-            AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
-            if (null != attachmentProxy) {
-                path = attachmentProxy.upLoad(file.getInputStream(), path.replace("\\", "/"));
-                localSave = attachmentProxy.isLocalSave();
-            }
-            if (localSave) {
-                File dest = new File(eruptProp.getUploadPath() + path);
-                if (!dest.getParentFile().exists()) {
-                    if (!dest.getParentFile().mkdirs()) {
-                        return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.cannot_created"));
-                    }
-                }
-                file.transferTo(dest);
-            }
-            return EruptApiModel.successApi(path.replace("\\", "/"));
-        } catch (Exception e) {
-            log.error("erupt upload error", e);
-            return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error") + " " + e.getMessage());
-        }
+        return EruptApiModel.successApi(eruptFileService.upload(file, path));
+
     }
 
 
@@ -170,8 +146,10 @@ public class EruptFileController {
                 map.put("url", EruptRestPath.ERUPT_ATTACHMENT + eruptApiModel.getData());
             }
             map.put("uploaded", true);
+            map.put("state", "SUCCESS");
         } else {
             map.put("uploaded", false);
+            map.put("state", "ERROR");
             throw new EruptWebApiRuntimeException(eruptApiModel.getMessage());
         }
         return map;
@@ -194,9 +172,11 @@ public class EruptFileController {
                 response.getOutputStream().write((callback + "(" + json + ")").getBytes(StandardCharsets.UTF_8));
             }
         } else {
-            Map<String, Object> map = uploadHtmlEditorImage(eruptName, fieldName, file);
-            Boolean status = (Boolean) map.get("uploaded");
-            map.put("state", status ? "SUCCESS" : "ERROR");
+            Map<String, Object> map = this.uploadHtmlEditorImage(eruptName, fieldName, file);
+            map.put("filename", file.getName());
+            map.put("original", file.getOriginalFilename());
+            map.put("name", file.getName());
+            map.put("size", file.getSize());
             response.getOutputStream().write(new Gson().toJson(map).getBytes(StandardCharsets.UTF_8));
         }
     }
