@@ -2,6 +2,7 @@ package xyz.erupt.upms.service;
 
 import com.google.gson.Gson;
 import eu.bitwalker.useragentutils.UserAgent;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
  * date 2018-12-13.
  */
 @Service
+@Slf4j
 public class EruptUserService {
 
     @Resource
@@ -66,6 +68,18 @@ public class EruptUserService {
     private final Gson gson = GsonFactory.getGson();
 
     public static final String LOGIN_ERROR_HINT = "账号或密码错误";
+
+    public void createToken(EruptUser eruptUser, String token, Integer tokenExpire) {
+        sessionService.put(SessionKey.TOKEN_OLINE + token, eruptUser.getAccount(), tokenExpire);
+        this.cacheUserInfo(eruptUser, token);
+    }
+
+    //登出token
+    public void logoutToken(String name, String token) {
+        if (!eruptProp.isRedisSession()) request.getSession().invalidate();
+        for (String uk : SessionKey.USER_KEY_GROUP) sessionService.remove(uk + token);
+        log.info("logout erupt-token: {} → {}", name, token);
+    }
 
     public void cacheUserInfo(EruptUser eruptUser, String token) {
         List<EruptMenu> eruptMenus = eruptMenuService.getUserAllMenu(eruptUser);

@@ -12,12 +12,22 @@ import static org.fusesource.jansi.Ansi.ansi;
 /**
  * @author YuePeng
  * date 2024/6/27 21:58
+ * ref magic-api mdx
  */
 public class Formatter {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     private final StringBuilder buf = new StringBuilder();
+
+    private final static String[] SPACES = {
+            " ", // 1
+            "  ", // 2
+            "    ", // 4
+            "        ", // 8
+            "                ", // 16
+            "                                " // 32
+    };
 
     public Formatter timestamp(Long timestamp) {
         synchronized (DATE_FORMAT) {
@@ -40,10 +50,10 @@ public class Formatter {
         } else if (Level.ERROR.name().equals(level)) {
             ansi = ansi().fg(Ansi.Color.RED);
         } else {
-            ansi = ansi().fg(Ansi.Color.CYAN);
+            ansi = ansi().fg(Ansi.Color.MAGENTA);
         }
         buf.append(ansi);
-        this.alignment(level, 5);
+        this.alignment(true, level, 5);
         buf.append(ansi().fg(Ansi.Color.DEFAULT));
         return this;
     }
@@ -54,13 +64,13 @@ public class Formatter {
     }
 
     public Formatter thread(String value) {
-        this.alignment(value, 15);
+        this.alignment(true, value, 15);
         return this;
     }
 
     public Formatter name(String name) {
         buf.append(ansi().fg(Ansi.Color.CYAN));
-        this.alignment(name, 40);
+        this.alignment(false, name, 40);
         buf.append(ansi().fg(Ansi.Color.DEFAULT));
         return this;
     }
@@ -83,14 +93,25 @@ public class Formatter {
         return this;
     }
 
-    public void alignment(String text, int size) {
+    public void alignment(boolean leftPad, String text, int size) {
         if (text.length() < size) {
-            for (int i = size - text.length(); i > 0; i--) {
-                buf.append(" ");
-            }
+            if (leftPad) this.spacePad(size - text.length());
             buf.append(text);
+            if (!leftPad) this.spacePad(size - text.length());
         } else {
             buf.append(text.substring(text.length() - size));
+        }
+    }
+
+    private void spacePad(int length) {
+        while (length >= 32) {
+            buf.append(SPACES[5]);
+            length -= 32;
+        }
+        for (int i = 4; i >= 0; i--) {
+            if ((length & (1 << i)) != 0) {
+                buf.append(SPACES[i]);
+            }
         }
     }
 

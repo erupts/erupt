@@ -8,6 +8,7 @@ upms.position_no_org,选择岗位时，所属组织必填,選擇崗位時，所�
 [erupt],,,,,,,,
 编码,编码,編碼,Code,codage,コード化です,인 코딩,закодирова,codificación
 名称,名称,名稱,Title,dénomination,名前です,이름,назван,El nombre
+值,值,值,value,valeur,値,값,значение,valore
 备注,备注,備註,Remark,remarques,備考です,비고,примечан,comentar
 用户名,用户名,用戶名,Account,Nom de l’utilisateur,ユーザー名です,사용자 이름,Имя пользователя.,Nombre de usuario
 姓名,姓名,姓名,Name,Le nom,名前です,이름,им,Los nombres
@@ -102,4 +103,7 @@ IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,I
 系统日志,系统日志,系統日誌,System Log,Journal système,システム ログ,시스템 로그,Системный журнал,Registro di sistema
 代码生成,代码生成,代碼生成,Code generation,Génération de code,コード生成です,코드 생성,Генерация кода,Generación de código
 生成Erupt代码,生成Erupt代码,生成Erupt代碼,Erupt code is generated,Générer du code Erupt,Eruptコードを生成します,erupt 코드를 생성한다,Генерирует код эрупта,Generando código Erupt
-,,,,,,,,
+更新秘钥,更新秘钥,更新密鑰,Update secret key,Mettre à jour la clé secrète,更新キー,업데이트 키,Обновление секретного ключа,Aggiornamento della chiave segreta
+Token有效期,Token 有效期,Token 有效期,Token validity period,Période de validité du token,トークン有効期間,토큰 유효 기간,Срок действия токена,Periodo di validità del token
+绑定用户权限,绑定用户权限,綁定用戶權限,Bind user permissions,Lier les autorisations d'utilisateur,ユーザー権限のバインド,사용자 권한 바인딩,Привязка прав пользователя,Vincolare i permessi dell'utente
+秘钥,秘钥,密鑰,Secret key,Clé secrète,秘密鍵,비밀 키,Секретный ключ,Chiave segreta

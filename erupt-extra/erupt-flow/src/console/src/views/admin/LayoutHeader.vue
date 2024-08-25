@@ -23,7 +23,7 @@
     </div>
 
     <el-dialog title="请使用手机扫码预览" :visible.sync="viewCode" width="300px" :close-on-click-modal="false" center>
-      <img src="../../assets/image/code.png" width="250" height="250">
+      <img height="250" src="../../assets/image/code.png" width="250">
     </el-dialog>
   </div>
 </template>

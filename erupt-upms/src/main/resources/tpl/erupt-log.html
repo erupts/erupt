@@ -17,7 +17,7 @@
 
         @font-face {
             font-family: 'Courier New';
-            src: url('monitor/Courier-New.ttf');
+            src: url('log/Courier-New.ttf');
         }
     </style>
 </head>
@@ -34,8 +34,23 @@
     let cloudNode = new URLSearchParams(location.search).get("_erupt") === 'CloudNode';
     if (cloudNode) {
         if (window.self !== window.top) {
-            window.parent.document.getElementsByClassName("ant-modal-header")[0].remove();
-            window.parent.document.getElementsByClassName("ant-modal-close-x")[0].style.color = "#fff";
+            let interval;
+
+            function removeHeader() {
+                try {
+                    // window.parent.document.getElementsByClassName("ant-modal-header")[0].remove();
+                    // window.parent.document.getElementsByClassName("ant-modal-close-x")[0].style.color = "#fff";
+                    window.parent.document.getElementsByClassName("ant-drawer-header")[0].remove();
+                } catch (e) {
+                    console.warn(e);
+                    interval && clearInterval(interval);
+                }
+            }
+
+            removeHeader()
+            interval = setInterval(() => {
+                removeHeader()
+            }, 100)
         }
     }
     const xterm = new Terminal({
@@ -80,7 +95,7 @@
                 } else if (error.response.status === 403) {
                     window.location.href = "${base}/error/403.html"
                 } else {
-                    xterm.writeln("status: " + error.response.status + " → " + error.response.data.message);
+                    xterm.writeln("status: " + error.response.status + (error.response.data && (" → " + error.response.data.message)));
                 }
             } else {
                 xterm.writeln(error.message);

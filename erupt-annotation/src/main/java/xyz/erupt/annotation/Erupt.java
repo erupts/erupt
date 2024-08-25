@@ -67,10 +67,6 @@ public @interface Erupt {
     //布局配置
     Layout layout() default @Layout;
 
-//    @Comment("自定义页头")
-//    @Match("#value.path() != ''")
-//    Tpl header() default @Tpl(path = "");
-//
 //    @Comment("画册视图定义")
 //    @Match("#value.enable() == true")
 //    Card cardView() default @Card(enable = false, galleryField = "", viewFields = {});

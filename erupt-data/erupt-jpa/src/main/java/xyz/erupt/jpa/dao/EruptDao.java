@@ -48,8 +48,13 @@ public class EruptDao {
 
     private static final String WHERE = " where ";
 
+    @Deprecated
     public <T> T findById(Class<T> clazz, Object id) {
         this.entityManager.clear();
+        return entityManager.find(clazz, id);
+    }
+
+    public <T> T find(Class<T> clazz, Object id) {
         return entityManager.find(clazz, id);
     }
 
@@ -84,7 +89,11 @@ public class EruptDao {
 
     //删除
     public void delete(Object obj) {
-        entityManager.remove(obj);
+        if (entityManager.contains(obj)) {
+            entityManager.remove(obj);
+        } else {
+            entityManager.remove(entityManager.merge(obj));
+        }
     }
 
     @Transactional
