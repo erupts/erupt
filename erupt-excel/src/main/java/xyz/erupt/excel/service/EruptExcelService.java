@@ -1,13 +1,14 @@
 package xyz.erupt.excel.service;
 
 import com.google.gson.JsonObject;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.VLModel;
@@ -52,71 +53,73 @@ public class EruptExcelService {
      *
      * @return Workbook
      */
+    @SneakyThrows
     public Workbook exportExcel(EruptModel eruptModel, Page page) {
         // XSSFWorkbook、SXSSFWorkbook
-        Workbook wb = new SXSSFWorkbook();
-        Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
-        sheet.setZoom(160);
-        //冻结首行
-        sheet.createFreezePane(0, 1, 1, 1);
-        int rowIndex = 0;
-        int colNum = 0;
-        Row row = sheet.createRow(rowIndex);
-        CellStyle headStyle = ExcelUtil.beautifyExcelStyle(wb);
-        Font headFont = wb.createFont();
-        headFont.setColor(IndexedColors.WHITE.index);
-        headStyle.setFont(headFont);
-        headStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
-        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headFont.setBold(true);
-        headStyle.setFont(headFont);
-        int cellNum = 0;
-        for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
-            for (View view : fieldModel.getEruptField().views()) {
-                cellNum++;
-                if (view.show() && view.export()) {
-                    sheet.setColumnWidth(cellNum, (view.title().length() + 10) * 256);
-                    Cell cell = row.createCell(colNum);
-                    cell.setCellStyle(headStyle);
-                    cell.setCellValue(view.title());
-                    colNum++;
-                }
-            }
-        }
-        CellStyle style = ExcelUtil.beautifyExcelStyle(wb);
-        for (Map<String, Object> map : page.getList()) {
-            int dataColNum = 0;
-            row = sheet.createRow(++rowIndex);
+        try (Workbook wb = new XSSFWorkbook()) {
+            Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
+            sheet.setZoom(160);
+            //冻结首行
+            sheet.createFreezePane(0, 1, 1, 1);
+            int rowIndex = 0;
+            int colNum = 0;
+            Row row = sheet.createRow(rowIndex);
+            CellStyle headStyle = ExcelUtil.beautifyExcelStyle(wb);
+            Font headFont = wb.createFont();
+            headFont.setColor(IndexedColors.WHITE.index);
+            headStyle.setFont(headFont);
+            headStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.index);
+            headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headFont.setBold(true);
+            headStyle.setFont(headFont);
+            int cellNum = 0;
             for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
                 for (View view : fieldModel.getEruptField().views()) {
+                    cellNum++;
                     if (view.show() && view.export()) {
-                        Cell cell = row.createCell(dataColNum);
-                        cell.setCellStyle(style);
-                        Object val;
-                        if (StringUtils.isNotBlank(view.column())) {
-                            val = map.get(fieldModel.getFieldName() + "_" + view.column().replace(EruptConst.DOT, "_"));
-                        } else {
-                            val = map.get(fieldModel.getFieldName());
-                        }
-                        Edit edit = fieldModel.getEruptField().edit();
-                        Optional.ofNullable(val).ifPresent(it -> {
-                            String str = it.toString();
-                            if (edit.type() == EditType.BOOLEAN || view.type() == ViewType.BOOLEAN) {
-                                if (edit.boolType().trueText().equals(str)) {
-                                    cell.setCellValue(edit.boolType().trueText());
-                                } else if (edit.boolType().falseText().equals(str)) {
-                                    cell.setCellValue(edit.boolType().falseText());
-                                }
-                            } else {
-                                cell.setCellValue(str);
-                            }
-                        });
-                        dataColNum++;
+                        sheet.setColumnWidth(cellNum, (view.title().length() + 10) * 256);
+                        Cell cell = row.createCell(colNum);
+                        cell.setCellStyle(headStyle);
+                        cell.setCellValue(view.title());
+                        colNum++;
                     }
                 }
             }
+            CellStyle style = ExcelUtil.beautifyExcelStyle(wb);
+            for (Map<String, Object> map : page.getList()) {
+                int dataColNum = 0;
+                row = sheet.createRow(++rowIndex);
+                for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
+                    for (View view : fieldModel.getEruptField().views()) {
+                        if (view.show() && view.export()) {
+                            Cell cell = row.createCell(dataColNum);
+                            cell.setCellStyle(style);
+                            Object val;
+                            if (StringUtils.isNotBlank(view.column())) {
+                                val = map.get(fieldModel.getFieldName() + "_" + view.column().replace(EruptConst.DOT, "_"));
+                            } else {
+                                val = map.get(fieldModel.getFieldName());
+                            }
+                            Edit edit = fieldModel.getEruptField().edit();
+                            Optional.ofNullable(val).ifPresent(it -> {
+                                String str = it.toString();
+                                if (edit.type() == EditType.BOOLEAN || view.type() == ViewType.BOOLEAN) {
+                                    if (edit.boolType().trueText().equals(str)) {
+                                        cell.setCellValue(edit.boolType().trueText());
+                                    } else if (edit.boolType().falseText().equals(str)) {
+                                        cell.setCellValue(edit.boolType().falseText());
+                                    }
+                                } else {
+                                    cell.setCellValue(str);
+                                }
+                            });
+                            dataColNum++;
+                        }
+                    }
+                }
+            }
+            return wb;
         }
-        return wb;
     }
 
     public List<JsonObject> excelToEruptObject(EruptModel eruptModel, Workbook workbook) throws Exception {
