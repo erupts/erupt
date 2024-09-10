@@ -8,6 +8,8 @@ public class EruptConst {
 
     public static final String ERUPT = "erupt";
 
+    public static final String ERUPT_AS = "et";
+
     public static final String BASE_PACKAGE = "xyz.erupt";
 
     public static final String ERUPT_DIR = ".erupt";
@@ -17,4 +19,7 @@ public class EruptConst {
     public static final String DOT = ".";
 
     public static final String ERUPT_LOG = "erupt-log";
+
+    public static final String AN = "abcdef0123456789";
+
 }

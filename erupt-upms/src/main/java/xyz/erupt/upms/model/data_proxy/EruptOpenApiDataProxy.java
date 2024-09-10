@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
+import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.upms.model.EruptOpenApi;
@@ -31,7 +32,7 @@ public class EruptOpenApiDataProxy implements DataProxy<EruptOpenApi>, Operation
 
     @Override
     public void beforeAdd(EruptOpenApi eruptOpenApi) {
-        eruptOpenApi.setAppid("et" + RandomStringUtils.random(14, "abcdef123456789"));
+        eruptOpenApi.setAppid(EruptConst.ERUPT_AS + RandomStringUtils.random(14, EruptConst.AN));
         eruptOpenApi.setSecret(RandomStringUtils.randomAlphanumeric(24).toUpperCase());
     }
 
