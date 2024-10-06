@@ -63,7 +63,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                         Runnable runnable = (() -> {
                             module.initFun();
                             for (MetaMenu metaMenu : metaMenus) {
-                                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.fromMetaMenu(metaMenu), EruptMenu.CODE, metaMenu.getCode());
+                                EruptMenu eruptMenu = eruptDao.persistIfNotExist(EruptMenu.class, EruptMenu.fromMetaMenu(metaMenu), LambdaSee.field(EruptMenu::getCode), metaMenu.getCode());
                                 metaMenu.setId(eruptMenu.getId());
                                 if (null != eruptMenu.getType() && null != eruptMenu.getValue()) {
                                     if (MenuTypeEnum.TABLE.getCode().equals(eruptMenu.getType()) || MenuTypeEnum.TREE.getCode().equals(eruptMenu.getType())) {
@@ -77,7 +77,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                                                             value.getName(), MenuTypeEnum.BUTTON.getCode(),
                                                             UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value),
                                                             eruptMenu, i.addAndGet(10)
-                                                    ), EruptMenu.CODE, UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value));
+                                                    ), LambdaSee.field(EruptMenu::getCode), UPMSUtil.getEruptFunPermissionsCode(eruptMenu.getValue(), value));
                                                 }
                                             }
                                         });
