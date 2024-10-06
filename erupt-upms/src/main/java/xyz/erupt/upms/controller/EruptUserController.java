@@ -127,6 +127,22 @@ public class EruptUserController {
     }
 
 
+    /**
+     * 修改密码
+     *
+     * @param pwd     旧密码
+     * @param newPwd  新密码
+     * @param newPwd2 确认新密码
+     */
+    @GetMapping(value = "/change-pwd")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public EruptApiModel changePwd(@RequestParam("pwd") String pwd, @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
+        pwd = SecretUtil.decodeSecret(pwd, 3);
+        newPwd = SecretUtil.decodeSecret(newPwd, 3);
+        newPwd2 = SecretUtil.decodeSecret(newPwd2, 3);
+        return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
+    }
+
     //用户信息
     @GetMapping("/userinfo")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -165,22 +181,6 @@ public class EruptUserController {
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
         eruptUserService.logoutToken(metaUserinfo.getUsername(), token);
         return EruptApiModel.successApi();
-    }
-
-    /**
-     * 修改密码
-     *
-     * @param pwd     旧密码
-     * @param newPwd  新密码
-     * @param newPwd2 确认新密码
-     */
-    @GetMapping(value = "/change-pwd")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel changePwd(@RequestParam("pwd") String pwd, @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
-        pwd = SecretUtil.decodeSecret(pwd, 3);
-        newPwd = SecretUtil.decodeSecret(newPwd, 3);
-        newPwd2 = SecretUtil.decodeSecret(newPwd2, 3);
-        return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 
     /**
