@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptApplication;
@@ -19,7 +20,6 @@ import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.EruptLogin;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptMenu;
-import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.log.EruptLoginLog;
 import xyz.erupt.upms.prop.EruptAppProp;
@@ -30,7 +30,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -62,47 +65,7 @@ public class EruptUserService {
     @Resource
     private EruptContextService eruptContextService;
 
-    @Resource
-    private EruptMenuService eruptMenuService;
-
     private final Gson gson = GsonFactory.getGson();
-
-    public static final String LOGIN_ERROR_HINT = "账号或密码错误";
-
-    public void createToken(EruptUser eruptUser, String token, Integer tokenExpire) {
-        sessionService.put(SessionKey.TOKEN_OLINE + token, eruptUser.getAccount(), tokenExpire);
-        this.cacheUserInfo(eruptUser, token);
-    }
-
-    //登出token
-    public void logoutToken(String name, String token) {
-        if (!eruptProp.isRedisSession()) request.getSession().invalidate();
-        for (String uk : SessionKey.USER_KEY_GROUP) sessionService.remove(uk + token);
-        log.info("logout erupt-token: {} → {}", name, token);
-    }
-
-    public void cacheUserInfo(EruptUser eruptUser, String token) {
-        List<EruptMenu> eruptMenus = eruptMenuService.getUserAllMenu(eruptUser);
-        Map<String, Object> valueMap = new HashMap<>();
-        for (EruptMenu menu : eruptMenus) {
-            if (null != menu.getValue()) {
-                //根据URL规则?后的均是参数如：eruptTest?code=test，把参数 ?code=test 去除
-                valueMap.put(menu.getValue().toLowerCase().split("\\?")[0], menu);
-            }
-        }
-        sessionService.putMap(SessionKey.MENU_VALUE_MAP + token, valueMap, eruptUpmsProp.getExpireTimeByLogin());
-        sessionService.put(SessionKey.MENU_VIEW + token, gson.toJson(eruptMenuService.geneMenuListVo(eruptMenus)), eruptUpmsProp.getExpireTimeByLogin());
-        MetaUserinfo metaUserinfo = new MetaUserinfo();
-        metaUserinfo.setId(eruptUser.getId());
-        metaUserinfo.setSuperAdmin(eruptUser.getIsAdmin());
-        metaUserinfo.setAccount(eruptUser.getAccount());
-        metaUserinfo.setUsername(eruptUser.getName());
-        metaUserinfo.setRoles(eruptUser.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList()));
-        Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> metaUserinfo.setPost(it.getCode()));
-        Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> metaUserinfo.setOrg(it.getCode()));
-        sessionService.put(SessionKey.USER_INFO + token, gson.toJson(metaUserinfo), eruptUpmsProp.getExpireTimeByLogin());
-    }
-
 
     public static LoginProxy findEruptLogin() {
         if (null == EruptApplication.getPrimarySource()) {
@@ -141,27 +104,32 @@ public class EruptUserService {
                     return new LoginModel(false, "当前 ip 无权访问");
                 }
             }
-            if (checkPwd(eruptUser, pwd)) {
+            if (this.checkPwd(eruptUser.getAccount(), eruptUser.getPassword(), eruptUser.getIsMd5(), pwd)) {
                 request.getSession().invalidate();
                 sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
                 return new LoginModel(true, eruptUser);
-            } else {
-                return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(account, requestIp));
             }
-        } else {
-            return new LoginModel(false, LOGIN_ERROR_HINT, loginErrorCountPlus(account, requestIp));
         }
+        return new LoginModel(false, I18nTranslate.$translate("upms.account_pwd_error"), loginErrorCountPlus(account, requestIp));
     }
 
-    //校验密码
-    public boolean checkPwd(EruptUser eruptUser, String pwd) {
+    /**
+     * 校验密码
+     *
+     * @param account  账号
+     * @param password 密码
+     * @param isMd5    是否加密
+     * @param inputPwd 前端输入的密码
+     * @return
+     */
+    public boolean checkPwd(String account, String password, boolean isMd5, String inputPwd) {
         if (eruptAppProp.getPwdTransferEncrypt()) {
-            String digestPwd = eruptUser.getIsMd5() ? eruptUser.getPassword() : MD5Util.digest(eruptUser.getPassword());
-            String calcPwd = MD5Util.digest(digestPwd + eruptUser.getAccount());
-            return pwd.equalsIgnoreCase(calcPwd);
+            String digestPwd = isMd5 ? password : MD5Util.digest(password);
+            String calcPwd = MD5Util.digest(digestPwd + account);
+            return inputPwd.equalsIgnoreCase(calcPwd);
         } else {
-            if (eruptUser.getIsMd5()) pwd = MD5Util.digest(pwd);
-            return pwd.equals(eruptUser.getPassword());
+            if (isMd5) inputPwd = MD5Util.digest(inputPwd);
+            return inputPwd.equals(password);
         }
     }
 

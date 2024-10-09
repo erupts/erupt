@@ -12,11 +12,11 @@ import java.io.Serializable;
 @Setter
 public class R<T> implements Serializable {
 
-    //消息
-    private String message;
-
     //数据
     private T data;
+
+    //消息
+    private String message;
 
     //是否成功
     private boolean success;
