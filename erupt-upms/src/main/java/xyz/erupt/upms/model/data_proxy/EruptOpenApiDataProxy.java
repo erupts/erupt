@@ -9,6 +9,7 @@ import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.upms.model.EruptOpenApi;
+import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -29,6 +30,9 @@ public class EruptOpenApiDataProxy implements DataProxy<EruptOpenApi>, Operation
 
     @Resource
     private EruptDao eruptDao;
+
+    @Resource
+    private EruptTokenService eruptTokenService;
 
     @Override
     public void beforeAdd(EruptOpenApi eruptOpenApi) {
@@ -59,7 +63,7 @@ public class EruptOpenApiDataProxy implements DataProxy<EruptOpenApi>, Operation
     }
 
     private void logoutToken(EruptOpenApi eruptOpenApi) {
-        Optional.ofNullable(eruptOpenApi.getCurrentToken()).ifPresent(it -> eruptUserService.logoutToken(eruptOpenApi.getName(), eruptOpenApi.getCurrentToken()));
+        Optional.ofNullable(eruptOpenApi.getCurrentToken()).ifPresent(it -> eruptTokenService.logoutToken(eruptOpenApi.getName(), eruptOpenApi.getCurrentToken()));
     }
 
     @Override

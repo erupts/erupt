@@ -12,7 +12,6 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
-import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.core.view.EruptApiModel;
@@ -22,9 +21,9 @@ import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
-import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
+import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.vo.EruptMenuVo;
 import xyz.erupt.upms.vo.EruptUserinfoVo;
@@ -61,14 +60,7 @@ public class EruptUserController {
     private HttpServletRequest request;
 
     @Resource
-    private EruptUpmsProp eruptUpmsProp;
-
-    @GetMapping("/erupt-app")
-    public EruptAppProp eruptApp() {
-        eruptAppProp.setHash(this.hashCode());
-        eruptAppProp.setVersion(EruptInformation.getEruptVersion());
-        return eruptAppProp;
-    }
+    private EruptTokenService eruptTokenService;
 
     /**
      * 登录
@@ -85,11 +77,7 @@ public class EruptUserController {
                             @RequestParam(required = false) String verifyCodeMark
     ) {
         if (!eruptUserService.checkVerifyCode(account, verifyCode, verifyCodeMark)) {
-            LoginModel loginModel = new LoginModel();
-            loginModel.setUseVerifyCode(true);
-            loginModel.setReason("验证码错误");
-            loginModel.setPass(false);
-            return loginModel;
+            return new LoginModel(false, "验证码错误", true);
         }
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         LoginModel loginModel;
@@ -119,8 +107,7 @@ public class EruptUserController {
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
             if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
-            sessionService.put(SessionKey.TOKEN_OLINE + loginModel.getToken(), eruptUser.getAccount(), eruptUpmsProp.getExpireTimeByLogin());
-            eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
+            eruptTokenService.loginToken(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
         return loginModel;
@@ -179,7 +166,7 @@ public class EruptUserController {
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
-        eruptUserService.logoutToken(metaUserinfo.getUsername(), token);
+        eruptTokenService.logoutToken(metaUserinfo.getUsername(), token);
         return EruptApiModel.successApi();
     }
 
