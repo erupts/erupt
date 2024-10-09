@@ -13,6 +13,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.service.EruptContextService;
+import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
@@ -41,6 +42,9 @@ public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
 
     @Resource
     private EruptContextService eruptContextService;
+
+    @Resource
+    private EruptTokenService eruptTokenService;
 
     @Override
     @Transactional
@@ -73,7 +77,7 @@ public class BiPublishMenu implements OperationHandler<Bi, BiReleaseModal> {
             eruptDao.persist(biRole);
         }
         //刷新当前用户菜单
-        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
+        eruptTokenService.loginToken(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
         return null;
     }
 
