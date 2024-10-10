@@ -52,7 +52,7 @@ public class PreEruptDataService {
     public Collection<Map<String, Object>> createColumnQuery(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
         List<String> conditionStrings = new ArrayList<>();
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> {
-            String condition = dataProxy.beforeFetch(query.getConditions());
+            String condition = dataProxy.beforeFetch(null == query.getConditions() ? new ArrayList<>() : query.getConditions());
             if (StringUtils.isNotBlank(condition)) {
                 conditionStrings.add(condition);
             }
