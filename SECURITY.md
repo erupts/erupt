@@ -1,3 +1,3 @@
 # Security Policy
 
-Version features see [Update log](https://www.yuque.com/yuepeng/erupt/wdic2w)
+Version features see [Update log](https://www.yuque.com/erupts/erupt/wdic2w)
