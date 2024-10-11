@@ -2,6 +2,7 @@ package xyz.erupt.sample.model;
 
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
@@ -11,7 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
 
-@Erupt(name = "DEMO", dataProxy = DemoDataProxy.class)
+@Erupt(name = "DEMO", dataProxy = DemoDataProxy.class, power = @Power(export = true, importable = true))
 @Table(name = "t_demo")
 @Entity
 public class Demo extends BaseModel {

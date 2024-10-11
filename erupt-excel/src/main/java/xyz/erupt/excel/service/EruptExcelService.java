@@ -232,10 +232,12 @@ public class EruptExcelService {
                             String rn = eruptFieldModel.getFieldReturnName();
                             if (String.class.getSimpleName().equals(rn)) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), getStringCellValue(cell));
-                            } else if (JavaType.NUMBER.equals(rn)) {
+                            } else if (cell.getCellType() == CellType.NUMERIC) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
                             } else if (EruptUtil.isDateField(eruptFieldModel.getFieldReturnName())) {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getSimpleFormatDateTime(cell.getDateCellValue()));
+                            } else {
+                                jsonObject.addProperty(eruptFieldModel.getFieldName(), getStringCellValue(cell));
                             }
                             break;
                     }
