@@ -13,9 +13,9 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.invoke.DataProxyContext;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserPostVo;
@@ -75,7 +75,7 @@ public class LookerOrg extends BaseModel {
             if (null == eruptUser.getEruptOrg()) {
                 throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + I18nTranslate.$translate("upms.no_bind_org"));
             } else {
-                return MetaContext.getErupt().getName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
+                return DataProxyContext.currentClass().getSimpleName() + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId();
             }
         }
 

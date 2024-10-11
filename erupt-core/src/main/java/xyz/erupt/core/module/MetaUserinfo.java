@@ -27,4 +27,6 @@ public class MetaUserinfo {
 
     private List<String> roles; //角色列表
 
+    private String tenantId;
+
 }

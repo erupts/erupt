@@ -62,6 +62,8 @@ public @interface RowOperation {
         SINGLE,
         @Comment("依赖多行数据")
         MULTI,
+        @Comment("仅依赖多行数据，屏蔽单行操作按钮")
+        MULTI_ONLY,
         @Comment("不依赖行数据")
         BUTTON
     }

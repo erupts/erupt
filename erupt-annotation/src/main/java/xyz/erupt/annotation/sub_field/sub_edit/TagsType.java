@@ -13,6 +13,9 @@ public @interface TagsType {
     @Comment("是否允许自定义标签")
     boolean allowExtension() default true;
 
+    @Comment("最大标签数")
+    int maxTagCount() default 9999;
+
     @Transient
     @Comment("可选标签列表")
     String[] tags() default {};

@@ -1,13 +1,14 @@
 package xyz.erupt.excel.service;
 
 import com.google.gson.JsonObject;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.VLModel;
@@ -52,9 +53,10 @@ public class EruptExcelService {
      *
      * @return Workbook
      */
+    @SneakyThrows
     public Workbook exportExcel(EruptModel eruptModel, Page page) {
         // XSSFWorkbook、SXSSFWorkbook
-        Workbook wb = new SXSSFWorkbook();
+        Workbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         sheet.setZoom(160);
         //冻结首行
@@ -239,7 +241,9 @@ public class EruptExcelService {
                     }
                 }
             }
-            listObject.add(jsonObject);
+            if (jsonObject.size() > 0) {
+                listObject.add(jsonObject);
+            }
         }
         return listObject;
     }

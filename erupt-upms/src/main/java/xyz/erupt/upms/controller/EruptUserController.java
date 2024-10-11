@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
-import xyz.erupt.core.util.EruptInformation;
+import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.core.view.EruptApiModel;
@@ -21,9 +21,9 @@ import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
-import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
+import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.vo.EruptMenuVo;
 import xyz.erupt.upms.vo.EruptUserinfoVo;
@@ -60,14 +60,7 @@ public class EruptUserController {
     private HttpServletRequest request;
 
     @Resource
-    private EruptUpmsProp eruptUpmsProp;
-
-    @GetMapping("/erupt-app")
-    public EruptAppProp eruptApp() {
-        eruptAppProp.setHash(this.hashCode());
-        eruptAppProp.setVersion(EruptInformation.getEruptVersion());
-        return eruptAppProp;
-    }
+    private EruptTokenService eruptTokenService;
 
     /**
      * 登录
@@ -84,11 +77,7 @@ public class EruptUserController {
                             @RequestParam(required = false) String verifyCodeMark
     ) {
         if (!eruptUserService.checkVerifyCode(account, verifyCode, verifyCodeMark)) {
-            LoginModel loginModel = new LoginModel();
-            loginModel.setUseVerifyCode(true);
-            loginModel.setReason("验证码错误");
-            loginModel.setPass(false);
-            return loginModel;
+            return new LoginModel(false, "验证码错误", true);
         }
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         LoginModel loginModel;
@@ -118,13 +107,28 @@ public class EruptUserController {
             loginModel.setExpire(this.eruptUserService.getExpireTime());
             loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
             if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
-            sessionService.put(SessionKey.TOKEN_OLINE + loginModel.getToken(), eruptUser.getAccount(), eruptUpmsProp.getExpireTimeByLogin());
-            eruptUserService.cacheUserInfo(eruptUser, loginModel.getToken());
+            eruptTokenService.loginToken(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
         return loginModel;
     }
 
+
+    /**
+     * 修改密码
+     *
+     * @param pwd     旧密码
+     * @param newPwd  新密码
+     * @param newPwd2 确认新密码
+     */
+    @GetMapping(value = "/change-pwd")
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    public EruptApiModel changePwd(@RequestParam("pwd") String pwd, @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
+        pwd = SecretUtil.decodeSecret(pwd, 3);
+        newPwd = SecretUtil.decodeSecret(newPwd, 3);
+        newPwd2 = SecretUtil.decodeSecret(newPwd2, 3);
+        return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
+    }
 
     //用户信息
     @GetMapping("/userinfo")
@@ -157,31 +161,13 @@ public class EruptUserController {
     //登出
     @GetMapping(value = "/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel logout(HttpServletRequest request) {
+    public EruptApiModel logout() {
         String token = eruptContextService.getCurrentToken();
+        MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         Optional.ofNullable(loginProxy).ifPresent(it -> it.logout(token));
-        request.getSession().invalidate();
-        for (String uk : SessionKey.USER_KEY_GROUP) {
-            sessionService.remove(uk + token);
-        }
+        eruptTokenService.logoutToken(metaUserinfo.getUsername(), token);
         return EruptApiModel.successApi();
-    }
-
-    /**
-     * 修改密码
-     *
-     * @param pwd     旧密码
-     * @param newPwd  新密码
-     * @param newPwd2 确认新密码
-     */
-    @GetMapping(value = "/change-pwd")
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
-    public EruptApiModel changePwd(@RequestParam("pwd") String pwd, @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
-        pwd = SecretUtil.decodeSecret(pwd, 3);
-        newPwd = SecretUtil.decodeSecret(newPwd, 3);
-        newPwd2 = SecretUtil.decodeSecret(newPwd2, 3);
-        return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 
     /**

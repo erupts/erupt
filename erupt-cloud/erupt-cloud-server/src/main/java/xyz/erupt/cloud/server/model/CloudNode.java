@@ -10,9 +10,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.ExprBool;
-import xyz.erupt.annotation.sub_erupt.Layout;
-import xyz.erupt.annotation.sub_erupt.RowOperation;
-import xyz.erupt.annotation.sub_erupt.Tpl;
+import xyz.erupt.annotation.sub_erupt.*;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -48,7 +46,7 @@ import javax.persistence.*;
                         title = "节点日志", mode = RowOperation.Mode.SINGLE,
                         ifExpr = "item.version && item.version != '-'",
                         show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.ERUPT_CLOUD_NODE_LOG),
-                        type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/erupt-log.html", width = "85%")
+                        type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/erupt-log.html", height = "80%", openWay = OpenWay.DRAWER, drawerPlacement = Placement.BOTTOM)
                 ),
         }, layout = @Layout(tableLeftFixed = 1, pageSize = 30)
 )

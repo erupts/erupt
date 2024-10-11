@@ -43,8 +43,6 @@ import java.time.LocalDateTime;
 @Setter
 public class EruptMenu extends MetaModel {
 
-    public static final String CODE = "code";
-
     @EruptField(
             views = @View(title = "名称"),
             edit = @Edit(

@@ -64,6 +64,8 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
                 newList.add(mongoObjectToMap(obj));
             }
             page.setList(newList);
+        } else {
+            page.setList(new ArrayList<>());
         }
         return page;
     }
@@ -86,27 +88,28 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
             String conditionKey = condition.getKey();
             EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(conditionKey);
             String mongoFieldName = this.populateMapping(eruptModel, conditionKey);
-            Object value = this.convertConditionValue(condition, eruptFieldModel);
-            switch (condition.getExpression()) {
-                case EQ:
-                    query.addCriteria(Criteria.where(mongoFieldName).is(value));
-                    break;
-                case LIKE:
-                    query.addCriteria(Criteria.where(mongoFieldName).regex("^.*" + value + ".*$"));
-                    break;
-                case RANGE:
-                    List<?> list = (List<?>) value;
-                    query.addCriteria(Criteria.where(mongoFieldName).gte(list.get(0)).lte(list.get(1)));
-                    break;
-                case IN:
-                    // 类型强制转换.
-                    if (value instanceof Collection<?>) {
-                        query.addCriteria(Criteria.where(mongoFieldName).in((Collection<?>) value));
-                    } else {
-                        query.addCriteria(Criteria.where(mongoFieldName).in(value));
-                    }
-                    break;
-            }
+            Optional.ofNullable(this.convertConditionValue(condition, eruptFieldModel)).ifPresent(value -> {
+                switch (condition.getExpression()) {
+                    case EQ:
+                        query.addCriteria(Criteria.where(mongoFieldName).is(value));
+                        break;
+                    case LIKE:
+                        query.addCriteria(Criteria.where(mongoFieldName).regex("^.*" + value + ".*$"));
+                        break;
+                    case RANGE:
+                        List<?> list = (List<?>) value;
+                        query.addCriteria(Criteria.where(mongoFieldName).gte(list.get(0)).lte(list.get(1)));
+                        break;
+                    case IN:
+                        // 类型强制转换.
+                        if (value instanceof Collection<?>) {
+                            query.addCriteria(Criteria.where(mongoFieldName).in((Collection<?>) value));
+                        } else {
+                            query.addCriteria(Criteria.where(mongoFieldName).in(value));
+                        }
+                        break;
+                }
+            });
         }
     }
 

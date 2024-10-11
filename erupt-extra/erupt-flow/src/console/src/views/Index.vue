@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    <org-picker type="user" ref="orgPicker" :selected="select" @ok="selected"></org-picker>
+    <org-picker ref="orgPicker" :selected="select" type="user" @ok="selected"></org-picker>
   </div>
 </template>
 

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.12.14</version>
+    <version>1.12.16</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>1.8</java.version>
-        <spring.boot.version>2.7.10</spring.boot.version>
+        <spring.boot.version>2.7.18</spring.boot.version>
     </properties>
 
     <!--
