@@ -18,6 +18,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.constant.RegexConst;
+import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.upms.looker.LookerSelf;
 import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 import xyz.erupt.upms.model.input.ResetPassword;
@@ -25,7 +26,9 @@ import xyz.erupt.upms.model.input.ResetPasswordExec;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -204,6 +207,18 @@ public class EruptUser extends LookerSelf {
 
     public EruptUser(Long id) {
         this.setId(id);
+    }
+
+    public MetaUserinfo toMetaUser(){
+        MetaUserinfo metaUserinfo = new MetaUserinfo();
+        metaUserinfo.setId(this.getId());
+        metaUserinfo.setSuperAdmin(this.getIsAdmin());
+        metaUserinfo.setAccount(this.getAccount());
+        metaUserinfo.setUsername(this.getName());
+        Optional.ofNullable(this.getRoles()).ifPresent(it-> metaUserinfo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));
+        Optional.ofNullable(this.getEruptPost()).ifPresent(it -> metaUserinfo.setPost(it.getCode()));
+        Optional.ofNullable(this.getEruptOrg()).ifPresent(it -> metaUserinfo.setOrg(it.getCode()));
+        return metaUserinfo;
     }
 
 }

@@ -42,7 +42,11 @@ public class EruptJpaDao {
 
     public void removeEntity(Class<?> eruptClass, Object entity) {
         entityManagerService.entityManagerTran(eruptClass, (em) -> {
-            em.remove(em.merge(entity));
+            if (em.contains(entity)) {
+                em.remove(entity);
+            } else {
+                em.remove(em.merge(entity));
+            }
         });
     }
 

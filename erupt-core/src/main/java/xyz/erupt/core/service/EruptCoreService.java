@@ -2,6 +2,7 @@ package xyz.erupt.core.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.fusesource.jansi.Ansi;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -25,6 +26,8 @@ import xyz.erupt.core.view.EruptModel;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * @author YuePeng
@@ -123,16 +126,15 @@ public class EruptCoreService implements ApplicationRunner {
             ERUPTS.put(clazz.getSimpleName(), eruptModel);
             ERUPT_LIST.add(eruptModel);
         });
-        log.info("<" + repeat("===", 20) + ">");
+        log.info("<{}>", repeat("===", 20));
         AtomicInteger moduleMaxCharLength = new AtomicInteger();
         EruptModuleInvoke.invoke(it -> {
             int length = it.info().getName().length();
             if (length > moduleMaxCharLength.get()) moduleMaxCharLength.set(length);
         });
-//        if (eruptProp.isHotBuild()) {
-//            hotBuild = eruptProp.isHotBuild();
-//            log.info(ansi().fg(Ansi.Color.RED).a("Erupt Hot Build").reset().toString());
-//        }
+        if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
+            log.warn(ansi().fg(Ansi.Color.RED).a("Open erupt hot build").reset().toString());
+        }
         EruptModuleInvoke.invoke(it -> {
             it.run();
             MODULES.add(it.info().getName());
@@ -143,7 +145,7 @@ public class EruptCoreService implements ApplicationRunner {
         log.info("Erupt modules : {}", MODULES.size());
         log.info("Erupt classes : {}", ERUPTS.size());
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
-        log.info("<" + repeat("===", 20) + ">");
+        log.info("<{}>", repeat("===", 20));
     }
 
     private String fillCharacter(String character, int targetWidth) {

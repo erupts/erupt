@@ -5,9 +5,11 @@ upms.no_bind_post,未绑定的岗位无法查看数据,未綁定的崗位無法�
 upms.no_bind_org,未绑定的组织无法查看数据,未綁定的組織無法查看數據,Unbound organizations cannot view data,Les organisations non liées ne peuvent pas voir les données,結合されていない組織はデータを見ることができません,바인딩되지 않은 조직은 데이터를 볼 수 없습니다,Несвязанные ткани не могут видеть данные,Las organizaciones no vinculadas no pueden ver los datos
 upms.not_super_admin-unable_add,当前用户非超管，无法创建超管用户,當前用戶非超管，無法創建超管用戶,"The current user is not hypermanaged. Therefore, you cannot create an hypermanaged user","L’utilisateur actuel n’est pas supertube, impossible de créer un utilisateur supertube",現在のユーザーはスーパーチューブではないので、スーパーチューブを作成できません。,현재 사용자는 초과 튜브가 아니므로 초과 튜브를 만들 수 없습니다,В настоящее время абонент не является гипертрубкой и не может создать пользователя,"El usuario actual no es supertube, no se puede crear un usuario supertube"
 upms.position_no_org,选择岗位时，所属组织必填,選擇崗位時，所屬組織必填,"When selecting a position, the organization is required",Obligatoire pour l’organisation affiliée lors de la sélection d’un poste,部署を選ぶとき、所属組織は必ず記入します。,부서 선택시 소속 조직은 필수이다,"При выборе места, принадлежащая организации заполняет его",Requerido por la organización al seleccionar un puesto
+upms.account_pwd_error,账号或密码错误,賬號或密碼錯誤,Incorrect account or password,Le nom d'utilisateur ou le mot de passe est incorrect,アカウントまたはパスワードが間違っています,아이디 또는 비밀번호가 틀렸습니다,Неверный логин или пароль,L'account o la password sono errati
 [erupt],,,,,,,,
 编码,编码,編碼,Code,codage,コード化です,인 코딩,закодирова,codificación
 名称,名称,名稱,Title,dénomination,名前です,이름,назван,El nombre
+值,值,值,value,valeur,値,값,значение,valore
 备注,备注,備註,Remark,remarques,備考です,비고,примечан,comentar
 用户名,用户名,用戶名,Account,Nom de l’utilisateur,ユーザー名です,사용자 이름,Имя пользователя.,Nombre de usuario
 姓名,姓名,姓名,Name,Le nom,名前です,이름,им,Los nombres
@@ -102,4 +104,7 @@ IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,I
 系统日志,系统日志,系統日誌,System Log,Journal système,システム ログ,시스템 로그,Системный журнал,Registro di sistema
 代码生成,代码生成,代碼生成,Code generation,Génération de code,コード生成です,코드 생성,Генерация кода,Generación de código
 生成Erupt代码,生成Erupt代码,生成Erupt代碼,Erupt code is generated,Générer du code Erupt,Eruptコードを生成します,erupt 코드를 생성한다,Генерирует код эрупта,Generando código Erupt
-,,,,,,,,
+更新秘钥,更新秘钥,更新密鑰,Update secret key,Mettre à jour la clé secrète,更新キー,업데이트 키,Обновление секретного ключа,Aggiornamento della chiave segreta
+Token有效期,Token 有效期,Token 有效期,Token validity period,Période de validité du token,トークン有効期間,토큰 유효 기간,Срок действия токена,Periodo di validità del token
+绑定用户权限,绑定用户权限,綁定用戶權限,Bind user permissions,Lier les autorisations d'utilisateur,ユーザー権限のバインド,사용자 권한 바인딩,Привязка прав пользователя,Vincolare i permessi dell'utente
+秘钥,秘钥,密鑰,Secret key,Clé secrète,秘密鍵,비밀 키,Секретный ключ,Chiave segreta

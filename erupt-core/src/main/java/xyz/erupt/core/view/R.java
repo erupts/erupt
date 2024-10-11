@@ -12,11 +12,11 @@ import java.io.Serializable;
 @Setter
 public class R<T> implements Serializable {
 
-    //消息
-    private String msg;
-
     //数据
     private T data;
+
+    //消息
+    private String message;
 
     //是否成功
     private boolean success;
@@ -35,10 +35,18 @@ public class R<T> implements Serializable {
         }};
     }
 
-    public static R<Void> error(String msg) {
-        return new R<Void>() {{
+
+    public static <T> R<T> ok() {
+        return new R<T>() {{
+            this.setSuccess(true);
+            this.setStatus(EruptApiModel.Status.SUCCESS);
+        }};
+    }
+
+    public static <T> R<T> error(String message) {
+        return new R<T>() {{
             this.setSuccess(false);
-            this.setMsg(msg);
+            this.setMessage(message);
             this.setStatus(EruptApiModel.Status.ERROR);
         }};
     }
