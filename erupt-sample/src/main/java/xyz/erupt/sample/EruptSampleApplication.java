@@ -1,4 +1,4 @@
-package xyz.erupt.sample.job;
+package xyz.erupt.sample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
