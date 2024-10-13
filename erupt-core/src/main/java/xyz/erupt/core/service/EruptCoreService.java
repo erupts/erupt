@@ -57,7 +57,7 @@ public class EruptCoreService implements ApplicationRunner {
             if (null == ERUPTS.get(eruptName)) {
                 return null;
             } else {
-                return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz());
+                return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz(), false);
             }
         } else {
             return ERUPTS.get(eruptName);
@@ -69,7 +69,7 @@ public class EruptCoreService implements ApplicationRunner {
         if (ERUPTS.containsKey(eruptClazz.getSimpleName())) {
             throw new RuntimeException(eruptClazz.getSimpleName() + " conflict !");
         }
-        EruptModel eruptModel = initEruptModel(eruptClazz);
+        EruptModel eruptModel = initEruptModel(eruptClazz, true);
         ERUPTS.put(eruptClazz.getSimpleName(), eruptModel);
         ERUPT_LIST.add(eruptModel);
     }
@@ -94,7 +94,7 @@ public class EruptCoreService implements ApplicationRunner {
         return em;
     }
 
-    private static EruptModel initEruptModel(Class<?> clazz) {
+    private static EruptModel initEruptModel(Class<?> clazz, boolean starting) {
         // erupt class data to memory
         EruptModel eruptModel = new EruptModel(clazz);
         // erupt field data to memory
@@ -102,7 +102,7 @@ public class EruptCoreService implements ApplicationRunner {
         eruptModel.setEruptFieldMap(new LinkedCaseInsensitiveMap<>());
         ReflectUtil.findClassAllFields(clazz, field -> Optional.ofNullable(field.getAnnotation(EruptField.class))
                 .ifPresent(ignore -> {
-                    EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
+                    EruptFieldModel eruptFieldModel = new EruptFieldModel(field, starting);
                     eruptModel.getEruptFieldModels().add(eruptFieldModel);
                     if (!eruptModel.getEruptFieldMap().containsKey(field.getName())) {
                         eruptModel.getEruptFieldMap().put(field.getName(), eruptFieldModel);
@@ -122,7 +122,7 @@ public class EruptCoreService implements ApplicationRunner {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(Erupt.class)
         }, clazz -> {
-            EruptModel eruptModel = initEruptModel(clazz);
+            EruptModel eruptModel = initEruptModel(clazz, true);
             ERUPTS.put(clazz.getSimpleName(), eruptModel);
             ERUPT_LIST.add(eruptModel);
         });

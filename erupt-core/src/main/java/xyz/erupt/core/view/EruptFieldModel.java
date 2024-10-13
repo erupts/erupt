@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.JavaType;
-import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.exception.ExceptionAnsi;
@@ -18,7 +17,6 @@ import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.util.TypeUtil;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 /**
  * @author YuePeng
@@ -36,6 +34,8 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private transient AnnotationProxy<EruptField, Void> eruptFieldAnnotationProxy = new EruptFieldProxy();
 
+    private transient boolean starting = false;
+
     private String fieldName;
 
     private JsonObject eruptFieldJson;
@@ -44,7 +44,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private Object componentValue;
 
-    public EruptFieldModel(Field field) {
+    public EruptFieldModel(Field field, boolean starting) {
         this.field = field;
         this.eruptField = field.getAnnotation(EruptField.class);
         Edit edit = eruptField.edit();
@@ -68,13 +68,15 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
                 }
                 break;
         }
+        this.starting = starting;
         this.eruptField = eruptFieldAnnotationProxy.newProxy(this.getEruptField());
         //校验注解的正确性
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
+        this.starting = false;
     }
 
     public EruptField getEruptField() {
-        ProxyContext.set(field);
+        ProxyContext.set(field, this.starting);
         return eruptField;
     }
 
