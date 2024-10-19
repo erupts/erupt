@@ -49,7 +49,7 @@ public class EruptAppProp {
     };
 
     //自定义配置
-    private Map<String, Object> properties;
+    private Map<String, Object> properties = new HashMap<>();
 
     //重置密码功能开关
     private Boolean resetPwd = true;
@@ -64,9 +64,6 @@ public class EruptAppProp {
 
     //注册自定义属性
     public void registerProp(String key, Object value) {
-        if (null == this.properties) {
-            this.properties = new HashMap<>();
-        }
         this.properties.put(key, value);
     }
 
