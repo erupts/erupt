@@ -34,6 +34,4 @@ public class EruptUserinfoVo {
     //角色列表
     private List<String> roles;
 
-    private String tenantId;
-
 }
