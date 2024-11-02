@@ -1,6 +1,7 @@
 package xyz.erupt.core.module;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.constant.MenuStatus;
@@ -12,6 +13,7 @@ import xyz.erupt.core.constant.MenuTypeEnum;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class MetaMenu {
 
     private Long id; //无需传递此参数
@@ -31,9 +33,6 @@ public class MetaMenu {
     private String icon;
 
     private MetaMenu parentMenu;
-
-    public MetaMenu() {
-    }
 
     public static MetaMenu createRootMenu(String code, String name, String icon, Integer sort) {
         MetaMenu metaMenu = new MetaMenu();

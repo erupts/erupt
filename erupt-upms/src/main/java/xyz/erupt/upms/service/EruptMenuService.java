@@ -15,7 +15,6 @@ import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.util.UPMSUtil;
-import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -39,15 +38,6 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Resource
     private EruptTokenService eruptTokenService;
-
-    public static List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
-        List<EruptMenuVo> list = new ArrayList<>();
-        menus.stream().filter(menu -> menu.getStatus() == MenuStatus.OPEN.getValue()).forEach(menu -> {
-            Long pid = null == menu.getParentMenu() ? null : menu.getParentMenu().getId();
-            list.add(new EruptMenuVo(menu.getId(), menu.getCode(), menu.getName(), menu.getType(), menu.getValue(), menu.getIcon(), pid));
-        });
-        return list;
-    }
 
     public List<EruptMenu> getUserAllMenu(EruptUser eruptUser) {
         if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
