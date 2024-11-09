@@ -83,7 +83,7 @@ public class EruptMenu extends MetaModel {
     )
     private String type;
 
-//    @Column(name = "\"value\"")
+    //@Column(name = "\"value\"")
     @EruptField(
             edit = @Edit(
                     title = "类型值"
@@ -155,7 +155,7 @@ public class EruptMenu extends MetaModel {
         metaMenu.setName(this.getName());
         metaMenu.setType(this.getType());
         metaMenu.setValue(this.getValue());
-        metaMenu.setStatus(MenuStatus.valueOf(this.getStatus()));
+        metaMenu.setStatus(null != this.getStatus() ? MenuStatus.valueOf(this.getStatus()) : MenuStatus.OPEN);
         metaMenu.setSort(this.getSort());
         metaMenu.setIcon(this.getIcon());
         metaMenu.setParentMenu(null == this.getParentMenu() ? null : this.getParentMenu().toMetaMenu());
