@@ -10,7 +10,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -212,7 +211,7 @@ public class EruptExcelService {
                                             cellIndexJoinEruptMap.get(cellNum).get(cell.getStringCellValue()).toString());
                                 }
                             } catch (Exception e) {
-                                throw new Exception(edit.title() + " -> " + getStringCellValue(cell) + "数据不存在");
+                                throw new Exception(edit.title() + " → " + getStringCellValue(cell) + " not found");
                             }
                             jsonObject.add(eruptFieldModel.getFieldName(), jo);
                             break;
@@ -221,24 +220,23 @@ public class EruptExcelService {
                                 jsonObject.addProperty(eruptFieldModel.getFieldName(), cellIndexJoinEruptMap.get(cellNum)
                                         .get(cell.getStringCellValue()).toString());
                             } catch (Exception e) {
-                                throw new Exception(edit.title() + " -> " + getStringCellValue(cell) + "数据不存在");
+                                throw new Exception(edit.title() + " → " + getStringCellValue(cell) + " not found");
                             }
                             break;
                         case BOOLEAN:
                             Boolean bool = (Boolean) cellIndexJoinEruptMap.get(cellNum).get(cell.getStringCellValue());
                             jsonObject.addProperty(eruptFieldModel.getFieldName(), bool);
                             break;
+                        case DATE:
+                            jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getSimpleFormatDateTime(cell.getDateCellValue()));
+                            break;
+                        case NUMBER:
+                            DataFormatter formatter = new DataFormatter();
+                            String text = formatter.formatCellValue(cell);
+                            jsonObject.addProperty(eruptFieldModel.getFieldName(), text);
+                            break;
                         default:
-                            String rn = eruptFieldModel.getFieldReturnName();
-                            if (String.class.getSimpleName().equals(rn)) {
-                                jsonObject.addProperty(eruptFieldModel.getFieldName(), getStringCellValue(cell));
-                            } else if (cell.getCellType() == CellType.NUMERIC) {
-                                jsonObject.addProperty(eruptFieldModel.getFieldName(), cell.getNumericCellValue());
-                            } else if (EruptUtil.isDateField(eruptFieldModel.getFieldReturnName())) {
-                                jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getSimpleFormatDateTime(cell.getDateCellValue()));
-                            } else {
-                                jsonObject.addProperty(eruptFieldModel.getFieldName(), getStringCellValue(cell));
-                            }
+                            jsonObject.addProperty(eruptFieldModel.getFieldName(), getStringCellValue(cell));
                             break;
                     }
                 }
