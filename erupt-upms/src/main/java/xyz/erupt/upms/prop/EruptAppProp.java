@@ -5,6 +5,9 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author YuePeng
  * date 2021/1/22 10:11
@@ -45,6 +48,9 @@ public class EruptAppProp {
             "es-ES"       // español
     };
 
+    //自定义配置
+    private Map<String, Object> properties = new HashMap<>();
+
     //重置密码功能开关
     private Boolean resetPwd = true;
 
@@ -54,6 +60,11 @@ public class EruptAppProp {
         } else {
             this.locales = locales;
         }
+    }
+
+    //注册自定义属性
+    public void registerProp(String key, Object value) {
+        this.properties.put(key, value);
     }
 
 

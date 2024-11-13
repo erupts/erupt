@@ -50,6 +50,7 @@ public class GsonFactory {
                     return new JsonPrimitive(src);
                 }
             })
+            .setObjectToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
             .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
 
     @Getter

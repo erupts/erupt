@@ -26,14 +26,17 @@ public class ProxyContext {
 
     private boolean i18n = false;
 
+    private boolean starting = false;
+
     public static void set(Class<?> clazz) {
         proxyContextThreadLocal.get().setClazz(clazz);
         proxyContextThreadLocal.get().setI18n(null != clazz.getAnnotation(EruptI18n.class));
     }
 
-    public static void set(Field field) {
+    public static void set(Field field, boolean starting) {
         proxyContextThreadLocal.get().setField(field);
-        ProxyContext.set(field.getDeclaringClass());
+        proxyContextThreadLocal.get().setStarting(starting);
+        set(field.getDeclaringClass());
     }
 
     public static ProxyContext get() {
