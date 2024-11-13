@@ -120,7 +120,7 @@ public class EruptUserService {
      * @param password 密码
      * @param isMd5    是否加密
      * @param inputPwd 前端输入的密码
-     * @return
+     * @return 密码是否正确
      */
     public boolean checkPwd(String account, String password, boolean isMd5, String inputPwd) {
         if (eruptAppProp.getPwdTransferEncrypt()) {
