@@ -2,7 +2,6 @@ package xyz.erupt.upms.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -30,7 +29,6 @@ import java.util.Set;
 @EruptI18n
 @Getter
 @Setter
-@Component
 public class EruptRole extends HyperModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)

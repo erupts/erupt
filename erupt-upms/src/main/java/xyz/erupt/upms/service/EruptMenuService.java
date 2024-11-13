@@ -7,7 +7,6 @@ import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
@@ -16,7 +15,6 @@ import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.util.UPMSUtil;
-import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -35,14 +33,11 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     @Resource
     private EruptContextService eruptContextService;
 
-    public List<EruptMenuVo> geneMenuListVo(List<EruptMenu> menus) {
-        List<EruptMenuVo> list = new ArrayList<>();
-        menus.stream().filter(menu -> menu.getStatus() == MenuStatus.OPEN.getValue()).forEach(menu -> {
-            Long pid = null == menu.getParentMenu() ? null : menu.getParentMenu().getId();
-            list.add(new EruptMenuVo(menu.getId(), menu.getCode(), menu.getName(), menu.getType(), menu.getValue(), menu.getIcon(), pid));
-        });
-        return list;
-    }
+    @Resource
+    private EruptUserService eruptUserService;
+
+    @Resource
+    private EruptTokenService eruptTokenService;
 
     public List<EruptMenu> getUserAllMenu(EruptUser eruptUser) {
         if (null != eruptUser.getIsAdmin() && eruptUser.getIsAdmin()) {
@@ -77,9 +72,8 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
     }
 
 
-    private void flushCache() {
-        EruptUserService eruptUserService = EruptSpringUtil.getBean(EruptUserService.class);
-        eruptUserService.cacheUserInfo(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
+    public void flushMenuCache() {
+        eruptTokenService.loginToken(eruptUserService.getCurrentEruptUser(), eruptContextService.getCurrentToken());
     }
 
     @Override
@@ -98,7 +92,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
                 }
             }
         }
-        this.flushCache();
+        this.flushMenuCache();
     }
 
     @Override
@@ -127,7 +121,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
 
     @Override
     public void afterDelete(EruptMenu eruptMenu) {
-        this.flushCache();
+        this.flushMenuCache();
     }
 
 }

@@ -24,6 +24,15 @@ public enum MenuStatus {
         this.label = label;
     }
 
+    public static MenuStatus valueOf(int value) {
+        for (MenuStatus menuStatus : MenuStatus.values()) {
+            if (menuStatus.getValue() == value) {
+                return menuStatus;
+            }
+        }
+        return null;
+    }
+
     public static class ChoiceFetch implements ChoiceFetchHandler {
 
         @Override

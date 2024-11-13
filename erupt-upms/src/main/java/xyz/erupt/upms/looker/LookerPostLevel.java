@@ -14,9 +14,9 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.invoke.DataProxyContext;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserPostVo;
@@ -79,7 +79,7 @@ public class LookerPostLevel extends BaseModel {
             if (null == eruptUser.getEruptOrg() || null == eruptUser.getEruptPost()) {
                 throw new EruptWebApiRuntimeException(eruptUser.getName() + " " + I18nTranslate.$translate("upms.no_bind_post"));
             }
-            String eruptName = MetaContext.getErupt().getName();
+            String eruptName = DataProxyContext.currentClass().getSimpleName();
             return "(" + eruptName + ".createUser.id = " + eruptUserService.getCurrentUid()
                     + " or " + eruptName + ".createUser.eruptOrg.id = " + eruptUser.getEruptOrg().getId() + " and "
                     + eruptName + ".createUser.eruptPost.weight < " + eruptUser.getEruptPost().getWeight() + ")";

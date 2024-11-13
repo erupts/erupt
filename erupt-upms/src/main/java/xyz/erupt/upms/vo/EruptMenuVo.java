@@ -1,10 +1,13 @@
 package xyz.erupt.upms.vo;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import xyz.erupt.core.module.MetaMenu;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class EruptMenuVo {
 
     private Long id;
@@ -31,6 +34,9 @@ public class EruptMenuVo {
         this.pid = pid;
     }
 
-    public EruptMenuVo() {
+    public static EruptMenuVo fromMetaMenu(MetaMenu metaMenu){
+        return new EruptMenuVo(metaMenu.getId(), metaMenu.getCode(), metaMenu.getName(), metaMenu.getType(), metaMenu.getValue(),
+                metaMenu.getIcon(), metaMenu.getParentMenu() == null ? null : metaMenu.getParentMenu().getId());
     }
+
 }

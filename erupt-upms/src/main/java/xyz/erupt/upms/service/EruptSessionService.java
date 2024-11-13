@@ -47,6 +47,32 @@ public class EruptSessionService {
         }
     }
 
+    public Long increment(String key, long timeout) {
+        return increment(key, timeout, TimeUnit.MINUTES);
+    }
+
+    public Long increment(String key, long timeout, TimeUnit timeUnit) {
+        if (eruptProp.isRedisSession()) {
+            try {
+                return stringRedisTemplate.opsForValue().increment(key, 1);
+            } finally {
+                stringRedisTemplate.expire(key, timeout, timeUnit);
+            }
+        } else {
+            Long num = (Long) request.getSession().getAttribute(key);
+            request.getSession().setAttribute(key, null == num ? 1L : ++num);
+            return num;
+        }
+    }
+
+    public boolean exist(String key) {
+        if (eruptProp.isRedisSession()) {
+            return Boolean.TRUE.equals(stringRedisTemplate.hasKey(key));
+        } else {
+            return null != request.getSession().getAttribute(key);
+        }
+    }
+
     public void remove(String key) {
         if (eruptProp.isRedisSession()) {
             stringRedisTemplate.delete(key);

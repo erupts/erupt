@@ -12,7 +12,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptOpenApi;
-import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.vo.OpenApiTokenVo;
 
 import javax.transaction.Transactional;
@@ -30,7 +30,7 @@ public class EruptOpenApiController {
 
     private final EruptDao eruptDao;
 
-    private final EruptUserService eruptUserService;
+    private final EruptTokenService eruptTokenService;
 
     /**
      * 获取token
@@ -49,10 +49,10 @@ public class EruptOpenApiController {
         if (!eruptOpenApi.getStatus()) throw new EruptWebApiRuntimeException("locked down");
         String token = "ER" + RandomStringUtils.randomAlphanumeric(24).toUpperCase();
         LocalDateTime expire = LocalDateTime.now().plusMinutes(eruptOpenApi.getExpire());
-        eruptUserService.createToken(eruptOpenApi.getEruptUser(), token, eruptOpenApi.getExpire());
+        eruptTokenService.loginToken(eruptOpenApi.getEruptUser(), token, eruptOpenApi.getExpire());
         if (null != eruptOpenApi.getCurrentToken()) {
             log.info("open-api remove old token {}", eruptOpenApi.getName());
-            eruptUserService.logoutToken(eruptOpenApi.getName(), eruptOpenApi.getCurrentToken());
+            eruptTokenService.logoutToken(eruptOpenApi.getName(), eruptOpenApi.getCurrentToken());
         }
         eruptOpenApi.setCurrentToken(token);
         return R.ok(new OpenApiTokenVo(token, expire));
