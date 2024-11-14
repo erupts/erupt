@@ -300,13 +300,7 @@ public class Simple extends BaseModel {
 <!--用户权限管理-->
 <dependency>
   <groupId>xyz.erupt</groupId>
-  <artifactId>erupt-upms</artifactId>
-  <version>LATEST-VERSION</version>
-</dependency>
-<!--接口数据安全-->
-<dependency>
-  <groupId>xyz.erupt</groupId>
-  <artifactId>erupt-security</artifactId>
+  <artifactId>erupt-admin</artifactId>
   <version>LATEST-VERSION</version>
 </dependency>
 <!--后台WEB界面-->
