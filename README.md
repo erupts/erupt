@@ -30,7 +30,7 @@
 ---
 
 <p align="center">
-    <a href="https://www.yuque.com/erupts/erupt/ggbcv9">Erupt Cloud【分布式配置中台】</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/erupts/erupt/ggbcv9">Erupt Cloud【分布式云配置】</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts/erupt/hstvzf">Erupt BI 【数据分析】</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts/erupt/xviwe9bimrmae26t">Erupt Tenant 【多租户】</a>
 </p>
