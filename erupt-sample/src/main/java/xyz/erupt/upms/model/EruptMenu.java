@@ -1,6 +1,7 @@
 package xyz.erupt.upms.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -41,9 +42,8 @@ import java.time.LocalDateTime;
 @EruptI18n
 @Getter
 @Setter
+@NoArgsConstructor
 public class EruptMenu extends MetaModel {
-
-    public static final String CODE = "code";
 
     @EruptField(
             views = @View(title = "名称"),
@@ -125,9 +125,6 @@ public class EruptMenu extends MetaModel {
     )
     private String param;
 
-    public EruptMenu() {
-    }
-
     public EruptMenu(String code, String name, String type, String value, Integer status, Integer sort, String icon, EruptMenu parentMenu) {
         this.code = code;
         this.name = name;
@@ -149,6 +146,20 @@ public class EruptMenu extends MetaModel {
         this.sort = sort;
         this.setStatus(MenuStatus.OPEN.getValue());
         this.setCreateTime(LocalDateTime.now());
+    }
+
+    public MetaMenu toMetaMenu() {
+        MetaMenu metaMenu = new MetaMenu();
+        metaMenu.setId(this.getId());
+        metaMenu.setCode(this.getCode());
+        metaMenu.setName(this.getName());
+        metaMenu.setType(this.getType());
+        metaMenu.setValue(this.getValue());
+        metaMenu.setStatus(null != this.getStatus() ? MenuStatus.valueOf(this.getStatus()) : MenuStatus.OPEN);
+        metaMenu.setSort(this.getSort());
+        metaMenu.setIcon(this.getIcon());
+        metaMenu.setParentMenu(null == this.getParentMenu() ? null : this.getParentMenu().toMetaMenu());
+        return metaMenu;
     }
 
     public static EruptMenu fromMetaMenu(MetaMenu metaMenu) {

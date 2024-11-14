@@ -11,9 +11,7 @@
     </parent>
 
     <artifactId>erupt-sample</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>erupt-sample</name>
-    <description>erupt-sample</description>
+
     <properties>
         <java.version>1.8</java.version>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -29,6 +27,7 @@
             <artifactId>erupt-web</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
         <!-- optional -->
         <dependency>
             <groupId>xyz.erupt</groupId>
@@ -53,38 +52,20 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>lib</directory>
-                <targetPath>BOOT-INF/lib/</targetPath>
-                <includes>
-                    <include>*.jar</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <fork>true</fork>
-                    <includeSystemScope>true</includeSystemScope>
+                    <mainClass>xyz.erupt.sample.EruptSampleApplication</mainClass>
                 </configuration>
-            </plugin>
-            <plugin>
-                <!-- 指定maven编译的jdk版本 -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <verbose>true</verbose>
-                    <fork>true</fork>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
