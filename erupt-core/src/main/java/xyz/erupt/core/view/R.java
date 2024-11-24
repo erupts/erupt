@@ -31,6 +31,7 @@ public class R<T> implements Serializable {
         return new R<T>() {{
             this.setSuccess(true);
             this.setData(data);
+            this.setPromptWay(EruptApiModel.PromptWay.NONE);
             this.setStatus(EruptApiModel.Status.SUCCESS);
         }};
     }
