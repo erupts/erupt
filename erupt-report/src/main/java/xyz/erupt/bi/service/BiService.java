@@ -21,6 +21,7 @@ import xyz.erupt.core.cache.EruptCache;
 import xyz.erupt.core.cache.EruptCacheLRU;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptMutualConst;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -247,6 +248,7 @@ public class BiService {
         param.put(ScriptPlaceholderConst.REQUEST_PLACEHOLDER, request);
         param.put(ScriptPlaceholderConst.RESPONSE_PLACEHOLDER, response);
         param.put(ScriptPlaceholderConst.USER_ID_PLACEHOLDER, eruptUserService.getCurrentUid());
+        param.putAll(MetaContext.getVars());
     }
 
     @SneakyThrows
