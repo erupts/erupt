@@ -35,29 +35,29 @@ public class GsonFactory implements ToNumberStrategy {
                     -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)))
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
-            .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> {
-                if (src > JS_MAX_NUMBER || src < JS_MIN_NUMBER) {
-                    return new JsonPrimitive((src).toString());
-                } else {
-                    return new JsonPrimitive(src);
-                }
-            })
-            .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> {
-                if (src > JS_MAX_NUMBER || src < JS_MIN_NUMBER) {
-                    return new JsonPrimitive((src).toString());
-                } else {
-                    return new JsonPrimitive(src);
-                }
-            })
-            .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> {
-                if (src.longValue() > JS_MAX_NUMBER || src.longValue() < JS_MIN_NUMBER) {
-                    return new JsonPrimitive((src).toString());
-                } else {
-                    return new JsonPrimitive(src);
-                }
-            })
+            .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> serializeDoubleValue(src))
+            .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
             .setObjectToNumberStrategy(new GsonFactory())
             .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
+
+    private static JsonPrimitive serializeSafeNumber(Number src) {
+        if (src.doubleValue() > JS_MAX_NUMBER || src.doubleValue() < JS_MIN_NUMBER) {
+            return new JsonPrimitive(src.toString());
+        } else {
+            return new JsonPrimitive(src);
+        }
+    }
+
+    private static JsonPrimitive serializeDoubleValue(Double src) {
+        if (src > JS_MAX_NUMBER || src < JS_MIN_NUMBER) {
+            return new JsonPrimitive(new BigDecimal(src).toPlainString());
+        }
+        if (Math.abs(src - src.longValue()) < Math.ulp(src)) {
+            return new JsonPrimitive(src.longValue());
+        } else {
+            return new JsonPrimitive(String.format("%.15g", src).replaceAll("\\.?0+$", ""));
+        }
+    }
 
     @Getter
     private static final Gson gson = gsonBuilder.create();
