@@ -17,7 +17,10 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.util.UPMSUtil;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +48,7 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
         } else {
             Set<EruptMenu> menuSet = new HashSet<>();
             eruptUser.getRoles().stream().filter(EruptRole::getStatus).map(EruptRole::getMenus).forEach(menuSet::addAll);
-            return menuSet.stream().filter(it -> it.getStatus() != MenuStatus.DISABLE.getValue()).sorted(Comparator.comparing(EruptMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).collect(Collectors.toList());
+            return menuSet.stream().filter(it -> it.getStatus() != MenuStatus.DISABLE.getValue()).collect(Collectors.toList());
         }
     }
 
