@@ -60,6 +60,10 @@ public class EruptTokenService {
         eruptSessionService.put(SessionKey.TOKEN_OLINE + token, metaUserinfo.getAccount(), tokenExpire);
     }
 
+    public boolean tokenExist(String token){
+        return eruptSessionService.exist(SessionKey.TOKEN_OLINE + token);
+    }
+
     public void loginToken(EruptUser eruptUser, String token, Integer tokenExpire) {
         List<MetaMenu> metaMenus = new ArrayList<>();
         List<EruptMenu> eruptMenus = EruptSpringUtil.getBean(EruptMenuService.class).getUserAllMenu(eruptUser);
