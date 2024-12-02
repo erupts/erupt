@@ -16,12 +16,12 @@ public class PingCommand extends SocketCommand<Void> {
 
     @Override
     protected String command() {
-        return "ping";
+        return "PING";
     }
 
     @Override
     public void handler(Session session, Void message) {
-        session.getAsyncRemote().sendText("pong");
+        session.getAsyncRemote().sendText("PONG");
     }
 
 }
