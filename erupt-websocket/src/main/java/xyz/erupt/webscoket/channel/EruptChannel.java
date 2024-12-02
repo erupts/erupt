@@ -7,6 +7,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.webscoket.command.base.SocketCommand;
+import xyz.erupt.webscoket.constant.EruptWebsocketConst;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -34,8 +35,8 @@ public class EruptChannel {
     }
 
     @OnMessage
-    public void onMessage(Session session, String message) throws IOException {
-        int commandIndex = message.contains(",") ? message.indexOf(",") : message.length();
+    public void onMessage(Session session, String message) {
+        int commandIndex = message.contains(EruptWebsocketConst.COMMAND_SYNTAX) ? message.indexOf(EruptWebsocketConst.COMMAND_SYNTAX) : message.length();
         String command = message.substring(0, commandIndex);
         String data = message.substring(commandIndex);
         SocketCommand<Object> socketCommand = SocketCommand.getCommand(command);
