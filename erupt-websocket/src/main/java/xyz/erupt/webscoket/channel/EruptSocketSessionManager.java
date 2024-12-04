@@ -2,10 +2,11 @@ package xyz.erupt.webscoket.channel;
 
 import org.springframework.stereotype.Component;
 
-import javax.websocket.CloseReason;
 import javax.websocket.Session;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,22 +17,29 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EruptSocketSessionManager {
 
     // <token,Session>
-    private static final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
+    private static final Map<String, List<Session>> sessionMap = new ConcurrentHashMap<>();
 
     // <sessionId,token>
-    private static final Map<String, String> sessionTokens = new ConcurrentHashMap<>();
+    private static final Map<String, String> sessionTokenMap = new ConcurrentHashMap<>();
 
     public static void register(String token, Session session) {
-        sessionMap.put(token, session);
-        sessionTokens.put(session.getId(), token);
+        sessionMap.computeIfAbsent(token, k -> new Vector<>());
+        sessionMap.get(token).add(session);
+        sessionTokenMap.put(session.getId(), token);
     }
 
-    public static void close(Session session, CloseReason closeReason) {
-        Optional.ofNullable(sessionTokens.remove(session.getId())).ifPresent(sessionMap::remove);
+    public static void close(Session session) {
+        Optional.ofNullable(sessionTokenMap.remove(session.getId())).ifPresent(it->{
+            if (sessionMap.get(it).size() <= 1) {
+                sessionMap.remove(it);
+            }else{
+                sessionMap.get(it).remove(session);
+            }
+        });
 
     }
 
-    public static Session getSession(String token) {
+    public static List<Session> getSession(String token) {
         return sessionMap.get(token);
     }
 

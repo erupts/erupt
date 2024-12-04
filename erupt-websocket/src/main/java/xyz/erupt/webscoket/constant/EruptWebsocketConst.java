@@ -8,6 +8,6 @@ public class EruptWebsocketConst {
 
     public static final String ERUPT_WEBSOCKET = "erupt-websocket";
 
-    public static final String COMMAND_SYNTAX = ":";
+    public static final String COMMAND_JS = "js";
 
 }
