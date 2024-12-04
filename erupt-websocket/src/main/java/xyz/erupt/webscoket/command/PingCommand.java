@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.webscoket.command.base.SocketCommand;
 
 import javax.websocket.Session;
+import java.util.Collections;
 
 /**
  * @author YuePeng
@@ -16,12 +17,12 @@ public class PingCommand extends SocketCommand<Void> {
 
     @Override
     protected String command() {
-        return "PING";
+        return "ping";
     }
 
     @Override
     public void handler(Session session, Void message) {
-        session.getAsyncRemote().sendText("PONG");
+        session.getAsyncRemote().sendText(Collections.singletonList("pong").toString());
     }
 
 }
