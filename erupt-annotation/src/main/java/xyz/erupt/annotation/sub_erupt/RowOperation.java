@@ -27,6 +27,8 @@ public @interface RowOperation {
     @Comment("调用提示,空则不提示")
     String callHint() default "erupt.operation.call_hint";
 
+    @Comment("单行按钮是否折叠显示，适用于按钮过多的场景")
+    boolean fold() default false;
 
     @Comment("图标请参考Font Awesome")
     String icon() default "fa fa-dot-circle-o";
