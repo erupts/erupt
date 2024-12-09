@@ -33,7 +33,7 @@ public class EruptChannel {
             session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Token error"));
             return;
         }
-        EruptSocketSessionManager.register(token.get(0), session);
+        EruptChannelManager.register(token.get(0), session);
     }
 
     @OnMessage
@@ -53,7 +53,7 @@ public class EruptChannel {
         if (closeReason.getCloseCode() != CloseReason.CloseCodes.NORMAL_CLOSURE && closeReason.getCloseCode() != CloseReason.CloseCodes.GOING_AWAY) {
             log.warn("[websocket] disconnect：id={}，{}", session.getId(), closeReason);
         }
-        EruptSocketSessionManager.close(session);
+        EruptChannelManager.close(session);
     }
 
     // 连接异常
