@@ -30,7 +30,7 @@ public class EruptChannel {
     public void open(Session session) {
         List<String> token = session.getRequestParameterMap().get(EruptMutualConst.TOKEN);
         if (null == token || !EruptSpringUtil.getBean(EruptTokenService.class).tokenExist(token.get(0))) {
-            session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "Token error"));
+            session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Token error"));
             return;
         }
         EruptSocketSessionManager.register(token.get(0), session);
@@ -43,14 +43,14 @@ public class EruptChannel {
         SocketCommand<Object> socketCommand = SocketCommand.getCommand(command.get(0));
         try {
             socketCommand.handler(session, GsonFactory.getGson().fromJson(command.size() == 1 ? null : command.get(1), socketCommand.type));
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("[websocket] Command execution error：{}", e.getMessage());
         }
     }
 
     @OnClose
     public void close(Session session, CloseReason closeReason) {
-        if (closeReason.getCloseCode() != CloseReason.CloseCodes.NORMAL_CLOSURE) {
+        if (closeReason.getCloseCode() != CloseReason.CloseCodes.NORMAL_CLOSURE && closeReason.getCloseCode() != CloseReason.CloseCodes.GOING_AWAY) {
             log.warn("[websocket] disconnect：id={}，{}", session.getId(), closeReason);
         }
         EruptSocketSessionManager.close(session);

@@ -2,6 +2,7 @@ package xyz.erupt.webscoket.command;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.webscoket.command.base.SocketCommand;
 
 import javax.websocket.Session;
@@ -22,7 +23,7 @@ public class PingCommand extends SocketCommand<Void> {
 
     @Override
     public void handler(Session session, Void message) {
-        session.getAsyncRemote().sendText(Collections.singletonList("pong").toString());
+        session.getAsyncRemote().sendText(GsonFactory.getGson().toJson(Collections.singletonList("pong")));
     }
 
 }
