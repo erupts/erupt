@@ -44,14 +44,16 @@ public class EruptWebSocketService {
         }
     }
 
-    @SneakyThrows
     public <T> void send(SocketCommand command, T data) {
         this.send(getCurrentSession(), command, data);
     }
 
-    @SneakyThrows
-    public void sendMessage(String message) {
+    public void sendJsMessage(String message) {
         this.send(SocketCommand.JS, "window.msg.info('" + message + "')");
+    }
+
+    public void sendJsNotify(String title, String message) {
+        this.send(SocketCommand.JS, String.format("window.notify.info('%s', '%s')", title, message));
     }
 
 }
