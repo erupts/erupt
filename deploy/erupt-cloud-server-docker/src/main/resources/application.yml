@@ -11,12 +11,6 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:sa}
     password: ${SPRING_DATASOURCE_PASSWORD:}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.h2.Driver}
-  h2:
-    console:
-      enabled: ${SPRING_H2_CONSOLE_ENABLED:true}
-      path: ${SPRING_H2_CONSOLE_PATH:/h2}
-      settings:
-        web-allow-others: ${SPRING_H2_CONSOLE_WEB_ALLOW_OTHERS:true}
   jpa:
     show-sql: ${SPRING_JPA_SHOW_SQL:false}
     generate-ddl: ${SPRING_JPA_GENERATE_DDL:true}

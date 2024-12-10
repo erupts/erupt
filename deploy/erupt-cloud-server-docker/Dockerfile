@@ -5,7 +5,7 @@ FROM registry.cn-zhangjiakou.aliyuncs.com/barcke-myblog/openjdk
 WORKDIR /app
 
 # 将本地的 jar 文件拷贝到容器中
-COPY target/erupt-server-docker-*.jar /app/EruptServerApplication.jar
+COPY target/erupt-cloud-server-docker-*.jar /app/EruptCloudServerApplication.jar
 
 # 暴露应用运行的端口
 EXPOSE 8080
@@ -14,5 +14,5 @@ EXPOSE 8080
 ENV JAVA_OPTS="-Xms256m -Xmx512m -Xss256k"
 
 # 定义容器启动时执行的命令
-ENTRYPOINT ["java", "-jar", "/app/EruptServerApplication.jar"]
+ENTRYPOINT ["java", "-jar", "/app/EruptCloudServerApplication.jar"]
 CMD ["${JAVA_OPTS}"]
