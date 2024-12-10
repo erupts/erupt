@@ -17,10 +17,10 @@ import xyz.erupt.core.annotation.EruptScan;
 @SpringBootApplication
 @EruptScan
 @EntityScan
-public class EruptServerApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(EruptServerApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 }
