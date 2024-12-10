@@ -10,7 +10,6 @@ import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.upms.prop.EruptAppProp;
-import xyz.erupt.webscoket.constant.EruptWebsocketConst;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -25,6 +24,8 @@ import javax.annotation.Resource;
 @EnableConfigurationProperties
 public class EruptWebSocketAutoConfiguration implements EruptModule {
 
+    public static final String ERUPT_WEBSOCKET = "erupt-websocket";
+
     static {
         EruptModuleInvoke.addEruptModule(EruptWebSocketAutoConfiguration.class);
     }
@@ -34,7 +35,7 @@ public class EruptWebSocketAutoConfiguration implements EruptModule {
 
     @PostConstruct
     public void post() {
-        eruptAppProp.registerProp(EruptWebsocketConst.ERUPT_WEBSOCKET, true);
+        eruptAppProp.registerProp(ERUPT_WEBSOCKET, true);
     }
 
     @Bean
@@ -44,7 +45,7 @@ public class EruptWebSocketAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(EruptWebsocketConst.ERUPT_WEBSOCKET).build();
+        return ModuleInfo.builder().name(ERUPT_WEBSOCKET).build();
     }
 
 }

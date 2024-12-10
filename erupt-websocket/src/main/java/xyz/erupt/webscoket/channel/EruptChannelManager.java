@@ -1,6 +1,9 @@
 package xyz.erupt.webscoket.channel;
 
 import org.springframework.stereotype.Component;
+import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.upms.service.EruptUserService;
+import xyz.erupt.webscoket.model.EruptWsSessionModel;
 
 import javax.websocket.Session;
 import java.util.*;
@@ -14,38 +17,35 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EruptChannelManager {
 
     // <token,Session>
-    private static final Map<String, List<Session>> sessionMap = new ConcurrentHashMap<>();
+    private static final Map<String, EruptWsSessionModel> sessionMap = new ConcurrentHashMap<>();
 
     // <sessionId,token>
     private static final Map<String, String> sessionTokenMap = new ConcurrentHashMap<>();
 
     public static void register(String token, Session session) {
-        sessionMap.computeIfAbsent(token, k -> new Vector<>());
-        sessionMap.get(token).add(session);
+        EruptUserService eruptUserService = EruptSpringUtil.getBean(EruptUserService.class);
+        sessionMap.computeIfAbsent(token, k -> new EruptWsSessionModel(eruptUserService.getSimpleUserInfo(), new Vector<>()));
+        sessionMap.get(token).getSessions().add(session);
         sessionTokenMap.put(session.getId(), token);
     }
 
     public static void close(Session session) {
         Optional.ofNullable(sessionTokenMap.remove(session.getId())).ifPresent(it -> {
-            if (sessionMap.get(it).size() <= 1) {
+            if (sessionMap.get(it).getSessions().size() <= 1) {
                 sessionMap.remove(it);
             } else {
-                sessionMap.get(it).remove(session);
+                sessionMap.get(it).getSessions().remove(session);
             }
         });
 
     }
 
-    public static List<Session> getSession(String token) {
+    public static EruptWsSessionModel getSession(String token) {
         return sessionMap.get(token);
     }
 
-    public static List<Session> getAllSession() {
-        List<Session> sessions = new ArrayList<>();
-        for (List<Session> value : sessionMap.values()) {
-            sessions.addAll(value);
-        }
-        return sessions;
+    public static List<EruptWsSessionModel> getAllSession() {
+        return new ArrayList<>(sessionMap.values());
     }
 
 }
