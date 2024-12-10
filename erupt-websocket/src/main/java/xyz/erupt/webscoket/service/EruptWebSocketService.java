@@ -40,15 +40,13 @@ public class EruptWebSocketService {
     @SneakyThrows
     public <T> void send(EruptWsSessionModel eruptWsSessionModel, SocketCommand command, T data) {
         for (Session session : eruptWsSessionModel.getSessions()) {
-            session.getBasicRemote().sendText(GsonFactory.getGson().toJson(Arrays.asList(command, GsonFactory.getGson().toJson(data))));
+            session.getBasicRemote().sendText(GsonFactory.getGson().toJson(Arrays.asList(command.getCommand(), data)));
         }
     }
 
     @SneakyThrows
     public <T> void send(SocketCommand command, T data) {
-        for (Session session : getCurrentSession().getSessions()) {
-            session.getBasicRemote().sendText(GsonFactory.getGson().toJson(Arrays.asList(command, GsonFactory.getGson().toJson(data))));
-        }
+        this.send(getCurrentSession(), command, data);
     }
 
     @SneakyThrows
