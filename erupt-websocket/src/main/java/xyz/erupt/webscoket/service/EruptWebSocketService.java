@@ -3,13 +3,14 @@ package xyz.erupt.webscoket.service;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.webscoket.channel.EruptChannelManager;
 import xyz.erupt.webscoket.channel.SocketCommand;
+import xyz.erupt.webscoket.model.EruptWsSessionModel;
 
 import javax.annotation.Resource;
 import javax.websocket.Session;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -25,25 +26,27 @@ public class EruptWebSocketService {
     private EruptContextService eruptContextService;
 
     //获取所有已连接会话
-    public List<Session> getAllSession() {
+    public List<EruptWsSessionModel> getAllSession() {
         return EruptChannelManager.getAllSession();
     }
 
     //获取当前操作用户的会话
-    public List<Session> getCurrentSession() {
-        return Optional.ofNullable(EruptChannelManager.getSession(eruptContextService.getCurrentToken())).orElse(new ArrayList<>());
+    public EruptWsSessionModel getCurrentSession() {
+        return Optional.ofNullable(EruptChannelManager.getSession(eruptContextService.getCurrentToken())).orElseThrow(() ->
+                new EruptWebApiRuntimeException("not found websocket session")
+        );
     }
 
     @SneakyThrows
-    public <T> void send(List<Session> sessions, SocketCommand command, T data) {
-        for (Session session : sessions) {
+    public <T> void send(EruptWsSessionModel eruptWsSessionModel, SocketCommand command, T data) {
+        for (Session session : eruptWsSessionModel.getSessions()) {
             session.getBasicRemote().sendText(GsonFactory.getGson().toJson(Arrays.asList(command, GsonFactory.getGson().toJson(data))));
         }
     }
 
     @SneakyThrows
     public <T> void send(SocketCommand command, T data) {
-        for (Session session : getCurrentSession()) {
+        for (Session session : getCurrentSession().getSessions()) {
             session.getBasicRemote().sendText(GsonFactory.getGson().toJson(Arrays.asList(command, GsonFactory.getGson().toJson(data))));
         }
     }
@@ -52,6 +55,5 @@ public class EruptWebSocketService {
     public void sendMessage(String message) {
         this.send(SocketCommand.JS, "window.msg.info('" + message + "')");
     }
-
 
 }
