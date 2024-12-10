@@ -5,7 +5,7 @@ FROM registry.cn-zhangjiakou.aliyuncs.com/barcke-myblog/openjdk
 WORKDIR /app
 
 # 将本地的 jar 文件拷贝到容器中
-COPY target/sample-server-*.jar /app/EruptServerApplication.jar
+COPY target/erupt-server-docker-*.jar /app/EruptServerApplication.jar
 
 # 暴露应用运行的端口
 EXPOSE 8080
