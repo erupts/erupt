@@ -23,8 +23,8 @@ public class EruptChannelManager {
     private static final Map<String, String> sessionTokenMap = new ConcurrentHashMap<>();
 
     public static void register(String token, Session session) {
-        EruptUserService eruptUserService = EruptSpringUtil.getBean(EruptUserService.class);
-        sessionMap.computeIfAbsent(token, k -> new EruptWsSessionModel(eruptUserService.getSimpleUserInfo(), new Vector<>()));
+        sessionMap.computeIfAbsent(token, k -> new EruptWsSessionModel(EruptSpringUtil.getBean(EruptUserService.class)
+                .getSimpleUserInfoByToken(token), new Vector<>()));
         sessionMap.get(token).getSessions().add(session);
         sessionTokenMap.put(session.getId(), token);
     }
