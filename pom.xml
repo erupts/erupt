@@ -60,6 +60,10 @@
 
         <!--使用H2作为数据源的示例项目-->
         <module>erupt-sample</module>
+
+
+        <!--erupt deploy-->
+        <module>deploy/erupt-server-docker</module>
     </modules>
 
     <dependencyManagement>
