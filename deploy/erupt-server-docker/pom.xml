@@ -21,17 +21,20 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-web</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-admin</artifactId>
             <scope>provided</scope>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-cloud-server</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
@@ -56,7 +59,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
                 <configuration>
-                    <mainClass>xyz.erupt.server.EruptServerApplication</mainClass>
+                    <mainClass>xyz.erupt.server.docker.EruptServerApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
