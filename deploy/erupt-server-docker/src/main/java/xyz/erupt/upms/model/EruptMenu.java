@@ -1,4 +1,4 @@
-package xyz.erupt.server.docker.upms.model;
+package xyz.erupt.upms.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
