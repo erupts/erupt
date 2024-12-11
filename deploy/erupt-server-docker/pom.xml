@@ -63,7 +63,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
                 <configuration>
-                    <mainClass>xyz.erupt.server.docker.Application</mainClass>
+                    <mainClass>xyz.erupt.cloud_server.docker.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>

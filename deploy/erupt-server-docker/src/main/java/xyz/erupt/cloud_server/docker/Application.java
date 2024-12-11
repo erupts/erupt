@@ -1,4 +1,4 @@
-package xyz.erupt.server.docker;
+package xyz.erupt.cloud_server.docker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
