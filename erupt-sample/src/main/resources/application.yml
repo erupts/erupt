@@ -15,3 +15,6 @@ spring:
     show-sql: false
     generate-ddl: true
     database: h2
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true

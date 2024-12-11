@@ -7,7 +7,7 @@ spring:
     password: ${SPRING_REDIS_PASSWORD:}
   datasource:
     # 案例使用 mysql 可调整为其他数据库
-    url: ${SPRING_DATASOURCE_URL:jdbc:h2:file:./erupt;AUTO_SERVER=TRUE;MODE=MySQL}
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:file:./erupt;AUTO_SERVER=TRUE;MODE=MySQL;database_to_upper=true}
     username: ${SPRING_DATASOURCE_USERNAME:sa}
     password: ${SPRING_DATASOURCE_PASSWORD:}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.h2.Driver}
@@ -15,8 +15,11 @@ spring:
     show-sql: ${SPRING_JPA_SHOW_SQL:false}
     generate-ddl: ${SPRING_JPA_GENERATE_DDL:true}
     database: ${SPRING_JPA_DATABASE:mysql}
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
 erupt:
-  redis-session: ${ERUPT_REDIS_SESSION:true}
+  redis-session: ${ERUPT_REDIS_SESSION:false}
   cloud-server:
     # cloud key 命名空间(可选配置)
     cloud-name-space: ${ERUPT_CLOUD_NAME_SPACE:'erupt-cloud:'}

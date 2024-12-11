@@ -3,10 +3,6 @@
 # 退出时显示错误
 set -e
 
-read -p "Enter your Docker Hub username: " DOCKER_USERNAME
-read -p "Enter your Docker Hub password: " DOCKER_PASSWORD
-echo
-
 # 获取 Maven 项目的版本号
 DOCKER_TAG=$(sed -n 's|.*<version>\([^<]*\)</version>.*|\1|p' pom.xml | head -n 1)
 
@@ -20,41 +16,40 @@ mvn clean package -DskipTests
 
 # Docker 镜像构建
 echo "Building Docker image..."
-docker build -t $DOCKER_USERNAME/$IMG_NAME:$DOCKER_TAG .
+docker build -t $IMG_NAME:$DOCKER_TAG .
 
 # Docker 登录
-echo "Logging into Docker Hub..."
-echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+docker login
 
 # Docker 推送
 echo "Pushing Docker image to Docker Hub..."
-docker push $DOCKER_USERNAME/$IMG_NAME:$DOCKER_TAG
+docker push $IMG_NAME:$DOCKER_TAG
 
 echo "Docker hub push complete!"
 
 # 询问用户是否需要推送到阿里云
-read -p "是否需要推送到阿里云? (y/n): " PUSH_TO_ALIYUN
-
-if [[ "$PUSH_TO_ALIYUN" == "y" || "$PUSH_TO_ALIYUN" == "Y" ]]; then
-    # 提示用户输入阿里云登录信息
-    read -p "Enter your Aliyun username: " ALIYUN_USERNAME
-    read -p "Enter your Aliyun password: " ALIYUN_PASSWORD
-    echo # 为了换行
-
-    # 登录到阿里云 Docker Registry
-    echo "Logging into Aliyun Docker Registry..."
-    echo $ALIYUN_PASSWORD | docker login --username=$ALIYUN_USERNAME registry.cn-hangzhou.aliyuncs.com --password-stdin
-
-    # 推送到阿里云 Docker Registry。  TODO 调整阿里云地址改这里 改前缀即可
-    ALIYUN_REPO="registry.cn-hangzhou.aliyuncs.com/barcke/$IMG_NAME"
-    echo "Pushing Docker image to Aliyun Registry..."
-    docker tag $DOCKER_USERNAME/$IMG_NAME:$DOCKER_TAG $ALIYUN_REPO:$DOCKER_TAG
-    docker push $ALIYUN_REPO:$DOCKER_TAG
-
-    echo "Docker image pushed to Aliyun successfully!"
-else
-    echo "Skipping push to Aliyun."
-fi
+#read -p "是否需要推送到阿里云? (y/n): " PUSH_TO_ALIYUN
+#
+#if [[ "$PUSH_TO_ALIYUN" == "y" || "$PUSH_TO_ALIYUN" == "Y" ]]; then
+#    # 提示用户输入阿里云登录信息
+#    read -p "Enter your Aliyun username: " ALIYUN_USERNAME
+#    read -p "Enter your Aliyun password: " ALIYUN_PASSWORD
+#    echo # 为了换行
+#
+#    # 登录到阿里云 Docker Registry
+#    echo "Logging into Aliyun Docker Registry..."
+#    echo $ALIYUN_PASSWORD | docker login --username=$ALIYUN_USERNAME registry.cn-hangzhou.aliyuncs.com --password-stdin
+#
+#    # 推送到阿里云 Docker Registry。  TODO 调整阿里云地址改这里 改前缀即可
+#    ALIYUN_REPO="registry.cn-hangzhou.aliyuncs.com/barcke/$IMG_NAME"
+#    echo "Pushing Docker image to Aliyun Registry..."
+#    docker tag $IMG_NAME:$DOCKER_TAG $ALIYUN_REPO:$DOCKER_TAG
+#    docker push $ALIYUN_REPO:$DOCKER_TAG
+#
+#    echo "Docker image pushed to Aliyun successfully!"
+#else
+#    echo "Skipping push to Aliyun."
+#fi
 
 
 echo "complete!"
