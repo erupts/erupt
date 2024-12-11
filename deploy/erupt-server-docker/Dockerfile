@@ -1,11 +1,20 @@
 # 默认使用阿里云镜像
-FROM registry.cn-zhangjiakou.aliyuncs.com/barcke-myblog/openjdk
+FROM openjdk:11-jre-slim
+
+# 安装Redis
+RUN apt-get update && apt-get install -y redis
+
+# 暴露Redis的默认端口6379
+EXPOSE 6379
+
+# 启动Redis服务
+CMD ["redis-server"]
 
 # 设置工作目录
 WORKDIR /app
 
 # 将本地的 jar 文件拷贝到容器中
-COPY target/erupt-cloud-server-docker-*.jar /app/EruptCloudServerApplication.jar
+COPY target/erupt-server-docker-*.jar /app/EruptCloudServerApplication.jar
 
 # 暴露应用运行的端口
 EXPOSE 8080

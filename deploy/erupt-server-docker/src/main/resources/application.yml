@@ -19,7 +19,7 @@ spring:
       hibernate:
         globally_quoted_identifiers: true
 erupt:
-  redis-session: ${ERUPT_REDIS_SESSION:false}
+  redis-session: ${ERUPT_REDIS_SESSION:true}
   cloud-server:
     # cloud key 命名空间(可选配置)
     cloud-name-space: ${ERUPT_CLOUD_NAME_SPACE:'erupt-cloud:'}
