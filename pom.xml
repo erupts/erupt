@@ -63,7 +63,7 @@
 
 
         <!--erupt deploy-->
-        <module>deploy/erupt-server-docker</module>
+        <module>deploy/erupt-cloud-server-docker</module>
     </modules>
 
     <dependencyManagement>
