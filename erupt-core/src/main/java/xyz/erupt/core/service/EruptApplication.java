@@ -1,5 +1,6 @@
 package xyz.erupt.core.service;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -22,13 +23,10 @@ import java.util.stream.Stream;
 @Slf4j
 public class EruptApplication implements ImportBeanDefinitionRegistrar {
 
+    @Getter
     private static Class<?> primarySource;
 
     private static final Set<String> scanPackage = new HashSet<>();
-
-    public static Class<?> getPrimarySource() {
-        return primarySource;
-    }
 
     public static String[] getScanPackage() {
         return scanPackage.toArray(new String[0]);
