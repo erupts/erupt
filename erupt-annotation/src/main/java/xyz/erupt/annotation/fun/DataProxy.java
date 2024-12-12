@@ -66,9 +66,14 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<M
     default void excelExport(@Comment("POI文档对象") Object workbook) {
     }
 
-    @Comment("excel导入，参数需要强转为WorkBook对象")
+    @Comment("excel导入,处理POI对象，参数需要强转为WorkBook对象")
     default void excelImport(@Comment("POI文档对象") Object workbook) {
     }
+
+    @Comment("excel导入，处理excel中提取到的的结构化数据")
+    default void excelImportProcess(@Comment("数据对象") List<MODEL> list) {
+    }
+
 
     @Comment("自定义行，可实现行计算等能力")
     default List<Row> extraRow(List<Condition> conditions) {

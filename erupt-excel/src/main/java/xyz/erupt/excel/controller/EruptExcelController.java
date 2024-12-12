@@ -18,7 +18,9 @@ import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.naming.EruptRecordNaming;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.core.service.EruptService;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecurityUtil;
 import xyz.erupt.core.view.EruptApiModel;
@@ -32,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,9 +53,11 @@ public class EruptExcelController {
 
     private final EruptExcelService dataFileService;
 
-    private final EruptModifyController eruptModifyController;
+    private final EruptModifyService eruptModifyService;
 
     private final EruptService eruptService;
+
+    private final EruptModifyController eruptModifyController;
 
     //模板下载
     @GetMapping(value = "/template/{erupt}")
@@ -116,7 +121,18 @@ public class EruptExcelController {
             throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage(), e);
         }
         try {
-            eruptModifyController.batchAddEruptData(eruptModel, list);
+            List<Object> eruptDataList = new ArrayList<>();
+            int j = 1;
+            for (JsonObject data : list) {
+                j++;
+                EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
+                if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
+                    throw new EruptWebApiRuntimeException("第" + j + "行，" + eruptApiModel.getMessage());
+                }
+                eruptDataList.add(eruptModifyService.eruptInsertDataProcess(eruptModel, data));
+            }
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelImportProcess(eruptDataList)));
+            eruptModifyController.batchAddEruptData(eruptModel, eruptDataList);
         } catch (Exception e) {
             throw new EruptWebApiRuntimeException("数据导入异常，原因：" + e.getMessage());
         }
