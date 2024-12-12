@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # 将本地的 jar 文件拷贝到容器中
-COPY target/erupt-server-docker-*.jar /app/EruptCloudServerApplication.jar
+COPY target/erupt-cloud-server-docker-*.jar /app/EruptCloudServerApplication.jar
 
 # 暴露应用运行的端口
 EXPOSE 80
