@@ -1,15 +1,6 @@
 # 默认使用阿里云镜像
 FROM openjdk:11-jre-slim
 
-# 安装Redis
-RUN apt-get update && apt-get install -y redis
-
-# 暴露Redis的默认端口6379
-EXPOSE 6379
-
-# 启动Redis服务
-CMD ["redis-server"]
-
 # 设置工作目录
 WORKDIR /app
 
@@ -17,11 +8,11 @@ WORKDIR /app
 COPY target/erupt-server-docker-*.jar /app/EruptCloudServerApplication.jar
 
 # 暴露应用运行的端口
-EXPOSE 8080
+EXPOSE 80
 
 # 设置 JVM 堆内存和线程栈大小
 ENV JAVA_OPTS="-Xms256m -Xmx512m -Xss256k"
 
 # 定义容器启动时执行的命令
-ENTRYPOINT ["java", "-jar", "/app/EruptCloudServerApplication.jar"]
-CMD ["${JAVA_OPTS}"]
+ENTRYPOINT ["sh", "-c"]
+CMD ["java -jar /app/EruptCloudServerApplication.jar ${JAVA_OPTS}"]
