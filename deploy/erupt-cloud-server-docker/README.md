@@ -3,6 +3,11 @@
 > 本地启动建议使用jar方式依赖部署，可降低使用成本
 > 运行：执行`src/main/java/xyz/erupt/sample/server/EruptServerApplication.java` 文件中的main方法即可
 
+### docker-compose 启动方式 (推荐)
+```shell
+docker compose up -d 
+```
+
 ### docker 启动方式 (推荐)
 
 ```shell

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  redis:
+    image: 'redis:latest'
+    container_name: 'my_redis'
+    ports:
+      - '6379:6379' # 将主机的 6379 端口映射到容器的 6379 端口
+
+  java_app:
+    build: .
+    container_name: 'erupt-cloud-server'
+    depends_on:
+      - redis
+    ports:
+      - '8080:8080' # 假设你的 Java 应用监听 8080 端口
+    environment:
+      - SPRING_REDIS_HOST=jdbc:redis://redis:6379/0 # 如果是 Spring Boot 应用

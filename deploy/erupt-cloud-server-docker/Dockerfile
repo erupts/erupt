@@ -7,21 +7,18 @@ RUN apt-get update && apt-get install -y redis
 # 暴露Redis的默认端口6379
 EXPOSE 6379
 
-# 启动Redis服务
-CMD ["redis-server"]
-
 # 设置工作目录
 WORKDIR /app
 
 # 将本地的 jar 文件拷贝到容器中
-COPY target/erupt-server-docker-*.jar /app/EruptCloudServerApplication.jar
+COPY target/erupt-cloud-server-docker-*.jar /app/EruptCloudServerApplication.jar
+
+# 启动脚本
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
 # 暴露应用运行的端口
 EXPOSE 8080
 
-# 设置 JVM 堆内存和线程栈大小
-ENV JAVA_OPTS="-Xms256m -Xmx512m -Xss256k"
-
-# 定义容器启动时执行的命令
-ENTRYPOINT ["java", "-jar", "/app/EruptCloudServerApplication.jar"]
-CMD ["${JAVA_OPTS}"]
+# 使用启动脚本启动 Java 应用和 Redis
+CMD ["/start.sh"]
