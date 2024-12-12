@@ -36,6 +36,7 @@ global.update.loading.hint,数据加载中无法保存!,數據加載中無法保
 global.no_data,暂无数据,無此資料,No Data,Aucune donnée,データがありません,데이터 없음,Приходящее множество доказательств,Datos aún no disponibles
 global.copy_success,复制成功,復製成功,Successful replication,Copiez avec succès,複製成功です,복사에 성공했습니다,Подтверждаю.,Replicar el éxito
 global.pre_select,请先选择,請先選擇,Please select first,Veuillez sélectionner d’abord,先にお願いします,먼저 선택하세요,Выбирайте.,Por favor seleccione primero
+global.more,更多,更多,more,plus,もっと,더,больше,di più.
 component.attachment.upload_hint,单击或拖动文件到此区域上传,單擊或拖動文件到此區域上傳,Click or drag the file to this area to upload,Cliquez ou faites glisser les fichiers dans cette zone pour les télécharger,ファイルをクリックまたはドラッグしてアップロードします,파일을이 영역으로 업로드하려면 누르거나 드래그하십시오,Нажмите или перетащите файл в эту область,Haga clic o arrastre los archivos a esta área para subir
 component.attachment.upload_format,文件格式,文件格式,File format,Format du fichier,ファイル形式です。,파일 형식,Формат файла,Formato de archivo
 table.operation,操作,操作,Operation,opérations,操作,조작,операцион,La operación
