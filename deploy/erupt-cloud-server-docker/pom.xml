@@ -10,7 +10,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>erupt-server-docker</artifactId>
+    <artifactId>erupt-cloud-server-docker</artifactId>
 
     <properties>
         <java.version>1.8</java.version>
