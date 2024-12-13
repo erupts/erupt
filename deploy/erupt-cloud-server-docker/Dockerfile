@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/erupt-cloud-server-docker-*.jar /app/EruptCloudServerApplication.jar
 
 # 暴露应用运行的端口
-EXPOSE 80
+EXPOSE 8080
 
 # 设置 JVM 堆内存和线程栈大小
 ENV JAVA_OPTS="-Xms256m -Xmx512m -Xss256k"
