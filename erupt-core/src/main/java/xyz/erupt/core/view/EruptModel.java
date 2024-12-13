@@ -16,6 +16,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -71,13 +72,14 @@ public class EruptModel implements Cloneable {
     public EruptModel clone() throws CloneNotSupportedException {
         EruptModel eruptModel = (EruptModel) super.clone();
         eruptModel.eruptJson = AnnotationProcess.annotationToJsonByReflect(this.getErupt());
-        for (Class<? extends Annotation> extra : this.getErupt().extra()) {
-            JsonObject jsonObject = new JsonObject();
-            eruptModel.eruptJson.add(LambdaSee.method(Erupt::extra), jsonObject);
-            jsonObject.add(extra.getSimpleName(), AnnotationProcess.annotationToJsonByReflect(this.getClazz().getAnnotation(extra)));
+        if (this.getErupt().extra().length > 0) {
+            JsonObject extra = new JsonObject();
+            eruptModel.eruptJson.add(LambdaSee.method(Erupt::extra), extra);
+            for (Class<? extends Annotation> ex : this.getErupt().extra()) {
+                Optional.ofNullable(this.getClazz().getAnnotation(ex)).ifPresent(it -> extra.add(ex.getSimpleName(), AnnotationProcess.annotationToJsonByReflect(it)));
+            }
         }
-        eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone)
-                .peek(EruptFieldModel::serializable).collect(Collectors.toList());
+        eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone).peek(EruptFieldModel::serializable).collect(Collectors.toList());
         return eruptModel;
     }
 
