@@ -98,10 +98,9 @@ public class ProcessHelper {
     /**
      * 先判断是否同一线程
      *
-     * @param processNode
+     * @param processNode processNode
      * @param allKeys     完整的key
      * @param noFoundKeys 等待判断的key，这两个数组都不能为空
-     * @return
      */
     private boolean isSameExecution(OaProcessNode processNode, List<String> allKeys, List<String> noFoundKeys) {
         if (processNode == null || processNode.getId() == null) {
@@ -156,8 +155,6 @@ public class ProcessHelper {
      * 获取流程的上一个用户任务
      * 只能从流程图上获取，而不能按照实际执行获取
      *
-     * @param activityKey
-     * @return
      */
     public void getPreUserTasks(OaProcessNode currentNode, OaProcessNode lastUserTask, String activityKey, Set<OaProcessNode> preNodes) {
         if (FlowConstant.NODE_TYPE_ROOT.equals(currentNode.getType())
@@ -188,9 +185,6 @@ public class ProcessHelper {
     /**
      * 根据条件选择一个分支继续
      *
-     * @param formContent
-     * @param nodes
-     * @return
      */
     public OaProcessNode switchNode(OaProcessExecution execution, JSONObject formContent, List<OaProcessNode> nodes) {
         //按照顺序判断是否满足条件
@@ -219,9 +213,6 @@ public class ProcessHelper {
     /**
      * 判断条件组
      *
-     * @param groups
-     * @param groupsType
-     * @return
      */
     private boolean checkForGroups(OaProcessExecution execution, JSONObject form, List<OaProcessNodeGroup> groups, String groupsType) {
         if ("OR".equals(groupsType)) {

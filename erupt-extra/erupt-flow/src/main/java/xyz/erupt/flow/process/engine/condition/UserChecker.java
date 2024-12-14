@@ -36,9 +36,6 @@ public class UserChecker implements ConditionChecker {
     /**
      * 所选用户分为2种，发起人，或者人员选择字段
      * 比较方式分为三种：人员、部门、角色
-     * @param form
-     * @param condition
-     * @return
      */
     @Override
     public boolean check(OaProcessExecution execution, JSONObject form, OaProcessNodeCondition condition) {

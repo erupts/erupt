@@ -73,8 +73,6 @@ public class TaskUserLinkServiceImpl extends ServiceImpl<OaTaskUserLinkMapper, O
     /**
      * 统计任务的实际处理人数量
      * 即把 角色 转化为人进行统计
-     * @param taskId
-     * @return
      */
     @Override
     public int countUsersByTaskId(Long taskId) {

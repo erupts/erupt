@@ -24,7 +24,6 @@ public class FormGroupController {
 
     /**
      * 查询所有表单分组
-     * @return
      */
     @GetMapping("/admin/form/group")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -37,7 +36,6 @@ public class FormGroupController {
 
     /**
      * 查询所有表单分组
-     * @return
      */
     @GetMapping("/admin/form/group/list")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)

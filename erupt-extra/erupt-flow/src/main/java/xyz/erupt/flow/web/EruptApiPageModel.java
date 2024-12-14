@@ -22,10 +22,6 @@ public class EruptApiPageModel extends EruptApiModel {
     /**
      * 为分页查询返回结果
      * 必须是mybatis分页
-     *
-     * @param list
-     * @param <T>
-     * @return
      */
     public static <T> EruptApiModel successApi(List<T> list, int pageNum, int pageSize) {
         PageInfo page = new PageInfo(list);//转化为pageInfo

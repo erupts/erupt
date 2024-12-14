@@ -120,7 +120,6 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
      * @param userId 当前用户id
      * @param startLevel 从多少级主管开始查，小于1则取1，1就是当前层级的领导
      * @param endLevel 最多查询到多少级主管，0表示不限级
-     * @return
      */
     @Override
     public LinkedHashMap<Integer, List<OrgTreeVo>> getLeaderMap(String userId, int startLevel, int endLevel) {
@@ -148,7 +147,6 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
 
     /**
      * 返回指定的领导
-     * @return
      */
     private List<OrgTreeVo> getLeadersByDeptId(Long deptId) {
         //假设部门内排第一个的人是主管
@@ -166,8 +164,6 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
 
     /**
      * 根据角色id查询用户列表
-     * @param roleIds
-     * @return
      */
     @Override
     public LinkedHashSet<OrgTreeVo> getUserIdsByRoleIds(String... roleIds) {
@@ -196,8 +192,6 @@ public class DefaultUserLinkServiceImpl implements UserLinkService {
 
     /**
      * 查询账号对用的角色列表
-     * @param userId
-     * @return
      */
     @Override
     public LinkedHashSet<String> getRoleIdsByUserId(String userId) {

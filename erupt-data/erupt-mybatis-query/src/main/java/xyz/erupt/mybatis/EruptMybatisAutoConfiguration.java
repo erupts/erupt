@@ -20,7 +20,7 @@ public class EruptMybatisAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-mybatis").build();
+        return ModuleInfo.builder().name("erupt-mybatis-query").build();
     }
 
 }

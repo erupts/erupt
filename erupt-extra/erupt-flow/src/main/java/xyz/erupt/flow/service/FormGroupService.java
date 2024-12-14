@@ -22,7 +22,6 @@ public interface FormGroupService extends IService<OaFormGroups> {
      * 表单及分组排序
      *
      * @param groups 分组数据
-     * @return 排序结果
      */
     void formGroupsSort(List<Long> groups);
 
@@ -31,7 +30,6 @@ public interface FormGroupService extends IService<OaFormGroups> {
      *
      * @param id   分组ID
      * @param name 分组名
-     * @return 修改结果
      */
     void updateFormGroupName(Long id, String name);
 
@@ -39,7 +37,6 @@ public interface FormGroupService extends IService<OaFormGroups> {
      * 新增表单分组
      *
      * @param name 分组名
-     * @return 添加结果
      */
     void createFormGroup(String name);
 
@@ -47,7 +44,6 @@ public interface FormGroupService extends IService<OaFormGroups> {
      * 删除分组
      *
      * @param id 分组ID
-     * @return 删除结果
      */
     void deleteFormGroup(Long id);
 

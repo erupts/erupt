@@ -197,8 +197,6 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
 
     /**
      * 查询下一个激活的任务
-     * @param executionId
-     * @return
      */
     private OaProcessActivity getNexActivity(Long executionId, boolean actived) {
         LambdaQueryWrapper<OaProcessActivity> queryWrapper = new LambdaQueryWrapper<>();
@@ -223,10 +221,6 @@ public class ProcessActivityServiceImpl extends ServiceImpl<OaProcessActivityMap
 
     /**
      * 创建一个活动
-     * @param execution
-     * @param node
-     * @param status
-     * @return
      */
     @Override
     public OaProcessActivity newActivity(OaProcessExecution execution, OaProcessNode node, String status, OaProcessNodeProps props, int sort) {

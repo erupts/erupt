@@ -219,8 +219,6 @@ public class TaskServiceImpl extends ServiceImpl<OaTaskMapper, OaTask> implement
 
     /**
      * 查询开始节点，开始节点只能有一个
-     * @param activityId
-     * @return
      */
     @Override
     public List<OaTask> getTasksByActivityId(Long activityId, String... types) {

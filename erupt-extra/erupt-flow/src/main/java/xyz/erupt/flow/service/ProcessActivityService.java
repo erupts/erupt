@@ -14,9 +14,6 @@ public interface ProcessActivityService extends IService<OaProcessActivity>, Wit
      * 针对当前node创建节点
      * 如果当前节点不是用户任务，将会继续向前，直到下一个（或多个）用户任务
      * 然后将这些用户任务解析为节点，同时生成任务
-     * @param execution
-     * @param node
-     * @return
      */
     public int newActivities(OaProcessExecution execution, JSONObject formContent, OaProcessNode node, String status);
 
@@ -36,8 +33,6 @@ public interface ProcessActivityService extends IService<OaProcessActivity>, Wit
 
     /**
      * 查询当前线程的节点
-     * @param executionId
-     * @return
      */
     OaProcessActivity getByExecutionId(Long executionId);
 

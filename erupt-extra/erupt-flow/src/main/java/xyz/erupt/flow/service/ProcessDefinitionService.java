@@ -25,37 +25,26 @@ public interface ProcessDefinitionService extends IService<OaProcessDefinition> 
 
     /**
      * 根据formId启动流程，会启动最新版流程
-     * @param procDefId
-     * @return
      */
     OaProcessInstance startById(String procDefId, String content);
 
     /**
      * 根据formId查询最新版
-     * @param formId
-     * @return
      */
     OaProcessDefinition getLastVersionByFromId(Long formId);
 
     /**
      * 预览
-     * @param
-     * @param formContent
-     * @return
      */
     List<OaProcessActivityHistory> preview(String formDefId, JSONObject formContent);
 
     /**
      * 查看流程实例的时间线
-     * @param instId
-     * @return
      */
     List<OaProcessActivityHistory> preview(Long instId);
 
     /**
      * 分组查询
-     * @param build
-     * @return
      */
     List<OaFormGroups> getFormGroups(OaFormGroups build);
 
@@ -67,9 +56,6 @@ public interface ProcessDefinitionService extends IService<OaProcessDefinition> 
 
     /**
      * 读取节点
-     * @param processDefId
-     * @param nodeId
-     * @return
      */
     OaProcessNode readNode(String processDefId, String nodeId);
 
