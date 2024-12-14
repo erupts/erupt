@@ -11,7 +11,6 @@ public class CustomUserLinkServiceImpl extends DefaultUserLinkServiceImpl {
 
     /**
      * 自定义的用户体系service要重写优先级，并且返回值要大于0
-     * @return
      */
     @Override
     public int priority() {
@@ -22,7 +21,6 @@ public class CustomUserLinkServiceImpl extends DefaultUserLinkServiceImpl {
     /**
      * 针对某些方法进行改写
      * 返回指定部门的主管
-     * @return
      */
     private List<OrgTreeVo> getLeadersByDeptId(Long deptId) {
         //我直接返回空集，没有部门主管

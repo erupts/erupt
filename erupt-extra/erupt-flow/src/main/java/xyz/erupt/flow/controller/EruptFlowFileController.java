@@ -31,8 +31,6 @@ public class EruptFlowFileController {
 
     /**
      * 上传图片
-     * @param file
-     * @return
      */
     @SneakyThrows
     @PostMapping("/upload")

@@ -15,7 +15,6 @@ public interface UserLinkService extends Comparable<UserLinkService> {
     /**
      * 实现类的优先级
      * 默认给个1，比 DefaultUserLinkServiceImpl 大
-     * @return
      */
     default int priority() {
         return 1;
@@ -58,14 +57,11 @@ public interface UserLinkService extends Comparable<UserLinkService> {
 
     /**
      * 查询超管用户列表
-     * @return
      */
     LinkedHashSet<OrgTreeVo> getAdminUsers();
 
     /**
      * 根据用户查询他的角色列表
-     * @param userName
-     * @return
      */
     LinkedHashSet<String> getRoleIdsByUserId(String userName);
 }

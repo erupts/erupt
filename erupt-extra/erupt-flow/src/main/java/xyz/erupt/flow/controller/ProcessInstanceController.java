@@ -33,7 +33,6 @@ public class ProcessInstanceController {
 
     /**
      * 查询与我相关的流程
-     * @return
      */
     @GetMapping("/inst/mine/about")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)

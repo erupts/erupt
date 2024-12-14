@@ -90,8 +90,6 @@ public class EruptFlowCoreService implements ApplicationRunner {
 
     /**
      * 根据字段配置解析对应的组件
-     *
-     * @return
      */
     public String convertComponentName(EruptFieldModel fieldModel, Edit edit) {
         switch (edit.type()) {

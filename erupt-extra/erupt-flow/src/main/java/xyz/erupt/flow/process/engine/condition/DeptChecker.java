@@ -80,7 +80,6 @@ public class DeptChecker implements ConditionChecker {
 
     /**
      * 判断A部门的所有上级中有没有B部门
-     * @return
      */
     public boolean instanceOfDept(Long deptId, Long parentId) {
         EruptOrg dept = eruptOrgRepository.findById(deptId).get();

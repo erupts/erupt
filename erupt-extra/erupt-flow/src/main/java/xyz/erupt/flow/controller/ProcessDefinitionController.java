@@ -24,7 +24,6 @@ public class ProcessDefinitionController {
     /**
      * 查询所有表单分组
      * 包含流程定义
-     * @return
      */
     @GetMapping("/process/groups")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -37,7 +36,6 @@ public class ProcessDefinitionController {
 
     /**
      * 启动流程，会启动当前流程的最新版本
-     * @return
      */
     @PostMapping("/process/start/form/{procDefId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -48,7 +46,6 @@ public class ProcessDefinitionController {
 
     /**
      * 预览流程时间线
-     * @return
      */
     @PostMapping("/process/timeline/preview/{formDefId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -59,7 +56,6 @@ public class ProcessDefinitionController {
 
     /**
      * 查看流程实例的时间线
-     * @return
      */
     @PostMapping("/process/timeline/{instId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)

@@ -21,8 +21,6 @@ public interface TaskUserLinkService {
 
     /**
      * 统计任务的处理人
-     * @param id
-     * @return
      */
     int countUsersByTaskId(Long id);
 }
