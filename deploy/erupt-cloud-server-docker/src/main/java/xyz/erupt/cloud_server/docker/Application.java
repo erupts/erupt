@@ -8,11 +8,10 @@ import xyz.erupt.core.annotation.EruptScan;
 /**
  * @author Barcke
  * @version 1.0
- * @projectName erupt
- * @className Application
- * @date 2024/12/10 10:40
- * @slogan: 源于生活 高于生活
- * @description:
+ * projectName erupt
+ * className Application
+ * date 2024/12/10 10:40
+ * slogan: 源于生活 高于生活
  **/
 @SpringBootApplication
 @EruptScan
