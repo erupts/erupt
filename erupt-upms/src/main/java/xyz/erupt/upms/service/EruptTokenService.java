@@ -16,10 +16,7 @@ import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author YuePeng
@@ -45,19 +42,25 @@ public class EruptTokenService {
         // Map<String, EruptMenu>
         Map<String, Object> eruptMenuMap = new HashMap<>();
         List<EruptMenuVo> eruptMenuVos = new ArrayList<>();
-        metaMenus.forEach(menu -> {
-            if (null != menu.getValue()) {
-                //根据URL规则?后的均是参数如：eruptTest?code=test，把参数 ?code=test 去除
-                eruptMenuMap.put(menu.getValue().toLowerCase().split("\\?")[0], EruptMenu.fromMetaMenu(menu));
-            }
-            if (menu.getStatus() == MenuStatus.OPEN) {
-                eruptMenuVos.add(EruptMenuVo.fromMetaMenu(menu));
+        metaMenus.stream().sorted(Comparator.comparing(MetaMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).forEach(menu -> {
+            if (menu.getStatus() != MenuStatus.DISABLE) {
+                if (null != menu.getValue()) {
+                    //根据URL规则?后的均是参数如：eruptTest?code=test，把参数 ?code=test 去除
+                    eruptMenuMap.put(menu.getValue().toLowerCase().split("\\?")[0], EruptMenu.fromMetaMenu(menu));
+                }
+                if (menu.getStatus() == MenuStatus.OPEN) {
+                    eruptMenuVos.add(EruptMenuVo.fromMetaMenu(menu));
+                }
             }
         });
         eruptSessionService.putMap(SessionKey.MENU_VALUE_MAP + token, eruptMenuMap, tokenExpire);
         eruptSessionService.put(SessionKey.MENU_VIEW + token, GsonFactory.getGson().toJson(eruptMenuVos), tokenExpire);
         eruptSessionService.put(SessionKey.USER_INFO + token, GsonFactory.getGson().toJson(metaUserinfo), tokenExpire);
         eruptSessionService.put(SessionKey.TOKEN_OLINE + token, metaUserinfo.getAccount(), tokenExpire);
+    }
+
+    public boolean tokenExist(String token) {
+        return eruptSessionService.exist(SessionKey.TOKEN_OLINE + token);
     }
 
     public void loginToken(EruptUser eruptUser, String token, Integer tokenExpire) {

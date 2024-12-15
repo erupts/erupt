@@ -252,7 +252,7 @@ public class EruptExcelService {
         CellType cellType = cell.getCellType();
         switch (cellType) {
             case NUMERIC:
-                return String.valueOf(cell.getNumericCellValue());
+                return new DataFormatter().formatCellValue(cell);
             case STRING:
                 return cell.getStringCellValue();
             case BOOLEAN:

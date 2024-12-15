@@ -24,23 +24,29 @@ public class TypeUtil {
      */
     @SneakyThrows
     public static Object typeStrConvertObject(Object obj, Class<?> targetType) {
-        String str = obj.toString();
+        String val = obj.toString();
+        String str = val;
+        if (NumberUtils.isCreatable(val)) {
+            if (val.endsWith(".0")) {
+                val = val.substring(0, val.length() - 2);
+            }
+        }
         if (int.class == targetType || Integer.class == targetType) {
-            return Integer.valueOf(str);
+            return Integer.valueOf(val);
         } else if (short.class == targetType || Short.class == targetType) {
-            return Short.valueOf(str);
+            return Short.valueOf(val);
         } else if (long.class == targetType || Long.class == targetType) {
-            return Long.valueOf(str);
+            return Long.valueOf(val);
         } else if (float.class == targetType || Float.class == targetType) {
-            return Float.valueOf(str);
+            return Float.valueOf(val);
         } else if (double.class == targetType || Double.class == targetType) {
-            return Double.valueOf(str);
+            return Double.valueOf(val);
         } else if (BigDecimal.class == targetType) {
-            return new BigDecimal(str);
+            return new BigDecimal(val);
         } else if (boolean.class == targetType || Boolean.class == targetType) {
-            return Boolean.valueOf(str);
+            return Boolean.valueOf(val);
         } else if (targetType.isEnum()) {
-            return targetType.getMethod("valueOf", String.class).invoke(targetType, str);
+            return targetType.getMethod("valueOf", String.class).invoke(targetType, val);
         } else {
             return str;
         }

@@ -17,7 +17,6 @@ public interface ProcessInstanceService extends IService<OaProcessInstance>, Wit
      * 创建一个新实例
      * @param processDefinition 流程定义
      * @param content 表单内容
-     * @return
      */
     public OaProcessInstance newProcessInstance(OaProcessDefinition processDefinition, String content);
 
@@ -37,7 +36,6 @@ public interface ProcessInstanceService extends IService<OaProcessInstance>, Wit
     /**
      * 查询与我相关的流程
      * 即我处理过的，或者抄送我的
-     * @return
      */
     List<OaProcessInstanceHistory> getMineAbout(String keywords, int pageNum, int pageSize);
 

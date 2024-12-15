@@ -24,7 +24,6 @@ public class TaskController {
 
     /**
      * 查询我的任务
-     * @return
      */
     @GetMapping("/task/mine")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -36,7 +35,6 @@ public class TaskController {
 
     /**
      * 完成任务
-     * @return
      */
     @PostMapping("/task/complete/{taskId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -47,7 +45,6 @@ public class TaskController {
 
     /**
      * 拒绝任务
-     * @return
      */
     @PostMapping("/task/refuse/{taskId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -58,7 +55,6 @@ public class TaskController {
 
     /**
      * 查询任务详情
-     * @return
      */
     @GetMapping("/task/detail/{taskId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
@@ -69,7 +65,6 @@ public class TaskController {
 
     /**
      * 查询任务详情
-     * @return
      */
     @GetMapping("/inst/detail/{instId}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)

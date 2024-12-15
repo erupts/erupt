@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.EruptApiModel;
-import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.flow.constant.FlowConstant;
 import xyz.erupt.flow.core.service.EruptFlowCoreService;
 import xyz.erupt.flow.core.view.EruptFormModel;
@@ -23,7 +22,6 @@ public class EruptFlowFormController {
 
     /**
      * 查询所有已加载的表单类
-     * @return
      */
     @GetMapping("/forms")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)

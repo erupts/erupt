@@ -27,10 +27,13 @@ public class R<T> implements Serializable {
     //提示方式
     private EruptApiModel.PromptWay promptWay = EruptApiModel.PromptWay.MESSAGE;
 
+    private boolean errorIntercept = true;
+
     public static <T> R<T> ok(T data) {
         return new R<T>() {{
             this.setSuccess(true);
             this.setData(data);
+            this.setPromptWay(EruptApiModel.PromptWay.NONE);
             this.setStatus(EruptApiModel.Status.SUCCESS);
         }};
     }

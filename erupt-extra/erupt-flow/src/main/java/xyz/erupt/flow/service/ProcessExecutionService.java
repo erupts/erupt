@@ -9,11 +9,6 @@ public interface ProcessExecutionService extends IService<OaProcessExecution>, W
 
     /**
      * 新建线程
-     * @param defId
-     * @param instanceId
-     * @param currentNode
-     * @param parent
-     * @return
      */
     public OaProcessExecution newExecution(String defId, Long instanceId, OaProcessNode currentNode, OaProcessExecution parent);
 

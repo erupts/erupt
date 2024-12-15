@@ -126,7 +126,7 @@ public class EruptCoreService implements ApplicationRunner {
             ERUPTS.put(clazz.getSimpleName(), eruptModel);
             ERUPT_LIST.add(eruptModel);
         });
-        log.info("<{}>", repeat("===", 20));
+        log.info("<{}>", repeat("===", 18));
         AtomicInteger moduleMaxCharLength = new AtomicInteger();
         EruptModuleInvoke.invoke(it -> {
             int length = it.info().getName().length();
@@ -138,14 +138,14 @@ public class EruptCoreService implements ApplicationRunner {
         EruptModuleInvoke.invoke(it -> {
             it.run();
             MODULES.add(it.info().getName());
-            log.info("🚀 -> {} module initialization completed in {}ms", fillCharacter(it.info().getName(),
+            log.info("🚀 → {} module initialization completed in {}ms", fillCharacter(it.info().getName(),
                     moduleMaxCharLength.get()), timeRecorder.recorder()
             );
         });
         log.info("Erupt modules : {}", MODULES.size());
         log.info("Erupt classes : {}", ERUPTS.size());
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
-        log.info("<{}>", repeat("===", 20));
+        log.info("<{}>", repeat("===", 18));
     }
 
     private String fillCharacter(String character, int targetWidth) {
