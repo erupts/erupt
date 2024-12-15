@@ -19,4 +19,9 @@ public abstract class EruptEventBase<T> extends ApplicationEvent {
         this.eruptClass = clazz;
     }
 
+    @Override
+    public T getSource() {
+        return (T) source;
+    }
+
 }
