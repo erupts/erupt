@@ -114,7 +114,6 @@ public class TaskBuilder {
 
     /**
      * 添加审批人
-     * @return
      */
     public TaskBuilder addUser(OrgTreeVo... vos) {
         for (OrgTreeVo id : vos) {
@@ -125,7 +124,6 @@ public class TaskBuilder {
 
     /**
      * 添加候选人
-     * @return
      */
     public TaskBuilder addLinkUser(OrgTreeVo... vos) {
         for (OrgTreeVo id : vos) {
@@ -136,7 +134,6 @@ public class TaskBuilder {
 
     /**
      * 添加候选角色
-     * @return
      */
     public TaskBuilder addLinkRole(OrgTreeVo... vos) {
         for (OrgTreeVo id : vos) {

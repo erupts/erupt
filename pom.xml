@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.12.16</version>
+    <version>1.12.17</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -38,6 +38,7 @@
         <module>erupt-upms</module><!--用户权限管理-->
         <module>erupt-security</module><!--API 接口安全-->
         <module>erupt-admin</module>
+        <module>erupt-websocket</module><!--websocket-->
         <module>erupt-web</module><!--前端代码-->
 
         <module>erupt-tpl</module>
@@ -59,6 +60,9 @@
 
         <!--使用H2作为数据源的示例项目-->
         <module>erupt-sample</module>
+
+        <!--erupt deploy-->
+        <module>deploy/erupt-cloud-server-docker</module>
     </modules>
 
     <dependencyManagement>

@@ -20,8 +20,6 @@ public class FormsController {
 
     /**
      * 创建新的表单
-     * @param form
-     * @return
      */
     @PostMapping("/admin/form")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)

@@ -54,9 +54,7 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
 
     /**
      * 启动新的流程实例（instance）
-     * @param processDef
      * @param content 表单内容
-     * @return
      */
     @Override
     public OaProcessInstance newProcessInstance(OaProcessDefinition processDef, String content) {
@@ -128,10 +126,6 @@ public class ProcessInstanceServiceImpl extends ServiceImpl<OaProcessInstanceMap
 
     /**
      * 查询与我相关的实例
-     * @param keywords
-     * @param pageNum
-     * @param pageSize
-     * @return
      */
     @Override
     public List<OaProcessInstanceHistory> getMineAbout(String keywords, int pageNum, int pageSize) {

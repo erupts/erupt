@@ -47,8 +47,6 @@ public interface TaskService extends IService<OaTask>, WithListener {
 
     /**
      * 分页查询我的任务
-     * @param keywords
-     * @return
      */
     List<OaTask> listMyTasks(String keywords);
 
@@ -62,15 +60,11 @@ public interface TaskService extends IService<OaTask>, WithListener {
 
     /**
      * 查看任务详情
-     * @param taskId
-     * @return
      */
     TaskDetailVo getTaskDetail(Long taskId);
 
     /**
      * 查看实例详情
-     * @param instId
-     * @return
      */
     TaskDetailVo getInstDetail(Long instId);
 

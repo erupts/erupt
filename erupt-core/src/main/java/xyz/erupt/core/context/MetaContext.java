@@ -3,6 +3,9 @@ package xyz.erupt.core.context;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author YuePeng
  * date 2021/12/26 23:57
@@ -24,6 +27,8 @@ public class MetaContext {
 
     private String token;
 
+    private Map<String, Object> vars = new HashMap<>();
+
     private static MetaContext getContext() {
         return threadLocal.get();
     }
@@ -40,6 +45,10 @@ public class MetaContext {
         return getContext().token;
     }
 
+    public static Map<String, Object> getVars() {
+        return getContext().vars;
+    }
+
     //注册erupt上下文
     public static void register(MetaErupt metaErupt) {
         getContext().setMetaErupt(metaErupt);
@@ -52,6 +61,10 @@ public class MetaContext {
 
     public static void registerToken(String token) {
         getContext().setToken(token);
+    }
+
+    public static void registerVar(String key, Object value) {
+        getContext().vars.put(key, value);
     }
 
     public static void remove() {

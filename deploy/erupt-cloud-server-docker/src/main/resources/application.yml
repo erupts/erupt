@@ -1,0 +1,31 @@
+spring:
+  redis:
+    database: ${SPRING_REDIS_DATABASE:0}
+    timeout: ${SPRING_REDIS_TIMEOUT:10000}
+    host: ${SPRING_REDIS_HOST:127.0.0.1}
+    port: ${SPRING_REDIS_PORT:6379}
+    password: ${SPRING_REDIS_PASSWORD:}
+  datasource:
+    # 案例使用 mysql 可调整为其他数据库
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:file:./h2.erupt;AUTO_SERVER=TRUE;MODE=MySQL;}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.h2.Driver}
+  jpa:
+    show-sql: ${SPRING_JPA_SHOW_SQL:false}
+    generate-ddl: ${SPRING_JPA_GENERATE_DDL:true}
+    # 解决H2数据库value关键字问题
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+erupt:
+  redis-session: ${ERUPT_REDIS_SESSION:false}
+  cloud-server:
+    # cloud key 命名空间(可选配置)
+    cloud-name-space: ${ERUPT_CLOUD_NAME_SPACE:'erupt-cloud:'}
+    # node节点持久化时长，单位：ms (可选配置)
+    node-expire-time: ${ERUPT_NODE_EXPIRE_TIME:60000}
+    # node节点存活检查周期，单位：ms (可选配置)
+    node-survive-check-time: ${ERUPT_NODE_SURVIVE_CHECK_TIME:120000}
+    # 是否校验 node 节点 access-token，默认值 true，1.11.4及以上版本支持
+    validate-access-token: ${ERUPT_VALIDATE_ACCESS_TOKEN:true}

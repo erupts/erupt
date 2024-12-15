@@ -9,7 +9,6 @@ public interface ExecutableNodeListener<T> extends Comparable<ExecutableNodeList
 
     /**
      * 默认顺序，最大
-     * @return
      */
     default int sort() {
         return Integer.MIN_VALUE;

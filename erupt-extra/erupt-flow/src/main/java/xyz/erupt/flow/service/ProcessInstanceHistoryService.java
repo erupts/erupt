@@ -8,8 +8,6 @@ public interface ProcessInstanceHistoryService extends IService<OaProcessInstanc
 
     /**
      * 从流程实例拷贝得到对象
-     * @param procInst
-     * @return
      */
     public OaProcessInstanceHistory copyAndSave(OaProcessInstance procInst);
 }

@@ -75,8 +75,6 @@ public @interface Erupt {
     @Comment("自定义扩展参数")
     KV[] param() default {};
 
-    @Deprecated
-    @Transient
-    Class<? extends Annotation> extra() default Annotation.class;
+    Class<? extends Annotation>[] extra() default {};
 
 }
