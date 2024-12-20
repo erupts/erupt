@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.12.17</version>
+    <version>1.12.18</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
