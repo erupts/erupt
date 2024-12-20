@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "erupt.upms", ignoreUnknownFields = false)
 public class EruptUpmsProp {
 
-    //redis session时长
+    //session 生效时长(分钟)
     private Integer expireTimeByLogin = 100;
 
     //严格的角色菜单策略，如果非管理员用户拥有角色权限则仅能编辑已有权限的菜单

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.MetaUserinfo;
-import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -29,11 +28,11 @@ import xyz.erupt.upms.util.IpUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -55,9 +54,6 @@ public class EruptUserService {
 
     @Resource
     private EruptAppProp eruptAppProp;
-
-    @Resource
-    private EruptProp eruptProp;
 
     @Resource
     private EruptUpmsProp eruptUpmsProp;
@@ -85,7 +81,7 @@ public class EruptUserService {
         if (null != loginError) {
             loginErrorCount = Integer.parseInt(loginError.toString());
         }
-        sessionService.put(key, ++loginErrorCount + "", eruptUpmsProp.getExpireTimeByLogin());
+        sessionService.put(key, ++loginErrorCount + "", eruptUpmsProp.getExpireTimeByLogin(), TimeUnit.MINUTES);
         return loginErrorCount >= eruptAppProp.getVerifyCodeCount();
     }
 
@@ -105,7 +101,6 @@ public class EruptUserService {
                 }
             }
             if (this.checkPwd(eruptUser.getAccount(), eruptUser.getPassword(), eruptUser.getIsMd5(), pwd)) {
-                request.getSession().invalidate();
                 sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
                 return new LoginModel(true, eruptUser);
             }
@@ -130,14 +125,6 @@ public class EruptUserService {
         } else {
             if (isMd5) inputPwd = MD5Util.digest(inputPwd);
             return inputPwd.equals(password);
-        }
-    }
-
-    public LocalDateTime getExpireTime() {
-        if (eruptProp.isRedisSession()) {
-            return LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin());
-        } else {
-            return LocalDateTime.now().plusSeconds(request.getSession().getMaxInactiveInterval());
         }
     }
 
