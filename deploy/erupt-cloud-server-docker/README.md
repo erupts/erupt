@@ -25,7 +25,7 @@ docker run -d \
 | spring-datasource | SPRING_DATASOURCE_PASSWORD          |               | 数据库连接密码                   |
 | jpa               | SPRING_JPA_SHOW_SQL                 | false         | jpa是否展示sql                |
 | jpa               | SPRING_JPA_GENERATE_DDL             | true          | jpa是否生成ddl                |
-| erupt             | ERUPT_REDIS_SESSION                 | false         | erupt是否开启redis会话          |
+| erupt             | ERUPT_REDIS_SESSION                 | false         | 是否使用Redis管理会话             |
 | erupt             | ERUPT_CLOUD_NAME_SPACE              | erupt-cloud:  | cloud key 命名空间            |
 | erupt             | ERUPT_NODE_EXPIRE_TIME              | 60000         | node节点持久化时长，单位：ms         |
 | erupt             | ERUPT_NODE_SURVIVE_CHECK_TIME       | 120000        | node节点存活检查周期，单位：ms        |

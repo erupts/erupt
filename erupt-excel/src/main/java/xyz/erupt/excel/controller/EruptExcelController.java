@@ -101,7 +101,7 @@ public class EruptExcelController {
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable, "Not import permission");
-        if (file.isEmpty() || null == file.getOriginalFilename()) return EruptApiModel.errorApi("上传失败，请选择文件");
+        if (file.isEmpty() || null == file.getOriginalFilename()) return EruptApiModel.errorApi("No file");
         List<JsonObject> list;
         int i = 1;
         try {
@@ -112,7 +112,7 @@ public class EruptExcelController {
             } else if (file.getOriginalFilename().endsWith(EruptExcelService.XLSX_FORMAT)) {
                 wb = new XSSFWorkbook(file.getInputStream());
             } else {
-                throw new EruptWebApiRuntimeException("上传文件格式必须为Excel");
+                throw new EruptWebApiRuntimeException("The uploaded file format must be Excel");
             }
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelImport(wb)));
             list = dataFileService.excelToEruptObject(eruptModel, wb);
