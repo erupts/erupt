@@ -203,7 +203,7 @@ public class EruptUtil {
                         if (edit.search().value() && null != condition.getValue()) {
                             if (condition.getValue() instanceof Collection) {
                                 Collection<?> collection = (Collection<?>) condition.getValue();
-                                if (collection.size() == 0) {
+                                if (collection.isEmpty()) {
                                     continue;
                                 }
                             }
