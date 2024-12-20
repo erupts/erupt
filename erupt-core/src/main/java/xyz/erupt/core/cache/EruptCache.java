@@ -9,9 +9,14 @@ import java.util.function.Supplier;
  */
 public interface EruptCache<V> {
 
+    // ttl with milliseconds
     V put(String key, V v, long ttl);
 
     V get(String key);
+
+    void expire(String key, long ttl);
+
+    Long getExpire(String key);
 
     default V getAndSet(String key, long timeout, Supplier<V> supplier) {
         return Optional.ofNullable(this.get(key)).orElseGet(() -> this.put(key, supplier.get(), timeout));

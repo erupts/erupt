@@ -21,6 +21,7 @@ import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptAppProp;
+import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptTokenService;
@@ -29,8 +30,8 @@ import xyz.erupt.upms.vo.EruptMenuVo;
 import xyz.erupt.upms.vo.EruptUserinfoVo;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -57,10 +58,10 @@ public class EruptUserController {
     private EruptContextService eruptContextService;
 
     @Resource
-    private HttpServletRequest request;
+    private EruptTokenService eruptTokenService;
 
     @Resource
-    private EruptTokenService eruptTokenService;
+    private EruptUpmsProp eruptUpmsProp;
 
     /**
      * 登录
@@ -101,10 +102,9 @@ public class EruptUserController {
             }
         }
         if (loginModel.isPass()) {
-            request.getSession().invalidate();
             EruptUser eruptUser = loginModel.getEruptUser();
             loginModel.setToken(Erupts.generateCode(16));
-            loginModel.setExpire(this.eruptUserService.getExpireTime());
+            loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin()));
             loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
             if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
             eruptTokenService.loginToken(eruptUser, loginModel.getToken());
