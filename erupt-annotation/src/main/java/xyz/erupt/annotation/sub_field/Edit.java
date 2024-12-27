@@ -93,7 +93,7 @@ public @interface Edit {
     @Match("#item.type().toString()=='REFERENCE_TREE'")
     ReferenceTreeType referenceTreeType() default @ReferenceTreeType;
 
-    @Match("#item.type().toString()=='REFERENCE_TABLE'")
+    @Match("#item.type().toString()=='REFERENCE_TABLE' || #item.type().toString()=='TAB_TABLE_REFER'")
     ReferenceTableType referenceTableType() default @ReferenceTableType;
 
     @Transient
