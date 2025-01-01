@@ -5,8 +5,8 @@ package xyz.erupt.annotation.model;
  * date 2025/1/1 21:06
  */
 public enum UiType {
-    SUCCESS,
-    INFO,
-    WARNING,
-    ERROR
+    success,
+    info,
+    warning,
+    error
 }

@@ -17,7 +17,7 @@ public class Alert {
 
     private boolean closeable = false;
 
-    private UiType uiType = UiType.INFO;
+    private UiType uiType = UiType.info;
 
     public static Alert info(String message) {
         return new Alert() {{
