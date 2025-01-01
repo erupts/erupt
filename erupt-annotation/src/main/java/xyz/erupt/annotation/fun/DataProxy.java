@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.fun;
 
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.model.Alert;
 import xyz.erupt.annotation.model.Row;
 import xyz.erupt.annotation.query.Condition;
 
@@ -72,6 +73,11 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<M
 
     @Comment("excel导入，处理excel中提取到的的结构化数据")
     default void excelImportProcess(@Comment("数据对象") List<MODEL> list) {
+    }
+
+    @Comment("警告提示")
+    default Alert alert(List<Condition> conditions) {
+        return null;
     }
 
 

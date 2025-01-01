@@ -3,6 +3,7 @@ package xyz.erupt.core.view;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.model.Alert;
 
 import java.util.Collection;
 import java.util.Map;
@@ -23,14 +24,14 @@ public class Page {
 
     private String sort;
 
-    //总页数
     private Integer totalPage;
 
-    //总条数
     private Long total;
 
     @Comment("Map → value 为复杂对象需做特殊处理，如：{region:{id:1,name:'xxxx'}},则需转换成：region_name 前端才可正常渲染")
     private Collection<Map<String, Object>> list;
+
+    private Alert alert;
 
     public void setTotal(Long total) {
         this.total = total;
