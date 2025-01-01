@@ -46,6 +46,8 @@ public class EruptTokenService {
                 }
             }
         });
+        // multi 1 minutes criteria value
+        tokenExpire -= 1;
         eruptSessionService.putMap(SessionKey.MENU_VALUE_MAP + token, eruptMenuMap, tokenExpire, TimeUnit.MINUTES);
         eruptSessionService.put(SessionKey.MENU_VIEW + token, GsonFactory.getGson().toJson(eruptMenuVos), tokenExpire, TimeUnit.MINUTES);
         eruptSessionService.put(SessionKey.USER_INFO + token, GsonFactory.getGson().toJson(metaUserinfo), tokenExpire, TimeUnit.MINUTES);
