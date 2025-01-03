@@ -214,6 +214,29 @@
                 </tr>
             </table>
         </el-card>
+
+        <el-card class="box-card" shadow="always">
+            <div class="clearfix" slot="header">
+                <span>GPU信息</span>
+            </div>
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>供应商</th>
+                    <th>内存大小</th>
+                    <th>Version</th>
+                </tr>
+                <tr v-for="gpu in server.gpus">
+                    <td>{{gpu.deviceId}}</td>
+                    <td>{{gpu.name}}</td>
+                    <td>{{gpu.vendor}}</td>
+                    <td>{{gpu.memorySize}}G</td>
+                    <td>{{gpu.versionInfo}}</td>
+                </tr>
+            </table>
+        </el-card>
+
         <el-card class="box-card" shadow="always">
             <div class="clearfix" slot="header">
                 <span>磁盘信息</span>

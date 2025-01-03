@@ -39,6 +39,11 @@ public class Server {
     private Sys sys;
 
     /**
+     * GPU相关信息
+     */
+    private List<Gpu> gpus;
+
+    /**
      * 磁盘相关信息
      */
     private List<SysFile> sysFiles;
@@ -54,10 +59,11 @@ public class Server {
         this.setMem(new Mem(si));
         this.setJvm(new Jvm());
         this.setSys(new Sys());
+        this.setGpus(si.getHardware().getGraphicsCards().stream().map(Gpu::new).collect(Collectors.toList()));
+        this.setSysFiles(os.getFileSystem().getFileStores().stream().map(SysFile::new).collect(Collectors.toList()));
         long startupDate = EruptSpringUtil.getApplicationContext().getStartupDate();
         this.setStartupDate(new Date(startupDate));
         this.setRunDay(this.zhDateDiff(this.getStartupDate()));
-        sysFiles = os.getFileSystem().getFileStores().stream().map(SysFile::new).collect(Collectors.toList());
     }
 
     private String zhDateDiff(Date date) {
