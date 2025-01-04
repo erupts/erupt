@@ -35,28 +35,6 @@
 <script>
     let cloudNode = new URLSearchParams(location.search).get("_erupt") === 'CloudNode';
 
-    if (cloudNode) {
-        if (window.self !== window.top) {
-            let interval;
-
-            function removeHeader() {
-                try {
-                    // window.parent.document.getElementsByClassName("ant-modal-header")[0].remove();
-                    // window.parent.document.getElementsByClassName("ant-modal-close-x")[0].style.color = "#fff";
-                    window.parent.document.getElementsByClassName("ant-drawer-header")[0].remove();
-                } catch (e) {
-                    console.warn(e);
-                    interval && clearInterval(interval);
-                }
-            }
-
-            removeHeader()
-            interval = setInterval(() => {
-                removeHeader()
-            }, 100)
-        }
-    }
-
     const xterm = new Terminal({
         convertEol: true,
         fontFamily: `Courier New, 'Fira Mono', monospace`,
