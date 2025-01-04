@@ -29,6 +29,5 @@ public class Gpu {
         this.setVendor(graphicsCard.getVendor());
         this.setVersionInfo(graphicsCard.getVersionInfo());
         this.setMemorySize(graphicsCard.getVRam() / 1073741824);
-
     }
 }
