@@ -147,6 +147,13 @@ public class EruptTplService {
         map.put(EngineConst.INJECT_BASE, request.getContextPath());
         EngineTemplate<Object> engineAbstractTemplate = tplEngines.get(engine);
         Assert.notNull(engineAbstractTemplate, engine.name() + " jar not found");
+        if (path.contains("?")) {
+            String[] sp = path.split("\\?");
+            path = sp[0];
+            for (String kv : sp[1].split("&")) {
+                map.put(kv.split("=")[0], kv.split("=")[1]);
+            }
+        }
         engineAbstractTemplate.render(engineAbstractTemplate.getEngine(), path, map, writer);
     }
 
