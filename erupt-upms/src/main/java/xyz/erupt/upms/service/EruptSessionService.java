@@ -52,7 +52,8 @@ public class EruptSessionService {
         } else {
             synchronized (this) {
                 Long num = (Long) eruptLocalSession.get(key);
-                eruptLocalSession.put(key, null == num ? 1L : ++num, timeUnit.toMillis(eruptLocalSession.getExpire(key)));
+                if (null == num) num = 0L;
+                eruptLocalSession.put(key, ++num, timeUnit.toMillis(timeout));
                 return num;
             }
         }
