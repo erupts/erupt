@@ -63,7 +63,7 @@ public class EruptFlowFileController {
                 File dest = new File(eruptProp.getUploadPath() + path);
                 if (!dest.getParentFile().exists()) {
                     if (!dest.getParentFile().mkdirs()) {
-                        return EruptApiModel.errorApi("上传失败，文件目录无法创建");
+                        return EruptApiModel.errorApi("上传失败，文件目录无法创建：" + dest.getParentFile().getAbsolutePath());
                     }
                 }
                 file.transferTo(dest);

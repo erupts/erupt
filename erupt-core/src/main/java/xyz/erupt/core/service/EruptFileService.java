@@ -54,7 +54,7 @@ public class EruptFileService {
                 File dest = new File(eruptProp.getUploadPath() + path);
                 if (!dest.getParentFile().exists()) {
                     if (!dest.getParentFile().mkdirs()) {
-                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created"));
+                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created")+ ": " + dest.getParentFile().getAbsolutePath());
                     }
                 }
                 file.transferTo(dest);
