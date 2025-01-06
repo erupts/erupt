@@ -52,6 +52,7 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                         case TAB_TREE:
                         case TAB_TABLE_REFER:
                         case CHECKBOX:
+                        case MULTI_CHOICE:
                             return ViewType.TAB_VIEW;
                     }
                 }

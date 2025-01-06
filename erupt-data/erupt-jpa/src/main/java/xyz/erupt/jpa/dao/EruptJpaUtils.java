@@ -40,7 +40,7 @@ public class EruptJpaUtils {
         String eruptNameSymbol = eruptModel.getEruptName() + EruptConst.DOT;
         cols.add(eruptNameSymbol + eruptModel.getErupt().primaryKeyCol() + AS + eruptModel.getErupt().primaryKeyCol());
         eruptModel.getEruptFieldModels().forEach(field -> {
-            if (null != field.getField().getAnnotation(OneToMany.class) || null != field.getField().getAnnotation(ManyToMany.class)) {
+            if (null != field.getField().getAnnotation(OneToMany.class) || null != field.getField().getAnnotation(ManyToMany.class) || null != field.getField().getAnnotation(ElementCollection.class)) {
                 return;
             }
             if (null == field.getField().getAnnotation(OneToOne.class) && field.getEruptField().edit().type() == EditType.COMBINE) {
