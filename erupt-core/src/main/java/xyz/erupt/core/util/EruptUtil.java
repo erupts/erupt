@@ -63,6 +63,14 @@ public class EruptUtil {
             if (null != value) {
                 EruptField eruptField = fieldModel.getEruptField();
                 switch (eruptField.edit().type()) {
+                    case NUMBER:
+                        Number val = (Number) value;
+                        if (val.doubleValue() > GsonFactory.JS_MAX_NUMBER || val.doubleValue() < GsonFactory.JS_MIN_NUMBER) {
+                            map.put(field.getName(), val.toString());
+                        } else {
+                            map.put(field.getName(), value);
+                        }
+                        break;
                     case REFERENCE_TREE:
                     case REFERENCE_TABLE:
                         String id;
