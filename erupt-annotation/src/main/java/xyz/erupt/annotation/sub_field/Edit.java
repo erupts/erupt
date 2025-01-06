@@ -78,6 +78,9 @@ public @interface Edit {
     @Match("#item.type().toString()=='CHOICE'")
     ChoiceType choiceType() default @ChoiceType;
 
+    @Match("#item.type().toString()=='MULTI_CHOICE'")
+    MultiChoiceType multiChoiceType() default @MultiChoiceType;
+
     @Match("#item.type().toString()=='TAGS'")
     TagsType tagsType() default @TagsType;
 
