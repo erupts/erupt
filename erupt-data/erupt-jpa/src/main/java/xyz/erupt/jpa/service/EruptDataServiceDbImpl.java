@@ -127,7 +127,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 throw new EruptWebApiRuntimeException(throwable.getMessage());
             }
         }
-        throw new EruptWebApiRuntimeException(e.getMessage());
+        throw new EruptWebApiRuntimeException(e);
     }
 
     @Transactional
