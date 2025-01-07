@@ -21,18 +21,18 @@ public class MetaModel extends BaseModel {
 
     @Comment("创建人")
     @EruptSmartSkipSerialize
-    private transient String createBy;
+    private String createBy;
 
     @Comment("创建时间")
     @EruptSmartSkipSerialize
-    private transient LocalDateTime createTime;
+    private LocalDateTime createTime;
 
     @Comment("更新人")
     @EruptSmartSkipSerialize
-    private transient String updateBy;
+    private String updateBy;
 
     @Comment("更新时间")
     @EruptSmartSkipSerialize
-    private transient LocalDateTime updateTime;
+    private LocalDateTime updateTime;
 
 }
