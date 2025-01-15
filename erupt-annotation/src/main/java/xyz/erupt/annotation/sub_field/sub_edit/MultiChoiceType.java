@@ -11,7 +11,7 @@ import java.beans.Transient;
  */
 public @interface MultiChoiceType {
 
-    Type type() default Type.SELECT;
+    Type type() default Type.CHECKBOX;
 
     @Transient
     @Comment("手动配置选择项")
