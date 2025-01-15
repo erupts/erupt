@@ -270,9 +270,12 @@ public class EruptUtil {
                 }
             }
             if (field.getEruptField().edit().type() == EditType.COMBINE) {
-                EruptApiModel eam = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), jsonObject.getAsJsonObject(field.getFieldName()));
-                if (eam.getStatus() == EruptApiModel.Status.ERROR) {
-                    return eam;
+                JsonObject combine = jsonObject.getAsJsonObject(field.getFieldName());
+                if (null != combine) {
+                    EruptApiModel eam = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), combine);
+                    if (eam.getStatus() == EruptApiModel.Status.ERROR) {
+                        return eam;
+                    }
                 }
             }
             if (null != value && !AnnotationConst.EMPTY_STR.equals(edit.title())) {
