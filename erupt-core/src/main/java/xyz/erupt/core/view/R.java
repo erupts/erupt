@@ -30,28 +30,27 @@ public class R<T> implements Serializable {
     private boolean errorIntercept = true;
 
     public static <T> R<T> ok(T data) {
-        return new R<T>() {{
-            this.setSuccess(true);
-            this.setData(data);
-            this.setPromptWay(EruptApiModel.PromptWay.NONE);
-            this.setStatus(EruptApiModel.Status.SUCCESS);
-        }};
+        R<T> r = new R<>();
+        r.setSuccess(true);
+        r.setData(data);
+        r.setPromptWay(EruptApiModel.PromptWay.NONE);
+        r.setStatus(EruptApiModel.Status.SUCCESS);
+        return r;
     }
 
-
     public static <T> R<T> ok() {
-        return new R<T>() {{
-            this.setSuccess(true);
-            this.setStatus(EruptApiModel.Status.SUCCESS);
-        }};
+        R<T> r = new R<>();
+        r.setSuccess(true);
+        r.setStatus(EruptApiModel.Status.SUCCESS);
+        return r;
     }
 
     public static <T> R<T> error(String message) {
-        return new R<T>() {{
-            this.setSuccess(false);
-            this.setMessage(message);
-            this.setStatus(EruptApiModel.Status.ERROR);
-        }};
+        R<T> r = new R<>();
+        r.setSuccess(false);
+        r.setMessage(message);
+        r.setStatus(EruptApiModel.Status.ERROR);
+        return r;
     }
 
     public enum Status {
