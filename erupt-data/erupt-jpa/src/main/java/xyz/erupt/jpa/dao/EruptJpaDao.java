@@ -1,8 +1,8 @@
 package xyz.erupt.jpa.dao;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.query.Condition;
-import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.EruptUtil;
@@ -27,19 +27,17 @@ public class EruptJpaDao {
     @Resource
     private EntityManagerService entityManagerService;
 
+    @Transactional
     public void addEntity(Class<?> eruptClass, Object entity) {
-        entityManagerService.entityManagerTran(eruptClass, (em) -> {
-            em.persist(entity);
-        });
+        entityManagerService.entityManagerTran(eruptClass, (em) -> em.persist(entity));
     }
 
+    @Transactional
     public void editEntity(Class<?> eruptClass, Object entity) {
-        entityManagerService.entityManagerTran(eruptClass, (em) -> {
-            em.merge(entity);
-        });
+        entityManagerService.entityManagerTran(eruptClass, (em) -> em.merge(entity));
     }
 
-
+    @Transactional
     public void removeEntity(Class<?> eruptClass, Object entity) {
         entityManagerService.entityManagerTran(eruptClass, (em) -> {
             if (em.contains(entity)) {
