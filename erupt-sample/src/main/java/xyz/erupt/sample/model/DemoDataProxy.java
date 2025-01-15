@@ -2,6 +2,7 @@ package xyz.erupt.sample.model;
 
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.model.Alert;
 import xyz.erupt.annotation.query.Condition;
 
 import java.util.List;
@@ -22,5 +23,10 @@ public class DemoDataProxy implements DataProxy<Demo> {
     @Override
     public String beforeFetch(List<Condition> conditions) {
         return DataProxy.super.beforeFetch(conditions);
+    }
+
+    @Override
+    public Alert alert(List<Condition> conditions) {
+        return Alert.info("提示信息");
     }
 }

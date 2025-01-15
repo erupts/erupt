@@ -20,9 +20,7 @@ public class Alert {
     private UiType uiType = UiType.info;
 
     public static Alert info(String message) {
-        return new Alert() {{
-            setMessage(message);
-        }};
+        return new Alert(message, false, UiType.info);
     }
 
     public Alert(String message, boolean closeable, UiType uiType) {
