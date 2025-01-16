@@ -111,10 +111,10 @@ public class EruptMenuService implements DataProxy<EruptMenu> {
                         eruptDao.merge(subMenu);
                     }
                 } catch (Exception ignore) {
-
                 }
             }
         }
+        this.flushMenuCache();
     }
 
     @Override
