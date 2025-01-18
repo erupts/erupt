@@ -7,7 +7,7 @@ import java.beans.Transient;
 
 /**
  * @author YuePeng
- * date 2018-10-09.
+ * date 2025-01-19.
  */
 public @interface MultiChoiceType {
 
