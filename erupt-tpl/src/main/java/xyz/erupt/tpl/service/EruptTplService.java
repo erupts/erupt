@@ -39,6 +39,8 @@ public class EruptTplService {
 
     public static String TPL = "tpl";
 
+    public static String TPL_MICRO = "mtpl";
+
     private static final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
 
     private static final Class<?>[] engineTemplates = {
