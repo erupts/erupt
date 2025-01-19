@@ -20,6 +20,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.util.UPMSUtil;
 
 import javax.annotation.Resource;
@@ -45,7 +46,8 @@ public class UpmsDataLoadService implements CommandLineRunner {
     @Resource
     private EruptProp eruptProp;
 
-    public static final String DEFAULT_ACCOUNT = EruptConst.ERUPT;
+    @Resource
+    private EruptUpmsProp eruptUpmsProp;
 
     @Transactional
     @Override
@@ -104,9 +106,9 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     eruptUser.setIsMd5(true);
                     eruptUser.setStatus(true);
                     eruptUser.setCreateTime(new Date());
-                    eruptUser.setAccount(DEFAULT_ACCOUNT);
-                    eruptUser.setPassword(MD5Util.digest(DEFAULT_ACCOUNT));
-                    eruptUser.setName(DEFAULT_ACCOUNT);
+                    eruptUser.setAccount(eruptUpmsProp.getDefaultAccount());
+                    eruptUser.setPassword(MD5Util.digest(eruptUpmsProp.getDefaultPassword()));
+                    eruptUser.setName(eruptUpmsProp.getDefaultAccount());
                     eruptDao.persistIfNotExist(EruptUser.class, eruptUser, LambdaSee.field(EruptUser::getAccount), eruptUser.getAccount());
                 }
             }

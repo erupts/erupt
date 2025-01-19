@@ -97,7 +97,7 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> im
         List<String> header = new ArrayList<>();
         boolean first = true;
         while ((line = reader.readLine()) != null) {
-            String[] row = line.split(",");
+            String[] row = parseCsvLine(line);
             for (int i = 0; i < row.length; i++) {
                 if (first) {
                     header.add(row[i]);
@@ -107,9 +107,6 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> im
                 } else {
                     if (i < header.size()) {
                         if (null != row[i]) {
-                            if (row[i].startsWith("\"") && row[i].endsWith("\"")) {
-                                row[i] = row[i].substring(1, row[i].length() - 1);
-                            }
                             langMappings.get(header.get(i)).put(row[0], row[i]);
                         }
                     }
@@ -117,6 +114,24 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> im
             }
             first = false;
         }
+    }
+
+    private String[] parseCsvLine(String line) {
+        List<String> result = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        boolean inQuotes = false;
+        for (char c : line.toCharArray()) {
+            if (c == '"') {
+                inQuotes = !inQuotes;
+            } else if (c == ',' && !inQuotes) {
+                result.add(sb.toString());
+                sb = new StringBuilder();
+            } else {
+                sb.append(c);
+            }
+        }
+        result.add(sb.toString());
+        return result.toArray(new String[0]);
     }
 
 }

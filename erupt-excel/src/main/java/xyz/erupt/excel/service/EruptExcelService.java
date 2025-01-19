@@ -136,7 +136,7 @@ public class EruptExcelService {
             Edit edit = eruptFieldModel.getEruptField().edit();
             switch (edit.type()) {
                 case CHOICE:
-                    Map<String, String> map = EruptUtil.getChoiceMap(eruptModel, edit.choiceType());
+                    Map<String, String> map = EruptUtil.getChoiceMap(eruptModel, edit);
                     Map<String, Object> choiceMap = new HashMap<>(map.size());
                     for (Map.Entry<String, String> entry : map.entrySet()) {
                         choiceMap.put(entry.getValue(), entry.getKey());
@@ -291,7 +291,7 @@ public class EruptExcelService {
                                 edit.boolType().falseText()})));
                         break;
                     case CHOICE:
-                        List<VLModel> vls = EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit().choiceType());
+                        List<VLModel> vls = EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit());
                         String[] arr = new String[vls.size()];
                         long length = 0;
                         for (int i = 0; i < vls.size(); i++) {

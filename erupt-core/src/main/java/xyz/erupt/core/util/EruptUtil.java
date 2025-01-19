@@ -18,7 +18,6 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
@@ -64,6 +63,14 @@ public class EruptUtil {
             if (null != value) {
                 EruptField eruptField = fieldModel.getEruptField();
                 switch (eruptField.edit().type()) {
+                    case NUMBER:
+                        Number val = (Number) value;
+                        if (val.doubleValue() > GsonFactory.JS_MAX_NUMBER || val.doubleValue() < GsonFactory.JS_MIN_NUMBER) {
+                            map.put(field.getName(), val.toString());
+                        } else {
+                            map.put(field.getName(), value);
+                        }
+                        break;
                     case REFERENCE_TREE:
                     case REFERENCE_TABLE:
                         String id;
@@ -132,16 +139,23 @@ public class EruptUtil {
         return map;
     }
 
-    public static Map<String, String> getChoiceMap(EruptModel eruptModel, ChoiceType choiceType) {
+    public static Map<String, String> getChoiceMap(EruptModel eruptModel, Edit edit) {
         Map<String, String> choiceMap = new LinkedHashMap<>();
-        getChoiceList(eruptModel, choiceType).forEach(vl -> choiceMap.put(vl.getValue(), vl.getLabel()));
+        getChoiceList(eruptModel, edit).forEach(vl -> choiceMap.put(vl.getValue(), vl.getLabel()));
         return choiceMap;
     }
 
-    public static List<VLModel> getChoiceList(EruptModel eruptModel, ChoiceType choiceType) {
-        List<VLModel> vls = Stream.of(choiceType.vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).collect(Collectors.toList());
-        Stream.of(choiceType.fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
-                Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(choiceType.fetchHandlerParams())).ifPresent(vls::addAll));
+    public static List<VLModel> getChoiceList(EruptModel eruptModel, Edit edit) {
+        List<VLModel> vls = new ArrayList<>();
+        if (edit.type() == EditType.CHOICE) {
+            vls.addAll(Stream.of(edit.choiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).collect(Collectors.toList()));
+            Stream.of(edit.choiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
+                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(edit.choiceType().fetchHandlerParams())).ifPresent(vls::addAll));
+        } else if (edit.type() == EditType.MULTI_CHOICE) {
+            vls.addAll(Stream.of(edit.multiChoiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).collect(Collectors.toList()));
+            Stream.of(edit.multiChoiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
+                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(edit.multiChoiceType().fetchHandlerParams())).ifPresent(vls::addAll));
+        }
         if (eruptModel.isI18n()) {
             vls.forEach(vl -> vl.setLabel(I18nTranslate.$translate(vl.getLabel())));
         }
@@ -203,7 +217,7 @@ public class EruptUtil {
                         if (edit.search().value() && null != condition.getValue()) {
                             if (condition.getValue() instanceof Collection) {
                                 Collection<?> collection = (Collection<?>) condition.getValue();
-                                if (collection.size() == 0) {
+                                if (collection.isEmpty()) {
                                     continue;
                                 }
                             }
@@ -256,9 +270,12 @@ public class EruptUtil {
                 }
             }
             if (field.getEruptField().edit().type() == EditType.COMBINE) {
-                EruptApiModel eam = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), jsonObject.getAsJsonObject(field.getFieldName()));
-                if (eam.getStatus() == EruptApiModel.Status.ERROR) {
-                    return eam;
+                JsonObject combine = jsonObject.getAsJsonObject(field.getFieldName());
+                if (null != combine) {
+                    EruptApiModel eam = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), combine);
+                    if (eam.getStatus() == EruptApiModel.Status.ERROR) {
+                        return eam;
+                    }
                 }
             }
             if (null != value && !AnnotationConst.EMPTY_STR.equals(edit.title())) {

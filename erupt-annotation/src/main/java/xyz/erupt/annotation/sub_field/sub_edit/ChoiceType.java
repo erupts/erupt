@@ -24,7 +24,7 @@ public @interface ChoiceType {
     String[] fetchHandlerParams() default {};
 
     @Transient
-    @Comment("动态获取选择项")
+    @Comment("获取下拉列表")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
     @Transient

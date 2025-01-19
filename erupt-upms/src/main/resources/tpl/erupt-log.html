@@ -22,37 +22,19 @@
     </style>
 </head>
 <body>
-<div style="background: #1e1f22;padding: 0 12px;position: fixed;left: 0;right: 0;top: 0;bottom: 0">
-    <div id="terminal" style="width:100%;height:100%">
+<div style="background: #1e1f22;position: fixed;left: 0;right: 0;top: 0;bottom: 0;padding-left: 12px;">
+    <div id="terminal" style="width:100%;height:100%;">
 
     </div>
 </div>
 <script src="log/axios.min.js"></script>
 <script src="log/xterm.js"></script>
 <script src="log/xterm-addon-fit.js"></script>
+<script src="log/xterm-addon-web-links.js"></script>
+<script src="log/xterm-addon-search.js"></script>
 <script>
     let cloudNode = new URLSearchParams(location.search).get("_erupt") === 'CloudNode';
-    if (cloudNode) {
-        if (window.self !== window.top) {
-            let interval;
 
-            function removeHeader() {
-                try {
-                    // window.parent.document.getElementsByClassName("ant-modal-header")[0].remove();
-                    // window.parent.document.getElementsByClassName("ant-modal-close-x")[0].style.color = "#fff";
-                    window.parent.document.getElementsByClassName("ant-drawer-header")[0].remove();
-                } catch (e) {
-                    console.warn(e);
-                    interval && clearInterval(interval);
-                }
-            }
-
-            removeHeader()
-            interval = setInterval(() => {
-                removeHeader()
-            }, 100)
-        }
-    }
     const xterm = new Terminal({
         convertEol: true,
         fontFamily: `Courier New, 'Fira Mono', monospace`,
@@ -64,8 +46,13 @@
             background: "#1e1f22", //背景色
         }
     });
-    var fitAddon = new FitAddon.FitAddon();
+    xterm.loadAddon(new WebLinksAddon.WebLinksAddon());
+    let searchAddon = new SearchAddon.SearchAddon();
+    // let searchAddonBar = new SearchAddonBar.SearchAddonBar({searchAddon});
+    xterm.loadAddon(searchAddon);
+    let fitAddon = new FitAddon.FitAddon();
     xterm.loadAddon(fitAddon)
+    // xterm.loadAddon(searchAddonBar);
     xterm.open(document.getElementById('terminal'));
     let offset = null;
 

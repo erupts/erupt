@@ -21,9 +21,9 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class GsonFactory implements ToNumberStrategy {
 
-    public static final double JS_MAX_NUMBER = Math.pow(2, 53) - 1;
+    public static final double JS_MAX_NUMBER = 9007199254740991.0;
 
-    public static final double JS_MIN_NUMBER = Math.pow(-2, 53);
+    public static final double JS_MIN_NUMBER = -9007199254740991.0;
 
     @Getter
     private final static GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
@@ -35,6 +35,7 @@ public class GsonFactory implements ToNumberStrategy {
                     -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)))
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
+            .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
             .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> serializeDoubleValue(src))
             .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
             .setObjectToNumberStrategy(new GsonFactory())
