@@ -16,7 +16,7 @@ public enum ChartTypeEnum {
     Number("数值统计", "1 ~ 2 个数据列：值 / [名称]"),
 
     @ChartColumn({A.X})
-    Alert("文本提示", "1 个数据列, 展现需要关注的信息"),
+    Alert("文本提示", "1 个数据列（多行会自动拼接）, 展现需要关注的信息"),
 
     @ChartColumn({A.X, A.Y, A.Z})
     Line("折线图", "2 ~ 3 个数据列：名称 / 值 / [分类]"),
