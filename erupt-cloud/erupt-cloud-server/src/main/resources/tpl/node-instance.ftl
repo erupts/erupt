@@ -1,8 +1,7 @@
 <html>
 <head>
-    <base href="${base}/">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="ant-design/antd.min.css">
+    <link rel="stylesheet" href="${base}/ant-design/antd.min.css">
 </head>
 <body>
 <div id="app">
@@ -21,9 +20,9 @@
         </a-list>
     </template>
 </div>
-<script src="ant-design/vue.min.js"></script>
-<script src="ant-design/antd.min.js"></script>
-<script src="ant-design/axios.min.js"></script>
+<script src="${base}/ant-design/vue.min.js"></script>
+<script src="${base}/ant-design/antd.min.js"></script>
+<script src="${base}/ant-design/axios.min.js"></script>
 <script>
     var vue = new Vue({
         el: '#app',

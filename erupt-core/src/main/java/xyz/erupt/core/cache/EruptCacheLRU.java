@@ -1,5 +1,8 @@
 package xyz.erupt.core.cache;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -55,15 +58,27 @@ public class EruptCacheLRU<V> extends LinkedHashMap<String, EruptCacheLRU.Expire
                 lock.writeLock().unlock();
             }
             return null;
+        } else {
+            expireNode.setExpire(expireNode.getExpire() + 100);
         }
         return expireNode.value;
+    }
+
+    @Override
+    public void expire(String key, long ttl) {
+        super.get(key).setExpire(System.currentTimeMillis() + ttl);
+    }
+
+    @Override
+    public Long getExpire(String key) {
+        return super.get(key).expire - System.currentTimeMillis();
     }
 
     @Override
     public void delete(String key) {
         try {
             lock.writeLock().lock();
-            this.remove(key);
+            super.remove(key);
         } finally {
             lock.writeLock().unlock();
         }
@@ -73,6 +88,11 @@ public class EruptCacheLRU<V> extends LinkedHashMap<String, EruptCacheLRU.Expire
     protected boolean removeEldestEntry(Map.Entry<String, ExpireNode<V>> eldest) {
         if (this.size() > capacity) this.clean();
         return this.size() > this.capacity;
+    }
+
+    @Override
+    public ExpireNode<V> remove(Object key) {
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -97,10 +117,12 @@ public class EruptCacheLRU<V> extends LinkedHashMap<String, EruptCacheLRU.Expire
     /**
      * 过期时间节点
      */
+    @Getter
+    @Setter
     public static class ExpireNode<V> {
-        private final long expire;
+        private long expire;
 
-        private final V value;
+        private V value;
 
         ExpireNode(long expire, V value) {
             this.expire = expire;

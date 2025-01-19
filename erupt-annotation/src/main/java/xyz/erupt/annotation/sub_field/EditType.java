@@ -33,8 +33,10 @@ public enum EditType {
     @EditTypeMapping(mapping = BoolType.class, desc = "布尔", allowType = {JavaTypeEnum.bool})
     BOOLEAN,
     @EditTypeSearch(vagueMethod = QueryExpression.IN)
-    @EditTypeMapping(mapping = ChoiceType.class, desc = "选择框", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
+    @EditTypeMapping(mapping = ChoiceType.class, desc = "单选", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     CHOICE,
+    @EditTypeMapping(mapping = MultiChoiceType.class, desc = "多选", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    MULTI_CHOICE,
     @EditTypeSearch
     @EditTypeMapping(mapping = TagsType.class, desc = "标签选择器", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     TAGS,
@@ -74,7 +76,7 @@ public enum EditType {
     @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用（多对一)", allowType = {JavaTypeEnum.object})
     REFERENCE_TREE,
     @EditTypeSearch
-    @EditTypeMapping(mapping = ReferenceTableType.class, desc = "表格引用（多对一)", allowType = {JavaTypeEnum.bool})
+    @EditTypeMapping(mapping = ReferenceTableType.class, desc = "表格引用（多对一)", allowType = {JavaTypeEnum.object})
     REFERENCE_TABLE,
     @EditTypeMapping(mapping = CheckboxType.class, desc = "多选（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
     CHECKBOX,

@@ -29,7 +29,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.*;
@@ -65,7 +64,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         return eruptJpaDao.queryEruptList(eruptModel, page, query);
     }
 
-    @Transactional
     @Override
     public void addData(EruptModel eruptModel, Object data) {
         try {
@@ -73,6 +71,17 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
             this.jpaManyToOneConvert(eruptModel, data);
             eruptJpaDao.addEntity(eruptModel.getClazz(), data);
         } catch (Exception e) {
+            handlerException(e, eruptModel);
+        }
+    }
+
+    @Override
+    public void editData(EruptModel eruptModel, Object data) {
+        try {
+            this.loadSupport(data);
+            eruptJpaDao.editEntity(eruptModel.getClazz(), data);
+        } catch (Exception e) {
+
             handlerException(e, eruptModel);
         }
     }
@@ -91,17 +100,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                     if (i % 500 == 0) em.flush();
                 }
             });
-        } catch (Exception e) {
-            handlerException(e, eruptModel);
-        }
-    }
-
-    @Transactional
-    @Override
-    public void editData(EruptModel eruptModel, Object data) {
-        try {
-            this.loadSupport(data);
-            eruptJpaDao.editEntity(eruptModel.getClazz(), data);
         } catch (Exception e) {
             handlerException(e, eruptModel);
         }
@@ -127,10 +125,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 throw new EruptWebApiRuntimeException(throwable.getMessage());
             }
         }
-        throw new EruptWebApiRuntimeException(e.getMessage());
+        throw new EruptWebApiRuntimeException(e);
     }
 
-    @Transactional
     @Override
     public void deleteData(EruptModel eruptModel, Object object) {
         try {

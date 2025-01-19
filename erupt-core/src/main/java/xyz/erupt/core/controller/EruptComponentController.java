@@ -61,7 +61,7 @@ public class EruptComponentController {
                                     @PathVariable("field") String field) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
-        return EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit().choiceType());
+        return EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit());
     }
 
     @GetMapping("/choice-trigger/{erupt}/{field}")

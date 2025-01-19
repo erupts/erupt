@@ -84,7 +84,7 @@ public class DataHandlerUtil {
             case CHOICE:
                 Map<String, String> cm = choiceItems.get(fieldModel.getFieldName());
                 if (null == cm) {
-                    cm = EruptUtil.getChoiceMap(eruptModel, edit.choiceType());
+                    cm = EruptUtil.getChoiceMap(eruptModel, edit);
                     choiceItems.put(fieldModel.getFieldName(), cm);
                 }
                 return cm.get(value.toString());

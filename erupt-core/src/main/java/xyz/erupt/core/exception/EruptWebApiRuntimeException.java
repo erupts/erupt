@@ -9,6 +9,10 @@ import lombok.Getter;
 @Getter
 public class EruptWebApiRuntimeException extends RuntimeException {
 
+    public EruptWebApiRuntimeException(Throwable throwable) {
+        super(throwable);
+    }
+
     public EruptWebApiRuntimeException(String message) {
         super(message);
     }

@@ -30,6 +30,10 @@
             /*border-collapse: collapse;*/
         }
 
+        .center {
+            text-align: center;
+        }
+
         .table.content-center td {
             text-align: center;
         }
@@ -214,6 +218,29 @@
                 </tr>
             </table>
         </el-card>
+
+        <el-card class="box-card" shadow="always">
+            <div class="clearfix" slot="header">
+                <span>GPU 信息</span>
+            </div>
+            <table class="table">
+                <tr>
+                    <th>Device Id</th>
+                    <th>名称</th>
+                    <th>供应商</th>
+                    <th>内存大小</th>
+                    <th>版本信息</th>
+                </tr>
+                <tr v-for="gpu in server.gpus">
+                    <td style="text-align: center">{{gpu.deviceId}}</td>
+                    <td>{{gpu.name}}</td>
+                    <td class="center">{{gpu.vendor}}</td>
+                    <td class="center">{{gpu.memorySize}}G</td>
+                    <td>{{gpu.versionInfo}}</td>
+                </tr>
+            </table>
+        </el-card>
+
         <el-card class="box-card" shadow="always">
             <div class="clearfix" slot="header">
                 <span>磁盘信息</span>
@@ -232,10 +259,10 @@
                     <td>{{sysFile.dirName}}</td>
                     <td>{{sysFile.sysTypeName}}</td>
                     <td>{{sysFile.typeName}}</td>
-                    <td>{{sysFile.total}}</td>
-                    <td>{{sysFile.free}}</td>
-                    <td>{{sysFile.used}}</td>
-                    <td>{{sysFile.usage}}</td>
+                    <td class="center">{{sysFile.total}}</td>
+                    <td class="center">{{sysFile.free}}</td>
+                    <td class="center">{{sysFile.used}}</td>
+                    <td class="center">{{sysFile.usage}}</td>
                 </tr>
             </table>
         </el-card>

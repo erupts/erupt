@@ -2,6 +2,7 @@ package xyz.erupt.excel.controller;
 
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -47,6 +48,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_EXCEL)
 @RequiredArgsConstructor
+@Slf4j
 public class EruptExcelController {
 
     private final EruptProp eruptProp;
@@ -97,11 +99,11 @@ public class EruptExcelController {
     @PostMapping("/import/{erupt}")
     @EruptRecordOperate(value = "Import Excel", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public EruptApiModel importExcel(@PathVariable("erupt") String eruptName, @RequestParam("file") MultipartFile file) {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable, "Not import permission");
-        if (file.isEmpty() || null == file.getOriginalFilename()) return EruptApiModel.errorApi("上传失败，请选择文件");
+        if (file.isEmpty() || null == file.getOriginalFilename()) return EruptApiModel.errorApi("No file");
         List<JsonObject> list;
         int i = 1;
         try {
@@ -112,7 +114,7 @@ public class EruptExcelController {
             } else if (file.getOriginalFilename().endsWith(EruptExcelService.XLSX_FORMAT)) {
                 wb = new XSSFWorkbook(file.getInputStream());
             } else {
-                throw new EruptWebApiRuntimeException("上传文件格式必须为Excel");
+                throw new EruptWebApiRuntimeException("The uploaded file format must be Excel");
             }
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelImport(wb)));
             list = dataFileService.excelToEruptObject(eruptModel, wb);
@@ -134,6 +136,7 @@ public class EruptExcelController {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelImportProcess(eruptDataList)));
             eruptModifyController.batchAddEruptData(eruptModel, eruptDataList);
         } catch (Exception e) {
+            log.error("import error {}", eruptModel.getEruptName(), e);
             throw new EruptWebApiRuntimeException("数据导入异常，原因：" + e.getMessage());
         }
         return EruptApiModel.successApi();

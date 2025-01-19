@@ -78,9 +78,7 @@ public class EruptService {
         }
         this.drillProcess(eruptModel, (link, val) -> {
             conditionStrings.add(String.format(val instanceof String ? "%s = '%s'" : "%s = %s", link.linkErupt().getSimpleName() + EruptConst.DOT + link.joinColumn(), val));
-            if (StringUtils.isNotBlank(link.linkCondition())) {
-                conditionStrings.add(link.linkCondition());
-            }
+            if (StringUtils.isNotBlank(link.linkCondition())) conditionStrings.add(link.linkCondition());
         });
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
@@ -90,6 +88,7 @@ public class EruptService {
                         .conditionStrings(conditionStrings).conditions(legalConditions).build());
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
         Optional.ofNullable(page.getList()).ifPresent(it -> DataHandlerUtil.convertDataToEruptView(eruptModel, it));
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.alert(legalConditions)).ifPresent(page::setAlert)));
         return page;
     }
 

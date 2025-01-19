@@ -39,6 +39,8 @@ public class EruptTplService {
 
     public static String TPL = "tpl";
 
+    public static String TPL_MICRO = "mtpl";
+
     private static final Map<Tpl.Engine, EngineTemplate<Object>> tplEngines = new HashMap<>();
 
     private static final Class<?>[] engineTemplates = {
@@ -147,6 +149,13 @@ public class EruptTplService {
         map.put(EngineConst.INJECT_BASE, request.getContextPath());
         EngineTemplate<Object> engineAbstractTemplate = tplEngines.get(engine);
         Assert.notNull(engineAbstractTemplate, engine.name() + " jar not found");
+        if (path.contains("?")) {
+            String[] sp = path.split("\\?");
+            path = sp[0];
+            for (String kv : sp[1].split("&")) {
+                map.put(kv.split("=")[0], kv.split("=")[1]);
+            }
+        }
         engineAbstractTemplate.render(engineAbstractTemplate.getEngine(), path, map, writer);
     }
 

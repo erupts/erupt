@@ -62,7 +62,7 @@ public class EruptFileController {
     @PostMapping("/upload/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
-        //生成存储路径
+        // Generating storage paths
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isAdd());
         Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
@@ -70,7 +70,7 @@ public class EruptFileController {
         switch (edit.type()) {
             case ATTACHMENT:
                 AttachmentType attachmentType = edit.attachmentType();
-                //校验扩展名
+                // Validates the extension
                 if (attachmentType.fileTypes().length > 0) {
                     String[] fileNameArr = file.getOriginalFilename().split("\\.");
                     String extensionName = fileNameArr[fileNameArr.length - 1];
@@ -81,14 +81,13 @@ public class EruptFileController {
                 if (!"".equals(attachmentType.path())) {
                     path = attachmentType.path() + path;
                 }
-                //校验文件大小
+                // Verify the file size
                 if (attachmentType.size() > 0 && file.getSize() / 1024 > attachmentType.size()) {
                     return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.size") + ": " + attachmentType.size() + "KB");
                 }
                 switch (edit.attachmentType().type()) {
                     case IMAGE:
                         AttachmentType.ImageType imageType = edit.attachmentType().imageType();
-                        // 通过MultipartFile得到InputStream，从而得到BufferedImage
                         BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
                         if (bufferedImage == null) {
                             return EruptApiModel.errorApi(I18nTranslate.$translate("erupt.upload_error.not_image"));

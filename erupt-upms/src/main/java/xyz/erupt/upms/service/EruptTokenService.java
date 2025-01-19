@@ -6,7 +6,6 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.MetaUserinfo;
-import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.model.EruptMenu;
@@ -15,8 +14,8 @@ import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author YuePeng
@@ -31,12 +30,6 @@ public class EruptTokenService {
 
     @Resource
     private EruptSessionService eruptSessionService;
-
-    @Resource
-    private EruptProp eruptProp;
-
-    @Resource
-    private HttpServletRequest request;
 
     public void loginToken(MetaUserinfo metaUserinfo, List<MetaMenu> metaMenus, String token, Integer tokenExpire) {
         // Map<String, EruptMenu>
@@ -53,10 +46,12 @@ public class EruptTokenService {
                 }
             }
         });
-        eruptSessionService.putMap(SessionKey.MENU_VALUE_MAP + token, eruptMenuMap, tokenExpire);
-        eruptSessionService.put(SessionKey.MENU_VIEW + token, GsonFactory.getGson().toJson(eruptMenuVos), tokenExpire);
-        eruptSessionService.put(SessionKey.USER_INFO + token, GsonFactory.getGson().toJson(metaUserinfo), tokenExpire);
-        eruptSessionService.put(SessionKey.TOKEN_OLINE + token, metaUserinfo.getAccount(), tokenExpire);
+        // multi 1 minutes criteria value
+        tokenExpire -= 1;
+        eruptSessionService.putMap(SessionKey.MENU_VALUE_MAP + token, eruptMenuMap, tokenExpire, TimeUnit.MINUTES);
+        eruptSessionService.put(SessionKey.MENU_VIEW + token, GsonFactory.getGson().toJson(eruptMenuVos), tokenExpire, TimeUnit.MINUTES);
+        eruptSessionService.put(SessionKey.USER_INFO + token, GsonFactory.getGson().toJson(metaUserinfo), tokenExpire, TimeUnit.MINUTES);
+        eruptSessionService.put(SessionKey.TOKEN_OLINE + token, metaUserinfo.getAccount(), tokenExpire, TimeUnit.MINUTES);
     }
 
     public boolean tokenExist(String token) {
@@ -75,7 +70,6 @@ public class EruptTokenService {
     }
 
     public void logoutToken(String name, String token) {
-        if (!eruptProp.isRedisSession()) request.getSession().invalidate();
         for (String uk : SessionKey.USER_KEY_GROUP) eruptSessionService.remove(uk + token);
         log.info("logout erupt-token: {} → {}", name, token);
     }
