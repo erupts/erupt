@@ -7,7 +7,8 @@
     ".jpg",
     ".jpeg",
     ".gif",
-    ".bmp"
+    ".bmp",
+    ".webp"
   ],
   "imageCompressEnable": true,
   "imageCompressBorder": 1600,
@@ -39,7 +40,8 @@
     ".jpg",
     ".jpeg",
     ".gif",
-    ".bmp"
+    ".bmp",
+    ".webp"
   ],
   "videoActionName": "uploadvideo",
   "videoFieldName": "file",
@@ -110,7 +112,8 @@
     ".pdf",
     ".txt",
     ".md",
-    ".xml"
+    ".xml",
+    ".webp"
   ],
   "imageManagerActionName": "listimage",
   "imageManagerListPath": "\/{yyyy}{mm}\/",
@@ -122,7 +125,8 @@
     ".jpg",
     ".jpeg",
     ".gif",
-    ".bmp"
+    ".bmp",
+    ".webp"
   ],
   "fileManagerActionName": "listfile",
   "fileManagerListPath": "\/Uploads\/File\/",
@@ -168,6 +172,7 @@
     ".pdf",
     ".txt",
     ".md",
-    ".xml"
+    ".xml",
+    ".webp"
   ]
 }
