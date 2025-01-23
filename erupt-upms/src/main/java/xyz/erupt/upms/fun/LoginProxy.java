@@ -26,7 +26,7 @@ public interface LoginProxy {
     }
 
     @Comment("登录成功")
-    default void loginSuccess(EruptUser eruptUser, String token) {
+    default void loginSuccess(EruptUser eruptUser, LoginModel loginModel) {
     }
 
     @Comment("注销事件")
