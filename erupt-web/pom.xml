@@ -11,7 +11,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.18</version>
+        <version>1.12.19</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
