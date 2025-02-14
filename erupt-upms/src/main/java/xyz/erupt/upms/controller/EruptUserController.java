@@ -106,7 +106,7 @@ public class EruptUserController {
             loginModel.setToken(Erupts.generateCode(16));
             loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin()));
             loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
-            if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
+            if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel);
             eruptTokenService.loginToken(eruptUser, loginModel.getToken());
             eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
         }
