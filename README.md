@@ -1,7 +1,7 @@
 中文 &nbsp; | &nbsp; [English](./README-EN.md)  
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
-<h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用配置管理框架 </h1>
+<h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用数据管理框架 </h1>
 <h3 align="center">零前端代码，急速开发通用管理系统</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
 
@@ -12,6 +12,7 @@
     <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
     <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html"><img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk 8+"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-blue" alt="license Apache 2.0"></a>
+    <a href="https://gitcode.com/erupts/erupt"><img src="https://gitcode.com/erupts/erupt/star/badge.svg" alt="gitcode"></a>
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
     <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=social" alt="GitHub stars"></a>
@@ -19,26 +20,22 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/erupts/erupt">Github 仓库</a> &nbsp; | &nbsp; 
+    <a href="https://github.com/erupts/erupt">GitHub 仓库</a> &nbsp; | &nbsp;
+    <a href="https://gitcode.com/erupts/erupt">GitCode 仓库</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">码云仓库</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz" target="_blank"><b>🦅 官方网站</b></a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz" target="_blank"><b>官方网站</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/#!/module" target="_blank">框架生态</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/erupts" target="_blank"><b>📕 使用文档</b></a>
+    <a href="https://www.yuque.com/erupts" target="_blank">📕 使用文档</a>
 </p>
 
 ---
 
 <p align="center">
-    <a href="https://www.yuque.com/erupts/erupt/ggbcv9">Erupt Cloud【分布式云配置】</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/erupts/erupt/ggbcv9">Erupt Cloud【云架构】</a> &nbsp; | &nbsp; 
+    <a href="https://github.com/erupts/linq.j">Linq.J</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts/erupt/hstvzf">Erupt BI 【数据分析】</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts/erupt/xviwe9bimrmae26t">Erupt Tenant 【多租户】</a>
-</p>
-
----
-
-<p align="center">
-    
 </p>
 
 ---
@@ -402,8 +399,9 @@ QQ交流群：<a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DhReMX7b17i5e_x
 
 <p align="center">
     <a href="https://github.com/erupts/erupt">Github 仓库</a> &nbsp; | &nbsp; 
+    <a href="https://gitcode.com/erupts/erupt">GitCode 仓库</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">码云仓库</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz" target="_blank"><b>🦅 官方网站</b></a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz" target="_blank"><b>官方网站</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts" target="_blank">📕 使用文档</a>
 </p>
