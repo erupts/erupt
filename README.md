@@ -21,7 +21,7 @@
 
 <p align="center">
     <a href="https://github.com/erupts/erupt">GitHub 仓库</a> &nbsp; | &nbsp;
-    <a href="https://gitcode.com/erupts/erupt">GitCode仓库</a> &nbsp; | &nbsp; 
+    <a href="https://gitcode.com/erupts/erupt">GitCode 仓库</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">码云仓库</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank"><b>官方网站</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
@@ -399,8 +399,9 @@ QQ交流群：<a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DhReMX7b17i5e_x
 
 <p align="center">
     <a href="https://github.com/erupts/erupt">Github 仓库</a> &nbsp; | &nbsp; 
+    <a href="https://gitcode.com/erupts/erupt">GitCode 仓库</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">码云仓库</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz" target="_blank"><b>🦅 官方网站</b></a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz" target="_blank"><b>官方网站</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts" target="_blank">📕 使用文档</a>
 </p>
