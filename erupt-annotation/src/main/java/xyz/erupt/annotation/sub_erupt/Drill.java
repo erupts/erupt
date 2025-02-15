@@ -15,6 +15,9 @@ public @interface Drill {
 
     String title();
 
+    @Comment("是否折叠显示")
+    boolean fold() default false;
+
     @Comment("图标请参考Font Awesome")
     String icon() default "fa fa-sitemap";
 
