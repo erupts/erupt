@@ -1,5 +1,5 @@
-### Web for angular
+### Erupt-Web
 
-如需自定义页面请使用 erupt-tpl模块
+当前包内容为编译后的的前端代码，可直接使用
 
-该部分源码将在 [github](https://github.com/erupts/erupt) star 达到 550 个开源
+源码详见：https://www.yuque.com/erupts/erupt/sqdd3r

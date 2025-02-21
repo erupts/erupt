@@ -5,7 +5,7 @@
 
     <artifactId>erupt-ai</artifactId>
     <name>erupt-ai</name>
-    <description>erupt ai llm</description>
+    <description>Erupt AI LLM</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>
@@ -24,6 +24,11 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
             <version>2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
