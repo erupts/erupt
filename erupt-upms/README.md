@@ -1,9 +1,6 @@
-## 用户与接口安全相关模块
-#### 页面配置：  
-用户管理、组织管理、菜单维护、角色维护、字典管理等
+# UPMS (User Permissions Manager System)
+### Core Features:
+User Management, Menu Management, Role Management, Organization Management, Open API, Operation Logs, Login Logs, Online Users, System Logs
 
-#### 核心功能
-记录登录日志，记录操作日志，redis session支持，安全校验等。  
-
-#### 强安全机制
-使用@EruptRouter注解可定义登录校验，菜单校验，erupt访问权限校验等强大功能 
+### Robust Security Mechanism
+Including features such as operation auditing, permission verification, and API encryption.

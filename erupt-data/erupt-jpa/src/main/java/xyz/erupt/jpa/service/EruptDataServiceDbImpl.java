@@ -117,9 +117,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         while (null != throwable) {
             throwable = throwable.getCause();
             if (throwable instanceof SQLException) {
-                if (throwable.getMessage().contains("Data too long")) {
+                if (throwable.getMessage().toLowerCase().contains("data too long")) {
                     throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.data.limit_length"));
-                } else if (throwable.getMessage().contains("Duplicate entry")) {
+                } else if (throwable.getMessage().toLowerCase().contains("duplicate")) {
                     throw new EruptWebApiRuntimeException(gcRepeatHint(eruptModel));
                 }
                 throw new EruptWebApiRuntimeException(throwable.getMessage());

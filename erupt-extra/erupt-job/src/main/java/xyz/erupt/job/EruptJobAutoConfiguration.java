@@ -54,7 +54,11 @@ public class EruptJobAutoConfiguration implements EruptModule {
     public void run() {
         if (eruptJobProp.isEnable()) {
             for (EruptJob job : eruptDao.lambdaQuery(EruptJob.class).eq(EruptJob::getStatus, true).list()) {
-                eruptJobService.modifyJob(job);
+                try {
+                    eruptJobService.addJob(job);
+                } catch (Exception e) {
+                    log.warn("The Erupt job named '{}' failed to be added: {}", job.getName(), e.getMessage());
+                }
             }
         } else {
             log.info("Erupt job disable");
