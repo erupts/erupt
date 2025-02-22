@@ -3,7 +3,6 @@ package xyz.erupt.cloud.node;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import xyz.erupt.cloud.node.config.EruptNodeProp;
 
 /**
  * @author YuePeng
@@ -11,6 +10,6 @@ import xyz.erupt.cloud.node.config.EruptNodeProp;
  */
 @Configuration
 @ComponentScan
-@EnableConfigurationProperties(EruptNodeProp.class)
+@EnableConfigurationProperties
 public class EruptCloudNodeAutoConfiguration {
 }

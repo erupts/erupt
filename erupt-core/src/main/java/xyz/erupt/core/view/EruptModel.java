@@ -6,6 +6,7 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.manager.EruptUiAnnotationManager;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.proxy.AnnotationProxy;
 import xyz.erupt.core.proxy.EruptProxy;
@@ -72,12 +73,12 @@ public class EruptModel implements Cloneable {
     public EruptModel clone() throws CloneNotSupportedException {
         EruptModel eruptModel = (EruptModel) super.clone();
         eruptModel.eruptJson = AnnotationProcess.annotationToJsonByReflect(this.getErupt());
-        if (this.getErupt().extra().length > 0) {
-            JsonObject extra = new JsonObject();
-            eruptModel.eruptJson.add(LambdaSee.method(Erupt::extra), extra);
-            for (Class<? extends Annotation> ex : this.getErupt().extra()) {
-                Optional.ofNullable(this.getClazz().getAnnotation(ex)).ifPresent(it -> extra.add(ex.getSimpleName(), AnnotationProcess.annotationToJsonByReflect(it)));
-            }
+        JsonObject extra = new JsonObject();
+        eruptModel.eruptJson.add(LambdaSee.method(Erupt::extra), extra);
+        EruptUiAnnotationManager.getAnnotations().forEach(annotation -> Optional.ofNullable(this.getClazz().getAnnotation(annotation))
+                .ifPresent(it -> extra.add(annotation.getSimpleName(), AnnotationProcess.annotationToJsonByReflect(it))));
+        for (Class<? extends Annotation> ex : this.getErupt().extra()) {
+            Optional.ofNullable(this.getClazz().getAnnotation(ex)).ifPresent(it -> extra.add(ex.getSimpleName(), AnnotationProcess.annotationToJsonByReflect(it)));
         }
         eruptModel.eruptFieldModels = eruptFieldModels.stream().map(CloneSupport::clone).peek(EruptFieldModel::serializable).collect(Collectors.toList());
         return eruptModel;
