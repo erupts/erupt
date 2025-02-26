@@ -81,7 +81,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
             this.loadSupport(data);
             eruptJpaDao.editEntity(eruptModel.getClazz(), data);
         } catch (Exception e) {
-
             handlerException(e, eruptModel);
         }
     }

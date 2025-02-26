@@ -31,8 +31,9 @@
         <module>erupt-core</module>
         <module>erupt-excel</module>
         <module>erupt-toolkit</module>
+        <module>erupt-ai</module>
 
-        <module>erupt-data/erupt-jpa</module><!-- Hibernate JPA 数据实现 -->
+        <module>erupt-data/erupt-jpa</module><!-- JPA 数据实现 -->
         <module>erupt-data/erupt-mongodb</module><!-- MongoDB 数据实现 -->
 
         <module>erupt-upms</module><!--用户权限管理-->
