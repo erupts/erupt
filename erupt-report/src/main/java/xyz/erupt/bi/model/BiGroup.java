@@ -36,7 +36,7 @@ public class BiGroup extends MetaModelUpdateVo implements DataProxy<BiGroup> {
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
             views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true),readonly = @Readonly(add = false))
+            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true), readonly = @Readonly(add = false))
     )
     private String code;
 
@@ -54,7 +54,7 @@ public class BiGroup extends MetaModelUpdateVo implements DataProxy<BiGroup> {
     )
     private BiGroup parent;
 
-    @Column(length = 5000)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "备注", sortable = true),
             edit = @Edit(title = "备注", type = EditType.TEXTAREA)

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -76,7 +77,7 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
     )
     private String drillExpress;
 
-    @Column(length = 1000)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(title = "描述", type = EditType.TEXTAREA)
     )

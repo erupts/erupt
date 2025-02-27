@@ -120,7 +120,7 @@ public class BiChart extends MetaModelUpdateVo {
     )
     private String sqlStatement;
 
-    @Column(length = 4000)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(title = "自定义图表配置", desc = "JSON格式，参照G2Plot",
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))

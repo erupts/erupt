@@ -108,7 +108,7 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
     )
     private String type;
 
-    @Column(length = 2000)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "默认值"),
             edit = @Edit(title = "默认值", desc = "通过js脚本动态生成默认值，字符串请加引号"

@@ -131,7 +131,7 @@ public class Bi extends MetaModelUpdateVo {
     )
     private String countStatement;
 
-    @Column(length = 2000)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "报表描述", type = ViewType.HTML),
             edit = @Edit(title = "报表描述", type = EditType.TEXTAREA)
