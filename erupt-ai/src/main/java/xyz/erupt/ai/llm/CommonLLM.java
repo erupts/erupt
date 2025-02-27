@@ -98,7 +98,7 @@ public abstract class CommonLLM extends SuperLLM<BaseLLMConfig> {
                 }
             }
         } else {
-            new Exception("Failed to get response from server" + response.body());
+            throw new RuntimeException("Failed to get response from server" + response.body());
         }
     }
 }

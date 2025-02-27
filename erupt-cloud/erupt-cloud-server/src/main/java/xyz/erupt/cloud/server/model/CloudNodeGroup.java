@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -52,7 +53,7 @@ public class CloudNodeGroup extends MetaModel {
     )
     private String config;
 
-    @Column(length = 5000)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "描述", type = ViewType.HTML),
             edit = @Edit(title = "描述", type = EditType.TEXTAREA)

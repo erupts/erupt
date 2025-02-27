@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public abstract class SuperLLM<Config> {
 
-    private static final Map<String, SuperLLM<?>> llms = new HashMap<>();
+    private static final Map<String, SuperLLM<?>> llms= new HashMap<>();
 
     public SuperLLM() {
         llms.put(this.code(), this);
@@ -33,12 +33,10 @@ public abstract class SuperLLM<Config> {
     public abstract void chatSse(Config config, String userPrompt, String assistantPrompt, Consumer<SseListener> listener);
 
     public static class H implements ChoiceFetchHandler {
-
         @Override
         public List<VLModel> fetch(String[] params) {
             return llms.keySet().stream().map(it -> new VLModel(it, it)).collect(Collectors.toList());
         }
-
     }
 
 }

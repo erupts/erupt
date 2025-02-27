@@ -2,16 +2,18 @@ package xyz.erupt.ai.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author YuePeng
@@ -29,20 +31,30 @@ public class LLMAgent extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "名称"),
-            edit = @Edit(title = "名称")
+            edit = @Edit(title = "名称", notNull = true)
     )
     private String name;
 
+    @ManyToOne
     @EruptField(
-            views = @View(title = "绑定模型", column = "name"),
-            edit = @Edit(title = "绑定模型", type = EditType.REFERENCE_TABLE)
+            views = @View(title = "大模型", column = "name"),
+            edit = @Edit(title = "大模型", type = EditType.REFERENCE_TABLE, notNull = true)
     )
     private LLM llm;
 
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    @EruptField(
+            views = @View(title = "提示词"),
+            edit = @Edit(title = "提示词", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "python"))
+    )
+    private String prompt;
+
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "描述"),
-            edit = @Edit(title = "描述")
+            edit = @Edit(title = "描述", type = EditType.TEXTAREA)
     )
-    private String description;
+    private String remark;
 
 }

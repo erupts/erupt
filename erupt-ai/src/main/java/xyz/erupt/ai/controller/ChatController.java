@@ -3,6 +3,7 @@ package xyz.erupt.ai.controller;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.base.SuperLLM;
@@ -26,18 +27,17 @@ public class ChatController {
             Runtime.getRuntime().availableProcessors() * 4,
             60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
 
-    @GetMapping("/stream-data")
-    public SseEmitter streamData(String llmCode, String message) {
+    @GetMapping("/send")
+    public SseEmitter send(@RequestParam String llmCode, @RequestParam String message) {
         SuperLLM<Object> llm = (SuperLLM<Object>) SuperLLM.getLLM(llmCode);
-        if (llm == null) {
-            throw new RuntimeException("llm not found");
-        }
+        if (llm == null) throw new RuntimeException("llm not found");
         SseEmitter emitter = new SseEmitter();
         sseExecutorService.submit(() -> llm.chatSse(llm.config(), message, "回答不超过10个字", (it) -> {
             try {
-                if (it.isFinish()){
+                if (it.isFinish()) {
+                    System.out.println(it.getOutput().toString());
                     emitter.complete();
-                }else{
+                } else {
                     emitter.send(it.getCurrMessage(), MediaType.TEXT_PLAIN);
                 }
             } catch (Exception e) {
@@ -45,6 +45,17 @@ public class ChatController {
             }
         }));
         return emitter;
+    }
+
+    @GetMapping("/list")
+    public void list() {
+
+    }
+
+    @GetMapping("/messages")
+    public void messages(@RequestParam Long chatId, @RequestParam Integer size,
+                         @RequestParam(defaultValue = "0") Integer index) {
+
     }
 
 }
