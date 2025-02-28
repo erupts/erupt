@@ -15,9 +15,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
-import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.NumberType;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.linq.lambda.LambdaSee;
 
@@ -63,6 +61,16 @@ public class LLM extends MetaModelUpdateVo implements ChoiceTrigger {
             edit = @Edit(title = "模型版本", notNull = true)
     )
     private String model;
+
+    @EruptField(
+            views = @View(title = "状态", sortable = true),
+            edit = @Edit(
+                    title = "状态", search = @Search,
+                    type = EditType.BOOLEAN, notNull = true,
+                    boolType = @BoolType(trueText = "激活", falseText = "锁定")
+            )
+    )
+    private Boolean enable = true;
 
     @EruptField(
             views = @View(title = "生成随机性"),

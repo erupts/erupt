@@ -32,6 +32,15 @@ public class ChatMessage extends MetaModelCreateOnly {
     @Type(type = "org.hibernate.type.TextType")
     private String content;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdTime;
+
+    public static ChatMessage create(Long chatId, ChatSenderType senderType, String content) {
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setChatId(chatId);
+        chatMessage.setSenderType(senderType);
+        chatMessage.setContent(content);
+        chatMessage.setCreateTime(LocalDateTime.now());
+        return chatMessage;
+    }
 
 }
