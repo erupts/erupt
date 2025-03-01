@@ -22,7 +22,7 @@ public class DeepSeek extends CommonLLM {
 
     @Override
     public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://api.deepseek.com", "deepseek-chat", "null");
+        return new BaseLLMConfig("https://api.deepseek.com", "");
     }
 
 }

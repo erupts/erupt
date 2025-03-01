@@ -22,7 +22,7 @@ public class Moonshot extends CommonLLM {
 
     @Override
     public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://api.moonshot.cn", "moonshot-v1-8k", "sk-j7TPlrYn69CEd3VLl7u4ceLwyox7QuPP4VzpdPDwv1uzayJl");
+        return new BaseLLMConfig("https://api.moonshot.cn", "");
     }
 
 }

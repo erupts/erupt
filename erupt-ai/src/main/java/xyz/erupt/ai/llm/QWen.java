@@ -9,6 +9,7 @@ import xyz.erupt.ai.base.BaseLLMConfig;
  */
 @Component
 public class QWen extends CommonLLM {
+
     @Override
     public String code() {
         return "通义千问";
@@ -21,6 +22,7 @@ public class QWen extends CommonLLM {
 
     @Override
     public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://dashscope.aliyuncs.com", "qwen-plus", "");
+        return new BaseLLMConfig("https://dashscope.aliyuncs.com", "");
     }
+
 }

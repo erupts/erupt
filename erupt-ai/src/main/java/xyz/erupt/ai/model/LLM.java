@@ -31,7 +31,7 @@ import java.util.Map;
  * @author YuePeng
  * date 2025/2/22 16:21
  */
-@Erupt(name = "大模型管理")
+@Erupt(name = "大模型管理", dataProxy = LLMDataProxy.class)
 @Getter
 @Setter
 @Table(name = "e_ai_llm")

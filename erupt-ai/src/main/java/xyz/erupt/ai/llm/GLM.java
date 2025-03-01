@@ -27,7 +27,7 @@ public class GLM extends CommonLLM {
 
     @Override
     public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://open.bigmodel.cn", "glm-4-air", "");
+        return new BaseLLMConfig("https://open.bigmodel.cn", "");
     }
 
 }
