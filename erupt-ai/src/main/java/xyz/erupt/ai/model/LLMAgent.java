@@ -3,6 +3,7 @@ package xyz.erupt.ai.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import xyz.erupt.ai.handler.DynamicPromptFetch;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -10,6 +11,7 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -41,6 +43,12 @@ public class LLMAgent extends MetaModelUpdateVo {
             edit = @Edit(title = "大模型", type = EditType.REFERENCE_TABLE, notNull = true)
     )
     private LLM llm;
+
+    @EruptField(
+            views = @View(title = "提示词动态处理器"),
+            edit = @Edit(title = "提示词动态处理器", type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = DynamicPromptFetch.class))
+    )
+    private String promptHandler;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")

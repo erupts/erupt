@@ -11,6 +11,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.ChoiceTrigger;
+import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -31,7 +32,10 @@ import java.util.Map;
  * @author YuePeng
  * date 2025/2/22 16:21
  */
-@Erupt(name = "大模型管理", dataProxy = LLMDataProxy.class)
+@Erupt(
+        name = "大模型管理", dataProxy = LLMDataProxy.class,
+        rowOperation = @RowOperation(title = "模型测试", icon = "fa fa-comments-o")
+)
 @Getter
 @Setter
 @Table(name = "e_ai_llm")
@@ -100,10 +104,6 @@ public class LLM extends MetaModelUpdateVo implements ChoiceTrigger {
             edit = @Edit(title = "备注", type = EditType.TEXTAREA)
     )
     private String remark;
-
-    private Long promptTokens;
-
-    private Long completionTokens;
 
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
