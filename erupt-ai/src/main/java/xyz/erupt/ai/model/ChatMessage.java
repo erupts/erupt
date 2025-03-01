@@ -1,46 +1,77 @@
 package xyz.erupt.ai.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.core.util.EruptTableStyle;
 import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author YuePeng
  * date 2025/2/27 22:57
  */
-@Erupt(name = "会话管理")
+@Erupt(name = "会话管理", dataProxy = ChatMessage.class)
 @Getter
 @Setter
 @Table(name = "e_ai_chat_message")
 @Entity
 @EruptI18n
-public class ChatMessage extends BaseModel {
+@NoArgsConstructor
+public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
 
     private Long chatId;
 
+    @EruptField(
+            views = @View(title = "发送人")
+    )
     @Enumerated(EnumType.STRING)
     private ChatSenderType senderType;
 
+    @EruptField(
+            views = @View(title = "发送内容", type = ViewType.HTML)
+    )
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String content;
 
+    @EruptField(
+            views = @View(title = "发送时间", type = ViewType.HTML)
+    )
     private LocalDateTime createTime;
 
-    public static ChatMessage create(Long chatId, ChatSenderType senderType, String content) {
+    private Long tokens;
+
+    public static ChatMessage create(Long chatId, ChatSenderType senderType, String content, Long tokens) {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setChatId(chatId);
         chatMessage.setSenderType(senderType);
         chatMessage.setContent(content);
         chatMessage.setCreateTime(LocalDateTime.now());
+        chatMessage.setTokens(tokens);
         return chatMessage;
     }
 
+    @Override
+    public void afterFetch(Collection<Map<String, Object>> list) {
+        String senderType = LambdaSee.field(ChatMessage::getSenderType);
+        for (Map<String, Object> map : list) {
+            if (map.get(senderType) == ChatSenderType.MODEL) {
+                EruptTableStyle.cellColor(map, senderType, "#09f");
+            }
+        }
+    }
 }

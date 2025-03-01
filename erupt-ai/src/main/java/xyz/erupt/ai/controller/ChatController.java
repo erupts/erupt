@@ -10,11 +10,13 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.constants.ChatType;
+import xyz.erupt.ai.handler.EruptPromptHandler;
 import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 
@@ -48,12 +50,17 @@ public class ChatController {
         if (llm == null) throw new RuntimeException("llm not found");
         StringBuilder assistantPrompt = new StringBuilder();
         SseEmitter emitter = new SseEmitter();
-        eruptDao.persist(ChatMessage.create(chatId, ChatSenderType.USER, message));
+        ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
+        eruptDao.persist(chatMessage);
 
         Chat chat = eruptDao.find(Chat.class, chatId);
         if (chat.getType() == ChatType.AGENT) {
             LLMAgent llmAgent = new LLMAgent();
-            assistantPrompt.append(llmAgent.getPrompt());
+            if (null == llmAgent.getPromptHandler()) {
+                assistantPrompt.append(llmAgent.getPrompt());
+            } else {
+                assistantPrompt.append(EruptSpringUtil.getBean(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt()));
+            }
         } else {
             assistantPrompt.append("回答不超过10个字");
         }
@@ -61,7 +68,9 @@ public class ChatController {
         sseExecutorService.submit(() -> llm.chatSse(llm.config(), message, assistantPrompt.toString(), (it) -> {
             try {
                 if (it.isFinish()) {
-                    eruptDao.persistAndFlush(ChatMessage.create(chatId, ChatSenderType.MODEL, message));
+                    chatMessage.setTokens((long) it.getUsage().getPromptTokens());
+                    eruptDao.merge(chatMessage);
+                    eruptDao.persistAndFlush(ChatMessage.create(chatId, ChatSenderType.MODEL, message, (long) it.getUsage().getCompletionTokens()));
                     emitter.complete();
                 } else {
                     emitter.send(it.getCurrMessage(), MediaType.TEXT_PLAIN);
@@ -92,7 +101,8 @@ public class ChatController {
     }
 
     @GetMapping("/messages")
-    public R<List<ChatMessage>> messages(@RequestParam Long chatId, @RequestParam Integer size,
+    public R<List<ChatMessage>> messages(@RequestParam Long chatId,
+                                         @RequestParam Integer size,
                                          @RequestParam(defaultValue = "0") Integer index) {
         return R.ok(eruptDao.lambdaQuery(ChatMessage.class)
                 .eq(ChatMessage::getChatId, chatId)
