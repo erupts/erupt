@@ -3,6 +3,7 @@ package xyz.erupt.job.service;
 import lombok.SneakyThrows;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
+import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.ChoiceTrigger;
 import xyz.erupt.annotation.fun.VLModel;
@@ -13,29 +14,32 @@ import xyz.erupt.job.handler.EruptJobHandler;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.linq.lambda.LambdaSee;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
  * @author YuePeng
  * date 2021/2/27 22:46
  */
+@Component
 public class EruptJobFetch implements ChoiceFetchHandler, ChoiceTrigger {
 
-    private static List<VLModel> loadedJobHandler;
+    private static final List<VLModel> loadedJobHandler = new ArrayList<>();
+
+    @PostConstruct
+    public void init() {
+        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptJobHandler.class)}, clazz -> {
+            EruptHandlerNaming eruptHandlerNaming = clazz.getAnnotation(EruptHandlerNaming.class);
+            if (null == eruptHandlerNaming) {
+                loadedJobHandler.add(new VLModel(clazz.getName(), ((EruptJobHandler) EruptSpringUtil.getBean(clazz)).name(), clazz.getName()));
+            } else {
+                loadedJobHandler.add(new VLModel(clazz.getName(), eruptHandlerNaming.value(), clazz.getName()));
+            }
+        });
+    }
 
     @Override
     public synchronized List<VLModel> fetch(String[] params) {
-        if (null == loadedJobHandler) {
-            loadedJobHandler = new ArrayList<>();
-            EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptJobHandler.class)}, clazz -> {
-                EruptHandlerNaming eruptHandlerNaming = clazz.getAnnotation(EruptHandlerNaming.class);
-                if (null == eruptHandlerNaming) {
-                    loadedJobHandler.add(new VLModel(clazz.getName(), ((EruptJobHandler) EruptSpringUtil.getBean(clazz)).name(), clazz.getName()));
-                } else {
-                    loadedJobHandler.add(new VLModel(clazz.getName(), eruptHandlerNaming.value(), clazz.getName()));
-                }
-            });
-        }
         return loadedJobHandler;
     }
 
