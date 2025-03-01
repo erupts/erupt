@@ -19,9 +19,8 @@ public class BaseLLMConfig {
 
     private String model;
 
-    public BaseLLMConfig(String url, String model, String apiKey) {
+    public BaseLLMConfig(String url, String apiKey) {
         this.url = url;
-        this.model = model;
         this.apiKey = apiKey;
     }
 

@@ -22,7 +22,7 @@ public class ChatGpt extends CommonLLM {
 
     @Override
     public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://api.openai.com", "gpt-4", "");
+        return new BaseLLMConfig("https://api.openai.com", "");
     }
 
 }
