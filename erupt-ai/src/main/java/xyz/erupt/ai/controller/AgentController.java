@@ -27,9 +27,9 @@ public class AgentController {
     @Resource
     private EruptDao eruptDao;
 
-    @GetMapping("/create_agent_chat")
+    @GetMapping("/create_chat")
     @Transactional
-    public void createAgentChat(@RequestParam Long agentId) {
+    public void createChat(@RequestParam Long agentId) {
         LLMAgent llmAgent = eruptDao.lambdaQuery(LLMAgent.class).eq(LLMAgent::getId, agentId).one();
         Chat chat = new Chat();
         chat.setType(ChatType.AGENT);

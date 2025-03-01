@@ -6,7 +6,7 @@ import org.hibernate.annotations.Type;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptI18n;
-import xyz.erupt.jpa.model.MetaModelCreateOnly;
+import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Table(name = "e_ai_chat_message")
 @Entity
 @EruptI18n
-public class ChatMessage extends MetaModelCreateOnly {
+public class ChatMessage extends BaseModel {
 
     private Long chatId;
 
@@ -32,7 +32,7 @@ public class ChatMessage extends MetaModelCreateOnly {
     @Type(type = "org.hibernate.type.TextType")
     private String content;
 
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     public static ChatMessage create(Long chatId, ChatSenderType senderType, String content) {
         ChatMessage chatMessage = new ChatMessage();
