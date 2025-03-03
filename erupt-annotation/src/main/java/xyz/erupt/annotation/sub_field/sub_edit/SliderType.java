@@ -12,7 +12,7 @@ public @interface SliderType {
     int min() default 0;
 
     @Comment("步进长度")
-    int step() default 1;
+    float step() default 1;
 
     @Comment("刻度标记")
     int[] markPoints() default {};
