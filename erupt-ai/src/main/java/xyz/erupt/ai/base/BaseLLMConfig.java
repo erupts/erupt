@@ -17,6 +17,8 @@ public class BaseLLMConfig {
 
     private String apiKey;
 
+    private Float top_p;
+
     private String model;
 
     public BaseLLMConfig(String url, String apiKey) {

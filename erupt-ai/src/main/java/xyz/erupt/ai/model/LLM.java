@@ -34,7 +34,11 @@ import java.util.Map;
  */
 @Erupt(
         name = "大模型管理", dataProxy = LLMDataProxy.class,
-        rowOperation = @RowOperation(title = "模型测试", icon = "fa fa-comments-o")
+        orderBy = "sort",
+        rowOperation = {
+                @RowOperation(title = "模型测试", icon = "fa fa-comments"),
+                @RowOperation(title = "默认对话模型", icon = "fa fa-bolt")
+        }
 )
 @Getter
 @Setter
@@ -77,8 +81,27 @@ public class LLM extends MetaModelUpdateVo implements ChoiceTrigger {
     private Boolean enable = true;
 
     @EruptField(
+            views = @View(title = "默认对话模型"),
+            edit = @Edit(title = "默认对话模型",show = false,boolType = @BoolType(trueText = "✓", falseText = "×"))
+    )
+    private Boolean defaultLLM = false;
+
+    @EruptField(
+            views = @View(title = "排序", sortable = true),
+            edit = @Edit(title = "排序", notNull = true)
+    )
+    private Integer sort = 0;
+
+    @EruptField(
+            views = @View(title = "上下文记忆轮次"),
+            edit = @Edit(title = "上下文记忆轮次", notNull = true,
+                    type = EditType.SLIDER, sliderType = @SliderType(max = 100))
+    )
+    private Integer maxContext = 20;
+
+    @EruptField(
             views = @View(title = "生成随机性"),
-            edit = @Edit(title = "生成随机性", desc = "temperature", numberType = @NumberType(min = 0, max = 1))
+            edit = @Edit(title = "生成随机性", desc = "temperature (0~1)", numberType = @NumberType(min = 0, max = 1))
     )
     private Float temperature;
 
@@ -97,6 +120,7 @@ public class LLM extends MetaModelUpdateVo implements ChoiceTrigger {
             )
     )
     private String config;
+
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(

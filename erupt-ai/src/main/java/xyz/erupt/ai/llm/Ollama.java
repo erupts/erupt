@@ -6,6 +6,7 @@
 //import xyz.erupt.ai.base.BaseLLMConfig;
 //import xyz.erupt.ai.base.SseListener;
 //import xyz.erupt.ai.base.SuperLLM;
+//import xyz.erupt.ai.model.LLM;
 //import xyz.erupt.ai.pojo.ChatCompletionResponse;
 //import xyz.erupt.core.config.GsonFactory;
 //
@@ -30,25 +31,25 @@
 //
 //    @Override
 //    public BaseLLMConfig config() {
-//        return new BaseLLMConfig("http://localhost:11434", "llama2-7b", "");
+//        return new BaseLLMConfig("http://localhost:11434", "");
 //    }
 //
 //    @Override
-//    public ChatCompletionResponse chat(BaseLLMConfig baseLLMConfig, String userPrompt, String assistantPrompt) {
+//    public ChatCompletionResponse chat(LLM llm, String userPrompt, String assistantPrompt) {
 //        return null;
 //    }
 //
 //    @Override
-//    public void chatSse(BaseLLMConfig baseLLMConfig, String userPrompt, String assistantPrompt, Consumer<SseListener> listener) {
-//        HttpResponse response = HttpUtil.createPost(baseLLMConfig.getUrl() + "/api/chat")
-//                .header("Accept", "text/event-stream")
-//                .body(GsonFactory.getGson().toJson(new HashMap<String, Object>() {{
-//                    this.put("model", baseLLMConfig.getModel());
-//                    this.put("stream", true);
-//                    this.put("temperature", 0.7);
-////                    this.put("prompt", userPrompt);
-//                }}))
-//                .execute();
+//    public void chatSse(LLM llm, String userPrompt, String assistantPrompt, Consumer<SseListener> listener) {
+////        HttpResponse response = HttpUtil.createPost(baseLLMConfig.getUrl() + "/api/chat")
+////                .header("Accept", "text/event-stream")
+////                .body(GsonFactory.getGson().toJson(new HashMap<String, Object>() {{
+////                    this.put("model", baseLLMConfig.getModel());
+////                    this.put("stream", true);
+////                    this.put("temperature", 0.7);
+//////                    this.put("prompt", userPrompt);
+////                }}))
+////                .execute();
 //
 //    }
 //}

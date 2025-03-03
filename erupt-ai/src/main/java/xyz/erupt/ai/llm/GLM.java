@@ -8,7 +8,7 @@ import xyz.erupt.ai.base.BaseLLMConfig;
  * date 2025/2/26 22:40
  */
 @Component
-public class GLM extends CommonLLM {
+public class GLM extends OpenAiSpec {
 
     @Override
     public String code() {
