@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
@@ -21,6 +22,7 @@ import java.util.List;
 @EruptScan
 @EntityScan
 @EnableConfigurationProperties
+@EnableAsync
 public class EruptAiAutoConfiguration implements EruptModule {
 
     static {

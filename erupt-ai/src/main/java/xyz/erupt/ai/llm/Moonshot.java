@@ -8,7 +8,7 @@ import xyz.erupt.ai.base.BaseLLMConfig;
  * date 2025/2/23 15:31
  */
 @Component
-public class Moonshot extends CommonLLM {
+public class Moonshot extends OpenAiSpec {
 
     @Override
     public String code() {

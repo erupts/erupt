@@ -1,6 +1,5 @@
 package xyz.erupt.ai.controller;
 
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +12,9 @@ import xyz.erupt.ai.constants.ChatType;
 import xyz.erupt.ai.handler.EruptPromptHandler;
 import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
+import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
+import xyz.erupt.ai.service.SseService;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -43,16 +44,18 @@ public class ChatController {
     @Resource
     private EruptDao eruptDao;
 
+    @Resource
+    private SseService sseService;
+
     @GetMapping("/send")
     @Transactional
-    public SseEmitter send(@RequestParam Long chatId, @RequestParam String llmCode, @RequestParam String message) {
-        SuperLLM<Object> llm = (SuperLLM<Object>) SuperLLM.getLLM(llmCode);
-        if (llm == null) throw new RuntimeException("llm not found");
+    public SseEmitter send(@RequestParam Long chatId, @RequestParam String message) {
+        LLM llmObj = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
+        SuperLLM<Object> llm = (SuperLLM<Object>) SuperLLM.getLLM(llmObj.getLlm());
         StringBuilder assistantPrompt = new StringBuilder();
         SseEmitter emitter = new SseEmitter();
         ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
-
         Chat chat = eruptDao.find(Chat.class, chatId);
         if (chat.getType() == ChatType.AGENT) {
             LLMAgent llmAgent = new LLMAgent();
@@ -62,29 +65,15 @@ public class ChatController {
                 assistantPrompt.append(EruptSpringUtil.getBean(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt()));
             }
         } else {
-            assistantPrompt.append("回答不超过10个字");
+            assistantPrompt.append("回答不超过100个字");
         }
-
-        sseExecutorService.submit(() -> llm.chatSse(llm.config(), message, assistantPrompt.toString(), (it) -> {
-            try {
-                if (it.isFinish()) {
-                    chatMessage.setTokens((long) it.getUsage().getPromptTokens());
-                    eruptDao.merge(chatMessage);
-                    eruptDao.persistAndFlush(ChatMessage.create(chatId, ChatSenderType.MODEL, message, (long) it.getUsage().getCompletionTokens()));
-                    emitter.complete();
-                } else {
-                    emitter.send(it.getCurrMessage(), MediaType.TEXT_PLAIN);
-                }
-            } catch (Exception e) {
-                emitter.completeWithError(e);
-            }
-        }));
+        sseService.send(emitter, llm, llmObj, chatMessage, assistantPrompt);
         return emitter;
     }
 
     @GetMapping("/create_chat")
     @Transactional
-    public void createChat() {
+    public void createChat(String title) {
         Chat chat = new Chat();
         chat.setType(ChatType.NORMAL);
         chat.setUserId(Long.valueOf(MetaContext.getUser().getUid()));

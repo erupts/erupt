@@ -8,7 +8,7 @@ import xyz.erupt.ai.base.BaseLLMConfig;
  * date 2025/2/22 16:37
  */
 @Component
-public class DeepSeek extends CommonLLM {
+public class DeepSeek extends OpenAiSpec {
 
     @Override
     public String code() {

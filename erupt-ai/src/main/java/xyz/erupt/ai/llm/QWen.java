@@ -8,7 +8,7 @@ import xyz.erupt.ai.base.BaseLLMConfig;
  * date 2025/2/26 22:58
  */
 @Component
-public class QWen extends CommonLLM {
+public class QWen extends OpenAiSpec {
 
     @Override
     public String code() {

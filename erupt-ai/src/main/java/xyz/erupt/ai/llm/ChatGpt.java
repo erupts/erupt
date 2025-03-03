@@ -8,7 +8,7 @@ import xyz.erupt.ai.base.BaseLLMConfig;
  * date 2025/2/22 16:37
  */
 @Component
-public class ChatGpt extends CommonLLM {
+public class ChatGpt extends OpenAiSpec {
 
     @Override
     public String code() {

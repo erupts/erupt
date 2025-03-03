@@ -13,6 +13,8 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
+import xyz.erupt.annotation.sub_field.sub_edit.NumberType;
+import xyz.erupt.annotation.sub_field.sub_edit.SliderType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.*;
@@ -45,10 +47,29 @@ public class LLMAgent extends MetaModelUpdateVo {
     private LLM llm;
 
     @EruptField(
+            views = @View(title = "上下文记忆轮次"),
+            edit = @Edit(title = "上下文记忆轮次", notNull = true,
+                    type = EditType.SLIDER, sliderType = @SliderType(max = 100))
+    )
+    private Integer maxContext = 20;
+
+    @EruptField(
             views = @View(title = "提示词动态处理器"),
             edit = @Edit(title = "提示词动态处理器", type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = DynamicPromptFetch.class))
     )
     private String promptHandler;
+
+    @EruptField(
+            views = @View(title = "生成随机性"),
+            edit = @Edit(title = "生成随机性", desc = "temperature", numberType = @NumberType(min = 0, max = 1))
+    )
+    private Float temperature;
+
+    @EruptField(
+            views = @View(title = "top_p"),
+            edit = @Edit(title = "top_p", numberType = @NumberType(min = 0, max = 1))
+    )
+    private Float topP;
 
     @Lob
     @Type(type = "org.hibernate.type.TextType")

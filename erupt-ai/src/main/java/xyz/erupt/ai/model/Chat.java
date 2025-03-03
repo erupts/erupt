@@ -44,9 +44,9 @@ public class Chat extends BaseModel {
 
     private String typeName;
 
-    private Long userId;
-
     private String title;
+
+    private Long userId;
 
     private String llmCode;
 

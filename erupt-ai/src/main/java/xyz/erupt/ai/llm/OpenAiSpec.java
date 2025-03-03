@@ -10,6 +10,7 @@ import xyz.erupt.ai.base.SseListener;
 import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.MessageRole;
+import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.pojo.ChatCompletion;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.pojo.ChatCompletionResponse;
@@ -27,7 +28,7 @@ import java.util.function.Consumer;
  * date 2025/2/25 22:07
  */
 @Component
-public abstract class CommonLLM extends SuperLLM<BaseLLMConfig> {
+public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
 
     @Resource
     private AiProp aiProp;
@@ -37,15 +38,16 @@ public abstract class CommonLLM extends SuperLLM<BaseLLMConfig> {
     }
 
     @Override
-    public ChatCompletionResponse chat(BaseLLMConfig config, String userPrompt, String assistantPrompt) {
-        ChatCompletion completion = ChatCompletion.builder().model(config.getModel())
+    public ChatCompletionResponse chat(LLM llm, String userPrompt, String assistantPrompt) {
+        BaseLLMConfig baseLLMConfig = GsonFactory.getGson().fromJson(llm.getConfig(), BaseLLMConfig.class);
+        ChatCompletion completion = ChatCompletion.builder().model(llm.getModel())
                 .stream(false).messages(Arrays.asList(
                         new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()),
                         new ChatCompletionMessage(MessageRole.user, userPrompt),
                         new ChatCompletionMessage(MessageRole.assistant, assistantPrompt)
                 )).build();
-        HttpResponse response = HttpUtil.createPost(config.getUrl() + chatApiPath())
-                .header("Authorization", "Bearer " + config.getApiKey())
+        HttpResponse response = HttpUtil.createPost(baseLLMConfig.getUrl() + chatApiPath())
+                .header("Authorization", "Bearer " + baseLLMConfig.getApiKey())
                 .body(GsonFactory.getGson().toJson(completion))
                 .execute();
         return GsonFactory.getGson().fromJson(response.body(), ChatCompletionResponse.class);
@@ -53,16 +55,17 @@ public abstract class CommonLLM extends SuperLLM<BaseLLMConfig> {
 
     @Override
     @SneakyThrows
-    public void chatSse(BaseLLMConfig config, String userPrompt, String assistantPrompt, Consumer<SseListener> listener) {
-        ChatCompletion completion = ChatCompletion.builder().model(config.getModel()).
+    public void chatSse(LLM llm, String userPrompt, String assistantPrompt, Consumer<SseListener> listener) {
+        BaseLLMConfig baseLLMConfig = GsonFactory.getGson().fromJson(llm.getConfig(), BaseLLMConfig.class);
+        ChatCompletion completion = ChatCompletion.builder().model(llm.getModel()).
                 messages(Arrays.asList(
                         new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()),
                         new ChatCompletionMessage(MessageRole.user, userPrompt),
                         new ChatCompletionMessage(MessageRole.assistant, assistantPrompt)
                 )).stream(true).build();
-        HttpResponse response = HttpUtil.createPost(config.getUrl() + chatApiPath())
+        HttpResponse response = HttpUtil.createPost(baseLLMConfig.getUrl() + chatApiPath())
                 .header("Accept", "text/event-stream")
-                .header("Authorization", "Bearer " + config.getApiKey())
+                .header("Authorization", "Bearer " + baseLLMConfig.getApiKey())
                 .body(GsonFactory.getGson().toJson(completion))
                 .execute();
 

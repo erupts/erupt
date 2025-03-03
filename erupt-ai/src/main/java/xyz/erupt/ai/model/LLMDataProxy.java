@@ -2,6 +2,9 @@ package xyz.erupt.ai.model;
 
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.jpa.dao.EruptDao;
+
+import javax.annotation.Resource;
 
 /**
  * @author YuePeng
@@ -10,8 +13,11 @@ import xyz.erupt.annotation.fun.DataProxy;
 @Component
 public class LLMDataProxy implements DataProxy<LLM> {
 
+    @Resource
+    private EruptDao eruptDao;
+
     @Override
     public void beforeAdd(LLM llm) {
-        llm.getConfig();
+        llm.setDefaultLLM(eruptDao.lambdaQuery(LLM.class).count() == 0);
     }
 }
