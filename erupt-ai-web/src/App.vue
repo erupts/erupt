@@ -3,7 +3,7 @@ import {computed, h, ref} from "vue";
 import {Bubble, Sender} from "ant-design-x-vue";
 import {message} from "ant-design-vue";
 import 'highlight.js/styles/monokai.css';
-import md from "./markdown.ts";
+import md from "./components/markdown.ts";
 
 let content = ref<string>("")
 let windowHeight = ref<number>(window.innerHeight);
@@ -32,20 +32,23 @@ const suggestions = [
     ],
   },
 ];
-
 const messageRender = (content: string) => {
   return h('div', {innerHTML: md.render(content)});
 };
 
+
+const accumulatedMarkdown = ref(''); // 用于累积接收到的 Markdown 数据
+const renderedMarkdown = ref(''); // 用于存储渲染后的 HTML
 
 const send = (message: string) => {
   content.value = "";
   const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${1}&message=${message}`); // 替换为你的 SSE 服务器地址
 
   // 监听消息事件
-  eventSource.onmessage = async function (event) {
+  eventSource.onmessage = function (event) {
+    accumulatedMarkdown.value += JSON.parse(event.data).text;
     setInterval(() => {
-      res.value = md.render(res.value + event.data)
+      renderedMarkdown.value = md.render(accumulatedMarkdown.value);
     }, 100)
   };
 
@@ -87,9 +90,9 @@ const markdown = computed(() => {
                   :content="'###  Good morning, how are you? - 123 -23'+index" style="margin-bottom: 8px"
                   :message-render="messageRender"
           />
-          <Bubble :placement="'start'" :content="res" :message-render="messageRender" style="margin-bottom: 8px"
+          <Bubble :placement="'start'" :content="renderedMarkdown" :message-render="messageRender"
+                  style="margin-bottom: 8px"
           />
-          {{ markdown }}
         </article>
         <Suggestion :items="suggestions">
           <!--              :loading='true'-->
