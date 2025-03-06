@@ -9,16 +9,16 @@ import lombok.Data;
 @Data
 public class ChatUsage {
 
-    private int promptTokens = 0;
+    private int prompt_tokens = 0;
 
-    private int completionTokens = 0;
+    private int completion_tokens = 0;
 
-    private int totalTokens = 0;
+    private int total_tokens = 0;
 
     public ChatUsage plus(ChatUsage chatUsage) {
-        this.completionTokens += chatUsage.completionTokens;
-        this.promptTokens += chatUsage.promptTokens;
-        this.totalTokens += chatUsage.totalTokens;
+        this.completion_tokens += chatUsage.completion_tokens;
+        this.prompt_tokens += chatUsage.prompt_tokens;
+        this.total_tokens += chatUsage.total_tokens;
         return this;
     }
 
