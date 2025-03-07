@@ -9,6 +9,8 @@ import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
+import xyz.erupt.ai.vo.SseBody;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
@@ -29,12 +31,12 @@ public class SseService {
         llm.chatSse(llmObj, chatMessage.getContent(), assistantPrompt.toString(), it -> {
             try {
                 if (it.isFinish()) {
-                    chatMessage.setTokens((long) it.getUsage().getPromptTokens());
+                    chatMessage.setTokens((long) it.getUsage().getPrompt_tokens());
                     eruptDao.merge(chatMessage);
-                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), ChatSenderType.MODEL, chatMessage.getContent(), (long) it.getUsage().getCompletionTokens()));
+                    eruptDao.persist(ChatMessage.create(chatMessage.getChatId(), ChatSenderType.MODEL, it.getOutput().toString(), (long) it.getUsage().getCompletion_tokens()));
                     emitter.complete();
                 } else {
-                    emitter.send(it.getCurrMessage(), MediaType.TEXT_PLAIN);
+                    emitter.send(GsonFactory.getGson().toJson(new SseBody(it.getCurrMessage())), MediaType.TEXT_PLAIN);
                 }
             } catch (Exception e) {
                 emitter.completeWithError(e);
