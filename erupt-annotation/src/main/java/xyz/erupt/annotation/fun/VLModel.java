@@ -15,11 +15,14 @@ public class VLModel {
 
     private String label;
 
-    // 额外描述
+    // 描述
     private String desc;
 
     // 是否禁用
     private boolean disable;
+
+    //自定义扩展值
+    private Object extra;
 
 //    private String color; //标签颜色
 
