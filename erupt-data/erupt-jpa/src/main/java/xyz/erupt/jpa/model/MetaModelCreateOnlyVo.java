@@ -49,8 +49,8 @@ public class MetaModelCreateOnlyVo extends MetaModelCreateOnly {
         @Override
         public void afterFetch(Collection<Map<String, Object>> list) {
             for (Map<String, Object> map : list) {
-                map.put(LambdaSee.field(MetaModelCreateVo::getCreateByVo), map.get(LambdaSee.field(MetaModel::getCreateBy)));
-                map.put(LambdaSee.field(MetaModelCreateVo::getCreateTimeVo), map.get(LambdaSee.field(MetaModel::getCreateTime)));
+                map.put(LambdaSee.field(MetaModelCreateOnlyVo::getCreateByVo), map.get(LambdaSee.field(MetaModelCreateOnly::getCreateBy)));
+                map.put(LambdaSee.field(MetaModelCreateOnlyVo::getCreateTimeVo), map.get(LambdaSee.field(MetaModelCreateOnly::getCreateTime)));
             }
         }
     }
