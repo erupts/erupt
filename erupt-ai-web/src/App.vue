@@ -47,7 +47,7 @@ const send = (message: string) => {
   // 监听消息事件
   eventSource.onmessage = function (event) {
     accumulatedMarkdown.value += JSON.parse(event.data).text;
-    setInterval(() => {
+    setTimeout(() => {
       renderedMarkdown.value = md.render(accumulatedMarkdown.value);
     }, 100)
   };
