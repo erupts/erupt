@@ -170,6 +170,27 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    public <E, R> EruptLambdaQuery<T> notIn(SFunction<E, R> field, Collection<?> val) {
+        String placeholder = this.genePlaceholder();
+        querySchema.getWheres().add(geneField(field) + " not in (:" + placeholder + ")");
+        querySchema.getParams().put(placeholder, new ArrayList<>(val));
+        return this;
+    }
+
+    public <E, R> EruptLambdaQuery<T> notIn(boolean condition, SFunction<E, R> field, Collection<?> val) {
+        if (condition) return this.notIn(field, val);
+        return this;
+    }
+
+    public <E, R> EruptLambdaQuery<T> notIn(SFunction<E, R> field, Object... val) {
+        return this.notIn(field, Arrays.stream(val).collect(Collectors.toList()));
+    }
+
+    public <E, R> EruptLambdaQuery<T> notIn(boolean condition, SFunction<E, R> field, Object... val) {
+        if (condition) return this.notIn(field, val);
+        return this;
+    }
+
     public <E, R> EruptLambdaQuery<T> like(SFunction<E, R> field, Object val) {
         String placeholder = this.genePlaceholder();
         querySchema.getWheres().add(geneField(field) + " like :" + placeholder);

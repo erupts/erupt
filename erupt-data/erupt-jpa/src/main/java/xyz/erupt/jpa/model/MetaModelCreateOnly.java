@@ -2,10 +2,11 @@ package xyz.erupt.jpa.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.PreDataProxy;
-import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.MappedSuperclass;
@@ -21,11 +22,11 @@ import java.time.LocalDateTime;
 @PreDataProxy(MetaModelCreateOnly.Proxy.class)
 public class MetaModelCreateOnly extends BaseModel {
 
-    @Comment("创建人")
+    @EruptField(views = @View(title = "创建人", show = false))
     @EruptSmartSkipSerialize
     private String createBy;
 
-    @Comment("创建时间")
+    @EruptField(views = @View(title = "创建时间", show = false))
     @EruptSmartSkipSerialize
     private LocalDateTime createTime;
 
