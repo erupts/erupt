@@ -14,5 +14,5 @@ public @interface VL {
 
     String desc() default "";
 
-    String extra();
+    String extra() default "";
 }
