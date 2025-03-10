@@ -23,10 +23,6 @@ import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author YuePeng
@@ -35,11 +31,6 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API + "/ai/chat")
 public class ChatController {
-
-    private final ExecutorService sseExecutorService = new ThreadPoolExecutor(
-            Runtime.getRuntime().availableProcessors() * 2,
-            Runtime.getRuntime().availableProcessors() * 4,
-            60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
 
     @Resource
     private EruptDao eruptDao;
