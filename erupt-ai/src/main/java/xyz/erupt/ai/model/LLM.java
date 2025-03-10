@@ -87,8 +87,8 @@ public class LLM extends MetaModelUpdateVo implements ChoiceTrigger {
     private Boolean defaultLLM = false;
 
     @EruptField(
-            views = @View(title = "排序", sortable = true),
-            edit = @Edit(title = "排序", notNull = true)
+            views = @View(title = "使用顺序", sortable = true),
+            edit = @Edit(title = "使用顺序", notNull = true)
     )
     private Integer sort = 0;
 
