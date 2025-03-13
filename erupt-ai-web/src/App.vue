@@ -1,103 +1,105 @@
 <script setup lang="ts">
-import {computed, h, ref} from "vue";
+import {h, ref} from "vue";
 import {Bubble, Sender} from "ant-design-x-vue";
 import {message} from "ant-design-vue";
 import 'highlight.js/styles/monokai.css';
 import md from "./components/markdown.ts";
+import {ChatApi, type ChatMessage} from "./api/chat.api.ts";
 
 let content = ref<string>("")
 let windowHeight = ref<number>(window.innerHeight);
 let recording = ref<boolean>(false);
 let res = ref<string>("")
+let messages = ref<ChatMessage[]>([])
+let sending = ref<boolean>(false)
+let sendDisabled = ref<boolean>(false)
+let bubbles = ref(null);
+
+ChatApi.messages(1, 10).then(res => {
+  messages.value = res.data.data.slice().reverse();
+  setTimeout(() => {
+    bubbles.value.scrollTop = bubbles.value.scrollHeight;
+  }, 100)
+})
 
 window.onresize = () => {
   windowHeight.value = window.innerHeight;
 }
 
-const suggestions = [
-  {label: 'Write a report', value: 'report'},
-  {label: 'Draw a picture', value: 'draw'},
-  {
-    label: 'Check some knowledge',
-    value: 'knowledge',
-    children: [
-      {
-        label: 'About React',
-        value: 'react',
-      },
-      {
-        label: 'About Ant Design',
-        value: 'antd',
-      },
-    ],
-  },
-];
+const accumulatedMarkdown = ref(''); // 用于累积接收到的 Markdown 数据
+
+const send = (message: string) => {
+  sending.value = true;
+  content.value = "";
+  messages.value.push({
+    id: Math.random(),
+    content: message,
+    senderType: "USER",
+    createTime: new Date()
+  })
+  messages.value.push({
+    id: Math.random(),
+    content: "",
+    senderType: "MODEL",
+    createTime: new Date(),
+    loading: true
+  })
+  setTimeout(() => {
+    bubbles.value.scrollTop = bubbles.value.scrollHeight;
+  }, 10)
+  const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${1}&message=${message}`);
+
+  eventSource.onmessage = function (event) {
+    sending.value = false;
+    sendDisabled.value = true;
+    accumulatedMarkdown.value += JSON.parse(event.data).text;
+    let msg = messages.value[messages.value.length - 1];
+    if (msg.loading) {
+      msg.loading = false;
+    }
+    msg.content = md.render(accumulatedMarkdown.value);
+    messageToBottom();
+  };
+
+  eventSource.onerror = function (event) {
+    accumulatedMarkdown.value = "";
+    sendDisabled.value = false;
+    sending.value = false;
+    eventSource.close();
+  };
+
+  eventSource.onopen = function (event) {
+    sendDisabled.value = true;
+  };
+}
+
 const messageRender = (content: string) => {
   return h('div', {innerHTML: md.render(content)});
 };
 
-
-const accumulatedMarkdown = ref(''); // 用于累积接收到的 Markdown 数据
-const renderedMarkdown = ref(''); // 用于存储渲染后的 HTML
-
-const send = (message: string) => {
-  content.value = "";
-  const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${1}&message=${message}`); // 替换为你的 SSE 服务器地址
-
-  // 监听消息事件
-  eventSource.onmessage = function (event) {
-    accumulatedMarkdown.value += JSON.parse(event.data).text;
-    setTimeout(() => {
-      renderedMarkdown.value = md.render(accumulatedMarkdown.value);
-    }, 100)
-  };
-
-  // 监听错误事件
-  eventSource.onerror = function (event) {
-    console.error('发生错误:', event);
-    // 可以在这里处理错误，例如重新连接
-  };
-
-  // 监听打开事件
-  eventSource.onopen = function (event) {
-    console.log('SSE 连接已打开');
-    // 可以在这里执行一些初始化操作
-  };
-
-  // 可选：监听特定的自定义事件
-  eventSource.addEventListener('customEvent', function (event) {
-    console.log('收到自定义事件:', event.data);
-    // 处理自定义事件
-  });
+const messageToBottom = () => {
+  if (bubbles.value.scrollHeight - bubbles.value.scrollTop - bubbles.value.clientHeight < bubbles.value.clientHeight / 3) {
+    bubbles.value.scrollTop = bubbles.value.scrollHeight;
+  }
 }
-
-const markdown = computed(() => {
-  return md.render(content.value);
-});
-
 
 </script>
 
 <template>
   <div style="padding:8px;height:100%;box-sizing: border-box" :style="{height: windowHeight+'px'}">
     <div style="display: flex;height:100%">
-      <!--      <div style="width: 20%">-->
-      <!--        <Conversations :items="conversations"/>-->
-      <!--      </div>-->
       <div style="width: 100%;display: flex;flex-direction: column;height:100%">
-        <article style="padding: 8px 0;flex: 1 1 0;overflow: auto;height: calc(100% - 66px)">
-          <Bubble v-for="(item, index) in 20" :key="index" :placement="index % 2 === 0 ? 'start' : 'end'"
-                  :content="'Good morning, how are you? - 123 -23'+index" style="margin-bottom: 8px"
-                  :message-render="messageRender"
-          />
-          <Bubble :placement="'start'" :content="renderedMarkdown" :message-render="messageRender"
-                  style="margin-bottom: 8px"
-          />
+        <article ref="bubbles" style="padding: 8px 0;flex: 1 1 0;overflow: auto;height: calc(100% - 66px)">
+          <Bubble v-if="messages.length" v-for="item in messages" style="margin-bottom: 8px" :key="item.id"
+                  :placement="item.senderType == 'MODEL' ? 'start' : 'end'"
+                  :content="item.content" :message-render="messageRender"
+                  :loading="item.loading"/>
         </article>
-        <Suggestion :items="suggestions">
-          <!--              :loading='true'-->
+        <Suggestion :loading='true'>
           <Sender
               :on-submit="send"
+              :loading="sending"
+              :disabled="sendDisabled"
               v-model:value="content"
               :allowSpeech="{
                 recording: recording.value,
@@ -133,7 +135,6 @@ const markdown = computed(() => {
 
   // 标题
   h1, h2, h3, h4, h5, h6 {
-    color: darken(@primary-color, 10%);
     margin: @base-margin 0;
     font-weight: bold;
     line-height: 1.2;
@@ -169,7 +170,7 @@ const markdown = computed(() => {
 
   // 段落
   p {
-    margin: @base-margin 0;
+    margin: 0;
     font-size: 1em;
   }
 
@@ -252,23 +253,6 @@ const markdown = computed(() => {
     margin: @base-margin 0;
   }
 
-  // 按钮
-  button, input[type="button"], input[type="submit"], input[type="reset"] {
-    display: inline-block;
-    padding: @base-padding / 2 @base-padding;
-    background-color: @primary-color;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-
-    &:hover, &:focus {
-      background-color: darken(@primary-color, 10%);
-    }
-  }
-
   // 引用
   blockquote {
     border-left: 4px solid @secondary-color;
@@ -284,17 +268,6 @@ const markdown = computed(() => {
     height: 1px;
     background: #ddd;
     margin: @base-margin * 2 0;
-  }
-
-  // 表单
-  form {
-    margin: @base-margin 0;
-
-    label {
-      display: block;
-      margin-bottom: @base-margin / 2;
-      font-weight: bold;
-    }
   }
 }
 

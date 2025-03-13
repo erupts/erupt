@@ -1,5 +1,6 @@
 package xyz.erupt.ai.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,7 @@ public class ChatController {
     @Resource
     private SseService sseService;
 
-    @GetMapping("/send")
+    @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
     public SseEmitter send(@RequestParam Long chatId, @RequestParam String message) {
         LLM llmObj = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
@@ -58,6 +59,18 @@ public class ChatController {
         } else {
             assistantPrompt.append("回答不超过100个字");
         }
+        emitter.onCompletion(() -> {
+            System.out.println("SseEmitter completed");
+        });
+
+        // 设置超时回调
+        emitter.onTimeout(() -> {
+            System.out.println("SseEmitter timed out");
+        });
+        // 设置异常回调
+        emitter.onError(e -> {
+            System.out.println("SseEmitter error: " + e.getMessage());
+        });
         sseService.send(emitter, llm, llmObj, chatMessage, assistantPrompt);
         return emitter;
     }
@@ -74,7 +87,7 @@ public class ChatController {
     @GetMapping("/chats")
     public R<List<Chat>> chats() {
         return R.ok(eruptDao.lambdaQuery(Chat.class)
-                .eq(Chat::getUserId, Long.valueOf(MetaContext.getUser().getUid()))
+                .eq(null != MetaContext.getUser().getUid(), Chat::getUserId, null == MetaContext.getUser().getUid() ? null : Long.valueOf(MetaContext.getUser().getUid()))
                 .eq(Chat::getType, ChatType.NORMAL)
                 .orderByDesc(Chat::getCreatedTime)
                 .list());
