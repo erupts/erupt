@@ -8,5 +8,4 @@ declare module 'markdown-it-ins';
 declare module 'markdown-it-deflist';
 declare module 'markdown-it-link-attributes';
 declare module 'markdown-it-task-lists';
-declare module 'markdown-it-emoji'
 declare module 'markdown-it'

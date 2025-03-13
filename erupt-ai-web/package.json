@@ -18,7 +18,6 @@
     "markdown-it": "^14.1.0",
     "markdown-it-abbr": "^2.0.0",
     "markdown-it-deflist": "^3.0.0",
-    "markdown-it-emoji": "^3.0.0",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-highlightjs": "^4.2.0",
     "markdown-it-ins": "^4.0.0",
@@ -27,6 +26,7 @@
     "markdown-it-sub": "^2.0.0",
     "markdown-it-sup": "^2.0.0",
     "markdown-it-task-lists": "^2.1.1",
+    "mermaid": "^11.5.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
