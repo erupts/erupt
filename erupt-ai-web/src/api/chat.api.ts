@@ -1,10 +1,9 @@
-import axios from "axios";
+import axios, {type R} from "./axios.config.ts";
 
 
-export interface R<T> {
-    data: T;
-    message: string | null;
-    success: boolean;
+export interface Chat {
+    id: number;
+    title: string;
 }
 
 export interface ChatMessage {
@@ -17,13 +16,42 @@ export interface ChatMessage {
     loading: boolean;
 }
 
+export interface UserInfo {
+    nickname: string;
+}
+
 export class ChatApi {
 
-    static chats() {
-        return axios.get("/erupt-api/ai/chat/chats?chatId=1");
+    static userInfo(): Promise<UserInfo> {
+        return axios.get("/erupt-api/userinfo");
+    }
+
+    static chats(): Promise<R<Chat[]>> {
+        return axios.get("/erupt-api/ai/chat/chats");
+    }
+
+    static createChat(title: string): Promise<R<number>> {
+        return axios.get("/erupt-api/ai/chat/create_chat", {
+            params: {
+                title
+            }
+        });
+    }
+
+    static deleteChat(chatId: number): Promise<R<void>> {
+        return axios.get("/erupt-api/ai/chat/delete_chat", {
+            params: {
+                chatId
+            }
+        })
     }
 
     static messages(chatId: number, size: number): Promise<R<ChatMessage[]>> {
-        return axios.get(`/erupt-api/ai/chat/messages?chatId=${chatId}&size=${size}`)
+        return axios.get(`/erupt-api/ai/chat/messages`,{
+            params: {
+                chatId,
+                size
+            }
+        })
     }
 }

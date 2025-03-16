@@ -17,6 +17,7 @@ import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.service.SseService;
+import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.EruptSpringUtil;
@@ -24,6 +25,7 @@ import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +46,7 @@ public class ChatController {
     @Resource
     private AiFunctionManager aiFunctionManager;
 
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
     public SseEmitter send(@RequestParam Long chatId, @RequestParam String message) {
@@ -64,43 +67,51 @@ public class ChatController {
         } else {
             assistantPrompt.add(aiFunctionManager.getFunctionCallPrompt());
         }
-        emitter.onCompletion(() -> {
-            System.out.println("SseEmitter completed");
-        });
-
-        // 设置超时回调
         emitter.onTimeout(() -> {
             System.out.println("SseEmitter timed out");
-        });
-        // 设置异常回调
-        emitter.onError(e -> {
-            System.out.println("SseEmitter error: " + e.getMessage());
         });
         sseService.send(emitter, llm, llmObj, chatMessage, assistantPrompt);
         return emitter;
     }
 
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/create_chat")
     @Transactional
-    public void createChat(String title) {
+    public R<Long> createChat(@RequestParam String title) {
         Chat chat = new Chat();
+        chat.setTitle(title);
         chat.setType(ChatType.NORMAL);
-        chat.setUserId(Long.valueOf(MetaContext.getUser().getUid()));
+        chat.setCreatedTime(LocalDateTime.now());
+        chat.setUserId(MetaContext.getUser().getUid());
         eruptDao.persist(chat);
+        return R.ok(chat.getId());
     }
 
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @GetMapping("/delete_chat")
+    @Transactional
+    public R<Void> deleteChat(@RequestParam Long chatId) {
+        eruptDao.delete(eruptDao.lambdaQuery(Chat.class).eq(Chat::getId, chatId)
+                .eq(Chat::getUserId, MetaContext.getUser().getUid()).one());
+        for (ChatMessage message : eruptDao.lambdaQuery(ChatMessage.class).eq(ChatMessage::getChatId, chatId).list()) {
+            eruptDao.delete(message);
+        }
+        return R.ok();
+    }
+
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/chats")
     public R<List<Chat>> chats() {
         return R.ok(eruptDao.lambdaQuery(Chat.class)
-                .eq(null != MetaContext.getUser().getUid(), Chat::getUserId, null == MetaContext.getUser().getUid() ? null : Long.valueOf(MetaContext.getUser().getUid()))
+                .eq(Chat::getUserId, MetaContext.getUser().getUid())
                 .eq(Chat::getType, ChatType.NORMAL)
                 .orderByDesc(Chat::getCreatedTime)
                 .list());
     }
 
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     @GetMapping("/messages")
-    public R<List<ChatMessage>> messages(@RequestParam Long chatId,
-                                         @RequestParam Integer size,
+    public R<List<ChatMessage>> messages(@RequestParam Long chatId, @RequestParam Integer size,
                                          @RequestParam(defaultValue = "0") Integer index) {
         return R.ok(eruptDao.lambdaQuery(ChatMessage.class)
                 .eq(ChatMessage::getChatId, chatId)

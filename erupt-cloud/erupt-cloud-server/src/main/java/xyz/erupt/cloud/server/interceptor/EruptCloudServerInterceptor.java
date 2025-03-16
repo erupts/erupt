@@ -145,7 +145,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
                 throw new EruptWebApiRuntimeException("'" + nodeName + "' node not ready");
             }
             MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
-            MetaContext.register(new MetaUser(metaUserinfo.getId() + "", metaUserinfo.getAccount(), metaUserinfo.getUsername()));
+            MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername()));
             MetaContext.register(new MetaErupt(erupt));
             MetaContext.registerToken(token);
             String path = request.getRequestURI().replace(erupt, eruptName);

@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 public class MetaUser {
 
-    private String uid; //用户id
+    private Long uid; //用户id
 
     private String account; //登录用户名
 
     private String name; //用户姓名
 
-    public MetaUser(String uid, String account, String name) {
+    public MetaUser(Long uid, String account, String name) {
         this.uid = uid;
         this.account = account;
         this.name = name;
