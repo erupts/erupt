@@ -9,14 +9,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.call.AiFunctionManager;
+import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.ChatSenderType;
+import xyz.erupt.ai.constants.MessageRole;
 import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
+import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +30,9 @@ import java.util.List;
 @Component
 @Slf4j
 public class SseService {
+
+    @Resource
+    private AiProp aiProp;
 
     @Resource
     private EruptDao eruptDao;
@@ -40,7 +47,12 @@ public class SseService {
     @SneakyThrows
     public void send(SseEmitter emitter, SuperLLM<Object> llm, LLM llmObj, ChatMessage chatMessage, List<String> assistantPrompt) {
         try {
-            llm.chatSse(llmObj, chatMessage.getContent(), assistantPrompt, it -> {
+            List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
+            chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
+            for (String ap : assistantPrompt) {
+                chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.assistant, ap));
+            }
+            llm.chatSse(llmObj, chatMessage.getContent(), chatCompletionMessages, it -> {
                 if (it.isFinish()) {
                     String msg = it.getOutput().toString();
                     if (it.getOutput().toString().length() <= MESSAGE_TS) {
