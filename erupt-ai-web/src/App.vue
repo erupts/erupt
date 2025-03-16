@@ -17,7 +17,6 @@ let content = ref<string>()
 let sending = ref<boolean>(false)
 let sendDisabled = ref<boolean>(false)
 
-
 ChatApi.userInfo().then(res => {
   userInfo.value = res;
 })
@@ -67,7 +66,8 @@ const send = (message: string) => {
       content: "",
       senderType: "MODEL",
       createTime: new Date(),
-      loading: true
+      loading: true,
+      replying: true
     })
     setTimeout(() => {
       bubbles.value.scrollTop = bubbles.value.scrollHeight;
@@ -87,6 +87,11 @@ const send = (message: string) => {
     };
 
     eventSource.onerror = function (event) {
+      if (messages.value.length) {
+        setTimeout(() => {
+          messages.value[messages.value.length - 1].replying = false;
+        }, 3000)
+      }
       accumulatedMarkdown.value = "";
       sendDisabled.value = false;
       sending.value = false;
@@ -132,7 +137,7 @@ const conversationMenu: ConversationsProps['menu'] = (conversation) => {
     }
     ],
     onClick: (item) => {
-      if (item.key=='delete'){
+      if (item.key == 'delete') {
         ChatApi.deleteChat(conversation.key as number).then(() => {
           fetchChats();
         })
@@ -145,7 +150,7 @@ const conversationMenu: ConversationsProps['menu'] = (conversation) => {
 
 <template>
   <div style="height:100%;box-sizing: border-box;display: flex;">
-    <div style="width: 200px;border-right:1px solid #f0f0f0;overflow: auto">
+    <div style="width: 200px;flex-shrink: 0;border-right:1px solid #f0f0f0;overflow: auto">
       <div style="padding: 8px">
         <a-button type="primary" style="width: 100%;" @click="createConversation()">
           <PlusOutlined/>
@@ -165,6 +170,7 @@ const conversationMenu: ConversationsProps['menu'] = (conversation) => {
                   icon: item.senderType == 'MODEL'?h(RobotOutlined) : (userInfo ? userInfo.nickname.substring(0,1) : h(UserOutlined)),
                   style: { background: item.senderType == 'MODEL'?'#87d068':'#ccc' }
                 }"
+                :typing="item.replying && { step: 50, interval: 100 }"
                 :loading="item.loading"/>
       </article>
       <Suggestion :loading='true'>
@@ -174,11 +180,16 @@ const conversationMenu: ConversationsProps['menu'] = (conversation) => {
             :disabled="sendDisabled"
             v-model:value="content"
         >
-<!--          <template #header>-->
-<!--            <div style="background: #f0f0f0;padding: 8px;border-radius: 12px 12px 0 0">-->
-<!--              123-->
-<!--            </div>-->
-<!--          </template>-->
+          <template #footer>
+            <div>
+              123
+            </div>
+          </template>
+          <!--          <template #header>-->
+          <!--            <div style="background: #f0f0f0;padding: 8px;border-radius: 12px 12px 0 0">-->
+          <!--              123-->
+          <!--            </div>-->
+          <!--          </template>-->
         </Sender>
       </Suggestion>
     </div>

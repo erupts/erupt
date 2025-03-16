@@ -14,6 +14,7 @@ export interface ChatMessage {
     createTime: string;
     tokens: number;
     loading: boolean;
+    replying: boolean;
 }
 
 export interface UserInfo {
@@ -47,7 +48,7 @@ export class ChatApi {
     }
 
     static messages(chatId: number, size: number): Promise<R<ChatMessage[]>> {
-        return axios.get(`/erupt-api/ai/chat/messages`,{
+        return axios.get(`/erupt-api/ai/chat/messages`, {
             params: {
                 chatId,
                 size
