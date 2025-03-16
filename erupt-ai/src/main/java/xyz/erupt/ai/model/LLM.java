@@ -12,6 +12,7 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.ChoiceTrigger;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -36,8 +37,9 @@ import java.util.Map;
         name = "大模型管理", dataProxy = LLMDataProxy.class,
         orderBy = "sort",
         rowOperation = {
-                @RowOperation(title = "模型测试", icon = "fa fa-comments"),
-                @RowOperation(title = "默认对话模型", icon = "fa fa-bolt")
+                @RowOperation(title = "对话测试", icon = "fa fa-comments",
+                        tpl = @Tpl(path = "/tpl/llm-chat.ftl",height = "85vh"),
+                        mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
         }
 )
 @Getter
@@ -82,7 +84,7 @@ public class LLM extends MetaModelUpdateVo implements ChoiceTrigger {
 
     @EruptField(
             views = @View(title = "默认对话模型"),
-            edit = @Edit(title = "默认对话模型",show = false,boolType = @BoolType(trueText = "✓", falseText = "×"))
+            edit = @Edit(title = "默认对话模型", show = false, boolType = @BoolType(trueText = "✓", falseText = "×"))
     )
     private Boolean defaultLLM = false;
 

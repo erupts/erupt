@@ -20,7 +20,8 @@ import xyz.erupt.core.config.GsonFactory;
 import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -38,14 +39,15 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
     }
 
     @Override
-    public ChatCompletionResponse chat(LLM llm, String userPrompt, String assistantPrompt) {
+    public ChatCompletionResponse chat(LLM llm, String userPrompt, List<String> assistantPrompt) {
         BaseLLMConfig baseLLMConfig = GsonFactory.getGson().fromJson(llm.getConfig(), BaseLLMConfig.class);
+        List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
+        chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
+        for (String ap : assistantPrompt) {
+            chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.assistant, ap));
+        }
         ChatCompletion completion = ChatCompletion.builder().model(llm.getModel())
-                .stream(false).messages(Arrays.asList(
-                        new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()),
-                        new ChatCompletionMessage(MessageRole.user, userPrompt),
-                        new ChatCompletionMessage(MessageRole.assistant, assistantPrompt)
-                )).build();
+                .stream(false).messages(chatCompletionMessages).build();
         HttpResponse response = HttpUtil.createPost(baseLLMConfig.getUrl() + chatApiPath())
                 .header("Authorization", "Bearer " + baseLLMConfig.getApiKey())
                 .body(GsonFactory.getGson().toJson(completion))
@@ -55,14 +57,16 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
 
     @Override
     @SneakyThrows
-    public void chatSse(LLM llm, String userPrompt, String assistantPrompt, Consumer<SseListener> listener) {
+    public void chatSse(LLM llm, String userPrompt, List<String> assistantPrompt, Consumer<SseListener> listener) {
         BaseLLMConfig baseLLMConfig = GsonFactory.getGson().fromJson(llm.getConfig(), BaseLLMConfig.class);
+        List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
+        chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
+        for (String ap : assistantPrompt) {
+            chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.assistant, ap));
+        }
+        chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.user, userPrompt));
         ChatCompletion completion = ChatCompletion.builder().model(llm.getModel()).
-                messages(Arrays.asList(
-                        new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()),
-                        new ChatCompletionMessage(MessageRole.user, userPrompt),
-                        new ChatCompletionMessage(MessageRole.assistant, assistantPrompt)
-                )).stream(true).build();
+                messages(chatCompletionMessages).stream(true).build();
         HttpResponse response = HttpUtil.createPost(baseLLMConfig.getUrl() + chatApiPath())
                 .header("Accept", "text/event-stream")
                 .header("Authorization", "Bearer " + baseLLMConfig.getApiKey())

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.base.SuperLLM;
+import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.constants.ChatType;
 import xyz.erupt.ai.handler.EruptPromptHandler;
@@ -23,6 +24,7 @@ import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,12 +41,15 @@ public class ChatController {
     @Resource
     private SseService sseService;
 
+    @Resource
+    private AiFunctionManager aiFunctionManager;
+
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
     public SseEmitter send(@RequestParam Long chatId, @RequestParam String message) {
         LLM llmObj = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
         SuperLLM<Object> llm = (SuperLLM<Object>) SuperLLM.getLLM(llmObj.getLlm());
-        StringBuilder assistantPrompt = new StringBuilder();
+        List<String> assistantPrompt = new ArrayList<>();
         SseEmitter emitter = new SseEmitter();
         ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
@@ -52,12 +57,12 @@ public class ChatController {
         if (chat.getType() == ChatType.AGENT) {
             LLMAgent llmAgent = new LLMAgent();
             if (null == llmAgent.getPromptHandler()) {
-                assistantPrompt.append(llmAgent.getPrompt());
+                assistantPrompt.add(llmAgent.getPrompt());
             } else {
-                assistantPrompt.append(EruptSpringUtil.getBean(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt()));
+                assistantPrompt.add(EruptSpringUtil.getBean(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt()));
             }
         } else {
-            assistantPrompt.append("回答不超过100个字");
+            assistantPrompt.add(aiFunctionManager.getFunctionCallPrompt());
         }
         emitter.onCompletion(() -> {
             System.out.println("SseEmitter completed");
