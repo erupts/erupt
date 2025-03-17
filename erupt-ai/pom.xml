@@ -17,12 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>${erupt.groupId}</groupId>
-            <artifactId>erupt-core</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${erupt.groupId}</groupId>
-            <artifactId>erupt-jpa</artifactId>
+            <artifactId>erupt-upms</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
