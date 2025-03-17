@@ -10,7 +10,10 @@ import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
+import xyz.erupt.upms.prop.EruptAppProp;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -25,8 +28,16 @@ import java.util.List;
 @EnableAsync
 public class EruptAiAutoConfiguration implements EruptModule {
 
+    @Resource
+    private EruptAppProp eruptAppProp;
+
     static {
         EruptModuleInvoke.addEruptModule(EruptAiAutoConfiguration.class);
+    }
+
+    @PostConstruct
+    public void post() {
+        eruptAppProp.registerProp("erupt-ai", true);
     }
 
     @Override
