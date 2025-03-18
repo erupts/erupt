@@ -177,6 +177,7 @@ const conversationMenu: ConversationsProps['menu'] = (conversation) => {
         <Sender
             :on-submit="send"
             :loading="sending"
+            :placeholder="'输入@召唤智能体'"
             :disabled="sendDisabled"
             v-model:value="content"
         >

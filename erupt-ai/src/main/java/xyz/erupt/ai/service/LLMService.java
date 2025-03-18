@@ -12,11 +12,15 @@ import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.constants.MessageRole;
+import xyz.erupt.ai.handler.EruptPromptHandler;
+import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
+import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
@@ -29,7 +33,7 @@ import java.util.List;
  */
 @Component
 @Slf4j
-public class SseService {
+public class LLMService {
 
     @Resource
     private AiProp aiProp;
@@ -42,10 +46,30 @@ public class SseService {
 
     public static final int MESSAGE_TS = 100;
 
+    public List<String> geneAssistantPrompt(Chat chat, Long agentId) {
+        List<String> assistantPrompt = new ArrayList<>();
+        List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
+                .eq(ChatMessage::getChatId, chat.getId()).eq(ChatMessage::getSenderType, ChatSenderType.USER)
+                .orderByAsc(ChatMessage::getCreatedAt)
+                .limit(20).list();
+        chatMessages.forEach(it -> assistantPrompt.add(it.getContent()));
+        if (null != agentId) {
+            LLMAgent llmAgent = eruptDao.find(LLMAgent.class, agentId);
+            if (null == llmAgent.getPromptHandler()) {
+                assistantPrompt.add(llmAgent.getPrompt());
+            } else {
+                assistantPrompt.add(EruptSpringUtil.getBean(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt()));
+            }
+        } else {
+            assistantPrompt.add(aiFunctionManager.getFunctionCallPrompt());
+        }
+        return assistantPrompt;
+    }
+
     @Async
     @Transactional
     @SneakyThrows
-    public void send(SseEmitter emitter, SuperLLM<Object> llm, LLM llmObj, ChatMessage chatMessage, List<String> assistantPrompt) {
+    public void sendSse(SseEmitter emitter, SuperLLM<Object> llm, LLM llmObj, ChatMessage chatMessage, List<String> assistantPrompt) {
         try {
             List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
             chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
