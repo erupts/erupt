@@ -13,6 +13,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
@@ -28,12 +29,14 @@ import java.util.Map;
 @PreDataProxy(MetaModelCreateVo.Proxy.class)
 public class MetaModelCreateVo extends MetaModel {
 
+    @Transient
     @EruptField(
             views = @View(title = "创建人", width = "100px"),
             edit = @Edit(title = "创建人", readonly = @Readonly)
     )
     private String createByVo;
 
+    @Transient
     @EruptField(
             views = @View(title = "创建时间", sortable = true),
             edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
