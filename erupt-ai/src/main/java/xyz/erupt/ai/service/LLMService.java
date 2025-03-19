@@ -20,6 +20,9 @@ import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaUser;
+import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
@@ -69,8 +72,9 @@ public class LLMService {
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(SseEmitter emitter, SuperLLM<Object> llm, LLM llmObj, ChatMessage chatMessage, List<String> assistantPrompt) {
+    public void sendSse(MetaUserinfo metaUserinfo, SseEmitter emitter, SuperLLM<Object> llm, LLM llmObj, ChatMessage chatMessage, List<String> assistantPrompt) {
         try {
+            MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername()));
             List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
             chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
             for (String ap : assistantPrompt) {
