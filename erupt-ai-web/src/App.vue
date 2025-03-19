@@ -6,16 +6,22 @@ import md from "./components/markdown.ts";
 import {type Chat, ChatApi, type ChatMessage, type UserInfo} from "./api/chat.api.ts";
 import {DeleteOutlined, PlusOutlined, RobotOutlined, UserOutlined} from '@ant-design/icons-vue';
 import {getToken} from "./api/axios.config.ts";
+import type {SuggestionItem} from "ant-design-x-vue/dist/typings/suggestion/interface";
 
 let userInfo = ref<UserInfo>()
 let chats = ref<Chat[]>([])
 let messages = ref<ChatMessage[]>([])
 let selectChat = ref<number>();
 
-let bubbles = ref(null);
-let content = ref<string>()
-let sending = ref<boolean>(false)
-let sendDisabled = ref<boolean>(false)
+const bubbles = ref(null);
+const content = ref<string>()
+const sending = ref<boolean>(false)
+const sendDisabled = ref<boolean>(false)
+
+const suggestions = ref<SuggestionItem>([
+  {label: 'Write a report', value: 'report'},
+  {label: 'Draw a picture', value: 'draw'},
+]);
 
 ChatApi.userInfo().then(res => {
   userInfo.value = res;
@@ -24,6 +30,8 @@ ChatApi.userInfo().then(res => {
 const createConversation = () => {
   messages.value = [];
   selectChat.value = null;
+  sending.value = false;
+  sendDisabled.value = false;
 }
 
 const fetchChats = (after?: () => void) => {
@@ -40,6 +48,8 @@ fetchChats();
 
 const onSelectChat = (chatId: number, after?: () => void) => {
   selectChat.value = chatId;
+  sending.value = false;
+  sendDisabled.value = false;
   ChatApi.messages(selectChat.value, 20).then(res => {
     messages.value = res.data.slice().reverse();
     after && after();
@@ -173,7 +183,7 @@ const conversationMenu: ConversationsProps['menu'] = (conversation) => {
                 :typing="item.replying && { step: 50, interval: 100 }"
                 :loading="item.loading"/>
       </article>
-      <Suggestion :loading='true'>
+      <Suggestion :loading='true' :items="suggestions" @select="(val) => alert(123)">
         <Sender
             :on-submit="send"
             :loading="sending"
@@ -181,11 +191,6 @@ const conversationMenu: ConversationsProps['menu'] = (conversation) => {
             :disabled="sendDisabled"
             v-model:value="content"
         >
-          <template #footer>
-            <div>
-              123
-            </div>
-          </template>
           <!--          <template #header>-->
           <!--            <div style="background: #f0f0f0;padding: 8px;border-radius: 12px 12px 0 0">-->
           <!--              123-->

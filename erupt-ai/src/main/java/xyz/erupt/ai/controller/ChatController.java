@@ -16,11 +16,11 @@ import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.service.LLMService;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.model.EruptUserVo;
+import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -43,6 +43,9 @@ public class ChatController {
     @Resource
     private AiFunctionManager aiFunctionManager;
 
+    @Resource
+    private EruptUserService eruptUserService;
+
     @EruptLoginAuth
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
@@ -56,7 +59,8 @@ public class ChatController {
         ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
         Chat chat = eruptDao.find(Chat.class, chatId);
-        llmService.sendSse(emitter, llm, llmObj, chatMessage, llmService.geneAssistantPrompt(chat, agentId));
+        llmService.sendSse(eruptUserService.getSimpleUserInfo(), emitter, llm, llmObj,
+                chatMessage, llmService.geneAssistantPrompt(chat, agentId));
         return emitter;
     }
 
@@ -68,7 +72,8 @@ public class ChatController {
         chat.setTitle(title);
         chat.setType(ChatType.NORMAL);
         chat.setCreatedTime(LocalDateTime.now());
-        chat.setEruptUser(new EruptUserVo(MetaContext.getUser().getUid()));
+        chat.setEruptUser(new EruptUserVo(eruptUserService.getCurrentUid()
+        ));
         eruptDao.persist(chat);
         return R.ok(chat.getId());
     }
@@ -86,7 +91,7 @@ public class ChatController {
     @GetMapping("/chats")
     public R<List<Chat>> chats() {
         return R.ok(eruptDao.lambdaQuery(Chat.class)
-                .eq(Chat::getEruptUser, MetaContext.getUser().getUid())
+                .with(Chat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
                 .eq(Chat::getType, ChatType.NORMAL)
                 .orderByDesc(Chat::getCreatedTime)
                 .list());
