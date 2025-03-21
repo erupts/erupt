@@ -87,19 +87,26 @@ public class LLMService {
                         msg = sendMessage(emitter, it.getOutput().toString());
                     }
                     chatMessage.setTokens((long) it.getUsage().getPrompt_tokens());
-                    eruptDao.merge(chatMessage);
-                    eruptDao.persist(ChatMessage.create(chatMessage.getChatId(), ChatSenderType.MODEL, msg, (long) it.getUsage().getCompletion_tokens()));
+                    eruptDao.mergeAndFlush(chatMessage);
+                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), ChatSenderType.MODEL, msg, (long) it.getUsage().getCompletion_tokens()));
                     emitter.complete();
                 } else {
                     if (it.getOutput().toString().length() > MESSAGE_TS) {
-                        sendMessage(emitter, it.getCurrMessage());
+                        if (it.isPending()) {
+                            sendMessage(emitter, it.getOutput().toString());
+                            it.setPending(false);
+                        } else {
+                            sendMessage(emitter, it.getCurrMessage());
+                        }
+                    } else {
+                        it.setPending(true);
                     }
                 }
             });
         } catch (Exception e) {
-            eruptDao.persist(ChatMessage.create(chatMessage.getChatId(), ChatSenderType.MODEL, e.getMessage(), 0L));
+            eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), ChatSenderType.MODEL, e.getMessage(), 0L));
             emitter.send(GsonFactory.getGson().toJson(new SseBody(e.getMessage())), MediaType.TEXT_EVENT_STREAM);
-            emitter.completeWithError(e);
+            emitter.complete();
         }
     }
 

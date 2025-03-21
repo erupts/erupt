@@ -96,7 +96,6 @@ const send = (message: string) => {
       content: message,
       createTime: "",
       loading: false,
-      replying: false,
     } as ChatMessage)
     messages.value.push({
       id: Math.random(),
@@ -104,7 +103,6 @@ const send = (message: string) => {
       content: "",
       createTime: "",
       loading: true,
-      replying: true
     } as ChatMessage)
     setTimeout(() => {
       //@ts-ignore
@@ -121,20 +119,18 @@ const send = (message: string) => {
       if (msg.loading) {
         msg.loading = false;
       }
-      msg.content = md.render(accumulatedMarkdown.value);
-      messageToBottom();
+      setTimeout(() => {
+        msg.content = md.render(accumulatedMarkdown.value);
+        messageToBottom();
+      }, 10);
     };
 
     eventSource.onerror = () => {
-      if (messages.value.length) {
-        setTimeout(() => {
-          messages.value[messages.value.length - 1].replying = false;
-        }, 3000)
-      }
-      console.log(accumulatedMarkdown.value)
-      accumulatedMarkdown.value = "";
-      sendDisabled.value = false;
-      sending.value = false;
+      setTimeout(() => {
+        accumulatedMarkdown.value = "";
+        sendDisabled.value = false;
+        sending.value = false;
+      }, 100)
       eventSource.close();
     };
 
@@ -227,7 +223,6 @@ const handleBubbleScroll = () => {
                   icon: item.senderType == 'MODEL'?h(RobotOutlined as any) : (userInfo ? userInfo.nickname.substring(0,1) : h(UserOutlined as any)),
                   style: { background: item.senderType == 'MODEL'?'#87d068':'#ccc' }
                 } as any"
-                :typing="item.replying && { step: 50, interval: 100 }"
                 :loading="item.loading"/>
       </article>
       <Suggestion :loading='true' :items="suggestions" @select="(val) => alert(123)">

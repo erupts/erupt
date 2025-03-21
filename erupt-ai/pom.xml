@@ -36,9 +36,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-http</artifactId>
-            <version>5.8.25</version>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.10.0</version> <!-- 请根据需要选择最新版本 -->
         </dependency>
         <dependency>
             <groupId>org.apache.opennlp</groupId>

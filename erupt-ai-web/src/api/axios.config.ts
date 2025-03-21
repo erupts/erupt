@@ -47,6 +47,9 @@ axiosInstance.interceptors.response.use(
         return response.data;
     },
     error => {
+        if (error.status === 401) {
+            window.location.reload();
+        }
         message.error("server error:" + error.message);
         return Promise.reject(error);
     }
