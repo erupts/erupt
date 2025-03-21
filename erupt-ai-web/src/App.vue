@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {h, ref} from "vue";
-import {Bubble, Conversations, type ConversationsProps, Sender} from "ant-design-x-vue";
+import {Bubble, Conversations, Sender} from "ant-design-x-vue";
 import 'highlight.js/styles/monokai.css';
 import md from "./components/markdown.ts";
 import {type Chat, ChatApi, type ChatMessage, type UserInfo} from "./api/chat.api.ts";
@@ -11,14 +11,18 @@ import type {SuggestionItem} from "ant-design-x-vue/dist/typings/suggestion/inte
 let userInfo = ref<UserInfo>()
 let chats = ref<Chat[]>([])
 let messages = ref<ChatMessage[]>([])
-let selectChat = ref<number>();
+let selectChat = ref<number | null>();
 
-const bubbles = ref(null);
-const content = ref<string>()
+const bubbles = ref<HTMLElement>();
+const content = ref<string>("")
 const sending = ref<boolean>(false)
 const sendDisabled = ref<boolean>(false)
 
-const suggestions = ref<SuggestionItem>([
+let messagePage = ref<number>(1); // 消息的当前页码
+let loadingMoreMessages = ref<boolean>(false); // 是否正在加载更多消息
+let hasMoreMessages = ref<boolean>(true); // 是否还有更多消息
+
+const suggestions = ref<SuggestionItem[]>([
   {label: 'Write a report', value: 'report'},
   {label: 'Draw a picture', value: 'draw'},
 ]);
@@ -50,14 +54,35 @@ const onSelectChat = (chatId: number, after?: () => void) => {
   selectChat.value = chatId;
   sending.value = false;
   sendDisabled.value = false;
-  ChatApi.messages(selectChat.value, 20).then(res => {
-    messages.value = res.data.slice().reverse();
+  messagePage.value = 1; // 重置消息页码
+  hasMoreMessages.value = true; // 重置是否有更多消息
+  accumulatedMarkdown.value = ""; // 清空累积的 Markdown 数据
+  messages.value = []; // 清空消息列表
+  fetchMessages(chatId, true, after); // 加载第一页消息
+};
+
+const fetchMessages = (chatId: number, toBottom: boolean, after?: () => void) => {
+  loadingMoreMessages.value = true; // 标记正在加载更多消息
+  ChatApi.messages(chatId, 20, messagePage.value).then(res => {
+    if (messagePage.value === 1) {
+      // 如果是第一页，直接赋值
+      messages.value = res.data.slice().reverse();
+    } else {
+      // 如果不是第一页，将新加载的消息追加到现有消息列表的前面
+      messages.value = res.data.slice().reverse().concat(messages.value);
+    }
+    hasMoreMessages.value = res.data.length === 20; // 判断是否还有更多消息
     after && after();
-    setTimeout(() => {
-      bubbles.value.scrollTop = bubbles.value.scrollHeight;
-    }, 100)
-  })
-}
+    if (toBottom) {
+      setTimeout(() => {
+        //@ts-ignore
+        bubbles.value.scrollTop = bubbles.value.scrollHeight; // 滚动到最新消息
+      }, 100);
+    }
+  }).finally(() => {
+    loadingMoreMessages.value = false; // 加载完成
+  });
+};
 
 const accumulatedMarkdown = ref(''); // 用于累积接收到的 Markdown 数据
 
@@ -67,26 +92,30 @@ const send = (message: string) => {
     content.value = "";
     messages.value.push({
       id: Math.random(),
-      content: message,
       senderType: "USER",
-      createTime: new Date()
-    })
+      content: message,
+      createTime: "",
+      loading: false,
+      replying: false,
+    } as ChatMessage)
     messages.value.push({
       id: Math.random(),
-      content: "",
       senderType: "MODEL",
-      createTime: new Date(),
+      content: "",
+      createTime: "",
       loading: true,
       replying: true
-    })
+    } as ChatMessage)
     setTimeout(() => {
+      //@ts-ignore
       bubbles.value.scrollTop = bubbles.value.scrollHeight;
     }, 10)
     const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}`);
 
-    eventSource.onmessage = function (event) {
+    eventSource.onmessage = (event) => {
       sending.value = false;
       sendDisabled.value = true;
+      console.log(JSON.parse(event.data).text)
       accumulatedMarkdown.value += JSON.parse(event.data).text;
       let msg = messages.value[messages.value.length - 1];
       if (msg.loading) {
@@ -96,19 +125,20 @@ const send = (message: string) => {
       messageToBottom();
     };
 
-    eventSource.onerror = function (event) {
+    eventSource.onerror = () => {
       if (messages.value.length) {
         setTimeout(() => {
           messages.value[messages.value.length - 1].replying = false;
         }, 3000)
       }
+      console.log(accumulatedMarkdown.value)
       accumulatedMarkdown.value = "";
       sendDisabled.value = false;
       sending.value = false;
       eventSource.close();
     };
 
-    eventSource.onopen = function (event) {
+    eventSource.onopen = () => {
       sendDisabled.value = true;
     };
   }
@@ -120,11 +150,12 @@ const send = (message: string) => {
       });
     });
   } else {
+    //@ts-ignore
     start(selectChat.value)
   }
 }
 
-const messageRender = (content: string) => {
+const messageRender = (content: string): any => {
   if (!content) {
     return null;
   }
@@ -132,12 +163,14 @@ const messageRender = (content: string) => {
 };
 
 const messageToBottom = () => {
+  //@ts-ignore
   if (bubbles.value.scrollHeight - bubbles.value.scrollTop - bubbles.value.clientHeight < bubbles.value.clientHeight / 3) {
+    //@ts-ignore
     bubbles.value.scrollTop = bubbles.value.scrollHeight;
   }
 }
 
-const conversationMenu: ConversationsProps['menu'] = (conversation) => {
+const conversationMenu = (conversation) => {
   return {
     items: [{
       label: '删除',
@@ -156,6 +189,19 @@ const conversationMenu: ConversationsProps['menu'] = (conversation) => {
   }
 }
 
+const handleBubbleScroll = () => {
+  if (
+      bubbles.value?.scrollTop <= 10 &&
+      !loadingMoreMessages.value &&
+      hasMoreMessages.value &&
+      selectChat.value
+  ) {
+    messagePage.value += 1;
+    //@ts-ignore
+    fetchMessages(selectChat.value, false); // 加载更多消息
+  }
+};
+
 </script>
 
 <template>
@@ -169,17 +215,18 @@ const conversationMenu: ConversationsProps['menu'] = (conversation) => {
       </div>
       <Conversations :items="chats.map(it => ({ label: it.title, key: it.id }))"
                      :menu="conversationMenu"
-                     :activeKey="selectChat" @activeChange="onSelectChat" style="margin:0;padding: 8px"/>
+                     :activeKey="selectChat as string" @activeChange="onSelectChat" style="margin:0;padding: 8px"/>
     </div>
     <div style="flex: 1;display: flex;flex-direction: column;height:100%;padding: 0 8px 8px;box-sizing: border-box">
-      <article ref="bubbles" style="padding: 8px 0;flex: 1 1 0;overflow: auto;height: calc(100% - 66px)">
+      <article ref="bubbles" style="padding: 8px 0;flex: 1 1 0;overflow: auto;height: calc(100% - 66px)"
+               @scroll="handleBubbleScroll">
         <Bubble v-if="messages.length" v-for="item in messages" style="margin-bottom: 8px" :key="item.id"
                 :placement="item.senderType == 'MODEL' ? 'start' : 'end'"
                 :content="item.content" :message-render="messageRender"
                 :avatar="{
-                  icon: item.senderType == 'MODEL'?h(RobotOutlined) : (userInfo ? userInfo.nickname.substring(0,1) : h(UserOutlined)),
+                  icon: item.senderType == 'MODEL'?h(RobotOutlined as any) : (userInfo ? userInfo.nickname.substring(0,1) : h(UserOutlined as any)),
                   style: { background: item.senderType == 'MODEL'?'#87d068':'#ccc' }
-                }"
+                } as any"
                 :typing="item.replying && { step: 50, interval: 100 }"
                 :loading="item.loading"/>
       </article>
