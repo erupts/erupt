@@ -3,7 +3,6 @@ package xyz.erupt.ai.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
-import xyz.erupt.ai.constants.ChatType;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -35,9 +34,6 @@ import java.time.LocalDateTime;
 @EruptI18n
 @Where(clause = "deleted = false or deleted is null")
 public class Chat extends BaseModel {
-
-    @Enumerated(EnumType.STRING)
-    private ChatType type;
 
     @EruptField(
             views = @View(title = "会话标题"),

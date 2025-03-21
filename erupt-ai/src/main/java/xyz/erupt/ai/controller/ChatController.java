@@ -10,7 +10,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.constants.ChatSenderType;
-import xyz.erupt.ai.constants.ChatType;
 import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
@@ -59,8 +58,7 @@ public class ChatController {
         ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
         Chat chat = eruptDao.find(Chat.class, chatId);
-        llmService.sendSse(eruptUserService.getSimpleUserInfo(), emitter, llm, llmObj,
-                chatMessage, llmService.geneAssistantPrompt(chat, agentId));
+        llmService.sendSse(eruptUserService.getSimpleUserInfo(), emitter, llm, llmObj, chatMessage, llmService.geneAssistantPrompt(chat, agentId));
         return emitter;
     }
 
@@ -70,10 +68,8 @@ public class ChatController {
     public R<Long> createChat(@RequestParam String title) {
         Chat chat = new Chat();
         chat.setTitle(title);
-        chat.setType(ChatType.NORMAL);
         chat.setCreatedTime(LocalDateTime.now());
-        chat.setEruptUser(new EruptUserVo(eruptUserService.getCurrentUid()
-        ));
+        chat.setEruptUser(new EruptUserVo(eruptUserService.getCurrentUid()));
         eruptDao.persist(chat);
         return R.ok(chat.getId());
     }
@@ -92,7 +88,6 @@ public class ChatController {
     public R<List<Chat>> chats() {
         return R.ok(eruptDao.lambdaQuery(Chat.class)
                 .with(Chat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
-                .eq(Chat::getType, ChatType.NORMAL)
                 .orderByDesc(Chat::getCreatedTime)
                 .list());
     }
@@ -100,11 +95,11 @@ public class ChatController {
     @EruptLoginAuth
     @GetMapping("/messages")
     public R<List<ChatMessage>> messages(@RequestParam Long chatId, @RequestParam Integer size,
-                                         @RequestParam(defaultValue = "0") Integer index) {
+                                         @RequestParam(defaultValue = "1") Integer index) {
         return R.ok(eruptDao.lambdaQuery(ChatMessage.class)
                 .eq(ChatMessage::getChatId, chatId)
                 .orderByDesc(ChatMessage::getCreatedAt)
-                .offset(index * size)
+                .offset((index - 1) * size)
                 .limit(size)
                 .list());
     }
