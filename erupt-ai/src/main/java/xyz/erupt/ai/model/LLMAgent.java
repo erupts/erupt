@@ -23,7 +23,7 @@ import javax.persistence.*;
  * @author YuePeng
  * date 2025/2/22 16:21
  */
-@Erupt(name = "智能体管理")
+@Erupt(name = "智能体")
 @Table(name = "e_ai_llm_agent")
 @Getter
 @Setter
