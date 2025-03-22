@@ -46,6 +46,12 @@ public class LLMAgent extends MetaModelUpdateVo {
     private LLM llm;
 
     @EruptField(
+            views = @View(title = "是否启用"),
+            edit = @Edit(title = "是否启用", notNull = true)
+    )
+    private Boolean enable = true;
+
+    @EruptField(
             views = @View(title = "提示词动态处理器"),
             edit = @Edit(title = "提示词动态处理器", type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = DynamicPromptFetch.class))
     )

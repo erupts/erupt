@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.base.SuperLLM;
-import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
@@ -38,9 +37,6 @@ public class ChatController {
 
     @Resource
     private LLMService llmService;
-
-    @Resource
-    private AiFunctionManager aiFunctionManager;
 
     @Resource
     private EruptUserService eruptUserService;
