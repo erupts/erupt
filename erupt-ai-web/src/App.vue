@@ -8,10 +8,13 @@ import {DeleteOutlined, PlusOutlined, RobotOutlined, UserOutlined} from '@ant-de
 import {getToken} from "./api/axios.config.ts";
 import type {SuggestionItem} from "ant-design-x-vue/dist/typings/suggestion/interface";
 
-let userInfo = ref<UserInfo>()
-let chats = ref<Chat[]>([])
-let messages = ref<ChatMessage[]>([])
-let selectChat = ref<number | null>();
+const userInfo = ref<UserInfo>()
+const chats = ref<Chat[]>([])
+const messages = ref<ChatMessage[]>([])
+const selectChat = ref<number | null>();
+const selectAgent = ref<number | null>();
+
+const selectAgentModel = ref<boolean>(false)
 
 const bubbles = ref<HTMLElement>();
 const content = ref<string>("")
@@ -225,25 +228,52 @@ const handleBubbleScroll = () => {
                 } as any"
                 :loading="item.loading"/>
       </article>
-      <Suggestion :loading='true' :items="suggestions" @select="(val) => alert(123)">
-        <Sender
-            :on-submit="send"
-            :loading="sending"
-            :placeholder="'输入@召唤智能体'"
-            :disabled="sendDisabled"
-            v-model:value="content"
-        >
-          <!--          <template #header>-->
-          <!--            <div style="background: #f0f0f0;padding: 8px;border-radius: 12px 12px 0 0">-->
-          <!--              123-->
-          <!--            </div>-->
-          <!--          </template>-->
-        </Sender>
+      <Suggestion :items="suggestions" @select="(val) => alert(123)">
+        <template #default="data">
+          <Sender
+              :on-submit="send"
+              :loading="sending"
+              :placeholder="'输入@召唤智能体'"
+              :disabled="sendDisabled"
+              @change="(nextVal) => {
+                if (nextVal === '@') {
+                  selectAgentModel = true;
+                }
+              }"
+              v-model:value="content"
+          >
+            <template #header>
+              <div style="background: #f6f7f9;padding: 10px 12px;border-radius: 12px 12px 0 0;color: #838a95">
+                与 <span style="color: #000;font-weight: 500">xxx</span> 对话
+              </div>
+            </template>
+          </Sender>
+        </template>
       </Suggestion>
+      <a-modal v-model:open="selectAgentModel" title="选择智能体" width="260px" :footer="null" style="top:50px"
+               :body-style="{padding:0}">
+        <div class="agent">
+          <p class="item" v-for="i in 30">Some contents...</p>
+        </div>
+      </a-modal>
     </div>
   </div>
 </template>
 
 <style scoped lang="less">
 @import './app.less';
+
+.agent {
+  max-height: 500px;
+  overflow-y: auto;
+
+  .item {
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+}
 </style>
