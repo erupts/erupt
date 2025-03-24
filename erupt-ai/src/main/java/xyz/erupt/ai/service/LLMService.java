@@ -107,14 +107,19 @@ public class LLMService {
         }
     }
 
-    @SneakyThrows
     private String sendMessage(SseEmitter emitter, String message) {
-        if (aiFunctionManager.exist(message)) {
+        if (aiFunctionManager.exist(message.trim())) {
             String functionMessage = aiFunctionManager.call(message);
-            emitter.send(GsonFactory.getGson().toJson(new SseBody(functionMessage)), MediaType.TEXT_EVENT_STREAM);
+            try {
+                emitter.send(GsonFactory.getGson().toJson(new SseBody(functionMessage)), MediaType.TEXT_EVENT_STREAM);
+            } catch (Exception ignore) {
+            }
             return functionMessage;
         } else {
-            emitter.send(GsonFactory.getGson().toJson(new SseBody(message)), MediaType.TEXT_EVENT_STREAM);
+            try {
+                emitter.send(GsonFactory.getGson().toJson(new SseBody(message)), MediaType.TEXT_EVENT_STREAM);
+            } catch (Exception ignore) {
+            }
         }
         return message;
     }

@@ -30,9 +30,9 @@ public class AiFunctionManager {
     }
 
     public String getFunctionCallPrompt() {
-        StringBuilder sb = new StringBuilder("下面内容的格式是多组 key → desc，如果用户问题与desc相关，则仅仅只返回对应的key即可，其他的不用输出，否则忽略这段提示词\n");
+        StringBuilder sb = new StringBuilder("下面是一组 Function Call 的映射，根据情况决定是否调用，否则忽略这段提示词\n");
         for (Map.Entry<String, AiFunction> entry : aiFunctionMap.entrySet()) {
-            sb.append("- ").append(entry.getKey()).append(" → ").append(entry.getValue().name()).append("\n");
+            sb.append("- 如果用户问：").append(entry.getValue().name()).append("，就回复：").append(entry.getKey()).append("\n");
         }
         return sb.toString();
     }
