@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import {h, ref} from "vue";
+import {h, onMounted, ref} from "vue";
 import {Bubble, Conversations, Sender} from "ant-design-x-vue";
 import 'highlight.js/styles/monokai.css';
 import md from "./components/markdown.ts";
-import {type Chat, ChatApi, type ChatMessage, type UserInfo} from "./api/chat.api.ts";
+import {type Agent, type Chat, ChatApi, type ChatMessage, type UserInfo} from "./api/chat.api.ts";
 import {DeleteOutlined, PlusOutlined, RobotOutlined, UserOutlined} from '@ant-design/icons-vue';
 import {getToken} from "./api/axios.config.ts";
 import type {SuggestionItem} from "ant-design-x-vue/dist/typings/suggestion/interface";
 
 const userInfo = ref<UserInfo>()
 const chats = ref<Chat[]>([])
+const agents = ref<Agent[]>([]);
 const messages = ref<ChatMessage[]>([])
 const selectChat = ref<number | null>();
-const selectAgent = ref<number | null>();
+const selectAgent = ref<Agent | null>();
 
-const selectAgentModel = ref<boolean>(false)
+const agentModel = ref<boolean>(false)
 
 const bubbles = ref<HTMLElement>();
 const content = ref<string>("")
@@ -51,7 +52,14 @@ const fetchChats = (after?: () => void) => {
   })
 }
 
-fetchChats();
+
+onMounted(() => {
+  fetchChats();
+  ChatApi.agents().then(it => {
+    agents.value = it.data;
+  })
+})
+
 
 const onSelectChat = (chatId: number, after?: () => void) => {
   selectChat.value = chatId;
@@ -111,7 +119,7 @@ const send = (message: string) => {
       //@ts-ignore
       bubbles.value.scrollTop = bubbles.value.scrollHeight;
     }, 10)
-    const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}`);
+    const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}&agentId=${selectAgent.value?.id || ''}`);
 
     eventSource.onmessage = (event) => {
       sending.value = false;
@@ -201,6 +209,12 @@ const handleBubbleScroll = () => {
   }
 };
 
+const onSelectAgent = (agent: Agent) => {
+  selectAgent.value = agent;
+  agentModel.value = false;
+  content.value = content.value.substring(0, content.value.length - 1)
+}
+
 </script>
 
 <template>
@@ -237,23 +251,25 @@ const handleBubbleScroll = () => {
               :disabled="sendDisabled"
               @change="(nextVal) => {
                 if (nextVal === '@') {
-                  selectAgentModel = true;
+                  agentModel = true;
                 }
               }"
               v-model:value="content"
           >
             <template #header>
-              <div style="background: #f6f7f9;padding: 10px 12px;border-radius: 12px 12px 0 0;color: #838a95">
-                与 <span style="color: #000;font-weight: 500">xxx</span> 对话
+              <div v-if="selectAgent"
+                   style="display: flex;align-items: center;background: #f6f7f9;padding: 5px 5px 5px 15px;border-radius: 12px 12px 0 0;color: #838a95">
+                <div>与 <span style="color: #000;font-weight: 400">{{ selectAgent.name }}</span> 对话</div>
+                <a-button type="text" style="margin-left: auto;" @click="selectAgent = null">&times;</a-button>
               </div>
             </template>
           </Sender>
         </template>
       </Suggestion>
-      <a-modal v-model:open="selectAgentModel" title="选择智能体" width="260px" :footer="null" style="top:50px"
+      <a-modal v-model:open="agentModel" title="选择智能体" width="260px" :footer="null" style="top:50px"
                :body-style="{padding:0}">
         <div class="agent">
-          <p class="item" v-for="i in 30">Some contents...</p>
+          <p class="item" v-for="agent in agents" @click="onSelectAgent(agent)">{{ agent.name }}</p>
         </div>
       </a-modal>
     </div>

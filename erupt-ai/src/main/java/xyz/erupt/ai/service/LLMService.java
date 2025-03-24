@@ -49,38 +49,35 @@ public class LLMService {
 
     public static final int MESSAGE_TS = 100;
 
-    public List<String> geneAssistantPrompt(Chat chat, Long agentId) {
-        List<String> assistantPrompt = new ArrayList<>();
-        List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
-                .eq(ChatMessage::getChatId, chat.getId()).eq(ChatMessage::getSenderType, ChatSenderType.USER)
-                .orderByAsc(ChatMessage::getCreatedAt)
-                .limit(20).list();
-        chatMessages.forEach(it -> assistantPrompt.add(it.getContent()));
+    public List<ChatCompletionMessage> geneCompletionPrompt(Chat chat, Long agentId) {
+        List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
+        chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
         if (null != agentId) {
             LLMAgent llmAgent = eruptDao.find(LLMAgent.class, agentId);
             if (null == llmAgent.getPromptHandler()) {
-                assistantPrompt.add(llmAgent.getPrompt());
+                chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, llmAgent.getPrompt()));
             } else {
-                assistantPrompt.add(EruptSpringUtil.getBean(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt()));
+                chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system,
+                        EruptSpringUtil.getBean(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
             }
         } else {
-            assistantPrompt.add(aiFunctionManager.getFunctionCallPrompt());
+            chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.assistant, aiFunctionManager.getFunctionCallPrompt()));
         }
-        return assistantPrompt;
+        List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
+                .eq(ChatMessage::getChatId, chat.getId()).eq(ChatMessage::getSenderType, ChatSenderType.USER)
+                .orderByDesc(ChatMessage::getCreatedAt)
+                .limit(20).list();
+        chatMessages.forEach(it -> chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.user, it.getContent())));
+        return chatCompletionMessages;
     }
 
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(MetaUserinfo metaUserinfo, SseEmitter emitter, SuperLLM<Object> llm, LLM llmObj, ChatMessage chatMessage, List<String> assistantPrompt) {
+    public void sendSse(MetaUserinfo metaUserinfo, SseEmitter emitter, SuperLLM<Object> llm, LLM llmObj, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
         try {
             MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername()));
-            List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
-            chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
-            for (String ap : assistantPrompt) {
-                chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.assistant, ap));
-            }
-            llm.chatSse(llmObj, chatMessage.getContent(), chatCompletionMessages, it -> {
+            llm.chatSse(llmObj, chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {
                     String msg = it.getOutput().toString();
                     if (it.getOutput().toString().length() <= MESSAGE_TS) {

@@ -19,6 +19,12 @@ export interface UserInfo {
     nickname: string;
 }
 
+export interface Agent {
+    id: number;
+    name: string;
+    desc: string;
+}
+
 export class ChatApi {
 
     static userInfo(): Promise<UserInfo> {
@@ -27,6 +33,10 @@ export class ChatApi {
 
     static chats(): Promise<R<Chat[]>> {
         return axios.get("/erupt-api/ai/chat/chats");
+    }
+
+    static agents(): Promise<R<Agent[]>> {
+        return axios.get("/erupt-api/ai/agent/list");
     }
 
     static createChat(title: string): Promise<R<number>> {

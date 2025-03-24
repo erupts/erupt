@@ -54,7 +54,7 @@ public class ChatController {
         ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
         Chat chat = eruptDao.find(Chat.class, chatId);
-        llmService.sendSse(eruptUserService.getSimpleUserInfo(), emitter, llm, llmObj, chatMessage, llmService.geneAssistantPrompt(chat, agentId));
+        llmService.sendSse(eruptUserService.getSimpleUserInfo(), emitter, llm, llmObj, chatMessage, llmService.geneCompletionPrompt(chat, agentId));
         return emitter;
     }
 
