@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import okhttp3.*;
 import okio.BufferedSource;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.base.BaseLLMConfig;
 import xyz.erupt.ai.base.SseListener;
@@ -38,8 +39,8 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
         ChatCompletion completion = ChatCompletion.builder().model(llm.getModel()).stream(false).messages(assistantPrompt).build();
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"),
-                GsonFactory.getGson().toJson(completion)
+                GsonFactory.getGson().toJson(completion),
+                MediaType.parse("application/json; charset=utf-8")
         );
         Request request = new Request.Builder()
                 .url(baseLLMConfig.getUrl() + chatApiPath())
@@ -69,8 +70,8 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
 
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"),
-                GsonFactory.getGson().toJson(completion)
+                GsonFactory.getGson().toJson(completion),
+                MediaType.parse("application/json; charset=utf-8")
         );
 
         Request request = new Request.Builder()
@@ -82,13 +83,13 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to get response from server", e);
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     throw new RuntimeException("Failed to get response from server: " + response.body().string());
                 }
@@ -99,7 +100,7 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
                         SseListener sseListener = new SseListener();
                         while (!source.exhausted()) {
                             String line = source.readUtf8Line();
-                            if (line != null && StringUtils.isNotBlank(line)) {
+                            if (StringUtils.isNotBlank(line)) {
                                 if (line.startsWith("data: ")) {
                                     line = line.substring(6);
                                 }
