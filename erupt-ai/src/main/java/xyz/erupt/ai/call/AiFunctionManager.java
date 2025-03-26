@@ -1,13 +1,15 @@
 package xyz.erupt.ai.call;
 
 import lombok.Getter;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,13 +18,14 @@ import java.util.Map;
  * date 2025/3/14 23:42
  */
 @Component
-public class AiFunctionManager {
+@Order(100)
+public class AiFunctionManager implements ApplicationRunner {
 
     @Getter
     private final Map<String, AiFunction> aiFunctionMap = new HashMap<>();
 
-    @PostConstruct
-    public void init() {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(),
                 new TypeFilter[]{new AssignableTypeFilter(AiFunction.class)}, clazz ->
                         aiFunctionMap.put(clazz.getSimpleName(), (AiFunction) EruptSpringUtil.getBean(clazz))
