@@ -5,6 +5,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import xyz.erupt.ai.model.LLM;
+import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
@@ -14,6 +16,7 @@ import xyz.erupt.upms.prop.EruptAppProp;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,7 +55,11 @@ public class EruptAiAutoConfiguration implements EruptModule {
 
     @Override
     public List<MetaMenu> initMenus() {
-        return EruptModule.super.initMenus();
+        List<MetaMenu> menus = new ArrayList<>();
+        menus.add(MetaMenu.createRootMenu("$ai", "大模型管理", "fa fa-rocket", 25));
+        menus.add(MetaMenu.createEruptClassMenu(LLM.class, menus.get(0), 10));
+        menus.add(MetaMenu.createEruptClassMenu(LLMAgent.class, menus.get(0), 20));
+        return menus;
     }
 
 }

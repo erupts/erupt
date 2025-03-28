@@ -38,6 +38,9 @@ public class EruptSuperInterceptor implements AsyncHandlerInterceptor {
             EruptMenuAuth eruptMenuAuth = handlerMethod.getMethodAnnotation(EruptMenuAuth.class);
             if (null != eruptAuth || null != eruptMenuAuth) {
                 String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
+                if (null == token) {
+                    token = request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
+                }
                 if (null == token || null == sessionService.get(SessionKey.TOKEN_OLINE + token)) {
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
                     response.sendError(HttpStatus.UNAUTHORIZED.value());

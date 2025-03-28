@@ -1,5 +1,6 @@
 package xyz.erupt.ai.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
@@ -14,7 +15,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.NumberType;
-import xyz.erupt.annotation.sub_field.sub_edit.SliderType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
 import javax.persistence.*;
@@ -23,9 +23,7 @@ import javax.persistence.*;
  * @author YuePeng
  * date 2025/2/22 16:21
  */
-@Erupt(
-        name = "智能体管理"
-)
+@Erupt(name = "智能体")
 @Table(name = "e_ai_llm_agent")
 @Getter
 @Setter
@@ -40,6 +38,7 @@ public class LLMAgent extends MetaModelUpdateVo {
     private String name;
 
     @ManyToOne
+    @JsonIgnore
     @EruptField(
             views = @View(title = "大模型", column = "name"),
             edit = @Edit(title = "大模型", type = EditType.REFERENCE_TABLE, notNull = true)
@@ -47,31 +46,41 @@ public class LLMAgent extends MetaModelUpdateVo {
     private LLM llm;
 
     @EruptField(
-            views = @View(title = "上下文记忆轮次"),
-            edit = @Edit(title = "上下文记忆轮次", notNull = true,
-                    type = EditType.SLIDER, sliderType = @SliderType(max = 100))
+            views = @View(title = "是否启用"),
+            edit = @Edit(title = "是否启用", notNull = true)
     )
-    private Integer maxContext = 20;
+    private Boolean enable = true;
 
     @EruptField(
             views = @View(title = "提示词动态处理器"),
             edit = @Edit(title = "提示词动态处理器", type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = DynamicPromptFetch.class))
     )
+    @JsonIgnore
     private String promptHandler;
 
     @EruptField(
             views = @View(title = "生成随机性"),
             edit = @Edit(title = "生成随机性", desc = "temperature", numberType = @NumberType(min = 0, max = 1))
     )
+    @JsonIgnore
     private Float temperature;
 
     @EruptField(
             views = @View(title = "top_p"),
             edit = @Edit(title = "top_p", numberType = @NumberType(min = 0, max = 1))
     )
+    @JsonIgnore
     private Float topP;
 
+    @EruptField(
+            views = @View(title = "候选词列表"),
+            edit = @Edit(title = "候选词列表", type = EditType.TAGS)
+    )
+    @Column(length = AnnotationConst.REMARK_LENGTH)
+    private String hint;
+
     @Lob
+    @JsonIgnore
     @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "提示词"),
@@ -81,8 +90,8 @@ public class LLMAgent extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "描述"),
-            edit = @Edit(title = "描述", type = EditType.TEXTAREA)
+            views = @View(title = "能力描述"),
+            edit = @Edit(title = "能力描述", type = EditType.TEXTAREA)
     )
     private String remark;
 

@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "ant-design-vue": "^4.2.6",
-    "ant-design-x-vue": "^1.0.1",
+    "ant-design-x-vue": "^1.0.5",
     "axios": "^1.8.3",
     "highlight.js": "^11.11.1",
+    "install": "^0.13.0",
     "katex": "^0.16.21",
     "markdown-it": "^14.1.0",
     "markdown-it-abbr": "^2.0.0",
@@ -23,10 +25,12 @@
     "markdown-it-ins": "^4.0.0",
     "markdown-it-link-attributes": "^4.0.1",
     "markdown-it-mark": "^4.0.0",
+    "markdown-it-mermaid": "^0.2.5",
     "markdown-it-sub": "^2.0.0",
     "markdown-it-sup": "^2.0.0",
     "markdown-it-task-lists": "^2.1.1",
     "mermaid": "^11.5.0",
+    "npm": "^11.2.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {

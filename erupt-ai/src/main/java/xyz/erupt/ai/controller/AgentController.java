@@ -1,51 +1,40 @@
 package xyz.erupt.ai.controller;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import xyz.erupt.ai.constants.ChatType;
-import xyz.erupt.ai.model.Chat;
+import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.ai.model.LLMAgent;
+import xyz.erupt.ai.vo.AgentVo;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.annotation.EruptLoginAuth;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
- * date 2025/2/27 23:34
+ * date 2025/3/22 23:06
  */
-@Component
+@RestController
 @RequestMapping(EruptRestPath.ERUPT_API + "/ai/agent")
 public class AgentController {
 
     @Resource
     private EruptDao eruptDao;
 
-    @GetMapping("/create_chat")
-    @Transactional
-    public void createChat(@RequestParam Long agentId) {
-        LLMAgent llmAgent = eruptDao.lambdaQuery(LLMAgent.class).eq(LLMAgent::getId, agentId).one();
-        Chat chat = new Chat();
-        chat.setType(ChatType.AGENT);
-        chat.setTypeRef(agentId);
-        chat.setTypeName(llmAgent.getName());
-        chat.setUserId(Long.valueOf(MetaContext.getUser().getUid()));
-        eruptDao.persist(chat);
+    @EruptLoginAuth
+    @GetMapping("/list")
+    public R<List<AgentVo>> list() {
+        return R.ok(eruptDao.lambdaQuery(LLMAgent.class).eq(LLMAgent::getEnable, true).list().stream().map(it->{
+            AgentVo agentVo = new AgentVo();
+            agentVo.setId(it.getId());
+            agentVo.setName(it.getName());
+            agentVo.setDesc(it.getRemark());
+            return agentVo;
+        }).collect(Collectors.toList()));
     }
-
-    @GetMapping("/chats")
-    public R<List<Chat>> chats(@RequestParam Long agentId) {
-        return R.ok(eruptDao.lambdaQuery(Chat.class)
-                .eq(Chat::getTypeRef, agentId)
-                .eq(Chat::getUserId, Long.valueOf(MetaContext.getUser().getUid()))
-                .eq(Chat::getType, ChatType.AGENT).list());
-    }
-
 
 }

@@ -15,6 +15,8 @@ public class SseListener {
     // 完整输出内容
     private final StringBuilder output = new StringBuilder();
 
+    private boolean pending = false;
+
     // 流式输出，当前消息的内容
     private String currMessage;
 

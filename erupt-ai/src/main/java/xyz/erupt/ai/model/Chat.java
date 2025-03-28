@@ -2,20 +2,20 @@ package xyz.erupt.ai.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import xyz.erupt.ai.constants.ChatType;
+import org.hibernate.annotations.Where;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
+import xyz.erupt.upms.model.EruptUserVo;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -32,23 +32,23 @@ import java.time.LocalDateTime;
 )
 @Entity
 @EruptI18n
+@Where(clause = "deleted = false or deleted is null")
 public class Chat extends BaseModel {
 
     @EruptField(
-            views = @View(title = "会话类型")
+            views = @View(title = "会话标题"),
+            edit = @Edit(title = "会话标题", search = @Search(vague = true))
     )
-    @Enumerated(EnumType.STRING)
-    private ChatType type;
-
-    private Long typeRef;
-
-    private String typeName;
-
     private String title;
 
-    private Long userId;
+    @EruptField(
+            views = @View(title = "用户", column = "name")
+    )
+    @ManyToOne
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private EruptUserVo eruptUser;
 
-    private String llmCode;
+    private Boolean deleted = false;
 
     @EruptField(
             views = @View(title = "创建时间")

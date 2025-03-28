@@ -8,25 +8,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.base.SuperLLM;
-import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.constants.ChatSenderType;
-import xyz.erupt.ai.constants.ChatType;
-import xyz.erupt.ai.handler.EruptPromptHandler;
 import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
-import xyz.erupt.ai.model.LLMAgent;
-import xyz.erupt.ai.service.SseService;
-import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.ai.service.LLMService;
 import xyz.erupt.core.constant.EruptRestPath;
-import xyz.erupt.core.context.MetaContext;
-import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.annotation.EruptLoginAuth;
+import xyz.erupt.upms.model.EruptUserVo;
+import xyz.erupt.upms.service.EruptUserService;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,82 +36,66 @@ public class ChatController {
     private EruptDao eruptDao;
 
     @Resource
-    private SseService sseService;
+    private LLMService llmService;
 
     @Resource
-    private AiFunctionManager aiFunctionManager;
+    private EruptUserService eruptUserService;
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    @EruptLoginAuth
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
-    public SseEmitter send(@RequestParam Long chatId, @RequestParam String message) {
+    public SseEmitter send(@RequestParam Long chatId,
+                           @RequestParam String message,
+                           @RequestParam(required = false) Long agentId
+    ) {
         LLM llmObj = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
         SuperLLM<Object> llm = (SuperLLM<Object>) SuperLLM.getLLM(llmObj.getLlm());
-        List<String> assistantPrompt = new ArrayList<>();
         SseEmitter emitter = new SseEmitter();
         ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
         Chat chat = eruptDao.find(Chat.class, chatId);
-        if (chat.getType() == ChatType.AGENT) {
-            LLMAgent llmAgent = new LLMAgent();
-            if (null == llmAgent.getPromptHandler()) {
-                assistantPrompt.add(llmAgent.getPrompt());
-            } else {
-                assistantPrompt.add(EruptSpringUtil.getBean(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt()));
-            }
-        } else {
-            assistantPrompt.add(aiFunctionManager.getFunctionCallPrompt());
-        }
-        emitter.onTimeout(() -> {
-            System.out.println("SseEmitter timed out");
-        });
-        sseService.send(emitter, llm, llmObj, chatMessage, assistantPrompt);
+        llmService.sendSse(eruptUserService.getSimpleUserInfo(), emitter, llm, llmObj, chatMessage, llmService.geneCompletionPrompt(chat, agentId));
         return emitter;
     }
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @EruptLoginAuth
     @GetMapping("/create_chat")
     @Transactional
     public R<Long> createChat(@RequestParam String title) {
         Chat chat = new Chat();
         chat.setTitle(title);
-        chat.setType(ChatType.NORMAL);
         chat.setCreatedTime(LocalDateTime.now());
-        chat.setUserId(MetaContext.getUser().getUid());
+        chat.setEruptUser(new EruptUserVo(eruptUserService.getCurrentUid()));
         eruptDao.persist(chat);
         return R.ok(chat.getId());
     }
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @EruptLoginAuth
     @GetMapping("/delete_chat")
     @Transactional
     public R<Void> deleteChat(@RequestParam Long chatId) {
-        eruptDao.delete(eruptDao.lambdaQuery(Chat.class).eq(Chat::getId, chatId)
-                .eq(Chat::getUserId, MetaContext.getUser().getUid()).one());
-        for (ChatMessage message : eruptDao.lambdaQuery(ChatMessage.class).eq(ChatMessage::getChatId, chatId).list()) {
-            eruptDao.delete(message);
-        }
+        Chat chat = eruptDao.find(Chat.class, chatId);
+        chat.setDeleted(true);
         return R.ok();
     }
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @EruptLoginAuth
     @GetMapping("/chats")
     public R<List<Chat>> chats() {
         return R.ok(eruptDao.lambdaQuery(Chat.class)
-                .eq(Chat::getUserId, MetaContext.getUser().getUid())
-                .eq(Chat::getType, ChatType.NORMAL)
+                .with(Chat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
                 .orderByDesc(Chat::getCreatedTime)
                 .list());
     }
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
+    @EruptLoginAuth
     @GetMapping("/messages")
     public R<List<ChatMessage>> messages(@RequestParam Long chatId, @RequestParam Integer size,
-                                         @RequestParam(defaultValue = "0") Integer index) {
+                                         @RequestParam(defaultValue = "1") Integer index) {
         return R.ok(eruptDao.lambdaQuery(ChatMessage.class)
                 .eq(ChatMessage::getChatId, chatId)
-                .orderByDesc(ChatMessage::getCreateTime)
-                .offset(index * size)
+                .orderByDesc(ChatMessage::getCreatedAt)
+                .offset((index - 1) * size)
                 .limit(size)
                 .list());
     }
