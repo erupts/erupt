@@ -34,7 +34,7 @@ import java.util.Map;
  * date 2025/2/22 16:21
  */
 @Erupt(
-        name = "大模型管理", dataProxy = LLMDataProxy.class,
+        name = "大语言模型", dataProxy = LLMDataProxy.class,
         orderBy = "sort",
         rowOperation = {
                 @RowOperation(title = "对话测试", icon = "fa fa-comments",

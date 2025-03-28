@@ -8,17 +8,21 @@ export interface Chat {
 
 export interface ChatMessage {
     id: number;
-    chatId: number;
     senderType: "USER" | "MODEL";
     content: string;
     createTime: string;
-    tokens: number;
     loading: boolean;
-    replying: boolean;
+    chatId?: number;
 }
 
 export interface UserInfo {
     nickname: string;
+}
+
+export interface Agent {
+    id: number;
+    name: string;
+    desc: string;
 }
 
 export class ChatApi {
@@ -29,6 +33,10 @@ export class ChatApi {
 
     static chats(): Promise<R<Chat[]>> {
         return axios.get("/erupt-api/ai/chat/chats");
+    }
+
+    static agents(): Promise<R<Agent[]>> {
+        return axios.get("/erupt-api/ai/agent/list");
     }
 
     static createChat(title: string): Promise<R<number>> {
@@ -47,11 +55,12 @@ export class ChatApi {
         })
     }
 
-    static messages(chatId: number, size: number): Promise<R<ChatMessage[]>> {
+    static messages(chatId: number, size: number, index: number): Promise<R<ChatMessage[]>> {
         return axios.get(`/erupt-api/ai/chat/messages`, {
             params: {
                 chatId,
-                size
+                size,
+                index
             }
         })
     }

@@ -47,7 +47,11 @@ axiosInstance.interceptors.response.use(
         return response.data;
     },
     error => {
-        message.error("server error:" + error.message);
+        if (error.status === 401) {
+            message.error("登录已过期，请重新登录");
+        }else{
+            message.error("server error:" + error.message);
+        }
         return Promise.reject(error);
     }
 );

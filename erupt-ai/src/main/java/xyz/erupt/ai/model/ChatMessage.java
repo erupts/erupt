@@ -51,7 +51,7 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
     @EruptField(
             views = @View(title = "发送时间", type = ViewType.HTML)
     )
-    private LocalDateTime createTime;
+    private LocalDateTime createdAt;
 
     private Long tokens;
 
@@ -60,7 +60,7 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
         chatMessage.setChatId(chatId);
         chatMessage.setSenderType(senderType);
         chatMessage.setContent(content);
-        chatMessage.setCreateTime(LocalDateTime.now());
+        chatMessage.setCreatedAt(LocalDateTime.now());
         chatMessage.setTokens(tokens);
         return chatMessage;
     }

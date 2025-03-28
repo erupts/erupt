@@ -1,13 +1,15 @@
 package xyz.erupt.ai.call;
 
 import lombok.Getter;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,13 +18,14 @@ import java.util.Map;
  * date 2025/3/14 23:42
  */
 @Component
-public class AiFunctionManager {
+@Order(100)
+public class AiFunctionManager implements ApplicationRunner {
 
     @Getter
     private final Map<String, AiFunction> aiFunctionMap = new HashMap<>();
 
-    @PostConstruct
-    public void init() {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(),
                 new TypeFilter[]{new AssignableTypeFilter(AiFunction.class)}, clazz ->
                         aiFunctionMap.put(clazz.getSimpleName(), (AiFunction) EruptSpringUtil.getBean(clazz))
@@ -30,9 +33,9 @@ public class AiFunctionManager {
     }
 
     public String getFunctionCallPrompt() {
-        StringBuilder sb = new StringBuilder("下面内容的格式是多组 key → desc，如果用户问题与desc相关，则仅仅只返回对应的key即可，其他的不用输出，否则忽略这段提示词\n");
+        StringBuilder sb = new StringBuilder("下面是一组 Function Call 的映射，根据情况决定是否调用，否则忽略这段提示词\n");
         for (Map.Entry<String, AiFunction> entry : aiFunctionMap.entrySet()) {
-            sb.append("- ").append(entry.getKey()).append(" → ").append(entry.getValue().name()).append("\n");
+            sb.append("- 如果用户问：").append(entry.getValue().name()).append("，就回复：").append(entry.getKey()).append("\n");
         }
         return sb.toString();
     }
