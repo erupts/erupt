@@ -11,7 +11,7 @@ export default defineConfig({
     server: {
         proxy: {
             // 字符串简写形式
-            '/erupt-api': 'http://localhost:9999', // 所有以 /api 开头的请求都会被代理到 http://localhost:3000
+            '/erupt-api': 'http://localhost:8080', // 所有以 /api 开头的请求都会被代理到 http://localhost:3000
         }
     }
 })
