@@ -16,7 +16,7 @@ public interface ChoiceFetchHandler {
 
     @Comment("下拉列表联动过滤，结果要保证包含fetch()的所有选项")
     default List<VLModel> fetchFilter(Map<String, Object> value, String[] params) {
-        return fetch(params);
+        return this.fetch(params);
     }
 
 }
