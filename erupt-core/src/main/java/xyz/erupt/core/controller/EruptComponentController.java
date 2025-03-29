@@ -64,6 +64,16 @@ public class EruptComponentController {
         return EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit());
     }
 
+    @PostMapping("/choice-item-filter/{erupt}/{field}")
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
+    public List<VLModel> choiceFilter(@PathVariable("erupt") String eruptName,
+                                      @PathVariable("field") String field,
+                                      @RequestBody Map<String, Object> formData) {
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        EruptFieldModel fieldModel = eruptModel.getEruptFieldMap().get(field);
+        return EruptUtil.getChoiceListFilter(eruptModel, fieldModel.getEruptField().edit(), formData);
+    }
+
     @GetMapping("/choice-trigger/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public Map<String, Object> choiceTrigger(@PathVariable("erupt") String eruptName,
