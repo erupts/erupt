@@ -48,6 +48,8 @@ const fetchChats = (after?: () => void) => {
     if (res.data.length) {
       selectChat.value = res.data[0].id;
       onSelectChat(res.data[0].id, after)
+    } else {
+      clearStatus();
     }
   })
 }
@@ -60,15 +62,19 @@ onMounted(() => {
   })
 })
 
-
-const onSelectChat = (chatId: number, after?: () => void) => {
-  selectChat.value = chatId;
+const clearStatus = () => {
+  selectChat.value = null;
   sending.value = false;
   sendDisabled.value = false;
   messagePage.value = 1; // 重置消息页码
   hasMoreMessages.value = true; // 重置是否有更多消息
   accumulatedMarkdown.value = ""; // 清空累积的 Markdown 数据
   messages.value = []; // 清空消息列表
+}
+
+const onSelectChat = (chatId: number, after?: () => void) => {
+  clearStatus();
+  selectChat.value = chatId;
   fetchMessages(chatId, true, after); // 加载第一页消息
 };
 
