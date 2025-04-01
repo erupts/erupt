@@ -1,6 +1,7 @@
 package xyz.erupt.ai.llm;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import okio.BufferedSource;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ import java.util.function.Consumer;
  * date 2025/2/25 22:07
  */
 @Component
+@Slf4j
 public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
 
     public String chatApiPath() {
@@ -84,8 +86,12 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to get response from server", e);
+                log.error("Failed to get response from server", e);
+                SseListener sseListener = new SseListener();
+                sseListener.setFinish(true);
+                sseListener.getOutput().append(e.getMessage());
+                sseListener.setCurrMessage(e.getMessage());
+                listener.accept(sseListener);
             }
 
             @Override
