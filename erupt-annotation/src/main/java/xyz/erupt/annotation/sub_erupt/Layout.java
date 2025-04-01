@@ -23,6 +23,8 @@ public @interface Layout {
     //数据更新时间，单位：毫秒
     int refreshTime() default -1;
 
+    String tableWidth() default "";
+
     enum FormSize {
         //默认
         DEFAULT,
