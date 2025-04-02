@@ -96,10 +96,6 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    throw new RuntimeException("Failed to get response from server: " + response.body().string());
-                }
-
                 try (ResponseBody responseBody = response.body()) {
                     if (responseBody != null) {
                         BufferedSource source = responseBody.source();
@@ -107,27 +103,31 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
                         while (!source.exhausted()) {
                             String line = source.readUtf8Line();
                             if (StringUtils.isNotBlank(line)) {
-                                if (line.startsWith("data: ")) {
-                                    line = line.substring(6);
-                                }
-                                if ("[DONE]".equalsIgnoreCase(line)) {
-                                    sseListener.setFinish(true);
-                                    listener.accept(sseListener);
+                                if (!response.isSuccessful()) {
+                                    this.onFailure(call, new IOException(line));
                                 } else {
-                                    ChatCompletionStreamResponse chatCompletionStreamResponse = GsonFactory.getGson().fromJson(line, ChatCompletionStreamResponse.class);
-                                    sseListener.setCurrData(line);
-                                    StringBuilder sb = new StringBuilder();
-                                    for (ChatCompletionStreamResponse.Choice choice : chatCompletionStreamResponse.getChoices()) {
-                                        if (null != choice.getUsage()) {
-                                            sseListener.setUsage(sseListener.getUsage().plus(choice.getUsage()));
-                                        }
-                                        if (choice.getDelta() != null && choice.getDelta().getContent() != null) {
-                                            sseListener.getOutput().append(choice.getDelta().getContent());
-                                            sb.append(choice.getDelta().getContent());
-                                        }
+                                    if (line.startsWith("data: ")) {
+                                        line = line.substring(6);
                                     }
-                                    sseListener.setCurrMessage(sb.toString());
-                                    listener.accept(sseListener);
+                                    if ("[DONE]".equalsIgnoreCase(line)) {
+                                        sseListener.setFinish(true);
+                                        listener.accept(sseListener);
+                                    } else {
+                                        ChatCompletionStreamResponse chatCompletionStreamResponse = GsonFactory.getGson().fromJson(line, ChatCompletionStreamResponse.class);
+                                        sseListener.setCurrData(line);
+                                        StringBuilder sb = new StringBuilder();
+                                        for (ChatCompletionStreamResponse.Choice choice : chatCompletionStreamResponse.getChoices()) {
+                                            if (null != choice.getUsage()) {
+                                                sseListener.setUsage(sseListener.getUsage().plus(choice.getUsage()));
+                                            }
+                                            if (choice.getDelta() != null && choice.getDelta().getContent() != null) {
+                                                sseListener.getOutput().append(choice.getDelta().getContent());
+                                                sb.append(choice.getDelta().getContent());
+                                            }
+                                        }
+                                        sseListener.setCurrMessage(sb.toString());
+                                        listener.accept(sseListener);
+                                    }
                                 }
                             }
                         }

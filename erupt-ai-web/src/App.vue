@@ -248,7 +248,9 @@ const onSelectAgent = (agent: Agent) => {
                 } as any"
                 :loading="item.loading"/>
       </article>
-      <Suggestion :items="suggestions" @select="(val) => alert(123)">
+      <Suggestion :items="suggestions" @select="(itemVal) => {
+        console.log(itemVal)
+      }">
         <template #default="data">
           <Sender
               :on-submit="send"
@@ -288,13 +290,14 @@ const onSelectAgent = (agent: Agent) => {
 .agent {
   max-height: 500px;
   overflow-y: auto;
+  margin-top: 22px;
 
   .item {
     border-bottom: 1px solid #f0f0f0;
-    padding: 12px 8px;
+    padding: 12px 6px;
     cursor: pointer;
     margin: 0;
-    transition: background 0.3s;
+    transition: background 0.5s;
 
     &:hover {
       background: #f0f0f0;
