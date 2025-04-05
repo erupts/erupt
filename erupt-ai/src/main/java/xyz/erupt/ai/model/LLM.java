@@ -38,7 +38,7 @@ import java.util.Map;
         orderBy = "sort",
         rowOperation = {
                 @RowOperation(title = "对话测试", icon = "fa fa-comments",
-                        tpl = @Tpl(path = "/tpl/llm-chat.ftl",height = "85vh"),
+                        tpl = @Tpl(path = "/tpl/llm-chat.ftl", height = "85vh", tplHandler = LLMDataProxy.class),
                         mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
         }
 )

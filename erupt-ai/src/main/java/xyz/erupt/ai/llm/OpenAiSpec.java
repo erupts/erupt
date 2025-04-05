@@ -17,6 +17,7 @@ import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.pojo.ChatCompletionResponse;
 import xyz.erupt.ai.pojo.ChatCompletionStreamResponse;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.context.MetaContext;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,7 +70,6 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
         BaseLLMConfig baseLLMConfig = GsonFactory.getGson().fromJson(llm.getConfig(), BaseLLMConfig.class);
         assistantPrompt.add(new ChatCompletionMessage(MessageRole.user, userPrompt));
         ChatCompletion completion = ChatCompletion.builder().model(llm.getModel()).messages(assistantPrompt).stream(true).build();
-
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(
                 GsonFactory.getGson().toJson(completion),
@@ -82,7 +82,7 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
                 .addHeader("Accept", "text/event-stream")
                 .addHeader("Authorization", "Bearer " + baseLLMConfig.getApiKey())
                 .build();
-
+        MetaContext metaContext = MetaContext.get();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -96,6 +96,7 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                MetaContext.set(metaContext);
                 try (ResponseBody responseBody = response.body()) {
                     if (responseBody != null) {
                         BufferedSource source = responseBody.source();

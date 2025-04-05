@@ -13,7 +13,9 @@ import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.service.LLMService;
+import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
@@ -41,7 +43,7 @@ public class ChatController {
     @Resource
     private EruptUserService eruptUserService;
 
-    @EruptLoginAuth
+    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
     public SseEmitter send(@RequestParam Long chatId,
@@ -54,7 +56,7 @@ public class ChatController {
         ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
         Chat chat = eruptDao.find(Chat.class, chatId);
-        llmService.sendSse(eruptUserService.getSimpleUserInfo(), emitter, llm, llmObj, chatMessage, llmService.geneCompletionPrompt(chat, agentId));
+        llmService.sendSse(MetaContext.get(), emitter, llm, llmObj, chatMessage, llmService.geneCompletionPrompt(chat, agentId));
         return emitter;
     }
 
