@@ -4,14 +4,14 @@ package xyz.erupt.ai.call;
  * @author YuePeng
  * date 2025/3/14 23:30
  */
-public interface AiFunction {
+public interface AiFunctionCall {
 
     default String code() {
         return this.getClass().getSimpleName();
     }
 
-    String name();
+    String description();
 
-    String call(String param);
+    String call(String prompt);
 
 }
