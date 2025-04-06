@@ -35,6 +35,8 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
 
     private Long chatId;
 
+    private String llm;
+
     private String model;
 
     @EruptField(
@@ -57,9 +59,10 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
 
     private Long tokens;
 
-    public static ChatMessage create(Long chatId, String model, ChatSenderType senderType, String content, Long tokens) {
+    public static ChatMessage create(Long chatId, String llm, String model, ChatSenderType senderType, String content, Long tokens) {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setChatId(chatId);
+        chatMessage.setLlm(llm);
         chatMessage.setModel(model);
         chatMessage.setSenderType(senderType);
         chatMessage.setContent(content);
