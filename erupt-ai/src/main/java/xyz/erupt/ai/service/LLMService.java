@@ -72,7 +72,7 @@ public class LLMService {
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(MetaContext metaContext, SseEmitter emitter, SuperLLM<Object> llm, LLM llmObj, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
+    public void sendSse(MetaContext metaContext, SseEmitter emitter, SuperLLM llm, LLM llmObj, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
         try {
             MetaContext.set(metaContext);
             llm.chatSse(llmObj, chatMessage.getContent(), completionMessage, it -> {

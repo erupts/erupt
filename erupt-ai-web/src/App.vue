@@ -22,9 +22,11 @@ const content = ref<string>("")
 const sending = ref<boolean>(false)
 const sendDisabled = ref<boolean>(false)
 
-let messagePage = ref<number>(1); // 消息的当前页码
-let loadingMoreMessages = ref<boolean>(false); // 是否正在加载更多消息
-let hasMoreMessages = ref<boolean>(true); // 是否还有更多消息
+const messagePage = ref<number>(1); // 消息的当前页码
+const loadingMoreMessages = ref<boolean>(false); // 是否正在加载更多消息
+const hasMoreMessages = ref<boolean>(true); // 是否还有更多消息
+
+const params = new URLSearchParams(new URL(window.location.href).search);
 
 const suggestions = ref<SuggestionItem[]>([
   {label: 'Write a report', value: 'report'},
@@ -125,7 +127,7 @@ const send = (message: string) => {
       //@ts-ignore
       bubbles.value.scrollTop = bubbles.value.scrollHeight;
     }, 10)
-    const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}&agentId=${selectAgent.value?.id || ''}`);
+    const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}&agentId=${selectAgent.value?.id || ''}&llmId=${params.get("llm")}`);
 
     eventSource.onmessage = (event) => {
       sending.value = false;

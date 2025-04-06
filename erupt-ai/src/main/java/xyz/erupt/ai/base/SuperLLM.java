@@ -12,15 +12,15 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public abstract class SuperLLM<Config> {
+public abstract class SuperLLM {
 
-    private static final Map<String, SuperLLM<?>> llms= new HashMap<>();
+    private static final Map<String, SuperLLM> llms= new HashMap<>();
 
     public SuperLLM() {
         llms.put(this.code(), this);
     }
 
-    public static SuperLLM<?> getLLM(String code) {
+    public static SuperLLM getLLM(String code) {
         return llms.get(code);
     }
 
@@ -28,7 +28,7 @@ public abstract class SuperLLM<Config> {
 
     public abstract String model();
 
-    public abstract Config config();
+    public abstract BaseLLMConfig config();
 
     public abstract ChatCompletionResponse chat(LLM llm, String userPrompt, List<ChatCompletionMessage> assistantPrompt);
 

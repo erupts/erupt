@@ -35,7 +35,7 @@ public class AiFunctionManager implements ApplicationRunner {
     public String getFunctionCallPrompt() {
         StringBuilder sb = new StringBuilder("下面是一组 Function Call 的映射，根据情况决定是否调用，否则忽略这段提示词\n");
         for (Map.Entry<String, AiFunctionCall> entry : aiFunctionMap.entrySet()) {
-            sb.append("- 如果用户问：").append(entry.getValue().description()).append("，就回复：").append(entry.getKey()).append("\n");
+            sb.append("- 如果用户问：").append(entry.getValue().description()).append("，就只回复：").append(entry.getKey()).append("\n");
         }
         return sb.toString();
     }
