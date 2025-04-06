@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  */
 @Component
 @Slf4j
-public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
+public abstract class OpenAiSpec extends SuperLLM {
 
     public String chatApiPath() {
         return "/v1/chat/completions";
@@ -137,4 +137,5 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
             }
         });
     }
+
 }

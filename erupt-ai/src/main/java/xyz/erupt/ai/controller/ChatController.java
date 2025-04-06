@@ -48,10 +48,16 @@ public class ChatController {
     @Transactional
     public SseEmitter send(@RequestParam Long chatId,
                            @RequestParam String message,
+                           @RequestParam(required = false) Long llmId,
                            @RequestParam(required = false) Long agentId
     ) {
-        LLM llmObj = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
-        SuperLLM<Object> llm = (SuperLLM<Object>) SuperLLM.getLLM(llmObj.getLlm());
+        LLM llmObj;
+        if (llmId == null) {
+            llmObj = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
+        } else {
+            llmObj = eruptDao.find(LLM.class, llmId);
+        }
+        SuperLLM llm = SuperLLM.getLLM(llmObj.getLlm());
         SseEmitter emitter = new SseEmitter();
         ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
