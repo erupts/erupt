@@ -59,7 +59,7 @@ public class ChatController {
         }
         SuperLLM llm = SuperLLM.getLLM(llmObj.getLlm());
         SseEmitter emitter = new SseEmitter();
-        ChatMessage chatMessage = ChatMessage.create(chatId, ChatSenderType.USER, message, 0L);
+        ChatMessage chatMessage = ChatMessage.create(chatId, llmObj.getModel(), ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
         Chat chat = eruptDao.find(Chat.class, chatId);
         llmService.sendSse(MetaContext.get(), emitter, llm, llmObj, chatMessage, llmService.geneCompletionPrompt(chat, agentId));
