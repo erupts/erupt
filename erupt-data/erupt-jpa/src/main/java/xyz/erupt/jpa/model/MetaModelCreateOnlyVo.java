@@ -36,7 +36,7 @@ public class MetaModelCreateOnlyVo extends MetaModelCreateOnly {
 
     @Transient
     @EruptField(
-            views = @View(title = "创建时间", sortable = true),
+            views = @View(title = "创建时间"),
             edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private LocalDateTime createTimeVo;
