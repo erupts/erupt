@@ -62,7 +62,7 @@ public class LLMService {
             chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.assistant, aiFunctionManager.getFunctionCallPrompt()));
         }
         List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
-                .eq(ChatMessage::getChatId, chat.getId()).eq(ChatMessage::getSenderType, ChatSenderType.USER)
+                .eq(ChatMessage::getChatId, chat.getId())
                 .orderByDesc(ChatMessage::getCreatedAt)
                 .limit(20).list();
         chatMessages.forEach(it -> chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.user, it.getContent())));
@@ -79,7 +79,7 @@ public class LLMService {
                 if (it.isFinish()) {
                     String msg = it.getOutput().toString();
                     if (it.getOutput().toString().length() <= MESSAGE_TS) {
-                        msg = sendMessage(emitter, it.getOutput().toString());
+                        msg = this.sendMessage(emitter, it.getOutput().toString(), llm, chatMessage, completionMessage);
                     }
                     chatMessage.setTokens((long) it.getUsage().getPrompt_tokens());
                     eruptDao.mergeAndFlush(chatMessage);
@@ -88,10 +88,10 @@ public class LLMService {
                 } else {
                     if (it.getOutput().toString().length() > MESSAGE_TS) {
                         if (it.isPending()) {
-                            sendMessage(emitter, it.getOutput().toString());
+                            this.sendMessage(emitter, it.getOutput().toString(), llm, chatMessage, completionMessage);
                             it.setPending(false);
                         } else {
-                            sendMessage(emitter, it.getCurrMessage());
+                            this.sendMessage(emitter, it.getCurrMessage(), llm, chatMessage, completionMessage);
                         }
                     } else {
                         it.setPending(true);
@@ -105,9 +105,9 @@ public class LLMService {
         }
     }
 
-    private String sendMessage(SseEmitter emitter, String message) {
-        if (aiFunctionManager.exist(message.trim())) {
-            String functionMessage = aiFunctionManager.call(message);
+    private String sendMessage(SseEmitter emitter, String userMessage, SuperLLM llm, ChatMessage chatMessage, List<ChatCompletionMessage> userContext) {
+        if (aiFunctionManager.exist(userMessage.trim())) {
+            String functionMessage = aiFunctionManager.call(userMessage, llm, chatMessage.getContent(), userContext);
             try {
                 emitter.send(GsonFactory.getGson().toJson(new SseBody(functionMessage)), MediaType.TEXT_EVENT_STREAM);
             } catch (Exception ignore) {
@@ -115,11 +115,11 @@ public class LLMService {
             return functionMessage;
         } else {
             try {
-                emitter.send(GsonFactory.getGson().toJson(new SseBody(message)), MediaType.TEXT_EVENT_STREAM);
+                emitter.send(GsonFactory.getGson().toJson(new SseBody(userMessage)), MediaType.TEXT_EVENT_STREAM);
             } catch (Exception ignore) {
             }
         }
-        return message;
+        return userMessage;
     }
 
 }

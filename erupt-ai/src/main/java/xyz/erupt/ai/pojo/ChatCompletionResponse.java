@@ -43,4 +43,12 @@ public class ChatCompletionResponse {
 
     }
 
+    public String getMessageStr() {
+        StringBuilder sb = new StringBuilder();
+        for (Choice choice : this.choices) {
+            sb.append(choice.getMessage().getContent());
+        }
+        return sb.toString();
+    }
+
 }
