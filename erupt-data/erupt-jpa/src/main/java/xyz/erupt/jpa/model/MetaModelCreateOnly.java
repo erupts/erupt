@@ -22,11 +22,11 @@ import java.time.LocalDateTime;
 @PreDataProxy(MetaModelCreateOnly.Proxy.class)
 public class MetaModelCreateOnly extends BaseModel {
 
-    @EruptField(views = @View(title = "创建人", show = false))
+    @EruptField
     @EruptSmartSkipSerialize
     private String createBy;
 
-    @EruptField(views = @View(title = "创建时间", show = false))
+    @EruptField
     @EruptSmartSkipSerialize
     private LocalDateTime createTime;
 
