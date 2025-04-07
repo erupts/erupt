@@ -1,6 +1,7 @@
 package xyz.erupt.ai.call;
 
 import lombok.SneakyThrows;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiFuncParam;
 
@@ -9,6 +10,7 @@ import xyz.erupt.ai.annotation.AiFuncParam;
  * date 2025/3/14 23:25
  */
 @Component
+@Scope("prototype")
 public class BrowserCall implements AiFunctionCall {
 
     @AiFuncParam("路径信息")
