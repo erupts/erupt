@@ -22,20 +22,20 @@ import java.util.Map;
 public class AiFunctionManager implements ApplicationRunner {
 
     @Getter
-    private final Map<String, AiFunction> aiFunctionMap = new HashMap<>();
+    private final Map<String, AiFunctionCall> aiFunctionMap = new HashMap<>();
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(),
-                new TypeFilter[]{new AssignableTypeFilter(AiFunction.class)}, clazz ->
-                        aiFunctionMap.put(clazz.getSimpleName(), (AiFunction) EruptSpringUtil.getBean(clazz))
+                new TypeFilter[]{new AssignableTypeFilter(AiFunctionCall.class)}, clazz ->
+                        aiFunctionMap.put(clazz.getSimpleName(), (AiFunctionCall) EruptSpringUtil.getBean(clazz))
         );
     }
 
     public String getFunctionCallPrompt() {
         StringBuilder sb = new StringBuilder("下面是一组 Function Call 的映射，根据情况决定是否调用，否则忽略这段提示词\n");
-        for (Map.Entry<String, AiFunction> entry : aiFunctionMap.entrySet()) {
-            sb.append("- 如果用户问：").append(entry.getValue().name()).append("，就回复：").append(entry.getKey()).append("\n");
+        for (Map.Entry<String, AiFunctionCall> entry : aiFunctionMap.entrySet()) {
+            sb.append("- 如果用户问：").append(entry.getValue().description()).append("，就只回复：").append(entry.getKey()).append("\n");
         }
         return sb.toString();
     }
