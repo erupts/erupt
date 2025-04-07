@@ -22,9 +22,11 @@ const content = ref<string>("")
 const sending = ref<boolean>(false)
 const sendDisabled = ref<boolean>(false)
 
-let messagePage = ref<number>(1); // 消息的当前页码
-let loadingMoreMessages = ref<boolean>(false); // 是否正在加载更多消息
-let hasMoreMessages = ref<boolean>(true); // 是否还有更多消息
+const messagePage = ref<number>(1); // 消息的当前页码
+const loadingMoreMessages = ref<boolean>(false); // 是否正在加载更多消息
+const hasMoreMessages = ref<boolean>(true); // 是否还有更多消息
+
+const params = new URLSearchParams(new URL(window.location.href).search);
 
 const suggestions = ref<SuggestionItem[]>([
   {label: 'Write a report', value: 'report'},
@@ -48,6 +50,8 @@ const fetchChats = (after?: () => void) => {
     if (res.data.length) {
       selectChat.value = res.data[0].id;
       onSelectChat(res.data[0].id, after)
+    } else {
+      clearStatus();
     }
   })
 }
@@ -60,15 +64,19 @@ onMounted(() => {
   })
 })
 
-
-const onSelectChat = (chatId: number, after?: () => void) => {
-  selectChat.value = chatId;
+const clearStatus = () => {
+  selectChat.value = null;
   sending.value = false;
   sendDisabled.value = false;
   messagePage.value = 1; // 重置消息页码
   hasMoreMessages.value = true; // 重置是否有更多消息
   accumulatedMarkdown.value = ""; // 清空累积的 Markdown 数据
   messages.value = []; // 清空消息列表
+}
+
+const onSelectChat = (chatId: number, after?: () => void) => {
+  clearStatus();
+  selectChat.value = chatId;
   fetchMessages(chatId, true, after); // 加载第一页消息
 };
 
@@ -119,7 +127,7 @@ const send = (message: string) => {
       //@ts-ignore
       bubbles.value.scrollTop = bubbles.value.scrollHeight;
     }, 10)
-    const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}&agentId=${selectAgent.value?.id || ''}`);
+    const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}&agentId=${selectAgent.value?.id || ''}&llmId=${params.get("llm")}`);
 
     eventSource.onmessage = (event) => {
       sending.value = false;
@@ -242,7 +250,9 @@ const onSelectAgent = (agent: Agent) => {
                 } as any"
                 :loading="item.loading"/>
       </article>
-      <Suggestion :items="suggestions" @select="(val) => alert(123)">
+      <Suggestion :items="suggestions" @select="(itemVal) => {
+        console.log(itemVal)
+      }">
         <template #default="data">
           <Sender
               :on-submit="send"
@@ -282,13 +292,14 @@ const onSelectAgent = (agent: Agent) => {
 .agent {
   max-height: 500px;
   overflow-y: auto;
+  margin-top: 22px;
 
   .item {
     border-bottom: 1px solid #f0f0f0;
-    padding: 12px 8px;
+    padding: 12px 6px;
     cursor: pointer;
     margin: 0;
-    transition: background 0.3s;
+    transition: background 0.5s;
 
     &:hover {
       background: #f0f0f0;

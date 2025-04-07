@@ -1,6 +1,7 @@
 package xyz.erupt.ai.llm;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import okio.BufferedSource;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,7 @@ import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.pojo.ChatCompletionResponse;
 import xyz.erupt.ai.pojo.ChatCompletionStreamResponse;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.context.MetaContext;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,7 +28,8 @@ import java.util.function.Consumer;
  * date 2025/2/25 22:07
  */
 @Component
-public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
+@Slf4j
+public abstract class OpenAiSpec extends SuperLLM {
 
     public String chatApiPath() {
         return "/v1/chat/completions";
@@ -67,7 +70,6 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
         BaseLLMConfig baseLLMConfig = GsonFactory.getGson().fromJson(llm.getConfig(), BaseLLMConfig.class);
         assistantPrompt.add(new ChatCompletionMessage(MessageRole.user, userPrompt));
         ChatCompletion completion = ChatCompletion.builder().model(llm.getModel()).messages(assistantPrompt).stream(true).build();
-
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(
                 GsonFactory.getGson().toJson(completion),
@@ -80,20 +82,21 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
                 .addHeader("Accept", "text/event-stream")
                 .addHeader("Authorization", "Bearer " + baseLLMConfig.getApiKey())
                 .build();
-
+        MetaContext metaContext = MetaContext.get();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to get response from server", e);
+                log.error("Failed to get response from server", e);
+                SseListener sseListener = new SseListener();
+                sseListener.setFinish(true);
+                sseListener.getOutput().append(e.getMessage());
+                sseListener.setCurrMessage(e.getMessage());
+                listener.accept(sseListener);
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    throw new RuntimeException("Failed to get response from server: " + response.body().string());
-                }
-
+                MetaContext.set(metaContext);
                 try (ResponseBody responseBody = response.body()) {
                     if (responseBody != null) {
                         BufferedSource source = responseBody.source();
@@ -101,27 +104,31 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
                         while (!source.exhausted()) {
                             String line = source.readUtf8Line();
                             if (StringUtils.isNotBlank(line)) {
-                                if (line.startsWith("data: ")) {
-                                    line = line.substring(6);
-                                }
-                                if ("[DONE]".equalsIgnoreCase(line)) {
-                                    sseListener.setFinish(true);
-                                    listener.accept(sseListener);
+                                if (!response.isSuccessful()) {
+                                    this.onFailure(call, new IOException(line));
                                 } else {
-                                    ChatCompletionStreamResponse chatCompletionStreamResponse = GsonFactory.getGson().fromJson(line, ChatCompletionStreamResponse.class);
-                                    sseListener.setCurrData(line);
-                                    StringBuilder sb = new StringBuilder();
-                                    for (ChatCompletionStreamResponse.Choice choice : chatCompletionStreamResponse.getChoices()) {
-                                        if (null != choice.getUsage()) {
-                                            sseListener.setUsage(sseListener.getUsage().plus(choice.getUsage()));
-                                        }
-                                        if (choice.getDelta() != null && choice.getDelta().getContent() != null) {
-                                            sseListener.getOutput().append(choice.getDelta().getContent());
-                                            sb.append(choice.getDelta().getContent());
-                                        }
+                                    if (line.startsWith("data: ")) {
+                                        line = line.substring(6);
                                     }
-                                    sseListener.setCurrMessage(sb.toString());
-                                    listener.accept(sseListener);
+                                    if ("[DONE]".equalsIgnoreCase(line)) {
+                                        sseListener.setFinish(true);
+                                        listener.accept(sseListener);
+                                    } else {
+                                        ChatCompletionStreamResponse chatCompletionStreamResponse = GsonFactory.getGson().fromJson(line, ChatCompletionStreamResponse.class);
+                                        sseListener.setCurrData(line);
+                                        StringBuilder sb = new StringBuilder();
+                                        for (ChatCompletionStreamResponse.Choice choice : chatCompletionStreamResponse.getChoices()) {
+                                            if (null != choice.getUsage()) {
+                                                sseListener.setUsage(sseListener.getUsage().plus(choice.getUsage()));
+                                            }
+                                            if (choice.getDelta() != null && choice.getDelta().getContent() != null) {
+                                                sseListener.getOutput().append(choice.getDelta().getContent());
+                                                sb.append(choice.getDelta().getContent());
+                                            }
+                                        }
+                                        sseListener.setCurrMessage(sb.toString());
+                                        listener.accept(sseListener);
+                                    }
                                 }
                             }
                         }
@@ -130,4 +137,5 @@ public abstract class OpenAiSpec extends SuperLLM<BaseLLMConfig> {
             }
         });
     }
+
 }

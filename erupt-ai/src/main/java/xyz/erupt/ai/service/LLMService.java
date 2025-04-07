@@ -21,8 +21,6 @@ import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
-import xyz.erupt.core.context.MetaUser;
-import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
@@ -74,9 +72,9 @@ public class LLMService {
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(MetaUserinfo metaUserinfo, SseEmitter emitter, SuperLLM<Object> llm, LLM llmObj, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
+    public void sendSse(MetaContext metaContext, SseEmitter emitter, SuperLLM llm, LLM llmObj, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
         try {
-            MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername()));
+            MetaContext.set(metaContext);
             llm.chatSse(llmObj, chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {
                     String msg = it.getOutput().toString();
@@ -85,7 +83,7 @@ public class LLMService {
                     }
                     chatMessage.setTokens((long) it.getUsage().getPrompt_tokens());
                     eruptDao.mergeAndFlush(chatMessage);
-                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), ChatSenderType.MODEL, msg, (long) it.getUsage().getCompletion_tokens()));
+                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmObj.getLlm(), llmObj.getModel(), ChatSenderType.MODEL, msg, (long) it.getUsage().getCompletion_tokens()));
                     emitter.complete();
                 } else {
                     if (it.getOutput().toString().length() > MESSAGE_TS) {
@@ -101,7 +99,7 @@ public class LLMService {
                 }
             });
         } catch (Exception e) {
-            eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), ChatSenderType.MODEL, e.getMessage(), 0L));
+            eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmObj.getLlm(), llmObj.getModel(), ChatSenderType.MODEL, e.getMessage(), 0L));
             emitter.send(GsonFactory.getGson().toJson(new SseBody(e.getMessage())), MediaType.TEXT_EVENT_STREAM);
             emitter.complete();
         }
