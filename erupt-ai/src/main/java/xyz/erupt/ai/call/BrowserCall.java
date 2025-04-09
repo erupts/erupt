@@ -13,8 +13,8 @@ import xyz.erupt.ai.annotation.AiFuncParam;
 @Scope("prototype")
 public class BrowserCall implements AiFunctionCall {
 
-    @AiFuncParam("路径信息")
-    private String path = "/";
+    @AiFuncParam(description = "路径信息")
+    private String uri = "/";
 
     @Override
     public String description() {
@@ -25,8 +25,8 @@ public class BrowserCall implements AiFunctionCall {
     @SneakyThrows
     public String call(String prompt) {
         Runtime runtime = Runtime.getRuntime();
-        runtime.exec("open " + path);
-        return "已打开: " + path;
+        runtime.exec("open " + uri);
+        return "已打开: " + uri;
     }
 
 }

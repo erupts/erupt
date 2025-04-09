@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Inherited
 public @interface AiFuncParam {
 
-    String value();
+    String description();
 
     boolean required() default true;
 

@@ -27,4 +27,6 @@ public class SseListener {
     private ChatUsage usage = new ChatUsage();
 
     private boolean isFinish = false;
+
+    private boolean error = false;
 }

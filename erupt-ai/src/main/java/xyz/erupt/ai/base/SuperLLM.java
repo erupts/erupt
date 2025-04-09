@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public abstract class SuperLLM {
 
-    private static final Map<String, SuperLLM> llms= new HashMap<>();
+    private static final Map<String, SuperLLM> llms = new HashMap<>();
 
     public SuperLLM() {
         llms.put(this.code(), this);
@@ -22,6 +22,10 @@ public abstract class SuperLLM {
 
     public static SuperLLM getLLM(String code) {
         return llms.get(code);
+    }
+
+    public static SuperLLM getLLM(LLM llm) {
+        return llms.get(llm.getLlm());
     }
 
     public abstract String code();
