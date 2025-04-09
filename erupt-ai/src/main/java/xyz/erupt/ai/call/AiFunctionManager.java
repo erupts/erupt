@@ -12,8 +12,10 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiFuncParam;
 import xyz.erupt.ai.base.SuperLLM;
+import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 
@@ -51,42 +53,57 @@ public class AiFunctionManager implements ApplicationRunner {
         return sb.toString();
     }
 
-    public String getFunctionCallParamsPrompt() {
-        return null;
-    }
-
     public boolean exist(String key) {
         return aiFunctionMap.containsKey(key);
     }
 
     @SneakyThrows
-    public String call(String key, SuperLLM llm, String userMessage, List<ChatCompletionMessage> userContext) {
+    public String call(String key, LLM llm, String userMessage, List<ChatCompletionMessage> userContext) {
         AiFunctionCall aiFunctionCall = aiFunctionMap.get(key);
-        Map<String, String> params = new HashMap<>();
+        Map<String, Field> params = new HashMap<>();
         for (Field field : aiFunctionCall.getClass().getDeclaredFields()) {
             Optional.ofNullable(field.getAnnotation(AiFuncParam.class)).ifPresent(it -> {
-                params.put(field.getName(), it.value() + ",数据类型：" + field.getType().getSimpleName());
+                params.put(field.getName(), field);
             });
         }
         if (params.isEmpty()) {
             return aiFunctionCall.call(userMessage);
         } else {
+            Map<String, ParamPromptTemplate> promptTemplateMap = getStringParamPromptTemplateMap(params);
             StringBuilder prompt = new StringBuilder();
-            prompt.append("根据以下内容，提取出JSON：\n");
-            prompt.append(userMessage);
-            prompt.append("请严格按照以下JSON格式返回内容，不要返回其他任何多余的内容或解释：\n");
-            prompt.append(GsonFactory.getGson().toJson(params));
-            String llmRes = llm.chat(null, prompt.toString(), userContext).getMessageStr();
-            Map<String, Object> res = GsonFactory.getGson().fromJson(llmRes, new TypeToken<Map<String, Object>>() {
-            }.getType());
-            for (Map.Entry<String, Object> entry : res.entrySet()) {
-                Field field = aiFunctionCall.getClass().getField(entry.getKey());
-                field.setAccessible(true);
-                field.set(aiFunctionCall, entry.getValue());
-                field.setAccessible(false);
+            prompt.append(userMessage).append("\n\n");
+            prompt.append("根据上面的内容生成且填充下面json每个key的value字段，目前json的每个value是具体的生成要求\n");
+            prompt.append("请严格按照以下JSON格式返回，不要返回其他任何多余的内容或解释，不要带markdown格式：\n\n");
+            prompt.append(GsonFactory.getGson().toJson(promptTemplateMap));
+
+            String llmRes = SuperLLM.getLLM(llm).chat(llm, prompt.toString(), userContext).getMessageStr();
+            try {
+                Map<String, ParamPromptTemplate> res = GsonFactory.getGson().fromJson(llmRes, new TypeToken<Map<String, ParamPromptTemplate>>() {
+                }.getType());
+                for (Map.Entry<String, ParamPromptTemplate> entry : res.entrySet()) {
+                    Field field = aiFunctionCall.getClass().getDeclaredField(entry.getKey());
+                    field.setAccessible(true);
+                    field.set(aiFunctionCall, entry.getValue().getValue());
+                    field.setAccessible(false);
+                }
+            } catch (Exception e) {
+                throw new EruptWebApiRuntimeException("Function Call param error: " + e.getMessage() + "→ \n\n" + llmRes);
             }
             return aiFunctionCall.call(prompt.toString());
         }
+    }
+
+    private static Map<String, ParamPromptTemplate> getStringParamPromptTemplateMap(Map<String, Field> params) {
+        Map<String, ParamPromptTemplate> promptTemplateMap = new HashMap<>();
+        for (Map.Entry<String, Field> entry : params.entrySet()) {
+            AiFuncParam aiFuncParam = entry.getValue().getAnnotation(AiFuncParam.class);
+            ParamPromptTemplate promptTemplate = new ParamPromptTemplate();
+            promptTemplate.setDescription(aiFuncParam.description());
+            promptTemplate.setRequired(aiFuncParam.required());
+            promptTemplate.setType(entry.getValue().getType().getSimpleName());
+            promptTemplateMap.put(entry.getKey(), promptTemplate);
+        }
+        return promptTemplateMap;
     }
 
 }

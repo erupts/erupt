@@ -72,26 +72,26 @@ public class LLMService {
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(MetaContext metaContext, SseEmitter emitter, SuperLLM llm, LLM llmObj, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
+    public void sendSse(MetaContext metaContext, SseEmitter emitter, SuperLLM llm, LLM llmModal, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
         try {
             MetaContext.set(metaContext);
-            llm.chatSse(llmObj, chatMessage.getContent(), completionMessage, it -> {
+            llm.chatSse(llmModal, chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {
                     String msg = it.getOutput().toString();
-                    if (it.getOutput().toString().length() <= MESSAGE_TS) {
-                        msg = this.sendMessage(emitter, it.getOutput().toString(), llm, chatMessage, completionMessage);
+                    if (it.getOutput().toString().length() <= MESSAGE_TS || it.isError()) {
+                        msg = this.sendMessage(emitter, it.getOutput().toString(), llmModal, chatMessage, completionMessage);
                     }
                     chatMessage.setTokens((long) it.getUsage().getPrompt_tokens());
                     eruptDao.mergeAndFlush(chatMessage);
-                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmObj.getLlm(), llmObj.getModel(), ChatSenderType.MODEL, msg, (long) it.getUsage().getCompletion_tokens()));
+                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, msg, (long) it.getUsage().getCompletion_tokens()));
                     emitter.complete();
                 } else {
                     if (it.getOutput().toString().length() > MESSAGE_TS) {
                         if (it.isPending()) {
-                            this.sendMessage(emitter, it.getOutput().toString(), llm, chatMessage, completionMessage);
+                            this.sendMessage(emitter, it.getOutput().toString(), llmModal, chatMessage, completionMessage);
                             it.setPending(false);
                         } else {
-                            this.sendMessage(emitter, it.getCurrMessage(), llm, chatMessage, completionMessage);
+                            this.sendMessage(emitter, it.getCurrMessage(), llmModal, chatMessage, completionMessage);
                         }
                     } else {
                         it.setPending(true);
@@ -99,13 +99,13 @@ public class LLMService {
                 }
             });
         } catch (Exception e) {
-            eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmObj.getLlm(), llmObj.getModel(), ChatSenderType.MODEL, e.getMessage(), 0L));
+            eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, e.getMessage(), 0L));
             emitter.send(GsonFactory.getGson().toJson(new SseBody(e.getMessage())), MediaType.TEXT_EVENT_STREAM);
             emitter.complete();
         }
     }
 
-    private String sendMessage(SseEmitter emitter, String userMessage, SuperLLM llm, ChatMessage chatMessage, List<ChatCompletionMessage> userContext) {
+    private String sendMessage(SseEmitter emitter, String userMessage, LLM llm, ChatMessage chatMessage, List<ChatCompletionMessage> userContext) {
         if (aiFunctionManager.exist(userMessage.trim())) {
             String functionMessage = aiFunctionManager.call(userMessage, llm, chatMessage.getContent(), userContext);
             try {

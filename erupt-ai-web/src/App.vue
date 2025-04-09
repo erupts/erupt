@@ -141,6 +141,9 @@ const send = (message: string) => {
       setTimeout(() => {
         msg.content = md.render(accumulatedMarkdown.value);
         messageToBottom();
+        setTimeout(() => {
+          messageToBottom()
+        }, 50)
       }, 10);
     };
 

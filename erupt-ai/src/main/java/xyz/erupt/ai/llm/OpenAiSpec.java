@@ -88,6 +88,7 @@ public abstract class OpenAiSpec extends SuperLLM {
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 log.error("Failed to get response from server", e);
                 SseListener sseListener = new SseListener();
+                sseListener.setError(true);
                 sseListener.setFinish(true);
                 sseListener.getOutput().append(e.getMessage());
                 sseListener.setCurrMessage(e.getMessage());
