@@ -4,6 +4,6 @@
     if (${x.devMode?c}) {
         location.href = 'http://localhost:5173' + param
     } else {
-        location.href = "${request.contextPath}/llm-chat.html" + param
+        location.href = "${request.contextPath}/ai-chat.html" + param
     }
 </script>
