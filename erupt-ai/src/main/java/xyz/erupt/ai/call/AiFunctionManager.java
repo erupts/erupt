@@ -72,8 +72,8 @@ public class AiFunctionManager implements ApplicationRunner {
             Map<String, ParamPromptTemplate> promptTemplateMap = getStringParamPromptTemplateMap(params);
             StringBuilder prompt = new StringBuilder();
             prompt.append(userMessage).append("\n\n");
-            prompt.append("根据上面的内容生成且填充下面json每个key的value字段，目前json的每个value是具体的生成要求\n");
-            prompt.append("请严格按照以下JSON格式返回，不要返回其他任何多余的内容或解释，不要带markdown格式：\n\n");
+            prompt.append("根据上面的内容，自动识别并填充下面JSON的val字段，此JSON中的每个value都是具体的生成要求，将不同key的识别结果放到对应val字段内\n");
+            prompt.append("请严格按照以下JSON格式返回，不要返回其他任何多余的内容或解释，请确保只返回纯JSON，不要混用Markdown格式：\n\n");
             prompt.append(GsonFactory.getGson().toJson(promptTemplateMap));
 
             String llmRes = SuperLLM.getLLM(llm).chat(llm, prompt.toString(), userContext).getMessageStr();
@@ -83,7 +83,7 @@ public class AiFunctionManager implements ApplicationRunner {
                 for (Map.Entry<String, ParamPromptTemplate> entry : res.entrySet()) {
                     Field field = aiFunctionCall.getClass().getDeclaredField(entry.getKey());
                     field.setAccessible(true);
-                    field.set(aiFunctionCall, entry.getValue().getValue());
+                    field.set(aiFunctionCall, entry.getValue().getVal());
                     field.setAccessible(false);
                 }
             } catch (Exception e) {

@@ -17,6 +17,6 @@ public class ParamPromptTemplate {
 
     private String description;
 
-    private Object value;
+    private Object val;
 
 }
