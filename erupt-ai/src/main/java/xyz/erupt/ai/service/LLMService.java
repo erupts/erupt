@@ -47,7 +47,7 @@ public class LLMService {
 
     public static final int MESSAGE_TS = 100;
 
-    public List<ChatCompletionMessage> geneCompletionPrompt(Chat chat, Long agentId) {
+    public List<ChatCompletionMessage> geneCompletionPrompt(Chat chat, Long agentId,Integer contextTurn) {
         List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
         chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
         if (null != agentId) {
@@ -64,7 +64,7 @@ public class LLMService {
         List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
                 .eq(ChatMessage::getChatId, chat.getId())
                 .orderByDesc(ChatMessage::getCreatedAt)
-                .limit(20).list();
+                .limit(contextTurn).list();
         chatMessages.forEach(it -> chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.user, it.getContent())));
         return chatCompletionMessages;
     }

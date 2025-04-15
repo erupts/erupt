@@ -51,18 +51,18 @@ public class ChatController {
                            @RequestParam(required = false) Long llmId,
                            @RequestParam(required = false) Long agentId
     ) {
-        LLM llmObj;
+        LLM llmModel;
         if (llmId == null) {
-            llmObj = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
+            llmModel = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
         } else {
-            llmObj = eruptDao.find(LLM.class, llmId);
+            llmModel = eruptDao.find(LLM.class, llmId);
         }
-        SuperLLM llm = SuperLLM.getLLM(llmObj.getLlm());
+        SuperLLM llm = SuperLLM.getLLM(llmModel.getLlm());
         SseEmitter emitter = new SseEmitter();
-        ChatMessage chatMessage = ChatMessage.create(chatId, llmObj.getLlm(), llmObj.getModel(), ChatSenderType.USER, message, 0L);
+        ChatMessage chatMessage = ChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
         Chat chat = eruptDao.find(Chat.class, chatId);
-        llmService.sendSse(MetaContext.get(), emitter, llm, llmObj, chatMessage, llmService.geneCompletionPrompt(chat, agentId));
+        llmService.sendSse(MetaContext.get(), emitter, llm, llmModel, chatMessage, llmService.geneCompletionPrompt(chat, agentId, llmModel.getMaxContext()));
         return emitter;
     }
 
