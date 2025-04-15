@@ -17,7 +17,10 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.NumberType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 
 /**
  * @author YuePeng
@@ -36,14 +39,6 @@ public class LLMAgent extends MetaModelUpdateVo {
             edit = @Edit(title = "名称", notNull = true)
     )
     private String name;
-
-    @ManyToOne
-    @JsonIgnore
-    @EruptField(
-            views = @View(title = "大模型", column = "name"),
-            edit = @Edit(title = "大模型", type = EditType.REFERENCE_TABLE, notNull = true)
-    )
-    private LLM llm;
 
     @EruptField(
             views = @View(title = "是否启用"),
@@ -72,12 +67,12 @@ public class LLMAgent extends MetaModelUpdateVo {
     @JsonIgnore
     private Float topP;
 
-    @EruptField(
-            views = @View(title = "候选词列表"),
-            edit = @Edit(title = "候选词列表", type = EditType.TAGS)
-    )
-    @Column(length = AnnotationConst.REMARK_LENGTH)
-    private String hint;
+//    @EruptField(
+//            views = @View(title = "候选词列表"),
+//            edit = @Edit(title = "候选词列表", type = EditType.TAGS)
+//    )
+//    @Column(length = AnnotationConst.REMARK_LENGTH)
+//    private String hint;
 
     @Lob
     @JsonIgnore
