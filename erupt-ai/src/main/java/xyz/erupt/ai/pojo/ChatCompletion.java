@@ -1,12 +1,12 @@
 package xyz.erupt.ai.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author YuePeng
@@ -46,15 +46,13 @@ public class ChatCompletion {
      * 介于 -2.0 和 2.0 之间的数字。如果该值为正，那么新 token 会根据其在已有文本中的出现频率受到相应的惩罚，降低模型重复相同内容的可能性。
      */
     @Builder.Default
-    @JsonProperty("frequency_penalty")
-    private Float frequencyPenalty = 0F;
+    private Float frequency_penalty = 0F;
 
     /**
      * 介于 -2.0 和 2.0 之间的数字。如果该值为正，那么新 token 会根据其是否已在已有文本中出现受到相应的惩罚，从而增加模型谈论新主题的可能性。
      */
     @Builder.Default
-    @JsonProperty("presence_penalty")
-    private Float presencePenalty = 0F;
+    private Float presence_penalty = 0F;
 
     /**
      * 一个 object，指定模型必须输出的格式。
@@ -63,8 +61,7 @@ public class ChatCompletion {
      * 否则，模型可能会生成不断的空白字符，直到生成达到令牌限制，从而导致请求长时间运行并显得“卡住”。
      * 此外，如果 finish_reason="length"，这表示生成超过了 max_tokens 或对话超过了最大上下文长度，消息内容可能会被部分截断。
      */
-    @JsonProperty("response_format")
-    private Object responseFormat;
+    private Map<String, String> response_format;
 
     /**
      * 在遇到这些词时，API 将停止生成更多的 token。

@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import xyz.erupt.ai.base.BaseLLMConfig;
+import xyz.erupt.ai.base.LlmRequest;
 import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -18,6 +20,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.linq.lambda.LambdaSee;
 
@@ -142,6 +145,17 @@ public class LLM extends MetaModelUpdateVo implements ChoiceTrigger {
             return ret;
         }
         return Collections.emptyMap();
+    }
+
+    public LlmRequest toLlmRequest() {
+        BaseLLMConfig baseLLMConfig = GsonFactory.getGson().fromJson(config, BaseLLMConfig.class);
+        LlmRequest llmRequest = new LlmRequest();
+        llmRequest.setUrl(baseLLMConfig.getUrl());
+        llmRequest.setApiKey(baseLLMConfig.getApiKey());
+        llmRequest.setModel(model);
+        llmRequest.setTemperature(temperature);
+        llmRequest.setTop_p(topP);
+        return llmRequest;
     }
 
 }

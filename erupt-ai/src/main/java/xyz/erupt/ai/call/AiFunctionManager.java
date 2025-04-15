@@ -11,7 +11,9 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiFuncParam;
+import xyz.erupt.ai.base.LlmRequest;
 import xyz.erupt.ai.base.SuperLLM;
+import xyz.erupt.ai.constants.ResponseFormat;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.core.config.GsonFactory;
@@ -75,8 +77,9 @@ public class AiFunctionManager implements ApplicationRunner {
             prompt.append("根据上面的内容，自动识别并填充下面JSON的val字段，此JSON中的每个value都是具体的生成要求，将不同key的识别结果放到对应val字段内\n");
             prompt.append("请严格按照以下JSON格式返回，不要返回其他任何多余的内容或解释，请确保只返回纯JSON，不要混用Markdown格式：\n\n");
             prompt.append(GsonFactory.getGson().toJson(promptTemplateMap));
-
-            String llmRes = SuperLLM.getLLM(llm).chat(llm, prompt.toString(), userContext).getMessageStr();
+            LlmRequest llmRequest = llm.toLlmRequest();
+            llmRequest.setResponseFormat(ResponseFormat.json_object);
+            String llmRes = SuperLLM.getLLM(llm).chat(llm.toLlmRequest(), prompt.toString(), userContext).getMessageStr();
             try {
                 Map<String, ParamPromptTemplate> res = GsonFactory.getGson().fromJson(llmRes, new TypeToken<Map<String, ParamPromptTemplate>>() {
                 }.getType());

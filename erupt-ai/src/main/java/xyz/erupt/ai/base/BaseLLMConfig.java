@@ -17,9 +17,9 @@ public class BaseLLMConfig {
 
     private String apiKey;
 
-    private Float top_p;
+    private Float topP;
 
-    private String model;
+    private String temperature;
 
     public BaseLLMConfig(String url, String apiKey) {
         this.url = url;
