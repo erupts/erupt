@@ -7,11 +7,10 @@ import okio.BufferedSource;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.base.BaseLLMConfig;
+import xyz.erupt.ai.base.LlmRequest;
 import xyz.erupt.ai.base.SseListener;
 import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.constants.MessageRole;
-import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.pojo.ChatCompletion;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.pojo.ChatCompletionResponse;
@@ -20,6 +19,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -36,19 +36,18 @@ public abstract class OpenAiSpec extends SuperLLM {
     }
 
     @Override
-    public ChatCompletionResponse chat(LLM llm, String userPrompt, List<ChatCompletionMessage> assistantPrompt) {
-        BaseLLMConfig baseLLMConfig = GsonFactory.getGson().fromJson(llm.getConfig(), BaseLLMConfig.class);
+    public ChatCompletionResponse chat(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt) {
         assistantPrompt.add(new ChatCompletionMessage(MessageRole.user, userPrompt));
-        ChatCompletion completion = ChatCompletion.builder().model(llm.getModel()).stream(false).messages(assistantPrompt).build();
+        ChatCompletion completion = ChatCompletion.builder().model(llmRequest.getModel()).stream(false).messages(assistantPrompt).build();
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(
                 GsonFactory.getGson().toJson(completion),
                 MediaType.parse("application/json; charset=utf-8")
         );
         Request request = new Request.Builder()
-                .url(baseLLMConfig.getUrl() + chatApiPath())
+                .url(llmRequest.getUrl() + chatApiPath())
                 .post(body)
-                .addHeader("Authorization", "Bearer " + baseLLMConfig.getApiKey())
+                .addHeader("Authorization", "Bearer " + llmRequest.getApiKey())
                 .build();
 
         // 同步执行请求
@@ -66,21 +65,24 @@ public abstract class OpenAiSpec extends SuperLLM {
 
     @Override
     @SneakyThrows
-    public void chatSse(LLM llm, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
-        BaseLLMConfig baseLLMConfig = GsonFactory.getGson().fromJson(llm.getConfig(), BaseLLMConfig.class);
+    public void chatSse(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
         assistantPrompt.add(new ChatCompletionMessage(MessageRole.user, userPrompt));
-        ChatCompletion completion = ChatCompletion.builder().model(llm.getModel()).messages(assistantPrompt).stream(true).build();
+        ChatCompletion completion = ChatCompletion.builder().model(llmRequest.getModel()).messages(assistantPrompt).stream(true).build();
+        completion.setResponse_format(new HashMap<String, String>() {{
+            this.put("type", String.valueOf(llmRequest.getResponseFormat()));
+        }});
+        completion.setTopP(llmRequest.getTop_p());
+        completion.setTemperature(llmRequest.getTemperature());
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(
                 GsonFactory.getGson().toJson(completion),
                 MediaType.parse("application/json; charset=utf-8")
         );
-
         Request request = new Request.Builder()
-                .url(baseLLMConfig.getUrl() + chatApiPath())
+                .url(llmRequest.getUrl() + chatApiPath())
                 .post(body)
                 .addHeader("Accept", "text/event-stream")
-                .addHeader("Authorization", "Bearer " + baseLLMConfig.getApiKey())
+                .addHeader("Authorization", "Bearer " + llmRequest.getApiKey())
                 .build();
         MetaContext metaContext = MetaContext.get();
         client.newCall(request).enqueue(new Callback() {

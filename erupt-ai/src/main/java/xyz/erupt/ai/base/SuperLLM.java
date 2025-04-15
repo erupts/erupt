@@ -34,9 +34,9 @@ public abstract class SuperLLM {
 
     public abstract BaseLLMConfig config();
 
-    public abstract ChatCompletionResponse chat(LLM llm, String userPrompt, List<ChatCompletionMessage> assistantPrompt);
+    public abstract ChatCompletionResponse chat(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt);
 
-    public abstract void chatSse(LLM llm, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener);
+    public abstract void chatSse(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener);
 
     public static class H implements ChoiceFetchHandler {
         @Override

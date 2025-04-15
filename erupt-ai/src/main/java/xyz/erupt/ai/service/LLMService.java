@@ -75,7 +75,7 @@ public class LLMService {
     public void sendSse(MetaContext metaContext, SseEmitter emitter, SuperLLM llm, LLM llmModal, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
         try {
             MetaContext.set(metaContext);
-            llm.chatSse(llmModal, chatMessage.getContent(), completionMessage, it -> {
+            llm.chatSse(llmModal.toLlmRequest(), chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {
                     String msg = it.getOutput().toString();
                     if (it.getOutput().toString().length() <= MESSAGE_TS || it.isError()) {
