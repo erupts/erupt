@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import xyz.erupt.ai.base.LlmRequest;
 import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.config.AiProp;
@@ -27,6 +28,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -47,11 +49,10 @@ public class LLMService {
 
     public static final int MESSAGE_TS = 100;
 
-    public List<ChatCompletionMessage> geneCompletionPrompt(Chat chat, Long agentId,Integer contextTurn) {
+    public List<ChatCompletionMessage> geneCompletionPrompt(Chat chat, LLMAgent llmAgent, Integer contextTurn) {
         List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
         chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
-        if (null != agentId) {
-            LLMAgent llmAgent = eruptDao.find(LLMAgent.class, agentId);
+        if (null != llmAgent) {
             if (null == llmAgent.getPromptHandler()) {
                 chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, llmAgent.getPrompt()));
             } else {
@@ -72,10 +73,15 @@ public class LLMService {
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(MetaContext metaContext, SseEmitter emitter, SuperLLM llm, LLM llmModal, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
+    public void sendSse(MetaContext metaContext, LLMAgent llmAgent, SseEmitter emitter, SuperLLM llm, LLM llmModal, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
         try {
             MetaContext.set(metaContext);
-            llm.chatSse(llmModal.toLlmRequest(), chatMessage.getContent(), completionMessage, it -> {
+            LlmRequest llmRequest = llmModal.toLlmRequest();
+            Optional.ofNullable(llmRequest).ifPresent(it -> {
+                llmAgent.setTemperature(llmAgent.getTemperature());
+                llmAgent.setTopP(llmAgent.getTopP());
+            });
+            llm.chatSse(llmRequest, chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {
                     String msg = it.getOutput().toString();
                     if (it.getOutput().toString().length() <= MESSAGE_TS || it.isError()) {

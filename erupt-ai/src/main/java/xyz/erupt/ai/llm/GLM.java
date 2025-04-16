@@ -12,7 +12,7 @@ public class GLM extends OpenAiSpec {
 
     @Override
     public String code() {
-        return "ChatGLM4(智普)";
+        return "ChatGLM";
     }
 
     @Override

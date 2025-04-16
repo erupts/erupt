@@ -1,7 +1,6 @@
 package xyz.erupt.ai.call;
 
 import com.google.gson.reflect.TypeToken;
-import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -10,7 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.annotation.AiFuncParam;
+import xyz.erupt.ai.annotation.AiParam;
 import xyz.erupt.ai.base.LlmRequest;
 import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.constants.ResponseFormat;
@@ -36,7 +35,6 @@ import java.util.Optional;
 @Slf4j
 public class AiFunctionManager implements ApplicationRunner {
 
-    @Getter
     private final Map<String, AiFunctionCall> aiFunctionMap = new HashMap<>();
 
     @Override
@@ -64,7 +62,7 @@ public class AiFunctionManager implements ApplicationRunner {
         AiFunctionCall aiFunctionCall = aiFunctionMap.get(key);
         Map<String, Field> params = new HashMap<>();
         for (Field field : aiFunctionCall.getClass().getDeclaredFields()) {
-            Optional.ofNullable(field.getAnnotation(AiFuncParam.class)).ifPresent(it -> {
+            Optional.ofNullable(field.getAnnotation(AiParam.class)).ifPresent(it -> {
                 params.put(field.getName(), field);
             });
         }
@@ -99,7 +97,7 @@ public class AiFunctionManager implements ApplicationRunner {
     private static Map<String, ParamPromptTemplate> getStringParamPromptTemplateMap(Map<String, Field> params) {
         Map<String, ParamPromptTemplate> promptTemplateMap = new HashMap<>();
         for (Map.Entry<String, Field> entry : params.entrySet()) {
-            AiFuncParam aiFuncParam = entry.getValue().getAnnotation(AiFuncParam.class);
+            AiParam aiFuncParam = entry.getValue().getAnnotation(AiParam.class);
             ParamPromptTemplate promptTemplate = new ParamPromptTemplate();
             promptTemplate.setDescription(aiFuncParam.description());
             promptTemplate.setRequired(aiFuncParam.required());
