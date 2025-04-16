@@ -12,6 +12,7 @@ import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
+import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.service.LLMService;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
@@ -62,7 +63,11 @@ public class ChatController {
         ChatMessage chatMessage = ChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);
         Chat chat = eruptDao.find(Chat.class, chatId);
-        llmService.sendSse(MetaContext.get(), emitter, llm, llmModel, chatMessage, llmService.geneCompletionPrompt(chat, agentId, llmModel.getMaxContext()));
+        LLMAgent llmAgent = null;
+        if (null != agentId) {
+            llmAgent = eruptDao.find(LLMAgent.class, agentId);
+        }
+        llmService.sendSse(MetaContext.get(), llmAgent, emitter, llm, llmModel, chatMessage, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()));
         return emitter;
     }
 

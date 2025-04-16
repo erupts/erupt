@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Documented
 @Inherited
-public @interface AiFuncParam {
+public @interface AiParam {
 
     String description();
 
