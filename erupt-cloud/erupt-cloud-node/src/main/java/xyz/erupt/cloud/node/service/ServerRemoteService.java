@@ -11,7 +11,7 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.module.MetaUserinfo;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author YuePeng

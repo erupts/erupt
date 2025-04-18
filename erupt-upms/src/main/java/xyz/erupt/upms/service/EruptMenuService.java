@@ -1,5 +1,6 @@
 package xyz.erupt.upms.service;
 
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -16,7 +17,6 @@ import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.util.UPMSUtil;
 
-import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;

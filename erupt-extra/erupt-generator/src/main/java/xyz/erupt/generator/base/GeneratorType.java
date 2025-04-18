@@ -3,8 +3,8 @@ package xyz.erupt.generator.base;
 import lombok.Getter;
 import xyz.erupt.annotation.sub_field.EditType;
 
-import javax.persistence.Lob;
-import javax.persistence.Transient;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Transient;
 import java.util.Date;
 import java.util.Set;
 

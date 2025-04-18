@@ -21,10 +21,10 @@ import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.jpa.model.MetaModel;
 import xyz.erupt.upms.service.EruptMenuService;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 /**

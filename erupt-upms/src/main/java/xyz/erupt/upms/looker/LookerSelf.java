@@ -1,5 +1,6 @@
 package xyz.erupt.upms.looker;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -8,8 +9,7 @@ import xyz.erupt.core.invoke.DataProxyContext;
 import xyz.erupt.upms.helper.HyperModelCreatorVo;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 import java.util.List;
 
 /**

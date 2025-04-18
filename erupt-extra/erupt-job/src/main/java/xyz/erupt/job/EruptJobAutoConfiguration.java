@@ -19,7 +19,7 @@ import xyz.erupt.job.model.EruptMail;
 import xyz.erupt.job.service.EruptJobService;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

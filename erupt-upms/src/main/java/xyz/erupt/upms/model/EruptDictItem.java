@@ -13,7 +13,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * @author YuePeng

@@ -13,8 +13,8 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.model.base.HyperModel;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 import java.util.Date;
 
 /**

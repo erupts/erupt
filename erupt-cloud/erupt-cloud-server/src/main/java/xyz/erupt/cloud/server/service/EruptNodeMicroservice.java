@@ -1,5 +1,6 @@
 package xyz.erupt.cloud.server.service;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.model.CloudNode;
@@ -8,7 +9,6 @@ import xyz.erupt.cloud.server.node.NodeManager;
 import xyz.erupt.cloud.server.node.NodeWorker;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;

@@ -13,7 +13,7 @@ import xyz.erupt.core.invoke.PowerInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author YuePeng

@@ -5,7 +5,7 @@ import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.service.EruptSessionService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

@@ -11,7 +11,7 @@ import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.tpl.service.EruptTplService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author YuePeng

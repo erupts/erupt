@@ -17,7 +17,7 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.Properties;

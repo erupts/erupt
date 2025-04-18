@@ -2,6 +2,7 @@ package xyz.erupt.upms.service;
 
 import com.google.gson.Gson;
 import eu.bitwalker.useragentutils.UserAgent;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,8 @@ import xyz.erupt.upms.prop.EruptAppProp;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.util.IpUtil;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;

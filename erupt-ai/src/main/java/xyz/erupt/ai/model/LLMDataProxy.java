@@ -1,12 +1,12 @@
 package xyz.erupt.ai.model;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**

@@ -18,7 +18,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.jpa.model.MetaModel;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Map;
 import java.util.Set;
 

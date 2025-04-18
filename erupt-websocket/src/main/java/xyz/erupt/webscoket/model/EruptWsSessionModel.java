@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.core.module.MetaUserinfo;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.util.List;
 
 /**

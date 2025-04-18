@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.dao;
 
+import jakarta.annotation.Resource;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,9 +9,8 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.jpa.service.EntityManagerService;
 
-import javax.annotation.Resource;
-import javax.persistence.*;
-import javax.transaction.Transactional;
+import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

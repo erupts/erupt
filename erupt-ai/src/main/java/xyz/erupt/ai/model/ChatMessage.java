@@ -15,7 +15,7 @@ import xyz.erupt.core.util.EruptTableStyle;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.linq.lambda.LambdaSee;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;

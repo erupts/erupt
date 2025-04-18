@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.webscoket.command.base.SocketCommand;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.util.Collections;
 
 /**

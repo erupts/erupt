@@ -5,7 +5,7 @@ import lombok.SneakyThrows;
 import org.springframework.util.StreamUtils;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;

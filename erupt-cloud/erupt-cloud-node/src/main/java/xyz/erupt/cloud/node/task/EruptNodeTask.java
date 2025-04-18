@@ -3,6 +3,7 @@ package xyz.erupt.cloud.node.task;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.google.gson.Gson;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -21,7 +22,6 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.annotation.Resource;
 import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;

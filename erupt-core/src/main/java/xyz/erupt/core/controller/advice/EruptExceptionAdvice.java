@@ -13,8 +13,8 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptExceptionVo;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author YuePeng

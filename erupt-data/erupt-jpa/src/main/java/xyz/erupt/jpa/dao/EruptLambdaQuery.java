@@ -9,9 +9,9 @@ import xyz.erupt.linq.lambda.LambdaInfo;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.linq.lambda.SFunction;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;

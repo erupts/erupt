@@ -1,5 +1,6 @@
 package xyz.erupt.webscoket.service;
 
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
@@ -9,8 +10,7 @@ import xyz.erupt.webscoket.channel.EruptChannelManager;
 import xyz.erupt.webscoket.channel.SocketCommand;
 import xyz.erupt.webscoket.model.EruptWsSessionModel;
 
-import javax.annotation.Resource;
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

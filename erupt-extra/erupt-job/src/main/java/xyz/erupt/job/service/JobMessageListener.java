@@ -1,6 +1,7 @@
 package xyz.erupt.job.service;
 
 import com.google.gson.reflect.TypeToken;
+import jakarta.annotation.Resource;
 import org.quartz.SchedulerException;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,7 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.toolkit.notify.DataAction;
 import xyz.erupt.toolkit.notify.NotifyData;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
 import java.text.ParseException;
 
 @Service

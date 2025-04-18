@@ -6,7 +6,7 @@ import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.core.util.EruptAssert;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author YuePeng

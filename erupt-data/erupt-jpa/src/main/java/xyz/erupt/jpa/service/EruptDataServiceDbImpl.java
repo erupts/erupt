@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.service;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -24,11 +25,10 @@ import xyz.erupt.jpa.dao.EruptJpaDao;
 import xyz.erupt.jpa.dao.EruptJpaUtils;
 import xyz.erupt.jpa.support.JpaSupport;
 
-import javax.annotation.Resource;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.*;

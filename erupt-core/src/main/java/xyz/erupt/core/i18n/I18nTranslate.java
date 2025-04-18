@@ -1,11 +1,11 @@
 package xyz.erupt.core.i18n;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author YuePeng

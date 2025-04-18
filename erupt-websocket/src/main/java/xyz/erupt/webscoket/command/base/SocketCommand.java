@@ -1,6 +1,6 @@
 package xyz.erupt.webscoket.command.base;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.util.HashMap;
 import java.util.Map;
 

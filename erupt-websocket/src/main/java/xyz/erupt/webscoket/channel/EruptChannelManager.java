@@ -5,7 +5,7 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.webscoket.model.EruptWsSessionModel;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 

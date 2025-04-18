@@ -12,7 +12,7 @@ import xyz.erupt.upms.model.EruptOpenApi;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

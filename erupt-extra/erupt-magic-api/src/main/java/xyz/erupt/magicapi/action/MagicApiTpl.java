@@ -1,5 +1,6 @@
 package xyz.erupt.magicapi.action;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import org.ssssssss.magicapi.core.config.MagicAPIProperties;
 import xyz.erupt.core.util.EruptInformation;
@@ -7,7 +8,6 @@ import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.upms.service.EruptContextService;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 

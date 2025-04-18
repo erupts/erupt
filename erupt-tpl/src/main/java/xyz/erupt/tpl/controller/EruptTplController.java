@@ -1,6 +1,7 @@
 package xyz.erupt.tpl.controller;
 
 
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
@@ -20,9 +21,8 @@ import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.tpl.engine.EngineConst;
 import xyz.erupt.tpl.service.EruptTplService;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;

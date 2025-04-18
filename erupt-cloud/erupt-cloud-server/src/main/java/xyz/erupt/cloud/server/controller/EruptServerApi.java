@@ -1,5 +1,6 @@
 package xyz.erupt.cloud.server.controller;
 
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
@@ -17,7 +18,6 @@ import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.UPMSUtil;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

@@ -9,7 +9,7 @@ import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.UPMSUtil;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Map;
 
 /**

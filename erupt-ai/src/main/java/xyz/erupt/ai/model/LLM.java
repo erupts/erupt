@@ -24,10 +24,10 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.linq.lambda.LambdaSee;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

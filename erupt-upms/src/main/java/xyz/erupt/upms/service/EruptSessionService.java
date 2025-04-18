@@ -1,13 +1,13 @@
 package xyz.erupt.upms.service;
 
 import com.google.gson.Gson;
+import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.prop.EruptProp;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;

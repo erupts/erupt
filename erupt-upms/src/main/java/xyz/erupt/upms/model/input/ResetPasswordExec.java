@@ -8,8 +8,8 @@ import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptUser;
 
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
+import jakarta.annotation.Resource;
+import jakarta.transaction.Transactional;
 import java.util.List;
 
 /**

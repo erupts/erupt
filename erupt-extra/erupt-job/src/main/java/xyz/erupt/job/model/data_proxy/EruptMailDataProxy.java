@@ -12,7 +12,7 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.job.model.EruptMail;
 
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;

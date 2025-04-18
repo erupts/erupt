@@ -1,11 +1,11 @@
 package xyz.erupt.upms.model.base;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
 import java.util.Date;
 
 /**

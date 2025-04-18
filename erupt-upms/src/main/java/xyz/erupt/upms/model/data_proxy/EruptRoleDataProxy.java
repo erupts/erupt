@@ -1,5 +1,6 @@
 package xyz.erupt.upms.model.data_proxy;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.query.Condition;
@@ -7,8 +8,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
-import javax.persistence.Transient;
+import jakarta.persistence.Transient;
 import java.util.List;
 
 /**

@@ -20,8 +20,8 @@ import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.generator.base.Ref;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

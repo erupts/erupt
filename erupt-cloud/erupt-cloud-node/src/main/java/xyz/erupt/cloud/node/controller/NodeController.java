@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 import xyz.erupt.cloud.node.config.EruptNodeProp;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author YuePeng

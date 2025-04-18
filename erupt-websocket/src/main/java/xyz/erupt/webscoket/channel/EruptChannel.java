@@ -10,8 +10,8 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.webscoket.command.base.SocketCommand;
 
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.websocket.*;
+import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

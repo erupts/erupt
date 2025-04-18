@@ -13,7 +13,7 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.File;
 import java.util.Date;
 

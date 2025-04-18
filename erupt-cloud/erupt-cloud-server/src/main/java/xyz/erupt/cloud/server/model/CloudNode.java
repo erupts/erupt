@@ -24,7 +24,7 @@ import xyz.erupt.cloud.server.base.CloudServerConst;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.handler.ViaMenuValueCtrl;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * @author YuePeng

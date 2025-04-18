@@ -7,7 +7,7 @@ import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.View;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 /**

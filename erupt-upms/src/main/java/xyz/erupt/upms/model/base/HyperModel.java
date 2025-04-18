@@ -8,8 +8,8 @@ import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 import java.util.Date;
 
 /**
