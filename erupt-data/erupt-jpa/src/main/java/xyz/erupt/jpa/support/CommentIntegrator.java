@@ -66,7 +66,7 @@ public class CommentIntegrator implements Integrator {
                 Optional.ofNullable(persistentClass.getIdentifierProperty()).ifPresent(it -> {
                     this.fieldComment(persistentClass, it.getName());
                 });
-                Iterator<Property> iterator = persistentClass.getPropertyIterator();
+                Iterator<Property> iterator = persistentClass.getProperties().iterator();
                 while (iterator.hasNext()) {
                     this.fieldComment(persistentClass, iterator.next().getName());
                 }
@@ -95,8 +95,8 @@ public class CommentIntegrator implements Integrator {
                     comment = eruptField.views()[0].title();
                 }
                 if (StringUtils.isNotBlank(comment)) {
-                    String sqlColumnName = persistentClass.getProperty(columnName).getValue().getColumnIterator().next().getText();
-                    Iterator<Column> columnIterator = persistentClass.getTable().getColumnIterator();
+                    String sqlColumnName = persistentClass.getProperty(columnName).getValue().getSelectables().iterator().next().getText();
+                    Iterator<Column> columnIterator = persistentClass.getTable().getColumns().iterator();
                     while (columnIterator.hasNext()) {
                         Column column = columnIterator.next();
                         if (sqlColumnName.equalsIgnoreCase(column.getName())) {
