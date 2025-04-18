@@ -2,9 +2,10 @@ package xyz.erupt.upms.model.log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.sql.Types;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -73,7 +74,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     private String apiName;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @EruptField(
             views = @View(title = "请求参数", type = ViewType.CODE),
             edit = @Edit(title = "请求参数", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))

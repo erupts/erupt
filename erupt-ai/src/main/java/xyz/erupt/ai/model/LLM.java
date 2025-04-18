@@ -2,9 +2,10 @@ package xyz.erupt.ai.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.sql.Types;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 import xyz.erupt.ai.base.BaseLLMConfig;
 import xyz.erupt.ai.base.LlmRequest;
 import xyz.erupt.ai.base.SuperLLM;
@@ -117,7 +118,7 @@ public class LLM extends MetaModelUpdateVo implements ChoiceTrigger {
     private Float topP;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @EruptField(
             views = @View(title = "模型配置"),
             edit = @Edit(title = "模型配置", type = EditType.CODE_EDITOR, notNull = true,

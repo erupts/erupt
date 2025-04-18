@@ -1,8 +1,9 @@
 package xyz.erupt.cloud.server.model;
 
+import java.sql.Types;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -46,7 +47,7 @@ public class CloudNodeGroup extends MetaModel {
     private String name;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @EruptField(
             views = @View(title = "分组配置"),
             edit = @Edit(title = "分组配置", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
