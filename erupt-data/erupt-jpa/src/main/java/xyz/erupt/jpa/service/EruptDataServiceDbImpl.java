@@ -192,10 +192,14 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 , column.getName()) + " as " + column.getAlias()));
         hql.append("select new map(").append(String.join(", ", columnStrList))
                 .append(") from ").append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
+        Set<String> aliasSet = new HashSet<>();
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                hql.append(" left outer join ").append(eruptModel.getEruptName()).append(EruptConst.DOT)
-                        .append(field.getName()).append(" as ").append(field.getName());
+                if (!aliasSet.contains(field.getName())) {
+                    hql.append(" left outer join ").append(eruptModel.getEruptName()).append(EruptConst.DOT)
+                            .append(field.getName()).append(" as ").append(field.getName());
+                    aliasSet.add(field.getName());
+                }
             }
         });
         hql.append(" where 1 = 1 ");

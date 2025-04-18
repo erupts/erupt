@@ -84,11 +84,12 @@ public class EruptJpaUtils {
 
     public static String generateEruptJoinHql(EruptModel eruptModel) {
         StringBuffer hql = new StringBuffer();
+        Set<String> pathSet = new HashSet<>();
+        Set<String> aliasSet = new HashSet<>();
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
                 EruptFieldModel model = eruptModel.getEruptFieldMap().get(field.getName());
                 if (model != null) {
-                    Set<String> pathSet = new HashSet<>();
                     View[] views = model.getEruptField().views();
                     for (View v : views) {
                         String columnPath = v.column();
@@ -99,7 +100,11 @@ public class EruptJpaUtils {
                                 pathSet.add(path);
                             }
                         } else {
-                            hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(EruptConst.DOT).append(field.getName()).append(AS).append(field.getName());
+                            String alias = field.getName();
+                            if (!aliasSet.contains(alias)) {
+                                hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(EruptConst.DOT).append(field.getName()).append(AS).append(field.getName());
+                                aliasSet.add(alias);
+                            }
                         }
                     }
                 }
