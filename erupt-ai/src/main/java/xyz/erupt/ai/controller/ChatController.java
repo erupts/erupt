@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import xyz.erupt.ai.base.SuperLLM;
+import xyz.erupt.ai.base.LlmCore;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
@@ -58,7 +58,7 @@ public class ChatController {
         } else {
             llmModel = eruptDao.find(LLM.class, llmId);
         }
-        SuperLLM llm = SuperLLM.getLLM(llmModel.getLlm());
+        LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
         SseEmitter emitter = new SseEmitter();
         ChatMessage chatMessage = ChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0L);
         eruptDao.persist(chatMessage);

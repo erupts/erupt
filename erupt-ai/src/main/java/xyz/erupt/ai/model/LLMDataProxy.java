@@ -1,12 +1,19 @@
 package xyz.erupt.ai.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai.base.LlmCore;
 import xyz.erupt.ai.config.AiProp;
+import xyz.erupt.annotation.fun.ChoiceTrigger;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,7 +21,7 @@ import java.util.Map;
  * date 2025/3/1 18:19
  */
 @Component
-public class LLMDataProxy implements DataProxy<LLM>, Tpl.TplHandler {
+public class LLMDataProxy implements DataProxy<LLM>, Tpl.TplHandler, ChoiceTrigger {
 
     @Resource
     private EruptDao eruptDao;
@@ -32,4 +39,18 @@ public class LLMDataProxy implements DataProxy<LLM>, Tpl.TplHandler {
         binding.put("x", aiProp);
     }
 
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+
+    @Override
+    public Map<String, Object> trigger(Object code, String[] params) {
+        if (null != code && !"null".equals(code)) {
+            Map<String, Object> ret = new HashMap<>();
+            ret.put(LambdaSee.field(LLM::getModel), LlmCore.getLLM(code.toString()).model());
+            ret.put(LambdaSee.field(LLM::getApiUrl), LlmCore.getLLM(code.toString()).api());
+            ret.put(LambdaSee.field(LLM::getApiKey), "");
+            ret.put(LambdaSee.field(LLM::getConfig), gson.toJson(LlmCore.getLLM(code.toString()).config()));
+            return ret;
+        }
+        return Collections.emptyMap();
+    }
 }
