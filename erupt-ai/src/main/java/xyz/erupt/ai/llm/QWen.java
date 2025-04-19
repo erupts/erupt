@@ -1,14 +1,15 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.base.LlmConfig;
+import xyz.erupt.ai.core.LlmConfig;
+import xyz.erupt.ai.core.OpenAi;
 
 /**
  * @author YuePeng
  * date 2025/2/26 22:58
  */
 @Component
-public class QWen extends OpenAiSpec {
+public class QWen extends OpenAi {
 
     @Override
     public String code() {

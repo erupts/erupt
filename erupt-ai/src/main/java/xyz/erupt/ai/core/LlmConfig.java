@@ -1,4 +1,4 @@
-package xyz.erupt.ai.base;
+package xyz.erupt.ai.core;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
