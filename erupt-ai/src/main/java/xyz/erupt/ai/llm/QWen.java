@@ -12,7 +12,7 @@ public class QWen extends OpenAiSpec {
 
     @Override
     public String code() {
-        return "通义千问";
+        return "Qwen";
     }
 
     @Override

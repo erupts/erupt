@@ -47,7 +47,7 @@ public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "模型名称"),
-            edit = @Edit(title = "模型名称", notNull = true)
+            edit = @Edit(title = "模型名称", notNull = true,search = @Search(vague = true))
     )
     private String name;
 
@@ -57,6 +57,7 @@ public class LLM extends MetaModelUpdateVo {
                     title = "大语言模型",
                     type = EditType.CHOICE,
                     notNull = true,
+                    search = @Search,
                     choiceType = @ChoiceType(fetchHandler = LlmCore.H.class, trigger = LLMDataProxy.class)
             )
     )
@@ -64,7 +65,7 @@ public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "模型版本"),
-            edit = @Edit(title = "模型版本", notNull = true)
+            edit = @Edit(title = "模型版本", notNull = true,search = @Search(vague = true))
     )
     private String model;
 
