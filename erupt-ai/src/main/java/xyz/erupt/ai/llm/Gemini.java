@@ -1,14 +1,15 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.base.LlmConfig;
+import xyz.erupt.ai.core.LlmConfig;
+import xyz.erupt.ai.core.OpenAi;
 
 /**
  * @author YuePeng
  * date 2025/2/22 16:37
  */
 @Component
-public class Gemini extends OpenAiSpec {
+public class Gemini extends OpenAi {
 
     @Override
     public String code() {

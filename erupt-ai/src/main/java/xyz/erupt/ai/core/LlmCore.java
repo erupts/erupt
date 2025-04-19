@@ -1,4 +1,4 @@
-package xyz.erupt.ai.base;
+package xyz.erupt.ai.core;
 
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
