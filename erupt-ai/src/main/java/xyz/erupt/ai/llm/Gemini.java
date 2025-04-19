@@ -8,21 +8,21 @@ import xyz.erupt.ai.base.LlmConfig;
  * date 2025/2/22 16:37
  */
 @Component
-public class ChatGpt extends OpenAiSpec {
+public class Gemini extends OpenAiSpec {
 
     @Override
     public String code() {
-        return "ChatGpt";
+        return "Gemini";
     }
 
     @Override
     public String model() {
-        return "gpt-4o";
+        return "gemini-2.0-flash";
     }
 
     @Override
     public String api() {
-        return "https://api.openai.com";
+        return "https://generativelanguage.googleapis.com";
     }
 
     @Override
