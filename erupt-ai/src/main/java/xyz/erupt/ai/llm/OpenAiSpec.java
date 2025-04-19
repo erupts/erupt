@@ -7,9 +7,9 @@ import okio.BufferedSource;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai.base.LlmCore;
 import xyz.erupt.ai.base.LlmRequest;
 import xyz.erupt.ai.base.SseListener;
-import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.constants.MessageRole;
 import xyz.erupt.ai.pojo.ChatCompletion;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  */
 @Component
 @Slf4j
-public abstract class OpenAiSpec extends SuperLLM {
+public abstract class OpenAiSpec extends LlmCore {
 
     public String chatApiPath() {
         return "/v1/chat/completions";

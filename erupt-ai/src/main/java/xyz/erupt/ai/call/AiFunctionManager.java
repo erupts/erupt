@@ -10,8 +10,8 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiParam;
+import xyz.erupt.ai.base.LlmCore;
 import xyz.erupt.ai.base.LlmRequest;
-import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.constants.ResponseFormat;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
@@ -77,7 +77,7 @@ public class AiFunctionManager implements ApplicationRunner {
             prompt.append(GsonFactory.getGson().toJson(promptTemplateMap));
             LlmRequest llmRequest = llm.toLlmRequest();
             llmRequest.setResponseFormat(ResponseFormat.json_object);
-            String llmRes = SuperLLM.getLLM(llm).chat(llm.toLlmRequest(), prompt.toString(), userContext).getMessageStr();
+            String llmRes = LlmCore.getLLM(llm).chat(llm.toLlmRequest(), prompt.toString(), userContext).getMessageStr();
             try {
                 Map<String, ParamPromptTemplate> res = GsonFactory.getGson().fromJson(llmRes, new TypeToken<Map<String, ParamPromptTemplate>>() {
                 }.getType());

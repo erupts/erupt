@@ -7,8 +7,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import xyz.erupt.ai.base.LlmCore;
 import xyz.erupt.ai.base.LlmRequest;
-import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.ChatSenderType;
@@ -64,6 +64,7 @@ public class LLMService {
         }
         List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
                 .eq(ChatMessage::getChatId, chat.getId())
+                .isNotNull(ChatMessage::getContent)
                 .orderByDesc(ChatMessage::getCreatedAt)
                 .limit(contextTurn).list();
         chatMessages.forEach(it -> chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.user, it.getContent())));
@@ -73,13 +74,13 @@ public class LLMService {
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(MetaContext metaContext, LLMAgent llmAgent, SseEmitter emitter, SuperLLM llm, LLM llmModal, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
+    public void sendSse(MetaContext metaContext, LLMAgent llmAgent, SseEmitter emitter, LlmCore llm, LLM llmModal, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
         try {
             MetaContext.set(metaContext);
             LlmRequest llmRequest = llmModal.toLlmRequest();
-            Optional.ofNullable(llmRequest).ifPresent(it -> {
-                llmAgent.setTemperature(llmAgent.getTemperature());
-                llmAgent.setTopP(llmAgent.getTopP());
+            Optional.ofNullable(llmAgent).ifPresent(it -> {
+                llmAgent.setTemperature(it.getTemperature());
+                llmAgent.setTopP(it.getTopP());
             });
             llm.chatSse(llmRequest, chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {

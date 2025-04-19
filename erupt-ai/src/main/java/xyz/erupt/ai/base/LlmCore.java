@@ -12,19 +12,19 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public abstract class SuperLLM {
+public abstract class LlmCore {
 
-    private static final Map<String, SuperLLM> llms = new HashMap<>();
+    private static final Map<String, LlmCore> llms = new HashMap<>();
 
-    public SuperLLM() {
+    public LlmCore() {
         llms.put(this.code(), this);
     }
 
-    public static SuperLLM getLLM(String code) {
+    public static LlmCore getLLM(String code) {
         return llms.get(code);
     }
 
-    public static SuperLLM getLLM(LLM llm) {
+    public static LlmCore getLLM(LLM llm) {
         return llms.get(llm.getLlm());
     }
 
@@ -32,7 +32,9 @@ public abstract class SuperLLM {
 
     public abstract String model();
 
-    public abstract BaseLLMConfig config();
+    public abstract String api();
+
+    public abstract LlmConfig config();
 
     public abstract ChatCompletionResponse chat(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt);
 
