@@ -17,6 +17,6 @@ public class UserCall implements AiFunctionCall {
 
     @Override
     public String call(String prompt) {
-        return "当前登录用户：" + MetaContext.getUser().getName();
+        return MetaContext.getUser().getName();
     }
 }

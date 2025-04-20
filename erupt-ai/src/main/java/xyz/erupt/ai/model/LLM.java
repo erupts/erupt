@@ -17,6 +17,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.core.annotation.Ref;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
@@ -36,6 +37,9 @@ import javax.persistence.Table;
                 @RowOperation(title = "对话测试", icon = "fa fa-comments",
                         tpl = @Tpl(path = "/tpl/llm-chat.ftl", height = "85vh", tplHandler = LLMDataProxy.class),
                         mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
+                @RowOperation(title = "默认对话模型", icon = "fa fa-magic",
+                        ifExpr = "item.defaultLLM == '×'",
+                        mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
         }
 )
 @Getter
@@ -47,7 +51,7 @@ public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "模型名称"),
-            edit = @Edit(title = "模型名称", notNull = true,search = @Search(vague = true))
+            edit = @Edit(title = "模型名称", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
@@ -65,7 +69,7 @@ public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "模型版本"),
-            edit = @Edit(title = "模型版本", notNull = true,search = @Search(vague = true))
+            edit = @Edit(title = "模型版本", notNull = true, search = @Search(vague = true))
     )
     private String model;
 
@@ -77,7 +81,7 @@ public class LLM extends MetaModelUpdateVo {
     private String apiUrl;
 
     @EruptField(
-            views = @View(title = "API Key",type = ViewType.HTML,width = "80px"),
+            views = @View(title = "API Key", type = ViewType.HTML, width = "80px"),
             edit = @Edit(title = "API Key")
     )
     private String apiKey;
@@ -119,6 +123,7 @@ public class LLM extends MetaModelUpdateVo {
                     codeEditType = @CodeEditorType(language = "json")
             )
     )
+    @Ref(LlmConfig.class)
     private String config;
 
 
@@ -128,7 +133,6 @@ public class LLM extends MetaModelUpdateVo {
             edit = @Edit(title = "备注", type = EditType.TEXTAREA)
     )
     private String remark;
-
 
 
     public LlmRequest toLlmRequest() {

@@ -20,7 +20,7 @@ const url = new URL(window.location.href);
 const params = new URLSearchParams(url.search);
 
 export function getToken(): string {
-    return <string>params.get("token");
+    return <string>params.get("_token");
 }
 
 // 请求拦截器
@@ -49,7 +49,7 @@ axiosInstance.interceptors.response.use(
     error => {
         if (error.status === 401) {
             message.error("登录已过期，请重新登录");
-        }else{
+        } else {
             message.error("server error:" + error.message);
         }
         return Promise.reject(error);
