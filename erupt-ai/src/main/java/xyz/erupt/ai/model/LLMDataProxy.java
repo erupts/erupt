@@ -3,10 +3,12 @@ package xyz.erupt.ai.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.annotation.fun.ChoiceTrigger;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
@@ -14,6 +16,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +24,7 @@ import java.util.Map;
  * date 2025/3/1 18:19
  */
 @Component
-public class LLMDataProxy implements DataProxy<LLM>, Tpl.TplHandler, ChoiceTrigger {
+public class LLMDataProxy implements DataProxy<LLM>, Tpl.TplHandler, ChoiceTrigger, OperationHandler<LLM, Void> {
 
     @Resource
     private EruptDao eruptDao;
@@ -39,7 +42,7 @@ public class LLMDataProxy implements DataProxy<LLM>, Tpl.TplHandler, ChoiceTrigg
         binding.put("x", aiProp);
     }
 
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+    public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
     @Override
     public Map<String, Object> trigger(Object code, String[] params) {
@@ -52,5 +55,16 @@ public class LLMDataProxy implements DataProxy<LLM>, Tpl.TplHandler, ChoiceTrigg
             return ret;
         }
         return Collections.emptyMap();
+    }
+
+    @Override
+    @Transactional
+    public String exec(List<LLM> data, Void o, String[] param) {
+        for (LLM llm : eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).list()) {
+            llm.setDefaultLLM(false);
+            eruptDao.merge(llm);
+        }
+        eruptDao.find(LLM.class, data.get(0).getId()).setDefaultLLM(true);
+        return "";
     }
 }

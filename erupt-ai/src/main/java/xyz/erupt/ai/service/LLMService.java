@@ -28,7 +28,6 @@ import xyz.erupt.jpa.dao.EruptDao;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -78,10 +77,9 @@ public class LLMService {
         try {
             MetaContext.set(metaContext);
             LlmRequest llmRequest = llmModal.toLlmRequest();
-            Optional.ofNullable(llmAgent).ifPresent(it -> {
-                llmAgent.setTemperature(it.getTemperature());
-                llmAgent.setTopP(it.getTopP());
-            });
+            if (null != llmAgent) {
+                llmAgent.mergeToLLmRequest(llmModal);
+            }
             llm.chatSse(llmRequest, chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {
                     String msg = it.getOutput().toString();

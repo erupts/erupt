@@ -1,5 +1,6 @@
 package xyz.erupt.ai.controller;
 
+import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,9 @@ import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.service.LLMService;
+import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.R;
@@ -47,6 +50,7 @@ public class ChatController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
+    @SneakyThrows
     public SseEmitter send(@RequestParam Long chatId,
                            @RequestParam String message,
                            @RequestParam(required = false) Long llmId,
@@ -54,20 +58,26 @@ public class ChatController {
     ) {
         LLM llmModel;
         if (llmId == null) {
-            llmModel = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
+            llmModel = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).eq(LLM::getEnable, true).limit(1).one();
         } else {
             llmModel = eruptDao.find(LLM.class, llmId);
         }
-        LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
         SseEmitter emitter = new SseEmitter();
-        ChatMessage chatMessage = ChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0L);
-        eruptDao.persist(chatMessage);
-        Chat chat = eruptDao.find(Chat.class, chatId);
-        LLMAgent llmAgent = null;
-        if (null != agentId) {
-            llmAgent = eruptDao.find(LLMAgent.class, agentId);
+        if (llmModel == null) {
+            emitter.send(GsonFactory.getGson().toJson(new SseBody("No LLM available")), MediaType.TEXT_EVENT_STREAM);
+            emitter.complete();
+        } else {
+            LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
+            ChatMessage chatMessage = ChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0L);
+            eruptDao.persist(chatMessage);
+            Chat chat = eruptDao.find(Chat.class, chatId);
+            LLMAgent llmAgent = null;
+            if (null != agentId) {
+                llmAgent = eruptDao.find(LLMAgent.class, agentId);
+            }
+            llmService.sendSse(MetaContext.get(), llmAgent, emitter, llm, llmModel, chatMessage, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()));
         }
-        llmService.sendSse(MetaContext.get(), llmAgent, emitter, llm, llmModel, chatMessage, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()));
+
         return emitter;
     }
 
