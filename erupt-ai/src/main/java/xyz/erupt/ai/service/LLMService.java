@@ -48,6 +48,7 @@ public class LLMService {
 
     public static final int MESSAGE_TS = 100;
 
+    @SneakyThrows
     public List<ChatCompletionMessage> geneCompletionPrompt(Chat chat, LLMAgent llmAgent, Integer contextTurn) {
         List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
         chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
@@ -56,7 +57,7 @@ public class LLMService {
                 chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, llmAgent.getPrompt()));
             } else {
                 chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system,
-                        EruptSpringUtil.getBean(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
+                        EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
             }
         } else {
             chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.assistant, aiFunctionManager.getFunctionCallPrompt()));
