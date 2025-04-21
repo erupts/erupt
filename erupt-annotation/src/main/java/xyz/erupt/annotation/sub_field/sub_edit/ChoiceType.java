@@ -16,7 +16,7 @@ public @interface ChoiceType {
     Type type() default Type.SELECT;
 
     @Transient
-    @Comment("手动配置选择项")
+    @Comment("手动下拉列表")
     VL[] vl() default {};
 
     @Transient
@@ -24,7 +24,7 @@ public @interface ChoiceType {
     String[] fetchHandlerParams() default {};
 
     @Transient
-    @Comment("获取下拉列表")
+    @Comment("动态下拉列表")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
     @Transient
@@ -42,12 +42,13 @@ public @interface ChoiceType {
     @Comment("联动能力，依赖字段名")
     String dependField() default "";
 
+    @Deprecated
     @Comment("联动过滤表达式，支持变量：")
     @Comment("dependValue:依赖字段的值")
     @Comment("vl.value: 下拉列表项的值")
     @Comment("vl.label: 下拉列表项名称")
     @Comment("vl.desc: 下拉列表项备注")
-    String dependExpr() default "false";
+    String dependExpr() default "";
 
     enum Type {
         @Comment("下拉选择")

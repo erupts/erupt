@@ -1,0 +1,151 @@
+@primary-color: #4285F4;
+@secondary-color: #f0f0f0;
+@hover-color: #f9f9f9;
+@border-color: #ddd;
+@font-stack: Arial, sans-serif;
+@base-padding: 15px;
+@base-margin: 10px;
+
+::v-deep(.ant-bubble) {
+  font-family: @font-stack;
+  color: @primary-color;
+  line-height: 1.6;
+
+  // 标题
+  h1, h2, h3, h4, h5, h6 {
+    margin: @base-margin 0;
+    font-weight: bold;
+    line-height: 1.2;
+
+    &:hover {
+      cursor: default;
+    }
+  }
+
+  h1 {
+    font-size: 2.5em;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  h3 {
+    font-size: 1.75em;
+  }
+
+  h4 {
+    font-size: 1.5em;
+  }
+
+  h5 {
+    font-size: 1.25em;
+  }
+
+  h6 {
+    font-size: 1em;
+  }
+
+  // 段落
+  p {
+    margin: 0;
+    font-size: 1em;
+  }
+
+  // 链接
+  a {
+    color: @primary-color;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover, &:focus {
+      color: darken(@primary-color, 20%);
+      text-decoration: underline;
+    }
+  }
+
+  // 列表
+  ul, ol {
+    margin: @base-margin 0;
+    padding-left: 20px;
+
+    li {
+      margin-bottom: @base-margin / 2;
+    }
+  }
+
+  // 图片
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin: @base-margin 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  // 表格
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: @base-margin 0;
+    font-size: 14px;
+    color: #333;
+
+    th, td {
+      padding: @base-padding;
+      border: 1px solid @border-color;
+      text-align: left;
+    }
+
+    th {
+      background-color: @secondary-color;
+      font-weight: bold;
+    }
+
+    tbody {
+      tr:nth-child(even) {
+        background-color: @hover-color;
+      }
+
+      tr:hover {
+        background-color: @hover-color;
+      }
+    }
+  }
+
+  // 代码块
+  code {
+    background-color: @secondary-color;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: "Courier New", Courier, monospace;
+  }
+
+  pre {
+    background-color: @hover-color;
+    border: 1px solid @border-color;
+    white-space: pre-wrap;
+    padding: @base-padding;
+    overflow-x: auto;
+    border-radius: 5px;
+    font-family: "Courier New", Courier, monospace;
+    margin: @base-margin 0;
+  }
+
+  // 引用
+  blockquote {
+    border-left: 4px solid @secondary-color;
+    padding: @base-padding / 2 @base-padding;
+    margin: @base-margin 0;
+    font-style: italic;
+    color: #666;
+  }
+
+  // 水平分割线
+  hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: @base-margin * 2 0;
+  }
+}

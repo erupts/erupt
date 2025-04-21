@@ -91,7 +91,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         }
         MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
         MetaContext.registerToken(token);
-        MetaContext.register(new MetaUser(metaUserinfo.getId() + "", metaUserinfo.getAccount(), metaUserinfo.getUsername()));
+        MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername()));
         //权限校验
         String authStr = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
         switch (eruptRouter.verifyType()) {

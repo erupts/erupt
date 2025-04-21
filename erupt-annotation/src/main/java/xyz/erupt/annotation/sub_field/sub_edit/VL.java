@@ -13,4 +13,6 @@ public @interface VL {
     boolean disable() default false;
 
     String desc() default "";
+
+    String extra() default "";
 }

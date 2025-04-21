@@ -25,6 +25,9 @@ public @interface MultiChoiceType {
     @Comment("动态获取选择项")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
+    @Comment("联动时依赖字段名")
+    String dependField() default "";
+
     enum Type {
         @Comment("下拉多选")
         SELECT,

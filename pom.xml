@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.12.19</version>
+    <version>1.12.20</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -31,8 +31,9 @@
         <module>erupt-core</module>
         <module>erupt-excel</module>
         <module>erupt-toolkit</module>
+        <module>erupt-ai</module>
 
-        <module>erupt-data/erupt-jpa</module><!-- Hibernate JPA 数据实现 -->
+        <module>erupt-data/erupt-jpa</module><!-- JPA 数据实现 -->
         <module>erupt-data/erupt-mongodb</module><!-- MongoDB 数据实现 -->
 
         <module>erupt-upms</module><!--用户权限管理-->
@@ -187,7 +188,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.5.0</version>
                         <configuration>
                             <additionalOptions>
                                 <additionalOption>-Xdoclint:none</additionalOption>

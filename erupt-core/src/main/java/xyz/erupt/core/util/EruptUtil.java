@@ -162,6 +162,23 @@ public class EruptUtil {
         return vls;
     }
 
+    public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, Edit edit, Map<String, Object> formData) {
+        List<VLModel> vls = new ArrayList<>();
+        if (edit.type() == EditType.CHOICE) {
+            vls.addAll(Stream.of(edit.choiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).collect(Collectors.toList()));
+            Stream.of(edit.choiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
+                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(formData, edit.choiceType().fetchHandlerParams())).ifPresent(vls::addAll));
+        } else if (edit.type() == EditType.MULTI_CHOICE) {
+            vls.addAll(Stream.of(edit.multiChoiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).collect(Collectors.toList()));
+            Stream.of(edit.multiChoiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
+                    Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(formData, edit.multiChoiceType().fetchHandlerParams())).ifPresent(vls::addAll));
+        }
+        if (eruptModel.isI18n()) {
+            vls.forEach(vl -> vl.setLabel(I18nTranslate.$translate(vl.getLabel())));
+        }
+        return vls;
+    }
+
     public static List<String> getTagList(TagsType tagsType) {
         List<String> tags = new ArrayList<>(Arrays.asList(tagsType.tags()));
         Stream.of(tagsType.fetchHandler()).filter(clazz -> !clazz.isInterface())

@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -103,7 +104,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     )
     private Date createTime;
 
-    @Column(length = 4000)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "请求地址", type = ViewType.HTML)
     )
