@@ -70,7 +70,7 @@ public class EruptJobLog extends BaseModel {
     )
     private Date endTime;
 
-    @Column(length = 2000)
+    @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "执行结果"),
             edit = @Edit(title = "执行结果")
