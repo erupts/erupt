@@ -1,14 +1,15 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.base.BaseLLMConfig;
+import xyz.erupt.ai.core.LlmConfig;
+import xyz.erupt.ai.core.OpenAi;
 
 /**
  * @author YuePeng
  * date 2025/2/23 15:31
  */
 @Component
-public class Moonshot extends OpenAiSpec {
+public class Moonshot extends OpenAi {
 
     @Override
     public String code() {
@@ -21,8 +22,13 @@ public class Moonshot extends OpenAiSpec {
     }
 
     @Override
-    public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://api.moonshot.cn", "");
+    public String api() {
+        return "https://api.moonshot.cn";
+    }
+
+    @Override
+    public LlmConfig config() {
+        return new LlmConfig();
     }
 
 }

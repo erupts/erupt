@@ -1,5 +1,6 @@
 package xyz.erupt.ai.controller;
 
+import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,13 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import xyz.erupt.ai.base.SuperLLM;
 import xyz.erupt.ai.constants.ChatSenderType;
+import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.model.Chat;
 import xyz.erupt.ai.model.ChatMessage;
 import xyz.erupt.ai.model.LLM;
+import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.service.LLMService;
+import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.annotation.EruptRouter;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.R;
@@ -46,23 +50,34 @@ public class ChatController {
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
+    @SneakyThrows
     public SseEmitter send(@RequestParam Long chatId,
                            @RequestParam String message,
                            @RequestParam(required = false) Long llmId,
                            @RequestParam(required = false) Long agentId
     ) {
-        LLM llmObj;
+        LLM llmModel;
         if (llmId == null) {
-            llmObj = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).limit(1).one();
+            llmModel = eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).eq(LLM::getEnable, true).limit(1).one();
         } else {
-            llmObj = eruptDao.find(LLM.class, llmId);
+            llmModel = eruptDao.find(LLM.class, llmId);
         }
-        SuperLLM llm = SuperLLM.getLLM(llmObj.getLlm());
         SseEmitter emitter = new SseEmitter();
-        ChatMessage chatMessage = ChatMessage.create(chatId, llmObj.getLlm(), llmObj.getModel(), ChatSenderType.USER, message, 0L);
-        eruptDao.persist(chatMessage);
-        Chat chat = eruptDao.find(Chat.class, chatId);
-        llmService.sendSse(MetaContext.get(), emitter, llm, llmObj, chatMessage, llmService.geneCompletionPrompt(chat, agentId));
+        if (llmModel == null) {
+            emitter.send(GsonFactory.getGson().toJson(new SseBody("No LLM available")), MediaType.TEXT_EVENT_STREAM);
+            emitter.complete();
+        } else {
+            LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
+            ChatMessage chatMessage = ChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0L);
+            eruptDao.persist(chatMessage);
+            Chat chat = eruptDao.find(Chat.class, chatId);
+            LLMAgent llmAgent = null;
+            if (null != agentId) {
+                llmAgent = eruptDao.find(LLMAgent.class, agentId);
+            }
+            llmService.sendSse(MetaContext.get(), llmAgent, emitter, llm, llmModel, chatMessage, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()));
+        }
+
         return emitter;
     }
 

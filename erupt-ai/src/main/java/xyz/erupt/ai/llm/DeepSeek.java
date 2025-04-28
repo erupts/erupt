@@ -1,14 +1,15 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.base.BaseLLMConfig;
+import xyz.erupt.ai.core.LlmConfig;
+import xyz.erupt.ai.core.OpenAi;
 
 /**
  * @author YuePeng
  * date 2025/2/22 16:37
  */
 @Component
-public class DeepSeek extends OpenAiSpec {
+public class DeepSeek extends OpenAi {
 
     @Override
     public String code() {
@@ -21,8 +22,13 @@ public class DeepSeek extends OpenAiSpec {
     }
 
     @Override
-    public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://api.deepseek.com", "");
+    public String api() {
+        return "https://api.deepseek.com";
+    }
+
+    @Override
+    public LlmConfig config() {
+        return new LlmConfig();
     }
 
 }

@@ -1,14 +1,15 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.base.BaseLLMConfig;
+import xyz.erupt.ai.core.LlmConfig;
+import xyz.erupt.ai.core.OpenAi;
 
 /**
  * @author YuePeng
  * date 2025/2/22 16:37
  */
 @Component
-public class ChatGpt extends OpenAiSpec {
+public class ChatGpt extends OpenAi {
 
     @Override
     public String code() {
@@ -17,12 +18,17 @@ public class ChatGpt extends OpenAiSpec {
 
     @Override
     public String model() {
-        return "gpt-4";
+        return "gpt-4o";
     }
 
     @Override
-    public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://api.openai.com", "");
+    public String api() {
+        return "https://api.openai.com";
+    }
+
+    @Override
+    public LlmConfig config() {
+        return new LlmConfig();
     }
 
 }
