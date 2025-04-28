@@ -4,12 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
+import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
+import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -23,7 +26,8 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EruptI18n
-public class MetaModelVo extends MetaModel {
+@PreDataProxy(MetaModelVo.Proxy.class)
+public class MetaModelVo extends BaseModel {
 
     @Transient
     @EruptField(
@@ -59,6 +63,23 @@ public class MetaModelVo extends MetaModel {
     )
     @EruptSmartSkipSerialize
     private LocalDateTime updateTime;
+
+    public static class Proxy implements DataProxy<MetaModelVo> {
+
+        @Override
+        public void beforeAdd(MetaModelVo metaModel) {
+            metaModel.setCreateTime(LocalDateTime.now());
+            metaModel.setCreateBy(MetaContext.getUser().getName());
+            metaModel.setUpdateTime(metaModel.getCreateTime());
+            metaModel.setUpdateBy(metaModel.getCreateBy());
+        }
+
+        @Override
+        public void beforeUpdate(MetaModelVo metaModel) {
+            metaModel.setUpdateTime(LocalDateTime.now());
+            metaModel.setUpdateBy(MetaContext.getUser().getName());
+        }
+    }
 
 
 }
