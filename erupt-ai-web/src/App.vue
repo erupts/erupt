@@ -6,7 +6,6 @@ import md from "./components/markdown.ts";
 import {type Agent, type Chat, ChatApi, type ChatMessage, type UserInfo} from "./api/chat.api.ts";
 import {DeleteOutlined, PlusOutlined, RobotOutlined, UserOutlined} from '@ant-design/icons-vue';
 import {getToken} from "./api/axios.config.ts";
-import type {SuggestionItem} from "ant-design-x-vue/dist/typings/suggestion/interface";
 
 const userInfo = ref<UserInfo>()
 const chats = ref<Chat[]>([])
@@ -17,7 +16,7 @@ const selectAgent = ref<Agent | null>();
 
 const agentModel = ref<boolean>(false)
 
-const bubbles = ref<HTMLElement>();
+const bubbles = ref<HTMLDivElement>();
 const content = ref<string>("")
 const sending = ref<boolean>(false)
 const sendDisabled = ref<boolean>(false)
@@ -27,11 +26,6 @@ const loadingMoreMessages = ref<boolean>(false); // 是否正在加载更多消�
 const hasMoreMessages = ref<boolean>(true); // 是否还有更多消息
 
 const params = new URLSearchParams(new URL(window.location.href).search);
-
-const suggestions = ref<SuggestionItem[]>([
-  {label: 'Write a report', value: 'report'},
-  {label: 'Draw a picture', value: 'draw'},
-]);
 
 ChatApi.userInfo().then(res => {
   userInfo.value = res;
@@ -49,7 +43,7 @@ const fetchChats = (after?: () => void) => {
     chats.value = res.data;
     if (res.data.length) {
       selectChat.value = res.data[0].id;
-      onSelectChat(res.data[0].id, after)
+      onSelectChat(String(res.data[0].id), after)
     } else {
       clearStatus();
     }
@@ -74,10 +68,10 @@ const clearStatus = () => {
   messages.value = []; // 清空消息列表
 }
 
-const onSelectChat = (chatId: number, after?: () => void) => {
+const onSelectChat = (chatId: string, after?: () => void) => {
   clearStatus();
-  selectChat.value = chatId;
-  fetchMessages(chatId, true, after); // 加载第一页消息
+  selectChat.value = Number(chatId);
+  fetchMessages(Number(chatId), true, after); // 加载第一页消息
 };
 
 const fetchMessages = (chatId: number, toBottom: boolean, after?: () => void) => {
@@ -127,7 +121,7 @@ const send = (message: string) => {
       //@ts-ignore
       bubbles.value.scrollTop = bubbles.value.scrollHeight;
     }, 10)
-    const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}&agentId=${selectAgent.value?.id || ''}&llmId=${params.get("llm")}`);
+    const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}&agentId=${selectAgent.value?.id || ''}&llmId=${params.get("llm")||''}`);
 
     eventSource.onmessage = (event) => {
       sending.value = false;
@@ -141,6 +135,9 @@ const send = (message: string) => {
       setTimeout(() => {
         msg.content = md.render(accumulatedMarkdown.value);
         messageToBottom();
+        setTimeout(() => {
+          messageToBottom()
+        }, 50)
       }, 10);
     };
 
@@ -205,15 +202,16 @@ const conversationMenu = (conversation) => {
 }
 
 const handleBubbleScroll = () => {
-  if (
-      bubbles.value?.scrollTop <= 10 &&
-      !loadingMoreMessages.value &&
-      hasMoreMessages.value &&
-      selectChat.value
-  ) {
-    messagePage.value += 1;
+  if (bubbles.value) {
     //@ts-ignore
-    fetchMessages(selectChat.value, false); // 加载更多消息
+    if (bubbles.value.scrollTop <= 10 &&
+        !loadingMoreMessages.value &&
+        hasMoreMessages.value &&
+        selectChat.value) {
+      messagePage.value += 1;
+      //@ts-ignore
+      fetchMessages(selectChat.value, false); // 加载更多消息
+    }
   }
 };
 
@@ -234,9 +232,9 @@ const onSelectAgent = (agent: Agent) => {
           新建会话
         </a-button>
       </div>
-      <Conversations :items="chats.map(it => ({ label: it.title, key: it.id }))"
+      <Conversations :items="chats.map(it => ({ label: it.title, key: String(it.id) }))"
                      :menu="conversationMenu"
-                     :activeKey="selectChat as string" @activeChange="onSelectChat" style="margin:0;padding: 8px"/>
+                     :activeKey="String(selectChat)" @activeChange="onSelectChat" style="margin:0;padding: 8px"/>
     </div>
     <div style="flex: 1;display: flex;flex-direction: column;height:100%;padding: 0 8px 8px;box-sizing: border-box">
       <article ref="bubbles" style="padding: 8px 0;flex: 1 1 0;overflow: auto;height: calc(100% - 66px)"
@@ -250,31 +248,27 @@ const onSelectAgent = (agent: Agent) => {
                 } as any"
                 :loading="item.loading"/>
       </article>
-      <Suggestion :items="suggestions" @select="(itemVal) => {
-        console.log(itemVal)
-      }">
-        <template #default="data">
-          <Sender
-              :on-submit="send"
-              :loading="sending"
-              :placeholder="'输入@召唤智能体'"
-              :disabled="sendDisabled"
-              @change="(nextVal) => {
+      <Suggestion>
+        <Sender
+            :on-submit="send"
+            :loading="sending"
+            :placeholder="'输入@召唤智能体'"
+            :disabled="sendDisabled"
+            @change="(nextVal) => {
                 if (nextVal === '@') {
                   agentModel = true;
                 }
               }"
-              v-model:value="content"
-          >
-            <template #header>
-              <div v-if="selectAgent"
-                   style="display: flex;align-items: center;background: #f6f7f9;padding: 5px 5px 5px 15px;border-radius: 12px 12px 0 0;color: #838a95">
-                <div>与 <span style="color: #000;font-weight: 400">{{ selectAgent.name }}</span> 对话</div>
-                <a-button type="text" style="margin-left: auto;" @click="selectAgent = null">&times;</a-button>
-              </div>
-            </template>
-          </Sender>
-        </template>
+            v-model:value="content"
+        >
+          <template #header>
+            <div v-if="selectAgent"
+                 style="display: flex;align-items: center;background: #f6f7f9;padding: 5px 5px 5px 15px;border-radius: 12px 12px 0 0;color: #838a95">
+              <div>与 <span style="color: #000;font-weight: 400">{{ selectAgent.name }}</span> 对话</div>
+              <a-button type="text" style="margin-left: auto;" @click="selectAgent = null">&times;</a-button>
+            </div>
+          </template>
+        </Sender>
       </Suggestion>
       <a-modal v-model:open="agentModel" title="选择智能体" width="260px" :footer="null" style="top:50px"
                :body-style="{padding:0}">

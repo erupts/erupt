@@ -1,18 +1,19 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.base.BaseLLMConfig;
+import xyz.erupt.ai.core.LlmConfig;
+import xyz.erupt.ai.core.OpenAi;
 
 /**
  * @author YuePeng
  * date 2025/2/26 22:58
  */
 @Component
-public class QWen extends OpenAiSpec {
+public class QWen extends OpenAi {
 
     @Override
     public String code() {
-        return "通义千问";
+        return "Qwen";
     }
 
     @Override
@@ -21,8 +22,13 @@ public class QWen extends OpenAiSpec {
     }
 
     @Override
-    public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://dashscope.aliyuncs.com", "");
+    public String api() {
+        return "https://dashscope.aliyuncs.com";
+    }
+
+    @Override
+    public LlmConfig config() {
+        return new LlmConfig();
     }
 
 }

@@ -12,6 +12,6 @@ public interface AiFunctionCall {
 
     String description();
 
-    String call(String prompt);
+    String call(String userPrompt);
 
 }

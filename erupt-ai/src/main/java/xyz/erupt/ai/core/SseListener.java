@@ -1,4 +1,4 @@
-package xyz.erupt.ai.base;
+package xyz.erupt.ai.core;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,4 +27,6 @@ public class SseListener {
     private ChatUsage usage = new ChatUsage();
 
     private boolean isFinish = false;
+
+    private boolean error = false;
 }

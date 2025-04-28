@@ -1,18 +1,19 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.base.BaseLLMConfig;
+import xyz.erupt.ai.core.LlmConfig;
+import xyz.erupt.ai.core.OpenAi;
 
 /**
  * @author YuePeng
  * date 2025/2/26 22:40
  */
 @Component
-public class GLM extends OpenAiSpec {
+public class GLM extends OpenAi {
 
     @Override
     public String code() {
-        return "ChatGLM4(智普)";
+        return "ChatGLM";
     }
 
     @Override
@@ -21,13 +22,18 @@ public class GLM extends OpenAiSpec {
     }
 
     @Override
+    public String api() {
+        return "https://open.bigmodel.cn";
+    }
+
+    @Override
     public String chatApiPath() {
         return "/api/paas/v4/chat/completions";
     }
 
     @Override
-    public BaseLLMConfig config() {
-        return new BaseLLMConfig("https://open.bigmodel.cn", "");
+    public LlmConfig config() {
+        return new LlmConfig();
     }
 
 }

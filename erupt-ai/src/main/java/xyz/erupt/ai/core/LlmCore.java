@@ -1,4 +1,4 @@
-package xyz.erupt.ai.base;
+package xyz.erupt.ai.core;
 
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
@@ -12,27 +12,33 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public abstract class SuperLLM {
+public abstract class LlmCore {
 
-    private static final Map<String, SuperLLM> llms= new HashMap<>();
+    private static final Map<String, LlmCore> llms = new HashMap<>();
 
-    public SuperLLM() {
+    public LlmCore() {
         llms.put(this.code(), this);
     }
 
-    public static SuperLLM getLLM(String code) {
+    public static LlmCore getLLM(String code) {
         return llms.get(code);
+    }
+
+    public static LlmCore getLLM(LLM llm) {
+        return llms.get(llm.getLlm());
     }
 
     public abstract String code();
 
     public abstract String model();
 
-    public abstract BaseLLMConfig config();
+    public abstract String api();
 
-    public abstract ChatCompletionResponse chat(LLM llm, String userPrompt, List<ChatCompletionMessage> assistantPrompt);
+    public abstract LlmConfig config();
 
-    public abstract void chatSse(LLM llm, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener);
+    public abstract ChatCompletionResponse chat(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt);
+
+    public abstract void chatSse(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener);
 
     public static class H implements ChoiceFetchHandler {
         @Override

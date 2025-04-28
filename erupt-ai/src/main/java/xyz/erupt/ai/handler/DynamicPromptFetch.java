@@ -24,7 +24,10 @@ public class DynamicPromptFetch implements ChoiceFetchHandler {
     @PostConstruct
     public void init() {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptPromptHandler.class)},
-                clazz -> promptHandlers.add(new VLModel(clazz.getName(), clazz.getName()))
+                clazz -> {
+                    EruptPromptHandler eruptPromptHandler = (EruptPromptHandler) EruptSpringUtil.getBean(clazz);
+                    promptHandlers.add(new VLModel(clazz.getName(), eruptPromptHandler.name()));
+                }
         );
     }
 

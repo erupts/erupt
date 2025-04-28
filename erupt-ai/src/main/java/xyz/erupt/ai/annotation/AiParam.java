@@ -6,9 +6,9 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Documented
 @Inherited
-public @interface AiFuncParam {
+public @interface AiParam {
 
-    String value();
+    String description();
 
     boolean required() default true;
 
