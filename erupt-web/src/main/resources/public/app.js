@@ -10,6 +10,7 @@ window.eruptSiteConfig = {
     //     return "x_x_x<a>xxx</a>";
     // },
     logoPath: null,
+    logoFoldPath: null,
     loginLogoPath: null,
     logoText: "Erupt",
     registerPage: null,
@@ -38,19 +39,12 @@ window.eruptSiteConfig = {
         }
     }, {
         text: "star",
-        icon: "fa-eercast",
-        mobileHidden: true,
-        click: function (event) {
-            let ele = `<a class="align-self-center" href='https://gitee.com/erupt/erupt' target="_blank">
+        render: `<a class="align-self-center" href='https://gitee.com/erupt/erupt' target="_blank">
                     <img alt='gitee star' src='https://gitee.com/erupt/erupt/badge/star.svg?theme=dark'/>
                 </a>&nbsp;<a class="align-self-center" href='https://github.com/erupts/erupt' target="_blank">
                     <img alt="github star" src="https://img.shields.io/github/stars/erupts/erupt?style=social">
-                </a> `
-            if (start) {
-                event.target.outerHTML = ele;
-                start = false;
-            }
-        }
+                </a>`,
+        mobileHidden: true
     }],
     login: function (e) {
 
