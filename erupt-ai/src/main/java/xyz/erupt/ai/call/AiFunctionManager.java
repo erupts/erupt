@@ -15,6 +15,7 @@ import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.core.LlmRequest;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
+import xyz.erupt.ai.util.MarkDownUtil;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.service.EruptApplication;
@@ -73,11 +74,12 @@ public class AiFunctionManager implements ApplicationRunner {
             StringBuilder prompt = new StringBuilder();
             prompt.append(userMessage).append("\n\n");
             prompt.append("根据上面的内容，自动识别并填充下面JSON的val字段，此JSON中的每个value都是具体的生成要求，将不同key的识别结果放到对应val字段内\n");
-            prompt.append("请严格按照以下JSON格式返回，不要返回其他任何多余的内容或解释，请确保只返回纯JSON，不要混用Markdown格式：\n\n");
+            prompt.append("请严格按照以下JSON格式返回，不要返回其他任何多余的内容或解释，请确保只返回纯JSON：\n\n");
             prompt.append(GsonFactory.getGson().toJson(promptTemplateMap));
             LlmRequest llmRequest = llm.toLlmRequest();
             llmRequest.setResponseFormat(ResponseFormat.json_object);
             String llmRes = LlmCore.getLLM(llm).chat(llm.toLlmRequest(), prompt.toString(), userContext).getMessageStr();
+            llmRes = MarkDownUtil.extractCodeBlock(llmRes);
             try {
                 Map<String, ParamPromptTemplate> res = GsonFactory.getGson().fromJson(llmRes, new TypeToken<Map<String, ParamPromptTemplate>>() {
                 }.getType());
