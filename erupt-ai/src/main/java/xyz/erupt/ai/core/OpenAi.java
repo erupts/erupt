@@ -67,7 +67,6 @@ public abstract class OpenAi extends LlmCore {
     @Override
     @SneakyThrows
     public void chatSse(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
-        assistantPrompt.add(new ChatCompletionMessage(MessageRole.user, userPrompt));
         ChatCompletion completion = ChatCompletion.builder().model(llmRequest.getModel()).messages(assistantPrompt).stream(true).build();
         completion.setResponse_format(new HashMap<String, String>() {{
             this.put("type", String.valueOf(llmRequest.getResponseFormat()));
