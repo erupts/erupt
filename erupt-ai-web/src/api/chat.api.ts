@@ -40,9 +40,11 @@ export class ChatApi {
     }
 
     static createChat(title: string): Promise<R<number>> {
-        return axios.get("erupt-api/ai/chat/create_chat", {
-            params: {
-                title
+        const formData = new URLSearchParams();
+        formData.append('title', title);
+        return axios.post("erupt-api/ai/chat/create_chat", formData,{
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
     }

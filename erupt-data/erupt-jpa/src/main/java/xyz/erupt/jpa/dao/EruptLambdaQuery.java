@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
+import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.jpa.constant.SqlLang;
 import xyz.erupt.linq.lambda.LambdaInfo;
 import xyz.erupt.linq.lambda.LambdaSee;
@@ -348,7 +349,7 @@ public class EruptLambdaQuery<T> {
     private <R> R objectToClazz(Class<R> clazz, Object[] objects, SFunction<?, ?>... fields) {
         R r = clazz.newInstance();
         for (int i = 0; i < fields.length; i++) {
-            Field f = clazz.getDeclaredField(LambdaSee.field(fields[i]));
+            Field f = ReflectUtil.findClassField(clazz, LambdaSee.field(fields[i]));
             f.setAccessible(true);
             f.set(r, objects[i]);
         }
