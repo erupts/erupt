@@ -3,10 +3,7 @@ package xyz.erupt.ai.controller;
 import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.core.LlmCore;
@@ -82,10 +79,11 @@ public class ChatController {
     }
 
     @EruptLoginAuth
-    @GetMapping("/create_chat")
+    @PostMapping("/create_chat")
     @Transactional
     public R<Long> createChat(@RequestParam String title) {
         Chat chat = new Chat();
+        if (title.length() > 100) title = title.substring(0, 100);
         chat.setTitle(title);
         chat.setCreatedTime(LocalDateTime.now());
         chat.setEruptUser(new EruptUserVo(eruptUserService.getCurrentUid()));

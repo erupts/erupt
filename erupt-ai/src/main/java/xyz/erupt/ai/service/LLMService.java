@@ -27,6 +27,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,14 +61,17 @@ public class LLMService {
                         EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
             }
         } else {
-            chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.assistant, aiFunctionManager.getFunctionCallPrompt()));
+            chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiFunctionManager.getFunctionCallPrompt()));
         }
         List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
                 .eq(ChatMessage::getChatId, chat.getId())
                 .isNotNull(ChatMessage::getContent)
                 .orderByDesc(ChatMessage::getCreatedAt)
                 .limit(contextTurn).list();
-        chatMessages.forEach(it -> chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.user, it.getContent())));
+        Collections.reverse(chatMessages);
+        chatMessages.forEach(it -> chatCompletionMessages.add(
+                new ChatCompletionMessage(it.getSenderType() == ChatSenderType.USER ? MessageRole.user : MessageRole.assistant, it.getContent()))
+        );
         return chatCompletionMessages;
     }
 
