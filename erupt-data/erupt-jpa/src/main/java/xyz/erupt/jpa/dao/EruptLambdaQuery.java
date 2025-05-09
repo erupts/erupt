@@ -277,6 +277,11 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    public EruptLambdaQuery<T> distinct() {
+        querySchema.setDistinct(true);
+        return this;
+    }
+
 
     public T one() {
         try {
@@ -384,6 +389,9 @@ public class EruptLambdaQuery<T> {
         StringBuilder select = new StringBuilder();
         if (!querySchema.columns.isEmpty()) {
             select.append(SqlLang.SELECT);
+            if (querySchema.distinct) {
+                select.append(SqlLang.DISTINCT);
+            }
             querySchema.getColumns().forEach(it -> select.append(it).append(SqlLang.COMMA));
             select.deleteCharAt(select.length() - 1);
         }
@@ -432,6 +440,8 @@ public class EruptLambdaQuery<T> {
         private Integer limit;
 
         private Integer offset;
+
+        private boolean distinct = false;
 
     }
 
