@@ -150,6 +150,20 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    public <E, R> EruptLambdaQuery<T> notBetween(SFunction<E, R> field, Object val1, Object val2) {
+        String l = this.genePlaceholder();
+        String r = this.genePlaceholder();
+        querySchema.getWheres().add(geneField(field) + " not between :" + l + " and " + ":" + r);
+        querySchema.getParams().put(l, val1);
+        querySchema.getParams().put(r, val2);
+        return this;
+    }
+
+    public <E, R> EruptLambdaQuery<T> notBetween(boolean condition, SFunction<E, R> field, Object val1, Object val2) {
+        if (condition) return this.notBetween(field, val1, val2);
+        return this;
+    }
+
     public <E, R> EruptLambdaQuery<T> in(SFunction<E, R> field, Collection<?> val) {
         String placeholder = this.genePlaceholder();
         querySchema.getWheres().add(geneField(field) + " in (:" + placeholder + ")");
@@ -415,10 +429,10 @@ public class EruptLambdaQuery<T> {
     private String geneField(SFunction<?, ?> field) {
         LambdaInfo lambdaInfo = LambdaSee.info(field);
         if (querySchema.with.isEmpty()) {
-            return lambdaInfo.getClazz().getSimpleName() + "." + lambdaInfo.getField();
+            return lambdaInfo.getClazz().getSimpleName() + SqlLang.DOT + lambdaInfo.getField();
         } else {
             StringBuilder withs = new StringBuilder();
-            querySchema.with.forEach(it -> withs.append(it).append("."));
+            querySchema.with.forEach(it -> withs.append(it).append(SqlLang.DOT));
             return withs + lambdaInfo.getField();
         }
     }
