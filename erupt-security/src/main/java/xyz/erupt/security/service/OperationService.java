@@ -82,7 +82,7 @@ public class OperationService {
     }
 
     private String findRequestParamVal(HttpServletRequest request) {
-        if (request.getParameterMap().size() > 0) {
+        if (!request.getParameterMap().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             request.getParameterMap().forEach((key, value) -> sb.append(key).append("=").append(Arrays.toString(value)).append("\n"));
             return sb.toString();
