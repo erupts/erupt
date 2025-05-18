@@ -25,6 +25,8 @@ public @interface Layout {
 
     String tableWidth() default "";
 
+    String tableOperatorWidth() default "";
+
     enum FormSize {
         //默认
         DEFAULT,
