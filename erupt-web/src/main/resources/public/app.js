@@ -16,6 +16,13 @@ window.eruptSiteConfig = {
     registerPage: null,
     amapKey: '6ed167be6d22b8f8fa8e0402724df150',
     amapSecurityJsCode: "ee3e78fcb019e6078fcfc5b53b0a63ec",
+    userTools: [{
+        text: "自定义用户工具栏",
+        icon: "fa fa-snowflake-o",
+        click: function (event) {
+            alert("On Click")
+        }
+    }],
     r_tools: [{
         text: "qq",
         mobileHidden: true,
