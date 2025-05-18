@@ -21,6 +21,8 @@ import xyz.erupt.generator.base.Ref;
 import xyz.erupt.jpa.model.BaseModel;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import java.util.Arrays;
 import java.util.List;
@@ -53,13 +55,14 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
     )
     private Integer sort;
 
+    @Enumerated(EnumType.STRING)
     @EruptField(
             views = @View(title = "编辑类型"),
             edit = @Edit(title = "编辑类型",
                     notNull = true, type = EditType.CHOICE,
                     choiceType = @ChoiceType(type = ChoiceType.Type.RADIO, fetchHandler = GeneratorField.class))
     )
-    private String type;
+    private GeneratorType type = GeneratorType.INPUT;
 
     @EruptField(
             views = @View(title = "关联实体类"),
@@ -101,7 +104,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
     @SneakyThrows
     @Override
     public void beforeAdd(GeneratorField generatorField) {
-        if (null != GeneratorType.class.getDeclaredField(generatorField.getType()).getAnnotation(Ref.class)) {
+        if (null != GeneratorType.class.getDeclaredField(generatorField.getType().name()).getAnnotation(Ref.class)) {
             if (StringUtils.isBlank(generatorField.getLinkClass())) {
                 throw new EruptWebApiRuntimeException("关联实体类必填！");
             }
