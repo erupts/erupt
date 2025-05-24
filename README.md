@@ -1,4 +1,4 @@
-中文 &nbsp; | &nbsp; [English](./README-EN.md)  
+中文 &nbsp; | &nbsp; [English](./README-EN.md)
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
 <h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用数据管理框架 </h1>
@@ -47,6 +47,7 @@
 ---
 
 ## 🚀 简介 | Intro
+
 Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态生成页面以及增、删、改、查、权限控制等后台功能。
 
 零前端代码、零 CURD、自动建表，仅需 **一个类文件** + 简洁的注解配置，快速开发企业级 Admin 管理后台。
@@ -59,8 +60,8 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 > 从 2020 年开始不断优化升级，目前已有上百家中小型公司使用，上千名开发者开发相关应用。上百名开发者参与提交了功能建议，30多名贡献者参与提交代码。
 
-
 ## 🌈 特性 | Features
+
 + **自动建表**：表结构自动生成，无需手动建表
 
 + **易于上手**：会简单的 **Spring Boot** 基础知识即可
@@ -94,16 +95,19 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 + **无需二次开发**：仅需引用 jar 包即可 ！
 
 ## 🏅 代码仓库 | Git Repository
-| |  Github  | 码云 |
-|  ---- |  ----  | ----  | 
-| 后端源码 | https://github.com/erupts/erupt | https://gitee.com/erupt/erupt |
-| 前端源码 | https://github.com/erupts/erupt-web | https://gitee.com/erupt/erupt-web |
-| 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |
+
+|      | Github                                  | 码云                                    | GitCode                              |
+|------|-----------------------------------------|---------------------------------------|--------------------------------------| 
+| 后端源码 | https://github.com/erupts/erupt         | https://gitee.com/erupt/erupt         | https://gitcode.com/erupts/erupt     |
+| 前端源码 | https://github.com/erupts/erupt-web     | https://gitee.com/erupt/erupt-web     | https://gitcode.com/erupts/erupt-web |
+| 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |                                      |
 
 ## 🧐 为什么要做 Erupt ?
+
 虽然近些年来 **代码生成器** 成了后台开发的新宠，但它真的是后台开发的最优解吗？
 
-代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想 Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
+代码生成器的本质还是生成繁琐的前端与后台代码，一旦修改后期生成的代码很难合并，想想
+Mybatis-Generator，基本上就是一次性的东西，虽然减轻了部分工作，可解决方式并非最佳。
 
 开发后台管理系统大部分情况下只想做个普通的增删改查界面，用于数据管理，类似下面这种：
 
@@ -181,18 +185,18 @@ public class Simple extends BaseModel {
 
 但可以看到，用 erupt 只需要 **30几行** 代码就能完成 ！
 
-> 完全不需要了解 **Angular / React / Vue / Jquery**   
+> 完全不需要了解 **Angular / React / Vue / Jquery**
 >
-> 而且不需要了解 **JavaScript / HTML / CSS**   
+> 而且不需要了解 **JavaScript / HTML / CSS**
 >
-> 甚至不需要了解 **Spring MVC / Mybatis / SQL**   
+> 甚至不需要了解 **Spring MVC / Mybatis / SQL**
 
 即便没学过 erupt 也能猜到大部分配置的作用，只需要简单配置就能完成所有后台页面开发。
 
 这正是建立 erupt 的初衷，对于大部分常用页面，应该使用最简单的方法来实现，甚至不需要学习各种框架和工具，专注核心业务。
 
-
 ## 🆚 开发方式横向比对 | VS
+
 <table>
     <tr>
         <td></td>
@@ -252,8 +256,8 @@ public class Simple extends BaseModel {
     </tr>
 </table>
 
-
 ## ⛰ 演示截图 | Screenshot
+
 <a href="https://www.erupt.xyz/demo" target="_blank"><img src="./readme/login2.png" width="100%"/></a>
 
 <a href="https://www.erupt.xyz" target="_blank"><img src="./readme/index.png" width="100%"/></a>
@@ -292,26 +296,28 @@ public class Simple extends BaseModel {
 </table>
 
 ## 🔗 下载使用 | Download
+
 下载最新的JAR或通过Maven获取。
+
 ```xml
 <!--用户权限管理-->
 <dependency>
-  <groupId>xyz.erupt</groupId>
-  <artifactId>erupt-admin</artifactId>
-  <version>LATEST-VERSION</version>
+    <groupId>xyz.erupt</groupId>
+    <artifactId>erupt-admin</artifactId>
+    <version>LATEST-VERSION</version>
 </dependency>
-<!--后台WEB界面-->
+        <!--后台WEB界面-->
 <dependency>
-  <groupId>xyz.erupt</groupId>
-  <artifactId>erupt-web</artifactId>
-  <version>LATEST-VERSION</version>
+<groupId>xyz.erupt</groupId>
+<artifactId>erupt-web</artifactId>
+<version>LATEST-VERSION</version>
 </dependency>
 ```
 
 [详细使用步骤](https://www.yuque.com/erupts/erupt/tpq1l9)
 
-
 ## 🥏 模块说明 | Module
+
 ```lua
 erupt
 ├── erupt-annotation -- 核心注解声明
@@ -344,16 +350,19 @@ erupt-web -- Erupt 前端源码 https://github.com/erupts/erupt-web
 ```
 
 ## 📟 技术体系 | Technology system
+
 **后端：**
-Java 8、 Spring Boot、 ScriptEngine、SpEL、 Annotation、 JDBC、 Reflect、  JPA、 Hibernate、 Quartz、 Gson、 Lombok、 POI ...
+Java 8、 Spring Boot、 ScriptEngine、SpEL、 Annotation、 JDBC、 Reflect、 JPA、 Hibernate、 Quartz、 Gson、 Lombok、 POI ...
 
 **前端：**
 JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
 
 ## ⚙️ 架构图 | Framework
+
 ![架构图](readme/architecture.png)
 
 ## 🌕 在线体验 | Demo
+
 演示地址：[https://www.erupt.xyz/demo](https://www.erupt.xyz/demo)
 
 账号密码：`guest / guest`
@@ -380,15 +389,19 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 </table>
 
 ## 🔭 开源推荐 | Recommend
+
 [`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)  
 [`Jpom`：简而轻的低侵入式在线构建、自动部署、日常运维、项目监控软件](https://gitee.com/dromara/Jpom)
 
 ## 🧩 加入讨论
-QQ交流群：<a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DhReMX7b17i5e_xaImsIoYJ_JaskDA1H&authKey=%2Bkldm0OLuB9HRv56c5s21YJyvJj%2BqdKul1X7eyUVnF2yzWkks6QTFN%2Bxd4AE2DVX&noverify=0&group_code=836044286">836044286 🔥</a>
+
+QQ交流群：<a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DhReMX7b17i5e_xaImsIoYJ_JaskDA1H&authKey=%2Bkldm0OLuB9HRv56c5s21YJyvJj%2BqdKul1X7eyUVnF2yzWkks6QTFN%2Bxd4AE2DVX&noverify=0&group_code=836044286">
+836044286 🔥</a>
 
 微信交流群：由于微信群二维码有效时间仅7日，关注 Erupt 官方公众号（EruptGuide），可获取最新群二维码
 
 ## ⛽️ 捐赠 | Donate
+
 此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏
 
 [前往捐赠](https://www.yuque.com/erupts/erupt/mwf15h)
