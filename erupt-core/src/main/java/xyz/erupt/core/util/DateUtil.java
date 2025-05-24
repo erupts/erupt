@@ -22,9 +22,9 @@ public class DateUtil {
     public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
     private static final String[] PATTERNS = {
-            "yyyy-MM-dd'T'HH:mm:ss",//ISO 8601规范，用T分割
-            "yyyy-MM-dd' 'HH:mm:ss.SSS",//SQL/数据库的 TIMESTAMP
-            "yyyy-MM-dd' 'HH:mm:ss:SSS",//非规范
+            "yyyy-MM-dd'T'HH:mm:ss", // ISO 8601 specification，T segmentation
+            "yyyy-MM-dd' 'HH:mm:ss.SSS", // SQL/DB TIMESTAMP
+            "yyyy-MM-dd' 'HH:mm:ss:SSS", // Non canonical
             "yyyy-MM-dd HH:mm:ss",
             "yyyy/MM/dd HH:mm:ss",
             "dd-MM-yyyy",
@@ -33,8 +33,8 @@ public class DateUtil {
     };
 
     /**
-     * 兼容多种格式的日期字符串，解析为Date对象
-     * */
+     * Compatible with multiple formats of the Date string, parsed into a Date object
+     */
     public static Date parseDate(String dateStr) throws ParseException {
         return DateUtils.parseDateStrictly(dateStr, PATTERNS);
     }

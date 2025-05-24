@@ -231,7 +231,7 @@ public class EruptExcelService {
                             Date dateCellValue;
                             try {
                                 dateCellValue = cell.getDateCellValue();
-                            } catch (Exception e) {//如果允许引入fastjson，建议使用其中的TypeUtils.caseDate()方法,各种阴间的日期字符串都能解析
+                            } catch (Exception e) {
                                 dateCellValue = DateUtil.parseDate(cell.getStringCellValue());
                             }
                             jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getSimpleFormatDateTime(dateCellValue));
