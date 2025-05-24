@@ -1,8 +1,10 @@
 package xyz.erupt.core.util;
 
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.time.DateUtils;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +20,24 @@ public class DateUtil {
     public static final String DATE = "yyyy-MM-dd";
 
     public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
+
+    private static final String[] PATTERNS = {
+            "yyyy-MM-dd'T'HH:mm:ss",//ISO 8601规范，用T分割
+            "yyyy-MM-dd' 'HH:mm:ss.SSS",//SQL/数据库的 TIMESTAMP
+            "yyyy-MM-dd' 'HH:mm:ss:SSS",//非规范
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy/MM/dd HH:mm:ss",
+            "dd-MM-yyyy",
+            "yyyy-MM-dd",
+            "dd/MM/yyyy"
+    };
+
+    /**
+     * 兼容多种格式的日期字符串，解析为Date对象
+     * */
+    public static Date parseDate(String dateStr) throws ParseException {
+        return DateUtils.parseDateStrictly(dateStr, PATTERNS);
+    }
 
     public static String getSimpleFormatDateTime(Date date) {
         return getFormatDate(date, DATE_TIME);
