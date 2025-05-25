@@ -1,22 +1,20 @@
 中文 &nbsp; | &nbsp; [English](./README-EN.md)
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="150" alt="logo"/></p>
-<h1 align="center"> Erupt Framework &nbsp; 🚀 &nbsp; 通用数据管理框架 </h1>
-<h3 align="center">零前端代码，急速开发通用管理系统</h3>
+<h1 align="center"> ERUPT &nbsp; 🚀 &nbsp; 为开发者打造的高效低代码引擎 </h1>
+<h3 align="center">低代码 + AI，让开发更简单</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
 
 ---
 
 <p align="center">
-    <a href="https://www.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/Erupt-Framework-brightgreen" alt="Erupt Framework"></a>
     <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
-    <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html"><img src="https://img.shields.io/badge/JDK-8+-green.svg" alt="jdk 8+"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-blue" alt="license Apache 2.0"></a>
+    <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=social" alt="GitHub stars"></a>
+    <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/forks/erupts/erupt?style=social" alt="GitHub forks"></a>
     <a href="https://gitcode.com/erupts/erupt"><img src="https://gitcode.com/erupts/erupt/star/badge.svg" alt="gitcode"></a>
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
-    <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=social" alt="GitHub stars"></a>
-    <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/forks/erupts/erupt?style=social" alt="GitHub forks"></a>
 </p>
 
 <p align="center">
@@ -27,21 +25,6 @@
     <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/#!/module" target="_blank">框架生态</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts" target="_blank">📕 使用文档</a>
-</p>
-
----
-
-<p align="center">
-    <a href="https://www.yuque.com/erupts/erupt/ggbcv9">Erupt Cloud【云架构】</a> &nbsp; | &nbsp; 
-    <a href="https://github.com/erupts/linq.j">Linq.J</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/erupts/erupt/hstvzf">Erupt BI 【数据分析】</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/erupts/erupt/xviwe9bimrmae26t">Erupt Tenant 【多租户】</a>
-</p>
-
----
-
-<p align="center">
-    QQ交流群：<a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DhReMX7b17i5e_xaImsIoYJ_JaskDA1H&authKey=%2Bkldm0OLuB9HRv56c5s21YJyvJj%2BqdKul1X7eyUVnF2yzWkks6QTFN%2Bxd4AE2DVX&noverify=0&group_code=836044286">836044286 🔥</a>
 </p>
 
 ---
@@ -58,7 +41,33 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 
 完美取代 **代码生成器**，开发后台管理系统更优解决方案
 
-> 从 2020 年开始不断优化升级，目前已有上百家中小型公司使用，上千名开发者开发相关应用。上百名开发者参与提交了功能建议，30多名贡献者参与提交代码。
+> 从 2020 年开始不断优化升级，目前已有上百家公司使用，上万名开发者开发相关应用。上百名开发者参与提交了功能建议，50多名贡献者参与提交代码。
+
+
+## 🚥 低代码引擎
+
+> Erupt 理解经验丰富的开发者对于框架的期望：效率、灵活性、可控性以及与现有技术栈的无缝集成。
+
+* **深度定制与扩展能力**：
+  * **`@DataProxy` 接口**：允许开发者在数据操作的各个阶段（如新增前、编辑后、查询时）注入自定义逻辑，实现复杂的业务校验、数据转换、权限控制等。
+  * **自定义组件与视图**：除了丰富的内置组件，Erupt 支持开发者创建和集成自定义的前端组件和视图模板 (如 Freemarker, Thymeleaf)，满足高度个性化的界面需求。
+  * **自定义数据源与方言**：轻松扩展对特定数据库或数据存储的支持，甚至可以实现自定义的 SQL 方言适配。
+  * **生命周期钩子**：在 Erupt 核心流程的多个关键节点提供了钩子函数，方便开发者进行功能增强或行为调整。
+
+* **拥抱 Spring Boot 生态，无缝集成**：
+  * **非侵入式设计**：Erupt 构建于 Spring Boot 之上，与 Spring Data JPA 深度集成，但不干涉开发者使用 Spring Boot 的其他功能或引入第三方库。
+  * **标准 JPA 实体**：Erupt 实体类本身就是标准的 JPA 实体，可以被项目中的其他服务或模块复用。
+  * **易于整合现有项目**：可以将 Erupt Cloud 渐进式地引入到已有的 Spring Boot 项目中，逐步替换或增强后台管理模块。
+
+* **透明的底层机制与高度可配置性**：
+  * **注解驱动，配置灵活**：通过 `@Erupt`、`@EruptField` 及其丰富的属性，开发者可以精细控制模型的行为、UI 的展现、数据的校验与处理方式。
+  * **开放的架构**：Erupt 的核心模块设计清晰，鼓励开发者理解其工作原理，并在需要时进行针对性调整。
+  * **详细的日志与调试支持**：方便开发者追踪问题，理解框架内部执行流程。
+
+* **超越传统代码生成器的开发体验**：
+  * **动态解释而非静态生成**：Erupt 通过运行时解析注解来动态构建应用，避免了传统代码生成器因代码冗余、难以维护、合并困难等问题带来的困扰。修改注解即可实时生效，无需重新生成大量代码。
+  * **关注模型而非实现**：开发者只需关注业务模型的定义与注解配置，Erupt 会自动处理大部分底层的 UI 渲染、数据绑定、API 生成等工作。
+
 
 ## 🌈 特性 | Features
 
@@ -93,14 +102,6 @@ Erupt 是一个低代码 **全栈类** 框架，它使用 **Java 注解** 动态
 + **前端零代码**：前端布局自动构建，一行前端代码都不用写
 
 + **无需二次开发**：仅需引用 jar 包即可 ！
-
-## 🏅 代码仓库 | Git Repository
-
-|      | Github                                  | 码云                                    | GitCode                              |
-|------|-----------------------------------------|---------------------------------------|--------------------------------------| 
-| 后端源码 | https://github.com/erupts/erupt         | https://gitee.com/erupt/erupt         | https://gitcode.com/erupts/erupt     |
-| 前端源码 | https://github.com/erupts/erupt-web     | https://gitee.com/erupt/erupt-web     | https://gitcode.com/erupts/erupt-web |
-| 示例代码 | https://github.com/erupts/erupt-example | https://gitee.com/erupt/erupt-example |                                      |
 
 ## 🧐 为什么要做 Erupt ?
 
@@ -297,16 +298,15 @@ public class Simple extends BaseModel {
 
 ## 🔗 下载使用 | Download
 
-下载最新的JAR或通过Maven获取。
-
+无需编译源代码，使用maven依赖节即
 ```xml
-<!--用户权限管理-->
+<!--核心依赖-->
 <dependency>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-admin</artifactId>
     <version>LATEST-VERSION</version>
 </dependency>
-        <!--后台WEB界面-->
+<!--后台WEB界面-->
 <dependency>
 <groupId>xyz.erupt</groupId>
 <artifactId>erupt-web</artifactId>
@@ -316,50 +316,8 @@ public class Simple extends BaseModel {
 
 [详细使用步骤](https://www.yuque.com/erupts/erupt/tpq1l9)
 
-## 🥏 模块说明 | Module
-
-```lua
-erupt
-├── erupt-annotation -- 核心注解声明
-├── erupt-core -- 核心功能实现
-├── erupt-data -- 数据实现包
-     ├── erupt-jpa -- 关系型数据库erupt实现
-     └── erupt-mongodb -- mongodb数据库erupt实现
-├── erupt-job -- 定时任务功能，支持动态定时任务，邮件发送，任务日志等功能
-├── erupt-upms -- 用户权限管理
-├── erupt-security -- 接口数据安全
-├── erupt-web -- 编译后的前端页面
-├── erupt-tpl -- 支持在 erupt 中自定义页面，自定义图表，自定义弹出层，模板引擎支持：FreeMarker / Thymeleaf / 原生H5 / Velocity 等
-├── erupt-tpl-ui -- 在 erupt-tpl 中可使用的 UI 库
-    ├── ant-design
-    ├── element-ui
-    └── amis 
-├── erupt-generator -- 代码生成器，通过配置，生成 erupt 代码段
-└── erupt-monitor -- 基于erupt实现的服务监控
-
-erupt-pro
-├── erupt-dataflow -- 基于erupt实现的数据流（构思中）
-├── erupt-workflow -- 基于erupt实现的工作流（构思中）
-├── erupt-tenant -- 基于erupt实现的SaaS云多租户（开发中，面向企业用户）
-└── erupt-bi -- 通过 sql 加 js 混编实现动态报表,支持：多数据源、自定义函数、图表开发等（面向企业用户）
-
-erupt-site -- Erupt 官方网站 https://github.com/erupts/erupt-site
-
-erupt-web -- Erupt 前端源码 https://github.com/erupts/erupt-web
-
-```
-
-## 📟 技术体系 | Technology system
-
-**后端：**
-Java 8、 Spring Boot、 ScriptEngine、SpEL、 Annotation、 JDBC、 Reflect、 JPA、 Hibernate、 Quartz、 Gson、 Lombok、 POI ...
-
-**前端：**
-JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-ALAIN、 G2Plot、 RxJS、 TypeScript、 Less ...
-
-## ⚙️ 架构图 | Framework
-
-![架构图](readme/architecture.png)
+## 🥏 框架生态 | Module
+详见：https://www.yuque.com/erupts/erupt/mlo8zho73id9qrw2
 
 ## 🌕 在线体验 | Demo
 
@@ -367,30 +325,11 @@ JavaScript、 H5、 MVVM、 Router、 Angular CLI、 Angular、 NG-ZORRO、 NG-A
 
 账号密码：`guest / guest`
 
-**支持主流 4 款现代浏览器，以及 Internet Explorer 11+，可直接运行在 Electron 等基于 Web 标准的环境上**
-
-<table width="100%">
-    <tr>
-        <th width="20%" align="center"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" /> <br> Edge / IE </th>
-        <th width="15%" align="center"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" /><br> Firefox </th>
-        <th width="15%" align="center"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" /> <br> Chrome </th>
-        <th width="15%" align="center"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" /> <br> Safari </th>
-        <th width="15%" align="center"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" /> <br> Opera </th>
-        <th width="20%" align="center"><img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" /> <br> Electron </th>
-    </tr>
-    <tr>
-        <td align="center">Edge 16 / IE 11+</td>
-        <td align="center">522</td>
-        <td align="center">57</td>
-        <td align="center">11</td>
-        <td align="center">44</td>
-        <td align="center">Chromium 57</td>
-    </tr>
-</table>
+**支持主流现代浏览器，可直接运行在 Electron 等基于 Web 标准的环境上**
 
 ## 🔭 开源推荐 | Recommend
-
-[`zeta-api`：通过XML配置快速创建api接口与文档，安全且高效，快速开发必备！](https://github.com/erupts/zeta-api)  
+[`Linq.J`：基于JVM的对象查询语言](https://github.com/erupts/Linq.J)
+[`magic-api`：接口快速开发框架](https://github.com/ssssssss-team/magic-api)
 [`Jpom`：简而轻的低侵入式在线构建、自动部署、日常运维、项目监控软件](https://gitee.com/dromara/Jpom)
 
 ## 🧩 加入讨论
