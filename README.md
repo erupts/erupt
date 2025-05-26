@@ -4,9 +4,7 @@
 
 ---
 
-<h2 align="center"> ERUPT &nbsp; 🚀 &nbsp; 为开发者打造的高效低代码引擎 </h2>
-
----
+<h1 align="center"> ERUPT &nbsp; 🚀 &nbsp; 为开发者打造的高效低代码引擎 </h1>
 
 <h3 align="center">低代码 + AI，让开发更简单</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
