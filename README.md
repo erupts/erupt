@@ -1,7 +1,13 @@
 中文 &nbsp; | &nbsp; [English](./README-EN.md)
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/erupt.svg" height="120" alt="logo"/></p>
-<h1 align="center"> ERUPT &nbsp; 🚀 &nbsp; 为开发者打造的高效低代码引擎 </h1>
+
+---
+
+<h2 align="center"> ERUPT &nbsp; 🚀 &nbsp; 为开发者打造的高效低代码引擎 </h2>
+
+---
+
 <h3 align="center">低代码 + AI，让开发更简单</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
 
@@ -238,17 +244,14 @@ ERUPT - 赋予 Java 开发者更高效、更灵活的后台构建能力。加入
 ---
 
 <p align="center">
-    <a href="https://github.com/erupts/erupt">Github</a> &nbsp; | &nbsp; 
-    <a href="https://gitcode.com/erupts/erupt">GitCode</a> &nbsp; | &nbsp; 
-    <a href="https://gitee.com/erupt/erupt">Gitee</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz" target="_blank"><b>官方网站</b></a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz" target="_blank">官方网站</a> &nbsp; | &nbsp; 
+    <a href="https://github.com/erupts/erupt">GITHUB</a> &nbsp; | &nbsp; 
     <a href="https://www.yuque.com/erupts" target="_blank">使用文档</a>
 </p>
 
 ---
 
 <p align="right">
-作者 ：<a href="https://github.com/erupts">YuePeng</a> / <a href="mailto:erupts@126.com">erupts@126.com</a>
+作者 ：<a href="https://github.com/erupts">YuePeng</a> &nbsp; / &nbsp; <a href="mailto:erupts@126.com">erupts@126.com</a>
 </p>
 <br>
