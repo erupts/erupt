@@ -197,7 +197,9 @@ public class Simple extends BaseModel {
   <version>LATEST-VERSION</version>
 </dependency>
 ```
-> 最新版本：<a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
+> 最新版本
+> 
+> <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
 
 [详细使用步骤](https://www.yuque.com/erupts/erupt/tpq1l9)
 
@@ -230,13 +232,13 @@ ERUPT - 赋予 Java 开发者更高效、更灵活的后台构建能力。加入
 
 ## ⛽️ 捐赠 | Donate
 
-此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是爱 🙏
+此框架服务器，域名，空间，人工等费用一直由作者本人自掏腰包并持续维护，开源不易，一杯咖啡也是动力 🙏
 
 [前往捐赠](https://www.yuque.com/erupts/erupt/mwf15h)
 
 ---
 
-### ⭐️ 使用 Apache License 2.0 协议，核心源代码开源免费。开源不易，喜欢请给作者 Star 鼓励 👇
+### ⭐️ 使用 Apache License 2.0 协议，核心源代码开源免费。开源不易，喜欢请给作者 Star 鼓励
 
 ---
 
