@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.12.20</version>
+    <version>1.12.21</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -24,7 +24,7 @@
     后面跟一串其它信息，网上大部分解决方案是修改relativePath配置项，
     其实这是很不优雅的方式。这里介绍另一种解决方案。
     解决办法如下，把父项目的modules里面的配置全部注释或者删除，
-    让后编译并打包并安装，在提示成功后，再把原来注释活删除的配置项还原即可，然后再编译即可成功。
+    然后编译并打包并安装，在提示成功后，再把原来注释和删除的配置项还原即可，然后再编译即可成功。
     -->
     <modules>
         <module>erupt-annotation</module>
@@ -114,7 +114,6 @@
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.7</version>
             </plugin>
-            <!--SCM插件-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-plugin</artifactId>
@@ -153,7 +152,6 @@
             <activation>
                 <jdk>[1.8,)</jdk>
             </activation>
-            <!-- java8版本导致javadoc打包编译失败时候，添加-->
             <properties>
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
                 <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
@@ -170,6 +168,16 @@
             </dependencies>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <namespace>xyz.erupt</namespace>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
@@ -220,18 +228,6 @@
                     </plugin>
                 </plugins>
             </build>
-
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>erupt</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>erupt</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
         </profile>
     </profiles>
 </project>
-

@@ -9,7 +9,6 @@ export interface R<T> {
 }
 
 const axiosInstance = axios.create({
-    baseURL: '/',
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json',

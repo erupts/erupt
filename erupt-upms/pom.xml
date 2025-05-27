@@ -9,13 +9,9 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.20</version>
+        <version>1.12.21</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
 
     <dependencies>
         <dependency>

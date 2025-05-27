@@ -121,7 +121,8 @@ const send = (message: string) => {
       //@ts-ignore
       bubbles.value.scrollTop = bubbles.value.scrollHeight;
     }, 10)
-    const eventSource = new EventSource(`/erupt-api/ai/chat/send?chatId=${chatId}&message=${message}&_token=${getToken()}&agentId=${selectAgent.value?.id || ''}&llmId=${params.get("llm")||''}`);
+
+    const eventSource = new EventSource(`erupt-api/ai/chat/send?chatId=${chatId}&message=${encodeURIComponent(message)}&_token=${getToken()}&agentId=${selectAgent.value?.id || ''}&llmId=${params.get("llm") || ''}`);
 
     eventSource.onmessage = (event) => {
       sending.value = false;
