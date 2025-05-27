@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
+import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.jpa.constant.SqlLang;
 import xyz.erupt.linq.lambda.LambdaInfo;
 import xyz.erupt.linq.lambda.LambdaSee;
@@ -149,6 +150,20 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    public <E, R> EruptLambdaQuery<T> notBetween(SFunction<E, R> field, Object val1, Object val2) {
+        String l = this.genePlaceholder();
+        String r = this.genePlaceholder();
+        querySchema.getWheres().add(geneField(field) + " not between :" + l + " and " + ":" + r);
+        querySchema.getParams().put(l, val1);
+        querySchema.getParams().put(r, val2);
+        return this;
+    }
+
+    public <E, R> EruptLambdaQuery<T> notBetween(boolean condition, SFunction<E, R> field, Object val1, Object val2) {
+        if (condition) return this.notBetween(field, val1, val2);
+        return this;
+    }
+
     public <E, R> EruptLambdaQuery<T> in(SFunction<E, R> field, Collection<?> val) {
         String placeholder = this.genePlaceholder();
         querySchema.getWheres().add(geneField(field) + " in (:" + placeholder + ")");
@@ -277,6 +292,11 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
+    public EruptLambdaQuery<T> distinct() {
+        querySchema.setDistinct(true);
+        return this;
+    }
+
 
     public T one() {
         try {
@@ -343,7 +363,7 @@ public class EruptLambdaQuery<T> {
     private <R> R objectToClazz(Class<R> clazz, Object[] objects, SFunction<?, ?>... fields) {
         R r = clazz.newInstance();
         for (int i = 0; i < fields.length; i++) {
-            Field f = clazz.getDeclaredField(LambdaSee.field(fields[i]));
+            Field f = ReflectUtil.findClassField(clazz, LambdaSee.field(fields[i]));
             f.setAccessible(true);
             f.set(r, objects[i]);
         }
@@ -384,6 +404,9 @@ public class EruptLambdaQuery<T> {
         StringBuilder select = new StringBuilder();
         if (!querySchema.columns.isEmpty()) {
             select.append(SqlLang.SELECT);
+            if (querySchema.distinct) {
+                select.append(SqlLang.DISTINCT);
+            }
             querySchema.getColumns().forEach(it -> select.append(it).append(SqlLang.COMMA));
             select.deleteCharAt(select.length() - 1);
         }
@@ -406,10 +429,10 @@ public class EruptLambdaQuery<T> {
     private String geneField(SFunction<?, ?> field) {
         LambdaInfo lambdaInfo = LambdaSee.info(field);
         if (querySchema.with.isEmpty()) {
-            return lambdaInfo.getClazz().getSimpleName() + "." + lambdaInfo.getField();
+            return lambdaInfo.getClazz().getSimpleName() + SqlLang.DOT + lambdaInfo.getField();
         } else {
             StringBuilder withs = new StringBuilder();
-            querySchema.with.forEach(it -> withs.append(it).append("."));
+            querySchema.with.forEach(it -> withs.append(it).append(SqlLang.DOT));
             return withs + lambdaInfo.getField();
         }
     }
@@ -432,6 +455,8 @@ public class EruptLambdaQuery<T> {
         private Integer limit;
 
         private Integer offset;
+
+        private boolean distinct = false;
 
     }
 

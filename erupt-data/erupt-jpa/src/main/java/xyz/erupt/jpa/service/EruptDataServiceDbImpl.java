@@ -1,14 +1,12 @@
 package xyz.erupt.jpa.service;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.constant.EruptConst;
-import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
@@ -30,7 +28,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -65,43 +62,33 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     }
 
     @Override
+    @SneakyThrows
     public void addData(EruptModel eruptModel, Object data) {
-        try {
-            this.loadSupport(data);
-            this.jpaManyToOneConvert(eruptModel, data);
-            eruptJpaDao.addEntity(eruptModel.getClazz(), data);
-        } catch (Exception e) {
-            handlerException(e, eruptModel);
-        }
+        this.loadSupport(data);
+        this.jpaManyToOneConvert(eruptModel, data);
+        eruptJpaDao.addEntity(eruptModel.getClazz(), data);
     }
 
     @Override
     public void editData(EruptModel eruptModel, Object data) {
-        try {
-            this.loadSupport(data);
-            eruptJpaDao.editEntity(eruptModel.getClazz(), data);
-        } catch (Exception e) {
-            handlerException(e, eruptModel);
-        }
+        this.loadSupport(data);
+        eruptJpaDao.editEntity(eruptModel.getClazz(), data);
     }
 
     @Override
+    @SneakyThrows
     public void batchAddData(EruptModel eruptModel, List<?> objectList) {
-        try {
-            for (Object data : objectList) {
-                this.loadSupport(data);
-                this.jpaManyToOneConvert(eruptModel, data);
-            }
-            entityManagerService.entityManagerTran(eruptModel.getClazz(), (em) -> {
-                for (int i = 0; i < objectList.size(); i++) {
-                    Object entity = objectList.get(i);
-                    em.persist(entity);
-                    if (i % 500 == 0) em.flush();
-                }
-            });
-        } catch (Exception e) {
-            handlerException(e, eruptModel);
+        for (Object data : objectList) {
+            this.loadSupport(data);
+            this.jpaManyToOneConvert(eruptModel, data);
         }
+        entityManagerService.entityManagerTran(eruptModel.getClazz(), (em) -> {
+            for (int i = 0; i < objectList.size(); i++) {
+                Object entity = objectList.get(i);
+                em.persist(entity);
+                if (i % 500 == 0) em.flush();
+            }
+        });
     }
 
     private void loadSupport(Object jpaEntity) {
@@ -110,32 +97,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         }
     }
 
-    //优化异常提示类
-    private void handlerException(Exception e, EruptModel eruptModel) {
-        Throwable throwable = e;
-        while (null != throwable) {
-            throwable = throwable.getCause();
-            if (throwable instanceof SQLException) {
-                if (throwable.getMessage().toLowerCase().contains("data too long")) {
-                    throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.data.limit_length"));
-                } else if (throwable.getMessage().toLowerCase().contains("duplicate")) {
-                    throw new EruptWebApiRuntimeException(gcRepeatHint(eruptModel));
-                }
-                throw new EruptWebApiRuntimeException(throwable.getMessage());
-            }
-        }
-        throw new EruptWebApiRuntimeException(e);
-    }
-
     @Override
     public void deleteData(EruptModel eruptModel, Object object) {
-        try {
-            eruptJpaDao.removeEntity(eruptModel.getClazz(), object);
-        } catch (DataIntegrityViolationException | ConstraintViolationException e) {
-            throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.data.delete_fail_may_be_associated_data"));
-        } catch (Exception e) {
-            throw new EruptWebApiRuntimeException(e.getMessage());
-        }
+        eruptJpaDao.removeEntity(eruptModel.getClazz(), object);
     }
 
     //@ManyToOne数据处理
@@ -192,10 +156,14 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 , column.getName()) + " as " + column.getAlias()));
         hql.append("select new map(").append(String.join(", ", columnStrList))
                 .append(") from ").append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
+        Set<String> aliasSet = new HashSet<>();
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                hql.append(" left outer join ").append(eruptModel.getEruptName()).append(EruptConst.DOT)
-                        .append(field.getName()).append(" as ").append(field.getName());
+                if (!aliasSet.contains(field.getName())) {
+                    hql.append(" left outer join ").append(eruptModel.getEruptName()).append(EruptConst.DOT)
+                            .append(field.getName()).append(" as ").append(field.getName());
+                    aliasSet.add(field.getName());
+                }
             }
         });
         hql.append(" where 1 = 1 ");

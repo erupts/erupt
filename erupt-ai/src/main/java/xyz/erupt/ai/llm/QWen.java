@@ -12,6 +12,11 @@ import xyz.erupt.ai.core.OpenAi;
 public class QWen extends OpenAi {
 
     @Override
+    public String chatApiPath() {
+        return "/compatible-mode/v1/chat/completions";
+    }
+
+    @Override
     public String code() {
         return "Qwen";
     }

@@ -5,18 +5,16 @@ import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.PreDataProxy;
+import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.linq.lambda.LambdaSee;
+import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * @author YuePeng
@@ -29,34 +27,40 @@ import java.util.Map;
 @PreDataProxy(MetaModelCreateVo.Proxy.class)
 public class MetaModelCreateVo extends MetaModel {
 
-    @Transient
     @EruptField(
             views = @View(title = "创建人", width = "100px"),
             edit = @Edit(title = "创建人", readonly = @Readonly)
     )
-    private String createByVo;
+    private String createBy;
 
-    @Transient
     @EruptField(
             views = @View(title = "创建时间"),
             edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
-    private LocalDateTime createTimeVo;
+    private LocalDateTime createTime;
+
+    @EruptField(views = @View(title = "更新人", show = false))
+    @EruptSmartSkipSerialize
+    private String updateBy;
+
+    @EruptField(views = @View(title = "更新时间", show = false))
+    @EruptSmartSkipSerialize
+    private LocalDateTime updateTime;
 
     public static class Proxy implements DataProxy<MetaModelCreateVo> {
 
         @Override
-        public void editBehavior(MetaModelCreateVo metaModelUpdateVo) {
-            metaModelUpdateVo.setCreateByVo(metaModelUpdateVo.getCreateBy());
-            metaModelUpdateVo.setCreateTimeVo(metaModelUpdateVo.getCreateTime());
+        public void beforeAdd(MetaModelCreateVo metaModel) {
+            metaModel.setCreateTime(LocalDateTime.now());
+            metaModel.setCreateBy(MetaContext.getUser().getName());
+            metaModel.setUpdateTime(metaModel.getCreateTime());
+            metaModel.setUpdateBy(metaModel.getCreateBy());
         }
 
         @Override
-        public void afterFetch(Collection<Map<String, Object>> list) {
-            for (Map<String, Object> map : list) {
-                map.put(LambdaSee.field(MetaModelCreateVo::getCreateByVo), map.get(LambdaSee.field(MetaModel::getCreateBy)));
-                map.put(LambdaSee.field(MetaModelCreateVo::getCreateTimeVo), map.get(LambdaSee.field(MetaModel::getCreateTime)));
-            }
+        public void beforeUpdate(MetaModelCreateVo metaModel) {
+            metaModel.setUpdateTime(LocalDateTime.now());
+            metaModel.setUpdateBy(MetaContext.getUser().getName());
         }
     }
 

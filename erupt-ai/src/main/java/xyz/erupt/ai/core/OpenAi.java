@@ -1,5 +1,7 @@
 package xyz.erupt.ai.core;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -28,6 +30,8 @@ import java.util.function.Consumer;
 @Slf4j
 public abstract class OpenAi extends LlmCore {
 
+    private final Gson gson = new GsonBuilder().create();
+
     public String chatApiPath() {
         return "/v1/chat/completions";
     }
@@ -38,7 +42,7 @@ public abstract class OpenAi extends LlmCore {
         ChatCompletion completion = ChatCompletion.builder().model(llmRequest.getModel()).stream(false).messages(assistantPrompt).build();
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(
-                GsonFactory.getGson().toJson(completion),
+                gson.toJson(completion),
                 MediaType.parse("application/json; charset=utf-8")
         );
         Request request = new Request.Builder()
@@ -63,7 +67,6 @@ public abstract class OpenAi extends LlmCore {
     @Override
     @SneakyThrows
     public void chatSse(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
-        assistantPrompt.add(new ChatCompletionMessage(MessageRole.user, userPrompt));
         ChatCompletion completion = ChatCompletion.builder().model(llmRequest.getModel()).messages(assistantPrompt).stream(true).build();
         completion.setResponse_format(new HashMap<String, String>() {{
             this.put("type", String.valueOf(llmRequest.getResponseFormat()));
@@ -72,7 +75,7 @@ public abstract class OpenAi extends LlmCore {
         completion.setTemperature(llmRequest.getTemperature());
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(
-                GsonFactory.getGson().toJson(completion),
+                gson.toJson(completion),
                 MediaType.parse("application/json; charset=utf-8")
         );
         Request request = new Request.Builder()
