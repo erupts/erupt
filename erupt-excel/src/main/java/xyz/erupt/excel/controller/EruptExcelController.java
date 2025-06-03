@@ -4,10 +4,13 @@ import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.core.annotation.EruptRecordOperate;
@@ -91,7 +94,32 @@ public class EruptExcelController {
         Page page = eruptService.getEruptData(eruptModel, tableQuery, null);
         try (Workbook wb = dataFileService.exportExcel(eruptModel, page)) {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
+            this.createConditionSheet(wb, eruptModel, conditions);
             wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLSX_FORMAT));
+        }
+    }
+
+    private void createConditionSheet(Workbook wb, EruptModel eruptModel, List<Condition> conditions) {
+        Sheet sheet = wb.createSheet("condition");
+        sheet.createFreezePane(0, 1, 1, 1);
+        sheet.setColumnWidth(0, 20 * 256);
+        sheet.setColumnWidth(1, 10 * 256);
+        sheet.setColumnWidth(2, 50 * 256);
+        if (null != conditions) {
+            for (Condition condition : conditions) {
+                Row head = sheet.createRow(sheet.getLastRowNum() + 1);
+                head.createCell(0).setCellValue("name");
+                head.createCell(1).setCellValue("expr");
+                head.createCell(2).setCellValue("value");
+                EruptField eruptField = eruptModel.getEruptFieldMap().get(condition.getKey()).getEruptField();
+                if (eruptField.views().length > 0) {
+                    Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+                    row.createCell(0).setCellValue(eruptField.views()[0].title());
+                    row.createCell(1).setCellValue(condition.getExpression().name());
+                    row.createCell(2).setCellValue(condition.getValue().toString());
+                }
+
+            }
         }
     }
 
