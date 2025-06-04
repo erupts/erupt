@@ -25,6 +25,7 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.core.service.EruptService;
+import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecurityUtil;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,7 +98,9 @@ public class EruptExcelController {
         try (Workbook wb = dataFileService.exportExcel(eruptModel, page)) {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
             this.createConditionSheet(wb, eruptModel, conditions);
-            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLSX_FORMAT));
+            DateUtil.getSimpleFormatDateTime(new Date());
+            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name()
+                    + "_" + DateUtil.getFormatDate(new Date(), "yyyy-MM-dd_HH-mm-ss") + EruptExcelService.XLSX_FORMAT));
         }
     }
 
