@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.core.annotation.EruptRecordOperate;
@@ -102,24 +103,25 @@ public class EruptExcelController {
     private void createConditionSheet(Workbook wb, EruptModel eruptModel, List<Condition> conditions) {
         Sheet sheet = wb.createSheet("condition");
         sheet.createFreezePane(0, 1, 1, 1);
-        sheet.setColumnWidth(0, 20 * 256);
-        sheet.setColumnWidth(1, 10 * 256);
+        sheet.setColumnWidth(0, 16 * 256);
+        sheet.setColumnWidth(1, 12 * 256);
         sheet.setColumnWidth(2, 50 * 256);
+        Row head = sheet.createRow(sheet.getLastRowNum() + 1);
+        head.createCell(0).setCellValue("name");
+        head.createCell(1).setCellValue("expr");
+        head.createCell(2).setCellValue("value");
         if (null != conditions) {
-            for (Condition condition : conditions) {
-                Row head = sheet.createRow(sheet.getLastRowNum() + 1);
-                head.createCell(0).setCellValue("name");
-                head.createCell(1).setCellValue("expr");
-                head.createCell(2).setCellValue("value");
-                EruptField eruptField = eruptModel.getEruptFieldMap().get(condition.getKey()).getEruptField();
-                if (eruptField.views().length > 0) {
-                    Row row = sheet.createRow(sheet.getLastRowNum() + 1);
-                    row.createCell(0).setCellValue(eruptField.views()[0].title());
-                    row.createCell(1).setCellValue(condition.getExpression().name());
-                    row.createCell(2).setCellValue(condition.getValue().toString());
+            conditions.forEach(condition -> {
+                if (null != condition.getValue()) {
+                    EruptField eruptField = eruptModel.getEruptFieldMap().get(condition.getKey()).getEruptField();
+                    if (eruptField.views().length > 0) {
+                        Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+                        row.createCell(0).setCellValue(eruptField.views()[0].title());
+                        row.createCell(1).setCellValue(null == condition.getExpression() ? QueryExpression.EQ.name() : condition.getExpression().name());
+                        row.createCell(2).setCellValue(condition.getValue().toString());
+                    }
                 }
-
-            }
+            });
         }
     }
 
