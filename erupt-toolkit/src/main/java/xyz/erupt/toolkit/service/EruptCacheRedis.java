@@ -21,7 +21,7 @@ public class EruptCacheRedis<V> implements EruptCache<V> {
 
     @Override
     public V put(String key, V v, long ttl) {
-        stringRedisTemplate.opsForValue().set(key, GsonFactory.getGson().toJson(v), ttl);
+        stringRedisTemplate.opsForValue().set(key, GsonFactory.getGson().toJson(v), ttl, TimeUnit.MILLISECONDS);
         return v;
     }
 
