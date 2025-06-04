@@ -312,7 +312,7 @@ public class BiService {
                 EruptBiHandler biHandler = EruptSpringUtil.getBeanByPath(biClassHandler.getHandlerPath(), EruptBiHandler.class);
                 biHandler.exportHandler(biClassHandler.getParam(), query, wb);
             }
-            wb.write(ExcelUtil.downLoadFile(request, response, name + "_" + DateUtil.getSimpleFormatDate(new Date()) + EruptExcelService.XLSX_FORMAT));
+            wb.write(ExcelUtil.downLoadFile(request, response, name + "_" + DateUtil.getFormatDate(new Date(), "yyyy-MM-dd_HH-mm-ss") + EruptExcelService.XLSX_FORMAT));
         }
     }
 
