@@ -77,7 +77,12 @@ public class IpUtil {
             log.warn("Error: Invalid ip address: {}", ip);
             return "";
         }
-        return new DbSearcher(new DbConfig(), fileByte).memorySearch(ip).getRegion();
+        try {
+            return new DbSearcher(new DbConfig(), fileByte).memorySearch(ip).getRegion();
+        } catch (Exception e) {
+            log.warn("ip2region error " + ip, e);
+            return null;
+        }
     }
 
 }
