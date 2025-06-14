@@ -3,8 +3,6 @@ package xyz.erupt.jpa.model;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.PreDataProxy;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
@@ -12,7 +10,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-@PreDataProxy(MetaModelCreateOnlyVo.Proxy.class)
 public class MetaModelCreateOnlyVo extends BaseModel {
 
     @EruptField(
@@ -36,14 +35,10 @@ public class MetaModelCreateOnlyVo extends BaseModel {
     )
     private LocalDateTime createTime;
 
-    public static class Proxy implements DataProxy<MetaModelCreateOnlyVo> {
-
-        @Override
-        public void beforeAdd(MetaModelCreateOnlyVo metaModel) {
-            metaModel.setCreateTime(LocalDateTime.now());
-            metaModel.setCreateBy(MetaContext.getUser().getName());
-        }
-
+    @PrePersist
+    protected void persist() {
+        this.setCreateTime(LocalDateTime.now());
+        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> this.setCreateBy(MetaContext.getUser().getName()));
     }
 
 }
