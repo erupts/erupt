@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
-import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
@@ -15,8 +13,11 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -26,7 +27,6 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EruptI18n
-@PreDataProxy(MetaModelVo.Proxy.class)
 public class MetaModelVo extends BaseModel {
 
     @Transient
@@ -64,21 +64,17 @@ public class MetaModelVo extends BaseModel {
     @EruptSmartSkipSerialize
     private LocalDateTime updateTime;
 
-    public static class Proxy implements DataProxy<MetaModelVo> {
+    @PrePersist
+    protected void persist() {
+        this.setCreateTime(LocalDateTime.now());
+        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> this.setCreateBy(MetaContext.getUser().getName()));
+        this.update();
+    }
 
-        @Override
-        public void beforeAdd(MetaModelVo metaModel) {
-            metaModel.setCreateTime(LocalDateTime.now());
-            metaModel.setCreateBy(MetaContext.getUser().getName());
-            metaModel.setUpdateTime(metaModel.getCreateTime());
-            metaModel.setUpdateBy(metaModel.getCreateBy());
-        }
-
-        @Override
-        public void beforeUpdate(MetaModelVo metaModel) {
-            metaModel.setUpdateTime(LocalDateTime.now());
-            metaModel.setUpdateBy(MetaContext.getUser().getName());
-        }
+    @PreUpdate
+    protected void update() {
+        this.setUpdateTime(LocalDateTime.now());
+        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> this.setUpdateBy(MetaContext.getUser().getName()));
     }
 
 
