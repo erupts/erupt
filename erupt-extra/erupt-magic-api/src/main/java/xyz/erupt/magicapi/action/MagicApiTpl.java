@@ -38,12 +38,10 @@ public class MagicApiTpl {
         map.put("token", eruptContextService.getCurrentToken());
         map.put("v", EruptInformation.getEruptVersion());
         map.put("hash", this.hashCode());
-
-        String scheme = request.getScheme();
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
         String contextPath = request.getContextPath();
-        map.put("baseUrl", scheme + "://" + serverName + (serverPort != 80 && serverPort != 443 ? ":" + serverPort : "") + contextPath);
+        map.put("baseUrl", "//" + serverName + (serverPort != 80 && serverPort != 443 ? ":" + serverPort : "") + contextPath);
         return map;
     }
 
