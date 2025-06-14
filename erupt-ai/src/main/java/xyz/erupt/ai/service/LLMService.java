@@ -22,6 +22,7 @@ import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
@@ -62,8 +63,10 @@ public class LLMService {
     }
 
     public String send(LLM llmConfig, String prompt, List<ChatCompletionMessage> assistantPrompt) {
-        LlmCore llm = LlmCore.getLLM(llmConfig.getLlm());
-        return llm.chat(llmConfig.toLlmRequest(), prompt, assistantPrompt).getMessageStr();
+        if (null == llmConfig) {
+            throw new EruptWebApiRuntimeException("Not found LLM config");
+        }
+        return LlmCore.getLLM(llmConfig.getLlm()).chat(llmConfig.toLlmRequest(), prompt, assistantPrompt).getMessageStr();
     }
 
     @SneakyThrows
