@@ -30,9 +30,12 @@ public class MetaModelCreateOnly extends BaseModel {
 
     @PrePersist
     protected void persist() {
-        this.setCreateTime(LocalDateTime.now());
-        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> this.setCreateBy(MetaContext.getUser().getName()));
+        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
+            if (null != it.getName()) {
+                this.setCreateBy(it.getName());
+                this.setCreateTime(LocalDateTime.now());
+            }
+        });
     }
-
 
 }
