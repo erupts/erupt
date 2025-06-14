@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.context.MetaUser;
+import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.annotation.EruptMenuAuth;
 import xyz.erupt.upms.constant.EruptReqHeaderConst;
@@ -46,6 +49,9 @@ public class EruptSuperInterceptor implements AsyncHandlerInterceptor {
                     response.sendError(HttpStatus.UNAUTHORIZED.value());
                     return false;
                 }
+                MetaUserinfo metaUserinfo = eruptUserService.getSimpleUserInfo();
+                MetaContext.registerToken(token);
+                MetaContext.register(new MetaUser(metaUserinfo.getId(), metaUserinfo.getAccount(), metaUserinfo.getUsername()));
             }
             if (null != eruptMenuAuth) {
                 if (null == eruptUserService.getEruptMenuByValue(eruptMenuAuth.value())) {
