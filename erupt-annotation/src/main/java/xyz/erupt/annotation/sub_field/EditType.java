@@ -52,7 +52,6 @@ public enum EditType {
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
     @EditTypeMapping(mapping = CodeEditorType.class, desc = "代码编辑器", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
-    @Deprecated
     @EditTypeMapping(desc = "MarkDown编辑器", allowType = {JavaTypeEnum.String})
     MARKDOWN,
     @EditTypeMapping(mapping = AttachmentType.class, desc = "附件上传", allowType = {JavaTypeEnum.String}, excelOperator = false)
