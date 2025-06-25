@@ -1,6 +1,10 @@
 import {Constants} from "../constants";
 import {isHeadingMD, isHrMD} from "../util/fixBrowserBehavior";
-import {getTopList, hasClosestBlock, hasClosestByAttribute, hasClosestByClassName,} from "../util/hasClosest";
+import {
+    getTopList,
+    hasClosestBlock, hasClosestByAttribute,
+    hasClosestByClassName,
+} from "../util/hasClosest";
 import {hasClosestByTag} from "../util/hasClosestByHeadings";
 import {log} from "../util/log";
 import {processCodeRender} from "../util/processCode";

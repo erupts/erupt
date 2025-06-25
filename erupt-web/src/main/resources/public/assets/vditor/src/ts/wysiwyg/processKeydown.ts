@@ -2,21 +2,13 @@ import {Constants} from "../constants";
 import {isCtrl, isFirefox} from "../util/compatibility";
 import {scrollCenter} from "../util/editorCommonEvent";
 import {
-    fixBlockquote,
-    fixCJKPosition,
-    fixCodeBlock,
-    fixCursorDownInlineMath,
-    fixDelete,
-    fixFirefoxArrowUpTable,
-    fixGSKeyBackspace,
-    fixHR,
+    fixBlockquote, fixCJKPosition,
+    fixCodeBlock, fixCursorDownInlineMath, fixDelete, fixFirefoxArrowUpTable, fixGSKeyBackspace, fixHR,
     fixList,
     fixMarkdown,
     fixTab,
     fixTable,
-    fixTask,
-    insertAfterBlock,
-    insertBeforeBlock,
+    fixTask, insertAfterBlock, insertBeforeBlock,
 } from "../util/fixBrowserBehavior";
 import {
     hasClosestBlock,

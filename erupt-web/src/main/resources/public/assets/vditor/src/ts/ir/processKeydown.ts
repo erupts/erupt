@@ -2,25 +2,22 @@ import {Constants} from "../constants";
 import {hidePanel} from "../toolbar/setToolbar";
 import {isCtrl} from "../util/compatibility";
 import {
-    fixBlockquote,
-    fixCJKPosition,
-    fixCodeBlock,
-    fixCursorDownInlineMath,
-    fixDelete,
-    fixFirefoxArrowUpTable,
-    fixGSKeyBackspace,
-    fixHR,
+    fixBlockquote, fixCJKPosition,
+    fixCodeBlock, fixCursorDownInlineMath,
+    fixDelete, fixFirefoxArrowUpTable, fixGSKeyBackspace, fixHR,
     fixList,
     fixMarkdown,
     fixTab,
     fixTable,
     fixTask,
-    insertAfterBlock,
-    insertBeforeBlock,
-    isFirstCell,
-    isLastCell,
+    insertAfterBlock, insertBeforeBlock, isFirstCell, isLastCell,
 } from "../util/fixBrowserBehavior";
-import {hasClosestBlock, hasClosestByAttribute, hasClosestByClassName, hasClosestByMatchTag,} from "../util/hasClosest";
+import {
+    hasClosestBlock,
+    hasClosestByAttribute,
+    hasClosestByClassName,
+    hasClosestByMatchTag,
+} from "../util/hasClosest";
 import {hasClosestByHeadings} from "../util/hasClosestByHeadings";
 import {matchHotKey} from "../util/hotKey";
 import {getEditorRange, getSelectPosition, setSelectionFocus} from "../util/selection";

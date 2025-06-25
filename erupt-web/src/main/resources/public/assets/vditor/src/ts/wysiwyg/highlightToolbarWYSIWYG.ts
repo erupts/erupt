@@ -1,5 +1,8 @@
 import {Constants} from "../constants";
-import {disableToolbar, enableToolbar, removeCurrentToolbar, setCurrentToolbar} from "../toolbar/setToolbar";
+import {disableToolbar} from "../toolbar/setToolbar";
+import {enableToolbar} from "../toolbar/setToolbar";
+import {removeCurrentToolbar} from "../toolbar/setToolbar";
+import {setCurrentToolbar} from "../toolbar/setToolbar";
 import {isCtrl, updateHotkeyTip} from "../util/compatibility";
 import {scrollCenter} from "../util/editorCommonEvent";
 import {
@@ -10,10 +13,22 @@ import {
     insertRowAbove,
     setTableAlign,
 } from "../util/fixBrowserBehavior";
-import {hasClosestByAttribute, hasClosestByClassName, hasClosestByMatchTag,} from "../util/hasClosest";
-import {hasClosestByHeadings, hasClosestByTag,} from "../util/hasClosestByHeadings";
+import {
+    hasClosestByAttribute,
+    hasClosestByClassName,
+    hasClosestByMatchTag,
+} from "../util/hasClosest";
+import {
+    hasClosestByHeadings,
+    hasClosestByTag,
+} from "../util/hasClosestByHeadings";
 import {processCodeRender} from "../util/processCode";
-import {getEditorRange, selectIsEditor, setRangeByWbr, setSelectionFocus,} from "../util/selection";
+import {
+    getEditorRange,
+    selectIsEditor,
+    setRangeByWbr,
+    setSelectionFocus,
+} from "../util/selection";
 import {afterRenderEvent} from "./afterRenderEvent";
 import {removeBlockElement} from "./processKeydown";
 import {renderToc} from "../util/toc";

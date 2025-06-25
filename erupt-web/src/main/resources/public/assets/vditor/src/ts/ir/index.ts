@@ -2,9 +2,7 @@ import {Constants} from "../constants";
 import {isCtrl, isFirefox} from "../util/compatibility";
 import {
     blurEvent,
-    copyEvent,
-    cutEvent,
-    dblclickEvent,
+    copyEvent, cutEvent, dblclickEvent,
     dropEvent,
     focusEvent,
     hotkeyEvent,
@@ -13,7 +11,10 @@ import {
 } from "../util/editorCommonEvent";
 import {paste} from "../util/fixBrowserBehavior";
 import {hasClosestByAttribute, hasClosestByClassName} from "../util/hasClosest";
-import {getEditorRange, setRangeByWbr, setSelectionFocus,} from "../util/selection";
+import {
+    getEditorRange, setRangeByWbr,
+    setSelectionFocus,
+} from "../util/selection";
 import {clickToc} from "../util/toc";
 import {expandMarker} from "./expandMarker";
 import {highlightToolbarIR} from "./highlightToolbarIR";

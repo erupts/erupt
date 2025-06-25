@@ -1,7 +1,6 @@
 /// <reference types="./types" />
 import "./assets/less/index.less";
 import VditorMethod from "./method";
-
 declare class Vditor extends VditorMethod {
     readonly version: string;
     vditor: IVditor;
