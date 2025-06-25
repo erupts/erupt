@@ -1,6 +1,6 @@
 import {Constants} from "../constants";
 import {getEventName} from "../util/compatibility";
-import {listOutdent} from "../util/fixBrowserBehavior";
+import { listOutdent} from "../util/fixBrowserBehavior";
 import {hasClosestByMatchTag} from "../util/hasClosest";
 import {getEditorRange} from "../util/selection";
 import {MenuItem} from "./MenuItem";

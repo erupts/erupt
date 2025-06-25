@@ -16,8 +16,7 @@ import {
     hidePanel,
     hideToolbar,
     removeCurrentToolbar,
-    showToolbar,
-    toggleSubMenu,
+    showToolbar, toggleSubMenu,
 } from "./setToolbar";
 import {combineFootnote} from "../sv/combineFootnote";
 

@@ -3,9 +3,7 @@ import {hidePanel} from "../toolbar/setToolbar";
 import {isCtrl, isFirefox} from "../util/compatibility";
 import {
     blurEvent,
-    copyEvent,
-    cutEvent,
-    dblclickEvent,
+    copyEvent, cutEvent, dblclickEvent,
     dropEvent,
     focusEvent,
     hotkeyEvent,
@@ -13,14 +11,16 @@ import {
     selectEvent,
 } from "../util/editorCommonEvent";
 import {isHeadingMD, isHrMD, paste} from "../util/fixBrowserBehavior";
-import {hasClosestBlock, hasClosestByAttribute, hasClosestByClassName, hasClosestByMatchTag,} from "../util/hasClosest";
+import {
+    hasClosestBlock, hasClosestByAttribute,
+    hasClosestByClassName, hasClosestByMatchTag,
+} from "../util/hasClosest";
 import {hasClosestByHeadings} from "../util/hasClosestByHeadings";
 import {
     getCursorPosition,
     getEditorRange,
     getSelectPosition,
-    setRangeByWbr,
-    setSelectionFocus,
+    setRangeByWbr, setSelectionFocus,
 } from "../util/selection"
 import {clickToc, renderToc} from "../util/toc";
 import {afterRenderEvent} from "./afterRenderEvent";

@@ -1,5 +1,4 @@
 import * as adapterRender from "./ts/markdown/adapterRender";
-
 declare class Vditor {
     /** 点击图片放大 */
     static adapterRender: typeof adapterRender;

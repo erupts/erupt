@@ -9,13 +9,13 @@ import {input} from "../wysiwyg/input";
 import {isCtrl, isFirefox} from "./compatibility";
 import {scrollCenter} from "./editorCommonEvent";
 import {
-    getLastNode,
     getTopList,
     hasClosestBlock,
     hasClosestByAttribute,
     hasClosestByClassName,
     hasClosestByMatchTag,
 } from "./hasClosest";
+import {getLastNode} from "./hasClosest";
 import {highlightToolbar} from "./highlightToolbar";
 import {matchHotKey} from "./hotKey";
 import {processCodeRender, processPasteCode} from "./processCode";
@@ -24,8 +24,7 @@ import {
     getSelectPosition,
     insertHTML,
     setRangeByWbr,
-    setSelectionByPosition,
-    setSelectionFocus,
+    setSelectionByPosition, setSelectionFocus,
 } from "./selection";
 
 // https://github.com/Vanessa219/vditor/issues/508 软键盘无法删除空块

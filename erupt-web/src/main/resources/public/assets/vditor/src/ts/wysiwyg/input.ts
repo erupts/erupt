@@ -1,4 +1,7 @@
-import {getTopList, hasClosestBlock, hasClosestByAttribute, hasTopClosestByTag,} from "../util/hasClosest";
+import {
+    getTopList,
+    hasClosestBlock, hasClosestByAttribute, hasTopClosestByTag,
+} from "../util/hasClosest";
 import {hasClosestByTag} from "../util/hasClosestByHeadings";
 import {log} from "../util/log";
 import {processCodeRender} from "../util/processCode";

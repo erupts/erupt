@@ -1,6 +1,6 @@
-import {getEditorRange, setSelectionFocus} from "../util/selection";
-import {getElement} from "./getElement";
-import {setHeaders} from "./setHeaders";
+import { getEditorRange, setSelectionFocus } from "../util/selection";
+import { getElement } from "./getElement";
+import { setHeaders } from "./setHeaders";
 
 class Upload {
     public element: HTMLElement;

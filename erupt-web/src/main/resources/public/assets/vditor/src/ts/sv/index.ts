@@ -1,8 +1,7 @@
 import {isCtrl, isFirefox} from "../util/compatibility";
 import {
     blurEvent,
-    copyEvent,
-    cutEvent,
+    copyEvent, cutEvent,
     dropEvent,
     focusEvent,
     hotkeyEvent,
