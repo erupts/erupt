@@ -3,6 +3,7 @@ package xyz.erupt.jpa.model;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @MappedSuperclass
+@EruptI18n
 public class MetaModelCreateOnlyVo extends BaseModel {
 
     @EruptField(
