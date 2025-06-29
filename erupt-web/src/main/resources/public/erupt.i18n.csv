@@ -40,6 +40,8 @@ global.pre_select,请先选择,請先選擇,Please select first,Veuillez sélect
 global.more,更多,更多,more,plus,もっと,더,больше,di più.,Sehr viel mehr.,mais,Lebih banyak,المزيد
 component.attachment.upload_hint,单击或拖动文件到此区域上传,單擊或拖動文件到此區域上傳,Click or drag the file to this area to upload,Cliquez ou faites glisser les fichiers dans cette zone pour les télécharger,ファイルをクリックまたはドラッグしてアップロードします,파일을이 영역으로 업로드하려면 누르거나 드래그하십시오,Нажмите или перетащите файл в эту область,Haga clic o arrastre los archivos a esta área para subir,Klicken Oder ziehen sie die datei in diese region zum aufladen,Clique ou arraste os arquivos para esta área para fazer upload,Klik atau tarik berkas untuk diunggah ke area ini,انقر أو اسحب الملف لتحميل في هذه المنطقة
 component.attachment.upload_format,文件格式,文件格式,File format,Format du fichier,ファイル形式です。,파일 형식,Формат файла,Formato de archivo,Format der dateien,Formato do arquivo,Format berkasname,تنسيق الملف
+table.totalLeft,共,共,Total,Total,合計,총계,всего,Total,Insgesamt.,Total,Total,مجموع
+table.totalRight,条,條,Items,Articles,件,개,шт.,artículos,Stück.,itens,item,بند
 table.operation,操作,操作,Operation,opérations,操作,조작,операцион,La operación,betrieb,funcionamento,operasi,تشغيل
 table.delete.hint,确认删除吗？,確認刪除嗎？,Are you sure to delete?,Confirmer la suppression?,削除を確認しますか？,삭제확인하시겠습니까?,Подтвердите удаление?,¿Confirmar la eliminación?,Ortung bestätigt?,Confirmar a exclusão?,Konfirmasi dihapus?,تأكيد حذف؟
 table.add,新增,新增,Add,nouveaux,追加,새로추가,нов,nuevos,hinzufügen,nova,baru,الإضافية
