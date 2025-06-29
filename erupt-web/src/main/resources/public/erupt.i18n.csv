@@ -15,7 +15,7 @@ global.check_all,全选,全選,Check all,Aléatoire!,すべて選択,전체선�
 global.check_none,不选,不選,Uncheck,ne,選択しない,선택하지않음,Не выбра,No seleccionado,Du hast keine wahl.,Não escolher,Tidak memilih.,وليس مملح؟
 global.ok,确定,確定,OK,déterminer,を選択します,확실합니다,увер,determinar,Könnten?,A certeza,yakin,تحديد
 global.keyword,请输入关键字,請輸入關鍵字,Please enter key words,Veuillez entrer un mot-clé,キーワードを入力してください,키워드를입력하세요,Введите ключевое слово,Por favor introduzca una palabra clave,Bitte geben sie das schlüsselwort ein,Por favor insira uma palavra-chave,"Kata kunci, silakan",يرجى إدخال الكلمة الرئيسية
-global.close,关闭,關閉,Close,La fermeture,閉じる,닫기,закр,cierre,Noch näher.,encerramento,menutup,إغلاق
+global.close,取消,取消,Close,fermer,閉じる,닫기,закрыть,cerrar,Schließen.,fechar,tutup,إغلاق
 global.view,查看,查看,View,voir,表示,보기,провер,ver,Ich kontrolliere sie.,ver,memeriksa,عرض
 global.delete,删除,刪除,Delete,supprimé,削除,삭제,удал,borrar,Löschen.,apagar,hapus,حذف
 global.new,新增,新增,New,nouveaux,追加,새로추가,нов,nuevos,hinzufügen,nova,baru,الإضافية
@@ -42,7 +42,7 @@ component.attachment.upload_hint,单击或拖动文件到此区域上传,單擊�
 component.attachment.upload_format,文件格式,文件格式,File format,Format du fichier,ファイル形式です。,파일 형식,Формат файла,Formato de archivo,Format der dateien,Formato do arquivo,Format berkasname,تنسيق الملف
 table.totalLeft,共,共,Total,Total,合計,총계,всего,Total,Insgesamt.,Total,Total,مجموع
 table.totalRight,条,條,Items,Articles,件,개,шт.,artículos,Stück.,itens,item,بند
-table.operation,操作,操作,Operation,opérations,操作,조작,операцион,La operación,betrieb,funcionamento,operasi,تشغيل
+table.operation,操作,操作,Action,Action,アクション,작업,действие,Acción,Aktion.,Ação,Aksi,Tindakan,العمل
 table.delete.hint,确认删除吗？,確認刪除嗎？,Are you sure to delete?,Confirmer la suppression?,削除を確認しますか？,삭제확인하시겠습니까?,Подтвердите удаление?,¿Confirmar la eliminación?,Ortung bestätigt?,Confirmar a exclusão?,Konfirmasi dihapus?,تأكيد حذف؟
 table.add,新增,新增,Add,nouveaux,追加,새로추가,нов,nuevos,hinzufügen,nova,baru,الإضافية
 table.delete,删除,刪除,Delete,supprimé,削除,삭제,удал,borrar,Löschen.,apagar,hapus,حذف
