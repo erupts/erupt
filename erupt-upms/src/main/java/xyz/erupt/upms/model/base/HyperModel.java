@@ -29,14 +29,14 @@ public class HyperModel extends BaseModel {
     @EruptSmartSkipSerialize
     private Date createTime;
 
-    @Comment("更新时间")
-    @EruptSmartSkipSerialize
-    private Date updateTime;
-
     @Comment("创建人")
     @ManyToOne
     @EruptSmartSkipSerialize
     private EruptUserVo createUser;
+
+    @Comment("更新时间")
+    @EruptSmartSkipSerialize
+    private Date updateTime;
 
     @Comment("更新人")
     @ManyToOne

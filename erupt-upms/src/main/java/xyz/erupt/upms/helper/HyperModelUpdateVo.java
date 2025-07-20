@@ -4,18 +4,24 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
+import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.upms.service.EruptUserService;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -25,7 +31,16 @@ import java.util.Date;
 @Setter
 @MappedSuperclass
 @EruptI18n
-public class HyperModelUpdateVo extends HyperModel {
+public class HyperModelUpdateVo extends BaseModel {
+
+    @Comment("创建时间")
+    @EruptSmartSkipSerialize
+    private Date createTime;
+
+    @Comment("创建人")
+    @ManyToOne
+    @EruptSmartSkipSerialize
+    private EruptUserVo createUser;
 
     @ManyToOne
     @EruptField(
@@ -41,5 +56,28 @@ public class HyperModelUpdateVo extends HyperModel {
     )
     @EruptSmartSkipSerialize
     private Date updateTime;
+
+    @PrePersist
+    protected void persist() {
+        try {
+            Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
+                this.setCreateUser(new EruptUserVo(it));
+                this.setCreateTime(new Date());
+            });
+        } catch (Exception ignored) {
+        }
+        this.update();
+    }
+
+    @PreUpdate
+    protected void update() {
+        try {
+            Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
+                this.setUpdateUser(new EruptUserVo(it));
+                this.setUpdateTime(new Date());
+            });
+        } catch (Exception ignored) {
+        }
+    }
 
 }
