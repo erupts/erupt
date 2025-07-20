@@ -3,8 +3,6 @@ package xyz.erupt.core.i18n;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
@@ -29,7 +27,7 @@ import java.util.jar.JarFile;
  */
 @Service
 @Slf4j
-public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> implements ApplicationRunner {
+public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>>  {
 
     //语言文件对应文字映射
     private static final I18nRunner langMappings = new I18nRunner();
@@ -43,9 +41,8 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>> im
         return Optional.ofNullable(langMappings.get(lang).get(key)).orElse(key);
     }
 
-    @Override
     @SneakyThrows
-    public void run(ApplicationArguments args) {
+    public void init() {
         Enumeration<URL> urls = I18nRunner.class.getClassLoader().getResources("i18n/");
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
