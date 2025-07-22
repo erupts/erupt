@@ -66,6 +66,8 @@ public enum EditType {
     HIDDEN,
     @EditTypeMapping(desc = "空（仍占据组件位置）", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     EMPTY,
+    @EditTypeMapping(desc = "签名板", allowType = {JavaTypeEnum.String}, excelOperator = false)
+    SIGNATURE,
 
     @Comment("==================================")
     @Comment("以下组件修饰于复杂对象上")
