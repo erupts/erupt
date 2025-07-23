@@ -19,4 +19,20 @@ public class AiProp {
 
     private boolean devMode = false;
 
+    private String apiDomain;
+
+    private String nameForHuman;
+
+    // 用户界面中显示的服务简介
+    private String descriptionForHuman;
+
+    // 向模型描述服务用途
+    private String descriptionForModel;
+
+    //联系邮箱
+    private String contactEmail;
+
+    //法律声明页面链接
+    private String legalInfoUrl;
+
 }
