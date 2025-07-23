@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -48,6 +49,14 @@ public class OpenAiVo {
     @Setter
     public static class Path {
 
+        private PathPost post;
+
+    }
+
+    @Getter
+    @Setter
+    public static class PathPost {
+
         private String summary;
 
         private String operationId;
@@ -55,7 +64,7 @@ public class OpenAiVo {
         private RequestBody requestBody;
 
         //<status code,>
-        private Map<String, Response> responses = new HashMap<>();
+        private Map<Integer, Response> responses = new HashMap<>();
 
     }
 
@@ -95,7 +104,7 @@ public class OpenAiVo {
 
         private String type;
 
-        private String required;
+        private List<String> required;
 
         private Map<String, SchemaProperties> properties = new HashMap<>();
 
@@ -107,17 +116,8 @@ public class OpenAiVo {
 
         private String type;
 
-        private Map<String, DataProp> properties = new HashMap<>();
-
-    }
-
-    @Getter
-    @Setter
-    public static class DataProp {
-
-        private String type;
-
         private String description;
+
     }
 
 }
