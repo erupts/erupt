@@ -24,6 +24,8 @@ public class EruptMenuVo {
 
     private Long pid;
 
+    private Integer badge;
+
     public EruptMenuVo(Long id, String code, String name, String type, String value, String icon, Long pid) {
         this.id = id;
         this.code = code;
@@ -34,7 +36,7 @@ public class EruptMenuVo {
         this.pid = pid;
     }
 
-    public static EruptMenuVo fromMetaMenu(MetaMenu metaMenu){
+    public static EruptMenuVo fromMetaMenu(MetaMenu metaMenu) {
         return new EruptMenuVo(metaMenu.getId(), metaMenu.getCode(), metaMenu.getName(), metaMenu.getType(), metaMenu.getValue(),
                 metaMenu.getIcon(), metaMenu.getParentMenu() == null ? null : metaMenu.getParentMenu().getId());
     }
