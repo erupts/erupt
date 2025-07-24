@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import xyz.erupt.ai.annotation.AiParam;
 import xyz.erupt.ai.call.AiFunctionCall;
 import xyz.erupt.ai.call.AiFunctionManager;
-import xyz.erupt.ai.config.AiProp;
-import xyz.erupt.ai.vo.McpVo;
+import xyz.erupt.ai.config.AiMCPProp;
+import xyz.erupt.ai.util.McpUtil;
 import xyz.erupt.ai.vo.OpenAiVo;
 import xyz.erupt.core.util.EruptInformation;
 
@@ -21,35 +21,19 @@ import java.util.Map;
 public class McpController {
 
     @Resource
-    private AiProp aiProp;
-
-    private static final String MCP_JSON = "/mcp.json";
-
-    private static final String OPEN_AI_JSON = "/openapi.json";
+    private AiMCPProp mcpProp;
 
     private static final String MCP_CALL_API = "/mcp/call";
 
-    @GetMapping(MCP_JSON)
-    public McpVo mcp() {
-        McpVo mcpVo = new McpVo();
-        mcpVo.setName_for_human(aiProp.getNameForHuman());
-        mcpVo.setDescription_for_human(aiProp.getDescriptionForHuman());
-        mcpVo.setDescription_for_model(aiProp.getDescriptionForModel());
-        mcpVo.setContact_email(aiProp.getContactEmail());
-        mcpVo.setLegal_info_url(aiProp.getLegalInfoUrl());
-        mcpVo.getApi().setUrl(aiProp.getApiDomain() + OPEN_AI_JSON);
-        return mcpVo;
-    }
-
-    @GetMapping(OPEN_AI_JSON)
+    @GetMapping("/openapi.json")
     public OpenAiVo eruptAi() {
         OpenAiVo openAiVo = new OpenAiVo();
         OpenAiVo.Info info = new OpenAiVo.Info();
-        info.setTitle(aiProp.getNameForHuman());
+        info.setTitle(mcpProp.getName());
         info.setVersion(EruptInformation.getEruptVersion());
-        info.setDescription(aiProp.getDescriptionForModel());
+        info.setDescription(mcpProp.getDescription());
         openAiVo.setInfo(info);
-        openAiVo.setServers(new OpenAiVo.Server[]{new OpenAiVo.Server(aiProp.getApiDomain())});
+        openAiVo.setServers(new OpenAiVo.Server[]{new OpenAiVo.Server(mcpProp.getApiDomain())});
         for (Map.Entry<String, AiFunctionCall> entry : AiFunctionManager.getAiFunctions().entrySet()) {
             OpenAiVo.Path path = new OpenAiVo.Path();
             openAiVo.getPaths().put(MCP_CALL_API + "/" + entry.getKey(), path);
@@ -67,7 +51,7 @@ public class McpController {
                             required.add(field.getName());
                         }
                         OpenAiVo.SchemaProperties schemaProperties = new OpenAiVo.SchemaProperties();
-                        schemaProperties.setType(field.getType().getSimpleName());
+                        schemaProperties.setType(McpUtil.toMcp(field.getType()));
                         schemaProperties.setDescription(aiParam.description());
                         properties.put(field.getName(), schemaProperties);
                     }
@@ -87,7 +71,13 @@ public class McpController {
             {
                 OpenAiVo.Response response = new OpenAiVo.Response();
                 post.getResponses().put(200, response);
-                response.getContent().put("text/plain", null);
+                response.setDescription("Success");
+                OpenAiVo.ApplicationType applicationType = new OpenAiVo.ApplicationType();
+                OpenAiVo.Schema schema = new OpenAiVo.Schema();
+                schema.setType(McpUtil.toMcp(String.class));
+                schema.setRequired(new ArrayList<>());
+                applicationType.setSchema(schema);
+                response.getContent().put("text/plain", applicationType);
             }
         }
         return openAiVo;
