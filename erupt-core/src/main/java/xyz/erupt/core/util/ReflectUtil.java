@@ -1,5 +1,6 @@
 package xyz.erupt.core.util;
 
+import lombok.SneakyThrows;
 import xyz.erupt.core.constant.EruptConst;
 
 import java.lang.reflect.Field;
@@ -91,6 +92,16 @@ public class ReflectUtil {
             }
         }
         return names;
+    }
+
+    @SneakyThrows
+    public static Type[] getClassGeneric(Class<?> clazz) {
+        Type superType = clazz.getGenericSuperclass(); // BaseDao<User>
+        if (superType instanceof ParameterizedType) {
+            ParameterizedType pt = (ParameterizedType) superType;
+            return pt.getActualTypeArguments();
+        }
+        return new Type[0];
     }
 
 }
