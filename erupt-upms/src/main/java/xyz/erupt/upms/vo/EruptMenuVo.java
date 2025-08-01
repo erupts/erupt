@@ -24,8 +24,6 @@ public class EruptMenuVo {
 
     private Long pid;
 
-    private Integer badge;
-
     public EruptMenuVo(Long id, String code, String name, String type, String value, String icon, Long pid) {
         this.id = id;
         this.code = code;
