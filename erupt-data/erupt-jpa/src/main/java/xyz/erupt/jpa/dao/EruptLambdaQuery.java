@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.jpa.constant.SqlLang;
 import xyz.erupt.linq.lambda.LambdaInfo;
@@ -398,6 +399,23 @@ public class EruptLambdaQuery<T> {
     public <E> Object max(SFunction<E, ?> field) {
         this.querySchema.columns.add("max(" + geneField(field) + ")");
         return geneQuery().getSingleResult();
+    }
+
+    public int delete() {
+        List<T> entities = this.list();
+        int count = 0;
+        for (T entity : entities) {
+            entityManager.remove(entity);
+            count++;
+        }
+        return count;
+    }
+
+    @Transactional
+    public int deleteAndFlush() {
+        int result = this.delete();
+        entityManager.flush();
+        return result;
     }
 
     private Query geneQuery() {
