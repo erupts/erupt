@@ -403,12 +403,10 @@ public class EruptLambdaQuery<T> {
 
     public int delete() {
         List<T> entities = this.list();
-        int count = 0;
         for (T entity : entities) {
             entityManager.remove(entity);
-            count++;
         }
-        return count;
+        return entities.size();
     }
 
     @Transactional
@@ -441,7 +439,7 @@ public class EruptLambdaQuery<T> {
     }
 
     private String genePlaceholder() {
-        return RandomStringUtils.randomAlphabetic(4);
+        return RandomStringUtils.randomAlphabetic(6);
     }
 
     private String geneField(SFunction<?, ?> field) {
