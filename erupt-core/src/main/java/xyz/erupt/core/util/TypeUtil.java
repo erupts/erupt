@@ -90,4 +90,14 @@ public class TypeUtil {
         return obj instanceof Number || NumberUtils.isCreatable(obj.toString());
     }
 
+    public static Integer fetchInt(Object value) {
+        if (value instanceof String) {
+            return Integer.parseInt(value.toString());
+        } else if (value instanceof Integer) {
+            return (Integer) value;
+        } else {
+            return ((Double) value).intValue();
+        }
+    }
+
 }
