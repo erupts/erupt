@@ -34,6 +34,7 @@ import xyz.erupt.excel.util.ExcelUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng
@@ -298,8 +299,11 @@ public class EruptExcelService {
                                 edit.boolType().falseText()})));
                         break;
                     case CHOICE:
-                        this.createDropDown(sheet, edit, EruptUtil.getChoiceList(eruptModel,
-                                fieldModel.getEruptField().edit()), new CellRangeAddress(1, 1000, cellNum, cellNum));
+                        List<VLModel> vls = EruptUtil.getChoiceList(eruptModel,
+                                fieldModel.getEruptField().edit()).stream().filter(it -> !it.isDisable()).collect(Collectors.toList());
+                        if (!vls.isEmpty()) {
+                            this.createDropDown(fieldModel, sheet, vls, new CellRangeAddress(1, 1000, cellNum, cellNum));
+                        }
                         break;
                     case SLIDER:
                         sheet.addValidationData(generateValidation(cellNum,
@@ -352,10 +356,10 @@ public class EruptExcelService {
         return dataValidationList;
     }
 
-    public void createDropDown(Sheet targetSheet, Edit edit,
+    public void createDropDown(EruptFieldModel fieldModel, Sheet targetSheet,
                                List<VLModel> options, CellRangeAddress targetRegion) {
         Workbook workbook = targetSheet.getWorkbook();
-        Sheet dictSheet = workbook.createSheet(edit.title());
+        Sheet dictSheet = workbook.createSheet(fieldModel.getFieldName());
         workbook.setSheetHidden(workbook.getSheetIndex(dictSheet), true);
         for (int i = 0; i < options.size(); i++) {
             Row row = dictSheet.createRow(i);
@@ -364,7 +368,7 @@ public class EruptExcelService {
         // 创建命名范围指向字典列
         String rangeAddress = dictSheet.getSheetName() + "!$A$1:$A$" + options.size();
         Name name = workbook.createName();
-        name.setNameName(edit.title() + "Range_" + System.nanoTime()); // 唯一名
+        name.setNameName(fieldModel.getFieldName() + "Range_" + System.nanoTime()); // 唯一名
         name.setRefersToFormula(rangeAddress);
 
         // 4. 数据验证
