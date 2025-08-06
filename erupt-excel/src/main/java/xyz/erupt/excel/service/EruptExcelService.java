@@ -7,6 +7,7 @@ import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -298,16 +299,7 @@ public class EruptExcelService {
                         break;
                     case CHOICE:
                         List<VLModel> vls = EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit());
-                        String[] arr = new String[vls.size()];
-                        long length = 0;
-                        for (int i = 0; i < vls.size(); i++) {
-                            arr[i] = vls.get(i).getLabel();
-                            length += arr[i].length();
-                        }
-                        //下拉框不允许超过255字节
-                        if (length <= 255) {
-                            sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(arr)));
-                        }
+                        this.createDropDown(sheet, edit, vls, new CellRangeAddress(1, 1000, cellNum, cellNum));
                         break;
                     case SLIDER:
                         sheet.addValidationData(generateValidation(cellNum,
@@ -356,8 +348,34 @@ public class EruptExcelService {
         // 四个参数分别是：起始行、终止行、起始列、终止列
         CellRangeAddressList regions = new CellRangeAddressList(1, 1000, colIndex, colIndex);
         DataValidation dataValidationList = new HSSFDataValidation(regions, constraint);
-        dataValidationList.createErrorBox("错误", errHint);
+        dataValidationList.createErrorBox("error", errHint);
         return dataValidationList;
+    }
+
+    public void createDropDown(Sheet targetSheet, Edit edit,
+                               List<VLModel> options, CellRangeAddress targetRegion) {
+        Workbook workbook = targetSheet.getWorkbook();
+        Sheet dictSheet = workbook.createSheet(edit.title());
+        workbook.setSheetHidden(workbook.getSheetIndex(dictSheet), true);
+        for (int i = 0; i < options.size(); i++) {
+            Row row = dictSheet.createRow(i);
+            row.createCell(0).setCellValue(options.get(i).getLabel());
+        }
+        // 创建命名范围指向字典列
+        String rangeAddress = dictSheet.getSheetName() + "!$A$1:$A$" + options.size();
+        Name name = workbook.createName();
+        name.setNameName(edit.title() + "Range_" + System.nanoTime()); // 唯一名
+        name.setRefersToFormula(rangeAddress);
+
+        // 4. 数据验证
+        DataValidationHelper helper = targetSheet.getDataValidationHelper();
+        DataValidationConstraint constraint = helper.createFormulaListConstraint(name.getNameName());
+        DataValidation validation = helper.createValidation(constraint, new CellRangeAddressList(
+                targetRegion.getFirstRow(), targetRegion.getLastRow(),
+                targetRegion.getFirstColumn(), targetRegion.getLastColumn()));
+        validation.setShowErrorBox(true);
+        validation.setSuppressDropDownArrow(false);
+        targetSheet.addValidationData(validation);
     }
 
 }
