@@ -298,12 +298,12 @@ public class EruptExcelService {
                                 edit.boolType().falseText()})));
                         break;
                     case CHOICE:
-                        List<VLModel> vls = EruptUtil.getChoiceList(eruptModel, fieldModel.getEruptField().edit());
-                        this.createDropDown(sheet, edit, vls, new CellRangeAddress(1, 1000, cellNum, cellNum));
+                        this.createDropDown(sheet, edit, EruptUtil.getChoiceList(eruptModel,
+                                fieldModel.getEruptField().edit()), new CellRangeAddress(1, 1000, cellNum, cellNum));
                         break;
                     case SLIDER:
                         sheet.addValidationData(generateValidation(cellNum,
-                                "请选择或输入有效的选项，区间：" + edit.sliderType().min() + " - " + edit.sliderType().max(), dvHelper.createNumericConstraint(
+                                "Select or enter a valid option, range: " + edit.sliderType().min() + " - " + edit.sliderType().max(), dvHelper.createNumericConstraint(
                                         DataValidationConstraint.ValidationType.INTEGER, DataValidationConstraint.OperatorType.BETWEEN,
                                         Integer.toString(edit.sliderType().min()), Integer.toString(edit.sliderType().max()))));
                         break;
@@ -311,7 +311,7 @@ public class EruptExcelService {
                         if (fieldModel.getFieldReturnName().equals(Date.class.getSimpleName())
                                 || fieldModel.getFieldReturnName().equals(LocalDate.class.getSimpleName())
                                 || fieldModel.getFieldReturnName().equals(LocalDateTime.class.getSimpleName())) {
-                            sheet.addValidationData(generateValidation(cellNum, "请选择或输入有效时间！"
+                            sheet.addValidationData(generateValidation(cellNum, "Please select or enter the valid time！"
                                     , dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN
                                             , "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
                         }
