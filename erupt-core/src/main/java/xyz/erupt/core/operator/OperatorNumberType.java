@@ -18,7 +18,7 @@ public enum OperatorNumberType implements DbOperatorExpr {
             return String.format("%s = %s", field, value);
         }
     },
-    NEQ(" 不等于") {
+    NEQ("不等于") {
         @Override
         public String expr(String field, Object value) {
             return String.format("%s <> %s", field, value);

@@ -30,6 +30,11 @@ public enum OperatorStringType implements DbOperatorExpr {
         public String expr(String field, Object value) {
             return field + " like " + "'%" + value + "%'";
         }
+    }, NOT_LIKE("不相似") {
+        @Override
+        public String expr(String field, Object value) {
+            return field + " not like " + "'%" + value + "%'";
+        }
     }, START_WITH("以**开始") {
         @Override
         public String expr(String field, Object value) {
@@ -40,11 +45,6 @@ public enum OperatorStringType implements DbOperatorExpr {
         public String expr(String field, Object value) {
             return field + " like '%" + value + "'";
         }
-    }, NOT_LIKE("不相似") {
-        @Override
-        public String expr(String field, Object value) {
-            return field + " not like " + "'%" + value + "%'";
-        }
     }, IN("包含于") {
         @Override
         public String expr(String field, Object value) {
@@ -54,7 +54,6 @@ public enum OperatorStringType implements DbOperatorExpr {
                 conditions.add(field + " like" + "'%" + object + "%'");
             }
             return "(" + String.join(" or ", conditions) + ")";
-//            return String.format("%s in (%s)", field, SqlParsing.geneJoinIn((ArrayList) value));
         }
     }, NOT_IN("不包含于") {
         @Override
@@ -65,11 +64,6 @@ public enum OperatorStringType implements DbOperatorExpr {
                 conditions.add(field + " not like" + "'%" + object + "%'");
             }
             return "(" + String.join(" or ", conditions) + ")";
-        }
-    }, REGEXP("正则匹配") {
-        @Override
-        public String expr(String field, Object value) {
-            return String.format("regexp(%s,'%s') = true", field, value);
         }
     }, NULL("为空") {
         @Override

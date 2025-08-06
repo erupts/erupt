@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public enum OperatorReferenceType implements DbOperatorExpr {
 
-    EQ("是") {
+    EQ("包含") {
         @Override
         public String expr(String field, Object value) {
             if (value instanceof List) {
@@ -27,7 +27,7 @@ public enum OperatorReferenceType implements DbOperatorExpr {
             }
         }
     },
-    NEQ("不是") {
+    NEQ("不包含") {
         @Override
         public String expr(String field, Object value) {
             if (value instanceof List) {
