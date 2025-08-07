@@ -4,10 +4,14 @@ import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.core.annotation.EruptRecordOperate;
@@ -21,6 +25,7 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.core.service.EruptService;
+import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.SecurityUtil;
@@ -36,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,7 +97,35 @@ public class EruptExcelController {
         Page page = eruptService.getEruptData(eruptModel, tableQuery, null);
         try (Workbook wb = dataFileService.exportExcel(eruptModel, page)) {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
-            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + EruptExcelService.XLSX_FORMAT));
+            this.createConditionSheet(wb, eruptModel, conditions);
+            DateUtil.getSimpleFormatDateTime(new Date());
+            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name()
+                    + "_" + DateUtil.getFormatDate(new Date(), "yyyy-MM-dd_HH-mm-ss") + EruptExcelService.XLSX_FORMAT));
+        }
+    }
+
+    private void createConditionSheet(Workbook wb, EruptModel eruptModel, List<Condition> conditions) {
+        Sheet sheet = wb.createSheet("condition");
+        sheet.createFreezePane(0, 1, 1, 1);
+        sheet.setColumnWidth(0, 16 * 256);
+        sheet.setColumnWidth(1, 12 * 256);
+        sheet.setColumnWidth(2, 50 * 256);
+        Row head = sheet.createRow(sheet.getLastRowNum() + 1);
+        head.createCell(0).setCellValue("name");
+        head.createCell(1).setCellValue("expr");
+        head.createCell(2).setCellValue("value");
+        if (null != conditions) {
+            conditions.forEach(condition -> {
+                if (null != condition.getValue()) {
+                    EruptField eruptField = eruptModel.getEruptFieldMap().get(condition.getKey()).getEruptField();
+                    if (eruptField.views().length > 0) {
+                        Row row = sheet.createRow(sheet.getLastRowNum() + 1);
+                        row.createCell(0).setCellValue(eruptField.views()[0].title());
+                        row.createCell(1).setCellValue(null == condition.getExpression() ? QueryExpression.EQ.name() : condition.getExpression().name());
+                        row.createCell(2).setCellValue(condition.getValue().toString());
+                    }
+                }
+            });
         }
     }
 

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.jpa.constant.SqlLang;
 import xyz.erupt.linq.lambda.LambdaInfo;
@@ -400,6 +401,21 @@ public class EruptLambdaQuery<T> {
         return geneQuery().getSingleResult();
     }
 
+    public int delete() {
+        List<T> entities = this.list();
+        for (T entity : entities) {
+            entityManager.remove(entity);
+        }
+        return entities.size();
+    }
+
+    @Transactional
+    public int deleteAndFlush() {
+        int result = this.delete();
+        entityManager.flush();
+        return result;
+    }
+
     private Query geneQuery() {
         StringBuilder select = new StringBuilder();
         if (!querySchema.columns.isEmpty()) {
@@ -423,7 +439,7 @@ public class EruptLambdaQuery<T> {
     }
 
     private String genePlaceholder() {
-        return RandomStringUtils.randomAlphabetic(4);
+        return RandomStringUtils.randomAlphabetic(6);
     }
 
     private String geneField(SFunction<?, ?> field) {

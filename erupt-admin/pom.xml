@@ -5,11 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-admin</artifactId>
+    <name>erupt-admin</name>
 
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.21</version>
+        <version>1.12.23</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

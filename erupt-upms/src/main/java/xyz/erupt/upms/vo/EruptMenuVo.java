@@ -34,7 +34,7 @@ public class EruptMenuVo {
         this.pid = pid;
     }
 
-    public static EruptMenuVo fromMetaMenu(MetaMenu metaMenu){
+    public static EruptMenuVo fromMetaMenu(MetaMenu metaMenu) {
         return new EruptMenuVo(metaMenu.getId(), metaMenu.getCode(), metaMenu.getName(), metaMenu.getType(), metaMenu.getValue(),
                 metaMenu.getIcon(), metaMenu.getParentMenu() == null ? null : metaMenu.getParentMenu().getId());
     }

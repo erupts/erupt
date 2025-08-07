@@ -9,13 +9,14 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
+import xyz.erupt.core.util.EruptSpringUtil;
+import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
-import xyz.erupt.upms.model.base.HyperModel;
+import xyz.erupt.upms.service.EruptUserService;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -24,7 +25,7 @@ import java.util.Date;
 @Getter
 @Setter
 @MappedSuperclass
-public class HyperModelVo extends HyperModel {
+public class HyperModelVo extends BaseModel {
 
     @Transient
     @EruptField(
@@ -62,5 +63,28 @@ public class HyperModelVo extends HyperModel {
     )
     @EruptSmartSkipSerialize
     private Date updateTime;
+
+    @PrePersist
+    protected void persist() {
+        try {
+            Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
+                this.setCreateUser(new EruptUserVo(it));
+                this.setCreateTime(new Date());
+            });
+        } catch (Exception ignored) {
+        }
+        this.update();
+    }
+
+    @PreUpdate
+    protected void update() {
+        try {
+            Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
+                this.setUpdateUser(new EruptUserVo(it));
+                this.setUpdateTime(new Date());
+            });
+        } catch (Exception ignored) {
+        }
+    }
 
 }

@@ -22,6 +22,7 @@ import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
@@ -47,7 +48,26 @@ public class LLMService {
     @Resource
     private AiFunctionManager aiFunctionManager;
 
-    public static final int MESSAGE_TS = 100;
+    private static final int MESSAGE_TS = 100;
+
+    public String send(String prompt) {
+        return send(prompt, Collections.emptyList());
+    }
+
+    public String send(String prompt, List<ChatCompletionMessage> assistantPrompt) {
+        return send(eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).eq(LLM::getEnable, true).limit(1).one(), prompt, assistantPrompt);
+    }
+
+    public String send(LLM llm, String prompt) {
+        return send(llm, prompt, Collections.emptyList());
+    }
+
+    public String send(LLM llmConfig, String prompt, List<ChatCompletionMessage> assistantPrompt) {
+        if (null == llmConfig) {
+            throw new EruptWebApiRuntimeException("Not found LLM config");
+        }
+        return LlmCore.getLLM(llmConfig.getLlm()).chat(llmConfig.toLlmRequest(), prompt, assistantPrompt).getMessageStr();
+    }
 
     @SneakyThrows
     public List<ChatCompletionMessage> geneCompletionPrompt(Chat chat, LLMAgent llmAgent, Integer contextTurn) {
@@ -67,7 +87,7 @@ public class LLMService {
                 .eq(ChatMessage::getChatId, chat.getId())
                 .isNotNull(ChatMessage::getContent)
                 .orderByDesc(ChatMessage::getCreatedAt)
-                .limit(contextTurn).list();
+                .limit(contextTurn + 1).list();
         Collections.reverse(chatMessages);
         chatMessages.forEach(it -> chatCompletionMessages.add(
                 new ChatCompletionMessage(it.getSenderType() == ChatSenderType.USER ? MessageRole.user : MessageRole.assistant, it.getContent()))

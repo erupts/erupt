@@ -52,7 +52,6 @@ public enum EditType {
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
     @EditTypeMapping(mapping = CodeEditorType.class, desc = "代码编辑器", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
-    @Deprecated
     @EditTypeMapping(desc = "MarkDown编辑器", allowType = {JavaTypeEnum.String})
     MARKDOWN,
     @EditTypeMapping(mapping = AttachmentType.class, desc = "附件上传", allowType = {JavaTypeEnum.String}, excelOperator = false)
@@ -67,6 +66,8 @@ public enum EditType {
     HIDDEN,
     @EditTypeMapping(desc = "空（仍占据组件位置）", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     EMPTY,
+    @EditTypeMapping(desc = "签名板", allowType = {JavaTypeEnum.String}, excelOperator = false)
+    SIGNATURE,
 
     @Comment("==================================")
     @Comment("以下组件修饰于复杂对象上")

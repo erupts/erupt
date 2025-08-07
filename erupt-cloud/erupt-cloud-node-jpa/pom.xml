@@ -4,12 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-cloud-node-jpa</artifactId>
+    <name>erupt-cloud-node-jpa</name>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.21</version>
+        <version>1.12.23</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 

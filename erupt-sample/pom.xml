@@ -6,12 +6,12 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.21</version>
+        <version>1.12.23</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>erupt-sample</artifactId>
-
+    <name>erupt-sample</name>
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>

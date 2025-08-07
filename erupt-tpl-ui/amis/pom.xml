@@ -3,7 +3,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <name>erupt-tpl-ui.amis</name>
     <artifactId>erupt-tpl-ui.amis</artifactId>
     <description>
         erupt-tpl-ui of amis
@@ -13,7 +13,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.21</version>
+        <version>1.12.23</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 </project>

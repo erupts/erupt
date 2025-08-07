@@ -1,6 +1,7 @@
 package xyz.erupt.ai.call;
 
 import com.google.gson.reflect.TypeToken;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -36,31 +37,32 @@ import java.util.Optional;
 @Slf4j
 public class AiFunctionManager implements ApplicationRunner {
 
-    private final Map<String, AiFunctionCall> aiFunctionMap = new HashMap<>();
+    @Getter
+    private static final Map<String, AiFunctionCall> aiFunctions = new HashMap<>();
 
     @Override
     public void run(ApplicationArguments args) {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(),
                 new TypeFilter[]{new AssignableTypeFilter(AiFunctionCall.class)}, clazz ->
-                        aiFunctionMap.put(clazz.getSimpleName(), (AiFunctionCall) EruptSpringUtil.getBean(clazz))
+                        aiFunctions.put(clazz.getSimpleName(), (AiFunctionCall) EruptSpringUtil.getBean(clazz))
         );
     }
 
     public String getFunctionCallPrompt() {
         StringBuilder sb = new StringBuilder("下面是一组 Function Call 的映射，根据情况决定是否调用，否则忽略这段提示词\n");
-        for (Map.Entry<String, AiFunctionCall> entry : aiFunctionMap.entrySet()) {
+        for (Map.Entry<String, AiFunctionCall> entry : aiFunctions.entrySet()) {
             sb.append("- 如果用户问：").append(entry.getValue().description()).append("，就只回复：").append(entry.getKey()).append("\n");
         }
         return sb.toString();
     }
 
     public boolean exist(String key) {
-        return aiFunctionMap.containsKey(key);
+        return aiFunctions.containsKey(key);
     }
 
     @SneakyThrows
     public String call(String key, LLM llm, String userMessage, List<ChatCompletionMessage> userContext) {
-        AiFunctionCall aiFunctionCall = aiFunctionMap.get(key);
+        AiFunctionCall aiFunctionCall = aiFunctions.get(key);
         Map<String, Field> params = new HashMap<>();
         for (Field field : aiFunctionCall.getClass().getDeclaredFields()) {
             Optional.ofNullable(field.getAnnotation(AiParam.class)).ifPresent(it -> {
