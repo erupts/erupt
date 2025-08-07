@@ -12,7 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * 标签配置项类型
+ * @author YuePeng
+ * date 2025/8/7 11:09
  */
 @Getter
 @AllArgsConstructor

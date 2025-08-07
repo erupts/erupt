@@ -6,7 +6,8 @@ import lombok.Getter;
 import java.util.List;
 
 /**
- * 标签配置项类型
+ * @author YuePeng
+ * date 2025/8/7 11:09
  */
 @Getter
 @AllArgsConstructor
