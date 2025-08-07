@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>401</title>
-
     <style>
         body, html {
             margin: 0 auto;
@@ -45,7 +44,7 @@
             border: 1px solid #2f8f7f;
             border-radius: 4px;
             color: #2f8f7f;
-            margin-top: 6%;
+            margin-top: 30px;
             padding: 8px 50px;
             text-decoration: none;
             opacity: .6;
@@ -107,8 +106,9 @@
     </g>
 </svg>
 <div class="content">
-    <h1>授权过期，请重新登录</h1>
-    <a href="javascript:" id="reLogin" onclick="window.parent.location.reload()">重新登录</a>
+    <h1>Session Expired</h1>
+    <p style="color: gray; font-size: 0.9em;">Your login session has expired. Please log in again.</p>
+    <a href="javascript:" id="reLogin" onclick="window.parent.location.reload()">🔁 Log In</a>
 </div>
 <script>
     if (window.self === window.top) {

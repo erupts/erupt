@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.12.21</version>
+    <version>1.12.23</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -171,11 +171,10 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.7.0</version>
+                        <version>0.8.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-                            <namespace>xyz.erupt</namespace>
                         </configuration>
                     </plugin>
                     <plugin>

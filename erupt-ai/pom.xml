@@ -10,7 +10,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.21</version>
+        <version>1.12.23</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -44,6 +44,11 @@
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>javapoet</artifactId>
+            <version>1.13.0</version>
         </dependency>
     </dependencies>
 

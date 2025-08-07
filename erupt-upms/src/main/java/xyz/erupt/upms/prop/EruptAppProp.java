@@ -34,14 +34,18 @@ public class EruptAppProp {
 
     //多语言配置
     private String[] locales = {
-            DEFAULT_LANG, // 简体中文
-            "zh-TW",      // 繁体中文
-            "en-US",      // English
-            "fr-FR",      // En français
-            "ja-JP",      // 日本語
-            "ko-KR",      // 한국어
-            "ru-RU",      // русск
-            "es-ES"       // español
+            DEFAULT_LANG, // 🇨🇳 简体中文
+            "zh-TW",      // 🇭🇰 繁体中文
+            "en-US",      // 🇬🇧 English
+            "fr-FR",      // 🇫🇷 En français
+            "ja-JP",      // 🇯🇵 日本語
+            "ko-KR",      // 🇰🇷 한국어
+            "ru-RU",      // 🇷🇺 русск
+            "es-ES",      // 🇪🇸 español
+            "de-DE",      // 🇩🇪 Deutsch
+            "pt-PT",      // 🇵🇹 Português
+            "id-ID",      // 🇮🇩 Bahasa Indonesia
+            "ar-SA",      // 🇸🇦 العربية
     };
 
     //自定义配置

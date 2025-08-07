@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "e_upms_user")
 @Erupt(
-        name = "简单用户对象"
+        name = "用户管理"
 )
 @EruptI18n
 @Getter

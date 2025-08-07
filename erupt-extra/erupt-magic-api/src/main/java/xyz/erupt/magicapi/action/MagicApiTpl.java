@@ -8,6 +8,7 @@ import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.upms.service.EruptContextService;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,9 @@ public class MagicApiTpl {
     @Resource
     private EruptContextService eruptContextService;
 
+    @Resource
+    private HttpServletRequest request;
+
     @TplAction(MAGIC_API_PERMISSION)
     public Map<String, Object> magicApiAction() {
         Map<String, Object> map = new HashMap<>();
@@ -34,6 +38,10 @@ public class MagicApiTpl {
         map.put("token", eruptContextService.getCurrentToken());
         map.put("v", EruptInformation.getEruptVersion());
         map.put("hash", this.hashCode());
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        String contextPath = request.getContextPath();
+        map.put("baseUrl", "//" + serverName + (serverPort != 80 && serverPort != 443 ? ":" + serverPort : "") + contextPath);
         return map;
     }
 

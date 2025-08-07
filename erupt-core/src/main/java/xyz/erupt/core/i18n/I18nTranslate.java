@@ -20,13 +20,23 @@ public class I18nTranslate {
     @Resource
     private EruptProp eruptProp;
 
+    private static final I18nRunner i18nRunner = new I18nRunner();
+
+    static {
+        i18nRunner.init();
+    }
+
     public static String $translate(String key) {
         return EruptSpringUtil.getBean(I18nTranslate.class).translate(key);
     }
 
     public String translate(String key) {
         String lang = getLang();
-        return I18nRunner.getI18nValue(lang == null ? eruptProp.getDefaultLocales() : lang, key);
+        return this.translate(lang == null ? eruptProp.getDefaultLocales() : lang, key);
+    }
+
+    public String translate(String lang, String key) {
+        return I18nRunner.getI18nValue(lang, key);
     }
 
     public String getLang() {

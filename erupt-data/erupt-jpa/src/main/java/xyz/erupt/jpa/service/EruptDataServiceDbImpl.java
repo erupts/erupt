@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.constant.EruptConst;
-import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
@@ -25,8 +24,6 @@ import xyz.erupt.jpa.support.JpaSupport;
 import javax.annotation.Resource;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -118,25 +115,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                     }
                 }
             }
-        }
-    }
-
-    //生成数据重复的提示字符串
-    private String gcRepeatHint(EruptModel eruptModel) {
-        StringBuilder str = new StringBuilder();
-        for (UniqueConstraint uniqueConstraint : eruptModel.getClazz().getAnnotation(Table.class).uniqueConstraints()) {
-            for (String columnName : uniqueConstraint.columnNames()) {
-                EruptFieldModel eruptFieldModel = eruptModel.getEruptFieldMap().get(columnName);
-                if (null != eruptFieldModel) {
-                    str.append(eruptFieldModel.getEruptField().views()[0].title()).append("、");
-                }
-            }
-        }
-        String repeatTxt = I18nTranslate.$translate("erupt.data.data_duplication");
-        if (StringUtils.isNotBlank(str)) {
-            return str.substring(0, str.length() - 1) + " " + repeatTxt;
-        } else {
-            return repeatTxt;
         }
     }
 

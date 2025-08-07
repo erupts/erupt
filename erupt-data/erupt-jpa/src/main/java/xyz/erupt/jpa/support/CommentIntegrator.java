@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.support;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.Metadata;
@@ -9,8 +10,10 @@ import org.hibernate.mapping.Column;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.hibernate.service.spi.SessionFactoryServiceRegistry;
+import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.ReflectUtil;
 
 import javax.persistence.ManyToMany;
@@ -27,7 +30,12 @@ import java.util.Optional;
  * date 2022/8/3 21:42
  */
 @Slf4j
+@Component
+@AllArgsConstructor
 public class CommentIntegrator implements Integrator {
+
+    private final I18nTranslate i18nTranslate;
+
 
     /**
      * Perform comment integration.
@@ -61,8 +69,8 @@ public class CommentIntegrator implements Integrator {
             // Process the Comment annotation is applied to Class
             Class<?> clazz = persistentClass.getMappedClass();
             if (clazz.isAnnotationPresent(Erupt.class)) {
-                Erupt comment = clazz.getAnnotation(Erupt.class);
-                persistentClass.getTable().setComment(comment.name());
+                Erupt erupt = clazz.getAnnotation(Erupt.class);
+                persistentClass.getTable().setComment(i18nTranslate.translate(erupt.name()));
                 Optional.ofNullable(persistentClass.getIdentifierProperty()).ifPresent(it -> {
                     this.fieldComment(persistentClass, it.getName());
                 });
@@ -100,7 +108,7 @@ public class CommentIntegrator implements Integrator {
                     while (columnIterator.hasNext()) {
                         Column column = columnIterator.next();
                         if (sqlColumnName.equalsIgnoreCase(column.getName())) {
-                            column.setComment(comment);
+                            column.setComment(i18nTranslate.translate(comment));
                             break;
                         }
                     }

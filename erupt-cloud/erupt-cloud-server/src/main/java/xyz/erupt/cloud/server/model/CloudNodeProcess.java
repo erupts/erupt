@@ -12,6 +12,7 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.tpl.engine.EngineConst;
+import xyz.erupt.upms.model.EruptUser;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -84,7 +85,7 @@ public class CloudNodeProcess implements DataProxy<CloudNode>, TagsFetchHandler,
 
     @Override
     public List<String> fetchTags(String[] params) {
-        return eruptDao.getJdbcTemplate().queryForList("select name from e_upms_user", String.class);
+        return eruptDao.lambdaQuery(EruptUser.class).listSelect(EruptUser::getName);
     }
 
     @Override

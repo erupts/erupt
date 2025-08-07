@@ -2,7 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <name>erupt-magic-api</name>
     <artifactId>erupt-magic-api</artifactId>
     <description>
         magic-api support
@@ -13,12 +13,12 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.21</version>
+        <version>1.12.23</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <properties>
-        <magic-api.version>2.1.1</magic-api.version>
+        <magic-api.version>2.2.2</magic-api.version>
     </properties>
 
     <dependencies>

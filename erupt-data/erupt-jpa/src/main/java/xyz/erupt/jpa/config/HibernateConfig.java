@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomi
 import org.springframework.stereotype.Component;
 import xyz.erupt.jpa.support.CommentIntegrator;
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.Map;
 
@@ -15,11 +16,14 @@ import java.util.Map;
 @Component
 public class HibernateConfig implements HibernatePropertiesCustomizer {
 
+    @Resource
+    private CommentIntegrator commentIntegrator;
+
     @Override
     public void customize(Map<String, Object> hibernateProperties) {
         hibernateProperties.put("hibernate.use_sql_comments", true);
         hibernateProperties.put("hibernate.integrator_provider",
-                (IntegratorProvider) () -> Collections.singletonList(new CommentIntegrator()));
+                (IntegratorProvider) () -> Collections.singletonList(commentIntegrator));
     }
 
 }
