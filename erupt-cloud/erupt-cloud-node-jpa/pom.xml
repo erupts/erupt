@@ -4,6 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-cloud-node-jpa</artifactId>
+    <name>erupt-cloud-node-jpa</name>
     <packaging>jar</packaging>
 
     <parent>

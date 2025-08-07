@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>erupt-sample</artifactId>
-
+    <name>erupt-sample</name>
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
