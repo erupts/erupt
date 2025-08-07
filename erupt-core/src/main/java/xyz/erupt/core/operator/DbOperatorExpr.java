@@ -1,8 +1,8 @@
 package xyz.erupt.core.operator;
 
 /**
- * @author YuePeng.li
- * @date 2022-06-15 6:48 PM
+ * @author YuePeng
+ * date 2025/8/7 11:09
  */
 public interface DbOperatorExpr {
 
