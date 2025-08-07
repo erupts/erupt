@@ -4,6 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>erupt-mongodb</artifactId>
+    <name>erupt-mongodb</name>
     <description>EruptProcess mongodb impl</description>
 
     <parent>
