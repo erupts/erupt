@@ -14,7 +14,7 @@ public enum GeneratorType {
     PASSWORD(EditType.INPUT, "密码输入", String.class.getSimpleName(), "inputType = @InputType(type = \"password\")"),
     TEXTAREA(EditType.TEXTAREA, "多行文本框", String.class.getSimpleName(), null),
     HTML_EDITOR(EditType.HTML_EDITOR, "富文本编辑器", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), "htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR)"),
-    CODE_EDITOR(EditType.CODE_EDITOR, "代码编辑器", HTML_EDITOR.type + String.class.getSimpleName(), "codeEditType = @CodeEditorType(language = \"sql\")"),
+    CODE_EDITOR(EditType.CODE_EDITOR, "代码编辑器", "@" + Lob.class.getSimpleName() + " " + String.class.getSimpleName(), "codeEditType = @CodeEditorType(language = \"sql\")"),
     COLOR(EditType.COLOR, "颜色选择", String.class.getSimpleName(), null),
     NUMBER(EditType.NUMBER, "数值框", Integer.class.getSimpleName(), "numberType = @NumberType"),
     SLIDER(EditType.SLIDER, "数字滑块", Integer.class.getSimpleName(), "sliderType = @SliderType(max = 999)"),
