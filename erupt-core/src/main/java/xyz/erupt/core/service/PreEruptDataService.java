@@ -11,6 +11,7 @@ import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.DataHandlerUtil;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.TreeModel;
 
@@ -18,6 +19,14 @@ import java.util.*;
 
 @Service
 public class PreEruptDataService {
+
+    // get by pk
+    public Map<String, Object> getEruptData(EruptModel eruptModel, String id) {
+        Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.editBehavior(data)));
+        return EruptUtil.generateEruptDataMap(eruptModel, data);
+    }
 
     /**
      * 根据要素生成树结构
