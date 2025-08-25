@@ -17,9 +17,17 @@ public class KV<KEY, VALUE> {
 
     private VALUE value;
 
+    private Boolean enable = true;
+
     public KV(KEY key, VALUE value) {
         this.key = key;
         this.value = value;
+    }
+
+    public KV(KEY key, VALUE value, Boolean enable) {
+        this.key = key;
+        this.value = value;
+        this.enable = enable;
     }
 
 }
