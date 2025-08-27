@@ -3,6 +3,7 @@ package xyz.erupt.core.service;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -52,7 +53,7 @@ public class EruptCoreService implements ApplicationRunner {
         return ERUPT_LIST;
     }
 
-    public static EruptModel getErupt(String eruptName) {
+    public static @NotNull EruptModel getErupt(String eruptName) {
         if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
             if (null == ERUPTS.get(eruptName)) {
                 return null;
