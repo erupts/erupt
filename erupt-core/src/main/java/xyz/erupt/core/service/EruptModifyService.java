@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.event.EruptAddEvent;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -79,8 +80,8 @@ public class EruptModifyService {
         });
     }
 
-    public void modifyLog(EruptModel eruptModel, String placeholder, String content) {
-        log.info("[{} -> {}]:{}", eruptModel.getEruptName(), placeholder, content);
+    public void modifyLog(EruptModel eruptModel, String action, String content) {
+        log.info("ERUPT CURD | {} | {} | {} | {}", MetaContext.getUser().getName(), eruptModel.getEruptName(), action, content);
     }
 
     /**
