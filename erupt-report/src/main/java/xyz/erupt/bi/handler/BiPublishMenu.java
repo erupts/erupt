@@ -1,5 +1,7 @@
 package xyz.erupt.bi.handler;
 
+import jakarta.annotation.Resource;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.bi.config.EruptBiProp;
@@ -16,8 +18,6 @@ import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;

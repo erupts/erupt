@@ -1,5 +1,6 @@
 package xyz.erupt.bi.model.dataproxy;
 
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -8,7 +9,6 @@ import xyz.erupt.bi.model.BiHistory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import java.util.Date;
 
 /**

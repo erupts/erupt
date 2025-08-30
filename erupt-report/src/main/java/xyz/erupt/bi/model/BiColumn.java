@@ -1,9 +1,11 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -19,11 +21,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.bi.constant.ColumnType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
 
 /**
  * @author YuePeng
@@ -68,8 +65,7 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
     )
     private Boolean sortable = true;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     @EruptField(
             edit = @Edit(title = "下钻SQL", type = EditType.CODE_EDITOR,
                     showBy = @ShowBy(dependField = "type", expr = "value == 'drill'"),

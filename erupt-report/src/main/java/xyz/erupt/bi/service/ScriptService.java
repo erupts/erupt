@@ -1,5 +1,6 @@
 package xyz.erupt.bi.service;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.bi.constant.BiConst;
 import xyz.erupt.bi.model.BiFunction;
@@ -7,7 +8,6 @@ import xyz.erupt.core.cache.EruptCache;
 import xyz.erupt.core.cache.EruptCacheLRU;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

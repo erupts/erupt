@@ -2,6 +2,7 @@ package xyz.erupt.bi.service;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
@@ -13,7 +14,6 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.util.TypeUtil;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;

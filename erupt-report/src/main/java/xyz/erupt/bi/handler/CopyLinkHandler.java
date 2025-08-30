@@ -1,11 +1,11 @@
 package xyz.erupt.bi.handler;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.bi.model.Bi;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

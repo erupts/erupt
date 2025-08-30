@@ -1,8 +1,8 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -19,7 +19,6 @@ import xyz.erupt.bi.handler.BiPublishMenu;
 import xyz.erupt.bi.model.dataproxy.BiDataProxy;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
-import javax.persistence.*;
 import java.util.Set;
 
 /**
@@ -114,16 +113,14 @@ public class Bi extends MetaModelUpdateVo {
     )
     private Boolean export = true;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     @EruptField(
             views = @View(title = "取值SQL"),
             edit = @Edit(title = "取值SQL", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     @EruptField(
             edit = @Edit(title = "总条数SQL", desc = "计算数据总量，在取值SQL嵌套子查询count性能较低时使用",
                     showBy = @ShowBy(dependField = "pageType", expr = "value == '" + BiConst.PAGE_END + "'"),

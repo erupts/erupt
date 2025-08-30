@@ -1,8 +1,8 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -17,8 +17,6 @@ import xyz.erupt.bi.constant.ChartTypeEnum;
 import xyz.erupt.bi.handler.ChartType;
 import xyz.erupt.bi.model.dataproxy.BiChartDataProxy;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-
-import javax.persistence.*;
 
 /**
  * @author YuePeng
@@ -111,8 +109,7 @@ public class BiChart extends MetaModelUpdateVo {
     )
     private BiTpl biTpl;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     @EruptField(
             views = @View(title = "图表SQL"),
             edit = @Edit(title = "图表SQL",

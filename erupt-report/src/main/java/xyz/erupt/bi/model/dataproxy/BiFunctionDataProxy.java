@@ -1,5 +1,6 @@
 package xyz.erupt.bi.model.dataproxy;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.bi.constant.BiConst;
@@ -8,7 +9,6 @@ import xyz.erupt.bi.service.ScriptService;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.util.Erupts;
 
-import javax.annotation.Resource;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;

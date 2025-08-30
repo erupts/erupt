@@ -1,5 +1,6 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -17,8 +18,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-
-import javax.persistence.*;
 
 /**
  * @author YuePeng

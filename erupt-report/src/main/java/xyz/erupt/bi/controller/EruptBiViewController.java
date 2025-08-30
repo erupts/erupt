@@ -6,8 +6,8 @@
 //import xyz.erupt.bi.view.BiViewVo;
 //import xyz.erupt.jpa.dao.EruptDao;
 //
-//import javax.annotation.Resource;
-//import javax.transaction.Transactional;
+//import jakarta.annotation.Resource;
+//import jakarta.transaction.Transactional;
 //import java.util.List;
 //
 ///**

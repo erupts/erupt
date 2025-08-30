@@ -1,5 +1,8 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.Erupt;
@@ -13,10 +16,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.handler.BiHandlerChoice;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  * @author YuePeng

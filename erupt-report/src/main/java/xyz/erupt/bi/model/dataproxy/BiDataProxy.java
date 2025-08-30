@@ -1,5 +1,7 @@
 package xyz.erupt.bi.model.dataproxy;
 
+import jakarta.annotation.Resource;
+import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -11,8 +13,6 @@ import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;

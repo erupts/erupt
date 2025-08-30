@@ -1,8 +1,11 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -22,7 +25,6 @@ import xyz.erupt.bi.handler.DriverChoice;
 import xyz.erupt.bi.service.BiDataSourceService;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 
-import javax.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -81,8 +83,7 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     )
     private String password;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     @EruptField(
             edit = @Edit(title = "分页语句", type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "sql"),

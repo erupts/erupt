@@ -1,5 +1,6 @@
 package xyz.erupt.bi;
 
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,7 +19,6 @@ import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;

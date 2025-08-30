@@ -1,5 +1,6 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -16,8 +17,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
-
-import javax.persistence.*;
 
 /**
  * @author YuePeng

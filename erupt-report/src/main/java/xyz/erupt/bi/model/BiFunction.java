@@ -1,8 +1,11 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -15,8 +18,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.bi.model.dataproxy.BiFunctionDataProxy;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-
-import javax.persistence.*;
 
 /**
  * @author YuePeng
@@ -44,8 +45,7 @@ public class BiFunction extends MetaModelUpdateVo {
     )
     private String name;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     @EruptField(
             views = @View(title = "函数表达式"),
             edit = @Edit(title = "函数表达式", desc = "参照JavaScript function写法",

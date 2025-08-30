@@ -6,9 +6,9 @@
 //import org.hibernate.annotations.Where;
 //import xyz.erupt.jpa.model.BaseModel;
 //
-//import javax.persistence.Lob;
-//import javax.persistence.Table;
-//import javax.persistence.UniqueConstraint;
+//import jakarta.persistence.Lob;
+//import jakarta.persistence.Table;
+//import jakarta.persistence.UniqueConstraint;
 //import java.util.Date;
 //
 ///**

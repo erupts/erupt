@@ -1,8 +1,11 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -12,11 +15,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 /**
  * @author YuePeng
@@ -50,8 +48,7 @@ public class BiDimensionReference extends MetaModelUpdateVo {
     private BiClassHandler classHandler;
 
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     @EruptField(
             views = @View(title = "参照SQL"),
             edit = @Edit(title = "参照SQL", type = EditType.CODE_EDITOR,

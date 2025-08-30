@@ -1,8 +1,11 @@
 package xyz.erupt.bi.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -15,7 +18,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -52,16 +54,14 @@ public class BiHistory extends BaseModel {
     )
     private Date operateTime;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     @EruptField(
             views = @View(title = "修改前"),
             edit = @Edit(title = "修改前", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     @EruptField(
             views = @View(title = "修改后"),
             edit = @Edit(title = "修改后", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
