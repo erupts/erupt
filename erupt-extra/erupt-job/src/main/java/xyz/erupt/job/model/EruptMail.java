@@ -2,6 +2,7 @@ package xyz.erupt.job.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,7 +67,7 @@ public class EruptMail extends BaseModel {
     )
     private Boolean status;
 
-    @Column(columnDefinition = "text")
+    @Lob
     @EruptField(
             views = @View(title = "内容"),
             edit = @Edit(title = "内容", notNull = true, type = EditType.HTML_EDITOR)
