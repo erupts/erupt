@@ -5,7 +5,7 @@
 //import xyz.erupt.jpa.entity.Class;
 //import xyz.erupt.jpa.entity.Student;
 //
-//import javax.annotation.Resource;
+//import jakarta.annotation.Resource;
 //
 //public class EruptLambdaQueryTest extends ApplicationTests {
 //

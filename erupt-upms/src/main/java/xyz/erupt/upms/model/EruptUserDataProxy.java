@@ -1,5 +1,6 @@
 package xyz.erupt.upms.model;
 
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -9,8 +10,6 @@ import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.service.EruptUserService;
-
-import javax.annotation.Resource;
 
 /**
  * @author YuePeng

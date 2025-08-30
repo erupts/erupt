@@ -8,7 +8,7 @@ import xyz.erupt.cloud.server.node.NodeManager;
 import xyz.erupt.cloud.server.node.NodeWorker;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;

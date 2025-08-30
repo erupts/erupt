@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.dao;
 
+import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Filter;
@@ -12,7 +13,6 @@ import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;

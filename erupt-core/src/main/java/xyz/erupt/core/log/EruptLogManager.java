@@ -1,12 +1,12 @@
 package xyz.erupt.core.log;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.prop.EruptProp;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;

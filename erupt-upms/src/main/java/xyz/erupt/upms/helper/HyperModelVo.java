@@ -1,5 +1,6 @@
 package xyz.erupt.upms.helper;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.NotFound;
@@ -16,7 +17,6 @@ import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
 

@@ -1,6 +1,7 @@
 package xyz.erupt.cloud.node.service;
 
 import cn.hutool.http.HttpUtil;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
@@ -10,8 +11,6 @@ import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.module.MetaUserinfo;
-
-import javax.annotation.Resource;
 
 /**
  * @author YuePeng

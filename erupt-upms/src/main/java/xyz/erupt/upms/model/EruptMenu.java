@@ -1,5 +1,9 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,10 +25,6 @@ import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.jpa.model.MetaModel;
 import xyz.erupt.upms.service.EruptMenuService;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
