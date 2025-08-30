@@ -21,7 +21,7 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;

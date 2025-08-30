@@ -1,5 +1,7 @@
 package xyz.erupt.jpa.dao;
 
+import jakarta.annotation.Resource;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.query.Condition;
@@ -11,8 +13,6 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.jpa.service.EntityManagerService;
 
-import javax.annotation.Resource;
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

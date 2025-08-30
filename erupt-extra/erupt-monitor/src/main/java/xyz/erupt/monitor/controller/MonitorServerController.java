@@ -1,5 +1,6 @@
 package xyz.erupt.monitor.controller;
 
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,8 +13,6 @@ import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.monitor.constant.MonitorConstant;
 import xyz.erupt.monitor.vo.Platform;
 import xyz.erupt.monitor.vo.Server;
-
-import javax.annotation.Resource;
 
 /**
  * @author YuePeng

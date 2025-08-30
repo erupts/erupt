@@ -1,6 +1,7 @@
 package xyz.erupt.ai.controller;
 
 import com.google.gson.reflect.TypeToken;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.ai.service.LLMService;
 import xyz.erupt.ai.util.ClassTemplateUtil;
@@ -11,7 +12,6 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**

@@ -1,8 +1,8 @@
 package xyz.erupt.cloud.server.annotation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import xyz.erupt.cloud.server.node.MetaNode;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)

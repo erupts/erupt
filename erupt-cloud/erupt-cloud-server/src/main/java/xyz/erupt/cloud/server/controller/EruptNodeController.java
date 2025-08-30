@@ -18,8 +18,8 @@ import xyz.erupt.core.log.LogMessage;
 import xyz.erupt.upms.annotation.EruptMenuAuth;
 import xyz.erupt.upms.service.EruptContextService;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
