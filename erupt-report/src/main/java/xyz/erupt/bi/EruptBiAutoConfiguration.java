@@ -57,7 +57,7 @@ public class EruptBiAutoConfiguration implements EruptModule {
     public void initFun() {
         String code = "BI_FUN";
         eruptDao.persistIfNotExist(BiFunction.class, new BiFunction(code, code,
-                StreamUtils.copyToString(EruptBiAutoConfiguration.class.getResourceAsStream("BiDefaultFunction.js")
+                StreamUtils.copyToString(EruptBiAutoConfiguration.class.getResourceAsStream("/BiDefaultFunction.js")
                         , StandardCharsets.UTF_8)), "code", code);
         BiGroup biGroup = new BiGroup();
         biGroup.setCode("default");
