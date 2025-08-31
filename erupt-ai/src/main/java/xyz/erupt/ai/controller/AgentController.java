@@ -1,5 +1,6 @@
 package xyz.erupt.ai.controller;
 
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,7 +11,6 @@ import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 

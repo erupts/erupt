@@ -1,5 +1,8 @@
 package xyz.erupt.jpa.support;
 
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.JoinColumn;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.EruptField;
@@ -8,9 +11,6 @@ import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.JoinColumn;
 import java.lang.reflect.Field;
 
 @Component

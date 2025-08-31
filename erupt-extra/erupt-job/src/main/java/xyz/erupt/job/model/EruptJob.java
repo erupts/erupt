@@ -1,5 +1,9 @@
 package xyz.erupt.job.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,11 +32,6 @@ import xyz.erupt.job.service.EruptJobFetch;
 import xyz.erupt.job.service.JobMessageListener;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.toolkit.notify.RedisNotifyDataProxy;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 /**
  * @author YuePeng

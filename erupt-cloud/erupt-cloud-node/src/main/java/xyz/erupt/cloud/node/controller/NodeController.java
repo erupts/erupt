@@ -1,11 +1,10 @@
 package xyz.erupt.cloud.node.controller;
 
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.cloud.common.consts.CloudRestApiConst;
 import xyz.erupt.cloud.node.config.EruptNodeProp;
-
-import javax.annotation.Resource;
 
 /**
  * @author YuePeng

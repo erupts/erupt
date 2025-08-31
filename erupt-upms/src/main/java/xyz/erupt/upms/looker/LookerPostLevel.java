@@ -1,6 +1,10 @@
 package xyz.erupt.upms.looker;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Resource;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -22,10 +26,6 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserPostVo;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
 import java.util.Date;
 import java.util.List;
 

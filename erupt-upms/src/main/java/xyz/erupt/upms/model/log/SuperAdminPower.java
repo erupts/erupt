@@ -1,11 +1,10 @@
 package xyz.erupt.upms.model.log;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.PowerHandler;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.upms.service.EruptUserService;
-
-import javax.annotation.Resource;
 
 /**
  * @author YuePeng

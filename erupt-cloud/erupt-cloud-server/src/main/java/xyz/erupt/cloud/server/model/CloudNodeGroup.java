@@ -1,8 +1,11 @@
 package xyz.erupt.cloud.server.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -14,11 +17,6 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModel;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
 
 /**
  * @author YuePeng
@@ -46,7 +44,6 @@ public class CloudNodeGroup extends MetaModel {
     private String name;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
     @EruptField(
             views = @View(title = "分组配置"),
             edit = @Edit(title = "分组配置", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))

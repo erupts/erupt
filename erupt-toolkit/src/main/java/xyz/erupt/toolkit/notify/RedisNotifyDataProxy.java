@@ -1,5 +1,6 @@
 package xyz.erupt.toolkit.notify;
 
+import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -7,8 +8,6 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProxyContext;
 import xyz.erupt.core.prop.EruptProp;
-
-import javax.annotation.Resource;
 
 /**
  * @author YuePeng

@@ -7,8 +7,8 @@ import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 

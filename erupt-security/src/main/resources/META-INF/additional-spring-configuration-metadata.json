@@ -1,9 +1,0 @@
-{
-  "groups": [
-    {
-      "sourceType": "xyz.erupt.security.config.EruptSecurityProp",
-      "name": "erupt.security",
-      "type": "xyz.erupt.security.config.EruptSecurityProp"
-    }
-  ]
-}

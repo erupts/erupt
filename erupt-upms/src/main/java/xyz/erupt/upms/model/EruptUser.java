@@ -1,5 +1,6 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -24,7 +25,6 @@ import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 import xyz.erupt.upms.model.input.ResetPassword;
 import xyz.erupt.upms.model.input.ResetPasswordExec;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;

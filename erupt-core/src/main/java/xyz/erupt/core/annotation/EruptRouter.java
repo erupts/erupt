@@ -2,7 +2,7 @@ package xyz.erupt.core.annotation;
 
 import xyz.erupt.annotation.config.Comment;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.lang.annotation.*;
 
 /**

@@ -2,6 +2,7 @@ package xyz.erupt.ai.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.ai.config.AiProp;
@@ -13,7 +14,6 @@ import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
