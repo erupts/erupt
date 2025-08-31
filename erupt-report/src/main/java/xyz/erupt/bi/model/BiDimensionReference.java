@@ -1,7 +1,7 @@
 package xyz.erupt.bi.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -48,7 +48,7 @@ public class BiDimensionReference extends MetaModelUpdateVo {
     private BiClassHandler classHandler;
 
 
-    @Column(columnDefinition = "text")
+    @Lob
     @EruptField(
             views = @View(title = "参照SQL"),
             edit = @Edit(title = "参照SQL", type = EditType.CODE_EDITOR,

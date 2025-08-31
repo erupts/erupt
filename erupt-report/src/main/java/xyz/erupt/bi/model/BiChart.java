@@ -109,7 +109,7 @@ public class BiChart extends MetaModelUpdateVo {
     )
     private BiTpl biTpl;
 
-    @Column(columnDefinition = "text")
+    @Lob
     @EruptField(
             views = @View(title = "图表SQL"),
             edit = @Edit(title = "图表SQL",

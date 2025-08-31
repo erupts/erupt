@@ -71,7 +71,7 @@ public class EruptBiController {
         biVo.setTable(StringUtils.isNotBlank(bi.getSqlStatement()));
         int maxSort = 9999;
         List<BiChartVo> biChartVos = new ArrayList<>();
-        for (BiChart chart : bi.getBiCharts()) {
+        for (BiChart chart : eruptDao.lambdaQuery(BiChart.class).with(BiChart::getBi).eq(Bi::getId, bi.getId()).list()) {
             BiChartVo biChartVo = new BiChartVo();
             biChartVo.setChartOption(chart.getChartOption());
             biChartVo.setId(chart.getId());

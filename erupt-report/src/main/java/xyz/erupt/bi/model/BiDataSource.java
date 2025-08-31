@@ -1,9 +1,6 @@
 package xyz.erupt.bi.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -83,7 +80,7 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
     )
     private String password;
 
-    @Column(columnDefinition = "text")
+    @Lob
     @EruptField(
             edit = @Edit(title = "分页语句", type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "sql"),

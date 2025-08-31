@@ -113,14 +113,14 @@ public class Bi extends MetaModelUpdateVo {
     )
     private Boolean export = true;
 
-    @Column(columnDefinition = "text")
+    @Lob
     @EruptField(
             views = @View(title = "取值SQL"),
             edit = @Edit(title = "取值SQL", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
-    @Column(columnDefinition = "text")
+    @Lob
     @EruptField(
             edit = @Edit(title = "总条数SQL", desc = "计算数据总量，在取值SQL嵌套子查询count性能较低时使用",
                     showBy = @ShowBy(dependField = "pageType", expr = "value == '" + BiConst.PAGE_END + "'"),
@@ -140,10 +140,6 @@ public class Bi extends MetaModelUpdateVo {
             views = @View(title = "效果预览", type = ViewType.LINK_DIALOG, desc = "需提前配置菜单权限")
     )
     private String view;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "bi_id")
-    private Set<BiChart> biCharts;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "bi_id")
