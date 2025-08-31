@@ -1,5 +1,6 @@
 package xyz.erupt.job.model.data_proxy;
 
+import jakarta.mail.internet.MimeMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +13,6 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.job.model.EruptMail;
 
-import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;

@@ -16,7 +16,7 @@ import xyz.erupt.upms.handler.RoleMenuFilter;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
 import xyz.erupt.upms.model.data_proxy.EruptRoleDataProxy;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Set;
 
 /**

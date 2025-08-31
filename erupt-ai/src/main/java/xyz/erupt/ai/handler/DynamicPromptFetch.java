@@ -1,5 +1,6 @@
 package xyz.erupt.ai.handler;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,6 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package xyz.erupt.ai.controller;
 
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.ai.annotation.AiParam;
@@ -10,7 +11,6 @@ import xyz.erupt.ai.util.McpUtil;
 import xyz.erupt.ai.vo.OpenAiVo;
 import xyz.erupt.core.util.EruptInformation;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;

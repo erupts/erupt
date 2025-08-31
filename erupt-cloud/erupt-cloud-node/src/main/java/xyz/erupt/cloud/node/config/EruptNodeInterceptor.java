@@ -15,9 +15,9 @@ import xyz.erupt.core.context.MetaErupt;
 import xyz.erupt.core.context.MetaUser;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 /**

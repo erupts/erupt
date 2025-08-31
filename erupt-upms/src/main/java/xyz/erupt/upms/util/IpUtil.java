@@ -1,5 +1,6 @@
 package xyz.erupt.upms.util;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.DbConfig;
@@ -7,7 +8,6 @@ import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
 import org.springframework.util.StreamUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;

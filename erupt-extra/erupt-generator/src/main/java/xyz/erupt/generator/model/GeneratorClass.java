@@ -2,6 +2,7 @@ package xyz.erupt.generator.model;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateHashModel;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -18,7 +19,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.jpa.model.MetaModel;
 
-import javax.persistence.*;
 import java.util.Map;
 import java.util.Set;
 

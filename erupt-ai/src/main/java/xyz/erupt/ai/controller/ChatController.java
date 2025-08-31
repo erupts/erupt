@@ -1,5 +1,6 @@
 package xyz.erupt.ai.controller;
 
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,6 @@ import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 

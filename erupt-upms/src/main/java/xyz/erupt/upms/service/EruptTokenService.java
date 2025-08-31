@@ -1,5 +1,6 @@
 package xyz.erupt.upms.service;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
@@ -13,7 +14,6 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 

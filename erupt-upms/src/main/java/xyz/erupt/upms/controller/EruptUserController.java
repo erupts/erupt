@@ -3,6 +3,8 @@ package xyz.erupt.upms.controller;
 import com.google.gson.reflect.TypeToken;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +31,6 @@ import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.vo.EruptMenuVo;
 import xyz.erupt.upms.vo.EruptUserinfoVo;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
