@@ -47,7 +47,7 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
     @EruptField(
             views = @View(title = "发送内容", type = ViewType.HTML)
     )
-    @Column(columnDefinition = "text")
+    @Lob
     private String content;
 
     @EruptField(
