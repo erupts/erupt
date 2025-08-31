@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.support;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -94,6 +95,7 @@ public class CommentIntegrator implements Integrator {
                     && !field.isAnnotationPresent(OneToOne.class)
                     && !field.isAnnotationPresent(OneToMany.class)
                     && !field.isAnnotationPresent(ManyToMany.class)
+                    && !field.isAnnotationPresent(ElementCollection.class)
             ) {
                 EruptField eruptField = field.getAnnotation(EruptField.class);
                 String comment = eruptField.edit().title();
@@ -112,7 +114,7 @@ public class CommentIntegrator implements Integrator {
             }
         } catch (SecurityException ignored) {
         } catch (Exception e) {
-            log.warn(e.getMessage());
+            log.warn(e.getMessage(), e);
         }
     }
 
