@@ -53,6 +53,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> em.find(eruptModel.getClazz(), id));
     }
 
+
     @Override
     public Page queryList(EruptModel eruptModel, Page page, EruptQuery query) {
         return eruptJpaDao.queryEruptList(eruptModel, page, query);

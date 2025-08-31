@@ -2,6 +2,7 @@ package xyz.erupt.job.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -75,7 +76,7 @@ public class EruptJobLog extends BaseModel {
     )
     private String resultInfo;
 
-    @Column(columnDefinition = "text")
+    @Lob
     @EruptField(
             views = @View(title = "错误信息", type = ViewType.HTML, sortable = true),
             edit = @Edit(title = "错误信息")

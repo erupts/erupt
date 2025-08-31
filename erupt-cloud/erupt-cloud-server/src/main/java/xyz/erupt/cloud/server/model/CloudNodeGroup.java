@@ -2,6 +2,7 @@ package xyz.erupt.cloud.server.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,7 +43,7 @@ public class CloudNodeGroup extends MetaModel {
     )
     private String name;
 
-    @Column(columnDefinition = "text")
+    @Lob
     @EruptField(
             views = @View(title = "分组配置"),
             edit = @Edit(title = "分组配置", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
