@@ -1,5 +1,9 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,11 +18,6 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
 /**
  * @author YuePeng
@@ -59,6 +58,15 @@ public class EruptOrg extends BaseModel {
             )
     )
     private EruptOrg parentOrg;
+
+    @ManyToOne
+    @EruptField(
+            edit = @Edit(
+                    title = "负责人",
+                    type = EditType.REFERENCE_TABLE
+            )
+    )
+    private EruptUser headUser;
 
     @EruptField(
             edit = @Edit(
