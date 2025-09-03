@@ -16,8 +16,6 @@ public class AiMCPProp {
 
     private boolean enable = false;
 
-    private String apiDomain;
-
     private String name;
 
     private String description;
