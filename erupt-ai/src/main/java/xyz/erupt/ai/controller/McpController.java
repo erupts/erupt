@@ -13,11 +13,14 @@ import xyz.erupt.ai.config.AiMCPProp;
 import xyz.erupt.ai.util.McpUtil;
 import xyz.erupt.ai.vo.mcp.McpInfo;
 import xyz.erupt.ai.vo.mcp.McpRequest;
+import xyz.erupt.ai.vo.mcp.McpResult;
 import xyz.erupt.ai.vo.mcp.McpTool;
+import xyz.erupt.core.util.EruptInformation;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -35,6 +38,7 @@ public class McpController {
     public static final String INITIALIZE = "initialize";
 
     @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter sse() {
         SseEmitter emitter = new SseEmitter(0L);
         Executors.newSingleThreadExecutor().submit(() -> {
@@ -65,61 +69,63 @@ public class McpController {
 
     @PostMapping
     public ResponseEntity<?> call(@RequestBody McpRequest request) {
-        Object result;
+        McpResult result = new McpResult();
         switch (request.getMethod()) {
-            case INITIALIZE -> result = this.mcpInfo();
+            case INITIALIZE -> result.setResult(this.mcpInfo());
+            case "notifications/initialized" -> {
+            }
             case "tools/list" -> {
-                List<McpTool> mcpTools = new ArrayList<>();
-                result = mcpTools;
-                for (Map.Entry<String, AiFunctionCall> entry : AiFunctionManager.getAiFunctions().entrySet()) {
-                    McpTool mcpTool = new McpTool();
-                    mcpTools.add(mcpTool);
-                    mcpTool.setName(entry.getValue().code());
-                    mcpTool.setDescription(entry.getValue().description());
-                    McpTool.InputSchema inputSchema = new McpTool.InputSchema();
-                    mcpTool.setInputSchema(inputSchema);
-                    {
-                        List<String> required = new ArrayList<>();
-                        for (Field field : entry.getValue().getClass().getDeclaredFields()) {
-                            AiParam aiParam = field.getDeclaredAnnotation(AiParam.class);
-                            if (null != aiParam) {
-                                if (aiParam.required()) {
-                                    required.add(field.getName());
-                                }
-                                mcpTool.getInputSchema().setType("object");
-                                McpTool.SchemaProperties schema = new McpTool.SchemaProperties();
-                                schema.setType(McpUtil.toMcp(field.getType()));
-                                schema.setDescription(aiParam.description());
-                                mcpTool.getInputSchema().getProperties().put(field.getName(), schema);
-                            }
-                        }
-                        mcpTool.getInputSchema().setRequired(required);
-                    }
-                }
+                result.setResult(Map.of("tools", this.mcpTools()));
             }
             case "tools/call" ->
-                    result = this.mcpCall(request.getParams().getName(), request.getParams().getArguments());
+                    result.setResult(this.mcpCall(request.getParams().getName(), request.getParams().getArguments()));
             default -> {
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", Map.of("code", -32601, "message", "Method not found " + request.getMethod())));
             }
         }
-        return ResponseEntity.ok(Map.of("jsonrpc", "2.0", "id", request.getId(), "result", result));
+        result.setId(request.getId());
+        return ResponseEntity.ok(result);
     }
 
     private McpInfo mcpInfo() {
         McpInfo mcpInfo = new McpInfo();
-        mcpInfo.setProtocolVersion("1");
-        mcpInfo.setCapabilities(Map.of("tools", Map.of()));
+        mcpInfo.setProtocolVersion("2024-11-05");
+        mcpInfo.setCapabilities(Map.of("tools", new HashMap<>()));
         McpInfo.ServerInfo serverInfo = new McpInfo.ServerInfo();
         serverInfo.setName("erupt-mcp");
-        serverInfo.setVersion("1.0");
+        serverInfo.setVersion(EruptInformation.getEruptVersion());
         mcpInfo.setServerInfo(serverInfo);
         return mcpInfo;
     }
 
     private List<McpTool> mcpTools() {
-        return null;
+        List<McpTool> mcpTools = new ArrayList<>();
+        for (Map.Entry<String, AiFunctionCall> entry : AiFunctionManager.getAiFunctions().entrySet()) {
+            McpTool mcpTool = new McpTool();
+            mcpTools.add(mcpTool);
+            mcpTool.setName(entry.getValue().code());
+            mcpTool.setDescription(entry.getValue().description());
+            {
+                McpTool.InputSchema inputSchema = new McpTool.InputSchema();
+                mcpTool.setInputSchema(inputSchema);
+                List<String> required = new ArrayList<>();
+                for (Field field : entry.getValue().getClass().getDeclaredFields()) {
+                    AiParam aiParam = field.getDeclaredAnnotation(AiParam.class);
+                    if (null != aiParam) {
+                        if (aiParam.required()) {
+                            required.add(field.getName());
+                        }
+                        McpTool.SchemaProperties schema = new McpTool.SchemaProperties();
+                        schema.setType(McpUtil.toMcp(field.getType()));
+                        schema.setDescription(aiParam.description());
+                        mcpTool.getInputSchema().getProperties().put(field.getName(), schema);
+                    }
+                }
+                mcpTool.getInputSchema().setRequired(required);
+            }
+        }
+        return mcpTools;
     }
 
     @SneakyThrows

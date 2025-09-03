@@ -21,9 +21,13 @@ public class McpTool {
     @Getter
     @Setter
     public static class InputSchema {
-        private String type;
+
+        private String type = "object";
+
         private Map<String, SchemaProperties> properties = new HashMap<>();
+
         private List<String> required = new ArrayList<>();
+
     }
 
     @Getter
