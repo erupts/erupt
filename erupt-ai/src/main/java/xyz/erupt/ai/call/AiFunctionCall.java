@@ -10,6 +10,10 @@ public interface AiFunctionCall {
         return this.getClass().getSimpleName();
     }
 
+    default boolean mcpCall() {
+        return true;
+    }
+
     String description();
 
     String call(String userPrompt);

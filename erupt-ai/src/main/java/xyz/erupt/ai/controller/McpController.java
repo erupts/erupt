@@ -35,15 +35,13 @@ public class McpController {
     @Resource
     private AiMCPProp mcpProp;
 
-    public static final String INITIALIZE = "initialize";
-
     @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @PostMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter sse() {
         SseEmitter emitter = new SseEmitter(0L);
         Executors.newSingleThreadExecutor().submit(() -> {
             try {
-                emitter.send(SseEmitter.event().name(INITIALIZE).data(this.mcpInfo()));
+                emitter.send(SseEmitter.event().name("initialize").data(this.mcpInfo()));
             } catch (Exception e) {
                 emitter.completeWithError(e);
             }
@@ -69,9 +67,12 @@ public class McpController {
 
     @PostMapping
     public ResponseEntity<?> call(@RequestBody McpRequest request) {
+        if (!mcpProp.isEnable()) {
+            throw new RuntimeException("MCP support is not enabled.");
+        }
         McpResult result = new McpResult();
         switch (request.getMethod()) {
-            case INITIALIZE -> result.setResult(this.mcpInfo());
+            case "initialize" -> result.setResult(this.mcpInfo());
             case "notifications/initialized" -> {
             }
             case "tools/list" -> result.setResult(Map.of("tools", this.mcpTools()));
@@ -100,27 +101,29 @@ public class McpController {
     private List<McpTool> mcpTools() {
         List<McpTool> mcpTools = new ArrayList<>();
         for (Map.Entry<String, AiFunctionCall> entry : AiFunctionManager.getAiFunctions().entrySet()) {
-            McpTool mcpTool = new McpTool();
-            mcpTools.add(mcpTool);
-            mcpTool.setName(entry.getValue().code());
-            mcpTool.setDescription(entry.getValue().description());
-            {
-                McpTool.InputSchema inputSchema = new McpTool.InputSchema();
-                mcpTool.setInputSchema(inputSchema);
-                List<String> required = new ArrayList<>();
-                for (Field field : entry.getValue().getClass().getDeclaredFields()) {
-                    AiParam aiParam = field.getDeclaredAnnotation(AiParam.class);
-                    if (null != aiParam) {
-                        if (aiParam.required()) {
-                            required.add(field.getName());
+            if (entry.getValue().mcpCall()) {
+                McpTool mcpTool = new McpTool();
+                mcpTools.add(mcpTool);
+                mcpTool.setName(entry.getValue().code());
+                mcpTool.setDescription(entry.getValue().description());
+                {
+                    McpTool.InputSchema inputSchema = new McpTool.InputSchema();
+                    mcpTool.setInputSchema(inputSchema);
+                    List<String> required = new ArrayList<>();
+                    for (Field field : entry.getValue().getClass().getDeclaredFields()) {
+                        AiParam aiParam = field.getDeclaredAnnotation(AiParam.class);
+                        if (null != aiParam) {
+                            if (aiParam.required()) {
+                                required.add(field.getName());
+                            }
+                            McpTool.SchemaProperties schema = new McpTool.SchemaProperties();
+                            schema.setType(McpUtil.toMcp(field.getType()));
+                            schema.setDescription(aiParam.description());
+                            mcpTool.getInputSchema().getProperties().put(field.getName(), schema);
                         }
-                        McpTool.SchemaProperties schema = new McpTool.SchemaProperties();
-                        schema.setType(McpUtil.toMcp(field.getType()));
-                        schema.setDescription(aiParam.description());
-                        mcpTool.getInputSchema().getProperties().put(field.getName(), schema);
                     }
+                    mcpTool.getInputSchema().setRequired(required);
                 }
-                mcpTool.getInputSchema().setRequired(required);
             }
         }
         return mcpTools;
