@@ -22,8 +22,4 @@ public class McpResult {
 
     private Object result;
 
-    public McpResult(Object id, Object result) {
-        this.id = id;
-        this.result = result;
-    }
 }

@@ -2,6 +2,7 @@ package xyz.erupt.ai.controller;
 
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +12,7 @@ import xyz.erupt.ai.call.AiFunctionCall;
 import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.config.AiMCPProp;
 import xyz.erupt.ai.util.McpUtil;
-import xyz.erupt.ai.vo.mcp.McpInfo;
-import xyz.erupt.ai.vo.mcp.McpRequest;
-import xyz.erupt.ai.vo.mcp.McpResult;
-import xyz.erupt.ai.vo.mcp.McpTool;
+import xyz.erupt.ai.vo.mcp.*;
 import xyz.erupt.core.util.EruptInformation;
 
 import java.io.IOException;
@@ -28,6 +26,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+
+@ConditionalOnProperty(name = "erupt.ai.mcp.enabled", havingValue = "true")
 @RestController
 @RequestMapping("/mcp")
 public class McpController {
@@ -67,17 +67,26 @@ public class McpController {
 
     @PostMapping
     public ResponseEntity<?> call(@RequestBody McpRequest request) {
-        if (!mcpProp.isEnable()) {
-            throw new RuntimeException("MCP support is not enabled.");
-        }
         McpResult result = new McpResult();
         switch (request.getMethod()) {
             case "initialize" -> result.setResult(this.mcpInfo());
             case "notifications/initialized" -> {
             }
             case "tools/list" -> result.setResult(Map.of("tools", this.mcpTools()));
-            case "tools/call" ->
-                    result.setResult(this.mcpCall(request.getParams().getName(), request.getParams().getArguments()));
+            case "tools/call" -> {
+                McpCallResult mcpCallResult = new McpCallResult();
+                McpCallResult.Content content = new McpCallResult.Content();
+                try {
+                    content.setText(this.mcpCall(request.getParams().getName(), request.getParams().getArguments()));
+                    mcpCallResult.setContent(List.of(content));
+                    result.setResult(mcpCallResult);
+                } catch (Exception e) {
+                    content.setText(e.getMessage());
+                    mcpCallResult.setError(true);
+                    mcpCallResult.setContent(List.of(content));
+                    result.setResult(mcpCallResult);
+                }
+            }
             default -> {
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", Map.of("code", -32601, "message", "Method not found " + request.getMethod())));

@@ -1,5 +1,6 @@
 package xyz.erupt.ai.call;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.context.MetaContext;
 
@@ -8,6 +9,7 @@ import xyz.erupt.core.context.MetaContext;
  * date 2025/3/14 23:25
  */
 @Component
+@Scope("prototype")
 public class UserCall implements AiFunctionCall {
 
     @Override
