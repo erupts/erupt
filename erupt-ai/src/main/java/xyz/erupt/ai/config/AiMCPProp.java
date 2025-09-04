@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("erupt.ai.mcp")
 public class AiMCPProp {
 
+    private boolean enable = false;
+
     private String name = "erupt-mcp";
 
     private String description;
