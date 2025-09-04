@@ -113,7 +113,7 @@ public class McpController {
             if (entry.getValue().mcpCall()) {
                 McpTool mcpTool = new McpTool();
                 mcpTools.add(mcpTool);
-                mcpTool.setName(entry.getValue().code());
+                mcpTool.setName(entry.getValue().name());
                 mcpTool.setDescription(entry.getValue().description());
                 {
                     McpTool.InputSchema inputSchema = new McpTool.InputSchema();

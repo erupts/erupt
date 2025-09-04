@@ -14,6 +14,10 @@ public interface AiFunctionCall {
         return true;
     }
 
+    default String name() {
+        return this.code();
+    }
+
     String description();
 
     String call(String userPrompt);

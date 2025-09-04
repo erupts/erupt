@@ -13,12 +13,17 @@ import xyz.erupt.core.context.MetaContext;
 public class UserCall implements AiFunctionCall {
 
     @Override
+    public String name() {
+        return "Current User";
+    }
+
+    @Override
     public String description() {
-        return "询问当前系统登录用户";
+        return "Ask the current system logged-in user";
     }
 
     @Override
     public String call(String prompt) {
-        return "Current user: " + MetaContext.getUser().getName();
+        return MetaContext.getUser().getName();
     }
 }
