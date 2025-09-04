@@ -74,9 +74,7 @@ public class McpController {
             case INITIALIZE -> result.setResult(this.mcpInfo());
             case "notifications/initialized" -> {
             }
-            case "tools/list" -> {
-                result.setResult(Map.of("tools", this.mcpTools()));
-            }
+            case "tools/list" -> result.setResult(Map.of("tools", this.mcpTools()));
             case "tools/call" ->
                     result.setResult(this.mcpCall(request.getParams().getName(), request.getParams().getArguments()));
             default -> {
@@ -93,7 +91,7 @@ public class McpController {
         mcpInfo.setProtocolVersion("2024-11-05");
         mcpInfo.setCapabilities(Map.of("tools", new HashMap<>()));
         McpInfo.ServerInfo serverInfo = new McpInfo.ServerInfo();
-        serverInfo.setName("erupt-mcp");
+        serverInfo.setName(mcpProp.getName());
         serverInfo.setVersion(EruptInformation.getEruptVersion());
         mcpInfo.setServerInfo(serverInfo);
         return mcpInfo;

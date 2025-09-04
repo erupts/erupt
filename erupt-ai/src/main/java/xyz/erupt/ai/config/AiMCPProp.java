@@ -2,6 +2,7 @@ package xyz.erupt.ai.config;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,12 +12,10 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-//@ConfigurationProperties("erupt.ai.mcp")
+@ConfigurationProperties("erupt.ai.mcp")
 public class AiMCPProp {
 
-    private boolean enable = false;
-
-    private String name;
+    private String name = "erupt-mcp";
 
     private String description;
 
