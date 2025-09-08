@@ -27,8 +27,6 @@ public class R<T> implements Serializable {
     //提示方式
     private EruptApiModel.PromptWay promptWay = EruptApiModel.PromptWay.MESSAGE;
 
-    private boolean errorIntercept = true;
-
     public static <T> R<T> ok(T data) {
         R<T> r = new R<>();
         r.setSuccess(true);
@@ -51,6 +49,19 @@ public class R<T> implements Serializable {
         r.setMessage(message);
         r.setStatus(EruptApiModel.Status.ERROR);
         return r;
+    }
+
+    public static <T> R<T> errorNotIntercept(String message, T data) {
+        R<T> r = new R<>();
+        r.setSuccess(false);
+        r.setMessage(message);
+        r.setPromptWay(EruptApiModel.PromptWay.NONE);
+        r.setStatus(EruptApiModel.Status.ERROR);
+        return r;
+    }
+
+    public static <T> R<T> errorNotIntercept(T data) {
+        return errorNotIntercept(null, data);
     }
 
     public enum Status {
