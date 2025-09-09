@@ -57,6 +57,7 @@ public class R<T> implements Serializable {
         r.setMessage(message);
         r.setPromptWay(EruptApiModel.PromptWay.NONE);
         r.setStatus(EruptApiModel.Status.ERROR);
+        r.setData(data);
         return r;
     }
 
