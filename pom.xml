@@ -197,9 +197,12 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>3.5.0</version>
                         <configuration>
-                            <additionalOptions>
-                                <additionalOption>-Xdoclint:none</additionalOption>
-                            </additionalOptions>
+                            <!-- 1. 关闭 doclint -->
+                            <doclint>none</doclint>
+                            <!-- 2. 指定 javadoc 可执行文件（按实际路径改） -->
+                            <javadocExecutable>
+                                ${java.home}/bin/javadoc
+                            </javadocExecutable>
                         </configuration>
                         <executions>
                             <execution>

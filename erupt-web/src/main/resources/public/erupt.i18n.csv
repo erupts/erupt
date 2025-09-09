@@ -104,3 +104,23 @@ none_permission,无权限！,無權限！,Without permission!,Aucune autorisatio
 theme.default,默认主题,默認主題,Default theme,Thème par défaut,デフォルトテーマ,기본 테마,По умолчанию.,Tema por defecto,Standardthema:,Tema por padrão,Tema standar,الموضوع الافتراضي
 theme.dark,黑夜主题,黑夜主題,Dark theme,Thème nuit noire,夜のテーマです,어두운 테마,♪ тема ночи ♪,Tema de noche,Das dunkle thema,Tema da noite,Tema malam,موضوع الليل
 theme.compact,紧凑主题,緊湊主題,Compact theme,Un thème compact,コンパクトなテーマです,주제를 잘 정리하다,Компактный предмет,Tema compacto,Ein neues thema.,Um tema compacto,Tema padat,موضوع ضيق
+
+TODAY,今天,今天,Today,Aujourd'hui,今日,오늘,Сегодня,Hoy,Heute,Hoje,Hari ini,اليوم
+FEW_DAYS,过去 N 天,過去 N 天,Past N days,Les N derniers jours,過去N日間,지난 N일,Последние N дней,Últimos N días,Letzte N Tage,Últimos N dias,N hari terakhir,الأيام N الماضية
+FUTURE_DAYS,未来 N 天,未來 N 天,Next N days,Les N prochains jours,今後N日間,향후 N일,Следующие N дней,Próximos N días,Nächste N Tage,Próximos N dias,N hari ke depan,الأيام N القادمة
+RANGE,区间,區間,Range,Intervalle,範囲,범위,Диапазон,Rango,Bereich,Intervalo,Rentang,نطاق
+GT,大于,大於,Greater than,Supérieur à,より大きい,보다 큰,Больше чем,Mayor que,Größer als,Maior que,Lebih besar dari,أكبر من
+LT,小于,小於,Less than,Inférieur à,より小さい,보다 작은,Меньше чем,Menor que,Kleiner als,Menor que,Kurang dari,أقل من
+EGT,大于等于,大於等於,Greater than or equal,Supérieur ou égal à,以上,이상,Больше или равно,Mayor o igual que,Größer gleich,Maior ou igual a,Lebih besar atau sama dengan,أكبر من أو يساوي
+ELT,小于等于,小於等於,Less than or equal,Inférieur ou égal à,以下,이하,Меньше или равно,Menor o igual que,Kleiner gleich,Menor ou igual a,Kurang dari atau sama dengan,أقل من أو يساوي
+NULL,为空,為空,Is null,Est nul,空である,널임,Пусто,Es nulo,Ist null,É nulo,Kosong,فارغ
+NOT_NULL,非空,非空,Not null,Non nul,空でない,널이 아님,Не пусто,No es nulo,Nicht null,Não é nulo,Tidak kosong,ليس فارغا
+EQ,等于,等於,Equal,Égal à,等しい,같음,Равно,Igual a,Gleich,Igual a,Sama dengan,يساوي
+NEQ,不等于,不等於,Not equal,Différent de,等しくない,같지 않음,Не равно,No igual a,Ungleich,Diferente de,Tidak sama dengan,لا يساوي
+LIKE,相似,相似,Similar,Similaire,類似,유사,Похожий,Similar,Ähnlich,Semelhante,Mirip,مشابه
+NOT_LIKE,不相似,不相似,Not similar,Pas similaire,類似していない,유사하지 않음,Не похожий,No similar,Nicht ähnlich,Não semelhante,Tidak mirip,غير مشابه
+START_WITH,以**开始,以**開始,Starts with,Commence par,で始まる,로 시작,Начинается с,Empieza con,Beginnt mit,Começa com,Dimulai dengan,يبدأ ب
+END_WITH,以**结尾,以**結尾,Ends with,Se termine par,で終わる,로 끝남,Заканчивается на,Termina en,Endet mit,Termina com,Berakhir dengan,ينتهي ب
+IN,包含于,包含於,Contains,Contient,含まれる,포함,Содержит,Contiene,Enthält,Contém,Mengandung,يحتوي على
+NOT_IN,不包含于,不包含於,Not contains,Ne contient pas,含まれない,포함하지 않음,Не содержит,No contiene,Enthält nicht,Não contém,Tidak mengandung,لا يحتوي على
+
