@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 @Getter
 @AllArgsConstructor
-public enum OperatorDateType implements DbOperatorExpr {
+public enum OperatorDateType implements OperatorExpr {
     TODAY("今天") {
         @Override
         public String expr(String field, Object value) {
