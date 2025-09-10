@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public enum OperatorReferenceType implements DbOperatorExpr {
+public enum OperatorReferenceType implements OperatorExpr {
 
     EQ("包含") {
         @Override

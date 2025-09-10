@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public enum OperatorStringType implements DbOperatorExpr {
+public enum OperatorStringType implements OperatorExpr {
 
     EQ("等于") {
         @Override
