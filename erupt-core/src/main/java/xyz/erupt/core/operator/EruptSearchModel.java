@@ -22,9 +22,10 @@ public class EruptSearchModel {
 
     private Object value;
 
-    public static String convertCondition(List<List<EruptSearchModel>> conditions) {
+    public static SqlParams convertCondition(List<List<EruptSearchModel>> conditions) {
+        SqlParams sqlParams = new SqlParams();
         if (conditions == null || conditions.isEmpty()) {
-            return "";
+            return sqlParams;
         }
         StringBuilder sb = new StringBuilder();
         List<String> orConditions = new ArrayList<>();
@@ -40,6 +41,8 @@ public class EruptSearchModel {
                 Class<? extends Enum> operatorClass = search.getOperatorType().operatorClass;
                 @SuppressWarnings("unchecked")
                 OperatorExpr operatorExpr = (OperatorExpr) Enum.valueOf(operatorClass, search.getOperator());
+//                String key = RandomStringUtils.randomAlphabetic(8);
+//                sqlParams.getParams().put(key, search.getValue());
                 String condition = operatorExpr.expr(search.getField(), search.getValue());
                 andConditions.add(condition);
             }
@@ -48,9 +51,10 @@ public class EruptSearchModel {
             }
         }
         if (!orConditions.isEmpty()) {
-            sb.append(" AND (").append(String.join(" OR ", orConditions)).append(")");
+            sb.append("(").append(String.join(" OR ", orConditions)).append(")");
         }
-        return sb.toString();
+        sqlParams.setSql(sb.toString());
+        return sqlParams;
     }
 
 }

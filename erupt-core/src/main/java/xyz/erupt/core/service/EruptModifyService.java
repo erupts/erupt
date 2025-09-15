@@ -2,6 +2,7 @@ package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -88,6 +89,7 @@ public class EruptModifyService {
      * @return pk
      */
     @SneakyThrows
+    @Transactional
     public Object insertEruptData(EruptModel eruptModel, JsonObject data) {
         EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
         if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
