@@ -42,6 +42,7 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
             views = @View(title = "发送人")
     )
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(100)")
     private ChatSenderType senderType;
 
     @EruptField(
