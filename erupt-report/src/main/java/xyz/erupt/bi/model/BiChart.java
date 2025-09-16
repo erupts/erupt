@@ -88,7 +88,7 @@ public class BiChart extends MetaModelUpdateVo {
     )
     private String remark;
 
-
+    @Column(columnDefinition = "varchar(100)")
     @Enumerated(EnumType.STRING)
     @EruptField(
             views = @View(title = "图表类型"),
