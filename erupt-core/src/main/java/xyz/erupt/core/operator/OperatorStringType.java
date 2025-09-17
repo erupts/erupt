@@ -64,7 +64,9 @@ public enum OperatorStringType implements OperatorExpr {
             Collection<?> collection = (Collection<?>) value;
             List<String> conditions = new ArrayList<>();
             for (Object object : collection) {
-                conditions.add(field + " like" + "'%" + object + "%'");
+                String placeholder = this.placeholder();
+                parameter.put(placeholder, "%" + object + "%");
+                conditions.add(field + " like :" + placeholder);
             }
             return "(" + String.join(" or ", conditions) + ")";
         }
@@ -74,9 +76,11 @@ public enum OperatorStringType implements OperatorExpr {
             Collection<?> collection = (Collection<?>) value;
             List<String> conditions = new ArrayList<>();
             for (Object object : collection) {
-                conditions.add(field + " not like" + "'%" + object + "%'");
+                String placeholder = this.placeholder();
+                parameter.put(placeholder, "%" + object + "%");
+                conditions.add(field + " not like :" + placeholder);
             }
-            return "(" + String.join(" or ", conditions) + ")";
+            return "(" + String.join(" and ", conditions) + ")";
         }
     }, NULL("为空") {
         @Override

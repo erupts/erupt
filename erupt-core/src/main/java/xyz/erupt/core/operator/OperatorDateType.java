@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,7 +56,7 @@ public enum OperatorDateType implements OperatorExpr {
     RANGE("区间") {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
-            ArrayList<String> s = (ArrayList<String>) value;
+            List<?> s = (ArrayList<?>) value;
             String placeholder1 = this.placeholder();
             parameter.put(placeholder1, s.get(0));
             String placeholder2 = this.placeholder();
