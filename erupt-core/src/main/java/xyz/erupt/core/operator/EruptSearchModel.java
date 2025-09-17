@@ -41,9 +41,7 @@ public class EruptSearchModel {
                 Class<? extends Enum> operatorClass = search.getOperatorType().operatorClass;
                 @SuppressWarnings("unchecked")
                 OperatorExpr operatorExpr = (OperatorExpr) Enum.valueOf(operatorClass, search.getOperator());
-//                String key = RandomStringUtils.randomAlphabetic(8);
-//                sqlParams.getParams().put(key, search.getValue());
-                String condition = operatorExpr.expr(search.getField(), search.getValue());
+                String condition = operatorExpr.expr(search.getField(), search.getValue(), sqlParams.getParams());
                 andConditions.add(condition);
             }
             if (!andConditions.isEmpty()) {
