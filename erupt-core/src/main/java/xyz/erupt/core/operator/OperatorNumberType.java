@@ -65,7 +65,7 @@ public enum OperatorNumberType implements OperatorExpr {
     RANGE("区间") {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
-            List<Object> s = (List) value;
+            List<?> s = (List<?>) value;
             String placeholder1 = this.placeholder();
             String placeholder2 = this.placeholder();
             parameter.put(placeholder1, s.get(0));
