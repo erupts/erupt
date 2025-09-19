@@ -1,11 +1,15 @@
 package xyz.erupt.bi.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -51,14 +55,14 @@ public class BiHistory extends BaseModel {
     )
     private Date operateTime;
 
-    @Lob
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "修改前"),
             edit = @Edit(title = "修改前", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
-    @Lob
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "修改后"),
             edit = @Edit(title = "修改后", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))

@@ -2,7 +2,6 @@ package xyz.erupt.bi.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,7 +65,7 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
     )
     private Boolean sortable = true;
 
-    @Lob
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             edit = @Edit(title = "下钻SQL", type = EditType.CODE_EDITOR,
                     showBy = @ShowBy(dependField = "type", expr = "value == 'drill'"),

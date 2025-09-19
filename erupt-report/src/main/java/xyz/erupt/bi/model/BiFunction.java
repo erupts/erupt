@@ -1,6 +1,9 @@
 package xyz.erupt.bi.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
@@ -42,7 +45,7 @@ public class BiFunction extends MetaModelUpdateVo {
     )
     private String name;
 
-    @Lob
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "函数表达式"),
             edit = @Edit(title = "函数表达式", desc = "参照JavaScript function写法",

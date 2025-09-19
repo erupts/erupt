@@ -113,14 +113,14 @@ public class Bi extends MetaModelUpdateVo {
     )
     private Boolean export = true;
 
-    @Lob
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "取值SQL"),
             edit = @Edit(title = "取值SQL", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql"))
     )
     private String sqlStatement;
 
-    @Lob
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             edit = @Edit(title = "总条数SQL", desc = "计算数据总量，在取值SQL嵌套子查询count性能较低时使用",
                     showBy = @ShowBy(dependField = "pageType", expr = "value == '" + BiConst.PAGE_END + "'"),
