@@ -2,7 +2,6 @@ package xyz.erupt.ai.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -113,7 +112,7 @@ public class LLM extends MetaModelUpdateVo {
     )
     private Integer sort = 0;
 
-    @Lob
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "模型配置"),
             edit = @Edit(title = "模型配置", type = EditType.CODE_EDITOR, notNull = true,
