@@ -8,6 +8,7 @@ import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
@@ -48,7 +49,7 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
     @EruptField(
             views = @View(title = "发送内容", type = ViewType.HTML)
     )
-    @Lob
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     private String content;
 
     @EruptField(
