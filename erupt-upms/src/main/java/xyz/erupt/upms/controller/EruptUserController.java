@@ -137,6 +137,7 @@ public class EruptUserController {
         EruptUser eruptUser = eruptUserService.getCurrentEruptUser();
         EruptUserinfoVo userinfoVo = new EruptUserinfoVo();
         userinfoVo.setNickname(eruptUser.getName());
+        userinfoVo.setAvatar(eruptUser.getAvatar());
         userinfoVo.setResetPwd(null == eruptUser.getResetPwdTime());
         Optional.ofNullable(eruptUser.getEruptOrg()).ifPresent(it -> userinfoVo.setOrg(it.getCode()));
         Optional.ofNullable(eruptUser.getEruptPost()).ifPresent(it -> userinfoVo.setPost(it.getCode()));

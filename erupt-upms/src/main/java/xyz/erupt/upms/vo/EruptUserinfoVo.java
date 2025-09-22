@@ -13,6 +13,8 @@ import java.util.List;
 @Setter
 public class EruptUserinfoVo {
 
+    private String avatar;
+
     //用户名
     private String nickname;
 
