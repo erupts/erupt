@@ -52,6 +52,9 @@ import java.util.stream.Collectors;
 @Setter
 public class EruptUser extends LookerSelf {
 
+    @Column(length = 1023)
+    private String avatar;
+
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "用户名", sortable = true),
@@ -209,13 +212,13 @@ public class EruptUser extends LookerSelf {
         this.setId(id);
     }
 
-    public MetaUserinfo toMetaUser(){
+    public MetaUserinfo toMetaUser() {
         MetaUserinfo metaUserinfo = new MetaUserinfo();
         metaUserinfo.setId(this.getId());
         metaUserinfo.setSuperAdmin(this.getIsAdmin());
         metaUserinfo.setAccount(this.getAccount());
         metaUserinfo.setUsername(this.getName());
-        Optional.ofNullable(this.getRoles()).ifPresent(it-> metaUserinfo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));
+        Optional.ofNullable(this.getRoles()).ifPresent(it -> metaUserinfo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));
         Optional.ofNullable(this.getEruptPost()).ifPresent(it -> metaUserinfo.setPost(it.getCode()));
         Optional.ofNullable(this.getEruptOrg()).ifPresent(it -> metaUserinfo.setOrg(it.getCode()));
         return metaUserinfo;
