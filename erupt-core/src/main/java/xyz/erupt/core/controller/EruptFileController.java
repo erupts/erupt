@@ -123,9 +123,9 @@ public class EruptFileController {
         List<String> paths = new ArrayList<>();
         for (MultipartFile file : files) {
             EruptApiModel eruptApiModel = upload(eruptName, fieldName, file);
-            paths.add(eruptApiModel.getMessage());
+            paths.add(eruptApiModel.getData().toString());
         }
-        return EruptApiModel.successApi(String.join(",", paths));
+        return EruptApiModel.successApi(paths);
     }
 
 
