@@ -18,7 +18,7 @@ upms.account_pwd_error,账号或密码错误,賬號或密碼錯誤,Incorrect acc
 md5加密,md5加密,md5加密,MD5 encrypt,Cryptage avec md5,md5暗号化です,md5 암호화,Md5 зашифровано,Cifrado con md5,Das md5 ist verschlüsselt.,Criptografia com md5,Enkripsi md5.,مشفر MD5.
 重置密码时间,重置密码时间,重置密碼時間,Reset password time,Réinitialiser le mot de passe time,パスワード時間をリセットします,비밀번호 초기화 시간,Перезагрузка.,Restablecer tiempo de contraseña,Das passwort zurücksetzen.,Redefinir tempo de senha,Atur ulang waktu kata sandi,إعادة ضبط وقت كلمة المرور
 账号失效时间,账号失效时间,賬號失效時間,Account expiration time,Temps d’expiration du compte,アカウント失効期間です,계정 유효기간,Время истечения срока действия счета,Tiempo de caducidad de cuenta,Die kontonummer werden gelöscht,Tempo de expiração da conta,Waktu gagal akun,وقت انتهاء الحساب
-超管用户,超管用户,超管用戶,Overpipe user,Surtube pour les utilisateurs,スーパーチューブ利用者です,하이퍼튜브 사용자,Пользователь с перетрубкой,Supertube para usuarios,Den benutzer,Supertube para usuários,Pengguna ultra,العملاء
+超管用户,超管用户,超管用戶,Admin user,Surtube pour les utilisateurs,スーパーチューブ利用者です,하이퍼튜브 사용자,Пользователь с перетрубкой,Supertube para usuarios,Den benutzer,Supertube para usuários,Pengguna ultra,العملاء
 重置密码,重置密码,重置密碼,Reset password,Réinitialiser votre mot de passe,パスワードをリセットします,비밀번호 초기화,Перезагрузка.,Restablecer la contraseña,Das passwort zurücksetzen.,Redefinir senha,Atur ulang kata sandi anda,إعادة ضبط كلمة المرور
 加密,加密,加密,encipher,chiffrement,暗号化です,암호화,зашифрова,cifrado,verschlüsselung,encriptação,Terenkripsi.,التشفير
 不加密,不加密,不加密,No encryption,Pas de cryptage,暗号化しません,암호화하지 않음,Нет.,Sin encriptación,Keine verschlüsselung.,Sem criptografia disponível,Tidak terenkripsi,غير مشفر
