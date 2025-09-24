@@ -26,6 +26,8 @@ import xyz.erupt.jpa.model.BaseModel;
 @Setter
 public class EruptUserVo extends BaseModel {
 
+    private String avatar;
+
     @EruptField(
             views = @View(title = "姓名", sortable = true),
             edit = @Edit(title = "姓名", notNull = true, search = @Search(vague = true))
