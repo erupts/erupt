@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
@@ -156,6 +157,8 @@ public class EruptTplService {
                 map.put(kv.split("=")[0], kv.split("=")[1]);
             }
         }
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         engineAbstractTemplate.render(engineAbstractTemplate.getEngine(), path, map, writer);
     }
 

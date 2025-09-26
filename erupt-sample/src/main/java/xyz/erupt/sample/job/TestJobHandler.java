@@ -1,9 +1,12 @@
 package xyz.erupt.sample.job;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.job.handler.EruptJobHandler;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 @Slf4j
+@Getter
 public class TestJobHandler implements EruptJobHandler {
 
     @Override
@@ -25,6 +28,12 @@ public class TestJobHandler implements EruptJobHandler {
     @Override
     public String param() {
         return "{}";
+    }
+
+    private String AAA_BBB;
+
+    public static void main(String[] args) {
+        System.out.println(LambdaSee.field(TestJobHandler::getAAA_BBB));
     }
 
 }
