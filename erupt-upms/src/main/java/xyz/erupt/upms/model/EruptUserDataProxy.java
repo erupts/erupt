@@ -60,9 +60,9 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
 
     @Override
     public void beforeDelete(EruptUser eruptUser) {
-        for (EruptOrg org : eruptDao.lambdaQuery(EruptOrg.class).eq(EruptOrg::getHeadUser, eruptUser).list()) {
-            org.setHeadUser(null);
-            eruptDao.merge(org);
-        }
+//        for (EruptOrg org : eruptDao.lambdaQuery(EruptOrg.class).eq(EruptOrg::getHeadUser, eruptUser).list()) {
+//            org.setHeadUser(null);
+//            eruptDao.merge(org);
+//        }
     }
 }
