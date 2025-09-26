@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.prop.EruptProp;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * @author YuePeng
@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class EruptLogManager {
 
-    private static final Deque<LogMessage> EVENT_QUEUE = new ArrayDeque<>();
+    private static final Deque<LogMessage> EVENT_QUEUE = new LinkedBlockingDeque<>();
 
     private static int LOG_TRACK_CACHE_SIZE;
 
