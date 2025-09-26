@@ -58,16 +58,16 @@ public class EruptOrg extends BaseModel {
     )
     private EruptOrg parentOrg;
 
-    @ManyToOne
-    @EruptField(
-            edit = @Edit(
-                    title = "负责人",
-                    type = EditType.REFERENCE_TABLE
-            )
-    )
-    @NotFound(action = NotFoundAction.IGNORE)
-    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private EruptUser headUser;
+//    @ManyToOne
+//    @EruptField(
+//            edit = @Edit(
+//                    title = "负责人",
+//                    type = EditType.REFERENCE_TABLE
+//            )
+//    )
+//    @NotFound(action = NotFoundAction.IGNORE)
+//    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+//    private EruptUser headUser;
 
     @EruptField(
             edit = @Edit(
