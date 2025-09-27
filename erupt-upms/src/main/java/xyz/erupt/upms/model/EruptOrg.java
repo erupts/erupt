@@ -1,11 +1,12 @@
 package xyz.erupt.upms.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -57,17 +58,6 @@ public class EruptOrg extends BaseModel {
             )
     )
     private EruptOrg parentOrg;
-
-//    @ManyToOne
-//    @EruptField(
-//            edit = @Edit(
-//                    title = "负责人",
-//                    type = EditType.REFERENCE_TABLE
-//            )
-//    )
-//    @NotFound(action = NotFoundAction.IGNORE)
-//    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-//    private EruptUser headUser;
 
     @EruptField(
             edit = @Edit(
