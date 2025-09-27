@@ -31,7 +31,6 @@ public class EruptExceptionAdvice {
     @ResponseBody
     public EruptApiModel eruptApiErrorTip(EruptApiErrorTip e) {
         log.error(ERE, e);
-        e.eruptApiModel.setErrorIntercept(false);
         return e.eruptApiModel;
     }
 

@@ -279,10 +279,10 @@ public class EruptUtil {
             JsonElement value = jsonObject.get(field.getFieldName());
             if (field.getEruptField().edit().notNull()) {
                 if (null == value || value.isJsonNull()) {
-                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                    return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
                 } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
-                        return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                        return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
             }
@@ -299,7 +299,7 @@ public class EruptUtil {
                 //xss 注入处理
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
                     if (SecurityUtil.xssInspect(value.getAsString())) {
-                        return EruptApiModel.errorNoInterceptApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
+                        return EruptApiModel.errorApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
                     }
                 }
                 //数据类型校验
@@ -307,7 +307,7 @@ public class EruptUtil {
                     case NUMBER:
                     case SLIDER:
                         if (!NumberUtils.isCreatable(value.getAsString())) {
-                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.must.number"));
+                            return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
                     case INPUT:
@@ -315,7 +315,7 @@ public class EruptUtil {
                             String content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
+                                    return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
                                 }
                             }
                         }
