@@ -14,13 +14,12 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.InputType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.upms.looker.LookerSelf;
+import xyz.erupt.upms.model.data_proxy.EruptOrgFetchHandler;
+import xyz.erupt.upms.model.data_proxy.EruptUserDataProxy;
 import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 import xyz.erupt.upms.model.input.ResetPassword;
 import xyz.erupt.upms.model.input.ResetPasswordExec;
@@ -126,6 +125,15 @@ public class EruptUser extends LookerSelf {
             edit = @Edit(title = "岗位", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private EruptPost eruptPost;
+
+    @ElementCollection
+    @CollectionTable(name = "e_upms_user_org_head", joinColumns = @JoinColumn(name = "id"))
+    @EruptField(
+            views = @View(title = "负责组织", column = "name"),
+            edit = @Edit(title = "负责组织", type = EditType.MULTI_CHOICE, multiChoiceType =
+            @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
+    )
+    private Set<Integer> headOrg;
 
     @Transient
     @EruptField(

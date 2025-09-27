@@ -8,6 +8,7 @@ import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
@@ -44,8 +45,8 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$manager", "系统管理", "fa fa-cogs", 1));
-        menus.add(MetaMenu.createSimpleMenu("$home", "首页", "/", null, 0, "fa fa-home", MenuTypeEnum.ROUTER.getCode(), MenuStatus.OPEN));
+        menus.add(MetaMenu.createRootMenu("$manager", I18nTranslate.$translate("系统管理"), "fa fa-cogs", 1));
+        menus.add(MetaMenu.createSimpleMenu("$home", I18nTranslate.$translate("首页"), "/", null, 0, "fa fa-home", MenuTypeEnum.ROUTER.getCode(), MenuStatus.OPEN));
         menus.add(MetaMenu.createEruptClassMenu(EruptMenu.class, menus.get(0), 0, MenuTypeEnum.TREE));
         menus.add(MetaMenu.createEruptClassMenu(EruptRole.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(EruptOrg.class, menus.get(0), 20, MenuTypeEnum.TREE));
@@ -57,7 +58,7 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createEruptClassMenu(EruptOnline.class, menus.get(0), 65));
         menus.add(MetaMenu.createEruptClassMenu(EruptLoginLog.class, menus.get(0), 70));
         menus.add(MetaMenu.createEruptClassMenu(EruptOperateLog.class, menus.get(0), 80));
-        menus.add(MetaMenu.createSimpleMenu(EruptConst.ERUPT_LOG, "系统日志", EruptConst.ERUPT_LOG, menus.get(0), 90, EruptTplService.TPL));
+        menus.add(MetaMenu.createSimpleMenu(EruptConst.ERUPT_LOG, I18nTranslate.$translate("系统日志"), EruptConst.ERUPT_LOG, menus.get(0), 90, EruptTplService.TPL));
         return menus;
     }
 

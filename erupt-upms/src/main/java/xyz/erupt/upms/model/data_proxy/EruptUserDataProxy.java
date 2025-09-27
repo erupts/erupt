@@ -1,4 +1,4 @@
-package xyz.erupt.upms.model;
+package xyz.erupt.upms.model.data_proxy;
 
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -9,7 +9,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
-import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptUserService;
 
 /**
@@ -21,9 +21,6 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
 
     @Resource
     private EruptUserService eruptUserService;
-
-    @Resource
-    private EruptDao eruptDao;
 
     @Override
     public void beforeAdd(EruptUser eruptUser) {
@@ -58,11 +55,4 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
         }
     }
 
-    @Override
-    public void beforeDelete(EruptUser eruptUser) {
-//        for (EruptOrg org : eruptDao.lambdaQuery(EruptOrg.class).eq(EruptOrg::getHeadUser, eruptUser).list()) {
-//            org.setHeadUser(null);
-//            eruptDao.merge(org);
-//        }
-    }
 }
