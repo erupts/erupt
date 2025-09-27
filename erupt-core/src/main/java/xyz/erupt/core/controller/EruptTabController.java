@@ -79,7 +79,6 @@ public class EruptTabController {
         if (eruptApiModel.getStatus() == EruptApiModel.Status.SUCCESS) {
             DataProxyInvoke.invoke(eruptModel, consumer);
         }
-        eruptApiModel.setErrorIntercept(false);
         eruptApiModel.setPromptWay(EruptApiModel.PromptWay.MESSAGE);
         return eruptApiModel;
     }
