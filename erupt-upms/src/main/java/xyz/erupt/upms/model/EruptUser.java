@@ -133,7 +133,7 @@ public class EruptUser extends LookerSelf {
             edit = @Edit(title = "负责组织", type = EditType.MULTI_CHOICE, multiChoiceType =
             @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
     )
-    private Set<Integer> headOrg;
+    private Set<Long> headOrg;
 
     @Transient
     @EruptField(
