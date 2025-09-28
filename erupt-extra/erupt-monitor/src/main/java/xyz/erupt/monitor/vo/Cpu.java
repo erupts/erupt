@@ -33,11 +33,12 @@ public class Cpu {
     private String cpuModel; //型号
 
     @SneakyThrows
-    Cpu(SystemInfo systemInfo) {
+    Cpu(SystemInfo systemInfo, Boolean wait) {
         CentralProcessor processor = systemInfo.getHardware().getProcessor();
         long[] prevTicks = processor.getSystemCpuLoadTicks();
-        // 睡眠1s
-        TimeUnit.MILLISECONDS.sleep(1000);
+        if (null == wait || wait) {
+            TimeUnit.MILLISECONDS.sleep(1000);
+        }
         long[] ticks = processor.getSystemCpuLoadTicks();
         long nice = ticks[CentralProcessor.TickType.NICE.getIndex()] - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
         long irq = ticks[CentralProcessor.TickType.IRQ.getIndex()] - prevTicks[CentralProcessor.TickType.IRQ.getIndex()];

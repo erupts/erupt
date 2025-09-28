@@ -27,8 +27,8 @@ public class MonitorServerController {
 
     @GetMapping("/info")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.MENU)
-    public Server info() {
-        return new Server();
+    public Server info(Boolean waitCpu) {
+        return new Server(waitCpu);
     }
 
     @GetMapping("/platform")
