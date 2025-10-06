@@ -11,6 +11,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.SceneEnum;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.exception.EruptException;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.query.Condition;
@@ -26,6 +27,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
@@ -295,7 +297,7 @@ public class EruptUtil {
                     }
                 }
             }
-            if (null != value && !AnnotationConst.EMPTY_STR.equals(edit.title())) {
+            if (null != value && !value.isJsonNull() && !AnnotationConst.EMPTY_STR.equals(edit.title())) {
                 //xss 注入处理
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
                     if (SecurityUtil.xssInspect(value.getAsString())) {
@@ -306,7 +308,7 @@ public class EruptUtil {
                 switch (edit.type()) {
                     case NUMBER:
                     case SLIDER:
-                        if (!NumberUtils.isCreatable(value.getAsString())) {
+                        if (!NumberUtils.isNumber(value.getAsString())) {
                             return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
@@ -322,6 +324,11 @@ public class EruptUtil {
                         break;
                 }
             }
+        }
+        try {
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.validate(GsonFactory.getGson().fromJson(jsonObject.toString(), eruptModel.getClazz()))));
+        } catch (EruptException e) {
+            return EruptApiModel.errorMessageApi(e.getMessage());
         }
         return EruptApiModel.successApi();
     }
