@@ -36,7 +36,7 @@ public class EruptOnlineFilterHandler implements FilterHandler {
         } else {
             keys = eruptLocalSession.keySet().stream().filter(it -> it.startsWith(SessionKey.TOKEN_OLINE)).collect(Collectors.toSet());
         }
-        if (keys != null && !keys.isEmpty()) {
+        if (!keys.isEmpty()) {
             return EruptOnline.class.getSimpleName() + "." + LambdaSee.field(EruptOnline::getToken) + " in (" + keys.stream()
                     .map(it -> "'" + it.substring(SessionKey.TOKEN_OLINE.length()) + "'").collect(Collectors.joining(",")) + ")";
         } else {

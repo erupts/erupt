@@ -267,7 +267,7 @@ public class EruptUtil {
                     throw new EruptApiErrorTip(EruptApiModel.Status.INFO, edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
                 }
                 if (condition.getValue() instanceof List) {
-                    if (((List<?>) condition.getValue()).size() == 0) {
+                    if (((List<?>) condition.getValue()).isEmpty()) {
                         throw new EruptApiErrorTip(EruptApiModel.Status.INFO + edit.title() + " " + I18nTranslate.$translate("erupt.notnull"), EruptApiModel.PromptWay.MESSAGE);
                     }
                 }

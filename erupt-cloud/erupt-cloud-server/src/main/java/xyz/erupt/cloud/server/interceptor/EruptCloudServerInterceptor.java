@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -97,7 +98,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     };
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull Object handler) throws Exception {
         EruptRouter eruptRouter = null;
         if (handler instanceof HandlerMethod) {
             eruptRouter = ((HandlerMethod) handler).getMethodAnnotation(EruptRouter.class);
@@ -181,7 +182,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull Object handler, Exception ex) throws Exception {
         eruptSecurityInterceptor.afterConcurrentHandlingStarted(request, response, handler);
         NodeContext.remove();
     }

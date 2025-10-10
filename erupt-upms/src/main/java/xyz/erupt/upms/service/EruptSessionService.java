@@ -61,7 +61,7 @@ public class EruptSessionService {
 
     public boolean exist(String key) {
         if (eruptProp.isRedisSession()) {
-            return Boolean.TRUE.equals(stringRedisTemplate.hasKey(key));
+            return stringRedisTemplate.hasKey(key);
         } else {
             return null != eruptLocalSession.get(key);
         }

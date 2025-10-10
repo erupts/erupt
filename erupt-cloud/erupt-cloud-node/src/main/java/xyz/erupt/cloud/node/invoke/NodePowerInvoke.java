@@ -1,5 +1,6 @@
 package xyz.erupt.cloud.node.invoke;
 
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -31,15 +32,17 @@ public class NodePowerInvoke implements PowerHandler {
     @Override
     public void handler(PowerObject power) {
         EruptModel eruptModel = EruptCoreService.getErupt(MetaContext.getErupt().getName());
-        PowerObject remotePowerObject = GsonFactory.getGson().fromJson(HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_POWER)
+        try (HttpResponse res = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.ERUPT_POWER)
                 .form("nodeName", eruptNodeProp.getNodeName()).form("eruptName", eruptModel.getEruptName())
-                .header(EruptMutualConst.TOKEN, MetaContext.getToken()).execute().body(), PowerObject.class);
-        if (power.isAdd()) power.setAdd(remotePowerObject.isAdd());
-        if (power.isDelete()) power.setDelete(remotePowerObject.isDelete());
-        if (power.isEdit()) power.setEdit(remotePowerObject.isEdit());
-        if (power.isViewDetails()) power.setViewDetails(remotePowerObject.isViewDetails());
-        if (power.isExport()) power.setExport(remotePowerObject.isExport());
-        if (power.isImportable()) power.setImportable(remotePowerObject.isImportable());
+                .header(EruptMutualConst.TOKEN, MetaContext.getToken()).execute()){
+            PowerObject remotePowerObject = GsonFactory.getGson().fromJson(res.body(), PowerObject.class);
+            if (power.isAdd()) power.setAdd(remotePowerObject.isAdd());
+            if (power.isDelete()) power.setDelete(remotePowerObject.isDelete());
+            if (power.isEdit()) power.setEdit(remotePowerObject.isEdit());
+            if (power.isViewDetails()) power.setViewDetails(remotePowerObject.isViewDetails());
+            if (power.isExport()) power.setExport(remotePowerObject.isExport());
+            if (power.isImportable()) power.setImportable(remotePowerObject.isImportable());
+        }
     }
 
 }

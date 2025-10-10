@@ -7,6 +7,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.lang.NonNull;
 import org.springframework.util.ClassUtils;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.constant.EruptConst;
@@ -34,13 +35,14 @@ public class EruptApplication implements ImportBeanDefinitionRegistrar {
 
     @SneakyThrows
     @Override
-    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,@NonNull BeanDefinitionRegistry registry) {
         Class<?> clazz = ClassUtils.forName(importingClassMetadata.getClassName(), ClassUtils.getDefaultClassLoader());
         Optional.ofNullable(clazz.getAnnotation(SpringBootApplication.class)).ifPresent(it -> primarySource = clazz);
         EruptScan eruptScan = clazz.getAnnotation(EruptScan.class);
         try {
             Class.forName("org.springframework.boot.devtools.RemoteUrlPropertyExtractor");
-            log.error("spring-boot-devtools 与 erupt 同时存在会出现各种奇怪的问题，建议移除该依赖！！！");
+            log.error("If  spring-boot-devtools  is on the classpath together with Erupt, weird bugs start to pop up.\n" +
+                    "Just drop the devtools dependency—problem solved.");
         } catch (ClassNotFoundException ignored) {
         }
         if (eruptScan.value().length == 0) {

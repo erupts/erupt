@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,7 +163,7 @@ public class EruptFileController {
                                    HttpServletResponse response) throws IOException, ClassNotFoundException {
         if (null == file) {
             @Cleanup InputStream stream = EruptFileController.class.getClassLoader().getResourceAsStream("ueditor.json");
-            String json = StreamUtils.copyToString(stream, Charset.forName(StandardCharsets.UTF_8.name()));
+            String json = StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
             if (null == callback) {
                 response.getOutputStream().write(json.getBytes(StandardCharsets.UTF_8));
             } else {

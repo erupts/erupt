@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.cloud.common.model.NodeInfo;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Setter
 public class MetaNode extends NodeInfo implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -10086;
 
     //服务注册时间
