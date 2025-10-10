@@ -170,6 +170,7 @@ public class BiService {
         }
         Supplier<List<Map<String, Object>>> supplier = () -> {
             NamedParameterJdbcTemplate jdbcTemplate = dataSourceService.getJdbcTemplate(biDataSource);
+            @SuppressWarnings("SqlSourceToSinkFlow")
             List<Map<String, Object>> list = jdbcTemplate.query(finalExpress, query, rowMapper);
             Optional.ofNullable(finalBiHandler).ifPresent(it -> it.resultHandler(classHandler.getParam(), query, list));
             return list;
@@ -235,6 +236,7 @@ public class BiService {
         }
     }
 
+    @SuppressWarnings("SqlSourceToSinkFlow")
     public Long getTotal(String express, BiDataSource biDataSource, Map<String, Object> query) {
         return Long.valueOf(dataSourceService.getJdbcTemplate(biDataSource)
                 .queryForMap("select count(1) " + TOTAL_KEY + " from (\n " + express + " \n) cnt", query)
