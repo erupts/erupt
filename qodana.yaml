@@ -8,3 +8,9 @@ profile:
   name: qodana.recommended
 include:
   - name: CheckDependencyLicenses
+
+exclude:
+  - name: All
+    paths:
+      - erupt-web
+      - erupt-tpl-ui
