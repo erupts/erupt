@@ -18,68 +18,31 @@ import java.util.regex.Pattern;
 @Slf4j
 public class SecurityUtil {
 
-    // xss跨站脚本检测
+    private static final Pattern XSS_PATTERN = Pattern.compile(
+            // Script 标签
+            "<script\\b[^>]*>(.*?)</script>|" +
+            // 主要事件处理器
+            "\\b(?:onclick|onload|onmouseover|onfocus|onerror|onchange|onsubmit|onkeydown|onkeyup|onblur|onresize|onscroll|ondblclick|onmousedown|onmouseup|onmousemove|onmouseout|oninput|onpaste|oncut|oncopy|ondrag|ondrop|onreset|onselect|onwheel)\\s*\\s*=" +
+            // 伪协议
+            "\\b(?:javascript|vbscript|data):|" +
+            // 危险的属性值
+            "\\b(?:src|href|action)\\s*\\s*=\\s*(['\"]?)\\s*(?:javascript|vbscript|data):|" +
+            // 危险的函数调用
+            "\\b(?:eval|expression|setTimeout|setInterval|Function|alert|confirm|prompt)\\s*\\s*\\(|" +
+            // 危险的HTML标签（只检测明显危险的标签）
+            "<(?:iframe|object|embed|applet)\\b[^>]*>|" +
+            // 样式中的表达式
+            "\\bexpression\\s*\\s*\\(|" +
+            // 危险的DOM操作
+            "\\b(?:innerHTML|outerHTML|document\\.write|document\\.writeln)\\s*\\s*=",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL
+    );
+
+    /**
+     * true = Detecting suspicious XSS fragments
+     */
     public static boolean xssInspect(String value) {
-        if (StringUtils.isNotBlank(value)) {
-            // 避免script 标签
-            Pattern scriptPattern = Pattern.compile("<script>(.*?)</script>", Pattern.CASE_INSENSITIVE);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免src形式的表达式
-            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\'(.*?)\\'", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\\"(.*?)\\\"", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 删除单个的<script ...> 标签
-            scriptPattern = Pattern.compile("<script(.*?)>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 eval(...) 形式表达式
-            scriptPattern = Pattern.compile("eval\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 expression(...) 表达式
-            scriptPattern = Pattern.compile("expression\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 javascript: 表达式
-            scriptPattern = Pattern.compile("javascript:", Pattern.CASE_INSENSITIVE);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 vbscript: 表达式
-            scriptPattern = Pattern.compile("vbscript:", Pattern.CASE_INSENSITIVE);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 onload= 表达式
-            scriptPattern = Pattern.compile("onload(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 onmouseover= 表达式
-            scriptPattern = Pattern.compile("onmouseover(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 onfocus= 表达式
-            scriptPattern = Pattern.compile("onfocus(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 onerror= 表达式
-            scriptPattern = Pattern.compile("^onerror(.*?)=$", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            return scriptPattern.matcher(value).find();
-        }
-        return false;
+        return value != null && XSS_PATTERN.matcher(value).find();
     }
 
     //检测 跨站请求伪造
@@ -99,4 +62,5 @@ public class SecurityUtil {
         }
         return false;
     }
+
 }
