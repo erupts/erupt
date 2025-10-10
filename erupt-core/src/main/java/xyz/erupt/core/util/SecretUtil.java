@@ -29,7 +29,7 @@ public class SecretUtil {
         for (int i = 0; i < encodeNum; i++) {
             str = new String(Base64.getDecoder().decode(str));
         }
-        return URLDecoder.decode(str, StandardCharsets.UTF_8.name());
+        return URLDecoder.decode(str, StandardCharsets.UTF_8);
     }
 
 }
