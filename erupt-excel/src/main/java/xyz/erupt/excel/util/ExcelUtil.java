@@ -32,7 +32,7 @@ public class ExcelUtil {
 
     public static OutputStream downLoadFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
         try {
-            String headStr = "attachment; filename=" + java.net.URLEncoder.encode(fileName, StandardCharsets.UTF_8.name());
+            String headStr = "attachment; filename=" + java.net.URLEncoder.encode(fileName, StandardCharsets.UTF_8);
             response.setContentType("application/x-download");
             response.setHeader(CONTENT_DISPOSITION_HEADER, headStr);
             response.addHeader("Access-Control-Expose-Headers", CONTENT_DISPOSITION_HEADER);

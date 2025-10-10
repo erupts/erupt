@@ -34,7 +34,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private transient AnnotationProxy<EruptField, Void> eruptFieldAnnotationProxy = new EruptFieldProxy();
 
-    private transient boolean starting = false;
+    private transient boolean starting;
 
     private String fieldName;
 

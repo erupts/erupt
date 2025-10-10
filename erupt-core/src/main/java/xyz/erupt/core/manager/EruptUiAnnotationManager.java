@@ -13,7 +13,7 @@ import java.util.Set;
 public class EruptUiAnnotationManager {
 
     @Getter
-    private static Set<Class<? extends Annotation>> annotations = new HashSet<>();
+    private static final Set<Class<? extends Annotation>> annotations = new HashSet<>();
 
     public static void register(Class<? extends Annotation> annotation) {
         annotations.add(annotation);

@@ -48,7 +48,7 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>>  {
             URL url = urls.nextElement();
             switch (url.getProtocol()) {
                 case "file":
-                    scanFile(new File(URLDecoder.decode(url.getFile(), Charset.defaultCharset().name())));
+                    scanFile(new File(URLDecoder.decode(url.getFile(), Charset.defaultCharset())));
                     break;
                 case "jar":
                     JarURLConnection urlConnection = (JarURLConnection) url.openConnection();

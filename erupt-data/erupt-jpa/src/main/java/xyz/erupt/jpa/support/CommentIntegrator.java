@@ -14,6 +14,7 @@ import org.hibernate.mapping.Column;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.hibernate.service.spi.SessionFactoryServiceRegistry;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -24,7 +25,7 @@ import java.lang.reflect.Field;
 import java.util.Optional;
 
 /**
- * code from : 'https://github.com/elyar-adil/JpaCommentAnnotation'
+ * code from : '<a href="https://github.com/elyar-adil/JpaCommentAnnotation">...</a>'
  *
  * @author YuePeng
  * date 2022/8/3 21:42
@@ -45,7 +46,7 @@ public class CommentIntegrator implements Integrator {
      * @param serviceRegistry The session factory's service registry
      */
     @Override
-    public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactory, SessionFactoryServiceRegistry serviceRegistry) {
+    public void integrate(@NonNull Metadata metadata, @NonNull SessionFactoryImplementor sessionFactory,@NonNull SessionFactoryServiceRegistry serviceRegistry) {
         this.processComment(metadata);
     }
 
@@ -56,7 +57,7 @@ public class CommentIntegrator implements Integrator {
      * @param sessionFactoryServiceRegistry That session factory's service registry
      */
     @Override
-    public void disintegrate(SessionFactoryImplementor sessionFactoryImplementor, SessionFactoryServiceRegistry sessionFactoryServiceRegistry) {
+    public void disintegrate(@NonNull SessionFactoryImplementor sessionFactoryImplementor,@NonNull SessionFactoryServiceRegistry sessionFactoryServiceRegistry) {
     }
 
     /**

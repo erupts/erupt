@@ -249,7 +249,7 @@ public class EruptExcelService {
                     }
                 }
             }
-            if (jsonObject.size() > 0) {
+            if (!jsonObject.isEmpty()) {
                 listObject.add(jsonObject);
             }
         }

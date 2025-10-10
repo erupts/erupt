@@ -100,7 +100,7 @@ public class AnnotationProcess {
                 if (null == toMap) {
                     jsonObject.add(methodName, jsonArray);
                 } else {
-                    if (jsonMap.size() > 0) jsonObject.add(methodName, jsonMap);
+                    if (!jsonMap.isEmpty()) jsonObject.add(methodName, jsonMap);
                 }
             } else {
                 if (Arrays.asList(ANNOTATION_STRING_TYPE).contains(returnType)) {

@@ -1,10 +1,5 @@
 package xyz.erupt.ai.vo.mcp;
 
-/**
- * @author YuePeng
- * date 2025/9/3 23:11
- */
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
