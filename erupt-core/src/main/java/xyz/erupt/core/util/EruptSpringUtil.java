@@ -43,7 +43,7 @@ public class EruptSpringUtil implements ApplicationContextAware {
                 || null != clazz.getDeclaredAnnotation(Controller.class)) {
             return getApplicationContext().getBean(clazz);
         } else {
-            return clazz.newInstance();
+            return clazz.getDeclaredConstructor().newInstance();
         }
     }
 
