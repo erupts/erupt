@@ -1,13 +1,14 @@
 package xyz.erupt.ai.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
@@ -15,7 +16,6 @@ import xyz.erupt.core.util.EruptTableStyle;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.linq.lambda.LambdaSee;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
@@ -43,13 +43,13 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
             views = @View(title = "发送人")
     )
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(100)")
     private ChatSenderType senderType;
 
     @EruptField(
             views = @View(title = "发送内容", type = ViewType.HTML)
     )
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     private String content;
 
     @EruptField(

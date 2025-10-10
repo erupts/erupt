@@ -1,5 +1,7 @@
 package xyz.erupt.core.controller.advice;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -12,9 +14,6 @@ import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptExceptionVo;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author YuePeng
@@ -32,7 +31,6 @@ public class EruptExceptionAdvice {
     @ResponseBody
     public EruptApiModel eruptApiErrorTip(EruptApiErrorTip e) {
         log.error(ERE, e);
-        e.eruptApiModel.setErrorIntercept(false);
         return e.eruptApiModel;
     }
 

@@ -1,11 +1,11 @@
 package xyz.erupt.jpa.config;
 
+import jakarta.annotation.Resource;
 import org.hibernate.jpa.boot.spi.IntegratorProvider;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.stereotype.Component;
 import xyz.erupt.jpa.support.CommentIntegrator;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.Map;
 

@@ -12,12 +12,12 @@ import xyz.erupt.annotation.sub_erupt.Power;
 @Getter
 public enum EruptFunPermissions {
 
-    ADD("新增"),
-    EDIT("修改"),
-    DELETE("删除"),
-    EXPORT("导出"),
-    IMPORTABLE("导入"),
-    VIEW_DETAIL("详情");
+    ADD("ADD"),
+    EDIT("EDIT"),
+    DELETE("DELETE"),
+    EXPORT("EXPORT"),
+    IMPORTABLE("IMPORT"),
+    VIEW_DETAIL("DETAIL");
 
     private final String name;
 

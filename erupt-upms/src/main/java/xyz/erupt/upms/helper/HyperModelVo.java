@@ -1,7 +1,10 @@
 package xyz.erupt.upms.helper;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -14,7 +17,6 @@ import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
 
@@ -39,6 +41,8 @@ public class HyperModelVo extends BaseModel {
             views = @View(title = "创建人", width = "100px", column = "name"),
             edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @EruptSmartSkipSerialize
     private EruptUserVo createUser;
 
@@ -54,6 +58,8 @@ public class HyperModelVo extends BaseModel {
             views = @View(title = "更新人", width = "100px", column = "name"),
             edit = @Edit(title = "更新人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @EruptSmartSkipSerialize
     private EruptUserVo updateUser;
 

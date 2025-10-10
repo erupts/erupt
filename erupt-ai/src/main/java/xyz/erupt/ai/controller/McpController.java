@@ -1,91 +1,145 @@
 package xyz.erupt.ai.controller;
 
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.annotation.AiParam;
 import xyz.erupt.ai.call.AiFunctionCall;
 import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.config.AiMCPProp;
 import xyz.erupt.ai.util.McpUtil;
-import xyz.erupt.ai.vo.OpenAiVo;
+import xyz.erupt.ai.vo.mcp.*;
 import xyz.erupt.core.util.EruptInformation;
 
-import javax.annotation.Resource;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
+
+@ConditionalOnProperty(name = "erupt.ai.mcp.enabled", havingValue = "true")
 @RestController
+@RequestMapping("/mcp")
 public class McpController {
 
     @Resource
     private AiMCPProp mcpProp;
 
-    private static final String MCP_CALL_API = "/mcp/call";
-
-    @GetMapping("/openapi.json")
-    public OpenAiVo eruptAi() {
-        OpenAiVo openAiVo = new OpenAiVo();
-        OpenAiVo.Info info = new OpenAiVo.Info();
-        info.setTitle(mcpProp.getName());
-        info.setVersion(EruptInformation.getEruptVersion());
-        info.setDescription(mcpProp.getDescription());
-        openAiVo.setInfo(info);
-        openAiVo.setServers(new OpenAiVo.Server[]{new OpenAiVo.Server(mcpProp.getApiDomain())});
-        for (Map.Entry<String, AiFunctionCall> entry : AiFunctionManager.getAiFunctions().entrySet()) {
-            OpenAiVo.Path path = new OpenAiVo.Path();
-            openAiVo.getPaths().put(MCP_CALL_API + "/" + entry.getKey(), path);
-            OpenAiVo.PathPost post = new OpenAiVo.PathPost();
-            path.setPost(post);
-            post.setSummary(entry.getValue().description());
-            post.setOperationId(entry.getKey());
-            {
-                List<String> required = new ArrayList<>();
-                Map<String, OpenAiVo.SchemaProperties> properties = new HashMap<>();
-                for (Field field : entry.getValue().getClass().getDeclaredFields()) {
-                    AiParam aiParam = field.getDeclaredAnnotation(AiParam.class);
-                    if (null != aiParam) {
-                        if (aiParam.required()) {
-                            required.add(field.getName());
-                        }
-                        OpenAiVo.SchemaProperties schemaProperties = new OpenAiVo.SchemaProperties();
-                        schemaProperties.setType(McpUtil.toMcp(field.getType()));
-                        schemaProperties.setDescription(aiParam.description());
-                        properties.put(field.getName(), schemaProperties);
-                    }
+    @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter sse() {
+        SseEmitter emitter = new SseEmitter(0L);
+        Executors.newSingleThreadExecutor().submit(() -> {
+            try {
+                emitter.send(SseEmitter.event().name("initialize").data(this.mcpInfo()));
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+            }
+            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "mcp-sse-ping"));
+            ScheduledFuture<?> pingTask = scheduler.scheduleWithFixedDelay(() -> {
+                try {
+                    emitter.send(SseEmitter.event().name("ping"));
+                } catch (IOException e) {
+                    emitter.completeWithError(e);
                 }
-
-                OpenAiVo.RequestBody requestBody = new OpenAiVo.RequestBody();
-                post.setRequestBody(requestBody);
-                requestBody.setRequired(!properties.isEmpty());
-                OpenAiVo.ApplicationType applicationType = new OpenAiVo.ApplicationType();
-                requestBody.getContent().put("application/json", applicationType);
-                OpenAiVo.Schema schema = new OpenAiVo.Schema();
-                applicationType.setSchema(schema);
-                schema.setType("object");
-                schema.setRequired(required);
-                schema.setProperties(properties);
-            }
-            {
-                OpenAiVo.Response response = new OpenAiVo.Response();
-                post.getResponses().put(200, response);
-                response.setDescription("Success");
-                OpenAiVo.ApplicationType applicationType = new OpenAiVo.ApplicationType();
-                OpenAiVo.Schema schema = new OpenAiVo.Schema();
-                schema.setType(McpUtil.toMcp(String.class));
-                schema.setRequired(new ArrayList<>());
-                applicationType.setSchema(schema);
-                response.getContent().put("text/plain", applicationType);
-            }
-        }
-        return openAiVo;
+            }, 15, 15, TimeUnit.SECONDS);
+            emitter.onCompletion(() -> cleanup(scheduler, pingTask));
+            emitter.onTimeout(() -> cleanup(scheduler, pingTask));
+            emitter.onError(e -> cleanup(scheduler, pingTask));
+        });
+        return emitter;
     }
 
-    @PostMapping(MCP_CALL_API + "/{code}")
+    private void cleanup(ScheduledExecutorService scheduler, ScheduledFuture<?> task) {
+        task.cancel(false);
+        scheduler.shutdownNow();
+    }
+
+    @PostMapping
+    public ResponseEntity<?> call(@RequestBody McpRequest request) {
+        McpResult result = new McpResult();
+        switch (request.getMethod()) {
+            case "initialize" -> result.setResult(this.mcpInfo());
+            case "notifications/initialized" -> {
+            }
+            case "tools/list" -> result.setResult(Map.of("tools", this.mcpTools()));
+            case "tools/call" -> {
+                McpCallResult mcpCallResult = new McpCallResult();
+                McpCallResult.Content content = new McpCallResult.Content();
+                try {
+                    content.setText(this.mcpCall(request.getParams().getName(), request.getParams().getArguments()));
+                    mcpCallResult.setContent(List.of(content));
+                    result.setResult(mcpCallResult);
+                } catch (Exception e) {
+                    content.setText(e.getMessage());
+                    mcpCallResult.setError(true);
+                    mcpCallResult.setContent(List.of(content));
+                    result.setResult(mcpCallResult);
+                }
+            }
+            default -> {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", Map.of("code", -32601, "message", "Method not found " + request.getMethod())));
+            }
+        }
+        result.setId(request.getId());
+        return ResponseEntity.ok(result);
+    }
+
+    private McpInfo mcpInfo() {
+        McpInfo mcpInfo = new McpInfo();
+        mcpInfo.setProtocolVersion("2024-11-05");
+        mcpInfo.setCapabilities(Map.of("tools", new HashMap<>()));
+        McpInfo.ServerInfo serverInfo = new McpInfo.ServerInfo();
+        serverInfo.setName(mcpProp.getName());
+        serverInfo.setVersion(EruptInformation.getEruptVersion());
+        mcpInfo.setServerInfo(serverInfo);
+        return mcpInfo;
+    }
+
+    private List<McpTool> mcpTools() {
+        List<McpTool> mcpTools = new ArrayList<>();
+        for (Map.Entry<String, AiFunctionCall> entry : AiFunctionManager.getAiFunctions().entrySet()) {
+            if (entry.getValue().mcpCall()) {
+                McpTool mcpTool = new McpTool();
+                mcpTools.add(mcpTool);
+                mcpTool.setName(entry.getValue().name());
+                mcpTool.setDescription(entry.getValue().description());
+                {
+                    McpTool.InputSchema inputSchema = new McpTool.InputSchema();
+                    mcpTool.setInputSchema(inputSchema);
+                    List<String> required = new ArrayList<>();
+                    for (Field field : entry.getValue().getClass().getDeclaredFields()) {
+                        AiParam aiParam = field.getDeclaredAnnotation(AiParam.class);
+                        if (null != aiParam) {
+                            if (aiParam.required()) {
+                                required.add(field.getName());
+                            }
+                            McpTool.SchemaProperties schema = new McpTool.SchemaProperties();
+                            schema.setType(McpUtil.toMcp(field.getType()));
+                            schema.setDescription(aiParam.description());
+                            mcpTool.getInputSchema().getProperties().put(field.getName(), schema);
+                        }
+                    }
+                    mcpTool.getInputSchema().setRequired(required);
+                }
+            }
+        }
+        return mcpTools;
+    }
+
     @SneakyThrows
-    public String mcpCall(@PathVariable String code, @RequestBody(required = false) Map<String, Object> params) {
+    private String mcpCall(String code, Map<String, Object> params) {
         AiFunctionCall aiFunctionCall = AiFunctionManager.getAiFunctions().get(code);
         if (null != params) {
             for (Map.Entry<String, Object> entry : params.entrySet()) {

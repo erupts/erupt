@@ -1,5 +1,7 @@
 package xyz.erupt.job.model.data_proxy;
 
+import jakarta.annotation.Resource;
+import jakarta.persistence.Transient;
 import org.quartz.SchedulerException;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.stereotype.Service;
@@ -11,8 +13,6 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.service.EruptJobService;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
-import javax.persistence.Transient;
 import java.text.ParseException;
 import java.util.List;
 

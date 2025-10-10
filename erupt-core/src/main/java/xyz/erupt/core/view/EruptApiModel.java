@@ -19,8 +19,6 @@ public class EruptApiModel {
 
     private Object data;
 
-    private boolean errorIntercept = true;
-
     public EruptApiModel(Status status, String message, Object data, PromptWay promptWay) {
         this.status = status;
         this.message = message;
@@ -50,20 +48,12 @@ public class EruptApiModel {
         return new EruptApiModel(Status.ERROR, message, null, PromptWay.DIALOG);
     }
 
-    public static EruptApiModel errorNoInterceptApi(String message) {
-        EruptApiModel eruptApiModel = new EruptApiModel(Status.ERROR, message, null, PromptWay.DIALOG);
-        eruptApiModel.errorIntercept = false;
-        return eruptApiModel;
-    }
-
-    public static EruptApiModel errorNoInterceptMessage(String message) {
-        EruptApiModel eruptApiModel = new EruptApiModel(Status.ERROR, message, null, PromptWay.MESSAGE);
-        eruptApiModel.errorIntercept = false;
-        return eruptApiModel;
-    }
-
     public static EruptApiModel errorApi(Exception e) {
         return new EruptApiModel(Status.ERROR, e.getMessage(), null, PromptWay.DIALOG);
+    }
+
+    public static EruptApiModel errorMessageApi(String message) {
+        return new EruptApiModel(Status.ERROR, message, null, PromptWay.MESSAGE);
     }
 
     public enum Status {

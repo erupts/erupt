@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.fun;
 
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.exception.EruptException;
 import xyz.erupt.annotation.model.Alert;
 import xyz.erupt.annotation.model.Row;
 import xyz.erupt.annotation.query.Condition;
@@ -14,6 +15,10 @@ import java.util.Map;
  * date 2018-10-09.
  */
 public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<MODEL> {
+
+    @Comment("Validate")
+    default void validate(MODEL model) throws EruptException {
+    }
 
     @Comment("增加前")
     default void beforeAdd(MODEL model) {

@@ -1,19 +1,28 @@
 package xyz.erupt.core.service;
 
 import com.google.gson.JsonObject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
+import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.event.EruptAddEvent;
+import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +38,8 @@ public class EruptModifyService {
     private final EruptService eruptService;
 
     private final HttpServletRequest request;
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @SneakyThrows
     public Object eruptInsertDataProcess(EruptModel eruptModel, JsonObject data) {
@@ -70,8 +81,28 @@ public class EruptModifyService {
         });
     }
 
-    public void modifyLog(EruptModel eruptModel, String placeholder, String content) {
-        log.info("[{} -> {}]:{}", eruptModel.getEruptName(), placeholder, content);
+    public void modifyLog(EruptModel eruptModel, String action, String content) {
+        log.info("ERUPT CURD | {} | {} | {} | {}", MetaContext.getUser().getName(), eruptModel.getEruptName(), action, content);
+    }
+
+    /**
+     * @return pk
+     */
+    @SneakyThrows
+    @Transactional
+    public Object insertEruptData(EruptModel eruptModel, JsonObject data) {
+        EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
+        if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
+            throw new EruptApiErrorTip(eruptApiModel.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+        }
+        Object obj = this.eruptInsertDataProcess(eruptModel, data);
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeAdd(obj)));
+        DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).addData(eruptModel, obj);
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterAdd(obj)));
+        applicationEventPublisher.publishEvent(new EruptAddEvent<>(eruptModel.getClazz(), obj));
+        Object pk = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(obj);
+        this.modifyLog(eruptModel, "ADD", GsonFactory.getGson().toJson(obj));
+        return pk;
     }
 
 }
