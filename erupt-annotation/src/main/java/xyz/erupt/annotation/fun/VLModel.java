@@ -45,7 +45,6 @@ public class VLModel {
     public VLModel(String value, String label, boolean disable) {
         this.value = value;
         this.label = label;
-        this.desc = desc;
         this.disable = disable;
     }
 
