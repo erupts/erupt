@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>17</java.version>
-        <spring.boot.version>3.5.5</spring.boot.version>
+        <spring.boot.version>3.5.6</spring.boot.version>
     </properties>
 
     <!--
@@ -92,8 +92,9 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>central</id>
-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <id>automizely-nexus-snapshots</id>
+            <name>automizely-nexus-snapshots</name>
+            <url>https://nexus.automizely.org/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
