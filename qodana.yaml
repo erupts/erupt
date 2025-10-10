@@ -14,3 +14,4 @@ exclude:
     paths:
       - erupt-web/src/main/resources
       - erupt-tpl-ui
+      - erupt-ai-web
