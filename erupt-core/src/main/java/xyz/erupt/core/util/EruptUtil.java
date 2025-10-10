@@ -425,11 +425,12 @@ public class EruptUtil {
      * @param json      json对象
      * @param extraData 额外填充的反射数据
      */
+    @SneakyThrows
     public static Object jsonToEruptEntity(EruptModel eruptModel, JsonObject json, Map<String, Object> extraData) throws InstantiationException, IllegalAccessException {
         Gson gson = GsonFactory.getGson();
         Object o = gson.fromJson(json.toString(), eruptModel.getClazz());
         EruptUtil.clearObjectDefaultValueByJson(o, json);
-        Object obj = EruptUtil.dataTarget(eruptModel, o, eruptModel.getClazz().newInstance(), SceneEnum.ADD);
+        Object obj = EruptUtil.dataTarget(eruptModel, o, eruptModel.getClazz().getDeclaredConstructor().newInstance(), SceneEnum.ADD);
         if (null != extraData) {
             for (String key : extraData.keySet()) {
                 Field field = ReflectUtil.findClassField(eruptModel.getClazz(), key);

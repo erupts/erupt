@@ -362,7 +362,7 @@ public class EruptLambdaQuery<T> {
 
     @SneakyThrows
     private <R> R objectToClazz(Class<R> clazz, Object[] objects, SFunction<?, ?>... fields) {
-        R r = clazz.newInstance();
+        R r = clazz.getDeclaredConstructor().newInstance();
         for (int i = 0; i < fields.length; i++) {
             Field f = ReflectUtil.findClassField(clazz, LambdaSee.field(fields[i]));
             f.setAccessible(true);
@@ -439,7 +439,7 @@ public class EruptLambdaQuery<T> {
     }
 
     private String genePlaceholder() {
-        return RandomStringUtils.randomAlphabetic(6);
+        return RandomStringUtils.randomAlphabetic(8);
     }
 
     private String geneField(SFunction<?, ?> field) {
