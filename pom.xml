@@ -97,9 +97,8 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>automizely-nexus-snapshots</id>
-            <name>automizely-nexus-snapshots</name>
-            <url>https://nexus.automizely.org/repository/maven-snapshots/</url>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
