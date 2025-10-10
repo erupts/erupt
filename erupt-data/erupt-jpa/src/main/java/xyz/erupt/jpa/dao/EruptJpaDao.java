@@ -52,7 +52,9 @@ public class EruptJpaDao {
         String hql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "new map(" + String.join(",", EruptJpaUtils.getEruptColJpaKeys(eruptModel)) + ")", eruptQuery, false);
         String countHql = EruptJpaUtils.generateEruptJpaHql(eruptModel, "count(*)", eruptQuery, true);
         return entityManagerService.getEntityManager(eruptModel.getClazz(), entityManager -> {
+            @SuppressWarnings("SqlSourceToSinkFlow")
             Query query = entityManager.createQuery(hql);
+            @SuppressWarnings("SqlSourceToSinkFlow")
             Query countQuery = entityManager.createQuery(countHql);
             Map<String, EruptFieldModel> eruptFieldMap = eruptModel.getEruptFieldMap();
             if (null != eruptQuery.getConditions()) {
