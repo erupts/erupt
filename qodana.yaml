@@ -12,5 +12,5 @@ include:
 exclude:
   - name: All
     paths:
-      - erupt-web
+      - erupt-web/src/main/resources
       - erupt-tpl-ui
