@@ -1,5 +1,6 @@
 package xyz.erupt.core.service;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +14,6 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.util.Date;
 

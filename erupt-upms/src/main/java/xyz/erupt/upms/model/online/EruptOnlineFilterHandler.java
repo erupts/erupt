@@ -8,7 +8,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.service.EruptLocalSession;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Set;
 import java.util.stream.Collectors;
 

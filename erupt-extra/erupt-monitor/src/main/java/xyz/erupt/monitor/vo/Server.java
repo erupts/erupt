@@ -52,10 +52,10 @@ public class Server {
 
     private String runDay; //运行时长
 
-    public Server() {
+    public Server(Boolean waitCpu) {
         SystemInfo si = new SystemInfo();
         OperatingSystem os = si.getOperatingSystem();
-        this.setCpu(new Cpu(si));
+        this.setCpu(new Cpu(si,waitCpu));
         this.setMem(new Mem(si));
         this.setJvm(new Jvm());
         this.setSys(new Sys());

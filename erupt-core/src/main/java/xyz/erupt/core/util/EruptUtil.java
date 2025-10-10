@@ -11,6 +11,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.SceneEnum;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.exception.EruptException;
 import xyz.erupt.annotation.fun.AttachmentProxy;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.query.Condition;
@@ -26,6 +27,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.i18n.I18nTranslate;
+import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.proxy.AnnotationProcess;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.service.EruptCoreService;
@@ -279,10 +281,10 @@ public class EruptUtil {
             JsonElement value = jsonObject.get(field.getFieldName());
             if (field.getEruptField().edit().notNull()) {
                 if (null == value || value.isJsonNull()) {
-                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                    return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
                 } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
-                        return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                        return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
             }
@@ -295,19 +297,19 @@ public class EruptUtil {
                     }
                 }
             }
-            if (null != value && !AnnotationConst.EMPTY_STR.equals(edit.title())) {
+            if (null != value && !value.isJsonNull() && !AnnotationConst.EMPTY_STR.equals(edit.title())) {
                 //xss 注入处理
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
                     if (SecurityUtil.xssInspect(value.getAsString())) {
-                        return EruptApiModel.errorNoInterceptApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
+                        return EruptApiModel.errorApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
                     }
                 }
                 //数据类型校验
                 switch (edit.type()) {
                     case NUMBER:
                     case SLIDER:
-                        if (!NumberUtils.isCreatable(value.getAsString())) {
-                            return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.must.number"));
+                        if (!NumberUtils.isNumber(value.getAsString())) {
+                            return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
                     case INPUT:
@@ -315,13 +317,18 @@ public class EruptUtil {
                             String content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorNoInterceptMessage(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
+                                    return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
                                 }
                             }
                         }
                         break;
                 }
             }
+        }
+        try {
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.validate(GsonFactory.getGson().fromJson(jsonObject.toString(), eruptModel.getClazz()))));
+        } catch (EruptException e) {
+            return EruptApiModel.errorMessageApi(e.getMessage());
         }
         return EruptApiModel.successApi();
     }

@@ -34,6 +34,8 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                             }
                         case CHOICE:
                             return ViewType.TEXT;
+                        case SIGNATURE:
+                            return ViewType.IMAGE_BASE64;
                         case DATE:
                             if (edit.dateType().type() == DateType.Type.DATE_TIME) {
                                 return ViewType.DATE_TIME;

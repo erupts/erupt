@@ -1,5 +1,6 @@
 package xyz.erupt.generator.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -20,10 +21,6 @@ import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.generator.base.Ref;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,6 +53,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
     private Integer sort;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(100)")
     @EruptField(
             views = @View(title = "编辑类型"),
             edit = @Edit(title = "编辑类型",

@@ -1,5 +1,6 @@
 package xyz.erupt.job.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
@@ -14,7 +15,6 @@ import xyz.erupt.job.handler.EruptJobHandler;
 import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.linq.lambda.LambdaSee;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**

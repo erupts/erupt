@@ -1,5 +1,6 @@
 package xyz.erupt.ai.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
@@ -15,7 +16,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**

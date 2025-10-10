@@ -1,8 +1,10 @@
 package xyz.erupt.ai.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import xyz.erupt.ai.core.LlmConfig;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.core.LlmRequest;
@@ -20,11 +22,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.annotation.Ref;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
 
 /**
  * @author YuePeng
@@ -115,8 +112,7 @@ public class LLM extends MetaModelUpdateVo {
     )
     private Integer sort = 0;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "模型配置"),
             edit = @Edit(title = "模型配置", type = EditType.CODE_EDITOR, notNull = true,

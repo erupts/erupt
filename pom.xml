@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.12.23</version>
+    <version>1.13.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -14,8 +14,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
-        <java.version>1.8</java.version>
-        <spring.boot.version>2.7.18</spring.boot.version>
+        <java.version>17</java.version>
+        <spring.boot.version>3.5.5</spring.boot.version>
     </properties>
 
     <!--
@@ -89,6 +89,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <plugins>
@@ -197,9 +204,12 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>3.5.0</version>
                         <configuration>
-                            <additionalOptions>
-                                <additionalOption>-Xdoclint:none</additionalOption>
-                            </additionalOptions>
+                            <!-- 1. 关闭 doclint -->
+                            <doclint>none</doclint>
+                            <!-- 2. 指定 javadoc 可执行文件（按实际路径改） -->
+                            <javadocExecutable>
+                                ${java.home}/bin/javadoc
+                            </javadocExecutable>
                         </configuration>
                         <executions>
                             <execution>

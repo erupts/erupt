@@ -1,5 +1,6 @@
 package xyz.erupt.upms.handler;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
@@ -10,7 +11,6 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.constant.FetchConst;
 import xyz.erupt.upms.model.EruptDictItem;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;

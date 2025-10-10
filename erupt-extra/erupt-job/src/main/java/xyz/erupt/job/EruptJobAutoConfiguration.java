@@ -1,5 +1,6 @@
 package xyz.erupt.job;
 
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -19,7 +20,6 @@ import xyz.erupt.job.model.EruptMail;
 import xyz.erupt.job.service.EruptJobService;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

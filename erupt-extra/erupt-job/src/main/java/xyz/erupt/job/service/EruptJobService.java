@@ -1,9 +1,13 @@
 package xyz.erupt.job.service;
 
+import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.quartz.*;
+import org.quartz.JobDataMap;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl;
@@ -17,7 +21,6 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.model.EruptJobLog;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.Properties;

@@ -144,7 +144,7 @@ public class EruptCoreService implements ApplicationRunner {
         });
         log.info("Erupt modules : {}", MODULES.size());
         log.info("Erupt classes : {}", ERUPTS.size());
-        log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
+        log.info("Erupt Engine initialization completed in {}ms", totalRecorder.recorder());
         log.info("<{}>", repeat("===", 18));
     }
 
