@@ -24,6 +24,7 @@ public class SqlChoiceFetchHandler implements ChoiceFetchHandler {
     private final EruptCache<List<VLModel>> eruptCache = new EruptCacheLRU<>(500);
 
     @Override
+    @SuppressWarnings("SqlSourceToSinkFlow")
     public List<VLModel> fetch(String[] params) {
         EruptAssert.notNull(params, SqlChoiceFetchHandler.class.getSimpleName() + " → params not found");
         return eruptCache.getAndSet(SqlChoiceFetchHandler.class.getName() + ":" + params[0],

@@ -128,6 +128,7 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
      * @return 数据结果集
      */
     @Override
+    @SuppressWarnings("SqlSourceToSinkFlow")
     public Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, List<Column> columns, EruptQuery query) {
         StringBuilder hql = new StringBuilder();
         List<String> columnStrList = new ArrayList<>();
