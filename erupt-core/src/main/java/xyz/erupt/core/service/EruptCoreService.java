@@ -55,7 +55,7 @@ public class EruptCoreService implements ApplicationRunner {
     public static EruptModel getErupt(String eruptName) {
         if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
             if (null == ERUPTS.get(eruptName)) {
-                return null;
+                return ERUPTS.get(eruptName);
             } else {
                 return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz(), false);
             }

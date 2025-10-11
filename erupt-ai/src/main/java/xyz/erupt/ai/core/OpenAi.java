@@ -54,7 +54,7 @@ public abstract class OpenAi extends LlmCore {
         // 同步执行请求
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                throw new RuntimeException("Failed to get response from server: " + response.body().string());
+                throw new RuntimeException("Failed to get response from server: " + response.body());
             }
 
             // 解析响应体为 ChatCompletionResponse
