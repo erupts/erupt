@@ -6,6 +6,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.proxy.erupt.DrillProxy;
 import xyz.erupt.core.proxy.erupt.FilterProxy;
@@ -54,6 +55,8 @@ public class EruptProxy extends AnnotationProxy<Erupt, Void> {
                 }
             }
             return proxyDrills.toArray(new Drill[0]);
+        } else if (super.matchMethod(invocation, Erupt::name)) {
+            return I18nTranslate.$translate(this.rawAnnotation.name());
         }
         return this.invoke(invocation);
     }
