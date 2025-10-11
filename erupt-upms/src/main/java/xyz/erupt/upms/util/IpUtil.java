@@ -53,7 +53,7 @@ public class IpUtil {
             }
             return ip;
         } catch (Exception e) {
-            log.warn("get ip error " + e.getMessage());
+            log.warn("get ip error {}", e.getMessage());
             return null;
         }
     }

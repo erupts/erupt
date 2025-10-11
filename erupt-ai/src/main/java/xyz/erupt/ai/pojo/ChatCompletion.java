@@ -63,11 +63,4 @@ public class ChatCompletion {
      */
     private List<String> stop;
 
-//
-//    /**
-//     * 辅助属性
-//     */
-//    @JsonIgnore
-//    private List<String> functions;
-
 }

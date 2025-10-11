@@ -76,7 +76,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
     @SneakyThrows
     @Override
     public void run() {
-        if (null == eruptNodeProp.getServerAddresses() || eruptNodeProp.getServerAddresses().length <= 0) {
+        if (null == eruptNodeProp.getServerAddresses() || eruptNodeProp.getServerAddresses().length == 0) {
             throw new RuntimeException(EruptNodeProp.SPACE + ".serverAddresses not config");
         }
         if (null == eruptNodeProp.getNodeName()) {

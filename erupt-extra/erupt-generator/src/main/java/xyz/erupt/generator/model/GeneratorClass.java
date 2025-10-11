@@ -63,12 +63,6 @@ public class GeneratorClass extends MetaModel implements Tpl.TplHandler {
     )
     private String remark;
 
-//    @EruptField(
-//            views = @View(title = "维护"),
-//            edit = @Edit(title = "自动维护创建字段与更新字段")
-//    )
-//    private Boolean createField;
-
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "class_id")
