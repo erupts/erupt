@@ -51,6 +51,7 @@ public class CloudNodeProcess implements DataProxy<CloudNode>, TagsFetchHandler,
     }
 
     @Override
+    @SuppressWarnings("StringConcatenationArgumentToLogCall")
     public void afterFetch(Collection<Map<String, Object>> list) {
         String nodeNameField = LambdaSee.field(CloudNode::getNodeName);
         for (Map<String, Object> map : list) {

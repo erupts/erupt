@@ -62,6 +62,9 @@ public class EruptFileController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         // Generating storage paths
+        if (null == file.getOriginalFilename()){
+            return EruptApiModel.errorApi(I18nTranslate.$translate("filename is empty"));
+        }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isAdd());
         Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();

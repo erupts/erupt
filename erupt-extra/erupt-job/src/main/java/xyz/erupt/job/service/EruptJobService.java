@@ -45,12 +45,16 @@ public class EruptJobService implements DisposableBean {
     @Resource
     private EruptDao eruptDao;
 
-    @Autowired(required = false)
     private JavaMailSenderImpl javaMailSender;
 
     @Resource
     @Getter
     StringRedisTemplate stringRedisTemplate;
+
+    @Autowired(required = false)
+    public void setJavaMailSender(JavaMailSenderImpl javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     public static final String MAIL_SENDER_KEY = "mailSensor";
 

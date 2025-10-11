@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * 代理池
+ * Proxy Cache Pool
  *
  * @author YuePeng
  * date 2022/2/7 10:27
