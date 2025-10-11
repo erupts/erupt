@@ -12,8 +12,12 @@ import xyz.erupt.annotation.expr.ExprBool;
 @Service
 public class NotifyEmailRender implements ExprBool.ExprHandler {
 
-    @Autowired(required = false)
     private MailProperties mailProperties;
+
+    @Autowired(required = false)
+    public void setMailProperties(MailProperties mailProperties) {
+        this.mailProperties = mailProperties;
+    }
 
     @Override
     public boolean handler(boolean expr, String[] params) {

@@ -34,6 +34,10 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>>  {
 
     private static final String I18N_EXT = ".csv";
 
+    public static List<String> langs(){
+        return new ArrayList<>(langMappings.keySet());
+    }
+
     public static String getI18nValue(String lang, String key) {
         if (null == langMappings.get(lang)) {
             return key;

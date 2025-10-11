@@ -72,6 +72,7 @@ public class IpUtil {
     }
 
     @SneakyThrows
+    @SuppressWarnings("StringConcatenationArgumentToLogCall")
     public static String getCityInfo(String ip) {
         if (!Util.isIpAddress(ip)) {
             log.warn("Error: Invalid ip address: {}", ip);

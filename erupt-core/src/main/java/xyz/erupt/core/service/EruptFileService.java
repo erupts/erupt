@@ -42,7 +42,7 @@ public class EruptFileService {
         }
     }
 
-    public String upload(MultipartFile file, String path) throws Exception {
+    public String upload(MultipartFile file, String path) {
         try {
             boolean localSave = true;
             AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();

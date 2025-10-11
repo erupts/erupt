@@ -54,6 +54,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
     private boolean errorConnect = false;
 
     @Override
+    @SuppressWarnings("StringConcatenationArgumentToLogCall")
     public void run(ApplicationArguments args) {
         log.info(ansi().fg(Ansi.Color.BLUE) + " \n" +
                 "                 _                _     \n" +

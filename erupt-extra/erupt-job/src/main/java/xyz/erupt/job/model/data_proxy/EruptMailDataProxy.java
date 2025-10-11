@@ -26,8 +26,12 @@ import java.util.Optional;
 @Service
 public class EruptMailDataProxy implements DataProxy<EruptMail> {
 
-    @Autowired(required = false)
     private JavaMailSenderImpl javaMailSender;
+
+    @Autowired(required = false)
+    public void setJavaMailSender(JavaMailSenderImpl javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     @SneakyThrows
     @Override

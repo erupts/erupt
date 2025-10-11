@@ -34,6 +34,7 @@ public class EruptJobAction implements Job {
         trigger(eruptJob, (JavaMailSenderImpl) jobDataMap.get(EruptJobService.MAIL_SENDER_KEY));
     }
 
+    @SuppressWarnings("StringConcatenationArgumentToLogCall")
     void trigger(EruptJob eruptJob, JavaMailSenderImpl javaMailSender) {
         if (EruptSpringUtil.getBean(EruptProp.class).isRedisSession()) {
             if (Boolean.FALSE.equals(EruptSpringUtil.getBean(EruptJobService.class).getStringRedisTemplate().opsForValue().setIfAbsent(JOB_KEY + eruptJob.getCode(), eruptJob.getCode(), 999, TimeUnit.MILLISECONDS))) {

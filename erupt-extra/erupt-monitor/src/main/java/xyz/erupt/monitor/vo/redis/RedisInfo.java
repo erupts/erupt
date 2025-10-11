@@ -40,13 +40,13 @@ public class RedisInfo {
 
     public RedisInfo(RedisConnectionFactory redisConnectionFactory) {
         RedisConnection redisConnection = redisConnectionFactory.getConnection();
-        Optional.ofNullable(redisConnection.info("commandstats")).ifPresent(commandStats -> {
+        Optional.of(redisConnection.info("commandstats")).ifPresent(commandStats -> {
             String cs = "cmdstat_";
             redisCmdStat = commandStats.stringPropertyNames().stream().filter(it -> it.startsWith(cs))
                     .map(it -> new RedisCmdStat(StringUtils.removeStart(it, cs),
                             StringUtils.substringBetween(commandStats.getProperty(it), "calls=", ",usec"))).collect(Collectors.toList());
         });
-        Optional.ofNullable(redisConnection.info()).ifPresent(properties -> {
+        Optional.of(redisConnection.info()).ifPresent(properties -> {
             this.setKeyNum(redisConnection.serverCommands().dbSize());
             this.setVersion(properties.getProperty("redis_version"));
             this.setUsedMem(properties.getProperty("used_memory_human"));
