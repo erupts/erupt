@@ -1,10 +1,11 @@
 package xyz.erupt.jpa.dao;
 
 import jakarta.annotation.Resource;
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NonUniqueResultException;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -12,9 +13,6 @@ import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.jpa.service.EntityManagerService;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -37,16 +35,6 @@ public class EruptDao {
     @Getter
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-    private static final String SELECT = "select ";
-
-    private static final String FROM = " from ";
-
-    private static final String NEW_MAP = "new map(";
-
-    private static final String AS = " as ";
-
-    private static final String WHERE = " where ";
 
     @Deprecated
     public <T> T findById(Class<T> clazz, Object id) {
@@ -124,7 +112,7 @@ public class EruptDao {
 
     //不存在则新增
     public <T> T persistIfNotExist(Class<T> eruptClass, T obj, String field, String val) throws NonUniqueResultException {
-        T t = (T) this.lambdaQuery(eruptClass).addCondition(field + " = :val", new HashMap<String, Object>(1) {{
+        T t = this.lambdaQuery(eruptClass).addCondition(field + " = :val", new HashMap<>(1) {{
             this.put("val", val);
         }}).one();
         if (null == t) {

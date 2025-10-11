@@ -59,8 +59,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull Object handler) throws IOException {
         EruptRouter eruptRouter = null;
-        if (handler instanceof HandlerMethod) {
-            HandlerMethod handlerMethod = (HandlerMethod) handler;
+        if (handler instanceof HandlerMethod handlerMethod) {
             eruptRouter = handlerMethod.getMethodAnnotation(EruptRouter.class);
         }
         if (null == eruptRouter) return true;

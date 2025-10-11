@@ -50,7 +50,7 @@ public class EruptNodeProp {
         if (this.serverAddresses.length == 1) {
             return this.serverAddresses[0];
         }
-        if (count >= Integer.MAX_VALUE) {
+        if (count == Integer.MAX_VALUE) {
             count = 0;
         }
         String address = this.serverAddresses[count++ % this.serverAddresses.length];
