@@ -58,7 +58,7 @@ public abstract class OpenAi extends LlmCore {
             }
 
             // 解析响应体为 ChatCompletionResponse
-            return GsonFactory.getGson().fromJson(response.body().string(), ChatCompletionResponse.class);
+            return GsonFactory.getGson().fromJson(null == response.body() ? null : response.body().string(), ChatCompletionResponse.class);
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute HTTP request", e);
         }
