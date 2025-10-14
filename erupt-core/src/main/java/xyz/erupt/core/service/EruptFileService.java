@@ -15,6 +15,8 @@ import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 
 /**
@@ -51,13 +53,17 @@ public class EruptFileService {
                 localSave = attachmentProxy.isLocalSave();
             }
             if (localSave) {
-                File dest = new File(eruptProp.getUploadPath() + path);
-                if (!dest.getParentFile().exists()) {
-                    if (!dest.getParentFile().mkdirs()) {
-                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created")+ ": " + dest.getParentFile().getAbsolutePath());
+                Path uploadRoot = Paths.get(eruptProp.getUploadPath());
+                Path target = uploadRoot.resolve(path.substring(1)).normalize();
+                if (!target.startsWith(uploadRoot)) {
+                    throw new EruptWebApiRuntimeException("Illegal path");
+                }
+                if (!target.toFile().getParentFile().exists()) {
+                    if (!target.toFile().getParentFile().mkdirs()) {
+                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created")+ ": " + target.toFile().getParentFile().getAbsolutePath());
                     }
                 }
-                file.transferTo(dest);
+                file.transferTo(target.toFile());
             }
             return path.replace("\\", "/");
         } catch (Exception e) {

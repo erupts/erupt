@@ -94,7 +94,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     }
 
     private static final String[] TRANSFER_HEADERS = {
-            "Content-Disposition"
+            HttpHeaders.CONTENT_DISPOSITION
     };
 
     @Override

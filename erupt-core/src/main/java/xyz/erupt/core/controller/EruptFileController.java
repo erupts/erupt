@@ -7,6 +7,7 @@ import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
@@ -30,11 +31,12 @@ import xyz.erupt.core.view.EruptModel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +64,7 @@ public class EruptFileController {
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel upload(@PathVariable("erupt") String eruptName, @PathVariable("field") String fieldName, @RequestParam("file") MultipartFile file) {
         // Generating storage paths
-        if (null == file.getOriginalFilename()){
+        if (null == file.getOriginalFilename()) {
             return EruptApiModel.errorApi(I18nTranslate.$translate("filename is empty"));
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
@@ -190,14 +192,21 @@ public class EruptFileController {
         if (!path.startsWith(FS_SEP)) {
             path = FS_SEP + path;
         }
-        File file = new File(eruptProp.getUploadPath() + path);
-        if (!file.exists()) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
+        Path uploadRoot = Paths.get(eruptProp.getUploadPath());
+        Path target = uploadRoot.resolve(path.substring(1)).normalize();
+        if (!target.startsWith(uploadRoot)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Illegal path");
+            return;
+        }
+        if (!Files.isRegularFile(target) || !Files.exists(target)) {
             response.sendError(HttpStatus.NOT_FOUND.value());
             return;
         }
-        @Cleanup InputStream inputStream = new FileInputStream(file);
-        response.getOutputStream().write(StreamUtils.copyToByteArray(inputStream));
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + target.getFileName() + "\"");
+        Files.copy(target, response.getOutputStream());
+        response.flushBuffer();
     }
 
 }

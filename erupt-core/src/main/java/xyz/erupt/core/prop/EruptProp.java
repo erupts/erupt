@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConfigurationProperties("erupt")
+@SuppressWarnings("ConfigurationProperties")
 public class EruptProp {
 
     //热构建erupt, 开启此功能后每次请求都会重新构建erupt，该功能方便启动时修改erupt注解，生产环境请勿启用

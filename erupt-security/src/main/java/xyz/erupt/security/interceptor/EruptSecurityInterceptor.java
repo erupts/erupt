@@ -29,6 +29,7 @@ import xyz.erupt.upms.service.EruptUserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +58,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     private EruptSessionService sessionService;
 
     @Override
-    public boolean preHandle(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull Object handler) throws IOException {
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws IOException {
         EruptRouter eruptRouter = null;
         if (handler instanceof HandlerMethod handlerMethod) {
             eruptRouter = handlerMethod.getMethodAnnotation(EruptRouter.class);
@@ -95,9 +96,10 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
         //权限校验
         String authStr = request.getServletPath().split("/")[eruptRouter.skipAuthIndex() + eruptRouter.authIndex()];
         switch (eruptRouter.verifyType()) {
-            case LOGIN:
-                break;
-            case MENU:
+            case LOGIN -> {
+
+            }
+            case MENU -> {
                 if (!eruptRouter.verifyHandler().isInterface()) {
                     authStr = EruptSpringUtil.getBean(eruptRouter.verifyHandler()).convertAuthStr(eruptRouter, request, authStr);
                 }
@@ -107,8 +109,8 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     return false;
                 }
                 MetaContext.register(new MetaErupt(null, authStr));
-                break;
-            case ERUPT:
+            }
+            case ERUPT -> {
                 EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
                 $ep:
                 if (StringUtils.isNotBlank(parentEruptName)) {
@@ -143,7 +145,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;
                 }
-                break;
+            }
         }
         if (eruptProp.isRedisSessionRefresh()) {
             for (String uk : SessionKey.USER_KEY_GROUP) {
@@ -154,7 +156,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull Object handler, Exception ex) {
+    public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
         try {
             if (HttpStatus.OK.value() == response.getStatus()) {
                 operationService.record(handler, ex);
