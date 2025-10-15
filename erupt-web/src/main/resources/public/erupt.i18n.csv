@@ -144,3 +144,10 @@ PENDING,审批中,審批中,Pending,En attente,審査中,대기 중,На рас�
 AGREED,已同意,已同意,Agreed,Accepté,同意,동의됨,Принято,Acertado,Aprovado,Acertado,Diterima,تم الموافقة
 REJECTED,已拒绝,已拒絕,Rejected,Rejeté,拒否,거부됨,Отклонено,Rechazado,Abgelehnt,Rejeitado,Ditolak,مرفوض
 SKIPPED,已跳过,已跳過,Skipped,Sautéé,跳過,건너뛰어짐,Пропущено,Saltado,Lewati,Dipulihkan,Lewati,لقد قفزت
+
+NEXT,成功,成功,Success,Succès,成功,성공,Успех,Éxito,Erfolg,Sucesso,Sukses,نجاح
+WAIT,等待执行,等待執行,Waiting,En attente,待機 중,대기 중,Ожидание,Esperando,Warten,Aguardando,Menunggu,في الانتظار
+WAIT_API_TRIGGER,等待审批,等待審批,Waiting for approval,En attente d'approbation,承認待ち,승인 대기 중,Ожидание подтверждения,Esperando aprobación,Warten auf Genehmigung,Aguardando aprovação,Menunggu persetujuan,في انتظار الموافقة
+ERROR,执行错误,執行錯誤,Execution error,Erreur d'exécution,実行エラー,실행 오шибка,Ошибка выполнения,Error de ejecución,Ausführungsfehler,Erro de execução,Kesalahan eksekusi,خطأ في التنفيذ
+REENTRY,重试中,重試中,Retrying,Recommencement,再試行 중,재시도 중,Повтор,Reintentando,Wiederholen,Repetindo,Mencoba lagi,إعادة المحاولة
+END,结束,結束,End,Fin,終了,끝,Конец,Fin,Ende,Fim,Akhir,نهاية
