@@ -63,22 +63,22 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     @SneakyThrows
     public void addData(EruptModel eruptModel, Object data) {
         this.loadSupport(data);
-        this.jpaManyToOneConvert(eruptModel, data);
+        this.jpaOneToManyConvert(eruptModel, data);
         eruptJpaDao.addEntity(eruptModel.getClazz(), data);
     }
 
     @Override
     public void editData(EruptModel eruptModel, Object data) {
         this.loadSupport(data);
+        this.jpaOneToManyConvert(eruptModel, data);
         eruptJpaDao.editEntity(eruptModel.getClazz(), data);
     }
 
     @Override
-    @SneakyThrows
     public void batchAddData(EruptModel eruptModel, List<?> objectList) {
         for (Object data : objectList) {
             this.loadSupport(data);
-            this.jpaManyToOneConvert(eruptModel, data);
+            this.jpaOneToManyConvert(eruptModel, data);
         }
         entityManagerService.entityManagerTran(eruptModel.getClazz(), (em) -> {
             for (int i = 0; i < objectList.size(); i++) {
@@ -100,8 +100,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         eruptJpaDao.removeEntity(eruptModel.getClazz(), object);
     }
 
-    //@ManyToOne数据处理
-    private void jpaManyToOneConvert(EruptModel eruptModel, Object object) throws IllegalAccessException {
+    //@OneToMany 数据处理
+    @SneakyThrows
+    private void jpaOneToManyConvert(EruptModel eruptModel, Object object) {
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             if (fieldModel.getEruptField().edit().type() == EditType.TAB_TABLE_ADD) {
                 Field field = ReflectUtil.findClassField(object.getClass(), fieldModel.getFieldName());
@@ -109,10 +110,13 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 Collection<?> collection = (Collection<?>) field.get(object);
                 if (null != collection) {
                     for (Object o : collection) {
-                        //强制删除主键
-                        ReflectUtil.findClassField(o.getClass(),
-                                EruptCoreService.getErupt(fieldModel.getFieldReturnName()).getErupt()
-                                        .primaryKeyCol()).set(o, null);
+                        String pk = EruptCoreService.getErupt(fieldModel.getFieldReturnName()).getErupt().primaryKeyCol();
+                        Field ff = ReflectUtil.findClassField(o.getClass(), pk);
+                        Object value = ff.get(o);
+                        if (null != value && value.toString().startsWith("-")) {
+                            ff.set(o, null);
+                        }
+                        ff.setAccessible(false);
                     }
                 }
             }

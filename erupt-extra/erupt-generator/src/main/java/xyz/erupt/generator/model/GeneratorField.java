@@ -53,7 +53,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
     private Integer sort;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(100)")
+    @Column
     @EruptField(
             views = @View(title = "编辑类型"),
             edit = @Edit(title = "编辑类型",
