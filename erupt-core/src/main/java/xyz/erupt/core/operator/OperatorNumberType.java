@@ -14,7 +14,7 @@ import java.util.Map;
 @AllArgsConstructor
 public enum OperatorNumberType implements OperatorExpr {
 
-    EQ("等于") {
+    EQ {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
@@ -22,7 +22,7 @@ public enum OperatorNumberType implements OperatorExpr {
             return String.format("%s = :%s", field, placeholder);
         }
     },
-    NEQ("不等于") {
+    NEQ {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
@@ -30,7 +30,7 @@ public enum OperatorNumberType implements OperatorExpr {
             return String.format("%s <> :%s", field, placeholder);
         }
     },
-    GT("大于") {
+    GT {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
@@ -38,7 +38,7 @@ public enum OperatorNumberType implements OperatorExpr {
             return String.format("%s > :%s", field, placeholder);
         }
     },
-    LT("小于") {
+    LT {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
@@ -46,7 +46,7 @@ public enum OperatorNumberType implements OperatorExpr {
             return String.format("%s < :%s", field, placeholder);
         }
     },
-    EGT("大于等于") {
+    EGT {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
@@ -54,7 +54,7 @@ public enum OperatorNumberType implements OperatorExpr {
             return String.format("%s >= :%s", field, placeholder);
         }
     },
-    ELT("小于等于") {
+    ELT {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
@@ -62,7 +62,7 @@ public enum OperatorNumberType implements OperatorExpr {
             return String.format("%s <= :%s", field, placeholder);
         }
     },
-    RANGE("区间") {
+    RANGE {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             List<?> s = (List<?>) value;
@@ -73,20 +73,18 @@ public enum OperatorNumberType implements OperatorExpr {
             return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
     },
-    NULL("为空") {
+    NULL {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return OperatorStringType.NULL.expr(field, value, parameter);
         }
     },
-    NOT_NULL("非空") {
+    NOT_NULL {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return OperatorStringType.NOT_NULL.expr(field, value, parameter);
         }
     };
 
-    //名称
-    private final String name;
 
 }

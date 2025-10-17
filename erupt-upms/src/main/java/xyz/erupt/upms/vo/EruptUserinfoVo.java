@@ -15,25 +15,24 @@ public class EruptUserinfoVo {
 
     private String avatar;
 
-    //用户名
     private String nickname;
 
-    //用户首页菜单类型
+    // Type of menu on the user's home page
     private String indexMenuType;
 
-    //用户首页菜单值
+    // User home page menu value
     private String indexMenuValue;
 
-    //是否需要重置密码
+    // Do you need to reset your password?
     private boolean resetPwd = false;
 
-    //组织编码
+    // Organizational code
     private String org;
 
-    //岗位编码
+    // Position code
     private String post;
 
-    //角色列表
+    // Character List
     private List<String> roles;
 
 }

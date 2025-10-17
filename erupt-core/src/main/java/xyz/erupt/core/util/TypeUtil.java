@@ -20,7 +20,7 @@ public class TypeUtil {
     };
 
     /**
-     * 将未知类型转换为目标类型
+     * Convert the unknown type to the target type
      */
     @SneakyThrows
     public static Object typeStrConvertObject(Object obj, Class<?> targetType) {
@@ -76,7 +76,7 @@ public class TypeUtil {
         }
     }
 
-    // 判断实体类字段返回值是否为基本类型（包括String与date）
+    // Determine whether the return value of the entity class field is a basic type (including String and date)
     public static boolean isFieldSimpleType(String typeName) {
         return Arrays.asList(SIMPLE_JPA_TYPE).contains(typeName.toLowerCase());
     }
@@ -85,7 +85,7 @@ public class TypeUtil {
         return Arrays.asList(NUMBER_TYPE).contains(typeName.toLowerCase());
     }
 
-    //判断是否为数值类型
+    // Determine whether it is a numeric type
     public static boolean isNumber(Object obj) {
         return obj instanceof Number || NumberUtils.isCreatable(obj.toString());
     }

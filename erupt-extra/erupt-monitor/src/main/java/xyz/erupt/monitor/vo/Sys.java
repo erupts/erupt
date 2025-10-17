@@ -20,13 +20,13 @@ import java.util.Enumeration;
 @Setter
 public class Sys {
 
-    private String name; //系统名称
+    private String name; // System name
 
-    private String arch; //架构
+    private String arch; // Architecture
 
-    private String hostName; //主机名称
+    private String hostName;
 
-    private Date date; //服务器时间
+    private Date date; // Server time
 
     @SneakyThrows
     Sys() {
@@ -38,7 +38,6 @@ public class Sys {
         this.setDate(new Date());
     }
 
-    //获取服务器IP地址
     @SneakyThrows
     public static String getServerIp() {
         Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();

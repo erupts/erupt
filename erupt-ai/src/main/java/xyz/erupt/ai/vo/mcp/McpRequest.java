@@ -11,7 +11,7 @@ public class McpRequest {
 
     private String jsonrpc = "2.0";
 
-    private Object id;          // String 或 Integer
+    private Object id;          // String or Integer
 
     private String method;
 

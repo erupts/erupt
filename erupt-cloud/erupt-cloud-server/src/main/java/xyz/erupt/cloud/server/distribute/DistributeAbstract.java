@@ -3,7 +3,7 @@ package xyz.erupt.cloud.server.distribute;
 import xyz.erupt.cloud.server.node.MetaNode;
 
 /**
- * 分布式处理
+ * distributed processing
  *
  * @author YuePeng
  * date 2022/3/8 21:25

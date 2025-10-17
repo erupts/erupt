@@ -12,18 +12,18 @@ import xyz.erupt.ai.pojo.ChatUsage;
 @Setter
 public class SseListener {
 
-    // 完整输出内容
+    // Full output content
     private final StringBuilder output = new StringBuilder();
 
     private boolean pending = false;
 
-    // 流式输出，当前消息的内容
+    // Stream output, the content of the current message
     private String currMessage;
 
-    // 流式输出，整条消息对象
+    // Stream output, the entire message object
     private String currData;
 
-    // 花费 token
+    // Spending tokens
     private ChatUsage usage = new ChatUsage();
 
     private boolean isFinish = false;

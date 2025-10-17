@@ -113,7 +113,7 @@ public class EruptTplService {
         if (tplActions.containsKey(path)) {
             return tplActions.get(path);
         } else {
-            // 从模糊匹配中查询资源路径
+            // Query the resource path from the fuzzy matching results
             for (Map.Entry<String, Method> entry : tplMatcherActions.entrySet()) {
                 if (pathMatcher.match(entry.getKey(), path)) {
                     return entry.getValue();

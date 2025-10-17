@@ -56,7 +56,6 @@ public class EruptChannel {
         EruptChannelManager.close(session);
     }
 
-    // 连接异常
     @OnError
     public void error(Session session, Throwable throwable) throws IOException {
         log.error("[websocket] Connection exception：id={}，throwable={}", session.getId(), throwable.getMessage());

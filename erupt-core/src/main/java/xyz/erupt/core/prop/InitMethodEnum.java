@@ -1,15 +1,15 @@
 package xyz.erupt.core.prop;
 
 /**
- * 初始化方式
+ * Initialization method
  *
  * @author YuePeng
  * date 2022/7/11 22:35
  */
 public enum InitMethodEnum {
 
-    NONE,    //不执行初始化代码
-    EVERY,   //每次启动都进行初始化
-    FILE     //通过标识文件判断是否需要初始化
+    NONE,    // Do not execute the initialization code
+    EVERY,   // Initialization is performed every time the system is started.
+    FILE     // Determine whether initialization is required by checking the identification file.
 
 }
