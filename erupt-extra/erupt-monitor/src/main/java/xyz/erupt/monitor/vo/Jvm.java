@@ -32,7 +32,7 @@ public class Jvm {
 
     private int threadCount;
 
-    //-------------------- 内存
+    //-------------------- Mem
     private String total;
 
     private String used;

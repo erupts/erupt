@@ -18,21 +18,21 @@ import java.util.regex.Pattern;
 public class SecurityUtil {
 
     private static final Pattern XSS_PATTERN = Pattern.compile(
-            // Script 标签
+            // Script Tag
             "<script\\b[^>]*>(.*?)</script>|" +
-            // 主要事件处理器
+            // event handler
             "\\b(?:onclick|onload|onmouseover|onfocus|onerror|onchange|onsubmit|onkeydown|onkeyup|onblur|onresize|onscroll|ondblclick|onmousedown|onmouseup|onmousemove|onmouseout|oninput|onpaste|oncut|oncopy|ondrag|ondrop|onreset|onselect|onwheel)\\s*\\s*=" +
-            // 伪协议
+            // Fake agreement
             "\\b(?:javascript|vbscript|data):|" +
-            // 危险的属性值
+            // Dangerous attribute value
             "\\b(?:src|href|action)\\s*\\s*=\\s*(['\"]?)\\s*(?:javascript|vbscript|data):|" +
-            // 危险的函数调用
+            // Dangerous function call
             "\\b(?:eval|expression|setTimeout|setInterval|Function|alert|confirm|prompt)\\s*\\s*\\(|" +
-            // 危险的HTML标签（只检测明显危险的标签）
+            // Dangerous HTML tags (only detecting obvious dangerous tags)
             "<(?:iframe|object|embed|applet)\\b[^>]*>|" +
-            // 样式中的表达式
+            // Expressions in the style
             "\\bexpression\\s*\\s*\\(|" +
-            // 危险的DOM操作
+            // Dangerous DOM operations
             "\\b(?:innerHTML|outerHTML|document\\.write|document\\.writeln)\\s*\\s*=",
             Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL
     );
@@ -44,7 +44,7 @@ public class SecurityUtil {
         return value != null && XSS_PATTERN.matcher(value).find();
     }
 
-    //检测 跨站请求伪造
+    // Detection of Cross-Site Request Forgery
     public static boolean csrfInspect(HttpServletRequest request, HttpServletResponse response) {
         String origin = request.getHeader("Origin");
         if (null != origin && !origin.contains(request.getHeader("Host"))) {

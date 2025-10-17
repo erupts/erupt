@@ -10,20 +10,20 @@ import xyz.erupt.linq.lambda.SFunction;
 import java.lang.annotation.Annotation;
 
 /**
- * 注解代理
+ * Annotation Proxy
  *
  * @author YuePeng
  * date 2022/2/5 14:20
  */
 public abstract class AnnotationProxy<A, PA> {
 
-    // 原始注解
+    // Original annotation
     public A rawAnnotation;
 
-    // 代理后新注解
+    // Proxy post-new annotation
     public A proxyAnnotation;
 
-    // 向上引用
+    // Reference upward
     protected AnnotationProxy<PA, ?> parent;
 
     protected abstract Object invocation(MethodInvocation invocation);

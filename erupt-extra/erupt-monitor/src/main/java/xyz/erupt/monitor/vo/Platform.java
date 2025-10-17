@@ -21,8 +21,8 @@ public class Platform {
 
     private String eruptVersion;
 
-    private int eruptCount; //erupt类数量
+    private int eruptCount;
 
-    private List<String> eruptModules; //模块列表
+    private List<String> eruptModules; // Module list
 
 }

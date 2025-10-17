@@ -15,19 +15,19 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("erupt.cloud-server")
 public class EruptCloudServerProp {
 
-    // node 节点持久化时长
+    // Node persistence duration
     private Integer nodeExpireTime = 1000 * 60 * 10;
 
-    // node 节点存活检查周期
+    // Node node survival check cycle
     private Integer nodeSurviveCheckTime = 1000 * 120;
 
-    // cloud key 命名空间
+    // Cloud Key Namespace
     private String cloudNameSpace = "erupt-cloud:";
 
-    // node 节点注册时是否校验 Access Token
+    // Does the node registration process verify the Access Token?
     private boolean validateAccessToken = true;
 
-    // node 节点请求超时时间
+    // Node node request timeout period
     private Integer nodeRequestTimeout = 1000 * 30;
 
 }

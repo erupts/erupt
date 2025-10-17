@@ -13,7 +13,7 @@ import xyz.erupt.upms.util.UPMSUtil;
 import java.util.Map;
 
 /**
- * 全局菜单权限控制
+ * Global menu permission control
  *
  * @author YuePeng
  * date 2021/3/16 00:15

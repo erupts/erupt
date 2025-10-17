@@ -23,7 +23,7 @@ public class ServerRemoteService {
     @Resource
     private EruptNodeProp eruptNodeProp;
 
-    //校验菜单权限
+    // Verify menu permissions
     public boolean getMenuCodePermission(String menuValue) {
         try (HttpResponse res = HttpUtil.createGet(eruptNodeProp.getBalanceAddress() + EruptRestPath.ERUPT_CODE_PERMISSION + "/" + menuValue)
                 .header(EruptMutualConst.TOKEN, MetaContext.getToken()).execute()) {

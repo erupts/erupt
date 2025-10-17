@@ -5,7 +5,6 @@ import xyz.erupt.annotation.config.Comment;
 import java.beans.Transient;
 
 /**
- * 画册视图
  *
  * @author YuePeng
  * date 2022/10/9 23:52

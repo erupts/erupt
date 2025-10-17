@@ -12,19 +12,15 @@ import java.io.Serializable;
 @Setter
 public class R<T> implements Serializable {
 
-    //数据
     private T data;
 
-    //消息
     private String message;
 
-    //是否成功
     private boolean success;
 
-    //状态
     private EruptApiModel.Status status;
 
-    //提示方式
+    // prompting mode
     private EruptApiModel.PromptWay promptWay = EruptApiModel.PromptWay.MESSAGE;
 
     public static <T> R<T> ok(T data) {

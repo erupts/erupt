@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 作用域：annotation[]
  * @author YuePeng
  * date 2019-05-28.
  */

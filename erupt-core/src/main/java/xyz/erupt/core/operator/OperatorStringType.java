@@ -16,49 +16,49 @@ import java.util.Map;
 @AllArgsConstructor
 public enum OperatorStringType implements OperatorExpr {
 
-    EQ("等于") {
+    EQ {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, value);
             return String.format("%s = :%s", field, placeholder);
         }
-    }, NEQ("不等于") {
+    }, NEQ {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, value);
             return String.format("%s != :%s", field, placeholder);
         }
-    }, LIKE("相似") {
+    }, LIKE {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, "%" + value + "%");
             return String.format("%s like :%s", field, placeholder);
         }
-    }, NOT_LIKE("不相似") {
+    }, NOT_LIKE {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, "%" + value + "%");
             return String.format("%s not like :%s", field, placeholder);
         }
-    }, START_WITH("以**开始") {
+    }, START_WITH {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, value + "%");
             return String.format("%s like :%s", field, placeholder);
         }
-    }, END_WITH("以**结尾") {
+    }, END_WITH {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, "%" + value);
             return String.format("%s like :%s", field, placeholder);
         }
-    }, IN("包含于") {
+    }, IN {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             Collection<?> collection = (Collection<?>) value;
@@ -70,7 +70,7 @@ public enum OperatorStringType implements OperatorExpr {
             }
             return "(" + String.join(" or ", conditions) + ")";
         }
-    }, NOT_IN("不包含于") {
+    }, NOT_IN {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             Collection<?> collection = (Collection<?>) value;
@@ -82,20 +82,17 @@ public enum OperatorStringType implements OperatorExpr {
             }
             return "(" + String.join(" and ", conditions) + ")";
         }
-    }, NULL("为空") {
+    }, NULL {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return String.format("%s is null", field);
         }
-    }, NOT_NULL("非空") {
+    }, NOT_NULL {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return String.format("%s is not null", field);
         }
     },
-    ;
 
-    //名称
-    private final String name;
 
 }

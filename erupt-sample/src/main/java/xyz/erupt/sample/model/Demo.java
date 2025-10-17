@@ -17,38 +17,33 @@ import java.util.Date;
 @Entity
 public class Demo extends BaseModel {
 
-    //文本输入
     @EruptField(
-            views = @View(title = "文本"),
-            edit = @Edit(title = "文本", search = @Search(vague = true))
+            views = @View(title = "Text"),
+            edit = @Edit(title = "Text", search = @Search(vague = true))
     )
     private String input;
 
-    //数值输入
     @EruptField(
-            views = @View(title = "数值", sortable = true),
-            edit = @Edit(title = "数值", search = @Search)
+            views = @View(title = "Number", sortable = true),
+            edit = @Edit(title = "Number", search = @Search)
     )
-    private Integer number = 100;  //默认值100
+    private Integer number = 100;  // Default value 100
 
-    //数值输入
     @EruptField(
-            views = @View(title = "浮点", sortable = true),
-            edit = @Edit(title = "浮点", search = @Search)
+            views = @View(title = "Float", sortable = true),
+            edit = @Edit(title = "Float", search = @Search)
     )
-    private Double dou = 100.1111D;  //默认值100
+    private Double dou = 100.1111D;  // Default value 100
 
-    //布尔选择
     @EruptField(
-            views = @View(title = "布尔"),
-            edit = @Edit(title = "布尔", search = @Search)
+            views = @View(title = "Bool"),
+            edit = @Edit(title = "Bool", search = @Search)
     )
     private Boolean bool;
 
-    //时间选择
     @EruptField(
-            views = @View(title = "时间"),
-            edit = @Edit(title = "时间", search = @Search)
+            views = @View(title = "Date"),
+            edit = @Edit(title = "Date", search = @Search)
     )
     private Date date;
 

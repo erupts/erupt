@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * node 节点定时任务
+ * Node timed task
  *
  * @author YuePeng
  * date 2022/2/3 21:36

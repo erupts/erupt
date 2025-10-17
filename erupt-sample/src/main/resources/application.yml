@@ -8,7 +8,7 @@ spring:
   h2:
     console:
       enabled: true
-      path: /h2           #H2控制台访问路径
+      path: /h2
       settings:
         web-allow-others: true
   jpa:

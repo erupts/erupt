@@ -95,12 +95,12 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
     }
 
     /**
-     * 根据列获取相关数据
+     * Retrieve relevant data based on the list.
      *
      * @param eruptModel eruptModel
-     * @param columns    列
-     * @param query      查询对象
-     * @return 数据结果集
+     * @param columns    column
+     * @param query      query object
+     * @return return set
      */
     @Override
     @SuppressWarnings("SqlSourceToSinkFlow")

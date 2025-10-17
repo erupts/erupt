@@ -74,14 +74,14 @@ public class EntityManagerService implements DisposableBean {
         throw new RuntimeException("Failed to match data source '" + dbName + "'");
     }
 
-    //注册扩展的EntityManager
+    // Register the extended EntityManager
     public void addExtEntityManager(EntityManager entityManager) {
         if (!extEntityManagers.contains(entityManager)) {
             extEntityManagers.add(entityManager);
         }
     }
 
-    //移除扩展的EntityManager
+    // Remove the extended EntityManager
     public void removeExtEntityManager(EntityManager entityManager) {
         extEntityManagers.remove(entityManager);
     }

@@ -58,7 +58,7 @@ public class EruptJobAction implements Job {
             String exceptionTraceStr = ExceptionUtils.getStackTrace(e);
             eruptJobLog.setErrorInfo(exceptionTraceStr);
             if (null != jobHandler) jobHandler.error(e, eruptJob.getHandlerParam());
-            //失败通知
+            // Error Notification
             if (StringUtils.isNotBlank(eruptJob.getNotifyEmails())) {
                 if (null == javaMailSender) {
                     log.warn("Sending mailbox not configured");

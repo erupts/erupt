@@ -46,8 +46,6 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 对Excel数据的处理
- *
  * @author YuePeng
  * date 10/15/18.
  */
@@ -67,7 +65,7 @@ public class EruptExcelController {
 
     private final EruptModifyController eruptModifyController;
 
-    //模板下载
+    // template download
     @GetMapping(value = "/template/{erupt}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public void getExcelTemplate(@PathVariable("erupt") String eruptName, HttpServletRequest request,
@@ -80,7 +78,6 @@ public class EruptExcelController {
         }
     }
 
-    //导出
     @PostMapping("/export/{erupt}")
     @EruptRecordOperate(value = "Export Excel", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
@@ -129,7 +126,6 @@ public class EruptExcelController {
         }
     }
 
-    //导入
     @PostMapping("/import/{erupt}")
     @EruptRecordOperate(value = "Import Excel", dynamicConfig = EruptRecordNaming.class)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)

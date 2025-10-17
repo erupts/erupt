@@ -20,7 +20,7 @@ public class JpaSupport {
     private EruptDao eruptDao;
 
     /**
-     * 对jpa @JoinColumn提供的referencedColumnName配置实现适配
+     * adaptation jpa → @JoinColumn → referencedColumnName
      */
     @SneakyThrows
     public void referencedColumnNameSupport(Object obj, Field field) {

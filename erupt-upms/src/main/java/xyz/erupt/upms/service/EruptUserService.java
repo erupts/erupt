@@ -89,15 +89,15 @@ public class EruptUserService {
         String requestIp = IpUtil.getIpAddr(request);
         EruptUser eruptUser = this.findEruptUserByAccount(account);
         if (null != eruptUser) {
-            if (!eruptUser.getStatus()) return new LoginModel(false, "账号已锁定!");
+            if (!eruptUser.getStatus()) return new LoginModel(false, "Account has been locked.!");
             if (null != eruptUser.getExpireDate()) {
                 if (eruptUser.getExpireDate().getTime() < System.currentTimeMillis()) {
-                    return new LoginModel(false, String.format("账号在 %s 失效", DateUtil.getSimpleFormatDate(eruptUser.getExpireDate())));
+                    return new LoginModel(false, String.format("The account has become invalid at %s.", DateUtil.getSimpleFormatDate(eruptUser.getExpireDate())));
                 }
             }
             if (StringUtils.isNotBlank(eruptUser.getWhiteIp())) {
                 if (Arrays.stream(eruptUser.getWhiteIp().split("\n")).noneMatch(ip -> ip.equals(requestIp))) {
-                    return new LoginModel(false, "当前 ip 无权访问");
+                    return new LoginModel(false, "Your IP address does not have the authority to access.");
                 }
             }
             if (this.checkPwd(eruptUser.getAccount(), eruptUser.getPassword(), eruptUser.getIsMd5(), pwd)) {
@@ -109,13 +109,13 @@ public class EruptUserService {
     }
 
     /**
-     * 校验密码
+     * Verify password
      *
-     * @param account  账号
-     * @param password 密码
-     * @param isMd5    是否加密
-     * @param inputPwd 前端输入的密码
-     * @return 密码是否正确
+     * @param account  account
+     * @param password password
+     * @param isMd5    Is it encrypted
+     * @param inputPwd The password entered at the front end
+     * @return Is the password correct?
      */
     public boolean checkPwd(String account, String password, boolean isMd5, String inputPwd) {
         if (eruptAppProp.getPwdTransferEncrypt()) {

@@ -13,59 +13,54 @@
 //    private EruptDao eruptDao;
 //
 //    @Test
-//    void lambdaQueryTest2() {
-//        System.out.println(1);
-//    }
-//
-//    @Test
 //    void lambdaQueryTest() {
-//        eruptDao.lambdaQuery(Student.class).eq(Student::getName, "张三");
+//        eruptDao.lambdaQuery(Student.class).eq(Student::getName, "John");
 //        eruptDao.lambdaQuery(Student.class).with(Student::getClazz)
-//                .eq(xyz.erupt.jpa.entity.Class::getName, "一班")
-//                .ne(xyz.erupt.jpa.entity.Class::getName, "一班")
-//                .le(xyz.erupt.jpa.entity.Class::getName, "一班")
-//                .lt(xyz.erupt.jpa.entity.Class::getName, "一班")
-//                .ge(xyz.erupt.jpa.entity.Class::getName, "一班")
-//                .gt(xyz.erupt.jpa.entity.Class::getName, "一班")
-//                .in(xyz.erupt.jpa.entity.Class::getName, "一班")
-//                .notIn(xyz.erupt.jpa.entity.Class::getName, "一班")
+//                .eq(xyz.erupt.jpa.entity.Class::getName, "A")
+//                .ne(xyz.erupt.jpa.entity.Class::getName, "A")
+//                .le(xyz.erupt.jpa.entity.Class::getName, "A")
+//                .lt(xyz.erupt.jpa.entity.Class::getName, "A")
+//                .ge(xyz.erupt.jpa.entity.Class::getName, "A")
+//                .gt(xyz.erupt.jpa.entity.Class::getName, "A")
+//                .in(xyz.erupt.jpa.entity.Class::getName, "A")
+//                .notIn(xyz.erupt.jpa.entity.Class::getName, "A")
 //                .isNull(xyz.erupt.jpa.entity.Class::getName)
 //                .isNotNull(xyz.erupt.jpa.entity.Class::getName)
-//                .between(xyz.erupt.jpa.entity.Class::getName, "一班", "二班")
-//                .like(xyz.erupt.jpa.entity.Class::getName, "二班")
-//                .likeValue(xyz.erupt.jpa.entity.Class::getName, "二班%")
+//                .between(xyz.erupt.jpa.entity.Class::getName, "A", "B")
+//                .like(xyz.erupt.jpa.entity.Class::getName, "B")
+//                .likeValue(xyz.erupt.jpa.entity.Class::getName, "B%")
 //                .orderBy(Class::getName)
 //                .with();
 //
 //        eruptDao.lambdaQuery(Student.class)
-//                .eq(Student::getName, "一班")
-//                .ne(Student::getName, "一班")
-//                .le(Student::getName, "一班")
-//                .lt(Student::getName, "一班")
-//                .ge(Student::getName, "一班")
-//                .gt(Student::getName, "一班")
-//                .in(Student::getName, "一班")
+//                .eq(Student::getName, "A")
+//                .ne(Student::getName, "A")
+//                .le(Student::getName, "A")
+//                .lt(Student::getName, "A")
+//                .ge(Student::getName, "A")
+//                .gt(Student::getName, "A")
+//                .in(Student::getName, "A")
 //                .isNull(Student::getName)
 //                .isNotNull(Student::getName)
-//                .between(Student::getName, "一班", "二班")
-//                .like(Student::getName, "二班")
-//                .likeValue(Student::getName, "二班%")
+//                .between(Student::getName, "A", "B")
+//                .like(Student::getName, "B")
+//                .likeValue(Student::getName, "B%")
 //                .orderBy(Student::getName)
 //                .with();
 //
 //        eruptDao.lambdaQuery(Student.class)
-//                .eq(true, Student::getName, "一班")
-//                .ne(true, Student::getName, "一班")
-//                .le(true, Student::getName, "一班")
-//                .lt(true, Student::getName, "一班")
-//                .ge(true, Student::getName, "一班")
-//                .gt(true, Student::getName, "一班")
-//                .in(true, Student::getName, "一班")
+//                .eq(true, Student::getName, "A")
+//                .ne(true, Student::getName, "A")
+//                .le(true, Student::getName, "A")
+//                .lt(true, Student::getName, "A")
+//                .ge(true, Student::getName, "A")
+//                .gt(true, Student::getName, "A")
+//                .in(true, Student::getName, "A")
 //                .isNull(true, Student::getName)
 //                .isNotNull(true, Student::getName)
-//                .between(true, Student::getName, "一班", "二班")
-//                .like(true, Student::getName, "二班")
-//                .likeValue(true, Student::getName, "二班%")
+//                .between(true, Student::getName, "A", "B")
+//                .like(true, Student::getName, "B")
+//                .likeValue(true, Student::getName, "B%")
 //                .orderBy(true, Student::getName)
 //                .with();
 //    }
