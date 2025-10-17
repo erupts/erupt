@@ -231,7 +231,7 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
-    //添加自定义条件
+    // Add custom conditions
     public EruptLambdaQuery<T> addCondition(String condition) {
         querySchema.getWheres().add(condition);
         return this;

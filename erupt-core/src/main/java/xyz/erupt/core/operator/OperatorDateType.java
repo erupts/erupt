@@ -21,13 +21,13 @@ import java.util.Map;
 @AllArgsConstructor
 public enum OperatorDateType implements OperatorExpr {
 
-    TODAY("今天") {
+    TODAY {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return FUTURE_DAYS.expr(field, 0, parameter);
         }
     },
-    FEW_DAYS("过去 N 天") {
+    FEW_DAYS {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             int days = TypeUtil.fetchInt(value);
@@ -40,7 +40,7 @@ public enum OperatorDateType implements OperatorExpr {
             return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
     },
-    FUTURE_DAYS("未来 N 天") {
+    FUTURE_DAYS {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             int days = TypeUtil.fetchInt(value);
@@ -53,7 +53,7 @@ public enum OperatorDateType implements OperatorExpr {
             return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
     },
-    RANGE("区间") {
+    RANGE {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             List<?> s = (ArrayList<?>) value;
@@ -63,48 +63,45 @@ public enum OperatorDateType implements OperatorExpr {
             parameter.put(placeholder2, s.get(1) + TIME_END);
             return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
-    }, GT("大于") {
+    }, GT {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, OperatorDateType.parseDate(value.toString()));
             return String.format("%s > :%s", field, placeholder);
         }
-    }, LT("小于") {
+    }, LT {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, OperatorDateType.parseDate(value.toString()) + TIME_END);
             return String.format("%s < :%s", field, placeholder);
         }
-    }, EGT("大于等于") {
+    }, EGT {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, OperatorDateType.parseDate(value.toString()));
             return String.format("%s >= :%s", field, placeholder);
         }
-    }, ELT("小于等于") {
+    }, ELT {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
             parameter.put(placeholder, OperatorDateType.parseDate(value.toString()) + TIME_END);
             return String.format("%s <= :%s", field, placeholder);
         }
-    }, NULL("为空") {
+    }, NULL {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return OperatorStringType.NULL.expr(field, value, null);
         }
-    }, NOT_NULL("非空") {
+    }, NOT_NULL {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return OperatorStringType.NOT_NULL.expr(field, value, null);
         }
     };
-
-    //名称
-    private final String name;
 
     public static String parseDate(String date) {
         return date;

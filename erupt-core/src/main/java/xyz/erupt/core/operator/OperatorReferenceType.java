@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 public enum OperatorReferenceType implements OperatorExpr {
 
-    EQ("包含") {
+    EQ {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
@@ -21,7 +21,7 @@ public enum OperatorReferenceType implements OperatorExpr {
             return String.format("%s in (:%s)", field, placeholder);
         }
     },
-    NEQ("不包含") {
+    NEQ {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             String placeholder = this.placeholder();
@@ -30,20 +30,17 @@ public enum OperatorReferenceType implements OperatorExpr {
         }
     },
 
-    NULL("为空") {
+    NULL{
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return OperatorStringType.NULL.expr(field, value, parameter);
         }
     },
-    NOT_NULL("非空") {
+    NOT_NULL {
         @Override
         public String expr(String field, Object value, Map<String, Object> parameter) {
             return OperatorStringType.NOT_NULL.expr(field, value, parameter);
         }
     };
-
-    //名称
-    private final String name;
 
 }

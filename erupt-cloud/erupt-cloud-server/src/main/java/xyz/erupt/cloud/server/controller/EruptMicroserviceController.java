@@ -18,7 +18,7 @@ import xyz.erupt.cloud.server.util.CloudServerUtil;
 import java.util.Optional;
 
 /**
- * 客户端注册控制器
+ * Client registration controller
  *
  * @author YuePeng
  * date 2021/12/17 00:01
