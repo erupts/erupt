@@ -33,8 +33,8 @@ public class EruptOpenApiController {
     private final EruptTokenService eruptTokenService;
 
     /**
-     * 获取token
-     * 每个 appid 同一时间只有一个 token 有效
+     * Create token
+     * Only one token for each appid is valid at the same time.
      *
      * @param appid  appid
      * @param secret secret

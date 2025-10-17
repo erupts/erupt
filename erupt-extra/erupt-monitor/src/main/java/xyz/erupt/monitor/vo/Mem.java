@@ -16,18 +16,18 @@ import java.text.DecimalFormat;
 @Setter
 public class Mem {
 
-    private String total; //内存总量
+    private String total;
 
-    private String used; //已用内存
+    private String used;
 
-    private String free; //剩余内存
+    private String free;
 
-    private String usage; //使用率
+    private String usage;
 
     Mem(SystemInfo systemInfo) {
         GlobalMemory memory = systemInfo.getHardware().getMemory();
-        long totalByte = memory.getTotal(); //总内存
-        long availableByte = memory.getAvailable(); //剩余
+        long totalByte = memory.getTotal();
+        long availableByte = memory.getAvailable();
         this.setTotal(SystemUtil.formatByte(totalByte));
         this.setUsed(SystemUtil.formatByte(totalByte - availableByte));
         this.setFree(SystemUtil.formatByte(availableByte));

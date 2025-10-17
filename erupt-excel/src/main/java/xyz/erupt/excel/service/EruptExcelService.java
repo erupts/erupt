@@ -50,7 +50,7 @@ public class EruptExcelService {
     private static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
 
     /**
-     * excel导出，展示的格式和view表格一致
+     * Excel export, the displayed format is consistent with the view table.
      *
      * @return Workbook
      */
@@ -348,8 +348,8 @@ public class EruptExcelService {
     }
 
     private DataValidation generateValidation(int colIndex, String errHint, DataValidationConstraint constraint) {
-        // 设置数据有效性加载在哪个单元格上。
-        // 四个参数分别是：起始行、终止行、起始列、终止列
+        // Set where the data validation is loaded.
+        // The four parameters are: starting row, ending row, starting column, ending column
         CellRangeAddressList regions = new CellRangeAddressList(1, 1000, colIndex, colIndex);
         DataValidation dataValidationList = new HSSFDataValidation(regions, constraint);
         dataValidationList.createErrorBox("error", errHint);
@@ -365,13 +365,11 @@ public class EruptExcelService {
             Row row = dictSheet.createRow(i);
             row.createCell(0).setCellValue(options.get(i).getLabel());
         }
-        // 创建命名范围指向字典列
         String rangeAddress = dictSheet.getSheetName() + "!$A$1:$A$" + options.size();
         Name name = workbook.createName();
-        name.setNameName(fieldModel.getFieldName() + "Range_" + System.nanoTime()); // 唯一名
+        name.setNameName(fieldModel.getFieldName() + "Range_" + System.nanoTime());
         name.setRefersToFormula(rangeAddress);
 
-        // 4. 数据验证
         DataValidationHelper helper = targetSheet.getDataValidationHelper();
         DataValidationConstraint constraint = helper.createFormulaListConstraint(name.getNameName());
         DataValidation validation = helper.createValidation(constraint, new CellRangeAddressList(
