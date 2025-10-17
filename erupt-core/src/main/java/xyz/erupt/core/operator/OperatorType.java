@@ -13,10 +13,12 @@ public enum OperatorType {
     STRING(OperatorStringType.class),
     NUMBER(OperatorNumberType.class),
     DATE(OperatorDateType.class),
-
     CHOICE(OperatorReferenceType.class),
     BOOLEAN(OperatorReferenceType.class),
-    REFERENCE(OperatorReferenceType.class);
+    REFERENCE(OperatorReferenceType.class),
+
+    UPMS(OperatorUpmsType.class)
+    ;
 
     public final Class<? extends Enum<?>> operatorClass;
 
