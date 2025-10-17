@@ -49,9 +49,9 @@ public class EruptService {
 
     /**
      * @param eruptModel      eruptModel
-     * @param tableQuery      前端查询对象
-     * @param serverCondition 自定义条件
-     * @param customCondition 条件字符串
+     * @param tableQuery      Front-end query object
+     * @param serverCondition Custom conditions
+     * @param customCondition Condition string
      */
     public Page getEruptData(EruptModel eruptModel, TableQuery tableQuery, List<Condition> serverCondition, String... customCondition) {
         Erupts.powerLegal(eruptModel, PowerObject::isQuery);
@@ -116,10 +116,10 @@ public class EruptService {
     }
 
     /**
-     * 校验id使用权限
+     * Verify the usage permissions of the ID
      *
      * @param eruptModel eruptModel
-     * @param id         标识主键
+     * @param id         PK
      */
     public void verifyIdPermissions(EruptModel eruptModel, String id) {
         List<Condition> conditions = new ArrayList<>();

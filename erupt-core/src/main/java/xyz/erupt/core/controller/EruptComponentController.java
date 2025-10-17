@@ -29,12 +29,12 @@ import java.util.Map;
 public class EruptComponentController {
 
     /**
-     * autoComplete 组件联动接口
+     * autoComplete component Interconnection Interface
      *
-     * @param field    自动完成组件字段
-     * @param val      输入框的值
-     * @param formData 完整表单对象
-     * @return 联想结果
+     * @param field    Auto-fill component fields
+     * @param val      The value of the input box
+     * @param formData Complete form object
+     * @return Association results
      */
     @PostMapping("/auto-complete/{erupt}/{field}")
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)

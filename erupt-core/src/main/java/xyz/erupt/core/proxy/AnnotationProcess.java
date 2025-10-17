@@ -121,7 +121,7 @@ public class AnnotationProcess {
         return jsonObject;
     }
 
-    // erupt annotation 最原始序列化实现，收藏 ✨
+    // Original serialization implementation of "erupt annotation", collection ✨
     @Deprecated
     public static String annotationToJsonByReplace(String annotationStr) throws JSONException {
         String convertStr = annotationStr
@@ -131,7 +131,7 @@ public class AnnotationProcess {
                 .replaceAll("@xyz\\.erupt\\.annotation\\.sub_field\\.\\w+", "")
                 .replaceAll("@xyz\\.erupt\\.annotation\\.sub_erupt\\.\\w+", "")
                 .replaceAll("@xyz\\.erupt\\.annotation\\.\\w+", "")
-                //屏蔽类信息
+                // Blocked information
                 .replaceAll("class [a-zA-Z0-9.]+", "")
                 .replace("=,", "='',")
                 .replace("=)", "='')")

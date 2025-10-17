@@ -50,7 +50,7 @@ public class EruptDao {
         this.entityManager.detach(obj);
     }
 
-    //新增
+    // save
     public void persist(Object obj) {
         entityManager.persist(obj);
     }
@@ -61,7 +61,7 @@ public class EruptDao {
         this.flush();
     }
 
-    //修改
+    // modify
     public <T> T merge(T t) {
         return entityManager.merge(t);
     }
@@ -75,7 +75,6 @@ public class EruptDao {
         }
     }
 
-    //删除
     public void delete(Object obj) {
         if (entityManager.contains(obj)) {
             entityManager.remove(obj);
@@ -110,7 +109,7 @@ public class EruptDao {
         return new EruptLambdaQuery<>(entityManager, eruptClass);
     }
 
-    //不存在则新增
+    // If it does not exist, create it.
     public <T> T persistIfNotExist(Class<T> eruptClass, T obj, String field, String val) throws NonUniqueResultException {
         T t = this.lambdaQuery(eruptClass).addCondition(field + " = :val", new HashMap<>(1) {{
             this.put("val", val);

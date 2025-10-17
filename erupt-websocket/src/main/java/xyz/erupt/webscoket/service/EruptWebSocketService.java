@@ -25,12 +25,12 @@ public class EruptWebSocketService {
     @Resource
     private EruptContextService eruptContextService;
 
-    //获取所有已连接会话
+    // Obtain all connected sessions
     public List<EruptWsSessionModel> getAllSession() {
         return EruptChannelManager.getAllSession();
     }
 
-    //获取当前操作用户的会话
+    // Obtain the current session of the operating user
     public EruptWsSessionModel getCurrentSession() {
         return Optional.ofNullable(EruptChannelManager.getSession(eruptContextService.getCurrentToken())).orElseThrow(() ->
                 new EruptWebApiRuntimeException("not found websocket session")

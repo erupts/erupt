@@ -23,7 +23,7 @@ public abstract class AnnotationProxy<A, PA> {
     // Proxy post-new annotation
     public A proxyAnnotation;
 
-    // 向上引用
+    // Reference upward
     protected AnnotationProxy<PA, ?> parent;
 
     protected abstract Object invocation(MethodInvocation invocation);

@@ -48,14 +48,14 @@ public class ChatCompletion {
      * Positive values penalize new tokens based on their existing frequency in the text so far,
      * decreasing the model's likelihood to repeat the same line verbatim.
      */
-    private Float frequencyPenalty;
+    private Float frequency_penalty;
 
     /**
      * Number between -2.0 and 2.0.
      * Positive values penalize new tokens if they have already appeared in the text,
      * increasing the model's likelihood to talk about new topics.
      */
-    private Float presencePenalty;
+    private Float presence_penalty;
 
     /**
      * An object specifying the format that the model must output.
@@ -64,7 +64,7 @@ public class ChatCompletion {
      * otherwise it may produce endless whitespace until the token limit is reached, making the request appear "stuck".
      * Additionally, if finish_reason="length", the message content may be partially truncated because generation exceeded max_tokens or the conversation exceeded the maximum context length.
      */
-    private Map<String, String> responseFormat;
+    private Map<String, String> response_format;
 
     /**
      * List of stop sequences; the API will stop generating further tokens when any of these is encountered.

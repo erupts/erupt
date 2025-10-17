@@ -19,8 +19,8 @@ public class ProjectUtil {
     private static final String LOADED_EXT = ".loaded";
 
     /**
-     * @param projectName 标识名
-     * @param first       bool回调，表示函数是否为第一次调用
+     * @param projectName identification name
+     * @param first       bool flag, indicating whether the function is being called for the first time
      */
     @SneakyThrows
     public void projectStartLoaded(String projectName, Consumer<Boolean> first) {

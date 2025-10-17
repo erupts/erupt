@@ -51,13 +51,13 @@ public abstract class OpenAi extends LlmCore {
                 .addHeader("Authorization", "Bearer " + llmRequest.getApiKey())
                 .build();
 
-        // 同步执行请求
+        // Synchronous execution request
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new RuntimeException("Failed to get response from server: " + response.body());
             }
 
-            // 解析响应体为 ChatCompletionResponse
+            // Parsing the response body as ChatCompletionResponse
             return GsonFactory.getGson().fromJson(null == response.body() ? null : response.body().string(), ChatCompletionResponse.class);
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute HTTP request", e);
@@ -68,7 +68,7 @@ public abstract class OpenAi extends LlmCore {
     @SneakyThrows
     public void chatSse(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
         ChatCompletion completion = ChatCompletion.builder().model(llmRequest.getModel()).messages(assistantPrompt).stream(true).build();
-        completion.setResponse_format(new HashMap<String, String>() {{
+        completion.setResponse_format(new HashMap<>() {{
             this.put("type", String.valueOf(llmRequest.getResponseFormat()));
         }});
         completion.setTopP(llmRequest.getTop_p());
