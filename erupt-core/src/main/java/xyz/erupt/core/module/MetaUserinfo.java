@@ -13,19 +13,19 @@ import java.util.List;
 @Setter
 public class MetaUserinfo {
 
-    private Long id; //用户id
+    private Long id;
 
-    private String account; //用户名
+    private String account;
 
-    private String username; //账号
+    private String username;
 
-    private String org;  //所属组织
+    private String org;
 
-    private String post; //所属岗位
+    private String post;
 
-    private boolean superAdmin; //是否为超级管理员
+    private boolean superAdmin; // Is it a super administrator?
 
-    private List<String> roles; //角色列表
+    private List<String> roles; // Character List
 
     private String tenantId;
 
