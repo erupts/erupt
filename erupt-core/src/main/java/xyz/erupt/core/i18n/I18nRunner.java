@@ -29,7 +29,7 @@ import java.util.jar.JarFile;
 @Slf4j
 public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>>  {
 
-    //语言文件对应文字映射
+    // Mapping of text in language files
     private static final I18nRunner langMappings = new I18nRunner();
 
     private static final String I18N_EXT = ".csv";

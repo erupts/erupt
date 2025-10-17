@@ -60,7 +60,7 @@ public class EruptExcelService {
         Workbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         sheet.setZoom(160);
-        //冻结首行
+        // Freeze the first line
         sheet.createFreezePane(0, 1, 1, 1);
         int rowIndex = 0;
         int colNum = 0;
@@ -258,30 +258,22 @@ public class EruptExcelService {
 
     private String getStringCellValue(Cell cell) {
         CellType cellType = cell.getCellType();
-        switch (cellType) {
-            case NUMERIC:
-                return new DataFormatter().formatCellValue(cell);
-            case STRING:
-                return cell.getStringCellValue();
-            case BOOLEAN:
-                return String.valueOf(cell.getBooleanCellValue());
-            case FORMULA:
-                return cell.getCellFormula();
-            case ERROR:
-                return String.valueOf(cell.getErrorCellValue());
-            case BLANK:
-            default:
-                return StringUtils.EMPTY;
-        }
+        return switch (cellType) {
+            case NUMERIC -> new DataFormatter().formatCellValue(cell);
+            case STRING -> cell.getStringCellValue();
+            case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
+            case FORMULA -> cell.getCellFormula();
+            case ERROR -> String.valueOf(cell.getErrorCellValue());
+            default -> StringUtils.EMPTY;
+        };
     }
 
-    //模板的格式和edit输入框一致
+    // The format of the template is the same as that of the "edit" input box.
     public Workbook createExcelTemplate(EruptModel eruptModel) {
         Workbook wb = new HSSFWorkbook();
-        //基本信息
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         sheet.setZoom(160);
-        //冻结首行
+        // Freeze the first line
         sheet.createFreezePane(0, 1, 1, 1);
         Row headRow = sheet.createRow(0);
         int cellNum = 0;
@@ -290,7 +282,7 @@ public class EruptExcelService {
             if (edit.show() && !edit.readonly().add() && StringUtils.isNotBlank(edit.title())
                     && AnnotationProcess.getEditTypeMapping(edit.type()).excelOperator()) {
                 Cell cell = headRow.createCell(cellNum);
-                //单字节宽度为256
+                // The single-byte width is 256.
                 sheet.setColumnWidth(cellNum, (edit.title().length() + 10) * 256);
                 DataValidationHelper dvHelper = sheet.getDataValidationHelper();
                 switch (edit.type()) {
@@ -323,7 +315,7 @@ public class EruptExcelService {
                     default:
                         break;
                 }
-                //单元格格式
+                // Cell format
                 CellStyle style = wb.createCellStyle();
                 style.setLocked(true);
                 Font font = wb.createFont();
@@ -339,7 +331,6 @@ public class EruptExcelService {
                 }
                 style.setFont(font);
                 cell.setCellStyle(style);
-                //值
                 cell.setCellValue(fieldModel.getEruptField().edit().title());
                 cellNum++;
             }

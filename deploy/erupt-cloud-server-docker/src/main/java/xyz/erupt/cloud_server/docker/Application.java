@@ -11,7 +11,7 @@ import xyz.erupt.core.annotation.EruptScan;
  * projectName erupt
  * className Application
  * date 2024/12/10 10:40
- * slogan: 源于生活 高于生活
+ * slogan: Derived from life, yet surpassing life
  **/
 @SpringBootApplication
 @EruptScan
