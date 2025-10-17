@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 使用 SpEL 表达式校验注解信息，用来确定是否序列化，表达式必须返回布尔类型，
+ * Use SpEL expressions to verify the annotation information to determine whether to serialize, and the expression must return a boolean type.
  *
  * @author YuePeng
  * date 2020-02-21
@@ -16,11 +16,11 @@ import java.lang.annotation.Target;
 public @interface Match {
 
     /**
-     * 预注入变量值：
-     * value : 当前注解变量
-     * item :  父级注解变量
+     * Pre-injected variable value：
+     * value : The current annotation variable
+     * item :  Parent annotation variable
      *
-     * @return 表达式
+     * @return expression
      */
     String value();
 }
