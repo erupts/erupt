@@ -29,14 +29,14 @@ public class PreEruptDataService {
     }
 
     /**
-     * 根据要素生成树结构
+     * Generate the tree structure based on the elements
      *
      * @param eruptModel eruptModel
      * @param id         id
      * @param label      label
      * @param pid        parent id
-     * @param query      查询对象
-     * @return 树对象
+     * @param query      query object
+     * @return tree object
      */
     public Collection<TreeModel> geneTree(EruptModel eruptModel, String id, String label, String pid, Expr rootId, EruptQuery query) {
         List<Column> columns = new ArrayList<>();
