@@ -47,7 +47,7 @@ public class EruptNodeInterceptor implements WebMvcConfigurer, AsyncHandlerInter
         Optional.ofNullable(request.getHeader(EruptMutualConst.USER)).ifPresent(it ->
                 MetaContext.register(GsonFactory.getGson().fromJson(Base64Decoder.decodeStr(it), MetaUser.class)));
         MetaContext.register(new MetaErupt(request.getHeader(EruptMutualConst.ERUPT)));
-        //node节点管理的erupt类禁止浏览器直接访问
+        // Browser direct access to the node-management erupt class is prohibited.
         response.setHeader("Access-Control-Allow-Origin", "255.255.255.255");
         return true;
     }
