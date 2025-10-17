@@ -238,10 +238,10 @@ public class EruptLambdaQuery<T> {
     }
 
     /**
-     * 添加自定义条件
+     * Add custom conditions
      *
-     * @param condition :xxx 的占位符可以被 params参数运行时替换，防止 SQL 注入
-     * @param params    条件参数
+     * @param condition The placeholder of xxx can be replaced by the params parameter at runtime to prevent SQL injection.
+     * @param params    Placeholder parameter
      */
     public EruptLambdaQuery<T> addCondition(String condition, Map<String, Object> params) {
         querySchema.getWheres().add(condition);

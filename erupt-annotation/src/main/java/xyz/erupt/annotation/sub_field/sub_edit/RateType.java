@@ -6,13 +6,13 @@ package xyz.erupt.annotation.sub_field.sub_edit;
  */
 public @interface RateType {
 
-    //自定义字符
+    // Custom characters
     String character() default "";
 
-    //是否允许半选
+    // Is it allowed to have a partial selection?
     boolean allowHalf() default false;
 
-    //star 总数
+    // Total number of characters
     int count() default 5;
 
 }

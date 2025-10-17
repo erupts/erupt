@@ -34,11 +34,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EruptJobService implements DisposableBean {
 
     /**
-     * 执行任务线程.
+     * Execution task thread.
      */
     private static final String PROP_THREAD_COUNT = "org.quartz.threadPool.threadCount";
+
     /**
-     * 执行任务线程数.
+     * Number of execution task threads.
      */
     private static final int DEFAULT_THREAD_COUNT = 1;
 

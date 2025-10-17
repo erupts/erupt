@@ -61,7 +61,7 @@ public class EruptJpaUtils {
         return cols;
     }
 
-    //erupt 注解信息映射成hql语句
+    // Erupt annotation to hql
     public static String generateEruptJpaHql(EruptModel eruptModel, String cols, EruptQuery query, boolean countSql) {
         StringBuilder hql = new StringBuilder();
         if (StringUtils.isNotBlank(cols)) {

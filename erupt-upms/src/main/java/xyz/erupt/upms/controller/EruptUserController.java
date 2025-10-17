@@ -64,12 +64,10 @@ public class EruptUserController {
     private EruptUpmsProp eruptUpmsProp;
 
     /**
-     * 登录
+     * Login
      *
-     * @param account        用户名
-     * @param pwd            密码
-     * @param verifyCode     验证码
-     * @param verifyCodeMark 验证码标识
+     * @param verifyCode     Verification code
+     * @param verifyCodeMark Verification code identifier
      */
     @SneakyThrows
     @GetMapping(value = "/login")
@@ -113,14 +111,6 @@ public class EruptUserController {
         return loginModel;
     }
 
-
-    /**
-     * 修改密码
-     *
-     * @param pwd     旧密码
-     * @param newPwd  新密码
-     * @param newPwd2 确认新密码
-     */
     @GetMapping(value = "/change-pwd")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel changePwd(@RequestParam("pwd") String pwd, @RequestParam("newPwd") String newPwd, @RequestParam("newPwd2") String newPwd2) {
@@ -130,7 +120,6 @@ public class EruptUserController {
         return eruptUserService.changePwd(eruptUserService.getCurrentAccount(), pwd, newPwd, newPwd2);
     }
 
-    //用户信息
     @GetMapping("/userinfo")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptUserinfoVo userinfo() {
@@ -149,7 +138,6 @@ public class EruptUserController {
         return userinfoVo;
     }
 
-    //获取菜单列表
     @GetMapping("/menu")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public List<EruptMenuVo> getMenu() {
@@ -159,7 +147,6 @@ public class EruptUserController {
         return menus;
     }
 
-    //登出
     @GetMapping(value = "/logout")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public EruptApiModel logout() {
@@ -172,17 +159,17 @@ public class EruptUserController {
     }
 
     /**
-     * 生成验证码
+     * Generate verification code
      *
-     * @param mark   生成验证码标记值
-     * @param height 验证码高度
+     * @param mark   Generate the verification code marking value
+     * @param height Height of the verification code
      */
     @GetMapping("/code-img")
     public void createCode(HttpServletResponse response, @RequestParam long mark,
                            @RequestParam(required = false, defaultValue = "38") Integer height) throws Exception {
-        response.setContentType("image/jpeg"); // 设置响应的类型格式为图片格式
+        response.setContentType("image/jpeg"); // Set the response type format to image format
         response.setDateHeader("Expires", 0);
-        response.setHeader("Pragma", "no-cache"); // 禁止图像缓存
+        response.setHeader("Pragma", "no-cache"); // Prohibit image caching
         response.setHeader("Cache-Control", "no-cache");
         Captcha captcha = new SpecCaptcha(150, height, 4);
         sessionService.put(SessionKey.VERIFY_CODE + mark, captcha.text(), 60, TimeUnit.SECONDS);
