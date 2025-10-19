@@ -4,7 +4,9 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -98,6 +100,16 @@ public class TypeUtil {
         } else {
             return ((Double) value).intValue();
         }
+    }
+
+    public static String arrayToConditonString(List<Object> objects, Class<?> target) {
+        List<String> values = new ArrayList<>();
+        for (Object o : objects) {
+            Object val = TypeUtil.typeStrConvertObject(o, target);
+            if (val instanceof String) val = "'" + val + "'";
+            values.add(val.toString());
+        }
+        return String.join(",", values);
     }
 
 }
