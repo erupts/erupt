@@ -51,7 +51,7 @@ public class EruptModel implements Cloneable {
 
     private boolean extraRow = false;
 
-    private Map<String, JsonObject> tags;
+    private Map<String, JsonObject> tags = new HashMap<>();
 
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;
@@ -61,7 +61,6 @@ public class EruptModel implements Cloneable {
         this.i18n = null != clazz.getAnnotation(EruptI18n.class);
         for (Annotation annotation : eruptClazz.getDeclaredAnnotations()) {
             if (annotation.annotationType().getAnnotation(EruptTag.class) != null) {
-                if (null == tags) tags = new HashMap<>();
                 tags.put(annotation.annotationType().getSimpleName(), AnnotationProcess.annotationToJsonByReflect(annotation));
             }
         }
