@@ -1,6 +1,7 @@
 package xyz.erupt.core.service;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,16 +19,12 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.query.EruptQuery;
-import xyz.erupt.core.util.DataHandlerUtil;
-import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.util.Erupts;
-import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.util.*;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.core.view.TableQuery;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,11 +62,8 @@ public class EruptService {
             } else {
                 EruptModel treeErupt = EruptCoreService.getErupt(ReflectUtil.findClassField(eruptModel.getClazz(), dependTree.field()).getType().getSimpleName());
                 EruptFieldModel pk = treeErupt.getEruptFieldMap().get(treeErupt.getErupt().primaryKeyCol());
-                if (pk.getField().getType() == String.class) {
-                    conditionStrings.add(String.format("%s = '%s'", dependTree.field() + EruptConst.DOT + pk.getFieldName(), tableQuery.getLinkTreeVal()));
-                } else {
-                    conditionStrings.add(String.format("%s = %s", dependTree.field() + EruptConst.DOT + pk.getFieldName(), tableQuery.getLinkTreeVal()));
-                }
+                conditionStrings.add(String.format("%s in (%s)", dependTree.field() + EruptConst.DOT + pk.getFieldName(),
+                        TypeUtil.arrayToConditonString(tableQuery.getLinkTreeVal(), pk.getField().getType())));
             }
         }
         Layout layout = eruptModel.getErupt().layout();
@@ -91,6 +85,8 @@ public class EruptService {
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.alert(legalConditions)).ifPresent(page::setAlert)));
         return page;
     }
+
+
 
     @SneakyThrows
     public void drillProcess(EruptModel eruptModel, BiConsumer<Link, Object> consumer) {
