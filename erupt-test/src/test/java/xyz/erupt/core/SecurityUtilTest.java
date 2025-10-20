@@ -1,8 +1,10 @@
-package xyz.erupt.core.util;
+package xyz.erupt.core;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import xyz.erupt.core.util.SecurityUtil;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 
 public class SecurityUtilTest {
 
