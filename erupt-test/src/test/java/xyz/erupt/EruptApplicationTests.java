@@ -1,9 +1,9 @@
-package xyz.erupt.upms;
+package xyz.erupt;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApplicationTests {
+public class EruptApplicationTests {
 
 
 }
