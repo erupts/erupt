@@ -75,6 +75,9 @@
 
         <!-- erupt deploy -->
         <module>deploy/erupt-cloud-server-docker</module>
+
+        <!-- unittest -->
+        <module>erupt-test</module>
     </modules>
 
     <dependencyManagement>
@@ -99,11 +102,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
