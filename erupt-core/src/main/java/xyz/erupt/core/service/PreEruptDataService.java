@@ -28,6 +28,11 @@ public class PreEruptDataService {
         return EruptUtil.generateEruptDataMap(eruptModel, data);
     }
 
+    public Object getEruptById(EruptModel eruptModel, String id) {
+        return DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
+    }
+
     /**
      * Generate the tree structure based on the elements
      *
