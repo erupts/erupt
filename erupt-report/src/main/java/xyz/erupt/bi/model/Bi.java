@@ -123,7 +123,7 @@ public class Bi extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             edit = @Edit(title = "总条数SQL", desc = "计算数据总量，在取值SQL嵌套子查询count性能较低时使用",
-                    showBy = @ShowBy(dependField = "pageType", expr = "value == '" + BiConst.PAGE_END + "'"),
+                    dynamicBy = @DynamicBy(dependField = "pageType", expr = "value == '" + BiConst.PAGE_END + "'"),
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "sql", height = 100))
     )
     private String countStatement;

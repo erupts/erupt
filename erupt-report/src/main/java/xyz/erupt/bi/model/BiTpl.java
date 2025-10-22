@@ -17,7 +17,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
+import xyz.erupt.annotation.sub_field.sub_edit.DynamicBy;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
@@ -66,7 +66,7 @@ public class BiTpl extends MetaModelUpdateVo implements DataProxy<BiTpl> {
     @EruptField(
             views = @View(title = "路径"),
             edit = @Edit(title = "路径",
-                    showBy = @ShowBy(dependField = "type", expr = "value == '" + BiTpl.TYPE_PATH + "'"),
+                    dynamicBy = @DynamicBy(dependField = "type", expr = "value == '" + BiTpl.TYPE_PATH + "'"),
                     desc = "resources路径下模板文件")
     )
     private String path;
@@ -74,7 +74,7 @@ public class BiTpl extends MetaModelUpdateVo implements DataProxy<BiTpl> {
     @EruptField(
             views = @View(title = "模板"),
             edit = @Edit(title = "模板", desc = "语法Freemarker",
-                    showBy = @ShowBy(dependField = "type", expr = "value == '" + BiTpl.TYPE_ONLINE + "'"),
+                    dynamicBy = @DynamicBy(dependField = "type", expr = "value == '" + BiTpl.TYPE_ONLINE + "'"),
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "html"))
     )
     private String tpl;
