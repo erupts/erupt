@@ -125,6 +125,7 @@ IN,包含于,包含於,Contains,Contient,含まれる,포함,Содержит,Co
 NOT_IN,不包含于,不包含於,Not contains,Ne contient pas,含まれない,포함하지 않음,Не содержит,No contiene,Enthält nicht,Não contém,Tidak mengandung,لا يحتوي على
 
 [flow]
+VIEW_FLOW,查看流程,檢視流程,View Flow,Voir le flux,フローを見る,플로우 보기,Просмотр потока,Ver flujo,Fluss anzeigen,Ver fluxo,Lihat Aliran,عرض التدفق
 USER_APPROVAL,或签审批,或簽審批,Sequential Approval,Approbation Séquentielle,順次承認,순차 승인,Последовательное утверждение,Aprobación Secuencial,Sequentielle Genehmigung,Aprovação Sequencial,Persetujuan Berurutan,الموافقة التسلسلية
 USER_APPROVAL_PARALLEL,会签审批,會簽審批,Parallel Approval,Approbation Parallèle,並列承認,병렬 승인,Параллельное утверждение,Aprobación Paralela,Parallele Genehmigung,Aprovação Paralela,Persetujuan Paralel,الموافقة المتوازية
 CC,抄送,副本,CC,Cc,CC,참조,Копия,CC,CC,CC,CC,نسخة
