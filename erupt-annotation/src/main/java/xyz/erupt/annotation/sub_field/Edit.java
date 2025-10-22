@@ -41,7 +41,7 @@ public @interface Edit {
 
     @Match("#value.dependField() != ''")
     @Comment("显示依赖")
-    ShowBy showBy() default @ShowBy(dependField = "", expr = "");
+    DynamicBy dynamicBy() default @DynamicBy(dependField = "", expr = "");
 
     @Comment("查询项")
     Search search() default @Search(false);
