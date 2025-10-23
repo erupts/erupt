@@ -13,7 +13,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.DynamicBy;
+import xyz.erupt.annotation.sub_field.sub_edit.DynamicOn;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
@@ -59,8 +59,8 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
     @EruptField(
             views = @View(title = "参照维度", column = "name"),
             edit = @Edit(title = "参照维度", type = EditType.REFERENCE_TABLE,
-                    dynamicBy = @DynamicBy(dependField = "type",
-                            expr = "value && value.indexOf('REFERENCE') != -1"))
+                    dynamicOn = @DynamicOn(dependField = "type",
+                            condition = "value && value.indexOf('REFERENCE') != -1"))
     )
     private BiDimensionReference biDimensionReference;
 

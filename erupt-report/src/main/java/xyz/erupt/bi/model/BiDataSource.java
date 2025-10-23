@@ -18,7 +18,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.DynamicBy;
+import xyz.erupt.annotation.sub_field.sub_edit.DynamicOn;
 import xyz.erupt.annotation.sub_field.sub_edit.InputType;
 import xyz.erupt.bi.constant.DBTypeEnum;
 import xyz.erupt.bi.handler.DriverChoice;
@@ -93,7 +93,7 @@ public class BiDataSource extends MetaModelUpdateVo implements ChoiceFetchHandle
                             "@size：展示条数\n" +
                             "@skip：跳过行数\n"+
                             "@sort：字段排序",
-                    dynamicBy = @DynamicBy(dependField = "type", expr = "value === 'Other'")
+                    dynamicOn = @DynamicOn(dependField = "type", condition = "value === 'Other'")
             )
     )
     private String limitSql;
