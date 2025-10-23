@@ -39,9 +39,9 @@ public @interface Edit {
     @Comment("表单提示信息")
     String placeHolder() default "";
 
-    @Match("#value.dependField() != ''")
+    @Match("#value.condition() != ''")
     @Comment("表单动态处理")
-    DynamicOn dynamic() default @DynamicOn(dependField = "", condition = "");
+    DynamicOn dynamicOn() default @DynamicOn(dependField = "", condition = "");
 
     @Comment("查询项")
     Search search() default @Search(false);

@@ -64,7 +64,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
 
     @EruptField(
             views = @View(title = "关联实体类"),
-            edit = @Edit(title = "关联实体类", dynamic = @DynamicOn(dependField = "type",
+            edit = @Edit(title = "关联实体类", dynamicOn = @DynamicOn(dependField = "type",
                     condition = "value.indexOf('REFERENCE') != -1 || value.indexOf('TAB') != -1 || value == 'CHECKBOX' || value == 'COMBINE'"))
     )
     private String linkClass;

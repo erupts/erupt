@@ -298,14 +298,12 @@ public class EruptUtil {
                     }
                 }
             }
-            if (!AnnotationConst.EMPTY_STR.equals(edit.dynamic().condition())) {
+            if (!AnnotationConst.EMPTY_STR.equals(edit.dynamicOn().condition())) {
                 if (null == value || value.isJsonNull()) {
-                    boolean dynamic = ScriptUtil.eval("!!(" + edit.dynamic().condition() + ")",
-                            Map.of(LambdaSee.field(DynamicOn.Var::getValue), jsonObject.get(edit.dynamic().dependField()))).asBoolean();
-                    if (!dynamic && DynamicOn.Ctrl.NOTNULL == edit.dynamic().noMatch()) {
-                        return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
-                    }
-                    if (dynamic && DynamicOn.Ctrl.NOTNULL == edit.dynamic().match()) {
+                    boolean dynamic = ScriptUtil.eval("!!(" + edit.dynamicOn().condition() + ")",
+                            Map.of(LambdaSee.field(DynamicOn.Var::getValue), jsonObject.get(edit.dynamicOn().dependField()).getAsString())).asBoolean();
+                    DynamicOn.Ctrl strategy = dynamic ? edit.dynamicOn().match() : edit.dynamicOn().noMatch();
+                    if (strategy == DynamicOn.Ctrl.NOTNULL) {
                         return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
