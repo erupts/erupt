@@ -19,8 +19,8 @@ public @interface DynamicOn {
 
     Ctrl match() default Ctrl.SHOW;
 
-    @Comment("Compute component value when condition changes, Variable, class field name")
-    String render() default "";
+//    @Comment("Compute component value when condition changes, Variable, class field name")
+//    String render() default "";
 
     enum Ctrl {
         SHOW,     //显示
