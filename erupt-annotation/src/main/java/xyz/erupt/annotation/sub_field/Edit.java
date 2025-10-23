@@ -40,8 +40,8 @@ public @interface Edit {
     String placeHolder() default "";
 
     @Match("#value.dependField() != ''")
-    @Comment("显示依赖")
-    DependOn dynamicOn() default @DependOn(dependField = "", condition = "");
+    @Comment("表单动态处理")
+    DynamicOn dynamic() default @DynamicOn(dependField = "", condition = "");
 
     @Comment("查询项")
     Search search() default @Search(false);
