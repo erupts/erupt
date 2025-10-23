@@ -7,17 +7,20 @@ import xyz.erupt.annotation.config.Comment;
  * @author YuePeng
  * date 2025-10-22
  */
-public @interface DependOn {
+public @interface DynamicOn {
 
     @Comment("依赖字段名")
     String dependField();
 
-    @Comment("条件依赖表达式，变量：value 依赖字段的值")
+    @Comment("JS expression，Variable: class field name")
     String condition();
 
     Ctrl noMatch() default Ctrl.HIDE;
 
     Ctrl match() default Ctrl.SHOW;
+
+    @Comment("compute component value when condition changes, Variable, class field name")
+    String render() default "";
 
     enum Ctrl {
         SHOW,     //显示

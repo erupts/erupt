@@ -15,7 +15,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.DependOn;
+import xyz.erupt.annotation.sub_field.sub_edit.DynamicOn;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.generator.base.Ref;
@@ -64,7 +64,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
 
     @EruptField(
             views = @View(title = "关联实体类"),
-            edit = @Edit(title = "关联实体类", dynamicOn = @DependOn(dependField = "type",
+            edit = @Edit(title = "关联实体类", dynamic = @DynamicOn(dependField = "type",
                     condition = "value.indexOf('REFERENCE') != -1 || value.indexOf('TAB') != -1 || value == 'CHECKBOX' || value == 'COMBINE'"))
     )
     private String linkClass;

@@ -19,7 +19,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.DependOn;
+import xyz.erupt.annotation.sub_field.sub_edit.DynamicOn;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
@@ -298,14 +298,14 @@ public class EruptUtil {
                     }
                 }
             }
-            if (!AnnotationConst.EMPTY_STR.equals(edit.dynamicOn().dependField())) {
+            if (!AnnotationConst.EMPTY_STR.equals(edit.dynamic().condition())) {
                 if (null == value || value.isJsonNull()) {
-                    boolean dynamic = (boolean) ScriptUtil.eval("!!(" + edit.dynamicOn().condition() + ")",
-                            Map.of(LambdaSee.field(DependOn.Var::getValue), jsonObject.get(edit.dynamicOn().dependField())));
-                    if (!dynamic && DependOn.Ctrl.NOTNULL == edit.dynamicOn().noMatch()) {
+                    boolean dynamic = (boolean) ScriptUtil.eval("!!(" + edit.dynamic().condition() + ")",
+                            Map.of(LambdaSee.field(DynamicOn.Var::getValue), jsonObject.get(edit.dynamic().dependField())));
+                    if (!dynamic && DynamicOn.Ctrl.NOTNULL == edit.dynamic().noMatch()) {
                         return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
-                    if (dynamic && DependOn.Ctrl.NOTNULL == edit.dynamicOn().match()) {
+                    if (dynamic && DynamicOn.Ctrl.NOTNULL == edit.dynamic().match()) {
                         return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
