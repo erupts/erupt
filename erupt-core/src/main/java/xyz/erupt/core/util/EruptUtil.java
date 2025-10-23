@@ -301,7 +301,7 @@ public class EruptUtil {
             if (!AnnotationConst.EMPTY_STR.equals(edit.dynamicOn().condition())) {
                 if (null == value || value.isJsonNull()) {
                     boolean dynamic = ScriptUtil.eval("!!(" + edit.dynamicOn().condition() + ")",
-                            Map.of(LambdaSee.field(DynamicOn.Var::getValue), jsonObject.get(edit.dynamicOn().dependField()).getAsString())).asBoolean();
+                            Map.of(LambdaSee.field(DynamicOn.Var::getValue), jsonObject.get(edit.dynamicOn().dependField()).getAsString()), boolean.class);
                     DynamicOn.Ctrl strategy = dynamic ? edit.dynamicOn().match() : edit.dynamicOn().noMatch();
                     if (strategy == DynamicOn.Ctrl.NOTNULL) {
                         return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
