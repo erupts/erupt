@@ -29,11 +29,11 @@ public class ScriptUtilTest {
         assert ScriptUtil.eval("new Date().getMonth() + 1", null).asInt() == LocalDate.now().getMonthValue();
 
         /* ---------------- object ---------------- */
-        assert ScriptUtil.eval("var list = [1,2,3];list.length == 3", null).asBoolean();
-        assert ScriptUtil.eval("let map = {k: 100};map['k']", null).asInt() == 100;
+        assert ScriptUtil.eval("var list = [1,2,3]; list.length == 3", null).asBoolean();
+        assert ScriptUtil.eval("let map = {k: 100}; map['k']", null).asInt() == 100;
 
         /* ---------------- function ---------------- */
-        assert ScriptUtil.eval("var add=(x,y)=>x+y; add(a,b)",
+        assert ScriptUtil.eval("var add = (x,y) => x+y; add(a, b)",
                 Map.of("a", 10, "b", 20)).asInt() == 30;
     }
 
