@@ -19,6 +19,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.EditTypeSearch;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.DependOn;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTableType;
 import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
 import xyz.erupt.annotation.sub_field.sub_edit.TagsType;
@@ -34,6 +35,7 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
@@ -278,16 +280,16 @@ public class EruptUtil {
         for (EruptFieldModel field : eruptModel.getEruptFieldModels()) {
             Edit edit = field.getEruptField().edit();
             JsonElement value = jsonObject.get(field.getFieldName());
-            if (field.getEruptField().edit().notNull()) {
+            if (edit.notNull()) {
                 if (null == value || value.isJsonNull()) {
-                    return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                    return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                 } else if (String.class.getSimpleName().equals(field.getFieldReturnName())) {
                     if (StringUtils.isBlank(value.getAsString())) {
-                        return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                        return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
                     }
                 }
             }
-            if (field.getEruptField().edit().type() == EditType.COMBINE) {
+            if (edit.type() == EditType.COMBINE) {
                 JsonObject combine = jsonObject.getAsJsonObject(field.getFieldName());
                 if (null != combine) {
                     EruptApiModel eam = validateEruptValue(EruptCoreService.getErupt(field.getFieldReturnName()), combine);
@@ -296,11 +298,23 @@ public class EruptUtil {
                     }
                 }
             }
+            if (!AnnotationConst.EMPTY_STR.equals(edit.dynamicOn().dependField())) {
+                if (null == value || value.isJsonNull()) {
+                    boolean dynamic = (boolean) ScriptUtil.eval("!!(" + edit.dynamicOn().condition() + ")",
+                            Map.of(LambdaSee.field(DependOn.Var::getValue), jsonObject.get(edit.dynamicOn().dependField())));
+                    if (!dynamic && DependOn.Ctrl.NOTNULL == edit.dynamicOn().noMatch()) {
+                        return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                    }
+                    if (dynamic && DependOn.Ctrl.NOTNULL == edit.dynamicOn().match()) {
+                        return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.notnull"));
+                    }
+                }
+            }
             if (null != value && !value.isJsonNull() && !AnnotationConst.EMPTY_STR.equals(edit.title())) {
                 // XSS Injection Handling
                 if (edit.type() == EditType.TEXTAREA || edit.type() == EditType.INPUT) {
                     if (SecurityUtil.xssInspect(value.getAsString())) {
-                        return EruptApiModel.errorApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
+                        return EruptApiModel.errorApi(edit.title() + " " + I18nTranslate.$translate("erupt.attack.xss"));
                     }
                 }
                 // Data type validation
@@ -308,7 +322,7 @@ public class EruptUtil {
                     case NUMBER:
                     case SLIDER:
                         if (!NumberUtils.isNumber(value.getAsString())) {
-                            return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.must.number"));
+                            return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.must.number"));
                         }
                         break;
                     case INPUT:
@@ -316,7 +330,7 @@ public class EruptUtil {
                             String content = value.getAsString();
                             if (StringUtils.isNotBlank(content)) {
                                 if (!Pattern.matches(edit.inputType().regex(), content)) {
-                                    return EruptApiModel.errorMessageApi(field.getEruptField().edit().title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
+                                    return EruptApiModel.errorMessageApi(edit.title() + " " + I18nTranslate.$translate("erupt.incorrect_format"));
                                 }
                             }
                         }
