@@ -15,10 +15,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <properties>
-        <graalvm-js.version>24.2.2</graalvm-js.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -68,15 +64,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js</artifactId>
-            <version>${graalvm-js.version}</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js-scriptengine</artifactId>
-            <version>${graalvm-js.version}</version>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>15.7</version>
         </dependency>
     </dependencies>
 
