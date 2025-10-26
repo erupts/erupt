@@ -2,6 +2,7 @@ package xyz.erupt.core.operator;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.core.constant.UpmsScope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,9 @@ public class EruptSearchModel {
     private String field;
 
     private OperatorType operatorType;
+
+    // Used with UPMS OperatorType
+    private UpmsScope upmsScope;
 
     private String operator;
 
