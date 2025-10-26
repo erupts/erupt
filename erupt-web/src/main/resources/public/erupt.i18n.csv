@@ -152,3 +152,14 @@ WAIT_API_TRIGGER,等待审批,等待審批,Waiting for approval,En attente d'app
 ERROR,执行错误,執行錯誤,Execution error,Erreur d'exécution,実行エラー,실행 오шибка,Ошибка выполнения,Error de ejecución,Ausführungsfehler,Erro de execução,Kesalahan eksekusi,خطأ في التنفيذ
 REENTRY,重试中,重試中,Retrying,Recommencement,再試行 중,재시도 중,Повтор,Reintentando,Wiederholen,Repetindo,Mencoba lagi,إعادة المحاولة
 END,结束,結束,End,Fin,終了,끝,Конец,Fin,Ende,Fim,Akhir,نهاية
+
+SUB_FLOW,子流程,子流程,Sub Flow,Sous-flux,サブフロー,서브 플로,Подпоток,Subflujo,Subflow,Subfluxo,Sub Alur,التدفق الفرعي
+FLOW_TODO,待办,待辦,Todo,À faire,やること,할 일,Сделать,Por hacer,Machen,Fazer,Yang harus dilakukan,للقيام
+FLOW_DONE,已办,已辦,Done,Fait,完了,완료,Выполнено,Hecho,Erledigt,Concluído,Selesai,تم
+CREATED,已创建,已創建,Created,Créé,作成済,생성됨,Создано,Creado,Erstellt,Criado,Dibuat,تم الإنشاء
+CC,抄送我,抄送我,CC Me,Me mettre en CC,私にCC,나에게 참조,Отправить копию мне,CC a mí,CC mich,CC para mim,CC saya,نسخة لي
+
+ORG,组织,組織,Organization,Organisation,組織,조직,Организация,Organización,Organisation,Organização,Organisasi,منظمة
+USER,用户,用戶,User,Utilisateur,ユーザー,사용자,Пользователь,Usuario,Benutzer,Utilizador,Pengguna,مستخدم
+POST,岗位,崗位,Position,Poste,ポスト,직위,Должность,Puesto,Position,Cargo,Jabatan,منصب
+ROLE,角色,角色,Role,Rôle,ロール,역할,Роль,Rol,Rolle,Função,Peran,دور
