@@ -16,7 +16,7 @@ window.eruptSiteConfig = {
         mobileHidden: true,
         icon: "fa-qq",
         click: function (event) {
-            window.open("https://jq.qq.com/?_wv=1027&k=MCd4plZ0")
+            window.open("https://qm.qq.com/q/M3U23bwy6Q")
         }
     }, {
         mobileHidden: true,
