@@ -9,6 +9,7 @@ import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.proxy.erupt_field.EditProxy;
 import xyz.erupt.core.proxy.erupt_field.ViewProxy;
 import xyz.erupt.core.tpl.EruptTpl;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +20,11 @@ import java.util.List;
  */
 public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
 
-    private static final EruptField tplEruptField;
+    private static final EruptField eruptFieldTpl;
 
     static {
         try {
-            tplEruptField = EruptTpl.class.getField(EruptField.class.getSimpleName()).getAnnotation(EruptField.class);
+            eruptFieldTpl = EruptTpl.class.getField(LambdaSee.field(EruptTpl::getField)).getAnnotation(EruptField.class);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
@@ -46,7 +47,7 @@ public class EruptFieldProxy extends AnnotationProxy<EruptField, Void> {
             if (ProxyContext.get().isStarting() || ExprInvoke.getExpr(edit.ifRender())) {
                 return AnnotationProxyPool.getOrPut(edit, annotation -> new EditProxy().newProxy(annotation, this));
             } else {
-                return tplEruptField.edit();
+                return eruptFieldTpl.edit();
             }
         }
         return this.invoke(invocation);
