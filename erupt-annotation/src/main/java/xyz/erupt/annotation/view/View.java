@@ -1,6 +1,7 @@
 package xyz.erupt.annotation.view;
 
 import xyz.erupt.annotation.config.Comment;
+import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 
@@ -19,10 +20,13 @@ public @interface View {
 
     ViewType viewType() default ViewType.TABLE;
 
+    @Match("#item.viewType() == 'CARD'")
     CardView cardView() default @CardView();
 
+    @Match("#item.viewType() == 'GANTT'")
     GanttView ganttView() default @GanttView(startDateField = "", endDateField = "");
 
+    @Match("#item.viewType() == 'TPL'")
     Tpl tplView() default @Tpl(enable = false, path = "");
 
     enum ViewType {
