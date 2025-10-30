@@ -4,15 +4,15 @@ import xyz.erupt.annotation.config.Comment;
 
 /**
  * @author YuePeng
- * date 2022/10/9 23:52
+ * date 2025/10/30 23:52
  */
 public @interface CardView {
 
-    @Comment("封面图效果")
-    GalleryCover galleryCover() default GalleryCover.CLIP;
+    @Comment("Cover image effect")
+    GalleryCover coverEffect() default GalleryCover.CLIP;
 
-    @Comment("封面图字段")
-    String galleryField() default "";
+    @Comment("Cover image field")
+    String coverField() default "";
 
     enum GalleryCover {
         FIT, //适应

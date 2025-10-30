@@ -5,6 +5,10 @@ import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 
+/**
+ * @author YuePeng
+ * date 2025/10/30 23:52
+ */
 public @interface View {
 
     String code() default "";
@@ -18,7 +22,7 @@ public @interface View {
 
     String orderBy() default "";
 
-    ViewType viewType() default ViewType.TABLE;
+    ViewType type() default ViewType.TABLE;
 
     @Match("#item.viewType() == 'CARD'")
     CardView cardView() default @CardView();

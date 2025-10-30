@@ -67,10 +67,6 @@ public @interface Erupt {
     //布局配置
     Layout layout() default @Layout;
 
-//    @Comment("画册视图定义")
-//    @Match("#value.enable() == true")
-//    Card cardView() default @Card(enable = false, galleryField = "", viewFields = {});
-
     @ToMap(key = "key")
     @Comment("自定义扩展参数")
     KV[] param() default {};
