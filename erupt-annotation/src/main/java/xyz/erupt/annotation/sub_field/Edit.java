@@ -95,8 +95,8 @@ public @interface Edit {
 
     @Match("#item.type().toString()=='REFERENCE_TREE'")
     ReferenceTreeType referenceTreeType() default @ReferenceTreeType;
-    
-	@Match("#item.type().toString()=='REFERENCE_TABLE' || #item.type().toString()=='TAB_TABLE_REFER'")
+
+    @Match("#item.type().toString()=='REFERENCE_TABLE' || #item.type().toString()=='TAB_TABLE_REFER'")
     ReferenceTableType referenceTableType() default @ReferenceTableType;
 
     @Transient
@@ -106,6 +106,6 @@ public @interface Edit {
     CodeEditorType codeEditType() default @CodeEditorType(language = "text");
 
     @Transient
-    Tpl tplType() default @Tpl(path = "");
+    Tpl tplType() default @Tpl(path = "", enable = false);
 
 }
