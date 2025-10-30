@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.Expr;
+import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
@@ -79,10 +80,13 @@ public class PreEruptDataService {
         }
         Optional.ofNullable(query.getConditionStrings()).ifPresent(conditionStrings::addAll);
         conditionStrings.removeIf(Objects::isNull);
-        String orderBy = StringUtils.isNotBlank(query.getOrderBy()) ? query.getOrderBy() : eruptModel.getErupt().orderBy();
+        List<Sort> sort = query.getSort();
+        if (null == query.getSort() || query.getSort().isEmpty()) {
+            sort = Sort.toSortList(eruptModel.getErupt().orderBy());
+        }
         Collection<Map<String, Object>> result = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryColumn(eruptModel, columns, EruptQuery.builder()
-                        .conditions(query.getConditions()).conditionStrings(conditionStrings).orderBy(orderBy).build());
+                        .conditions(query.getConditions()).conditionStrings(conditionStrings).sort(sort).build());
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(result)));
         return result;
     }

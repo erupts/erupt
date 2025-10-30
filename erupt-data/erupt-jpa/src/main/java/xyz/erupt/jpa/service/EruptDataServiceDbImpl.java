@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.invoke.DataProcessorManager;
@@ -133,8 +134,8 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         Optional.ofNullable(query.getConditionStrings()).ifPresent(c -> c.forEach(it -> hql.append(EruptJpaUtils.AND).append(it)));
         Arrays.stream(eruptModel.getErupt().filter()).map(Filter::value)
                 .filter(StringUtils::isNotBlank).forEach(it -> hql.append(EruptJpaUtils.AND).append(it));
-        if (StringUtils.isNotBlank(query.getOrderBy())) {
-            hql.append(" order by ").append(query.getOrderBy());
+        if (null != query.getSort() && !query.getSort().isEmpty()) {
+            hql.append(" order by ").append(Sort.toSortString(query.getSort()));
         }
         return entityManagerService.getEntityManager(eruptModel.getClazz(), (em) -> em.createQuery(hql.toString()).getResultList());
     }

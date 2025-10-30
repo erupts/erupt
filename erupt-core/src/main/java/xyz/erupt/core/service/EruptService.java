@@ -78,7 +78,7 @@ public class EruptService {
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                .queryList(eruptModel, tableQuery, EruptQuery.builder().orderBy(tableQuery.getSort())
+                .queryList(eruptModel, tableQuery, EruptQuery.builder().sort(tableQuery.getSort())
                         .conditionStrings(conditionStrings).conditions(legalConditions).build());
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(page.getList())));
         Optional.ofNullable(page.getList()).ifPresent(it -> DataHandlerUtil.convertDataToEruptView(eruptModel, it));

@@ -3,6 +3,7 @@ package xyz.erupt.jpa.dao;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -12,11 +13,13 @@ import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
+import xyz.erupt.jpa.constant.SqlLang;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author YuePeng date 2018-11-05.
@@ -77,7 +80,7 @@ public class EruptJpaUtils {
         }
         hql.append(geneEruptHqlCondition(eruptModel, query.getConditions(), query.getConditionStrings()));
         if (!countSql) {
-            hql.append(geneEruptHqlOrderBy(eruptModel, query.getOrderBy()));
+            hql.append(geneEruptHqlOrderBy(eruptModel, query.getSort()));
         }
         return hql.toString();
     }
@@ -161,11 +164,14 @@ public class EruptJpaUtils {
         return hql.toString();
     }
 
-    public static String geneEruptHqlOrderBy(EruptModel eruptModel, String orderBy) {
-        if (StringUtils.isNotBlank(orderBy)) {
-            return " order by " + EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), orderBy);
+    public static String geneEruptHqlOrderBy(EruptModel eruptModel, List<Sort> sorts) {
+        if (sorts != null && !sorts.isEmpty()) {
+            String hql = sorts.stream()
+                    .map(sort -> EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), sort.getField()) + " " + sort.getDirection().name())
+                    .collect(Collectors.joining(","));
+            return SqlLang.ORDER_BY + hql;
         } else if (StringUtils.isNotBlank(eruptModel.getErupt().orderBy())) {
-            return " order by " + EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), eruptModel.getErupt().orderBy());
+            return SqlLang.ORDER_BY + EruptJpaUtils.completeHqlPath(eruptModel.getEruptName(), eruptModel.getErupt().orderBy());
         } else {
             return "";
         }
