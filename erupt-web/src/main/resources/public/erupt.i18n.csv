@@ -129,9 +129,9 @@ VIEW_FLOW,查看流程,檢視流程,View Flow,Voir le flux,フローを見る,�
 USER_APPROVAL,或签审批,或簽審批,Sequential Approval,Approbation Séquentielle,順次承認,순차 승인,Последовательное утверждение,Aprobación Secuencial,Sequentielle Genehmigung,Aprovação Sequencial,Persetujuan Berurutan,الموافقة التسلسلية
 USER_APPROVAL_PARALLEL,会签审批,會簽審批,Parallel Approval,Approbation Parallèle,並列承認,병렬 승인,Параллельное утверждение,Aprobación Paralela,Parallele Genehmigung,Aprovação Paralela,Persetujuan Paralel,الموافقة المتوازية
 CC,抄送,副本,CC,Cc,CC,참조,Копия,CC,CC,CC,CC,نسخة
+
 PRE_SIGN,前加签,前加簽,Pre-sign,Pré-signature,事前署名,사전 서명,Предварительная подпись,Firma previa,Vorunterschrift,Pré-assinatura,Tanda tangan awal,التوقيع المسبق
 POST_SIGN,后加签,後加簽,Post-sign,Post-signature,事後署名,사후 서명,Последующая подпись,Firma posterior,Nachunterschrift,Pós-assinatura,Tanda tangan akhir,التوقيع اللاحق
-
 PENDING,审批中,審批中,Pending,En attente,審査中,대기 중,На рассмотрении,Pendiente,Ausstehend,Pendente,Menunggu,قيد الانتظار
 FINISH,已完成,已完成,Finished,Terminé,完了,완료,Завершено,Finalizado,Abgeschlossen,Concluído,Selesai,منتهي
 REJECTED,已拒绝,已拒絕,Rejected,Rejeté,拒否,거부됨,Отклонено,Rechazado,Abgelehnt,Rejeitado,Ditolak,مرفوض
@@ -140,6 +140,8 @@ DELETED,已删除,已刪除,Deleted,Supprimé,削除,삭제됨,Удалено,El
 TERMINATED,已终止,已終止,Terminated,Terminé,強制終了,종료됨,Прервано,Terminado,Beendet,Terminado,Dihentikan,منتهي
 REVOKED,已撤销,已撤銷,Revoked,Révoqué,取消,취소됨,Аннулировано,Revocado,Widerrufen,Revogado,Dicabut,ملغى
 TRANSFER,已转交,已轉交,Transferred,Transféré,転送済み,전송됨,Передано,Transferido,Übertragen,Transferido,Transfer,تم النقل
+TIMEOUT_AUTO_PASS,超时自动通过,逾時自動通過,Auto pass on timeout,Passer automatiquement en cas de délai d'attente,タイムアウト時に自動承認,시간 초과 시 자동 승인,Автоматическое подтверждение по истечении времени,Autorizar automáticamente al alcanzar el tiempo de espera,Automatische Genehmigung nach Zeitablauf,Aprovação automática ao atingir o tempo limite,Setujui otomatis saat waktu habilit,تجاوز تلقائي عند انتهاء المهلة
+TIMEOUT_AUTO_REJECT,超时自动拒绝,逾時自動拒絕,Auto reject on timeout,Rejeter automatiquement en cas de délai d'attente,タイムアウト時に自動拒否,시간 초과 시 자동 거부,Автоматический отказ по истечении времени,Rechazar automáticamente al alcanzar el tiempo de espera,Automatische Ablehnung nach Zeitablauf,Rejeição automática ao atingir o tempo limite,Tolak otomatis saat waktu habilit,رفض تلقائي عند انتهاء المهلة
 
 PENDING,审批中,審批中,Pending,En attente,審査中,대기 중,На рассмотрении,Pendiente,Ausstehend,Pendente,Menunggu,قيد الانتظار
 AGREED,已同意,已同意,Agreed,Accepté,同意,동의됨,Принято,Acertado,Aprovado,Acertado,Diterima,تم الموافقة
