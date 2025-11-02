@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EruptI18n
-public class MetaModelCreateOnlyVo extends MetaModelLifecycle {
+public class MetaModelCreateOnlyVo extends MetaModelCreateOnlyLifecycle {
 
     @EruptField(
             views = @View(title = "创建人", width = "100px"),
@@ -38,16 +38,6 @@ public class MetaModelCreateOnlyVo extends MetaModelLifecycle {
     @PrePersist
     protected void persist() {
         initializeCreateMetadata();
-    }
-
-    @Override
-    protected void setUpdateBy(String updateBy) {
-        // No-op: this model doesn't track updates
-    }
-
-    @Override
-    protected void setUpdateTime(LocalDateTime updateTime) {
-        // No-op: this model doesn't track updates
     }
 
 }

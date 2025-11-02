@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-public class MetaModelCreateOnly extends MetaModelLifecycle {
+public class MetaModelCreateOnly extends MetaModelCreateOnlyLifecycle {
 
     @EruptField
     @EruptSmartSkipSerialize
@@ -29,16 +29,6 @@ public class MetaModelCreateOnly extends MetaModelLifecycle {
     @PrePersist
     protected void persist() {
         initializeCreateMetadata();
-    }
-
-    @Override
-    protected void setUpdateBy(String updateBy) {
-        // No-op: this model doesn't track updates
-    }
-
-    @Override
-    protected void setUpdateTime(LocalDateTime updateTime) {
-        // No-op: this model doesn't track updates
     }
 
 }
