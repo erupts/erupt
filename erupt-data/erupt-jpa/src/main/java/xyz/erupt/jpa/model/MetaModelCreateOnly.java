@@ -4,12 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
-import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -18,7 +16,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @MappedSuperclass
-public class MetaModelCreateOnly extends BaseModel {
+public class MetaModelCreateOnly extends MetaModelLifecycle {
 
     @EruptField
     @EruptSmartSkipSerialize
@@ -30,12 +28,17 @@ public class MetaModelCreateOnly extends BaseModel {
 
     @PrePersist
     protected void persist() {
-        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
-            if (null != it.getName()) {
-                this.setCreateBy(it.getName());
-                this.setCreateTime(LocalDateTime.now());
-            }
-        });
+        initializeCreateMetadata();
+    }
+
+    @Override
+    protected void setUpdateBy(String updateBy) {
+        // No-op: this model doesn't track updates
+    }
+
+    @Override
+    protected void setUpdateTime(LocalDateTime updateTime) {
+        // No-op: this model doesn't track updates
     }
 
 }

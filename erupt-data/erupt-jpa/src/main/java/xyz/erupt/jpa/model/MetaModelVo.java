@@ -10,14 +10,12 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -27,7 +25,7 @@ import java.util.Optional;
 @Setter
 @MappedSuperclass
 @EruptI18n
-public class MetaModelVo extends BaseModel {
+public class MetaModelVo extends MetaModelLifecycle {
 
     @Transient
     @EruptField(
@@ -66,23 +64,13 @@ public class MetaModelVo extends BaseModel {
 
     @PrePersist
     protected void persist() {
-        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
-            if (null != it.getName()) {
-                this.setCreateBy(it.getName());
-                this.setCreateTime(LocalDateTime.now());
-            }
-        });
-        this.update();
+        initializeCreateMetadata();
+        update();
     }
 
     @PreUpdate
     protected void update() {
-        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
-            if (null != it.getName()) {
-                this.setUpdateBy(it.getName());
-                this.setUpdateTime(LocalDateTime.now());
-            }
-        });
+        initializeUpdateMetadata();
     }
 
 

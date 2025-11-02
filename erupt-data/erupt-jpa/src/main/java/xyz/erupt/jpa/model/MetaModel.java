@@ -5,13 +5,11 @@ import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -20,7 +18,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @MappedSuperclass
-public class MetaModel extends BaseModel {
+public class MetaModel extends MetaModelLifecycle {
 
     @EruptField(views = @View(title = "创建人", show = false))
     @EruptSmartSkipSerialize
@@ -40,23 +38,13 @@ public class MetaModel extends BaseModel {
 
     @PrePersist
     protected void persist() {
-        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
-            if (null != it.getName()) {
-                this.setCreateBy(it.getName());
-                this.setCreateTime(LocalDateTime.now());
-            }
-        });
-        this.update();
+        initializeCreateMetadata();
+        update();
     }
 
     @PreUpdate
     protected void update() {
-        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
-            if (null != it.getName()) {
-                this.setUpdateBy(it.getName());
-                this.setUpdateTime(LocalDateTime.now());
-            }
-        });
+        initializeUpdateMetadata();
     }
 
 }

@@ -8,12 +8,10 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.DateType;
-import xyz.erupt.core.context.MetaContext;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author YuePeng
@@ -23,7 +21,7 @@ import java.util.Optional;
 @Setter
 @MappedSuperclass
 @EruptI18n
-public class MetaModelCreateOnlyVo extends BaseModel {
+public class MetaModelCreateOnlyVo extends MetaModelLifecycle {
 
     @EruptField(
             views = @View(title = "创建人", width = "100px"),
@@ -39,12 +37,17 @@ public class MetaModelCreateOnlyVo extends BaseModel {
 
     @PrePersist
     protected void persist() {
-        Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
-            if (null != it.getName()) {
-                this.setCreateBy(it.getName());
-                this.setCreateTime(LocalDateTime.now());
-            }
-        });
+        initializeCreateMetadata();
+    }
+
+    @Override
+    protected void setUpdateBy(String updateBy) {
+        // No-op: this model doesn't track updates
+    }
+
+    @Override
+    protected void setUpdateTime(LocalDateTime updateTime) {
+        // No-op: this model doesn't track updates
     }
 
 }
