@@ -49,8 +49,8 @@ public @interface Lens {
         TABLE,
         GANTT,
         CARD,
-//        BOARD,
-//        TPL
+        BOARD,
+        TPL
     }
 
 }
