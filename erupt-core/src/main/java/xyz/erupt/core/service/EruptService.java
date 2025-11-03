@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
+import xyz.erupt.annotation.Lens;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptReqHeader;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
@@ -76,6 +78,18 @@ public class EruptService {
         });
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
+        if (null != tableQuery.getLens()) {
+            for (Lens lens : eruptModel.getErupt().lenses()) {
+                if (lens.code().equals(tableQuery.getLens())) {
+                    for (Filter filter : lens.filter()) {
+                        conditionStrings.add(filter.value());
+                    }
+//                    if (StringUtils.isNotBlank(lens.orderBy())) {
+//
+//                    }
+                }
+            }
+        }
         Optional.ofNullable(serverCondition).ifPresent(legalConditions::addAll);
         Page page = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryList(eruptModel, tableQuery, EruptQuery.builder().sort(tableQuery.getSort())
@@ -85,7 +99,6 @@ public class EruptService {
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.alert(legalConditions)).ifPresent(page::setAlert)));
         return page;
     }
-
 
 
     @SneakyThrows

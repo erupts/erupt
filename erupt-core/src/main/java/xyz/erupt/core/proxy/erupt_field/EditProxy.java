@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.ArrayUtils;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.proxy.AnnotationProcess;
@@ -42,12 +41,7 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
             }
             return this.rawAnnotation.type();
         } else if (super.matchMethod(invocation, Edit::filter)) {
-            Filter[] filters = this.rawAnnotation.filter();
-            Filter[] proxyFilters = new Filter[filters.length];
-            for (int i = 0; i < filters.length; i++) {
-                proxyFilters[i] = AnnotationProxyPool.getOrPut(filters[i], filter -> new FilterProxy<Edit>().newProxy(filter, this));
-            }
-            return proxyFilters;
+            return FilterProxy.proxy(this.rawAnnotation.filter(),this);
         } else if (super.matchMethod(invocation, Edit::readonly)) {
             return AnnotationProxyPool.getOrPut(this.rawAnnotation.readonly(), readonly -> new ReadonlyProxy().newProxy(readonly, this));
         } else if (super.matchMethod(invocation, Edit::title)) {
