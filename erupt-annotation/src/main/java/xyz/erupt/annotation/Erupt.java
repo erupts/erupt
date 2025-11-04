@@ -64,8 +64,9 @@ public @interface Erupt {
     @Comment("左树右表配置项")
     LinkTree linkTree() default @LinkTree(field = "");
 
-    //布局配置
     Layout layout() default @Layout;
+
+    Lens[] lenses() default {};
 
     @ToMap(key = "key")
     @Comment("自定义扩展参数")
