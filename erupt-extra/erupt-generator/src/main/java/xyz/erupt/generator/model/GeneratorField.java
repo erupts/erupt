@@ -12,7 +12,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.DynamicOn;
+import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
 import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.jpa.model.BaseModel;
 
@@ -59,8 +59,8 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
 
     @EruptField(
             views = @View(title = "关联实体类"),
-            edit = @Edit(title = "关联实体类", dynamicOn = @DynamicOn(dependField = "type",
-                    match = DynamicOn.Ctrl.NOTNULL,
+            edit = @Edit(title = "关联实体类", dynamic = @Dynamic(dependField = "type",
+                    match = Dynamic.Ctrl.NOTNULL,
                     condition = "value.indexOf('REFERENCE') != -1 || value.indexOf('TAB') != -1 || value == 'CHECKBOX' || value == 'COMBINE'"))
     )
     private String linkClass;

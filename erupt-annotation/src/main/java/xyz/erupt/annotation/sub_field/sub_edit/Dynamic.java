@@ -7,7 +7,7 @@ import xyz.erupt.annotation.config.Comment;
  * @author YuePeng
  * date 2025-10-22
  */
-public @interface DynamicOn {
+public @interface Dynamic {
 
     @Comment("依赖字段名")
     String dependField();

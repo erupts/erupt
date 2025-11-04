@@ -41,7 +41,7 @@ public @interface Edit {
 
     @Match("#value.condition() != ''")
     @Comment("表单动态处理")
-    DynamicOn dynamicOn() default @DynamicOn(dependField = "", condition = "");
+    Dynamic dynamic() default @Dynamic(dependField = "", condition = "");
 
     @Comment("查询项")
     Search search() default @Search(false);
