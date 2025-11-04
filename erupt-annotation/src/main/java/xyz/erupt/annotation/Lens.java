@@ -1,39 +1,51 @@
-package xyz.erupt.annotation.view;
+package xyz.erupt.annotation;
 
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.Match;
+import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
+import xyz.erupt.annotation.lens.CardView;
+import xyz.erupt.annotation.lens.GanttView;
+
+import java.beans.Transient;
 
 /**
  * @author YuePeng
  * date 2025/10/30 23:52
  */
-public @interface View {
+public @interface Lens {
 
     String code() default "";
 
     String title();
 
+    String desc() default "";
+
     @Comment("Specify the view fields. If no configuration is made, all fields will be displayed.")
     String[] fields() default {};
 
+    @Transient
     Filter[] filter() default {};
 
+    @Transient
     String orderBy() default "";
 
-    ViewType type() default ViewType.TABLE;
+    @Transient
+    ExprBool show() default @ExprBool;
 
-    @Match("#item.viewType() == 'CARD'")
+    Type type() default Type.TABLE;
+
+    @Match("#item.type().toString() == 'CARD'")
     CardView cardView() default @CardView();
 
-    @Match("#item.viewType() == 'GANTT'")
+    @Match("#item.type().toString() == 'GANTT'")
     GanttView ganttView() default @GanttView(startDateField = "", endDateField = "");
 
-    @Match("#item.viewType() == 'TPL'")
+    @Match("#item.type().toString() == 'TPL'")
     Tpl tplView() default @Tpl(enable = false, path = "");
 
-    enum ViewType {
+    enum Type {
         TABLE,
         GANTT,
         CARD,

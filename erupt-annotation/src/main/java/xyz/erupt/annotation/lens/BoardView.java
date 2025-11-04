@@ -1,4 +1,4 @@
-package xyz.erupt.annotation.view;
+package xyz.erupt.annotation.lens;
 
 /**
  * @author YuePeng
