@@ -105,7 +105,7 @@ public class BiChart extends MetaModelUpdateVo {
     @ManyToOne
     @EruptField(
             edit = @Edit(title = "报表模板", type = EditType.REFERENCE_TABLE,
-                    dynamicOn = @DynamicOn(dependField = "type", condition = "value=='tpl'", match = DynamicOn.Ctrl.NOTNULL))
+                    dynamic = @Dynamic(dependField = "type", condition = "value=='tpl'", match = Dynamic.Ctrl.NOTNULL))
     )
     private BiTpl biTpl;
 

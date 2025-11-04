@@ -17,7 +17,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.DynamicOn;
+import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
 import xyz.erupt.bi.constant.ColumnType;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.jpa.model.BaseModel;
@@ -68,7 +68,7 @@ public class BiColumn extends BaseModel implements DataProxy<BiColumn> {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             edit = @Edit(title = "下钻SQL", type = EditType.CODE_EDITOR,
-                    dynamicOn = @DynamicOn(dependField = "type", condition = "value == 'drill'", match = DynamicOn.Ctrl.NOTNULL),
+                    dynamic = @Dynamic(dependField = "type", condition = "value == 'drill'", match = Dynamic.Ctrl.NOTNULL),
                     codeEditType = @CodeEditorType(language = "sql"))
     )
     private String drillExpress;
