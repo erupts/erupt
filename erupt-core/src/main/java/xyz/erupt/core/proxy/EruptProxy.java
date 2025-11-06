@@ -3,14 +3,14 @@ package xyz.erupt.core.proxy;
 import lombok.SneakyThrows;
 import org.aopalliance.intercept.MethodInvocation;
 import xyz.erupt.annotation.Erupt;
-import xyz.erupt.annotation.Lens;
+import xyz.erupt.annotation.Viz;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.proxy.erupt.DrillProxy;
 import xyz.erupt.core.proxy.erupt.FilterProxy;
-import xyz.erupt.core.proxy.erupt.LensProxy;
 import xyz.erupt.core.proxy.erupt.RowOperationProxy;
+import xyz.erupt.core.proxy.erupt.VizProxy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,15 +44,15 @@ public class EruptProxy extends AnnotationProxy<Erupt, Void> {
                 }
             }
             return proxyDrills.toArray(new Drill[0]);
-        } else if (super.matchMethod(invocation, Erupt::lenses)) {
-            Lens[] lenses = this.rawAnnotation.lenses();
-            List<Lens> proxyLenses = new ArrayList<>();
-            for (Lens len : lenses) {
-                if (ExprInvoke.getExpr(len.show())) {
-                    proxyLenses.add(AnnotationProxyPool.getOrPut(len, it -> new LensProxy().newProxy(it, this)));
+        } else if (super.matchMethod(invocation, Erupt::viz)) {
+            Viz[] viz = this.rawAnnotation.viz();
+            List<Viz> proxyViz = new ArrayList<>();
+            for (Viz v : viz) {
+                if (ExprInvoke.getExpr(v.show())) {
+                    proxyViz.add(AnnotationProxyPool.getOrPut(v, it -> new VizProxy().newProxy(it, this)));
                 }
             }
-            return proxyLenses.toArray(new Lens[0]);
+            return proxyViz.toArray(new Viz[0]);
         } else if (super.matchMethod(invocation, Erupt::name)) {
             return ProxyContext.translate(this.rawAnnotation.name());
         }

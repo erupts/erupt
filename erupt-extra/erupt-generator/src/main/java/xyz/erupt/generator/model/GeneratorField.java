@@ -48,7 +48,7 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
     private Integer sort;
 
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(columnDefinition = "varchar(100)")
     @EruptField(
             views = @View(title = "编辑类型"),
             edit = @Edit(title = "编辑类型",
