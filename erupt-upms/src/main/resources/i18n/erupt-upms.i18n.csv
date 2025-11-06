@@ -13,12 +13,13 @@ upms.account_pwd_error,账号或密码错误,賬號或密碼錯誤,Incorrect acc
 备注,备注,備註,Remark,remarques,備考です,비고,примечан,comentar,bemerkungen,observações,catatan,ملحوظة رقم
 用户名,用户名,用戶名,Account,Nom de l’utilisateur,ユーザー名です,사용자 이름,Имя пользователя.,Nombre de usuario,benutzername,Nome de usuário,Nama pengguna,اسم المستخدم
 姓名,姓名,姓名,Name,Le nom,名前です,이름,им,Los nombres,"Namen, bitte?",O nome,nama,أسماء
+负责组织,负责组织,負責組織,Responsible Organization,Organisation Responsable,責任組織,책임 조직,Ответственная Организация,Organización Responsable,Verantwortliche Organisation,Organização Responsável,Organisasi yang Bertanggung Jawab,المنظمة المسؤولة
 密码,密码,密碼,Password,Les mots de passe,パスワードです,암호,код,La contraseña,kennwort,senha,kode,كلمة المرور
 确认密码,确认密码,確認密碼,Confirm password,Confirmer le mot de passe,パスワードを確認します,비밀번호 확인,Подтвердите код.,Confirme su contraseña,Passwort bestätigt.,Confirme a senha,Konfirmasi sandi,تأكيد كلمة المرور
 md5加密,md5加密,md5加密,MD5 encrypt,Cryptage avec md5,md5暗号化です,md5 암호화,Md5 зашифровано,Cifrado con md5,Das md5 ist verschlüsselt.,Criptografia com md5,Enkripsi md5.,مشفر MD5.
 重置密码时间,重置密码时间,重置密碼時間,Reset password time,Réinitialiser le mot de passe time,パスワード時間をリセットします,비밀번호 초기화 시간,Перезагрузка.,Restablecer tiempo de contraseña,Das passwort zurücksetzen.,Redefinir tempo de senha,Atur ulang waktu kata sandi,إعادة ضبط وقت كلمة المرور
 账号失效时间,账号失效时间,賬號失效時間,Account expiration time,Temps d’expiration du compte,アカウント失効期間です,계정 유효기간,Время истечения срока действия счета,Tiempo de caducidad de cuenta,Die kontonummer werden gelöscht,Tempo de expiração da conta,Waktu gagal akun,وقت انتهاء الحساب
-超管用户,超管用户,超管用戶,Overpipe user,Surtube pour les utilisateurs,スーパーチューブ利用者です,하이퍼튜브 사용자,Пользователь с перетрубкой,Supertube para usuarios,Den benutzer,Supertube para usuários,Pengguna ultra,العملاء
+超管用户,超管用户,超管用戶,Admin user,Surtube pour les utilisateurs,スーパーチューブ利用者です,하이퍼튜브 사용자,Пользователь с перетрубкой,Supertube para usuarios,Den benutzer,Supertube para usuários,Pengguna ultra,العملاء
 重置密码,重置密码,重置密碼,Reset password,Réinitialiser votre mot de passe,パスワードをリセットします,비밀번호 초기화,Перезагрузка.,Restablecer la contraseña,Das passwort zurücksetzen.,Redefinir senha,Atur ulang kata sandi anda,إعادة ضبط كلمة المرور
 加密,加密,加密,encipher,chiffrement,暗号化です,암호화,зашифрова,cifrado,verschlüsselung,encriptação,Terenkripsi.,التشفير
 不加密,不加密,不加密,No encryption,Pas de cryptage,暗号化しません,암호화하지 않음,Нет.,Sin encriptación,Keine verschlüsselung.,Sem criptografia disponível,Tidak terenkripsi,غير مشفر
@@ -92,6 +93,7 @@ IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,I
 岗位管理,岗位管理,崗位管理,Post maintenance,Maintien des postes,雇用維持です,직무 유지,Уход за постом,Mantenimiento del puesto,B.O.B. :,Gestão de posts,Penempatan manajemen,إدارة الموقع
 用户管理,用户管理,用戶管理,User maintenance,Maintenance des utilisateurs,ユーザーメンテナンス,사용자 보호,Обслуживание пользователя,Mantenimiento por usuarios,Regieren der benutzer.,Gestão de usuários,Manajemen pengguna,إدارة المستخدمين
 数据字典,数据字典,數據字典,Dictionary maintenance,Maintenance du dictionnaire,辞書メンテナンスです,사전 관리,Уход за словарем,Mantenimiento del diccionario,Ein datenwörterbuch.,Dicionário de dados,Kamus data,قاموس البيانات
+字典项,字典项,數據項,Dictionary item,Élément de dictionnaire,辞書項目,사전 항목,Элемент словаря,Elemento de diccionario,Wörterbucheintrag,Item do dicionário,Item kamus,عنصر القاموس
 菜单维护,菜单维护,菜單維護,Menu maintenance,Maintenance du menu,メニューメンテナンスです,메뉴 관리,Обслуживание меню,Mantenimiento del menú,Menü-wartung.,Manutenção do menu,Pemeliharaan menu,صيانة القائمة
 角色维护,角色维护,角色維護,Role maintenance,Maintien des rôles,キャラクターメンテナンスです,역할 관리,Уход за персонажами,Mantenimiento de roles,Rollenerhaltung und bewachung,Manutenção do papel,Perawatan peran,صيانة الشخصية
 组织维护,组织维护,組織維護,Organization maintenance,Organisation et maintenance,メンテナンス組織です,조직 유지,Организационное обслуживание,Organización y mantenimiento,Hier ist der organisator.,Organização e manutenção,Perawatan organisasi,صيانة المنظمة
@@ -108,3 +110,4 @@ IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,I
 Token有效期,Token 有效期,Token 有效期,Token validity period,Période de validité du token,トークン有効期間,토큰 유효 기간,Срок действия токена,Periodo di validità del token,Ich trag die geschäftsvereinbarung.,Validade do Token,Token Token,توكين صالحة
 绑定用户权限,绑定用户权限,綁定用戶權限,Bind user permissions,Lier les autorisations d'utilisateur,ユーザー権限のバインド,사용자 권한 바인딩,Привязка прав пользователя,Vincolare i permessi dell'utente,Definiert die zugriffsrechte,Vincular direitos de usuário,Mengikat akses pengguna,ربط إذن المستخدم
 秘钥,秘钥,密鑰,Secret key,Clé secrète,秘密鍵,비밀 키,Секретный ключ,Chiave segreta,Ein schlüssel.,A chave secreta,Kunci rahasia.,سكرتير الإفتراضى
+国家 | 大区 | 省份 | 城市 | 运营商,国家 | 大区 | 省份 | 城市 | 运营商,国家 | 大区 | 省份 | 城市 | 运营商,Country | Region | Province | City | ISP,Pays | Région | Province | Ville | Opérateur,国 | 地域 | 省 | 都市 | プロバイダー,국가 | 권역 | 도 | 시 | 통신사,Страна | Регион | Провинция | Город | Оператор,País | Región | Provincia | Ciudad | Operador,Land | Region | Provinz | Stadt | Anbieter,País | Região | Província | Cidade | Operadora,Negara | Wilayah | Provinsi | Kota | Penyedia layanan,الدولة | المنطقة | المحافظة | المدينة | مزود الخدمة

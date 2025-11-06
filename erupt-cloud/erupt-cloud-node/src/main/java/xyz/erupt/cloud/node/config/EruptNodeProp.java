@@ -17,31 +17,28 @@ public class EruptNodeProp {
 
     public static final String SPACE = "erupt.cloud-node";
 
-    //是否开启NODE节点注册
+    // Do you want to enable the registration of the NODE node?
     private boolean enableRegister = true;
 
-    //是否开启附件上传代理，开启后上传能力全部交予server端实现【server端请求node端获取附件上传要求】
-//    private boolean attachmentProxy = true;
-
-    //接入应用名称，推荐填写当前 Java 项目名称
+    // Enter the application name. It is recommended to fill in the current name of your Java project.
     private String nodeName;
 
-    //客户端秘钥（在服务端界面生成）
+    // Client secret key (generated on the server interface)
     private String accessToken;
 
-    //服务端地址（支持集群）
+    // Server address (supporting clustering)
     private String[] serverAddresses;
 
-    //自动注册时协议前缀
+    // Protocol prefix during automatic registration
     private String schema = "http";
 
     /**
-     * 当前服务地址（支持集群，非必填）
-     * 正常情况下无需配置，多层代理等复杂网络环境下需配置此参数，目的是让server端准确寻址到node
+     * Current service address (supports clustering, not mandatory)
+     * In normal circumstances, no configuration is required. However, in complex network environments such as multi-layer proxies, this parameter needs to be configured. The purpose is to enable the server to accurately locate the node.
      */
     private String[] hostAddress;
 
-    //心跳时间(毫秒)
+    // Heartbeat time (milliseconds)
     private int heartbeatTime = 15 * 1000;
 
     private int count = 0;
@@ -50,7 +47,7 @@ public class EruptNodeProp {
         if (this.serverAddresses.length == 1) {
             return this.serverAddresses[0];
         }
-        if (count >= Integer.MAX_VALUE) {
+        if (count == Integer.MAX_VALUE) {
             count = 0;
         }
         String address = this.serverAddresses[count++ % this.serverAddresses.length];

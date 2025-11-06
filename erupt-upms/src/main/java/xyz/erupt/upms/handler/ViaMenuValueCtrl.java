@@ -1,12 +1,11 @@
 package xyz.erupt.upms.handler;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.core.util.EruptAssert;
 import xyz.erupt.upms.service.EruptUserService;
-
-import javax.annotation.Resource;
 
 /**
  * @author YuePeng

@@ -1,11 +1,11 @@
 package xyz.erupt.webscoket.command;
 
+import jakarta.websocket.Session;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.webscoket.command.base.SocketCommand;
 
-import javax.websocket.Session;
 import java.util.Collections;
 
 /**

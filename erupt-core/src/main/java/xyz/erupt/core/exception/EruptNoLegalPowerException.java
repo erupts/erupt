@@ -9,14 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EruptNoLegalPowerException extends RuntimeException {
 
-    private static final String NO_LEGAL_POWER = "权限不足，该操作将被记录!";
+    private static final String NO_LEGAL_POWER = "Insufficient permissions. This operation will be recorded !";
 
     public EruptNoLegalPowerException() {
         this(NO_LEGAL_POWER);
     }
 
     public EruptNoLegalPowerException(String message) {
-        //TODO 记录IP或者其他操作
         if (null == message) {
             throw new EruptWebApiRuntimeException(NO_LEGAL_POWER);
         } else {

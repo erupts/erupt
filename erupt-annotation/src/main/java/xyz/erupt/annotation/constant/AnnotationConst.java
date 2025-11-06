@@ -19,4 +19,6 @@ public class AnnotationConst {
     public static final int CODE_LENGTH = 64;
 
     public static final int REMARK_LENGTH = 2000;
+
+    public static final int CONFIG_LENGTH = 10_485_760;
 }

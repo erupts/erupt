@@ -1,8 +1,8 @@
 package xyz.erupt.cloud.server.annotation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import xyz.erupt.cloud.server.node.MetaNode;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -15,21 +15,14 @@ public @interface EruptCloudServer {
     interface Proxy {
 
         /**
-         * 节点心跳注册
+         * Node Heartbeat Registration
          *
-         * @param metaNode 节点注册对象
-         * @param request  request对象
+         * @param metaNode Node registration object
          */
         default void registerNode(MetaNode metaNode, HttpServletRequest request) {
 
         }
 
-        /**
-         * 节点移除
-         *
-         * @param nodeName 节点名
-         * @param request  request对象
-         */
         default void removeNode(String nodeName, HttpServletRequest request) {
 
         }

@@ -18,18 +18,18 @@ public class SecretUtil {
     }
 
     /**
-     * 解密Base64
+     * Decode Base64
      *
-     * @param str       加密字符串
-     * @param encodeNum 被加密了几次
-     * @return 原文
+     * @param str       Encrypted string
+     * @param encodeNum Was encrypted several times
+     * @return original
      */
     @SneakyThrows
     public static String decodeSecret(String str, int encodeNum) {
         for (int i = 0; i < encodeNum; i++) {
             str = new String(Base64.getDecoder().decode(str));
         }
-        return URLDecoder.decode(str, StandardCharsets.UTF_8.name());
+        return URLDecoder.decode(str, StandardCharsets.UTF_8);
     }
 
 }

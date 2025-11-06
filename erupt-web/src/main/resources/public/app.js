@@ -1,14 +1,10 @@
-var start = true;
 window.eruptSiteConfig = {
     domain: "",
     fileDomain: "",
-    title: "Erupt Framework",
-    desc: "通用后台管理框架",
+    title: "Erupt Engine",
+    desc: "Common Data Framework",
     dialogLogin: false,
     copyright: true, //是否保留显示版权信息
-    // copyrightTxt: () => {
-    //     return "x_x_x<a>xxx</a>";
-    // },
     logoPath: null,
     logoFoldPath: null,
     loginLogoPath: null,
@@ -16,18 +12,11 @@ window.eruptSiteConfig = {
     registerPage: null,
     amapKey: '6ed167be6d22b8f8fa8e0402724df150',
     amapSecurityJsCode: "ee3e78fcb019e6078fcfc5b53b0a63ec",
-    userTools: [{
-        text: "自定义用户工具栏",
-        icon: "fa fa-snowflake-o",
-        click: function (event) {
-            alert("On Click")
-        }
-    }],
     r_tools: [{
         mobileHidden: true,
         icon: "fa-qq",
         click: function (event) {
-            window.open("https://jq.qq.com/?_wv=1027&k=MCd4plZ0")
+            window.open("https://qm.qq.com/q/M3U23bwy6Q")
         }
     }, {
         mobileHidden: true,

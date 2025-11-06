@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.Expr;
+import xyz.erupt.annotation.query.Sort;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
@@ -11,6 +12,7 @@ import xyz.erupt.core.invoke.ExprInvoke;
 import xyz.erupt.core.query.Column;
 import xyz.erupt.core.query.EruptQuery;
 import xyz.erupt.core.util.DataHandlerUtil;
+import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.TreeModel;
 
@@ -19,15 +21,28 @@ import java.util.*;
 @Service
 public class PreEruptDataService {
 
+    // get by pk
+    public Map<String, Object> getEruptData(EruptModel eruptModel, String id) {
+        Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.editBehavior(data)));
+        return EruptUtil.generateEruptDataMap(eruptModel, data);
+    }
+
+    public Object getEruptById(EruptModel eruptModel, String id) {
+        return DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
+                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
+    }
+
     /**
-     * 根据要素生成树结构
+     * Generate the tree structure based on the elements
      *
      * @param eruptModel eruptModel
      * @param id         id
      * @param label      label
      * @param pid        parent id
-     * @param query      查询对象
-     * @return 树对象
+     * @param query      query object
+     * @return tree object
      */
     public Collection<TreeModel> geneTree(EruptModel eruptModel, String id, String label, String pid, Expr rootId, EruptQuery query) {
         List<Column> columns = new ArrayList<>();
@@ -65,10 +80,13 @@ public class PreEruptDataService {
         }
         Optional.ofNullable(query.getConditionStrings()).ifPresent(conditionStrings::addAll);
         conditionStrings.removeIf(Objects::isNull);
-        String orderBy = StringUtils.isNotBlank(query.getOrderBy()) ? query.getOrderBy() : eruptModel.getErupt().orderBy();
+        List<Sort> sort = query.getSort();
+        if (null == query.getSort() || query.getSort().isEmpty()) {
+            sort = Sort.toSortList(eruptModel.getErupt().orderBy());
+        }
         Collection<Map<String, Object>> result = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .queryColumn(eruptModel, columns, EruptQuery.builder()
-                        .conditions(query.getConditions()).conditionStrings(conditionStrings).orderBy(orderBy).build());
+                        .conditions(query.getConditions()).conditionStrings(conditionStrings).sort(sort).build());
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterFetch(result)));
         return result;
     }

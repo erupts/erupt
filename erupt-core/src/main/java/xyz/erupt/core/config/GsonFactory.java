@@ -39,7 +39,7 @@ public class GsonFactory implements ToNumberStrategy {
             .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> serializeDoubleValue(src))
             .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
             .setObjectToNumberStrategy(new GsonFactory())
-            .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
+            .setExclusionStrategies(new EruptGsonExclusionStrategies());
 
     private static JsonPrimitive serializeSafeNumber(Number src) {
         if (src.doubleValue() > JS_MAX_NUMBER || src.doubleValue() < JS_MIN_NUMBER) {
@@ -61,7 +61,8 @@ public class GsonFactory implements ToNumberStrategy {
     }
 
     @Getter
-    private static final Gson gson = gsonBuilder.create();
+    private static final Gson gson = gsonBuilder.serializeNulls().create();
+
 
     @Override
     public Number readNumber(JsonReader in) throws IOException {

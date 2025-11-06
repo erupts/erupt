@@ -5,8 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.model.Alert;
+import xyz.erupt.annotation.query.Sort;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,7 +26,7 @@ public class Page {
 
     private Integer pageSize;
 
-    private String sort;
+    private List<Sort> sort;
 
     private Integer totalPage;
 

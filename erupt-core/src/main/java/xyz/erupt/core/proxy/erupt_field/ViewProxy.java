@@ -34,6 +34,8 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                             }
                         case CHOICE:
                             return ViewType.TEXT;
+                        case SIGNATURE:
+                            return ViewType.IMAGE_BASE64;
                         case DATE:
                             if (edit.dateType().type() == DateType.Type.DATE_TIME) {
                                 return ViewType.DATE_TIME;
@@ -54,6 +56,8 @@ public class ViewProxy extends AnnotationProxy<View, EruptField> {
                         case CHECKBOX:
                         case MULTI_CHOICE:
                             return ViewType.TAB_VIEW;
+                        case MARKDOWN:
+                            return ViewType.MARKDOWN;
                     }
                 }
                 String returnType = ProxyContext.get().getField().getType().getSimpleName();

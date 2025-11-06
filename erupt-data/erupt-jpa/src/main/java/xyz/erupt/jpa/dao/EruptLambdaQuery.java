@@ -1,5 +1,8 @@
 package xyz.erupt.jpa.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -11,9 +14,6 @@ import xyz.erupt.linq.lambda.LambdaInfo;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.linq.lambda.SFunction;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -231,17 +231,17 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
-    //添加自定义条件
+    // Add custom conditions
     public EruptLambdaQuery<T> addCondition(String condition) {
         querySchema.getWheres().add(condition);
         return this;
     }
 
     /**
-     * 添加自定义条件
+     * Add custom conditions
      *
-     * @param condition :xxx 的占位符可以被 params参数运行时替换，防止 SQL 注入
-     * @param params    条件参数
+     * @param condition The placeholder of xxx can be replaced by the params parameter at runtime to prevent SQL injection.
+     * @param params    Placeholder parameter
      */
     public EruptLambdaQuery<T> addCondition(String condition, Map<String, Object> params) {
         querySchema.getWheres().add(condition);
@@ -362,7 +362,7 @@ public class EruptLambdaQuery<T> {
 
     @SneakyThrows
     private <R> R objectToClazz(Class<R> clazz, Object[] objects, SFunction<?, ?>... fields) {
-        R r = clazz.newInstance();
+        R r = clazz.getDeclaredConstructor().newInstance();
         for (int i = 0; i < fields.length; i++) {
             Field f = ReflectUtil.findClassField(clazz, LambdaSee.field(fields[i]));
             f.setAccessible(true);
@@ -439,7 +439,7 @@ public class EruptLambdaQuery<T> {
     }
 
     private String genePlaceholder() {
-        return RandomStringUtils.randomAlphabetic(6);
+        return RandomStringUtils.randomAlphabetic(8);
     }
 
     private String geneField(SFunction<?, ?> field) {

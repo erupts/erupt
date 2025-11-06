@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.prop.EruptProp;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class EruptSessionService {
 
     public boolean exist(String key) {
         if (eruptProp.isRedisSession()) {
-            return Boolean.TRUE.equals(stringRedisTemplate.hasKey(key));
+            return stringRedisTemplate.hasKey(key);
         } else {
             return null != eruptLocalSession.get(key);
         }

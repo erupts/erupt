@@ -17,7 +17,8 @@ import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.UPMSUtil;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -69,10 +70,11 @@ public class EruptServerApi {
 
     @GetMapping(CloudRestApiConst.NODE_GROUP_CONFIG + "/{nodeName}")
     public String getNodeGroupConfig(@PathVariable String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {
-        return (String) eruptDao.getEntityManager()
-                .createQuery("select cloudNodeGroup.config from CloudNode where nodeName = :nodeName and accessToken = :accessToken")
-                .setParameter("nodeName", nodeName)
-                .setParameter("accessToken", accessToken).getSingleResult();
+        CloudNode cloudNode = eruptDao.lambdaQuery(CloudNode.class)
+                .eq(CloudNode::getNodeName, nodeName)
+                .eq(CloudNode::getAccessToken, accessToken).one();
+        if (null == cloudNode) return null;
+        return cloudNode.getCloudNodeGroup().getConfig();
     }
 
 

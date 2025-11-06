@@ -2,6 +2,7 @@ package xyz.erupt.generator.model;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.TemplateHashModel;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -18,7 +19,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.jpa.model.MetaModel;
 
-import javax.persistence.*;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,12 +62,6 @@ public class GeneratorClass extends MetaModel implements Tpl.TplHandler {
             edit = @Edit(title = "简介", type = EditType.TEXTAREA)
     )
     private String remark;
-
-//    @EruptField(
-//            views = @View(title = "维护"),
-//            edit = @Edit(title = "自动维护创建字段与更新字段")
-//    )
-//    private Boolean createField;
 
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

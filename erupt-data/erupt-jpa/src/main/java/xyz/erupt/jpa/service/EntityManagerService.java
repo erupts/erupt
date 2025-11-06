@@ -2,6 +2,10 @@ package xyz.erupt.jpa.service;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -11,10 +15,6 @@ import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.jpa.prop.EruptPropForDb;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -74,14 +74,14 @@ public class EntityManagerService implements DisposableBean {
         throw new RuntimeException("Failed to match data source '" + dbName + "'");
     }
 
-    //注册扩展的EntityManager
+    // Register the extended EntityManager
     public void addExtEntityManager(EntityManager entityManager) {
         if (!extEntityManagers.contains(entityManager)) {
             extEntityManagers.add(entityManager);
         }
     }
 
-    //移除扩展的EntityManager
+    // Remove the extended EntityManager
     public void removeExtEntityManager(EntityManager entityManager) {
         extEntityManagers.remove(entityManager);
     }

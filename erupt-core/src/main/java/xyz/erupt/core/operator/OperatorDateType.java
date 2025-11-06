@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author YuePeng
@@ -17,88 +19,94 @@ import java.util.ArrayList;
  */
 @Getter
 @AllArgsConstructor
-public enum OperatorDateType implements DbOperatorExpr {
-    TODAY("今天") {
+public enum OperatorDateType implements OperatorExpr {
+
+    TODAY {
         @Override
-        public String expr(String field, Object value) {
-            return FUTURE_DAYS.expr(field, 0);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            return FUTURE_DAYS.expr(field, 0, parameter);
         }
     },
-    FEW_DAYS("过去 N 天") {
+    FEW_DAYS {
         @Override
-        public String expr(String field, Object value) {
+        public String expr(String field, Object value, Map<String, Object> parameter) {
             int days = TypeUtil.fetchInt(value);
-            // 起始：N 天前 00:00:00
-            String start = LocalDate.now()
-                    .minusDays(days)
-                    .atStartOfDay()
-                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME));
-            // 结束：今天 00:00:00（不包含今天）
-            String end = LocalDate.now()
-                    .atStartOfDay()
-                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME));
-            return String.format("%s between '%s' and '%s'", field, start, end);
+            String placeholder1 = this.placeholder();
+            parameter.put(placeholder1, LocalDate.now().minusDays(days).atStartOfDay()
+                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)));
+            String placeholder2 = this.placeholder();
+            parameter.put(placeholder2, LocalDate.now().atStartOfDay()
+                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)));
+            return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
     },
-    FUTURE_DAYS("未来 N 天") {
+    FUTURE_DAYS {
         @Override
-        public String expr(String field, Object value) {
+        public String expr(String field, Object value, Map<String, Object> parameter) {
             int days = TypeUtil.fetchInt(value);
-            // 起始：明天 00:00:00
-            String start = LocalDate.now()
-                    .plusDays(1)
-                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE));
-            // 结束：第 N 天 23:59:59
-            String end = LocalDate.now()
-                    .plusDays(days)
-                    .atTime(LocalTime.MAX)          // 23:59:59.999999999
-                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME));
-            return String.format("%s between '%s' and '%s'", field, start, end);
+            String placeholder1 = this.placeholder();
+            parameter.put(placeholder1, LocalDate.now().plusDays(1)
+                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE)));
+            String placeholder2 = this.placeholder();
+            parameter.put(placeholder2, LocalDate.now().plusDays(days).atTime(LocalTime.MAX)
+                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)));
+            return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
     },
-    RANGE("区间") {
+    RANGE {
         @Override
-        public String expr(String field, Object value) {
-            ArrayList<String> s = (ArrayList<String>) value;
-            return String.format("%s between '%s' and '%s'", field, s.get(0), s.get(1) + " 23:59:59");
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            List<?> s = (ArrayList<?>) value;
+            String placeholder1 = this.placeholder();
+            parameter.put(placeholder1, s.get(0));
+            String placeholder2 = this.placeholder();
+            parameter.put(placeholder2, s.get(1) + TIME_END);
+            return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
-    }, GT("大于") {
+    }, GT {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s > '%s'", field, OperatorDateType.parseDate(value.toString()));
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, OperatorDateType.parseDate(value.toString()));
+            return String.format("%s > :%s", field, placeholder);
         }
-    }, LT("小于") {
+    }, LT {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s < '%s'", field, OperatorDateType.parseDate(value.toString()) + " 23:59:59");
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, OperatorDateType.parseDate(value.toString()) + TIME_END);
+            return String.format("%s < :%s", field, placeholder);
         }
-    }, EGT("大于等于") {
+    }, EGT {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s >= '%s'", field, OperatorDateType.parseDate(value.toString()));
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, OperatorDateType.parseDate(value.toString()));
+            return String.format("%s >= :%s", field, placeholder);
         }
-    }, ELT("小于等于") {
+    }, ELT {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s <= '%s'", field, OperatorDateType.parseDate(value.toString()) + " 23:59:59");
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, OperatorDateType.parseDate(value.toString()) + TIME_END);
+            return String.format("%s <= :%s", field, placeholder);
         }
-    }, NULL("为空") {
+    }, NULL {
         @Override
-        public String expr(String field, Object value) {
-            return OperatorStringType.NULL.expr(field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            return OperatorStringType.NULL.expr(field, value, null);
         }
-    }, NOT_NULL("非空") {
+    }, NOT_NULL {
         @Override
-        public String expr(String field, Object value) {
-            return OperatorStringType.NOT_NULL.expr(field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            return OperatorStringType.NOT_NULL.expr(field, value, null);
         }
     };
-
-    //名称
-    private final String name;
 
     public static String parseDate(String date) {
         return date;
     }
+
+    public static final String TIME_END = " 23:59:59.999999999";
 
 }

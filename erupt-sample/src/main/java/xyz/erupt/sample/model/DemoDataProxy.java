@@ -27,6 +27,6 @@ public class DemoDataProxy implements DataProxy<Demo> {
 
     @Override
     public Alert alert(List<Condition> conditions) {
-        return Alert.info("提示信息");
+        return Alert.info("Hint");
     }
 }

@@ -7,7 +7,7 @@ import xyz.erupt.annotation.fun.OperationHandler;
 import java.beans.Transient;
 
 /**
- * 使用一列或者多列的数据执行特定代码
+ * Custom buttons
  *
  * @author YuePeng
  * date 2018-10-09.

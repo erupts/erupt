@@ -1,7 +1,10 @@
 package xyz.erupt.upms.helper;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.Comment;
@@ -16,10 +19,6 @@ import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -40,6 +39,8 @@ public class HyperModelUpdateVo extends BaseModel {
     @Comment("创建人")
     @ManyToOne
     @EruptSmartSkipSerialize
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private EruptUserVo createUser;
 
     @ManyToOne
@@ -48,6 +49,8 @@ public class HyperModelUpdateVo extends BaseModel {
             edit = @Edit(title = "更新人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
     )
     @EruptSmartSkipSerialize
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private EruptUserVo updateUser;
 
     @EruptField(

@@ -18,8 +18,9 @@ import xyz.erupt.core.log.LogMessage;
 import xyz.erupt.upms.annotation.EruptMenuAuth;
 import xyz.erupt.upms.service.EruptContextService;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.List;
 
 /**
@@ -51,16 +52,17 @@ public class EruptNodeController {
         MetaNode metaNode = nodeManager.getNode(nodeName);
         if (null == metaNode || metaNode.getLocations().isEmpty())
             throw new EruptWebApiRuntimeException("'" + nodeName + "' node not ready");
-        HttpResponse httpResponse = HttpUtil.createGet(metaNode.getLocations().iterator().next() + EruptRestPath.ERUPT_TOOL + "/" + EruptConst.ERUPT_LOG)
+        try (HttpResponse httpResponse = HttpUtil.createGet(metaNode.getLocations().iterator().next() + EruptRestPath.ERUPT_TOOL + "/" + EruptConst.ERUPT_LOG)
                 .header(EruptMutualConst.TOKEN, eruptContextService.getCurrentToken()).header(CloudCommonConst.HEADER_ACCESS_TOKEN, metaNode.getAccessToken())
-                .form("size", size).form("offset", offset).execute();
-        if (httpResponse.getStatus() == 200) {
-            return GsonFactory.getGson().fromJson(httpResponse.body(), new TypeToken<List<LogMessage>>() {
-                    }.getType()
-            );
-        } else {
-            httpServletResponse.setStatus(httpResponse.getStatus());
-            return null;
+                .form("size", size).form("offset", offset).execute()) {
+            if (httpResponse.getStatus() == 200) {
+                return GsonFactory.getGson().fromJson(httpResponse.body(), new TypeToken<List<LogMessage>>() {
+                        }.getType()
+                );
+            } else {
+                httpServletResponse.setStatus(httpResponse.getStatus());
+                return null;
+            }
         }
     }
 

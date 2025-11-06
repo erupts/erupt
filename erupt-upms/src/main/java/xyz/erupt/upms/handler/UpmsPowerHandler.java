@@ -1,5 +1,6 @@
 package xyz.erupt.upms.handler;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.fun.PowerHandler;
 import xyz.erupt.annotation.fun.PowerObject;
@@ -9,11 +10,10 @@ import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.UPMSUtil;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * 全局菜单权限控制
+ * Global menu permission control
  *
  * @author YuePeng
  * date 2021/3/16 00:15

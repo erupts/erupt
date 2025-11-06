@@ -1,17 +1,18 @@
 package xyz.erupt.core.i18n;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.EruptSpringUtil;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author YuePeng
  * date 2023/6/23 21:25
  */
 @Service
+@Slf4j
 public class I18nTranslate {
 
     @Resource
@@ -41,7 +42,13 @@ public class I18nTranslate {
 
     public String getLang() {
         try {
-            return request.getHeader("lang");
+            String lang = request.getHeader("Lang");
+            if (I18nRunner.langs().contains(lang)) {
+                return lang;
+            } else {
+                log.warn("Error: Invalid lang: {}", lang);
+                return null;
+            }
         } catch (Exception ignored) {
             return null;
         }

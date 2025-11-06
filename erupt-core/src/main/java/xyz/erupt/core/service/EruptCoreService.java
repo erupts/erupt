@@ -55,7 +55,7 @@ public class EruptCoreService implements ApplicationRunner {
     public static EruptModel getErupt(String eruptName) {
         if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
             if (null == ERUPTS.get(eruptName)) {
-                return null;
+                return ERUPTS.get(eruptName);
             } else {
                 return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz(), false);
             }
@@ -144,7 +144,7 @@ public class EruptCoreService implements ApplicationRunner {
         });
         log.info("Erupt modules : {}", MODULES.size());
         log.info("Erupt classes : {}", ERUPTS.size());
-        log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
+        log.info("Erupt Engine initialization completed in {}ms", totalRecorder.recorder());
         log.info("<{}>", repeat("===", 18));
     }
 

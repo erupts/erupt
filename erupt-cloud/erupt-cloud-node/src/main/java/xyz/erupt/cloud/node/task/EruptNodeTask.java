@@ -21,7 +21,8 @@ import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+
 import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -52,16 +53,8 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
 
     private boolean errorConnect = false;
 
-    private String hostName;
-
-//    public EruptNodeTask() {
-//        try {
-//            hostName = InetAddress.getLocalHost().getHostName();
-//        } catch (UnknownHostException ignore) {
-//        }
-//    }
-
     @Override
+    @SuppressWarnings("StringConcatenationArgumentToLogCall")
     public void run(ApplicationArguments args) {
         log.info(ansi().fg(Ansi.Color.BLUE) + " \n" +
                 "                 _                _     \n" +
@@ -84,7 +77,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
     @SneakyThrows
     @Override
     public void run() {
-        if (null == eruptNodeProp.getServerAddresses() || eruptNodeProp.getServerAddresses().length <= 0) {
+        if (null == eruptNodeProp.getServerAddresses() || eruptNodeProp.getServerAddresses().length == 0) {
             throw new RuntimeException(EruptNodeProp.SPACE + ".serverAddresses not config");
         }
         if (null == eruptNodeProp.getNodeName()) {
@@ -107,18 +100,19 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
             nodeInfo.setErupts(EruptCoreService.getErupts().stream().map(EruptModel::getEruptName).collect(Collectors.toList()));
             String address = eruptNodeProp.getBalanceAddress();
             try {
-                HttpResponse httpResponse = HttpUtil.createPost(address + CloudRestApiConst.REGISTER_NODE)
-                        .body(gson.toJson(nodeInfo)).execute();
-                if (!httpResponse.isOk()) {
-                    log.error(address + " -> Connection error: {}", httpResponse.body());
+                try (HttpResponse httpResponse = HttpUtil.createPost(address + CloudRestApiConst.REGISTER_NODE)
+                        .body(gson.toJson(nodeInfo)).execute()) {
+                    if (!httpResponse.isOk()) {
+                        log.error("{} -> Http error: {}", address, httpResponse.body());
+                    }
                 }
                 if (this.errorConnect) {
                     this.errorConnect = false;
-                    log.info(address + " -> Connection success");
+                    log.info("{} -> Connection success", address);
                 }
                 TimeUnit.MILLISECONDS.sleep(eruptNodeProp.getHeartbeatTime());
             } catch (Exception e) {
-                log.error(address + " -> Connection error: {}", e.getMessage());
+                log.error("{} -> Connection error: {}", address, e.getMessage());
                 this.errorConnect = true;
                 TimeUnit.MILLISECONDS.sleep(eruptNodeProp.getHeartbeatTime() / 2);
             }
@@ -129,10 +123,11 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
     public void destroy() {
         this.runner = false;
         // cancel register
-        HttpUtil.createPost(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.REMOVE_INSTANCE_NODE
-        ).form(new HashMap<String, Object>() {{
+        HttpResponse httpResponse = HttpUtil.createPost(eruptNodeProp.getBalanceAddress() + CloudRestApiConst.REMOVE_INSTANCE_NODE
+        ).form(new HashMap<>() {{
             this.put("nodeName", eruptNodeProp.getNodeName());
             this.put("accessToken", eruptNodeProp.getAccessToken());
         }}).execute();
+        httpResponse.close();
     }
 }

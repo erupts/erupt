@@ -1,5 +1,9 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,10 +25,6 @@ import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.jpa.model.MetaModel;
 import xyz.erupt.upms.service.EruptMenuService;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -118,7 +118,6 @@ public class EruptMenu extends MetaModel {
     @EruptField(
             edit = @Edit(
                     title = "自定义参数",
-                    desc = "json格式，通过上下文获取，根据业务需求自助解析",
                     type = EditType.CODE_EDITOR,
                     codeEditType = @CodeEditorType(language = "json")
             )

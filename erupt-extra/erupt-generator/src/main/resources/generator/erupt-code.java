@@ -3,7 +3,7 @@
  * Author: YuePeng (erupts@126.com)
  */
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import xyz.erupt.annotation.*;
 import xyz.erupt.annotation.sub_erupt.*;
 import xyz.erupt.annotation.sub_field.*;

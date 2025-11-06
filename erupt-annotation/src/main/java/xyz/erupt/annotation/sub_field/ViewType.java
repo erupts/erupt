@@ -51,7 +51,6 @@ public enum ViewType {
     CODE,
     @Comment("显示一对多,对多对数据")
     TAB_VIEW,
-    @Deprecated
     @Comment("markdown 编辑器")
     MARKDOWN,
 }

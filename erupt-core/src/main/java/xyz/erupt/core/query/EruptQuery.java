@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.annotation.query.Sort;
 
 import java.util.List;
 
@@ -15,10 +16,10 @@ import java.util.List;
 @Builder
 public class EruptQuery {
 
-    List<Condition> conditions;
+    private List<Condition> conditions;
 
-    List<String> conditionStrings;
+    private List<String> conditionStrings;
 
-    String orderBy;
+    private List<Sort> sort;
 
 }

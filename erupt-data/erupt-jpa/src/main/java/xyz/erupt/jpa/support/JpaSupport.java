@@ -1,5 +1,8 @@
 package xyz.erupt.jpa.support;
 
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.JoinColumn;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.EruptField;
@@ -8,9 +11,6 @@ import xyz.erupt.core.annotation.EruptDataSource;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.JoinColumn;
 import java.lang.reflect.Field;
 
 @Component
@@ -20,7 +20,7 @@ public class JpaSupport {
     private EruptDao eruptDao;
 
     /**
-     * 对jpa @JoinColumn提供的referencedColumnName配置实现适配
+     * adaptation jpa → @JoinColumn → referencedColumnName
      */
     @SneakyThrows
     public void referencedColumnNameSupport(Object obj, Field field) {

@@ -22,7 +22,7 @@ import xyz.erupt.upms.service.EruptUserService;
 import java.util.Objects;
 
 /**
- * magic-api UI鉴权、接口鉴权
+ * magic-api UI authentication, interface authentication
  */
 @Component
 @AllArgsConstructor
@@ -35,7 +35,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     private static final String LOGIN_EXPIRE = "登录凭证失效！";
 
     /**
-     * 配置接口权限
+     * Configure interface permissions
      */
     @Override
     public Object preHandle(RequestEntity requestEntity) {
@@ -46,17 +46,16 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
         boolean isLogin = eruptUserService.getCurrentUid() != null;
         if (StringUtils.isNotBlank(login) && !isLogin) return new JsonBean<>(401, LOGIN_EXPIRE);
         if (StringUtils.isNotBlank(role) || StringUtils.isNotBlank(permission)) {
-            // 未登录
             if (!isLogin) {
                 return new JsonBean<Void>(401, LOGIN_EXPIRE);
             } else {
                 MetaUserinfo metaUserInfo = eruptUserService.getSimpleUserInfo();
                 if (!metaUserInfo.isSuperAdmin()) {
-                    // 权限判断
+                    // Menu judgment
                     if (StringUtils.isNotBlank(permission) && eruptUserService.getEruptMenuByValue(permission) == null) {
                         return new JsonBean<Void>(403, NO_PERMISSION);
                     }
-                    // 角色判断
+                    // Role judgment
                     if (StringUtils.isNotBlank(role) && metaUserInfo.getRoles().stream().noneMatch(role::equals)) {
                         return new JsonBean<Void>(403, NO_PERMISSION);
                     }
@@ -67,7 +66,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     }
 
     /**
-     * 配置UI界面不需要登录框
+     * The UI interface configuration does not require a login box.
      */
     @Override
     public boolean requireLogin() {
@@ -83,7 +82,7 @@ public class EruptMagicAPIRequestInterceptor implements RequestInterceptor, Auth
     }
 
     /**
-     * 配置UI鉴权
+     * Configure UI authentication
      */
     @Override
     public boolean allowVisit(MagicUser magicUser, MagicHttpServletRequest request, Authorization authorization) {

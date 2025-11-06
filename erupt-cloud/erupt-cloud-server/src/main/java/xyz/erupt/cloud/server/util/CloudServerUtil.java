@@ -24,8 +24,7 @@ public class CloudServerUtil {
 
     //Node节点健康检查
     public static boolean nodeHealth(String nodeName, String location) {
-        try {
-            HttpResponse httpResponse = HttpUtil.createGet(location + CloudRestApiConst.NODE_HEALTH).timeout(1000).execute();
+        try (HttpResponse httpResponse = HttpUtil.createGet(location + CloudRestApiConst.NODE_HEALTH).timeout(1000).execute()) {
             String body = httpResponse.body();
             if (StringUtils.isNotBlank(body) && !nodeName.equals(body)) {
                 log.warn("nodeName mismatch {} != {}", nodeName, body);

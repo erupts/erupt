@@ -1,40 +1,32 @@
 package xyz.erupt.generator.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
-import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
-import xyz.erupt.annotation.sub_field.sub_edit.ShowBy;
-import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
 import xyz.erupt.generator.base.GeneratorType;
-import xyz.erupt.generator.base.Ref;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @EruptI18n
-@Erupt(name = "Erupt字段信息", dataProxy = GeneratorField.class)
+@Erupt(name = "Erupt字段信息")
 @Table(name = "e_generator_field")
 @Entity
 @Getter
 @Setter
-public class GeneratorField extends BaseModel implements DataProxy<GeneratorField>, ChoiceFetchHandler {
+public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
 
     @EruptField(
             views = @View(title = "字段名"),
@@ -56,6 +48,7 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
     private Integer sort;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(100)")
     @EruptField(
             views = @View(title = "编辑类型"),
             edit = @Edit(title = "编辑类型",
@@ -66,8 +59,9 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
 
     @EruptField(
             views = @View(title = "关联实体类"),
-            edit = @Edit(title = "关联实体类", showBy = @ShowBy(dependField = "type",
-                    expr = "value.indexOf('REFERENCE') != -1 || value.indexOf('TAB') != -1 || value == 'CHECKBOX' || value == 'COMBINE'"))
+            edit = @Edit(title = "关联实体类", dynamic = @Dynamic(dependField = "type",
+                    match = Dynamic.Ctrl.NOTNULL,
+                    condition = "value.indexOf('REFERENCE') != -1 || value.indexOf('TAB') != -1 || value == 'CHECKBOX' || value == 'COMBINE'"))
     )
     private String linkClass;
 
@@ -101,18 +95,4 @@ public class GeneratorField extends BaseModel implements DataProxy<GeneratorFiel
         return Arrays.stream(GeneratorType.values()).map(it -> new VLModel(it.name(), it.getName(), it.name())).collect(Collectors.toList());
     }
 
-    @SneakyThrows
-    @Override
-    public void beforeAdd(GeneratorField generatorField) {
-        if (null != GeneratorType.class.getDeclaredField(generatorField.getType().name()).getAnnotation(Ref.class)) {
-            if (StringUtils.isBlank(generatorField.getLinkClass())) {
-                throw new EruptWebApiRuntimeException("关联实体类必填！");
-            }
-        }
-    }
-
-    @Override
-    public void beforeUpdate(GeneratorField generatorField) {
-        this.beforeAdd(generatorField);
-    }
 }

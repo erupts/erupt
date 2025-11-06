@@ -1,11 +1,10 @@
 package xyz.erupt.core.util;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -18,71 +17,34 @@ import java.util.regex.Pattern;
 @Slf4j
 public class SecurityUtil {
 
-    // xss跨站脚本检测
+    private static final Pattern XSS_PATTERN = Pattern.compile(
+            // Script Tag
+            "<script\\b[^>]*>(.*?)</script>|" +
+            // event handler
+            "\\b(?:onclick|onload|onmouseover|onfocus|onerror|onchange|onsubmit|onkeydown|onkeyup|onblur|onresize|onscroll|ondblclick|onmousedown|onmouseup|onmousemove|onmouseout|oninput|onpaste|oncut|oncopy|ondrag|ondrop|onreset|onselect|onwheel)\\s*\\s*=" +
+            // Fake agreement
+            "\\b(?:javascript|vbscript|data):|" +
+            // Dangerous attribute value
+            "\\b(?:src|href|action)\\s*\\s*=\\s*(['\"]?)\\s*(?:javascript|vbscript|data):|" +
+            // Dangerous function call
+            "\\b(?:eval|expression|setTimeout|setInterval|Function|alert|confirm|prompt)\\s*\\s*\\(|" +
+            // Dangerous HTML tags (only detecting obvious dangerous tags)
+            "<(?:iframe|object|embed|applet)\\b[^>]*>|" +
+            // Expressions in the style
+            "\\bexpression\\s*\\s*\\(|" +
+            // Dangerous DOM operations
+            "\\b(?:innerHTML|outerHTML|document\\.write|document\\.writeln)\\s*\\s*=",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL
+    );
+
+    /**
+     * true = Detecting suspicious XSS fragments
+     */
     public static boolean xssInspect(String value) {
-        if (StringUtils.isNotBlank(value)) {
-            // 避免script 标签
-            Pattern scriptPattern = Pattern.compile("<script>(.*?)</script>", Pattern.CASE_INSENSITIVE);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免src形式的表达式
-            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\'(.*?)\\'", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\\"(.*?)\\\"", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 删除单个的<script ...> 标签
-            scriptPattern = Pattern.compile("<script(.*?)>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 eval(...) 形式表达式
-            scriptPattern = Pattern.compile("eval\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 expression(...) 表达式
-            scriptPattern = Pattern.compile("expression\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 javascript: 表达式
-            scriptPattern = Pattern.compile("javascript:", Pattern.CASE_INSENSITIVE);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 vbscript: 表达式
-            scriptPattern = Pattern.compile("vbscript:", Pattern.CASE_INSENSITIVE);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 onload= 表达式
-            scriptPattern = Pattern.compile("onload(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 onmouseover= 表达式
-            scriptPattern = Pattern.compile("onmouseover(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 onfocus= 表达式
-            scriptPattern = Pattern.compile("onfocus(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            if (scriptPattern.matcher(value).find()) {
-                return true;
-            }
-            // 避免 onerror= 表达式
-            scriptPattern = Pattern.compile("^onerror(.*?)=$", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            return scriptPattern.matcher(value).find();
-        }
-        return false;
+        return value != null && XSS_PATTERN.matcher(value).find();
     }
 
-    //检测 跨站请求伪造
+    // Detection of Cross-Site Request Forgery
     public static boolean csrfInspect(HttpServletRequest request, HttpServletResponse response) {
         String origin = request.getHeader("Origin");
         if (null != origin && !origin.contains(request.getHeader("Host"))) {
@@ -99,4 +61,5 @@ public class SecurityUtil {
         }
         return false;
     }
+
 }
