@@ -19,6 +19,9 @@ public @interface Dynamic {
 
     Ctrl match() default Ctrl.SHOW;
 
+//    // change 当前修饰对象的静态配置，例如代码编辑器的语言
+//    String changeScript() default "";
+
 //    @Comment("Compute component value when condition changes, Variable, class field name")
 //    String render() default "";
 
