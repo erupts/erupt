@@ -66,7 +66,7 @@ public @interface Erupt {
 
     Layout layout() default @Layout;
 
-    Lens[] lenses() default {};
+    Viz[] viz() default {};
 
     @ToMap(key = "key")
     @Comment("自定义扩展参数")

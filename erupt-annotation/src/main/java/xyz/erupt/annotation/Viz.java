@@ -5,8 +5,8 @@ import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Tpl;
-import xyz.erupt.annotation.lens.CardView;
-import xyz.erupt.annotation.lens.GanttView;
+import xyz.erupt.annotation.viz.CardView;
+import xyz.erupt.annotation.viz.GanttView;
 
 import java.beans.Transient;
 
@@ -14,7 +14,7 @@ import java.beans.Transient;
  * @author YuePeng
  * date 2025/10/30 23:52
  */
-public @interface Lens {
+public @interface Viz {
 
     String code() default "";
 

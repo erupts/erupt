@@ -14,7 +14,7 @@ public class TableQuery extends Page {
 
     private List<Condition> condition;
 
-    // ref @Lens.code
-    private String lens;
+    // ref @Viz.code
+    private String viz;
 
 }

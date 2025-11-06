@@ -1,4 +1,4 @@
-package xyz.erupt.annotation.lens;
+package xyz.erupt.annotation.viz;
 
 import xyz.erupt.annotation.config.Comment;
 

@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.Viz;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
@@ -13,7 +14,6 @@ import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
-import xyz.erupt.annotation.Lens;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.constant.EruptReqHeader;
 import xyz.erupt.core.exception.EruptNoLegalPowerException;
@@ -78,15 +78,12 @@ public class EruptService {
         });
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
-        if (null != tableQuery.getLens()) {
-            for (Lens lens : eruptModel.getErupt().lenses()) {
-                if (lens.code().equals(tableQuery.getLens())) {
-                    for (Filter filter : lens.filter()) {
+        if (null != tableQuery.getViz()) {
+            for (Viz viz : eruptModel.getErupt().viz()) {
+                if (viz.code().equals(tableQuery.getViz())) {
+                    for (Filter filter : viz.filter()) {
                         conditionStrings.add(filter.value());
                     }
-//                    if (StringUtils.isNotBlank(lens.orderBy())) {
-//
-//                    }
                 }
             }
         }
