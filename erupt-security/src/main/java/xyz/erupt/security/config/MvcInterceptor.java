@@ -1,5 +1,6 @@
 package xyz.erupt.security.config;
 
+import jakarta.annotation.Resource;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +10,6 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.security.interceptor.EruptSecurityInterceptor;
 import xyz.erupt.security.interceptor.EruptSuperInterceptor;
 import xyz.erupt.security.interceptor.HttpServletRequestFilter;
-
-import javax.annotation.Resource;
 
 /**
  * @author YuePeng

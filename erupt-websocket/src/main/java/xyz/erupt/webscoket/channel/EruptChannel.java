@@ -1,6 +1,8 @@
 package xyz.erupt.webscoket.channel;
 
 import com.google.gson.reflect.TypeToken;
+import jakarta.websocket.*;
+import jakarta.websocket.server.ServerEndpoint;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -10,8 +12,6 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.webscoket.command.base.SocketCommand;
 
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,6 @@ public class EruptChannel {
         EruptChannelManager.close(session);
     }
 
-    // 连接异常
     @OnError
     public void error(Session session, Throwable throwable) throws IOException {
         log.error("[websocket] Connection exception：id={}，throwable={}", session.getId(), throwable.getMessage());

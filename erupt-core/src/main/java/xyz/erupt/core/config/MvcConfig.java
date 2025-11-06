@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
@@ -43,7 +44,7 @@ public class MvcConfig implements WebMvcConfigurer {
         Optional.ofNullable(eruptProp.getGsonHttpMessageConvertersPackages()).ifPresent(it -> gsonMessageConverterPackage.addAll(Arrays.asList(it)));
         converters.add(0, new GsonHttpMessageConverter(GsonFactory.getGson()) {
             @Override
-            protected boolean supports(Class<?> clazz) {
+            protected boolean supports(@NonNull Class<?> clazz) {
                 for (String pack : gsonMessageConverterPackage) {
                     if (clazz.getName().startsWith(pack)) {
                         return super.supports(clazz);

@@ -19,8 +19,8 @@ public class ProjectUtil {
     private static final String LOADED_EXT = ".loaded";
 
     /**
-     * @param projectName 标识名
-     * @param first       bool回调，表示函数是否为第一次调用
+     * @param projectName identification name
+     * @param first       bool flag, indicating whether the function is being called for the first time
      */
     @SneakyThrows
     public void projectStartLoaded(String projectName, Consumer<Boolean> first) {
@@ -28,7 +28,7 @@ public class ProjectUtil {
         File dirFile = new File(userDir, EruptConst.ERUPT_DIR);
         String warnTxt = " The erupt initialization ID file could not be created";
         if (!dirFile.exists() && !dirFile.mkdirs()) {
-            log.warn(dirFile + warnTxt);
+            log.warn("{} {}", dirFile, warnTxt);
         }
         File file = new File(dirFile.getPath(), projectName + LOADED_EXT);
         if (file.exists()) {
@@ -38,7 +38,7 @@ public class ProjectUtil {
             if (file.createNewFile()) {
                 FileUtils.writeStringToFile(file, EruptInformation.getEruptVersion(), StandardCharsets.UTF_8.name());
             } else {
-                log.warn(dirFile + warnTxt);
+                log.warn("{} {}", dirFile, warnTxt);
             }
         }
     }

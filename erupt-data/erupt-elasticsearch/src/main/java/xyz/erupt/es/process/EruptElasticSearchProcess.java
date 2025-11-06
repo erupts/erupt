@@ -18,7 +18,7 @@ import xyz.erupt.core.service.IEruptDataService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.*;
 

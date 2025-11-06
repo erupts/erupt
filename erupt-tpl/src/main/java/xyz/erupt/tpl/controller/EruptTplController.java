@@ -1,6 +1,9 @@
 package xyz.erupt.tpl.controller;
 
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
@@ -20,9 +23,6 @@ import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.tpl.engine.EngineConst;
 import xyz.erupt.tpl.service.EruptTplService;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 import static xyz.erupt.core.constant.EruptRestPath.ERUPT_API;
 
 /**
- * Erupt 页面结构构建信息
+ * Erupt Tpl
  *
  * @author YuePeng
  * date 2018-09-28.
@@ -86,11 +86,11 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
     }
 
     /**
-     * 自定义按钮弹出层模板
+     * Custom button pop-up layer template
      *
      * @param eruptName erupt
-     * @param code      模板标识
-     * @param ids       ID标识
+     * @param code      Template Identifier
+     * @param ids       ID Identifier
      */
     @GetMapping(value = "/operation-tpl/{erupt}/{code}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
@@ -111,11 +111,11 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
     }
 
     /**
-     * 表格视图@View注解触发的TPL
+     * The TPL triggered by the @View annotation in the table view
      *
      * @param eruptName erupt
-     * @param field     字段
-     * @param id        当前行数据的主键
+     * @param field     field
+     * @param id        pk
      */
     @GetMapping(value = "/view-tpl/{erupt}/{field}/{id}", produces = HTML_MIME_TYPE)
     @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)

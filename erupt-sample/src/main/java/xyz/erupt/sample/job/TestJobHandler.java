@@ -1,19 +1,22 @@
 package xyz.erupt.sample.job;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.job.handler.EruptJobHandler;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 @Slf4j
+@Getter
 public class TestJobHandler implements EruptJobHandler {
 
     @Override
     public String name() {
-        return "测试定时任务";
+        return "Test Scheduled";
     }
 
     @Override
     public String exec(String code, String param) {
-        log.info("执行了一次定义任务");
+        log.info("A task was executed.");
         return null;
     }
 

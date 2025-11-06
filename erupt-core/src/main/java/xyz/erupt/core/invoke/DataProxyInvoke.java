@@ -2,6 +2,7 @@ package xyz.erupt.core.invoke;
 
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.fun.DataProxy;
+import xyz.erupt.core.interceptor.PostDataProxy;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptModel;
@@ -30,34 +31,40 @@ public class DataProxyInvoke {
     }
 
     public static void invoke(EruptModel eruptModel, Consumer<DataProxy<Object>> consumer) {
-        //注解中的 @PreDataProxy
+        // The @PreDataProxy in the annotation
         dataProxyAnnotationContainer.forEach(pc -> Optional.ofNullable(eruptModel.getClazz().getAnnotation(pc)).ifPresent(it -> {
             PreDataProxy preDataProxy = it.annotationType().getAnnotation(PreDataProxy.class);
             DataProxyContext.set(new DataProxyContext.Data(eruptModel, preDataProxy.params()));
             consumer.accept(getInstanceBean(preDataProxy.value()));
             DataProxyContext.remove();
         }));
-        //父类及接口 @PreDataProxy
+        // Parent classes and interfaces @PreDataProxy
         ReflectUtil.findClassExtendStack(eruptModel.getClazz()).forEach(clazz -> DataProxyInvoke.actionInvokePreDataProxy(eruptModel, clazz, consumer));
-        //本类及接口 @PreDataProxy
+        // This class and interface @PreDataProxy
         DataProxyInvoke.actionInvokePreDataProxy(eruptModel, eruptModel.getClazz(), consumer);
-        //@Erupt → DataProxy
+        // @Erupt → DataProxy
         Stream.of(eruptModel.getErupt().dataProxy()).forEach(proxy -> {
             DataProxyContext.set(new DataProxyContext.Data(eruptModel, eruptModel.getErupt().dataProxyParams()));
             consumer.accept(getInstanceBean(proxy));
             DataProxyContext.remove();
         });
+        // POST DataProxy
+        DataProxyContext.set(new DataProxyContext.Data(eruptModel, eruptModel.getErupt().dataProxyParams()));
+        for (Class<? extends DataProxy<Object>> proxy : PostDataProxy.getDataProxies()) {
+            consumer.accept(getInstanceBean(proxy));
+        }
+        DataProxyContext.remove();
     }
 
     private static void actionInvokePreDataProxy(EruptModel eruptModel, Class<?> clazz, Consumer<DataProxy<Object>> consumer) {
-        //接口
+        // Interface
         Stream.of(clazz.getInterfaces()).forEach(it -> Optional.ofNullable(it.getAnnotation(PreDataProxy.class))
                 .ifPresent(dataProxy -> {
                     DataProxyContext.set(new DataProxyContext.Data(eruptModel, dataProxy.params()));
                     consumer.accept(getInstanceBean(dataProxy.value()));
                     DataProxyContext.remove();
                 }));
-        //类
+        // Class
         Optional.ofNullable(clazz.getAnnotation(PreDataProxy.class))
                 .ifPresent(dataProxy -> {
                     DataProxyContext.set(new DataProxyContext.Data(eruptModel, dataProxy.params()));

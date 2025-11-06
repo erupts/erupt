@@ -11,7 +11,7 @@ public class MarkDownUtil {
     public static String extractCodeBlock(String markdown) {
         if (markdown.startsWith(CODE_BLOCK_MARK) && markdown.endsWith(CODE_BLOCK_MARK)) {
             markdown = markdown.substring(CODE_BLOCK_MARK.length(), markdown.length() - CODE_BLOCK_MARK.length());
-            // 处理可能存在的语言标识符，例如 ```java
+            // Handle possible language identifiers, such as ```java
             int firstNewlineIndex = markdown.indexOf('\n');
             if (firstNewlineIndex != -1) {
                 markdown = markdown.substring(firstNewlineIndex + 1);

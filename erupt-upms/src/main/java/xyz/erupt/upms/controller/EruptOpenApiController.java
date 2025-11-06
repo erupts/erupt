@@ -15,7 +15,7 @@ import xyz.erupt.upms.model.EruptOpenApi;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.vo.OpenApiTokenVo;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 
 /**
@@ -33,8 +33,8 @@ public class EruptOpenApiController {
     private final EruptTokenService eruptTokenService;
 
     /**
-     * 获取token
-     * 每个 appid 同一时间只有一个 token 有效
+     * Create token
+     * Only one token for each appid is valid at the same time.
      *
      * @param appid  appid
      * @param secret secret

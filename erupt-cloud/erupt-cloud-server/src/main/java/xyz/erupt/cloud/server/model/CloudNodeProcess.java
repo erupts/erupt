@@ -1,5 +1,6 @@
 package xyz.erupt.cloud.server.model;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -14,7 +15,6 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.tpl.engine.EngineConst;
 import xyz.erupt.upms.model.EruptUser;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +51,7 @@ public class CloudNodeProcess implements DataProxy<CloudNode>, TagsFetchHandler,
     }
 
     @Override
+    @SuppressWarnings("StringConcatenationArgumentToLogCall")
     public void afterFetch(Collection<Map<String, Object>> list) {
         String nodeNameField = LambdaSee.field(CloudNode::getNodeName);
         for (Map<String, Object> map : list) {

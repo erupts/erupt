@@ -6,7 +6,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import xyz.erupt.core.prop.EruptProp;
@@ -35,6 +34,7 @@ public class EruptJobAction implements Job {
         trigger(eruptJob, (JavaMailSenderImpl) jobDataMap.get(EruptJobService.MAIL_SENDER_KEY));
     }
 
+    @SuppressWarnings("StringConcatenationArgumentToLogCall")
     void trigger(EruptJob eruptJob, JavaMailSenderImpl javaMailSender) {
         if (EruptSpringUtil.getBean(EruptProp.class).isRedisSession()) {
             if (Boolean.FALSE.equals(EruptSpringUtil.getBean(EruptJobService.class).getStringRedisTemplate().opsForValue().setIfAbsent(JOB_KEY + eruptJob.getCode(), eruptJob.getCode(), 999, TimeUnit.MILLISECONDS))) {
@@ -58,7 +58,7 @@ public class EruptJobAction implements Job {
             String exceptionTraceStr = ExceptionUtils.getStackTrace(e);
             eruptJobLog.setErrorInfo(exceptionTraceStr);
             if (null != jobHandler) jobHandler.error(e, eruptJob.getHandlerParam());
-            //失败通知
+            // Error Notification
             if (StringUtils.isNotBlank(eruptJob.getNotifyEmails())) {
                 if (null == javaMailSender) {
                     log.warn("Sending mailbox not configured");

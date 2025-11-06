@@ -1,5 +1,6 @@
 package xyz.erupt.core.service;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,8 +14,9 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
 
-import javax.annotation.Resource;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 
 /**
@@ -42,7 +44,7 @@ public class EruptFileService {
         }
     }
 
-    public String upload(MultipartFile file, String path) throws Exception {
+    public String upload(MultipartFile file, String path) {
         try {
             boolean localSave = true;
             AttachmentProxy attachmentProxy = EruptUtil.findAttachmentProxy();
@@ -51,13 +53,17 @@ public class EruptFileService {
                 localSave = attachmentProxy.isLocalSave();
             }
             if (localSave) {
-                File dest = new File(eruptProp.getUploadPath() + path);
-                if (!dest.getParentFile().exists()) {
-                    if (!dest.getParentFile().mkdirs()) {
-                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created")+ ": " + dest.getParentFile().getAbsolutePath());
+                Path uploadRoot = Paths.get(eruptProp.getUploadPath());
+                Path target = uploadRoot.resolve(path.substring(1)).normalize();
+                if (!target.startsWith(uploadRoot)) {
+                    throw new EruptWebApiRuntimeException("Illegal path");
+                }
+                if (!target.toFile().getParentFile().exists()) {
+                    if (!target.toFile().getParentFile().mkdirs()) {
+                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created")+ ": " + target.toFile().getParentFile().getAbsolutePath());
                     }
                 }
-                file.transferTo(dest);
+                file.transferTo(target.toFile());
             }
             return path.replace("\\", "/");
         } catch (Exception e) {

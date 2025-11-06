@@ -28,7 +28,7 @@ global.update.success,修改成功,修改成功,Update success,Modifié avec suc
 global.delete.success,删除成功,刪除成功,Delete success,Supprimé avec succès,削除に成功しました,삭제성공,Удаление удалено.,Eliminado con éxito,Löschen erfolgreich.,Remoção bem sucedida,Sukses dihapus,حذف بنجاح
 global.delete.hint,请确认是否要删除,請確認是否要刪除,Please confirm to delete,Veuillez confirmer si vous souhaitez supprimer,削除するかどうか確認してください。,삭제할지확인하세요,"Пожалуйста, подтвердите удаление",Confirme si desea eliminar,Möchten sie sie entfernen,Confirme se deseja excluir,Silakan konfirmasi jika anda ingin menghapusnya,يرجى تأكيد ما إذا كان ينبغي حذفها
 global.delete.hint.check,请选中要删除的数据,請選中要刪除的數據,Please select delete data,Veuillez cocher les données que vous souhaitez supprimer,削除するデータを選択してください。,삭제할데이터를선택하십시오,"Пожалуйста, выберите удаленные данные",Seleccione los datos que desea eliminar,Bitte wählen sie die zu löschenden daten,Selecione os dados que você deseja excluir,Silahkan pilih data yang ingin anda hapus,اختر البيانات المراد حذفها
-global.reset_pwd,修改密码,修改密碼,Change password,Changer votre mot de passe,パスワードを変更,비밀번호수정,Измени код.,Cambiar mi contraseña,Codes ändern.,Alterar sua senha,Ubah sandi,تعديل كلمة المرور
+global.reset_pwd,修改密码,修改密碼,Change pwd,Chg pwd,パス変更,비밀번호수정,Измени код.,Camb pwd,Codes ändern.,Alterar sua senha,Ubah sandi,تعديل كلمة المرور
 global.logout,退出登录,退出登錄,Log out,Déconnexion du login,ログアウト,로그인종료,Выход из системы.,Salir del login,Und loggen sie sich nicht ein.,Sair do login,Log masuk keluar,خروج تسجيل الدخول
 global.search.hint,搜索菜单,搜索菜單,Search menu,Rechercher le menu,検索メニュー,검색메뉴,Меню поиска.,Buscar el menú,Suche nach dem menü.,Procurar no menu,Menu pencarian,قائمة البحث
 global.confirm_logout,退出登录，是否继续?,退出系統，是否繼續?,Are you sure to log out and exit the system?,Sûr de se déconnecter et quitter le système?,ログアウトしてシステムを終了しますか？,로그아웃하고시스템을종료하시겠습니까?,"Вы уверены, что система списана и выведена из строя?",¿Seguro de salir y salir del sistema?,Und steigen sie aus Oder nicht?,Sair do login. Deseja continuar?,"Log keluar, apakah akan terus?",خروج تسجيل الدخول، هل تستمر؟
@@ -42,7 +42,7 @@ component.attachment.upload_hint,单击或拖动文件到此区域上传,單擊�
 component.attachment.upload_format,文件格式,文件格式,File format,Format du fichier,ファイル形式です。,파일 형식,Формат файла,Formato de archivo,Format der dateien,Formato do arquivo,Format berkasname,تنسيق الملف
 table.totalLeft,共,共,Total,Total,合計,총계,всего,Total,Insgesamt.,Total,Total,مجموع
 table.totalRight,条,條,Items,Articles,件,개,шт.,artículos,Stück.,itens,item,بند
-table.operation,操作,操作,Action,Action,アクション,작업,действие,Acción,Aktion.,Ação,Aksi,Tindakan,العمل
+table.operation,操作,操作,Action,Action,アクション,작업,действие,Acción,Aktion.,Ação,Aksi,العمل
 table.delete.hint,确认删除吗？,確認刪除嗎？,Are you sure to delete?,Confirmer la suppression?,削除を確認しますか？,삭제확인하시겠습니까?,Подтвердите удаление?,¿Confirmar la eliminación?,Ortung bestätigt?,Confirmar a exclusão?,Konfirmasi dihapus?,تأكيد حذف؟
 table.add,新增,新增,Add,nouveaux,追加,새로추가,нов,nuevos,hinzufügen,nova,baru,الإضافية
 table.delete,删除,刪除,Delete,supprimé,削除,삭제,удал,borrar,Löschen.,apagar,hapus,حذف
@@ -89,7 +89,7 @@ login.forget_pwd,忘记密码？,忘記密碼？,Forget Password?,Mot de passe o
 login.forget_pwd_hint,请联系管理员,請聯系管理員,Please contact the administrator,Veuillez contacter l’administrateur,管理者に連絡してください,관리자에게연락하세요,Свяжитесь с администратором.,Por favor contacte al administrador,Kontaktiere den administrator.,Entre em contato com o administrador,Silahkan hubungi administrator,يرجى الاتصال المسؤول
 setting.config,页面设置,頁面設置,Page config,Configuration de page,ページの設定,페이지설정,Настройка страницы.,Configuración de página,seiteneinstellungen,Configuração da página,Pengaturan halaman,إعداد الصفحة
 setting.fixed-header,固定头和侧边栏,固定頭和側邊欄,Fixed Header & Nav,Tête fixe et sidebar,고정헤드와사이드바,고정헤드와사이드바,Закрепи голову и боковую панель,Cabeza fija y barra lateral,Kopf und seitentüren,Cabeçalho fixo e barra lateral,Amankan kepala dan batang sisi,تثبيت الرأس والأعمدة الجانبية
-setting.tab-reuse,多页签,多頁簽,MultiTab,Plusieurs onglets de page,何枚かのくじです,다중 탭,Подпиши несколько страниц.,Múltiples pestañas,Signatur? - ja.,Várias guias de página,Tanda tangan banyak halaman,صفحات عديدة
+setting.tab-reuse,多页签,多頁簽,Multiple tabs,Plusieurs onglets de page,何枚かのくじです,다중 탭,Подпиши несколько страниц.,Múltiples pestañas,Signatur? - ja.,Várias guias de página,Tanda tangan banyak halaman,صفحات عديدة
 setting.nav,面包屑导航,面包屑導航,Breadcrumb nav,Navigation sur breadcrumb,パン粉ナビゲーション,빵부스러기내비게이션,Навигация по хлебным крошкам,Navegación por breadcrumb,Klein wie brot.,Navegação por breadcrumb,Navigasi remah roti,فتات الخبز الملاحة
 setting.table-border,表格边框,表格邊框,Table bordered,Bordure de table,表の境界線,표테두리,Табличная боковая рама,Borde de tabla,Tabelle im rahmen,Borda da tabela,Batas tabel,إطار الجدول
 setting.color-weak,色弱模式,色弱模式,Color weak mode,Mode faible couleur,色弱モードです,색약 패턴,Слабая модель цвета,Modo débil de color,Das zerstörerische muster,Modo fraco da cor,Pola afektif,وضع ضعيف
@@ -104,3 +104,64 @@ none_permission,无权限！,無權限！,Without permission!,Aucune autorisatio
 theme.default,默认主题,默認主題,Default theme,Thème par défaut,デフォルトテーマ,기본 테마,По умолчанию.,Tema por defecto,Standardthema:,Tema por padrão,Tema standar,الموضوع الافتراضي
 theme.dark,黑夜主题,黑夜主題,Dark theme,Thème nuit noire,夜のテーマです,어두운 테마,♪ тема ночи ♪,Tema de noche,Das dunkle thema,Tema da noite,Tema malam,موضوع الليل
 theme.compact,紧凑主题,緊湊主題,Compact theme,Un thème compact,コンパクトなテーマです,주제를 잘 정리하다,Компактный предмет,Tema compacto,Ein neues thema.,Um tema compacto,Tema padat,موضوع ضيق
+
+TODAY,今天,今天,Today,Aujourd'hui,今日,오늘,Сегодня,Hoy,Heute,Hoje,Hari ini,اليوم
+FEW_DAYS,过去 N 天,過去 N 天,Past N days,Les N derniers jours,過去N日間,지난 N일,Последние N дней,Últimos N días,Letzte N Tage,Últimos N dias,N hari terakhir,الأيام N الماضية
+FUTURE_DAYS,未来 N 天,未來 N 天,Next N days,Les N prochains jours,今後N日間,향후 N일,Следующие N дней,Próximos N días,Nächste N Tage,Próximos N dias,N hari ke depan,الأيام N القادمة
+RANGE,区间,區間,Range,Intervalle,範囲,범위,Диапазон,Rango,Bereich,Intervalo,Rentang,نطاق
+GT,大于,大於,Greater than,Supérieur à,より大きい,보다 큰,Больше чем,Mayor que,Größer als,Maior que,Lebih besar dari,أكبر من
+LT,小于,小於,Less than,Inférieur à,より小さい,보다 작은,Меньше чем,Menor que,Kleiner als,Menor que,Kurang dari,أقل من
+EGT,大于等于,大於等於,Greater than or equal,Supérieur ou égal à,以上,이상,Больше или равно,Mayor o igual que,Größer gleich,Maior ou igual a,Lebih besar atau sama dengan,أكبر من أو يساوي
+ELT,小于等于,小於等於,Less than or equal,Inférieur ou égal à,以下,이하,Меньше или равно,Menor o igual que,Kleiner gleich,Menor ou igual a,Kurang dari atau sama dengan,أقل من أو يساوي
+NULL,为空,為空,Is null,Est nul,空である,널임,Пусто,Es nulo,Ist null,É nulo,Kosong,فارغ
+NOT_NULL,非空,非空,Not null,Non nul,空でない,널이 아님,Не пусто,No es nulo,Nicht null,Não é nulo,Tidak kosong,ليس فارغا
+EQ,等于,等於,Equal,Égal à,等しい,같음,Равно,Igual a,Gleich,Igual a,Sama dengan,يساوي
+NEQ,不等于,不等於,Not equal,Différent de,等しくない,같지 않음,Не равно,No igual a,Ungleich,Diferente de,Tidak sama dengan,لا يساوي
+LIKE,相似,相似,Similar,Similaire,類似,유사,Похожий,Similar,Ähnlich,Semelhante,Mirip,مشابه
+NOT_LIKE,不相似,不相似,Not similar,Pas similaire,類似していない,유사하지 않음,Не похожий,No similar,Nicht ähnlich,Não semelhante,Tidak mirip,غير مشابه
+START_WITH,以**开始,以**開始,Starts with,Commence par,で始まる,로 시작,Начинается с,Empieza con,Beginnt mit,Começa com,Dimulai dengan,يبدأ ب
+END_WITH,以**结尾,以**結尾,Ends with,Se termine par,で終わる,로 끝남,Заканчивается на,Termina en,Endet mit,Termina com,Berakhir dengan,ينتهي ب
+IN,包含于,包含於,Contains,Contient,含まれる,포함,Содержит,Contiene,Enthält,Contém,Mengandung,يحتوي على
+NOT_IN,不包含于,不包含於,Not contains,Ne contient pas,含まれない,포함하지 않음,Не содержит,No contiene,Enthält nicht,Não contém,Tidak mengandung,لا يحتوي على
+
+[flow]
+VIEW_FLOW,查看流程,檢視流程,View Flow,Voir le flux,フローを見る,플로우 보기,Просмотр потока,Ver flujo,Fluss anzeigen,Ver fluxo,Lihat Aliran,عرض التدفق
+USER_APPROVAL,或签审批,或簽審批,Sequential Approval,Approbation Séquentielle,順次承認,순차 승인,Последовательное утверждение,Aprobación Secuencial,Sequentielle Genehmigung,Aprovação Sequencial,Persetujuan Berurutan,الموافقة التسلسلية
+USER_APPROVAL_PARALLEL,会签审批,會簽審批,Parallel Approval,Approbation Parallèle,並列承認,병렬 승인,Параллельное утверждение,Aprobación Paralela,Parallele Genehmigung,Aprovação Paralela,Persetujuan Paralel,الموافقة المتوازية
+CC,抄送,副本,CC,Cc,CC,참조,Копия,CC,CC,CC,CC,نسخة
+
+PRE_SIGN,前加签,前加簽,Pre-sign,Pré-signature,事前署名,사전 서명,Предварительная подпись,Firma previa,Vorunterschrift,Pré-assinatura,Tanda tangan awal,التوقيع المسبق
+POST_SIGN,后加签,後加簽,Post-sign,Post-signature,事後署名,사후 서명,Последующая подпись,Firma posterior,Nachunterschrift,Pós-assinatura,Tanda tangan akhir,التوقيع اللاحق
+PENDING,审批中,審批中,Pending,En attente,審査中,대기 중,На рассмотрении,Pendiente,Ausstehend,Pendente,Menunggu,قيد الانتظار
+FINISH,已完成,已完成,Finished,Terminé,完了,완료,Завершено,Finalizado,Abgeschlossen,Concluído,Selesai,منتهي
+REJECTED,已拒绝,已拒絕,Rejected,Rejeté,拒否,거부됨,Отклонено,Rechazado,Abgelehnt,Rejeitado,Ditolak,مرفوض
+WITHDRAWN,已撤回,已撤回,Withdrawn,Retiré,撤回,철회됨,Отозвано,Retirado,Zurückgezogen,Retirado,Ditarik,مسحوب
+DELETED,已删除,已刪除,Deleted,Supprimé,削除,삭제됨,Удалено,Eliminado,Gelöscht,Excluído,Dihapus,محذوف
+TERMINATED,已终止,已終止,Terminated,Terminé,強制終了,종료됨,Прервано,Terminado,Beendet,Terminado,Dihentikan,منتهي
+REVOKED,已撤销,已撤銷,Revoked,Révoqué,取消,취소됨,Аннулировано,Revocado,Widerrufen,Revogado,Dicabut,ملغى
+TRANSFER,已转交,已轉交,Transferred,Transféré,転送済み,전송됨,Передано,Transferido,Übertragen,Transferido,Transfer,تم النقل
+TIMEOUT_AUTO_PASS,超时自动通过,逾時自動通過,Auto pass on timeout,Passer automatiquement en cas de délai d'attente,タイムアウト時に自動承認,시간 초과 시 자동 승인,Автоматическое подтверждение по истечении времени,Autorizar automáticamente al alcanzar el tiempo de espera,Automatische Genehmigung nach Zeitablauf,Aprovação automática ao atingir o tempo limite,Setujui otomatis saat waktu habilit,تجاوز تلقائي عند انتهاء المهلة
+TIMEOUT_AUTO_REJECT,超时自动拒绝,逾時自動拒絕,Auto reject on timeout,Rejeter automatiquement en cas de délai d'attente,タイムアウト時に自動拒否,시간 초과 시 자동 거부,Автоматический отказ по истечении времени,Rechazar automáticamente al alcanzar el tiempo de espera,Automatische Ablehnung nach Zeitablauf,Rejeição automática ao atingir o tempo limite,Tolak otomatis saat waktu habilit,رفض تلقائي عند انتهاء المهلة
+
+PENDING,审批中,審批中,Pending,En attente,審査中,대기 중,На рассмотрении,Pendiente,Ausstehend,Pendente,Menunggu,قيد الانتظار
+AGREED,已同意,已同意,Agreed,Accepté,同意,동의됨,Принято,Acertado,Aprovado,Acertado,Diterima,تم الموافقة
+REJECTED,已拒绝,已拒絕,Rejected,Rejeté,拒否,거부됨,Отклонено,Rechazado,Abgelehnt,Rejeitado,Ditolak,مرفوض
+SKIPPED,已跳过,已跳過,Skipped,Sautéé,跳過,건너뛰어짐,Пропущено,Saltado,Lewati,Dipulihkan,Lewati,لقد قفزت
+
+NEXT,成功,成功,Success,Succès,成功,성공,Успех,Éxito,Erfolg,Sucesso,Sukses,نجاح
+WAIT,等待执行,等待執行,Waiting,En attente,待機 중,대기 중,Ожидание,Esperando,Warten,Aguardando,Menunggu,في الانتظار
+WAIT_API_TRIGGER,等待审批,等待審批,Waiting for approval,En attente d'approbation,承認待ち,승인 대기 중,Ожидание подтверждения,Esperando aprobación,Warten auf Genehmigung,Aguardando aprovação,Menunggu persetujuan,في انتظار الموافقة
+ERROR,执行错误,執行錯誤,Execution error,Erreur d'exécution,実行エラー,실행 오шибка,Ошибка выполнения,Error de ejecución,Ausführungsfehler,Erro de execução,Kesalahan eksekusi,خطأ في التنفيذ
+REENTRY,重试中,重試中,Retrying,Recommencement,再試行 중,재시도 중,Повтор,Reintentando,Wiederholen,Repetindo,Mencoba lagi,إعادة المحاولة
+END,结束,結束,End,Fin,終了,끝,Конец,Fin,Ende,Fim,Akhir,نهاية
+
+SUB_FLOW,子流程,子流程,Sub Flow,Sous-flux,サブフロー,서브 플로,Подпоток,Subflujo,Subflow,Subfluxo,Sub Alur,التدفق الفرعي
+FLOW_TODO,待办,待辦,Todo,À faire,やること,할 일,Сделать,Por hacer,Machen,Fazer,Yang harus dilakukan,للقيام
+FLOW_DONE,已办,已辦,Done,Fait,完了,완료,Выполнено,Hecho,Erledigt,Concluído,Selesai,تم
+CREATED,已创建,已創建,Created,Créé,作成済,생성됨,Создано,Creado,Erstellt,Criado,Dibuat,تم الإنشاء
+CC,抄送我,抄送我,CC Me,Me mettre en CC,私にCC,나에게 참조,Отправить копию мне,CC a mí,CC mich,CC para mim,CC saya,نسخة لي
+
+ORG,组织,組織,Organization,Organisation,組織,조직,Организация,Organización,Organisation,Organização,Organisasi,منظمة
+USER,用户,用戶,User,Utilisateur,ユーザー,사용자,Пользователь,Usuario,Benutzer,Utilizador,Pengguna,مستخدم
+POST,岗位,崗位,Position,Poste,ポスト,직위,Должность,Puesto,Position,Cargo,Jabatan,منصب
+ROLE,角色,角色,Role,Rôle,ロール,역할,Роль,Rol,Rolle,Função,Peran,دور

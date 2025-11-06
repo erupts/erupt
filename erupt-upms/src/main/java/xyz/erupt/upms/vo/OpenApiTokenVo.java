@@ -18,7 +18,7 @@ public class OpenApiTokenVo {
     //token
     private String token;
 
-    //token 过期时间
+    //token expiration time
     private LocalDateTime expireTime;
 
     public OpenApiTokenVo(String token, LocalDateTime expireTime) {

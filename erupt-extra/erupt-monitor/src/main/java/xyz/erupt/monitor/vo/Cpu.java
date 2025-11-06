@@ -18,26 +18,27 @@ import java.util.concurrent.TimeUnit;
 @Setter
 public class Cpu {
 
-    private int cpuNum; //核心数
+    private int cpuNum;
 
-    private String freq; //主频
+    private String freq;
 
-    private String sys; //CPU系统使用率
+    private String sys;
 
-    private String user; //CPU用户使用率
+    private String user;
 
-    private String wait; //CPU当前等待率
+    private String wait;
 
-    private String usage; //使用率
+    private String usage;
 
-    private String cpuModel; //型号
+    private String cpuModel;
 
     @SneakyThrows
-    Cpu(SystemInfo systemInfo) {
+    Cpu(SystemInfo systemInfo, Boolean wait) {
         CentralProcessor processor = systemInfo.getHardware().getProcessor();
         long[] prevTicks = processor.getSystemCpuLoadTicks();
-        // 睡眠1s
-        TimeUnit.MILLISECONDS.sleep(1000);
+        if (null == wait || wait) {
+            TimeUnit.MILLISECONDS.sleep(1000);
+        }
         long[] ticks = processor.getSystemCpuLoadTicks();
         long nice = ticks[CentralProcessor.TickType.NICE.getIndex()] - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
         long irq = ticks[CentralProcessor.TickType.IRQ.getIndex()] - prevTicks[CentralProcessor.TickType.IRQ.getIndex()];

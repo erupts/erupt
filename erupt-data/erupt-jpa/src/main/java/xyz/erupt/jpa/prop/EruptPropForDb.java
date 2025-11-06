@@ -18,9 +18,8 @@ import xyz.erupt.jpa.config.HikariCpConfig;
 @ConfigurationProperties("erupt")
 public class EruptPropForDb {
 
-    //多数据源
+    // multi-data source
     private DB[] dbs;
-
 
     @Getter
     @Setter

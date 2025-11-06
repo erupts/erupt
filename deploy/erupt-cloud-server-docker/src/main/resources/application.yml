@@ -1,10 +1,4 @@
 spring:
-  redis:
-    database: ${SPRING_REDIS_DATABASE:0}
-    timeout: ${SPRING_REDIS_TIMEOUT:10000}
-    host: ${SPRING_REDIS_HOST:127.0.0.1}
-    port: ${SPRING_REDIS_PORT:6379}
-    password: ${SPRING_REDIS_PASSWORD:}
   datasource:
     # 案例使用 mysql 可调整为其他数据库
     url: ${SPRING_DATASOURCE_URL:jdbc:h2:file:./h2.erupt;AUTO_SERVER=TRUE;MODE=MySQL;}
@@ -18,6 +12,13 @@ spring:
     properties:
       hibernate:
         globally_quoted_identifiers: true
+  data:
+    redis:
+      database: ${SPRING_REDIS_DATABASE:0}
+      timeout: ${SPRING_REDIS_TIMEOUT:10000}
+      host: ${SPRING_REDIS_HOST:127.0.0.1}
+      port: ${SPRING_REDIS_PORT:6379}
+      password: ${SPRING_REDIS_PASSWORD:}
 erupt:
   redis-session: ${ERUPT_REDIS_SESSION:false}
   cloud-server:

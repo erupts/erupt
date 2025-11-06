@@ -7,8 +7,8 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
-import javax.persistence.Transient;
+import jakarta.annotation.Resource;
+import jakarta.persistence.Transient;
 import java.util.List;
 
 /**

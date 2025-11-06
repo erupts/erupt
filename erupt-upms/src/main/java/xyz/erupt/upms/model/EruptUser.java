@@ -1,5 +1,6 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -13,18 +14,16 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.Readonly;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
-import xyz.erupt.annotation.sub_field.sub_edit.InputType;
-import xyz.erupt.annotation.sub_field.sub_edit.ReferenceTreeType;
-import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.annotation.sub_field.sub_edit.*;
 import xyz.erupt.core.constant.RegexConst;
 import xyz.erupt.core.module.MetaUserinfo;
 import xyz.erupt.upms.looker.LookerSelf;
+import xyz.erupt.upms.model.data_proxy.EruptOrgFetchHandler;
+import xyz.erupt.upms.model.data_proxy.EruptUserDataProxy;
 import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 import xyz.erupt.upms.model.input.ResetPassword;
 import xyz.erupt.upms.model.input.ResetPasswordExec;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -51,6 +50,9 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class EruptUser extends LookerSelf {
+
+    @Column(length = 1023)
+    private String avatar;
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
@@ -123,6 +125,15 @@ public class EruptUser extends LookerSelf {
             edit = @Edit(title = "岗位", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private EruptPost eruptPost;
+
+    @ElementCollection
+    @CollectionTable(name = "e_upms_user_org_head", joinColumns = @JoinColumn(name = "id"))
+    @EruptField(
+            views = @View(title = "负责组织", column = "name"),
+            edit = @Edit(title = "负责组织", type = EditType.MULTI_CHOICE, multiChoiceType =
+            @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
+    )
+    private Set<Long> headOrg;
 
     @Transient
     @EruptField(
@@ -209,13 +220,13 @@ public class EruptUser extends LookerSelf {
         this.setId(id);
     }
 
-    public MetaUserinfo toMetaUser(){
+    public MetaUserinfo toMetaUser() {
         MetaUserinfo metaUserinfo = new MetaUserinfo();
         metaUserinfo.setId(this.getId());
         metaUserinfo.setSuperAdmin(this.getIsAdmin());
         metaUserinfo.setAccount(this.getAccount());
         metaUserinfo.setUsername(this.getName());
-        Optional.ofNullable(this.getRoles()).ifPresent(it-> metaUserinfo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));
+        Optional.ofNullable(this.getRoles()).ifPresent(it -> metaUserinfo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));
         Optional.ofNullable(this.getEruptPost()).ifPresent(it -> metaUserinfo.setPost(it.getCode()));
         Optional.ofNullable(this.getEruptOrg()).ifPresent(it -> metaUserinfo.setOrg(it.getCode()));
         return metaUserinfo;

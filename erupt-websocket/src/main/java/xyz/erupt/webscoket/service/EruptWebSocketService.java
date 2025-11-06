@@ -1,5 +1,7 @@
 package xyz.erupt.webscoket.service;
 
+import jakarta.annotation.Resource;
+import jakarta.websocket.Session;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
@@ -9,8 +11,6 @@ import xyz.erupt.webscoket.channel.EruptChannelManager;
 import xyz.erupt.webscoket.channel.SocketCommand;
 import xyz.erupt.webscoket.model.EruptWsSessionModel;
 
-import javax.annotation.Resource;
-import javax.websocket.Session;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -25,12 +25,12 @@ public class EruptWebSocketService {
     @Resource
     private EruptContextService eruptContextService;
 
-    //获取所有已连接会话
+    // Obtain all connected sessions
     public List<EruptWsSessionModel> getAllSession() {
         return EruptChannelManager.getAllSession();
     }
 
-    //获取当前操作用户的会话
+    // Obtain the current session of the operating user
     public EruptWsSessionModel getCurrentSession() {
         return Optional.ofNullable(EruptChannelManager.getSession(eruptContextService.getCurrentToken())).orElseThrow(() ->
                 new EruptWebApiRuntimeException("not found websocket session")

@@ -3,8 +3,7 @@ package xyz.erupt.core.operator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author YuePeng
@@ -12,61 +11,36 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public enum OperatorReferenceType implements DbOperatorExpr {
+public enum OperatorReferenceType implements OperatorExpr {
 
-    EQ("包含") {
+    EQ {
         @Override
-        public String expr(String field, Object value) {
-            if (value instanceof List) {
-                List<Object> s = (List<Object>) value;
-                return String.format("%s in (%s)", field, geneJoinIn(s));
-            } else if (value instanceof Number) {
-                return String.format("%s = %s", field, Integer.parseInt(value.toString()));
-            } else {
-                return String.format("%s = '%s'", field, value);
-            }
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s in (:%s)", field, placeholder);
         }
     },
-    NEQ("不包含") {
+    NEQ {
         @Override
-        public String expr(String field, Object value) {
-            if (value instanceof List) {
-                List<Object> s = (List<Object>) value;
-                return String.format("%s not in (%s)", field, geneJoinIn(s));
-            } else if (value instanceof Number) {
-                return String.format("%s <> %s", field, Integer.parseInt(value.toString()));
-            } else {
-                return String.format("%s <> '%s'", field, value);
-            }
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s not in (:%s)", field, placeholder);
         }
     },
 
-    NULL("为空") {
+    NULL{
         @Override
-        public String expr(String field, Object value) {
-            return OperatorStringType.NULL.expr(field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            return OperatorStringType.NULL.expr(field, value, parameter);
         }
     },
-    NOT_NULL("非空") {
+    NOT_NULL {
         @Override
-        public String expr(String field, Object value) {
-            return OperatorStringType.NOT_NULL.expr(field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            return OperatorStringType.NOT_NULL.expr(field, value, parameter);
         }
     };
-
-    //名称
-    private final String name;
-
-    public static String geneJoinIn(List<Object> list) {
-        List<String> newList = new ArrayList<>();
-        for (Object o : list) {
-            if (o instanceof Number) {
-                newList.add(o.toString());
-            } else {
-                newList.add("'" + o + "'");
-            }
-        }
-        return String.join(",", newList);
-    }
 
 }

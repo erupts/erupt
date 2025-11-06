@@ -2,11 +2,11 @@ package xyz.erupt.core.operator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import xyz.erupt.annotation.fun.VLModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author YuePeng
@@ -14,80 +14,85 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public enum OperatorStringType implements DbOperatorExpr {
+public enum OperatorStringType implements OperatorExpr {
 
-    EQ("等于") {
+    EQ {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s = '%s'", field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s = :%s", field, placeholder);
         }
-    }, NEQ("不等于") {
+    }, NEQ {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s != '%s'", field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s != :%s", field, placeholder);
         }
-    }, LIKE("相似") {
+    }, LIKE {
         @Override
-        public String expr(String field, Object value) {
-            return field + " like " + "'%" + value + "%'";
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, "%" + value + "%");
+            return String.format("%s like :%s", field, placeholder);
         }
-    }, NOT_LIKE("不相似") {
+    }, NOT_LIKE {
         @Override
-        public String expr(String field, Object value) {
-            return field + " not like " + "'%" + value + "%'";
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, "%" + value + "%");
+            return String.format("%s not like :%s", field, placeholder);
         }
-    }, START_WITH("以**开始") {
+    }, START_WITH {
         @Override
-        public String expr(String field, Object value) {
-            return field + " like '" + value + "%'";
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value + "%");
+            return String.format("%s like :%s", field, placeholder);
         }
-    }, END_WITH("以**结尾") {
+    }, END_WITH {
         @Override
-        public String expr(String field, Object value) {
-            return field + " like '%" + value + "'";
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, "%" + value);
+            return String.format("%s like :%s", field, placeholder);
         }
-    }, IN("包含于") {
+    }, IN {
         @Override
-        public String expr(String field, Object value) {
+        public String expr(String field, Object value, Map<String, Object> parameter) {
             Collection<?> collection = (Collection<?>) value;
             List<String> conditions = new ArrayList<>();
             for (Object object : collection) {
-                conditions.add(field + " like" + "'%" + object + "%'");
+                String placeholder = this.placeholder();
+                parameter.put(placeholder, "%" + object + "%");
+                conditions.add(field + " like :" + placeholder);
             }
             return "(" + String.join(" or ", conditions) + ")";
         }
-    }, NOT_IN("不包含于") {
+    }, NOT_IN {
         @Override
-        public String expr(String field, Object value) {
+        public String expr(String field, Object value, Map<String, Object> parameter) {
             Collection<?> collection = (Collection<?>) value;
             List<String> conditions = new ArrayList<>();
             for (Object object : collection) {
-                conditions.add(field + " not like" + "'%" + object + "%'");
+                String placeholder = this.placeholder();
+                parameter.put(placeholder, "%" + object + "%");
+                conditions.add(field + " not like :" + placeholder);
             }
-            return "(" + String.join(" or ", conditions) + ")";
+            return "(" + String.join(" and ", conditions) + ")";
         }
-    }, NULL("为空") {
+    }, NULL {
         @Override
-        public String expr(String field, Object value) {
+        public String expr(String field, Object value, Map<String, Object> parameter) {
             return String.format("%s is null", field);
         }
-    }, NOT_NULL("非空") {
+    }, NOT_NULL {
         @Override
-        public String expr(String field, Object value) {
+        public String expr(String field, Object value, Map<String, Object> parameter) {
             return String.format("%s is not null", field);
         }
     },
-    ;
 
-    //名称
-    private final String name;
-
-    public static List<VLModel> fetchList() {
-        List<VLModel> vlModels = new ArrayList<>();
-        for (OperatorStringType value : OperatorStringType.values()) {
-            vlModels.add(new VLModel(value.name(), value.getName()));
-        }
-        return vlModels;
-    }
 
 }

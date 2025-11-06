@@ -8,7 +8,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.service.EruptLocalSession;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,7 +36,7 @@ public class EruptOnlineFilterHandler implements FilterHandler {
         } else {
             keys = eruptLocalSession.keySet().stream().filter(it -> it.startsWith(SessionKey.TOKEN_OLINE)).collect(Collectors.toSet());
         }
-        if (keys != null && !keys.isEmpty()) {
+        if (!keys.isEmpty()) {
             return EruptOnline.class.getSimpleName() + "." + LambdaSee.field(EruptOnline::getToken) + " in (" + keys.stream()
                     .map(it -> "'" + it.substring(SessionKey.TOKEN_OLINE.length()) + "'").collect(Collectors.joining(",")) + ")";
         } else {

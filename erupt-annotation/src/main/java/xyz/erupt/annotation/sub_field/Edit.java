@@ -39,9 +39,9 @@ public @interface Edit {
     @Comment("表单提示信息")
     String placeHolder() default "";
 
-    @Match("#value.dependField() != ''")
-    @Comment("显示依赖")
-    ShowBy showBy() default @ShowBy(dependField = "", expr = "");
+    @Match("#value.condition() != ''")
+    @Comment("表单动态处理")
+    Dynamic dynamic() default @Dynamic(dependField = "", condition = "");
 
     @Comment("查询项")
     Search search() default @Search(false);
@@ -95,8 +95,8 @@ public @interface Edit {
 
     @Match("#item.type().toString()=='REFERENCE_TREE'")
     ReferenceTreeType referenceTreeType() default @ReferenceTreeType;
-    
-	@Match("#item.type().toString()=='REFERENCE_TABLE' || #item.type().toString()=='TAB_TABLE_REFER'")
+
+    @Match("#item.type().toString()=='REFERENCE_TABLE' || #item.type().toString()=='TAB_TABLE_REFER'")
     ReferenceTableType referenceTableType() default @ReferenceTableType;
 
     @Transient
@@ -106,6 +106,6 @@ public @interface Edit {
     CodeEditorType codeEditType() default @CodeEditorType(language = "text");
 
     @Transient
-    Tpl tplType() default @Tpl(path = "");
+    Tpl tplType() default @Tpl(path = "", enable = false);
 
 }

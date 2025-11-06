@@ -1,10 +1,10 @@
 package xyz.erupt.webscoket.model;
 
+import jakarta.websocket.Session;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.core.module.MetaUserinfo;
 
-import javax.websocket.Session;
 import java.util.List;
 
 /**

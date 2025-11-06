@@ -1,5 +1,6 @@
 package xyz.erupt.cloud.server.node;
 
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -9,7 +10,6 @@ import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.model.CloudNode;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

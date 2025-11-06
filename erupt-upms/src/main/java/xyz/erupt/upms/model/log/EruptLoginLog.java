@@ -1,5 +1,8 @@
 package xyz.erupt.upms.model.log;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -12,9 +15,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -54,7 +54,7 @@ public class EruptLoginLog extends BaseModel {
     private String ip;
 
     @EruptField(
-            views = @View(title = "IP来源", desc = "格式：国家 | 大区 | 省份 | 城市 | 运营商", width = "250px", template = "value&&value.replace(/\\|/g,' | ')"),
+            views = @View(title = "IP来源", desc = "国家 | 大区 | 省份 | 城市 | 运营商", width = "250px", template = "value&&value.replace(/\\|/g,' | ')"),
             edit = @Edit(title = "IP来源", search = @Search(vague = true))
     )
     private String region;

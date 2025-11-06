@@ -15,16 +15,12 @@ public class VLModel {
 
     private String label;
 
-    // 描述
     private String desc;
 
-    // 是否禁用
     private boolean disable;
 
-    //自定义扩展值
+    // Custom extension value
     private Object extra;
-
-//    private String color; //标签颜色
 
     public VLModel(Long value, String label) {
         this.value = value + "";
@@ -45,7 +41,6 @@ public class VLModel {
     public VLModel(String value, String label, boolean disable) {
         this.value = value;
         this.label = label;
-        this.desc = desc;
         this.disable = disable;
     }
 

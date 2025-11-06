@@ -25,7 +25,7 @@ public class RowOperationProxy extends AnnotationProxy<RowOperation, Erupt> {
         } else if (super.matchMethod(invocation, RowOperation::title)) {
             return ProxyContext.translate(this.rawAnnotation.title());
         } else if (super.matchMethod(invocation, RowOperation::callHint)) {
-            return I18nTranslate.$translate(this.rawAnnotation.callHint());
+            return ProxyContext.translate(this.rawAnnotation.callHint());
         }
         return this.invoke(invocation);
     }

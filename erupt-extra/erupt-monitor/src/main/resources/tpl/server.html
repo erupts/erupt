@@ -301,8 +301,8 @@
             }
         },
         mounted: function () {
-            function load() {
-                axios.get("erupt-api/erupt-monitor/server.html/info", {
+            function load(waitCpu) {
+                axios.get("erupt-api/erupt-monitor/server.html/info?waitCpu=" + waitCpu, {
                     headers: {
                         token: token
                     }
@@ -320,7 +320,7 @@
                 })
             }
 
-            load();
+            load(false);
 
             axios.get("erupt-api/erupt-monitor/server.html/platform", {
                 headers: {
@@ -334,7 +334,7 @@
                 }
             })
             setInterval(() => {
-                load()
+                load(true)
             }, 5000)
         },
         methods: {}

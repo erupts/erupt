@@ -1,10 +1,14 @@
 package xyz.erupt.tpl.service;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
@@ -17,9 +21,6 @@ import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.tpl.engine.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -55,7 +56,7 @@ public class EruptTplService {
     static {
         for (Class<?> tpl : engineTemplates) {
             try {
-                EngineTemplate<Object> engineTemplate = (EngineTemplate) tpl.newInstance();
+                EngineTemplate<Object> engineTemplate = (EngineTemplate) tpl.getDeclaredConstructor().newInstance();
                 engineTemplate.setEngine(engineTemplate.init());
                 tplEngines.put(engineTemplate.engine(), engineTemplate);
             } catch (NoClassDefFoundError ignored) {
@@ -112,7 +113,7 @@ public class EruptTplService {
         if (tplActions.containsKey(path)) {
             return tplActions.get(path);
         } else {
-            // 从模糊匹配中查询资源路径
+            // Query the resource path from the fuzzy matching results
             for (Map.Entry<String, Method> entry : tplMatcherActions.entrySet()) {
                 if (pathMatcher.match(entry.getKey(), path)) {
                     return entry.getValue();
@@ -156,6 +157,8 @@ public class EruptTplService {
                 map.put(kv.split("=")[0], kv.split("=")[1]);
             }
         }
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         engineAbstractTemplate.render(engineAbstractTemplate.getEngine(), path, map, writer);
     }
 

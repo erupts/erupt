@@ -1,9 +1,11 @@
 package xyz.erupt.ai.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import org.springframework.beans.BeanUtils;
 import xyz.erupt.ai.core.LlmConfig;
 import xyz.erupt.ai.core.LlmRequest;
@@ -21,11 +23,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.core.annotation.Ref;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
 
 /**
  * @author YuePeng
@@ -58,8 +55,7 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
     @JsonIgnore
     private String promptHandler;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "智能体参数"),
             edit = @Edit(title = "智能体参数", type = EditType.CODE_EDITOR, notNull = true,
@@ -77,9 +73,8 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
 //    @Column(length = AnnotationConst.REMARK_LENGTH)
 //    private String hint;
 
-    @Lob
     @JsonIgnore
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "提示词"),
             edit = @Edit(title = "提示词", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "python"))

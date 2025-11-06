@@ -10,8 +10,11 @@ import java.util.List;
 @Setter
 public class TableQuery extends Page {
 
-    private Object linkTreeVal;
+    private List<Object> linkTreeVal;
 
     private List<Condition> condition;
+
+    // ref @Viz.code
+    private String viz;
 
 }

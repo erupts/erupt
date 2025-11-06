@@ -18,21 +18,21 @@ import java.util.stream.Collectors;
 @Setter
 public class RedisInfo {
 
-    private String version; //版本
+    private String version;
 
     private String port;
 
-    private String day; //运行天数
+    private String day;
 
-    private String clientNum; //客户端数量
+    private String clientNum;
 
-    private String totalMem; //总内存
+    private String totalMem;
 
-    private String usedMem; //使用内存
+    private String usedMem;
 
-    private Long keyNum; //key数量
+    private Long keyNum;
 
-    private boolean isCluster; //是否集群
+    private boolean isCluster;
 
     private boolean isAOF;
 
@@ -40,13 +40,13 @@ public class RedisInfo {
 
     public RedisInfo(RedisConnectionFactory redisConnectionFactory) {
         RedisConnection redisConnection = redisConnectionFactory.getConnection();
-        Optional.ofNullable(redisConnection.info("commandstats")).ifPresent(commandStats -> {
+        Optional.of(redisConnection.info("commandstats")).ifPresent(commandStats -> {
             String cs = "cmdstat_";
             redisCmdStat = commandStats.stringPropertyNames().stream().filter(it -> it.startsWith(cs))
                     .map(it -> new RedisCmdStat(StringUtils.removeStart(it, cs),
                             StringUtils.substringBetween(commandStats.getProperty(it), "calls=", ",usec"))).collect(Collectors.toList());
         });
-        Optional.ofNullable(redisConnection.info()).ifPresent(properties -> {
+        Optional.of(redisConnection.info()).ifPresent(properties -> {
             this.setKeyNum(redisConnection.serverCommands().dbSize());
             this.setVersion(properties.getProperty("redis_version"));
             this.setUsedMem(properties.getProperty("used_memory_human"));

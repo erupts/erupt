@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.constant.JavaType;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.exception.ExceptionAnsi;
@@ -34,7 +33,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private transient AnnotationProxy<EruptField, Void> eruptFieldAnnotationProxy = new EruptFieldProxy();
 
-    private transient boolean starting = false;
+    private transient boolean starting;
 
     private String fieldName;
 
@@ -44,6 +43,8 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
 
     private Object componentValue;
 
+    public static final String NUMBER = "number";
+
     public EruptFieldModel(Field field, boolean starting) {
         this.field = field;
         this.eruptField = field.getAnnotation(EruptField.class);
@@ -51,7 +52,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
         this.fieldName = field.getName();
         //数字类型转换
         if (TypeUtil.isNumberType(field.getType().getSimpleName())) {
-            this.fieldReturnName = JavaType.NUMBER;
+            this.fieldReturnName = NUMBER;
         } else {
             this.fieldReturnName = field.getType().getSimpleName();
         }

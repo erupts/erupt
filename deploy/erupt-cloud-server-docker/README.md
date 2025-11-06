@@ -1,32 +1,32 @@
-### docker 启动方式
+### Docker Startup
 
 ```shell
 docker run -d \
   -p 8080:8080 \
   -e SPRING_REDIS_HOST="172.17.0.1" \
   -e ERUPT_REDIS_SESSION="true" \
-  erupts/erupt-cloud-server:{替换版本号}
+  erupts/erupt-cloud-server:{replace-version}
 ```
 
-#### “-e” 环境变量信息详解（全部可选）
+#### “-e” Environment Variables (All Optional)
 
 ---
 
-| 中间件               | 环境变量                                | 默认值           | 描述                        |
-|-------------------|-------------------------------------|---------------|---------------------------|
-| redis             | SPRING_REDIS_DATABASE               | 0             | redis db                  |
-| redis             | SPRING_REDIS_TIMEOUT                | 10000         | redis超时时间                 |
-| redis             | SPRING_REDIS_HOST                   | 127.0.0.1     | redis链接地址                 |
-| redis             | SPRING_REDIS_PORT                   | 6379          | redis端口                   |
-| redis             | SPRING_REDIS_PASSWORD               |               | redis密码                   |
-| spring-datasource | SPRING_DATASOURCE_URL               |               | 数据库连接地址                   |
-| spring-datasource | SPRING_DATASOURCE_DRIVER_CLASS_NAME | org.h2.Driver | 数据库方言                     |
-| spring-datasource | SPRING_DATASOURCE_USERNAME          | sa            | 数据库连接用户名                  |
-| spring-datasource | SPRING_DATASOURCE_PASSWORD          |               | 数据库连接密码                   |
-| jpa               | SPRING_JPA_SHOW_SQL                 | false         | jpa是否展示sql                |
-| jpa               | SPRING_JPA_GENERATE_DDL             | true          | jpa是否生成ddl                |
-| erupt             | ERUPT_REDIS_SESSION                 | false         | 是否使用Redis管理会话             |
-| erupt             | ERUPT_CLOUD_NAME_SPACE              | erupt-cloud:  | cloud key 命名空间            |
-| erupt             | ERUPT_NODE_EXPIRE_TIME              | 60000         | node节点持久化时长，单位：ms         |
-| erupt             | ERUPT_NODE_SURVIVE_CHECK_TIME       | 120000        | node节点存活检查周期，单位：ms        |
-| erupt             | ERUPT_VALIDATE_ACCESS_TOKEN         | true          | 是否校验 node 节点 access-token |
+| Middleware        | Environment Variable                    | Default       | Description                           |
+| ----------------- | --------------------------------------- | ------------- | ------------------------------------- |
+| redis             | SPRING\_REDIS\_DATABASE                 | 0             | Redis database index                  |
+| redis             | SPRING\_REDIS\_TIMEOUT                  | 10000         | Redis connection timeout (ms)         |
+| redis             | SPRING\_REDIS\_HOST                     | 127.0.0.1     | Redis server host                     |
+| redis             | SPRING\_REDIS\_PORT                     | 6379          | Redis server port                     |
+| redis             | SPRING\_REDIS\_PASSWORD                 |               | Redis password (empty = no auth)      |
+| spring-datasource | SPRING\_DATASOURCE\_URL                 |               | JDBC connection URL                   |
+| spring-datasource | SPRING\_DATASOURCE\_DRIVER\_CLASS\_NAME | org.h2.Driver | JDBC driver class                     |
+| spring-datasource | SPRING\_DATASOURCE\_USERNAME            | sa            | Database username                     |
+| spring-datasource | SPRING\_DATASOURCE\_PASSWORD            |               | Database password                     |
+| jpa               | SPRING\_JPA\_SHOW\_SQL                  | false         | Whether JPA shows SQL statements      |
+| jpa               | SPRING\_JPA\_GENERATE\_DDL              | true          | Whether JPA generates DDL             |
+| erupt             | ERUPT\_REDIS\_SESSION                   | false         | Use Redis for session management      |
+| erupt             | ERUPT\_CLOUD\_NAME\_SPACE               | erupt-cloud:  | Cloud key namespace                   |
+| erupt             | ERUPT\_NODE\_EXPIRE\_TIME               | 60000         | Node persistence duration (ms)        |
+| erupt             | ERUPT\_NODE\_SURVIVE\_CHECK\_TIME       | 120000        | Node alive check interval (ms)        |
+| erupt             | ERUPT\_VALIDATE\_ACCESS\_TOKEN          | true          | Whether to validate node access-token |

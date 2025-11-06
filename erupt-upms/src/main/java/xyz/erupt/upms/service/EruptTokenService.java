@@ -1,5 +1,6 @@
 package xyz.erupt.upms.service;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
@@ -13,7 +14,6 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +38,7 @@ public class EruptTokenService {
         metaMenus.stream().sorted(Comparator.comparing(MetaMenu::getSort, Comparator.nullsFirst(Integer::compareTo))).forEach(menu -> {
             if (menu.getStatus() != MenuStatus.DISABLE) {
                 if (null != menu.getValue()) {
-                    //根据URL规则?后的均是参数如：eruptTest?code=test，把参数 ?code=test 去除
+                    // According to the URL rules, everything after the "?" is a parameter, such as "eruptTest?code=test". Remove the parameter "code=test"
                     eruptMenuMap.put(menu.getValue().toLowerCase().split("\\?")[0], EruptMenu.fromMetaMenu(menu));
                 }
                 if (menu.getStatus() == MenuStatus.OPEN) {

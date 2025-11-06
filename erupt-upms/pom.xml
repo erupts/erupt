@@ -10,7 +10,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.23</version>
+        <version>1.13.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -44,29 +44,23 @@
             <artifactId>erupt-tpl</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <!--根据请求头获取浏览器信息-->
+        <!--Get browser information based on the request header.-->
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
             <version>1.21</version>
         </dependency>
-        <!--根据ip地址获取大致地址信息-->
+        <!--Obtain approximate address information based on the IP address.-->
         <dependency>
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
             <version>1.7.2</version>
         </dependency>
-        <!--图形验证码-->
+        <!--verification code-->
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
             <version>1.6.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

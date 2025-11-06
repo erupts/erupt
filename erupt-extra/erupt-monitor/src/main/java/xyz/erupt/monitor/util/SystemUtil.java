@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
  */
 public class SystemUtil {
 
-    //换算单位
+    // reduced unit
     public static String formatByte(long byteNumber) {
         double FORMAT = 1024.0;
         double kbNumber = byteNumber / FORMAT;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author YuePeng
@@ -11,65 +12,79 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public enum OperatorNumberType implements DbOperatorExpr {
+public enum OperatorNumberType implements OperatorExpr {
 
-    EQ("等于") {
+    EQ {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s = %s", field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s = :%s", field, placeholder);
         }
     },
-    NEQ("不等于") {
+    NEQ {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s <> %s", field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s <> :%s", field, placeholder);
         }
     },
-    GT("大于") {
+    GT {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s > %s", field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s > :%s", field, placeholder);
         }
     },
-    LT("小于") {
+    LT {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s < %s", field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s < :%s", field, placeholder);
         }
     },
-    EGT("大于等于") {
+    EGT {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s >= %s", field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s >= :%s", field, placeholder);
         }
     },
-    ELT("小于等于") {
+    ELT {
         @Override
-        public String expr(String field, Object value) {
-            return String.format("%s <= %s", field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            String placeholder = this.placeholder();
+            parameter.put(placeholder, value);
+            return String.format("%s <= :%s", field, placeholder);
         }
     },
-    RANGE("区间") {
+    RANGE {
         @Override
-        public String expr(String field, Object value) {
-            List<Object> s = (List) value;
-            return String.format("%s between %s and %s", field, s.get(0), s.get(1));
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            List<?> s = (List<?>) value;
+            String placeholder1 = this.placeholder();
+            String placeholder2 = this.placeholder();
+            parameter.put(placeholder1, s.get(0));
+            parameter.put(placeholder2, s.get(1));
+            return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
     },
-    NULL("为空") {
+    NULL {
         @Override
-        public String expr(String field, Object value) {
-            return OperatorStringType.NULL.expr(field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            return OperatorStringType.NULL.expr(field, value, parameter);
         }
     },
-    NOT_NULL("非空") {
+    NOT_NULL {
         @Override
-        public String expr(String field, Object value) {
-            return OperatorStringType.NOT_NULL.expr(field, value);
+        public String expr(String field, Object value, Map<String, Object> parameter) {
+            return OperatorStringType.NOT_NULL.expr(field, value, parameter);
         }
     };
 
-    //名称
-    private final String name;
 
 }

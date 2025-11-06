@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.EruptTag;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.manager.EruptUiAnnotationManager;
 import xyz.erupt.core.proxy.AnnotationProcess;
@@ -15,6 +16,7 @@ import xyz.erupt.core.util.CloneSupport;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,15 +51,22 @@ public class EruptModel implements Cloneable {
 
     private boolean extraRow = false;
 
+    private Map<String, JsonObject> tags = new HashMap<>();
+
     public EruptModel(Class<?> eruptClazz) {
         this.clazz = eruptClazz;
         this.erupt = eruptClazz.getAnnotation(Erupt.class);
         this.erupt = eruptAnnotationProxy.newProxy(this.getErupt());
         this.eruptName = eruptClazz.getSimpleName();
         this.i18n = null != clazz.getAnnotation(EruptI18n.class);
+        for (Annotation annotation : eruptClazz.getDeclaredAnnotations()) {
+            if (annotation.annotationType().getAnnotation(EruptTag.class) != null) {
+                tags.put(annotation.annotationType().getSimpleName(), AnnotationProcess.annotationToJsonByReflect(annotation));
+            }
+        }
         DataProxyInvoke.invoke(this, it -> {
             try {
-                it.getClass().getDeclaredMethod("extraRow", List.class);
+                it.getClass().getDeclaredMethod(LambdaSee.field(EruptModel::isExtraRow), List.class);
                 this.extraRow = true;
             } catch (NoSuchMethodException ignored) {
             }

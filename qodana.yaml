@@ -1,0 +1,21 @@
+####################################################################################################################
+# WARNING: Do not store sensitive information in this file, as its contents will be included in the Qodana report. #
+####################################################################################################################
+
+version: "1.0"
+linter: jetbrains/qodana-jvm:2025.2
+profile:
+  name: qodana.starter
+include:
+  - name: CheckDependencyLicenses
+exclude:
+  - name: All
+    paths:
+      - erupt-web/src/main/resources
+      - erupt-tpl-ui
+      - erupt-ai-web
+      - erupt-core/src/main/java/xyz/erupt/core/i18n
+      - erupt-data/erupt-jpa/src/main/java/xyz/erupt/jpa/advice/JpaExceptionAdvice.java
+      - erupt-ai/src/main/java/xyz/erupt/ai/controller/McpController.java
+  - name: deprecation
+  - name: UncheckedWarning

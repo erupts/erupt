@@ -9,7 +9,7 @@ import xyz.erupt.core.util.EruptSpringUtil;
 import java.lang.reflect.Field;
 
 /**
- * 代理类上下文
+ * Proxy class context
  *
  * @author YuePeng
  * date 2022/3/12 00:13

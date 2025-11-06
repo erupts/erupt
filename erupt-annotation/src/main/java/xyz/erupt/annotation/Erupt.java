@@ -64,12 +64,9 @@ public @interface Erupt {
     @Comment("左树右表配置项")
     LinkTree linkTree() default @LinkTree(field = "");
 
-    //布局配置
     Layout layout() default @Layout;
 
-//    @Comment("画册视图定义")
-//    @Match("#value.enable() == true")
-//    Card cardView() default @Card(enable = false, galleryField = "", viewFields = {});
+    Viz[] viz() default {};
 
     @ToMap(key = "key")
     @Comment("自定义扩展参数")

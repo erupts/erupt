@@ -10,7 +10,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.12.23</version>
+        <version>1.13.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.16.1.RELEASE</version>
+            <version>3.19.2.RELEASE</version>
             <optional>true</optional>
         </dependency>
         <dependency>

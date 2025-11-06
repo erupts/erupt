@@ -29,10 +29,14 @@ import java.util.jar.JarFile;
 @Slf4j
 public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>>  {
 
-    //语言文件对应文字映射
+    // Mapping of text in language files
     private static final I18nRunner langMappings = new I18nRunner();
 
     private static final String I18N_EXT = ".csv";
+
+    public static List<String> langs(){
+        return new ArrayList<>(langMappings.keySet());
+    }
 
     public static String getI18nValue(String lang, String key) {
         if (null == langMappings.get(lang)) {
@@ -48,7 +52,7 @@ public class I18nRunner extends LinkedCaseInsensitiveMap<Map<String, String>>  {
             URL url = urls.nextElement();
             switch (url.getProtocol()) {
                 case "file":
-                    scanFile(new File(URLDecoder.decode(url.getFile(), Charset.defaultCharset().name())));
+                    scanFile(new File(URLDecoder.decode(url.getFile(), Charset.defaultCharset())));
                     break;
                 case "jar":
                     JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
