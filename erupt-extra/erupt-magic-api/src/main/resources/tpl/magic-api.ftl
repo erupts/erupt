@@ -34,7 +34,7 @@
     }
     <#if web??>
     document.write('<script src="' + document.location.origin + '${request.contextPath}/app.js?v=${hash}"><\/script>');
-    document.write('<iframe src="' + document.location.origin + '${request.contextPath}${web!'/not-config-magic.web'}?v=${v}" style="border: 0;vertical-align: bottom;" width="100%" height="100%"></iframe>');
+    document.write('<iframe src="' + document.location.origin + '${request.contextPath}${web}/index.html?v=${v}" style="border: 0;vertical-align: bottom;" width="100%" height="100%"></iframe>');
     <#else>
     document.write("<h1 style='margin:0;padding-top:20%;text-align: center;font-family: Monoton,serif'>'magic-api.web' is not configured</h1>")
     </#if>
