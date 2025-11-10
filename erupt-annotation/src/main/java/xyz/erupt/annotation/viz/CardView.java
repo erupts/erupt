@@ -9,12 +9,12 @@ import xyz.erupt.annotation.config.Comment;
 public @interface CardView {
 
     @Comment("Cover image effect")
-    GalleryCover coverEffect() default GalleryCover.CLIP;
+    CoverEffect coverEffect() default CoverEffect.CLIP;
 
     @Comment("Cover image field")
     String coverField() default "";
 
-    enum GalleryCover {
+    enum CoverEffect {
         FIT, //适应
         CLIP, //剪裁
     }
