@@ -43,6 +43,8 @@
         <module>erupt-admin</module>
         <!-- WebSocket -->
         <module>erupt-websocket</module>
+        <!-- Notice -->
+        <module>erupt-notice</module>
         <!-- Front-end Code -->
         <module>erupt-web</module>
 
