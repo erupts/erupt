@@ -66,6 +66,8 @@ public @interface Erupt {
 
     Layout layout() default @Layout;
 
+    boolean vizRawTable() default true;
+
     Viz[] viz() default {};
 
     @ToMap(key = "key")
