@@ -1,5 +1,8 @@
 package xyz.erupt.security.interceptor;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
@@ -25,10 +28,6 @@ import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
-
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -80,6 +79,7 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
             MetaContext.register(new MetaErupt(eruptName, eruptName));
             EruptModel erupt = EruptCoreService.getErupt(eruptName);
             if (null == erupt) {
+                log.warn("Erupt not found: {}", eruptName);
                 response.setStatus(HttpStatus.NOT_FOUND.value());
                 return false;
             }
