@@ -12,4 +12,10 @@ public @interface GanttView {
 
     String pidField() default "";
 
+    // max value is 100
+    String progressField() default "";
+
+    // hex2rgb
+    String colorField() default "";
+
 }
