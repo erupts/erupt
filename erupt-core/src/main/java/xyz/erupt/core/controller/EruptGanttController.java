@@ -12,6 +12,7 @@ import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.invoke.DataProcessorManager;
+import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.Erupts;
@@ -45,7 +46,9 @@ public class EruptGanttController {
                 Field endField = ReflectUtil.findClassField(obj.getClass(), viz.ganttView().endDateField());
                 startField.set(obj, DateUtil.getDate(startField.getType(), command.getStartDate()));
                 endField.set(obj, DateUtil.getDate(startField.getType(), command.getEndDate()));
+                DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
                 DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
+                DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
                 break;
             }
         }
