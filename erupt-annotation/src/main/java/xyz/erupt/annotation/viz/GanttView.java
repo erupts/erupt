@@ -10,6 +10,8 @@ public @interface GanttView {
 
     String endDateField();
 
+    String groupField() default "";
+
     String pidField() default "";
 
     // max value is 100

@@ -62,7 +62,7 @@ public class EruptGanttController {
 
         private String vizCode;
 
-        private String pk;
+        private Object pk;
 
         private String startDate;
 
