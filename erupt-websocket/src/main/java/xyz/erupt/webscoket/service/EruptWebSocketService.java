@@ -49,11 +49,11 @@ public class EruptWebSocketService {
     }
 
     public void sendJsMessage(String message) {
-        this.send(SocketCommand.JS, "window.msg.info('" + message + "')");
+        this.send(SocketCommand.JS, "window.msg.info(`" + message + "`)");
     }
 
     public void sendJsNotify(String title, String message) {
-        this.send(SocketCommand.JS, String.format("window.notify.info('%s', '%s')", title, message));
+        this.send(SocketCommand.JS, String.format("window.notify.info(`%s`, `%s`)", title, message));
     }
 
 }
