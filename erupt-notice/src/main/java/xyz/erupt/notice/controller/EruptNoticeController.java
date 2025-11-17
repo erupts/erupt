@@ -11,12 +11,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API + "/notice")
-public class NoticeController {
+public class EruptNoticeController {
 
     @GetMapping("/list")
     public List<VLModel> list() {
         return NoticeHandler.getHandlers().values().stream().map(h
-                -> new VLModel(h.getClass().getSimpleName(), h.name())).toList();
+                -> new VLModel(h.code(), h.name())).toList();
     }
 
 }
