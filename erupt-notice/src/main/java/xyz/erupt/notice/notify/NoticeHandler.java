@@ -11,11 +11,15 @@ public abstract class NoticeHandler {
     private static final Map<String, NoticeHandler> handlers = new HashMap<>();
 
     public NoticeHandler() {
-        handlers.put(this.getClass().getSimpleName(), this);
+        handlers.put(this.code(), this);
+    }
+
+    public String code() {
+        return this.getClass().getSimpleName();
     }
 
     public abstract String name();
 
-    public abstract String send(String title, String content);
+    public abstract void send(String title, String content);
 
 }
