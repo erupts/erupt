@@ -35,7 +35,7 @@ public class EruptNoticeController {
     @EruptLoginAuth
     @GetMapping("/messages")
     public List<NoticeLog> messages() {
-        return eruptDao.lambdaQuery(NoticeLog.class).with(NoticeLog::getReceiveUser)
+        return eruptDao.lambdaQuery(NoticeLog.class).with(NoticeLog::getReceiveUsers)
                 .eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).list();
     }
 
