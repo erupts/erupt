@@ -1,6 +1,7 @@
 package xyz.erupt.notice.notify;
 
 import lombok.Getter;
+import xyz.erupt.upms.model.EruptUser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,6 @@ public abstract class NoticeHandler {
 
     public abstract String name();
 
-    public abstract void send(String title, String content);
+    public abstract void send(EruptUser eruptUser, String title, String content);
 
 }
