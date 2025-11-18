@@ -1,0 +1,9 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Notice,消息通知,訊息通知,Message Notification,Notification de message,メッセージ通知,메시지 알림,Уведомление о сообщении,Notificación de mensaje,Nachrichtenbenachrichtigung,Notificação de mensagem,Notifikasi Pesan,إشعار الرسالة
+Notice Log,发送日志,發送日誌,Send Log,Journal d’envoi,送信ログ,발송 로그,Журнал отправки,Registro de envío,Sende-Protokoll,Registro de envio,Log Pengiriman,سجل الإرسال
+Log Details,日志详情,日誌詳情,Log Details,Détails du journal,ログ詳細,로그 상세,Детали журнала,Detalles del registro,Protokoll-Details,Detalhes do registro,Detail Log,تفاصيل السجل
+notice.receive_user,接收用户,接收用戶,Recipient,Destinataire,受信者,수신자,Получатель,Destinatario,Empfänger,Destinatário,Penerima,المستلم
+notice.channel,通知渠道,通知管道,Notification Channel,Canal de notification,通知チャンネル,알림 채널,Канал уведомлений,Canal de notificación,Benachrichtigungskanal,Canal de notificação,Saluran Notifikasi,قناة الإشعار
+notice.is_success,是否成功,是否成功,Success,Réussite,成功,성공 여부,Успешно,¿Éxito?,Erfolg,Sucesso,Sukses,النجاح
+notice.error,错误信息,錯誤資訊,Error Information,Informations d’erreur,エラー情報,오류 정보,Информация об ошибке,Información de error,Fehlerinformation,Informação de erro,Informasi Kesalahan,معلومات الخطأ
+notice.channel.internal,站内通知,站內通知,Internal,Interne,内線通知,내부 통지,Внутрение уведомление,Notificación interna,Interner Benachrichtigung,Notificação interna,Notifikasi Internal,إشعار الداخل
