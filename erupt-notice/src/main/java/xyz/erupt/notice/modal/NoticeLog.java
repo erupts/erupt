@@ -33,7 +33,7 @@ import java.util.Set;
 @Erupt(
         orderBy = "createTime desc",
         name = "Notice Log",
-        drills = @Drill(title = "Notice Log", link = @Link(linkErupt = NoticeLogDetail.class, joinColumn = "noticeLog.id")),
+        drills = @Drill(title = "Log Details", link = @Link(linkErupt = NoticeLogDetail.class, joinColumn = "noticeLog.id")),
         power = @Power(export = true, edit = false, viewDetails = false),
         dataProxy = NoticeLogDataProxy.class
 )

@@ -24,7 +24,7 @@ import xyz.erupt.upms.model.EruptUserVo;
 @EruptI18n
 @Erupt(
         orderBy = "createTime desc,receiveUser.id",
-        name = "Notice Log Detail",
+        name = "Log Details",
         power = @Power(export = true, add = false, edit = false, viewDetails = false)
 )
 @Entity
@@ -53,14 +53,14 @@ public class NoticeLogDetail extends HyperModelCreatorOnlyVo {
     private EruptUserVo receiveUser;
 
     @EruptField(
-            views = @View(title = "是否成功", sortable = true),
-            edit = @Edit(title = "是否成功", search = @Search)
+            views = @View(title = "notice.is_success", sortable = true),
+            edit = @Edit(title = "notice.is_success", search = @Search)
     )
     private Boolean success;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "错误信息", type = ViewType.HTML)
+            views = @View(title = "notice.error", type = ViewType.HTML)
     )
     private String error;
 

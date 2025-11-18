@@ -3,6 +3,7 @@ package xyz.erupt.notice.controller;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.constant.EruptRestPath;
@@ -27,16 +28,19 @@ public class EruptNoticeController {
 
     @EruptLoginAuth
     @GetMapping("/channels")
-    public List<VLModel> list() {
+    public List<VLModel> channels() {
         return NoticeChannelHandler.getHandlers().values().stream().map(h
                 -> new VLModel(h.code(), h.name())).toList();
     }
 
     @EruptLoginAuth
     @GetMapping("/messages")
-    public List<NoticeLog> messages() {
+    public List<NoticeLog> messages(@RequestParam int page, @RequestParam int size) {
         return eruptDao.lambdaQuery(NoticeLog.class).with(NoticeLog::getReceiveUsers)
-                .eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).list();
+                .eq(EruptUserVo::getId, eruptUserService.getCurrentUid())
+                .offset((page - 1) * size)
+                .limit(size)
+                .list();
     }
 
 }

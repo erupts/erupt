@@ -1,5 +1,7 @@
 package xyz.erupt.notice;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,6 +15,7 @@ import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.notice.modal.NoticeLog;
 import xyz.erupt.notice.modal.NoticeLogDetail;
+import xyz.erupt.upms.prop.EruptAppProp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +35,25 @@ public class EruptNoticeAutoConfiguration implements EruptModule {
         EruptModuleInvoke.addEruptModule(EruptNoticeAutoConfiguration.class);
     }
 
+    public static final String ERUPT_NOTICE = "erupt-notice";
+
+    @Resource
+    private EruptAppProp eruptAppProp;
+
+    @PostConstruct
+    public void post() {
+        eruptAppProp.registerProp(ERUPT_NOTICE, true);
+    }
+
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-notice").build();
+        return ModuleInfo.builder().name(ERUPT_NOTICE).build();
     }
 
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu notice = MetaMenu.createRootMenu("$notice", "消息通知", "fa fa-bell", 90);
+        MetaMenu notice = MetaMenu.createRootMenu("$notice", "Notice", "fa fa-bell", 90);
         menus.add(notice);
         menus.add(MetaMenu.createEruptClassMenu(NoticeLog.class, notice, 10));
         menus.add(MetaMenu.createEruptClassMenu(NoticeLogDetail.class, notice, 20));
