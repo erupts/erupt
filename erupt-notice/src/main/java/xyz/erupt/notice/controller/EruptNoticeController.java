@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.notice.channel.NoticeChannelHandler;
+import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.modal.NoticeLog;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.model.EruptUserVo;
@@ -29,7 +29,7 @@ public class EruptNoticeController {
     @EruptLoginAuth
     @GetMapping("/channels")
     public List<VLModel> channels() {
-        return NoticeChannelHandler.getHandlers().values().stream().map(h
+        return AbstractNoticeChannel.getHandlers().values().stream().map(h
                 -> new VLModel(h.code(), h.name())).toList();
     }
 

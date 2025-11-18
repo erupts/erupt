@@ -5,9 +5,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.notice.channel.NoticeChannelHandler;
 import xyz.erupt.upms.model.EruptUser;
-import xyz.erupt.upms.service.EruptUserService;
 
 import java.util.List;
 

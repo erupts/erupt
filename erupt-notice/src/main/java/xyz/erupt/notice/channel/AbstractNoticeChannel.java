@@ -7,12 +7,12 @@ import xyz.erupt.upms.model.EruptUser;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class NoticeChannelHandler {
+public abstract class AbstractNoticeChannel {
 
     @Getter
-    private static final Map<String, NoticeChannelHandler> handlers = new HashMap<>();
+    private static final Map<String, AbstractNoticeChannel> handlers = new HashMap<>();
 
-    public NoticeChannelHandler() {
+    public AbstractNoticeChannel() {
         handlers.put(this.code(), this);
     }
 

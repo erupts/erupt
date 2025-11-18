@@ -4,7 +4,7 @@ import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.notice.channel.NoticeChannelHandler;
+import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.modal.NoticeLog;
 import xyz.erupt.notice.modal.NoticeLogDetail;
 import xyz.erupt.notice.pojo.NoticeMessage;
@@ -40,7 +40,7 @@ public class EruptNoticeService {
                 noticeLogDetail.setReceiveUser(new EruptUserVo(userId));
                 noticeLogDetail.setSuccess(true);
                 try {
-                    NoticeChannelHandler.getHandlers().get(channel).send(eruptDao.find(EruptUser.class, userId), noticeMessage);
+                    AbstractNoticeChannel.getHandlers().get(channel).send(eruptDao.find(EruptUser.class, userId), noticeMessage);
                 } catch (Exception e) {
                     noticeLogDetail.setSuccess(false);
                     noticeLogDetail.setError(e.getMessage());
