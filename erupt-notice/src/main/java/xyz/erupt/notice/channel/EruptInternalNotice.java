@@ -1,9 +1,8 @@
-package xyz.erupt.notice.channel.impl;
+package xyz.erupt.notice.channel;
 
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.i18n.I18nTranslate;
-import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.pojo.NoticeMessage;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.webscoket.model.EruptWsSessionModel;
