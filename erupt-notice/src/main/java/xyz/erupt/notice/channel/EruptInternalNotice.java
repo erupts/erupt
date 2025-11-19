@@ -15,6 +15,11 @@ public class EruptInternalNotice extends AbstractNoticeChannel {
     private EruptWebSocketService webSocketService;
 
     @Override
+    public Integer order() {
+        return -1;
+    }
+
+    @Override
     public String name() {
         return I18nTranslate.$translate("notice.channel.internal");
     }
