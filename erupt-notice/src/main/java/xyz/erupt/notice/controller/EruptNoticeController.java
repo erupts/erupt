@@ -14,6 +14,7 @@ import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -29,8 +30,9 @@ public class EruptNoticeController {
     @EruptLoginAuth
     @GetMapping("/channels")
     public List<VLModel> channels() {
-        return AbstractNoticeChannel.getHandlers().values().stream().map(h
-                -> new VLModel(h.code(), h.name())).toList();
+        return AbstractNoticeChannel.getHandlers().values().stream()
+                .sorted(Comparator.comparingInt(AbstractNoticeChannel::order))
+                .map(h -> new VLModel(h.code(), h.name())).toList();
     }
 
     @EruptLoginAuth
