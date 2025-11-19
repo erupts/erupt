@@ -1,4 +1,4 @@
-package xyz.erupt.bi.semantic.annotation;
+package xyz.erupt.bi.cube.annotation;
 
 import java.lang.annotation.*;
 

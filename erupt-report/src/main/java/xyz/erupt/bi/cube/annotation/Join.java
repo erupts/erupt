@@ -1,4 +1,4 @@
-package xyz.erupt.bi.semantic.annotation;
+package xyz.erupt.bi.cube.annotation;
 
 public @interface Join {
 

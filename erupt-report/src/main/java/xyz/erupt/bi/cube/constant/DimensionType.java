@@ -1,4 +1,4 @@
-package xyz.erupt.bi.semantic.constant;
+package xyz.erupt.bi.cube.constant;
 
 /**
  * @author YuePeng

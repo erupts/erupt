@@ -1,4 +1,4 @@
-package xyz.erupt.bi.semantic.model;
+package xyz.erupt.bi.cube.model;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
-package xyz.erupt.bi.semantic.annotation;
+package xyz.erupt.bi.cube.annotation;
 
-import xyz.erupt.bi.semantic.constant.DimensionType;
+import xyz.erupt.bi.cube.constant.DimensionType;
 
 import java.lang.annotation.*;
 
