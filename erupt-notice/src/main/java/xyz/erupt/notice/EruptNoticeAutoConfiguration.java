@@ -3,11 +3,8 @@ package xyz.erupt.notice;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
@@ -28,7 +25,6 @@ import java.util.List;
 @ComponentScan
 @EruptScan
 @EntityScan
-@EnableConfigurationProperties
 public class EruptNoticeAutoConfiguration implements EruptModule {
 
     static {
@@ -53,7 +49,7 @@ public class EruptNoticeAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        MetaMenu notice = MetaMenu.createRootMenu("$notice", "Notice", "fa fa-bell", 90);
+        MetaMenu notice = MetaMenu.createRootMenu("$notice", "Notice", "fa fa-bell-o", 90);
         menus.add(notice);
         menus.add(MetaMenu.createEruptClassMenu(NoticeLog.class, notice, 10));
         menus.add(MetaMenu.createEruptClassMenu(NoticeLogDetail.class, notice, 20));
