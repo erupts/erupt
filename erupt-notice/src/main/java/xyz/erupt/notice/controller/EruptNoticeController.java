@@ -9,11 +9,12 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
-import xyz.erupt.notice.modal.NoticeLog;
+import xyz.erupt.notice.modal.NoticeLogDetail;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -29,15 +30,17 @@ public class EruptNoticeController {
     @EruptLoginAuth
     @GetMapping("/channels")
     public List<VLModel> channels() {
-        return AbstractNoticeChannel.getHandlers().values().stream().map(h
-                -> new VLModel(h.code(), h.name())).toList();
+        return AbstractNoticeChannel.getHandlers().values().stream()
+                .sorted(Comparator.comparingInt(AbstractNoticeChannel::order))
+                .map(h -> new VLModel(h.code(), h.name())).toList();
     }
 
     @EruptLoginAuth
     @GetMapping("/messages")
-    public List<NoticeLog> messages(@RequestParam int page, @RequestParam int size) {
-        return eruptDao.lambdaQuery(NoticeLog.class).with(NoticeLog::getReceiveUsers)
-                .eq(EruptUserVo::getId, eruptUserService.getCurrentUid())
+    public List<NoticeLogDetail> messages(@RequestParam String channel, @RequestParam int page, @RequestParam int size) {
+        return eruptDao.lambdaQuery(NoticeLogDetail.class)
+                .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
+                .eq(NoticeLogDetail::getChannel, channel)
                 .offset((page - 1) * size)
                 .limit(size)
                 .list();

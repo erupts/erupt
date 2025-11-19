@@ -16,6 +16,10 @@ public abstract class AbstractNoticeChannel {
         handlers.put(this.code(), this);
     }
 
+    public Integer order() {
+        return 0;
+    }
+
     public String code() {
         return this.getClass().getSimpleName();
     }
