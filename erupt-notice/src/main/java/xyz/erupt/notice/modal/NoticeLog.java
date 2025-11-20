@@ -1,10 +1,7 @@
 package xyz.erupt.notice.modal;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -13,6 +10,7 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
+import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -24,7 +22,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.notice.modal.dataproxy.ChannelChoice;
 import xyz.erupt.notice.modal.dataproxy.EruptUserChoice;
-import xyz.erupt.notice.modal.dataproxy.NoticeLogDataProxy;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 
 import java.util.Set;
@@ -33,9 +30,9 @@ import java.util.Set;
 @Erupt(
         orderBy = "createTime desc",
         name = "Notice Log",
-        drills = @Drill(title = "Log Details", link = @Link(linkErupt = NoticeLogDetail.class, joinColumn = "noticeLog.id")),
-        power = @Power(export = true, edit = false, viewDetails = false),
-        dataProxy = NoticeLogDataProxy.class
+        linkTree = @LinkTree(field = "noticeScene"),
+        drills = @Drill(title = "Notice Log Details", link = @Link(linkErupt = NoticeLogDetail.class, joinColumn = "noticeLog.id")),
+        power = @Power(export = true, edit = false, viewDetails = false)
 )
 @EruptDataProcessor(value = "NoticeLog")
 @Entity
@@ -49,6 +46,13 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
             edit = @Edit(title = "title", notNull = true, search = @Search(vague = true))
     )
     private String title;
+
+    @ManyToOne
+    @EruptField(
+            views = @View(title = "notice.scene", column = "name"),
+            edit = @Edit(title = "notice.scene", notNull = true, type = EditType.REFERENCE_TABLE)
+    )
+    private NoticeScene noticeScene;
 
     @Transient
     @EruptField(

@@ -2,11 +2,15 @@ package xyz.erupt.notice.service;
 
 import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
+import xyz.erupt.notice.channel.EruptInternalNotice;
+import xyz.erupt.notice.constant.NoticeStatus;
 import xyz.erupt.notice.modal.NoticeLog;
 import xyz.erupt.notice.modal.NoticeLogDetail;
+import xyz.erupt.notice.modal.NoticeScene;
 import xyz.erupt.notice.pojo.NoticeMessage;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserVo;
@@ -14,8 +18,10 @@ import xyz.erupt.upms.service.EruptUserService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
+@Slf4j
 public class EruptNoticeService {
 
     @Resource
@@ -25,8 +31,9 @@ public class EruptNoticeService {
     private EruptUserService eruptUserService;
 
     @Transactional
-    public void send(List<String> channels, List<Long> receiveUsers, NoticeMessage noticeMessage) {
+    public void send(NoticeScene noticeScene, List<String> channels, List<Long> receiveUsers, NoticeMessage noticeMessage) {
         NoticeLog noticeLog = new NoticeLog();
+        noticeLog.setNoticeScene(noticeScene);
         noticeLog.setTitle(noticeMessage.getTitle());
         noticeLog.setContent(noticeMessage.getContent());
         noticeLog.setCreateTime(new Date());
@@ -39,11 +46,18 @@ public class EruptNoticeService {
                 noticeLogDetail.setNoticeLog(noticeLog);
                 noticeLogDetail.setReceiveUser(new EruptUserVo(userId));
                 noticeLogDetail.setSuccess(true);
+                if (Objects.equals(channel, EruptInternalNotice.class.getSimpleName())) {
+                    noticeLogDetail.setStatus(NoticeStatus.UNREAD);
+                } else {
+                    noticeLogDetail.setStatus(NoticeStatus.SENT);
+                }
+                AbstractNoticeChannel noticeChannel = AbstractNoticeChannel.getHandlers().get(channel);
                 try {
-                    AbstractNoticeChannel.getHandlers().get(channel).send(eruptDao.find(EruptUser.class, userId), noticeMessage);
+                    noticeChannel.send(eruptDao.find(EruptUser.class, userId), noticeMessage);
                 } catch (Exception e) {
                     noticeLogDetail.setSuccess(false);
-                    noticeLogDetail.setError(e.getMessage());
+                    noticeLogDetail.setError(e.toString());
+                    log.error("{} send error: {}", noticeChannel.name(), e.getMessage());
                 }
                 eruptDao.persist(noticeLogDetail);
             }
