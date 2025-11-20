@@ -10,6 +10,8 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.jpa.service.EruptDataServiceDbImpl;
 import xyz.erupt.notice.modal.NoticeLog;
+import xyz.erupt.notice.pojo.NoticeMessage;
+import xyz.erupt.notice.service.EruptNoticeService;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +23,8 @@ public class NoticeLogEruptDataService implements IEruptDataService {
     @Resource
     private EruptDataServiceDbImpl eruptDataServiceDb;
 
+    @Resource
+    private EruptNoticeService eruptNoticeService;
 
     static {
         DataProcessorManager.register(NoticeLog.class.getSimpleName(), NoticeLogEruptDataService.class);
@@ -43,6 +47,11 @@ public class NoticeLogEruptDataService implements IEruptDataService {
 
     @Override
     public void addData(EruptModel eruptModel, Object object) {
+        NoticeLog noticeLog = (NoticeLog) object;
+        NoticeMessage noticeMessage = new NoticeMessage();
+        noticeMessage.setTitle(noticeLog.getTitle());
+        noticeMessage.setContent(noticeLog.getContent());
+        eruptNoticeService.send(noticeLog.getNoticeScene(), noticeLog.getChannels().stream().toList(), noticeLog.getReceiveUsers().stream().toList(), noticeMessage);
     }
 
     @Override
