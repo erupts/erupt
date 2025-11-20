@@ -9,12 +9,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
 import xyz.erupt.notice.modal.NoticeLog;
 import xyz.erupt.notice.modal.NoticeLogDetail;
+import xyz.erupt.notice.modal.NoticeScene;
 import xyz.erupt.upms.prop.EruptAppProp;
 
 import java.util.ArrayList;
@@ -55,6 +57,7 @@ public class EruptNoticeAutoConfiguration implements EruptModule {
         List<MetaMenu> menus = new ArrayList<>();
         MetaMenu notice = MetaMenu.createRootMenu("$notice", "Notice", "fa fa-bell", 90);
         menus.add(notice);
+        menus.add(MetaMenu.createEruptClassMenu(NoticeScene.class, notice, 5, MenuTypeEnum.TREE));
         menus.add(MetaMenu.createEruptClassMenu(NoticeLog.class, notice, 10));
         menus.add(MetaMenu.createEruptClassMenu(NoticeLogDetail.class, notice, 20));
         return menus;

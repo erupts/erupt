@@ -17,6 +17,7 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
+import xyz.erupt.notice.constant.NoticeStatus;
 import xyz.erupt.notice.modal.dataproxy.ChannelChoice;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 import xyz.erupt.upms.model.EruptUserVo;
@@ -24,7 +25,7 @@ import xyz.erupt.upms.model.EruptUserVo;
 @EruptI18n
 @Erupt(
         orderBy = "createTime desc,receiveUser.id",
-        name = "Log Details",
+        name = "Notice Log Details",
         power = @Power(export = true, add = false, edit = false, viewDetails = false)
 )
 @Entity
@@ -42,6 +43,13 @@ public class NoticeLogDetail extends HyperModelCreatorOnlyVo {
                     choiceType = @ChoiceType(fetchHandler = ChannelChoice.class))
     )
     private String channel;
+
+    @EruptField(
+            views = @View(title = "notice.status"),
+            edit = @Edit(title = "notice.status", type = EditType.CHOICE, notNull = true, search = @Search,
+                    choiceType = @ChoiceType(fetchHandler = NoticeStatus.H.class))
+    )
+    private NoticeStatus status;
 
     @ManyToOne
     @EruptField(
