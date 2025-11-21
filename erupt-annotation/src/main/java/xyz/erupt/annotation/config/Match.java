@@ -1,5 +1,7 @@
 package xyz.erupt.annotation.config;
 
+import org.intellij.lang.annotations.Language;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,5 +24,6 @@ public @interface Match {
      *
      * @return expression
      */
+    @Language(value="spel")
     String value();
 }

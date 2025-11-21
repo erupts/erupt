@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.expr.Expr;
@@ -26,6 +27,7 @@ public @interface ReferenceTreeType {
     Expr rootPid() default @Expr;
 
     @Comment("依赖字段")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependField() default "";
 
     @Transient

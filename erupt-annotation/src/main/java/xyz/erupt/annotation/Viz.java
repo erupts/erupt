@@ -1,5 +1,6 @@
 package xyz.erupt.annotation;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.expr.ExprBool;
@@ -29,6 +30,7 @@ public @interface Viz {
     Filter[] filter() default {};
 
     @Transient
+    @Language(value = "sql", prefix = "select * from t order by ")
     String orderBy() default "";
 
     @Transient

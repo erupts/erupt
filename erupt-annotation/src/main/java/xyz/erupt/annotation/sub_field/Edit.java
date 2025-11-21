@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
@@ -48,6 +49,7 @@ public @interface Edit {
 
     @Transient
     @Comment("排序表达式，在修饰类型为 ORM 对象时可用")
+    @Language(value = "sql", prefix = "select * from t order by")
     String orderBy() default "";
 
     @Transient

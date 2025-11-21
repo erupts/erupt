@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 
@@ -26,6 +27,7 @@ public @interface MultiChoiceType {
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
     @Comment("联动时依赖字段名")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependField() default "";
 
     enum Type {
