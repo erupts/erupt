@@ -8,15 +8,16 @@ import org.intellij.lang.annotations.Language;
  */
 public @interface GanttView {
 
-    @Language(value = "java", prefix = "private String x", suffix = ";")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String startDateField();
 
-    @Language(value = "java", prefix = "private String x", suffix = ";")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String endDateField();
 
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String groupField() default "";
 
+    @Language(value = "hql", prefix = "select * from t where ")
     String pidField() default "";
 
     // max value is 100
