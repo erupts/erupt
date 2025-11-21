@@ -61,7 +61,7 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
             views = @View(title = "关联实体类"),
             edit = @Edit(title = "关联实体类", dynamic = @Dynamic(dependField = "type",
                     match = Dynamic.Ctrl.NOTNULL,
-                    condition = "value.indexOf('REFERENCE') != -1 || value.indexOf('TAB') != -1 || value == 'CHECKBOX' || value == 'COMBINE'"))
+                    condition = "value.indexOf('REFERENCE') !== -1 || value.indexOf('TAB') !== -1 || value === 'CHECKBOX' || value === 'COMBINE'"))
     )
     private String linkClass;
 

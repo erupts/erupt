@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.fun.CodeEditHintHandler;
 

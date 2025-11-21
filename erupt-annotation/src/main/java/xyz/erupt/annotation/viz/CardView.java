@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.viz;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 
 /**
@@ -12,6 +13,7 @@ public @interface CardView {
     CoverEffect coverEffect() default CoverEffect.CLIP;
 
     @Comment("Cover image field")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String coverField() default "";
 
     enum CoverEffect {

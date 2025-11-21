@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
@@ -40,6 +41,7 @@ public @interface ChoiceType {
 
     //联动能力
     @Comment("联动能力，依赖字段名")
+    @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependField() default "";
 
     @Deprecated
@@ -48,6 +50,7 @@ public @interface ChoiceType {
     @Comment("vl.value: 下拉列表项的值")
     @Comment("vl.label: 下拉列表项名称")
     @Comment("vl.desc: 下拉列表项备注")
+    @Language("javascript")
     String dependExpr() default "";
 
     enum Type {
