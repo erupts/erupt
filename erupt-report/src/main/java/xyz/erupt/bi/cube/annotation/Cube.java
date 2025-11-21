@@ -1,5 +1,7 @@
 package xyz.erupt.bi.cube.annotation;
 
+import org.intellij.lang.annotations.Language;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,12 +15,19 @@ public @interface Cube {
 
     String datasource() default "";
 
-    String title();;
+    String title();
+
+    @Language("sql")
+    String sql();
+
+    boolean authVerify() default true;
 
     String description() default "";
 
-    String sql();
 
+    Parameter[] parameters() default {};
+
+    // 是否对外暴漏
     boolean explore() default true;
 
     String[] tags() default {};

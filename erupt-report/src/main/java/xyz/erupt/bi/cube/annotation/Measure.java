@@ -1,5 +1,7 @@
 package xyz.erupt.bi.cube.annotation;
 
+import org.intellij.lang.annotations.Language;
+
 import java.lang.annotation.*;
 
 /**
@@ -15,7 +17,12 @@ public @interface Measure {
 
     String description() default "";
 
+    @Language(value = "sql",suffix = "select ")
     String sql();
+
+    // 格式化表达式，可使用 js 语法，内置变量 value 表示当前值
+    @Language("javascript")
+    String format() default "";
 
     String filter() default "";
 
