@@ -16,7 +16,7 @@ public @interface Dimension {
 
     String title();
 
-    @Language(value = "sql",suffix = "select ")
+    @Language(value = "sql",prefix = "select ")
     String sql() default "";
 
     String description() default "";

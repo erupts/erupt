@@ -17,7 +17,7 @@ public @interface Measure {
 
     String description() default "";
 
-    @Language(value = "sql",suffix = "select ")
+    @Language(value = "sql",prefix = "select ")
     String sql();
 
     // 格式化表达式，可使用 js 语法，内置变量 value 表示当前值

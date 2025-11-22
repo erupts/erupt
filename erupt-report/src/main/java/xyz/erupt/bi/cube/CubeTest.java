@@ -47,7 +47,7 @@ public class CubeTest {
                           when age > 0 then 'Late'
                           when age < 0 then 'Early'
                           else $a
-                        end
+                      end
                     """,
             format = "'---->' + value"
     )
