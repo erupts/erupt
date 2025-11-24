@@ -6,6 +6,7 @@ import xyz.erupt.bi.cube.annotation.Cube;
 import xyz.erupt.bi.cube.annotation.Dimension;
 import xyz.erupt.bi.cube.annotation.Measure;
 import xyz.erupt.bi.cube.annotation.Parameter;
+import xyz.erupt.bi.cube.constant.SqlType;
 
 @Getter
 @Setter
@@ -25,6 +26,7 @@ import xyz.erupt.bi.cube.annotation.Parameter;
                       #end
                       ;
                 """,
+        sqlType = SqlType.SUB_QUERY,
         parameters = {
                 @Parameter(name = "a"),
                 @Parameter(name = "b"),

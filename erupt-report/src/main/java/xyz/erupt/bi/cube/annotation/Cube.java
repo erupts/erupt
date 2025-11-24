@@ -1,6 +1,7 @@
 package xyz.erupt.bi.cube.annotation;
 
 import org.intellij.lang.annotations.Language;
+import xyz.erupt.bi.cube.constant.SqlType;
 
 import java.lang.annotation.*;
 
@@ -17,13 +18,14 @@ public @interface Cube {
 
     String title();
 
+    String description() default "";
+
     @Language("sql")
     String sql();
 
+    SqlType sqlType() default SqlType.TABLE_NAME;
+
     boolean authVerify() default true;
-
-    String description() default "";
-
 
     Parameter[] parameters() default {};
 

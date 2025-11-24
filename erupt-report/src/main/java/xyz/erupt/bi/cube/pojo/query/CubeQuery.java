@@ -1,4 +1,4 @@
-package xyz.erupt.bi.cube.query;
+package xyz.erupt.bi.cube.pojo.query;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ public class CubeQuery {
 
     private List<String> measures;
 
-    private List<String> filters;
+    private List<CubeFilter> filters;
 
     private boolean groupBy = true;
 
