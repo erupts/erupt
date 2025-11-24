@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import xyz.erupt.bi.cube.annotation.Cube;
 import xyz.erupt.bi.cube.annotation.Dimension;
+import xyz.erupt.bi.cube.annotation.Explore;
 import xyz.erupt.bi.cube.annotation.Measure;
-import xyz.erupt.bi.cube.core.CubeModel;
-import xyz.erupt.bi.cube.core.DimensionModel;
-import xyz.erupt.bi.cube.core.MeasureModel;
+import xyz.erupt.bi.cube.pojo.core.CubeModel;
+import xyz.erupt.bi.cube.pojo.core.DimensionModel;
+import xyz.erupt.bi.cube.pojo.core.MeasureModel;
 import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 
@@ -54,6 +55,9 @@ public class CubeCoreService implements ApplicationRunner {
         CubeModel cubeModel = new CubeModel();
         cubeModel.setClazz(clazz);
         cubeModel.setCube(clazz.getAnnotation(Cube.class));
+        for (Explore explore : cubeModel.getCube().explores()) {
+            cubeModel.getExploreMap().put(explore.name(), explore);
+        }
         for (Field field : clazz.getDeclaredFields()) {
             Dimension dimension = field.getAnnotation(Dimension.class);
             if (null != dimension) {

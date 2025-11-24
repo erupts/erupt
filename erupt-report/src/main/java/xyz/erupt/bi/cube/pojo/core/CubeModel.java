@@ -1,8 +1,9 @@
-package xyz.erupt.bi.cube.core;
+package xyz.erupt.bi.cube.pojo.core;
 
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.bi.cube.annotation.Cube;
+import xyz.erupt.bi.cube.annotation.Explore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,8 @@ public class CubeModel {
     private Class<?> clazz;
 
     private Cube cube;
+
+    private Map<String, Explore> exploreMap = new HashMap<>();
 
     private Map<String, DimensionModel> dimensionMap = new HashMap<>();
 

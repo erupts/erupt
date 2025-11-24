@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author YuePeng
@@ -13,13 +14,17 @@ import java.util.List;
 @Setter
 public class CubeQuery {
 
-    private String cubeName;
+    private String cube;
+
+    private String explore;
 
     private List<String> dimensions;
 
     private List<String> measures;
 
     private List<CubeFilter> filters;
+
+    private Map<String,Object> params;
 
     private boolean groupBy = true;
 

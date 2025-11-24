@@ -28,10 +28,6 @@ public @interface Measure {
 
     boolean hidden() default false;
 
-    boolean canFilter() default true;
-
-    String[] drillFields() default {};
-
     String[] tags() default {};
 
 }

@@ -14,7 +14,7 @@ public class CubeServiceTest {
     @Test
     public void test() {
         CubeQuery cubeQuery = new CubeQuery();
-        cubeQuery.setCubeName("cube");
+        cubeQuery.setCube("cube");
         cubeQuery.setGroupBy(true);
         SqlParameter cubeSql = cubeQueryService.cubeToSql(cubeQuery);
     }

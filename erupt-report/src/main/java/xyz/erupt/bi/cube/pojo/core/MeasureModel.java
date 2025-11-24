@@ -1,4 +1,4 @@
-package xyz.erupt.bi.cube.core;
+package xyz.erupt.bi.cube.pojo.core;
 
 import lombok.Getter;
 import lombok.Setter;

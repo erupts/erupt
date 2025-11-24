@@ -18,19 +18,19 @@ public @interface Cube {
 
     String title();
 
-    String description() default "";
-
     @Language("sql")
     String sql();
 
     SqlType sqlType() default SqlType.TABLE_NAME;
 
+    // 定义对外暴漏规则
+    Explore[] explores();
+
     boolean authVerify() default true;
 
     Parameter[] parameters() default {};
 
-    // 是否对外暴漏
-    boolean explore() default true;
+    String description() default "";
 
     String[] tags() default {};
 

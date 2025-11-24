@@ -8,9 +8,13 @@ public class SqlConst {
 
     public static final String WHERE = " WHERE ";
 
+    public static final String AND = " AND ";
+
     public static final String GROUP_BY = " GROUP BY ";
 
     public static final String COMMA = ", ";
 
     public static final String AS = " AS ";
+
+    public static final String ON = " ON ";
 }

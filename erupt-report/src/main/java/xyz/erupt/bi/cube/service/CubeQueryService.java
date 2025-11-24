@@ -9,12 +9,14 @@ import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.bi.cube.annotation.Explore;
+import xyz.erupt.bi.cube.annotation.Join;
 import xyz.erupt.bi.cube.annotation.Parameter;
 import xyz.erupt.bi.cube.constant.SqlConst;
 import xyz.erupt.bi.cube.constant.SqlType;
-import xyz.erupt.bi.cube.core.CubeModel;
-import xyz.erupt.bi.cube.core.DimensionModel;
-import xyz.erupt.bi.cube.core.MeasureModel;
+import xyz.erupt.bi.cube.pojo.core.CubeModel;
+import xyz.erupt.bi.cube.pojo.core.DimensionModel;
+import xyz.erupt.bi.cube.pojo.core.MeasureModel;
 import xyz.erupt.bi.cube.pojo.query.CubeFilter;
 import xyz.erupt.bi.cube.pojo.query.CubeQuery;
 import xyz.erupt.bi.cube.pojo.query.SqlParameter;
@@ -46,7 +48,8 @@ public class CubeQueryService {
 
     public SqlParameter cubeToSql(CubeQuery cubeQuery) {
         Map<String, Object> context = new HashMap<>();
-        CubeModel cubeModel = CubeCoreService.get(cubeQuery.getCubeName());
+        CubeModel cubeModel = CubeCoreService.get(cubeQuery.getCube());
+        Explore explore = cubeModel.getExploreMap().get(cubeQuery.getExplore());
         StringBuilder sql = new StringBuilder();
         sql.append(SqlConst.SELECT);
         for (String dimension : cubeQuery.getDimensions()) {
@@ -62,19 +65,27 @@ public class CubeQueryService {
             MeasureModel m = cubeModel.getMeasureMap().get(measure);
             sql.append(m.getMeasure().sql()).append(SqlConst.COMMA);
         }
-        sql.deleteCharAt(sql.length() - SqlConst.COMMA.length());
+        sql.delete(sql.length() - SqlConst.COMMA.length(), sql.length());
         sql.append(SqlConst.FROM);
         if (cubeModel.getCube().sqlType() == SqlType.TABLE_NAME) {
             sql.append(cubeModel.getCube().sql()).append(SqlConst.AS).append(cubeModel.getClazz().getSimpleName());
         } else if (cubeModel.getCube().sqlType() == SqlType.SUB_QUERY) {
             sql.append("(").append(cubeModel.getCube().sql()).append(")").append(SqlConst.AS).append(cubeModel.getClazz().getSimpleName());
         }
+        for (Join join : explore.joins()) {
+            sql.append(join.type());
+            sql.append(SqlConst.AS).append(join.cube().getSimpleName());
+            sql.append(SqlConst.ON).append(join.sqlOn());
+        }
+        sql.append(SqlConst.WHERE).append("1 = 1");
         if (!cubeQuery.getFilters().isEmpty()) {
-            sql.append(SqlConst.WHERE);
             for (CubeFilter cubeFilter : cubeQuery.getFilters()) {
                 context.put(cubeFilter.getField(), cubeFilter.getValue());
-                sql.append(cubeFilter.getField()).append(" = ").append(cubeFilter.getValue());
+                sql.append(SqlConst.AND).append(cubeFilter.getField()).append(" = ").append(cubeFilter.getValue());
             }
+        }
+        if (!AnnotationConst.EMPTY_STR.equals(explore.where())) {
+            sql.append(SqlConst.AND).append(explore.where());
         }
         if (cubeQuery.isGroupBy()) {
             sql.append(SqlConst.GROUP_BY);
@@ -87,10 +98,13 @@ public class CubeQueryService {
                 }
                 sql.append(SqlConst.COMMA);
             }
-            sql.deleteCharAt(sql.length() - SqlConst.COMMA.length());
+            sql.delete(sql.length() - SqlConst.COMMA.length(), sql.length());
         }
+        context.putAll(cubeQuery.getParams());
         for (Parameter parameter : cubeModel.getCube().parameters()) {
-            context.put(parameter.name(), null);
+            if (!context.containsKey(parameter.name())){
+                context.put(parameter.name(), null);
+            }
         }
         VelocityContext ctx = new VelocityContext(context);
         StringWriter out = new StringWriter();
@@ -104,7 +118,7 @@ public class CubeQueryService {
     }
 
     public List<CubeResultRow> executeCubeSql(CubeQuery cubeQuery, SqlParameter sqlParameter) {
-        CubeModel cubeModel = CubeCoreService.get(cubeQuery.getCubeName());
+        CubeModel cubeModel = CubeCoreService.get(cubeQuery.getCube());
         @SuppressWarnings("SqlSourceToSinkFlow")
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlParameter.getSql(), sqlParameter.getParameters());
         List<CubeResultRow> result = new ArrayList<>();

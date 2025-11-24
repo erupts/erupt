@@ -2,12 +2,14 @@ package xyz.erupt.bi.cube.annotation;
 
 public @interface Join {
 
-    String name()        default "";      // explore 里 join 的别名
+    Class<?> cube();
 
-    String cube()        default "";      // 被 join 的 view 名
+    String type();
 
-    String sqlOn()       default "";      // ${view1}.id = ${view2}.id
+    String[] dimensions() default {};
 
-    String type()        default "left_outer"; // left_outer, inner, full
+    String[] measures() default {};
+
+    String sqlOn() default "";  // ${cube1}.id = ${cube2}.id
 
 }
