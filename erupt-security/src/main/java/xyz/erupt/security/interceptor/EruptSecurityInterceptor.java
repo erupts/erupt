@@ -141,6 +141,11 @@ public class EruptSecurityInterceptor implements AsyncHandlerInterceptor {
                     return false;
                 }
                 if (null == eruptUserService.getEruptMenuByValue(eruptModel.getEruptName())) {
+                    if (!eruptRouter.highSafe()) {
+                        if (null != eruptModel.getTags().get("EruptFlow")) {
+                            return true;
+                        }
+                    }
                     response.setStatus(HttpStatus.FORBIDDEN.value());
                     response.sendError(HttpStatus.FORBIDDEN.value());
                     return false;

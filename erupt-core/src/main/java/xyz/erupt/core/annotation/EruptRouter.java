@@ -1,8 +1,8 @@
 package xyz.erupt.core.annotation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import xyz.erupt.annotation.config.Comment;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.lang.annotation.*;
 
 /**
@@ -20,6 +20,9 @@ public @interface EruptRouter {
 
     @Comment("配合authIndex使用，计算后权限下标位置为：skipAuthIndex + authIndex")
     int skipAuthIndex() default 2;
+
+    @Comment("高权限检查机制，禁止因为任何原因绕过")
+    boolean highSafe() default false;
 
     @Comment("权限校验类型")
     VerifyType verifyType();
