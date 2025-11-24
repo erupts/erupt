@@ -18,8 +18,10 @@ import xyz.erupt.bi.cube.core.MeasureModel;
 import xyz.erupt.bi.cube.pojo.query.CubeFilter;
 import xyz.erupt.bi.cube.pojo.query.CubeQuery;
 import xyz.erupt.bi.cube.pojo.query.SqlParameter;
-import xyz.erupt.bi.cube.pojo.vo.CubeResultVo;
+import xyz.erupt.bi.cube.pojo.vo.CubeResultColumn;
+import xyz.erupt.bi.cube.pojo.vo.CubeResultRow;
 import xyz.erupt.core.util.ScriptUtil;
+import xyz.erupt.linq.lambda.LambdaSee;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -42,9 +44,9 @@ public class CubeQueryService {
         velocityEngine.init();
     }
 
-    public SqlParameter cubeToSql(String cubeName, CubeQuery cubeQuery) {
+    public SqlParameter cubeToSql(CubeQuery cubeQuery) {
         Map<String, Object> context = new HashMap<>();
-        CubeModel cubeModel = CubeCoreService.get(cubeName);
+        CubeModel cubeModel = CubeCoreService.get(cubeQuery.getCubeName());
         StringBuilder sql = new StringBuilder();
         sql.append(SqlConst.SELECT);
         for (String dimension : cubeQuery.getDimensions()) {
@@ -101,32 +103,32 @@ public class CubeQueryService {
         return sqlParameter;
     }
 
-    public List<Map<String, CubeResultVo>> executeCubeSql(String cubeName, CubeQuery cubeQuery, SqlParameter sqlParameter) {
-        CubeModel cubeModel = CubeCoreService.get(cubeName);
+    public List<CubeResultRow> executeCubeSql(CubeQuery cubeQuery, SqlParameter sqlParameter) {
+        CubeModel cubeModel = CubeCoreService.get(cubeQuery.getCubeName());
         @SuppressWarnings("SqlSourceToSinkFlow")
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlParameter.getSql(), sqlParameter.getParameters());
-        List<Map<String, CubeResultVo>> result = new ArrayList<>();
+        List<CubeResultRow> result = new ArrayList<>();
         for (Map<String, Object> map : list) {
-            Map<String, CubeResultVo> resultVoMap = new HashMap<>();
+            CubeResultRow resultVoMap = new CubeResultRow();
             result.add(resultVoMap);
             cubeQuery.getDimensions().forEach(dim -> {
                 DimensionModel dimensionModel = cubeModel.getDimensionMap().get(dim);
                 if (!AnnotationConst.EMPTY_STR.equals(dimensionModel.getDimension().format())) {
                     Map<String, Object> context = new HashMap<>();
-                    context.put("value", map.get(dim));
-                    resultVoMap.put(dim, new CubeResultVo(map.get(dim), ScriptUtil.eval(dimensionModel.getDimension().format(), context, Object.class)));
+                    context.put(LambdaSee.field(CubeResultColumn::getValue), map.get(dim));
+                    resultVoMap.put(dim, new CubeResultColumn(map.get(dim), ScriptUtil.eval(dimensionModel.getDimension().format(), context, Object.class)));
                 } else {
-                    resultVoMap.put(dim, new CubeResultVo(map.get(dim)));
+                    resultVoMap.put(dim, new CubeResultColumn(map.get(dim)));
                 }
             });
             cubeQuery.getMeasures().forEach(measure -> {
                 MeasureModel measureModel = cubeModel.getMeasureMap().get(measure);
                 if (!AnnotationConst.EMPTY_STR.equals(measureModel.getMeasure().format())) {
                     Map<String, Object> context = new HashMap<>();
-                    context.put("value", map.get(measure));
-                    resultVoMap.put(measure, new CubeResultVo(map.get(measure), ScriptUtil.eval(measureModel.getMeasure().format(), context, Object.class)));
+                    context.put(LambdaSee.field(CubeResultColumn::getValue), map.get(measure));
+                    resultVoMap.put(measure, new CubeResultColumn(map.get(measure), ScriptUtil.eval(measureModel.getMeasure().format(), context, Object.class)));
                 } else {
-                    resultVoMap.put(measure, new CubeResultVo(map.get(measure)));
+                    resultVoMap.put(measure, new CubeResultColumn(map.get(measure)));
                 }
             });
         }

@@ -7,18 +7,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CubeResultVo {
+public class CubeResultColumn {
 
     private Object value;
 
     private Object formatValue;
 
-    public CubeResultVo(Object value, Object formatValue) {
+    public CubeResultColumn(Object value, Object formatValue) {
         this.value = value;
         this.formatValue = formatValue;
     }
 
-    public CubeResultVo(Object value) {
+    public CubeResultColumn(Object value) {
         this.value = value;
     }
 }

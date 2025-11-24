@@ -1,5 +1,7 @@
 package xyz.erupt.bi.cube.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
@@ -17,6 +19,8 @@ public class Dashboard extends HyperModelUpdateVo {
     private String name;
 
     private String description;
+
+    private String type;
 
     private String cube;
 

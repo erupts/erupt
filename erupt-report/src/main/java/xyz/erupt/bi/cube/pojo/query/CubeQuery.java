@@ -13,6 +13,8 @@ import java.util.List;
 @Setter
 public class CubeQuery {
 
+    private String cubeName;
+
     private List<String> dimensions;
 
     private List<String> measures;
