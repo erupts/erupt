@@ -385,6 +385,9 @@ public class EruptUtil {
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             EruptField eruptField = fieldModel.getEruptField();
             boolean readonly = sceneEnum == SceneEnum.EDIT ? eruptField.edit().readonly().edit() : eruptField.edit().readonly().add();
+            if (eruptField.edit().readonly().allowChange()) {
+                readonly = false;
+            }
             if (StringUtils.isNotBlank(eruptField.edit().title()) && !readonly) {
                 Field f = fieldModel.getField();
                 try {
