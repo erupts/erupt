@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.constant.EruptRestPath;
+import xyz.erupt.core.view.R;
+import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.jpa.dao.EruptLambdaQuery;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.constant.NoticeStatus;
 import xyz.erupt.notice.modal.NoticeLogDetail;
@@ -31,35 +34,36 @@ public class EruptNoticeController {
 
     @EruptLoginAuth
     @GetMapping("/channels")
-    public List<VLModel> channels() {
-        return AbstractNoticeChannel.getHandlers().values().stream()
+    public R<List<VLModel>> channels() {
+        return R.ok(AbstractNoticeChannel.getHandlers().values().stream()
                 .sorted(Comparator.comparingInt(AbstractNoticeChannel::order))
-                .map(h -> new VLModel(h.code(), h.name())).toList();
+                .map(h -> new VLModel(h.code(), h.name())).toList());
     }
 
     @EruptLoginAuth
     @GetMapping("/messages")
-    public List<NoticeLogDetail> messages(@RequestParam String channel, @RequestParam int page, @RequestParam int size) {
-        return eruptDao.lambdaQuery(NoticeLogDetail.class)
+    public R<SimplePage<NoticeLogDetail>> messages(@RequestParam String channel, @RequestParam int page, @RequestParam int size) {
+        SimplePage<NoticeLogDetail> simplePage = new SimplePage<>();
+        EruptLambdaQuery<NoticeLogDetail> eruptLambdaQuery = eruptDao.lambdaQuery(NoticeLogDetail.class)
                 .eq(NoticeLogDetail::getChannel, channel)
                 .eq(NoticeLogDetail::getSuccess, true)
-                .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
-                .offset((page - 1) * size)
-                .limit(size)
-                .list();
+                .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with();
+        simplePage.setTotal(eruptLambdaQuery.count());
+        simplePage.setList(eruptLambdaQuery.orderByDesc(NoticeLogDetail::getCreateTime).offset((page - 1) * size).limit(size).list());
+        return R.ok(simplePage);
     }
 
     @EruptLoginAuth
     @GetMapping("/message-detail")
     @Transactional
-    public NoticeLogDetail message(@RequestParam Long id) {
+    public R<NoticeLogDetail> message(@RequestParam Long id) {
         NoticeLogDetail noticeLogDetail = eruptDao.lambdaQuery(NoticeLogDetail.class).eq(NoticeLogDetail::getId, id)
                 .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with().one();
         if (noticeLogDetail.getStatus() == NoticeStatus.UNREAD) {
             noticeLogDetail.setStatus(NoticeStatus.READ);
             eruptDao.merge(noticeLogDetail);
         }
-        return noticeLogDetail;
+        return R.ok(noticeLogDetail);
     }
 
 }
