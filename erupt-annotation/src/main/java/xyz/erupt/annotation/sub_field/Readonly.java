@@ -1,5 +1,7 @@
 package xyz.erupt.annotation.sub_field;
 
+import xyz.erupt.annotation.config.Comment;
+
 import java.beans.Transient;
 
 /**
@@ -11,6 +13,9 @@ public @interface Readonly {
     boolean add() default true;
 
     boolean edit() default true;
+
+    @Comment("是否允许通过 API 修改")
+    boolean allowChange() default true;
 
     @Transient
     String[] params() default {};

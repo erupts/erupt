@@ -37,13 +37,13 @@ public class MetaModelUpdateVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "更新人", width = "100px"),
-            edit = @Edit(title = "更新人", readonly = @Readonly)
+            edit = @Edit(title = "更新人", readonly = @Readonly(allowChange = false))
     )
     private String updateBy;
 
     @EruptField(
             views = @View(title = "更新时间"),
-            edit = @Edit(title = "更新时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "更新时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private LocalDateTime updateTime;
 
@@ -62,7 +62,7 @@ public class MetaModelUpdateVo extends BaseModel {
     protected void update() {
         Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
             if (null != it.getName()) {
-                this.setUpdateBy(it.getName());
+//                this.setUpdateBy(it.getName());
                 this.setUpdateTime(LocalDateTime.now());
             }
         });

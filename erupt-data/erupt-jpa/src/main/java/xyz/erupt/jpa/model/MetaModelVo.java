@@ -38,28 +38,28 @@ public class MetaModelVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "创建人", width = "100px"),
-            edit = @Edit(title = "创建人", readonly = @Readonly)
+            edit = @Edit(title = "创建人", readonly = @Readonly(allowChange = false))
     )
     @EruptSmartSkipSerialize
     private String createBy;
 
     @EruptField(
             views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "创建时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private LocalDateTime createTime;
 
     @EruptField(
             views = @View(title = "更新人", width = "100px"),
-            edit = @Edit(title = "更新人", readonly = @Readonly)
+            edit = @Edit(title = "更新人", readonly = @Readonly(allowChange = false))
     )
     @EruptSmartSkipSerialize
     private String updateBy;
 
     @EruptField(
             views = @View(title = "更新时间", sortable = true),
-            edit = @Edit(title = "更新时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "更新时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private LocalDateTime updateTime;

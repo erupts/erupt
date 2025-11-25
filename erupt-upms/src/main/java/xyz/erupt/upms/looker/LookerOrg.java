@@ -43,14 +43,14 @@ public class LookerOrg extends BaseModel {
                     @View(title = "创建人", column = "name"),
                     @View(title = "所属组织", column = "eruptOrg.name")
             },
-            edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "创建人", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
     )
     @EruptSmartSkipSerialize
     private EruptUserPostVo createUser;
 
     @EruptField(
             views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "创建时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private Date createTime;

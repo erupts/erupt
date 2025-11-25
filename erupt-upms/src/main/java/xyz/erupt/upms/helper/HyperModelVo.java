@@ -39,7 +39,7 @@ public class HyperModelVo extends BaseModel {
     @ManyToOne
     @EruptField(
             views = @View(title = "创建人", width = "100px", column = "name"),
-            edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "创建人", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
     )
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -48,7 +48,7 @@ public class HyperModelVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "创建时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private Date createTime;
@@ -56,7 +56,7 @@ public class HyperModelVo extends BaseModel {
     @ManyToOne
     @EruptField(
             views = @View(title = "更新人", width = "100px", column = "name"),
-            edit = @Edit(title = "更新人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "更新人", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
     )
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -65,7 +65,7 @@ public class HyperModelVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "更新时间", sortable = true),
-            edit = @Edit(title = "更新时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "更新时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private Date updateTime;

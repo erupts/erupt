@@ -29,13 +29,13 @@ public class MetaModelCreateVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "创建人", width = "100px"),
-            edit = @Edit(title = "创建人", readonly = @Readonly)
+            edit = @Edit(title = "创建人", readonly = @Readonly(allowChange = false))
     )
     private String createBy;
 
     @EruptField(
             views = @View(title = "创建时间"),
-            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "创建时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private LocalDateTime createTime;
 
