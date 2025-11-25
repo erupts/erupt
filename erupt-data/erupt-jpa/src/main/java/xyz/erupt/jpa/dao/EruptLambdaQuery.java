@@ -372,33 +372,57 @@ public class EruptLambdaQuery<T> {
     }
 
     public Long count() {
-        this.querySchema.columns.add("count(*)");
-        return (Long) geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("count(*)");
+            return (Long) geneQuery().getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Long count(SFunction<E, ?> field) {
-        this.querySchema.columns.add("count(" + geneField(field) + ")");
-        return (Long) geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("count(" + geneField(field) + ")");
+            return (Long) geneQuery().getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Object sum(SFunction<E, ?> field) {
-        this.querySchema.columns.add("sum(" + geneField(field) + ")");
-        return geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("sum(" + geneField(field) + ")");
+            return geneQuery().getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Double avg(SFunction<E, ?> field) {
-        this.querySchema.columns.add("avg(" + geneField(field) + ")");
-        return (Double) geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("avg(" + geneField(field) + ")");
+            return (Double) geneQuery().getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Object min(SFunction<E, ?> field) {
-        this.querySchema.columns.add("min(" + geneField(field) + ")");
-        return geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("min(" + geneField(field) + ")");
+            return geneQuery().getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Object max(SFunction<E, ?> field) {
-        this.querySchema.columns.add("max(" + geneField(field) + ")");
-        return geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("max(" + geneField(field) + ")");
+            return geneQuery().getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public int delete() {
