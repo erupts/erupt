@@ -76,7 +76,7 @@ public class EruptBiTplController {
                               HttpServletResponse response) throws IOException, TemplateException {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         Map<String, Object> condition = gson.fromJson(URLDecoder.decode(conditionStr,
-                StandardCharsets.UTF_8.name()), new TypeToken<Map<String, Object>>() {
+                StandardCharsets.UTF_8), new TypeToken<Map<String, Object>>() {
         }.getType());
         BiChart biChart = entityManager.find(BiChart.class, chartId);
         biService.verifyBiMenuPermissions(biChart.getBi(), code);
