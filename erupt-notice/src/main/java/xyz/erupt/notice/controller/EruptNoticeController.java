@@ -13,6 +13,7 @@ import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.dao.EruptLambdaQuery;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
+import xyz.erupt.notice.channel.EruptInternalNotice;
 import xyz.erupt.notice.constant.NoticeStatus;
 import xyz.erupt.notice.modal.NoticeLogDetail;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
@@ -32,6 +33,9 @@ public class EruptNoticeController {
     @Resource
     private EruptUserService eruptUserService;
 
+    @Resource
+    private EruptInternalNotice eruptInternalNotice;
+
     @EruptLoginAuth
     @GetMapping("/channels")
     public R<List<VLModel>> channels() {
@@ -42,10 +46,10 @@ public class EruptNoticeController {
 
     @EruptLoginAuth
     @GetMapping("/messages")
-    public R<SimplePage<NoticeLogDetail>> messages(@RequestParam String channel, @RequestParam int page, @RequestParam int size) {
+    public R<SimplePage<NoticeLogDetail>> messages(@RequestParam int page, @RequestParam int size) {
         SimplePage<NoticeLogDetail> simplePage = new SimplePage<>();
         EruptLambdaQuery<NoticeLogDetail> eruptLambdaQuery = eruptDao.lambdaQuery(NoticeLogDetail.class)
-                .eq(NoticeLogDetail::getChannel, channel)
+                .eq(NoticeLogDetail::getChannel, eruptInternalNotice.code())
                 .eq(NoticeLogDetail::getSuccess, true)
                 .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with();
         simplePage.setTotal(eruptLambdaQuery.count());
@@ -64,6 +68,16 @@ public class EruptNoticeController {
             eruptDao.merge(noticeLogDetail);
         }
         return R.ok(noticeLogDetail);
+    }
+
+    @EruptLoginAuth
+    @GetMapping("/unread-count")
+    @Transactional
+    public R<Long> unreadCount() {
+        return R.ok(eruptDao.lambdaQuery(NoticeLogDetail.class)
+                .eq(NoticeLogDetail::getSuccess, true)
+                .eq(NoticeLogDetail::getStatus, NoticeStatus.UNREAD)
+                .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).count());
     }
 
 }
