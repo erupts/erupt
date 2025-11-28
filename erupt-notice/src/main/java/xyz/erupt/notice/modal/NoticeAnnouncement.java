@@ -14,20 +14,20 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
-import xyz.erupt.notice.constant.AnnunciateStatus;
+import xyz.erupt.notice.constant.AnnouncementStatus;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 
 @EruptI18n
 @Erupt(
         orderBy = "createTime desc",
-        name = "Annunciate",
+        name = "Announcement",
         power = @Power(export = true)
 )
 @Entity
-@Table(name = "e_annunciate")
+@Table(name = "e_notice_announcement")
 @Getter
 @Setter
-public class Annunciate extends HyperModelCreatorOnlyVo {
+public class NoticeAnnouncement extends HyperModelCreatorOnlyVo {
 
     @EruptField(
             views = @View(title = "title"),
@@ -36,11 +36,13 @@ public class Annunciate extends HyperModelCreatorOnlyVo {
     private String title;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(100)")
     @EruptField(
             views = @View(title = "status"),
-            edit = @Edit(title = "status", notNull = true, type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = AnnunciateStatus.H.class))
+            edit = @Edit(title = "status", notNull = true, type = EditType.CHOICE, search = @Search,
+                    choiceType = @ChoiceType(fetchHandler = AnnouncementStatus.H.class))
     )
-    private AnnunciateStatus status = AnnunciateStatus.OPEN;
+    private AnnouncementStatus status = AnnouncementStatus.OPEN;
 
 //    @ManyToOne
 //    @NotFound(action = NotFoundAction.IGNORE)

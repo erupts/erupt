@@ -11,7 +11,6 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.R;
 import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.jpa.dao.EruptLambdaQuery;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.channel.EruptInternalNotice;
 import xyz.erupt.notice.constant.NoticeStatus;
@@ -47,14 +46,11 @@ public class EruptNoticeController {
     @EruptLoginAuth
     @GetMapping("/messages")
     public R<SimplePage<NoticeLogDetail>> messages(@RequestParam int page, @RequestParam int size) {
-        SimplePage<NoticeLogDetail> simplePage = new SimplePage<>();
-        EruptLambdaQuery<NoticeLogDetail> eruptLambdaQuery = eruptDao.lambdaQuery(NoticeLogDetail.class)
+        return R.ok(eruptDao.lambdaQuery(NoticeLogDetail.class)
                 .eq(NoticeLogDetail::getChannel, eruptInternalNotice.code())
                 .eq(NoticeLogDetail::getSuccess, true)
-                .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with();
-        simplePage.setTotal(eruptLambdaQuery.count());
-        simplePage.setList(eruptLambdaQuery.orderByDesc(NoticeLogDetail::getCreateTime).offset((page - 1) * size).limit(size).list());
-        return R.ok(simplePage);
+                .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
+                .orderByDesc(NoticeLogDetail::getCreateTime).page(size, (page - 1) * size));
     }
 
     @EruptLoginAuth

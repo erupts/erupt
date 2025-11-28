@@ -7,7 +7,7 @@ import xyz.erupt.core.i18n.I18nTranslate;
 import java.util.Arrays;
 import java.util.List;
 
-public enum AnnunciateStatus {
+public enum AnnouncementStatus {
 
     OPEN,
     CLOSE;
@@ -16,7 +16,7 @@ public enum AnnunciateStatus {
 
         @Override
         public List<VLModel> fetch(String[] params) {
-            return Arrays.stream(AnnunciateStatus.values()).map(noticeHandler ->
+            return Arrays.stream(AnnouncementStatus.values()).map(noticeHandler ->
                     new VLModel(noticeHandler.name(), I18nTranslate.$translate(noticeHandler.name()))).toList();
         }
 

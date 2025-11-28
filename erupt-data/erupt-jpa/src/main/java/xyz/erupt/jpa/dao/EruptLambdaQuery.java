@@ -46,14 +46,11 @@ public class EruptLambdaQuery<T> {
         return this;
     }
 
-    /**
-     * @param pageNo Start at 1
-     */
-    public SimplePage<T> page(int pageNo, int size) {
+    public SimplePage<T> page(int limit, int offset) {
         SimplePage<T> simplePage = new SimplePage<>();
         simplePage.setTotal(this.count());
         if (simplePage.getTotal() > 0) {
-            simplePage.setList(this.limit(size).offset((pageNo - 1) * size).list());
+            simplePage.setList(this.limit(limit).offset(offset).list());
         } else {
             simplePage.setList(new ArrayList<>());
         }
