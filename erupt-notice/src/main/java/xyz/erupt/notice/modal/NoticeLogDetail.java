@@ -45,6 +45,7 @@ public class NoticeLogDetail extends HyperModelCreatorOnlyVo {
     private String channel;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(100)")
     @EruptField(
             views = @View(title = "notice.status"),
             edit = @Edit(title = "notice.status", type = EditType.CHOICE, notNull = true, search = @Search,

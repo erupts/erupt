@@ -50,7 +50,7 @@ public @interface Erupt {
 
     @Transient
     @Comment("排序表达式")
-    @Language(value = "sql", prefix = "select * from t order by ")
+    @Language(value = "hql", prefix = "select * from t order by ")
     String orderBy() default "";
 
     @Transient

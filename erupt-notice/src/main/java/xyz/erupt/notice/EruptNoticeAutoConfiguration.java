@@ -11,7 +11,7 @@ import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
-import xyz.erupt.notice.modal.Annunciate;
+import xyz.erupt.notice.modal.NoticeAnnouncement;
 import xyz.erupt.notice.modal.NoticeLog;
 import xyz.erupt.notice.modal.NoticeLogDetail;
 import xyz.erupt.notice.modal.NoticeScene;
@@ -57,7 +57,7 @@ public class EruptNoticeAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createEruptClassMenu(NoticeScene.class, notice, 10, MenuTypeEnum.TREE));
         menus.add(MetaMenu.createEruptClassMenu(NoticeLog.class, notice, 20));
         menus.add(MetaMenu.createEruptClassMenu(NoticeLogDetail.class, notice, 30));
-        menus.add(MetaMenu.createEruptClassMenu(Annunciate.class, notice, 40));
+        menus.add(MetaMenu.createEruptClassMenu(NoticeAnnouncement.class, notice, 40));
         return menus;
     }
 
