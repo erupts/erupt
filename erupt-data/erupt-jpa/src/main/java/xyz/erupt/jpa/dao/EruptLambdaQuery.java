@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.constant.SqlLang;
 import xyz.erupt.linq.lambda.LambdaInfo;
 import xyz.erupt.linq.lambda.LambdaSee;
@@ -43,6 +44,20 @@ public class EruptLambdaQuery<T> {
     public EruptLambdaQuery<T> with() {
         querySchema.getWith().clear();
         return this;
+    }
+
+    /**
+     * @param pageNo Start at 1
+     */
+    public SimplePage<T> page(int pageNo, int size) {
+        SimplePage<T> simplePage = new SimplePage<>();
+        simplePage.setTotal(this.count());
+        if (simplePage.getTotal() > 0) {
+            simplePage.setList(this.limit(size).offset((pageNo - 1) * size).list());
+        } else {
+            simplePage.setList(new ArrayList<>());
+        }
+        return simplePage;
     }
 
     public <E, R> EruptLambdaQuery<T> isNull(SFunction<E, R> field) {
