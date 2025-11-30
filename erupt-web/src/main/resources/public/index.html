@@ -23,7 +23,7 @@
             var SW = new SiriWave({
                 width: innerWidth < 512 ? innerWidth : 512,
                 height: 200,
-                wave: innerWidth < 512 ? 2 : new Date().getHours() % 6 + 2,
+                wave: innerWidth < 512 ? 2 : new Date().getMinutes() % 5 + 2,
                 container: document.getElementById("preload")
             });
             SW.set(0.4, 0.2);
@@ -48,5 +48,5 @@
 </div>
 <![endif]-->
 <app-root></app-root>
-<script src="runtime.49507153ef7a21aa.js" type="module"></script><script src="polyfills.4d09d161e136865d.js" type="module"></script><script src="main.686314337e7c96ae.js" type="module"></script></body>
+<script src="runtime.aa2aded2d67c2361.js" type="module"></script><script src="polyfills.4d09d161e136865d.js" type="module"></script><script src="main.3ff6fe9a56ff478c.js" type="module"></script></body>
 </html>
