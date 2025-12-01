@@ -14,7 +14,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Table(name = "e_upms_user")
 @Getter
 @Setter
-public class EruptUserAnn extends BaseModel {
+public class EruptUserAnnouncement extends BaseModel {
 
     private Long annReadId;
 

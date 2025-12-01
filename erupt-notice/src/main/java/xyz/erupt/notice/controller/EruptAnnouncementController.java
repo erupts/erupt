@@ -9,7 +9,7 @@ import xyz.erupt.core.view.R;
 import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.notice.constant.AnnouncementStatus;
-import xyz.erupt.notice.modal.EruptUserAnn;
+import xyz.erupt.notice.modal.EruptUserAnnouncement;
 import xyz.erupt.notice.modal.NoticeAnnouncement;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.service.EruptUserService;
@@ -39,7 +39,7 @@ public class EruptAnnouncementController {
 
     @GetMapping("/popups")
     public R<List<NoticeAnnouncement>> popups() {
-        EruptUserAnn eruptUserAnn = eruptDao.find(EruptUserAnn.class, eruptUserService.getCurrentUid());
+        EruptUserAnnouncement eruptUserAnn = eruptDao.find(EruptUserAnnouncement.class, eruptUserService.getCurrentUid());
         return R.ok(eruptDao.lambdaQuery(NoticeAnnouncement.class)
                 .eq(NoticeAnnouncement::getStatus, AnnouncementStatus.OPEN)
                 .gt(NoticeAnnouncement::getCreateTime, DateUtils.addDays(new Date(), -7))
@@ -51,7 +51,7 @@ public class EruptAnnouncementController {
     @Transactional
     @GetMapping("/mark-read/{annId}")
     public R<Void> markRead(@PathVariable Long annId) {
-        EruptUserAnn eruptUserAnn = eruptDao.find(EruptUserAnn.class, eruptUserService.getCurrentUid());
+        EruptUserAnnouncement eruptUserAnn = eruptDao.find(EruptUserAnnouncement.class, eruptUserService.getCurrentUid());
         eruptUserAnn.setAnnReadId(annId);
         eruptDao.merge(eruptUserAnn);
         return R.ok();
