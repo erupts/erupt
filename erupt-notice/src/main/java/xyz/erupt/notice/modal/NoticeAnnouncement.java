@@ -36,7 +36,7 @@ public class NoticeAnnouncement extends HyperModelCreatorOnlyVo {
     private String title;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(100)")
+    @Column(length = 100)
     @EruptField(
             views = @View(title = "status"),
             edit = @Edit(title = "status", notNull = true, type = EditType.CHOICE, search = @Search,
