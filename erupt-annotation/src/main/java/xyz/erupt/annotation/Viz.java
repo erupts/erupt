@@ -5,6 +5,7 @@ import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.Match;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.Sort;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.viz.CardView;
 import xyz.erupt.annotation.viz.GanttView;
@@ -30,8 +31,7 @@ public @interface Viz {
     Filter[] filter() default {};
 
     @Transient
-    @Language(value = "sql", prefix = "select * from t order by ")
-    String orderBy() default "";
+    Sort[] orderBy() default {};
 
     @Transient
     ExprBool show() default @ExprBool;

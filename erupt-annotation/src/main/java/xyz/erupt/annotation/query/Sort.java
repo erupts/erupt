@@ -19,12 +19,7 @@ public class Sort {
 
     private String field;
 
-    private Direction direction = Direction.asc;
-
-    public enum Direction {
-        asc,
-        desc
-    }
+    private Direction direction = Direction.ASC;
 
     public Sort(String field, Direction direction) {
         this.field = field;
@@ -68,8 +63,8 @@ public class Sort {
         }
 
         Direction direction = switch (dirPart.toUpperCase()) {
-            case "ASC" -> Direction.asc;
-            case "DESC" -> Direction.desc;
+            case "ASC" -> Direction.ASC;
+            case "DESC" -> Direction.DESC;
             default -> throw new IllegalArgumentException("Sort direction must be ASC or DESC, but was: " + dirPart);
         };
         return new Sort(field, direction);
