@@ -13,7 +13,7 @@ public @interface CardView {
     CoverEffect coverEffect() default CoverEffect.CLIP;
 
     @Comment("Cover image field")
-    @Language(value = "java", prefix = "private String ", suffix = ";")
+    @Language(value = "hql", prefix = "select ", suffix = " from")
     String coverField() default "";
 
     enum CoverEffect {
