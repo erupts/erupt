@@ -37,6 +37,7 @@ public class EruptAnnouncementController {
                 .page(size, (page - 1) * size));
     }
 
+    @EruptLoginAuth
     @GetMapping("/popups")
     public R<List<NoticeAnnouncement>> popups() {
         EruptUserAnnouncement eruptUserAnn = eruptDao.find(EruptUserAnnouncement.class, eruptUserService.getCurrentUid());
@@ -50,6 +51,7 @@ public class EruptAnnouncementController {
 
     @Transactional
     @GetMapping("/mark-read/{annId}")
+    @EruptLoginAuth
     public R<Void> markRead(@PathVariable Long annId) {
         EruptUserAnnouncement eruptUserAnn = eruptDao.find(EruptUserAnnouncement.class, eruptUserService.getCurrentUid());
         eruptUserAnn.setAnnReadId(annId);
