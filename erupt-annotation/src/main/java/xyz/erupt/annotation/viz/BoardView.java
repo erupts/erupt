@@ -8,7 +8,7 @@ import org.intellij.lang.annotations.Language;
  */
 public @interface BoardView {
 
-    @Language(value = "java", prefix = "private String x", suffix = ";")
+    @Language(value = "hql", prefix = "select * from t where ")
     String groupField();
 
 }

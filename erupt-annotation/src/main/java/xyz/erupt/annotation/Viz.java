@@ -25,6 +25,7 @@ public @interface Viz {
     String desc() default "";
 
     @Comment("Specify the view fields. If no configuration is made, all fields will be displayed.")
+    @Language(value = "hql", prefix = "select ", suffix = " from ")
     String[] fields() default {};
 
     @Transient
