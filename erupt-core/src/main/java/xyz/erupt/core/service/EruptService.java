@@ -85,10 +85,7 @@ public class EruptService {
                         if (null == tableQuery.getSort() || tableQuery.getSort().isEmpty()) {
                             tableQuery.setSort(new ArrayList<>());
                             for (Sort sort : viz.orderBy()) {
-                                xyz.erupt.annotation.query.Sort s = new xyz.erupt.annotation.query.Sort();
-                                s.setField(sort.field());
-                                s.setDirection(sort.direction());
-                                tableQuery.getSort().add(s);
+                                tableQuery.getSort().add(new xyz.erupt.annotation.query.Sort(sort.field(), sort.direction()));
                             }
                         }
                     }

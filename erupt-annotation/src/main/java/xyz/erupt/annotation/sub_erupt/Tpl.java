@@ -1,7 +1,6 @@
 package xyz.erupt.annotation.sub_erupt;
 
 import lombok.Getter;
-import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.constant.PageEmbedType;
 
@@ -18,7 +17,6 @@ public @interface Tpl {
 
     @Transient
     @Comment("模板文件路径")
-    @Language("file-reference")
     String path();
 
     @Transient
