@@ -5,7 +5,7 @@
 + Table-related annotation @View
 + Template-related annotation @Tpl
 + Permission-related annotation @Power
-+ Visualization configuration annotation @Viz
++ Visualization configuration annotation @Vis
 + Layout annotation @Layout
 + Dynamic form annotation @Dynamic
 + ......
