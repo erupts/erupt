@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="Name" viewBox="0 0 960 300">
+    <defs>
+        <style>
+            * {
+                font-family: monospace, sans-serif, Courier New;
+            }
+
+            svg {
+                display: block;
+                font-size: 10.5em;
+                width: 100%;
+                height: 300px;
+                margin: 0 auto;
+            }
+
+            .text {
+                fill: none;
+                stroke: white;
+                stroke-dasharray: 8%, 29%;
+                stroke-width: 5px;
+                stroke-dashoffset: 1%;
+                animation: stroke-offset 5.5s infinite linear;
+            }
+
+            .text:nth-child(1) {
+                stroke: #0b0f15;
+                animation-delay: -1s;
+            }
+
+            .text:nth-child(2) {
+                stroke: #1e2a3a;
+                animation-delay: -2s;
+            }
+
+            .text:nth-child(3) {
+                stroke: #00b0ff;
+                animation-delay: -3s;
+            }
+
+            .text:nth-child(4) {
+                stroke: #00b0ff;
+                animation-delay: -4s;
+            }
+
+            .text:nth-child(5) {
+                stroke: #ff007f;
+                animation-delay: -5s;
+            }
+
+            @keyframes stroke-offset {
+                100% {
+                    stroke-dashoffset: -35%;
+                }
+            }
+        </style>
+    </defs>
+    <symbol id="s-text">
+        <text text-anchor="middle" x="50%" y="80%">YuePeng</text>
+    </symbol>
+
+    <g class="g-ants">
+        <use class="text" href="#s-text"></use>
+        <use class="text" href="#s-text"></use>
+        <use class="text" href="#s-text"></use>
+        <use class="text" href="#s-text"></use>
+        <use class="text" href="#s-text"></use>
+    </g>
+</svg>
