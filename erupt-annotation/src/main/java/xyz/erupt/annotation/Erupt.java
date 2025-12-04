@@ -69,9 +69,9 @@ public @interface Erupt {
 
     Layout layout() default @Layout;
 
-    boolean vizRawTable() default true;
+    boolean visRawTable() default true;
 
-    Viz[] viz() default {};
+    Vis[] vis() default {};
 
     @ToMap(key = "key")
     @Comment("自定义扩展参数")

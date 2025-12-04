@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import xyz.erupt.annotation.Viz;
+import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
@@ -36,14 +36,14 @@ public class EruptGanttController {
     @EruptRouter(skipAuthIndex = 4, authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     @Transactional
     @SneakyThrows
-    public R<Void> updateDate(@PathVariable String erupt, @RequestBody VizGanttDateCommand command) {
+    public R<Void> updateDate(@PathVariable String erupt, @RequestBody visGanttDateCommand command) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Erupts.powerLegal(eruptModel, PowerObject::isEdit);
-        for (Viz viz : eruptModel.getErupt().viz()) {
-            if (viz.code().equals(command.getVizCode())) {
+        for (Vis vis : eruptModel.getErupt().vis()) {
+            if (vis.code().equals(command.getVisCode())) {
                 Object obj = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, command.getPk());
-                Field startField = ReflectUtil.findClassField(obj.getClass(), viz.ganttView().startDateField());
-                Field endField = ReflectUtil.findClassField(obj.getClass(), viz.ganttView().endDateField());
+                Field startField = ReflectUtil.findClassField(obj.getClass(), vis.ganttView().startDateField());
+                Field endField = ReflectUtil.findClassField(obj.getClass(), vis.ganttView().endDateField());
                 startField.set(obj, DateUtil.getDate(startField.getType(), command.getStartDate()));
                 endField.set(obj, DateUtil.getDate(startField.getType(), command.getEndDate()));
                 DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
@@ -58,9 +58,9 @@ public class EruptGanttController {
 
     @Getter
     @Setter
-    public static class VizGanttDateCommand {
+    public static class visGanttDateCommand {
 
-        private String vizCode;
+        private String visCode;
 
         private Object pk;
 
