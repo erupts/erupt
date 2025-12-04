@@ -6,7 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import xyz.erupt.annotation.Viz;
+import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.config.QueryExpression;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.annotation.query.Condition;
@@ -75,16 +75,16 @@ public class EruptService {
         });
         conditionStrings.addAll(Arrays.asList(customCondition));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> Optional.ofNullable(dataProxy.beforeFetch(legalConditions)).ifPresent(conditionStrings::add)));
-        if (null != tableQuery.getViz()) {
-            for (Viz viz : eruptModel.getErupt().viz()) {
-                if (viz.code().equals(tableQuery.getViz())) {
-                    for (Filter filter : viz.filter()) {
+        if (null != tableQuery.getVis()) {
+            for (Vis vis : eruptModel.getErupt().vis()) {
+                if (vis.code().equals(tableQuery.getVis())) {
+                    for (Filter filter : vis.filter()) {
                         conditionStrings.add(filter.value());
                     }
-                    if (viz.orderBy().length > 0) {
+                    if (vis.orderBy().length > 0) {
                         if (null == tableQuery.getSort() || tableQuery.getSort().isEmpty()) {
                             tableQuery.setSort(new ArrayList<>());
-                            for (Sort sort : viz.orderBy()) {
+                            for (Sort sort : vis.orderBy()) {
                                 tableQuery.getSort().add(new xyz.erupt.annotation.query.Sort(sort.field(), sort.direction()));
                             }
                         }

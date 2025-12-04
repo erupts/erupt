@@ -4,21 +4,21 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
-import xyz.erupt.annotation.Viz;
-import xyz.erupt.annotation.viz.CardView;
-import xyz.erupt.annotation.viz.GanttView;
+import xyz.erupt.annotation.Vis;
+import xyz.erupt.annotation.vis.CardView;
+import xyz.erupt.annotation.vis.GanttView;
 import xyz.erupt.jpa.model.BaseModel;
 
 @Getter
 @Setter
 @Entity
-@Erupt(name = "Viz", viz = {
-        @Viz(title = "test", fields = {"id", "name"}, type = Viz.Type.CARD,
+@Erupt(name = "Vis", vis = {
+        @Vis(title = "test", fields = {"id", "name"}, type = Vis.Type.CARD,
                 cardView = @CardView(coverField = "name"),
                 ganttView = @GanttView(startDateField = "a",endDateField = "b",progressField = "c",colorField = "c.c.c")
         )
 })
-public class VizModel extends BaseModel {
+public class VisModel extends BaseModel {
 
 
 }

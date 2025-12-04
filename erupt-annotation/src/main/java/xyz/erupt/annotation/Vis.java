@@ -7,8 +7,8 @@ import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Sort;
 import xyz.erupt.annotation.sub_erupt.Tpl;
-import xyz.erupt.annotation.viz.CardView;
-import xyz.erupt.annotation.viz.GanttView;
+import xyz.erupt.annotation.vis.CardView;
+import xyz.erupt.annotation.vis.GanttView;
 
 import java.beans.Transient;
 
@@ -16,7 +16,7 @@ import java.beans.Transient;
  * @author YuePeng
  * date 2025/10/30 23:52
  */
-public @interface Viz {
+public @interface Vis {
 
     String code() default "";
 

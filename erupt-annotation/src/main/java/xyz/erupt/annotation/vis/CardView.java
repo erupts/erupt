@@ -1,4 +1,4 @@
-package xyz.erupt.annotation.viz;
+package xyz.erupt.annotation.vis;
 
 import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
