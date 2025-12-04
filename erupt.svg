@@ -22,7 +22,7 @@
         }
 
         .text:nth-child(1) {
-            stroke: #0b0f15;
+            stroke: #fff;
             animation-delay: -1s;
         }
 
