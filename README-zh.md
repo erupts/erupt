@@ -1,10 +1,10 @@
-English &nbsp; | &nbsp; [中文](README-zh.md)
+中文 &nbsp; | &nbsp; [English](README-zh.md)
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/assets/logo-raw2.png" height="120px" alt="logo"/></p>
 
 <h1 align="center">ERUPT &nbsp; 🚀 &nbsp; Low-code</h1>
 
-<h3 align="center">Annotation-driven development, zero front-end code, zero CRUD, automatic table creation, multi-dimensional data management</h3>
+<h3 align="center">注解驱动开发，零前端代码，零 CURD，自动建表，实现多维数据管理</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
 
 ---
@@ -23,31 +23,32 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
     <a href="https://github.com/erupts/erupt">GitHub</a> &nbsp; | &nbsp;
     <a href="https://gitcode.com/erupts/erupt">GitCode</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">Gitee</a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz" target="_blank"><b>Official Website</b></a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz/#!/module" target="_blank">Framework Ecosystem</a> &nbsp; | &nbsp;
-    <a href="https://www.erupt.xyz/demo" target="_blank">Online Demo</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/erupts" target="_blank">📕 Documentation</a>
+    <a href="https://www.erupt.xyz" target="_blank"><b>官方网站</b></a> &nbsp; | &nbsp; 
+    <a href="https://www.erupt.xyz/#!/module" target="_blank">框架生态</a> &nbsp; | &nbsp;
+    <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/erupts" target="_blank">📕 使用文档</a>
 </p>
 
 <img alt="erupt" src="erupt.svg">
 
 ---
 
-## 🚀 Low-code Development
-> @Erupt annotation enables out-of-the-box functionality in all scenarios
+## 🚀 低代码开发
+> @Erupt 注解可实现全场景开箱即用
 
-- Visualization: Tables / Trees / Gantt Charts / Cards + 20+ form components
-- Data: Full database compatibility, API data sources, automatic table/index creation, LambdaQuery multi-table queries, dynamic CRUD
-- API: One-click OpenAPI exposure, row/column permission control
-- Permissions: UPMS / Class / Row/Column / Role multi-dimensional management
-- Extensions: i18n, Cloud clustering, audit & event logs, BI, SaaS, AI large models
-- Form Reusability: Flow processes, custom nodes, custom buttons
+- 可视化：表 / 树 / 甘特图 / 卡片 + 20+表单组件
+- 数据：全库兼容、API 数据源、自动建表/索引、LambdaQuery 多表查询、动态CURD
+- API：OpenAPI 一键暴露、行列权限控制
+- 权限：UPMS / 类 / 行列 / 角色多维管控
+- 扩展：i18n、Cloud 集群、审计 & 事件日志、BI、SaaS、AI 大模型
+- Form 复用：Flow 流程、自定义节点、自定义按钮
 
-## Quick Start
+## 快速开始
 
 #### Annotation Example
 
 ```java
+
 @Erupt(
         name = "Simple",
         power = @Power(importable = true, export = true),
@@ -108,9 +109,9 @@ public void select() {
 }
 ```
 
-[Feature Demo](https://www.erupt.xyz/#!/contrast)
+[功能体验](https://www.erupt.xyz/#!/contrast)
 
-## ⛰ Demo Screenshots
+## ⛰ 演示截图
 
 <table>
     <tr>
@@ -130,18 +131,18 @@ public void select() {
     </tr>
 </table>
 
-## 🔗 Download and Use
+## 🔗 下载使用
 
-No need to compile source code. Simply add the following dependencies to your Spring Boot project:
+无需编译源代码，Spring Boot项目添加如下依赖即可
 
 ```xml
-<!--Core dependency-->
+<!--核心依赖-->
 <dependency>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt-admin</artifactId>
     <version>${LATEST-VERSION}</version>
 </dependency>
-        <!--Backend WEB interface-->
+        <!--后台WEB界面-->
 <dependency>
 <groupId>xyz.erupt</groupId>
 <artifactId>erupt-web</artifactId>
@@ -149,45 +150,47 @@ No need to compile source code. Simply add the following dependencies to your Sp
 </dependency>
 ```
 
-> Latest Version
+> 最新版本
 >
 > <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
 
-[Detailed Usage Steps](https://www.yuque.com/erupts/erupt/tpq1l9)
+[详细使用步骤](https://www.yuque.com/erupts/erupt/tpq1l9)
 
-## 🌕 Online Demo
+## 🌕 在线体验
 
-Demo URL: [https://www.erupt.xyz/demo](https://www.erupt.xyz/demo)
+演示地址：[https://www.erupt.xyz/demo](https://www.erupt.xyz/demo)
 
-Username/Password: `guest / guest`
+账号密码：`guest / guest`
 
-**Supports mainstream modern browsers and can run directly on Electron and other web-standard-based environments**
+**支持主流现代浏览器，可直接运行在 Electron 等基于 Web 标准的环境上**
 
-## 🔭 Open Source Recommendations
+## 🔭 开源推荐
 
-[`Linq.J`: Object query language based on JVM](https://github.com/erupts/Linq.J)
+[`Linq.J`：基于JVM的对象查询语言](https://github.com/erupts/Linq.J)
 
-[`magic-api`: Rapid interface development framework](https://github.com/ssssssss-team/magic-api)
+[`magic-api`：接口快速开发框架](https://github.com/ssssssss-team/magic-api)
 
-[`Jpom`: Lightweight low-invasive online build, automatic deployment, daily operations and maintenance, project monitoring software](https://gitee.com/dromara/Jpom)
+[`Jpom`：简而轻的低侵入式在线构建、自动部署、日常运维、项目监控软件](https://gitee.com/dromara/Jpom)
 
-## 🤝 Contributing
+## 🤝 参与贡献
 
-Erupt is a free and open-source project. We welcome anyone to contribute to Erupt to help improve it. This includes but is not limited to: submitting code, reporting bugs, sharing ideas, or sharing your use cases based on Erupt. We also welcome users to share Erupt on personal blogs or social media.
+Erupt 是一个免费且开源的项目。我们欢迎任何人为 Erupt 做出贡献，以帮助改善 Erupt。包括但不限于：提交代码、反馈缺陷、交流想法，或分享你基于
+Erupt 的使用案例。同时，我们也欢迎用户在个人博客或社交媒体上分享 Erupt。
 
-If you want to contribute code, please read our [Contribution Guidelines](./CONTRIBUTING.md) first.
+如果你想要贡献代码，请先阅读我们的[贡献指南](./CONTRIBUTING.md)。
 
-Please submit [Issues](https://github.com/erupts/erupt/issues) and [Pull Requests](https://github.com/erupts/erupt/pulls) at https://github.com/erupts/erupt.
+请在 https://github.com/erupts/erupt 提交 [Issues](https://github.com/erupts/erupt/issues)
+和 [Pull Requests](https://github.com/erupts/erupt/pulls)。
 
-#### Thanks to the following contributors for their contributions to Erupt:
+#### 感谢以下贡献者对 Erupt 做出的贡献：
 
 [![Contributors](https://contrib.rocks/image?repo=erupts/erupt)](https://github.com/erupts/erupt/graphs/contributors)
 
-<h3 align="center">⭐️ Licensed under Apache License 2.0, source code is free and open source. Open source is not easy, please give the author a Star if you like it</h3>
+<h3 align="center">⭐️ 使用 Apache License 2.0 协议，源代码开源免费。开源不易，喜欢请给作者 Star 鼓励</h3>
 
 ---
 
 <p align="right">
-Author: <a href="https://github.com/erupts">YuePeng</a> &nbsp; / &nbsp; <a href="mailto:erupts@126.com">erupts@126.com</a>
+作者 ：<a href="https://github.com/erupts">YuePeng</a> &nbsp; / &nbsp; <a href="mailto:erupts@126.com">erupts@126.com</a>
 </p>
 <br>
