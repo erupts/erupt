@@ -1,4 +1,4 @@
-中文 &nbsp; | &nbsp; [English](README-zh.md)
+中文 &nbsp; | &nbsp; [English](README.md)
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/assets/logo-raw2.png" height="120px" alt="logo"/></p>
 

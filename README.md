@@ -4,7 +4,7 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 <h1 align="center">ERUPT &nbsp; 🚀 &nbsp; Low-code</h1>
 
-<h3 align="center">Annotation-driven development, zero front-end code, zero CRUD, automatic table creation, multi-dimensional data management</h3>
+<h3 align="center">Annotation-driven development, zero front-end code, zero CRUD, multi-dimensional data management</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
 
 ---
@@ -24,9 +24,9 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
     <a href="https://gitcode.com/erupts/erupt">GitCode</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">Gitee</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank"><b>Official Website</b></a> &nbsp; | &nbsp; 
-    <a href="https://www.erupt.xyz/#!/module" target="_blank">Framework Ecosystem</a> &nbsp; | &nbsp;
+    <a href="https://www.erupt.xyz/#!/module" target="_blank">Ecosystem</a> &nbsp; | &nbsp;
     <a href="https://www.erupt.xyz/demo" target="_blank">Online Demo</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/erupts" target="_blank">📕 Documentation</a>
+    <a href="https://www.yuque.com/erupts" target="_blank">Documentation</a>
 </p>
 
 <img alt="erupt" src="erupt.svg">
@@ -141,11 +141,11 @@ No need to compile source code. Simply add the following dependencies to your Sp
     <artifactId>erupt-admin</artifactId>
     <version>${LATEST-VERSION}</version>
 </dependency>
-        <!--Backend WEB interface-->
+<!--Backend WEB interface-->
 <dependency>
-<groupId>xyz.erupt</groupId>
-<artifactId>erupt-web</artifactId>
-<version>${LATEST-VERSION}</version>
+    <groupId>xyz.erupt</groupId>
+    <artifactId>erupt-web</artifactId>
+    <version>${LATEST-VERSION}</version>
 </dependency>
 ```
 
