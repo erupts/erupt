@@ -31,6 +31,12 @@ public class EruptNoticeService {
     private EruptUserService eruptUserService;
 
     @Transactional
+    public void send(AbstractNoticeChannel abstractNoticeChannel, String scene, List<Long> receiveUsers, NoticeMessage noticeMessage) {
+        NoticeScene noticeScene = eruptDao.lambdaQuery(NoticeScene.class).eq(NoticeScene::getCode, scene).one();
+        this.send(noticeScene, List.of(abstractNoticeChannel.code()), receiveUsers, noticeMessage);
+    }
+
+    @Transactional
     public void send(NoticeScene noticeScene, List<String> channels, List<Long> receiveUsers, NoticeMessage noticeMessage) {
         NoticeLog noticeLog = new NoticeLog();
         noticeLog.setNoticeScene(noticeScene);
