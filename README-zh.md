@@ -142,11 +142,11 @@ public void select() {
     <artifactId>erupt-admin</artifactId>
     <version>${LATEST-VERSION}</version>
 </dependency>
-        <!--后台WEB界面-->
+<!--后台WEB界面-->
 <dependency>
-<groupId>xyz.erupt</groupId>
-<artifactId>erupt-web</artifactId>
-<version>${LATEST-VERSION}</version>
+    <groupId>xyz.erupt</groupId>
+    <artifactId>erupt-web</artifactId>
+    <version>${LATEST-VERSION}</version>
 </dependency>
 ```
 
