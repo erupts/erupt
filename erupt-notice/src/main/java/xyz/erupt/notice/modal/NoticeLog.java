@@ -22,6 +22,7 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataProcessor;
 import xyz.erupt.notice.modal.dataproxy.ChannelChoice;
 import xyz.erupt.notice.modal.dataproxy.EruptUserChoice;
+import xyz.erupt.notice.modal.dataproxy.NoticeLogDataProxy;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 
 import java.util.Set;
@@ -29,6 +30,7 @@ import java.util.Set;
 @EruptI18n
 @Erupt(
         orderBy = "createTime desc",
+        dataProxy = NoticeLogDataProxy.class,
         name = "Notice Log",
         linkTree = @LinkTree(field = "noticeScene"),
         drills = @Drill(title = "Notice Log Details", link = @Link(linkErupt = NoticeLogDetail.class, joinColumn = "noticeLog.id")),

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.notice.pojo.NoticeMessage;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.webscoket.channel.SocketCommand;
 import xyz.erupt.webscoket.model.EruptWsSessionModel;
 import xyz.erupt.webscoket.service.EruptWebSocketService;
 
@@ -28,7 +29,8 @@ public class EruptInternalNotice extends AbstractNoticeChannel {
     public void send(EruptUser eruptUser, NoticeMessage noticeMessage) {
         for (EruptWsSessionModel model : webSocketService.getAllSession()) {
             if (model.getMetaUserinfo().getId().equals(eruptUser.getId())) {
-                webSocketService.sendJsNotify(noticeMessage.getTitle(), noticeMessage.getContent());
+                webSocketService.send(model, SocketCommand.JS,
+                        "window.eruptNotice(`" + noticeMessage.getTitle() + "`, `" + noticeMessage.getContent() + "`)");
             }
         }
     }
