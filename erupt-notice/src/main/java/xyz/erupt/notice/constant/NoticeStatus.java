@@ -11,7 +11,8 @@ public enum NoticeStatus {
 
     SENT,
     UNREAD,
-    READ;
+    READ
+    ;
 
     public static class H implements ChoiceFetchHandler {
 
