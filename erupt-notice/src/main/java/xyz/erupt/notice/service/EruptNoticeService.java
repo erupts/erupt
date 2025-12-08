@@ -33,6 +33,9 @@ public class EruptNoticeService {
     @Transactional
     public void send(AbstractNoticeChannel abstractNoticeChannel, String scene, List<Long> receiveUsers, NoticeMessage noticeMessage) {
         NoticeScene noticeScene = eruptDao.lambdaQuery(NoticeScene.class).eq(NoticeScene::getCode, scene).one();
+        if (null == noticeScene) {
+            throw new RuntimeException("Notice Scene not found: " + scene);
+        }
         this.send(noticeScene, List.of(abstractNoticeChannel.code()), receiveUsers, noticeMessage);
     }
 

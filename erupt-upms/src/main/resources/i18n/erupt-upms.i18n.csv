@@ -9,6 +9,7 @@ upms.account_pwd_error,账号或密码错误,賬號或密碼錯誤,Incorrect acc
 code,编码,編碼,Code,codage,コード化です,인 코딩,закодирова,codificación,Codes.,A codificação,kode,الترميز
 name,名称,名稱,Title,dénomination,名前です,이름,назван,El nombre,nachname,O nome,nama,اسم
 title,标题,標題,Title,Titre,タイトル,제목,Заголовок,Título,Titel,Título,Judul,العنوان
+status,状态,狀態,Status,Statut,ステータス,상태,Состояние,Estado,Status,Estado,Estado,الحالة
 content,内容,內容,Content,Contenu,内容,내용,Содержание,Contenido,Inhalt,Conteúdo,Konten,المحتوى
 remark,备注,備註,Remark,remarques,備考です,비고,примечан,comentar,bemerkungen,observações,catatan,ملحوظة رقم
 OPEN,打开,打開,Open,Ouvrir,開く,열기,Открыть,Abrir,Öffnen,Abrir,Buka,فتح
