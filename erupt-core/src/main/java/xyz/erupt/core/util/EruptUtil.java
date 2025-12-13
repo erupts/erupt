@@ -140,7 +140,7 @@ public class EruptUtil {
                         } else if (value instanceof LocalDate ld) {
                             map.put(field.getName(), ld.format(DateTimeFormatter.ISO_LOCAL_DATE));
                         } else if (value instanceof LocalDateTime ldt) {
-                            map.put(field.getName(), ldt.format(DateTimeFormatter.ISO_LOCAL_DATE));
+                            map.put(field.getName(), ldt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                         } else {
                             map.put(field.getName(), value);
                         }
