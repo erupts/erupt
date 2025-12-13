@@ -63,7 +63,7 @@ public class DateUtil {
                 return new SimpleDateFormat(DATE_TIME).parse(str);
             }
         } else if (targetDateType == LocalDate.class) {
-            return LocalDate.parse(str, DateTimeFormatter.ofPattern(DATE));
+            return LocalDate.parse(str.substring(0, 10), DateTimeFormatter.ofPattern(DATE));
         } else if (targetDateType == LocalDateTime.class) {
             return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(DATE_TIME));
         } else {

@@ -45,7 +45,7 @@ public class EruptGanttController {
                 Field startField = ReflectUtil.findClassField(obj.getClass(), vis.ganttView().startDateField());
                 Field endField = ReflectUtil.findClassField(obj.getClass(), vis.ganttView().endDateField());
                 startField.set(obj, DateUtil.getDate(startField.getType(), command.getStartDate()));
-                endField.set(obj, DateUtil.getDate(startField.getType(), command.getEndDate()));
+                endField.set(obj, DateUtil.getDate(endField.getType(), command.getEndDate()));
                 DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
                 DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
                 DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));

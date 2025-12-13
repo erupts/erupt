@@ -40,6 +40,7 @@ import xyz.erupt.linq.lambda.LambdaSee;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -136,6 +137,10 @@ public class EruptUtil {
                     default:
                         if (value instanceof Date d) {
                             map.put(field.getName(), DateUtil.getFormatDate(d, DateUtil.ISO_8601));
+                        } else if (value instanceof LocalDate ld) {
+                            map.put(field.getName(), ld.format(DateTimeFormatter.ISO_LOCAL_DATE));
+                        } else if (value instanceof LocalDateTime ldt) {
+                            map.put(field.getName(), ldt.format(DateTimeFormatter.ISO_LOCAL_DATE));
                         } else {
                             map.put(field.getName(), value);
                         }
