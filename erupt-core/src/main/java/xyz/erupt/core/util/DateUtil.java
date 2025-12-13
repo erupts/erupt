@@ -21,6 +21,8 @@ public class DateUtil {
 
     public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
+    public static final String ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
     private static final String[] PATTERNS = {
             "yyyy-MM-dd'T'HH:mm:ss", // ISO 8601 specification，T segmentation
             "yyyy-MM-dd' 'HH:mm:ss.SSS", // SQL/DB TIMESTAMP

@@ -26,7 +26,8 @@ public class GsonFactory implements ToNumberStrategy {
     public static final double JS_MIN_NUMBER = -9007199254740991.0;
 
     @Getter
-    private final static GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
+    private final static GsonBuilder gsonBuilder = new GsonBuilder()
+            .setDateFormat(DateUtil.DATE_TIME)
             .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context)
                     -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME))))
             .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, typeOfSrc, context)
@@ -39,6 +40,11 @@ public class GsonFactory implements ToNumberStrategy {
             .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> serializeDoubleValue(src))
             .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
             .setObjectToNumberStrategy(new GsonFactory())
+//            .registerTypeAdapter(Date.class, (JsonSerializer<Date>) (src, type, ctx) -> {
+//                Instant instant = src.toInstant();
+//                return new JsonPrimitive(
+//                        DateTimeFormatter.ISO_INSTANT.format(instant)); // 2023-12-13T06:30:45.123Z
+//            })
             .setExclusionStrategies(new EruptGsonExclusionStrategies());
 
     private static JsonPrimitive serializeSafeNumber(Number src) {
