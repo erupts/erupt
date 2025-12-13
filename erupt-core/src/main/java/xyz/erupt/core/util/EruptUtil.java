@@ -134,7 +134,11 @@ public class EruptUtil {
                         map.put(field.getName(), list);
                         break;
                     default:
-                        map.put(field.getName(), value);
+                        if (value instanceof Date d) {
+                            map.put(field.getName(), DateUtil.getFormatDate(d, DateUtil.ISO_8601));
+                        } else {
+                            map.put(field.getName(), value);
+                        }
                         break;
                 }
             }
