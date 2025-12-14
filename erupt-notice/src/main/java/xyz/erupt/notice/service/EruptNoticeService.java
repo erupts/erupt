@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.channel.EruptInternalNotice;
@@ -47,7 +48,9 @@ public class EruptNoticeService {
         noticeLog.setContent(noticeMessage.getContent());
         noticeLog.setCreateTime(new Date());
         noticeLog.setCreateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
+        noticeLog.setUrl(noticeMessage.getUrl());
         eruptDao.persist(noticeLog);
+        noticeMessage.setId(noticeLog.getId());
         for (String channel : channels) {
             for (Long userId : receiveUsers) {
                 NoticeLogDetail noticeLogDetail = new NoticeLogDetail();
@@ -70,6 +73,10 @@ public class EruptNoticeService {
                 }
                 eruptDao.persist(noticeLogDetail);
             }
+        }
+        if (!noticeMessage.getParams().isEmpty()) {
+            noticeLog.setParams(GsonFactory.getGsonBuilder().setPrettyPrinting().create().toJson(noticeMessage.getParams()));
+            eruptDao.merge(noticeLog);
         }
     }
 
