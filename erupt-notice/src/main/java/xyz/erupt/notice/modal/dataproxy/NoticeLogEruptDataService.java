@@ -51,6 +51,7 @@ public class NoticeLogEruptDataService implements IEruptDataService {
         NoticeMessage noticeMessage = new NoticeMessage();
         noticeMessage.setTitle(noticeLog.getTitle());
         noticeMessage.setContent(noticeLog.getContent());
+        noticeMessage.setUrl(noticeLog.getUrl());
         eruptNoticeService.send(noticeLog.getNoticeScene(), noticeLog.getChannels().stream().toList(), noticeLog.getReceiveUsers().stream().toList(), noticeMessage);
     }
 

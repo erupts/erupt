@@ -70,6 +70,14 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
     )
     private Set<String> channels;
 
+
+    @Column(length = AnnotationConst.REMARK_LENGTH)
+    @EruptField(
+            views = @View(title = "URL", type = ViewType.LINK),
+            edit = @Edit(title = "URL")
+    )
+    private String url;
+
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "content", type = ViewType.HTML),
@@ -77,5 +85,11 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
                     notNull = true, codeEditType = @CodeEditorType(language = "text"))
     )
     private String content;
+
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    @EruptField(
+            views = @View(title = "Params", type = ViewType.CODE)
+    )
+    private String params;
 
 }
