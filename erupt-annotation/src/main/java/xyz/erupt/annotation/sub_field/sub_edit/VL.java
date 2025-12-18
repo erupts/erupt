@@ -10,6 +10,8 @@ public @interface VL {
 
     String label();
 
+    String color() default "";
+
     boolean disable() default false;
 
     String desc() default "";
