@@ -160,11 +160,11 @@ public class EruptUtil {
     public static List<VLModel> getChoiceList(EruptModel eruptModel, Edit edit) {
         List<VLModel> vls = new ArrayList<>();
         if (edit.type() == EditType.CHOICE) {
-            vls.addAll(Stream.of(edit.choiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).toList());
+            vls.addAll(Stream.of(edit.choiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.color(), vl.disable())).toList());
             Stream.of(edit.choiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
                     Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(edit.choiceType().fetchHandlerParams())).ifPresent(vls::addAll));
         } else if (edit.type() == EditType.MULTI_CHOICE) {
-            vls.addAll(Stream.of(edit.multiChoiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).toList());
+            vls.addAll(Stream.of(edit.multiChoiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.color(), vl.disable())).toList());
             Stream.of(edit.multiChoiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
                     Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetch(edit.multiChoiceType().fetchHandlerParams())).ifPresent(vls::addAll));
         }
@@ -177,11 +177,11 @@ public class EruptUtil {
     public static List<VLModel> getChoiceListFilter(EruptModel eruptModel, Edit edit, Map<String, Object> formData) {
         List<VLModel> vls = new ArrayList<>();
         if (edit.type() == EditType.CHOICE) {
-            vls.addAll(Stream.of(edit.choiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).toList());
+            vls.addAll(Stream.of(edit.choiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.color(), vl.disable())).toList());
             Stream.of(edit.choiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
                     Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(formData, edit.choiceType().fetchHandlerParams())).ifPresent(vls::addAll));
         } else if (edit.type() == EditType.MULTI_CHOICE) {
-            vls.addAll(Stream.of(edit.multiChoiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.disable())).toList());
+            vls.addAll(Stream.of(edit.multiChoiceType().vl()).map(vl -> new VLModel(vl.value(), vl.label(), vl.desc(), vl.color(), vl.disable())).toList());
             Stream.of(edit.multiChoiceType().fetchHandler()).filter(clazz -> !clazz.isInterface()).forEach(clazz ->
                     Optional.ofNullable(EruptSpringUtil.getBean(clazz).fetchFilter(formData, edit.multiChoiceType().fetchHandlerParams())).ifPresent(vls::addAll));
         }
