@@ -12,9 +12,11 @@ import xyz.erupt.annotation.sub_erupt.Drill;
 import xyz.erupt.annotation.sub_erupt.Link;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.Power;
-import xyz.erupt.annotation.sub_field.*;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
-import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.MultiChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataProcessor;
@@ -23,7 +25,6 @@ import xyz.erupt.notice.modal.dataproxy.EruptUserChoice;
 import xyz.erupt.notice.modal.dataproxy.NoticeLogDataProxy;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 
-import java.util.Date;
 import java.util.Set;
 
 @EruptI18n
@@ -91,10 +92,10 @@ public class NoticeLog extends HyperModelCreatorOnlyVo {
     )
     private String params;
 
-    @EruptField(
-            views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间",search = @Search(vague = true), readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
-    )
-    private Date createTime;
+//    @EruptField(
+//            views = @View(title = "创建时间", sortable = true),
+//            edit = @Edit(title = "创建时间",search = @Search(vague = true), readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
+//    )
+//    private Date createTime;
 
 }
