@@ -31,6 +31,14 @@ public class EruptNoticeService {
     @Resource
     private EruptUserService eruptUserService;
 
+    /**
+     * 发送通知
+     *
+     * @param abstractNoticeChannel 通知渠道
+     * @param scene                 通知场景
+     * @param receiveUsers          接收用户ID列表
+     * @param noticeMessage         通知消息
+     */
     @Transactional
     public void send(AbstractNoticeChannel abstractNoticeChannel, String scene, List<Long> receiveUsers, NoticeMessage noticeMessage) {
         NoticeScene noticeScene = eruptDao.lambdaQuery(NoticeScene.class).eq(NoticeScene::getCode, scene).one();
