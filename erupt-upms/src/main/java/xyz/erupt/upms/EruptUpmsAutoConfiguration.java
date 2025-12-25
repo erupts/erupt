@@ -39,7 +39,7 @@ public class EruptUpmsAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-upms").build();
+        return ModuleInfo.builder().name("erupt-upms").description("User privilege management").build();
     }
 
     @Override

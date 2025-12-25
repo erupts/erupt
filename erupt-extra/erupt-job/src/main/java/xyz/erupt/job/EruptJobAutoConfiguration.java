@@ -67,7 +67,7 @@ public class EruptJobAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-job").build();
+        return ModuleInfo.builder().name("erupt-job").description("Scheduled Task Management").build();
     }
 
     @Override

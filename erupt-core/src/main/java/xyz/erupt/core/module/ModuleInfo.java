@@ -15,4 +15,6 @@ public class ModuleInfo {
 
     private String name;
 
+    private String description;
+
 }

@@ -20,7 +20,7 @@ public class EruptJpaAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-jpa").build();
+        return ModuleInfo.builder().name("erupt-jpa").description("erupt orm").build();
     }
 
 }

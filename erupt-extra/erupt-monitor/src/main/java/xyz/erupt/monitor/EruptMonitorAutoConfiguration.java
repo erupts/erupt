@@ -29,7 +29,7 @@ public class EruptMonitorAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-monitor").build();
+        return ModuleInfo.builder().name("erupt-monitor").description("Erupt system monitor").build();
     }
 
     @Override

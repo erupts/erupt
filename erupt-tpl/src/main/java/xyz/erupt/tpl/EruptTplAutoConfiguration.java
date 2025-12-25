@@ -39,7 +39,7 @@ public class EruptTplAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-tpl").build();
+        return ModuleInfo.builder().name("erupt-tpl").description("Erupt Template Engine").build();
     }
 
 }
