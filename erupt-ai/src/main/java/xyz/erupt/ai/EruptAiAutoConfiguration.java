@@ -45,7 +45,7 @@ public class EruptAiAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-ai").build();
+        return ModuleInfo.builder().name("erupt-ai").description("The large-model-driven ERUPT AI infrastructure").build();
     }
 
     @Override

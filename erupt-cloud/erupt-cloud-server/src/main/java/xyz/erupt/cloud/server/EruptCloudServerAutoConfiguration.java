@@ -34,7 +34,7 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-cloud-server").build();
+        return ModuleInfo.builder().name("erupt-cloud-server").description("Erupt Cloud Microservice control center").build();
     }
 
     @Override

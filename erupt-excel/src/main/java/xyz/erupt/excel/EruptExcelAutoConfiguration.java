@@ -15,7 +15,7 @@ public class EruptExcelAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-excel").build();
+        return ModuleInfo.builder().name("erupt-excel").description("Support Excel").build();
     }
 
 }

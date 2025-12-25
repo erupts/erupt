@@ -39,7 +39,7 @@ public class EruptMagicApiAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-magic-api").build();
+        return ModuleInfo.builder().name("erupt-magic-api").description("Online IDE").build();
     }
 
     @Override

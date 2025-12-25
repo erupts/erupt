@@ -20,7 +20,7 @@ public class EruptMongodbAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-mongodb").build();
+        return ModuleInfo.builder().name("erupt-mongodb").description("Mongodb implement").build();
     }
 
 }

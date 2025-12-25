@@ -31,6 +31,11 @@
             <artifactId>erupt-notice</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ai</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <!-- optional -->
         <dependency>
