@@ -2,6 +2,7 @@ package xyz.erupt.ai.controller;
 
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import xyz.erupt.ai.config.AiMCPProp;
 import xyz.erupt.ai.util.McpUtil;
 import xyz.erupt.ai.vo.mcp.*;
 import xyz.erupt.core.util.EruptInformation;
+import xyz.erupt.core.util.ReflectUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -30,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnProperty(name = "erupt.ai.mcp.enabled", havingValue = "true")
 @RestController
 @RequestMapping("/mcp")
+@Slf4j
 public class McpController {
 
     @Resource
@@ -81,6 +84,7 @@ public class McpController {
                     mcpCallResult.setContent(List.of(content));
                     result.setResult(mcpCallResult);
                 } catch (Exception e) {
+                    log.error("mcp call error [" + request.getParams().getName() + "]", e);
                     content.setText(e.getMessage());
                     mcpCallResult.setError(true);
                     mcpCallResult.setContent(List.of(content));
@@ -143,7 +147,7 @@ public class McpController {
         AiFunctionCall aiFunctionCall = AiFunctionManager.getAiFunctions().get(code);
         if (null != params) {
             for (Map.Entry<String, Object> entry : params.entrySet()) {
-                Field field = aiFunctionCall.getClass().getDeclaredField(entry.getKey());
+                Field field = ReflectUtil.findClassField(aiFunctionCall.getClass(), entry.getKey());
                 field.setAccessible(true);
                 field.set(aiFunctionCall, entry.getValue());
                 field.setAccessible(false);

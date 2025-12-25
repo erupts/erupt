@@ -46,7 +46,6 @@ public class I18nTranslate {
             if (I18nRunner.langs().contains(lang)) {
                 return lang;
             } else {
-                log.warn("Error: Invalid lang: {}", lang);
                 return null;
             }
         } catch (Exception ignored) {

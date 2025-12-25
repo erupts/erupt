@@ -78,7 +78,6 @@ public class LLM extends MetaModelUpdateVo {
     private String apiUrl;
 
     @EruptField(
-            views = @View(title = "API Key", type = ViewType.HTML, width = "80px"),
             edit = @Edit(title = "API Key")
     )
     private String apiKey;

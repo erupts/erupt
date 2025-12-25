@@ -6,16 +6,12 @@ package xyz.erupt.ai.call;
  */
 public interface AiFunctionCall {
 
-    default String code() {
-        return this.getClass().getSimpleName();
-    }
-
     default boolean mcpCall() {
         return true;
     }
 
     default String name() {
-        return this.code();
+        return this.getClass().getSimpleName();
     }
 
     String description();
