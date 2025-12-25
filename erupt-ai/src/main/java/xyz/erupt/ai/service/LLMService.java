@@ -74,6 +74,7 @@ public class LLMService {
         List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
         chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
         if (null != llmAgent) {
+            // Agent
             if (null == llmAgent.getPromptHandler()) {
                 chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, llmAgent.getPrompt()));
             } else {
@@ -81,6 +82,7 @@ public class LLMService {
                         EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
             }
         } else {
+            // Function Call
             chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiFunctionManager.getFunctionCallPrompt()));
         }
         List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
