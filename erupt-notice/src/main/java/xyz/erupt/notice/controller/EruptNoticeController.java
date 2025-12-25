@@ -76,4 +76,16 @@ public class EruptNoticeController {
                 .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).count());
     }
 
+    @EruptLoginAuth
+    @GetMapping("/read-all")
+    @Transactional
+    public R<Void> readAll() {
+        List<NoticeLogDetail> noticeLogDetails = eruptDao.lambdaQuery(NoticeLogDetail.class)
+                .eq(NoticeLogDetail::getSuccess, true)
+                .eq(NoticeLogDetail::getStatus, NoticeStatus.UNREAD)
+                .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).list();
+        noticeLogDetails.forEach(detail -> detail.setStatus(NoticeStatus.READ));
+        return R.ok();
+    }
+
 }
