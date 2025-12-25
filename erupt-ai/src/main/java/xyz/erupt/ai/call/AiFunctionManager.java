@@ -49,10 +49,29 @@ public class AiFunctionManager implements ApplicationRunner {
     }
 
     public String getFunctionCallPrompt() {
-        StringBuilder sb = new StringBuilder("下面是一组 Function Call 的映射，根据情况决定是否调用，否则忽略这段提示词\n");
+        StringBuilder sb = new StringBuilder("""
+                    Below is a mapping of available Function Calls.
+                
+                    Please decide whether a function is clearly required after understanding the user's question.
+                
+                    Rules:
+                    1. Call a function IF AND ONLY IF the user's intent clearly and directly matches the function description,
+                       and calling the function will significantly improve the accuracy of the response.
+                    2. If a function is triggered, STRICTLY output ONLY the function name.
+                       Do NOT output explanations, symbols, punctuation, or any extra text.
+                    3. If no function is required, IGNORE this entire instruction block
+                       and respond to the user normally.
+                
+                    Available functions:
+                """);
         for (Map.Entry<String, AiFunctionCall> entry : aiFunctions.entrySet()) {
-            sb.append("- 如果用户问：").append(entry.getValue().description()).append("，就只回复：").append(entry.getKey()).append("\n");
+            sb.append("- ")
+                    .append(entry.getKey())
+                    .append(": ")
+                    .append(entry.getValue().description())
+                    .append("\n");
         }
+
         return sb.toString();
     }
 
