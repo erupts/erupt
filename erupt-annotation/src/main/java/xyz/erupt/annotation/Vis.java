@@ -24,9 +24,9 @@ public @interface Vis {
 
     String desc() default "";
 
-    @Comment("Specify the view fields. If no configuration is made, all fields will be displayed.")
+    @Comment("Exclude display view fields")
     @Language(value = "hql", prefix = "select ", suffix = " from ")
-    String[] fields() default {};
+    String[] excludeFields() default {};
 
     @Transient
     Filter[] filter() default {};

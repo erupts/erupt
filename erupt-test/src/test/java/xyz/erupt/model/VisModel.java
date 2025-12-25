@@ -13,9 +13,10 @@ import xyz.erupt.jpa.model.BaseModel;
 @Setter
 @Entity
 @Erupt(name = "Vis", vis = {
-        @Vis(title = "test", fields = {"id", "name"}, type = Vis.Type.CARD,
+        @Vis(title = "test",
+                type = Vis.Type.CARD,
                 cardView = @CardView(coverField = "name"),
-                ganttView = @GanttView(startDateField = "a",endDateField = "b",progressField = "c",colorField = "c.c.c")
+                ganttView = @GanttView(startDateField = "a", endDateField = "b", progressField = "c", colorField = "c.c.c")
         )
 })
 public class VisModel extends BaseModel {

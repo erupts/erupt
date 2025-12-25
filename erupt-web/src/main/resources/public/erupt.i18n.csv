@@ -111,6 +111,9 @@ notice.center,通知中心,通知中心,Notification Center,Centre de notificati
 tenant.login,租户登录,租戶登入,Tenant Login,Connexion du locataire,テナントログイン,테넌트 로그인,Вход арендатора,Inicio del inquilino,Mieter-Login,Login do inquilino,Masuk penyewa,تسجيل دخول المستأجر
 notice,通知,通知,Notice,Avis,お知らせ,공지,Уведомление,Aviso,Hinweis,Aviso,Pemberitahuan,إشعار
 notice.announcement,公告,公告,Announcement,Annonce,お知らせ,공지,Объявление,Anuncio,Bekanntmachung,Anúncio,Pengumuman,إعلان
+notice.readAll,全部已读,全部已讀,Mark All as Read,Tout marquer comme lu,すべて既読にする,모두 읽음으로 표시,Отметить все как прочитанное,Marcar todo como leído,Alle als gelesen markieren,Marcar tudo como lido,Tandai Semua Sebagai Dibaca,وضع علامة على الكل كمقروء
+notice.confirm.title,确认操作,確認操作,Confirm Operation,Confirmer l'opération,操作を確認,작업 확인,Подтвердить операцию,Confirmar operación,Vorgang bestätigen,Confirmar Operação,Konfirmasi Operasi,تأكيد العملية
+notice.confirm.readAll,确认要将所有通知标记为已读吗？,確認要將所有通知標記為已讀嗎？,Are you sure you want to mark all notifications as read?,Êtes-vous sûr de vouloir marquer toutes les notifications comme lues?,すべての通知を既読にしますか？,모든 알림을 읽음으로 표시하시겠습니까?,Вы уверены, что хотите отметить все уведомления как прочитанные?,¿Está seguro de que desea marcar todas las notificaciones como leídas?,Möchten Sie wirklich alle Benachrichtigungen als gelesen markieren?,Tem certeza de que deseja marcar todas as notificações como lidas?,Apakah Anda yakin ingin menandai semua notifikasi sebagai dibaca?,هل أنت متأكد من أنك تريد وضع علامة على جميع الإشعارات كمقروءة؟
 
 TODAY,今天,今天,Today,Aujourd'hui,今日,오늘,Сегодня,Hoy,Heute,Hoje,Hari ini,اليوم
 FEW_DAYS,过去 N 天,過去 N 天,Past N days,Les N derniers jours,過去N日間,지난 N일,Последние N дней,Últimos N días,Letzte N Tage,Últimos N dias,N hari terakhir,الأيام N الماضية

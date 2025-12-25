@@ -11,16 +11,16 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Power;
-import xyz.erupt.annotation.sub_field.Edit;
-import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.ViewType;
+import xyz.erupt.annotation.sub_field.*;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.notice.constant.NoticeStatus;
 import xyz.erupt.notice.modal.dataproxy.ChannelChoice;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 import xyz.erupt.upms.model.EruptUserVo;
+
+import java.util.Date;
 
 @EruptI18n
 @Erupt(
@@ -73,5 +73,11 @@ public class NoticeLogDetail extends HyperModelCreatorOnlyVo {
             views = @View(title = "notice.error", type = ViewType.HTML)
     )
     private String error;
+
+    @EruptField(
+            views = @View(title = "创建时间", sortable = true),
+            edit = @Edit(title = "创建时间",search = @Search(vague = true), readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
+    )
+    private Date createTime;
 
 }
