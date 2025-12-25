@@ -43,9 +43,10 @@ public class AiFunctionManager implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(),
-                new TypeFilter[]{new AssignableTypeFilter(AiFunctionCall.class)}, clazz ->
-                        aiFunctions.put(clazz.getSimpleName(), (AiFunctionCall) EruptSpringUtil.getBean(clazz))
-        );
+                new TypeFilter[]{new AssignableTypeFilter(AiFunctionCall.class)}, clazz -> {
+                    AiFunctionCall functionCall = (AiFunctionCall) EruptSpringUtil.getBean(clazz);
+                    aiFunctions.put(functionCall.name(), functionCall);
+                });
     }
 
     public String getFunctionCallPrompt() {

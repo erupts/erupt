@@ -19,3 +19,8 @@ spring:
       hibernate:
         globally_quoted_identifiers: true
         type.enumeration.use_named: false # Make Hibernate 6 not use native enums and switch back to varchar.
+
+erupt:
+  ai:
+    mcp:
+      enabled: true
