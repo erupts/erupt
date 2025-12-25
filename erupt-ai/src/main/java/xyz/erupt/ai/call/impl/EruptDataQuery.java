@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Component
 @Scope("prototype")
-public class EruptData implements AiFunctionCall {
+public class EruptDataQuery implements AiFunctionCall {
 
     @AiParam(description = "Erupt Name")
     private String eruptName;
@@ -28,7 +28,7 @@ public class EruptData implements AiFunctionCall {
 
     @Override
     public String description() {
-        return "Erupt model data";
+        return "Query erupt model data";
     }
 
     @Override
