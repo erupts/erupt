@@ -21,9 +21,4 @@ public class Claude extends OpenAi {
         return "https://api.anthropic.com";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

@@ -17,9 +17,4 @@ public class Fireworks extends OpenAi {
         return "https://api.fireworks.ai/inference";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

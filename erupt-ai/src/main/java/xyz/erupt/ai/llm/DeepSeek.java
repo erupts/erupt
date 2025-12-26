@@ -21,9 +21,4 @@ public class DeepSeek extends OpenAi {
         return "https://api.deepseek.com";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

@@ -32,13 +32,18 @@ public abstract class OpenAi extends LlmCore {
 
     private final Gson gson = new GsonBuilder().create();
 
+    public String chatApiPath() {
+        return "/v1/chat/completions";
+    }
+
     @Override
     public String code() {
         return getClass().getSimpleName();
     }
 
-    public String chatApiPath() {
-        return "/v1/chat/completions";
+    @Override
+    public LlmConfig config() {
+        return new LlmConfig();
     }
 
     @Override

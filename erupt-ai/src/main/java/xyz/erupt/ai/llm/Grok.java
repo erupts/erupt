@@ -17,9 +17,4 @@ public class Grok extends OpenAi {
         return "https://api.x.ai";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

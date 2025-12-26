@@ -17,9 +17,4 @@ public class OpenRouter extends OpenAi {
         return "https://openrouter.ai";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

@@ -21,9 +21,4 @@ public class Gemini extends OpenAi {
         return "https://generativelanguage.googleapis.com";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

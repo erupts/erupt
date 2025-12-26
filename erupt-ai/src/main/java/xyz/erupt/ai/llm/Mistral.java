@@ -17,9 +17,4 @@ public class Mistral extends OpenAi {
         return "https://api.mistral.ai";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

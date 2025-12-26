@@ -21,9 +21,4 @@ public class ChatGpt extends OpenAi {
         return "https://api.openai.com";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }
