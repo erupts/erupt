@@ -12,11 +12,6 @@ import xyz.erupt.ai.core.OpenAi;
 public class Ollama extends OpenAi {
 
     @Override
-    public String code() {
-        return "Ollama";
-    }
-
-    @Override
     public String model() {
         return "nomic-embed-text";
     }

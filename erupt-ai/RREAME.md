@@ -1,3 +1,3 @@
 #### AI Module
 
-ChatGpt/DeepSeek/Kimi/ollama
+Unified LLM Access & Support Layer

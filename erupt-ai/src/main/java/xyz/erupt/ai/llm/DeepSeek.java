@@ -12,11 +12,6 @@ import xyz.erupt.ai.core.OpenAi;
 public class DeepSeek extends OpenAi {
 
     @Override
-    public String code() {
-        return "DeepSeek";
-    }
-
-    @Override
     public String model() {
         return "deepseek-chat";
     }

@@ -4,21 +4,17 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.ai.core.LlmConfig;
 import xyz.erupt.ai.core.OpenAi;
 
-/**
- * @author YuePeng
- * date 2025/2/22 16:37
- */
 @Component
-public class Claude extends OpenAi {
+public class Fireworks extends OpenAi {
 
     @Override
     public String model() {
-        return "claude-3-7-sonnet-latest";
+        return "accounts/fireworks/models/llama-v3p1-70b-instruct";
     }
 
     @Override
     public String api() {
-        return "https://api.anthropic.com";
+        return "https://api.fireworks.ai/inference";
     }
 
     @Override
