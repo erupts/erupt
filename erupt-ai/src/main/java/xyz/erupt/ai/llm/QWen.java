@@ -17,11 +17,6 @@ public class QWen extends OpenAi {
     }
 
     @Override
-    public String code() {
-        return "Qwen";
-    }
-
-    @Override
     public String model() {
         return "qwen-plus";
     }

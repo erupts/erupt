@@ -12,11 +12,6 @@ import xyz.erupt.ai.core.OpenAi;
 public class Gemini extends OpenAi {
 
     @Override
-    public String code() {
-        return "Gemini";
-    }
-
-    @Override
     public String model() {
         return "gemini-2.0-flash";
     }

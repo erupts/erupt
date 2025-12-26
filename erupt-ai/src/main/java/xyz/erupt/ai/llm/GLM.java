@@ -12,11 +12,6 @@ import xyz.erupt.ai.core.OpenAi;
 public class GLM extends OpenAi {
 
     @Override
-    public String code() {
-        return "ChatGLM";
-    }
-
-    @Override
     public String model() {
         return "glm-4-air";
     }

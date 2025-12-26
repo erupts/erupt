@@ -4,21 +4,17 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.ai.core.LlmConfig;
 import xyz.erupt.ai.core.OpenAi;
 
-/**
- * @author YuePeng
- * date 2025/2/22 16:37
- */
 @Component
-public class Claude extends OpenAi {
+public class Grok extends OpenAi {
 
     @Override
     public String model() {
-        return "claude-3-7-sonnet-latest";
+        return "grok-2-latest";
     }
 
     @Override
     public String api() {
-        return "https://api.anthropic.com";
+        return "https://api.x.ai";
     }
 
     @Override
