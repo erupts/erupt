@@ -1,6 +1,5 @@
 package xyz.erupt.ai.handler;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,6 @@ public class DynamicPromptFetch implements ChoiceFetchHandler {
 
     private static final List<VLModel> promptHandlers = new ArrayList<>();
 
-    @PostConstruct
     public void init() {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptPromptHandler.class)},
                 clazz -> {
@@ -32,7 +30,10 @@ public class DynamicPromptFetch implements ChoiceFetchHandler {
     }
 
     @Override
-    public List<VLModel> fetch(String[] params) {
+    public synchronized List<VLModel> fetch(String[] params) {
+        if (promptHandlers.isEmpty()) {
+            init();
+        }
         return promptHandlers;
     }
 

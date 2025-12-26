@@ -118,7 +118,9 @@ public abstract class OpenAi extends LlmCore {
                             String line = source.readUtf8Line();
                             if (StringUtils.isNotBlank(line)) {
                                 if (!response.isSuccessful()) {
-                                    this.onFailure(call, new IOException(line));
+                                    this.onFailure(call, new IOException(response.body().string()));
+                                    log.error("Failed to get llm response from server: {}", response.body());
+                                    return;
                                 } else {
                                     try {
                                         if (line.startsWith("data: ")) {
