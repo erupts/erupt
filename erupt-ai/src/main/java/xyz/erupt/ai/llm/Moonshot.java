@@ -21,9 +21,4 @@ public class Moonshot extends OpenAi {
         return "https://api.moonshot.cn";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

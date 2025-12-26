@@ -26,9 +26,4 @@ public class GLM extends OpenAi {
         return "/api/paas/v4/chat/completions";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

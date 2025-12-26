@@ -17,9 +17,4 @@ public class MinMax extends OpenAi {
         return "https://api.minmax.ai";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

@@ -26,9 +26,4 @@ public class QWen extends OpenAi {
         return "https://dashscope.aliyuncs.com";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }

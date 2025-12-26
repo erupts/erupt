@@ -21,9 +21,4 @@ public class Ollama extends OpenAi {
         return "http://localhost:11434";
     }
 
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
 }
