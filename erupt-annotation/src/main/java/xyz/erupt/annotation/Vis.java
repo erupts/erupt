@@ -24,9 +24,11 @@ public @interface Vis {
 
     String desc() default "";
 
-    @Comment("Exclude display view fields")
+    FieldVisibility fieldVisibility() default FieldVisibility.EXCLUDE;
+
+    @Comment("Fields to display or exclude")
     @Language(value = "hql", prefix = "select ", suffix = " from ")
-    String[] excludeFields() default {};
+    String[] fields() default {};
 
     @Transient
     Filter[] filter() default {};
@@ -54,6 +56,13 @@ public @interface Vis {
         CARD,
         BOARD,
         TPL
+    }
+
+    enum FieldVisibility {
+        // Include fields in the view
+        INCLUDE,
+        // Exclude fields in the view
+        EXCLUDE
     }
 
 }
