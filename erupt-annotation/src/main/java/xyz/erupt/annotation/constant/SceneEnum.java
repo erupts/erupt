@@ -1,4 +1,4 @@
-package xyz.erupt.annotation;
+package xyz.erupt.annotation.constant;
 
 /**
  * @author YuePeng
