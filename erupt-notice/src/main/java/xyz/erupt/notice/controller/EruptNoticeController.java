@@ -14,6 +14,7 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.channel.EruptInternalNotice;
 import xyz.erupt.notice.constant.NoticeStatus;
+import xyz.erupt.notice.modal.NoticeAnnouncement;
 import xyz.erupt.notice.modal.NoticeLogDetail;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.model.EruptUserVo;
@@ -45,10 +46,11 @@ public class EruptNoticeController {
 
     @EruptLoginAuth
     @GetMapping("/messages")
-    public R<SimplePage<NoticeLogDetail>> messages(@RequestParam int page, @RequestParam int size) {
+    public R<SimplePage<NoticeLogDetail>> messages(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) String search) {
         return R.ok(eruptDao.lambdaQuery(NoticeLogDetail.class)
                 .eq(NoticeLogDetail::getChannel, eruptInternalNotice.code())
                 .eq(NoticeLogDetail::getSuccess, true)
+                .with(NoticeLogDetail::getNoticeLog).like(null != search, NoticeAnnouncement::getTitle, search).with()
                 .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
                 .orderByDesc(NoticeLogDetail::getCreateTime).page(size, (page - 1) * size));
     }
