@@ -30,8 +30,9 @@ public class EruptAnnouncementController {
     @EruptLoginAuth
     @GetMapping("/list")
     @Transactional
-    public R<SimplePage<NoticeAnnouncement>> announcements(@RequestParam int page, @RequestParam int size) {
+    public R<SimplePage<NoticeAnnouncement>> announcements(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) String search) {
         return R.ok(eruptDao.lambdaQuery(NoticeAnnouncement.class)
+                .like(null != search, NoticeAnnouncement::getTitle, search)
                 .eq(NoticeAnnouncement::getStatus, AnnouncementStatus.OPEN)
                 .orderByDesc(NoticeAnnouncement::getCreateTime)
                 .page(size, (page - 1) * size));
