@@ -14,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.function.Consumer;
 
@@ -60,6 +62,11 @@ public class EruptSpringUtil implements ApplicationContextAware {
     //根据类路径获取bean
     public static <T> T getBeanByPath(String path, Class<T> clazz) throws ClassNotFoundException {
         return clazz.cast(getBean(Class.forName(path)));
+    }
+
+    public static boolean isMvcContext(){
+        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        return attrs != null;
     }
 
     /**

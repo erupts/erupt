@@ -18,6 +18,7 @@ import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.invoke.DataProxyInvoke;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptApiModel;
@@ -44,8 +45,10 @@ public class EruptModifyService {
     @SneakyThrows
     public Object eruptInsertDataProcess(EruptModel eruptModel, JsonObject data) {
         Map<String, Object> extraData = new HashMap<>();
-        this.setLinkValue(eruptModel, extraData);
-        this.setDrillValue(eruptModel, extraData);
+        if (EruptSpringUtil.isMvcContext()) {
+            this.setLinkValue(eruptModel, extraData);
+            this.setDrillValue(eruptModel, extraData);
+        }
         return EruptUtil.jsonToEruptEntity(eruptModel, data, extraData);
     }
 
