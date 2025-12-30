@@ -63,9 +63,9 @@ public class HyperModelUpdateVo extends BaseModel {
     @PrePersist
     protected void persist() {
         try {
+            this.setCreateTime(new Date());
             Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
                 this.setCreateUser(new EruptUserVo(it));
-                this.setCreateTime(new Date());
             });
         } catch (Exception ignored) {
         }
@@ -75,9 +75,9 @@ public class HyperModelUpdateVo extends BaseModel {
     @PreUpdate
     protected void update() {
         try {
+            this.setUpdateTime(new Date());
             Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
                 this.setUpdateUser(new EruptUserVo(it));
-                this.setUpdateTime(new Date());
             });
         } catch (Exception ignored) {
         }

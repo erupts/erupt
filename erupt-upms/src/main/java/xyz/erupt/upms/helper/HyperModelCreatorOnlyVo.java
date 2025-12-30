@@ -51,9 +51,9 @@ public class HyperModelCreatorOnlyVo extends BaseModel {
     @PrePersist
     protected void persist() {
         try {
+            this.setCreateTime(new Date());
             Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
                 this.setCreateUser(new EruptUserVo(it));
-                this.setCreateTime(new Date());
             });
         } catch (Exception ignored) {
         }
