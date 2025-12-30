@@ -48,6 +48,7 @@ public class EruptLambdaQuery<T> {
 
     public SimplePage<T> page(int limit, int offset) {
         SimplePage<T> simplePage = new SimplePage<>();
+
         simplePage.setTotal(this.count());
         if (simplePage.getTotal() > 0) {
             simplePage.setList(this.limit(limit).offset(offset).list());
@@ -386,7 +387,7 @@ public class EruptLambdaQuery<T> {
     public Long count() {
         try {
             this.querySchema.columns.add("count(*)");
-            return (Long) geneQuery().getSingleResult();
+            return (Long) geneQuery(false).getSingleResult();
         } finally {
             this.querySchema.columns.clear();
         }
@@ -395,7 +396,7 @@ public class EruptLambdaQuery<T> {
     public <E> Long count(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("count(" + geneField(field) + ")");
-            return (Long) geneQuery().getSingleResult();
+            return (Long) geneQuery(false).getSingleResult();
         } finally {
             this.querySchema.columns.clear();
         }
@@ -404,7 +405,7 @@ public class EruptLambdaQuery<T> {
     public <E> Object sum(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("sum(" + geneField(field) + ")");
-            return geneQuery().getSingleResult();
+            return geneQuery(false).getSingleResult();
         } finally {
             this.querySchema.columns.clear();
         }
@@ -413,7 +414,7 @@ public class EruptLambdaQuery<T> {
     public <E> Double avg(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("avg(" + geneField(field) + ")");
-            return (Double) geneQuery().getSingleResult();
+            return (Double) geneQuery(false).getSingleResult();
         } finally {
             this.querySchema.columns.clear();
         }
@@ -422,7 +423,7 @@ public class EruptLambdaQuery<T> {
     public <E> Object min(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("min(" + geneField(field) + ")");
-            return geneQuery().getSingleResult();
+            return geneQuery(false).getSingleResult();
         } finally {
             this.querySchema.columns.clear();
         }
@@ -431,7 +432,7 @@ public class EruptLambdaQuery<T> {
     public <E> Object max(SFunction<E, ?> field) {
         try {
             this.querySchema.columns.add("max(" + geneField(field) + ")");
-            return geneQuery().getSingleResult();
+            return geneQuery(false).getSingleResult();
         } finally {
             this.querySchema.columns.clear();
         }
@@ -453,6 +454,13 @@ public class EruptLambdaQuery<T> {
     }
 
     private Query geneQuery() {
+        return this.geneQuery(true);
+    }
+
+    /**
+     * @param useOrderBy count/sum/avg/min/max don't need order
+     */
+    private Query geneQuery(boolean useOrderBy) {
         StringBuilder select = new StringBuilder();
         if (!querySchema.columns.isEmpty()) {
             select.append(SqlLang.SELECT);
@@ -465,7 +473,7 @@ public class EruptLambdaQuery<T> {
         StringBuilder expr = new StringBuilder(select + SqlLang.FROM + eruptClass.getSimpleName() + SqlLang.AS + eruptClass.getSimpleName());
         if (!querySchema.getWheres().isEmpty())
             expr.append(SqlLang.WHERE).append(String.join(SqlLang.AND, querySchema.getWheres()));
-        if (!querySchema.getOrders().isEmpty())
+        if (useOrderBy && !querySchema.getOrders().isEmpty())
             expr.append(SqlLang.ORDER_BY).append(String.join(SqlLang.COMMA, querySchema.getOrders()));
         Query query = entityManager.createQuery(expr.toString());
         querySchema.getParams().forEach(query::setParameter);
