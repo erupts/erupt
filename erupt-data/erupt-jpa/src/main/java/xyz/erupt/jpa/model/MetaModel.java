@@ -40,10 +40,10 @@ public class MetaModel extends BaseModel {
 
     @PrePersist
     protected void persist() {
+        this.setCreateTime(LocalDateTime.now());
         Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
             if (null != it.getName()) {
                 this.setCreateBy(it.getName());
-                this.setCreateTime(LocalDateTime.now());
             }
         });
         this.update();
@@ -51,10 +51,10 @@ public class MetaModel extends BaseModel {
 
     @PreUpdate
     protected void update() {
+        this.setUpdateTime(LocalDateTime.now());
         Optional.ofNullable(MetaContext.getUser()).ifPresent(it -> {
             if (null != it.getName()) {
                 this.setUpdateBy(it.getName());
-                this.setUpdateTime(LocalDateTime.now());
             }
         });
     }

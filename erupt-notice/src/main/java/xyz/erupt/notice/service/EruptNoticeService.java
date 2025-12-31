@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.erupt.core.config.GsonFactory;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.channel.EruptInternalNotice;
@@ -55,7 +56,7 @@ public class EruptNoticeService {
         noticeLog.setTitle(noticeMessage.getTitle());
         noticeLog.setContent(noticeMessage.getContent());
         noticeLog.setCreateTime(new Date());
-        noticeLog.setCreateUser(new EruptUserVo(eruptUserService.getCurrentUid()));
+        noticeLog.setCreateUser(new EruptUserVo(MetaContext.getUser().getUid()));
         noticeLog.setUrl(noticeMessage.getUrl());
         eruptDao.persist(noticeLog);
         noticeMessage.setId(noticeLog.getId());
