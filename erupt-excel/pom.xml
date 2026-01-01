@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <poi.version>5.4.1</poi.version>
+        <poi.version>5.5.0</poi.version>
     </properties>
 
     <dependencies>
