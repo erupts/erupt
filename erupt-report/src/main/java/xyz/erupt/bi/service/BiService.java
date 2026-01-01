@@ -306,7 +306,7 @@ public class BiService {
                     if (null != value) {
                         Cell cell = row.createCell(j);
                         cell.setCellStyle(style);
-                        cell.setCellValue(value.toString());
+                        cell.setCellValue(value.toString().substring(0, Math.min(value.toString().length(), 32767)));
                     }
                 }
             }
