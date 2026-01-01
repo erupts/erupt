@@ -171,7 +171,6 @@ public class EruptBiController {
     public List<Reference> refQuery(@PathVariable("id") Long dimId, @PathVariable String code,
                                     @RequestBody Map<String, Object> query) {
         BiDimension dimension = entityManager.find(BiDimension.class, dimId);
-        biService.verifyBiMenuPermissions(dimension.getBi(), code);
         BiDimensionReference reference = dimension.getBiDimensionReference();
         if (null == reference) {
             throw new RuntimeException("未绑定查询维度");
@@ -205,7 +204,6 @@ public class EruptBiController {
     public BiData refTableQuery(@PathVariable String code,
                                 @PathVariable Long id) {
         BiDimension dimension = entityManager.find(BiDimension.class, id);
-        biService.verifyBiMenuPermissions(dimension.getBi(), code);
         BiData biData = new BiData();
         BiDimensionReference reference = dimension.getBiDimensionReference();
         biData.setList(biService.startQuery(

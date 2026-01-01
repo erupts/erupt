@@ -115,9 +115,6 @@ public class BiDimension extends BaseModel implements DataProxy<BiDimension> {
     )
     private String defaultValue;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
-    private Bi bi;
-
     @Override
     public void beforeAdd(BiDimension biDimension) {
         if (biDimension.getType().startsWith("REFERENCE") && null == biDimension.getBiDimensionReference()) {

@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.bi.model.Bi;
-import xyz.erupt.bi.model.BiDimension;
 import xyz.erupt.bi.model.BiHistory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.Erupts;
@@ -38,11 +37,11 @@ public class BiDataProxy implements DataProxy<Bi> {
         eruptDao.detach(bi);
         Bi bbi = eruptDao.lambdaQuery(Bi.class).eq(Bi::getId, bi.getId()).one();
         // 在一对多的映射情况下，多的一方如果存有一的一方对象，那么这个对象必须赋值否则会出现多的一方数据无法保存的问题
-        if (null != bi.getBiDimension()) {
-            for (BiDimension dimension : bi.getBiDimension()) {
-                dimension.setBi(bi);
-            }
-        }
+//        if (null != bi.getBiDimension()) {
+//            for (BiDimension dimension : bi.getBiDimension()) {
+//                dimension.setBi(bi);
+//            }
+//        }
         if (StringUtils.isNotBlank(bi.getSqlStatement()) && StringUtils.isNotBlank(bbi.getSqlStatement())) {
             if (!bi.getSqlStatement().equals(bbi.getSqlStatement())) {
                 BiHistory history = new BiHistory();
