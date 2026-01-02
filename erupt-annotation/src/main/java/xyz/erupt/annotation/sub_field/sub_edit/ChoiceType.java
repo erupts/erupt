@@ -44,15 +44,6 @@ public @interface ChoiceType {
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependField() default "";
 
-    @Deprecated
-    @Comment("联动过滤表达式，支持变量：")
-    @Comment("dependValue:依赖字段的值")
-    @Comment("vl.value: 下拉列表项的值")
-    @Comment("vl.label: 下拉列表项名称")
-    @Comment("vl.desc: 下拉列表项备注")
-    @Language("javascript")
-    String dependExpr() default "";
-
     enum Type {
         @Comment("下拉选择")
         SELECT,
