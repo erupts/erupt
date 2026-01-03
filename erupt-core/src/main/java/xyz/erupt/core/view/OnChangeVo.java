@@ -13,7 +13,7 @@ import java.util.Map;
 @Setter
 public class OnChangeVo {
 
-    private Object formData;
+    private Map<String, Object> formData;
 
     private Map<String, String> editExpr;
 
