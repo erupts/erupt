@@ -29,7 +29,11 @@ public @interface Edit {
     @Comment("是否显示")
     boolean show() default true;
 
-    Class<? extends OnChange> onChange() default OnChange.class;
+    @Transient
+    @Comment("可被 onchange 接口获取到")
+    String[] onchangeParams() default {};
+
+    Class<? extends OnChange> onchange() default OnChange.class;
 
     @Transient
     @Comment("动态渲染配置")

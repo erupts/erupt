@@ -41,7 +41,7 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
             }
             return this.rawAnnotation.type();
         } else if (super.matchMethod(invocation, Edit::filter)) {
-            return FilterProxy.proxy(this.rawAnnotation.filter(),this);
+            return FilterProxy.proxy(this.rawAnnotation.filter(), this);
         } else if (super.matchMethod(invocation, Edit::readonly)) {
             return AnnotationProxyPool.getOrPut(this.rawAnnotation.readonly(), readonly -> new ReadonlyProxy().newProxy(readonly, this));
         } else if (super.matchMethod(invocation, Edit::title)) {
