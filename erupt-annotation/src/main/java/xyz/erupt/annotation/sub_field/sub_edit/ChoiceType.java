@@ -28,10 +28,12 @@ public @interface ChoiceType {
     @Comment("动态下拉列表")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
+    @Deprecated
     @Transient
     @Comment("可被trigger接口获取到")
     String[] triggerParams() default {};
 
+    @Deprecated
     @Comment("选择数据时触发动作")
     @Match("#item.trigger().getSimpleName() != 'ChoiceTrigger'")
     Class<? extends ChoiceTrigger> trigger() default ChoiceTrigger.class;
