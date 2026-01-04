@@ -20,8 +20,8 @@ import java.util.List;
 @Scope("prototype")
 public class EruptDataQuery implements AiFunctionCall {
 
-    @AiParam(description = "Erupt Name")
-    private String eruptName;
+    @AiParam(description = "HQL (Hibernate Query Language)")
+    private String hql;
 
     @Resource
     private EruptDao eruptDao;
@@ -33,8 +33,7 @@ public class EruptDataQuery implements AiFunctionCall {
 
     @Override
     public String call(String prompt) {
-        EruptModel erupt = EruptCoreService.getErupt(eruptName);
-        List<?> result = eruptDao.lambdaQuery(erupt.getClazz()).limit(50).list();
+        List<?> result = eruptDao.getEntityManager().createQuery(hql).getResultList();
         return GsonFactory.getGson().toJson(result);
     }
 }
