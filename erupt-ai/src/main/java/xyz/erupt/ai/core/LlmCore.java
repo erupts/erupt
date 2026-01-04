@@ -6,6 +6,7 @@ import xyz.erupt.ai.pojo.ChatCompletionResponse;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,8 @@ public abstract class LlmCore {
     public static class H implements ChoiceFetchHandler {
         @Override
         public List<VLModel> fetch(String[] params) {
-            return llms.keySet().stream().map(it -> new VLModel(it, it)).collect(Collectors.toList());
+            return llms.keySet().stream().map(it -> new VLModel(it, it))
+                    .sorted(Comparator.comparing(VLModel::getLabel)).collect(Collectors.toList());
         }
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@ServerEndpoint("/erupt")
+@ServerEndpoint("/erupt-websocket")
 public class EruptChannel {
 
     @SneakyThrows

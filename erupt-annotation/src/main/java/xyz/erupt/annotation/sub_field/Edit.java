@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.config.Match;
@@ -29,6 +30,12 @@ public @interface Edit {
     boolean show() default true;
 
     @Transient
+    @Comment("可被 onchange 接口获取到")
+    String[] onchangeParams() default {};
+
+    Class<? extends OnChange> onchange() default OnChange.class;
+
+    @Transient
     @Comment("动态渲染配置")
     ExprBool ifRender() default @ExprBool;
 
@@ -48,6 +55,7 @@ public @interface Edit {
 
     @Transient
     @Comment("排序表达式，在修饰类型为 ORM 对象时可用")
+    @Language(value = "sql", prefix = "select * from t order by")
     String orderBy() default "";
 
     @Transient

@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.query.Condition;
+import xyz.erupt.annotation.query.Direction;
 import xyz.erupt.core.exception.EruptFieldAnnotationException;
 import xyz.erupt.core.invoke.DataProcessorManager;
 import xyz.erupt.core.query.Column;
@@ -56,7 +57,7 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
             query.skip((long) (page.getPageIndex() - 1) * page.getPageSize());
             if (null != page.getSort() && !page.getSort().isEmpty()) {
                 for (xyz.erupt.annotation.query.Sort sort : page.getSort()) {
-                    if (sort.getDirection() == xyz.erupt.annotation.query.Sort.Direction.asc) {
+                    if (sort.getDirection() == Direction.ASC) {
                         query.with(Sort.by(Sort.Direction.ASC, sort.getField()));
                     } else {
                         query.with(Sort.by(Sort.Direction.DESC, sort.getField()));

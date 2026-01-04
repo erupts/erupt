@@ -35,7 +35,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
                         tpl = @Tpl(path = "/tpl/llm-chat.ftl", height = "85vh", tplHandler = LLMDataProxy.class),
                         mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
                 @RowOperation(title = "默认对话模型", icon = "fa fa-magic",
-                        ifExpr = "item.defaultLLM == '×'",
+                        ifExpr = "item.defaultLLM === '×'",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
         }
 )
@@ -78,7 +78,6 @@ public class LLM extends MetaModelUpdateVo {
     private String apiUrl;
 
     @EruptField(
-            views = @View(title = "API Key", type = ViewType.HTML, width = "80px"),
             edit = @Edit(title = "API Key")
     )
     private String apiKey;

@@ -12,11 +12,6 @@ import xyz.erupt.ai.core.OpenAi;
 public class Moonshot extends OpenAi {
 
     @Override
-    public String code() {
-        return "Moonshot";
-    }
-
-    @Override
     public String model() {
         return "moonshot-v1-8k";
     }
@@ -24,11 +19,6 @@ public class Moonshot extends OpenAi {
     @Override
     public String api() {
         return "https://api.moonshot.cn";
-    }
-
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
     }
 
 }

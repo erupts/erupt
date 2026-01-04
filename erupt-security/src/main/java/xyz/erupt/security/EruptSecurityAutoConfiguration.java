@@ -22,7 +22,7 @@ public class EruptSecurityAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-security").build();
+        return ModuleInfo.builder().name("erupt-security").description("Erupt api security").build();
     }
 
 }

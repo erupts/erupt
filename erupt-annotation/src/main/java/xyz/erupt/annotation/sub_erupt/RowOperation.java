@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_erupt;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.fun.OperationHandler;
@@ -31,6 +32,7 @@ public @interface RowOperation {
     boolean fold() default false;
 
     @Comment("图标请参考Font Awesome")
+    @Language(value = "html", prefix = "<i class=\"", suffix = "\"></i>")
     String icon() default "fa fa-dot-circle-o";
 
     @Comment("功能模式")
@@ -39,6 +41,7 @@ public @interface RowOperation {
     @Comment("功能类型")
     Type type() default Type.ERUPT;
 
+    @Language("javascript")
     @Comment("控制按钮显示与隐藏 或 能否点击（JS表达式），变量：item 获取整行数据")
     String ifExpr() default "";
 

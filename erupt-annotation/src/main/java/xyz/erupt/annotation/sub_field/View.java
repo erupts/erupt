@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptProperty;
 import xyz.erupt.annotation.expr.ExprBool;
@@ -43,12 +44,14 @@ public @interface View {
     boolean export() default true;
 
     @Comment("样式类名")
+    @Language("css")
     String className() default "";
 
     @Comment("格式化表格列值，前端使用eval方法解析，支持变量：" +
             "1、item    （表格整行数据）" +
             "2、item.xxx（数据行中某一列的值）" +
             "3、value   （当前列值）")
+    @Language("javascript")
     String template() default "";
 
 }

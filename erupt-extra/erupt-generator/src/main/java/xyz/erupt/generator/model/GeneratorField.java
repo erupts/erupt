@@ -1,6 +1,9 @@
 package xyz.erupt.generator.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -48,7 +51,6 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
     private Integer sort;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "varchar(100)")
     @EruptField(
             views = @View(title = "编辑类型"),
             edit = @Edit(title = "编辑类型",
@@ -61,7 +63,7 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
             views = @View(title = "关联实体类"),
             edit = @Edit(title = "关联实体类", dynamic = @Dynamic(dependField = "type",
                     match = Dynamic.Ctrl.NOTNULL,
-                    condition = "value.indexOf('REFERENCE') != -1 || value.indexOf('TAB') != -1 || value == 'CHECKBOX' || value == 'COMBINE'"))
+                    condition = "value.indexOf('REFERENCE') !== -1 || value.indexOf('TAB') !== -1 || value === 'CHECKBOX' || value === 'COMBINE'"))
     )
     private String linkClass;
 

@@ -25,7 +25,7 @@ public @interface Tree {
     int expandLevel() default 999;
 
     @Transient
-    @Comment("标识pid为何特征才是根节点，需要与filter配合使用")
+    @Comment("标识pid为何特征才是根节点，不配置则默认按照 null 作为根节点，需要与 filter 配合使用")
     Expr rootPid() default @Expr;
 
 }

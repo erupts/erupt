@@ -12,11 +12,6 @@ import xyz.erupt.ai.core.OpenAi;
 public class Ollama extends OpenAi {
 
     @Override
-    public String code() {
-        return "Ollama";
-    }
-
-    @Override
     public String model() {
         return "nomic-embed-text";
     }
@@ -24,11 +19,6 @@ public class Ollama extends OpenAi {
     @Override
     public String api() {
         return "http://localhost:11434";
-    }
-
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
     }
 
 }

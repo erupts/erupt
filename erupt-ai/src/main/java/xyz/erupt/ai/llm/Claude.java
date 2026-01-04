@@ -12,11 +12,6 @@ import xyz.erupt.ai.core.OpenAi;
 public class Claude extends OpenAi {
 
     @Override
-    public String code() {
-        return "Claude";
-    }
-
-    @Override
     public String model() {
         return "claude-3-7-sonnet-latest";
     }
@@ -24,11 +19,6 @@ public class Claude extends OpenAi {
     @Override
     public String api() {
         return "https://api.anthropic.com";
-    }
-
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
     }
 
 }

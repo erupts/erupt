@@ -37,6 +37,16 @@ public abstract class OpenAi extends LlmCore {
     }
 
     @Override
+    public String code() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    public LlmConfig config() {
+        return new LlmConfig();
+    }
+
+    @Override
     public ChatCompletionResponse chat(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt) {
         assistantPrompt.add(new ChatCompletionMessage(MessageRole.user, userPrompt));
         ChatCompletion completion = ChatCompletion.builder().model(llmRequest.getModel()).stream(false).messages(assistantPrompt).build();
@@ -108,7 +118,9 @@ public abstract class OpenAi extends LlmCore {
                             String line = source.readUtf8Line();
                             if (StringUtils.isNotBlank(line)) {
                                 if (!response.isSuccessful()) {
-                                    this.onFailure(call, new IOException(line));
+                                    this.onFailure(call, new IOException(response.body().string()));
+                                    log.error("Failed to get llm response from server: {}", response.body());
+                                    return;
                                 } else {
                                     try {
                                         if (line.startsWith("data: ")) {

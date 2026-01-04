@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import xyz.erupt.annotation.Vis;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.View;
@@ -108,6 +109,17 @@ public class EruptTplController implements EruptRouter.VerifyHandler {
         map.put(EngineConst.INJECT_ROWS, Stream.of(ids).map(id -> DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id))).collect(Collectors.toList()));
         eruptTplService.tplRender(operation.tpl(), map, response);
+    }
+
+    @GetMapping(value = "/vis-tpl/{erupt}/{code}", produces = HTML_MIME_TYPE)
+    @EruptRouter(authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    public void visTpl(@PathVariable("erupt") String eruptName, @PathVariable("code") String code, HttpServletResponse response) {
+        EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
+        Vis vis = Arrays.stream(eruptModel.getErupt().vis()).filter(it ->
+                it.code().equals(code)).findFirst().orElseThrow(EruptNoLegalPowerException::new);
+        Erupts.powerLegal(ExprInvoke.getExpr(vis.show()));
+        Map<String, Object> map = new HashMap<>();
+        eruptTplService.tplRender(vis.tplView(), map, response);
     }
 
     /**

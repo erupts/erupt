@@ -17,6 +17,8 @@ public class VLModel {
 
     private String desc;
 
+    private String color;
+
     private boolean disable;
 
     // Custom extension value
@@ -44,7 +46,7 @@ public class VLModel {
         this.disable = disable;
     }
 
-    public VLModel(String value, String label, String desc, boolean disable) {
+    public VLModel(String value, String label, String desc, String color, boolean disable) {
         this.value = value;
         this.label = label;
         this.desc = desc;

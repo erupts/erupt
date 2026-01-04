@@ -10,12 +10,12 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.13.1</version>
+        <version>1.13.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
-        <poi.version>5.4.1</poi.version>
+        <poi.version>5.5.0</poi.version>
     </properties>
 
     <dependencies>

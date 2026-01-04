@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
+import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 
 import java.beans.Transient;
@@ -15,6 +16,7 @@ public @interface AttachmentType {
 
     @Transient
     @Comment("定义独享存储空间，便于文件查找")
+    @Language("file-reference")
     String path() default "";
 
     @Comment("允许上传的文件类型")

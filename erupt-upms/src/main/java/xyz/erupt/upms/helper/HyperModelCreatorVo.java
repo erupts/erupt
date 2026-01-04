@@ -35,7 +35,7 @@ public class HyperModelCreatorVo extends BaseModel {
     @ManyToOne
     @EruptField(
             views = @View(title = "创建人", width = "100px", column = "name"),
-            edit = @Edit(title = "创建人", readonly = @Readonly, type = EditType.REFERENCE_TABLE)
+            edit = @Edit(title = "创建人", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
     )
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -44,7 +44,7 @@ public class HyperModelCreatorVo extends BaseModel {
 
     @EruptField(
             views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间", readonly = @Readonly, dateType = @DateType(type = DateType.Type.DATE_TIME))
+            edit = @Edit(title = "创建时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private Date createTime;
@@ -63,9 +63,9 @@ public class HyperModelCreatorVo extends BaseModel {
     @PrePersist
     protected void persist() {
         try {
+            this.setCreateTime(new Date());
             Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
                 this.setCreateUser(new EruptUserVo(it));
-                this.setCreateTime(new Date());
             });
         } catch (Exception ignored) {
         }
@@ -75,9 +75,9 @@ public class HyperModelCreatorVo extends BaseModel {
     @PreUpdate
     protected void update() {
         try {
+            this.setUpdateTime(new Date());
             Optional.ofNullable(EruptSpringUtil.getBean(EruptUserService.class).getCurrentUid()).ifPresent(it -> {
                 this.setUpdateUser(new EruptUserVo(it));
-                this.setUpdateTime(new Date());
             });
         } catch (Exception ignored) {
         }

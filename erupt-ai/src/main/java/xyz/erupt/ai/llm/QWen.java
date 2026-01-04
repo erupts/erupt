@@ -17,11 +17,6 @@ public class QWen extends OpenAi {
     }
 
     @Override
-    public String code() {
-        return "Qwen";
-    }
-
-    @Override
     public String model() {
         return "qwen-plus";
     }
@@ -29,11 +24,6 @@ public class QWen extends OpenAi {
     @Override
     public String api() {
         return "https://dashscope.aliyuncs.com";
-    }
-
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
     }
 
 }

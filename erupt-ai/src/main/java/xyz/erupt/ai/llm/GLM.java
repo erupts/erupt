@@ -12,11 +12,6 @@ import xyz.erupt.ai.core.OpenAi;
 public class GLM extends OpenAi {
 
     @Override
-    public String code() {
-        return "ChatGLM";
-    }
-
-    @Override
     public String model() {
         return "glm-4-air";
     }
@@ -29,11 +24,6 @@ public class GLM extends OpenAi {
     @Override
     public String chatApiPath() {
         return "/api/paas/v4/chat/completions";
-    }
-
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
     }
 
 }

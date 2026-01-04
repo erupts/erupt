@@ -12,11 +12,6 @@ import xyz.erupt.ai.core.OpenAi;
 public class ChatGpt extends OpenAi {
 
     @Override
-    public String code() {
-        return "ChatGpt";
-    }
-
-    @Override
     public String model() {
         return "gpt-4o";
     }
@@ -24,11 +19,6 @@ public class ChatGpt extends OpenAi {
     @Override
     public String api() {
         return "https://api.openai.com";
-    }
-
-    @Override
-    public LlmConfig config() {
-        return new LlmConfig();
     }
 
 }

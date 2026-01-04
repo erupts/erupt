@@ -1,0 +1,17 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Notice Manager,通知管理,通知管理,Notice Manager,Gestionnaire de notifications,通知マネージャー,알림 관리자,Менеджер уведомлений,Administrador de notificaciones,Benachrichtigungsmanager,Gerenciador de Notificações,Manajer Pemberitahuan,مدير الإشعارات
+Notice Scene,通知场景,通知場景,Notification Scene,Scène de notification,通知シーン,알림 장면,Сцена уведомления,Escena de notificación,Benachrichtigungsszene,Cena de Notificação,Skenario Pemberitahuan,مشهد الإشعار
+Notice Log,消息通知,消息通知,Notification Log,Journal de notifications,通知ログ,알림 로그,Журнал уведомлений,Registro de notificaciones,Benachrichtigungsprotokoll,Registro de Notificações,Log Pemberitahuan,سجل الإشعارات
+Notice Log Details,通知详情,通知詳情,Notification Log Details,Détails du journal de notifications,通知ログの詳細,알림 로그 상세,Сведения журнала уведомлений,Detalles del registro de notificaciones,Details zum Benachrichtigungsprotokoll,Detalhes do Registro de Notificações,Detail Log Pemberitahuan,تفاصيل سجل الإشعارات
+Announcement,消息公告,消息公告,Announcement,Annonce,お知らせ,공지사항,Объявление,Anuncio,Ankündigung,Anúncio,Pengumuman,إعلان
+
+notice.receive_user,接收用户,接收用戶,Recipient,Destinataire,受信者,수신자,Получатель,Destinatario,Empfänger,Destinatário,Penerima,المستلم
+notice.channel,通知渠道,通知管道,Notification Channel,Canal de notification,通知チャンネル,알림 채널,Канал уведомлений,Canal de notificación,Benachrichtigungskanal,Canal de notificação,Saluran Notifikasi,قناة الإشعار
+notice.is_success,是否成功,是否成功,Success,Réussite,成功,성공 여부,Успешно,¿Éxito?,Erfolg,Sucesso,Sukses,النجاح
+notice.error,错误信息,錯誤資訊,Error Information,Informations d’erreur,エラー情報,오류 정보,Информация об ошибке,Información de error,Fehlerinformation,Informação de erro,Informasi Kesalahan,معلومات الخطأ
+notice.channel.internal,站内通知,站內通知,Internal,Interne,内線通知,내부 통지,Внутрение уведомление,Notificación interna,Interner Benachrichtigung,Notificação interna,Notifikasi Internal,إشعار الداخل
+notice.status,状态,狀態,Status,Statut,状態,상태,Статус,Estado,Status,Estado,Status,الحالة
+notice.scene,通知场景,通知場景,Notification Scene,Scène de notification,通知場景,通知場景,Уведомление сцена,Escena de notificación,Benachrichtigungsszene,Escena de notificación,Scene Notifikasi,محocus الإشعار
+SENT,已发送,已發送,Sent,Envoyé,送信済み,발송 완료,Отправлено,Enviado,Gesendet,Enviado,Dikirim,تم الإرسال
+UNREAD,未读,未讀,Unread,Non lu,未読,미확인,Не прочитано,No leído,No gelesen,No leído,Belum Dibaca,غير مقروء
+READ,已读,已讀,Read,Lu,読み,읽음,Прочитано,Leído,Gelesen,Leído,Dibaca,تم القراءة

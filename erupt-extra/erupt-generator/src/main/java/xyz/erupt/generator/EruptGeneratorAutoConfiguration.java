@@ -31,7 +31,7 @@ public class EruptGeneratorAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name("erupt-generator").build();
+        return ModuleInfo.builder().name("erupt-generator").description("Generator erupt code").build();
     }
 
     @Override

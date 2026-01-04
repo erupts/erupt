@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.constant.SqlLang;
 import xyz.erupt.linq.lambda.LambdaInfo;
 import xyz.erupt.linq.lambda.LambdaSee;
@@ -43,6 +44,18 @@ public class EruptLambdaQuery<T> {
     public EruptLambdaQuery<T> with() {
         querySchema.getWith().clear();
         return this;
+    }
+
+    public SimplePage<T> page(int limit, int offset) {
+        SimplePage<T> simplePage = new SimplePage<>();
+
+        simplePage.setTotal(this.count());
+        if (simplePage.getTotal() > 0) {
+            simplePage.setList(this.limit(limit).offset(offset).list());
+        } else {
+            simplePage.setList(new ArrayList<>());
+        }
+        return simplePage;
     }
 
     public <E, R> EruptLambdaQuery<T> isNull(SFunction<E, R> field) {
@@ -372,33 +385,57 @@ public class EruptLambdaQuery<T> {
     }
 
     public Long count() {
-        this.querySchema.columns.add("count(*)");
-        return (Long) geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("count(*)");
+            return (Long) geneQuery(false).getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Long count(SFunction<E, ?> field) {
-        this.querySchema.columns.add("count(" + geneField(field) + ")");
-        return (Long) geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("count(" + geneField(field) + ")");
+            return (Long) geneQuery(false).getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Object sum(SFunction<E, ?> field) {
-        this.querySchema.columns.add("sum(" + geneField(field) + ")");
-        return geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("sum(" + geneField(field) + ")");
+            return geneQuery(false).getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Double avg(SFunction<E, ?> field) {
-        this.querySchema.columns.add("avg(" + geneField(field) + ")");
-        return (Double) geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("avg(" + geneField(field) + ")");
+            return (Double) geneQuery(false).getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Object min(SFunction<E, ?> field) {
-        this.querySchema.columns.add("min(" + geneField(field) + ")");
-        return geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("min(" + geneField(field) + ")");
+            return geneQuery(false).getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public <E> Object max(SFunction<E, ?> field) {
-        this.querySchema.columns.add("max(" + geneField(field) + ")");
-        return geneQuery().getSingleResult();
+        try {
+            this.querySchema.columns.add("max(" + geneField(field) + ")");
+            return geneQuery(false).getSingleResult();
+        } finally {
+            this.querySchema.columns.clear();
+        }
     }
 
     public int delete() {
@@ -417,6 +454,13 @@ public class EruptLambdaQuery<T> {
     }
 
     private Query geneQuery() {
+        return this.geneQuery(true);
+    }
+
+    /**
+     * @param useOrderBy count/sum/avg/min/max don't need order
+     */
+    private Query geneQuery(boolean useOrderBy) {
         StringBuilder select = new StringBuilder();
         if (!querySchema.columns.isEmpty()) {
             select.append(SqlLang.SELECT);
@@ -429,7 +473,7 @@ public class EruptLambdaQuery<T> {
         StringBuilder expr = new StringBuilder(select + SqlLang.FROM + eruptClass.getSimpleName() + SqlLang.AS + eruptClass.getSimpleName());
         if (!querySchema.getWheres().isEmpty())
             expr.append(SqlLang.WHERE).append(String.join(SqlLang.AND, querySchema.getWheres()));
-        if (!querySchema.getOrders().isEmpty())
+        if (useOrderBy && !querySchema.getOrders().isEmpty())
             expr.append(SqlLang.ORDER_BY).append(String.join(SqlLang.COMMA, querySchema.getOrders()));
         Query query = entityManager.createQuery(expr.toString());
         querySchema.getParams().forEach(query::setParameter);
