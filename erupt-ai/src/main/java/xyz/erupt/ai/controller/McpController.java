@@ -1,6 +1,7 @@
 package xyz.erupt.ai.controller;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,8 +15,11 @@ import xyz.erupt.ai.call.AiFunctionManager;
 import xyz.erupt.ai.config.AiMCPProp;
 import xyz.erupt.ai.util.McpUtil;
 import xyz.erupt.ai.vo.mcp.*;
+import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.model.EruptOpenApi;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -37,6 +41,9 @@ public class McpController {
 
     @Resource
     private AiMCPProp mcpProp;
+
+    @Resource
+    private EruptDao eruptDao;
 
     @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @PostMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -69,7 +76,23 @@ public class McpController {
     }
 
     @PostMapping
-    public ResponseEntity<?> call(@RequestBody McpRequest request) {
+    public ResponseEntity<?> call(HttpServletRequest servletRequest, @RequestBody McpRequest request) {
+        String auth = servletRequest.getHeader("Authorization");
+        if (null == auth) {
+            log.error("MCP authorization not found");
+            return ResponseEntity.status(401).build();
+        }
+        String bearer = "Bearer ";
+        String token = auth.startsWith(bearer) ? auth.substring(bearer.length()) : auth;
+        EruptOpenApi eruptOpenApi = eruptDao.lambdaQuery(EruptOpenApi.class).eq(EruptOpenApi::getSecret, token).one();
+        if (null == eruptOpenApi) {
+            log.error("MCP authorization token error: {}", token);
+            return ResponseEntity.status(401).build();
+        } else {
+            MetaContext.getUser().setUid(eruptOpenApi.getEruptUser().getId());
+            MetaContext.getUser().setName(eruptOpenApi.getEruptUser().getName());
+            MetaContext.getUser().setAccount(eruptOpenApi.getEruptUser().getAccount());
+        }
         McpResult result = new McpResult();
         switch (request.getMethod()) {
             case "initialize" -> result.setResult(this.mcpInfo());
@@ -84,7 +107,7 @@ public class McpController {
                     mcpCallResult.setContent(List.of(content));
                     result.setResult(mcpCallResult);
                 } catch (Exception e) {
-                    log.error("mcp call error [" + request.getParams().getName() + "]", e);
+                    log.error("MCP call error [" + request.getParams().getName() + "]", e);
                     content.setText(e.getMessage());
                     mcpCallResult.setError(true);
                     mcpCallResult.setContent(List.of(content));
