@@ -43,7 +43,7 @@ import xyz.erupt.upms.handler.ViaMenuValueCtrl;
                 ),
                 @RowOperation(
                         title = "节点日志", mode = RowOperation.Mode.SINGLE,
-                        ifExpr = "item.version && item.version != '-'",
+                        ifExpr = "item.version && item.version !== '-'",
                         show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.ERUPT_CLOUD_NODE_LOG),
                         type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/erupt-log.html", height = "80vh", openWay = OpenWay.DRAWER, drawerPlacement = Placement.BOTTOM)
                 ),
