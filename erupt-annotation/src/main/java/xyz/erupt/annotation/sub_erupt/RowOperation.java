@@ -41,6 +41,7 @@ public @interface RowOperation {
     @Comment("功能类型")
     Type type() default Type.ERUPT;
 
+    @Language("javascript")
     @Comment("控制按钮显示与隐藏 或 能否点击（JS表达式），变量：item 获取整行数据")
     String ifExpr() default "";
 

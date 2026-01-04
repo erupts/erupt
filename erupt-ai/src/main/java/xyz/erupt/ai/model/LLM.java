@@ -35,7 +35,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
                         tpl = @Tpl(path = "/tpl/llm-chat.ftl", height = "85vh", tplHandler = LLMDataProxy.class),
                         mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
                 @RowOperation(title = "默认对话模型", icon = "fa fa-magic",
-                        ifExpr = "item.defaultLLM == '×'",
+                        ifExpr = "item.defaultLLM === '×'",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
         }
 )
