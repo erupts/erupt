@@ -1,5 +1,5 @@
 # 默认使用阿里云镜像
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:17-jre
 
 # 设置工作目录
 WORKDIR /app
