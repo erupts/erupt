@@ -8,5 +8,8 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Setter
 public class EruptPrintVar extends MetaModelUpdateVo {
 
+    private String name;
+
+    private String value;
 
 }
