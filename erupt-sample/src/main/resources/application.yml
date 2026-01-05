@@ -2,8 +2,6 @@
 spring:
   datasource:
     url: jdbc:h2:file:./erupt;AUTO_SERVER=TRUE;MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE
-    username: sa
-    password:
     driver-class-name: org.h2.Driver
   h2:
     console:
@@ -19,7 +17,6 @@ spring:
       hibernate:
         globally_quoted_identifiers: true
         type.enumeration.use_named: false # Make Hibernate 6 not use native enums and switch back to varchar.
-
 erupt:
   ai:
     mcp:
