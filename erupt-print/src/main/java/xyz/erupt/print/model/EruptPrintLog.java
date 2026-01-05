@@ -1,4 +1,13 @@
 package xyz.erupt.print.model;
 
-public class EruptPrintLog {
+import xyz.erupt.jpa.model.MetaModelCreateOnlyVo;
+
+public class EruptPrintLog extends MetaModelCreateOnlyVo {
+
+    private String seq;
+
+    private String erupt;
+
+    private String content;
+
 }
