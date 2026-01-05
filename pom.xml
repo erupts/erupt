@@ -45,6 +45,8 @@
         <module>erupt-websocket</module>
         <!-- Notice -->
         <module>erupt-notice</module>
+        <!-- Print -->
+        <module>erupt-print</module>
         <!-- Front-end Code -->
         <module>erupt-web</module>
 
