@@ -8,6 +8,7 @@ import java.util.Map;
  * @author YuePeng
  * date 2019-07-25.
  */
+@Deprecated
 public interface ChoiceTrigger {
 
     @Comment("获取下拉列表")
