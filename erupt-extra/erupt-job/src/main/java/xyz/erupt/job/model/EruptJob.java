@@ -63,7 +63,8 @@ public class EruptJob extends MetaModelUpdateVo {
     @EruptField(
             views = @View(title = "任务执行器"),
             edit = @Edit(title = "任务执行器", desc = "实现EruptJobHandler接口即可",
-                    choiceType = @ChoiceType(fetchHandler = EruptJobFetch.class, trigger = EruptJobFetch.class)
+                    choiceType = @ChoiceType(fetchHandler = EruptJobFetch.class)
+                    , onchange = EruptJobFetch.class
                     , notNull = true, search = @Search, type = EditType.CHOICE)
     )
     private String handler;

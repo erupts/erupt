@@ -59,7 +59,8 @@ public class LLM extends MetaModelUpdateVo {
                     type = EditType.CHOICE,
                     notNull = true,
                     search = @Search,
-                    choiceType = @ChoiceType(fetchHandler = LlmCore.H.class, trigger = LLMDataProxy.class)
+                    onchange = LLMDataProxy.class,
+                    choiceType = @ChoiceType(fetchHandler = LlmCore.H.class)
             )
     )
     private String llm;
