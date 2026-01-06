@@ -5,7 +5,7 @@ body{
 .wrapper {
     margin: 10px auto 0;
     font-size: 12px;
-    overflow: hidden;
+    overflow: auto;
     width: 520px;
     height: 315px;
 }
