@@ -9,7 +9,7 @@
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-jpa</artifactId>
+            <artifactId>erupt-upms</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

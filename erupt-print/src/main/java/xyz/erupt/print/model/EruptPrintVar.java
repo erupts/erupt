@@ -9,13 +9,14 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
+import xyz.erupt.upms.helper.HyperModelUpdateVo;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "e_print_var")
 @Erupt(name = "Print Variable")
-public class EruptPrintVar extends MetaModelUpdateVo {
+public class EruptPrintVar extends HyperModelUpdateVo {
 
     @EruptField(
             views = @View(title = "名称"),
