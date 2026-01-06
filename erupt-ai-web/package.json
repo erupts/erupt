@@ -23,6 +23,7 @@
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-highlightjs": "^4.2.0",
     "markdown-it-ins": "^4.0.0",
+    "markdown-it-katex": "^2.0.3",
     "markdown-it-link-attributes": "^4.0.1",
     "markdown-it-mark": "^4.0.0",
     "markdown-it-mermaid": "^0.2.5",
