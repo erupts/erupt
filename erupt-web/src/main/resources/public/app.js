@@ -12,6 +12,9 @@ window.eruptSiteConfig = {
     registerPage: null,
     amapKey: '6ed167be6d22b8f8fa8e0402724df150',
     amapSecurityJsCode: "ee3e78fcb019e6078fcfc5b53b0a63ec",
+    theme: {
+        primaryColor: '#1837ff'
+    },
     r_tools: [{
         mobileHidden: true,
         icon: "fa-qq",
