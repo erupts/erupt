@@ -1,6 +1,5 @@
 package xyz.erupt.job.service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
@@ -24,10 +23,10 @@ import java.util.*;
 @Component
 public class EruptJobFetch implements ChoiceFetchHandler, ChoiceTrigger {
 
-    private static final List<VLModel> loadedJobHandler = new ArrayList<>();
+    private List<VLModel> loadedJobHandler;
 
-    @PostConstruct
     public void init() {
+        loadedJobHandler = new ArrayList<>();
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{new AssignableTypeFilter(EruptJobHandler.class)}, clazz -> {
             EruptHandlerNaming eruptHandlerNaming = clazz.getAnnotation(EruptHandlerNaming.class);
             if (null == eruptHandlerNaming) {
@@ -40,6 +39,9 @@ public class EruptJobFetch implements ChoiceFetchHandler, ChoiceTrigger {
 
     @Override
     public synchronized List<VLModel> fetch(String[] params) {
+        if (null == loadedJobHandler) {
+            init();
+        }
         return loadedJobHandler;
     }
 
