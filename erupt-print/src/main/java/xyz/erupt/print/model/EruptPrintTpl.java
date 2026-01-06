@@ -9,13 +9,16 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.MetaModelCreateOnlyVo;
+import xyz.erupt.upms.helper.HyperModelUpdateVo;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "e_print_tpl")
 @Erupt(name = "Print Template")
-public class EruptPrintTpl extends MetaModelCreateOnlyVo {
+public class EruptPrintTpl extends HyperModelUpdateVo {
+
+    private String code;
 
     @EruptField(
             views = @View(title = "名称"),
