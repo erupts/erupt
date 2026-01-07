@@ -29,11 +29,17 @@ public class GsonFactory implements ToNumberStrategy {
     private final static GsonBuilder gsonBuilder = new GsonBuilder()
             .setDateFormat(DateUtil.DATE_TIME)
             .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context)
-                    -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME))))
+                    -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(src.toString().length() == 10 ? DateUtil.DATE : DateUtil.DATE_TIME))))
             .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, typeOfSrc, context)
                     -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(DateUtil.DATE))))
             .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext)
-                    -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)))
+                    -> {
+                String str = json.getAsJsonPrimitive().getAsString();
+                if (str.length() == 10) {
+                    return LocalDate.parse(str, DateTimeFormatter.ofPattern(DateUtil.DATE)).atStartOfDay();
+                }
+                return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(DateUtil.DATE_TIME));
+            })
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
             .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
