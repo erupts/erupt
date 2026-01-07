@@ -148,4 +148,9 @@
     background: #ddd;
     margin: @base-margin * 2 0;
   }
+
+  /* 修复 KaTeX 上下标显示问题 */
+  .katex .vlist {
+    vertical-align: baseline !important;
+  }
 }

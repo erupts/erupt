@@ -11,34 +11,37 @@ import abbr from 'markdown-it-abbr';
 import deflist from 'markdown-it-deflist';
 import linkAttributes from 'markdown-it-link-attributes';
 import taskLists from 'markdown-it-task-lists';
-import katex from 'katex';
+import markdownItKatex from 'markdown-it-katex';
 import 'katex/dist/katex.min.css';
+import mermaid from 'mermaid';
 
+// 初始化 mermaid
+// if (typeof window !== 'undefined') {
+//     mermaid.initialize({
+//         startOnLoad: true,
+//         theme: 'default',
+//         securityLevel: 'loose'
+//     });
+// }
 
-// 自定义数学公式渲染
-// @ts-ignore
-const renderMath = (md) => {
-    const defaultRender = md.renderer.rules.text;
-    md.renderer.rules.text = (tokens: {
-        [x: string]: any;
-    }, idx: string | number, options: any, env: any, self: any) => {
-        const token = tokens[idx];
-        const match = token.content.match(/(\$\$?)([\s\S]*?)\1/g);
-        if (match) {
-            match.forEach((m: string) => {
-                const isBlock = m.startsWith('$$');
-                const tex = m.slice(2, -2);
-                try {
-                    const html = katex.renderToString(tex, {displayMode: isBlock});
-                    token.content = token.content.replace(m, html);
-                } catch (e: any) {
-                    token.content = token.content.replace(m, `<span class="error">Error rendering math: ${e.message}</span>`);
-                }
-            });
-        }
-        return defaultRender(tokens, idx, options, env, self);
-    };
-};
+function preprocessLatex(text: string): string {
+    // 1. 先将 ```latex 代码块的内容提取出来（保留原始内容）
+    text = text.replace(/```latex\s*([\s\S]*?)```/g, (_match, content) => {
+        return '\n' + content.trim() + '\n';
+    });
+
+    // 2. 统一将 \[ ... \] 转换为 $$...$$（LaTeX 块级公式）
+    text = text.replace(/\\\[([\s\S]*?)\\\]/g, (_match, formula) => {
+        return '$$' + formula.trim() + '$$';
+    });
+
+    // 3. 将 \( ... \) 转换为 $...$（LaTeX 行内公式）
+    text = text.replace(/\\\(([\s\S]*?)\\\)/g, (_match, formula) => {
+        return '$' + formula.trim() + '$';
+    });
+
+    return text;
+}
 
 // 创建 markdown-it 实例并加载插件
 const md = new MarkdownIt({
@@ -47,6 +50,12 @@ const md = new MarkdownIt({
     linkify: true,
     typographer: true,
     highlight: (str: string, lang: string) => {
+        // 处理 mermaid 图表
+        if (lang === 'mermaid') {
+            return `<div class="mermaid">${str}</div>`;
+        }
+
+        // 处理代码高亮
         if (lang && hljs.getLanguage(lang)) {
             return `<pre class="hljs"><code>${hljs.highlight(str, {language: lang}).value}</code></pre>`;
         }
@@ -63,6 +72,26 @@ const md = new MarkdownIt({
     .use(deflist)
     .use(linkAttributes, {attrs: {target: '_blank', rel: 'noopener'}})
     .use(taskLists)
-    .use(renderMath);
+    .use(markdownItKatex, {
+        throwOnError: false,
+        errorColor: '#cc0000'
+    });
+
+// 重写 render 方法，添加预处理
+const originalRender = md.render.bind(md);
+md.render = function (text: string, env?: any): string {
+    const preprocessedText = preprocessLatex(text);
+    const html = originalRender(preprocessedText, env);
+
+    if (html.indexOf('<div class="mermaid">') !== -1) {
+        setTimeout(() => {
+            mermaid.run({
+                querySelector: '.mermaid'
+            });
+        }, 0);
+    }
+
+    return html;
+};
 
 export default md;

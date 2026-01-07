@@ -11,11 +11,15 @@ import java.util.Map;
 public interface OnChange<MODEL> {
 
     @Comment("根据用户输入填充表单")
-    Map<String, Object> populateForm(MODEL model, String[] params);
+    default Map<String, Object> populateForm(MODEL model, String[] params) {
+        return null;
+    }
 
     @Comment("根据用户输入动态调整不同的字段的 @Edit 注解配置")
     @Comment("demo: return Map.of(\"name\", \"edit.desc='xxxxx'\");")
-    Map<String, String> buildEditExpr(MODEL model, String[] params);
+    default Map<String, String> buildEditExpr(MODEL model, String[] params) {
+        return null;
+    }
 
 
 }
