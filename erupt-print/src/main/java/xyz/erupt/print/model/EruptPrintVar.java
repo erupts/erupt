@@ -7,7 +7,9 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
 
@@ -26,7 +28,7 @@ public class EruptPrintVar extends HyperModelUpdateVo {
 
     @EruptField(
             views = @View(title = "脚本"),
-            edit = @Edit(title = "脚本")
+            edit = @Edit(title = "脚本", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "js"))
     )
     private String script;
 

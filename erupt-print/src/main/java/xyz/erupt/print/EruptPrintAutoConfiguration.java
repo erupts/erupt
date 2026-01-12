@@ -35,6 +35,7 @@ public class EruptPrintAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
+        
         return ModuleInfo.builder().name(ERUPT_PRINT).description("Print module").build();
     }
 
