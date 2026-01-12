@@ -14,7 +14,7 @@ import java.util.Map;
  * @author YuePeng
  * date 2018-10-09.
  */
-public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<MODEL> {
+public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MODEL> {
 
     @Comment("Validate")
     default void validate(MODEL model) throws EruptException {
@@ -78,6 +78,11 @@ public interface DataProxy<@Comment("Erupt类对象") MODEL> extends MetaProxy<M
 
     @Comment("excel导入，处理excel中提取到的的结构化数据")
     default void excelImportProcess(@Comment("数据对象") List<MODEL> list) {
+    }
+
+    @Comment("Print Erupt object")
+    default String print(MODEL model, String content) {
+        return content;
     }
 
     @Comment("警告提示")
