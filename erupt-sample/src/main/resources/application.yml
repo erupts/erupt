@@ -21,3 +21,5 @@ erupt:
   ai:
     mcp:
       enabled: true
+server:
+  port: 9999
