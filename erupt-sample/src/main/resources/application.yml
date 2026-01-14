@@ -3,12 +3,6 @@ spring:
   datasource:
     url: jdbc:h2:file:./erupt;AUTO_SERVER=TRUE;MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE
     driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true
-      path: /h2
-      settings:
-        web-allow-others: true
   jpa:
     show-sql: false
     generate-ddl: true
