@@ -12,7 +12,9 @@ import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.print.model.EruptPrintTpl;
 import xyz.erupt.print.var.PrintVar;
+import xyz.erupt.upms.annotation.EruptLoginAuth;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -35,9 +37,16 @@ public class EruptPrintController {
         return R.ok(contentReference.get());
     }
 
+    @EruptLoginAuth
     @GetMapping("/vars")
     public R<List<VLModel>> vars() {
         return R.ok(PrintVar.PRINT_VAR_MAP.values().stream().map(it -> new VLModel(it.code(), it.name())).toList());
+    }
+
+    @EruptLoginAuth
+    @GetMapping("/templates")
+    public R<List<EruptPrintTpl>> templates() {
+        return R.ok(eruptDao.lambdaQuery(EruptPrintTpl.class).list());
     }
 
 }
