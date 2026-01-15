@@ -13,7 +13,7 @@ window.eruptSiteConfig = {
     amapKey: '6ed167be6d22b8f8fa8e0402724df150',
     amapSecurityJsCode: "ee3e78fcb019e6078fcfc5b53b0a63ec",
     theme: {
-        primaryColor: '#1837ff'
+        primaryColor: '#3f51b5'
     },
     r_tools: [{
         mobileHidden: true,
