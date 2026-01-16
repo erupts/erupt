@@ -3,6 +3,8 @@ spring:
   datasource:
     url: jdbc:h2:file:./erupt;AUTO_SERVER=TRUE;MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE
     driver-class-name: org.h2.Driver
+    username: sa
+    password:
   jpa:
     show-sql: false
     generate-ddl: true
@@ -15,3 +17,4 @@ erupt:
   ai:
     mcp:
       enabled: true
+    system-prompt: 你是一个 Aftership 智能助手，根据用户提供的上下文，生成合适的回答。
