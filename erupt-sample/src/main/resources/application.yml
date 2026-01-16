@@ -17,4 +17,3 @@ erupt:
   ai:
     mcp:
       enabled: true
-    system-prompt: 你是一个 Aftership 智能助手，根据用户提供的上下文，生成合适的回答。
