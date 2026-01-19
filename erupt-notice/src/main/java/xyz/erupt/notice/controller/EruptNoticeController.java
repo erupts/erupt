@@ -15,7 +15,9 @@ import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.channel.EruptInternalNotice;
 import xyz.erupt.notice.constant.NoticeStatus;
 import xyz.erupt.notice.modal.NoticeAnnouncement;
+import xyz.erupt.notice.modal.NoticeLog;
 import xyz.erupt.notice.modal.NoticeLogDetail;
+import xyz.erupt.notice.modal.NoticeScene;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
@@ -48,13 +50,15 @@ public class EruptNoticeController {
     @GetMapping("/messages")
     public R<SimplePage<NoticeLogDetail>> messages(@RequestParam int page, @RequestParam int size,
                                                    @RequestParam(required = false) NoticeStatus status,
-                                                   @RequestParam(required = false) String search) {
+                                                   @RequestParam(required = false) String search,
+                                                   @RequestParam(required = false) Long sense) {
         return R.ok(eruptDao.lambdaQuery(NoticeLogDetail.class)
                 .eq(NoticeLogDetail::getChannel, eruptInternalNotice.code())
                 .eq(NoticeLogDetail::getSuccess, true)
                 .eq(null != status, NoticeLogDetail::getStatus, status)
                 .with(NoticeLogDetail::getNoticeLog).like(null != search, NoticeAnnouncement::getTitle, search).with()
                 .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
+                .with(NoticeLogDetail::getNoticeLog).with(NoticeLog::getNoticeScene).eq(null != sense, NoticeScene::getId, sense).with()
                 .orderByDesc(NoticeLogDetail::getCreateTime).page(size, (page - 1) * size));
     }
 
