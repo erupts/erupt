@@ -61,14 +61,14 @@ public class EruptNoticeController {
     public R<SimplePage<NoticeLogDetail>> messages(@RequestParam int page, @RequestParam int size,
                                                    @RequestParam(required = false) NoticeStatus status,
                                                    @RequestParam(required = false) String search,
-                                                   @RequestParam(required = false) Long sense) {
+                                                   @RequestParam(required = false) Long scene) {
         return R.ok(eruptDao.lambdaQuery(NoticeLogDetail.class)
                 .eq(NoticeLogDetail::getChannel, eruptInternalNotice.code())
                 .eq(NoticeLogDetail::getSuccess, true)
                 .eq(null != status, NoticeLogDetail::getStatus, status)
                 .with(NoticeLogDetail::getNoticeLog).like(null != search, NoticeAnnouncement::getTitle, search).with()
                 .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
-                .with(NoticeLogDetail::getNoticeLog).with(NoticeLog::getNoticeScene).eq(null != sense, NoticeScene::getId, sense).with()
+                .with(NoticeLogDetail::getNoticeLog).with(NoticeLog::getNoticeScene).eq(null != scene, NoticeScene::getId, scene).with()
                 .orderByDesc(NoticeLogDetail::getCreateTime).page(size, (page - 1) * size));
     }
 
