@@ -2,6 +2,7 @@ package xyz.erupt.notice.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.notice.constant.NoticeUrlOpenWay;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,8 @@ public class NoticeMessage {
     private String content;
 
     private String url;
+
+    private NoticeUrlOpenWay urlOpenWay = NoticeUrlOpenWay.DRAWER;
 
     private Map<String, Object> params = new HashMap<>();
 
