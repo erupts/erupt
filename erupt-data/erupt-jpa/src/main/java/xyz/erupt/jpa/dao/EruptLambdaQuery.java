@@ -355,6 +355,11 @@ public class EruptLambdaQuery<T> {
         }
     }
 
+    public final <R> List<R> selectByPath(Class<R> requiredType, String... fields) {
+        this.querySchema.columns.addAll(Arrays.asList(fields));
+        return this.geneQuery().getResultList();
+    }
+
     @Deprecated
     @SafeVarargs
     public final List<Object[]> listSelects(SFunction<T, ?>... fields) {

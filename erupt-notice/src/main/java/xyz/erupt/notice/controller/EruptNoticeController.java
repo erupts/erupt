@@ -11,6 +11,7 @@ import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.view.R;
 import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.notice.channel.AbstractNoticeChannel;
 import xyz.erupt.notice.channel.EruptInternalNotice;
 import xyz.erupt.notice.constant.NoticeStatus;
@@ -44,6 +45,15 @@ public class EruptNoticeController {
         return R.ok(AbstractNoticeChannel.getHandlers().values().stream()
                 .sorted(Comparator.comparingInt(AbstractNoticeChannel::order))
                 .map(h -> new VLModel(h.code(), h.name())).toList());
+    }
+
+    @GetMapping("/scenes")
+    public R<List<NoticeScene>> scenes() {
+        List<Long> scenes = eruptDao.lambdaQuery(NoticeLogDetail.class)
+                .eq(NoticeLogDetail::getChannel, eruptInternalNotice.code()).eq(NoticeLogDetail::getSuccess, true)
+                .with(NoticeLogDetail::getReceiveUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
+                .selectByPath(Long.class, "distinct " + LambdaSee.field(NoticeLogDetail::getNoticeLog) + "." + LambdaSee.field(NoticeLog::getNoticeScene) + "." + LambdaSee.field(NoticeScene::getId));
+        return R.ok(eruptDao.lambdaQuery(NoticeScene.class).in(NoticeScene::getId, scenes).list());
     }
 
     @EruptLoginAuth
