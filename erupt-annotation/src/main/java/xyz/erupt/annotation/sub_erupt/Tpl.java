@@ -15,8 +15,7 @@ public @interface Tpl {
 
     boolean enable() default true;
 
-    @Transient
-    @Comment("模板文件路径")
+    @Comment("模板文件路径,或路由地址")
     String path();
 
     @Transient
