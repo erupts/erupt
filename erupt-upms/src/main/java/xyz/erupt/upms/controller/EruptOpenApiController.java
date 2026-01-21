@@ -1,21 +1,21 @@
 package xyz.erupt.upms.controller;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptOpenApi;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.vo.OpenApiTokenVo;
 
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 
 /**
@@ -47,7 +47,7 @@ public class EruptOpenApiController {
         if (eruptOpenApi == null) throw new EruptWebApiRuntimeException("appid not found");
         if (!secret.equals(eruptOpenApi.getSecret())) throw new EruptWebApiRuntimeException("secret error");
         if (!eruptOpenApi.getStatus()) throw new EruptWebApiRuntimeException("locked down");
-        String token = "ER" + RandomStringUtils.randomAlphanumeric(24).toUpperCase();
+        String token = "ER" + Erupts.generateCode(24).toUpperCase();
         LocalDateTime expire = LocalDateTime.now().plusMinutes(eruptOpenApi.getExpire());
         eruptTokenService.loginToken(eruptOpenApi.getEruptUser(), token, eruptOpenApi.getExpire());
         if (null != eruptOpenApi.getCurrentToken()) {

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.fun.OperationHandler;
 import xyz.erupt.core.constant.EruptConst;
+import xyz.erupt.core.util.Erupts;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.upms.model.EruptOpenApi;
@@ -37,7 +38,7 @@ public class EruptOpenApiDataProxy implements DataProxy<EruptOpenApi>, Operation
     @Override
     public void beforeAdd(EruptOpenApi eruptOpenApi) {
         eruptOpenApi.setAppid("es" + RandomStringUtils.random(14, EruptConst.AN));
-        eruptOpenApi.setSecret(RandomStringUtils.randomAlphanumeric(24).toUpperCase());
+        eruptOpenApi.setSecret(Erupts.generateCode(24).toUpperCase());
     }
 
     @Override
@@ -70,7 +71,7 @@ public class EruptOpenApiDataProxy implements DataProxy<EruptOpenApi>, Operation
     @Transactional
     public String exec(List<EruptOpenApi> data, Void unused, String[] param) {
         EruptOpenApi eruptOpenApi = eruptDao.find(EruptOpenApi.class, data.get(0).getId());
-        eruptOpenApi.setSecret(RandomStringUtils.randomAlphanumeric(24).toUpperCase());
+        eruptOpenApi.setSecret(Erupts.generateCode(24).toUpperCase());
         return "msg.info('new secret:" + eruptOpenApi.getSecret() + "')";
     }
 
