@@ -19,4 +19,6 @@ public class AiProp {
 
     private boolean devMode = false;
 
+    private boolean enableFunctionCall = true;
+
 }

@@ -83,7 +83,9 @@ public class LLMService {
             }
         } else {
             // Function Call
-            chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiFunctionManager.getFunctionCallPrompt()));
+            if (aiProp.isEnableFunctionCall()) {
+                chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiFunctionManager.getFunctionCallPrompt()));
+            }
         }
         List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
                 .eq(ChatMessage::getChatId, chat.getId())
@@ -138,7 +140,7 @@ public class LLMService {
     }
 
     private String sendMessage(SseEmitter emitter, String userMessage, LLM llm, ChatMessage chatMessage, List<ChatCompletionMessage> userContext) {
-        if (aiFunctionManager.exist(userMessage.trim())) {
+        if (aiProp.isEnableFunctionCall() && aiFunctionManager.exist(userMessage.trim())) {
             String functionMessage = aiFunctionManager.call(userMessage, llm, chatMessage.getContent(), userContext);
             try {
                 emitter.send(GsonFactory.getGson().toJson(new SseBody(functionMessage)), MediaType.TEXT_EVENT_STREAM);
