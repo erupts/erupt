@@ -13,6 +13,7 @@ import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.print.model.EruptPrintTpl;
+import xyz.erupt.print.service.EruptPrintService;
 import xyz.erupt.print.var.PrintVar;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 
@@ -26,13 +27,15 @@ public class EruptPrintController {
     @Resource
     private EruptDao eruptDao;
 
+    @Resource
+    private EruptPrintService eruptPrintService;
+
     @PostMapping("/{erupt}/{id}")
     @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
     public R<String> print(@PathVariable String erupt, @PathVariable String id, @RequestBody String content) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
-        Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
-                .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
-        AtomicReference<String> contentReference = new AtomicReference<>(content);
+        Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
+        AtomicReference<String> contentReference = new AtomicReference<>(eruptPrintService.repeatVar(content, EruptUtil.generateEruptDataMap(eruptModel, data)));
         DataProxyInvoke.invoke(eruptModel, dataProxy -> contentReference.set(dataProxy.print(data, contentReference.get())));
         return R.ok(contentReference.get());
     }
