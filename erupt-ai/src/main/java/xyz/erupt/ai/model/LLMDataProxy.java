@@ -60,7 +60,6 @@ public class LLMDataProxy implements DataProxy<LLM>, Tpl.TplHandler, OnChange<LL
             Map<String, Object> ret = new HashMap<>();
             ret.put(LambdaSee.field(LLM::getModel), LlmCore.getLLM(llm.getLlm()).model());
             ret.put(LambdaSee.field(LLM::getApiUrl), LlmCore.getLLM(llm.getLlm()).api());
-            ret.put(LambdaSee.field(LLM::getApiKey), "");
             ret.put(LambdaSee.field(LLM::getConfig), gson.toJson(LlmCore.getLLM(llm.getLlm()).config()));
             return ret;
         }

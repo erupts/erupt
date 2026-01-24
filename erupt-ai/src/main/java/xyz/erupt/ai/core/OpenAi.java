@@ -77,6 +77,7 @@ public abstract class OpenAi extends LlmCore {
     @Override
     @SneakyThrows
     public void chatSse(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
+        assistantPrompt.removeIf(it -> StringUtils.isBlank(it.getContent()));
         ChatCompletion completion = ChatCompletion.builder().model(llmRequest.getModel()).messages(assistantPrompt).stream(true).build();
         completion.setResponse_format(new HashMap<>() {{
             this.put("type", String.valueOf(llmRequest.getResponseFormat()));
@@ -118,8 +119,8 @@ public abstract class OpenAi extends LlmCore {
                             String line = source.readUtf8Line();
                             if (StringUtils.isNotBlank(line)) {
                                 if (!response.isSuccessful()) {
-                                    this.onFailure(call, new IOException(response.body().string()));
-                                    log.error("Failed to get llm response from server: {}", response.body());
+                                    this.onFailure(call, new IOException(response.body().string() + line));
+                                    log.error("Failed to get llm response from server: {}", response.body() + " → " + line);
                                     return;
                                 } else {
                                     try {

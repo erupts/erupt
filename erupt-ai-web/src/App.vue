@@ -127,7 +127,6 @@ const send = (message: string) => {
     eventSource.onmessage = (event) => {
       sending.value = false;
       sendDisabled.value = true;
-      console.log(JSON.parse(event.data).text)
       accumulatedMarkdown.value += JSON.parse(event.data).text;
       let msg = messages.value[messages.value.length - 1];
       if (msg.loading) {
