@@ -50,6 +50,7 @@ public class VLModel {
         this.value = value;
         this.label = label;
         this.desc = desc;
+        this.color = color;
         this.disable = disable;
     }
 
