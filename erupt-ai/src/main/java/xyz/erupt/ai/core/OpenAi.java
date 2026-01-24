@@ -20,6 +20,7 @@ import xyz.erupt.core.context.MetaContext;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -29,6 +30,14 @@ import java.util.function.Consumer;
 @Component
 @Slf4j
 public abstract class OpenAi extends LlmCore {
+
+    private final OkHttpClient client = new OkHttpClient().newBuilder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.MINUTES)    // 流式需要很长！
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .pingInterval(10, TimeUnit.SECONDS)  // 保持连接心跳
+            .build();
+    ;
 
     private final Gson gson = new GsonBuilder().create();
 
@@ -50,7 +59,6 @@ public abstract class OpenAi extends LlmCore {
     public ChatCompletionResponse chat(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt) {
         assistantPrompt.add(new ChatCompletionMessage(MessageRole.user, userPrompt));
         ChatCompletion completion = ChatCompletion.builder().model(llmRequest.getModel()).stream(false).messages(assistantPrompt).build();
-        OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(
                 gson.toJson(completion),
                 MediaType.parse("application/json; charset=utf-8")
@@ -147,7 +155,8 @@ public abstract class OpenAi extends LlmCore {
                                             listener.accept(sseListener);
                                         }
                                     } catch (Exception e) {
-                                        this.onFailure(call, new IOException(e));
+                                        this.onFailure(call, new IOException(e + "→" + line));
+                                        break;
                                     }
                                 }
                             }

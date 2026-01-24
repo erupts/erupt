@@ -1,7 +1,6 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.core.LlmConfig;
 import xyz.erupt.ai.core.OpenAi;
 
 @Component
@@ -17,4 +16,8 @@ public class OpenRouter extends OpenAi {
         return "https://openrouter.ai";
     }
 
+    @Override
+    public String chatApiPath() {
+        return "/api/v1/chat/completions";
+    }
 }
