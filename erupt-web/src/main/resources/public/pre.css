@@ -5,9 +5,8 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #1890ff;
     z-index: 9999;
-    transition: opacity 1s
+    transition: opacity .35s
 }
 
 .cs-loader {

@@ -121,7 +121,7 @@ global.next_page,下一页,下一頁,Next Page,Page suivante,次のページ,다
 TODAY,今天,今天,Today,Aujourd'hui,今日,오늘,Сегодня,Hoy,Heute,Hoje,Hari ini,اليوم
 FEW_DAYS,过去 N 天,過去 N 天,Past N days,Les N derniers jours,過去N日間,지난 N일,Последние N дней,Últimos N días,Letzte N Tage,Últimos N dias,N hari terakhir,الأيام N الماضية
 FUTURE_DAYS,未来 N 天,未來 N 天,Next N days,Les N prochains jours,今後N日間,향후 N일,Следующие N дней,Próximos N días,Nächste N Tage,Próximos N dias,N hari ke depan,الأيام N القادمة
-RANGE,区间,區間,Range,Intervalle,範囲,범위,Диапазон,Rango,Bereich,Intervalo,Rentang,نطاق
+BETWEEN,区间,區間,Range,Intervalle,範囲,범위,Диапазон,Rango,Bereich,Intervalo,Rentang,نطاق
 GT,大于,大於,Greater than,Supérieur à,より大きい,보다 큰,Больше чем,Mayor que,Größer als,Maior que,Lebih besar dari,أكبر من
 LT,小于,小於,Less than,Inférieur à,より小さい,보다 작은,Меньше чем,Menor que,Kleiner als,Menor que,Kurang dari,أقل من
 EGT,大于等于,大於等於,Greater than or equal,Supérieur ou égal à,以上,이상,Больше или равно,Mayor o igual que,Größer gleich,Maior ou igual a,Lebih besar atau sama dengan,أكبر من أو يساوي
