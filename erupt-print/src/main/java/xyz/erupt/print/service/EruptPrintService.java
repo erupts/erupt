@@ -1,34 +1,34 @@
 package xyz.erupt.print.service;
 
-import jakarta.annotation.Resource;
-import org.apache.commons.collections4.map.HashedMap;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 import org.springframework.stereotype.Service;
-import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.print.var.PrintVar;
 
-import java.util.LinkedHashMap;
+import java.io.StringWriter;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class EruptPrintService {
 
-    public String repeatVar(String content, Map<String, Object> vars) {
-        Pattern pattern = Pattern.compile("\\{\\{(.*?)\\}\\}");
-        Matcher matcher = pattern.matcher(content);
-        StringBuilder result = new StringBuilder();
-        Map<String, Object> globalVars = new LinkedHashMap<>();
+    private static final VelocityEngine velocityEngine = new VelocityEngine();
+
+    static {
+        velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADERS, String.class.getSimpleName());
+        velocityEngine.setProperty("resource.loader.string.class", StringResourceLoader.class.getName());
+        velocityEngine.init();
+    }
+
+    public String render(String template, Map<String, Object> vars) {
+        VelocityContext ctx = new VelocityContext(vars);
         for (PrintVar value : PrintVar.PRINT_VAR_MAP.values()) {
-            globalVars.put(value.code(), value.value());
+            ctx.put(value.code(), value.value());
         }
-        globalVars.putAll(vars);
-        while (matcher.find()) {
-            Object value = globalVars.get(matcher.group(1));
-            matcher.appendReplacement(result, value != null ? Matcher.quoteReplacement(value.toString()) : matcher.group(1));
-        }
-        matcher.appendTail(result);
-        return result.toString();
+        StringWriter out = new StringWriter();
+        velocityEngine.evaluate(ctx, out, EruptPrintService.class.getSimpleName(), template);
+        return out.toString();
     }
 
 }

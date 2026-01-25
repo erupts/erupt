@@ -35,7 +35,7 @@ public class EruptPrintController {
     public R<String> print(@PathVariable String erupt, @PathVariable String id, @RequestBody String content) {
         EruptModel eruptModel = EruptCoreService.getErupt(erupt);
         Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
-        AtomicReference<String> contentReference = new AtomicReference<>(eruptPrintService.repeatVar(content, EruptUtil.generateEruptDataMap(eruptModel, data)));
+        AtomicReference<String> contentReference = new AtomicReference<>(eruptPrintService.render(content, EruptUtil.generateEruptDataMap(eruptModel, data, true)));
         DataProxyInvoke.invoke(eruptModel, dataProxy -> contentReference.set(dataProxy.print(data, contentReference.get())));
         return R.ok(contentReference.get());
     }

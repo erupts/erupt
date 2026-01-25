@@ -22,11 +22,11 @@ import java.util.*;
 public class PreEruptDataService {
 
     // get by pk
-    public Map<String, Object> getEruptData(EruptModel eruptModel, String id) {
+    public Map<String, Object> getEruptData(EruptModel eruptModel, String id, boolean valueMapping) {
         Object data = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz())
                 .findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id));
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.editBehavior(data)));
-        return EruptUtil.generateEruptDataMap(eruptModel, data);
+        return EruptUtil.generateEruptDataMap(eruptModel, data, valueMapping);
     }
 
     public Object getEruptById(EruptModel eruptModel, String id) {
