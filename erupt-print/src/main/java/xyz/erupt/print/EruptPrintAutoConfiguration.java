@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.annotation.EruptScan;
-import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
@@ -47,10 +46,14 @@ public class EruptPrintAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$print", "Print Manager", "fa fa-print", 110));
-        menus.add(MetaMenu.createEruptClassMenu(EruptPrintTpl.class, menus.get(0), 10, MenuTypeEnum.TREE));
         return ModuleInfo.builder().name(ERUPT_PRINT).description("Print module").build();
     }
 
+    @Override
+    public List<MetaMenu> initMenus() {
+        List<MetaMenu> menus = new ArrayList<>();
+        menus.add(MetaMenu.createRootMenu("$print", "Print Manager", "fa fa-print", 110));
+        menus.add(MetaMenu.createEruptClassMenu(EruptPrintTpl.class, menus.get(0), 10));
+        return menus;
+    }
 }
