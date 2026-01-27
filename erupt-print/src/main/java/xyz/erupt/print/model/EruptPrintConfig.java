@@ -7,20 +7,16 @@
 //import xyz.erupt.annotation.Erupt;
 //import xyz.erupt.annotation.EruptField;
 //import xyz.erupt.annotation.sub_field.View;
-//import xyz.erupt.jpa.model.MetaModelCreateOnlyVo;
+//import xyz.erupt.print.pojo.PrintPageConfig;
 //import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
+//import xyz.erupt.upms.helper.HyperModelUpdateVo;
 //
 //@Getter
 //@Setter
 //@Entity
-//@Table(name = "e_print_log")
-//@Erupt(name = "Print Log")
-//public class EruptPrintLog extends HyperModelCreatorOnlyVo {
-//
-//    @EruptField(
-//            views = @View(title = "打印标识")
-//    )
-//    private String seq;
+//@Table(name = "e_print_config")
+//@Erupt(name = "Print Config")
+//public class EruptPrintConfig extends HyperModelUpdateVo {
 //
 //    @EruptField(
 //            views = @View(title = "Erupt 模型")
@@ -31,5 +27,7 @@
 //            views = @View(title = "内容")
 //    )
 //    private String content;
+//
+//    private PrintPageConfig pageConfig;
 //
 //}
