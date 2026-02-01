@@ -10,7 +10,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -276,7 +276,7 @@ public class BiService {
                             HttpServletRequest request,
                             HttpServletResponse response
     ) {
-        try (Workbook wb = new SXSSFWorkbook()) {
+        try (Workbook wb = new XSSFWorkbook()) {
             //基本信息
             Sheet sheet = wb.createSheet(name);
             sheet.createFreezePane(0, 1, 1, 1);
