@@ -97,6 +97,8 @@ public class TypeUtil {
             return Integer.parseInt(value.toString());
         } else if (value instanceof Integer) {
             return (Integer) value;
+        } else if (value instanceof Long v) {
+            return v.intValue();
         } else {
             return ((Double) value).intValue();
         }

@@ -2,6 +2,7 @@ package xyz.erupt.annotation.fun;
 
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.annotation.sub_field.sub_edit.VL;
 
 /**
  * @author YuePeng
@@ -52,6 +53,15 @@ public class VLModel {
         this.desc = desc;
         this.color = color;
         this.disable = disable;
+    }
+
+    public VLModel(VL vl) {
+        this.value = vl.value();
+        this.label = vl.label();
+        this.desc = vl.desc();
+        this.color = vl.color();
+        this.disable = vl.disable();
+        this.extra = vl.extra();
     }
 
     public VLModel() {
