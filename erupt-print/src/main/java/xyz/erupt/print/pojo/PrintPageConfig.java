@@ -1,7 +1,10 @@
 package xyz.erupt.print.pojo;
 
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import lombok.Getter;
 import lombok.Setter;
+import xyz.erupt.core.config.GsonFactory;
 
 /**
  * @author YuePeng
@@ -9,7 +12,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class PrintPageConfig {
+@Converter
+public class PrintPageConfig implements AttributeConverter<PrintPageConfig, String> {
 
     private String paperSize;
 
@@ -23,4 +27,13 @@ public class PrintPageConfig {
 
     private Integer marginRight;
 
+    @Override
+    public String convertToDatabaseColumn(PrintPageConfig printPageConfig) {
+        return GsonFactory.getGson().toJson(printPageConfig);
+    }
+
+    @Override
+    public PrintPageConfig convertToEntityAttribute(String dbData) {
+        return GsonFactory.getGson().fromJson(dbData, PrintPageConfig.class);
+    }
 }
