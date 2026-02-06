@@ -22,6 +22,7 @@ global.new,新增,新增,New,nouveaux,追加,새로추가,нов,nuevos,hinzufü
 global.add,增加,增加,Add,Une augmentation,增加,증가,увелич,aumento,Erhöhen.,aumentar,meningkatkan,زيادة
 global.editor,编辑,編輯,Edit,Rédacteur en chef,編集,편집,редактор,editor,Make up,editor,editor,التحرير
 global.update,修改,修改,Modify,La modification,変更,수정,модификац,La modificación,änderung,alterações,modifikasi,تعديل
+global.print,打印,列印,Print,Imprimer,印刷,인쇄,Печать,Imprimir,Drucken,Imprimir,Cetak,طباعة
 global.add.success,添加成功,添加成功,Add success,Ajouté avec succès,追加成功,성공추가,Добавить успех,Añadido con éxito,Abbruch. Abbruch.,Adicionado com sucesso,Tambahkan sukses,أضف النجاح
 global.select.one,请选中一条数据,請選中一條數據,Please select one data,Veuillez sélectionner une donnée,データを選択してください。,데이터를선택하십시오,"Пожалуйста, выберите сообщение","Por favor, seleccione un dato",Bitte wählen sie eine datei,"Por favor, selecione um dado",Silahkan pilih satu data,انتقِ a بيانات
 global.update.success,修改成功,修改成功,Update success,Modifié avec succès,修正成功,수정성공,Модификация завершена.,Modificado con éxito,Modifikation erfolgreich.,Modificado com sucesso,Revisi berhasil,تعديل ناجح
@@ -136,6 +137,8 @@ START_WITH,以**开始,以**開始,Starts with,Commence par,で始まる,로 시
 END_WITH,以**结尾,以**結尾,Ends with,Se termine par,で終わる,로 끝남,Заканчивается на,Termina en,Endet mit,Termina com,Berakhir dengan,ينتهي ب
 IN,包含于,包含於,Contains,Contient,含まれる,포함,Содержит,Contiene,Enthält,Contém,Mengandung,يحتوي على
 NOT_IN,不包含于,不包含於,Not contains,Ne contient pas,含まれない,포함하지 않음,Не содержит,No contiene,Enthält nicht,Não contém,Tidak mengandung,لا يحتوي على
+
+print.preview,打印预览,列印預覽,Print Preview,Aperçu avant impression,印刷プレビュー,인쇄 미리보기,Предпросмотр печати,Vista previa de impresión,Druckvorschau,Pré-visualizar impressão,Pratinjau Cetak,معاينة الطباعة
 
 [flow]
 VIEW_FLOW,查看流程,檢視流程,View Flow,Voir le flux,フローを見る,플로우 보기,Просмотр потока,Ver flujo,Fluss anzeigen,Ver fluxo,Lihat Aliran,عرض التدفق
