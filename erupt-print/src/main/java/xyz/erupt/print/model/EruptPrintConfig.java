@@ -26,6 +26,11 @@
 //    private String erupt;
 //
 //    @EruptField(
+//            views = @View(title = "Title")
+//    )
+//    private String title;
+//
+//    @EruptField(
 //            views = @View(title = "Content")
 //    )
 //    private String content;
