@@ -12,6 +12,7 @@ import xyz.erupt.core.util.EruptUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.print.model.EruptPrintConfig;
 import xyz.erupt.print.model.EruptPrintTpl;
 import xyz.erupt.print.service.EruptPrintService;
 import xyz.erupt.print.var.PrintVar;
@@ -44,6 +45,12 @@ public class EruptPrintController {
     @GetMapping("/vars")
     public R<List<VLModel>> vars() {
         return R.ok(PrintVar.PRINT_VAR_MAP.values().stream().map(it -> new VLModel(it.code(), it.name())).toList());
+    }
+
+    @EruptRouter(authIndex = 1, verifyType = EruptRouter.VerifyType.ERUPT)
+    @GetMapping("/{erupt}/prints")
+    public R<List<EruptPrintConfig>> prints(@PathVariable String erupt) {
+        return R.ok(eruptDao.lambdaQuery(EruptPrintConfig.class).eq(EruptPrintConfig::getErupt, erupt).list());
     }
 
     @EruptLoginAuth
