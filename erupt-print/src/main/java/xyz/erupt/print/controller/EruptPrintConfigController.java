@@ -51,5 +51,4 @@ public class EruptPrintConfigController {
         return R.ok();
     }
 
-
 }
