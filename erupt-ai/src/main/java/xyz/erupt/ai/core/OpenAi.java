@@ -1,16 +1,22 @@
 package xyz.erupt.ai.core;
 
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.core.context.MetaContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -21,6 +27,9 @@ import java.util.function.Consumer;
 @Component
 @Slf4j
 public abstract class OpenAi extends LlmCore {
+
+    @Resource
+    private AiProp aiProp;
 
     public String chatApiPoint() {
         return "/v1";
@@ -60,7 +69,11 @@ public abstract class OpenAi extends LlmCore {
                 .temperature(llmRequest.getTemperature())
                 .build();
         MetaContext metaContext = MetaContext.get();
-        model.chat(userMessage, new StreamingChatResponseHandler() {
+
+        List<ChatMessage> messages = new ArrayList<>();
+        messages.add(SystemMessage.from(aiProp.getSystemPrompt()));
+        messages.add(UserMessage.from(userMessage));
+        model.chat(messages, new StreamingChatResponseHandler() {
             @Override
             public void onPartialResponse(String partialResponse) {
                 MetaContext.set(metaContext);
