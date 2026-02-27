@@ -1,5 +1,6 @@
 package xyz.erupt.ai.core;
 
+import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.config.AiProp;
+import xyz.erupt.ai.constants.MessageRole;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
 import xyz.erupt.core.context.MetaContext;
 
@@ -69,9 +71,17 @@ public abstract class OpenAi extends LlmCore {
                 .temperature(llmRequest.getTemperature())
                 .build();
         MetaContext metaContext = MetaContext.get();
-
         List<ChatMessage> messages = new ArrayList<>();
         messages.add(SystemMessage.from(aiProp.getSystemPrompt()));
+        for (ChatCompletionMessage message : assistantPrompt) {
+            if (message.getRole() == MessageRole.assistant) {
+                messages.add(AiMessage.from(message.getContent()));
+            } else if (message.getRole() == MessageRole.user) {
+                messages.add(UserMessage.from(message.getContent()));
+            } else if (message.getRole() == MessageRole.system) {
+                messages.add(SystemMessage.from(message.getContent()));
+            }
+        }
         messages.add(UserMessage.from(userMessage));
         model.chat(messages, new StreamingChatResponseHandler() {
             @Override
