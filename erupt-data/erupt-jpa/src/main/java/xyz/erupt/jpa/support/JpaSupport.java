@@ -46,7 +46,7 @@ public class JpaSupport {
                     if (eruptDataSource != null) {
                         em = eruptDao.getEntityManager(eruptDataSource.value());
                     }
-                    Object result = em.createQuery("from " + refObject.getClass().getSimpleName() + " I where I.id = :id")
+                    Object result = em.createQuery("from " + refObject.getClass().getSimpleName() + " I where I." + id + " = :id")
                             .setParameter("id", idField.get(refObject)).getSingleResult();
                     em.close();
                     field.set(obj, result);
