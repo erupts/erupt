@@ -22,8 +22,8 @@ public class GLM extends OpenAi {
     }
 
     @Override
-    public String chatApiPath() {
-        return "/api/paas/v4/chat/completions";
+    public String chatApiPoint() {
+        return "/api/paas/v4";
     }
 
 }
