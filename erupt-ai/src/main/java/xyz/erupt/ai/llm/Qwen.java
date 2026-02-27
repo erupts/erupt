@@ -11,8 +11,8 @@ import xyz.erupt.ai.core.OpenAi;
 public class Qwen extends OpenAi {
 
     @Override
-    public String chatApiPath() {
-        return "/compatible-mode/v1/chat/completions";
+    public String chatApiPoint() {
+        return "/compatible-mode/v1";
     }
 
     @Override

@@ -2,7 +2,6 @@ package xyz.erupt.ai.core;
 
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
-import xyz.erupt.ai.pojo.ChatCompletionResponse;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 
@@ -37,9 +36,9 @@ public abstract class LlmCore {
 
     public abstract LlmConfig config();
 
-    public abstract ChatCompletionResponse chat(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt);
+    public abstract String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt);
 
-    public abstract void chatSse(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener);
+    public abstract void chatSse(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener);
 
     public static class H implements ChoiceFetchHandler {
         @Override

@@ -100,7 +100,7 @@ public class AiFunctionManager implements ApplicationRunner {
             prompt.append(GsonFactory.getGson().toJson(promptTemplateMap));
             LlmRequest llmRequest = llm.toLlmRequest();
             llmRequest.setResponseFormat(ResponseFormat.json_object);
-            String llmRes = LlmCore.getLLM(llm).chat(llm.toLlmRequest(), prompt.toString(), userContext).getMessageStr();
+            String llmRes = LlmCore.getLLM(llm).chat(llm.toLlmRequest(), prompt.toString(), userContext);
             llmRes = MarkDownUtil.extractCodeBlock(llmRes);
             try {
                 Map<String, ParamPromptTemplate> res = GsonFactory.getGson().fromJson(llmRes, new TypeToken<Map<String, ParamPromptTemplate>>() {

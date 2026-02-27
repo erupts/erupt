@@ -3,7 +3,6 @@ package xyz.erupt.ai.service;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -49,8 +48,6 @@ public class LLMService {
     @Resource
     private AiFunctionManager aiFunctionManager;
 
-    private static final int MESSAGE_TS = 100;
-
     public String send(String prompt) {
         return send(prompt, Collections.emptyList());
     }
@@ -67,7 +64,7 @@ public class LLMService {
         if (null == llmConfig) {
             throw new EruptWebApiRuntimeException("Not found LLM config");
         }
-        return LlmCore.getLLM(llmConfig.getLlm()).chat(llmConfig.toLlmRequest(), prompt, assistantPrompt).getMessageStr();
+        return LlmCore.getLLM(llmConfig.getLlm()).chat(llmConfig.toLlmRequest(), prompt, assistantPrompt);
     }
 
     @SneakyThrows
@@ -112,34 +109,13 @@ public class LLMService {
             }
             llm.chatSse(llmRequest, chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {
-                    String msg = it.getOutput().toString();
-                    // finish 时，无论之前发送了多少，都要确保最后的增量被发送
-                    if (msg.length() > MESSAGE_TS && !it.isError()) {
-                        // 只发送最后的增量部分
-                        if (!StringUtils.isEmpty(it.getCurrMessage())) {
-                            this.sendMessage(emitter, it.getCurrMessage(), llmModal, chatMessage, completionMessage);
-                        }
-                    } else {
-                        // 短消息直接发送完整内容
-                        msg = this.sendMessage(emitter, msg, llmModal, chatMessage, completionMessage);
-                    }
-
                     // 保存到数据库时使用完整消息
-                    chatMessage.setTokens((long) it.getUsage().getPrompt_tokens());
+                    chatMessage.setTokens((long) it.getUsage().inputTokenCount());
                     eruptDao.mergeAndFlush(chatMessage);
-                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, msg, (long) it.getUsage().getCompletion_tokens()));
+                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, it.getOutput().toString(), (long) it.getUsage().outputTokenCount()));
                     emitter.complete();
                 } else {
-                    if (it.getOutput().toString().length() > MESSAGE_TS) {
-                        if (it.isPending()) {
-                            this.sendMessage(emitter, it.getOutput().toString(), llmModal, chatMessage, completionMessage);
-                            it.setPending(false);
-                        } else {
-                            this.sendMessage(emitter, it.getCurrMessage(), llmModal, chatMessage, completionMessage);
-                        }
-                    } else {
-                        it.setPending(true);
-                    }
+                    this.sendMessage(emitter, it.getCurrMessage(), llmModal, chatMessage, completionMessage);
                 }
             });
         } catch (Exception e) {
@@ -149,21 +125,19 @@ public class LLMService {
         }
     }
 
-    private String sendMessage(SseEmitter emitter, String userMessage, LLM llm, ChatMessage chatMessage, List<ChatCompletionMessage> userContext) {
-        if (aiProp.isEnableFunctionCall() && aiFunctionManager.exist(userMessage.trim())) {
-            String functionMessage = aiFunctionManager.call(userMessage, llm, chatMessage.getContent(), userContext);
+    private void sendMessage(SseEmitter emitter, String llmMessage, LLM llm, ChatMessage chatMessage, List<ChatCompletionMessage> userContext) {
+        if (aiProp.isEnableFunctionCall() && aiFunctionManager.exist(llmMessage.trim())) {
+            String functionMessage = aiFunctionManager.call(llmMessage, llm, chatMessage.getContent(), userContext);
             try {
                 emitter.send(GsonFactory.getGson().toJson(new SseBody(functionMessage)), MediaType.TEXT_EVENT_STREAM);
             } catch (Exception ignore) {
             }
-            return functionMessage;
         } else {
             try {
-                emitter.send(GsonFactory.getGson().toJson(new SseBody(userMessage)), MediaType.TEXT_EVENT_STREAM);
+                emitter.send(GsonFactory.getGson().toJson(new SseBody(llmMessage)), MediaType.TEXT_EVENT_STREAM);
             } catch (Exception ignore) {
             }
         }
-        return userMessage;
     }
 
 }

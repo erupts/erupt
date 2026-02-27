@@ -1,5 +1,6 @@
 package xyz.erupt.ai.core;
 
+import dev.langchain4j.model.output.TokenUsage;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai.pojo.ChatUsage;
@@ -15,8 +16,6 @@ public class SseListener {
     // Full output content
     private final StringBuilder output = new StringBuilder();
 
-    private boolean pending = false;
-
     // Stream output, the content of the current message
     private String currMessage;
 
@@ -24,7 +23,7 @@ public class SseListener {
     private String currData;
 
     // Spending tokens
-    private ChatUsage usage = new ChatUsage();
+    private TokenUsage usage;
 
     private boolean isFinish = false;
 
