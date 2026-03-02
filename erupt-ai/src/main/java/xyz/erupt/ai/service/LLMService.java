@@ -109,7 +109,6 @@ public class LLMService {
             }
             llm.chatSse(llmRequest, chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {
-                    // 保存到数据库时使用完整消息
                     chatMessage.setTokens((long) it.getUsage().inputTokenCount());
                     eruptDao.mergeAndFlush(chatMessage);
                     eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, it.getOutput().toString(), (long) it.getUsage().outputTokenCount()));

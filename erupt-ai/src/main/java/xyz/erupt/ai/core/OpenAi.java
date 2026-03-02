@@ -1,24 +1,13 @@
 package xyz.erupt.ai.core;
 
-import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.SystemMessage;
-import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.response.ChatResponse;
-import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
-import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.config.AiProp;
-import xyz.erupt.ai.constants.MessageRole;
 import xyz.erupt.ai.pojo.ChatCompletionMessage;
-import xyz.erupt.core.context.MetaContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -29,9 +18,6 @@ import java.util.function.Consumer;
 @Component
 @Slf4j
 public abstract class OpenAi extends LlmCore {
-
-    @Resource
-    private AiProp aiProp;
 
     public String chatApiPoint() {
         return "/v1";
@@ -70,49 +56,7 @@ public abstract class OpenAi extends LlmCore {
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
                 .build();
-        MetaContext metaContext = MetaContext.get();
-        List<ChatMessage> messages = new ArrayList<>();
-        messages.add(SystemMessage.from(aiProp.getSystemPrompt()));
-        for (ChatCompletionMessage message : assistantPrompt) {
-            if (message.getRole() == MessageRole.assistant) {
-                messages.add(AiMessage.from(message.getContent()));
-            } else if (message.getRole() == MessageRole.user) {
-                messages.add(UserMessage.from(message.getContent()));
-            } else if (message.getRole() == MessageRole.system) {
-                messages.add(SystemMessage.from(message.getContent()));
-            }
-        }
-        messages.add(UserMessage.from(userMessage));
-        model.chat(messages, new StreamingChatResponseHandler() {
-            @Override
-            public void onPartialResponse(String partialResponse) {
-                MetaContext.set(metaContext);
-                SseListener sseListener = new SseListener();
-                sseListener.setCurrData(partialResponse);
-                sseListener.getOutput().append(partialResponse);
-                sseListener.setCurrMessage(partialResponse);
-                listener.accept(sseListener);
-            }
-
-            @Override
-            public void onCompleteResponse(ChatResponse chatResponse) {
-                SseListener sseListener = new SseListener();
-                sseListener.setFinish(true);
-                sseListener.setUsage(chatResponse.tokenUsage());
-                listener.accept(sseListener);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                log.error("Failed to get response from server", e);
-                SseListener sseListener = new SseListener();
-                sseListener.setError(true);
-                sseListener.setFinish(true);
-                sseListener.getOutput().append(e.getMessage());
-                sseListener.setCurrMessage(e.getMessage());
-                listener.accept(sseListener);
-            }
-        });
+        this.streamerReact(listener, model, userMessage, assistantPrompt);
     }
 
 }
