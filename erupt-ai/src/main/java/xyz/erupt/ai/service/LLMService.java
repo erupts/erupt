@@ -3,6 +3,7 @@ package xyz.erupt.ai.service;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -107,6 +108,7 @@ public class LLMService {
             if (null != llmAgent) {
                 llmAgent.mergeToLLmRequest(llmModal);
             }
+            completionMessage.removeIf(it -> StringUtils.isBlank(it.getContent()));
             llm.chatSse(llmRequest, chatMessage.getContent(), completionMessage, it -> {
                 if (it.isFinish()) {
                     chatMessage.setTokens((long) it.getUsage().inputTokenCount());

@@ -29,11 +29,6 @@ public abstract class OpenAi extends LlmCore {
     }
 
     @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
-    @Override
     public String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt) {
         OpenAiChatModel model = OpenAiChatModel.builder()
                 .baseUrl(llmRequest.getUrl() + chatApiPoint())
@@ -48,7 +43,6 @@ public abstract class OpenAi extends LlmCore {
     @Override
     @SneakyThrows
     public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
-        assistantPrompt.removeIf(it -> StringUtils.isBlank(it.getContent()));
         OpenAiStreamingChatModel model = OpenAiStreamingChatModel.builder()
                 .baseUrl(llmRequest.getUrl() + chatApiPoint())
                 .apiKey(llmRequest.getApiKey())

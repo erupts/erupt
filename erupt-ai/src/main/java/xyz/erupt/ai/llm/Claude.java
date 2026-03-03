@@ -42,11 +42,6 @@ public class Claude extends LlmCore {
     }
 
     @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
-    @Override
     public String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt) {
         AnthropicChatModel model = AnthropicChatModel.builder()
                 .baseUrl(llmRequest.getUrl())
@@ -61,7 +56,6 @@ public class Claude extends LlmCore {
     @Override
     @SneakyThrows
     public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
-        assistantPrompt.removeIf(it -> StringUtils.isBlank(it.getContent()));
         AnthropicStreamingChatModel model = AnthropicStreamingChatModel.builder()
                 .baseUrl(llmRequest.getUrl())
                 .apiKey(llmRequest.getApiKey())
