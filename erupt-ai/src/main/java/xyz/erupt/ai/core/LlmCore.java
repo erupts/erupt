@@ -44,7 +44,9 @@ public abstract class LlmCore {
 
     public abstract String api();
 
-    public abstract LlmConfig config();
+    public LlmConfig config(){
+        return new LlmConfig();
+    };
 
     public abstract String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt);
 

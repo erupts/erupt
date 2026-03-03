@@ -42,11 +42,6 @@ public class Gemini extends LlmCore {
     }
 
     @Override
-    public LlmConfig config() {
-        return new LlmConfig();
-    }
-
-    @Override
     public String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt) {
         GoogleAiGeminiChatModel model = GoogleAiGeminiChatModel.builder()
                 .apiKey(llmRequest.getApiKey())
@@ -60,7 +55,6 @@ public class Gemini extends LlmCore {
     @Override
     @SneakyThrows
     public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
-        assistantPrompt.removeIf(it -> StringUtils.isBlank(it.getContent()));
         GoogleAiGeminiStreamingChatModel model = GoogleAiGeminiStreamingChatModel.builder()
                 .apiKey(llmRequest.getApiKey())
                 .modelName(llmRequest.getModel())
