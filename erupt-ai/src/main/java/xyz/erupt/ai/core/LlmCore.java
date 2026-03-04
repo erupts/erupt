@@ -57,12 +57,13 @@ public abstract class LlmCore {
 
     public String chat(LlmRequest llmRequest, List<ChatMessage> chatMessages) {
         ChatModel chatModel = this.buildChatModel(llmRequest, chatMessages);
+        chatMessages.add(0, SystemMessage.from(EruptSpringUtil.getBean(AiProp.class).getSystemPrompt()));
         return chatModel.chat(chatMessages).aiMessage().text();
     }
 
     public void chatSse(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener) {
         StreamingChatModel streamingChatModel = this.buildStreamingChatModel(llmRequest, chatMessages, listener);
-        chatMessages.add(SystemMessage.from(EruptSpringUtil.getBean(AiProp.class).getSystemPrompt()));
+        chatMessages.add(0, SystemMessage.from(EruptSpringUtil.getBean(AiProp.class).getSystemPrompt()));
         List<ToolSpecification> specs = new ArrayList<>();
         for (Method method : AiToolboxManager.getAiMethodMap().values()) {
             specs.add(ToolSpecifications.toolSpecificationFrom(method));
