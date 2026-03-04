@@ -65,7 +65,7 @@ public class ChatController {
             emitter.complete();
         } else {
             LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
-            ChatMessage chatMessage = ChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0L);
+            ChatMessage chatMessage = ChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0);
             eruptDao.persist(chatMessage);
             Chat chat = eruptDao.find(Chat.class, chatId);
             LLMAgent llmAgent = null;

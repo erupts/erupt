@@ -56,9 +56,9 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
     )
     private LocalDateTime createdAt;
 
-    private Long tokens;
+    private Integer tokens;
 
-    public static ChatMessage create(Long chatId, String llm, String model, ChatSenderType senderType, String content, Long tokens) {
+    public static ChatMessage create(Long chatId, String llm, String model, ChatSenderType senderType, String content, Integer tokens) {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setChatId(chatId);
         chatMessage.setLlm(llm);

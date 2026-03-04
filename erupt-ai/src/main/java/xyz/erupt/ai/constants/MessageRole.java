@@ -7,5 +7,6 @@ package xyz.erupt.ai.constants;
 public enum MessageRole {
     system,
     user,
-    assistant
+    assistant,
+    tool
 }
