@@ -64,7 +64,7 @@ public class EruptCoreService implements ApplicationRunner {
         }
     }
 
-    //动态注册erupt类
+    // 动态注册 erupt 类
     public static void registerErupt(Class<?> eruptClazz) {
         if (ERUPTS.containsKey(eruptClazz.getSimpleName())) {
             throw new RuntimeException(eruptClazz.getSimpleName() + " conflict !");
@@ -74,7 +74,7 @@ public class EruptCoreService implements ApplicationRunner {
         ERUPT_LIST.add(eruptModel);
     }
 
-    //移除容器内所维护的Erupt
+    // 移除容器内所维护的 Erupt
     public static void unregisterErupt(Class<?> eruptClazz) {
         ERUPTS.remove(eruptClazz.getSimpleName());
         ERUPT_LIST.removeIf(model -> model.getEruptName().equals(eruptClazz.getSimpleName()));

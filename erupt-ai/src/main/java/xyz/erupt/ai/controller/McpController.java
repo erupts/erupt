@@ -1,5 +1,8 @@
 package xyz.erupt.ai.controller;
 
+import dev.langchain4j.agent.tool.P;
+import dev.langchain4j.agent.tool.Tool;
+import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
@@ -9,20 +12,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import xyz.erupt.ai.annotation.AiParam;
-import xyz.erupt.ai.call.AiFunctionCall;
-import xyz.erupt.ai.call.AiFunctionManager;
+import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.config.AiMCPProp;
 import xyz.erupt.ai.util.McpUtil;
 import xyz.erupt.ai.vo.mcp.*;
+import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.EruptInformation;
-import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptOpenApi;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,27 +138,29 @@ public class McpController {
 
     private List<McpTool> mcpTools() {
         List<McpTool> mcpTools = new ArrayList<>();
-        for (Map.Entry<String, AiFunctionCall> entry : AiFunctionManager.getAiFunctions().entrySet()) {
-            if (entry.getValue().mcpCall()) {
+        for (Map.Entry<String, Method> entry : AiToolboxManager.getAiMethodMap().entrySet()) {
+            Method method = entry.getValue();
+            Tool tool = method.getAnnotation(Tool.class);
+            if (null != tool) {
                 McpTool mcpTool = new McpTool();
                 mcpTools.add(mcpTool);
-                mcpTool.setName(entry.getValue().name());
-                mcpTool.setDescription(entry.getValue().description());
+                mcpTool.setName(entry.getKey());
+                mcpTool.setDescription(tool.value().length > 0 ? tool.value()[0] : "");
                 {
                     McpTool.InputSchema inputSchema = new McpTool.InputSchema();
                     mcpTool.setInputSchema(inputSchema);
                     List<String> required = new ArrayList<>();
-                    for (Field field : entry.getValue().getClass().getDeclaredFields()) {
-                        AiParam aiParam = field.getDeclaredAnnotation(AiParam.class);
-                        if (null != aiParam) {
-                            if (aiParam.required()) {
-                                required.add(field.getName());
-                            }
-                            McpTool.SchemaProperties schema = new McpTool.SchemaProperties();
-                            schema.setType(McpUtil.toMcp(field.getType()));
-                            schema.setDescription(aiParam.description());
-                            mcpTool.getInputSchema().getProperties().put(field.getName(), schema);
+                    for (Parameter parameter : method.getParameters()) {
+                        P p = parameter.getAnnotation(P.class);
+                        String description = "";
+                        if (null != p) {
+                            description = p.value();
+                            required.add(parameter.getName());
                         }
+                        McpTool.SchemaProperties schema = new McpTool.SchemaProperties();
+                        schema.setType(McpUtil.toMcp(parameter.getType()));
+                        schema.setDescription(description);
+                        mcpTool.getInputSchema().getProperties().put(parameter.getName(), schema);
                     }
                     mcpTool.getInputSchema().setRequired(required);
                 }
@@ -167,16 +171,11 @@ public class McpController {
 
     @SneakyThrows
     private String mcpCall(String code, Map<String, Object> params) {
-        AiFunctionCall aiFunctionCall = AiFunctionManager.getAiFunctions().get(code);
-        if (null != params) {
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
-                Field field = ReflectUtil.findClassField(aiFunctionCall.getClass(), entry.getKey());
-                field.setAccessible(true);
-                field.set(aiFunctionCall, entry.getValue());
-                field.setAccessible(false);
-            }
-        }
-        return aiFunctionCall.call(null);
+        ToolExecutionRequest request = ToolExecutionRequest.builder()
+                .name(code)
+                .arguments(GsonFactory.getGson().toJson(params))
+                .build();
+        return (String) AiToolboxManager.invoke(request);
     }
 
 }

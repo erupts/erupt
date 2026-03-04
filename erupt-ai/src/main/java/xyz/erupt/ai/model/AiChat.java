@@ -28,12 +28,12 @@ import java.time.LocalDateTime;
 @Erupt(
         name = "会话管理",
         power = @Power(add = false, edit = false, viewDetails = false), orderBy = "createdTime desc",
-        drills = @Drill(title = "会话记录", link = @Link(linkErupt = ChatMessage.class, joinColumn = "chatId"))
+        drills = @Drill(title = "会话记录", link = @Link(linkErupt = AiChatMessage.class, joinColumn = "chatId"))
 )
 @Entity
 @EruptI18n
 @Where(clause = "deleted = false or deleted is null")
-public class Chat extends BaseModel {
+public class AiChat extends BaseModel {
 
     @EruptField(
             views = @View(title = "会话标题"),
