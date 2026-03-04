@@ -39,7 +39,11 @@ public class EruptAiToolbox {
 
     @Tool("Ask the current system logged-in user")
     public String eruptUserInfo() {
-        return GsonFactory.getGson().toJson(eruptDao.find(EruptUser.class, MetaContext.getUser().getUid()));
+        EruptUser eruptUser = eruptDao.find(EruptUser.class, MetaContext.getUser().getUid());
+        eruptUser.setRoles(null);
+        eruptUser.setHeadOrg(null);
+        eruptUser.setPassword(null);
+        return GsonFactory.getGson().toJson(eruptUser);
     }
 
     @Tool("Query erupt model data")
