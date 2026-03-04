@@ -1,19 +1,16 @@
 package xyz.erupt.ai.llm;
 
+import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.anthropic.AnthropicStreamingChatModel;
-import dev.langchain4j.model.chat.response.ChatResponse;
-import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
+import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.StreamingChatModel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.core.LlmConfig;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.core.LlmRequest;
 import xyz.erupt.ai.core.SseListener;
-import xyz.erupt.ai.pojo.ChatCompletionMessage;
-import xyz.erupt.core.context.MetaContext;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -42,28 +39,26 @@ public class Claude extends LlmCore {
     }
 
     @Override
-    public String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt) {
-        AnthropicChatModel model = AnthropicChatModel.builder()
+    public ChatModel buildChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages) {
+        return AnthropicChatModel.builder()
                 .baseUrl(llmRequest.getUrl())
                 .apiKey(llmRequest.getApiKey())
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
                 .build();
-        return model.chat(userMessage);
     }
 
     @Override
     @SneakyThrows
-    public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
-        AnthropicStreamingChatModel model = AnthropicStreamingChatModel.builder()
+    public StreamingChatModel buildStreamingChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener) {
+        return AnthropicStreamingChatModel.builder()
                 .baseUrl(llmRequest.getUrl())
                 .apiKey(llmRequest.getApiKey())
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
                 .build();
-        this.streamerReact(listener, model, userMessage, assistantPrompt);
     }
 
 }

@@ -2,17 +2,18 @@ package xyz.erupt.ai.core;
 
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.agent.tool.ToolSpecifications;
-import dev.langchain4j.data.message.*;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
 import lombok.extern.slf4j.Slf4j;
-import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.config.AiProp;
-import xyz.erupt.ai.constants.MessageRole;
 import xyz.erupt.ai.model.LLM;
-import xyz.erupt.ai.pojo.ChatCompletionMessage;
+import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.context.MetaContext;
@@ -50,33 +51,24 @@ public abstract class LlmCore {
         return new LlmConfig();
     }
 
+    public abstract ChatModel buildChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages);
 
-    public abstract String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt);
+    public abstract StreamingChatModel buildStreamingChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener);
 
-    public abstract void chatSse(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener);
+    public String chat(LlmRequest llmRequest, List<ChatMessage> chatMessages) {
+        ChatModel chatModel = this.buildChatModel(llmRequest, chatMessages);
+        return chatModel.chat(chatMessages).aiMessage().text();
+    }
 
-    protected void streamerReact(Consumer<SseListener> listener, StreamingChatModel streamingChatModel, String userMessage, List<ChatCompletionMessage> chatCompletionMessages) {
-        List<ChatMessage> messages = new ArrayList<>();
-        messages.add(SystemMessage.from(EruptSpringUtil.getBean(AiProp.class).getSystemPrompt()));
-        for (ChatCompletionMessage message : chatCompletionMessages) {
-            if (message.getRole() == MessageRole.assistant) {
-                messages.add(AiMessage.from(message.getContent()));
-            } else if (message.getRole() == MessageRole.user) {
-                messages.add(UserMessage.from(message.getContent()));
-            } else if (message.getRole() == MessageRole.system) {
-                messages.add(SystemMessage.from(message.getContent()));
-            } else if (message.getRole() == MessageRole.tool) {
-                messages.add(ToolExecutionResultMessage.from(message.getToolId(), message.getToolName(), message.getContent()));
-            }
-        }
-
+    public void chatSse(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener) {
+        StreamingChatModel streamingChatModel = this.buildStreamingChatModel(llmRequest, chatMessages, listener);
+        chatMessages.add(SystemMessage.from(EruptSpringUtil.getBean(AiProp.class).getSystemPrompt()));
         List<ToolSpecification> specs = new ArrayList<>();
         for (Method method : AiToolboxManager.getAiMethodMap().values()) {
             specs.add(ToolSpecifications.toolSpecificationFrom(method));
         }
-        ChatRequest request = ChatRequest.builder().messages(messages).toolSpecifications(specs).build();
+        ChatRequest request = ChatRequest.builder().messages(chatMessages).toolSpecifications(specs).build();
         MetaContext metaContext = MetaContext.get();
-        messages.add(UserMessage.from(userMessage));
         streamingChatModel.chat(request, new StreamingChatResponseHandler() {
             @Override
             public void onPartialResponse(String partialResponse) {
