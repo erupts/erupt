@@ -3,13 +3,11 @@ package xyz.erupt.ai.annotation;
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Documented
 @Inherited
-public @interface AiParam {
+public @interface AiToolbox {
 
-    String description();
-
-    boolean required() default true;
+    String value() default "";
 
 }

@@ -1,13 +1,14 @@
 package xyz.erupt.ai.core;
 
-import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.SystemMessage;
-import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.agent.tool.ToolSpecifications;
+import dev.langchain4j.data.message.*;
 import dev.langchain4j.model.chat.StreamingChatModel;
+import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
 import lombok.extern.slf4j.Slf4j;
+import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.MessageRole;
 import xyz.erupt.ai.model.LLM;
@@ -17,6 +18,7 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.util.EruptSpringUtil;
 
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -44,9 +46,10 @@ public abstract class LlmCore {
 
     public abstract String api();
 
-    public LlmConfig config(){
+    public LlmConfig config() {
         return new LlmConfig();
-    };
+    }
+
 
     public abstract String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt);
 
@@ -62,39 +65,38 @@ public abstract class LlmCore {
                 messages.add(UserMessage.from(message.getContent()));
             } else if (message.getRole() == MessageRole.system) {
                 messages.add(SystemMessage.from(message.getContent()));
+            } else if (message.getRole() == MessageRole.tool) {
+                messages.add(ToolExecutionResultMessage.from(message.getToolId(), message.getToolName(), message.getContent()));
             }
         }
+
+        List<ToolSpecification> specs = new ArrayList<>();
+        for (Method method : AiToolboxManager.getAiMethodMap().values()) {
+            specs.add(ToolSpecifications.toolSpecificationFrom(method));
+        }
+        ChatRequest request = ChatRequest.builder().messages(messages).toolSpecifications(specs).build();
         MetaContext metaContext = MetaContext.get();
         messages.add(UserMessage.from(userMessage));
-        streamingChatModel.chat(messages, new StreamingChatResponseHandler() {
+        streamingChatModel.chat(request, new StreamingChatResponseHandler() {
             @Override
             public void onPartialResponse(String partialResponse) {
                 MetaContext.set(metaContext);
-                SseListener sseListener = new SseListener();
-                sseListener.setCurrData(partialResponse);
-                sseListener.getOutput().append(partialResponse);
-                sseListener.setCurrMessage(partialResponse);
-                listener.accept(sseListener);
+                listener.accept(SseListener.builder().currMessage(partialResponse).build());
             }
 
             @Override
             public void onCompleteResponse(ChatResponse chatResponse) {
-                SseListener sseListener = new SseListener();
-                sseListener.setFinish(true);
-                sseListener.setUsage(chatResponse.tokenUsage());
-                sseListener.getOutput().append(chatResponse.aiMessage().text());
-                listener.accept(sseListener);
+                MetaContext.set(metaContext);
+                listener.accept(SseListener.builder()
+                        .isFinish(true)
+                        .usage(chatResponse.tokenUsage())
+                        .aiMessage(chatResponse.aiMessage()).build());
             }
 
             @Override
             public void onError(Throwable e) {
                 log.error("Failed to get response from server", e);
-                SseListener sseListener = new SseListener();
-                sseListener.setError(true);
-                sseListener.setFinish(true);
-                sseListener.getOutput().append(e.getMessage());
-                sseListener.setCurrMessage(e.getMessage());
-                listener.accept(sseListener);
+                listener.accept(SseListener.builder().throwable(e).build());
             }
         });
     }

@@ -18,8 +18,19 @@ public class ChatCompletionMessage {
 
     private String content;
 
+    private String toolName;
+
+    private String toolId;
+
     public ChatCompletionMessage(MessageRole role, String content) {
         this.role = role;
         this.content = content;
+    }
+
+    public ChatCompletionMessage(MessageRole role, String content, String toolName, String toolId) {
+        this.role = role;
+        this.content = content;
+        this.toolName = toolName;
+        this.toolId = toolId;
     }
 }
