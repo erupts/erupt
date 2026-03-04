@@ -1,12 +1,13 @@
 package xyz.erupt.ai.core;
 
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.pojo.ChatCompletionMessage;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -29,28 +30,26 @@ public abstract class OpenAi extends LlmCore {
     }
 
     @Override
-    public String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt) {
-        OpenAiChatModel model = OpenAiChatModel.builder()
+    public ChatModel buildChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages) {
+        return OpenAiChatModel.builder()
                 .baseUrl(llmRequest.getUrl() + chatApiPoint())
                 .apiKey(llmRequest.getApiKey())
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
                 .build();
-        return model.chat(userMessage);
     }
 
     @Override
     @SneakyThrows
-    public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
-        OpenAiStreamingChatModel model = OpenAiStreamingChatModel.builder()
+    public StreamingChatModel buildStreamingChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener) {
+        return OpenAiStreamingChatModel.builder()
                 .baseUrl(llmRequest.getUrl() + chatApiPoint())
                 .apiKey(llmRequest.getApiKey())
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
                 .build();
-        this.streamerReact(listener, model, userMessage, assistantPrompt);
     }
 
 }

@@ -24,14 +24,14 @@ import java.util.Map;
  * @author YuePeng
  * date 2025/2/27 22:57
  */
-@Erupt(name = "会话管理", dataProxy = ChatMessage.class)
+@Erupt(name = "会话管理", dataProxy = AiChatMessage.class)
 @Getter
 @Setter
 @Table(name = "e_ai_chat_message")
 @Entity
 @EruptI18n
 @NoArgsConstructor
-public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
+public class AiChatMessage extends BaseModel implements DataProxy<AiChatMessage> {
 
     private Long chatId;
 
@@ -58,8 +58,8 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
 
     private Integer tokens;
 
-    public static ChatMessage create(Long chatId, String llm, String model, ChatSenderType senderType, String content, Integer tokens) {
-        ChatMessage chatMessage = new ChatMessage();
+    public static AiChatMessage create(Long chatId, String llm, String model, ChatSenderType senderType, String content, Integer tokens) {
+        AiChatMessage chatMessage = new AiChatMessage();
         chatMessage.setChatId(chatId);
         chatMessage.setLlm(llm);
         chatMessage.setModel(model);
@@ -72,7 +72,7 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
-        String senderType = LambdaSee.field(ChatMessage::getSenderType);
+        String senderType = LambdaSee.field(AiChatMessage::getSenderType);
         for (Map<String, Object> map : list) {
             if (map.get(senderType) == ChatSenderType.MODEL) {
                 EruptTableStyle.cellColor(map, senderType, "#09f");

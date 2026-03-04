@@ -1,13 +1,14 @@
 package xyz.erupt.ai.llm;
 
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
-import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
-import dev.langchain4j.model.googleai.GoogleAiGeminiStreamingChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.core.*;
-import xyz.erupt.ai.pojo.ChatCompletionMessage;
+import xyz.erupt.ai.core.LlmCore;
+import xyz.erupt.ai.core.LlmRequest;
+import xyz.erupt.ai.core.SseListener;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -35,23 +36,21 @@ public class Ollama extends LlmCore {
     }
 
     @Override
-    public String chat(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt) {
-        OllamaChatModel model = OllamaChatModel.builder()
+    public ChatModel buildChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages) {
+        return OllamaChatModel.builder()
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
                 .build();
-        return model.chat(userMessage);
     }
 
     @Override
-    public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener) {
-        StreamingChatModel model = OllamaStreamingChatModel.builder()
+    public StreamingChatModel buildStreamingChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener) {
+        return OllamaStreamingChatModel.builder()
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
                 .build();
-        this.streamerReact(listener, model, userMessage, assistantPrompt);
     }
 
 }

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.core.LlmCore;
-import xyz.erupt.ai.model.Chat;
-import xyz.erupt.ai.model.ChatMessage;
+import xyz.erupt.ai.model.AiChat;
+import xyz.erupt.ai.model.AiChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.service.LLMService;
@@ -65,9 +65,9 @@ public class ChatController {
             emitter.complete();
         } else {
             LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
-            ChatMessage chatMessage = ChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0);
+            AiChatMessage chatMessage = AiChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0);
             eruptDao.persist(chatMessage);
-            Chat chat = eruptDao.find(Chat.class, chatId);
+            AiChat chat = eruptDao.find(AiChat.class, chatId);
             LLMAgent llmAgent = null;
             if (null != agentId) {
                 llmAgent = eruptDao.find(LLMAgent.class, agentId);
@@ -82,7 +82,7 @@ public class ChatController {
     @PostMapping("/create_chat")
     @Transactional
     public R<Long> createChat(@RequestParam String title) {
-        Chat chat = new Chat();
+        AiChat chat = new AiChat();
         if (title.length() > 100) title = title.substring(0, 100);
         chat.setTitle(title);
         chat.setCreatedTime(LocalDateTime.now());
@@ -95,27 +95,27 @@ public class ChatController {
     @GetMapping("/delete_chat")
     @Transactional
     public R<Void> deleteChat(@RequestParam Long chatId) {
-        Chat chat = eruptDao.find(Chat.class, chatId);
+        AiChat chat = eruptDao.find(AiChat.class, chatId);
         chat.setDeleted(true);
         return R.ok();
     }
 
     @EruptLoginAuth
     @GetMapping("/chats")
-    public R<List<Chat>> chats() {
-        return R.ok(eruptDao.lambdaQuery(Chat.class)
-                .with(Chat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
-                .orderByDesc(Chat::getCreatedTime)
+    public R<List<AiChat>> chats() {
+        return R.ok(eruptDao.lambdaQuery(AiChat.class)
+                .with(AiChat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
+                .orderByDesc(AiChat::getCreatedTime)
                 .list());
     }
 
     @EruptLoginAuth
     @GetMapping("/messages")
-    public R<List<ChatMessage>> messages(@RequestParam Long chatId, @RequestParam Integer size,
-                                         @RequestParam(defaultValue = "1") Integer index) {
-        return R.ok(eruptDao.lambdaQuery(ChatMessage.class)
-                .eq(ChatMessage::getChatId, chatId)
-                .orderByDesc(ChatMessage::getCreatedAt)
+    public R<List<AiChatMessage>> messages(@RequestParam Long chatId, @RequestParam Integer size,
+                                           @RequestParam(defaultValue = "1") Integer index) {
+        return R.ok(eruptDao.lambdaQuery(AiChatMessage.class)
+                .eq(AiChatMessage::getChatId, chatId)
+                .orderByDesc(AiChatMessage::getCreatedAt)
                 .offset((index - 1) * size)
                 .limit(size)
                 .list());

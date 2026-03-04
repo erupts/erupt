@@ -1,6 +1,10 @@
 package xyz.erupt.ai.service;
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.UserMessage;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,18 +14,16 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.ChatSenderType;
-import xyz.erupt.ai.constants.MessageRole;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.core.LlmRequest;
 import xyz.erupt.ai.handler.EruptPromptHandler;
-import xyz.erupt.ai.model.Chat;
-import xyz.erupt.ai.model.ChatMessage;
+import xyz.erupt.ai.model.AiChat;
+import xyz.erupt.ai.model.AiChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
-import xyz.erupt.ai.pojo.ChatCompletionMessage;
+import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
@@ -48,91 +50,97 @@ public class LLMService {
     private EruptDao eruptDao;
 
     public String send(String prompt) {
-        return send(prompt, Collections.emptyList());
+        return this.send(List.of(UserMessage.from(prompt)));
     }
 
-    public String send(String prompt, List<ChatCompletionMessage> assistantPrompt) {
-        return send(eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).eq(LLM::getEnable, true).limit(1).one(), prompt, assistantPrompt);
+    public String send(List<ChatMessage> chatMessages) {
+        return this.send(eruptDao.lambdaQuery(LLM.class).eq(LLM::getDefaultLLM, true).eq(LLM::getEnable, true).limit(1).one(), chatMessages);
     }
 
     public String send(LLM llm, String prompt) {
-        return send(llm, prompt, Collections.emptyList());
+        return send(llm, List.of(UserMessage.from(prompt)));
     }
 
-    public String send(LLM llmConfig, String prompt, List<ChatCompletionMessage> assistantPrompt) {
+    public String send(LLM llmConfig, List<ChatMessage> chatMessages) {
         if (null == llmConfig) {
             throw new EruptWebApiRuntimeException("Not found LLM config");
         }
-        return LlmCore.getLLM(llmConfig.getLlm()).chat(llmConfig.toLlmRequest(), prompt, assistantPrompt);
+        return LlmCore.getLLM(llmConfig.getLlm()).chat(llmConfig.toLlmRequest(), chatMessages);
     }
 
     @SneakyThrows
-    public List<ChatCompletionMessage> geneCompletionPrompt(Chat chat, LLMAgent llmAgent, Integer contextTurn) {
-        List<ChatCompletionMessage> chatCompletionMessages = new ArrayList<>();
-        chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, aiProp.getSystemPrompt()));
+    public List<ChatMessage> geneCompletionPrompt(AiChat chat, LLMAgent llmAgent, Integer contextTurn) {
+        List<ChatMessage> messages = new ArrayList<>();
         if (null != llmAgent) {
             // Agent
             if (null == llmAgent.getPromptHandler()) {
-                chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system, llmAgent.getPrompt()));
+                messages.add(SystemMessage.from(llmAgent.getPrompt()));
             } else {
-                chatCompletionMessages.add(new ChatCompletionMessage(MessageRole.system,
-                        EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
+                messages.add(SystemMessage.from(EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
             }
         }
-        List<ChatMessage> chatMessages = eruptDao.lambdaQuery(ChatMessage.class)
-                .eq(ChatMessage::getChatId, chat.getId())
-                .isNotNull(ChatMessage::getContent)
-                .orderByDesc(ChatMessage::getCreatedAt)
+        List<AiChatMessage> chatMessages = eruptDao.lambdaQuery(AiChatMessage.class)
+                .eq(AiChatMessage::getChatId, chat.getId())
+                .isNotNull(AiChatMessage::getContent)
+                .orderByDesc(AiChatMessage::getCreatedAt)
                 .limit(contextTurn + 1).list();
         Collections.reverse(chatMessages);
-        chatMessages.forEach(it -> chatCompletionMessages.add(
-                new ChatCompletionMessage(it.getSenderType() == ChatSenderType.USER ? MessageRole.user : MessageRole.assistant, it.getContent()))
-        );
-        return chatCompletionMessages;
+        for (AiChatMessage message : chatMessages) {
+            if (message.getSenderType() == ChatSenderType.USER) {
+                messages.add(UserMessage.from(message.getContent()));
+            } else if (message.getSenderType() == ChatSenderType.MODEL) {
+                messages.add(AiMessage.from(message.getContent()));
+            }
+        }
+        return messages;
     }
 
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(MetaContext metaContext, LLMAgent llmAgent, SseEmitter emitter, LlmCore llm, LLM llmModal, ChatMessage chatMessage, List<ChatCompletionMessage> completionMessage) {
+    public void sendSse(MetaContext metaContext, LLMAgent llmAgent, SseEmitter emitter, LlmCore llm, LLM llmModal, AiChatMessage chatMessage, List<ChatMessage> chatMessages) {
         try {
             MetaContext.set(metaContext);
             LlmRequest llmRequest = llmModal.toLlmRequest();
             if (null != llmAgent) {
                 llmAgent.mergeToLLmRequest(llmModal);
             }
-            completionMessage.removeIf(it -> StringUtils.isBlank(it.getContent()));
-            llm.chatSse(llmRequest, chatMessage.getContent(), completionMessage, it -> {
+            llm.chatSse(llmRequest, chatMessages, it -> {
                 if (null != it.getThrowable()) {
                     String message = it.getThrowable().getMessage();
                     this.sendSseMessage(emitter, message);
-                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, 0));
+                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, 0));
                     emitter.complete();
                 } else if (it.isFinish()) {
                     String message = it.getAiMessage().text();
                     if (aiProp.isEnableFunctionCall()) {
-                        List<String> functionCallRtn = new ArrayList<>();
                         if (it.getAiMessage().hasToolExecutionRequests()) {
+                            List<String> functionCallRtn = new ArrayList<>();
                             for (ToolExecutionRequest request : it.getAiMessage().toolExecutionRequests()) {
-                                Object rtn = AiToolboxManager.invoke(request);
-                                if (null != rtn) {
-                                    functionCallRtn.add(rtn.toString());
+                                try {
+                                    Object rtn = AiToolboxManager.invoke(request);
+                                    if (null != rtn) {
+                                        functionCallRtn.add(rtn.toString());
+                                    }
+                                } catch (Exception e) {
+                                    log.error("Function call error", e);
+                                    this.stopSse(emitter, chatMessage, llmModal, e.toString());
                                 }
                             }
-                        }
-                        if (!functionCallRtn.isEmpty()) {
-                            for (String s : functionCallRtn) {
-                                completionMessage.add(new ChatCompletionMessage(MessageRole.tool, s));
+                            if (functionCallRtn.isEmpty()) {
+                                message = "Completed !";
+                            } else {
+                                for (String s : functionCallRtn) {
+                                    chatMessages.add(AiMessage.from(s));
+                                }
+                                message = llm.chat(llmRequest, chatMessages);
+                                this.sendSseMessage(emitter, message);
                             }
-                            message = llm.chat(llmRequest, chatMessage.getContent(), completionMessage);
-                            this.sendSseMessage(emitter, message);
-                        }else{
-                            message = "Completed";
                         }
                     }
                     chatMessage.setTokens(it.getUsage().inputTokenCount());
                     eruptDao.mergeAndFlush(chatMessage);
-                    eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
+                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
                     emitter.complete();
                 } else {
                     // streaming
@@ -140,11 +148,15 @@ public class LLMService {
                 }
             });
         } catch (Exception e) {
-            String message = e.toString();
-            eruptDao.persistAndFlush(ChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, 0));
-            emitter.send(GsonFactory.getGson().toJson(new SseBody(message)), MediaType.TEXT_EVENT_STREAM);
-            emitter.complete();
+            this.stopSse(emitter, chatMessage, llmModal, e.toString());
         }
+    }
+
+    @SneakyThrows
+    private void stopSse(SseEmitter emitter, AiChatMessage chatMessage, LLM llmModal, String reason) {
+        eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, reason, 0));
+        emitter.send(GsonFactory.getGson().toJson(new SseBody(reason)), MediaType.TEXT_EVENT_STREAM);
+        emitter.complete();
     }
 
     private void sendSseMessage(SseEmitter emitter, String llmMessage) {
