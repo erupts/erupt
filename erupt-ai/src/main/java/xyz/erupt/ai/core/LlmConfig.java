@@ -13,9 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LlmConfig {
 
-    private Float top_p;
+    private Double top_p;
 
-    private Float temperature;
+    private Double temperature;
 
     public LlmRequest toLlmRequest() {
         LlmRequest llmRequest = new LlmRequest();

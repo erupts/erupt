@@ -17,7 +17,7 @@ public class OpenRouter extends OpenAi {
     }
 
     @Override
-    public String chatApiPath() {
-        return "/api/v1/chat/completions";
+    public String chatApiPoint() {
+        return "/api/v1";
     }
 }

@@ -21,4 +21,8 @@ public class AiProp {
 
     private boolean enableFunctionCall = true;
 
+    private int messageChunkSize = 20;
+
+    private int messageDelay = 30;
+
 }

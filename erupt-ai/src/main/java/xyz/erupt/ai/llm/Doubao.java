@@ -1,29 +1,24 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.core.LlmConfig;
 import xyz.erupt.ai.core.OpenAi;
 
-/**
- * @author YuePeng
- * date 2025/2/26 22:40
- */
 @Component
-public class GLM extends OpenAi {
+public class Doubao extends OpenAi {
 
     @Override
     public String model() {
-        return "glm-4-air";
+        return "doubao-pro-32k";
     }
 
     @Override
     public String api() {
-        return "https://open.bigmodel.cn";
+        return "https://ark.cn-beijing.volces.com";
     }
 
     @Override
     public String chatApiPoint() {
-        return "/api/paas/v4";
+        return "/api/v3";
     }
 
 }

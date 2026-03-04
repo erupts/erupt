@@ -92,6 +92,14 @@ const fetchMessages = (chatId: number, toBottom: boolean, after?: () => void) =>
         bubbles.value.scrollTop = bubbles.value.scrollHeight; // 滚动到最新消息
       }, 100);
     }
+  }, err => {
+    messages.value.push({
+      content: err.message || err.data || String(err),
+      senderType: 'MODEL',
+      id: 0,
+      createTime: "",
+      loading: false
+    })
   }).finally(() => {
     loadingMoreMessages.value = false; // 加载完成
   });
