@@ -22,6 +22,7 @@ CLOSE,关闭,關閉,Close,Fermer,閉じる,닫기,Закрыть,Cerrar,Schließ
 用户名,用户名,用戶名,Account,Nom de l’utilisateur,ユーザー名です,사용자 이름,Имя пользователя.,Nombre de usuario,benutzername,Nome de usuário,Nama pengguna,اسم المستخدم
 姓名,姓名,姓名,Name,Le nom,名前です,이름,им,Los nombres,"Namen, bitte?",O nome,nama,أسماء
 负责组织,负责组织,負責組織,Responsible Organization,Organisation Responsable,責任組織,책임 조직,Ответственная Организация,Organización Responsable,Verantwortliche Organisation,Organização Responsável,Organisasi yang Bertanggung Jawab,المنظمة المسؤولة
+分管组织,分管组织,分管組織,Supervising Organization,Organisation de Supervision,主管組織,관할 조직,Надзорная организация,Organización Supervisora,Aufsichtsorganisation,Organização Supervisora,Organisasi Pengawas,المنظمة الإشرافية
 密码,密码,密碼,Password,Les mots de passe,パスワードです,암호,код,La contraseña,kennwort,senha,kode,كلمة المرور
 确认密码,确认密码,確認密碼,Confirm password,Confirmer le mot de passe,パスワードを確認します,비밀번호 확인,Подтвердите код.,Confirme su contraseña,Passwort bestätigt.,Confirme a senha,Konfirmasi sandi,تأكيد كلمة المرور
 md5加密,md5加密,md5加密,MD5 encrypt,Cryptage avec md5,md5暗号化です,md5 암호화,Md5 зашифровано,Cifrado con md5,Das md5 ist verschlüsselt.,Criptografia com md5,Enkripsi md5.,مشفر MD5.

@@ -135,6 +135,16 @@ public class EruptUser extends LookerSelf {
     )
     private Set<Long> headOrg;
 
+    @ElementCollection
+    @CollectionTable(name = "e_upms_user_org_division", joinColumns = @JoinColumn(name = "id"))
+    @EruptField(
+            views = @View(title = "分管组织", column = "name"),
+            edit = @Edit(title = "分管组织", type = EditType.MULTI_CHOICE, multiChoiceType =
+            @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
+    )
+    private Set<Long> divisionOrg;
+
+
     @Transient
     @EruptField(
             edit = @Edit(title = "密码", type = EditType.DIVIDE)
