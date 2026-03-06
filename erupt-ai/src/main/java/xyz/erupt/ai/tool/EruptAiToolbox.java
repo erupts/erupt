@@ -41,13 +41,14 @@ public class EruptAiToolbox {
     public String eruptUserInfo() {
         EruptUser eruptUser = eruptDao.find(EruptUser.class, MetaContext.getUser().getUid());
         eruptUser.setRoles(null);
-        eruptUser.setHeadOrg(null);
         eruptUser.setPassword(null);
         return GsonFactory.getGson().toJson(eruptUser);
     }
 
-    @Tool("Query erupt model data")
-    public String eruptDataQuery(@P("HQL (Hibernate Query Language)") String hql) {
+    @Tool("查询 Erupt 实体数据。注意：必须使用 HQL (Hibernate Query Language)，" +
+            "针对 Java 实体类名而非表名进行查询。例如：'from User where name = :name'")
+    public String eruptDataQuery(@P("面向对象的 HQL 语句。格式参考：SELECT e FROM [实体类名] e WHERE e.[属性名] = ...")
+                                 String hql) {
         List<?> result = eruptDao.getEntityManager().createQuery(hql).getResultList();
         return GsonFactory.getGson().toJson(result);
     }
