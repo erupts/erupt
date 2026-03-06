@@ -60,8 +60,12 @@ public class ChatController {
             llmModel = eruptDao.find(LLM.class, llmId);
         }
         SseEmitter emitter = new SseEmitter();
-        if (llmModel == null) {
-            emitter.send(GsonFactory.getGson().toJson(new SseBody("No LLM available")), MediaType.TEXT_EVENT_STREAM);
+        if (message.isBlank()) {
+            llmService.sendSseMessage(emitter, "Please enter a prompt");
+            emitter.complete();
+            return emitter;
+        } else if (llmModel == null) {
+            llmService.sendSseMessage(emitter, "No LLM available");
             emitter.complete();
         } else {
             LlmCore llm = LlmCore.getLLM(llmModel.getLlm());

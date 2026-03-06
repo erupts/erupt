@@ -118,13 +118,14 @@ public class LLMService {
                             List<String> functionCallRtn = new ArrayList<>();
                             for (ToolExecutionRequest request : it.getAiMessage().toolExecutionRequests()) {
                                 try {
+                                    log.info("Execution tool: {}", request);
                                     Object rtn = AiToolboxManager.invoke(request);
                                     if (null != rtn) {
                                         functionCallRtn.add(rtn.toString());
                                     }
                                 } catch (Exception e) {
-                                    log.error("Function call error", e);
-                                    this.stopSse(emitter, chatMessage, llmModal, e.toString());
+                                    log.error("Execution tool error: {}, {}", request, e);
+                                    this.stopSse(emitter, chatMessage, llmModal, "Execution tool error: " + request.toString() + ", " + e.getMessage());
                                 }
                             }
                             if (functionCallRtn.isEmpty()) {
@@ -159,7 +160,7 @@ public class LLMService {
         emitter.complete();
     }
 
-    private void sendSseMessage(SseEmitter emitter, String llmMessage) {
+    public void sendSseMessage(SseEmitter emitter, String llmMessage) {
         try {
             if (StringUtils.isNotBlank(llmMessage) && llmMessage.length() > aiProp.getMessageChunkSize()) {
                 for (int i = 0; i < llmMessage.length(); i += aiProp.getMessageChunkSize()) {
