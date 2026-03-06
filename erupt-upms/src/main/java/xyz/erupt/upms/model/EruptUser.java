@@ -126,7 +126,7 @@ public class EruptUser extends LookerSelf {
     )
     private EruptPost eruptPost;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "e_upms_user_org_head", joinColumns = @JoinColumn(name = "id"))
     @EruptField(
             views = @View(title = "负责组织", column = "name"),
@@ -135,7 +135,7 @@ public class EruptUser extends LookerSelf {
     )
     private Set<Long> headOrg;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "e_upms_user_org_division", joinColumns = @JoinColumn(name = "id"))
     @EruptField(
             views = @View(title = "分管组织", column = "name"),
