@@ -182,3 +182,14 @@ ORG,组织,組織,Organization,Organisation,組織,조직,Организация
 USER,用户,用戶,User,Utilisateur,ユーザー,사용자,Пользователь,Usuario,Benutzer,Utilizador,Pengguna,مستخدم
 POST,岗位,崗位,Position,Poste,ポスト,직위,Должность,Puesto,Position,Cargo,Jabatan,منصب
 ROLE,角色,角色,Role,Rôle,ロール,역할,Роль,Rol,Rolle,Função,Peran,دور
+ORG_HEAD,组织负责人,組織負責人,Organization Head,Responsable de l'organisation,組織責任者,조직 책임자,Руководитель организации,Jefe de organización,Organisationsleiter,Chefe da organização,Kepala Organisasi,رئيس المنظمة
+DIVISION_LEADER,分管领导,分管領導,Division Leader,Chef de division,分担リーダー,분할 리더,Руководитель подразделения,Líder de división,Abteilungsleiter,Líder de divisão,Pemimpin Divisi,زعيم القسم
+SPECIFIED_USER,指定人员,指定人員,Specified Users,Personnes spécifiées,指定された人,지정된 사용자,Указанные лица,Personas especificadas,Spezifizierte Personen,Pessoas especificadas,Pengguna Tertentu,الأشخاص المحددون
+SELF_SELECT,发起人自选,发起人自選,Self-select by initiator,Choix par l'initiateur,発信者による自選,기안자 자율 선택,Самостоятельный выбор инициатором,Selección propia del iniciador,Selbstwahl durch den Initiator,Auto-seleção pelo iniciador,Pilih sendiri oleh inisiator,الاختيار الذاتي من قبل المبادر
+NODE_ASSIGNED,由其他节点指定,由其他節點指定,Assigned by other nodes,Assigné par d'autres nœuds,他のノードによって指定,다른 노드에 의해 지정됨,Назначено другими узлами,Asignado por otros nodos,Von anderen Knoten zugewiesen,Atribuído por outros nós,Ditugaskan oleh simpul lain,مخصص من قبل عقد أخرى
+SUBMITTER_HIMSELF,提交人本人,提交人本人,Submitter himself,Le soumissionnaire lui-même,提出者本人,제출자 본인,Сам заявитель,El propio remitente,Einreicher selbst,O próprio remetente,Pengirim itu sendiri,المقدم نفسه
+DIRECT_ORG_HEAD,直属组织负责人,直屬組織負責人,Direct Organization Head,Responsable direct de l'organisation,直属組織責任者,직속 조직 책임자,Непосредственный руководитель организации,Jefe de organización directa,Direkter Organisationsleiter,Chefe direto da organização,Kepala Organisasi Langsung,رئيس المنظمة المباشر
+flow.approval_mode,人员设置,人員設置,Approval Mode,Mode d'approbation,承認モード,승인 모드,Режим одобрения,Modo de aprobación,Genehmigungsmodus,Modo de aprovação,Mode Persetujuan,وضع الموافقة
+flow.node_select,节点选择,節點選擇,Node Selection,Sélection de nœud,ノード選択,노드 선택,Выбор узла,Selección de nodo,Knotenauswahl,Seleção de nó,Pemilihan Simpul,اختيار العقدة
+flow.permission_scopes,人员范围,人員範圍,Permission Scopes,Périmètres de permission,権限範囲,권한 범위,Сферы полномочий,Ámbitos de permiso,Berechtigungsbereiche,Escopos de permissão,Cakupan Izin,نطاقات الإذن
+flow.submitter_of,提交人的,提交人的,Submitter of,Soumetteur de,提出者の,제출자의,Отправитель de,Remitente de,Einreicher von,Remetente de,Penyerah dari,مقدم من
