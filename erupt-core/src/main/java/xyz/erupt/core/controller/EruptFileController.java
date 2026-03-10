@@ -25,7 +25,6 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptFileService;
 import xyz.erupt.core.util.EruptUtil;
-import xyz.erupt.core.util.Erupts;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
@@ -68,7 +67,6 @@ public class EruptFileController {
             return EruptApiModel.errorApi(I18nTranslate.$translate("filename is empty"));
         }
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
-        Erupts.powerLegal(eruptModel, powerObject -> powerObject.isEdit() || powerObject.isAdd());
         Edit edit = eruptModel.getEruptFieldMap().get(fieldName).getEruptField().edit();
         String path = eruptFileService.createPath(file).replace(edit.attachmentType().fileSeparator(), "");
         switch (edit.type()) {
