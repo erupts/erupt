@@ -160,7 +160,6 @@ TRANSFER,已转交,已轉交,Transferred,Transféré,転送済み,전송됨,Пе
 TIMEOUT_AUTO_PASS,超时自动通过,逾時自動通過,Auto pass on timeout,Passer automatiquement en cas de délai d'attente,タイムアウト時に自動承認,시간 초과 시 자동 승인,Автоматическое подтверждение по истечении времени,Autorizar automáticamente al alcanzar el tiempo de espera,Automatische Genehmigung nach Zeitablauf,Aprovação automática ao atingir o tempo limite,Setujui otomatis saat waktu habilit,تجاوز تلقائي عند انتهاء المهلة
 TIMEOUT_AUTO_REJECT,超时自动拒绝,逾時自動拒絕,Auto reject on timeout,Rejeter automatiquement en cas de délai d'attente,タイムアウト時に自動拒否,시간 초과 시 자동 거부,Автоматический отказ по истечении времени,Rechazar automáticamente al alcanzar el tiempo de espera,Automatische Ablehnung nach Zeitablauf,Rejeição automática ao atingir o tempo limite,Tolak otomatis saat waktu habilit,رفض تلقائي عند انتهاء المهلة
 
-PENDING,审批中,審批中,Pending,En attente,審査中,대기 중,На рассмотрении,Pendiente,Ausstehend,Pendente,Menunggu,قيد الانتظار
 AGREED,已同意,已同意,Agreed,Accepté,同意,동의됨,Принято,Acertado,Aprovado,Acertado,Diterima,تم الموافقة
 REJECTED,已拒绝,已拒絕,Rejected,Rejeté,拒否,거부됨,Отклонено,Rechazado,Abgelehnt,Rejeitado,Ditolak,مرفوض
 SKIPPED,已跳过,已跳過,Skipped,Sautéé,跳過,건너뛰어짐,Пропущено,Saltado,Lewati,Dipulihkan,Lewati,لقد قفزت
@@ -177,6 +176,7 @@ FLOW_TODO,待办,待辦,Todo,À faire,やること,할 일,Сделать,Por ha
 FLOW_DONE,已办,已辦,Done,Fait,完了,완료,Выполнено,Hecho,Erledigt,Concluído,Selesai,تم
 CREATED,已创建,已創建,Created,Créé,作成済,생성됨,Создано,Creado,Erstellt,Criado,Dibuat,تم الإنشاء
 CC,抄送我,抄送我,CC Me,Me mettre en CC,私にCC,나에게 참조,Отправить копию мне,CC a mí,CC mich,CC para mim,CC saya,نسخة لي
+ASSIGNEE,办理,辦理,Assignee,Assigné,担当者,담당자,Исполнитель,Asignado,Zuständiger,Responsável,Penanggung jawab,المكلف
 
 ORG,组织,組織,Organization,Organisation,組織,조직,Организация,Organización,Organisation,Organização,Organisasi,منظمة
 USER,用户,用戶,User,Utilisateur,ユーザー,사용자,Пользователь,Usuario,Benutzer,Utilizador,Pengguna,مستخدم
