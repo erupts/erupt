@@ -31,9 +31,9 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
         name = "大语言模型", dataProxy = LLMDataProxy.class,
         orderBy = "sort",
         rowOperation = {
-                @RowOperation(title = "对话测试", icon = "fa fa-comments",
-                        tpl = @Tpl(path = "/tpl/llm-chat.ftl", height = "85vh", tplHandler = LLMDataProxy.class),
-                        mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
+//                @RowOperation(title = "对话测试", icon = "fa fa-comments",
+//                        tpl = @Tpl(path = "/tpl/llm-chat.ftl", height = "85vh", tplHandler = LLMDataProxy.class),
+//                        mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
                 @RowOperation(title = "默认对话模型", icon = "fa fa-magic",
                         ifExpr = "item.defaultLLM === '×'",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
