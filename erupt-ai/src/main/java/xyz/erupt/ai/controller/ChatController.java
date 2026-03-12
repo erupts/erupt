@@ -19,6 +19,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.R;
+import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.model.EruptUserVo;
@@ -106,11 +107,12 @@ public class ChatController {
 
     @EruptLoginAuth
     @GetMapping("/chats")
-    public R<List<AiChat>> chats() {
+    public R<SimplePage<AiChat>> chats(@RequestParam Integer size,
+                                       @RequestParam(defaultValue = "1") Integer index) {
         return R.ok(eruptDao.lambdaQuery(AiChat.class)
                 .with(AiChat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
                 .orderByDesc(AiChat::getCreatedTime)
-                .list());
+                .page(size, (index - 1) * size));
     }
 
     @EruptLoginAuth
