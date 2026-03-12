@@ -13,9 +13,7 @@ import xyz.erupt.ai.model.AiChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.service.LLMService;
-import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.core.annotation.EruptRouter;
-import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.R;
@@ -97,13 +95,24 @@ public class ChatController {
     }
 
     @EruptLoginAuth
-    @GetMapping("/delete_chat")
+    @GetMapping("/delete-chat")
     @Transactional
     public R<Void> deleteChat(@RequestParam Long chatId) {
         AiChat chat = eruptDao.find(AiChat.class, chatId);
         chat.setDeleted(true);
         return R.ok();
     }
+
+    @EruptLoginAuth
+    @PostMapping("/rename-chat")
+    @Transactional
+    public R<Void> renameChat(@RequestParam Long chatId, @RequestParam String title) {
+        AiChat chat = eruptDao.find(AiChat.class, chatId);
+        chat.setTitle(title);
+        eruptDao.persist(chat);
+        return R.ok();
+    }
+
 
     @EruptLoginAuth
     @GetMapping("/chats")
