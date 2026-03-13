@@ -71,14 +71,6 @@ public class LLMService {
     @SneakyThrows
     public List<ChatMessage> geneCompletionPrompt(AiChat chat, LLMAgent llmAgent, Integer contextTurn) {
         List<ChatMessage> messages = new ArrayList<>();
-        if (null != llmAgent) {
-            // Agent
-            if (null == llmAgent.getPromptHandler()) {
-                messages.add(SystemMessage.from(llmAgent.getPrompt()));
-            } else {
-                messages.add(SystemMessage.from(EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
-            }
-        }
         List<AiChatMessage> chatMessages = eruptDao.lambdaQuery(AiChatMessage.class)
                 .eq(AiChatMessage::getChatId, chat.getId())
                 .isNotNull(AiChatMessage::getContent)
@@ -90,6 +82,14 @@ public class LLMService {
                 messages.add(UserMessage.from(message.getContent()));
             } else if (message.getSenderType() == ChatSenderType.MODEL) {
                 messages.add(AiMessage.from(message.getContent()));
+            }
+        }
+        if (null != llmAgent) {
+            // Agent
+            if (null == llmAgent.getPromptHandler()) {
+                messages.add(SystemMessage.from(llmAgent.getPrompt()));
+            } else {
+                messages.add(SystemMessage.from(EruptSpringUtil.getBeanByPath(llmAgent.getPromptHandler(), EruptPromptHandler.class).handle(llmAgent.getPrompt())));
             }
         }
         return messages;

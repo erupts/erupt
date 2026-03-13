@@ -58,6 +58,7 @@ public class ChatController {
         } else {
             llmModel = eruptDao.find(LLM.class, llmId);
         }
+        eruptDao.detach(llmModel);
         SseEmitter emitter = new SseEmitter();
         if (message.isBlank()) {
             llmService.sendSseMessage(emitter, "Please enter a prompt");
