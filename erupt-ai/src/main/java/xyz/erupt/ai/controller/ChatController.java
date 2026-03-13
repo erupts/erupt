@@ -82,7 +82,7 @@ public class ChatController {
     }
 
     @EruptLoginAuth
-    @PostMapping("/create_chat")
+    @PostMapping("/create-chat")
     @Transactional
     public R<Long> createChat(@RequestParam String title) {
         AiChat chat = new AiChat();
