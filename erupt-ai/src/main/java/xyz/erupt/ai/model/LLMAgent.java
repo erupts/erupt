@@ -55,17 +55,6 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
     @JsonIgnore
     private String promptHandler;
 
-    @Column(length = AnnotationConst.CONFIG_LENGTH)
-    @EruptField(
-            views = @View(title = "智能体参数"),
-            edit = @Edit(title = "智能体参数", type = EditType.CODE_EDITOR, notNull = true,
-                    codeEditType = @CodeEditorType(language = "json")
-            )
-    )
-    @JsonIgnore
-    @Ref(LlmConfig.class)
-    private String config;
-
 //    @EruptField(
 //            views = @View(title = "候选词列表"),
 //            edit = @Edit(title = "候选词列表", type = EditType.TAGS)
@@ -83,10 +72,21 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "能力描述"),
-            edit = @Edit(title = "能力描述", type = EditType.TEXTAREA)
+            views = @View(title = "描述"),
+            edit = @Edit(title = "描述", type = EditType.TEXTAREA)
     )
     private String remark;
+
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    @EruptField(
+            views = @View(title = "智能体参数"),
+            edit = @Edit(title = "智能体参数", type = EditType.CODE_EDITOR, notNull = true,
+                    codeEditType = @CodeEditorType(language = "json")
+            )
+    )
+    @JsonIgnore
+    @Ref(LlmConfig.class)
+    private String config;
 
     @Override
     public void addBehavior(LLMAgent llmAgent) {
