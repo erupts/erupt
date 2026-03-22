@@ -49,6 +49,7 @@ public class ChatController {
     @SneakyThrows
     public SseEmitter send(@RequestParam Long chatId,
                            @RequestParam String message,
+                           @RequestParam(required = false, defaultValue = "true") Boolean autoToolCall,
                            @RequestParam(required = false) Long llmId,
                            @RequestParam(required = false) Long agentId
     ) {
@@ -76,7 +77,7 @@ public class ChatController {
             if (null != agentId) {
                 llmAgent = eruptDao.find(LLMAgent.class, agentId);
             }
-            llmService.sendSse(MetaContext.get(), llmAgent, emitter, llm, llmModel, chatMessage, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()));
+            llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()));
         }
 
         return emitter;

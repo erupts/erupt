@@ -4,7 +4,6 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
-import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
@@ -65,8 +64,10 @@ public abstract class LlmCore {
         StreamingChatModel streamingChatModel = this.buildStreamingChatModel(llmRequest, chatMessages, listener);
         chatMessages.add(0, SystemMessage.from(EruptSpringUtil.getBean(AiProp.class).getSystemPrompt()));
         List<ToolSpecification> specs = new ArrayList<>();
-        for (Method method : AiToolboxManager.getAiMethodMap().values()) {
-            specs.add(ToolSpecifications.toolSpecificationFrom(method));
+        if (null != llmRequest.getAutoCallTool() && llmRequest.getAutoCallTool()) {
+            for (Method method : AiToolboxManager.getAiMethodMap().values()) {
+                specs.add(ToolSpecifications.toolSpecificationFrom(method));
+            }
         }
         ChatRequest request = ChatRequest.builder().messages(chatMessages).toolSpecifications(specs).build();
         MetaContext metaContext = MetaContext.get();
