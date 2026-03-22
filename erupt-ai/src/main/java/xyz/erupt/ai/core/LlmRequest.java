@@ -22,6 +22,8 @@ public class LlmRequest {
 
     private Double top_p;
 
+    private Boolean autoCallTool;
+
     private ResponseFormat responseFormat = ResponseFormat.text;
 
 }

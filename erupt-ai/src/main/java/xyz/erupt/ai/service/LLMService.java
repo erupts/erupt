@@ -98,13 +98,14 @@ public class LLMService {
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(MetaContext metaContext, LLMAgent llmAgent, SseEmitter emitter, LlmCore llm, LLM llmModal, AiChatMessage chatMessage, List<ChatMessage> chatMessages) {
+    public void sendSse(MetaContext metaContext, Boolean autoToolCall, LLMAgent llmAgent, SseEmitter emitter, LlmCore llm, LLM llmModal, AiChatMessage chatMessage, List<ChatMessage> chatMessages) {
         try {
             MetaContext.set(metaContext);
             LlmRequest llmRequest = llmModal.toLlmRequest();
             if (null != llmAgent) {
                 llmAgent.mergeToLLmRequest(llmModal);
             }
+            llmRequest.setAutoCallTool(autoToolCall);
             llm.chatSse(llmRequest, chatMessages, it -> {
                 if (null != it.getThrowable()) {
                     String message = it.getThrowable().getMessage();
@@ -113,7 +114,7 @@ public class LLMService {
                     emitter.complete();
                 } else if (it.isFinish()) {
                     String message = it.getAiMessage().text();
-                    if (aiProp.isEnableFunctionCall()) {
+                    if (aiProp.isEnableFunctionCall() && autoToolCall) {
                         if (it.getAiMessage().hasToolExecutionRequests()) {
                             List<String> functionCallRtn = new ArrayList<>();
                             for (ToolExecutionRequest request : it.getAiMessage().toolExecutionRequests()) {
