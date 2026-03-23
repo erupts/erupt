@@ -25,6 +25,7 @@ import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.vo.SseBody;
+import xyz.erupt.ai.vo.SseEvent;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
@@ -111,7 +112,7 @@ public class LLMService {
                     String message = it.getThrowable().getMessage();
                     this.sendSseMessage(emitter, message);
                     eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, 0));
-                    emitter.complete();
+                    this.completeSse(emitter);
                 } else if (it.isFinish()) {
                     String message = it.getAiMessage().text();
                     if (aiProp.isEnableFunctionCall() && autoToolCall) {
@@ -119,6 +120,7 @@ public class LLMService {
                             List<String> functionCallRtn = new ArrayList<>();
                             for (ToolExecutionRequest request : it.getAiMessage().toolExecutionRequests()) {
                                 try {
+                                    this.sendSseThinkMessage(emitter, "Execution tool: " + request);
                                     log.info("Execution tool: {}", request);
                                     Object rtn = AiToolboxManager.invoke(request);
                                     if (null != rtn) {
@@ -126,7 +128,7 @@ public class LLMService {
                                     }
                                 } catch (Exception e) {
                                     log.error("Execution tool error: {}, {}", request, e);
-                                    this.stopSse(emitter, chatMessage, llmModal, "Execution tool error: " + request.toString() + ", " + e.getMessage());
+                                    this.stopSse(emitter, chatMessage, llmModal, "Execution tool error: " + request + ", " + e.getMessage());
                                 }
                             }
                             if (functionCallRtn.isEmpty()) {
@@ -138,12 +140,14 @@ public class LLMService {
                                 message = llm.chat(llmRequest, chatMessages);
                                 this.sendSseMessage(emitter, message);
                             }
+                            this.sendSseThinkClear(emitter);
                         }
                     }
+                    this.sendSseDone(emitter);
                     chatMessage.setTokens(it.getUsage().inputTokenCount());
                     eruptDao.mergeAndFlush(chatMessage);
                     eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
-                    emitter.complete();
+                    this.completeSse(emitter);
                 } else {
                     // streaming
                     this.sendSseMessage(emitter, it.getCurrMessage());
@@ -154,27 +158,57 @@ public class LLMService {
         }
     }
 
+
+    @SneakyThrows
+    public void sendSseDone(SseEmitter emitter) {
+        this.sendSseBody(emitter, new SseBody(SseEvent.DONE, null));
+    }
+
+    @SneakyThrows
+    public void sendSseThinkClear(SseEmitter emitter) {
+        this.sendSseBody(emitter, new SseBody(SseEvent.THINK, null));
+    }
+
+    @SneakyThrows
+    public void sendSseThinkMessage(SseEmitter emitter, String llmMessage) {
+        this.sendSseBody(emitter, new SseBody(SseEvent.THINK, llmMessage));
+    }
+
     @SneakyThrows
     private void stopSse(SseEmitter emitter, AiChatMessage chatMessage, LLM llmModal, String reason) {
         eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, reason, 0));
-        emitter.send(GsonFactory.getGson().toJson(new SseBody(reason)), MediaType.TEXT_EVENT_STREAM);
-        emitter.complete();
+        this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, reason));
+        this.completeSse(emitter);
     }
 
+    @SneakyThrows
     public void sendSseMessage(SseEmitter emitter, String llmMessage) {
-        try {
-            if (StringUtils.isNotBlank(llmMessage) && llmMessage.length() > aiProp.getMessageChunkSize()) {
-                for (int i = 0; i < llmMessage.length(); i += aiProp.getMessageChunkSize()) {
-                    int end = Math.min(i + aiProp.getMessageChunkSize(), llmMessage.length());
-                    emitter.send(GsonFactory.getGson().toJson(new SseBody(llmMessage.substring(i, end))), MediaType.TEXT_EVENT_STREAM);
-                    if (aiProp.getMessageDelay() > 0) {
-                        Thread.sleep(aiProp.getMessageDelay());
-                    }
+        if (StringUtils.isNotBlank(llmMessage) && llmMessage.length() > aiProp.getMessageChunkSize()) {
+            for (int i = 0; i < llmMessage.length(); i += aiProp.getMessageChunkSize()) {
+                int end = Math.min(i + aiProp.getMessageChunkSize(), llmMessage.length());
+                this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, llmMessage.substring(i, end)));
+                if (aiProp.getMessageDelay() > 0) {
+                    Thread.sleep(aiProp.getMessageDelay());
                 }
-            } else {
-                emitter.send(GsonFactory.getGson().toJson(new SseBody(llmMessage)), MediaType.TEXT_EVENT_STREAM);
             }
-        } catch (Exception ignore) {
+        } else {
+            this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, llmMessage));
+        }
+    }
+
+    public void sendSseBody(SseEmitter emitter, SseBody sseBody) {
+        try {
+            emitter.send(GsonFactory.getGson().toJson(sseBody), MediaType.TEXT_EVENT_STREAM);
+        } catch (Exception e) {
+            log.warn("SSE send error: {}", e.getMessage());
+        }
+    }
+
+    public void completeSse(SseEmitter emitter) {
+        try {
+            emitter.complete();
+        } catch (Exception e) {
+            log.warn("SSE complete error: {}", e.getMessage());
         }
     }
 

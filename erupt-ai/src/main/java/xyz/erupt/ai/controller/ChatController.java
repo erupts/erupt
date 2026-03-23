@@ -63,11 +63,11 @@ public class ChatController {
         SseEmitter emitter = new SseEmitter();
         if (message.isBlank()) {
             llmService.sendSseMessage(emitter, "Please enter a prompt");
-            emitter.complete();
+            llmService.completeSse(emitter);
             return emitter;
         } else if (llmModel == null) {
             llmService.sendSseMessage(emitter, "No LLM available");
-            emitter.complete();
+            llmService.completeSse(emitter);
         } else {
             LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
             AiChatMessage chatMessage = AiChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0);
