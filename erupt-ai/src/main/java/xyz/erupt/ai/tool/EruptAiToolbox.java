@@ -45,14 +45,6 @@ public class EruptAiToolbox {
         return GsonFactory.getGson().toJson(eruptUser);
     }
 
-    @Tool("查询 Erupt 实体数据。注意：必须使用 HQL (Hibernate Query Language)，" +
-            "针对 Java 实体类名而非表名进行查询。例如：'from User where name = :name'")
-    public String eruptDataQuery(@P("面向对象的 HQL 语句。格式参考：SELECT e FROM [实体类名] e WHERE e.[属性名] = ...")
-                                 String hql) {
-        List<?> result = eruptDao.getEntityManager().createQuery(hql).getResultList();
-        return GsonFactory.getGson().toJson(result);
-    }
-
     @Tool("Erupt Module list")
     public String eruptModuleList() {
         StringBuilder sb = new StringBuilder();
