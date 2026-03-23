@@ -55,12 +55,12 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
     @JsonIgnore
     private String promptHandler;
 
-//    @EruptField(
-//            views = @View(title = "候选词列表"),
-//            edit = @Edit(title = "候选词列表", type = EditType.TAGS)
-//    )
-//    @Column(length = AnnotationConst.REMARK_LENGTH)
-//    private String hint;
+    @EruptField(
+            views = @View(title = "候选词列表"),
+            edit = @Edit(title = "候选词列表", type = EditType.TAGS)
+    )
+    @Column(length = AnnotationConst.REMARK_LENGTH)
+    private String hint;
 
     @JsonIgnore
     @Column(length = AnnotationConst.CONFIG_LENGTH)

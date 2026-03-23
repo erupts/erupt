@@ -1,6 +1,7 @@
 package xyz.erupt.ai.controller;
 
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import xyz.erupt.core.view.R;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +30,14 @@ public class AgentController {
     @EruptLoginAuth
     @GetMapping("/list")
     public R<List<AgentVo>> list() {
-        return R.ok(eruptDao.lambdaQuery(LLMAgent.class).eq(LLMAgent::getEnable, true).list().stream().map(it->{
+        return R.ok(eruptDao.lambdaQuery(LLMAgent.class).eq(LLMAgent::getEnable, true).list().stream().map(it -> {
             AgentVo agentVo = new AgentVo();
             agentVo.setId(it.getId());
             agentVo.setName(it.getName());
             agentVo.setDesc(it.getRemark());
+            if (StringUtils.isNotBlank(it.getHint())) {
+                agentVo.setHints(Arrays.stream(it.getHint().split("\\|")).toList());
+            }
             return agentVo;
         }).collect(Collectors.toList()));
     }
