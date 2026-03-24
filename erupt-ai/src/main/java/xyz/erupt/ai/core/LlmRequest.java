@@ -22,7 +22,7 @@ public class LlmRequest {
 
     private Double top_p;
 
-    private Boolean autoCallTool;
+    private Boolean autoCallTool = false;
 
     private ResponseFormat responseFormat = ResponseFormat.text;
 
