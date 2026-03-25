@@ -22,7 +22,7 @@ public class EruptAiToolbox {
     @Resource
     private EruptDao eruptDao;
 
-    @Tool("Erupt model list")
+    @Tool("Erupt data model list")
     public String eruptModelList() {
         StringBuilder sb = new StringBuilder();
         for (EruptModel erupt : EruptCoreService.getErupts()) {
@@ -31,8 +31,8 @@ public class EruptAiToolbox {
         return sb.toString();
     }
 
-    @Tool("Erupt model schema")
-    public String eruptSchema(@P("Erupt Name") String eruptName) {
+    @Tool("Erupt data model schema")
+    public String eruptSchema(@P("Erupt model Name") String eruptName) {
         EruptModel erupt = EruptCoreService.getEruptView(eruptName);
         return GsonFactory.getGson().toJson(erupt);
     }
@@ -45,11 +45,10 @@ public class EruptAiToolbox {
         return GsonFactory.getGson().toJson(eruptUser);
     }
 
-    @Tool("Erupt Module list")
-    public String eruptModuleList() {
-        StringBuilder sb = new StringBuilder();
-        EruptModuleInvoke.invoke(it -> sb.append(GsonFactory.getGson().toJson(it.info())).append("\n"));
-        return sb.toString();
-    }
+//    @Tool("Query erupt model data")
+//    public String eruptDataQuery(@P("HQL (Hibernate Query Language)") String hql) {
+//        List<?> result = eruptDao.getEntityManager().createQuery(hql).getResultList();
+//        return GsonFactory.getGson().toJson(result);
+//    }
 
 }
