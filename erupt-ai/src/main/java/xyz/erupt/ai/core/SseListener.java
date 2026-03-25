@@ -19,7 +19,9 @@ public class SseListener {
     // Stream output, the content of the current message
     private String currMessage;
 
-    private boolean isFinish = false;
+    private String think;
+
+    private boolean isFinish;
 
     // Spending tokens
     private TokenUsage usage;

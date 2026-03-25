@@ -1,6 +1,5 @@
 package xyz.erupt.ai.service;
 
-import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
@@ -23,7 +22,6 @@ import xyz.erupt.ai.model.AiChat;
 import xyz.erupt.ai.model.AiChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
-import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.ai.vo.SseEvent;
 import xyz.erupt.core.config.GsonFactory;
@@ -114,43 +112,18 @@ public class LLMService {
                     eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, 0));
                     this.completeSse(emitter);
                 } else if (it.isFinish()) {
-                    String message = it.getAiMessage().text();
-                    if (aiProp.isEnableFunctionCall() && autoToolCall) {
-                        if (it.getAiMessage().hasToolExecutionRequests()) {
-                            List<String> functionCallRtn = new ArrayList<>();
-                            for (ToolExecutionRequest request : it.getAiMessage().toolExecutionRequests()) {
-                                try {
-                                    this.sendSseThinkMessage(emitter, "Execution tool: " + request);
-                                    log.info("Execution tool: {}", request);
-                                    Object rtn = AiToolboxManager.invoke(request);
-                                    if (null != rtn) {
-                                        functionCallRtn.add(rtn.toString());
-                                    }
-                                } catch (Exception e) {
-                                    log.error("Execution tool error: {}, {}", request, e);
-                                    this.stopSse(emitter, chatMessage, llmModal, "Execution tool error: " + request + ", " + e.getMessage());
-                                }
-                            }
-                            if (functionCallRtn.isEmpty()) {
-                                message = "Completed !";
-                            } else {
-                                for (String s : functionCallRtn) {
-                                    chatMessages.add(AiMessage.from(s));
-                                }
-                                message = llm.chat(llmRequest, chatMessages);
-                                this.sendSseMessage(emitter, message);
-                            }
-                            this.sendSseThinkClear(emitter);
-                        }
-                    }
+                    String message = it.getAiMessage() != null && it.getAiMessage().text() != null ? it.getAiMessage().text() : "";
                     this.sendSseDone(emitter);
                     chatMessage.setTokens(it.getUsage().inputTokenCount());
                     eruptDao.mergeAndFlush(chatMessage);
-                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
+                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(),
+                            llmModal.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
                     this.completeSse(emitter);
-                } else {
-                    // streaming
+                } else if (null != it.getCurrMessage()) {
                     this.sendSseMessage(emitter, it.getCurrMessage());
+                }
+                if (null != it.getThink()) {
+                    this.sendSseThinkMessage(emitter, it.getThink());
                 }
             });
         } catch (Exception e) {
@@ -187,12 +160,14 @@ public class LLMService {
             for (int i = 0; i < llmMessage.length(); i += aiProp.getMessageChunkSize()) {
                 int end = Math.min(i + aiProp.getMessageChunkSize(), llmMessage.length());
                 this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, llmMessage.substring(i, end)));
+                this.sendSseThinkClear(emitter);
                 if (aiProp.getMessageDelay() > 0) {
                     Thread.sleep(aiProp.getMessageDelay());
                 }
             }
         } else {
             this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, llmMessage));
+            this.sendSseThinkClear(emitter);
         }
     }
 

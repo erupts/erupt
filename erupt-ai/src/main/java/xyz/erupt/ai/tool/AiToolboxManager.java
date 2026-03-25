@@ -19,7 +19,9 @@ import xyz.erupt.core.service.EruptApplication;
 import xyz.erupt.core.util.EruptSpringUtil;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Order(100)
@@ -29,6 +31,10 @@ public class AiToolboxManager implements ApplicationRunner {
 
     @Getter
     private static final Map<String, Method> aiMethodMap = new HashMap<>();
+
+    @Getter
+    private static final List<Object> tools = new ArrayList<>();
+
 
     @SneakyThrows
     public static Object invoke(ToolExecutionRequest request) {
@@ -54,6 +60,7 @@ public class AiToolboxManager implements ApplicationRunner {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(AiToolbox.class)
         }, clazz -> {
+            tools.add(EruptSpringUtil.getBean(clazz));
             for (Method method : clazz.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(Tool.class)) {
                     aiMethodMap.put(method.getName(), method);
