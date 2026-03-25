@@ -13,7 +13,7 @@ public class Moonshot extends OpenAi {
 
     @Override
     public String model() {
-        return "moonshot-v1-8k";
+        return "kimi-k2.5";
     }
 
     @Override
