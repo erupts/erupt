@@ -90,6 +90,7 @@ public abstract class LlmCore {
             if (chatResponse.aiMessage().hasToolExecutionRequests()) {
                 chatMemory.add(chatResponse.aiMessage());
                 chatResponse.aiMessage().toolExecutionRequests().forEach(it -> {
+                    log.info("Invoke tool: {} with arguments: {}", it.name(), it.arguments());
                     Object result = AiToolboxManager.invoke(it);
                     chatMemory.add(ToolExecutionResultMessage.from(it, null == result ? "" : result.toString()));
                 });
@@ -105,7 +106,8 @@ public abstract class LlmCore {
             listener.accept(SseListener.builder().throwable(e).build());
         }).onPartialToolCall(toolCall -> {
             MetaContext.set(metaContext);
-            listener.accept(SseListener.builder().think(toolCall.name() + ": " + toolCall.partialArguments()).build());
+            log.info("Calling {} with arguments: {}", toolCall.name(), toolCall.partialArguments());
+            listener.accept(SseListener.builder().think("Calling " + toolCall.name()).build());
         }).onPartialThinking(thinking -> {
             listener.accept(SseListener.builder().think(thinking.text()).build());
         }).start();
