@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
+import xyz.erupt.ai.model.McpServer;
 import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
@@ -59,6 +60,7 @@ public class EruptAiAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createRootMenu("$ai", "大模型管理", "fa fa-rocket", 25));
         menus.add(MetaMenu.createEruptClassMenu(LLM.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(LLMAgent.class, menus.get(0), 20));
+        menus.add(MetaMenu.createEruptClassMenu(McpServer.class, menus.get(0), 30));
         return menus;
     }
 

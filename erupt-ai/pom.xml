@@ -42,6 +42,11 @@
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j</artifactId>
+            <version>${langchain4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>
             <version>${langchain4j.version}</version>
         </dependency>
@@ -62,8 +67,8 @@
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j</artifactId>
-            <version>${langchain4j.version}</version>
+            <artifactId>langchain4j-mcp</artifactId>
+            <version>1.12.2-beta22</version>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
