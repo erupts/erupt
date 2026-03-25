@@ -61,6 +61,10 @@ public class ChatController {
         }
         eruptDao.detach(llmModel);
         SseEmitter emitter = new SseEmitter();
+        emitter.onTimeout(() -> {
+            llmService.sendSseMessage(emitter, "Request timed out, please try again");
+            llmService.completeSse(emitter);
+        });
         if (message.isBlank()) {
             llmService.sendSseMessage(emitter, "Please enter a prompt");
             llmService.completeSse(emitter);
