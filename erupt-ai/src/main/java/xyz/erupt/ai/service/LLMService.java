@@ -1,6 +1,5 @@
 package xyz.erupt.ai.service;
 
-import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
@@ -23,7 +22,6 @@ import xyz.erupt.ai.model.AiChat;
 import xyz.erupt.ai.model.AiChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
-import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.ai.vo.SseEvent;
 import xyz.erupt.core.config.GsonFactory;
@@ -118,7 +116,8 @@ public class LLMService {
                     this.sendSseDone(emitter);
                     chatMessage.setTokens(it.getUsage().inputTokenCount());
                     eruptDao.mergeAndFlush(chatMessage);
-                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
+                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(),
+                            llmModal.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
                     this.completeSse(emitter);
                 } else if (null != it.getCurrMessage()) {
                     this.sendSseMessage(emitter, it.getCurrMessage());
