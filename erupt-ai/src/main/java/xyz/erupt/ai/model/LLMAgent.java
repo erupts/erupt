@@ -28,7 +28,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * @author YuePeng
  * date 2025/2/22 16:21
  */
-@Erupt(name = "智能体", dataProxy = LLMAgent.class)
+@Erupt(name = "Agent", dataProxy = LLMAgent.class)
 @Table(name = "e_ai_llm_agent")
 @Getter
 @Setter
