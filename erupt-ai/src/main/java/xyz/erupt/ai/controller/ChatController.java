@@ -81,7 +81,8 @@ public class ChatController {
             if (null != agentId) {
                 llmAgent = eruptDao.find(LLMAgent.class, agentId);
             }
-            llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()));
+            llmService.sendSse(MetaContext.get(), autoToolCall, llmAgent, emitter, llm, llmModel, chatMessage,
+                    message, llmService.geneCompletionPrompt(chat, llmAgent, llmModel.getMaxContext()));
         }
 
         return emitter;
@@ -123,7 +124,7 @@ public class ChatController {
     @EruptLoginAuth
     @GetMapping("/chats")
     public R<SimplePage<AiChat>> chats(@RequestParam Integer size,
-                                       @RequestParam(defaultValue = "1") Integer index) {
+                                       @RequestParam Integer index) {
         return R.ok(eruptDao.lambdaQuery(AiChat.class)
                 .with(AiChat::getEruptUser).eq(EruptUserVo::getId, eruptUserService.getCurrentUid()).with()
                 .orderByDesc(AiChat::getCreatedTime)
@@ -132,8 +133,9 @@ public class ChatController {
 
     @EruptLoginAuth
     @GetMapping("/messages")
-    public R<List<AiChatMessage>> messages(@RequestParam Long chatId, @RequestParam Integer size,
-                                           @RequestParam(defaultValue = "1") Integer index) {
+    public R<List<AiChatMessage>> messages(@RequestParam Long chatId,
+                                           @RequestParam Integer size,
+                                           @RequestParam Integer index) {
         return R.ok(eruptDao.lambdaQuery(AiChatMessage.class)
                 .eq(AiChatMessage::getChatId, chatId)
                 .orderByDesc(AiChatMessage::getCreatedAt)

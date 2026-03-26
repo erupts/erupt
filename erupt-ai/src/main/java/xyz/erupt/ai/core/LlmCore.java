@@ -64,11 +64,9 @@ public abstract class LlmCore {
         return this.buildAiServices(eruptAiServices, llmRequest).chat(userMessage).text();
     }
 
-    public void chatSse(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener) {
-        String userMessage = ((dev.langchain4j.data.message.UserMessage) chatMessages.get(chatMessages.size() - 1)).singleText();
-        List<ChatMessage> historyMessages = chatMessages.subList(0, chatMessages.size() - 1);
-        StreamingChatModel streamingChatModel = this.buildStreamingChatModel(llmRequest, chatMessages, listener);
-        ChatMemory chatMemory = creatMemory(historyMessages);
+    public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatMessage> chatContext, Consumer<SseListener> listener) {
+        StreamingChatModel streamingChatModel = this.buildStreamingChatModel(llmRequest, chatContext, listener);
+        ChatMemory chatMemory = creatMemory(chatContext);
         AiServices<EruptAiChat> eruptAiServices = AiServices.builder(EruptAiChat.class)
                 .streamingChatModel(streamingChatModel).chatMemoryProvider((id) -> chatMemory);
         MetaContext metaContext = MetaContext.get();
