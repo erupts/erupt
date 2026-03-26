@@ -52,9 +52,9 @@ public class McpServer extends MetaModelUpdateVo implements OnChange<McpServer> 
 
     @Enumerated(EnumType.STRING)
     @EruptField(
-            views = @View(title = "连接类型"),
+            views = @View(title = "连接协议"),
             edit = @Edit(
-                    title = "连接类型", notNull = true, search = @Search,
+                    title = "连接协议", notNull = true, search = @Search,
                     onchange = McpServer.class,
                     type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = McpServerType.H.class)
             )
@@ -62,9 +62,9 @@ public class McpServer extends MetaModelUpdateVo implements OnChange<McpServer> 
     private McpServerType serverType = McpServerType.SSE;
 
     @EruptField(
-            views = @View(title = "Config"),
+            views = @View(title = "配置"),
             edit = @Edit(
-                    title = "Config", notNull = true, search = @Search,
+                    title = "配置", notNull = true, search = @Search,
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json")
             )
     )

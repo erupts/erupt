@@ -74,7 +74,7 @@ public class LLMService {
                 .eq(AiChatMessage::getChatId, chat.getId())
                 .isNotNull(AiChatMessage::getContent)
                 .orderByDesc(AiChatMessage::getCreatedAt)
-                .limit(contextTurn + 1).list();
+                .limit(contextTurn + 1).offset(1).list();
         Collections.reverse(chatMessages);
         for (AiChatMessage message : chatMessages) {
             if (message.getSenderType() == ChatSenderType.USER) {
@@ -97,7 +97,9 @@ public class LLMService {
     @Async
     @Transactional
     @SneakyThrows
-    public void sendSse(MetaContext metaContext, Boolean autoToolCall, LLMAgent llmAgent, SseEmitter emitter, LlmCore llm, LLM llmModal, AiChatMessage chatMessage, List<ChatMessage> chatMessages) {
+    public void sendSse(MetaContext metaContext, Boolean autoToolCall, LLMAgent llmAgent, SseEmitter emitter,
+                        LlmCore llm, LLM llmModal, AiChatMessage chatMessage,
+                        String userMessage,List<ChatMessage> chatContext) {
         try {
             MetaContext.set(metaContext);
             LlmRequest llmRequest = llmModal.toLlmRequest();
@@ -105,7 +107,7 @@ public class LLMService {
                 llmAgent.mergeToLLmRequest(llmModal);
             }
             llmRequest.setAutoCallTool(autoToolCall);
-            llm.chatSse(llmRequest, chatMessages, it -> {
+            llm.chatSse(llmRequest,userMessage, chatContext, it -> {
                 if (null != it.getThrowable()) {
                     String message = it.getThrowable().getMessage();
                     this.sendSseMessage(emitter, message);
@@ -127,6 +129,7 @@ public class LLMService {
                 }
             });
         } catch (Exception e) {
+            log.error("LLM error: {}", e.getMessage(), e);
             this.stopSse(emitter, chatMessage, llmModal, e.toString());
         }
     }

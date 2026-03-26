@@ -28,7 +28,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2025/2/22 16:21
  */
 @Erupt(
-        name = "大语言模型", dataProxy = LLMDataProxy.class,
+        name = "LLM", dataProxy = LLMDataProxy.class,
         orderBy = "sort",
         rowOperation = {
                 @RowOperation(title = "模型测试", icon = "fa fa-comments",
