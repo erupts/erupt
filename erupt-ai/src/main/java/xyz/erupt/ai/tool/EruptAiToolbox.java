@@ -7,13 +7,18 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
-import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
+import xyz.erupt.upms.service.EruptMenuService;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @AiToolbox
 @Component
@@ -22,11 +27,14 @@ public class EruptAiToolbox {
     @Resource
     private EruptDao eruptDao;
 
+    @Resource
+    private EruptMenuService eruptMenuService;
+
     @Tool("Erupt data model list")
     public String eruptModelList() {
         StringBuilder sb = new StringBuilder();
         for (EruptModel erupt : EruptCoreService.getErupts()) {
-            sb.append(erupt.getEruptName()).append(": ").append(erupt.getErupt().name());
+            sb.append(erupt.getEruptName()).append(": ").append(erupt.getErupt().name()).append("\n");
         }
         return sb.toString();
     }
@@ -45,10 +53,40 @@ public class EruptAiToolbox {
         return GsonFactory.getGson().toJson(eruptUser);
     }
 
-//    @Tool("Query erupt model data")
-//    public String eruptDataQuery(@P("HQL (Hibernate Query Language)") String hql) {
-//        List<?> result = eruptDao.getEntityManager().createQuery(hql).getResultList();
-//        return GsonFactory.getGson().toJson(result);
-//    }
+    @Tool("Get current server date and time with timezone")
+    public String eruptCurrentDateTime() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                + " (" + ZoneId.systemDefault() + ")";
+    }
+
+    @Tool("Get current user's roles and accessible menu permissions")
+    public String eruptUserPermissions() {
+        EruptUser eruptUser = eruptDao.find(EruptUser.class, MetaContext.getUser().getUid());
+        List<EruptMenu> menus = eruptMenuService.getUserAllMenu(eruptUser);
+
+        List<Map<String, String>> roleList = Optional.ofNullable(eruptUser.getRoles())
+                .orElse(Collections.emptySet()).stream()
+                .map(role -> {
+                    Map<String, String> r = new LinkedHashMap<>();
+                    r.put("name", role.getName());
+                    r.put("code", role.getCode());
+                    return r;
+                }).collect(Collectors.toList());
+
+        List<Map<String, String>> menuList = menus.stream()
+                .map(menu -> {
+                    Map<String, String> m = new LinkedHashMap<>();
+                    m.put("name", menu.getName());
+                    m.put("code", menu.getCode());
+                    m.put("type", menu.getType());
+                    return m;
+                }).collect(Collectors.toList());
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("isAdmin", eruptUser.getIsAdmin());
+        result.put("roles", roleList);
+        result.put("menus", menuList);
+        return GsonFactory.getGson().toJson(result);
+    }
 
 }

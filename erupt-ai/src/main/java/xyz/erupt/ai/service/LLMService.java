@@ -160,10 +160,10 @@ public class LLMService {
     @SneakyThrows
     public void sendSseMessage(SseEmitter emitter, String llmMessage) {
         if (StringUtils.isNotBlank(llmMessage) && llmMessage.length() > aiProp.getMessageChunkSize()) {
+            this.sendSseThinkClear(emitter);
             for (int i = 0; i < llmMessage.length(); i += aiProp.getMessageChunkSize()) {
                 int end = Math.min(i + aiProp.getMessageChunkSize(), llmMessage.length());
                 this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, llmMessage.substring(i, end)));
-                this.sendSseThinkClear(emitter);
                 if (aiProp.getMessageDelay() > 0) {
                     Thread.sleep(aiProp.getMessageDelay());
                 }
@@ -185,6 +185,7 @@ public class LLMService {
     public void completeSse(SseEmitter emitter) {
         try {
             emitter.complete();
+            log.info("SSE complete");
         } catch (Exception e) {
             log.warn("SSE complete error: {}", e.getMessage());
         }
