@@ -161,12 +161,14 @@ public class McpServerDataProxy implements DataProxy<McpServer>, OnChange<McpSer
     @Override
     public Map<String, Object> populateForm(McpServer mcpServer, String[] params) {
         Map<String, Object> data = new HashMap<>();
-        if (null == mcpServer.getId()) {
-            switch (mcpServer.getServerType()) {
-                case SSE ->
-                        data.put(LambdaSee.field(McpServer::getConfig), LLMDataProxy.gson.toJson(new McpServerSse()));
-                case STDIO ->
-                        data.put(LambdaSee.field(McpServer::getConfig), LLMDataProxy.gson.toJson(new McpServerStdio()));
+        if (null != mcpServer.getServerType()) {
+            if (null == mcpServer.getId()) {
+                switch (mcpServer.getServerType()) {
+                    case SSE ->
+                            data.put(LambdaSee.field(McpServer::getConfig), LLMDataProxy.gson.toJson(new McpServerSse()));
+                    case STDIO ->
+                            data.put(LambdaSee.field(McpServer::getConfig), LLMDataProxy.gson.toJson(new McpServerStdio()));
+                }
             }
         }
         return data;
