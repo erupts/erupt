@@ -45,7 +45,7 @@ public class McpServer extends MetaModelUpdateVo {
 
     @Transient
     @EruptField(
-            views = @View(title = "Tools", width = "350px")
+            views = @View(title = "Tools", width = "500px")
     )
     private String tools;
 
