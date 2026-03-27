@@ -10,12 +10,11 @@ import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.sub_edit.*;
+import xyz.erupt.annotation.sub_field.sub_edit.BoolType;
+import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
+import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
-import xyz.erupt.linq.lambda.LambdaSee;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author YuePeng
@@ -29,7 +28,7 @@ import java.util.Map;
 @Table(name = "e_ai_mcp_server")
 @Entity
 @EruptI18n
-public class McpServer extends MetaModelUpdateVo implements OnChange<McpServer> {
+public class McpServer extends MetaModelUpdateVo {
 
     @EruptField(
             views = @View(title = "名称"),
@@ -46,7 +45,7 @@ public class McpServer extends MetaModelUpdateVo implements OnChange<McpServer> 
 
     @Transient
     @EruptField(
-            views = @View(title = "Tools")
+            views = @View(title = "Tools", width = "350px")
     )
     private String tools;
 
@@ -55,37 +54,19 @@ public class McpServer extends MetaModelUpdateVo implements OnChange<McpServer> 
             views = @View(title = "连接协议"),
             edit = @Edit(
                     title = "连接协议", notNull = true, search = @Search,
-                    onchange = McpServer.class,
+                    onchange = McpServerDataProxy.class,
                     type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = McpServerType.H.class)
             )
     )
     private McpServerType serverType = McpServerType.SSE;
 
     @EruptField(
-            views = @View(title = "配置"),
+            views = @View(title = "Config"),
             edit = @Edit(
-                    title = "配置", notNull = true, search = @Search,
+                    title = "Config", notNull = true,
                     type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json")
             )
     )
     private String config;
 
-    @Override
-    public Map<String, Object> populateForm(McpServer mcpServer, String[] params) {
-        Map<String, Object> data = new HashMap<>();
-        Map<String, Object> config = new HashMap<>();
-        switch (mcpServer.getServerType()) {
-            case SSE -> {
-                config.put("url", "");
-                config.put("headers", new HashMap<>());
-            }
-            case STDIO -> {
-                config.put("command", "");
-                config.put("args", new String[]{});
-                config.put("env", new HashMap<>());
-            }
-        }
-        data.put(LambdaSee.field(McpServer::getConfig), LLMDataProxy.gson.toJson(config));
-        return data;
-    }
 }

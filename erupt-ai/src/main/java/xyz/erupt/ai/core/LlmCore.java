@@ -1,16 +1,22 @@
 package xyz.erupt.ai.core;
 
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.tool.ToolProvider;
+import dev.langchain4j.service.tool.ToolProviderResult;
 import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.ai.ask.EruptAiChat;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
+import xyz.erupt.ai.model.McpServerDataProxy;
 import xyz.erupt.ai.tool.AiToolboxManager;
+import xyz.erupt.ai.vo.mcp.McpClientInfo;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.context.MetaContext;
@@ -75,10 +81,34 @@ public abstract class LlmCore {
 
     private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest) {
         eruptAiServices.systemMessageProvider((id) -> EruptSpringUtil.getBean(AiProp.class).getSystemPrompt());
-        if (llmRequest.getAutoCallTool() && !AiToolboxManager.getTools().isEmpty()) {
-            eruptAiServices.tools(AiToolboxManager.getTools());
+        if (llmRequest.getAutoCallTool()) {
+            eruptAiServices.toolProvider(buildMcpTools());
         }
         return eruptAiServices.build();
+    }
+
+    private ToolProvider buildMcpTools() {
+        return (request) -> {
+            ToolProviderResult.Builder builder = ToolProviderResult.builder();
+            AiToolboxManager.getTools().forEach(obj -> {
+                List<ToolSpecification> specs = ToolSpecifications.toolSpecificationsFrom(obj);
+                for (ToolSpecification spec : specs) {
+                    builder.add(spec, (executionRequest, memoryId) -> {
+                        Object result = AiToolboxManager.invoke(executionRequest);
+                        return null == result ? "" : result.toString();
+                    });
+                }
+            });
+            for (McpClientInfo value : McpServerDataProxy.getMCP_CLIENTS().values()) {
+                if (null != value.getMcpClient()) {
+                    value.getMcpClient().listTools().forEach(spec ->
+                            builder.add(spec, (executionRequest, memoryId) ->
+                                    value.getMcpClient().executeTool(executionRequest).toString())
+                    );
+                }
+            }
+            return builder.build();
+        };
     }
 
     private void streamingChat(EruptAiChat eruptAiChat, String userMessage, MetaContext metaContext, Consumer<SseListener> listener, ChatMemory chatMemory) {

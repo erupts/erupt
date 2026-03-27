@@ -21,4 +21,6 @@ public class AiProp {
 
     private int messageDelay = 30;
 
+    private Long sseTimeout = 300L * 1000;
+
 }

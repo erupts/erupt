@@ -2,10 +2,12 @@ package xyz.erupt.ai.controller;
 
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.model.AiChat;
@@ -30,12 +32,16 @@ import java.util.List;
  * @author YuePeng
  * date 2025/2/22 16:35
  */
+@Slf4j
 @RestController
 @RequestMapping(EruptRestPath.ERUPT_API + "/ai/chat")
 public class ChatController {
 
     @Resource
     private EruptDao eruptDao;
+
+    @Resource
+    private AiProp aiProp;
 
     @Resource
     private LLMService llmService;
@@ -60,11 +66,12 @@ public class ChatController {
             llmModel = eruptDao.find(LLM.class, llmId);
         }
         eruptDao.detach(llmModel);
-        SseEmitter emitter = new SseEmitter();
+        SseEmitter emitter = new SseEmitter(aiProp.getSseTimeout());
         emitter.onTimeout(() -> {
+            log.info("Sse Request timed out chatId: {}", chatId);
             llmService.sendSseMessage(emitter, "Request timed out, please try again");
-            llmService.completeSse(emitter);
         });
+        emitter.onError((throwable) -> log.error("Sse Request failed chatId: {}", chatId, throwable));
         if (message.isBlank()) {
             llmService.sendSseMessage(emitter, "Please enter a prompt");
             llmService.completeSse(emitter);
