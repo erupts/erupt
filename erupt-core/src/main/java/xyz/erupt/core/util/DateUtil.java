@@ -19,8 +19,6 @@ public class DateUtil {
 
     public static final String DATE = "yyyy-MM-dd";
 
-    public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
-
     public static final String ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     private static final String[] PATTERNS = {
@@ -41,10 +39,6 @@ public class DateUtil {
         return DateUtils.parseDateStrictly(dateStr, PATTERNS);
     }
 
-    public static String getSimpleFormatDateTime(Date date) {
-        return getFormatDate(date, DATE_TIME);
-    }
-
     public static String getSimpleFormatDate(Date date) {
         return getFormatDate(date, DATE);
     }
@@ -60,12 +54,12 @@ public class DateUtil {
             if (str.length() == 10) {
                 return new SimpleDateFormat(DATE).parse(str);
             } else {
-                return new SimpleDateFormat(DATE_TIME).parse(str);
+                return new SimpleDateFormat(ISO_8601).parse(str);
             }
         } else if (targetDateType == LocalDate.class) {
             return LocalDate.parse(str.substring(0, 10), DateTimeFormatter.ofPattern(DATE));
         } else if (targetDateType == LocalDateTime.class) {
-            return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(DATE_TIME));
+            return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(ISO_8601));
         } else {
             throw new EruptWebApiRuntimeException("Unsupported date type");
         }

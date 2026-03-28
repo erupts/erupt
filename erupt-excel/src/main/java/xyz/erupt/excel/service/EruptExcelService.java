@@ -236,7 +236,8 @@ public class EruptExcelService {
                             } catch (Exception e) {
                                 dateCellValue = DateUtil.parseDate(cell.getStringCellValue());
                             }
-                            jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getSimpleFormatDateTime(dateCellValue));
+                            jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getFormatDate(dateCellValue, DateUtil.ISO_8601));
+                            cell.getCellStyle().setDataFormat((short) 22);
                             break;
                         case NUMBER:
                             DataFormatter formatter = new DataFormatter();
@@ -279,6 +280,7 @@ public class EruptExcelService {
         int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
+            CellStyle style = wb.createCellStyle();
             if (edit.show() && !edit.readonly().add() && StringUtils.isNotBlank(edit.title())
                     && AnnotationProcess.getEditTypeMapping(edit.type()).excelOperator()) {
                 Cell cell = headRow.createCell(cellNum);
@@ -316,7 +318,6 @@ public class EruptExcelService {
                         break;
                 }
                 // Cell format
-                CellStyle style = wb.createCellStyle();
                 style.setLocked(true);
                 Font font = wb.createFont();
                 style.setVerticalAlignment(VerticalAlignment.CENTER);

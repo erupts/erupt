@@ -95,9 +95,8 @@ public class EruptExcelController {
         try (Workbook wb = dataFileService.exportExcel(eruptModel, page)) {
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.excelExport(wb)));
             this.createConditionSheet(wb, eruptModel, conditions);
-            DateUtil.getSimpleFormatDateTime(new Date());
             wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name()
-                    + "_" + DateUtil.getFormatDate(new Date(), "yyyy-MM-dd_HH-mm-ss") + EruptExcelService.XLSX_FORMAT));
+                    + "_" + DateUtil.getFormatDate(new Date(), DateUtil.ISO_8601) + EruptExcelService.XLSX_FORMAT));
         }
     }
 
