@@ -33,10 +33,10 @@ public enum OperatorDateType implements OperatorExpr {
             int days = TypeUtil.fetchInt(value);
             String placeholder1 = this.placeholder();
             parameter.put(placeholder1, LocalDate.now().minusDays(days).atStartOfDay()
-                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)));
+                    .format(DateTimeFormatter.ofPattern(DateUtil.ISO_8601)));
             String placeholder2 = this.placeholder();
             parameter.put(placeholder2, LocalDate.now().atStartOfDay()
-                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)));
+                    .format(DateTimeFormatter.ofPattern(DateUtil.ISO_8601)));
             return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
     },
@@ -49,7 +49,7 @@ public enum OperatorDateType implements OperatorExpr {
                     .format(DateTimeFormatter.ofPattern(DateUtil.DATE)));
             String placeholder2 = this.placeholder();
             parameter.put(placeholder2, LocalDate.now().plusDays(days).atTime(LocalTime.MAX)
-                    .format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)));
+                    .format(DateTimeFormatter.ofPattern(DateUtil.ISO_8601)));
             return String.format("%s between :%s and :%s", field, placeholder1, placeholder2);
         }
     },
