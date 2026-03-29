@@ -33,6 +33,7 @@ import xyz.erupt.excel.util.ExcelUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,12 +74,14 @@ public class EruptExcelService {
         headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         headFont.setBold(true);
         headStyle.setFont(headFont);
-        int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             for (View view : fieldModel.getEruptField().views()) {
-                cellNum++;
                 if (view.show() && view.export()) {
-                    sheet.setColumnWidth(cellNum, (view.title().length() + 10) * 256);
+                    if (view.type() == ViewType.DATE_TIME) {
+                        sheet.setColumnWidth(colNum, (view.title().length() + 12) * 256);
+                    } else {
+                        sheet.setColumnWidth(colNum, (view.title().length() + 10) * 256);
+                    }
                     Cell cell = row.createCell(colNum);
                     cell.setCellStyle(headStyle);
                     cell.setCellValue(view.title());
@@ -112,8 +115,8 @@ public class EruptExcelService {
                                 }
                             } else if (edit.type() == EditType.DATE) {
                                 cell.getCellStyle().setDataFormat((short) 22);
-                                if (it instanceof Date) {
-                                    cell.setCellValue(str);
+                                if (it instanceof Date date) {
+                                    cell.setCellValue(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
                                 } else if (it instanceof LocalDate date) {
                                     cell.setCellValue(date);
                                 } else if (it instanceof LocalDateTime date) {

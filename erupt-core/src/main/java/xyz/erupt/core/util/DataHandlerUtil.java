@@ -90,8 +90,6 @@ public class DataHandlerUtil {
                 return cm.get(value.toString());
             case BOOLEAN:
                 return (Boolean) value ? edit.boolType().trueText() : edit.boolType().falseText();
-            case DATE:
-                return DateUtil.dateFormat(value,DateUtil.DATE_TIME);
         }
         return value;
     }
