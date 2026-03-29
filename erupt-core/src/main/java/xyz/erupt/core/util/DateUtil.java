@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -18,6 +19,8 @@ import java.util.Date;
 public class DateUtil {
 
     public static final String DATE = "yyyy-MM-dd";
+
+    public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 
     public static final String ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
@@ -40,12 +43,25 @@ public class DateUtil {
     }
 
     public static String getSimpleFormatDate(Date date) {
-        return getFormatDate(date, DATE);
+        return getFormatDate(date, DATE_TIME);
     }
 
     public static String getFormatDate(Date date, String formatStr) {
         SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
         return sdf.format(date);
+    }
+
+    @SneakyThrows
+    public static String dateFormat(Object value, String formatStr) {
+        if (value instanceof Date d) {
+            return new SimpleDateFormat(formatStr).format(d);
+        } else if (value instanceof LocalDate d) {
+            return new SimpleDateFormat(formatStr).format(Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        } else if (value instanceof LocalDateTime d) {
+            return new SimpleDateFormat(formatStr).format(Date.from(d.atZone(ZoneId.systemDefault()).toInstant()));
+        } else {
+            return value.toString();
+        }
     }
 
     @SneakyThrows

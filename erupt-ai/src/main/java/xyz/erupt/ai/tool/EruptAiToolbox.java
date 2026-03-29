@@ -8,6 +8,7 @@ import xyz.erupt.ai.annotation.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptMenu;
@@ -55,7 +56,7 @@ public class EruptAiToolbox {
 
     @Tool("Get current server date and time with timezone")
     public String eruptCurrentDateTime() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateUtil.ISO_8601))
                 + " (" + ZoneId.systemDefault() + ")";
     }
 
