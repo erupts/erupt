@@ -47,7 +47,7 @@ public class EruptExcelService {
 
     public static final String XLSX_FORMAT = ".xlsx";
 
-    private static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
+    private static final String SIMPLE_CELL_ERR = "Please select or enter a valid option, or download the latest template and try again!";
 
     /**
      * Excel export, the displayed format is consistent with the view table.
@@ -109,6 +109,17 @@ public class EruptExcelService {
                                     cell.setCellValue(edit.boolType().trueText());
                                 } else if (edit.boolType().falseText().equals(str)) {
                                     cell.setCellValue(edit.boolType().falseText());
+                                }
+                            } else if (edit.type() == EditType.DATE) {
+                                cell.getCellStyle().setDataFormat((short) 22);
+                                if (it instanceof Date) {
+                                    cell.setCellValue(str);
+                                } else if (it instanceof LocalDate date) {
+                                    cell.setCellValue(date);
+                                } else if (it instanceof LocalDateTime date) {
+                                    cell.setCellValue(date);
+                                } else {
+                                    cell.setCellValue(str);
                                 }
                             } else {
                                 cell.setCellValue(str);
