@@ -183,7 +183,18 @@ Please submit [Issues](https://github.com/erupts/erupt/issues) and [Pull Request
 
 [![Contributors](https://contrib.rocks/image?repo=erupts/erupt)](https://github.com/erupts/erupt/graphs/contributors)
 
-<h3 align="center">⭐️ Licensed under Apache License 2.0, source code is free and open source. Open source is not easy, please give the author a Star if you like it</h3>
+## Star History
+
+<a href="https://www.star-history.com/?repos=erupts%2Ferupt&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=erupts/erupt&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=erupts/erupt&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=erupts/erupt&type=date&legend=top-left" />
+ </picture>
+</a>
+
+## License
+⭐️ Erupt is under the Apache 2.0 license. See the [LICENSE](./LICENSE) file for details.
 
 ---
 
