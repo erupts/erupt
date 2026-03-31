@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.model.McpServer;
@@ -31,6 +32,7 @@ import java.util.List;
 @EntityScan
 @EnableConfigurationProperties
 @EnableAsync
+@EnableScheduling
 public class EruptAiAutoConfiguration implements EruptModule {
 
     @Resource

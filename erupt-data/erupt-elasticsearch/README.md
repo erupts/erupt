@@ -1,1 +1,0 @@
-### erupt Elasticsearch ORM

@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.ai.ask.EruptAiChat;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
-import xyz.erupt.ai.model.McpServerDataProxy;
+import xyz.erupt.ai.service.McpServerService;
 import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.vo.mcp.McpClientInfo;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
@@ -103,7 +103,7 @@ public abstract class LlmCore {
                     });
                 }
             });
-            for (McpClientInfo value : McpServerDataProxy.getMCP_CLIENTS().values()) {
+            for (McpClientInfo value : McpServerService.getMCP_CLIENTS().values()) {
                 if (null != value.getMcpClient()) {
                     value.getMcpClient().listTools().forEach(spec ->
                             builder.add(spec, (executionRequest, memoryId) -> {
