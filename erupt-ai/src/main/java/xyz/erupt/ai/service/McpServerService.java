@@ -1,4 +1,4 @@
-package xyz.erupt.ai.model;
+package xyz.erupt.ai.service;
 
 import dev.langchain4j.mcp.client.DefaultMcpClient;
 import dev.langchain4j.mcp.client.McpClient;
@@ -10,7 +10,10 @@ import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai.model.LLMDataProxy;
+import xyz.erupt.ai.model.McpServer;
 import xyz.erupt.ai.vo.mcp.McpClientInfo;
 import xyz.erupt.ai.vo.mcp.McpServerSse;
 import xyz.erupt.ai.vo.mcp.McpServerStdio;
@@ -30,7 +33,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class McpServerDataProxy implements DataProxy<McpServer>, OnChange<McpServer> {
+public class McpServerService implements DataProxy<McpServer>, OnChange<McpServer> {
 
     @Resource
     private EruptDao eruptDao;
@@ -42,6 +45,30 @@ public class McpServerDataProxy implements DataProxy<McpServer>, OnChange<McpSer
     public void init() {
         for (McpServer mcpServer : eruptDao.lambdaQuery(McpServer.class).eq(McpServer::getEnable, true).list()) {
             register(mcpServer);
+        }
+    }
+
+    @Scheduled(fixedDelay = 30 * 1000)
+    public void check() {
+        for (Map.Entry<Long, McpClientInfo> entry : MCP_CLIENTS.entrySet()) {
+            McpClientInfo mcpClientInfo = entry.getValue();
+            try {
+                if (null != mcpClientInfo.getMcpClient()) {
+                    mcpClientInfo.getMcpClient().listTools();
+                } else {
+                    this.reRegister(entry.getKey());
+                }
+            } catch (Exception e) {
+                log.error("MCP server check failed: {}, try to re-register", mcpClientInfo.getName(), e);
+                this.reRegister(entry.getKey());
+            }
+        }
+    }
+
+    private void reRegister(Long id) {
+        McpServer mcpServer = eruptDao.lambdaQuery(McpServer.class).eq(McpServer::getId, id).one();
+        if (null != mcpServer) {
+            this.register(mcpServer);
         }
     }
 
@@ -163,7 +190,8 @@ public class McpServerDataProxy implements DataProxy<McpServer>, OnChange<McpSer
         Map<String, Object> data = new HashMap<>();
         switch (mcpServer.getServerType()) {
             case SSE -> data.put(LambdaSee.field(McpServer::getConfig), LLMDataProxy.gson.toJson(new McpServerSse()));
-            case STDIO -> data.put(LambdaSee.field(McpServer::getConfig), LLMDataProxy.gson.toJson(new McpServerStdio()));
+            case STDIO ->
+                    data.put(LambdaSee.field(McpServer::getConfig), LLMDataProxy.gson.toJson(new McpServerStdio()));
         }
         return data;
     }

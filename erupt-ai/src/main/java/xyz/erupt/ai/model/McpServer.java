@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.ai.constants.McpServerType;
+import xyz.erupt.ai.service.McpServerService;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -21,7 +22,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2026/3/24 22:52
  */
 @Erupt(
-        name = "MCP", dataProxy = McpServerDataProxy.class
+        name = "MCP", dataProxy = McpServerService.class
 )
 @Getter
 @Setter
@@ -54,7 +55,7 @@ public class McpServer extends MetaModelUpdateVo {
             views = @View(title = "连接协议"),
             edit = @Edit(
                     title = "连接协议", notNull = true, search = @Search,
-                    onchange = McpServerDataProxy.class,
+                    onchange = McpServerService.class,
                     type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = McpServerType.H.class)
             )
     )
