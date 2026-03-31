@@ -172,6 +172,11 @@
         <connection>scm:git:git@github.com:erupts/erupt.git</connection>
         <developerConnection>scm:git:git@github.com:erupts/erupt.git</developerConnection>
     </scm>
+
+    <organization>
+        <name>Erupt</name>
+        <url>https://erupt.xyz</url>
+    </organization>
     <developers>
         <developer>
             <name>YuePeng</name>
