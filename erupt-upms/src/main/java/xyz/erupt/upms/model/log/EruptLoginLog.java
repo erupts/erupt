@@ -8,6 +8,10 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
+import xyz.erupt.annotation.cube.Cube;
+import xyz.erupt.annotation.cube.Dimension;
+import xyz.erupt.annotation.cube.Explore;
+import xyz.erupt.annotation.cube.SqlType;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.View;
@@ -29,23 +33,32 @@ import java.util.Date;
                 export = true, powerHandler = SuperAdminPower.class),
         orderBy = "loginTime desc"
 )
+@Cube(
+        name = "登录日志统计",
+        sql = "e_upms_login_log",
+        sqlType = SqlType.TABLE_NAME,
+        explores = @Explore(code = "login_log_explore", name = "Default Explore")
+)
 @EruptI18n
 @Getter
 @Setter
 public class EruptLoginLog extends BaseModel {
 
+    @Dimension(title = "User Name", sql = "user_name")
     @EruptField(
             views = @View(title = "用户"),
             edit = @Edit(title = "用户", search = @Search(vague = true))
     )
     private String userName;
 
+    @Dimension(title = "Login Time", sql = "login_time")
     @EruptField(
             views = @View(title = "登录时间", sortable = true),
             edit = @Edit(title = "登录时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date loginTime;
 
+    @Dimension(title = "IP Address", sql = "ip")
     @Column(length = 64)
     @EruptField(
             views = @View(title = "IP地址"),
@@ -53,24 +66,28 @@ public class EruptLoginLog extends BaseModel {
     )
     private String ip;
 
+    @Dimension(title = "IP Region", sql = "region")
     @EruptField(
             views = @View(title = "IP来源", desc = "国家 | 大区 | 省份 | 城市 | 运营商", width = "250px", template = "value&&value.replace(/\\|/g,' | ')"),
             edit = @Edit(title = "IP来源", search = @Search(vague = true))
     )
     private String region;
 
+    @Dimension(title = "System Name", sql = "system_name")
     @EruptField(
             views = @View(title = "操作系统"),
             edit = @Edit(title = "操作系统", search = @Search)
     )
     private String systemName;
 
+    @Dimension(title = "Browser", sql = "browser")
     @EruptField(
             views = @View(title = "浏览器"),
             edit = @Edit(title = "浏览器", search = @Search)
     )
     private String browser;
 
+    @Dimension(title = "Device Type", sql = "device_type")
     @EruptField(
             views = @View(title = "设备类型"),
             edit = @Edit(title = "设备类型", search = @Search)
@@ -78,4 +95,5 @@ public class EruptLoginLog extends BaseModel {
     private String deviceType;
 
     private String token;
+
 }
