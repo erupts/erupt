@@ -25,8 +25,6 @@ public @interface Cube {
 
     SqlType sqlType() default SqlType.SUB_QUERY;
 
-    Parameter[] parameters() default {};
-
     // Define the rules for external exposure
     Explore[] explores() default {};
 

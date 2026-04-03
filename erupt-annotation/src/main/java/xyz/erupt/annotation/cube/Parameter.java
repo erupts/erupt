@@ -14,8 +14,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface Parameter {
 
-    String code();
-
     String title();
 
     String description() default "";
