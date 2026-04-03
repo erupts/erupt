@@ -26,7 +26,12 @@ public @interface Cube {
     SqlType sqlType() default SqlType.SUB_QUERY;
 
     // Define the rules for external exposure
-    Explore[] explores() default {};
+    Explore[] explores() default {
+            @Explore(
+                    code = "overview",
+                    name = "Overview"
+            )
+    };
 
     String[] tags() default {};
 

@@ -5,12 +5,17 @@ import com.google.gson.GsonBuilder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.cube.Cube;
+import xyz.erupt.annotation.cube.Dimension;
+import xyz.erupt.annotation.cube.Measure;
+import xyz.erupt.annotation.cube.SqlType;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -42,28 +47,37 @@ import java.util.Map;
         orderBy = "createTime desc",
         dataProxy = EruptOperateLog.class
 )
+@Cube(
+        name = "Erupt Operate Log",
+        sql = "e_upms_operate_log",
+        sqlType = SqlType.TABLE_NAME
+)
 @Getter
 @Setter
 public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperateLog> {
 
+    @Dimension(title = "Operate User", sql = "operate_user")
     @EruptField(
             views = @View(title = "操作人"),
             edit = @Edit(title = "操作人", search = @Search(vague = true))
     )
     private String operateUser;
 
+    @Dimension(title = "IP")
     @EruptField(
             views = @View(title = "IP地址"),
             edit = @Edit(title = "IP地址", search = @Search)
     )
     private String ip;
 
+    @Dimension(title = "IP Region")
     @EruptField(
             views = @View(title = "IP来源", desc = "国家 | 大区 | 省份 | 城市 | 运营商", template = "value&&value.replace(/\\|/g,' | ')"),
             edit = @Edit(title = "IP来源", search = @Search(vague = true))
     )
     private String region;
 
+    @Dimension(title = "API Name", sql = "api_name")
     @EruptField(
             views = @View(title = "功能名称"),
             edit = @Edit(title = "功能名称", search = @Search(vague = true))
@@ -77,6 +91,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     )
     private String reqParam;
 
+    @Dimension(title = "Status")
     @EruptField(
             views = @View(title = "是否成功", sortable = true),
             edit = @Edit(title = "是否成功", search = @Search)
@@ -89,29 +104,42 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
     )
     private String errorInfo;
 
+    @Dimension(title = "Total Time", sql = "total_time")
     @EruptField(
             views = @View(title = "请求耗时", template = "value && value+'ms'", sortable = true),
             edit = @Edit(title = "请求耗时", search = @Search(vague = true))
     )
     private Long totalTime;
 
+    @Dimension(title = "Create Time", sql = "create_time")
     @EruptField(
             views = @View(title = "记录时间", sortable = true),
             edit = @Edit(title = "记录时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
 
+    @Dimension(title = "Request Address", sql = "req_addr")
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             views = @View(title = "请求地址", type = ViewType.HTML)
     )
     private String reqAddr;
 
+    @Dimension(title = "Request Method", sql = "req_method")
     @Column(length = 64)
     @EruptField(
             views = @View(title = "请求方法")
     )
     private String reqMethod;
+
+    @Transient
+    @Measure(title = "Count", sql = "count(*)")
+    private String count;
+
+    @Transient
+    @Measure(title = "Max Request Duration", sql = "max(total_time)")
+    private String maxRequestDuration;
+
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {
