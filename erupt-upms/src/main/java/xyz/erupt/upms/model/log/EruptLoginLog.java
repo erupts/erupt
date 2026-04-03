@@ -3,6 +3,7 @@ package xyz.erupt.upms.model.log;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -10,7 +11,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.cube.Cube;
 import xyz.erupt.annotation.cube.Dimension;
-import xyz.erupt.annotation.cube.Explore;
+import xyz.erupt.annotation.cube.Measure;
 import xyz.erupt.annotation.cube.SqlType;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -34,10 +35,9 @@ import java.util.Date;
         orderBy = "loginTime desc"
 )
 @Cube(
-        name = "登录日志统计",
+        name = "Erupt Login Log",
         sql = "e_upms_login_log",
-        sqlType = SqlType.TABLE_NAME,
-        explores = @Explore(code = "login_log_explore", name = "Default Explore")
+        sqlType = SqlType.TABLE_NAME
 )
 @EruptI18n
 @Getter
@@ -95,5 +95,9 @@ public class EruptLoginLog extends BaseModel {
     private String deviceType;
 
     private String token;
+
+    @Transient
+    @Measure(title = "Count", sql = "count(*)")
+    private String count;
 
 }
