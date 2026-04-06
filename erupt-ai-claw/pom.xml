@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-core</artifactId>
+            <artifactId>erupt-ai</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
