@@ -26,7 +26,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Entity
 @Table(name = "e_upms_org")
 @Erupt(
-        name = "组织管理",
+        name = "Org Management",
         tree = @Tree(pid = "parentOrg.id", expandLevel = 5),
         orderBy = "EruptOrg.sort asc"
 )
@@ -38,21 +38,21 @@ public class EruptOrg extends BaseModel {
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
-            views = @View(title = "组织编码", sortable = true),
-            edit = @Edit(title = "组织编码", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Org Code", sortable = true),
+            edit = @Edit(title = "Org Code", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "组织名称", sortable = true),
-            edit = @Edit(title = "组织名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Org Name", sortable = true),
+            edit = @Edit(title = "Org Name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @ManyToOne
     @EruptField(
             edit = @Edit(
-                    title = "上级组织",
+                    title = "Parent Org",
                     type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id", expandLevel = 3)
             )
@@ -61,7 +61,7 @@ public class EruptOrg extends BaseModel {
 
     @EruptField(
             edit = @Edit(
-                    title = "显示顺序"
+                    title = "Display Order"
             )
     )
     private Integer sort;

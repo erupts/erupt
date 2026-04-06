@@ -37,27 +37,27 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true)
+            views = @View(title = "Name"),
+            edit = @Edit(title = "Name", notNull = true)
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "是否启用"),
-            edit = @Edit(title = "是否启用", notNull = true)
+            views = @View(title = "Enabled"),
+            edit = @Edit(title = "Enabled", notNull = true)
     )
     private Boolean enable = true;
 
     @EruptField(
-            views = @View(title = "提示词处理器"),
-            edit = @Edit(title = "提示词处理器", type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = DynamicPromptFetch.class))
+            views = @View(title = "Prompt Handler"),
+            edit = @Edit(title = "Prompt Handler", type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = DynamicPromptFetch.class))
     )
     @JsonIgnore
     private String promptHandler;
 
     @EruptField(
-            views = @View(title = "候选词列表"),
-            edit = @Edit(title = "候选词列表", type = EditType.TAGS)
+            views = @View(title = "Hint List"),
+            edit = @Edit(title = "Hint List", type = EditType.TAGS)
     )
     @Column(length = AnnotationConst.REMARK_LENGTH)
     private String hint;
@@ -65,22 +65,22 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
     @JsonIgnore
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "提示词"),
-            edit = @Edit(title = "提示词", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "python"))
+            views = @View(title = "Prompt"),
+            edit = @Edit(title = "Prompt", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "python"))
     )
     private String prompt;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "描述"),
-            edit = @Edit(title = "描述", type = EditType.TEXTAREA)
+            views = @View(title = "Description"),
+            edit = @Edit(title = "Description", type = EditType.TEXTAREA)
     )
     private String remark;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "智能体参数"),
-            edit = @Edit(title = "智能体参数", type = EditType.CODE_EDITOR, notNull = true,
+            views = @View(title = "Agent Config"),
+            edit = @Edit(title = "Agent Config", type = EditType.CODE_EDITOR, notNull = true,
                     codeEditType = @CodeEditorType(language = "json")
             )
     )

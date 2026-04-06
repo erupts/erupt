@@ -26,9 +26,9 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "e_ai_chat")
 @Erupt(
-        name = "会话管理",
+        name = "Chat Management",
         power = @Power(add = false, edit = false, viewDetails = false), orderBy = "createdTime desc",
-        drills = @Drill(title = "会话记录", link = @Link(linkErupt = AiChatMessage.class, joinColumn = "chatId"))
+        drills = @Drill(title = "Chat Records", link = @Link(linkErupt = AiChatMessage.class, joinColumn = "chatId"))
 )
 @Entity
 @EruptI18n
@@ -36,13 +36,13 @@ import java.time.LocalDateTime;
 public class AiChat extends BaseModel {
 
     @EruptField(
-            views = @View(title = "会话标题"),
-            edit = @Edit(title = "会话标题", search = @Search(vague = true))
+            views = @View(title = "Chat Title"),
+            edit = @Edit(title = "Chat Title", search = @Search(vague = true))
     )
     private String title;
 
     @EruptField(
-            views = @View(title = "用户", column = "name")
+            views = @View(title = "User", column = "name")
     )
     @ManyToOne
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
@@ -51,7 +51,7 @@ public class AiChat extends BaseModel {
     private Boolean deleted = false;
 
     @EruptField(
-            views = @View(title = "创建时间")
+            views = @View(title = "Created Time")
     )
     private LocalDateTime createdTime;
 

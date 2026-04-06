@@ -32,15 +32,15 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 public class McpServer extends MetaModelUpdateVo {
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Name"),
+            edit = @Edit(title = "Name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "状态"),
-            edit = @Edit(title = "状态", notNull = true, search = @Search,
-                    boolType = @BoolType(trueText = "启用", falseText = "禁用"))
+            views = @View(title = "Status"),
+            edit = @Edit(title = "Status", notNull = true, search = @Search,
+                    boolType = @BoolType(trueText = "Enable", falseText = "Disable"))
     )
     private Boolean enable = true;
 
@@ -52,9 +52,9 @@ public class McpServer extends MetaModelUpdateVo {
 
     @Enumerated(EnumType.STRING)
     @EruptField(
-            views = @View(title = "连接协议"),
+            views = @View(title = "Connection Protocol"),
             edit = @Edit(
-                    title = "连接协议", notNull = true, search = @Search,
+                    title = "Connection Protocol", notNull = true, search = @Search,
                     onchange = McpServerService.class,
                     type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = McpServerType.H.class)
             )

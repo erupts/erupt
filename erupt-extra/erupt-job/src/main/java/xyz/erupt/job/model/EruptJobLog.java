@@ -29,7 +29,7 @@ import java.util.Date;
 @EruptI18n
 @Erupt(
         orderBy = "startTime desc",
-        name = "任务日志",
+        name = "Job Log",
         power = @Power(export = true, add = false, edit = false, viewDetails = false)
 )
 @Entity
@@ -39,46 +39,46 @@ import java.util.Date;
 public class EruptJobLog extends BaseModel {
 
     @EruptField(
-            views = @View(title = "任务名称", type = ViewType.TEXT),
-            edit = @Edit(title = "任务名称", search = @Search, type = EditType.CHOICE,
+            views = @View(title = "Job Name", type = ViewType.TEXT),
+            edit = @Edit(title = "Job Name", search = @Search, type = EditType.CHOICE,
                     choiceType = @ChoiceType(fetchHandler = SqlChoiceFetchHandler.class, fetchHandlerParams = "select id, name from e_job"))
     )
     private Long jobId;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "任务参数")
+            views = @View(title = "Job Params")
     )
     private String handlerParam;
 
     @EruptField(
-            views = @View(title = "任务状态"),
-            edit = @Edit(title = "任务状态", boolType = @BoolType(trueText = "成功", falseText = "失败"), search = @Search)
+            views = @View(title = "Job Status"),
+            edit = @Edit(title = "Job Status", boolType = @BoolType(trueText = "Success", falseText = "Failure"), search = @Search)
     )
     private Boolean status;
 
     @EruptField(
-            views = @View(title = "开始时间", type = ViewType.DATE_TIME),
-            edit = @Edit(title = "任务执行时间", search = @Search(vague = true))
+            views = @View(title = "Start Time", type = ViewType.DATE_TIME),
+            edit = @Edit(title = "Exec Duration", search = @Search(vague = true))
     )
     private Date startTime;
 
     @EruptField(
-            views = @View(title = "结束时间", type = ViewType.DATE_TIME)
+            views = @View(title = "End Time", type = ViewType.DATE_TIME)
     )
     private Date endTime;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "执行结果"),
-            edit = @Edit(title = "执行结果")
+            views = @View(title = "Exec Result"),
+            edit = @Edit(title = "Exec Result")
     )
     private String resultInfo;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "错误信息", type = ViewType.HTML, sortable = true),
-            edit = @Edit(title = "错误信息")
+            views = @View(title = "Error Info", type = ViewType.HTML, sortable = true),
+            edit = @Edit(title = "Error Info")
     )
     private String errorInfo;
 

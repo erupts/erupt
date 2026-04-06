@@ -1,5 +1,6 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -16,7 +17,6 @@ import xyz.erupt.upms.handler.RoleMenuFilter;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
 import xyz.erupt.upms.model.data_proxy.EruptRoleDataProxy;
 
-import jakarta.persistence.*;
 import java.util.Set;
 
 /**
@@ -25,7 +25,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "e_upms_role")
-@Erupt(name = "角色管理", dataProxy = EruptRoleDataProxy.class, orderBy = "EruptRole.sort asc")
+@Erupt(name = "Role Management", dataProxy = EruptRoleDataProxy.class, orderBy = "EruptRole.sort asc")
 @EruptI18n
 @Getter
 @Setter
@@ -33,31 +33,31 @@ public class EruptRole extends HyperModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
-            views = @View(title = "编码"),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
+            views = @View(title = "code"),
+            edit = @Edit(title = "code", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "name"),
+            edit = @Edit(title = "name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "显示顺序", sortable = true),
-            edit = @Edit(title = "显示顺序")
+            views = @View(title = "Display Order", sortable = true),
+            edit = @Edit(title = "Display Order")
     )
     private Integer sort;
 
     @EruptField(
-            views = @View(title = "状态", sortable = true),
+            views = @View(title = "status", sortable = true),
             edit = @Edit(
-                    title = "状态",
+                    title = "status",
                     type = EditType.BOOLEAN,
                     notNull = true,
                     search = @Search(vague = true),
-                    boolType = @BoolType(trueText = "启用", falseText = "禁用")
+                    boolType = @BoolType(trueText = "Enable", falseText = "Disable")
             )
     )
     private Boolean status = true;
@@ -68,10 +68,10 @@ public class EruptRole extends HyperModelUpdateVo {
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"))
     @EruptField(
-            views = @View(title = "菜单权限"),
+            views = @View(title = "Menu Permission"),
             edit = @Edit(
                     filter = @Filter(conditionHandler = RoleMenuFilter.class),
-                    title = "菜单权限",
+                    title = "Menu Permission",
                     type = EditType.TAB_TREE
             )
     )
@@ -82,9 +82,9 @@ public class EruptRole extends HyperModelUpdateVo {
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     @ManyToMany(fetch = FetchType.EAGER)
     @EruptField(
-            views = @View(title = "包含用户"),
+            views = @View(title = "Contain User"),
             edit = @Edit(
-                    title = "包含用户",
+                    title = "Contain User",
                     type = EditType.TAB_TABLE_REFER
             )
     )

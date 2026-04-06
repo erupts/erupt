@@ -21,7 +21,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Entity
 @Table(name = "e_dict_item", uniqueConstraints = @UniqueConstraint(columnNames = {"code", "erupt_dict_id"}))
 @Erupt(
-        name = "字典项",
+        name = "Dict Item",
         orderBy = "sort",
         power = @Power(export = true, importable = true)
 )
@@ -32,33 +32,33 @@ public class EruptDictItem extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH)
     @EruptField(
-            views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search)
+            views = @View(title = "code", sortable = true),
+            edit = @Edit(title = "code", notNull = true, search = @Search)
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "name", sortable = true),
+            edit = @Edit(title = "name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "值"),
-            edit = @Edit(title = "值", search = @Search(vague = true))
+            views = @View(title = "Value"),
+            edit = @Edit(title = "Value", search = @Search(vague = true))
     )
     private String val;
 
     @EruptField(
-            views = @View(title = "显示顺序", sortable = true),
-            edit = @Edit(title = "显示顺序")
+            views = @View(title = "Display Order", sortable = true),
+            edit = @Edit(title = "Display Order")
     )
     private Integer sort;
 
     @EruptField(
-            views = @View(title = "备注"),
+            views = @View(title = "remark"),
             edit = @Edit(
-                    title = "备注",
+                    title = "remark",
                     type = EditType.TEXTAREA
             )
     )

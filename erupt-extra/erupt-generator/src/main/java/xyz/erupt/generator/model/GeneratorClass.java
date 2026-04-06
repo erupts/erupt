@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 @EruptI18n
-@Erupt(name = "生成Erupt代码",
+@Erupt(name = "Generate Erupt Code",
         rowOperation = @RowOperation(
-                title = "代码预览", icon = "fa fa-code",
+                title = "Code Preview", icon = "fa fa-code",
                 mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL,
                 tpl = @Tpl(path = "generator/erupt-code-skeleton.ftl",
                         engine = Tpl.Engine.FreeMarker,
@@ -39,27 +39,27 @@ import java.util.Set;
 public class GeneratorClass extends MetaModel implements Tpl.TplHandler {
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Name"),
+            edit = @Edit(title = "Name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "实体类名"),
-            edit = @Edit(title = "实体类名", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Entity Class"),
+            edit = @Edit(title = "Entity Class", notNull = true, search = @Search(vague = true))
     )
     private String className;
 
     @EruptField(
-            views = @View(title = "表名"),
-            edit = @Edit(title = "表名", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Table Name"),
+            edit = @Edit(title = "Table Name", notNull = true, search = @Search(vague = true))
     )
     private String tableName;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "简介"),
-            edit = @Edit(title = "简介", type = EditType.TEXTAREA)
+            views = @View(title = "Intro"),
+            edit = @Edit(title = "Intro", type = EditType.TEXTAREA)
     )
     private String remark;
 
@@ -68,7 +68,7 @@ public class GeneratorClass extends MetaModel implements Tpl.TplHandler {
     @JoinColumn(name = "class_id")
     @OrderBy("sort")
     @EruptField(
-            edit = @Edit(title = "字段管理", type = EditType.TAB_TABLE_ADD)
+            edit = @Edit(title = "Field Management", type = EditType.TAB_TABLE_ADD)
     )
     private Set<GeneratorField> fields;
 

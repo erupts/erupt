@@ -24,7 +24,7 @@ import java.util.Map;
  * @author YuePeng
  * date 2025/2/27 22:57
  */
-@Erupt(name = "会话管理", dataProxy = AiChatMessage.class)
+@Erupt(name = "Chat Management", dataProxy = AiChatMessage.class)
 @Getter
 @Setter
 @Table(name = "e_ai_chat_message")
@@ -40,19 +40,19 @@ public class AiChatMessage extends BaseModel implements DataProxy<AiChatMessage>
     private String model;
 
     @EruptField(
-            views = @View(title = "发送人")
+            views = @View(title = "Sender")
     )
     @Enumerated(EnumType.STRING)
     private ChatSenderType senderType;
 
     @EruptField(
-            views = @View(title = "发送内容", type = ViewType.HTML)
+            views = @View(title = "Message Content", type = ViewType.HTML)
     )
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     private String content;
 
     @EruptField(
-            views = @View(title = "发送时间", type = ViewType.HTML)
+            views = @View(title = "Sent Time", type = ViewType.HTML)
     )
     private LocalDateTime createdAt;
 

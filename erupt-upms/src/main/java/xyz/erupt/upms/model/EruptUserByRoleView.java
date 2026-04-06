@@ -23,7 +23,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Entity
 @Table(name = "e_upms_user")
 @Erupt(
-        name = "用户配置"
+        name = "User Config"
 )
 @EruptI18n
 @Getter
@@ -31,51 +31,51 @@ import xyz.erupt.jpa.model.BaseModel;
 public class EruptUserByRoleView extends BaseModel {
 
     @EruptField(
-            views = @View(title = "用户名", sortable = true),
-            edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Account", sortable = true),
+            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search(vague = true))
     )
     private String account;
 
     @EruptField(
-            views = @View(title = "姓名", sortable = true),
-            edit = @Edit(title = "姓名", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Full Name", sortable = true),
+            edit = @Edit(title = "Full Name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "账户状态", sortable = true),
+            views = @View(title = "Account Status", sortable = true),
             edit = @Edit(
-                    title = "账户状态",
+                    title = "Account Status",
                     search = @Search,
                     type = EditType.BOOLEAN,
                     notNull = true,
                     boolType = @BoolType(
-                            trueText = "激活",
-                            falseText = "锁定"
+                            trueText = "Activate",
+                            falseText = "Locked"
                     )
             )
     )
     private Boolean status = true;
 
     @EruptField(
-            views = @View(title = "超管用户", sortable = true),
+            views = @View(title = "Admin User", sortable = true),
             edit = @Edit(
-                    title = "超管用户", notNull = true
+                    title = "Admin User", notNull = true
             )
     )
     private Boolean isAdmin = false;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "所属组织", column = "name"),
-            edit = @Edit(title = "所属组织", type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id"))
+            views = @View(title = "Org", column = "name"),
+            edit = @Edit(title = "Org", type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id"))
     )
     private EruptOrg eruptOrg;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "岗位", column = "name"),
-            edit = @Edit(title = "岗位", type = EditType.REFERENCE_TREE)
+            views = @View(title = "Post", column = "name"),
+            edit = @Edit(title = "Post", type = EditType.REFERENCE_TREE)
     )
     private EruptPost eruptPost;
 
