@@ -12,7 +12,7 @@ public @interface PreDataProxy {
 
     Class<? extends DataProxy<?>> value();
 
-    @Comment("此值可在dataProxy内被DataProxyContext.get()方法中获取到")
+    @Comment("此值可在 dataProxy 内被 DataProxyContext.get() 方法中获取到")
     String[] params() default {};
 
 }

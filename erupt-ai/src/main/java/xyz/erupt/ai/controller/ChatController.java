@@ -65,8 +65,13 @@ public class ChatController {
         } else {
             llmModel = eruptDao.find(LLM.class, llmId);
         }
-        eruptDao.detach(llmModel);
         SseEmitter emitter = new SseEmitter(aiProp.getSseTimeout());
+        if (null == llmModel) {
+            llmService.sendSseMessage(emitter, "No LLM available");
+            llmService.completeSse(emitter);
+            return emitter;
+        }
+        eruptDao.detach(llmModel);
         emitter.onTimeout(() -> {
             log.info("Sse Request timed out chatId: {}", chatId);
             llmService.sendSseMessage(emitter, "Request timed out, please try again");
