@@ -45,11 +45,6 @@
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-monitor</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
             <artifactId>erupt-job</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

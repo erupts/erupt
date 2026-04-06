@@ -84,7 +84,6 @@ public class EruptTplService {
                 this::registerTpl);
     }
 
-    //注册模板
     public void registerTpl(Class<?> tplClass) {
         Arrays.stream(tplClass.getDeclaredMethods()).forEach(method -> Optional.ofNullable(method.getAnnotation(TplAction.class))
                 .ifPresent(it -> {
@@ -97,7 +96,6 @@ public class EruptTplService {
                 ));
     }
 
-    //移除模板
     public void unregisterTpl(Class<?> tplClass) {
         Arrays.stream(tplClass.getDeclaredMethods()).forEach(
                 method -> Optional.ofNullable(method.getAnnotation(TplAction.class)).ifPresent(

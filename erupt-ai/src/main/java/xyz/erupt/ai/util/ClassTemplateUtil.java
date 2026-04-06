@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ClassTemplateUtil {
 
     public static String geneEruptFormClass(Class<?> erupt) {
-        // 构建类
+        // Building classes
         TypeSpec.Builder builder = TypeSpec.classBuilder(erupt.getSimpleName()).addModifiers(Modifier.PUBLIC);
         ReflectUtil.findClassAllFields(erupt, field -> {
             Optional.ofNullable(field.getDeclaredAnnotation(EruptField.class)).ifPresent(eruptField -> {
