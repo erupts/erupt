@@ -25,6 +25,8 @@ Agent Config,智能体参数,智能體參數,Agent Config,Configuration de l'age
 Enable,启用,啟用,Enable,Activer,有効,활성화,Включить,Activar,Aktivieren,Ativar,Aktifkan,تفعيل
 Disable,禁用,禁用,Disable,Désactiver,無効,비활성화,Отключить,Desactivar,Deaktivieren,Desativar,Nonaktifkan,تعطيل
 Connection Protocol,连接协议,連接協議,Connection Protocol,Protocole de connexion,接続プロトコル,연결 프로토콜,Протокол подключения,Protocolo de conexión,Verbindungsprotokoll,Protocolo de conexão,Protokol Koneksi,بروتوكول الاتصال
+Tools,工具列表,工具列表,Tools,Outils,ツール,도구,Инструменты,Herramientas,Werkzeuge,Ferramentas,Alat,الأدوات
+Config,配置,配置,Config,Configuration,設定,구성,Конфигурация,Configuración,Konfiguration,Configuração,Konfigurasi,إعداد
 Chat Management,会话管理,會話管理,Chat Management,Gestion des discussions,チャット管理,채팅 관리,Управление чатом,Gestión de chats,Chat-Verwaltung,Gerenciamento de chat,Manajemen Obrolan,إدارة الدردشة
 Chat Records,会话记录,會話記錄,Chat Records,Historique des discussions,チャット履歴,채팅 기록,История чатов,Registros de chat,Chat-Verlauf,Registros de chat,Riwayat Obrolan,سجلات الدردشة
 Chat Title,会话标题,會話標題,Chat Title,Titre de la discussion,チャットタイトル,채팅 제목,Заголовок чата,Título del chat,Chat-Titel,Título do chat,Judul Obrolan,عنوان الدردشة

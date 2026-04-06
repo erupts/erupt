@@ -27,23 +27,23 @@ import java.util.Optional;
 @EruptI18n
 public class MetaModelUpdateVo extends BaseModel {
 
-    @EruptField(views = @View(title = "创建人", show = false))
+    @EruptField(views = @View(title = "Creator", show = false))
     @EruptSmartSkipSerialize
     private String createBy;
 
-    @EruptField(views = @View(title = "创建时间", show = false))
+    @EruptField(views = @View(title = "Create Time", show = false))
     @EruptSmartSkipSerialize
     private LocalDateTime createTime;
 
     @EruptField(
-            views = @View(title = "更新人", width = "100px"),
-            edit = @Edit(title = "更新人", readonly = @Readonly(allowChange = false))
+            views = @View(title = "Updater", width = "100px"),
+            edit = @Edit(title = "Updater", readonly = @Readonly(allowChange = false))
     )
     private String updateBy;
 
     @EruptField(
-            views = @View(title = "更新时间"),
-            edit = @Edit(title = "更新时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "Update Time"),
+            edit = @Edit(title = "Update Time", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private LocalDateTime updateTime;
 

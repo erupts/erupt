@@ -78,40 +78,40 @@ Force Logout,强退,強退,Strong back,Forts de la restitution,強退です,강 
 Entity Class Name,实体类名,實體類名,Entity class name,Nom de classe d’entité,実体クラス名です,엔티티 클래스 이름,Настоящее имя класса,Nombre de clase de entidad,Namen für körper.,Nome da classe de entidade,Nama kelas entitas,أسماء الكيانات
 Table Name,表名,表名,Table name,Tableau de,表名です,표 명,Час из,Tabla de,Name einer tabelle,mesa,Nama.,يحدث ذلك من
 Intro,简介,簡介,intro,introduction,プロフィール,간단 한 소개,профил,perfil,Klappentext?!,introdução,profil,موجز
-字段管理,字段管理,字段管理,Field management,Gestion des champs,フィールド管理です,필드 관리,Управление полем,Gestión de campos,Verwaltung des feldes,Gestão de campos,Bidang administrasi,إدارة الحقول
-字段名,字段名,字段名,Field name,Nom du champ,フィールド名です,필드 이름,Имя поля.,Nombre del campo,feldnamen,Nome do campo,Nama lapangan,اسم الحقل
-显示名称,显示名称,顯示名稱,Display name,Afficher le nom,名前を表示します,이름 보이기,Назовите имя.,Mostrar el nombre,Gib mir den namen.,Nome de exibição,Nama tampilan,اعرض الاسم
-编辑类型,编辑类型,編輯類型,Edit type,Type de montage,編集タイプです,형식 편집,Редакторский тип,Tipo de edición,Art des editors,Tipo de edição,Sunting tipe,نوع التحرير
-查询项,查询项,查詢項,Query item,Rechercher un article,問い合わせ項目です,조회 항목,Запрос.,Buscar un artículo,Namen für die abfrage,Item de pesquisa,Item kueri,البحث
-字段排序,字段排序,字段排序,Field sort,Trier par champs,フィールド並べ替えです,필드 정렬,Поле в порядке,Ordenar por campos,Feldnamen sind codiert,Ordenar por campos,Kolom diurutkan,ترتيب الحقول
-关联实体类,关联实体类,關聯實體類,Associated entity class,Classe d’entité associée,関連実体クラスです,연결된 개체 클래스,Ассоциированный класс,Clase de entidad asociada,Organisationseinheiten. Klasse.,Classe de entidade associada,Mengkorelasi kelas entitas,الكيانات المرتبطة
-是否必填,是否必填,是否必填,Required or not,Oui non obligatoire,必ず記入しますか,기입해야 하는지,Будет ли он заполнен?,Sí no requerido,Sie mussten es tun.,Sim não é obrigatório,Apakah harus mengisi,هل ستملأ؟
-是否显示,是否显示,是否顯示,Show or not,Afficher ou non,表示されますか,표시할지 여부,Показать?,Mostrar sí no,Ist es eingeschaltet?,Mostrar sim não,Apakah itu menunjukkan,هل يظهر
-代码预览,代码预览,代碼預覽,Code preview,Aperçu du code,プレビューコードです,코드 미리보기,Предварительный просмотр кода,Vista previa del código,Vorschau des codes.,Pré-visualização do código,Pratilik kode,معاينة رموز
+Field Management,字段管理,字段管理,Field management,Gestion des champs,フィールド管理です,필드 관리,Управление полем,Gestión de campos,Verwaltung des feldes,Gestão de campos,Bidang administrasi,إدارة الحقول
+Field Name,字段名,字段名,Field name,Nom du champ,フィールド名です,필드 이름,Имя поля.,Nombre del campo,feldnamen,Nome do campo,Nama lapangan,اسم الحقل
+Display Name,显示名称,顯示名稱,Display name,Afficher le nom,名前を表示します,이름 보이기,Назовите имя.,Mostrar el nombre,Gib mir den namen.,Nome de exibição,Nama tampilan,اعرض الاسم
+Edit Type,编辑类型,編輯類型,Edit type,Type de montage,編集タイプです,형식 편집,Редакторский тип,Tipo de edición,Art des editors,Tipo de edição,Sunting tipe,نوع التحرير
+Query Item,查询项,查詢項,Query item,Rechercher un article,問い合わせ項目です,조회 항목,Запрос.,Buscar un artículo,Namen für die abfrage,Item de pesquisa,Item kueri,البحث
+Field Sort,字段排序,字段排序,Field sort,Trier par champs,フィールド並べ替えです,필드 정렬,Поле в порядке,Ordenar por campos,Feldnamen sind codiert,Ordenar por campos,Kolom diurutkan,ترتيب الحقول
+Associated Entity,关联实体类,關聯實體類,Associated entity class,Classe d’entité associée,関連実体クラスです,연결된 개체 클래스,Ассоциированный класс,Clase de entidad asociada,Organisationseinheiten. Klasse.,Classe de entidade associada,Mengkorelasi kelas entitas,الكيانات المرتبطة
+Required,是否必填,是否必填,Required or not,Oui non obligatoire,必ず記入しますか,기입해야 하는지,Будет ли он заполнен?,Sí no requerido,Sie mussten es tun.,Sim não é obrigatório,Apakah harus mengisi,هل ستملأ؟
+Visible,是否显示,是否顯示,Show or not,Afficher ou non,表示されますか,표시할지 여부,Показать?,Mostrar sí no,Ist es eingeschaltet?,Mostrar sim não,Apakah itu menunjukkan,هل يظهر
+Code Preview,代码预览,代碼預覽,Code preview,Aperçu du code,プレビューコードです,코드 미리보기,Предварительный просмотр кода,Vista previa del código,Vorschau des codes.,Pré-visualização do código,Pratilik kode,معاينة رموز
 [menu],,,,,,,,,,,,
-首页,首页,首頁,Home,La maison,トップページです,첫 페이지,Главн страниц,En la primera página,Die titelseite.,Ficha técnica,Halaman depan,الصفحة الأولى
-系统管理,系统管理,系統管理,System management,Gestion du système,システム管理です,시스템 관리,Управление системой,Administración del sistema,Hartes system,Gestão do sistema,Manajemen sistem,إدارة النظام
-菜单管理,菜单管理,菜單管理,Menu maintenance,Maintenance du menu,メニューメンテナンスです,메뉴 관리,Обслуживание меню,Mantenimiento del menú,Alles über dich.,Gestão de menus,Manajemen menu,إدارة القائمة
-角色管理,角色管理,角色管理,Role maintenance,Maintien des rôles,キャラクターメンテナンスです,역할 관리,Уход за персонажами,Mantenimiento de roles,Kollaboratives management.,Gestão de funções,Manajemen peran,إدارة الأدوار
-组织管理,组织管理,組織管理,Organization maintenance,Organisation et maintenance,メンテナンス組織です,조직 유지,Организационное обслуживание,Organización y mantenimiento,Organisationsweites management.,Organização e gestão,Manajemen organisasi,الإدارة التنظيمية
-岗位管理,岗位管理,崗位管理,Post maintenance,Maintien des postes,雇用維持です,직무 유지,Уход за постом,Mantenimiento del puesto,B.O.B. :,Gestão de posts,Penempatan manajemen,إدارة الموقع
-用户管理,用户管理,用戶管理,User maintenance,Maintenance des utilisateurs,ユーザーメンテナンス,사용자 보호,Обслуживание пользователя,Mantenimiento por usuarios,Regieren der benutzer.,Gestão de usuários,Manajemen pengguna,إدارة المستخدمين
-数据字典,数据字典,數據字典,Dictionary maintenance,Maintenance du dictionnaire,辞書メンテナンスです,사전 관리,Уход за словарем,Mantenimiento del diccionario,Ein datenwörterbuch.,Dicionário de dados,Kamus data,قاموس البيانات
-字典项,字典项,數據項,Dictionary item,Élément de dictionnaire,辞書項目,사전 항목,Элемент словаря,Elemento de diccionario,Wörterbucheintrag,Item do dicionário,Item kamus,عنصر القاموس
-菜单维护,菜单维护,菜單維護,Menu maintenance,Maintenance du menu,メニューメンテナンスです,메뉴 관리,Обслуживание меню,Mantenimiento del menú,Menü-wartung.,Manutenção do menu,Pemeliharaan menu,صيانة القائمة
-角色维护,角色维护,角色維護,Role maintenance,Maintien des rôles,キャラクターメンテナンスです,역할 관리,Уход за персонажами,Mantenimiento de roles,Rollenerhaltung und bewachung,Manutenção do papel,Perawatan peran,صيانة الشخصية
-组织维护,组织维护,組織維護,Organization maintenance,Organisation et maintenance,メンテナンス組織です,조직 유지,Организационное обслуживание,Organización y mantenimiento,Hier ist der organisator.,Organização e manutenção,Perawatan organisasi,صيانة المنظمة
-岗位维护,岗位维护,崗位維護,Post maintenance,Maintien des postes,雇用維持です,직무 유지,Уход за постом,Mantenimiento del puesto,Achtung achtung,Manutenção da posição,Pos pemeliharaan,صيانة الموقع
-用户维护,用户维护,用戶維護,User maintenance,Maintenance des utilisateurs,ユーザーメンテナンス,사용자 보호,Обслуживание пользователя,Mantenimiento por usuarios,Die wartung.,Manutenção para usuários,Pemeliharaan pengguna,صيانة المستخدمين
-字典维护,字典维护,字典維護,Dictionary maintenance,Maintenance du dictionnaire,辞書メンテナンスです,사전 관리,Уход за словарем,Mantenimiento del diccionario,Gültig im wörterbuch,Manutenção do dicionário,Pemeliharaan kamus,صيانة القواميس
-登录日志,登录日志,登錄日誌,Entry log,Log de connexion,ログを登録する,로그인 로그,Регистрационный журнал.,Iniciar sesión log,Und loggen.,Log de login,Log masuk,سجل الدخول
-在线用户,在线用户,在線用戶,Online user,Utilisateurs en ligne,オンラインユーザーです,온라인 사용자,Онлайн.,Usuarios en línea,Benutzer jetzt,Usuários online online,Pengguna online,مستخدم على الانترنت
-操作日志,操作日志,操作日誌,Operation log,Journal des opérations,操作履歴です,작업 로그,Журнал операций.,Registro de operaciones,"Captains, logbuch.",Logs de operações,Catatan operasi,سجل التشغيل
-系统日志,系统日志,系統日誌,System Log,Journal système,システム ログ,시스템 로그,Системный журнал,Registro di sistema,Das system logbuch,Logs do sistema,Log sistem,سجل النظام
-代码生成,代码生成,代碼生成,Code generation,Génération de code,コード生成です,코드 생성,Генерация кода,Generación de código,Programm gestartet.,Geração de código,Kode generasi,توليد الشفرة
-生成Erupt代码,生成Erupt代码,生成Erupt代碼,Erupt code is generated,Générer du code Erupt,Eruptコードを生成します,erupt 코드를 생성한다,Генерирует код эрупта,Generando código Erupt,Wurde sperrtext erstellt,Gerar código Erupt,Menghasilkan kode Erupt,توليد رمز ERUPT
-更新秘钥,更新秘钥,更新密鑰,Update secret key,Mettre à jour la clé secrète,更新キー,업데이트 키,Обновление секретного ключа,Aggiornamento della chiave segreta,Den schlüssel erneuern,Atualizar chave secreta,Memutakhirkan kunci-kunci.,تحديث المفتاح
-Token有效期,Token 有效期,Token 有效期,Token validity period,Période de validité du token,トークン有効期間,토큰 유효 기간,Срок действия токена,Periodo di validità del token,Ich trag die geschäftsvereinbarung.,Validade do Token,Token Token,توكين صالحة
-绑定用户权限,绑定用户权限,綁定用戶權限,Bind user permissions,Lier les autorisations d'utilisateur,ユーザー権限のバインド,사용자 권한 바인딩,Привязка прав пользователя,Vincolare i permessi dell'utente,Definiert die zugriffsrechte,Vincular direitos de usuário,Mengikat akses pengguna,ربط إذن المستخدم
-秘钥,秘钥,密鑰,Secret key,Clé secrète,秘密鍵,비밀 키,Секретный ключ,Chiave segreta,Ein schlüssel.,A chave secreta,Kunci rahasia.,سكرتير الإفتراضى
-国家 | 大区 | 省份 | 城市 | 运营商,国家 | 大区 | 省份 | 城市 | 运营商,国家 | 大区 | 省份 | 城市 | 运营商,Country | Region | Province | City | ISP,Pays | Région | Province | Ville | Opérateur,国 | 地域 | 省 | 都市 | プロバイダー,국가 | 권역 | 도 | 시 | 통신사,Страна | Регион | Провинция | Город | Оператор,País | Región | Provincia | Ciudad | Operador,Land | Region | Provinz | Stadt | Anbieter,País | Região | Província | Cidade | Operadora,Negara | Wilayah | Provinsi | Kota | Penyedia layanan,الدولة | المنطقة | المحافظة | المدينة | مزود الخدمة
+Home,首页,首頁,Home,La maison,トップページです,첫 페이지,Главн страниц,En la primera página,Die titelseite.,Ficha técnica,Halaman depan,الصفحة الأولى
+System Management,系统管理,系統管理,System management,Gestion du système,システム管理です,시스템 관리,Управление системой,Administración del sistema,Hartes system,Gestão do sistema,Manajemen sistem,إدارة النظام
+Menu Management,菜单管理,菜單管理,Menu maintenance,Maintenance du menu,メニューメンテナンスです,메뉴 관리,Обслуживание меню,Mantenimiento del menú,Alles über dich.,Gestão de menus,Manajemen menu,إدارة القائمة
+Role Management,角色管理,角色管理,Role maintenance,Maintien des rôles,キャラクターメンテナンスです,역할 관리,Уход за персонажами,Mantenimiento de roles,Kollaboratives management.,Gestão de funções,Manajemen peran,إدارة الأدوار
+Org Management,组织管理,組織管理,Organization maintenance,Organisation et maintenance,メンテナンス組織です,조직 유지,Организационное обслуживание,Organización y mantenimiento,Organisationsweites management.,Organização e gestão,Manajemen organisasi,الإدارة التنظيمية
+Post Management,岗位管理,崗位管理,Post maintenance,Maintien des postes,雇用維持です,직무 유지,Уход за постом,Mantenimiento del puesto,B.O.B. :,Gestão de posts,Penempatan manajemen,إدارة الموقع
+User Management,用户管理,用戶管理,User maintenance,Maintenance des utilisateurs,ユーザーメンテナンス,사용자 보호,Обслуживание пользователя,Mantenimiento por usuarios,Regieren der benutzer.,Gestão de usuários,Manajemen pengguna,إدارة المستخدمين
+Data Dictionary,数据字典,數據字典,Dictionary maintenance,Maintenance du dictionnaire,辞書メンテナンスです,사전 관리,Уход за словарем,Mantenimiento del diccionario,Ein datenwörterbuch.,Dicionário de dados,Kamus data,قاموس البيانات
+Dict Item,字典项,數據項,Dictionary item,Élément de dictionnaire,辞書項目,사전 항목,Элемент словаря,Elemento de diccionario,Wörterbucheintrag,Item do dicionário,Item kamus,عنصر القاموس
+Menu Maintenance,菜单维护,菜單維護,Menu maintenance,Maintenance du menu,メニューメンテナンスです,메뉴 관리,Обслуживание меню,Mantenimiento del menú,Menü-wartung.,Manutenção do menu,Pemeliharaan menu,صيانة القائمة
+Role Maintenance,角色维护,角色維護,Role maintenance,Maintien des rôles,キャラクターメンテナンスです,역할 관리,Уход за персонажами,Mantenimiento de roles,Rollenerhaltung und bewachung,Manutenção do papel,Perawatan peran,صيانة الشخصية
+Org Maintenance,组织维护,組織維護,Organization maintenance,Organisation et maintenance,メンテナンス組織です,조직 유지,Организационное обслуживание,Organización y mantenimiento,Hier ist der organisator.,Organização e manutenção,Perawatan organisasi,صيانة المنظمة
+Post Maintenance,岗位维护,崗位維護,Post maintenance,Maintien des postes,雇用維持です,직무 유지,Уход за постом,Mantenimiento del puesto,Achtung achtung,Manutenção da posição,Pos pemeliharaan,صيانة الموقع
+User Maintenance,用户维护,用戶維護,User maintenance,Maintenance des utilisateurs,ユーザーメンテナンス,사용자 보호,Обслуживание пользователя,Mantenimiento por usuarios,Die wartung.,Manutenção para usuários,Pemeliharaan pengguna,صيانة المستخدمين
+Dictionary Maintenance,字典维护,字典維護,Dictionary maintenance,Maintenance du dictionnaire,辞書メンテナンスです,사전 관리,Уход за словарем,Mantenimiento del diccionario,Gültig im wörterbuch,Manutenção do dicionário,Pemeliharaan kamus,صيانة القواميس
+Login Log,登录日志,登錄日誌,Entry log,Log de connexion,ログを登録する,로그인 로그,Регистрационный журнал.,Iniciar sesión log,Und loggen.,Log de login,Log masuk,سجل الدخول
+Online Users,在线用户,在線用戶,Online user,Utilisateurs en ligne,オンラインユーザーです,온라인 사용자,Онлайн.,Usuarios en línea,Benutzer jetzt,Usuários online online,Pengguna online,مستخدم على الانترنت
+Operation Log,操作日志,操作日誌,Operation log,Journal des opérations,操作履歴です,작업 로그,Журнал операций.,Registro de operaciones,"Captains, logbuch.",Logs de operações,Catatan operasi,سجل التشغيل
+System Log,系统日志,系統日誌,System Log,Journal système,システム ログ,시스템 로그,Системный журнал,Registro di sistema,Das system logbuch,Logs do sistema,Log sistem,سجل النظام
+Code Generation,代码生成,代碼生成,Code generation,Génération de code,コード生成です,코드 생성,Генерация кода,Generación de código,Programm gestartet.,Geração de código,Kode generasi,توليد الشفرة
+Generate Erupt Code,生成Erupt代码,生成Erupt代碼,Erupt code is generated,Générer du code Erupt,Eruptコードを生成します,erupt 코드를 생성한다,Генерирует код эрупта,Generando código Erupt,Wurde sperrtext erstellt,Gerar código Erupt,Menghasilkan kode Erupt,توليد رمز ERUPT
+Update Secret Key,更新秘钥,更新密鑰,Update secret key,Mettre à jour la clé secrète,更新キー,업데이트 키,Обновление секретного ключа,Aggiornamento della chiave segreta,Den schlüssel erneuern,Atualizar chave secreta,Memutakhirkan kunci-kunci.,تحديث المفتاح
+Token Validity Period,Token 有效期,Token 有效期,Token validity period,Période de validité du token,トークン有効期間,토큰 유효 기간,Срок действия токена,Periodo di validità del token,Ich trag die geschäftsvereinbarung.,Validade do Token,Token Token,توكين صالحة
+Bind User Permissions,绑定用户权限,綁定用戶權限,Bind user permissions,Lier les autorisations d'utilisateur,ユーザー権限のバインド,사용자 권한 바인딩,Привязка прав пользователя,Vincolare i permessi dell'utente,Definiert die zugriffsrechte,Vincular direitos de usuário,Mengikat akses pengguna,ربط إذن المستخدم
+Secret Key,秘钥,密鑰,Secret key,Clé secrète,秘密鍵,비밀 키,Секретный ключ,Chiave segreta,Ein schlüssel.,A chave secreta,Kunci rahasia.,سكرتير الإفتراضى
+Country | Region | Province | City | ISP,国家 | 大区 | 省份 | 城市 | 运营商,国家 | 大区 | 省份 | 城市 | 运营商,Country | Region | Province | City | ISP,Pays | Région | Province | Ville | Opérateur,国 | 地域 | 省 | 都市 | プロバイダー,국가 | 권역 | 도 | 시 | 통신사,Страна | Регион | Провинция | Город | Оператор,País | Región | Provincia | Ciudad | Operador,Land | Region | Provinz | Stadt | Anbieter,País | Região | Província | Cidade | Operadora,Negara | Wilayah | Provinsi | Kota | Penyedia layanan,الدولة | المنطقة | المحافظة | المدينة | مزود الخدمة

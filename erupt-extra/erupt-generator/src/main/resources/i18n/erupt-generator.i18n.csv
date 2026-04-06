@@ -1,0 +1,17 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Generate Erupt Code,生成Erupt代码,生成Erupt代碼,Generate Erupt Code,Générer du code Erupt,Eruptコードを生成,erupt 코드 생성,Генерировать код Erupt,Generar código Erupt,Erupt-Code generieren,Gerar código Erupt,Buat kode Erupt,توليد كود Erupt
+Code Preview,代码预览,代碼預覽,Code Preview,Aperçu du code,コードプレビュー,코드 미리보기,Предварительный просмотр кода,Vista previa del código,Codevorschau,Pré-visualização do código,Pratinjau Kode,معاينة الكود
+Name,名称,名稱,Name,Nom,名前,이름,Название,Nombre,Name,Nome,Nama,الاسم
+Entity Class,实体类,實體類,Entity Class,Classe d'entité,エンティティクラス,엔티티 클래스,Класс сущности,Clase de entidad,Entity-Klasse,Classe de entidade,Kelas Entitas,فئة الكيان
+Table Name,表名,表名,Table Name,Nom de la table,テーブル名,테이블 이름,Имя таблицы,Nombre de tabla,Tabellenname,Nome da tabela,Nama Tabel,اسم الجدول
+Intro,简介,簡介,Intro,Introduction,はじめに,소개,Введение,Introducción,Einleitung,Introdução,Pengantar,مقدمة
+Field Management,字段管理,字段管理,Field Management,Gestion des champs,フィールド管理,필드 관리,Управление полями,Gestión de campos,Feldverwaltung,Gestão de campos,Manajemen Bidang,إدارة الحقول
+Field Name,字段名,字段名,Field Name,Nom du champ,フィールド名,필드 이름,Имя поля,Nombre del campo,Feldname,Nome do campo,Nama Bidang,اسم الحقل
+Display Name,显示名称,顯示名稱,Display Name,Nom d'affichage,表示名,표시 이름,Отображаемое имя,Nombre de visualización,Anzeigename,Nome de exibição,Nama Tampilan,اسم العرض
+Display Order,显示顺序,顯示順序,Display Order,Ordre d'affichage,表示順序,표시 순서,Порядок отображения,Orden de visualización,Anzeigereihenfolge,Ordem de exibição,Urutan Tampilan,ترتيب العرض
+Edit Type,编辑类型,編輯類型,Edit Type,Type d'édition,編集タイプ,편집 유형,Тип редактирования,Tipo de edición,Bearbeitungstyp,Tipo de edição,Jenis Edit,نوع التحرير
+Related Entity,关联实体类,關聯實體類,Related Entity,Entité associée,関連エンティティ,연관 엔티티,Связанная сущность,Entidad relacionada,Verwandte Entität,Entidade relacionada,Entitas Terkait,الكيان المرتبط
+Query Item,查询项,查詢項,Query Item,Élément de requête,クエリ項目,쿼리 항목,Элемент запроса,Elemento de consulta,Abfrageelement,Item de consulta,Item Kueri,عنصر الاستعلام
+Field Sort,字段排序,字段排序,Field Sort,Tri des champs,フィールドソート,필드 정렬,Сортировка полей,Ordenar campos,Feldsortierung,Ordenação de campos,Urutan Bidang,ترتيب الحقول
+Required,是否必填,是否必填,Required,Obligatoire,必須,필수,Обязательно,Obligatorio,Erforderlich,Obrigatório,Wajib,مطلوب
+Visible,是否显示,是否顯示,Visible,Visible,表示,표시,Видимый,Visible,Sichtbar,Visível,Terlihat,مرئي
