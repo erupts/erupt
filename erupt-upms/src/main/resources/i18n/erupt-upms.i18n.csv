@@ -14,75 +14,70 @@ content,内容,內容,Content,Contenu,内容,내용,Содержание,Conteni
 remark,备注,備註,Remark,remarques,備考です,비고,примечан,comentar,bemerkungen,observações,catatan,ملحوظة رقم
 OPEN,打开,打開,Open,Ouvrir,開く,열기,Открыть,Abrir,Öffnen,Abrir,Buka,فتح
 CLOSE,关闭,關閉,Close,Fermer,閉じる,닫기,Закрыть,Cerrar,Schließen,Fechar,Tutup,إغلاق
-[erupt],,,,,,,,,,,,
-编码,编码,編碼,Code,codage,コード化です,인 코딩,закодирова,codificación,Codes.,A codificação,kode,الترميز
-名称,名称,名稱,Title,dénomination,名前です,이름,назван,El nombre,nachname,O nome,nama,اسم
-值,值,值,value,valeur,値,값,значение,valore,wert,Os valores,nilai,القيمة
-备注,备注,備註,Remark,remarques,備考です,비고,примечан,comentar,bemerkungen,observações,catatan,ملحوظة رقم
-用户名,用户名,用戶名,Account,Nom de l’utilisateur,ユーザー名です,사용자 이름,Имя пользователя.,Nombre de usuario,benutzername,Nome de usuário,Nama pengguna,اسم المستخدم
-姓名,姓名,姓名,Name,Le nom,名前です,이름,им,Los nombres,"Namen, bitte?",O nome,nama,أسماء
-负责组织,负责组织,負責組織,Responsible Organization,Organisation Responsable,責任組織,책임 조직,Ответственная Организация,Organización Responsable,Verantwortliche Organisation,Organização Responsável,Organisasi yang Bertanggung Jawab,المنظمة المسؤولة
-分管组织,分管组织,分管組織,Supervising Organization,Organisation de Supervision,主管組織,관할 조직,Надзорная организация,Organización Supervisora,Aufsichtsorganisation,Organização Supervisora,Organisasi Pengawas,المنظمة الإشرافية
-密码,密码,密碼,Password,Les mots de passe,パスワードです,암호,код,La contraseña,kennwort,senha,kode,كلمة المرور
-确认密码,确认密码,確認密碼,Confirm password,Confirmer le mot de passe,パスワードを確認します,비밀번호 확인,Подтвердите код.,Confirme su contraseña,Passwort bestätigt.,Confirme a senha,Konfirmasi sandi,تأكيد كلمة المرور
-md5加密,md5加密,md5加密,MD5 encrypt,Cryptage avec md5,md5暗号化です,md5 암호화,Md5 зашифровано,Cifrado con md5,Das md5 ist verschlüsselt.,Criptografia com md5,Enkripsi md5.,مشفر MD5.
-重置密码时间,重置密码时间,重置密碼時間,Reset password time,Réinitialiser le mot de passe time,パスワード時間をリセットします,비밀번호 초기화 시간,Перезагрузка.,Restablecer tiempo de contraseña,Das passwort zurücksetzen.,Redefinir tempo de senha,Atur ulang waktu kata sandi,إعادة ضبط وقت كلمة المرور
-账号失效时间,账号失效时间,賬號失效時間,Account expiration time,Temps d’expiration du compte,アカウント失効期間です,계정 유효기간,Время истечения срока действия счета,Tiempo de caducidad de cuenta,Die kontonummer werden gelöscht,Tempo de expiração da conta,Waktu gagal akun,وقت انتهاء الحساب
-超管用户,超管用户,超管用戶,Admin user,Surtube pour les utilisateurs,スーパーチューブ利用者です,하이퍼튜브 사용자,Пользователь с перетрубкой,Supertube para usuarios,Den benutzer,Supertube para usuários,Pengguna ultra,العملاء
-重置密码,重置密码,重置密碼,Reset password,Réinitialiser votre mot de passe,パスワードをリセットします,비밀번호 초기화,Перезагрузка.,Restablecer la contraseña,Das passwort zurücksetzen.,Redefinir senha,Atur ulang kata sandi anda,إعادة ضبط كلمة المرور
-加密,加密,加密,encipher,chiffrement,暗号化です,암호화,зашифрова,cifrado,verschlüsselung,encriptação,Terenkripsi.,التشفير
-不加密,不加密,不加密,No encryption,Pas de cryptage,暗号化しません,암호화하지 않음,Нет.,Sin encriptación,Keine verschlüsselung.,Sem criptografia disponível,Tidak terenkripsi,غير مشفر
-激活,激活,激活,Activate,l’activation,活性化します,활성화,активирова,activar,Aktiviere jetzt.,activar,aktifkan,تفعيل
-锁定,锁定,鎖定,lock,verrouillage,ロックです,잠금,блокировк,cerrado,Ziel erfasst.,Fixado.,kunci,قفل
-启用,启用,啟用,enable,Le lancement,起用します,사용 하기,открыт,activar,Einschalten.,activar,Dan online.,تشغيل
-禁用,禁用,禁用,forbidden,interdits,無効です,사용 안 함,отключ,deshabilitar,Deaktivieren.,desactivar,dinonaktifkan,تعطيل
-隐藏,隐藏,隱藏,Hidden,cachée,隠します,숨기기,спрята,ocultar,Versteckt?,esconder,tersembunyi,إخفاء
+Value,值,值,value,valeur,値,값,значение,valore,wert,Os valores,nilai,القيمة
+Account,用户名,用戶名,Account,Nom de l’utilisateur,ユーザー名です,사용자 이름,Имя пользователя.,Nombre de usuario,benutzername,Nome de usuário,Nama pengguna,اسم المستخدم
+Full Name,姓名,姓名,Name,Le nom,名前です,이름,им,Los nombres,"Namen, bitte?",O nome,nama,أسماء
+Responsible Org,负责组织,負責組織,Responsible Organization,Organisation Responsable,責任組織,책임 조직,Ответственная Организация,Organización Responsable,Verantwortliche Organisation,Organização Responsável,Organisasi yang Bertanggung Jawab,المنظمة المسؤولة
+Supervising Org,分管组织,分管組織,Supervising Organization,Organisation de Supervision,主管組織,관할 조직,Надзорная организация,Organización Supervisora,Aufsichtsorganisation,Organização Supervisora,Organisasi Pengawas,المنظمة الإشرافية
+Password,密码,密碼,Password,Les mots de passe,パスワードです,암호,код,La contraseña,kennwort,senha,kode,كلمة المرور
+Confirm Password,确认密码,確認密碼,Confirm password,Confirmer le mot de passe,パスワードを確認します,비밀번호 확인,Подтвердите код.,Confirme su contraseña,Passwort bestätigt.,Confirme a senha,Konfirmasi sandi,تأكيد كلمة المرور
+MD5 Encrypt,md5加密,md5加密,MD5 encrypt,Cryptage avec md5,md5暗号化です,md5 암호화,Md5 зашифровано,Cifrado con md5,Das md5 ist verschlüsselt.,Criptografia com md5,Enkripsi md5.,مشفر MD5.
+Reset Pwd Time,重置密码时间,重置密碼時間,Reset password time,Réinitialiser le mot de passe time,パスワード時間をリセットします,비밀번호 초기화 시간,Перезагрузка.,Restablecer tiempo de contraseña,Das passwort zurücksetzen.,Redefinir tempo de senha,Atur ulang waktu kata sandi,إعادة ضبط وقت كلمة المرور
+Account Expiry,账号失效时间,賬號失效時間,Account expiration time,Temps d’expiration du compte,アカウント失効期間です,계정 유효기간,Время истечения срока действия счета,Tiempo de caducidad de cuenta,Die kontonummer werden gelöscht,Tempo de expiração da conta,Waktu gagal akun,وقت انتهاء الحساب
+Admin User,超管用户,超管用戶,Admin user,Surtube pour les utilisateurs,スーパーチューブ利用者です,하이퍼튜브 사용자,Пользователь с перетрубкой,Supertube para usuarios,Den benutzer,Supertube para usuários,Pengguna ultra,العملاء
+Reset Password,重置密码,重置密碼,Reset password,Réinitialiser votre mot de passe,パスワードをリセットします,비밀번호 초기화,Перезагрузка.,Restablecer la contraseña,Das passwort zurücksetzen.,Redefinir senha,Atur ulang kata sandi anda,إعادة ضبط كلمة المرور
+Encrypt,加密,加密,encipher,chiffrement,暗号化です,암호화,зашифрова,cifrado,verschlüsselung,encriptação,Terenkripsi.,التشفير
+No Encrypt,不加密,不加密,No encryption,Pas de cryptage,暗号化しません,암호화하지 않음,Нет.,Sin encriptación,Keine verschlüsselung.,Sem criptografia disponível,Tidak terenkripsi,غير مشفر
+Activate,激活,激活,Activate,l’activation,活性化します,활성화,активирова,activar,Aktiviere jetzt.,activar,aktifkan,تفعيل
+Locked,锁定,鎖定,lock,verrouillage,ロックです,잠금,блокировк,cerrado,Ziel erfasst.,Fixado.,kunci,قفل
+Enable,启用,啟用,enable,Le lancement,起用します,사용 하기,открыт,activar,Einschalten.,activar,Dan online.,تشغيل
+Disable,禁用,禁用,forbidden,interdits,無効です,사용 안 함,отключ,deshabilitar,Deaktivieren.,desactivar,dinonaktifkan,تعطيل
+Hidden,隐藏,隱藏,Hidden,cachée,隠します,숨기기,спрята,ocultar,Versteckt?,esconder,tersembunyi,إخفاء
 ,,,,,,,,,,,,
-ip白名单,ip白名单,ip白名單,Ip white list,Liste blanche ip,ホワイトリストです,ip 화이트 리스트,Белый ip-список,Lista blanca de ip,Die ip-liste.,Lista branca de ip,Daftar ip putih,قائمة IP أبيض
-所属角色,所属角色,所屬角色,Role,Le rôle affilié,所属しています,소속배역,Принадлежность к роли,Rol al que pertenece,Teil um,Funções a que pertence,Peran peran,شخصيتك
-手机号码,手机号码,手機號碼,Phone,Numéro de téléphone,携帯電話番号です,핸드폰 번호,Номер телефона.,Teléfono móvil,Sein handy.,Número de celular,Nomor ponsel,رقم الهاتف
-所属组织,所属组织,所屬組織,Org,Les organisations affiliées,所属組織です,산하 조직,Принадлежность к организации,Organizaciones afiliadas,Die organisation.,Organizações a que pertence,Milik organisasi,المنظمة التي تنتمي إليها
-岗位,岗位,崗位,Post,emplois,持ち場です,일자리를,пост,Puestos de trabajo,Gefechtsstellung.,Postos de trabalho,posisi,الوظائف
-账户状态,账户状态,賬戶狀態,Status,Statut du compte,口座状態です,계정 상태,Статус счета.,Estado de cuenta,Kontostand steht.,Status da conta,Status akun,حالة الحساب
-邮箱,邮箱,郵箱,Email,La boîte aux lettres,メールボックスです,메일 박스,Почтов ящик,dirección,Briefkasten.,Caixa de correio,Kotak surat.,صندوق البريد
-首页菜单,首页菜单,首頁菜單,Home menu,Accueil menu menu,トップページのメニューです,홈페이지 메뉴,Меню на первой странице,Página principal menú,Das titelblatt.,Página inicial menu,Menu rumah,القائمة الرئيسية
-状态,状态,狀態,Status,l’état,状態です,상태,состоян,El estado,Versetzen.,estado,keadaan,حالة
-操作权限,操作权限,操作權限,Operation permissions,Autorisations de fonctionnement,操作権限です,작업 권한,Доступ к операции,Permisos de operación,Zugriff gewährt,Permissões de operação,Hak operasi,الدخول
-菜单权限,菜单权限,菜單權限,Menu permissions,Accès au menu,メニュー権限です,메뉴 권한,Доступ к меню,Permisos de menú,Menü berechne,Permissões no menu,Hak akses menu,دخول القائمة
-包含用户,包含用户,包含用戶,Contain user,Inclure un utilisateur,ユーザーを含みます,사용자 포함,Включать пользователей,Incluye un usuario,Inklusive benutzer?,Incluir um usuário,Termasuk pengguna,يشمل المستخدمين
-菜单类型,菜单类型,菜單類型,Menu type,Type de menu,メニュータイプです。,메뉴 종류,Тип меню,Tipo de menú,Typ 3: menütypen,Tipo de menu,Jenis menu,نوع القائمة
-类型值,类型值,類型值,Menu value,Type valeur valeur,型値です,형식 값,Значение типа,Tipo valor valor,Art werte.,Tipo valor valor,Nilai jenis,قيمة النوع
-顺序,顺序,順序,Order,La séquence,順番です,순서,последовательн,orden,Horns.,ordem,urutan,الترتيب
-图标,图标,圖標,Icon,Les icônes,アイコンです,아이콘,иконк,El icono,Icons.,ícones,ikon,أيقونة
-上级菜单,上级菜单,上級菜單,Parent,Le menu supérieur,上級メニュー,상위 메뉴,Меню начальства,Menú superior,Das menü oben.,Menu superior superior,Menu superior,قائمة الأعلى
-自定义参数,自定义参数,自定義參數,Customer param,Personnalisez vos paramètres,カスタムパラメータです,사용자 정의 인자,Самоопределение параметра,Personaliza tus parámetros,Definierte parameter,Personalize seus parâmetros,Parameter khusus,البارامترات المحددة
-组织编码,组织编码,組織編碼,Org code,Organisation et codage,組織コードです,조직 인코딩,Код ткани,Organización y codificación,Organisations-code.,Organização e codificação,Kode jaringan,رمز التنظيم
-组织名称,组织名称,組織名稱,Org name,Nom de l’organisation,組織名です,조직 이름,Организационное имя,Nombre de la organización,Name der organisation:,Nome da organização,Nama organisasi,اسم المنظمة
-上级组织,上级组织,上級組織,Parent org,Les organisations supérieures,上級組織です,상급 조직,Организация высшего порядка,Organización superior,Die organisation.,A organização superior,Lebih tinggi organisasi,المنظمة العليا
-显示顺序,显示顺序,顯示順序,Order,Afficher la commande,表示順序です,표시 순서,Покажи последовательность.,Mostrar el orden,Reihenfolge:,Ordem de exibição,Urutan tampilan,عرض الترتيب
-岗位编码,岗位编码,崗位編碼,Code,Code du poste,ポストコードです,직위 인코딩,Код поста,Código de posición,Die bypass-codes.,Código do post,Posting coding,رمز الموقع
-岗位名称,岗位名称,崗位名稱,Name,Nom du poste,持ち場の名前です,직책 명칭,Название поста,Nombre del post,Name der arbeitsplätze,Nome do post,Nama posting,اسم الموقع
-岗位权重,岗位权重,崗位權重,Weight,Poids du poste,ポジションの重みです。,직위의 영향력,Вес поста,Peso del post,Posten bezogen.,Peso da posição,Tugas berat,الموقع، الوزن
-用户,用户,用戶,User,Les utilisateurs,ユーザーです,사용자,пользовател,El usuario,Oder benutzer.,utilizador,Pengguna.,المستعملين
-操作人,操作人,操作人,operator,Les opérateurs,人を操作します,오퍼레이터,Оператор.,operador,Das würde ich nie tun.,O operador,Seorang operator,المشغل
-错误信息,错误信息,錯誤信息,Error message,Message d’erreur message,エラー情報です,오류 메시지,Ложная информация.,Mensaje de error,Falsche informationen,Mensagem de erro,Informasi salah,معلومات خاطئة
-登录时间,登录时间,登錄時間,Login time,Temps de connexion,登録時間です,로그인 시간,Время входа.,Hora de inicio,Zeit für logins.,Tempo de login,Log masuk waktu,وقت تسجيل الدخول
-IP地址,IP地址,IP地址,Ip address,Votre adresse IP,IPアドレスです,ip 주소,IP адрес.,Dirección IP,Die ip-adresse.,O endereço IP,Alamat IP,عنوان IP
-IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,IP-адрес.,Origen de IP,Die ip-quelle.,Origem do IP,IP sumber,آي بي
-操作系统,操作系统,操作系統,OS,Le système d’exploitation,osです,오퍼레이션 시스템,Операционная система,Sistema operativo,Das betriebssystem.,O sistema operacional,Sistem operasi,نظام التشغيل
-浏览器,浏览器,瀏覽器,Browser,navigateur,ブラウザです,브라우저,браузер,explorador,Der browser?,navegador,peramban,المتصفح
-设备类型,设备类型,設備類型,Device type,Type de matériel,装置の種類です,장치 종류,Тип оборудования,Tipos de equipos,Arten Von gerät?,Tipo de equipamento,Tipe divais,نوع الجهاز
-功能名称,功能名称,功能名稱,Function name,Nom de fonction,機能名です,기능 이름,Функциональное имя,Nombre de función,Titel der funktion,Nome da função,Nama fungsi,الاسم الوظيفي
-请求参数,请求参数,請求參數,Req param,Paramètres de requête,パラメータを要求します,요청 인자,Параметр запроса,Parámetros de solicitud,Erwarte parameter.,Parâmetros de solicitação,Meminta parameter,طلب البارامترات
-是否成功,是否成功,是否成功,Is success,Avec ou sans succès,成功したかどうかです,성공 여부,Успех или нет?,Tener éxito o no,Es ist uns gelungen.,Tenha sucesso ou não,Berhasil atau tidak,هل نجح؟
-请求耗时,请求耗时,請求耗時,Req time,La demande prend du temps,お願いには時間がかかります,요청 시간,Время запроса,La solicitud consume tiempo,"Äh, zeit wofür?",Requisição demorada,Permintaan memakan waktu,الطلب يستغرق وقتا
-记录时间,记录时间,記錄時間,Record time,Temps de record,時間を記録します,기록 시간,Время записи.,Tiempo de grabación,Zeit zum aufzeichnen.,Tempo de gravação,Catatan waktu,سجل الوقت
-请求地址,请求地址,請求地址,URL,Adresse de demande,請求先です,주소 요청,Запрашиваю адрес.,Dirección de solicitud,"Okay, wie lautet die adresse?",Endereço do pedido,Meminta alamat,عنوان الطلب
-请求方法,请求方法,請求方法,Method,Méthode de demande,請求方法です,요청 방법,Способ просьбы,Método de solicitud,Nenn mir eine methode.,Método de solicitação,Cara meminta,طريقة الطلب
-强退,强退,強退,Strong back,Forts de la restitution,強退です,강 퇴,Сильн назад,Denuncia fuerte,Strengen sie sich an!,Forte de volta,Kuat!,تراجع أقوى
-实体类名,实体类名,實體類名,Entity class name,Nom de classe d’entité,実体クラス名です,엔티티 클래스 이름,Настоящее имя класса,Nombre de clase de entidad,Namen für körper.,Nome da classe de entidade,Nama kelas entitas,أسماء الكيانات
-表名,表名,表名,Table name,Tableau de,表名です,표 명,Час из,Tabla de,Name einer tabelle,mesa,Nama.,يحدث ذلك من
-简介,简介,簡介,intro,introduction,プロフィール,간단 한 소개,профил,perfil,Klappentext?!,introdução,profil,موجز
+IP Whitelist,ip白名单,ip白名單,Ip white list,Liste blanche ip,ホワイトリストです,ip 화이트 리스트,Белый ip-список,Lista blanca de ip,Die ip-liste.,Lista branca de ip,Daftar ip putih,قائمة IP أبيض
+Role,所属角色,所屬角色,Role,Le rôle affilié,所属しています,소속배역,Принадлежность к роли,Rol al que pertenece,Teil um,Funções a que pertence,Peran peran,شخصيتك
+Phone,手机号码,手機號碼,Phone,Numéro de téléphone,携帯電話番号です,핸드폰 번호,Номер телефона.,Teléfono móvil,Sein handy.,Número de celular,Nomor ponsel,رقم الهاتف
+Org,所属组织,所屬組織,Org,Les organisations affiliées,所属組織です,산하 조직,Принадлежность к организации,Organizaciones afiliadas,Die organisation.,Organizações a que pertence,Milik organisasi,المنظمة التي تنتمي إليها
+Post,岗位,崗位,Post,emplois,持ち場です,일자리를,пост,Puestos de trabajo,Gefechtsstellung.,Postos de trabalho,posisi,الوظائف
+Account Status,账户状态,賬戶狀態,Status,Statut du compte,口座状態です,계정 상태,Статус счета.,Estado de cuenta,Kontostand steht.,Status da conta,Status akun,حالة الحساب
+Email,邮箱,郵箱,Email,La boîte aux lettres,メールボックスです,메일 박스,Почтов ящик,dirección,Briefkasten.,Caixa de correio,Kotak surat.,صندوق البريد
+Home Menu,首页菜单,首頁菜單,Home menu,Accueil menu menu,トップページのメニューです,홈페이지 메뉴,Меню на первой странице,Página principal menú,Das titelblatt.,Página inicial menu,Menu rumah,القائمة الرئيسية
+Operation Permissions,操作权限,操作權限,Operation permissions,Autorisations de fonctionnement,操作権限です,작업 권한,Доступ к операции,Permisos de operación,Zugriff gewährt,Permissões de operação,Hak operasi,الدخول
+Menu Permission,菜单权限,菜單權限,Menu permissions,Accès au menu,メニュー権限です,메뉴 권한,Доступ к меню,Permisos de menú,Menü berechne,Permissões no menu,Hak akses menu,دخول القائمة
+Contain User,包含用户,包含用戶,Contain user,Inclure un utilisateur,ユーザーを含みます,사용자 포함,Включать пользователей,Incluye un usuario,Inklusive benutzer?,Incluir um usuário,Termasuk pengguna,يشمل المستخدمين
+Menu Type,菜单类型,菜單類型,Menu type,Type de menu,メニュータイプです。,메뉴 종류,Тип меню,Tipo de menú,Typ 3: menütypen,Tipo de menu,Jenis menu,نوع القائمة
+Menu Value,类型值,類型值,Menu value,Type valeur valeur,型値です,형식 값,Значение типа,Tipo valor valor,Art werte.,Tipo valor valor,Nilai jenis,قيمة النوع
+Order,顺序,順序,Order,La séquence,順番です,순서,последовательн,orden,Horns.,ordem,urutan,الترتيب
+Icon,图标,圖標,Icon,Les icônes,アイコンです,아이콘,иконк,El icono,Icons.,ícones,ikon,أيقونة
+Parent Menu,上级菜单,上級菜單,Parent,Le menu supérieur,上級メニュー,상위 메뉴,Меню начальства,Menú superior,Das menü oben.,Menu superior superior,Menu superior,قائمة الأعلى
+Custom Param,自定义参数,自定義參數,Customer param,Personnalisez vos paramètres,カスタムパラメータです,사용자 정의 인자,Самоопределение параметра,Personaliza tus parámetros,Definierte parameter,Personalize seus parâmetros,Parameter khusus,البارامترات المحددة
+Org Code,组织编码,組織編碼,Org code,Organisation et codage,組織コードです,조직 인코딩,Код ткани,Organización y codificación,Organisations-code.,Organização e codificação,Kode jaringan,رمز التنظيم
+Org Name,组织名称,組織名稱,Org name,Nom de l’organisation,組織名です,조직 이름,Организационное имя,Nombre de la organización,Name der organisation:,Nome da organização,Nama organisasi,اسم المنظمة
+Parent Org,上级组织,上級組織,Parent org,Les organisations supérieures,上級組織です,상급 조직,Организация высшего порядка,Organización superior,Die organisation.,A organização superior,Lebih tinggi organisasi,المنظمة العليا
+Display Order,显示顺序,顯示順序,Order,Afficher la commande,表示順序です,표시 순서,Покажи последовательность.,Mostrar el orden,Reihenfolge:,Ordem de exibição,Urutan tampilan,عرض الترتيب
+Post Code,岗位编码,崗位編碼,Code,Code du poste,ポストコードです,직위 인코딩,Код поста,Código de posición,Die bypass-codes.,Código do post,Posting coding,رمز الموقع
+Post Name,岗位名称,崗位名稱,Name,Nom du poste,持ち場の名前です,직책 명칭,Название поста,Nombre del post,Name der arbeitsplätze,Nome do post,Nama posting,اسم الموقع
+Post Weight,岗位权重,崗位權重,Weight,Poids du poste,ポジションの重みです。,직위의 영향력,Вес поста,Peso del post,Posten bezogen.,Peso da posição,Tugas berat,الموقع، الوزن
+User,用户,用戶,User,Les utilisateurs,ユーザーです,사용자,пользовател,El usuario,Oder benutzer.,utilizador,Pengguna.,المستعملين
+Operator,操作人,操作人,operator,Les opérateurs,人を操作します,오퍼레이터,Оператор.,operador,Das würde ich nie tun.,O operador,Seorang operator,المشغل
+Error Info,错误信息,錯誤信息,Error message,Message d’erreur message,エラー情報です,오류 메시지,Ложная информация.,Mensaje de error,Falsche informationen,Mensagem de erro,Informasi salah,معلومات خاطئة
+Login Time,登录时间,登錄時間,Login time,Temps de connexion,登録時間です,로그인 시간,Время входа.,Hora de inicio,Zeit für logins.,Tempo de login,Log masuk waktu,وقت تسجيل الدخول
+IP Address,IP地址,IP地址,Ip address,Votre adresse IP,IPアドレスです,ip 주소,IP адрес.,Dirección IP,Die ip-adresse.,O endereço IP,Alamat IP,عنوان IP
+IP Source,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,IP-адрес.,Origen de IP,Die ip-quelle.,Origem do IP,IP sumber,آي بي
+OS,操作系统,操作系統,OS,Le système d’exploitation,osです,오퍼레이션 시스템,Операционная система,Sistema operativo,Das betriebssystem.,O sistema operacional,Sistem operasi,نظام التشغيل
+Browser,浏览器,瀏覽器,Browser,navigateur,ブラウザです,브라우저,браузер,explorador,Der browser?,navegador,peramban,المتصفح
+Device Type,设备类型,設備類型,Device type,Type de matériel,装置の種類です,장치 종류,Тип оборудования,Tipos de equipos,Arten Von gerät?,Tipo de equipamento,Tipe divais,نوع الجهاز
+Function Name,功能名称,功能名稱,Function name,Nom de fonction,機能名です,기능 이름,Функциональное имя,Nombre de función,Titel der funktion,Nome da função,Nama fungsi,الاسم الوظيفي
+Req Param,请求参数,請求參數,Req param,Paramètres de requête,パラメータを要求します,요청 인자,Параметр запроса,Parámetros de solicitud,Erwarte parameter.,Parâmetros de solicitação,Meminta parameter,طلب البارامترات
+Is Success,是否成功,是否成功,Is success,Avec ou sans succès,成功したかどうかです,성공 여부,Успех или нет?,Tener éxito o no,Es ist uns gelungen.,Tenha sucesso ou não,Berhasil atau tidak,هل نجح؟
+Req Time,请求耗时,請求耗時,Req time,La demande prend du temps,お願いには時間がかかります,요청 시간,Время запроса,La solicitud consume tiempo,"Äh, zeit wofür?",Requisição demorada,Permintaan memakan waktu,الطلب يستغرق وقتا
+Record Time,记录时间,記錄時間,Record time,Temps de record,時間を記録します,기록 시간,Время записи.,Tiempo de grabación,Zeit zum aufzeichnen.,Tempo de gravação,Catatan waktu,سجل الوقت
+URL,请求地址,請求地址,URL,Adresse de demande,請求先です,주소 요청,Запрашиваю адрес.,Dirección de solicitud,"Okay, wie lautet die adresse?",Endereço do pedido,Meminta alamat,عنوان الطلب
+Method,请求方法,請求方法,Method,Méthode de demande,請求方法です,요청 방법,Способ просьбы,Método de solicitud,Nenn mir eine methode.,Método de solicitação,Cara meminta,طريقة الطلب
+Force Logout,强退,強退,Strong back,Forts de la restitution,強退です,강 퇴,Сильн назад,Denuncia fuerte,Strengen sie sich an!,Forte de volta,Kuat!,تراجع أقوى
+Entity Class Name,实体类名,實體類名,Entity class name,Nom de classe d’entité,実体クラス名です,엔티티 클래스 이름,Настоящее имя класса,Nombre de clase de entidad,Namen für körper.,Nome da classe de entidade,Nama kelas entitas,أسماء الكيانات
+Table Name,表名,表名,Table name,Tableau de,表名です,표 명,Час из,Tabla de,Name einer tabelle,mesa,Nama.,يحدث ذلك من
+Intro,简介,簡介,intro,introduction,プロフィール,간단 한 소개,профил,perfil,Klappentext?!,introdução,profil,موجز
 字段管理,字段管理,字段管理,Field management,Gestion des champs,フィールド管理です,필드 관리,Управление полем,Gestión de campos,Verwaltung des feldes,Gestão de campos,Bidang administrasi,إدارة الحقول
 字段名,字段名,字段名,Field name,Nom du champ,フィールド名です,필드 이름,Имя поля.,Nombre del campo,feldnamen,Nome do campo,Nama lapangan,اسم الحقل
 显示名称,显示名称,顯示名稱,Display name,Afficher le nom,名前を表示します,이름 보이기,Назовите имя.,Mostrar el nombre,Gib mir den namen.,Nome de exibição,Nama tampilan,اعرض الاسم

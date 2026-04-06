@@ -1,5 +1,8 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -16,10 +19,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.NumberType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.model.data_proxy.EruptOpenApiDataProxy;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
 /**
  * @author YuePeng
@@ -43,8 +42,8 @@ public class EruptOpenApi extends MetaModelUpdateVo {
     private String appid;
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "name", sortable = true),
+            edit = @Edit(title = "name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
@@ -62,10 +61,10 @@ public class EruptOpenApi extends MetaModelUpdateVo {
     private EruptUser eruptUser;
 
     @EruptField(
-            views = @View(title = "状态", sortable = true),
+            views = @View(title = "status", sortable = true),
             edit = @Edit(
-                    title = "状态", search = @Search, type = EditType.BOOLEAN, notNull = true,
-                    boolType = @BoolType(trueText = "激活", falseText = "锁定")
+                    title = "status", search = @Search, type = EditType.BOOLEAN, notNull = true,
+                    boolType = @BoolType(trueText = "Activate", falseText = "Locked")
             )
     )
     private Boolean status = true;

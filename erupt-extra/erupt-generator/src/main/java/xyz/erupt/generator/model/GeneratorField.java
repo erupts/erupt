@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @EruptI18n
-@Erupt(name = "Erupt字段信息")
+@Erupt(name = "Erupt Field Info")
 @Table(name = "e_generator_field")
 @Entity
 @Getter
@@ -32,62 +32,62 @@ import java.util.stream.Collectors;
 public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
 
     @EruptField(
-            views = @View(title = "字段名"),
-            edit = @Edit(title = "字段名", notNull = true,
-                    desc = "驼峰命名法，字母以小写开头，其后每个单词首字母大写")
+            views = @View(title = "Field Name"),
+            edit = @Edit(title = "Field Name", notNull = true,
+                    desc = "Camel case naming, start with lowercase")
     )
     private String fieldName;
 
     @EruptField(
-            views = @View(title = "显示名称"),
-            edit = @Edit(title = "显示名称", notNull = true)
+            views = @View(title = "Display Name"),
+            edit = @Edit(title = "Display Name", notNull = true)
     )
     private String showName;
 
     @EruptField(
-            views = @View(title = "显示顺序", sortable = true),
-            edit = @Edit(title = "显示顺序", notNull = true)
+            views = @View(title = "Display Order", sortable = true),
+            edit = @Edit(title = "Display Order", notNull = true)
     )
     private Integer sort;
 
     @Enumerated(EnumType.STRING)
     @EruptField(
-            views = @View(title = "编辑类型"),
-            edit = @Edit(title = "编辑类型",
+            views = @View(title = "Edit Type"),
+            edit = @Edit(title = "Edit Type",
                     notNull = true, type = EditType.CHOICE,
                     choiceType = @ChoiceType(type = ChoiceType.Type.RADIO, fetchHandler = GeneratorField.class))
     )
     private GeneratorType type = GeneratorType.INPUT;
 
     @EruptField(
-            views = @View(title = "关联实体类"),
-            edit = @Edit(title = "关联实体类", dynamic = @Dynamic(dependField = "type",
+            views = @View(title = "Related Entity"),
+            edit = @Edit(title = "Related Entity", dynamic = @Dynamic(dependField = "type",
                     match = Dynamic.Ctrl.NOTNULL,
                     condition = "value.indexOf('REFERENCE') !== -1 || value.indexOf('TAB') !== -1 || value === 'CHECKBOX' || value === 'COMBINE'"))
     )
     private String linkClass;
 
     @EruptField(
-            views = @View(title = "查询项"),
-            edit = @Edit(title = "查询项", notNull = true)
+            views = @View(title = "Query Item"),
+            edit = @Edit(title = "Query Item", notNull = true)
     )
     private Boolean query = true;
 
     @EruptField(
-            views = @View(title = "字段排序"),
-            edit = @Edit(title = "字段排序", notNull = true)
+            views = @View(title = "Field Sort"),
+            edit = @Edit(title = "Field Sort", notNull = true)
     )
     private Boolean sortable = false;
 
     @EruptField(
-            views = @View(title = "是否必填"),
-            edit = @Edit(title = "是否必填", notNull = true)
+            views = @View(title = "Required"),
+            edit = @Edit(title = "Required", notNull = true)
     )
     private Boolean notNull = true;
 
     @EruptField(
-            views = @View(title = "是否显示"),
-            edit = @Edit(title = "是否显示", notNull = true)
+            views = @View(title = "Visible"),
+            edit = @Edit(title = "Visible", notNull = true)
     )
     private Boolean isShow = true;
 
