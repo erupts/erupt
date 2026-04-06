@@ -29,7 +29,6 @@
         <module>erupt-core</module>
         <module>erupt-excel</module>
         <module>erupt-toolkit</module>
-        <module>erupt-ai</module>
 
         <!-- JPA Data Implementation -->
         <module>erupt-data/erupt-jpa</module>
@@ -56,6 +55,8 @@
         <module>erupt-tpl-ui/amis</module>
         <module>erupt-tpl-ui/element-plus</module>
 
+        <module>erupt-ai</module>
+        <module>erupt-ai-claw</module>
         <!-- Task Scheduling -->
         <module>erupt-extra/erupt-job</module>
         <!-- Code Generation -->
