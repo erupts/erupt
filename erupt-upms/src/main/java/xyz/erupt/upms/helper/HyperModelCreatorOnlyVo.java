@@ -33,8 +33,8 @@ public class HyperModelCreatorOnlyVo extends BaseModel {
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "创建人", width = "100px", column = "name"),
-            edit = @Edit(title = "创建人", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
+            views = @View(title = "Creator", width = "100px", column = "name"),
+            edit = @Edit(title = "Creator", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
     )
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -42,8 +42,8 @@ public class HyperModelCreatorOnlyVo extends BaseModel {
     private EruptUserVo createUser;
 
     @EruptField(
-            views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "Create Time", sortable = true),
+            edit = @Edit(title = "Create Time", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private Date createTime;

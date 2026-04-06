@@ -41,7 +41,7 @@ import java.util.Map;
 @EruptI18n
 @Erupt(
         name = "Operation Log",
-        desc = "记录平台内各用户操作过程",
+        desc = "Records all user operations in the platform",
         power = @Power(add = false, edit = false, viewDetails = false,
                 delete = false, powerHandler = SuperAdminPower.class),
         orderBy = "createTime desc",
@@ -72,7 +72,7 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
 
     @Dimension(title = "IP Region")
     @EruptField(
-            views = @View(title = "IP Source", desc = "国家 | 大区 | 省份 | 城市 | 运营商", template = "value&&value.replace(/\\|/g,' | ')"),
+            views = @View(title = "IP Source", desc = "Country | Region | Province | City | ISP", template = "value&&value.replace(/\\|/g,' | ')"),
             edit = @Edit(title = "IP Source", search = @Search(vague = true))
     )
     private String region;

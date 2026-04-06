@@ -45,8 +45,8 @@ public class HyperModelUpdateVo extends BaseModel {
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "更新人", width = "100px", column = "name"),
-            edit = @Edit(title = "更新人", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
+            views = @View(title = "Updater", width = "100px", column = "name"),
+            edit = @Edit(title = "Updater", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
     )
     @EruptSmartSkipSerialize
     @NotFound(action = NotFoundAction.IGNORE)
@@ -54,8 +54,8 @@ public class HyperModelUpdateVo extends BaseModel {
     private EruptUserVo updateUser;
 
     @EruptField(
-            views = @View(title = "更新时间", sortable = true),
-            edit = @Edit(title = "更新时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "Update Time", sortable = true),
+            edit = @Edit(title = "Update Time", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private Date updateTime;

@@ -39,13 +39,13 @@ public class EruptCloudServerAutoConfiguration implements EruptModule {
 
     @Override
     public List<MetaMenu> initMenus() {
-        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "微节点管理", "fa fa-cloud", 70);
+        MetaMenu nodeManager = MetaMenu.createRootMenu("$NodeManager", "Micronode Management", "fa fa-cloud", 70);
         MetaMenu nodeMenu = MetaMenu.createEruptClassMenu(CloudNode.class, nodeManager, 20);
         return Arrays.asList(nodeManager,
                 MetaMenu.createEruptClassMenu(CloudNodeGroup.class, nodeManager, 10, MenuTypeEnum.TREE), nodeMenu,
-                MetaMenu.createSimpleMenu(CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, "查看令牌", CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, nodeMenu, 110, MenuTypeEnum.BUTTON.getCode()),
-                MetaMenu.createSimpleMenu(CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, "节点管理", CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode()),
-                MetaMenu.createSimpleMenu(CloudServerConst.ERUPT_CLOUD_NODE_LOG, "节点日志", CloudServerConst.ERUPT_CLOUD_NODE_LOG, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode())
+                MetaMenu.createSimpleMenu(CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, "View Token", CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION, nodeMenu, 110, MenuTypeEnum.BUTTON.getCode()),
+                MetaMenu.createSimpleMenu(CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, "Node Manager", CloudServerConst.CLOUD_NODE_MANAGER_PERMISSION, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode()),
+                MetaMenu.createSimpleMenu(CloudServerConst.ERUPT_CLOUD_NODE_LOG, "Node Log", CloudServerConst.ERUPT_CLOUD_NODE_LOG, nodeMenu, 120, MenuTypeEnum.BUTTON.getCode())
         );
     }
 

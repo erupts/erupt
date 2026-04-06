@@ -28,22 +28,22 @@ import java.util.Optional;
 public class MetaModelCreateVo extends BaseModel {
 
     @EruptField(
-            views = @View(title = "创建人", width = "100px"),
-            edit = @Edit(title = "创建人", readonly = @Readonly(allowChange = false))
+            views = @View(title = "Creator", width = "100px"),
+            edit = @Edit(title = "Creator", readonly = @Readonly(allowChange = false))
     )
     private String createBy;
 
     @EruptField(
-            views = @View(title = "创建时间"),
-            edit = @Edit(title = "创建时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "Create Time"),
+            edit = @Edit(title = "Create Time", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private LocalDateTime createTime;
 
-    @EruptField(views = @View(title = "更新人", show = false))
+    @EruptField(views = @View(title = "Updater", show = false))
     @EruptSmartSkipSerialize
     private String updateBy;
 
-    @EruptField(views = @View(title = "更新时间", show = false))
+    @EruptField(views = @View(title = "Update Time", show = false))
     @EruptSmartSkipSerialize
     private LocalDateTime updateTime;
 

@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
@@ -27,19 +28,20 @@ import java.util.Optional;
 @Getter
 @Setter
 @MappedSuperclass
+@EruptI18n
 public class HyperModelVo extends BaseModel {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "数据审计", type = EditType.DIVIDE)
+            edit = @Edit(title = "Data Audit", type = EditType.DIVIDE)
     )
     @EruptSmartSkipSerialize
     private String divide;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "创建人", width = "100px", column = "name"),
-            edit = @Edit(title = "创建人", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
+            views = @View(title = "Creator", width = "100px", column = "name"),
+            edit = @Edit(title = "Creator", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
     )
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -47,16 +49,16 @@ public class HyperModelVo extends BaseModel {
     private EruptUserVo createUser;
 
     @EruptField(
-            views = @View(title = "创建时间", sortable = true),
-            edit = @Edit(title = "创建时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "Create Time", sortable = true),
+            edit = @Edit(title = "Create Time", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private Date createTime;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "更新人", width = "100px", column = "name"),
-            edit = @Edit(title = "更新人", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
+            views = @View(title = "Updater", width = "100px", column = "name"),
+            edit = @Edit(title = "Updater", readonly = @Readonly(allowChange = false), type = EditType.REFERENCE_TABLE)
     )
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -64,8 +66,8 @@ public class HyperModelVo extends BaseModel {
     private EruptUserVo updateUser;
 
     @EruptField(
-            views = @View(title = "更新时间", sortable = true),
-            edit = @Edit(title = "更新时间", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "Update Time", sortable = true),
+            edit = @Edit(title = "Update Time", readonly = @Readonly(allowChange = false), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     @EruptSmartSkipSerialize
     private Date updateTime;
