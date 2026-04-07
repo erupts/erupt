@@ -41,6 +41,15 @@ global.pre_select,请先选择,請先選擇,Please select first,Veuillez sélect
 global.more,更多,更多,more,plus,もっと,더,больше,di più.,Sehr viel mehr.,mais,Lebih banyak,المزيد
 global.sort,排序,排序,Sort,Trier,並び替える,정렬,Сортировать,Ordenar,Sortieren,Ordenar,Mengurut,فرز
 gobal.search,搜索,搜尋,Search,Rechercher,検索,검색,Поиск,Buscar,Suchen,Procurar,Cari,بحث
+global.save,保存,保存,Save,Enregistrer,保存,저장,Сохранить,Guardar,Speichern,Salvar,Simpan,حفظ
+global.reset,重置,重置,Reset,Réinitialiser,リセット,초기화,Сбросить,Restablecer,Zurücksetzen,Redefinir,Reset,إعادة تعيين
+global.fullscreen,全屏,全屏,Fullscreen,Plein écran,フルスクリーン,전체화면,Полный экран,Pantalla completa,Vollbild,Tela cheia,Layar penuh,ملء الشاشة
+global.drag,拖拽,拖拽,Drag,Glisser,ドラッグ,드래그,Перетащить,Arrastrar,Ziehen,Arrastar,Seret,سحب
+global.copy,复制,複製,Copy,Copier,コピー,복사,Копировать,Copiar,Kopieren,Copiar,Salin,نسخ
+global.download,下载,下載,Download,Télécharger,ダウンロード,다운로드,Скачать,Descargar,Herunterladen,Baixar,Unduh,تحميل
+global.refresh,刷新,刷新,Refresh,Actualiser,更新,새로고침,Обновить,Actualizar,Aktualisieren,Atualizar,Segarkan,تحديث
+
+
 component.attachment.upload_hint,单击或拖动文件到此区域上传,單擊或拖動文件到此區域上傳,Click or drag the file to this area to upload,Cliquez ou faites glisser les fichiers dans cette zone pour les télécharger,ファイルをクリックまたはドラッグしてアップロードします,파일을이 영역으로 업로드하려면 누르거나 드래그하십시오,Нажмите или перетащите файл в эту область,Haga clic o arrastre los archivos a esta área para subir,Klicken Oder ziehen sie die datei in diese region zum aufladen,Clique ou arraste os arquivos para esta área para fazer upload,Klik atau tarik berkas untuk diunggah ke area ini,انقر أو اسحب الملف لتحميل في هذه المنطقة
 component.attachment.upload_format,文件格式,文件格式,File format,Format du fichier,ファイル形式です。,파일 형식,Формат файла,Formato de archivo,Format der dateien,Formato do arquivo,Format berkasname,تنسيق الملف
 table.totalLeft,共,共,Total,Total,合計,총계,всего,Total,Insgesamt.,Total,Total,مجموع
@@ -343,3 +352,11 @@ cube.filter.config.linkage,联动字段,聯動字段,Linked field,Champ lié,連
 cube.filter.config.linkage_placeholder,请选择联动字段,請選擇聯動字段,Please select linked field,Sélectionner le champ lié,連動フィールドを選択,연동 필드 선택,Выберите связанное поле,Seleccionar campo vinculado,Verknüpftes Feld auswählen,Selecionar campo vinculado,Pilih field terkait,اختر الحقل المرتبط
 cube.filter.control.select_linkage_first,请先选择联动项: ,請先選擇聯動項: ,Please select linked field first: ,Veuillez d'abord sélectionner le champ lié : ,先に連動フィールドを選択してください: ,연동 항목을 먼저 선택하세요: ,Сначала выберите связанное поле: ,Primero seleccione el campo vinculado: ,Zuerst verknüpftes Feld auswählen: ,Primeiro selecione o campo vinculado: ,Pilih item terkait terlebih dahulu: ,الرجاء تحديد الحقل المرتبط أولاً:
 cube.drill.export,导出,導出,Export,Exporter,エクスポート,내보내기,Экспорт,Exportar,Exportieren,Exportar,Ekspor,تصدير
+cube.dashboard.add_report,添加报表,添加報表,Add Report,Ajouter un rapport,レポート追加,보고서 추가,Добавить отчёт,Agregar informe,Bericht hinzufügen,Adicionar relatório,Tambah laporan,إضافة تقرير
+cube.dashboard.edit_report,编辑报表,編輯報表,Edit Report,Modifier le rapport,レポート編集,보고서 편집,Редактировать отчёт,Editar informe,Bericht bearbeiten,Editar relatório,Edit laporan,تعديل التقرير
+cube.dashboard.add_filter,添加筛选,添加篩選,Add Filter,Ajouter un filtre,フィルター追加,필터 추가,Добавить фильтр,Agregar filtro,Filter hinzufügen,Adicionar filtro,Tambah filter,إضافة فلتر
+cube.dashboard.edit_filter,编辑筛选,編輯篩選,Edit Filter,Modifier le filtre,フィルター編集,필터 편집,Редактировать фильтр,Editar filtro,Filter bearbeiten,Editar filtro,Edit filter,تعديل الفلتر
+cube.dashboard.settings,看板设置,看板設置,Dashboard Settings,Paramètres du tableau,ダッシュボード設定,대시보드 설정,Настройки панели,Configuración del panel,Dashboard-Einstellungen,Configurações do painel,Pengaturan dasbor,إعدادات اللوحة
+cube.dashboard.history,历史版本,歷史版本,History,Historique,履歴,히스토리,История,Historial,Verlauf,Histórico,Riwayat,السجل
+cube.dashboard.publish,发布,發布,Publish,Publier,公開,게시,Опубликовать,Publicar,Veröffentlichen,Publicar,Publikasikan,نشر
+cube.dashboard.copy_link,复制链接,複製鏈接,Copy Link,Copier le lien,リンクをコピー,링크 복사,Копировать ссылку,Copiar enlace,Link kopieren,Copiar link,Salin tautan,نسخ الرابط
