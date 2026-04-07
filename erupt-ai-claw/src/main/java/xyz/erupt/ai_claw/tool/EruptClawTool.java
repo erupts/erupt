@@ -79,11 +79,11 @@ public class EruptClawTool {
         return "success";
     }
 
-    @Tool("Generate erupt annotation code. Returns the erupt annotation reference documentation to guide code generation.")
-    public String geneEruptCode() throws Exception {
-        try (var in = getClass().getClassLoader().getResourceAsStream("erupt-annotation.md")) {
-            return new String(in.readAllBytes());
-        }
-    }
+//    @Tool("Generate erupt annotation code. Returns the erupt annotation reference documentation to guide code generation.")
+//    public String geneEruptCode() throws Exception {
+//        try (var in = getClass().getClassLoader().getResourceAsStream("erupt-annotation.md")) {
+//            return new String(in.readAllBytes());
+//        }
+//    }
 
 }
