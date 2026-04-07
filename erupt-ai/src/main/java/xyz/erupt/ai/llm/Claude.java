@@ -45,6 +45,7 @@ public class Claude extends LlmCore {
                 .apiKey(llmRequest.getApiKey())
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
+                .strictTools(llmRequest.getStrictTools())
                 .temperature(llmRequest.getTemperature())
                 .build();
     }
@@ -56,6 +57,7 @@ public class Claude extends LlmCore {
                 .baseUrl(llmRequest.getUrl())
                 .apiKey(llmRequest.getApiKey())
                 .modelName(llmRequest.getModel())
+                .strictTools(llmRequest.getStrictTools())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
                 .build();
