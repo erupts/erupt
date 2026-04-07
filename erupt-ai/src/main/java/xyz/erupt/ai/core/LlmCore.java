@@ -7,6 +7,7 @@ import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.tool.ToolErrorHandlerResult;
 import dev.langchain4j.service.tool.ToolProvider;
 import dev.langchain4j.service.tool.ToolProviderResult;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -83,6 +85,10 @@ public abstract class LlmCore {
         if (llmRequest.getAutoCallTool()) {
             eruptAiServices.toolProvider(buildMcpTools());
         }
+        eruptAiServices.toolExecutionErrorHandler((throwable, e) -> {
+            log.error("Tool execution error [{}] e: {}", throwable.getMessage(), e);
+            return new ToolErrorHandlerResult("Tool error: " + e.toString());
+        });
         return eruptAiServices.build();
     }
 
@@ -93,27 +99,16 @@ public abstract class LlmCore {
                 List<ToolSpecification> specs = ToolSpecifications.toolSpecificationsFrom(obj);
                 for (ToolSpecification spec : specs) {
                     builder.add(spec, (executionRequest, memoryId) -> {
-                        try {
-                            Object result = AiToolboxManager.invoke(executionRequest);
-                            return null == result ? "" : result.toString();
-                        } catch (Exception e) {
-                            log.error("Invoke tool: {} error", executionRequest.name(), e);
-                            return "Error: " + e.getMessage();
-                        }
+                        Object result = AiToolboxManager.invoke(executionRequest);
+                        return null == result ? "" : result.toString();
                     });
                 }
             });
             for (McpClientInfo value : McpServerService.getMCP_CLIENTS().values()) {
                 if (null != value.getMcpClient()) {
                     value.getMcpClient().listTools().forEach(spec ->
-                            builder.add(spec, (executionRequest, memoryId) -> {
-                                try {
-                                    return value.getMcpClient().executeTool(executionRequest).toString();
-                                } catch (Exception e) {
-                                    log.error("Invoke MCP tool: {} error", executionRequest.name(), e);
-                                    return "Error: " + e.getMessage();
-                                }
-                            })
+                            builder.add(spec, (executionRequest, memoryId) ->
+                                    value.getMcpClient().executeTool(executionRequest).toString())
                     );
                 }
             }
@@ -123,22 +118,31 @@ public abstract class LlmCore {
 
     private void streamingChat(EruptAiChat eruptAiChat, String userMessage, MetaContext metaContext, Consumer<SseListener> listener) {
         MetaContext.set(metaContext);
-        MetaContext.registerToken("");
-        eruptAiChat.streamChat(userMessage).onPartialResponse(partialResponse ->
-                listener.accept(SseListener.builder().currMessage(partialResponse).build())).onCompleteResponse(chatResponse
-                -> listener.accept(SseListener.builder()
-                .isFinish(true)
-                .usage(chatResponse.tokenUsage())
-                .aiMessage(chatResponse.aiMessage()).build())).onError(e -> {
-            log.error("Failed to get response from server", e);
-            listener.accept(SseListener.builder().isFinish(true).throwable(e).build());
-        }).onPartialToolCall(toolCall -> {
-            MetaContext.set(metaContext);
-            log.info("Calling {} with arguments: {}", toolCall.name(), toolCall.partialArguments());
-            listener.accept(SseListener.builder().think("Calling " + toolCall.name()).build());
-        }).onPartialThinking(thinking ->
-                listener.accept(SseListener.builder().think(thinking.text()).build())
-        ).start();
+        AtomicBoolean toolCalling = new AtomicBoolean(false);
+        eruptAiChat.streamChat(userMessage).onPartialResponse(partialResponse -> {
+                    toolCalling.set(true);
+                    listener.accept(SseListener.builder().currMessage(partialResponse).build());
+                })
+                .onCompleteResponse(chatResponse -> {
+                    toolCalling.set(false);
+                    listener.accept(SseListener.builder()
+                            .isFinish(true)
+                            .usage(chatResponse.tokenUsage())
+                            .aiMessage(chatResponse.aiMessage()).build());
+                })
+                .onError(e -> {
+                    log.error("Failed to get response from server", e);
+                    if (!toolCalling.get()) {
+                        listener.accept(SseListener.builder().isFinish(true).throwable(e).build());
+                    }
+                }).onPartialToolCall(toolCall -> {
+                    toolCalling.set(true);
+                    MetaContext.set(metaContext);
+                    log.info("Calling {} with arguments: {}", toolCall.name(), toolCall.partialArguments());
+                    listener.accept(SseListener.builder().think("Calling " + toolCall.name()).build());
+                }).onPartialThinking(thinking -> {
+                    listener.accept(SseListener.builder().think(thinking.text()).build());
+                }).start();
     }
 
     public ChatMemory creatMemory(List<ChatMessage> chatMessages) {

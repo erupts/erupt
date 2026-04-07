@@ -7,13 +7,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import xyz.erupt.annotation.constant.SceneEnum;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptConst;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.event.EruptAddEvent;
+import xyz.erupt.core.event.EruptDeleteEvent;
+import xyz.erupt.core.event.EruptEditEvent;
 import xyz.erupt.core.exception.EruptApiErrorTip;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.invoke.DataProcessorManager;
@@ -25,6 +29,7 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptModel;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -106,6 +111,45 @@ public class EruptModifyService {
         Object pk = ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(obj);
         this.modifyLog(eruptModel, "ADD", GsonFactory.getGson().toJson(obj));
         return pk;
+    }
+
+    @SneakyThrows
+    @Transactional
+    public void updateEruptData(EruptModel eruptModel, JsonObject data) {
+        EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
+        if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
+            throw new EruptApiErrorTip(eruptApiModel.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+        }
+        eruptService.verifyIdPermissions(eruptModel, data.get(eruptModel.getErupt().primaryKeyCol()).getAsString());
+        Object o = GsonFactory.getGson().fromJson(data.toString(), eruptModel.getClazz());
+        EruptUtil.clearObjectDefaultValueByJson(o, data);
+        Object old = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).findDataById(eruptModel, ReflectUtil.findClassField(eruptModel.getClazz(), eruptModel.getErupt().primaryKeyCol()).get(o));
+        Object realOld = eruptModel.getClazz().getDeclaredConstructor().newInstance();
+        BeanUtils.copyProperties(old, realOld);
+        Object obj = EruptUtil.dataTarget(eruptModel, o, old, SceneEnum.EDIT);
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeUpdate(obj)));
+        DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz()).editData(eruptModel, obj);
+        this.modifyLog(eruptModel, "UPDATE", GsonFactory.getGson().toJson(realOld) + " -> " + data);
+        DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterUpdate(obj)));
+        applicationEventPublisher.publishEvent(new EruptEditEvent<>(eruptModel.getClazz(), obj, realOld));
+    }
+
+    @SneakyThrows
+    @Transactional
+    public void deleteEruptData(EruptModel eruptModel, List<Object> ids, boolean verifyIdPermissions) {
+        for (Object id : ids) {
+            if (verifyIdPermissions) {
+                eruptService.verifyIdPermissions(eruptModel, id.toString());
+            }
+            IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
+            //获取对象数据信息用于DataProxy函数中
+            Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id.toString()));
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeDelete(obj)));
+            dataService.deleteData(eruptModel, obj);
+            this.modifyLog(eruptModel, "DELETE", GsonFactory.getGson().toJson(obj));
+            DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.afterDelete(obj)));
+            applicationEventPublisher.publishEvent(new EruptDeleteEvent<>(eruptModel.getClazz(), obj));
+        }
     }
 
 }

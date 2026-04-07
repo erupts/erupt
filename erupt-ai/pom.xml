@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <langchain4j.version>1.11.0</langchain4j.version>
+        <langchain4j.version>1.12.2</langchain4j.version>
     </properties>
 
     <dependencies>
