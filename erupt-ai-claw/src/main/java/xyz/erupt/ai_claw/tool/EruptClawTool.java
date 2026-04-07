@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.controller.EruptDataController;
-import xyz.erupt.core.controller.EruptModifyController;
+import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import java.util.List;
@@ -27,10 +28,10 @@ public class EruptClawTool {
     private EruptDao eruptDao;
 
     @Resource
-    private EruptModifyController eruptModifyController;
+    private EruptDataController eruptDataController;
 
     @Resource
-    private EruptDataController eruptDataController;
+    private EruptModifyService eruptModifyService;
 
     public static final String ERUPT_NAME_PARAM_HINT = "Erupt model name (call eruptModelList first if unknown)";
 
@@ -56,7 +57,7 @@ public class EruptClawTool {
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("JSON object representing the new record. Field names and types must match the model schema obtained from eruptSchema.") Map<String, Object> data) {
         JsonObject jsonObject = GsonFactory.getGson().toJsonTree(data).getAsJsonObject();
-        return GsonFactory.getGson().toJson(eruptModifyController.addEruptData(eruptName, jsonObject));
+        return GsonFactory.getGson().toJson(eruptModifyService.insertEruptData(EruptCoreService.getErupt(eruptName), jsonObject));
     }
 
     @Transactional
@@ -65,7 +66,8 @@ public class EruptClawTool {
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("JSON object representing the updated record. Must include the primary key field and all required fields as defined in eruptSchema.") Map<String, Object> data) {
         JsonObject jsonObject = GsonFactory.getGson().toJsonTree(data).getAsJsonObject();
-        return GsonFactory.getGson().toJson(eruptModifyController.updateEruptData(eruptName, jsonObject));
+        eruptModifyService.updateEruptData(EruptCoreService.getErupt(eruptName), jsonObject);
+        return "success";
     }
 
     @Transactional
@@ -73,7 +75,8 @@ public class EruptClawTool {
     public String deleteEruptData(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("List of primary key values identifying the records to delete. Use findEruptDataByPk or eruptDataQuery to confirm IDs before deletion.") List<Object> ids) {
-        return GsonFactory.getGson().toJson(eruptModifyController.deleteEruptData(eruptName, ids));
+        eruptModifyService.deleteEruptData(EruptCoreService.getErupt(eruptName), ids, false);
+        return "success";
     }
 
     @Tool("Generate erupt annotation code. Returns the erupt annotation reference documentation to guide code generation.")
