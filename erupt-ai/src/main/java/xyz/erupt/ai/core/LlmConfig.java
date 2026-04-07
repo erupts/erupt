@@ -17,10 +17,13 @@ public class LlmConfig {
 
     private Double temperature;
 
+    private Boolean strictTools = true;
+
     public LlmRequest toLlmRequest() {
         LlmRequest llmRequest = new LlmRequest();
         llmRequest.setTop_p(this.top_p);
         llmRequest.setTemperature(this.temperature);
+        llmRequest.setStrictTools(this.strictTools);
         return llmRequest;
     }
 

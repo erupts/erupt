@@ -1,4 +1,4 @@
-package xyz.erupt.ai.claw;
+package xyz.erupt.ai_claw;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;

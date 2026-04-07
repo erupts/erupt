@@ -15,6 +15,11 @@
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-upms</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
             <artifactId>erupt-ai</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

@@ -37,6 +37,7 @@ public abstract class OpenAi extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
+                .strictTools(llmRequest.getStrictTools())
                 .build();
     }
 
@@ -49,6 +50,7 @@ public abstract class OpenAi extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
+                .strictTools(llmRequest.getStrictTools())
                 .build();
     }
 

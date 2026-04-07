@@ -8,6 +8,4 @@ import java.lang.annotation.*;
 @Inherited
 public @interface AiToolbox {
 
-    String value() default "";
-
 }
