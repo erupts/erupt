@@ -40,8 +40,8 @@ public class EruptAiToolbox {
         return sb.toString();
     }
 
-    @Tool("Erupt data model schema")
-    public String eruptSchema(@P("Erupt model Name") String eruptName) {
+    @Tool("Erupt data model schema. If the erupt model name is not specified, call eruptModelList first to get available model names.")
+    public String eruptSchema(@P("Erupt model name (call eruptModelList first if unknown)") String eruptName) {
         EruptModel erupt = EruptCoreService.getEruptView(eruptName);
         return GsonFactory.getGson().toJson(erupt);
     }

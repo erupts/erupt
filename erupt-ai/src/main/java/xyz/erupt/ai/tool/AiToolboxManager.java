@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -60,7 +61,12 @@ public class AiToolboxManager implements ApplicationRunner {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(AiToolbox.class)
         }, clazz -> {
-            tools.add(EruptSpringUtil.getBean(clazz));
+            if (clazz.isInterface()) {
+                return;
+            }
+            Object bean = EruptSpringUtil.getBean(clazz);
+            Object target = AopProxyUtils.getSingletonTarget(bean);
+            tools.add(target != null ? target : bean);
             for (Method method : clazz.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(Tool.class)) {
                     aiMethodMap.put(method.getName(), method);

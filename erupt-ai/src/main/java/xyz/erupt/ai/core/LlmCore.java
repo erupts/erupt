@@ -75,7 +75,7 @@ public abstract class LlmCore {
         AiServices<EruptAiChat> eruptAiServices = AiServices.builder(EruptAiChat.class)
                 .streamingChatModel(streamingChatModel).chatMemoryProvider((id) -> chatMemory);
         MetaContext metaContext = MetaContext.get();
-        this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest), userMessage, metaContext, listener, chatMemory);
+        this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest), userMessage, metaContext, listener);
     }
 
     private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest) {
@@ -121,29 +121,15 @@ public abstract class LlmCore {
         };
     }
 
-    private void streamingChat(EruptAiChat eruptAiChat, String userMessage, MetaContext metaContext, Consumer<SseListener> listener, ChatMemory chatMemory) {
+    private void streamingChat(EruptAiChat eruptAiChat, String userMessage, MetaContext metaContext, Consumer<SseListener> listener) {
         MetaContext.set(metaContext);
+        MetaContext.registerToken("");
         eruptAiChat.streamChat(userMessage).onPartialResponse(partialResponse ->
-                listener.accept(SseListener.builder().currMessage(partialResponse).build())).onCompleteResponse(chatResponse -> {
-//            if (chatResponse.aiMessage().hasToolExecutionRequests()) {
-//                chatMemory.add(chatResponse.aiMessage());
-//                chatResponse.aiMessage().toolExecutionRequests().forEach(it -> {
-//                    log.info("Invoke tool: {} with arguments: {}", it.name(), it.arguments());
-//                    Object result = AiToolboxManager.invoke(it);
-//                    chatMemory.add(ToolExecutionResultMessage.from(it, null == result ? "" : result.toString()));
-//                });
-//                this.streamingChat(eruptAiChat, userMessage, metaContext, listener, chatMemory);
-//            } else {
-//                listener.accept(SseListener.builder()
-//                        .isFinish(true)
-//                        .usage(chatResponse.tokenUsage())
-//                        .aiMessage(chatResponse.aiMessage()).build());
-//            }
-            listener.accept(SseListener.builder()
-                    .isFinish(true)
-                    .usage(chatResponse.tokenUsage())
-                    .aiMessage(chatResponse.aiMessage()).build());
-        }).onError(e -> {
+                listener.accept(SseListener.builder().currMessage(partialResponse).build())).onCompleteResponse(chatResponse
+                -> listener.accept(SseListener.builder()
+                .isFinish(true)
+                .usage(chatResponse.tokenUsage())
+                .aiMessage(chatResponse.aiMessage()).build())).onError(e -> {
             log.error("Failed to get response from server", e);
             listener.accept(SseListener.builder().isFinish(true).throwable(e).build());
         }).onPartialToolCall(toolCall -> {
