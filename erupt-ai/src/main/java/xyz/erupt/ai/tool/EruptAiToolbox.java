@@ -8,15 +8,13 @@ import xyz.erupt.ai.annotation.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.service.EruptMenuService;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,12 +52,6 @@ public class EruptAiToolbox {
         return GsonFactory.getGson().toJson(eruptUser);
     }
 
-    @Tool("Get current server date and time with timezone")
-    public String eruptCurrentDateTime() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateUtil.ISO_8601))
-                + " (" + ZoneId.systemDefault() + ")";
-    }
-
     @Tool("Get current user's roles and accessible menu permissions")
     public String eruptUserPermissions() {
         EruptUser eruptUser = eruptDao.find(EruptUser.class, MetaContext.getUser().getUid());
@@ -88,6 +80,14 @@ public class EruptAiToolbox {
         result.put("roles", roleList);
         result.put("menus", menuList);
         return GsonFactory.getGson().toJson(result);
+    }
+
+    @Tool("Get current date and time of the server with timezone information.")
+    public String getCurrentDateTime() {
+        ZonedDateTime now = ZonedDateTime.now();
+        return "DateTime: " + now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                + "\nTimezone: " + now.getZone()
+                + "\nTimestamp: " + now.toInstant().toEpochMilli();
     }
 
 }

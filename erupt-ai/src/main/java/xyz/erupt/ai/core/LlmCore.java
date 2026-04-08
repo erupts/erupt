@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.ai.ask.EruptAiChat;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
+import xyz.erupt.ai.prompt.SystemPromptProvider;
 import xyz.erupt.ai.service.McpServerService;
 import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.vo.mcp.McpClientInfo;
@@ -81,7 +82,14 @@ public abstract class LlmCore {
     }
 
     private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest) {
-        eruptAiServices.systemMessageProvider((id) -> EruptSpringUtil.getBean(AiProp.class).getSystemPrompt());
+        eruptAiServices.systemMessageProvider((id) -> {
+            AiProp aiProp = EruptSpringUtil.getBean(AiProp.class);
+            StringBuffer systemPrompt = new StringBuffer(aiProp.getSystemPrompt());
+            SystemPromptProvider.getRegisteredProviders().forEach(provider -> {
+                systemPrompt.append("\n\n").append(provider.getPrompt());
+            });
+            return systemPrompt.toString();
+        });
         if (llmRequest.getAutoCallTool()) {
             eruptAiServices.toolProvider(buildMcpTools());
         }
