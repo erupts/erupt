@@ -43,14 +43,6 @@ public class EruptClawTool {
         return GsonFactory.getGson().toJson(result);
     }
 
-
-    @Tool("Fetch a single erupt model record by its primary key ID.")
-    public String findEruptDataByPk(
-            @P(ERUPT_NAME_PARAM_HINT) String eruptName,
-            @P("Primary key value of the record to retrieve") String id) {
-        return GsonFactory.getGson().toJson(eruptDataController.getEruptDataById(eruptName, id));
-    }
-
     @Transactional
     @Tool("Insert a new record into the specified erupt model. Call eruptSchema first to ensure the data object contains all required fields with correct types.")
     public String insertEruptData(
@@ -60,11 +52,19 @@ public class EruptClawTool {
         return GsonFactory.getGson().toJson(eruptModifyService.insertEruptData(EruptCoreService.getErupt(eruptName), jsonObject));
     }
 
+    @Tool("Fetch a single erupt model record by its primary key ID.")
+    public String findEruptDataByPk(
+            @P(ERUPT_NAME_PARAM_HINT) String eruptName,
+            @P("Primary key value of the record to retrieve") String id) {
+        return GsonFactory.getGson().toJson(eruptDataController.getEruptDataById(eruptName, id));
+    }
+
+
     @Transactional
-    @Tool("Update an existing record in the specified erupt model. The data object must include the primary key field. Call eruptSchema first to confirm field names and types.")
+    @Tool("Update an existing record in the specified erupt model. It is strongly recommended to call findEruptDataByPk first to retrieve the current record, then modify only the necessary fields before submitting the update. The data object must include the primary key field.")
     public String updateEruptData(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
-            @P("JSON object representing the updated record. Must include the primary key field and all required fields as defined in eruptSchema.") Map<String, Object> data) {
+            @P("JSON object representing the updated record. Must include the primary key field. Obtain the full record via findEruptDataByPk first to avoid overwriting fields with null or incorrect values.") Map<String, Object> data) {
         JsonObject jsonObject = GsonFactory.getGson().toJsonTree(data).getAsJsonObject();
         eruptModifyService.updateEruptData(EruptCoreService.getErupt(eruptName), jsonObject);
         return "success";
