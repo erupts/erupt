@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import xyz.erupt.ai.constants.AiConst;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.model.McpServer;
@@ -64,7 +65,7 @@ public class EruptAiAutoConfiguration implements EruptModule {
         menus.add(MetaMenu.createEruptClassMenu(LLM.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(LLMAgent.class, menus.get(0), 20));
         menus.add(MetaMenu.createEruptClassMenu(McpServer.class, menus.get(0), 30));
-        menus.add(MetaMenu.createSimpleMenu("ai-chat", "AI Chat", "/ai/chat", menus.get(0), 40, MenuTypeEnum.ROUTER.getCode()));
+        menus.add(MetaMenu.createSimpleMenu("ai-chat", "AI Chat", AiConst.AI_CHAT, menus.get(0), 40, MenuTypeEnum.ROUTER.getCode()));
         return menus;
     }
 

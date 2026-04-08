@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.config.AiProp;
+import xyz.erupt.ai.constants.AiConst;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.ai.core.LlmCore;
 import xyz.erupt.ai.model.AiChat;
@@ -15,13 +16,12 @@ import xyz.erupt.ai.model.AiChatMessage;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.service.LLMService;
-import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.view.R;
 import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.upms.annotation.EruptLoginAuth;
+import xyz.erupt.upms.annotation.EruptMenuAuth;
 import xyz.erupt.upms.model.EruptUserVo;
 import xyz.erupt.upms.service.EruptUserService;
 
@@ -49,7 +49,7 @@ public class ChatController {
     @Resource
     private EruptUserService eruptUserService;
 
-    @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN, verifyMethod = EruptRouter.VerifyMethod.PARAM)
+    @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping(value = "/send", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Transactional
     @SneakyThrows
@@ -100,7 +100,7 @@ public class ChatController {
         return emitter;
     }
 
-    @EruptLoginAuth
+    @EruptMenuAuth(AiConst.AI_CHAT)
     @PostMapping("/create-chat")
     @Transactional
     public R<Long> createChat(@RequestParam String title) {
@@ -113,7 +113,7 @@ public class ChatController {
         return R.ok(chat.getId());
     }
 
-    @EruptLoginAuth
+    @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/delete-chat")
     @Transactional
     public R<Void> deleteChat(@RequestParam Long chatId) {
@@ -122,7 +122,7 @@ public class ChatController {
         return R.ok();
     }
 
-    @EruptLoginAuth
+    @EruptMenuAuth(AiConst.AI_CHAT)
     @PostMapping("/rename-chat")
     @Transactional
     public R<Void> renameChat(@RequestParam Long chatId, @RequestParam String title) {
@@ -133,7 +133,7 @@ public class ChatController {
     }
 
 
-    @EruptLoginAuth
+    @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/chats")
     public R<SimplePage<AiChat>> chats(@RequestParam Integer size,
                                        @RequestParam Integer index) {
@@ -143,7 +143,7 @@ public class ChatController {
                 .page(size, (index - 1) * size));
     }
 
-    @EruptLoginAuth
+    @EruptMenuAuth(AiConst.AI_CHAT)
     @GetMapping("/messages")
     public R<List<AiChatMessage>> messages(@RequestParam Long chatId,
                                            @RequestParam Integer size,
