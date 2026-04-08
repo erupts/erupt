@@ -91,7 +91,7 @@ public abstract class LlmCore {
             return systemPrompt.toString();
         });
         if (llmRequest.getAutoCallTool()) {
-            eruptAiServices.toolProvider(buildMcpTools());
+            eruptAiServices.toolProvider(buildTools());
         }
         eruptAiServices.toolExecutionErrorHandler((throwable, e) -> {
             log.error("Tool execution error [{}] e: {}", throwable.getMessage(), e);
@@ -100,7 +100,7 @@ public abstract class LlmCore {
         return eruptAiServices.build();
     }
 
-    private ToolProvider buildMcpTools() {
+    private ToolProvider buildTools() {
         return (request) -> {
             ToolProviderResult.Builder builder = ToolProviderResult.builder();
             AiToolboxManager.getTools().forEach(obj -> {
@@ -152,7 +152,6 @@ public abstract class LlmCore {
                     listener.accept(SseListener.builder().think(thinking.text()).build());
                 }).start();
     }
-
     public ChatMemory creatMemory(List<ChatMessage> chatMessages) {
         return new ChatMemory() {
 

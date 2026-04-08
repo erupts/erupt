@@ -2,6 +2,7 @@ package xyz.erupt.ai_claw.tool;
 
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiToolbox;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @AiToolbox
 @Component
+@ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
 public class EruptSkillTools {
 
     private static final String SKILL_DIR =

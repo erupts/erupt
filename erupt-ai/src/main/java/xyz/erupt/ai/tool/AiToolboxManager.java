@@ -3,6 +3,7 @@ package xyz.erupt.ai.tool;
 import com.google.gson.JsonObject;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,14 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import xyz.erupt.ai.annotation.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
-import xyz.erupt.core.service.EruptApplication;
-import xyz.erupt.core.util.EruptSpringUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -30,8 +28,13 @@ import java.util.Map;
 @Slf4j
 public class AiToolboxManager implements ApplicationRunner {
 
+    @Resource
+    private ApplicationContext applicationContext;
+
     @Getter
     private static final Map<String, Method> aiMethodMap = new HashMap<>();
+
+    private static final Map<String, Object> aiMethodBeanMap = new HashMap<>();
 
     @Getter
     private static final List<Object> tools = new ArrayList<>();
@@ -51,25 +54,21 @@ public class AiToolboxManager implements ApplicationRunner {
                     }
                 }
             }
-            return method.invoke(EruptSpringUtil.getBean(method.getDeclaringClass()), args);
+            return method.invoke(aiMethodBeanMap.get(request.name()), args);
         }
         return null;
     }
 
     @Override
     public void run(ApplicationArguments args) {
-        EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
-                new AnnotationTypeFilter(AiToolbox.class)
-        }, clazz -> {
-            if (clazz.isInterface()) {
-                return;
-            }
-            Object bean = EruptSpringUtil.getBean(clazz);
+        applicationContext.getBeansWithAnnotation(AiToolbox.class).values().forEach(bean -> {
             Object target = AopProxyUtils.getSingletonTarget(bean);
-            tools.add(target != null ? target : bean);
-            for (Method method : clazz.getDeclaredMethods()) {
+            Object realBean = target != null ? target : bean;
+            tools.add(realBean);
+            for (Method method : realBean.getClass().getDeclaredMethods()) {
                 if (method.isAnnotationPresent(Tool.class)) {
                     aiMethodMap.put(method.getName(), method);
+                    aiMethodBeanMap.put(method.getName(), realBean);
                 }
             }
         });

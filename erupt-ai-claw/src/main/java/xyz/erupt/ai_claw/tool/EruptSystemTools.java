@@ -2,6 +2,7 @@ package xyz.erupt.ai_claw.tool;
 
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiToolbox;
 
@@ -9,8 +10,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +17,7 @@ import java.util.stream.Collectors;
 
 @AiToolbox
 @Component
+@ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
 public class EruptSystemTools {
 
 
@@ -64,14 +64,6 @@ public class EruptSystemTools {
                 + "\nUser home: " + System.getProperty("user.home")
                 + "\nWorking dir: " + System.getProperty("user.dir")
                 + "\nJava version: " + System.getProperty("java.version");
-    }
-
-    @Tool("Get current date and time of the server with timezone information.")
-    public String getCurrentDateTime() {
-        ZonedDateTime now = ZonedDateTime.now();
-        return "DateTime: " + now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-                + "\nTimezone: " + now.getZone()
-                + "\nTimestamp: " + now.toInstant().toEpochMilli();
     }
 
     // ======================== File System ========================

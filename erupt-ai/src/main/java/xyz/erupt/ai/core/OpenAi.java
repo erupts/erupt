@@ -4,12 +4,14 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiChatRequestParameters;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai.llm.ChatGpt;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -37,12 +39,17 @@ public abstract class OpenAi extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
-                .strictTools(llmRequest.getStrictTools())
+                .sendThinking(isThinkingModel(llmRequest.getModel()))
+                .returnThinking(false)
+                .strictTools(this instanceof ChatGpt)
+                .defaultRequestParameters(OpenAiChatRequestParameters.builder()
+                        .customParameters(buildCustomParams(llmRequest.getModel()))
+                        .build()
+                )
                 .build();
     }
 
     @Override
-    @SneakyThrows
     public StreamingChatModel buildStreamingChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener) {
         return OpenAiStreamingChatModel.builder()
                 .baseUrl(llmRequest.getUrl() + chatApiPoint())
@@ -50,8 +57,33 @@ public abstract class OpenAi extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
-                .strictTools(llmRequest.getStrictTools())
+                .sendThinking(isThinkingModel(llmRequest.getModel()))
+                .returnThinking(false)
+                .strictTools(this instanceof ChatGpt)
+                .defaultRequestParameters(OpenAiChatRequestParameters.builder()
+                        .customParameters(buildCustomParams(llmRequest.getModel()))
+                        .build()
+                )
                 .build();
+    }
+
+    private boolean isThinkingModel(String model) {
+        return model != null && (
+                model.contains("deepseek-r") ||
+                        model.contains("deepseek-reasoner") ||
+                        model.contains("k2-thinking")
+        );
+    }
+
+    private Map<String, Object> buildCustomParams(String model) {
+        if (model.contains("k2.5")) {
+            return Map.of("thinking", Map.of("type", "disabled"));
+        } else if (model.contains("qwen3")) {
+            return Map.of("enable_thinking", false);
+        } else if (model.contains("grok-3-mini")) {
+            return Map.of("reasoning_effort", "none");
+        }
+        return Map.of();
     }
 
 }

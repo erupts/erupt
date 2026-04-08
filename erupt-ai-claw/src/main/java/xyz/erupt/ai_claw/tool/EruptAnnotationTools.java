@@ -5,6 +5,7 @@ import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
@@ -22,6 +23,7 @@ import java.util.Map;
  */
 @AiToolbox
 @Component
+@ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
 public class EruptAnnotationTools {
 
     @Resource

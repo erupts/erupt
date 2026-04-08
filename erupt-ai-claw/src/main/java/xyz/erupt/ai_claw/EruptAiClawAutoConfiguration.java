@@ -36,7 +36,7 @@ public class EruptAiClawAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-
         return menus;
     }
+
 }
