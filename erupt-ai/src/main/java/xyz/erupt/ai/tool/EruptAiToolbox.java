@@ -1,14 +1,11 @@
 package xyz.erupt.ai.tool;
 
-import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
-import xyz.erupt.core.service.EruptCoreService;
-import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
@@ -28,21 +25,6 @@ public class EruptAiToolbox {
 
     @Resource
     private EruptMenuService eruptMenuService;
-
-    @Tool("Erupt data model list")
-    public String eruptModelList() {
-        StringBuilder sb = new StringBuilder();
-        for (EruptModel erupt : EruptCoreService.getErupts()) {
-            sb.append(erupt.getEruptName()).append(": ").append(erupt.getErupt().name()).append("\n");
-        }
-        return sb.toString();
-    }
-
-    @Tool("Erupt data model schema. If the erupt model name is not specified, call eruptModelList first to get available model names.")
-    public String eruptSchema(@P("Erupt model name (call eruptModelList first if unknown)") String eruptName) {
-        EruptModel erupt = EruptCoreService.getEruptView(eruptName);
-        return GsonFactory.getGson().toJson(erupt);
-    }
 
     @Tool("Ask the current system logged-in user")
     public String eruptUserInfo() {

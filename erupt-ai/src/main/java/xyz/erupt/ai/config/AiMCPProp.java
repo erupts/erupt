@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("erupt.ai.mcp")
 public class AiMCPProp {
 
-    // Whether to enable @Tool to expose MCP calls externally
-    private boolean enabled = false;
+    // Whether to enable the built-in MCP server, allowing external tools (e.g. Cursor, Claude) to invoke @Tool methods via MCP protocol
+    private boolean serverEnabled = false;
 
     private String name = "erupt-mcp";
 

@@ -17,8 +17,7 @@ import java.util.List;
 @ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
 public class EruptSkillTools {
 
-    private static final String SKILL_DIR =
-            System.getProperty("user.home") + "/.erupt-ai/skills/";
+    private static final String SKILL_DIR = System.getProperty("user.home") + "/.erupt/skills/";
 
     // ======================== Skills ========================
 
