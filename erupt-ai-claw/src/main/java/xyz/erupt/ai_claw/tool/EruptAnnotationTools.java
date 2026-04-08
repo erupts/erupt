@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @AiToolbox
 @Component
-public class EruptClawTool {
+public class EruptAnnotationTools {
 
     @Resource
     private EruptDao eruptDao;
