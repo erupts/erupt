@@ -1,4 +1,4 @@
-package xyz.erupt.ai.config;
+package xyz.erupt.ai_claw.prop;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,14 +12,9 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties("erupt.ai.mcp")
-public class AiMCPProp {
+@ConfigurationProperties("erupt.ai.claw")
+public class EruptAiClawProp {
 
-    // Whether to enable @Tool to expose MCP calls externally
     private boolean enabled = false;
-
-    private String name = "erupt-mcp";
-
-    private String description;
 
 }
