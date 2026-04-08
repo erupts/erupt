@@ -12,6 +12,7 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.controller.EruptDataController;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
+import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
 
 import java.util.List;
@@ -36,6 +37,21 @@ public class EruptAnnotationTools {
     private EruptModifyService eruptModifyService;
 
     public static final String ERUPT_NAME_PARAM_HINT = "Erupt model name (call eruptModelList first if unknown)";
+
+    @Tool("Erupt data model list")
+    public String eruptModelList() {
+        StringBuilder sb = new StringBuilder();
+        for (EruptModel erupt : EruptCoreService.getErupts()) {
+            sb.append(erupt.getEruptName()).append(": ").append(erupt.getErupt().name()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Tool("Erupt data model schema. If the erupt model name is not specified, call eruptModelList first to get available model names.")
+    public String eruptSchema(@P(ERUPT_NAME_PARAM_HINT) String eruptName) {
+        EruptModel erupt = EruptCoreService.getEruptView(eruptName);
+        return GsonFactory.getGson().toJson(erupt);
+    }
 
     @Tool("Query erupt model data. If the model structure is unknown, call eruptSchema first to get field definitions before writing HQL. Security restrictions: SELECT only (INSERT/UPDATE/DELETE/DROP/TRUNCATE are strictly forbidden).")
     public String eruptDataQuery(@P("HQL (Hibernate Query Language), SELECT only. Ensure model schema is known via eruptSchema before querying.") String hql) {
@@ -81,11 +97,11 @@ public class EruptAnnotationTools {
         return "success";
     }
 
-//    @Tool("Generate erupt annotation code. Returns the erupt annotation reference documentation to guide code generation.")
-//    public String geneEruptCode() throws Exception {
-//        try (var in = getClass().getClassLoader().getResourceAsStream("erupt-annotation.md")) {
-//            return new String(in.readAllBytes());
-//        }
-//    }
+    @Tool("Generate erupt annotation code. Returns the erupt annotation reference documentation to guide code generation.")
+    public String geneEruptCode() throws Exception {
+        try (var in = getClass().getClassLoader().getResourceAsStream("erupt-annotation.md")) {
+            return new String(in.readAllBytes());
+        }
+    }
 
 }

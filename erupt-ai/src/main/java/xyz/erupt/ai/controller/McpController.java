@@ -12,8 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.config.AiMCPProp;
+import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.util.McpUtil;
 import xyz.erupt.ai.vo.mcp.*;
 import xyz.erupt.core.config.GsonFactory;
@@ -35,7 +35,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 
-@ConditionalOnProperty(name = "erupt.ai.mcp.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "erupt.ai.mcp.server-enabled", havingValue = "true")
 @RestController
 @RequestMapping("/mcp")
 @Slf4j
