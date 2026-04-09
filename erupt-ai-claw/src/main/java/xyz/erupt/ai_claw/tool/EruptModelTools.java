@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.ai.annotation.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.controller.EruptDataController;
+import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.service.EruptModifyService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ import java.util.Map;
 @AiToolbox
 @Component
 @ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
-public class EruptAnnotationTools {
+public class EruptModelTools {
 
     @Resource
     private EruptDao eruptDao;
@@ -37,6 +39,17 @@ public class EruptAnnotationTools {
     private EruptModifyService eruptModifyService;
 
     public static final String ERUPT_NAME_PARAM_HINT = "Erupt model name (call eruptModelList first if unknown)";
+
+    @Tool("List all loaded Erupt modules with their name and description. " +
+            "Use this to understand what features and capabilities are available in the current deployment.")
+    public String getEruptModules() {
+        List<String> modules = new ArrayList<>();
+        EruptModuleInvoke.invoke(m -> {
+            var info = m.info();
+            modules.add(info.getName() + (info.getDescription() != null ? ": " + info.getDescription() : ""));
+        });
+        return modules.isEmpty() ? "No modules loaded." : String.join("\n", modules);
+    }
 
     @Tool("Erupt data model list")
     public String eruptModelList() {
