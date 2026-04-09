@@ -98,6 +98,6 @@ public class EruptLoginLog extends BaseModel {
 
     @Transient
     @Measure(title = "Count", sql = "count(*)")
-    private String count;
+    private Long count;
 
 }

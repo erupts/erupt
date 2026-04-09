@@ -134,11 +134,11 @@ public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperate
 
     @Transient
     @Measure(title = "Count", sql = "count(*)")
-    private String count;
+    private Long count;
 
     @Transient
     @Measure(title = "Max Request Duration", sql = "max(total_time)")
-    private String maxRequestDuration;
+    private Long maxRequestDuration;
 
 
     @Override
