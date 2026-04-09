@@ -56,11 +56,11 @@ public class EruptFileService {
                 Path uploadRoot = Paths.get(eruptProp.getUploadPath());
                 Path target = uploadRoot.resolve(path.substring(1)).normalize();
                 if (!target.startsWith(uploadRoot)) {
-                    throw new EruptWebApiRuntimeException("Illegal path");
+                    throw new EruptWebApiRuntimeException("Illegal path:" + path);
                 }
                 if (!target.toFile().getParentFile().exists()) {
                     if (!target.toFile().getParentFile().mkdirs()) {
-                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created")+ ": " + target.toFile().getParentFile().getAbsolutePath());
+                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created") + ": " + target.toFile().getParentFile().getAbsolutePath());
                     }
                 }
                 file.transferTo(target.toFile());

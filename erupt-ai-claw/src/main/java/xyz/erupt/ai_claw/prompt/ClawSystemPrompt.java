@@ -35,6 +35,13 @@ public class ClawSystemPrompt implements SystemPromptProvider {
                 ## Installed Skills
                 """ + eruptSkillTools.listSkills() + """
                 
+                ## Memory
+                At the start of each session, call `listMemories` to discover available memory entries.
+                Load relevant entries via `getMemory` based on the user's request context.
+                During the session, if the user confirms a decision, preference, or important project context, save it via `saveMemory` with a short descriptive key.
+                At the end of the session, review the conversation and save any new information worth retaining.
+                
+                
                 ## Data Operations
                 When operating on Erupt model data:
                 - Always call `eruptModelList` first if the target model is unknown
