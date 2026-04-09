@@ -72,5 +72,6 @@ public class AiToolboxManager implements ApplicationRunner {
                 }
             }
         });
+        log.info("AiToolbox initialized, {} tool(s) registered", aiMethodMap.size());
     }
 }
