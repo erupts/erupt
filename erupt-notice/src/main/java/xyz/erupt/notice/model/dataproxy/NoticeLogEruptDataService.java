@@ -1,4 +1,4 @@
-package xyz.erupt.notice.modal.dataproxy;
+package xyz.erupt.notice.model.dataproxy;
 
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import xyz.erupt.core.service.IEruptDataService;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.core.view.Page;
 import xyz.erupt.jpa.service.EruptDataServiceDbImpl;
-import xyz.erupt.notice.modal.NoticeLog;
+import xyz.erupt.notice.model.NoticeLog;
 import xyz.erupt.notice.pojo.NoticeMessage;
 import xyz.erupt.notice.service.EruptNoticeService;
 

@@ -1,4 +1,4 @@
-package xyz.erupt.notice.modal;
+package xyz.erupt.notice.model;
 
 
 import jakarta.persistence.*;
@@ -18,7 +18,7 @@ import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.notice.constant.NoticeStatus;
-import xyz.erupt.notice.modal.dataproxy.ChannelChoice;
+import xyz.erupt.notice.model.dataproxy.ChannelChoice;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 import xyz.erupt.upms.model.EruptUserVo;
 

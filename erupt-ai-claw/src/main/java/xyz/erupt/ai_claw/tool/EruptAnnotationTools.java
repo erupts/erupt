@@ -99,7 +99,7 @@ public class EruptAnnotationTools {
 
     @Tool("Generate erupt annotation code. Returns the erupt annotation reference documentation to guide code generation.")
     public String geneEruptCode() throws Exception {
-        try (var in = getClass().getClassLoader().getResourceAsStream("erupt-annotation.md")) {
+        try (var in = getClass().getClassLoader().getResourceAsStream("erupt-model.md")) {
             return new String(in.readAllBytes());
         }
     }

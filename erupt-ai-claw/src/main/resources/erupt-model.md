@@ -1,1 +1,1 @@
-/Users/yp.li/code/erupt/.claude/skills/erupt/references/erupt-annotation.md
+../../../../.claude/skills/erupt/references/erupt-model.md

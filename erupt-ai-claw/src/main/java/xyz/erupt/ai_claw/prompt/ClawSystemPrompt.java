@@ -41,7 +41,6 @@ public class ClawSystemPrompt implements SystemPromptProvider {
                 During the session, if the user confirms a decision, preference, or important project context, save it via `saveMemory` with a short descriptive key.
                 At the end of the session, review the conversation and save any new information worth retaining.
                 
-                
                 ## Data Operations
                 When operating on Erupt model data:
                 - Always call `eruptModelList` first if the target model is unknown

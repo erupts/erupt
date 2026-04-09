@@ -1,4 +1,4 @@
-package xyz.erupt.notice.modal;
+package xyz.erupt.notice.model;
 
 
 import jakarta.persistence.*;
@@ -20,9 +20,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.CodeEditorType;
 import xyz.erupt.annotation.sub_field.sub_edit.MultiChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.core.annotation.EruptDataProcessor;
-import xyz.erupt.notice.modal.dataproxy.ChannelChoice;
-import xyz.erupt.notice.modal.dataproxy.EruptUserChoice;
-import xyz.erupt.notice.modal.dataproxy.NoticeLogDataProxy;
+import xyz.erupt.notice.model.dataproxy.ChannelChoice;
+import xyz.erupt.notice.model.dataproxy.EruptUserChoice;
+import xyz.erupt.notice.model.dataproxy.NoticeLogDataProxy;
 import xyz.erupt.upms.helper.HyperModelCreatorOnlyVo;
 
 import java.util.Set;

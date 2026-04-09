@@ -1,4 +1,4 @@
-package xyz.erupt.notice.modal.dataproxy;
+package xyz.erupt.notice.model.dataproxy;
 
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;

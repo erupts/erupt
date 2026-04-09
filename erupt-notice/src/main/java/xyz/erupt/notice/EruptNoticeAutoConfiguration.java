@@ -11,10 +11,10 @@ import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
-import xyz.erupt.notice.modal.NoticeAnnouncement;
-import xyz.erupt.notice.modal.NoticeLog;
-import xyz.erupt.notice.modal.NoticeLogDetail;
-import xyz.erupt.notice.modal.NoticeScene;
+import xyz.erupt.notice.model.NoticeAnnouncement;
+import xyz.erupt.notice.model.NoticeLog;
+import xyz.erupt.notice.model.NoticeLogDetail;
+import xyz.erupt.notice.model.NoticeScene;
 import xyz.erupt.upms.prop.EruptAppProp;
 
 import java.util.ArrayList;

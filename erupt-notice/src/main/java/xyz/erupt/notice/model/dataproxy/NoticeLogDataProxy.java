@@ -1,11 +1,11 @@
-package xyz.erupt.notice.modal.dataproxy;
+package xyz.erupt.notice.model.dataproxy;
 
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.notice.modal.NoticeLog;
-import xyz.erupt.notice.modal.NoticeLogDetail;
+import xyz.erupt.notice.model.NoticeLog;
+import xyz.erupt.notice.model.NoticeLogDetail;
 
 /**
  * @author YuePeng

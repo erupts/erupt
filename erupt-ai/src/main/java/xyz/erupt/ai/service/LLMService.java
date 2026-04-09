@@ -98,28 +98,28 @@ public class LLMService {
     @Transactional
     @SneakyThrows
     public void sendSse(MetaContext metaContext, Boolean autoToolCall, LLMAgent llmAgent, SseEmitter emitter,
-                        LlmCore llm, LLM llmModal, AiChatMessage chatMessage,
+                        LlmCore llm, LLM llmModel, AiChatMessage chatMessage,
                         String userMessage,List<ChatMessage> chatContext) {
         try {
             MetaContext.set(metaContext);
-            LlmRequest llmRequest = llmModal.toLlmRequest();
+            LlmRequest llmRequest = llmModel.toLlmRequest();
             if (null != llmAgent) {
-                llmAgent.mergeToLLmRequest(llmModal);
+                llmAgent.mergeToLLmRequest(llmModel);
             }
             llmRequest.setAutoCallTool(autoToolCall);
             llm.chatSse(llmRequest,userMessage, chatContext, it -> {
                 if (null != it.getThrowable()) {
                     String message = it.getThrowable().getMessage();
                     this.sendSseMessage(emitter, message);
-                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, message, 0));
+                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(), llmModel.getModel(), ChatSenderType.MODEL, message, 0));
                     this.completeSse(emitter);
                 } else if (it.isFinish()) {
                     String message = it.getAiMessage() != null && it.getAiMessage().text() != null ? it.getAiMessage().text() : "";
                     this.sendSseDone(emitter);
                     chatMessage.setTokens(it.getUsage().inputTokenCount());
                     eruptDao.mergeAndFlush(chatMessage);
-                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(),
-                            llmModal.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
+                    eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(),
+                            llmModel.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
                     this.completeSse(emitter);
                 } else if (null != it.getCurrMessage()) {
                     this.sendSseMessage(emitter, it.getCurrMessage());
@@ -130,7 +130,7 @@ public class LLMService {
             });
         } catch (Exception e) {
             log.error("LLM error: {}", e.getMessage(), e);
-            this.stopSse(emitter, chatMessage, llmModal, e.toString());
+            this.stopSse(emitter, chatMessage, llmModel, e.toString());
         }
     }
 
@@ -151,8 +151,8 @@ public class LLMService {
     }
 
     @SneakyThrows
-    private void stopSse(SseEmitter emitter, AiChatMessage chatMessage, LLM llmModal, String reason) {
-        eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModal.getLlm(), llmModal.getModel(), ChatSenderType.MODEL, reason, 0));
+    private void stopSse(SseEmitter emitter, AiChatMessage chatMessage, LLM llmModel, String reason) {
+        eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(), llmModel.getModel(), ChatSenderType.MODEL, reason, 0));
         this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, reason));
         this.completeSse(emitter);
     }

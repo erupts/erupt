@@ -1,4 +1,4 @@
-package xyz.erupt.notice.modal;
+package xyz.erupt.notice.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

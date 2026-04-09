@@ -1,4 +1,4 @@
-package xyz.erupt.notice.modal.dataproxy;
+package xyz.erupt.notice.model.dataproxy;
 
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
