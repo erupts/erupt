@@ -43,6 +43,71 @@
 - 扩展：i18n、Cloud 集群、审计 & 事件日志、BI、SaaS、AI 大模型
 - Form 复用：Flow 流程、自定义节点、自定义按钮
 
+## 🤖 AI 大模型集成
+
+> `erupt-ai` 模块 —— 零样板代码，开箱即用的企业级大模型接入
+
+### 支持 15+ 大模型提供商
+
+| 提供商 | 模型 |
+|--------|------|
+| OpenAI / ChatGPT | GPT-4o 系列 |
+| Claude（Anthropic）| claude-3-7-sonnet 系列 |
+| Gemini（Google）| gemini-2.0-flash 系列 |
+| DeepSeek | deepseek-chat（支持思考模型）|
+| 通义千问 / 智谱 GLM / 豆包 | 阿里 · 智谱 · 字节 |
+| Moonshot / MiniMax | Kimi-K2.5 · MiniMax-M2.5 |
+| Mistral / Grok | Mistral Large · Grok-2 |
+| Fireworks / Together / OpenRouter | 开源模型托管 |
+| Ollama | 本地私有化部署 |
+
+### 核心能力
+
+- **多模型切换** —— 通过管理界面配置多个 LLM，无需修改代码即可切换
+- **流式输出（SSE）** —— 实时逐 token 响应，可配置超时时间
+- **思考模型支持** —— 原生支持推理模型（DeepSeek、Kimi-K2）
+- **MCP 协议** —— 接入任意 MCP 工具服务器（SSE & STDIO），自动健康检查与重连
+- **AI Toolbox** —— 通过 `@AiToolbox` + `@Tool` 注解将任意 Spring Bean 暴露为 AI 工具
+- **Agent 框架** —— 自定义系统提示词、提示词列表与动态 Prompt 处理器
+- **会话历史** —— 按用户隔离的对话会话，记录 Token 用量，支持软删除
+
+### AI Toolbox 示例
+
+```java
+@AiToolbox
+@Component
+public class MyTools {
+
+    @Tool("根据订单ID查询订单状态")
+    public String getOrderStatus(String orderId) {
+        return orderService.getStatus(orderId);
+    }
+}
+```
+
+LLM 提供商、MCP 服务器、Agent 均可通过内置管理界面配置，无需重启服务。
+
+## 🦞 Erupt AI Claw
+
+> 通过自然语言直接驱动服务器——像与同事对话一样简单
+
+Erupt AI Claw 让你通过对话操作注解驱动的数据与业务、执行 Shell 命令、读写文件、扩展自定义 Skills，全程无需编写代码。
+
+### Claw 能力
+
+- **Erupt 模型操作** —— 通过对话对任意 `@Erupt` 实体进行增删改查
+- **Shell 执行** —— 用自然语言直接运行系统命令
+- **文件读写** —— 读取和写入服务器文件
+- **浏览器控制** —— 在 MCP 菜单中添加配置即可与浏览器交互
+- **Skills（70万+）** —— 兼容 [skills.sh](https://skills.sh) 70万+ Skills；AI 根据提示词自动匹配执行；支持通过对话动态创建 Skill
+- **长期记忆** —— 跨会话记忆持久化；AI 自动将重要决策与上下文写入记忆文件，下次会话自动加载
+
+> ⚠️ **警告：** Claw 拥有较高系统权限，生产环境切勿开启！安全第一！
+
+Skills 存放于 `~/.erupt/skills/`，也可在对话中动态创建。
+
+---
+
 ## 快速开始
 
 #### Annotation Example

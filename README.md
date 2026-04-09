@@ -2,7 +2,7 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/assets/logo-raw2.png" height="120px" alt="logo"/></p>
 
-<h1 align="center">ERUPT &nbsp; 🚀 &nbsp; Low-code</h1>
+<h1 align="center">ERUPT &nbsp; 🚀 &nbsp; Low-code  &nbsp; 🦞 &nbsp; AI & CLAW</h1>
 
 <h3 align="center">Annotation-driven development, zero front-end code, zero CRUD, multi-dimensional data management</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
@@ -43,7 +43,58 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 - Extensions: i18n, Cloud clustering, audit & event logs, BI, SaaS, AI large models
 - Form Reusability: Flow processes, custom nodes, custom buttons
 
-## Quick Start
+## 🤖 AI Integration
+
+> `erupt-ai` module — enterprise-grade LLM integration with zero boilerplate
+
+### Supported LLM Providers (15+)
+
+| Provider | Models |
+|----------|--------|
+| OpenAI / ChatGPT | GPT-4o and variants |
+| Claude (Anthropic) | claude-3-7-sonnet and variants |
+| Gemini (Google) | gemini-2.0-flash and variants |
+| DeepSeek | deepseek-chat (thinking model support) |
+| Qwen / GLM / Doubao | Alibaba · Zhipu · ByteDance |
+| Moonshot / MiniMax | Kimi-K2.5 · MiniMax-M2.5 |
+| Mistral / Grok | Mistral Large · Grok-2 |
+| Fireworks / Together / OpenRouter | Open-source model hosting |
+| Ollama | Local self-hosted models |
+
+### Key Capabilities
+
+- **Multi-Provider Switching** — configure multiple LLMs via UI, switch without code changes
+- **Streaming Chat (SSE)** — real-time token-by-token responses with configurable timeouts
+- **Thinking Models** — native support for reasoning models (DeepSeek, Kimi-K2)
+- **MCP Protocol** — connect any MCP-compatible tool server (SSE & STDIO transports), with auto-reconnect health checks
+- **AI Toolbox** — expose any Spring Bean as an AI tool via `@AiToolbox` + `@Tool` annotations
+- **Agent Framework** — define agents with custom system prompts, hint lists, and dynamic prompt handlers
+- **Chat History** — per-user conversation sessions with token tracking and soft-delete
+
+LLM providers, MCP servers, and agents are all managed through the built-in admin UI — no restarts required.
+
+## 🦞 Erupt AI Claw
+
+> Drive your server through natural language — just like talking to a colleague
+
+Erupt AI Claw lets you control annotation-driven data & business logic, execute shell commands, read/write files, and extend custom Skills — all through conversational AI.
+
+### Claw Capabilities
+
+- **Erupt Model Operations** — query, create, update data across any `@Erupt` entity via chat
+- **Shell Execution** — run system commands directly through natural language
+- **File I/O** — read and write files on the server
+- **Browser Control** — interact with the browser via MCP configuration
+- **Skills (700k+)** — compatible with 700k+ skills from [skills.sh](https://skills.sh); AI auto-matches and executes the right skill based on your prompt; supports dynamic skill creation
+- **Long-term Memory** — cross-session memory persistence; AI automatically stores key decisions and context, reloaded on next session
+
+> ⚠️ **Warning:** Claw has broad system permissions. Do NOT enable in production environments.
+
+Skills are stored in `~/.erupt/skills/` and can also be created dynamically through chat.
+
+---
+
+## Low-code Quick Start
 
 #### Annotation Example
 
