@@ -14,7 +14,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
-import xyz.erupt.ai.annotation.AiToolbox;
+import xyz.erupt.annotation.ai.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
 
 import java.lang.reflect.Method;

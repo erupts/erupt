@@ -4,7 +4,7 @@ import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.annotation.AiToolbox;
+import xyz.erupt.annotation.ai.AiToolbox;
 
 import java.io.File;
 import java.nio.file.Files;

@@ -3,7 +3,7 @@ package xyz.erupt.ai.tool;
 import dev.langchain4j.agent.tool.Tool;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.annotation.AiToolbox;
+import xyz.erupt.annotation.ai.AiToolbox;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.jpa.dao.EruptDao;

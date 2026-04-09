@@ -1,4 +1,4 @@
-package xyz.erupt.ai.annotation;
+package xyz.erupt.annotation.ai;
 
 import java.lang.annotation.*;
 

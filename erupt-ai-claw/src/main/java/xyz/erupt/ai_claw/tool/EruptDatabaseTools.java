@@ -7,7 +7,7 @@
 //import jakarta.annotation.Resource;
 //import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 //import org.springframework.stereotype.Component;
-//import xyz.erupt.ai.annotation.AiToolbox;
+//import xyz.erupt.annotation.ai.AiToolbox;
 //import xyz.erupt.core.config.GsonFactory;
 //import xyz.erupt.jpa.dao.EruptDao;
 //
