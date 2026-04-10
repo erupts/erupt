@@ -2,9 +2,9 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/assets/logo-raw2.png" height="120px" alt="logo"/></p>
 
-<h1 align="center">MDD Low-Code + AI & CLAW 🦞</h1>
+<h1 align="center">Low-Code + AI & 🦞</h1>
 
-<h3 align="center">Annotation-driven development, zero front-end code, zero CRUD, multi-dimensional data management</h3>
+<h3 align="center">MDD & Annotation-driven development, zero front-end code, zero CRUD, multi-dimensional data management</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
 
 ---
