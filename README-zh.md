@@ -2,7 +2,7 @@
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/assets/logo-raw2.png" height="120px" alt="logo"/></p>
 
-<h1 align="center">ERUPT &nbsp; 🚀 &nbsp; Low-code</h1>
+<h1 align="center">MDD Low-Code + AI & CLAW 🦞</h1>
 
 <h3 align="center">注解驱动开发，零前端代码，零 CURD，自动建表，实现多维数据管理</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
