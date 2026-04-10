@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  */
 @Component
 @Slf4j
-public abstract class OpenAi extends LlmCore {
+public abstract class OpenAI extends LlmCore {
 
     public String chatApiPoint() {
         return "/v1";

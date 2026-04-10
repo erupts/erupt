@@ -1,10 +1,10 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.core.OpenAi;
+import xyz.erupt.ai.core.OpenAI;
 
 @Component
-public class Doubao extends OpenAi {
+public class Doubao extends OpenAI {
 
     @Override
     public String model() {

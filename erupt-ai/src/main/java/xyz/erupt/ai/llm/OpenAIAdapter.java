@@ -5,24 +5,24 @@ import xyz.erupt.ai.core.OpenAI;
 
 /**
  * @author YuePeng
- * date 2025/2/26 22:58
+ * date 2025/2/22 16:37
  */
 @Component
-public class Qwen extends OpenAI {
+public class OpenAIAdapter extends OpenAI {
 
     @Override
-    public String chatApiPoint() {
-        return "/compatible-mode/v1";
+    public String code() {
+        return "Open AI Adapter";
     }
 
     @Override
     public String model() {
-        return "qwen-plus";
+        return "";
     }
 
     @Override
     public String api() {
-        return "https://dashscope.aliyuncs.com";
+        return "https://";
     }
 
 }

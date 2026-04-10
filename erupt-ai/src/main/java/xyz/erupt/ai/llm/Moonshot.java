@@ -1,15 +1,14 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.core.LlmConfig;
-import xyz.erupt.ai.core.OpenAi;
+import xyz.erupt.ai.core.OpenAI;
 
 /**
  * @author YuePeng
  * date 2025/2/23 15:31
  */
 @Component
-public class Moonshot extends OpenAi {
+public class Moonshot extends OpenAI {
 
     @Override
     public String model() {
