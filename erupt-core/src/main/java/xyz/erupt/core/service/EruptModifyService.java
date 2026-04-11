@@ -98,10 +98,12 @@ public class EruptModifyService {
      */
     @SneakyThrows
     @Transactional
-    public Object insertEruptData(EruptModel eruptModel, JsonObject data) {
-        EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
-        if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-            throw new EruptApiErrorTip(eruptApiModel.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+    public Object insertEruptData(EruptModel eruptModel, JsonObject data, boolean validateValue) {
+        if (validateValue) {
+            EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
+            if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
+                throw new EruptApiErrorTip(eruptApiModel.getMessage(), EruptApiModel.PromptWay.MESSAGE);
+            }
         }
         Object obj = this.eruptInsertDataProcess(eruptModel, data);
         DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeAdd(obj)));

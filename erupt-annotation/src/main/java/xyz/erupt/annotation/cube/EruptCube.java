@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-public @interface Cube {
+public @interface EruptCube {
 
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String datasource() default "";

@@ -9,8 +9,8 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
-import xyz.erupt.annotation.cube.Cube;
 import xyz.erupt.annotation.cube.Dimension;
+import xyz.erupt.annotation.cube.EruptCube;
 import xyz.erupt.annotation.cube.Measure;
 import xyz.erupt.annotation.cube.SqlType;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -34,7 +34,7 @@ import java.util.Date;
                 export = true, powerHandler = SuperAdminPower.class),
         orderBy = "loginTime desc"
 )
-@Cube(
+@EruptCube(
         name = "Erupt Login Log",
         sql = "e_upms_login_log",
         sqlType = SqlType.TABLE_NAME

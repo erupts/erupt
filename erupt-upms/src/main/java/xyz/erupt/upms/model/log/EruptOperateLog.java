@@ -12,8 +12,8 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
-import xyz.erupt.annotation.cube.Cube;
 import xyz.erupt.annotation.cube.Dimension;
+import xyz.erupt.annotation.cube.EruptCube;
 import xyz.erupt.annotation.cube.Measure;
 import xyz.erupt.annotation.cube.SqlType;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -47,7 +47,7 @@ import java.util.Map;
         orderBy = "createTime desc",
         dataProxy = EruptOperateLog.class
 )
-@Cube(
+@EruptCube(
         name = "Erupt Operate Log",
         sql = "e_upms_operate_log",
         sqlType = SqlType.TABLE_NAME
