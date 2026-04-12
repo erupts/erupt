@@ -6,17 +6,12 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.14.1</version>
+        <version>1.14.2</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>erupt-cloud-server-docker</artifactId>
     <name>erupt-cloud-server-docker</name>
-
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-        <central.publishing.skip>true</central.publishing.skip>
-    </properties>
 
     <dependencies>
         <dependency>
