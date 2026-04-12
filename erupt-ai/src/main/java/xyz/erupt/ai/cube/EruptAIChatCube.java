@@ -19,10 +19,12 @@ import java.util.Date;
                        message.llm,
                        message.model,
                        message.tokens,
-                       message.created_at as createdAt
+                       message.created_at  as createdAt,
+                       agent.name          as agent
                 from e_ai_chat_message message
                          inner join e_ai_chat chat on chat.id = message.chat_id
                          inner join e_upms_user user on chat.user_id = user.id
+                         inner join e_ai_llm_agent agent on agent.id = message.agent_id
                 """
 )
 public class EruptAIChatCube {
@@ -38,6 +40,9 @@ public class EruptAIChatCube {
 
     @Dimension(title = "Model")
     private String model;
+
+    @Dimension(title = "Agent")
+    private String agent;
 
     @Dimension(title = "Date", type = FieldType.DATE)
     private Date createdAt;

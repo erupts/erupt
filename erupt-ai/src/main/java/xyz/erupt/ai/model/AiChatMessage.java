@@ -6,12 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.annotation.Erupt;
-import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.fun.DataProxy;
-import xyz.erupt.annotation.sub_field.View;
-import xyz.erupt.annotation.sub_field.ViewType;
 import xyz.erupt.core.util.EruptTableStyle;
 import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.linq.lambda.LambdaSee;
@@ -39,22 +36,15 @@ public class AiChatMessage extends BaseModel implements DataProxy<AiChatMessage>
 
     private String model;
 
-    @EruptField(
-            views = @View(title = "Sender")
-    )
     @Enumerated(EnumType.STRING)
     private ChatSenderType senderType;
 
-    @EruptField(
-            views = @View(title = "Message Content", type = ViewType.HTML)
-    )
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     private String content;
 
-    @EruptField(
-            views = @View(title = "Sent Time", type = ViewType.HTML)
-    )
     private LocalDateTime createdAt;
+
+    private Long agentId;
 
     private Integer tokens;
 

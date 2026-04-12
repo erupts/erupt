@@ -81,12 +81,10 @@ public class ChatController {
             llmService.sendSseMessage(emitter, "Please enter a prompt");
             llmService.completeSse(emitter);
             return emitter;
-        } else if (llmModel == null) {
-            llmService.sendSseMessage(emitter, "No LLM available");
-            llmService.completeSse(emitter);
         } else {
             LlmCore llm = LlmCore.getLLM(llmModel.getLlm());
             AiChatMessage chatMessage = AiChatMessage.create(chatId, llmModel.getLlm(), llmModel.getModel(), ChatSenderType.USER, message, 0);
+            chatMessage.setAgentId(agentId);
             eruptDao.persist(chatMessage);
             AiChat chat = eruptDao.find(AiChat.class, chatId);
             LLMAgent llmAgent = null;

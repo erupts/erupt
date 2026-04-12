@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import xyz.erupt.ai.core.LlmConfig;
@@ -34,6 +35,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Setter
 @Entity
 @EruptI18n
+@NoArgsConstructor
 public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
 
     @EruptField(
@@ -99,4 +101,7 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
         BeanUtils.copyProperties(llmConfig, llmRequest);
     }
 
+    public LLMAgent(Long id) {
+        this.setId(id);
+    }
 }

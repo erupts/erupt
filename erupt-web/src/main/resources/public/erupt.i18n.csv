@@ -359,3 +359,12 @@ cube.dashboard.settings,看板设置,看板設置,Dashboard Settings,Paramètres
 cube.dashboard.history,历史版本,歷史版本,History,Historique,履歴,히스토리,История,Historial,Verlauf,Histórico,Riwayat,السجل
 cube.dashboard.publish,发布,發布,Publish,Publier,公開,게시,Опубликовать,Publicar,Veröffentlichen,Publicar,Publikasikan,نشر
 cube.dashboard.copy_link,复制链接,複製鏈接,Copy Link,Copier le lien,リンクをコピー,링크 복사,Копировать ссылку,Copiar enlace,Link kopieren,Copiar link,Salin tautan,نسخ الرابط
+ai.chat.copy,复制,複製,Copy,Copier,コピー,복사,Копировать,Copiar,Kopieren,Copiar,Salin,نسخ
+ai.chat.copied,已复制,已複製,Copied,Copié,コピーしました,복사됨,Скопировано,Copiado,Kopiert,Copiado,Tersalin,تم النسخ
+ai.chat.regenerate,重新生成,重新生成,Regenerate,Régénérer,再生成,재생성,Перегенерировать,Regenerar,Neu generieren,Regenerar,Buat ulang,إعادة الإنشاء
+ai.chat.think_expand,展开思考,展開思考,Show thinking,Afficher la réflexion,思考を展開,사고 펼치기,Развернуть мышление,Mostrar pensamiento,Denken anzeigen,Mostrar raciocínio,Tampilkan pemikiran,إظهار التفكير
+ai.chat.think_collapse,折叠思考,折疊思考,Hide thinking,Masquer la réflexion,思考を折りたたむ,사고 접기,Свернуть мышление,Ocultar pensamiento,Denken ausblenden,Ocultar raciocínio,Sembunyikan pemikiran,إخفاء التفكير
+ai.chat.edit_resend,编辑重发,編輯重發,Edit & Resend,Modifier et renvoyer,編集して再送,수정 후 재전송,Изменить и отправить,Editar y reenviar,Bearbeiten und senden,Editar e reenviar,Edit & kirim ulang,تعديل وإعادة إرسال
+ai.chat.quote,引用到输入框,引用到輸入框,Quote to input,Citer dans la saisie,引用して入力,입력창에 인용,Цитировать в ввод,Citar en entrada,In Eingabe zitieren,Citar na entrada,Kutip ke input,اقتبس في المدخل
+ai.chat.speak,朗读,朗讀,Read aloud,Lire à voix haute,読み上げる,읽어주기,Прочитать вслух,Leer en voz alta,Vorlesen,Ler em voz alta,Baca keras,قراءة بصوت عالٍ
+ai.chat.speak_stop,停止朗读,停止朗讀,Stop reading,Arrêter la lecture,読み上げ停止,읽기 중지,Остановить чтение,Detener lectura,Vorlesen stoppen,Parar leitura,Hentikan bacaan,إيقاف القراءة
