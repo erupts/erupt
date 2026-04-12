@@ -6,6 +6,9 @@
     <artifactId>erupt-test</artifactId>
     <name>erupt-test</name>
     <description>unittest</description>
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
 
     <parent>
         <groupId>xyz.erupt</groupId>
