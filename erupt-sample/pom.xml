@@ -14,6 +14,7 @@
     <name>erupt-sample</name>
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <central.publishing.skip>true</central.publishing.skip>
     </properties>
     <dependencies>
         <dependency>
