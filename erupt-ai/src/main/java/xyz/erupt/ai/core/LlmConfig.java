@@ -13,14 +13,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LlmConfig {
 
-    private Float top_p;
+    private Double top_p;
 
-    private Float temperature;
+    private Double temperature;
+
+    private Boolean strictTools = true;
 
     public LlmRequest toLlmRequest() {
         LlmRequest llmRequest = new LlmRequest();
         llmRequest.setTop_p(this.top_p);
         llmRequest.setTemperature(this.temperature);
+        llmRequest.setStrictTools(this.strictTools);
         return llmRequest;
     }
 

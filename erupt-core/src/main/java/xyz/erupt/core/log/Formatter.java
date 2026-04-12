@@ -2,6 +2,7 @@ package xyz.erupt.core.log;
 
 import org.fusesource.jansi.Ansi;
 import org.slf4j.event.Level;
+import xyz.erupt.core.util.DateUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,7 +17,7 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 public class Formatter {
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtil.DATE_TIME);
 
     private final StringBuilder buf = new StringBuilder();
 

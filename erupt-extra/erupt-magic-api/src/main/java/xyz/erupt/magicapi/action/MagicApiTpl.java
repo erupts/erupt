@@ -1,7 +1,6 @@
 package xyz.erupt.magicapi.action;
 
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import org.ssssssss.magicapi.core.config.MagicAPIProperties;
 import xyz.erupt.core.util.EruptInformation;
@@ -27,9 +26,6 @@ public class MagicApiTpl {
 
     @Resource
     private EruptContextService eruptContextService;
-
-    @Resource
-    private HttpServletRequest request;
 
     @TplAction(MAGIC_API_PERMISSION)
     public Map<String, Object> magicApiAction() {

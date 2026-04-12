@@ -1,5 +1,7 @@
 package xyz.erupt.upms.model.online;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -14,8 +16,6 @@ import xyz.erupt.annotation.sub_field.sub_edit.DateType;
 import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.jpa.model.BaseModel;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import java.util.Date;
 
 /**
@@ -26,11 +26,11 @@ import java.util.Date;
 @Table(name = "e_upms_login_log")
 @EruptI18n
 @Erupt(
-        name = "在线用户",
+        name = "Online Users",
         filter = @Filter(conditionHandler = EruptOnlineFilterHandler.class),
         power = @Power(add = false, edit = false, viewDetails = false, delete = false, export = true),
         orderBy = "loginTime desc",
-        rowOperation = @RowOperation(code = "out", title = "强退", icon = "fa fa-trash-o text-red",
+        rowOperation = @RowOperation(code = "out", title = "Force Logout", icon = "fa fa-trash-o text-red",
                 operationHandler = LogOutOperationHandler.class)
 )
 @Getter
@@ -38,44 +38,44 @@ import java.util.Date;
 public class EruptOnline extends BaseModel {
 
     @EruptField(
-            views = @View(title = "用户"),
-            edit = @Edit(title = "用户", search = @Search(vague = true))
+            views = @View(title = "Account"),
+            edit = @Edit(title = "Account", search = @Search(vague = true))
     )
     private String userName;
 
     @EruptField(
-            views = @View(title = "登录时间", sortable = true),
-            edit = @Edit(title = "登录时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "Login Time", sortable = true),
+            edit = @Edit(title = "Login Time", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date loginTime;
 
     @EruptField(
-            views = @View(title = "IP地址"),
-            edit = @Edit(title = "IP地址", search = @Search)
+            views = @View(title = "IP Address"),
+            edit = @Edit(title = "IP Address", search = @Search)
     )
     private String ip;
 
     @EruptField(
-            views = @View(title = "IP来源", desc = "国家 | 大区 | 省份 | 城市 | 运营商", template = "value&&value.replace(/\\|/g,' | ')"),
-            edit = @Edit(title = "IP来源", search = @Search(vague = true))
+            views = @View(title = "IP Source", desc = "Country | Region | Province | City | ISP", template = "value&&value.replace(/\\|/g,' | ')"),
+            edit = @Edit(title = "IP Source", search = @Search(vague = true))
     )
     private String region;
 
     @EruptField(
-            views = @View(title = "操作系统"),
-            edit = @Edit(title = "操作系统", search = @Search)
+            views = @View(title = "OS"),
+            edit = @Edit(title = "OS", search = @Search)
     )
     private String systemName;
 
     @EruptField(
-            views = @View(title = "浏览器"),
-            edit = @Edit(title = "浏览器", search = @Search)
+            views = @View(title = "Browser"),
+            edit = @Edit(title = "Browser", search = @Search)
     )
     private String browser;
 
     @EruptField(
-            views = @View(title = "设备类型"),
-            edit = @Edit(title = "设备类型", search = @Search)
+            views = @View(title = "Device Type"),
+            edit = @Edit(title = "Device Type", search = @Search)
     )
     private String deviceType;
 

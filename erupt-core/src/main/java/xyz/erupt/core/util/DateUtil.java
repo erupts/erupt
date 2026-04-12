@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -19,9 +20,9 @@ public class DateUtil {
 
     public static final String DATE = "yyyy-MM-dd";
 
-    public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss.SSS";
 
-    public static final String ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final String ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     private static final String[] PATTERNS = {
             "yyyy-MM-dd'T'HH:mm:ss", // ISO 8601 specification，T segmentation
@@ -41,12 +42,8 @@ public class DateUtil {
         return DateUtils.parseDateStrictly(dateStr, PATTERNS);
     }
 
-    public static String getSimpleFormatDateTime(Date date) {
-        return getFormatDate(date, DATE_TIME);
-    }
-
     public static String getSimpleFormatDate(Date date) {
-        return getFormatDate(date, DATE);
+        return getFormatDate(date, DATE_TIME);
     }
 
     public static String getFormatDate(Date date, String formatStr) {
@@ -55,17 +52,30 @@ public class DateUtil {
     }
 
     @SneakyThrows
+    public static String dateFormat(Object value, String formatStr) {
+        if (value instanceof Date d) {
+            return new SimpleDateFormat(formatStr).format(d);
+        } else if (value instanceof LocalDate d) {
+            return new SimpleDateFormat(formatStr).format(Date.from(d.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        } else if (value instanceof LocalDateTime d) {
+            return new SimpleDateFormat(formatStr).format(Date.from(d.atZone(ZoneId.systemDefault()).toInstant()));
+        } else {
+            return value.toString();
+        }
+    }
+
+    @SneakyThrows
     public static Object getDate(Class<?> targetDateType, String str) {
         if (targetDateType == Date.class) {
             if (str.length() == 10) {
                 return new SimpleDateFormat(DATE).parse(str);
             } else {
-                return new SimpleDateFormat(DATE_TIME).parse(str);
+                return new SimpleDateFormat(ISO_8601).parse(str);
             }
         } else if (targetDateType == LocalDate.class) {
             return LocalDate.parse(str.substring(0, 10), DateTimeFormatter.ofPattern(DATE));
         } else if (targetDateType == LocalDateTime.class) {
-            return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(DATE_TIME));
+            return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(ISO_8601));
         } else {
             throw new EruptWebApiRuntimeException("Unsupported date type");
         }

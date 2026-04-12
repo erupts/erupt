@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.13.3</version>
+    <version>1.14.1</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>17</java.version>
-        <spring.boot.version>3.5.9</spring.boot.version>
+        <spring.boot.version>3.5.13</spring.boot.version>
     </properties>
 
     <!--
@@ -29,7 +29,6 @@
         <module>erupt-core</module>
         <module>erupt-excel</module>
         <module>erupt-toolkit</module>
-        <module>erupt-ai</module>
 
         <!-- JPA Data Implementation -->
         <module>erupt-data/erupt-jpa</module>
@@ -56,6 +55,8 @@
         <module>erupt-tpl-ui/amis</module>
         <module>erupt-tpl-ui/element-plus</module>
 
+        <module>erupt-ai</module>
+        <module>erupt-ai-claw</module>
         <!-- Task Scheduling -->
         <module>erupt-extra/erupt-job</module>
         <!-- Code Generation -->
@@ -172,6 +173,11 @@
         <connection>scm:git:git@github.com:erupts/erupt.git</connection>
         <developerConnection>scm:git:git@github.com:erupts/erupt.git</developerConnection>
     </scm>
+
+    <organization>
+        <name>Erupt</name>
+        <url>https://erupt.xyz</url>
+    </organization>
     <developers>
         <developer>
             <name>YuePeng</name>
@@ -205,6 +211,13 @@
             </dependencies>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>

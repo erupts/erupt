@@ -25,34 +25,34 @@ import xyz.erupt.jpa.model.MetaModel;
 @Setter
 @Entity
 @Table(name = "e_cloud_node_group")
-@Erupt(name = "分组配置")
+@Erupt(name = "Group Config")
 @EruptI18n
 public class CloudNodeGroup extends MetaModel {
 
     @Column(unique = true)
     @EruptField(
-            views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Code", sortable = true),
+            edit = @Edit(title = "Code", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Name", sortable = true),
+            edit = @Edit(title = "Name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "分组配置"),
-            edit = @Edit(title = "分组配置", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
+            views = @View(title = "Group Config"),
+            edit = @Edit(title = "Group Config", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
     )
     private String config;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "描述", type = ViewType.HTML),
-            edit = @Edit(title = "描述", type = EditType.TEXTAREA)
+            views = @View(title = "Description", type = ViewType.HTML),
+            edit = @Edit(title = "Description", type = EditType.TEXTAREA)
     )
     private String remark;
 

@@ -30,7 +30,7 @@ import java.util.Date;
  */
 @EruptI18n
 @Erupt(
-        name = "发送邮件",
+        name = "Mail Management",
         dataProxy = EruptMailDataProxy.class,
         power = @Power(edit = false),
         orderBy = "id desc"
@@ -43,34 +43,34 @@ import java.util.Date;
 public class EruptMail extends BaseModel {
 
     @EruptField(
-            views = @View(title = "接收人"),
-            edit = @Edit(title = "接收人", notNull = true, search = @Search(vague = true),
+            views = @View(title = "Recipient"),
+            edit = @Edit(title = "Recipient", notNull = true, search = @Search(vague = true),
                     inputType = @InputType(fullSpan = true, regex = RegexConst.EMAIL_REGEX))
     )
     private String recipient;
 
     @EruptField(
-            views = @View(title = "抄送人"),
-            edit = @Edit(title = "抄送人", type = EditType.TAGS)
+            views = @View(title = "CC"),
+            edit = @Edit(title = "CC", type = EditType.TAGS)
     )
     private String cc;
 
     @EruptField(
-            views = @View(title = "主题"),
-            edit = @Edit(title = "主题", notNull = true, search = @Search(vague = true), inputType = @InputType(fullSpan = true))
+            views = @View(title = "Subject"),
+            edit = @Edit(title = "Subject", notNull = true, search = @Search(vague = true), inputType = @InputType(fullSpan = true))
     )
     private String subject;
 
     @EruptField(
-            views = @View(title = "状态"),
-            edit = @Edit(title = "状态", boolType = @BoolType(trueText = "成功", falseText = "失败"), show = false)
+            views = @View(title = "Status"),
+            edit = @Edit(title = "Status", boolType = @BoolType(trueText = "Success", falseText = "Failure"), show = false)
     )
     private Boolean status;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "内容"),
-            edit = @Edit(title = "内容", notNull = true, type = EditType.HTML_EDITOR)
+            views = @View(title = "Content"),
+            edit = @Edit(title = "Content", notNull = true, type = EditType.HTML_EDITOR)
     )
     private String content;
 
@@ -78,12 +78,12 @@ public class EruptMail extends BaseModel {
     private String errorInfo;
 
     @EruptField(
-            views = @View(title = "发送时间")
+            views = @View(title = "Sent Time")
     )
     private Date createTime;
 
     @EruptField(
-            views = @View(title = "发送人")
+            views = @View(title = "Sender")
     )
     @EruptSmartSkipSerialize
     private String createBy;

@@ -33,6 +33,7 @@ import xyz.erupt.excel.util.ExcelUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,7 @@ public class EruptExcelService {
 
     public static final String XLSX_FORMAT = ".xlsx";
 
-    private static final String SIMPLE_CELL_ERR = "请选择或输入有效的选项，或下载最新模版重试！";
+    private static final String SIMPLE_CELL_ERR = "Please select or enter a valid option, or download the latest template and try again!";
 
     /**
      * Excel export, the displayed format is consistent with the view table.
@@ -73,12 +74,14 @@ public class EruptExcelService {
         headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         headFont.setBold(true);
         headStyle.setFont(headFont);
-        int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             for (View view : fieldModel.getEruptField().views()) {
-                cellNum++;
                 if (view.show() && view.export()) {
-                    sheet.setColumnWidth(cellNum, (view.title().length() + 10) * 256);
+                    if (view.type() == ViewType.DATE_TIME) {
+                        sheet.setColumnWidth(colNum, (view.title().length() + 12) * 256);
+                    } else {
+                        sheet.setColumnWidth(colNum, (view.title().length() + 10) * 256);
+                    }
                     Cell cell = row.createCell(colNum);
                     cell.setCellStyle(headStyle);
                     cell.setCellValue(view.title());
@@ -109,6 +112,17 @@ public class EruptExcelService {
                                     cell.setCellValue(edit.boolType().trueText());
                                 } else if (edit.boolType().falseText().equals(str)) {
                                     cell.setCellValue(edit.boolType().falseText());
+                                }
+                            } else if (edit.type() == EditType.DATE) {
+                                cell.getCellStyle().setDataFormat((short) 22);
+                                if (it instanceof Date date) {
+                                    cell.setCellValue(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+                                } else if (it instanceof LocalDate date) {
+                                    cell.setCellValue(date);
+                                } else if (it instanceof LocalDateTime date) {
+                                    cell.setCellValue(date);
+                                } else {
+                                    cell.setCellValue(str);
                                 }
                             } else {
                                 cell.setCellValue(str);
@@ -236,7 +250,8 @@ public class EruptExcelService {
                             } catch (Exception e) {
                                 dateCellValue = DateUtil.parseDate(cell.getStringCellValue());
                             }
-                            jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getSimpleFormatDateTime(dateCellValue));
+                            jsonObject.addProperty(eruptFieldModel.getFieldName(), DateUtil.getFormatDate(dateCellValue, DateUtil.ISO_8601));
+                            cell.getCellStyle().setDataFormat((short) 22);
                             break;
                         case NUMBER:
                             DataFormatter formatter = new DataFormatter();
@@ -279,6 +294,7 @@ public class EruptExcelService {
         int cellNum = 0;
         for (EruptFieldModel fieldModel : eruptModel.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
+            CellStyle style = wb.createCellStyle();
             if (edit.show() && !edit.readonly().add() && StringUtils.isNotBlank(edit.title())
                     && AnnotationProcess.getEditTypeMapping(edit.type()).excelOperator()) {
                 Cell cell = headRow.createCell(cellNum);
@@ -316,7 +332,6 @@ public class EruptExcelService {
                         break;
                 }
                 // Cell format
-                CellStyle style = wb.createCellStyle();
                 style.setLocked(true);
                 Font font = wb.createFont();
                 style.setVerticalAlignment(VerticalAlignment.CENTER);

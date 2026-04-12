@@ -19,7 +19,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Entity
 @Table(name = "e_upms_user")
 @Erupt(
-        name = "用户管理"
+        name = "User Management"
 )
 @EruptI18n
 @Getter
@@ -29,8 +29,8 @@ public class EruptUserVo extends BaseModel {
     private String avatar;
 
     @EruptField(
-            views = @View(title = "姓名", sortable = true),
-            edit = @Edit(title = "姓名", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Full Name", sortable = true),
+            edit = @Edit(title = "Full Name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 

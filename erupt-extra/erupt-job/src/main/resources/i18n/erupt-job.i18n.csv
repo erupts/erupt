@@ -1,0 +1,32 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+Job Manager,任务管理,工作管理員,Job Manager,Gestionnaire de tâches,ジョブマネージャー,작업 관리자,Диспетчер задач,Administrador de trabajos,Auftragsverwaltung,Gestor de Tarefas,Pengelola Tugas,مدير المهام
+Job Config,任务配置,任務配置,Job Config,Configuration des tâches,ジョブ設定,작업 구성,Конфигурация задания,Configuración de tareas,Aufgabenkonfiguration,Configuração de tarefas,Konfigurasi Pekerjaan,إعداد المهمة
+Log,日志,日誌,Log,Journal,ログ,로그,Журнал,Registro,Protokoll,Log,Log,سجل
+Execute Once,执行一次任务,執行一次任務,Execute Once,Exécuter une fois,一度実行,한 번 실행,Выполнить один раз,Ejecutar una vez,Einmal ausführen,Executar uma vez,Jalankan sekali,تنفيذ مرة واحدة
+Code,任务编码,任務編碼,Code,Code,コード,코드,Код,Código,Code,Código,Kode,رمز
+Job Handler,执行处理器,執行處理器,Job Handler,Gestionnaire de tâches,ジョブハンドラー,작업 핸들러,Обработчик задания,Manejador de tareas,Aufgaben-Handler,Manipulador de tarefas,Penanganan Pekerjaan,معالج المهمة
+Job Name,任务名称,任務名稱,Job Name,Nom de la tâche,ジョブ名,작업 이름,Название задания,Nombre de la tarea,Aufgabenname,Nome da tarefa,Nama Pekerjaan,اسم المهمة
+Cron Expression,cron表达式,Cron表達式,Cron Expression,Expression Cron,Cron式,Cron 식,Выражение Cron,Expresión Cron,Cron-Ausdruck,Expressão Cron,Ekspresi Cron,تعبير Cron
+Job Status,任务状态,任務狀態,Job Status,Statut de la tâche,ジョブステータス,작업 상태,Статус задания,Estado de la tarea,Aufgabenstatus,Status da tarefa,Status Pekerjaan,حالة المهمة
+Record Log,记录日志,記錄日誌,Record Log,Enregistrer le journal,ログを記録,로그 기록,Записывать журнал,Registrar log,Log aufzeichnen,Registrar log,Catat Log,تسجيل السجل
+Failure Notify Email,失败通知邮件,失敗通知郵件,Failure Notify Email,Email de notification d'échec,失敗通知メール,실패 알림 이메일,Email уведомления об ошибке,Email de notificación de fallo,Fehlerbenachrichtigungs-E-Mail,Email de notificação de falha,Email Notifikasi Kegagalan,البريد الإلكتروني لإشعار الفشل
+Job Params,任务参数,任務參數,Job Params,Paramètres de tâche,ジョブパラメータ,작업 매개변수,Параметры задания,Parámetros de tarea,Aufgabenparameter,Parâmetros da tarefa,Parameter Pekerjaan,معاملات المهمة
+Description,描述,描述,Description,Description,説明,설명,Описание,Descripción,Beschreibung,Descrição,Deskripsi,وصف
+Job Log,任务日志,任務日誌,Job Log,Journal des tâches,ジョブログ,작업 로그,Журнал заданий,Registro de tareas,Aufgabenprotokoll,Log de tarefas,Log Pekerjaan,سجل المهمة
+Start Time,开始时间,開始時間,Start Time,Heure de début,開始時間,시작 시간,Время начала,Hora de inicio,Startzeit,Hora de início,Waktu Mulai,وقت البدء
+Exec Duration,执行耗时,執行耗時,Exec Duration,Durée d'exécution,実行時間,실행 시간,Время выполнения,Duración de ejecución,Ausführungsdauer,Duração de execução,Durasi Eksekusi,مدة التنفيذ
+End Time,结束时间,結束時間,End Time,Heure de fin,終了時間,종료 시간,Время окончания,Hora de finalización,Endzeit,Hora de término,Waktu Selesai,وقت الانتهاء
+Exec Result,执行结果,執行結果,Exec Result,Résultat d'exécution,実行結果,실행 결과,Результат выполнения,Resultado de ejecución,Ausführungsergebnis,Resultado de execução,Hasil Eksekusi,نتيجة التنفيذ
+Error Info,错误信息,錯誤信息,Error Info,Informations d'erreur,エラー情報,오류 정보,Информация об ошибке,Información de error,Fehlerinformation,Informação de erro,Info Kesalahan,معلومات الخطأ
+Success,成功,成功,Success,Succès,成功,성공,Успех,Éxito,Erfolg,Sucesso,Sukses,نجاح
+Failure,失败,失敗,Failure,Échec,失敗,실패,Неудача,Fallo,Fehler,Falha,Kegagalan,فشل
+Yes,是,是,Yes,Oui,はい,예,Да,Sí,Ja,Sim,Ya,نعم
+No,否,否,No,Non,いいえ,아니요,Нет,No,Nein,Não,Tidak,لا
+Mail Management,邮件管理,郵件管理,Mail Management,Gestion des emails,メール管理,메일 관리,Управление почтой,Gestión de correos,E-Mail-Verwaltung,Gerenciamento de e-mails,Manajemen Email,إدارة البريد الإلكتروني
+Recipient,收件人,收件人,Recipient,Destinataire,受信者,수신자,Получатель,Destinatario,Empfänger,Destinatário,Penerima,المستلم
+CC,抄送,抄送,CC,CC,CC,참조,Копия,CC,CC,CC,CC,نسخة
+Subject,主题,主題,Subject,Sujet,件名,제목,Тема,Asunto,Betreff,Assunto,Subjek,الموضوع
+Status,状态,狀態,Status,Statut,ステータス,상태,Статус,Estado,Status,Estado,Status,الحالة
+Content,内容,內容,Content,Contenu,内容,내용,Содержание,Contenido,Inhalt,Conteúdo,Konten,المحتوى
+Sent Time,发送时间,發送時間,Sent Time,Heure d'envoi,送信時間,전송 시간,Время отправки,Hora de envío,Sendezeitpunkt,Hora de envio,Waktu Pengiriman,وقت الإرسال
+Sender,发件人,發件人,Sender,Expéditeur,送信者,발신자,Отправитель,Remitente,Absender,Remetente,Pengirim,المرسل

@@ -7,9 +7,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import xyz.erupt.ai.constants.AiConst;
 import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
+import xyz.erupt.ai.model.McpServer;
 import xyz.erupt.core.annotation.EruptScan;
+import xyz.erupt.core.constant.MenuTypeEnum;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
 import xyz.erupt.core.module.MetaMenu;
@@ -29,6 +33,7 @@ import java.util.List;
 @EntityScan
 @EnableConfigurationProperties
 @EnableAsync
+@EnableScheduling
 public class EruptAiAutoConfiguration implements EruptModule {
 
     @Resource
@@ -56,9 +61,11 @@ public class EruptAiAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createRootMenu("$ai", "大模型管理", "fa fa-rocket", 25));
+        menus.add(MetaMenu.createRootMenu("$ai", "AI Manager", "fa fa-magic", 25));
         menus.add(MetaMenu.createEruptClassMenu(LLM.class, menus.get(0), 10));
         menus.add(MetaMenu.createEruptClassMenu(LLMAgent.class, menus.get(0), 20));
+        menus.add(MetaMenu.createEruptClassMenu(McpServer.class, menus.get(0), 30));
+        menus.add(MetaMenu.createSimpleMenu("ai-chat", "AI Chat", AiConst.AI_CHAT, menus.get(0), 40, MenuTypeEnum.ROUTER.getCode()));
         return menus;
     }
 

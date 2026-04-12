@@ -13,9 +13,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SseBody {
 
-    private String text;
+    private SseEvent event = SseEvent.TOKEN;
 
-    public SseBody(String text) {
-        this.text = text;
+    private String data;
+
+    public SseBody(SseEvent even, String data) {
+        this.data = data;
+        this.event = even;
     }
 }

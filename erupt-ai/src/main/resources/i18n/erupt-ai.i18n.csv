@@ -1,0 +1,37 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+AI Manager,AI 管理,AI 管理,AI Manager,Gestionnaire d'IA,AIマネージャー,AI 매니저,AI-менеджер,Gestor de IA,KI-Manager,Gestor de IA,Manajer AI,مدير الذكاء الاصطناعي
+Agent,智能体,智能體,Agent,Agent,エージェント,에이전트,Агент,Agente,Agent,Agente,Agen,وكيل
+AI Chat,AI 对话,AI 對話,AI Chat,Discussion IA,AIチャット,AI 채팅,AI-чат,Chat de IA,KI-Chat,Chat de IA,Obrolan AI,دردشة الذكاء الاصطناعي
+Model Test,模型测试,模型測試,Model Test,Test de modèle,モデルテスト,모델 테스트,Тест модели,Prueba del modelo,Modelltest,Teste de modelo,Uji Model,اختبار النموذج
+Default Chat Model,默认对话模型,預設對話模型,Default Chat Model,Modèle de chat par défaut,デフォルトチャットモデル,기본 채팅 모델,Модель чата по умолчанию,Modelo de chat predeterminado,Standard-Chat-Modell,Modelo de chat padrão,Model Chat Default,نموذج الدردشة الافتراضي
+Model Name,模型名称,模型名稱,Model Name,Nom du modèle,モデル名,모델 이름,Название модели,Nombre del modelo,Modellname,Nome do modelo,Nama Model,اسم النموذج
+Large Language Model,大语言模型,大語言模型,Large Language Model,Grand modèle de langage,大規模言語モデル,대형 언어 모델,Большая языковая модель,Gran modelo de lenguaje,Großes Sprachmodell,Grande modelo de linguagem,Model Bahasa Besar,نموذج اللغة الكبير
+Model Version,模型版本,模型版本,Model Version,Version du modèle,モデルバージョン,모델 버전,Версия модели,Versión del modelo,Modellversion,Versão do modelo,Versi Model,إصدار النموذج
+API Domain,API 域名,API 域名,API Domain,Domaine API,APIドメイン,API 도메인,Домен API,Dominio API,API-Domain,Domínio da API,Domain API,نطاق API
+Context Memory Rounds,上下文记忆轮次,上下文記憶輪次,Context Memory Rounds,Tours de mémoire contextuelle,コンテキストメモリラウンド,컨텍스트 메모리 라운드,Раунды контекстной памяти,Rondas de memoria contextual,Kontextspeicher-Runden,Rodadas de memória de contexto,Putaran Memori Konteks,جولات الذاكرة السياقية
+Status,状态,狀態,Status,Statut,ステータス,상태,Статус,Estado,Status,Estado,Status,الحالة
+Active,激活,激活,Active,Actif,アクティブ,활성,Активный,Activo,Aktiv,Ativo,Aktif,نشط
+Locked,锁定,鎖定,Locked,Verrouillé,ロック中,잠금,Заблокирован,Bloqueado,Gesperrt,Bloqueado,Terkunci,مقفل
+Usage Order,使用顺序,使用順序,Usage Order,Ordre d'utilisation,使用順序,사용 순서,Порядок использования,Orden de uso,Verwendungsreihenfolge,Ordem de uso,Urutan Penggunaan,ترتيب الاستخدام
+Model Config,模型配置,模型配置,Model Config,Configuration du modèle,モデル設定,모델 구성,Конфигурация модели,Configuración del modelo,Modellkonfiguration,Configuração do modelo,Konfigurasi Model,إعداد النموذج
+Remark,备注,備註,Remark,Remarque,備考,비고,Примечание,Observación,Bemerkung,Observação,Keterangan,ملاحظة
+Name,名称,名稱,Name,Nom,名前,이름,Название,Nombre,Name,Nome,Nama,الاسم
+Enabled,是否启用,是否啟用,Enabled,Activé,有効,활성화 여부,Включено,Habilitado,Aktiviert,Habilitado,Diaktifkan,مُفعَّل
+Prompt Handler,提示词处理器,提示詞處理器,Prompt Handler,Gestionnaire d'invite,プロンプトハンドラー,프롬프트 핸들러,Обработчик запросов,Manejador de prompts,Prompt-Handler,Manipulador de prompt,Penanganan Prompt,معالج التلميح
+Hint List,候选词列表,候選詞列表,Hint List,Liste de suggestions,ヒントリスト,힌트 목록,Список подсказок,Lista de sugerencias,Hinweisliste,Lista de sugestões,Daftar Petunjuk,قائمة التلميحات
+Prompt,提示词,提示詞,Prompt,Invite,プロンプト,프롬프트,Запрос,Prompt,Prompt,Prompt,Prompt,تلميح
+Description,描述,描述,Description,Description,説明,설명,Описание,Descripción,Beschreibung,Descrição,Deskripsi,وصف
+Agent Config,智能体参数,智能體參數,Agent Config,Configuration de l'agent,エージェント設定,에이전트 구성,Конфигурация агента,Configuración del agente,Agentenkonfiguration,Configuração do agente,Konfigurasi Agen,إعداد الوكيل
+Enable,启用,啟用,Enable,Activer,有効,활성화,Включить,Activar,Aktivieren,Ativar,Aktifkan,تفعيل
+Disable,禁用,禁用,Disable,Désactiver,無効,비활성화,Отключить,Desactivar,Deaktivieren,Desativar,Nonaktifkan,تعطيل
+Connection Protocol,连接协议,連接協議,Connection Protocol,Protocole de connexion,接続プロトコル,연결 프로토콜,Протокол подключения,Protocolo de conexión,Verbindungsprotokoll,Protocolo de conexão,Protokol Koneksi,بروتوكول الاتصال
+Tools,工具列表,工具列表,Tools,Outils,ツール,도구,Инструменты,Herramientas,Werkzeuge,Ferramentas,Alat,الأدوات
+Config,配置,配置,Config,Configuration,設定,구성,Конфигурация,Configuración,Konfiguration,Configuração,Konfigurasi,إعداد
+Chat Management,会话管理,會話管理,Chat Management,Gestion des discussions,チャット管理,채팅 관리,Управление чатом,Gestión de chats,Chat-Verwaltung,Gerenciamento de chat,Manajemen Obrolan,إدارة الدردشة
+Chat Records,会话记录,會話記錄,Chat Records,Historique des discussions,チャット履歴,채팅 기록,История чатов,Registros de chat,Chat-Verlauf,Registros de chat,Riwayat Obrolan,سجلات الدردشة
+Chat Title,会话标题,會話標題,Chat Title,Titre de la discussion,チャットタイトル,채팅 제목,Заголовок чата,Título del chat,Chat-Titel,Título do chat,Judul Obrolan,عنوان الدردشة
+User,用户,用戶,User,Utilisateur,ユーザー,사용자,Пользователь,Usuario,Benutzer,Usuário,Pengguna,مستخدم
+Created Time,创建时间,創建時間,Created Time,Heure de création,作成日時,생성 시간,Время создания,Hora de creación,Erstellungszeit,Hora de criação,Waktu Dibuat,وقت الإنشاء
+Sender,发送人,發送人,Sender,Expéditeur,送信者,발신자,Отправитель,Remitente,Absender,Remetente,Pengirim,المرسل
+Message Content,发送内容,發送內容,Message Content,Contenu du message,メッセージ内容,메시지 내용,Содержимое сообщения,Contenido del mensaje,Nachrichteninhalt,Conteúdo da mensagem,Konten Pesan,محتوى الرسالة
+Sent Time,发送时间,發送時間,Sent Time,Heure d'envoi,送信日時,전송 시간,Время отправки,Hora de envío,Sendezeitpunkt,Hora de envio,Waktu Pengiriman,وقت الإرسال

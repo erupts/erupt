@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import xyz.erupt.ai.core.LlmConfig;
@@ -28,65 +29,66 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * @author YuePeng
  * date 2025/2/22 16:21
  */
-@Erupt(name = "智能体", dataProxy = LLMAgent.class)
+@Erupt(name = "Agent", dataProxy = LLMAgent.class)
 @Table(name = "e_ai_llm_agent")
 @Getter
 @Setter
 @Entity
 @EruptI18n
+@NoArgsConstructor
 public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true)
+            views = @View(title = "Name"),
+            edit = @Edit(title = "Name", notNull = true)
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "是否启用"),
-            edit = @Edit(title = "是否启用", notNull = true)
+            views = @View(title = "Enabled"),
+            edit = @Edit(title = "Enabled", notNull = true)
     )
     private Boolean enable = true;
 
     @EruptField(
-            views = @View(title = "提示词处理器"),
-            edit = @Edit(title = "提示词处理器", type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = DynamicPromptFetch.class))
+            views = @View(title = "Prompt Handler"),
+            edit = @Edit(title = "Prompt Handler", type = EditType.CHOICE, choiceType = @ChoiceType(fetchHandler = DynamicPromptFetch.class))
     )
     @JsonIgnore
     private String promptHandler;
 
+    @EruptField(
+            views = @View(title = "Hint List"),
+            edit = @Edit(title = "Hint List", type = EditType.TAGS)
+    )
+    @Column(length = AnnotationConst.REMARK_LENGTH)
+    private String hint;
+
+    @JsonIgnore
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "智能体参数"),
-            edit = @Edit(title = "智能体参数", type = EditType.CODE_EDITOR, notNull = true,
+            views = @View(title = "Prompt"),
+            edit = @Edit(title = "Prompt", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "python"))
+    )
+    private String prompt;
+
+    @Column(length = AnnotationConst.REMARK_LENGTH)
+    @EruptField(
+            views = @View(title = "Description"),
+            edit = @Edit(title = "Description", type = EditType.TEXTAREA)
+    )
+    private String remark;
+
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    @EruptField(
+            views = @View(title = "Agent Config"),
+            edit = @Edit(title = "Agent Config", type = EditType.CODE_EDITOR, notNull = true,
                     codeEditType = @CodeEditorType(language = "json")
             )
     )
     @JsonIgnore
     @Ref(LlmConfig.class)
     private String config;
-
-//    @EruptField(
-//            views = @View(title = "候选词列表"),
-//            edit = @Edit(title = "候选词列表", type = EditType.TAGS)
-//    )
-//    @Column(length = AnnotationConst.REMARK_LENGTH)
-//    private String hint;
-
-    @JsonIgnore
-    @Column(length = AnnotationConst.CONFIG_LENGTH)
-    @EruptField(
-            views = @View(title = "提示词"),
-            edit = @Edit(title = "提示词", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "python"))
-    )
-    private String prompt;
-
-    @Column(length = AnnotationConst.REMARK_LENGTH)
-    @EruptField(
-            views = @View(title = "能力描述"),
-            edit = @Edit(title = "能力描述", type = EditType.TEXTAREA)
-    )
-    private String remark;
 
     @Override
     public void addBehavior(LLMAgent llmAgent) {
@@ -99,4 +101,7 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
         BeanUtils.copyProperties(llmConfig, llmRequest);
     }
 
+    public LLMAgent(Long id) {
+        this.setId(id);
+    }
 }

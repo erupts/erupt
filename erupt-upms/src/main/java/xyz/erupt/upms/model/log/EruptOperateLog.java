@@ -5,12 +5,17 @@ import com.google.gson.GsonBuilder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.cube.Dimension;
+import xyz.erupt.annotation.cube.EruptCube;
+import xyz.erupt.annotation.cube.Measure;
+import xyz.erupt.annotation.cube.SqlType;
 import xyz.erupt.annotation.fun.DataProxy;
 import xyz.erupt.annotation.sub_erupt.Power;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -35,83 +40,106 @@ import java.util.Map;
 @Table(name = "e_upms_operate_log")
 @EruptI18n
 @Erupt(
-        name = "操作日志",
-        desc = "记录平台内各用户操作过程",
+        name = "Operation Log",
+        desc = "Records all user operations in the platform",
         power = @Power(add = false, edit = false, viewDetails = false,
                 delete = false, powerHandler = SuperAdminPower.class),
         orderBy = "createTime desc",
         dataProxy = EruptOperateLog.class
 )
+@EruptCube(
+        name = "Erupt Operate Log",
+        sql = "e_upms_operate_log",
+        sqlType = SqlType.TABLE_NAME
+)
 @Getter
 @Setter
 public class EruptOperateLog extends BaseModel implements DataProxy<EruptOperateLog> {
 
+    @Dimension(title = "Operate User", sql = "operate_user")
     @EruptField(
-            views = @View(title = "操作人"),
-            edit = @Edit(title = "操作人", search = @Search(vague = true))
+            views = @View(title = "Operator"),
+            edit = @Edit(title = "Operator", search = @Search(vague = true))
     )
     private String operateUser;
 
+    @Dimension(title = "IP")
     @EruptField(
-            views = @View(title = "IP地址"),
-            edit = @Edit(title = "IP地址", search = @Search)
+            views = @View(title = "IP Address"),
+            edit = @Edit(title = "IP Address", search = @Search)
     )
     private String ip;
 
+    @Dimension(title = "IP Region")
     @EruptField(
-            views = @View(title = "IP来源", desc = "国家 | 大区 | 省份 | 城市 | 运营商", template = "value&&value.replace(/\\|/g,' | ')"),
-            edit = @Edit(title = "IP来源", search = @Search(vague = true))
+            views = @View(title = "IP Source", desc = "Country | Region | Province | City | ISP", template = "value&&value.replace(/\\|/g,' | ')"),
+            edit = @Edit(title = "IP Source", search = @Search(vague = true))
     )
     private String region;
 
+    @Dimension(title = "API Name", sql = "api_name")
     @EruptField(
-            views = @View(title = "功能名称"),
-            edit = @Edit(title = "功能名称", search = @Search(vague = true))
+            views = @View(title = "Function Name"),
+            edit = @Edit(title = "Function Name", search = @Search(vague = true))
     )
     private String apiName;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "请求参数", type = ViewType.CODE),
-            edit = @Edit(title = "请求参数", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
+            views = @View(title = "Req Param", type = ViewType.CODE),
+            edit = @Edit(title = "Req Param", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
     )
     private String reqParam;
 
+    @Dimension(title = "Status")
     @EruptField(
-            views = @View(title = "是否成功", sortable = true),
-            edit = @Edit(title = "是否成功", search = @Search)
+            views = @View(title = "Is Success", sortable = true),
+            edit = @Edit(title = "Is Success", search = @Search)
     )
     private Boolean status;
 
     @Column(length = 4000)
     @EruptField(
-            views = @View(title = "错误信息", type = ViewType.HTML)
+            views = @View(title = "Error Info", type = ViewType.HTML)
     )
     private String errorInfo;
 
+    @Dimension(title = "Total Time", sql = "total_time")
     @EruptField(
-            views = @View(title = "请求耗时", template = "value && value+'ms'", sortable = true),
-            edit = @Edit(title = "请求耗时", search = @Search(vague = true))
+            views = @View(title = "Req Time", template = "value && value+'ms'", sortable = true),
+            edit = @Edit(title = "Req Time", search = @Search(vague = true))
     )
     private Long totalTime;
 
+    @Dimension(title = "Create Time", sql = "create_time")
     @EruptField(
-            views = @View(title = "记录时间", sortable = true),
-            edit = @Edit(title = "记录时间", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
+            views = @View(title = "Record Time", sortable = true),
+            edit = @Edit(title = "Record Time", search = @Search(vague = true), dateType = @DateType(type = DateType.Type.DATE_TIME))
     )
     private Date createTime;
 
+    @Dimension(title = "Request Address", sql = "req_addr")
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "请求地址", type = ViewType.HTML)
+            views = @View(title = "URL", type = ViewType.HTML)
     )
     private String reqAddr;
 
+    @Dimension(title = "Request Method", sql = "req_method")
     @Column(length = 64)
     @EruptField(
-            views = @View(title = "请求方法")
+            views = @View(title = "Method")
     )
     private String reqMethod;
+
+    @Transient
+    @Measure(title = "Count", sql = "count(*)")
+    private Long count;
+
+    @Transient
+    @Measure(title = "Max Request Duration", sql = "max(total_time)")
+    private Long maxRequestDuration;
+
 
     @Override
     public void afterFetch(Collection<Map<String, Object>> list) {

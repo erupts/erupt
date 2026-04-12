@@ -27,11 +27,11 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 @Table(name = "e_dict")
 @EruptI18n
 @Erupt(
-        name = "数据字典",
+        name = "Data Dictionary",
         power = @Power(export = true),
         orderBy = "EruptDict.updateTime desc",
         drills = @Drill(
-                title = "字典项",
+                title = "Dict Item",
                 link = @Link(
                         linkErupt = EruptDictItem.class, joinColumn = "eruptDict.id"
                 )
@@ -43,20 +43,20 @@ public class EruptDict extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
-            views = @View(title = "编码", sortable = true),
-            edit = @Edit(title = "编码", notNull = true, search = @Search(vague = true))
+            views = @View(title = "code", sortable = true),
+            edit = @Edit(title = "code", notNull = true, search = @Search(vague = true))
     )
     private String code;
 
     @EruptField(
-            views = @View(title = "名称", sortable = true),
-            edit = @Edit(title = "名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "name", sortable = true),
+            edit = @Edit(title = "name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "备注"),
-            edit = @Edit(title = "备注", type = EditType.TEXTAREA)
+            views = @View(title = "remark"),
+            edit = @Edit(title = "remark", type = EditType.TEXTAREA)
     )
     private String remark;
 

@@ -1,18 +1,37 @@
 package xyz.erupt.ai.core;
 
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.agent.tool.ToolSpecifications;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.StreamingChatModel;
+import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.tool.ToolErrorHandlerResult;
+import dev.langchain4j.service.tool.ToolProvider;
+import dev.langchain4j.service.tool.ToolProviderResult;
+import lombok.extern.slf4j.Slf4j;
+import xyz.erupt.ai.ask.EruptAiChat;
+import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
-import xyz.erupt.ai.pojo.ChatCompletionMessage;
-import xyz.erupt.ai.pojo.ChatCompletionResponse;
+import xyz.erupt.ai.prompt.SystemPromptProvider;
+import xyz.erupt.ai.service.McpServerService;
+import xyz.erupt.ai.tool.AiToolboxManager;
+import xyz.erupt.ai.vo.mcp.McpClientInfo;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
+import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.util.EruptSpringUtil;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+@Slf4j
 public abstract class LlmCore {
 
     private static final Map<String, LlmCore> llms = new HashMap<>();
@@ -35,11 +54,128 @@ public abstract class LlmCore {
 
     public abstract String api();
 
-    public abstract LlmConfig config();
+    public LlmConfig config() {
+        return new LlmConfig();
+    }
 
-    public abstract ChatCompletionResponse chat(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt);
+    public abstract ChatModel buildChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages);
 
-    public abstract void chatSse(LlmRequest llmRequest, String userPrompt, List<ChatCompletionMessage> assistantPrompt, Consumer<SseListener> listener);
+    public abstract StreamingChatModel buildStreamingChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener);
+
+    public String chat(LlmRequest llmRequest, List<ChatMessage> chatMessages) {
+        String userMessage = ((dev.langchain4j.data.message.UserMessage) chatMessages.get(chatMessages.size() - 1)).singleText();
+        List<ChatMessage> historyMessages = chatMessages.subList(0, chatMessages.size() - 1);
+        ChatModel chatModel = this.buildChatModel(llmRequest, chatMessages);
+        ChatMemory chatMemory = creatMemory(historyMessages);
+        AiServices<EruptAiChat> eruptAiServices = AiServices.builder(EruptAiChat.class)
+                .chatModel(chatModel).chatMemoryProvider((id) -> chatMemory);
+        return this.buildAiServices(eruptAiServices, llmRequest).chat(userMessage).text();
+    }
+
+    public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatMessage> chatContext, Consumer<SseListener> listener) {
+        StreamingChatModel streamingChatModel = this.buildStreamingChatModel(llmRequest, chatContext, listener);
+        ChatMemory chatMemory = creatMemory(chatContext);
+        AiServices<EruptAiChat> eruptAiServices = AiServices.builder(EruptAiChat.class)
+                .streamingChatModel(streamingChatModel).chatMemoryProvider((id) -> chatMemory);
+        MetaContext metaContext = MetaContext.get();
+        this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest), userMessage, metaContext, listener);
+    }
+
+    private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest) {
+        eruptAiServices.systemMessageProvider((id) -> {
+            AiProp aiProp = EruptSpringUtil.getBean(AiProp.class);
+            StringBuffer systemPrompt = new StringBuffer(aiProp.getSystemPrompt());
+            SystemPromptProvider.getRegisteredProviders().forEach(provider -> {
+                systemPrompt.append("\n\n").append(provider.getPrompt());
+            });
+            return systemPrompt.toString();
+        });
+        if (llmRequest.getAutoCallTool()) {
+            eruptAiServices.toolProvider(buildTools());
+        }
+        eruptAiServices.toolExecutionErrorHandler((throwable, e) -> {
+            log.error("Tool execution error [{}] e: {}", throwable.getMessage(), e);
+            return new ToolErrorHandlerResult("Tool error: " + e.toString());
+        });
+        return eruptAiServices.build();
+    }
+
+    private ToolProvider buildTools() {
+        return (request) -> {
+            ToolProviderResult.Builder builder = ToolProviderResult.builder();
+            AiToolboxManager.getTools().forEach(obj -> {
+                List<ToolSpecification> specs = ToolSpecifications.toolSpecificationsFrom(obj);
+                for (ToolSpecification spec : specs) {
+                    builder.add(spec, (executionRequest, memoryId) -> {
+                        Object result = AiToolboxManager.invoke(executionRequest);
+                        return null == result ? "" : result.toString();
+                    });
+                }
+            });
+            for (McpClientInfo value : McpServerService.getMCP_CLIENTS().values()) {
+                if (null != value.getMcpClient()) {
+                    value.getMcpClient().listTools().forEach(spec ->
+                            builder.add(spec, (executionRequest, memoryId) ->
+                                    value.getMcpClient().executeTool(executionRequest).toString())
+                    );
+                }
+            }
+            return builder.build();
+        };
+    }
+
+    private void streamingChat(EruptAiChat eruptAiChat, String userMessage, MetaContext metaContext, Consumer<SseListener> listener) {
+        MetaContext.set(metaContext);
+        AtomicBoolean toolCalling = new AtomicBoolean(false);
+        eruptAiChat.streamChat(userMessage).onPartialResponse(partialResponse -> {
+                    toolCalling.set(true);
+                    listener.accept(SseListener.builder().currMessage(partialResponse).build());
+                })
+                .onCompleteResponse(chatResponse -> {
+                    toolCalling.set(false);
+                    listener.accept(SseListener.builder()
+                            .isFinish(true)
+                            .usage(chatResponse.tokenUsage())
+                            .aiMessage(chatResponse.aiMessage()).build());
+                })
+                .onError(e -> {
+                    log.error("Failed to get response from server", e);
+                    if (!toolCalling.get()) {
+                        listener.accept(SseListener.builder().isFinish(true).throwable(e).build());
+                    }
+                }).onPartialToolCall(toolCall -> {
+                    toolCalling.set(true);
+                    MetaContext.set(metaContext);
+                    log.info("Calling {} with arguments: {}", toolCall.name(), toolCall.partialArguments());
+                    listener.accept(SseListener.builder().think("Calling " + toolCall.name()).build());
+                }).onPartialThinking(thinking -> {
+                    listener.accept(SseListener.builder().think(thinking.text()).build());
+                }).start();
+    }
+    public ChatMemory creatMemory(List<ChatMessage> chatMessages) {
+        return new ChatMemory() {
+
+            @Override
+            public Object id() {
+                return null;
+            }
+
+            @Override
+            public void add(ChatMessage chatMessage) {
+                chatMessages.add(chatMessage);
+            }
+
+            @Override
+            public List<ChatMessage> messages() {
+                return chatMessages;
+            }
+
+            @Override
+            public void clear() {
+
+            }
+        };
+    }
 
     public static class H implements ChoiceFetchHandler {
         @Override

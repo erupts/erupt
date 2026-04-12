@@ -6,11 +6,14 @@
     <artifactId>erupt-test</artifactId>
     <name>erupt-test</name>
     <description>unittest</description>
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
 
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.13.3</version>
+        <version>1.14.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

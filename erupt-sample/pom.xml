@@ -6,7 +6,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.13.3</version>
+        <version>1.14.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -41,11 +41,6 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-cloud-server</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-monitor</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

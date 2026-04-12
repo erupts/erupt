@@ -18,9 +18,13 @@ public class LlmRequest {
 
     private String model;
 
-    private Float temperature;
+    private Double temperature;
 
-    private Float top_p;
+    private Double top_p;
+
+    private Boolean autoCallTool = false;
+
+    private Boolean strictTools = true;
 
     private ResponseFormat responseFormat = ResponseFormat.text;
 

@@ -1,8 +1,11 @@
 package xyz.erupt.ai.core;
 
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.model.chat.StreamingChatModel;
+import dev.langchain4j.model.output.TokenUsage;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import xyz.erupt.ai.pojo.ChatUsage;
 
 /**
  * @author YuePeng
@@ -10,23 +13,22 @@ import xyz.erupt.ai.pojo.ChatUsage;
  */
 @Getter
 @Setter
+@Builder
 public class SseListener {
-
-    // Full output content
-    private final StringBuilder output = new StringBuilder();
-
-    private boolean pending = false;
 
     // Stream output, the content of the current message
     private String currMessage;
 
-    // Stream output, the entire message object
-    private String currData;
+    private String think;
+
+    private boolean isFinish;
 
     // Spending tokens
-    private ChatUsage usage = new ChatUsage();
+    private TokenUsage usage;
 
-    private boolean isFinish = false;
+    private AiMessage aiMessage;
 
-    private boolean error = false;
+    private StreamingChatModel streamingChatModel;
+
+    private Throwable throwable;
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.core.context.MetaContext;
@@ -20,21 +21,22 @@ import java.util.Optional;
 @Getter
 @Setter
 @MappedSuperclass
+@EruptI18n
 public class MetaModel extends BaseModel {
 
-    @EruptField(views = @View(title = "创建人", show = false))
+    @EruptField(views = @View(title = "Creator", show = false))
     @EruptSmartSkipSerialize
     private String createBy;
 
-    @EruptField(views = @View(title = "创建时间", show = false))
+    @EruptField(views = @View(title = "Create Time", show = false))
     @EruptSmartSkipSerialize
     private LocalDateTime createTime;
 
-    @EruptField(views = @View(title = "更新人", show = false))
+    @EruptField(views = @View(title = "Updater", show = false))
     @EruptSmartSkipSerialize
     private String updateBy;
 
-    @EruptField(views = @View(title = "更新时间", show = false))
+    @EruptField(views = @View(title = "Update Time", show = false))
     @EruptSmartSkipSerialize
     private LocalDateTime updateTime;
 

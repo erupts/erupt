@@ -1,0 +1,1 @@
+../../../../.claude/skills/erupt/references/erupt-model.md

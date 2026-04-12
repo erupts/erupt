@@ -1,18 +1,18 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.core.OpenAi;
+import xyz.erupt.ai.core.OpenAI;
 
 /**
  * @author YuePeng
  * date 2025/2/26 22:58
  */
 @Component
-public class Qwen extends OpenAi {
+public class Qwen extends OpenAI {
 
     @Override
-    public String chatApiPath() {
-        return "/compatible-mode/v1/chat/completions";
+    public String chatApiPoint() {
+        return "/compatible-mode/v1";
     }
 
     @Override

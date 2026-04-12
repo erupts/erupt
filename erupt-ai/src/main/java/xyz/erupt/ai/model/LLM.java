@@ -28,13 +28,13 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
  * date 2025/2/22 16:21
  */
 @Erupt(
-        name = "大语言模型", dataProxy = LLMDataProxy.class,
+        name = "LLM", dataProxy = LLMDataProxy.class,
         orderBy = "sort",
         rowOperation = {
-                @RowOperation(title = "对话测试", icon = "fa fa-comments",
-                        tpl = @Tpl(path = "/tpl/llm-chat.ftl", height = "85vh", tplHandler = LLMDataProxy.class),
+                @RowOperation(title = "Model Test", icon = "fa fa-comments",
+                        tpl = @Tpl(path = "/tpl/ai-chat.ftl", height = "85vh"),
                         mode = RowOperation.Mode.SINGLE, type = RowOperation.Type.TPL),
-                @RowOperation(title = "默认对话模型", icon = "fa fa-magic",
+                @RowOperation(title = "Default Chat Model", icon = "fa fa-magic",
                         ifExpr = "item.defaultLLM === '×'",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
         }
@@ -47,15 +47,15 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
-            views = @View(title = "模型名称"),
-            edit = @Edit(title = "模型名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Model Name"),
+            edit = @Edit(title = "Model Name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "大语言模型"),
+            views = @View(title = "Large Language Model"),
             edit = @Edit(
-                    title = "大语言模型",
+                    title = "Large Language Model",
                     type = EditType.CHOICE,
                     notNull = true,
                     search = @Search,
@@ -66,15 +66,15 @@ public class LLM extends MetaModelUpdateVo {
     private String llm;
 
     @EruptField(
-            views = @View(title = "模型版本"),
-            edit = @Edit(title = "模型版本", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Model Version"),
+            edit = @Edit(title = "Model Version", notNull = true, search = @Search(vague = true))
     )
     private String model;
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "API 域名"),
-            edit = @Edit(title = "API 域名", notNull = true)
+            views = @View(title = "API Domain"),
+            edit = @Edit(title = "API Domain", notNull = true)
     )
     private String apiUrl;
 
@@ -84,38 +84,38 @@ public class LLM extends MetaModelUpdateVo {
     private String apiKey;
 
     @EruptField(
-            views = @View(title = "上下文记忆轮次"),
-            edit = @Edit(title = "上下文记忆轮次", notNull = true,
+            views = @View(title = "Context Memory Rounds"),
+            edit = @Edit(title = "Context Memory Rounds", notNull = true,
                     type = EditType.SLIDER, sliderType = @SliderType(max = 100))
     )
     private Integer maxContext = 20;
 
     @EruptField(
-            views = @View(title = "状态", sortable = true),
+            views = @View(title = "Status", sortable = true),
             edit = @Edit(
-                    title = "状态", search = @Search,
+                    title = "Status", search = @Search,
                     type = EditType.BOOLEAN, notNull = true,
-                    boolType = @BoolType(trueText = "激活", falseText = "锁定")
+                    boolType = @BoolType(trueText = "Active", falseText = "Locked")
             )
     )
     private Boolean enable = true;
 
     @EruptField(
-            views = @View(title = "默认对话模型"),
-            edit = @Edit(title = "默认对话模型", show = false, boolType = @BoolType(trueText = "✓", falseText = "×"))
+            views = @View(title = "Default Chat Model"),
+            edit = @Edit(title = "Default Chat Model", show = false, boolType = @BoolType(trueText = "✓", falseText = "×"))
     )
     private Boolean defaultLLM = false;
 
     @EruptField(
-            views = @View(title = "使用顺序", sortable = true),
-            edit = @Edit(title = "使用顺序", notNull = true)
+            views = @View(title = "Usage Order", sortable = true),
+            edit = @Edit(title = "Usage Order", notNull = true)
     )
     private Integer sort = 0;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "模型配置"),
-            edit = @Edit(title = "模型配置", type = EditType.CODE_EDITOR, notNull = true,
+            views = @View(title = "Model Config"),
+            edit = @Edit(title = "Model Config", type = EditType.CODE_EDITOR, notNull = true,
                     codeEditType = @CodeEditorType(language = "json")
             )
     )
@@ -125,8 +125,8 @@ public class LLM extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "备注", type = ViewType.HTML),
-            edit = @Edit(title = "备注", type = EditType.TEXTAREA)
+            views = @View(title = "Remark", type = ViewType.HTML),
+            edit = @Edit(title = "Remark", type = EditType.TEXTAREA)
     )
     private String remark;
 

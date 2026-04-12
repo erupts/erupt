@@ -1,11 +1,10 @@
 package xyz.erupt.ai.llm;
 
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.core.LlmConfig;
-import xyz.erupt.ai.core.OpenAi;
+import xyz.erupt.ai.core.OpenAI;
 
 @Component
-public class Mistral extends OpenAi {
+public class Mistral extends OpenAI {
 
     @Override
     public String model() {

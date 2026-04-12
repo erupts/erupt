@@ -36,11 +36,11 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "e_upms_user")
 @Erupt(
-        name = "用户管理",
+        name = "User Management",
         dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg"),
         orderBy = "EruptUser.id",
-        rowOperation = @RowOperation(title = "重置密码",
+        rowOperation = @RowOperation(title = "Reset Password",
                 icon = "fa fa-refresh",
                 mode = RowOperation.Mode.SINGLE,
                 eruptClass = ResetPassword.class,
@@ -56,55 +56,55 @@ public class EruptUser extends LookerSelf {
 
     @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
-            views = @View(title = "用户名", sortable = true),
-            edit = @Edit(title = "用户名", desc = "登录用户名", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Account", sortable = true),
+            edit = @Edit(title = "Account", desc = "Login account", notNull = true, search = @Search(vague = true))
     )
     private String account;
 
     @EruptField(
-            views = @View(title = "姓名", sortable = true),
-            edit = @Edit(title = "姓名", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Full Name", sortable = true),
+            edit = @Edit(title = "Full Name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @EruptField(
-            views = @View(title = "账户状态", sortable = true),
+            views = @View(title = "Account Status", sortable = true),
             edit = @Edit(
-                    title = "账户状态",
+                    title = "Account Status",
                     search = @Search,
                     type = EditType.BOOLEAN,
                     notNull = true,
                     boolType = @BoolType(
-                            trueText = "激活",
-                            falseText = "锁定"
+                            trueText = "Activate",
+                            falseText = "Locked"
                     )
             )
     )
     private Boolean status = true;
 
     @EruptField(
-            edit = @Edit(title = "手机号码", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.PHONE_REGEX))
+            edit = @Edit(title = "Phone", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.PHONE_REGEX))
     )
     private String phone;
 
     @EruptField(
-            edit = @Edit(title = "邮箱", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
+            edit = @Edit(title = "Email", search = @Search(vague = true), inputType = @InputType(regex = RegexConst.EMAIL_REGEX))
     )
     private String email;
 
     @EruptField(
-            views = @View(title = "超管用户", sortable = true),
+            views = @View(title = "Admin User", sortable = true),
             edit = @Edit(
-                    title = "超管用户", notNull = true, search = @Search(vague = true)
+                    title = "Admin User", notNull = true, search = @Search(vague = true)
             )
     )
     private Boolean isAdmin = false;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "首页菜单", column = "name"),
+            views = @View(title = "Home Menu", column = "name"),
             edit = @Edit(
-                    title = "首页菜单",
+                    title = "Home Menu",
                     type = EditType.REFERENCE_TREE,
                     referenceTreeType = @ReferenceTreeType(pid = "parentMenu.id"),
                     filter = @Filter(conditionHandler = EruptMenuViewFilter.class)
@@ -114,30 +114,40 @@ public class EruptUser extends LookerSelf {
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "所属组织", column = "name"),
-            edit = @Edit(title = "所属组织", type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id"))
+            views = @View(title = "Org", column = "name"),
+            edit = @Edit(title = "Org", type = EditType.REFERENCE_TREE, referenceTreeType = @ReferenceTreeType(pid = "parentOrg.id"))
     )
     private EruptOrg eruptOrg;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "岗位", column = "name"),
-            edit = @Edit(title = "岗位", type = EditType.REFERENCE_TREE, search = @Search)
+            views = @View(title = "Post", column = "name"),
+            edit = @Edit(title = "Post", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private EruptPost eruptPost;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "e_upms_user_org_head", joinColumns = @JoinColumn(name = "id"))
     @EruptField(
-            views = @View(title = "负责组织", column = "name"),
-            edit = @Edit(title = "负责组织", type = EditType.MULTI_CHOICE, multiChoiceType =
+            views = @View(title = "Responsible Org", column = "name"),
+            edit = @Edit(title = "Responsible Org", type = EditType.MULTI_CHOICE, multiChoiceType =
             @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
     )
     private Set<Long> headOrg;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "e_upms_user_org_division", joinColumns = @JoinColumn(name = "id"))
+    @EruptField(
+            views = @View(title = "Supervising Org", column = "name"),
+            edit = @Edit(title = "Supervising Org", type = EditType.MULTI_CHOICE, multiChoiceType =
+            @MultiChoiceType(type = MultiChoiceType.Type.SELECT, fetchHandler = EruptOrgFetchHandler.class))
+    )
+    private Set<Long> divisionOrg;
+
+
     @Transient
     @EruptField(
-            edit = @Edit(title = "密码", type = EditType.DIVIDE)
+            edit = @Edit(title = "Password", type = EditType.DIVIDE)
     )
     private String pwdDivide;
 
@@ -145,36 +155,36 @@ public class EruptUser extends LookerSelf {
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "密码", readonly = @Readonly(add = false))
+            edit = @Edit(title = "Password", readonly = @Readonly(add = false))
     )
     private String passwordA;
 
     @Transient
     @EruptField(
-            edit = @Edit(title = "确认密码", readonly = @Readonly(add = false))
+            edit = @Edit(title = "Confirm Password", readonly = @Readonly(add = false))
     )
     private String passwordB;
 
     @EruptField(
-            views = @View(title = "重置密码时间", width = "130px", sortable = true)
+            views = @View(title = "Reset Pwd Time", width = "130px", sortable = true)
     )
     private Date resetPwdTime;
 
     @EruptField(
             edit = @Edit(
-                    title = "md5加密", type = EditType.BOOLEAN, notNull = true,
+                    title = "MD5 Encrypt", type = EditType.BOOLEAN, notNull = true,
                     readonly = @Readonly(add = false),
                     boolType = @BoolType(
-                            trueText = "加密",
-                            falseText = "不加密"
+                            trueText = "Encrypt",
+                            falseText = "No Encrypt"
                     )
             )
     )
     private Boolean isMd5 = true;
 
     @EruptField(
-            views = @View(title = "账号失效时间", sortable = true),
-            edit = @Edit(title = "账号失效时间")
+            views = @View(title = "Account Expiry", sortable = true),
+            edit = @Edit(title = "Account Expiry")
     )
     private Date expireDate;
 
@@ -186,9 +196,9 @@ public class EruptUser extends LookerSelf {
     )
     @OrderBy
     @EruptField(
-            views = @View(title = "所属角色"),
+            views = @View(title = "Role"),
             edit = @Edit(
-                    title = "所属角色",
+                    title = "Role",
                     type = EditType.CHECKBOX
             )
     )
@@ -197,8 +207,8 @@ public class EruptUser extends LookerSelf {
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
-                    title = "ip白名单",
-                    desc = "ip与ip之间使用换行符间隔，不填表示不鉴权",
+                    title = "IP Whitelist",
+                    desc = "Separate IPs with newline; leave empty for no auth check",
                     type = EditType.TEXTAREA
             )
     )
@@ -207,7 +217,7 @@ public class EruptUser extends LookerSelf {
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
             edit = @Edit(
-                    title = "备注",
+                    title = "remark",
                     type = EditType.TEXTAREA
             )
     )

@@ -34,15 +34,15 @@ import xyz.erupt.upms.handler.ViaMenuValueCtrl;
 @Entity
 @Table(name = "e_cloud_node")
 @Erupt(
-        name = "节点配置", dataProxy = CloudNodeProcess.class,
+        name = "Node Config", dataProxy = CloudNodeProcess.class,
         rowOperation = {
                 @RowOperation(
-                        title = "查看令牌", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
+                        title = "View Token", icon = "fa fa-shield", mode = RowOperation.Mode.SINGLE,
                         show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.CLOUD_ACCESS_TOKEN_PERMISSION),
                         type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/node-info.ftl",embedType = PageEmbedType.MICRO_FRONTEND)
                 ),
                 @RowOperation(
-                        title = "节点日志", mode = RowOperation.Mode.SINGLE,
+                        title = "Node Log", mode = RowOperation.Mode.SINGLE,
                         ifExpr = "item.version && item.version !== '-'",
                         show = @ExprBool(exprHandler = ViaMenuValueCtrl.class, params = CloudServerConst.ERUPT_CLOUD_NODE_LOG),
                         type = RowOperation.Type.TPL, tpl = @Tpl(path = "/tpl/erupt-log.html", height = "80vh", openWay = OpenWay.DRAWER, drawerPlacement = Placement.BOTTOM)
@@ -55,47 +55,47 @@ public class CloudNode extends MetaModelUpdateVo {
 
     @Column(unique = true)
     @EruptField(
-            views = @View(title = "节点名", sortable = true),
-            edit = @Edit(title = "节点名", desc = "NodeName", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Node Name", sortable = true),
+            edit = @Edit(title = "Node Name", desc = "NodeName", notNull = true, search = @Search(vague = true))
     )
     private String nodeName;
 
     @EruptField(
-            views = @View(title = "友好名称", sortable = true),
-            edit = @Edit(title = "友好名称", notNull = true, search = @Search(vague = true))
+            views = @View(title = "Friendly Name", sortable = true),
+            edit = @Edit(title = "Friendly Name", notNull = true, search = @Search(vague = true))
     )
     private String name;
 
     @ManyToOne
     @EruptField(
-            views = @View(title = "所属分组", column = "name"),
-            edit = @Edit(title = "所属分组", type = EditType.REFERENCE_TREE, search = @Search)
+            views = @View(title = "Node Group", column = "name"),
+            edit = @Edit(title = "Node Group", type = EditType.REFERENCE_TREE, search = @Search)
     )
     private CloudNodeGroup cloudNodeGroup;
 
     @EruptField(
-            views = @View(title = "状态", sortable = true),
-            edit = @Edit(title = "状态", search = @Search, notNull = true, boolType = @BoolType(
-                    trueText = "启用", falseText = "禁用"
+            views = @View(title = "Status", sortable = true),
+            edit = @Edit(title = "Status", search = @Search, notNull = true, boolType = @BoolType(
+                    trueText = "Enable", falseText = "Disable"
             ))
     )
     private Boolean status = true;
 
     @Transient
     @EruptField(
-            views = @View(title = "Erupt 类数量", className = "text-center", width = "120px")
+            views = @View(title = "Erupt Class Count", className = "text-center", width = "120px")
     )
     private Integer eruptNum;
 
     @Transient
     @EruptField(
-            views = @View(title = "模块数", className = "text-center", width = "70px")
+            views = @View(title = "Module Count", className = "text-center", width = "70px")
     )
     private Integer eruptModuleNum;
 
     @Transient
     @EruptField(
-            views = @View(title = "实例数", className = "text-center", width = "70px"
+            views = @View(title = "Instance Count", className = "text-center", width = "70px"
                     , tpl = @Tpl(path = "/tpl/node-instance.ftl", width = "400px", tplHandler = CloudNodeProcess.class)
             )
     )
@@ -103,21 +103,21 @@ public class CloudNode extends MetaModelUpdateVo {
 
     @Transient
     @EruptField(
-            views = @View(title = "版本", className = "text-center", width = "120px")
+            views = @View(title = "Version", className = "text-center", width = "120px")
     )
     private String version;
 
     @EruptField(
-            views = @View(title = "负责人", sortable = true),
-            edit = @Edit(title = "负责人", type = EditType.TAGS,
+            views = @View(title = "Duty", sortable = true),
+            edit = @Edit(title = "Duty", type = EditType.TAGS,
                     tagsType = @TagsType(fetchHandler = CloudNodeProcess.class), notNull = true)
     )
     private String duty;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "节点配置"),
-            edit = @Edit(title = "节点配置", desc = "配置后可在子节点中读取", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
+            views = @View(title = "Node Config"),
+            edit = @Edit(title = "Node Config", desc = "Config can be read by child nodes", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))
     )
     private String config;
 
@@ -128,8 +128,8 @@ public class CloudNode extends MetaModelUpdateVo {
 
     @Column(length = AnnotationConst.REMARK_LENGTH)
     @EruptField(
-            views = @View(title = "描述", type = ViewType.HTML),
-            edit = @Edit(title = "描述", type = EditType.TEXTAREA)
+            views = @View(title = "Description", type = ViewType.HTML),
+            edit = @Edit(title = "Description", type = EditType.TEXTAREA)
     )
     private String remark;
 

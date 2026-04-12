@@ -24,16 +24,16 @@ public class EruptPrintTpl extends HyperModelUpdateVo {
     private String code;
 
     @EruptField(
-            views = @View(title = "名称"),
-            edit = @Edit(title = "名称", notNull = true)
+            views = @View(title = "Name"),
+            edit = @Edit(title = "Name", notNull = true)
     )
     private String name;
 
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
-            views = @View(title = "内容"),
+            views = @View(title = "Content"),
             edit = @Edit(
-                    title = "内容", type = EditType.HTML_EDITOR, notNull = true,
+                    title = "Content", type = EditType.HTML_EDITOR, notNull = true,
                     htmlEditorType = @HtmlEditorType(HtmlEditorType.Type.UEDITOR)
             )
     )

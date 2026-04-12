@@ -9,8 +9,8 @@ import xyz.erupt.core.view.R;
 import xyz.erupt.core.view.SimplePage;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.notice.constant.AnnouncementStatus;
-import xyz.erupt.notice.modal.EruptUserAnnouncement;
-import xyz.erupt.notice.modal.NoticeAnnouncement;
+import xyz.erupt.notice.model.EruptUserAnnouncement;
+import xyz.erupt.notice.model.NoticeAnnouncement;
 import xyz.erupt.upms.annotation.EruptLoginAuth;
 import xyz.erupt.upms.service.EruptUserService;
 
