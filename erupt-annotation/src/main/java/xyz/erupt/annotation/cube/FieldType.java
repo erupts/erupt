@@ -1,5 +1,6 @@
 package xyz.erupt.annotation.cube;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -27,6 +28,11 @@ public enum FieldType {
         } else {
             return fieldType;
         }
+    }
+
+    public static FieldType get(Field field) {
+        Dimension dimension = field.getDeclaredAnnotation(Dimension.class);
+        return get(dimension.type(), field.getType());
     }
 
 }
