@@ -3,9 +3,6 @@ package xyz.erupt.annotation.cube;
 import org.intellij.lang.annotations.Language;
 
 public @interface Join {
-
-//    String as() default "";
-
     Class<?> cube();
 
     @Language(value = "sql", prefix = "select * from t ", suffix = " t1")
