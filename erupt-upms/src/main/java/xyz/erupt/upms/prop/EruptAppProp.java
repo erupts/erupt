@@ -18,8 +18,6 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "erupt-app")
 public class EruptAppProp {
 
-    public static final String DEFAULT_LANG = "zh-CN";
-
     //Whether to display a watermark
     private boolean waterMark = true;
 
@@ -34,10 +32,10 @@ public class EruptAppProp {
 
     //Multi-language configuration
     private String[] locales = {
-            DEFAULT_LANG, // 🇨🇳 简体中文
-            "zh-TW",      // 🇭🇰 繁体中文
             "en-US",      // 🇬🇧 English
             "fr-FR",      // 🇫🇷 En français
+            "zh-CN",      // 🇨🇳 简体中文
+            "zh-TW",      // 🇭🇰 繁体中文
             "ja-JP",      // 🇯🇵 日本語
             "ko-KR",      // 🇰🇷 한국어
             "ru-RU",      // 🇷🇺 русск
@@ -60,7 +58,7 @@ public class EruptAppProp {
 
     public void setLocales(String[] locales) {
         if (null == locales || locales.length == 0) {
-            this.locales = new String[]{DEFAULT_LANG};
+            this.locales = new String[]{"en-US"};
         } else {
             this.locales = locales;
         }

@@ -41,7 +41,7 @@ public class EruptProp {
     private boolean redisSessionRefresh = false;
 
     // Default locale
-    public String defaultLocales = "zh-CN";
+    public String defaultLocales = "en-US";
 
     // Log collection feature switch
     private boolean logTrack = true;
