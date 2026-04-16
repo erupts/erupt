@@ -15,6 +15,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "erupt.security", ignoreUnknownFields = false)
 public class EruptSecurityProp {
 
-    // 是否记录操作日志
+    // Whether to record operation logs
     private boolean recordOperateLog = true;
 }

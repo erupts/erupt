@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
  */
 public interface VolatileFun<A extends Annotation, P extends Annotation> {
 
-    @Comment("返回值：JSON对象")
-    Void exec(@Comment("当前注解") A a, @Comment("父级注解") P p);
+    @Comment("Return value: JSON object")
+    Void exec(@Comment("current annotation") A a, @Comment("parent annotation") P p);
 
 }

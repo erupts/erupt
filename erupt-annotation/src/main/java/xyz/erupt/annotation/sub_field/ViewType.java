@@ -7,50 +7,50 @@ import xyz.erupt.annotation.config.Comment;
  * date 2018-11-12.
  */
 public enum ViewType {
-    @Comment("根据返回值等特征自动判断")
+    @Comment("Automatically determined based on return value type and other characteristics")
     AUTO,
-    @Comment("普通文本")
+    @Comment("Plain text")
     TEXT,
-    @Comment("颜色")
+    @Comment("Color")
     COLOR,
-    @Comment("安全文本渲染")
+    @Comment("Safe text rendering")
     SAFE_TEXT,
-    @Comment("图片")
+    @Comment("Image")
     IMAGE,
-    @Comment("图片BASE64")
+    @Comment("Image in BASE64 format")
     IMAGE_BASE64,
-    @Comment("flash文件")
+    @Comment("Flash file")
     SWF,
     @Comment("HTML")
     HTML,
-    @Comment("手机端方式展示")
+    @Comment("Mobile-style display")
     MOBILE_HTML,
-    @Comment("二维码")
+    @Comment("QR code")
     QR_CODE,
-    @Comment("链接")
+    @Comment("Link")
     LINK,
-    @Comment("对话框方式打开链接")
+    @Comment("Open link in a dialog")
     LINK_DIALOG,
-    @Comment("下载")
+    @Comment("Download")
     DOWNLOAD,
-    @Comment("在新标签页中查看，不同于下载，特殊mime类型可以在网页中直接预览，如：pdf,mp4,svg,png等")
+    @Comment("View in a new tab; unlike download, special MIME types can be previewed directly in the browser, e.g. pdf, mp4, svg, png")
     ATTACHMENT,
-    @Comment("对话框方式展示附件")
+    @Comment("Display attachment in a dialog")
     ATTACHMENT_DIALOG,
-    @Comment("时间")
+    @Comment("Date")
     DATE,
-    @Comment("时间日期")
+    @Comment("Date and time")
     DATE_TIME,
-    @Comment("开关")
+    @Comment("Boolean switch")
     BOOLEAN,
-    @Comment("数值")
+    @Comment("Numeric value")
     NUMBER,
-    @Comment("地图")
+    @Comment("Map")
     MAP,
-    @Comment("代码")
+    @Comment("Code")
     CODE,
-    @Comment("显示一对多,对多对数据")
+    @Comment("Display one-to-many or many-to-many data")
     TAB_VIEW,
-    @Comment("markdown 编辑器")
+    @Comment("Markdown editor")
     MARKDOWN,
 }

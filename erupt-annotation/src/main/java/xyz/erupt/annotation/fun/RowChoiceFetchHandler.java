@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface RowChoiceFetchHandler<T> {
 
-    @Comment("根据行数据获取下拉列表")
+    @Comment("Fetch dropdown list based on row data")
     List<VLModel> fetch(T t, String[] params);
 
 }

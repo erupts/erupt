@@ -6,7 +6,6 @@ import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.constant.MenuStatus;
 import xyz.erupt.core.constant.MenuTypeEnum;
-import xyz.erupt.core.i18n.I18nTranslate;
 
 /**
  * @author YuePeng
@@ -17,7 +16,7 @@ import xyz.erupt.core.i18n.I18nTranslate;
 @NoArgsConstructor
 public class MetaMenu {
 
-    private Long id; //无需传递此参数
+    private Long id; // No need to pass this parameter
 
     private String code;
 

@@ -108,7 +108,7 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
                         query.addCriteria(Criteria.where(mongoFieldName).gte(list.get(0)).lte(list.get(1)));
                         break;
                     case IN:
-                        // 类型强制转换.
+                        // Force type conversion.
                         if (value instanceof Collection<?>) {
                             query.addCriteria(Criteria.where(mongoFieldName).in((Collection<?>) value));
                         } else {
@@ -121,8 +121,8 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
     }
 
     /**
-     * <note>由于mongodb类型检查严格</note>
-     * 根据{@link xyz.erupt.annotation.EruptField} 标注的字段类型 转换查询条件参数值类型
+     * <note>Due to strict type checking in MongoDB</note>
+     * Convert the query condition parameter value type based on the field type annotated by {@link xyz.erupt.annotation.EruptField}
      */
     protected Object convertConditionValue(Condition condition, EruptFieldModel eruptFieldModel) {
         Object value = condition.getValue();
@@ -155,7 +155,7 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
         if (null == mongoFieldAnnotation) {
             return mongoField;
         }
-        mongoField = Optional.of(mongoFieldAnnotation).map(obj -> StringUtils.defaultIfBlank(obj.value(), eruptFieldModelField.getName())).orElseThrow(() -> new EruptFieldAnnotationException("mongodb字段映射配置错误"));
+        mongoField = Optional.of(mongoFieldAnnotation).map(obj -> StringUtils.defaultIfBlank(obj.value(), eruptFieldModelField.getName())).orElseThrow(() -> new EruptFieldAnnotationException("There is an error in the MongoDB field mapping configuration."));
         eruptFieldMongFieldMap.put(fieldName, mongoField);
         MODEL_CLASS_FIELD_MAPPING.put(eruptModel.getClazz(), eruptFieldMongFieldMap);
         return mongoField;

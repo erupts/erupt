@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Documented
-@Comment("记录操作日志")
+@Comment("Record operation logs")
 public @interface EruptRecordOperate {
 
-    @Comment("操作名称")
+    @Comment("Operation name")
     String value();
 
     Class<? extends DynamicConfig> dynamicConfig() default DynamicConfig.class;

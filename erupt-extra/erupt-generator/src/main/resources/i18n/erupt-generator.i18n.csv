@@ -1,5 +1,6 @@
 key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
-Generate Erupt Code,生成Erupt代码,生成Erupt代碼,Generate Erupt Code,Générer du code Erupt,Eruptコードを生成,erupt 코드 생성,Генерировать код Erupt,Generar código Erupt,Erupt-Code generieren,Gerar código Erupt,Buat kode Erupt,توليد كود Erupt
+Generate Code,代码生成,產生程式碼,Generate Code,Générer le code,コードを生成,코드 생성,Сгенерировать код,Generar código,Code generieren,Gerar código,Buat Kode,توليد الكود
+Generate Erupt Code,生成 Erupt 代码,生成 Erupt 代碼,Generate Erupt Code,Générer du code Erupt,Eruptコードを生成,erupt 코드 생성,Генерировать код Erupt,Generar código Erupt,Erupt-Code generieren,Gerar código Erupt,Buat kode Erupt,توليد كود Erupt
 Code Preview,代码预览,代碼預覽,Code Preview,Aperçu du code,コードプレビュー,코드 미리보기,Предварительный просмотр кода,Vista previa del código,Codevorschau,Pré-visualização do código,Pratinjau Kode,معاينة الكود
 Name,名称,名稱,Name,Nom,名前,이름,Название,Nombre,Name,Nome,Nama,الاسم
 Entity Class,实体类,實體類,Entity Class,Classe d'entité,エンティティクラス,엔티티 클래스,Класс сущности,Clase de entidad,Entity-Klasse,Classe de entidade,Kelas Entitas,فئة الكيان
@@ -15,3 +16,35 @@ Query Item,查询项,查詢項,Query Item,Élément de requête,クエリ項目,
 Field Sort,字段排序,字段排序,Field Sort,Tri des champs,フィールドソート,필드 정렬,Сортировка полей,Ordenar campos,Feldsortierung,Ordenação de campos,Urutan Bidang,ترتيب الحقول
 Required,是否必填,是否必填,Required,Obligatoire,必須,필수,Обязательно,Obligatorio,Erforderlich,Obrigatório,Wajib,مطلوب
 Visible,是否显示,是否顯示,Visible,Visible,表示,표시,Видимый,Visible,Sichtbar,Visível,Terlihat,مرئي
+Text Input,文本输入,文本輸入,Text Input,Entrée de texte,テキスト入力,텍스트 입력,Текстовый ввод,Entrada de texto,Texteingabe,Entrada de texto,Input Teks,إدخال نصي
+Password Input,密码输入,密碼輸入,Password Input,Mot de passe,パスワード入力,비밀번호 입력,Ввод пароля,Entrada de contraseña,Passworteingabe,Entrada de senha,Input Kata Sandi,إدخال كلمة المرور
+Textarea,文本域,文本域,Textarea,Zone de texte,テキストエリア,텍스트 영역,Текстовое поле,Área de texto,Textbereich,Área de texto,Area Teks,منطقة نص
+Rich Text Editor,富文本编辑器,富文本編輯器,Rich Text Editor,Éditeur de texte enrichi,リッチテキストエディタ,리치 텍스트 에디터,Редактор форматированного текста,Editor de texto enriquecido,Rich-Text-Editor,Editor de texto rico,Editor Teks Kaya,محرر نص غني
+Code Editor,代码编辑器,代碼編輯器,Code Editor,Éditeur de code,コードエディタ,코드 에디터,Редактор кода,Editor de código,Code-Editor,Editor de código,Editor Kode,محرر الكود
+Color Picker,颜色选择器,颜色選擇器,Color Picker,Sélecteur de couleurs,カラーピッカー,색상 선택기,Выбор цвета,Selector de color,Farbauswahl,Seletor de cores,Pemilih Warna,منتقي الألوان
+Number Input,数字输入,数字輸入,Number Input,Entrée numérique,数値入力,숫자 입력,Числовой ввод,Entrada de número,Zahleneingabe,Entrada de número,Input Angka,إدخال رقمي
+Slider,滑块,滑塊,Slider,Curseur,スライダー,슬라이더,Ползунок,Deslizador,Schiebelegler,Controle deslizante,Geser,منزلق
+Rating,评分,評分,Rating,Évaluation,評価,평점,Рейтинг,Calificación,Bewertung,Classificação,Peringkat,تقييم
+Date,日期,日期,Date,Date,日付,날짜,Дата,Fecha,Datum,Data,Tanggal,تاريخ
+Date Time,日期时间,日期時間,Date Time,Date et heure,日時,날짜 시간,Дата и время,Fecha y hora,Datum und Uhrzeit,Data e hora,Tanggal Waktu,التاريخ والوقت
+Time,时间,時間,Time,Heure,時間,시간,Время,Hora,Zeit,Hora,Waktu,وقت
+Week,周,周,Week,Semaine,週,주,Неделя,Semana,Woche,Semana,Minggu,أسبوع
+Month,月,月,Month,Mois,月,월,Месяц,Mes,Monat,Mês,Bulan,شهر
+Year,年,年,Year,Année,年,년,Год,Año,Jahr,Ano,Tahun,سنة
+Switch,开关,開關,Switch,Commutateur,スイッチ,스위치,Переключатель,Interruptor,Schalter,Interruptor,Saklar,مفتاح
+Dropdown,下拉选择,下拉選擇,Dropdown,Liste déroulante,ドロップダウン,ドロップダウン,Выпадающий список,Menú desplegable,Dropdown,Lista suspensa,Menu Tarik-turun,قائمة منسدلة
+Tags Selector,标签选择器,標籤選擇器,Tags Selector,Sélecteur de balises,タグセレクタ,태그 선택기,Выбор тегов,Selector de etiquetas,Tags-Auswahl,Seletor de tags,Pemilih Tag,منتقي العلامات
+Attachment,附件,附件,Attachment,Pièce jointe,添付ファイル,첨부 파일,Вложение,Adjunto,Anhang,Anexo,Lampiran,مرفق
+Image,图片,圖片,Image,Image,画像,이미지,Изображение,Imagen,Bild,Imagem,Gambar,صورة
+Auto Complete,自动完成,自動完成,Auto Complete,Saisie automatique,自動補完,자동 완성,Автозаполнение,Autocompletar,Autovervollständigung,Autocompletar,Lengkapi Otomatis,إكمال تلقائي
+Map,地图,地圖,Map,Carte,地図,지도,Карта,Mapa,Karte,Mapa,Peta,خريطة
+Divider,分割线,分割線,Divider,Séparateur,分割線,구분선,Разделитель,Divisor,Trennlinie,Divisor,Pembagi,فاصل
+One-to-One Add,一对一添加,一對一添加,One-to-One Add,Ajout un à un,1对1追加,일대일 추가,Добавление один-к-одному,Agregar uno a uno,Eins-zu-eins hinzufügen,Adicionar um para um,Tambah Satu-ke-Satu,إضافة واحد لواحد
+Tree Reference,树引用,樹引用,Tree Reference,Référence d'arbre,ツリー参照,트리 참조,Древовидная ссылка,Referencia de árbol,Baumreferenz,Referência de árvore,Referensi Pohon,مرجع شجرة
+Table Reference,表格引用,表格引用,Table Reference,Référence de tableau,テーブル参照,テーブル参照,Табличная ссылка,Referencia de tabla,Tabellenreferenz,Referência de tabela,Referensi Tabel,مرجع جدول
+One-to-Many Reference,一对多引用,一對多引用,One-to-Many Reference,Référence un-à-plusieurs,1对多参照,일대다 참조,Ссылка один-ко-многим,Referencia uno a muchos,Eins-zu-viele-Referenz,Referência um para muitos,Referensi Satu-ke-Banyak,مرجع واحد لكثير
+One-to-Many Add,一对多添加,一對多添加,One-to-Many Add,Ajout un-à-plusieurs,1对多追加,일대다 추가,Добавление один-ко-многим,Agregar uno a muchos,Eins-zu-viele hinzufügen,Adicionar um para muitos,Tambah Satu-ke-Banyak,إضافة واحد لكثير
+Multi-select,多选,多選,Multi-select,Sélection multiple,複数選択,다중 선택,Множественный выбор,Selección múltiple,Mehrfachauswahl,Seleção múltipla,Pilihan Ganda,اختيار متعدد
+Multi-select Tree,多选树,多選樹,Multi-select Tree,Arbre de sélection multiple,複数選択ツリー,다중 선택 트리,Древовидный множественный выбор,Árbol de selección múltiple,Mehrfachauswahl-Baum,Árvore de seleção múltipla,Pohon Pilihan Ganda,شجرة اختيار متعدد
+Hidden,隐藏,隱藏,Hidden,Caché,非表示,숨김,Скрытый,Oculto,Versteckt,Oculto,Tersembunyi,مخفي
+Empty,占位,占位,Empty,Vide,空,비어 있음,Пусто,Vacío,Leer,Vazio,Kosong,فارغ

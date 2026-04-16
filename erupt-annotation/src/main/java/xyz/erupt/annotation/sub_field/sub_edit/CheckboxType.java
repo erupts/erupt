@@ -5,13 +5,13 @@ import xyz.erupt.annotation.constant.AnnotationConst;
 
 public @interface CheckboxType {
 
-    @Comment("存储列")
+    @Comment("Storage column")
     String id() default AnnotationConst.ID;
 
-    @Comment("展示列")
+    @Comment("Display column")
     String label() default AnnotationConst.LABEL;
 
-    @Comment("描述列")
+    @Comment("Description column")
     String remark() default AnnotationConst.EMPTY_STR;
 
 }

@@ -34,6 +34,11 @@
             <artifactId>erupt-ai</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ai-claw</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <!-- optional -->
         <dependency>

@@ -22,6 +22,7 @@ import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.controller.EruptModifyController;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.invoke.DataProxyInvoke;
 import xyz.erupt.core.naming.EruptRecordNaming;
 import xyz.erupt.core.prop.EruptProp;
@@ -149,7 +150,7 @@ public class EruptExcelController {
             list = dataFileService.excelToEruptObject(eruptModel, wb);
             wb.close();
         } catch (Exception e) {
-            throw new EruptWebApiRuntimeException("Excel解析异常，出错行数：" + i + "，原因：" + e.getMessage(), e);
+            throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.parse_error"), i, e.getMessage()), e);
         }
         try {
             List<Object> eruptDataList = new ArrayList<>();
@@ -158,7 +159,7 @@ public class EruptExcelController {
                 j++;
                 EruptApiModel eruptApiModel = EruptUtil.validateEruptValue(eruptModel, data);
                 if (eruptApiModel.getStatus() == EruptApiModel.Status.ERROR) {
-                    throw new EruptWebApiRuntimeException("第" + j + "行，" + eruptApiModel.getMessage());
+                    throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.row_error"), j, eruptApiModel.getMessage()));
                 }
                 eruptDataList.add(eruptModifyService.eruptInsertDataProcess(eruptModel, data));
             }
@@ -166,7 +167,7 @@ public class EruptExcelController {
             eruptModifyController.batchAddEruptData(eruptModel, eruptDataList);
         } catch (Exception e) {
             log.error("import error {}", eruptModel.getEruptName(), e);
-            throw new EruptWebApiRuntimeException("数据导入异常，原因：" + e.getMessage());
+            throw new EruptWebApiRuntimeException(String.format(I18nTranslate.$translate("excel.import_error"), e.getMessage()));
         }
         return EruptApiModel.successApi();
     }

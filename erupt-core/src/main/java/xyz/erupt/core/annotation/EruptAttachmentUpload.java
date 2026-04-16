@@ -5,7 +5,7 @@ import xyz.erupt.annotation.fun.AttachmentProxy;
 
 import java.lang.annotation.*;
 
-@Comment("自定义附件上传，需在spring boot入口类中修饰")
+@Comment("Custom attachment upload, must be applied on the Spring Boot entry class")
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented

@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 @Setter
 public class LoginModel {
 
-    private boolean pass; //校验是否通过
+    private boolean pass; //Whether validation passed
 
-    private boolean resetPwd = false; //是否需要重置密码
+    private boolean resetPwd = false; //Whether password reset is required
 
-    private boolean useVerifyCode = false; //是否需要验证码
+    private boolean useVerifyCode = false; //Whether a verification code is required
 
-    private String reason; //未校验通过原因
+    private String reason; //Reason for validation failure
 
     private String token;
 

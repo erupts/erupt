@@ -1,13 +1,13 @@
 package xyz.erupt.upms.service;
 
 import com.google.gson.Gson;
+import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.prop.EruptProp;
 
-import jakarta.annotation.Resource;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +114,7 @@ public class EruptSessionService {
         }
     }
 
-    //获取map的所有key
+    //Get all keys of the map
     public List<String> getMapKeys(String key) {
         if (eruptProp.isRedisSession()) {
             Set<Object> set = stringRedisTemplate.opsForHash().keys(key);

@@ -16,14 +16,14 @@ public @interface Drill {
 
     String title();
 
-    @Comment("是否折叠显示")
+    @Comment("Whether to display as collapsed")
     boolean fold() default false;
 
-    @Comment("图标请参考Font Awesome")
+    @Comment("Refer to Font Awesome for icon names")
     @Language(value = "html", prefix = "<i class=\"", suffix = "\"></i>")
     String icon() default "fa fa-sitemap";
 
-    @Comment("下钻目标配置")
+    @Comment("Drill-down target configuration")
     Link link();
 
     @Transient

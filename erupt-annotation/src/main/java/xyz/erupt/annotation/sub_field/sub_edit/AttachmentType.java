@@ -11,48 +11,48 @@ import java.beans.Transient;
  */
 public @interface AttachmentType {
 
-    @Comment("附件大小限制，单位KB")
+    @Comment("Attachment size limit in KB")
     long size() default -1;
 
     @Transient
-    @Comment("定义独享存储空间，便于文件查找")
+    @Comment("Define a dedicated storage path for easier file lookup")
     @Language("file-reference")
     String path() default "";
 
-    @Comment("允许上传的文件类型")
+    @Comment("Allowed file types for upload")
     String[] fileTypes() default {};
 
-    @Comment("附件类型")
+    @Comment("Attachment type")
     Type type() default Type.BASE;
 
-    @Comment("最大上传数")
+    @Comment("Maximum number of uploads")
     int maxLimit() default 1;
 
     @Transient
     ImageType imageType() default @ImageType;
 
-    @Comment("多张图片分割字符")
+    @Comment("Separator character for multiple file paths")
     String fileSeparator() default "|";
 
     enum Type {
-        @Comment("可上传任意类型文件")
+        @Comment("Any file type can be uploaded")
         BASE,
-        @Comment("图片上传")
+        @Comment("Image upload")
         IMAGE,
     }
 
     @interface ImageType {
 
-        //最小宽度限制
+        //Minimum width limit
         int minWidth() default 0;
 
-        //最大宽度限制
+        //Maximum width limit
         int maxWidth() default Integer.MAX_VALUE;
 
-        //最小高度限制
+        //Minimum height limit
         int minHeight() default 0;
 
-        //最大高度限制
+        //Maximum height limit
         int maxHeight() default Integer.MAX_VALUE;
 
     }

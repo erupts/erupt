@@ -5,11 +5,11 @@ import xyz.erupt.annotation.config.Comment;
 
 public @interface LinkTree {
 
-    @Comment("树字段")
+    @Comment("Tree field")
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String field();
 
-    @Comment("表格的数据是否必须依赖树节点")
+    @Comment("Whether the table data must depend on a tree node")
     boolean dependNode() default false;
 
 }

@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  */
 @Getter
 public enum MenuStatus {
-    OPEN(1, "启用"), HIDE(2, "隐藏"), DISABLE(3, "禁用");
+    OPEN(1, "Enable"), HIDE(2, "Disable"), DISABLE(3, "Hidden");
 
     private final int value;
     private final String label;

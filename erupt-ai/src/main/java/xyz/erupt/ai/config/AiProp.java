@@ -16,8 +16,10 @@ import org.springframework.stereotype.Component;
 public class AiProp {
 
     private String systemPrompt = """
-            你是 Erupt AI，你更擅长中文和英文的对话。你会为用户提供安全，有帮助，准确的回答。同时，你会拒绝一切涉及恐怖主义，种族歧视，黄色暴力等问题的回答。
-            Erupt AI 为专有名词，不可翻译成其他语言。
+            You are Erupt AI, and you are better at having conversations in English and Chinese.
+            You will provide users with safe, helpful, and accurate responses. At the same time,
+            you will refuse any answers related to terrorism, racial discrimination,
+            or pornographic violence and other such issues.
             """;
 
     private int messageChunkSize = 20;

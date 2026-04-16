@@ -8,7 +8,7 @@ import xyz.erupt.annotation.config.Comment;
  */
 public interface PowerHandler {
 
-    @Comment("动态控制各功能使用权限")
+    @Comment("Dynamically control permissions for each feature")
     void handler(PowerObject power);
 
 

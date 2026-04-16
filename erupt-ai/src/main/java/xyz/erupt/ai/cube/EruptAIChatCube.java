@@ -2,7 +2,6 @@ package xyz.erupt.ai.cube;
 
 import xyz.erupt.annotation.cube.Dimension;
 import xyz.erupt.annotation.cube.EruptCube;
-import xyz.erupt.annotation.cube.FieldType;
 import xyz.erupt.annotation.cube.Measure;
 
 import java.util.Date;
@@ -44,7 +43,7 @@ public class EruptAIChatCube {
     @Dimension(title = "Agent")
     private String agent;
 
-    @Dimension(title = "Date", type = FieldType.DATE)
+    @Dimension(title = "Date")
     private Date createdAt;
 
     @Measure(title = "Message Count", sql = "count(*)")

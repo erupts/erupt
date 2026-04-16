@@ -7,24 +7,24 @@ import java.beans.Transient;
 
 public @interface TagsType {
 
-    @Comment("多个标签存储时分割字符")
+    @Comment("Separator character when storing multiple tags")
     String joinSeparator() default "|";
 
-    @Comment("是否允许自定义标签")
+    @Comment("Whether custom tags are allowed")
     boolean allowExtension() default true;
 
-    @Comment("最大标签数")
+    @Comment("Maximum number of tags")
     int maxTagCount() default 9999;
 
     @Transient
-    @Comment("可选标签列表")
+    @Comment("List of selectable tags")
     String[] tags() default {};
 
     @Transient
-    @Comment("该配置可从fetchHandler中获取")
+    @Comment("This configuration is accessible from fetchHandler")
     String[] fetchHandlerParams() default {};
 
     @Transient
-    @Comment("动态获取可选标签列表")
+    @Comment("Dynamically fetched list of selectable tags")
     Class<? extends TagsFetchHandler>[] fetchHandler() default {};
 }

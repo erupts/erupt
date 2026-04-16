@@ -12,17 +12,17 @@ import java.beans.Transient;
  */
 public @interface ReferenceTableType {
 
-    @Comment("存储列")
+    @Comment("Storage column")
     String id() default AnnotationConst.ID;
 
-    @Comment("展示列")
+    @Comment("Display column")
     String label() default AnnotationConst.LABEL;
 
-    @Comment("依赖字段")
+    @Comment("Dependent field")
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependField() default "";
 
     @Transient
-    @Comment("与依赖字段值相关联的列名，dependField.value = this.dependColumn")
+    @Comment("The column name associated with the dependent field value; dependField.value = this.dependColumn")
     String dependColumn() default AnnotationConst.ID;
 }

@@ -16,23 +16,15 @@ public enum FieldType {
     STRING,
     DATE;
 
-    public static FieldType get(FieldType fieldType, Class<?> clazz) {
-        if (FieldType.AUTO == fieldType) {
-            if (clazz == Short.class || clazz == Integer.class || clazz == Long.class || clazz == Double.class || clazz == Float.class) {
-                return FieldType.NUMBER;
-            } else if (clazz == Date.class || clazz == java.sql.Date.class || clazz == LocalDateTime.class || clazz == LocalDate.class) {
-                return FieldType.DATE;
-            } else {
-                return FieldType.STRING;
-            }
-        } else {
-            return fieldType;
-        }
-    }
-
     public static FieldType get(Field field) {
-        Dimension dimension = field.getDeclaredAnnotation(Dimension.class);
-        return get(dimension.type(), field.getType());
+        Class<?> clazz = field.getType();
+        if (clazz == Short.class || clazz == Integer.class || clazz == Long.class || clazz == Double.class || clazz == Float.class) {
+            return FieldType.NUMBER;
+        } else if (clazz == Date.class || clazz == java.sql.Date.class || clazz == LocalDateTime.class || clazz == LocalDate.class) {
+            return FieldType.DATE;
+        } else {
+            return FieldType.STRING;
+        }
     }
 
 }

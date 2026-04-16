@@ -13,27 +13,27 @@ import java.beans.Transient;
  */
 public @interface ReferenceTreeType {
 
-    @Comment("存储列")
+    @Comment("Storage column")
     String id() default AnnotationConst.ID;
 
-    @Comment("展示列")
+    @Comment("Display column")
     String label() default AnnotationConst.LABEL;
 
-    @Comment("父级节点标识列")
+    @Comment("Parent node identifier column")
     String pid() default "";
 
     @Transient
-    @Comment("标识pid为何特征才是根节点，需要与filter配合使用")
+    @Comment("Identifies what characteristic of pid marks a root node; must be used together with filter")
     Expr rootPid() default @Expr;
 
-    @Comment("依赖字段")
+    @Comment("Dependent field")
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependField() default "";
 
     @Transient
-    @Comment("与依赖字段值想关联的列名，dependField.value = this.dependColumn")
+    @Comment("The column name associated with the dependent field value; dependField.value = this.dependColumn")
     String dependColumn() default AnnotationConst.ID;
 
-    @Comment("展开层级数")
+    @Comment("Number of expanded levels")
     int expandLevel() default 999;
 }

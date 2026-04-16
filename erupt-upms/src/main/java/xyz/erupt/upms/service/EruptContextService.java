@@ -24,19 +24,19 @@ public class EruptContextService {
     @Resource
     private EruptSessionService sessionService;
 
-    //获取erupt上下文对象
+    //Get the erupt context object
     @Deprecated
     public Class<?> getContextEruptClass() {
         return EruptCoreService.getErupt(MetaContext.getErupt().getName()).getClazz();
     }
 
-    //获取当前请求token
+    //Get the current request token
     public String getCurrentToken() {
         String token = request.getHeader(EruptReqHeaderConst.ERUPT_HEADER_TOKEN);
         return StringUtils.isNotBlank(token) ? token : request.getParameter(EruptReqHeaderConst.URL_ERUPT_PARAM_TOKEN);
     }
 
-    //获取当前菜单对象
+    //Get the current menu object
     public EruptMenu getCurrentEruptMenu() {
         MetaErupt metaErupt = MetaContext.getErupt();
         return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + getCurrentToken()
