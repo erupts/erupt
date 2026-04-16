@@ -15,25 +15,25 @@ public @interface MultiChoiceType {
     Type type() default Type.CHECKBOX;
 
     @Transient
-    @Comment("手动配置选择项")
+    @Comment("Manually configured options")
     VL[] vl() default {};
 
     @Transient
-    @Comment("可被fetchHandler接口获取到")
+    @Comment("Accessible by the fetchHandler interface")
     String[] fetchHandlerParams() default {};
 
     @Transient
-    @Comment("动态获取选择项")
+    @Comment("Dynamically fetched options")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
-    @Comment("联动时依赖字段名")
+    @Comment("Dependent field name for linkage")
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependField() default "";
 
     enum Type {
-        @Comment("下拉多选")
+        @Comment("Dropdown multi-select")
         SELECT,
-        @Comment("多选框")
+        @Comment("Checkbox group")
         CHECKBOX,
     }
 }

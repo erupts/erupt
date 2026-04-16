@@ -12,10 +12,10 @@ public abstract class DistributeAbstract {
 
     protected abstract void init();
 
-    //集群节点更新
+    //Cluster node update
     protected abstract void distributePut(MetaNode metaNode);
 
-    //集群节点移除
+    //Cluster node removal
     protected abstract void distributeRemove(String nodeName);
 
     public void putNode(MetaNode metaNode) {

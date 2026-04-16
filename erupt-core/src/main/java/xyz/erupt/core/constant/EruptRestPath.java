@@ -8,32 +8,32 @@ public class EruptRestPath {
 
     public static final String ERUPT_API = "/erupt-api";
 
-    //界面构建
+    // UI build
     public static final String ERUPT_BUILD = ERUPT_API + "/build";
 
-    //数据
+    // Data
     public static final String ERUPT_DATA = ERUPT_API + "/data";
 
-    //数据增删改操作
+    // Data CRUD operations
     public static final String ERUPT_DATA_MODIFY = ERUPT_DATA + "/modify";
 
-    //组件
+    // Components
     public static final String ERUPT_COMP = ERUPT_API + "/comp";
 
-    //excel
+    // Excel
     public static final String ERUPT_EXCEL = ERUPT_API + "/excel";
 
-    //文件
+    // File
     public static final String ERUPT_FILE = ERUPT_API + "/file";
 
 
-    //工具
+    // Tools
     public static final String ERUPT_TOOL = ERUPT_API + "/tool";
 
-    //附件虚拟路径
+    // Attachment virtual path
     public static final String ERUPT_ATTACHMENT = "/erupt-attachment";
 
-    //菜单类型值权限
+    // Menu type value permission
     public static final String ERUPT_CODE_PERMISSION = ERUPT_API + "/erupt-permission";
 
 }

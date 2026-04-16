@@ -11,8 +11,8 @@ import java.util.Map;
 @Deprecated
 public interface ChoiceTrigger {
 
-    @Comment("获取下拉列表")
-    @Comment("返回值会填充给key对应表单中")
+    @Comment("Fetch dropdown list")
+    @Comment("The return value will be filled into the form corresponding to the key")
     Map<String, Object> trigger(Object value, String[] params);
 
 }

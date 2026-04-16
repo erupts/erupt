@@ -10,83 +10,83 @@ import xyz.erupt.annotation.sub_field.sub_edit.*;
  * date 2018-09-28.
  */
 public enum EditType {
-    @EditTypeMapping(desc = "框架自动检测类型", allowType = {JavaTypeEnum.any})
+    @EditTypeMapping(desc = "Auto-detected type by framework", allowType = {JavaTypeEnum.any})
     AUTO,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
-    @EditTypeMapping(mapping = InputType.class, desc = "文本输入", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
+    @EditTypeMapping(mapping = InputType.class, desc = "Text input", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     INPUT,
     @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
-    @EditTypeMapping(mapping = NumberType.class, desc = "数字输入", allowType = {JavaTypeEnum.number})
+    @EditTypeMapping(mapping = NumberType.class, desc = "Number input", allowType = {JavaTypeEnum.number})
     NUMBER,
     @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
-    @EditTypeMapping(mapping = SliderType.class, desc = "数字滑块", allowType = {JavaTypeEnum.number})
+    @EditTypeMapping(mapping = SliderType.class, desc = "Number slider", allowType = {JavaTypeEnum.number})
     SLIDER,
-    @EditTypeMapping(desc = "颜色选择", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(desc = "Color picker", allowType = {JavaTypeEnum.String})
     COLOR,
     @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
-    @EditTypeMapping(mapping = RateType.class, desc = "评分", allowType = {JavaTypeEnum.number})
+    @EditTypeMapping(mapping = RateType.class, desc = "Rating", allowType = {JavaTypeEnum.number})
     RATE,
     @EditTypeSearch(vagueMethod = QueryExpression.RANGE)
-    @EditTypeMapping(mapping = DateType.class, desc = "日期", allowType = {JavaTypeEnum.String, JavaTypeEnum.date})
+    @EditTypeMapping(mapping = DateType.class, desc = "Date", allowType = {JavaTypeEnum.String, JavaTypeEnum.date})
     DATE,
     @EditTypeSearch
-    @EditTypeMapping(mapping = BoolType.class, desc = "布尔", allowType = {JavaTypeEnum.bool})
+    @EditTypeMapping(mapping = BoolType.class, desc = "Boolean", allowType = {JavaTypeEnum.bool})
     BOOLEAN,
     @EditTypeSearch(vagueMethod = QueryExpression.IN)
-    @EditTypeMapping(mapping = ChoiceType.class, desc = "单选", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
+    @EditTypeMapping(mapping = ChoiceType.class, desc = "Single select", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     CHOICE,
-    @EditTypeMapping(mapping = MultiChoiceType.class, desc = "多选", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    @EditTypeMapping(mapping = MultiChoiceType.class, desc = "Multi select", allowType = {JavaTypeEnum.object}, excelOperator = false)
     MULTI_CHOICE,
     @EditTypeSearch
-    @EditTypeMapping(mapping = TagsType.class, desc = "标签选择器", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
+    @EditTypeMapping(mapping = TagsType.class, desc = "Tags selector", allowType = {JavaTypeEnum.String, JavaTypeEnum.number})
     TAGS,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
-    @EditTypeMapping(mapping = AutoCompleteType.class, desc = "自动完成", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(mapping = AutoCompleteType.class, desc = "Auto complete", allowType = {JavaTypeEnum.String})
     AUTO_COMPLETE,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
-    @EditTypeMapping(desc = "多行文本框", allowType = {JavaTypeEnum.String}, nameInfer = {"remark"})
+    @EditTypeMapping(desc = "Multi-line text area", allowType = {JavaTypeEnum.String}, nameInfer = {"remark"})
     TEXTAREA,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
-    @EditTypeMapping(mapping = HtmlEditorType.class, desc = "富文本编辑器", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(mapping = HtmlEditorType.class, desc = "Rich text editor", allowType = {JavaTypeEnum.String})
     HTML_EDITOR,
     @EditTypeSearch(vagueMethod = QueryExpression.LIKE)
-    @EditTypeMapping(mapping = CodeEditorType.class, desc = "代码编辑器", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(mapping = CodeEditorType.class, desc = "Code editor", allowType = {JavaTypeEnum.String})
     CODE_EDITOR,
-    @EditTypeMapping(desc = "MarkDown编辑器", allowType = {JavaTypeEnum.String})
+    @EditTypeMapping(desc = "MarkDown editor", allowType = {JavaTypeEnum.String})
     MARKDOWN,
-    @EditTypeMapping(mapping = AttachmentType.class, desc = "附件上传", allowType = {JavaTypeEnum.String}, excelOperator = false)
+    @EditTypeMapping(mapping = AttachmentType.class, desc = "Attachment upload", allowType = {JavaTypeEnum.String}, excelOperator = false)
     ATTACHMENT,
-    @EditTypeMapping(desc = "地图", allowType = {JavaTypeEnum.String}, excelOperator = false)
+    @EditTypeMapping(desc = "Map", allowType = {JavaTypeEnum.String}, excelOperator = false)
     MAP,
-    @EditTypeMapping(desc = "自定义HTML模板", allowType = {JavaTypeEnum.String}, excelOperator = false)
+    @EditTypeMapping(desc = "Custom HTML template", allowType = {JavaTypeEnum.String}, excelOperator = false)
     TPL,
-    @EditTypeMapping(desc = "横向分割线与描述", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    @EditTypeMapping(desc = "Horizontal divider with description", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     DIVIDE,
-    @EditTypeMapping(desc = "隐藏", allowType = {JavaTypeEnum.any}, excelOperator = false)
+    @EditTypeMapping(desc = "Hidden", allowType = {JavaTypeEnum.any}, excelOperator = false)
     HIDDEN,
-    @EditTypeMapping(desc = "空（仍占据组件位置）", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
+    @EditTypeMapping(desc = "Empty (still occupies component space)", allowType = {JavaTypeEnum.not_know}, excelOperator = false)
     EMPTY,
-    @EditTypeMapping(desc = "签名板", allowType = {JavaTypeEnum.String}, excelOperator = false)
+    @EditTypeMapping(desc = "Signature pad", allowType = {JavaTypeEnum.String}, excelOperator = false)
     SIGNATURE,
 
     @Comment("==================================")
-    @Comment("以下组件修饰于复杂对象上")
+    @Comment("The following components are used on complex object fields")
     @Comment("==================================")
 
     @EditTypeSearch
-    @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "树引用（多对一)", allowType = {JavaTypeEnum.object})
+    @EditTypeMapping(mapping = ReferenceTreeType.class, desc = "Tree reference (many-to-one)", allowType = {JavaTypeEnum.object})
     REFERENCE_TREE,
     @EditTypeSearch
-    @EditTypeMapping(mapping = ReferenceTableType.class, desc = "表格引用（多对一)", allowType = {JavaTypeEnum.object})
+    @EditTypeMapping(mapping = ReferenceTableType.class, desc = "Table reference (many-to-one)", allowType = {JavaTypeEnum.object})
     REFERENCE_TABLE,
-    @EditTypeMapping(mapping = CheckboxType.class, desc = "多选（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    @EditTypeMapping(mapping = CheckboxType.class, desc = "Multi-select (many-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
     CHECKBOX,
-    @EditTypeMapping(desc = "多选树（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    @EditTypeMapping(desc = "Multi-select tree (many-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
     TAB_TREE,
-    @EditTypeMapping(desc = "多选表格（多对多）", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    @EditTypeMapping(desc = "Multi-select table (many-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
     TAB_TABLE_REFER,
-    @EditTypeMapping(desc = "表格添加（一对多)", allowType = {JavaTypeEnum.object}, excelOperator = false)
+    @EditTypeMapping(desc = "Table add (one-to-many)", allowType = {JavaTypeEnum.object}, excelOperator = false)
     TAB_TABLE_ADD,
-    @EditTypeMapping(desc = "表格合并（一对一）", allowType = {JavaTypeEnum.object})
+    @EditTypeMapping(desc = "Table merge (one-to-one)", allowType = {JavaTypeEnum.object})
     COMBINE,
 }

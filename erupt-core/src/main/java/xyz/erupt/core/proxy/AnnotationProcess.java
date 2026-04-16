@@ -67,7 +67,7 @@ public class AnnotationProcess {
                 JsonArray jsonArray = new JsonArray();
                 ToMap toMap = method.getAnnotation(ToMap.class);
                 JsonObject jsonMap = new JsonObject();
-                //基本类型无法强转成Object类型数组，所以使用下面的方法进行处理
+                // Primitive types cannot be directly cast to Object arrays, so the following method is used instead
                 if (Arrays.asList(ANNOTATION_NUMBER_TYPE).contains(returnType)) {
                     TypeUtil.simpleNumberTypeArrayToObject(result, returnType, jsonArray::add);
                 } else {

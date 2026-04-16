@@ -24,22 +24,22 @@ import java.util.Optional;
 @MappedSuperclass
 public class HyperModel extends BaseModel {
 
-    @Comment("创建时间")
+    @Comment("Create time")
     @EruptSmartSkipSerialize
     private Date createTime;
 
-    @Comment("创建人")
+    @Comment("Creator")
     @ManyToOne
     @EruptSmartSkipSerialize
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private EruptUserVo createUser;
 
-    @Comment("更新时间")
+    @Comment("Update time")
     @EruptSmartSkipSerialize
     private Date updateTime;
 
-    @Comment("更新人")
+    @Comment("Updater")
     @ManyToOne
     @EruptSmartSkipSerialize
     @NotFound(action = NotFoundAction.IGNORE)

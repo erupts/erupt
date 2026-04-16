@@ -20,19 +20,19 @@ public class EruptAppProp {
 
     public static final String DEFAULT_LANG = "zh-CN";
 
-    //是否显示水印
+    //Whether to display a watermark
     private boolean waterMark = true;
 
-    //登录失败几次出现验证码，0表示一直要求输入验证码
+    //Number of login failures before showing a verification code; 0 means always require a verification code
     private Integer verifyCodeCount = 2;
 
-    //登录密码是否加密传输
+    //Whether to encrypt the login password during transmission
     private Boolean pwdTransferEncrypt = true;
 
-    //自定义登录页路径，支持http网络路径
+    //Custom login page path, supports HTTP URL
     private String loginPagePath;
 
-    //多语言配置
+    //Multi-language configuration
     private String[] locales = {
             DEFAULT_LANG, // 🇨🇳 简体中文
             "zh-TW",      // 🇭🇰 繁体中文
@@ -48,10 +48,10 @@ public class EruptAppProp {
             "ar-SA",      // 🇸🇦 العربية
     };
 
-    //自定义配置
+    //Custom configuration
     private Map<String, Object> properties = new HashMap<>();
 
-    //重置密码功能开关
+    //Toggle for the reset password feature
     private Boolean resetPwd = true;
 
     private Integer hash;
@@ -66,7 +66,7 @@ public class EruptAppProp {
         }
     }
 
-    //注册自定义属性
+    //Register custom properties
     public void registerProp(String key, Object value) {
         this.properties.put(key, value);
     }

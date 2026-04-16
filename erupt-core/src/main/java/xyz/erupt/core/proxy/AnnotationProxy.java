@@ -32,7 +32,7 @@ public abstract class AnnotationProxy<A, PA> {
         return this.newProxy(annotation, null);
     }
 
-    //创建注解注解代理类
+    // Create an annotation proxy class
     public A newProxy(A annotation, AnnotationProxy<PA, ?> parent) {
         this.parent = parent;
         this.rawAnnotation = annotation;

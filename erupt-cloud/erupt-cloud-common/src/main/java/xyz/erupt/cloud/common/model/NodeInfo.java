@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Node 节点信息
+ * Node information
  *
  * @author YuePeng
  * date 2022/1/28 22:23
@@ -17,25 +17,25 @@ import java.util.List;
 @Setter
 public class NodeInfo implements Serializable {
 
-    //实例唯一ID
+    //Unique instance ID
     private String instanceId;
 
-    //版本
+    //Version
     private String version;
 
-    //节点名
+    //Node name
     private String nodeName;
 
-    //访问令牌
+    //Access token
     private String accessToken;
 
-    //node节点地址
+    //Node address
     private String[] nodeAddress;
 
-    //服务所管理的模块清单
+    //List of modules managed by the service
     private List<String> eruptModules = new ArrayList<>();
 
-    //服务所管理的erupt清单
+    //List of erupts managed by the service
     private List<String> erupts = new ArrayList<>();
 
 }

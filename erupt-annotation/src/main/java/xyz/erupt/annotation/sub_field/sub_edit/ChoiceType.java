@@ -17,39 +17,39 @@ public @interface ChoiceType {
     Type type() default Type.SELECT;
 
     @Transient
-    @Comment("手动下拉列表")
+    @Comment("Manually configured dropdown list")
     VL[] vl() default {};
 
     @Transient
-    @Comment("可被fetchHandler接口获取到")
+    @Comment("Accessible by the fetchHandler interface")
     String[] fetchHandlerParams() default {};
 
     @Transient
-    @Comment("动态下拉列表")
+    @Comment("Dynamically fetched dropdown list")
     Class<? extends ChoiceFetchHandler>[] fetchHandler() default {};
 
     @Deprecated
     @Transient
-    @Comment("可被trigger接口获取到")
+    @Comment("Accessible by the trigger interface")
     String[] triggerParams() default {};
 
     @Deprecated
-    @Comment("选择数据时触发动作")
+    @Comment("Action triggered when a selection is made")
     @Match("#item.trigger().getSimpleName() != 'ChoiceTrigger'")
     Class<? extends ChoiceTrigger> trigger() default ChoiceTrigger.class;
 
-    @Comment("开启后在编辑等操作时会重新获取下拉列表")
+    @Comment("When enabled, the dropdown list will be re-fetched during edit and similar operations")
     boolean anewFetch() default false;
 
-    //联动能力
-    @Comment("联动能力，依赖字段名")
+    //Linkage capability
+    @Comment("Linkage capability; dependent field name")
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String dependField() default "";
 
     enum Type {
-        @Comment("下拉选择")
+        @Comment("Dropdown selection")
         SELECT,
-        @Comment("单选框")
+        @Comment("Radio button")
         RADIO,
     }
 }

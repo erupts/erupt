@@ -1,5 +1,6 @@
 package xyz.erupt.cloud.server.controller;
 
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.annotation.fun.PowerObject;
 import xyz.erupt.cloud.common.consts.CloudCommonConst;
@@ -16,8 +17,6 @@ import xyz.erupt.upms.service.EruptContextService;
 import xyz.erupt.upms.service.EruptSessionService;
 import xyz.erupt.upms.service.EruptUserService;
 import xyz.erupt.upms.util.UPMSUtil;
-
-import jakarta.annotation.Resource;
 
 import java.util.List;
 import java.util.Map;
@@ -78,7 +77,7 @@ public class EruptServerApi {
     }
 
 
-    //用户信息
+    //User information
     @GetMapping(CloudRestApiConst.ERUPT_USER_INFO + "/{nodeName}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public MetaUserinfo userinfo(@PathVariable String nodeName, @RequestHeader(CloudCommonConst.HEADER_ACCESS_TOKEN) String accessToken) {

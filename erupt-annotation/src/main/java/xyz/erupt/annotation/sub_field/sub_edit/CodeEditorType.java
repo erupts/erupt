@@ -1,6 +1,5 @@
 package xyz.erupt.annotation.sub_field.sub_edit;
 
-import org.intellij.lang.annotations.Language;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.fun.CodeEditHintHandler;
 
@@ -12,23 +11,23 @@ import java.beans.Transient;
  */
 public @interface CodeEditorType {
 
-    @Comment("语言")
+    @Comment("Language")
     String language();
 
-    @Comment("编辑器高度")
+    @Comment("Editor height")
     int height() default 300;
 
     @Deprecated
-    @Comment("提示触发字符")
+    @Comment("Hint trigger characters")
     String[] triggerCharacters() default "$";
 
     @Deprecated
-    @Comment("代码提示处理类参数")
+    @Comment("Code hint handler parameters")
     @Transient
     String[] hintParams() default {};
 
     @Deprecated
-    @Comment("代码提示处理类")
+    @Comment("Code hint handler class")
     @Transient
     Class<CodeEditHintHandler> hint() default CodeEditHintHandler.class;
 

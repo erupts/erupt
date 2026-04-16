@@ -10,7 +10,7 @@ import xyz.erupt.annotation.config.Comment;
  */
 public @interface Dynamic {
 
-    @Comment("依赖字段名")
+    @Comment("Dependent field name")
     String dependField();
 
     @Comment("JS expression，Variable: class field name")
@@ -21,17 +21,17 @@ public @interface Dynamic {
 
     Ctrl match() default Ctrl.SHOW;
 
-//    // change 当前修饰对象的静态配置，例如代码编辑器的语言
+//    // change the static configuration of the current decorated object, e.g. the language of the code editor
 //    String changeScript() default "";
 
 //    @Comment("Compute component value when condition changes, Variable, class field name")
 //    String render() default "";
 
     enum Ctrl {
-        SHOW,     //显示
-        HIDE,     //隐藏
-        NOTNULL,  //必填
-        READONLY, //只读
+        SHOW,     //Show
+        HIDE,     //Hide
+        NOTNULL,  //Required
+        READONLY, //Read-only
     }
 
     @Getter

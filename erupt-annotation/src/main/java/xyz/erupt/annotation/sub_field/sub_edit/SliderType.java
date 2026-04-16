@@ -12,12 +12,12 @@ public @interface SliderType {
 
     int max();
 
-    @Comment("步进长度")
+    @Comment("Step size")
     float step() default 1;
 
-    @Comment("刻度标记")
+    @Comment("Scale mark points")
     float[] markPoints() default {};
 
-    @Comment("是否只能拖拽到刻度上")
+    @Comment("Whether the slider can only be dragged to mark points")
     boolean dots() default false;
 }

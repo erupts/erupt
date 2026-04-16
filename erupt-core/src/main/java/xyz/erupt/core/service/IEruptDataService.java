@@ -17,36 +17,36 @@ import java.util.Map;
  */
 public interface IEruptDataService {
 
-    @Comment("定义数据源能力")
+    @Comment("Define data source capabilities")
     default PowerObject power() {
         return new PowerObject();
     }
 
-    @Comment("根据主键id获取数据")
-    Object findDataById(EruptModel eruptModel, @Comment("主键值") Object id);
+    @Comment("Retrieve data by primary key id")
+    Object findDataById(EruptModel eruptModel, @Comment("Primary key value") Object id);
 
-    @Comment("查询分页数据")
-    Page queryList(EruptModel eruptModel, @Comment("分页对象") Page page, @Comment("条件") EruptQuery eruptQuery);
+    @Comment("Query paginated data")
+    Page queryList(EruptModel eruptModel, @Comment("Pagination object") Page page, @Comment("Conditions") EruptQuery eruptQuery);
 
-    @Comment("根据列查询相关数据")
-    Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, @Comment("列信息") List<Column> columns, @Comment("条件") EruptQuery eruptQuery);
+    @Comment("Query data by columns")
+    Collection<Map<String, Object>> queryColumn(EruptModel eruptModel, @Comment("Column information") List<Column> columns, @Comment("Conditions") EruptQuery eruptQuery);
 
-    @Comment("添加数据")
-    void addData(EruptModel eruptModel, @Comment("数据对象") Object object);
+    @Comment("Add data")
+    void addData(EruptModel eruptModel, @Comment("Data object") Object object);
 
-    @Comment("修改数据")
-    void editData(EruptModel eruptModel, @Comment("数据对象") Object object);
+    @Comment("Edit data")
+    void editData(EruptModel eruptModel, @Comment("Data object") Object object);
 
-    @Comment("删除数据")
-    void deleteData(EruptModel eruptModel, @Comment("数据对象") Object object);
+    @Comment("Delete data")
+    void deleteData(EruptModel eruptModel, @Comment("Data object") Object object);
 
-    @Comment("批量插入")
-    default void batchAddData(EruptModel eruptModel, @Comment("数据对象") List<?> objects) {
+    @Comment("Batch insert")
+    default void batchAddData(EruptModel eruptModel, @Comment("Data objects") List<?> objects) {
         for (Object o : objects) this.addData(eruptModel, o);
     }
 
-    @Comment("批量删除")
-    default void batchDelete(EruptModel eruptModel, @Comment("数据对象") List<?> objects) {
+    @Comment("Batch delete")
+    default void batchDelete(EruptModel eruptModel, @Comment("Data objects") List<?> objects) {
         for (Object o : objects) this.deleteData(eruptModel, o);
     }
 

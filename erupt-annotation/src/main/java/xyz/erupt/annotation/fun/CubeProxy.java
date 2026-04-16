@@ -7,13 +7,13 @@ import java.util.Map;
 
 public interface CubeProxy {
 
-    @Comment("查询表达式动态处理")
+    @Comment("Dynamic processing of query expressions")
     default String beforeQuery(String expr, Map<String, Object> context) {
         return expr;
     }
 
 
-    @Comment("返回结果处理")
+    @Comment("Post-query result processing")
     default void afterQuery(List<CubeResultRow> result, Map<String, Object> context) {
 
     }

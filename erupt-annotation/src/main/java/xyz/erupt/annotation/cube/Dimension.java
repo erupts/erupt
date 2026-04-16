@@ -1,5 +1,7 @@
 package xyz.erupt.annotation.cube;
 
+import org.intellij.lang.annotations.Language;
+
 import java.lang.annotation.*;
 
 /**
@@ -17,7 +19,7 @@ public @interface Dimension {
 
     FieldType type() default FieldType.AUTO;
 
-//    @Language(value = "sql")
+    @Language("VTL")
     String sql() default "";
 
     boolean hidden() default false;

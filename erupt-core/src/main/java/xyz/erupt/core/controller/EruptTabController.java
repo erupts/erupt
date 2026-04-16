@@ -31,7 +31,7 @@ public class EruptTabController {
 
     private final Gson gson = GsonFactory.getGson();
 
-    //TAB组件新增行为
+    // TAB component add behavior
     @PostMapping({"/tab-add/{erupt}/{tabName}"})
     @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel addTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
@@ -45,7 +45,7 @@ public class EruptTabController {
         return eruptApiModel;
     }
 
-    //TAB组件更新行为
+    // TAB component update behavior
     @PostMapping({"/tab-update/{erupt}/{tabName}"})
     @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel updateTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {
@@ -59,7 +59,7 @@ public class EruptTabController {
         return eruptApiModel;
     }
 
-    //TAB组件删除行为
+    // TAB component delete behavior
     @PostMapping({"/tab-delete/{erupt}/{tabName}"})
     @EruptRouter(skipAuthIndex = 3, authIndex = 2, verifyType = EruptRouter.VerifyType.ERUPT)
     public EruptApiModel deleteTabEruptData(@PathVariable("erupt") String erupt, @PathVariable("tabName") String tabName, @RequestBody JsonObject data) {

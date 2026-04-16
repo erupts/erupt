@@ -8,17 +8,17 @@ import java.io.InputStream;
  * @author YuePeng
  * date 2020-05-18
  */
-@Comment("自定义附件上传策略")
+@Comment("Custom attachment upload strategy")
 public interface AttachmentProxy {
 
-    @Comment("附件上传")
-    @Comment("返回值表示存储路径，多数情况下返回 path 即可")
-    String upLoad(@Comment("数据流") InputStream inputStream, @Comment("上传位置") String path);
+    @Comment("Attachment upload")
+    @Comment("The return value represents the storage path; in most cases returning path is sufficient")
+    String upLoad(@Comment("data stream") InputStream inputStream, @Comment("upload path") String path);
 
-    @Comment("附件所在域名")
+    @Comment("Domain name where attachments are hosted")
     String fileDomain();
 
-    @Comment("是否同时保存到本地服务器")
+    @Comment("Whether to also save to the local server")
     default boolean isLocalSave() {
         return true;
     }

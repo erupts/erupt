@@ -96,7 +96,7 @@ public class EruptDao {
         entityManager.flush();
     }
 
-    @Comment("根据数据源名称获取 EntityManager 注意：必须手动执行 entityManager.close() 方法")
+    @Comment("Get EntityManager by data source name. Note: entityManager.close() must be called manually")
     public EntityManager getEntityManager(String name) {
         return entityManagerService.findEntityManager(name);
     }
