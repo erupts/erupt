@@ -1,0 +1,4 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+System Monitoring,系统监控,系統監控,System Monitoring,Surveillance du système,システム監視,시스템 모니터링,Мониторинг системы,Monitoreo del sistema,Systemüberwachung,Monitorização do sistema,Pemantauan Sistem,مراقبة النظام
+Service Monitoring,服务监控,服務監控,Service Monitoring,Surveillance des services,サービス監視,서비스 모니터링,Мониторинг служб,Monitoreo de servicios,Dienstüberwachung,Monitorização de serviços,Pemantauan Layanan,مراقبة الخدمة
+Cache Monitoring,缓存监控,快取監控,Cache Monitoring,Surveillance du cache,キャッシュ監視,캐시 모니터링,Мониторинг кэша,Monitoreo de caché,Cache-Überwachung,Monitorização de cache,Pemantauan Cache,مراقبة ذاكرة التخزين المؤقت

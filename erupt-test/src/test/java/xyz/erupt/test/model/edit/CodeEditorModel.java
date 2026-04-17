@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -19,7 +20,7 @@ import xyz.erupt.jpa.model.BaseModel;
 public class CodeEditorModel extends BaseModel {
 
     // JSON（默认高度 300）
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "JSON Config"),
             edit = @Edit(title = "JSON Config", type = EditType.CODE_EDITOR,
@@ -28,7 +29,7 @@ public class CodeEditorModel extends BaseModel {
     private String jsonConfig;
 
     // SQL（高度 500）
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "SQL Script"),
             edit = @Edit(title = "SQL Script", type = EditType.CODE_EDITOR,
@@ -37,7 +38,7 @@ public class CodeEditorModel extends BaseModel {
     private String sqlScript;
 
     // XML
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "XML Content"),
             edit = @Edit(title = "XML Content", type = EditType.CODE_EDITOR,
@@ -46,7 +47,7 @@ public class CodeEditorModel extends BaseModel {
     private String xmlContent;
 
     // JavaScript
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "JS Script"),
             edit = @Edit(title = "JS Script", type = EditType.CODE_EDITOR,
@@ -55,7 +56,7 @@ public class CodeEditorModel extends BaseModel {
     private String jsScript;
 
     // YAML
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "YAML Config"),
             edit = @Edit(title = "YAML Config", type = EditType.CODE_EDITOR,

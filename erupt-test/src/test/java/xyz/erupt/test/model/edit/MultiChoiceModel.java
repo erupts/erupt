@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -21,7 +22,7 @@ import xyz.erupt.jpa.model.BaseModel;
 public class MultiChoiceModel extends BaseModel {
 
     // 多选框组（默认 CHECKBOX）
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Roles"),
             edit = @Edit(title = "Roles", type = EditType.MULTI_CHOICE,
@@ -35,7 +36,7 @@ public class MultiChoiceModel extends BaseModel {
     private String roles;
 
     // 下拉多选（SELECT 布局）
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Tags"),
             edit = @Edit(title = "Tags", type = EditType.MULTI_CHOICE,
@@ -51,7 +52,7 @@ public class MultiChoiceModel extends BaseModel {
     private String tags;
 
     // 动态 handler 获取选项
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Permissions"),
             edit = @Edit(title = "Permissions", type = EditType.MULTI_CHOICE,

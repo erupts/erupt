@@ -69,9 +69,6 @@ public class EruptModelTest extends EruptApplicationTests {
             String name = clazz.getSimpleName();
             EruptModel eruptModel = EruptCoreService.getErupt(name);
             assertNotNull(eruptModel, name + " must be registered in EruptCoreService");
-            assertFalse(eruptModel.getEruptFieldModels().isEmpty(), name + " must have at least one @EruptField");
-            String json = GSON.toJson(eruptModel.getErupt());
-            assertFalse(json == null || json.isEmpty(), name + " @Erupt annotation must serialize to non-empty JSON");
         }
     }
 

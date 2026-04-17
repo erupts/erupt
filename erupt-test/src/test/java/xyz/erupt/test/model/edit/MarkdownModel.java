@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -17,7 +18,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Erupt(name = "MarkdownEdit")
 public class MarkdownModel extends BaseModel {
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Value"),
             edit = @Edit(title = "Value", type = EditType.MARKDOWN)

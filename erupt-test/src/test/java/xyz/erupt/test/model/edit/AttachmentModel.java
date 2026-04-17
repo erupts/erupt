@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -29,7 +30,7 @@ public class AttachmentModel extends BaseModel {
     private String resume;
 
     // 多文件上传
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Attachments"),
             edit = @Edit(title = "Attachments", type = EditType.ATTACHMENT,
@@ -64,7 +65,7 @@ public class AttachmentModel extends BaseModel {
     private String banner;
 
     // 多图上传
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Gallery"),
             edit = @Edit(title = "Gallery", type = EditType.ATTACHMENT,

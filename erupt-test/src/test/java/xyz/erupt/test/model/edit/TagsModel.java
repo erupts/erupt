@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
@@ -20,7 +21,7 @@ import xyz.erupt.jpa.model.BaseModel;
 public class TagsModel extends BaseModel {
 
     // 静态候选标签 + 允许自定义
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Skills"),
             edit = @Edit(title = "Skills", type = EditType.TAGS,
@@ -29,7 +30,7 @@ public class TagsModel extends BaseModel {
     private String skills;
 
     // 禁止自定义，只能选预设
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Category"),
             edit = @Edit(title = "Category", type = EditType.TAGS,
@@ -40,7 +41,7 @@ public class TagsModel extends BaseModel {
     private String category;
 
     // 最多选 3 个
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Highlights"),
             edit = @Edit(title = "Highlights", desc = "Max 3 tags",
@@ -52,7 +53,7 @@ public class TagsModel extends BaseModel {
     private String highlights;
 
     // 自定义分隔符（逗号）
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Keywords"),
             edit = @Edit(title = "Keywords", type = EditType.TAGS,
@@ -62,7 +63,7 @@ public class TagsModel extends BaseModel {
     private String keywords;
 
     // 动态 handler 获取候选标签
-    @Column(columnDefinition = "TEXT")
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Labels"),
             edit = @Edit(title = "Labels", type = EditType.TAGS,
