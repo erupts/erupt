@@ -4,8 +4,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import xyz.erupt.ai.prompt.SystemPromptProvider;
 import xyz.erupt.ai_claw.tool.EruptSkillTools;
+import xyz.erupt.core.prompt.SystemPromptProvider;
 
 @Component
 @ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")

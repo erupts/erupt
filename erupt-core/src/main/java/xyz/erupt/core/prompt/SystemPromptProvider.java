@@ -1,4 +1,4 @@
-package xyz.erupt.ai.prompt;
+package xyz.erupt.core.prompt;
 
 import java.util.ArrayList;
 import java.util.List;
