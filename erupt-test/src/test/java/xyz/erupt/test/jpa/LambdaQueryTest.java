@@ -1,13 +1,13 @@
-package xyz.erupt.jpa;
+package xyz.erupt.test.jpa;
 
 import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.Rollback;
-import xyz.erupt.EruptApplicationTests;
 import xyz.erupt.jpa.dao.EruptDao;
-import xyz.erupt.model.Grade;
-import xyz.erupt.model.Student;
+import xyz.erupt.test.EruptApplicationTests;
+import xyz.erupt.test.model.lambda_query.Grade;
+import xyz.erupt.test.model.lambda_query.Student;
 import xyz.erupt.upms.model.EruptOrg;
 import xyz.erupt.upms.model.EruptUser;
 

@@ -1,8 +1,8 @@
-package xyz.erupt.core;
+package xyz.erupt.test.core;
 
 import org.junit.jupiter.api.Test;
-import xyz.erupt.EruptApplicationTests;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.test.EruptApplicationTests;
 
 public class EruptTest extends EruptApplicationTests {
 

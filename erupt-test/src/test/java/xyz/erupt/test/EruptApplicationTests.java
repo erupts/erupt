@@ -1,4 +1,4 @@
-package xyz.erupt;
+package xyz.erupt.test;
 
 import jakarta.annotation.Resource;
 import org.springframework.boot.test.context.SpringBootTest;

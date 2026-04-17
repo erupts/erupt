@@ -80,7 +80,7 @@ public class EruptModelTools {
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
             @P("JSON object representing the new record. Field names and types must match the model schema obtained from eruptSchema.") Map<String, Object> data) {
         JsonObject jsonObject = GsonFactory.getGson().toJsonTree(data).getAsJsonObject();
-        return GsonFactory.getGson().toJson(eruptModifyService.insertEruptData(EruptCoreService.getErupt(eruptName), jsonObject));
+        return "Insert success, Primary key:" + eruptModifyService.insertEruptData(EruptCoreService.getErupt(eruptName), jsonObject);
     }
 
     @Tool("Fetch a single erupt model record by its primary key ID.")

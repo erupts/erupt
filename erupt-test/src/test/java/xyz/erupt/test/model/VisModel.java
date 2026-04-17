@@ -1,4 +1,4 @@
-package xyz.erupt.model;
+package xyz.erupt.test.model;
 
 import jakarta.persistence.Entity;
 import lombok.Getter;

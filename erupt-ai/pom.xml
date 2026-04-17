@@ -14,9 +14,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <properties>
-        <langchain4j.version>1.12.2</langchain4j.version>
-    </properties>
 
     <dependencies>
         <dependency>

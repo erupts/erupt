@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>17</java.version>
+        <langchain4j.version>1.12.2</langchain4j.version>
         <spring.boot.version>3.5.13</spring.boot.version>
     </properties>
 
@@ -75,6 +76,13 @@
         <!-- Cloud Node (Aggregated JPA) -->
         <module>erupt-cloud/erupt-cloud-node-jpa</module>
 
+        <!-- unittest -->
+        <module>erupt-test</module>
+
+        <!-- Sample Project Using H2 as Data Source -->
+        <module>erupt-sample</module>
+        <!-- erupt deploy -->
+        <module>deploy/erupt-cloud-server-docker</module>
     </modules>
 
     <dependencyManagement>
@@ -182,21 +190,16 @@
     </developers>
 
     <profiles>
-        <profile>
-            <!-- Active by default; skipped automatically when -P release is specified -->
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <!-- Sample Project Using H2 as Data Source -->
-                <module>erupt-sample</module>
-                <!-- unittest -->
-                <module>erupt-test</module>
-                <!-- erupt deploy -->
-                <module>deploy/erupt-cloud-server-docker</module>
-            </modules>
-        </profile>
+<!--        <profile>-->
+<!--            &lt;!&ndash; Active by default; skipped automatically when -P release is specified &ndash;&gt;-->
+<!--            <id>dev</id>-->
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
+<!--            <modules>-->
+<!--                -->
+<!--            </modules>-->
+<!--        </profile>-->
         <profile>
             <id>disable-javadoc-doclint</id>
             <activation>
