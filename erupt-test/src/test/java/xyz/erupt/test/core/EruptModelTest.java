@@ -2,16 +2,20 @@ package xyz.erupt.test.core;
 
 import com.google.gson.Gson;
 import jakarta.annotation.Resource;
-import jakarta.persistence.*;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.Rollback;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.service.EruptCoreService;
+import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.view.EruptModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.jpa.model.BaseModel;
@@ -21,7 +25,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -34,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Service
 @Rollback
 @Transactional
-public class EruptFieldEditTypeTest extends EruptApplicationTests {
+public class EruptModelTest extends EruptApplicationTests {
 
     @Resource
     private EruptDao eruptDao;
@@ -45,20 +48,11 @@ public class EruptFieldEditTypeTest extends EruptApplicationTests {
     // ─── 扫描 ─────────────────────────────────────────────────────────────────
 
     private List<Class<?>> scanModelClasses() {
-        ClassPathScanningCandidateComponentProvider scanner =
-                new ClassPathScanningCandidateComponentProvider(false);
-        scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
-        return scanner.findCandidateComponents(MODEL_PACKAGE).stream()
-                .map(bd -> {
-                    try {
-                        return Class.forName(bd.getBeanClassName());
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .filter(c -> c.isAnnotationPresent(Erupt.class))
-                .sorted(Comparator.comparing(Class::getSimpleName))
-                .toList();
+        List<Class<?>> list = new ArrayList<>();
+        EruptSpringUtil.scannerPackage(new String[]{MODEL_PACKAGE},
+                new TypeFilter[]{new AnnotationTypeFilter(Erupt.class)
+                }, list::add);
+        return list;
     }
 
     // ─── 序列化校验 ───────────────────────────────────────────────────────────
@@ -134,7 +128,9 @@ public class EruptFieldEditTypeTest extends EruptApplicationTests {
         return entity;
     }
 
-    /** 从 List&lt;T&gt; 泛型中提取 T。 */
+    /**
+     * 从 List&lt;T&gt; 泛型中提取 T。
+     */
     private Class<?> resolveCollectionGeneric(Field field) {
         return (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
     }

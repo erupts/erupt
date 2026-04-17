@@ -1,13 +1,11 @@
-package xyz.erupt.test.jpa;
+package xyz.erupt.test.query;
 
-import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.Rollback;
-import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.test.EruptApplicationTests;
-import xyz.erupt.test.model.lambda_query.Grade;
-import xyz.erupt.test.model.lambda_query.Student;
+import xyz.erupt.test.query.model.Grade;
+import xyz.erupt.test.query.model.Student;
 import xyz.erupt.upms.model.EruptOrg;
 import xyz.erupt.upms.model.EruptUser;
 
@@ -18,8 +16,6 @@ import java.util.Set;
 @Transactional
 public class LambdaQueryTest extends EruptApplicationTests {
 
-    @Resource
-    private EruptDao eruptDao;
 
     @Test
     void lambdaQueryTest() {

@@ -12,7 +12,7 @@ import xyz.erupt.upms.prop.EruptUpmsProp;
 public class EruptApplicationTests {
 
     @Resource
-    private EruptDao eruptDao;
+    protected EruptDao eruptDao;
 
     @Resource
     private EruptUserController eruptUserController;
