@@ -1,6 +1,7 @@
-package xyz.erupt.core.util;
+package xyz.erupt.test.util;
 
 import org.junit.jupiter.api.Test;
+import xyz.erupt.core.util.SecurityUtil;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 

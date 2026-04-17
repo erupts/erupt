@@ -1,4 +1,4 @@
-package xyz.erupt.test.query.model;
+package xyz.erupt.test.model.query;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

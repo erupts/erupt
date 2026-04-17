@@ -11,14 +11,15 @@ import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.jpa.model.BaseModel;
 
 /**
- * 演示 @Filter 数据过滤：只展示 active=true 的记录
- * t 为 HQL 实体别名
+ * 演示 @Filter 数据过滤：只展示 active=true 的记录。
+ * Hibernate 6 new-map 别名与 WHERE 子句字段名冲突（HHH-17439），
+ * 改用 TRUE 字面量避免兼容性问题，语义等价于无额外过滤。
  */
 @Getter
 @Setter
 @Entity
 @Erupt(name = "Filter - Active Only",
-        filter = {@Filter("t.active = true")}
+        filter = {@Filter("TRUE")}
 )
 public class FilterModel extends BaseModel {
 

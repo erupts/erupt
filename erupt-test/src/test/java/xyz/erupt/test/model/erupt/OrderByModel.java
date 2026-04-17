@@ -16,7 +16,7 @@ import xyz.erupt.jpa.model.BaseModel;
 @Setter
 @Entity
 @Erupt(name = "OrderBy Demo",
-        orderBy = "t.sort asc, t.name desc"
+        orderBy = "sort asc"
 )
 public class OrderByModel extends BaseModel {
 

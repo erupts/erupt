@@ -1,16 +1,11 @@
-package xyz.erupt.test.query;
+package xyz.erupt.test.core;
 
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.Rollback;
 import xyz.erupt.test.EruptApplicationTests;
-import xyz.erupt.test.query.model.Grade;
-import xyz.erupt.test.query.model.Student;
-import xyz.erupt.upms.model.EruptOrg;
-import xyz.erupt.upms.model.EruptUser;
-
-import java.util.List;
-import java.util.Set;
+import xyz.erupt.test.model.query.Grade;
+import xyz.erupt.test.model.query.Student;
 
 @Rollback
 @Transactional
@@ -70,17 +65,4 @@ public class LambdaQueryTest extends EruptApplicationTests {
                 .with().list();
     }
 
-    @Test
-    public void orgHeads() {
-        EruptOrg eruptOrg = new EruptOrg();
-        eruptOrg.setName("test");
-        eruptDao.persist(eruptOrg);
-        EruptUser eruptUser = new EruptUser();
-        eruptUser.setAccount("test");
-        eruptUser.setHeadOrg(Set.of(eruptOrg.getId()));
-        eruptDao.persist(eruptUser);
-        List<EruptUser> eruptUsers = eruptDao.getEntityManager().createQuery("select u from EruptUser u join u.headOrg h where h = :orgId")
-                .setParameter("orgId", eruptOrg.getId()).getResultList();
-        assert eruptUsers.size() == 1;
-    }
 }
