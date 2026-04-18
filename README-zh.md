@@ -110,6 +110,9 @@ Skills 存放于 `~/.erupt/skills/`，也可在对话中动态创建。
 
 ## 快速开始
 
+> 💡 **本地运行**：克隆仓库后，直接运行 `erupt-sample` 模块中的 `EruptSampleApplication.main()` 方法即可启动示例项目，内置 H2 内存数据库，无需额外配置。
+> 默认账号密码：`erupt / erupt`
+
 #### Annotation Example
 
 ```java
