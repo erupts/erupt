@@ -20,7 +20,7 @@ public @interface Link {
 
     @Transient
     @Comment("Column in linkErupt → this.column = linkErupt.joinColumn")
-    @Language(value = "hql", prefix = "select * from t where ",suffix = " = ''")
+    @Language(value = "hql", prefix = "select * from t where ", suffix = " = ''")
     String joinColumn();
 
     @Comment("Other conditions for the link")

@@ -118,6 +118,42 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
                 }
             });
         }
+        // Parse drill / filter condition strings: "Entity.field = value" or "Entity.field = 'value'"
+        if (eruptQuery.getConditionStrings() != null) {
+            for (String cs : eruptQuery.getConditionStrings()) {
+                applyConditionString(query, cs);
+            }
+        }
+    }
+
+    // Parses simple "Entity.field = value" / "Entity.field = 'value'" equality conditions
+    // produced by drillProcess and static @Filter values into MongoDB Criteria.
+    private void applyConditionString(Query query, String conditionStr) {
+        if (StringUtils.isBlank(conditionStr)) return;
+        String trimmed = conditionStr.trim();
+        int eqIdx = trimmed.indexOf('=');
+        if (eqIdx < 0) return;
+        String lhs = trimmed.substring(0, eqIdx).trim();
+        String rhs = trimmed.substring(eqIdx + 1).trim();
+        // strip Entity. prefix (e.g. "DrillDetailModel.orderId" → "orderId")
+        int dotIdx = lhs.lastIndexOf('.');
+        String fieldName = dotIdx >= 0 ? lhs.substring(dotIdx + 1) : lhs;
+        if (StringUtils.isBlank(fieldName)) return;
+        Object value;
+        if (rhs.startsWith("'") && rhs.endsWith("'")) {
+            value = rhs.substring(1, rhs.length() - 1);
+        } else {
+            try {
+                value = Long.parseLong(rhs);
+            } catch (NumberFormatException e1) {
+                try {
+                    value = Double.parseDouble(rhs);
+                } catch (NumberFormatException e2) {
+                    value = rhs;
+                }
+            }
+        }
+        query.addCriteria(Criteria.where(fieldName).is(value));
     }
 
     /**
