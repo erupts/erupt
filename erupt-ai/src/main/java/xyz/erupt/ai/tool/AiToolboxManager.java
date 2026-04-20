@@ -72,6 +72,15 @@ public class AiToolboxManager implements ApplicationRunner {
                 }
             }
         });
-        log.info("AiToolbox initialized, {} tool(s) registered", aiMethodMap.size());
+        if (aiMethodMap.isEmpty()) {
+            log.info("AiToolbox initialized, 0 tool(s) registered");
+        } else {
+            List<String> names = new ArrayList<>(aiMethodMap.keySet());
+            StringBuilder sb = new StringBuilder("AiToolbox initialized, ").append(names.size()).append(" tool(s) registered:");
+            for (int i = 0; i < names.size(); i++) {
+                sb.append("\n  ").append(i == names.size() - 1 ? "└─ " : "├─ ").append(names.get(i));
+            }
+            log.info(sb.toString());
+        }
     }
 }

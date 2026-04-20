@@ -47,7 +47,7 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 > `erupt-ai` module — enterprise-grade LLM integration with zero boilerplate
 
-### Supported LLM Providers (15+)
+### Supported LLM Providers
 
 | Provider | Models |
 |----------|--------|

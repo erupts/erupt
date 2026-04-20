@@ -1,9 +1,14 @@
 package xyz.erupt.annotation.cube;
 
+import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.fun.VLModel;
+
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author YuePeng
@@ -25,6 +30,16 @@ public enum FieldType {
         } else {
             return FieldType.STRING;
         }
+    }
+
+    public static class H implements ChoiceFetchHandler {
+
+        @Override
+        public List<VLModel> fetch(String[] params) {
+            return Arrays.stream(FieldType.values()).filter(it -> !it.name().equals(AUTO.name()))
+                    .map(v -> new VLModel(v.name(), v.name())).toList();
+        }
+
     }
 
 }
