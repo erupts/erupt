@@ -75,10 +75,20 @@ public class AiToolboxManager implements ApplicationRunner {
         if (aiMethodMap.isEmpty()) {
             log.info("AiToolbox initialized, 0 tool(s) registered");
         } else {
-            List<String> names = new ArrayList<>(aiMethodMap.keySet());
-            StringBuilder sb = new StringBuilder("AiToolbox initialized, ").append(names.size()).append(" tool(s) registered:");
-            for (int i = 0; i < names.size(); i++) {
-                sb.append("\n  ").append(i == names.size() - 1 ? "└─ " : "├─ ").append(names.get(i));
+            Map<String, List<String>> classMethodMap = new java.util.LinkedHashMap<>();
+            aiMethodBeanMap.forEach((name, bean) ->
+                    classMethodMap.computeIfAbsent(bean.getClass().getSimpleName(), k -> new ArrayList<>()).add(name));
+            StringBuilder sb = new StringBuilder("AiToolbox initialized, ").append(aiMethodMap.size()).append(" tool(s) registered:");
+            List<String> classes = new ArrayList<>(classMethodMap.keySet());
+            for (int i = 0; i < classes.size(); i++) {
+                String className = classes.get(i);
+                boolean lastClass = i == classes.size() - 1;
+                sb.append("\n  ").append(lastClass ? "└─ " : "├─ ").append(className);
+                List<String> methods = classMethodMap.get(className);
+                for (int j = 0; j < methods.size(); j++) {
+                    sb.append("\n  ").append(lastClass ? "   " : "│  ")
+                            .append(j == methods.size() - 1 ? "└─ " : "├─ ").append(methods.get(j));
+                }
             }
             log.info(sb.toString());
         }
