@@ -126,26 +126,29 @@ public class EruptCoreService implements ApplicationRunner {
             ERUPTS.put(clazz.getSimpleName(), eruptModel);
             ERUPT_LIST.add(eruptModel);
         });
-        log.info("<{}>", repeat("===", 18));
         AtomicInteger moduleMaxCharLength = new AtomicInteger();
         EruptModuleInvoke.invoke(it -> {
-            int length = it.info().getName().length();
-            if (length > moduleMaxCharLength.get()) moduleMaxCharLength.set(length);
+            int len = it.info().getName().length();
+            if (len > moduleMaxCharLength.get()) moduleMaxCharLength.set(len);
         });
+        String sep = ansi().fgBright(Ansi.Color.BLACK).a(repeat("─", 54)).reset().toString();
+        log.info(sep);
         if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
-            log.warn(ansi().fg(Ansi.Color.RED).a("Open erupt hot build").reset().toString());
+            log.warn(ansi().fg(Ansi.Color.RED).a("  ⚠ Hot build enabled").reset().toString());
         }
         EruptModuleInvoke.invoke(it -> {
             it.run();
             MODULES.add(it.info().getName());
-            log.info("🚀 → {} module initialization completed in {}ms", fillCharacter(it.info().getName(),
-                    moduleMaxCharLength.get()), timeRecorder.recorder()
-            );
+            log.info("  {} {}", ansi().fgBright(Ansi.Color.CYAN).a(fillCharacter(it.info().getName(), moduleMaxCharLength.get())).reset(),
+                    ansi().fgBright(Ansi.Color.BLACK).a(timeRecorder.recorder() + "ms").reset());
         });
-        log.info("Erupt modules : {}", MODULES.size());
-        log.info("Erupt classes : {}", ERUPTS.size());
-        log.info("Erupt Engine initialization completed in {}ms", totalRecorder.recorder());
-        log.info("<{}>", repeat("===", 18));
+        log.info(sep);
+        log.info("  {}{}   {}{}   {}{}",
+                ansi().fgBright(Ansi.Color.BLACK).a("Modules  ").reset(), MODULES.size(),
+                ansi().fgBright(Ansi.Color.BLACK).a("Classes  ").reset(), ERUPTS.size(),
+                ansi().fgBright(Ansi.Color.BLACK).a("Ready in  ").reset(),
+                ansi().fgBright(Ansi.Color.GREEN).a(totalRecorder.recorder() + "ms").reset());
+        log.info(sep);
     }
 
     private String fillCharacter(String character, int targetWidth) {

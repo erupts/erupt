@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @AiToolbox
 @Component
-public class EruptAiToolbox {
+public class EruptUserTools {
 
     @Resource
     private EruptDao eruptDao;

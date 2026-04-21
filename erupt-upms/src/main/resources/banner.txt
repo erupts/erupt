@@ -1,4 +1,4 @@
-${AnsiColor.BRIGHT_BLUE}
+${AnsiColor.BRIGHT_CYAN}
                              __
                             /\ \__
    __   _ __   __  __  _____\ \ __\
@@ -9,5 +9,6 @@ ${AnsiColor.BRIGHT_BLUE}
                          \ \_\
                           \/_/
 
-:: Spring Boot     :: v(${spring-boot.version})
-:: Erupt Framework :: v(${project.version}) ${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_BLACK}─────────────────────────────────────────────${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_YELLOW}Spring Boot${AnsiColor.DEFAULT}  v${spring-boot.version}   ${AnsiColor.BRIGHT_CYAN}Erupt Engine${AnsiColor.DEFAULT}  v${project.version}
+${AnsiColor.DEFAULT}
