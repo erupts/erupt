@@ -21,7 +21,7 @@ public enum FieldType {
     STRING,
     DATE;
 
-    public static FieldType get(Field field) {
+    public static FieldType getType(Field field) {
         Class<?> clazz = field.getType();
         if (clazz == Short.class || clazz == Integer.class || clazz == Long.class || clazz == Double.class || clazz == Float.class) {
             return FieldType.NUMBER;

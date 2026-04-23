@@ -131,7 +131,7 @@ public class EruptCoreService implements ApplicationRunner {
             int len = it.info().getName().length();
             if (len > moduleMaxCharLength.get()) moduleMaxCharLength.set(len);
         });
-        String sep = ansi().fgBright(Ansi.Color.BLACK).a(repeat("─", 54)).reset().toString();
+        String sep = ansi().fgBright(Ansi.Color.BLACK).a("─".repeat(54)).reset().toString();
         log.info(sep);
         if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
             log.warn(ansi().fg(Ansi.Color.RED).a("  ⚠ Hot build enabled").reset().toString());
@@ -152,13 +152,7 @@ public class EruptCoreService implements ApplicationRunner {
     }
 
     private String fillCharacter(String character, int targetWidth) {
-        return character + repeat(" ", targetWidth - character.length());
-    }
-
-    private String repeat(String space, int num) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < num; i++) sb.append(space);
-        return sb.toString();
+        return character + " ".repeat(targetWidth - character.length());
     }
 
 }
