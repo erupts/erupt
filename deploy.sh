@@ -6,4 +6,4 @@
 #cd ../deploy/erupt-cloud-server-docker
 #source deploy.sh
 
-mvn clean deploy -P release -DskipTests
+mvn clean deploy -P release
