@@ -1,5 +1,5 @@
 #cd ../erupt-web
-#pnpm run build
+#yarn run build
 #cd ../erupt/erupt-web
 #git add src/main/resources/public
 #
