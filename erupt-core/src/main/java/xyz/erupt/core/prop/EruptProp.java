@@ -16,37 +16,37 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("ConfigurationProperties")
 public class EruptProp {
 
-    //热构建erupt, 开启此功能后每次请求都会重新构建erupt，该功能方便启动时修改erupt注解，生产环境请勿启用
+    // Hot-build erupt: when enabled, erupt will be rebuilt on every request. Useful for modifying erupt annotations at startup. Do NOT enable in production.
     private boolean hotBuild = false;
 
-    //附件存储根路径
+    // Root path for attachment storage
     private String uploadPath = "/opt/erupt-attachment";
 
-    //是否开启csrf校验
+    // Whether to enable CSRF validation
     private boolean csrfInspect = true;
 
-    //是否保留上传文件原始名称
+    // Whether to preserve the original filename of uploaded files
     private boolean keepUploadFileName = false;
 
-    //初始化检测方式
+    // Initialization detection method
     private InitMethodEnum initMethodEnum = InitMethodEnum.FILE;
 
-    //指定哪些包内的类通过gson实现序列化
+    // Specify which packages use Gson for serialization
     private String[] gsonHttpMessageConvertersPackages;
 
-    //是否使用redis管理session
+    // Whether to use Redis for session management
     private boolean redisSession = false;
 
-    //是否自动更新 redis 会话中 token 有效期（redisSession为true时有效）
+    // Whether to automatically refresh the token expiry in the Redis session (effective when redisSession is true)
     private boolean redisSessionRefresh = false;
 
-    //默认语言
-    public String defaultLocales = "zh-CN";
+    // Default locale
+    public String defaultLocales = "en-US";
 
-    //日志采集功能开关
+    // Log collection feature switch
     private boolean logTrack = true;
 
-    //日志采集暂存行数
+    // Number of rows to buffer for log collection
     private Integer logTrackCacheSize = 1000;
 
 }

@@ -47,7 +47,7 @@ public class ProxyContext {
         proxyContextThreadLocal.remove();
     }
 
-    // 受控于 I18n 注解
+    // Controlled by the I18n annotation
     public static String translate(String key) {
         if (ProxyContext.get().i18n) {
             return EruptSpringUtil.getBean(I18nTranslate.class).translate(key);

@@ -10,20 +10,20 @@ import java.util.List;
  */
 public interface EruptModule {
 
-    @Comment("模块信息")
+    @Comment("Module information")
     ModuleInfo info();
 
-    @Comment("初始化")
+    @Comment("Initialize")
     default void run() {
 
     }
 
-    @Comment("初始化菜单 → 仅执行一次，标识文件位置.erupt/.${moduleName}")
+    @Comment("Initialize menus → executed only once; marker file location: .erupt/.${moduleName}")
     default List<MetaMenu> initMenus() {
         return null;
     }
 
-    @Comment("初始化方法 → 仅执行一次，标识文件位置.erupt/.${moduleName}")
+    @Comment("Initialization method → executed only once; marker file location: .erupt/.${moduleName}")
     default void initFun() {
 
     }

@@ -11,8 +11,8 @@ import java.util.Map;
  */
 public interface AutoCompleteHandler {
 
-    List<Object> completeHandler(@Comment("前端其他表单组件的值") Map<String,Object> formData,
-                                 @Comment("前端输入值") String val,
-                                 @Comment("注解回传参数") String[] param);
+    List<Object> completeHandler(@Comment("values of other frontend form components") Map<String,Object> formData,
+                                 @Comment("frontend input value") String val,
+                                 @Comment("annotation callback parameters") String[] param);
 
 }

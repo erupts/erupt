@@ -22,68 +22,68 @@ public @interface RowOperation {
     @Transient
     ExprBool show() default @ExprBool;
 
-    @Comment("功能提示")
+    @Comment("Feature tooltip")
     String tip() default "";
 
-    @Comment("调用提示,空则不提示")
+    @Comment("Confirmation prompt before invocation; no prompt if empty")
     String callHint() default "erupt.operation.call_hint";
 
-    @Comment("单行按钮是否折叠显示，适用于按钮过多的场景")
+    @Comment("Whether to collapse single-row buttons; useful when there are too many buttons")
     boolean fold() default false;
 
-    @Comment("图标请参考Font Awesome")
+    @Comment("Refer to Font Awesome for icon names")
     @Language(value = "html", prefix = "<i class=\"", suffix = "\"></i>")
     String icon() default "fa fa-dot-circle-o";
 
-    @Comment("功能模式")
+    @Comment("Operation mode")
     Mode mode() default Mode.MULTI;
 
-    @Comment("功能类型")
+    @Comment("Operation type")
     Type type() default Type.ERUPT;
 
     @Language("javascript")
-    @Comment("控制按钮显示与隐藏 或 能否点击（JS表达式），变量：item 获取整行数据")
+    @Comment("Controls button visibility or clickability (JS expression); variable: item retrieves the entire row data")
     String ifExpr() default "";
 
-    @Comment("控制 ifExpr 的结果是控制按钮的 显示与隐藏 还是 能否点击")
+    @Comment("Controls whether ifExpr result governs button visibility or clickability")
     IfExprBehavior ifExprBehavior() default IfExprBehavior.DISABLE;
 
-    @Comment("type为tpl时可用，可在模板中使用rows变量，可获取选中行的数据")
+    @Comment("Available when type is TPL; the rows variable in the template can be used to retrieve selected row data")
     Tpl tpl() default @Tpl(path = "");
 
-    @Comment("按钮提交时，需要填写的表单信息")
+    @Comment("Form information required to be filled in when the button is submitted")
     Class<?> eruptClass() default void.class;
 
     @Transient
-    @Comment("该配置可在operationHandler中获取")
+    @Comment("This configuration can be retrieved in operationHandler")
     String[] operationParam() default {};
 
     @Transient
-    @Comment("type为ERUPT时可用，操作按钮点击后，后台处理逻辑")
+    @Comment("Available when type is ERUPT; backend processing logic after the operation button is clicked")
     Class<? extends OperationHandler> operationHandler() default OperationHandler.class;
 
     enum Mode {
-        @Comment("依赖单行数据")
+        @Comment("Requires single-row data")
         SINGLE,
-        @Comment("依赖多行数据")
+        @Comment("Requires multi-row data")
         MULTI,
-        @Comment("仅依赖多行数据，屏蔽单行操作按钮")
+        @Comment("Requires multi-row data only; hides single-row operation button")
         MULTI_ONLY,
-        @Comment("不依赖行数据")
+        @Comment("Does not depend on row data")
         BUTTON
     }
 
     enum Type {
-        @Comment("通过erupt表单渲染，operationHandler进行逻辑处理")
+        @Comment("Rendered via erupt form; operationHandler handles the logic")
         ERUPT,
-        @Comment("通过自定义模板渲染")
+        @Comment("Rendered via a custom template")
         TPL
     }
 
     enum IfExprBehavior {
-        @Comment("IfExpr处理按钮显示或隐藏")
+        @Comment("IfExpr controls button show or hide")
         HIDE,
-        @Comment("IfExpr处理按钮可否点击")
+        @Comment("IfExpr controls whether the button is clickable")
         DISABLE
     }
 }

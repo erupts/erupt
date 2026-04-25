@@ -34,7 +34,7 @@ public class EditProxy extends AnnotationProxy<Edit, EruptField> {
                 } else if (EruptUtil.isDateField(returnType)) {
                     return EditType.DATE;
                 } else if (ArrayUtils.contains(AnnotationProcess.getEditTypeMapping(EditType.TEXTAREA).nameInfer(), returnType)) {
-                    return EditType.TEXTAREA; //属性名推断
+                    return EditType.TEXTAREA; // inferred by field name
                 } else {
                     return EditType.INPUT;
                 }

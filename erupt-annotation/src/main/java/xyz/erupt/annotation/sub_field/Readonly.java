@@ -14,7 +14,7 @@ public @interface Readonly {
 
     boolean edit() default true;
 
-    @Comment("是否允许通过 API 修改")
+    @Comment("Whether modification via API is allowed")
     boolean allowChange() default true;
 
     @Transient

@@ -14,8 +14,11 @@ public class EruptAnnotationException extends RuntimeException {
 
     public static void validateEruptInfo(EruptModel eruptModel) {
         if (null == eruptModel.getEruptFieldMap().get(eruptModel.getErupt().primaryKeyCol())) {
-            throw ExceptionAnsi.styleEruptException(eruptModel, "找不到主键,请确认主键列名是否为" + eruptModel.getErupt().primaryKeyCol() +
-                    "，如果你不想将主键名定义为'" + eruptModel.getErupt().primaryKeyCol() + "'则可以修改@erupt->primaryKeyCol值解决此异常");
+            throw ExceptionAnsi.styleEruptException(eruptModel,
+                    "Primary key not found. Please verify if the primary key column name is "
+                            + eruptModel.getErupt().primaryKeyCol()
+                            + ". If you don't want to define the primary key name as '" + eruptModel.getErupt().primaryKeyCol()
+                            + "', you can modify the @erupt->primaryKeyCol value to resolve this exception");
         }
     }
 

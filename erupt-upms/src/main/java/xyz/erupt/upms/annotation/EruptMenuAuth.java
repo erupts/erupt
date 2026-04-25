@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Documented
-@Comment("菜单权限校验")
+@Comment("Menu permission validation")
 public @interface EruptMenuAuth {
 
     String value();

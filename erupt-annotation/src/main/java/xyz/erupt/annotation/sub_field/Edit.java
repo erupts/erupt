@@ -20,49 +20,49 @@ public @interface Edit {
 
     String title();
 
-    @Comment("描述")
+    @Comment("Description")
     String desc() default "";
 
-    @Comment("是否必填")
+    @Comment("Whether the field is required")
     boolean notNull() default false;
 
-    @Comment("是否显示")
+    @Comment("Whether to display")
     boolean show() default true;
 
     @Transient
-    @Comment("可被 onchange 接口获取到")
+    @Comment("Accessible by the onchange interface")
     String[] onchangeParams() default {};
 
     Class<? extends OnChange> onchange() default OnChange.class;
 
     @Transient
-    @Comment("动态渲染配置")
+    @Comment("Dynamic rendering configuration")
     ExprBool ifRender() default @ExprBool;
 
-    @Comment("是否只读")
+    @Comment("Whether the field is read-only")
     @EruptProperty(alias = "readOnly")
     Readonly readonly() default @Readonly(add = false, edit = false);
 
-    @Comment("表单提示信息")
+    @Comment("Form placeholder hint")
     String placeHolder() default "";
 
     @Match("#value.condition() != ''")
-    @Comment("表单动态处理")
+    @Comment("Dynamic form processing")
     Dynamic dynamic() default @Dynamic(dependField = "", condition = "");
 
-    @Comment("查询项")
+    @Comment("Search configuration")
     Search search() default @Search(false);
 
     @Transient
-    @Comment("排序表达式，在修饰类型为 ORM 对象时可用")
+    @Comment("Sort expression; applicable when the field type is an ORM entity object")
     @Language(value = "sql", prefix = "select * from t order by")
     String orderBy() default "";
 
     @Transient
-    @Comment("数据过滤表达式，在修饰类型为对象时可用")
+    @Comment("Data filter expression; applicable when the field type is an entity object")
     Filter[] filter() default {};
 
-    @Comment("组件类型")
+    @Comment("Component type")
     EditType type() default EditType.AUTO;
 
     @Match("#item.type().toString()=='INPUT'")

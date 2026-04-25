@@ -205,6 +205,11 @@ flow.permission_scopes,人员范围,人員範圍,Permission Scopes,Périmètres 
 flow.submitter_of,提交人的,提交人的,Submitter of,Soumetteur de,提出者の,제출자의,Отправитель de,Remitente de,Einreicher von,Remetente de,Penyerah dari,مقدم من
 
 [ai]
+ai.chat.sessions,会话,會話,Chats,Conversations,チャット,대화,Чаты,Conversaciones,Chats,Conversas,Percakapan,المحادثات
+ai.chat.collapse_sidebar,收起侧边栏,收起側邊欄,Collapse sidebar,Réduire le panneau,サイドバーを閉じる,사이드바 접기,Свернуть панель,Cerrar panel,Seitenleiste schließen,Recolher painel,Sembunyikan panel,طي الشريط الجانبي
+ai.chat.expand_sidebar,展开侧边栏,展開側邊欄,Expand sidebar,Développer le panneau,サイドバーを開く,사이드바 펼치기,Развернуть панель,Abrir panel,Seitenleiste öffnen,Expandir painel,Tampilkan panel,توسيع الشريط الجانبي
+ai.chat.empty_title,开始一段对话,開始一段對話,Start a conversation,Commencer une conversation,会話を始めましょう,대화를 시작해보세요,Начните разговор,Iniciar una conversación,Gespräch beginnen,Iniciar uma conversa,Mulai percakapan,ابدأ محادثة
+ai.chat.empty_hint,在下方输入内容，AI 将为你解答,在下方輸入內容，AI 將為你解答,Type below and AI will respond,Tapez ci-dessous pour commencer,下に入力してAIが回答します,아래에 입력하면 AI가 답변합니다,Введите запрос ниже,Escribe abajo para comenzar,Unten eingeben für KI-Antwort,Digite abaixo para começar,Ketik di bawah untuk memulai,اكتب أدناه وسيرد الذكاء الاصطناعي
 ai.chat.new_session,新建会话,新建會話,New Chat,Nouvelle conversation,新しいチャット,새 대화,Новый чат,Nueva conversación,Neuer Chat,Nova conversa,Percakapan baru,محادثة جديدة
 ai.chat.more_actions,更多操作,更多操作,More actions,Plus d'actions,その他の操作,더 많은 작업,Ещё действия,Más acciones,Weitere Aktionen,Mais ações,Tindakan lainnya,المزيد من الإجراءات
 ai.chat.rename,重命名,重新命名,Rename,Renommer,名前を変更,이름 바꾸기,Переименовать,Renombrar,Umbenennen,Renomear,Ubah nama,إعادة التسمية
@@ -368,3 +373,5 @@ ai.chat.edit_resend,编辑重发,編輯重發,Edit & Resend,Modifier et renvoyer
 ai.chat.quote,引用到输入框,引用到輸入框,Quote to input,Citer dans la saisie,引用して入力,입력창에 인용,Цитировать в ввод,Citar en entrada,In Eingabe zitieren,Citar na entrada,Kutip ke input,اقتبس في المدخل
 ai.chat.speak,朗读,朗讀,Read aloud,Lire à voix haute,読み上げる,읽어주기,Прочитать вслух,Leer en voz alta,Vorlesen,Ler em voz alta,Baca keras,قراءة بصوت عالٍ
 ai.chat.speak_stop,停止朗读,停止朗讀,Stop reading,Arrêter la lecture,読み上げ停止,읽기 중지,Остановить чтение,Detener lectura,Vorlesen stoppen,Parar leitura,Hentikan bacaan,إيقاف القراءة
+cube.filter.config.not_null,必填,必填,Required,Obligatoire,必須,필수,Обязательно,Obligatorio,Pflichtfeld,Obrigatório,Wajib diisi,مطلوب
+cube.filter.required_hint,请先填写必填筛选项,請先填寫必填篩選項目,Please fill in the required filter options first,Veuillez d'abord remplir les options de filtre obligatoires,必須のフィルター項目を先に入力してください,필수 필터 항목을 먼저 입력해 주세요,"Пожалуйста, сначала заполните обязательные параметры фильтра","Por favor, complete primero las opciones de filtro obligatorias",Bitte füllen Sie zuerst die erforderlichen Filteroptionen aus,"Por favor, preencha primeiro as opções de filtro obrigatórias",Silakan isi opsi filter yang wajib diisi terlebih dahulu,يرجى ملء خيارات التصفية المطلوبة أولاً

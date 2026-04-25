@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.14.1</version>
+    <version>1.14.2</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>17</java.version>
+        <langchain4j.version>1.12.2</langchain4j.version>
         <spring.boot.version>3.5.13</spring.boot.version>
     </properties>
 
@@ -75,14 +76,13 @@
         <!-- Cloud Node (Aggregated JPA) -->
         <module>erupt-cloud/erupt-cloud-node-jpa</module>
 
-        <!-- Sample Project Using H2 as Data Source -->
-        <module>erupt-sample</module>
-
-        <!-- erupt deploy -->
-        <module>deploy/erupt-cloud-server-docker</module>
-
         <!-- unittest -->
         <module>erupt-test</module>
+
+        <!-- Sample Project Using H2 as Data Source -->
+        <module>erupt-sample</module>
+        <!-- erupt deploy -->
+        <module>deploy/erupt-cloud-server-docker</module>
     </modules>
 
     <dependencyManagement>
@@ -190,6 +190,16 @@
     </developers>
 
     <profiles>
+<!--        <profile>-->
+<!--            &lt;!&ndash; Active by default; skipped automatically when -P release is specified &ndash;&gt;-->
+<!--            <id>dev</id>-->
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
+<!--            <modules>-->
+<!--                -->
+<!--            </modules>-->
+<!--        </profile>-->
         <profile>
             <id>disable-javadoc-doclint</id>
             <activation>
@@ -219,12 +229,39 @@
                         </configuration>
                     </plugin>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>oss</flattenMode>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>flatten</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>flatten</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>flatten.clean</id>
+                                <phase>clean</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <version>0.8.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
+<!--                            <autoPublish>true</autoPublish>-->
+<!--                            <waitUntil>published</waitUntil>-->
                         </configuration>
                     </plugin>
                     <plugin>
@@ -248,6 +285,8 @@
                         <version>3.5.0</version>
                         <configuration>
                             <doclint>none</doclint>
+                            <detectOfflineLinks>false</detectOfflineLinks>
+                            <failOnError>false</failOnError>
                             <javadocExecutable>
                                 ${java.home}/bin/javadoc
                             </javadocExecutable>

@@ -76,7 +76,7 @@ public class EruptUserController {
                             @RequestParam(required = false) String verifyCodeMark
     ) {
         if (!eruptUserService.checkVerifyCode(account, verifyCode, verifyCodeMark)) {
-            return new LoginModel(false, "验证码错误", true);
+            return new LoginModel(false, I18nTranslate.$translate("upms.verify_code_error"), true);
         }
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         LoginModel loginModel;
@@ -87,7 +87,7 @@ public class EruptUserController {
             try {
                 EruptUser eruptUser = loginProxy.login(account, pwd);
                 if (null == eruptUser) {
-                    loginModel.setReason("账号或密码错误");
+                    loginModel.setReason(I18nTranslate.$translate("upms.account_pwd_error"));
                     loginModel.setPass(false);
                 } else {
                     loginModel.setEruptUser(eruptUser);
@@ -106,7 +106,7 @@ public class EruptUserController {
             loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
             if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
             eruptTokenService.loginToken(eruptUser, loginModel.getToken());
-            eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
+            eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //Record login log
         }
         return loginModel;
     }

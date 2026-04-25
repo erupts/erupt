@@ -35,9 +35,9 @@ public class EruptMonitorAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> metaMenus = new ArrayList<>();
-        metaMenus.add(MetaMenu.createRootMenu("monitor", "系统监控", "fa fa-bullseye", 10));
-        metaMenus.add(MetaMenu.createSimpleMenu("server.html", "服务监控", "server.html", metaMenus.get(0), 10, EruptTplService.TPL));
-        metaMenus.add(MetaMenu.createSimpleMenu("redis.html", "缓存监控", "redis.html", metaMenus.get(0), 20, EruptTplService.TPL));
+        metaMenus.add(MetaMenu.createRootMenu("monitor", "System Monitoring", "fa fa-bullseye", 10));
+        metaMenus.add(MetaMenu.createSimpleMenu("server.html", "Service Monitoring", "server.html", metaMenus.get(0), 10, EruptTplService.TPL));
+        metaMenus.add(MetaMenu.createSimpleMenu("redis.html", "Cache Monitoring", "redis.html", metaMenus.get(0), 20, EruptTplService.TPL));
         return metaMenus;
     }
 }

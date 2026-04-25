@@ -18,7 +18,7 @@ import xyz.erupt.core.view.EruptModel;
 import java.util.*;
 
 /**
- * Erupt 页面结构构建信息
+ * Erupt page structure build information
  *
  * @author YuePeng
  * date 2018-09-28.

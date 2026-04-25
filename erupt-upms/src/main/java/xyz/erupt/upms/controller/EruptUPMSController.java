@@ -22,7 +22,7 @@ public class EruptUPMSController {
 
     private final EruptAppProp eruptAppProp;
 
-    //校验菜单类型值权限
+    //Verify menu type value permission
     @GetMapping(EruptRestPath.ERUPT_CODE_PERMISSION + "/{value}")
     @EruptRouter(verifyType = EruptRouter.VerifyType.LOGIN)
     public boolean eruptPermission(@PathVariable("value") String menuValue) {

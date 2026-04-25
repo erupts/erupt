@@ -11,15 +11,15 @@ import java.util.stream.Stream;
 @Getter
 public enum MenuTypeEnum {
 
-    TABLE("table", "表格视图", "填erupt类名"),
-    TREE("tree", "树状视图", "填erupt类名"),
-    BUTTON("button", "功能按钮", null),
-    API("api", "接口名称", null),
-    LINK("link", "框架内打开链接", "互联网地址"),
-    NEW_WINDOW("newWindow", "新窗口打开链接", "互联网地址"),
-    THIS_WINDOW("selfWindow", "本窗口打开链接", "互联网地址"),
-    FILL("fill", "充满屏幕", "需要充满屏幕的路由地址"),
-    ROUTER("router", "页面路由", "前端开发时的路由地址");
+    TABLE("table", "Table View", "Erupt Class Name"),
+    TREE("tree", "Tree View", "Erupt Class Name"),
+    BUTTON("button", "Function Button", null),
+    API("api", "Interface Name", null),
+    LINK("link", "Open Link in Frame", "URL"),
+    NEW_WINDOW("newWindow", "Open Link in New Window", "URL"),
+    THIS_WINDOW("selfWindow", "Open Link in Current Window", "URL"),
+    FILL("fill", "Full Screen", "Fill Router Address"),
+    ROUTER("router", "Page Route", "Router Address");
 
     private final String code;
     private final String name;

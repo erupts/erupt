@@ -6,15 +6,15 @@ package xyz.erupt.tpl.engine;
  */
 public class EngineConst {
 
-    public static final String INJECT_REQUEST = "request"; //request请求对象
+    public static final String INJECT_REQUEST = "request"; //HTTP request object
 
-    public static final String INJECT_RESPONSE = "response"; //response对象
+    public static final String INJECT_RESPONSE = "response"; //HTTP response object
 
     public static final String INJECT_BASE = "base";
 
-    public static final String INJECT_ROWS = "rows"; //多行数据值
+    public static final String INJECT_ROWS = "rows"; //Multi-row data value
 
-    public static final String INJECT_ROW = "row"; //单行数据值
+    public static final String INJECT_ROW = "row"; //Single-row data value
 
 
 }

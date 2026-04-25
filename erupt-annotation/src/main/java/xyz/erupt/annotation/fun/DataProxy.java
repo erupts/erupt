@@ -20,64 +20,64 @@ public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MOD
     default void validate(MODEL model) throws EruptException {
     }
 
-    @Comment("增加前")
+    @Comment("Before add")
     default void beforeAdd(MODEL model) {
     }
 
-    @Comment("增加后")
+    @Comment("After add")
     default void afterAdd(MODEL model) {
     }
 
-    @Comment("修改前")
+    @Comment("Before update")
     default void beforeUpdate(MODEL model) {
     }
 
-    @Comment("修改后")
+    @Comment("After update")
     default void afterUpdate(MODEL model) {
     }
 
-    @Comment("删除前")
+    @Comment("Before delete")
     default void beforeDelete(MODEL model) {
     }
 
-    @Comment("删除后")
+    @Comment("After delete")
     default void afterDelete(MODEL model) {
     }
 
-    @Comment("查询前，返回值为：自定义查询条件")
+    @Comment("Before fetch; return value is a custom query condition")
     default String beforeFetch(List<Condition> conditions) {
         return null;
     }
 
-    @Comment("查询后结果处理")
-    default void afterFetch(@Comment("查询结果") Collection<Map<String, Object>> list) {
+    @Comment("Post-fetch result processing")
+    default void afterFetch(@Comment("query result") Collection<Map<String, Object>> list) {
     }
 
 
-    @Comment("数据新增行为，可对数据做初始化等操作")
+    @Comment("Add data behavior; can be used for initialization and similar operations")
     default void addBehavior(MODEL model) {
     }
 
-    @Comment("数据编辑行为，对待编辑的数据做预处理")
+    @Comment("Edit data behavior; pre-processes the data to be edited")
     default void editBehavior(MODEL model) {
     }
 
-    //必须用参数的形式传递model, 因为dataProxy可出现多层定义，返回值方式无法多层传递对象
-    @Comment("默认查询条件")
+    //model must be passed as a parameter, because dataProxy can have multi-level definitions and return values cannot propagate objects across multiple levels
+    @Comment("Default search condition")
     default void searchCondition(Map<String, Object> condition) {
 
     }
 
-    @Comment("excel导出，参数需要强转为WorkBook对象")
-    default void excelExport(@Comment("POI文档对象") Object workbook) {
+    @Comment("Excel export; the parameter must be cast to a WorkBook object")
+    default void excelExport(@Comment("POI document object") Object workbook) {
     }
 
-    @Comment("excel导入,处理POI对象，参数需要强转为WorkBook对象")
-    default void excelImport(@Comment("POI文档对象") Object workbook) {
+    @Comment("Excel import; processes the POI object, the parameter must be cast to a WorkBook object")
+    default void excelImport(@Comment("POI document object") Object workbook) {
     }
 
-    @Comment("excel导入，处理excel中提取到的的结构化数据")
-    default void excelImportProcess(@Comment("数据对象") List<MODEL> list) {
+    @Comment("Excel import; processes the structured data extracted from the Excel file")
+    default void excelImportProcess(@Comment("data object") List<MODEL> list) {
     }
 
     @Comment("Print Erupt object")
@@ -85,13 +85,13 @@ public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MOD
         return content;
     }
 
-    @Comment("警告提示")
+    @Comment("Alert prompt")
     default Alert alert(List<Condition> conditions) {
         return null;
     }
 
 
-    @Comment("自定义行，可实现行计算等能力")
+    @Comment("Custom rows; supports row-level computation and similar capabilities")
     default List<Row> extraRow(List<Condition> conditions) {
         return null;
     }

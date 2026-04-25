@@ -15,39 +15,39 @@ public @interface Tpl {
 
     boolean enable() default true;
 
-    @Comment("模板文件路径,或路由地址")
+    @Comment("Template file path or route address")
     String path();
 
     @Transient
-    @Comment("定义的值可在tplHandler中获取到")
+    @Comment("The defined values can be retrieved in tplHandler")
     String[] params() default {};
 
     @Transient
-    @Comment("定义模板绑定数据")
+    @Comment("Define template binding data")
     Class<? extends TplHandler> tplHandler() default TplHandler.class;
 
     @Transient
-    @Comment("模板引擎")
+    @Comment("Template engine")
     Engine engine() default Engine.FreeMarker;
 
-    @Comment("页面嵌入方式：Iframe or 微前端")
+    @Comment("Page embed mode: Iframe or micro-frontend")
     PageEmbedType embedType() default PageEmbedType.IFRAME;
 
-    @Comment("弹出层宽度")
+    @Comment("Popup layer width")
     String width() default "";
 
-    @Comment("弹出层高度")
+    @Comment("Popup layer height")
     String height() default "";
 
-    @Comment("弹出层打开方式")
+    @Comment("Popup layer open mode")
     OpenWay openWay() default OpenWay.MODAL;
 
-    @Comment("抽屉打开方向")
+    @Comment("Drawer open direction")
     Placement drawerPlacement() default Placement.RIGHT;
 
     @Getter
     enum Engine {
-        @Comment("原生H5, Native模式下不支持tplHandler")
+        @Comment("Native H5; tplHandler is not supported in Native mode")
         Native,
         @Comment("FreeMarker")
         FreeMarker,

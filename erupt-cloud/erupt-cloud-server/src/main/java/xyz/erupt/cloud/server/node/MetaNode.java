@@ -21,10 +21,10 @@ public class MetaNode extends NodeInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = -10086;
 
-    //服务注册时间
+    //Service registration time
     private Date registerTime;
 
-    //服务自动注册地址
+    //Service auto-registration addresses
     private Set<String> locations = new HashSet<>();
 
 }

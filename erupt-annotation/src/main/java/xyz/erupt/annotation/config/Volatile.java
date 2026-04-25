@@ -2,7 +2,7 @@ package xyz.erupt.annotation.config;
 
 import java.lang.annotation.*;
 
-@Comment("使用Volatile修饰的注解字段不要随意修改属性，会被Volatile动态执行的方法覆盖掉")
+@Comment("Do not arbitrarily modify attributes of annotation fields decorated with @Volatile; they will be overwritten by the method dynamically executed by Volatile")
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Volatile {

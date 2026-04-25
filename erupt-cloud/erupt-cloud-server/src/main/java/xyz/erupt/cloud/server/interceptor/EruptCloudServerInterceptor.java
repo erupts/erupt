@@ -209,7 +209,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
             String dse = headers.get(EruptReqHeader.DRILL_SOURCE_ERUPT);
             headers.put(EruptReqHeader.DRILL_SOURCE_ERUPT, dse.substring(dse.lastIndexOf(".") + 1));
         }
-        //process drill header
+        //Process drill header
         if (headers.containsKey(EruptReqHeader.DRILL_SOURCE_ERUPT)) {
             String dse = headers.get(EruptReqHeader.DRILL_SOURCE_ERUPT);
             headers.put(EruptReqHeader.DRILL_SOURCE_ERUPT, dse.substring(dse.lastIndexOf(".") + 1));
@@ -233,7 +233,7 @@ public class EruptCloudServerInterceptor implements WebMvcConfigurer, AsyncHandl
     private void eruptBuildProcess(EruptBuildModel eruptBuildModel, String nodeName) {
         String prefix = nodeName + EruptConst.DOT;
         eruptBuildModel.getEruptModel().setEruptName(prefix + eruptBuildModel.getEruptModel().getEruptName());
-        //修改Drill的值
+        //Modify the Drill value
         JsonArray drills = eruptBuildModel.getEruptModel().getEruptJson().getAsJsonArray("drills");
         if (!drills.isEmpty()) {
             for (JsonElement drill : drills) {

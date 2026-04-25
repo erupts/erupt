@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.fusesource.jansi.Ansi;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 @Order(100)
 @Service
@@ -72,6 +75,27 @@ public class AiToolboxManager implements ApplicationRunner {
                 }
             }
         });
-        log.info("AiToolbox initialized, {} tool(s) registered", aiMethodMap.size());
+        if (aiMethodMap.isEmpty()) {
+            log.info("AiToolbox initialized, 0 tool(s) registered");
+        } else {
+            Map<String, List<String>> classMethodMap = new java.util.LinkedHashMap<>();
+            aiMethodBeanMap.forEach((name, bean) ->
+                    classMethodMap.computeIfAbsent(bean.getClass().getSimpleName(), k -> new ArrayList<>()).add(name));
+            StringBuilder sb = new StringBuilder("AiToolbox initialized, ")
+                    .append(ansi().fgBright(Ansi.Color.CYAN).a(aiMethodMap.size()).reset())
+                    .append(" tool(s) registered:");
+            List<String> classes = new ArrayList<>(classMethodMap.keySet());
+            for (int i = 0; i < classes.size(); i++) {
+                String className = classes.get(i);
+                String methods = String.join(", ", classMethodMap.get(className));
+                sb.append("\n  ")
+                        .append(ansi().fgBright(Ansi.Color.BLACK).a(i == classes.size() - 1 ? "└─ " : "├─ ").reset())
+                        .append(ansi().fg(Ansi.Color.CYAN).a(className).reset())
+                        .append(ansi().fgBright(Ansi.Color.BLACK).a(" [").reset())
+                        .append(ansi().fgBright(Ansi.Color.BLACK).a(methods).reset())
+                        .append(ansi().fgBright(Ansi.Color.BLACK).a("]").reset());
+            }
+            log.info(sb.toString());
+        }
     }
 }

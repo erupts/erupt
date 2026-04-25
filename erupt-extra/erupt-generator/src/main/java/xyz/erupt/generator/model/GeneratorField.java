@@ -16,6 +16,7 @@ import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.annotation.sub_field.View;
 import xyz.erupt.annotation.sub_field.sub_edit.ChoiceType;
 import xyz.erupt.annotation.sub_field.sub_edit.Dynamic;
+import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.generator.base.GeneratorType;
 import xyz.erupt.jpa.model.BaseModel;
 
@@ -94,7 +95,7 @@ public class GeneratorField extends BaseModel implements ChoiceFetchHandler {
 
     @Override
     public List<VLModel> fetch(String[] params) {
-        return Arrays.stream(GeneratorType.values()).map(it -> new VLModel(it.name(), it.getName(), it.name())).collect(Collectors.toList());
+        return Arrays.stream(GeneratorType.values()).map(it -> new VLModel(it.name(), I18nTranslate.$translate(it.getName()), it.name())).collect(Collectors.toList());
     }
 
 }

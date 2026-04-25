@@ -50,14 +50,14 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
         this.eruptField = field.getAnnotation(EruptField.class);
         Edit edit = eruptField.edit();
         this.fieldName = field.getName();
-        //数字类型转换
+        // Numeric type conversion
         if (TypeUtil.isNumberType(field.getType().getSimpleName())) {
             this.fieldReturnName = NUMBER;
         } else {
             this.fieldReturnName = field.getType().getSimpleName();
         }
         switch (edit.type()) {
-            //如果是Tab类型视图，数据必须为一对多关系管理，需要用泛型集合来存放，所以取出泛型的名称重新赋值到fieldReturnName中
+            // For Tab-type views, data must be managed as a one-to-many relationship using a generic collection, so the generic type name is extracted and re-assigned to fieldReturnName
             case TAB_TREE:
             case TAB_TABLE_ADD:
             case TAB_TABLE_REFER:
@@ -71,7 +71,7 @@ public class EruptFieldModel extends CloneSupport<EruptFieldModel> {
         }
         this.starting = starting;
         this.eruptField = eruptFieldAnnotationProxy.newProxy(this.getEruptField());
-        //校验注解的正确性
+        // Validate the correctness of the annotation
         EruptFieldAnnotationException.validateEruptFieldInfo(this);
         this.starting = false;
     }

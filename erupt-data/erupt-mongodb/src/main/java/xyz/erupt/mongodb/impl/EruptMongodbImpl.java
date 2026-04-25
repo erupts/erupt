@@ -108,7 +108,7 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
                         query.addCriteria(Criteria.where(mongoFieldName).gte(list.get(0)).lte(list.get(1)));
                         break;
                     case IN:
-                        // 类型强制转换.
+                        // Force type conversion.
                         if (value instanceof Collection<?>) {
                             query.addCriteria(Criteria.where(mongoFieldName).in((Collection<?>) value));
                         } else {
@@ -118,11 +118,47 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
                 }
             });
         }
+        // Parse drill / filter condition strings: "Entity.field = value" or "Entity.field = 'value'"
+        if (eruptQuery.getConditionStrings() != null) {
+            for (String cs : eruptQuery.getConditionStrings()) {
+                applyConditionString(query, cs);
+            }
+        }
+    }
+
+    // Parses simple "Entity.field = value" / "Entity.field = 'value'" equality conditions
+    // produced by drillProcess and static @Filter values into MongoDB Criteria.
+    private void applyConditionString(Query query, String conditionStr) {
+        if (StringUtils.isBlank(conditionStr)) return;
+        String trimmed = conditionStr.trim();
+        int eqIdx = trimmed.indexOf('=');
+        if (eqIdx < 0) return;
+        String lhs = trimmed.substring(0, eqIdx).trim();
+        String rhs = trimmed.substring(eqIdx + 1).trim();
+        // strip Entity. prefix (e.g. "DrillDetailModel.orderId" → "orderId")
+        int dotIdx = lhs.lastIndexOf('.');
+        String fieldName = dotIdx >= 0 ? lhs.substring(dotIdx + 1) : lhs;
+        if (StringUtils.isBlank(fieldName)) return;
+        Object value;
+        if (rhs.startsWith("'") && rhs.endsWith("'")) {
+            value = rhs.substring(1, rhs.length() - 1);
+        } else {
+            try {
+                value = Long.parseLong(rhs);
+            } catch (NumberFormatException e1) {
+                try {
+                    value = Double.parseDouble(rhs);
+                } catch (NumberFormatException e2) {
+                    value = rhs;
+                }
+            }
+        }
+        query.addCriteria(Criteria.where(fieldName).is(value));
     }
 
     /**
-     * <note>由于mongodb类型检查严格</note>
-     * 根据{@link xyz.erupt.annotation.EruptField} 标注的字段类型 转换查询条件参数值类型
+     * <note>Due to strict type checking in MongoDB</note>
+     * Convert the query condition parameter value type based on the field type annotated by {@link xyz.erupt.annotation.EruptField}
      */
     protected Object convertConditionValue(Condition condition, EruptFieldModel eruptFieldModel) {
         Object value = condition.getValue();
@@ -155,7 +191,7 @@ public class EruptMongodbImpl implements IEruptDataService, ApplicationRunner {
         if (null == mongoFieldAnnotation) {
             return mongoField;
         }
-        mongoField = Optional.of(mongoFieldAnnotation).map(obj -> StringUtils.defaultIfBlank(obj.value(), eruptFieldModelField.getName())).orElseThrow(() -> new EruptFieldAnnotationException("mongodb字段映射配置错误"));
+        mongoField = Optional.of(mongoFieldAnnotation).map(obj -> StringUtils.defaultIfBlank(obj.value(), eruptFieldModelField.getName())).orElseThrow(() -> new EruptFieldAnnotationException("There is an error in the MongoDB field mapping configuration."));
         eruptFieldMongFieldMap.put(fieldName, mongoField);
         MODEL_CLASS_FIELD_MAPPING.put(eruptModel.getClazz(), eruptFieldMongFieldMap);
         return mongoField;

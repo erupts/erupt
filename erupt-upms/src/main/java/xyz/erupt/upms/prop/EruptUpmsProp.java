@@ -19,7 +19,7 @@ public class EruptUpmsProp {
     //login session Duration (minutes)
     private Integer expireTimeByLogin = 100;
 
-    //严格的角色菜单策略，如果非管理员用户拥有角色权限则仅能编辑已有权限的菜单
+    //Strict role-menu policy: non-admin users with role permissions can only edit menus they already have access to
     private boolean strictRoleMenuLegal = true;
 
     //default account

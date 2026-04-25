@@ -9,7 +9,7 @@ import xyz.erupt.annotation.query.Sort;
 import java.util.List;
 
 /**
- * erupt通用数据对象
+ * Erupt generic data object
  */
 @Getter
 @Setter

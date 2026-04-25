@@ -49,17 +49,17 @@ public class EruptSpringUtil implements ApplicationContextAware {
         }
     }
 
-    //通过name,以及Clazz返回指定的Bean
+    // Get the specified property by key and class type
     public static <T> T getProperty(String key, Class<T> clazz) {
         return getApplicationContext().getEnvironment().getProperty(key, clazz);
     }
 
-    //通过name,以及Clazz返回指定的Bean
+    // Get the specified Bean by name and class type
     public static <T> T getBean(String name, Class<T> clazz) {
         return getApplicationContext().getBean(name, clazz);
     }
 
-    //根据类路径获取bean
+    // Get a Bean by its class path
     public static <T> T getBeanByPath(String path, Class<T> clazz) throws ClassNotFoundException {
         return clazz.cast(getBean(Class.forName(path)));
     }

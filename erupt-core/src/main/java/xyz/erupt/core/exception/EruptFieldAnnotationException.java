@@ -21,7 +21,8 @@ public class EruptFieldAnnotationException extends RuntimeException {
             case REFERENCE_TABLE:
                 for (View view : eruptFieldModel.getEruptField().views()) {
                     if ("".equals(view.column())) {
-                        throw ExceptionAnsi.styleEruptFieldException(eruptFieldModel, "@View注解修饰复杂对象，必须配置column值 → " + view.title());
+                        throw ExceptionAnsi.styleEruptFieldException(eruptFieldModel,
+                                "@View annotation on @ManyToOne or @OneToOne must configure column value → " + view.title());
                     }
                 }
                 break;

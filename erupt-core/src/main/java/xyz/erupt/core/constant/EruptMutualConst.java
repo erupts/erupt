@@ -1,7 +1,7 @@
 package xyz.erupt.core.constant;
 
 /**
- * 服务交互常量
+ * Service interaction constants
  * @author YuePeng
  * date 2022/1/13 00:33
  */

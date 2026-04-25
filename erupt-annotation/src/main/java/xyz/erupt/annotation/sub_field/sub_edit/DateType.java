@@ -8,10 +8,10 @@ import xyz.erupt.annotation.config.Comment;
  */
 public @interface DateType {
 
-    @Comment("时间类型")
+    @Comment("Date/time type")
     Type type() default Type.DATE;
 
-    @Comment("挑选模式")
+    @Comment("Picker mode")
     PickerMode pickerMode() default PickerMode.ALL;
 
     enum Type {
@@ -24,11 +24,11 @@ public @interface DateType {
     }
 
     enum PickerMode {
-        @Comment("可选任意时间段")
+        @Comment("Any time period can be selected")
         ALL,
-        @Comment("仅可选择未来时间")
+        @Comment("Only future dates can be selected")
         FUTURE,
-        @Comment("仅可选择历史时间")
+        @Comment("Only past dates can be selected")
         HISTORY
     }
 }
