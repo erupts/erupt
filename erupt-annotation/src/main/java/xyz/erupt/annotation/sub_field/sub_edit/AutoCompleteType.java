@@ -8,13 +8,13 @@ import java.beans.Transient;
 public @interface AutoCompleteType {
 
     @Transient
-    @Comment("动态生成自动完成列表")
+    @Comment("Dynamically generates the autocomplete list")
     Class<? extends AutoCompleteHandler> handler();
 
     @Transient
-    @Comment("可在handler中获取到")
+    @Comment("Accessible from the handler")
     String[] param() default {};
 
-    @Comment("触发字符最小长度")
+    @Comment("Minimum input length to trigger autocomplete")
     int triggerLength() default 1;
 }

@@ -49,11 +49,11 @@ public class HyperModelCreatorVo extends BaseModel {
     @EruptSmartSkipSerialize
     private Date createTime;
 
-    @Comment("更新时间")
+    @Comment("Update time")
     @EruptSmartSkipSerialize
     private Date updateTime;
 
-    @Comment("更新人")
+    @Comment("Updater")
     @ManyToOne
     @EruptSmartSkipSerialize
     @NotFound(action = NotFoundAction.IGNORE)

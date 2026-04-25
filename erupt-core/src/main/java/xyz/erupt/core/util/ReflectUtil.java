@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  */
 public class ReflectUtil {
 
-    //递归查找类字段
+    // Recursively search for a class field
     public static Field findClassField(Class<?> clazz, String fieldName) {
         Field field;
         while (clazz != null) {
@@ -64,7 +64,7 @@ public class ReflectUtil {
         }
     }
 
-    //获取继承列表
+    // Get the inheritance hierarchy list
     public static List<Class<?>> findClassExtendStack(Class<?> clazz) {
         List<Class<?>> list = new ArrayList<>();
         Class<?> tempClass = clazz;
@@ -80,7 +80,7 @@ public class ReflectUtil {
         return list;
     }
 
-    //获取字段泛型名
+    // Get the generic type name of a field
     public static List<String> getFieldGenericName(Field field) {
         List<String> names = new ArrayList<>();
         Type gType = field.getGenericType();

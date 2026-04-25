@@ -14,13 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.ai.ask.EruptAiChat;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
-import xyz.erupt.ai.prompt.SystemPromptProvider;
 import xyz.erupt.ai.service.McpServerService;
 import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.vo.mcp.McpClientInfo;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.prompt.SystemPromptProvider;
 import xyz.erupt.core.util.EruptSpringUtil;
 
 import java.util.Comparator;

@@ -11,11 +11,11 @@ import java.beans.Transient;
  */
 public @interface HtmlEditorType {
 
-    @Comment("富文本编辑器类型")
+    @Comment("Rich text editor type")
     Type value();
 
     @Transient
-    @Comment("定义独享存储空间，便于文件查找")
+    @Comment("Define a dedicated storage path for easier file lookup")
     @Language("file-reference")
     String path() default "";
 

@@ -20,10 +20,10 @@ import java.util.stream.Stream;
  */
 public class DataProxyInvoke {
 
-    //@PreDataProxy的注解容器
+    // Annotation container for @PreDataProxy
     private static final Set<Class<? extends Annotation>> dataProxyAnnotationContainer = new HashSet<>();
 
-    //注册支持@PreDataProxy注解的注解容器
+    // Register an annotation container that supports the @PreDataProxy annotation
     public static void registerAnnotationContainer(Class<? extends Annotation> annotationClass) {
         PreDataProxy preDataProxy = annotationClass.getAnnotation(PreDataProxy.class);
         if (preDataProxy == null) throw new RuntimeException("register error not found @PreDataProxy");

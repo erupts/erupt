@@ -1,10 +1,10 @@
 package xyz.erupt.annotation.sub_erupt;
 
 public enum OpenWay {
-    //抽屉
+    //Drawer
     DRAWER,
-    //对话框
+    //Dialog
     MODAL,
-    //Angular 路由跳转,支持 {xxx} 写法传递行变量
+    //Angular router navigation; supports {xxx} syntax for passing row variables
     ROUTER,
 }

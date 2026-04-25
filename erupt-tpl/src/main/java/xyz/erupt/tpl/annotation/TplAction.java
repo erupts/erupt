@@ -8,13 +8,13 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Documented
 @Inherited
-@Comment("修饰方法必须返回Map<String,Object>类型")
+@Comment("Annotated method must return Map<String,Object>")
 public @interface TplAction {
 
-    @Comment("tpl目录下文件名称，该值也作为权限特征使用")
+    @Comment("File name under the tpl directory; also used as the permission identifier")
     String value();
 
-    @Comment("文件路径，为空则以 value 值作为文件路径")
+    @Comment("File path; if empty, the value is used as the file path")
     String path() default "";
 
 }

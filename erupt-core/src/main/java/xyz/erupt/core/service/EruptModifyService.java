@@ -61,7 +61,7 @@ public class EruptModifyService {
         LinkTree dependTree = eruptModel.getErupt().linkTree();
         if (StringUtils.isNotBlank(dependTree.field()) && dependTree.dependNode()) {
             String linkVal = request.getHeader("link");
-            //必须是强依赖才会自动注入值
+            // Value will only be auto-injected for strong dependencies
             if (dependTree.dependNode()) {
                 if (StringUtils.isBlank(linkVal)) {
                     throw new EruptWebApiRuntimeException("Place select tree node");
@@ -142,7 +142,7 @@ public class EruptModifyService {
                 eruptService.verifyIdPermissions(eruptModel, id.toString());
             }
             IEruptDataService dataService = DataProcessorManager.getEruptDataProcessor(eruptModel.getClazz());
-            //获取对象数据信息用于DataProxy函数中
+            // Retrieve object data for use in DataProxy callbacks
             Object obj = dataService.findDataById(eruptModel, EruptUtil.toEruptId(eruptModel, id.toString()));
             DataProxyInvoke.invoke(eruptModel, (dataProxy -> dataProxy.beforeDelete(obj)));
             dataService.deleteData(eruptModel, obj);

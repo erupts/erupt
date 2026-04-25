@@ -21,6 +21,7 @@ public @interface EruptCube {
 
     String description() default "";
 
+    @Language("VTL")
     String sql();
 
     SqlType sqlType() default SqlType.SUB_QUERY;

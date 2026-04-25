@@ -32,11 +32,11 @@ import java.util.Optional;
 @EruptI18n
 public class HyperModelUpdateVo extends BaseModel {
 
-    @Comment("创建时间")
+    @Comment("Create time")
     @EruptSmartSkipSerialize
     private Date createTime;
 
-    @Comment("创建人")
+    @Comment("Creator")
     @ManyToOne
     @EruptSmartSkipSerialize
     @NotFound(action = NotFoundAction.IGNORE)

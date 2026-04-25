@@ -2,7 +2,6 @@ package xyz.erupt.notice.cube;
 
 import xyz.erupt.annotation.cube.Dimension;
 import xyz.erupt.annotation.cube.EruptCube;
-import xyz.erupt.annotation.cube.FieldType;
 import xyz.erupt.annotation.cube.Measure;
 
 import java.util.Date;
@@ -46,7 +45,7 @@ public class EruptNoticeLogCube {
     @Dimension(title = "Receive User", sql = "receive_user_id")
     private Long receiveUserId;
 
-    @Dimension(title = "Create Time", type = FieldType.DATE, sql = "create_time")
+    @Dimension(title = "Create Time", sql = "create_time")
     private Date createTime;
 
     @Measure(title = "Count", sql = "count(*)")

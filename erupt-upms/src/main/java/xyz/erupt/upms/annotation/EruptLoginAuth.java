@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Documented
-@Comment("登录校验")
+@Comment("Login authentication")
 public @interface EruptLoginAuth {
 
 }

@@ -3,6 +3,7 @@ package xyz.erupt.cloud.node.task;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.google.gson.Gson;
+import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -20,8 +21,6 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.service.EruptCoreService;
 import xyz.erupt.core.util.EruptInformation;
 import xyz.erupt.core.view.EruptModel;
-
-import jakarta.annotation.Resource;
 
 import java.net.Inet4Address;
 import java.util.HashMap;
@@ -56,13 +55,13 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
     @Override
     @SuppressWarnings("StringConcatenationArgumentToLogCall")
     public void run(ApplicationArguments args) {
-        log.info(ansi().fg(Ansi.Color.BLUE) + " \n" +
+        log.info(ansi().fgBright(Ansi.Color.CYAN) + " \n" +
                 "                 _                _     \n" +
                 " ___ ___ _ _ ___| |_    ___ ___ _| |___ \n" +
                 "| -_|  _| | | . |  _|  |   | . | . | -_|\n" +
                 "|___|_| |___|  _|_|    |_|_|___|___|___|\n" +
-                "            |_|        " + EruptInformation.getEruptVersion() + "\n" +
-                ansi().fg(Ansi.Color.DEFAULT)
+                "            |_|        " + ansi().fgBright(Ansi.Color.BLACK).a(EruptInformation.getEruptVersion()).reset() + "\n" +
+                ansi().reset()
         );
         if (eruptNodeProp.isEnableRegister()) {
             Thread register = new Thread(this);
@@ -83,7 +82,13 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
         if (null == eruptNodeProp.getNodeName()) {
             throw new RuntimeException(EruptNodeProp.SPACE + ".nodeName not config");
         }
-        log.info("erupt-cloud-node initialization completed");
+        String sep = ansi().fgBright(Ansi.Color.BLACK).a("─".repeat(54)).reset().toString();
+        String address = eruptNodeProp.getBalanceAddress();
+        log.info(sep);
+        log.info("  {}{}", ansi().fgBright(Ansi.Color.BLACK).a("Node     ").reset(), ansi().fgBright(Ansi.Color.CYAN).a(eruptNodeProp.getNodeName()).reset());
+        log.info("  {}{}", ansi().fgBright(Ansi.Color.BLACK).a("Server   ").reset(), address);
+        log.info("  {}{}", ansi().fgBright(Ansi.Color.BLACK).a("Version  ").reset(), EruptInformation.getEruptVersion());
+        log.info(sep);
         while (this.runner) {
             NodeInfo nodeInfo = new NodeInfo();
             nodeInfo.setInstanceId(instanceId);
@@ -98,7 +103,6 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 nodeInfo.setNodeAddress(new String[]{eruptNodeProp.getSchema() + "://" + Inet4Address.getLocalHost().getHostAddress() + ":" + serverProperties.getPort() + contextPath});
             }
             nodeInfo.setErupts(EruptCoreService.getErupts().stream().map(EruptModel::getEruptName).collect(Collectors.toList()));
-            String address = eruptNodeProp.getBalanceAddress();
             try {
                 try (HttpResponse httpResponse = HttpUtil.createPost(address + CloudRestApiConst.REGISTER_NODE)
                         .body(gson.toJson(nodeInfo)).execute()) {
@@ -108,7 +112,7 @@ public class EruptNodeTask implements Runnable, ApplicationRunner, DisposableBea
                 }
                 if (this.errorConnect) {
                     this.errorConnect = false;
-                    log.info("{} -> Connection success", address);
+                    log.info("{} -> {}", address, ansi().fgBright(Ansi.Color.GREEN).a("Connection success").reset());
                 }
                 TimeUnit.MILLISECONDS.sleep(eruptNodeProp.getHeartbeatTime());
             } catch (Exception e) {

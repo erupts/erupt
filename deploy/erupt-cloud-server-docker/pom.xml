@@ -6,16 +6,17 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.14.1</version>
+        <version>1.14.2</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>erupt-cloud-server-docker</artifactId>
-    <name>erupt-cloud-server-docker</name>
-
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <central.publishing.skip>true</central.publishing.skip>
     </properties>
+
+    <artifactId>erupt-cloud-server-docker</artifactId>
+    <name>erupt-cloud-server-docker</name>
 
     <dependencies>
         <dependency>
@@ -72,6 +73,19 @@
     <!-- 如需打成可运行jar解开如下注释代码即可 -->
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>injected-central-publishing</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

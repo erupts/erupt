@@ -14,5 +14,10 @@ public @interface Explore {
 
     Join[] joins() default {};
 
+    boolean hidden() default false;
+
+    String[] dimensions() default {};
+
+    String[] measures() default {};
 
 }

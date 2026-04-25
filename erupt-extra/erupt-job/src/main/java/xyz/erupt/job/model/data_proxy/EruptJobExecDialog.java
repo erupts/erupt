@@ -20,7 +20,7 @@ import xyz.erupt.jpa.model.BaseModel;
 public class EruptJobExecDialog extends BaseModel {
 
     @EruptField(
-            edit = @Edit(title = "任务参数", type = EditType.CODE_EDITOR)
+            edit = @Edit(title = "Task Parameters", type = EditType.CODE_EDITOR)
     )
     private String param;
 

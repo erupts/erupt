@@ -20,7 +20,7 @@ public class TreeModel {
 
     private String pid;
 
-    private Integer level; //树层级
+    private Integer level; // tree level
 
     private boolean root;
 

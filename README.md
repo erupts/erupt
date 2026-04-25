@@ -47,7 +47,7 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 > `erupt-ai` module — enterprise-grade LLM integration with zero boilerplate
 
-### Supported LLM Providers (15+)
+### Supported LLM Providers
 
 | Provider | Models |
 |----------|--------|
@@ -95,6 +95,9 @@ Skills are stored in `~/.erupt/skills/` and can also be created dynamically thro
 ---
 
 ## Low-code Quick Start
+
+> 💡 **Run Locally**: Clone the repo and run `EruptSampleApplication.main()` in the `erupt-sample` module — no extra configuration needed, H2 in-memory database is bundled.
+> Default credentials: `erupt / erupt`
 
 #### Annotation Example
 

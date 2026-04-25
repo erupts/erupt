@@ -12,14 +12,14 @@ import xyz.erupt.upms.service.EruptUserService;
  * date 2020/12/28 22:33
  */
 @Service
-@Comment("通过菜单类型值控制是否显示")
+@Comment("Controls visibility based on menu type value")
 public class ViaMenuValueCtrl implements ExprBool.ExprHandler {
 
     @Resource
     private EruptUserService eruptUserService;
 
     @Override
-    @Comment("params必填，值为菜单类型值")
+    @Comment("params is required; the value is the menu type value")
     public boolean handler(boolean expr, String[] params) {
         EruptAssert.notNull(params,ViaMenuValueCtrl.class.getSimpleName() + " → params[0] not found");
         return null != eruptUserService.getEruptMenuByValue(params[0]);

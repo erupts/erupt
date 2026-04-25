@@ -17,17 +17,17 @@ import java.lang.annotation.*;
 @Documented
 public @interface EruptField {
 
-    @Comment("表格列配置")
+    @Comment("Table column configuration")
     View[] views() default {};
 
-    @Comment("编辑组件配置")
+    @Comment("Edit component configuration")
     Edit edit() default @Edit(title = "");
 
     @Transient
-    @Comment("显示顺序")
+    @Comment("Display order")
     int sort() default 1000;
 
     @ToMap(key = "key")
-    @Comment("自定义扩展参数")
+    @Comment("Custom extension parameters")
     KV[] params() default {};
 }
