@@ -66,6 +66,8 @@
         <module>erupt-extra/erupt-monitor</module>
         <!-- magic-api Interface Configuration -->
         <module>erupt-extra/erupt-magic-api</module>
+        <!-- terminal impl -->
+        <module>erupt-extra/erupt-terminal</module>
 
         <!-- erupt cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
