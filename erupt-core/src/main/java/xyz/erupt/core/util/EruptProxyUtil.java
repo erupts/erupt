@@ -16,7 +16,7 @@ import java.lang.annotation.Annotation;
  */
 public class EruptProxyUtil {
 
-    public static <A> A newProxy(A annotation, MethodInterceptor interceptor) {
+    public static <A extends Annotation> A newProxy(A annotation, MethodInterceptor interceptor) {
         ProxyFactory proxyFactory = new ProxyFactory(annotation);
         proxyFactory.addAdvice(interceptor);
         return (A) proxyFactory.getProxy(EruptProxyUtil.class.getClassLoader());
