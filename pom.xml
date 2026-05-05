@@ -47,6 +47,8 @@
         <module>erupt-notice</module>
         <!-- Print -->
         <module>erupt-print</module>
+        <!-- Terminal Server -->
+        <module>erupt-terminal</module>
         <!-- Front-end Code -->
         <module>erupt-web</module>
 
@@ -66,8 +68,6 @@
         <module>erupt-extra/erupt-monitor</module>
         <!-- magic-api Interface Configuration -->
         <module>erupt-extra/erupt-magic-api</module>
-        <!-- terminal impl -->
-        <module>erupt-extra/erupt-terminal</module>
 
         <!-- erupt cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
@@ -196,16 +196,16 @@
     </developers>
 
     <profiles>
-<!--        <profile>-->
-<!--            &lt;!&ndash; Active by default; skipped automatically when -P release is specified &ndash;&gt;-->
-<!--            <id>dev</id>-->
-<!--            <activation>-->
-<!--                <activeByDefault>true</activeByDefault>-->
-<!--            </activation>-->
-<!--            <modules>-->
-<!--                -->
-<!--            </modules>-->
-<!--        </profile>-->
+        <!--        <profile>-->
+        <!--            &lt;!&ndash; Active by default; skipped automatically when -P release is specified &ndash;&gt;-->
+        <!--            <id>dev</id>-->
+        <!--            <activation>-->
+        <!--                <activeByDefault>true</activeByDefault>-->
+        <!--            </activation>-->
+        <!--            <modules>-->
+        <!--                -->
+        <!--            </modules>-->
+        <!--        </profile>-->
         <profile>
             <id>disable-javadoc-doclint</id>
             <activation>
@@ -266,8 +266,8 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-<!--                            <autoPublish>true</autoPublish>-->
-<!--                            <waitUntil>published</waitUntil>-->
+                            <!--                            <autoPublish>true</autoPublish>-->
+                            <!--                            <waitUntil>published</waitUntil>-->
                         </configuration>
                     </plugin>
                     <plugin>

@@ -27,6 +27,8 @@ import java.util.List;
 @EnableWebSocket
 public class EruptTerminalAutoConfiguration implements EruptModule {
 
+    public static final String TERMINAL_KEY = "erupt-terminal.html";
+
     static {
         EruptModuleInvoke.addEruptModule(EruptTerminalAutoConfiguration.class);
     }
@@ -46,7 +48,7 @@ public class EruptTerminalAutoConfiguration implements EruptModule {
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
         MetaMenu metaMenu = MetaMenu.createSimpleMenu("terminal", "Terminal",
-                "terminal.html", null, 120, EruptTplService.TPL);
+                TERMINAL_KEY, null, 120, EruptTplService.TPL);
         metaMenu.setIcon("fa fa-terminal");
         menus.add(metaMenu);
         return menus;
