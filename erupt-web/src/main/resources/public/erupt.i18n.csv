@@ -315,6 +315,8 @@ cube.report.config.add,添加,添加,Add,Ajouter,追加,추가,Добавить,
 cube.report.config.sort_field_placeholder,排序字段,排序字段,Sort field,Champ de tri,ソートフィールド,정렬 필드,Поле сортировки,Campo de ordenación,Sortierfeld,Campo de ordenação,Field pengurutan,حقل الترتيب
 cube.report.config.sort.asc,升序,升序,Ascending,Croissant,昇順,오름차순,По возрастанию,Ascendente,Aufsteigend,Crescente,Naik,تصاعدي
 cube.report.config.sort.desc,降序,降序,Descending,Décroissant,降順,내림차순,По убыванию,Descendente,Absteigend,Decrescente,Turun,تنازلي
+cube.report.config.data_source,数据源,數據源,Data source,Source de données,データソース,데이터 소스,Источник данных,Fuente de datos,Datenquelle,Fonte de dados,Sumber data,مصدر البيانات
+cube.report.config.main_model,主模型（默认）,主模型（預設）,Main model (default),Modèle principal (défaut),メインモデル（デフォルト）,주 모델(기본),Основная модель (по умолчанию),Modelo principal (predeterminado),Hauptmodell (Standard),Modelo principal (padrão),Model utama (default),النموذج الرئيسي (الافتراضي)
 cube.report.config.custom,自定义配置,自定義配置,Custom config,Configuration personnalisée,カスタム設定,사용자 정의 설정,Пользовательские настройки,Configuración personalizada,Benutzerdefinierte Konfiguration,Configuração personalizada,Konfigurasi kustom,الإعداد المخصص
 cube.report.config.font_size,字体大小,字體大小,Font size,Taille de police,フォントサイズ,글꼴 크기,Размер шрифта,Tamaño de fuente,Schriftgröße,Tamanho da fonte,Ukuran font,حجم الخط
 cube.report.config.text_color,文本颜色,文本顏色,Text color,Couleur du texte,テキスト色,글자 색,Цвет текста,Color de texto,Textfarbe,Cor do texto,Warna teks,لون النص
@@ -375,3 +377,15 @@ ai.chat.speak,朗读,朗讀,Read aloud,Lire à voix haute,読み上げる,읽어
 ai.chat.speak_stop,停止朗读,停止朗讀,Stop reading,Arrêter la lecture,読み上げ停止,읽기 중지,Остановить чтение,Detener lectura,Vorlesen stoppen,Parar leitura,Hentikan bacaan,إيقاف القراءة
 cube.filter.config.not_null,必填,必填,Required,Obligatoire,必須,필수,Обязательно,Obligatorio,Pflichtfeld,Obrigatório,Wajib diisi,مطلوب
 cube.filter.required_hint,请先填写必填筛选项,請先填寫必填篩選項目,Please fill in the required filter options first,Veuillez d'abord remplir les options de filtre obligatoires,必須のフィルター項目を先に入力してください,필수 필터 항목을 먼저 입력해 주세요,"Пожалуйста, сначала заполните обязательные параметры фильтра","Por favor, complete primero las opciones de filtro obligatorias",Bitte füllen Sie zuerst die erforderlichen Filteroptionen aus,"Por favor, preencha primeiro as opções de filtro obrigatórias",Silakan isi opsi filter yang wajib diisi terlebih dahulu,يرجى ملء خيارات التصفية المطلوبة أولاً
+cube.report.config.parameter,参数,參數,Parameter,Paramètre,パラメータ,파라미터,Параметр,Parámetro,Parameter,Parâmetro,Parameter,معامل
+cube.sub_model.manage,子模型管理,子模型管理,Sub-Model Management,Gestion des sous-modèles,サブモデル管理,서브 모델 관리,Управление подмоделями,Gestión de submodelos,Untermodell-Verwaltung,Gestão de submodelos,Manajemen sub-model,إدارة النماذج الفرعية
+cube.sub_model.add,添加子模型,添加子模型,Add Sub-Model,Ajouter un sous-modèle,サブモデル追加,서브 모델 추가,Добавить подмодель,Agregar submodelo,Untermodell hinzufügen,Adicionar submodelo,Tambah sub-model,إضافة نموذج فرعي
+cube.sub_model.edit,编辑子模型,編輯子模型,Edit Sub-Model,Modifier le sous-modèle,サブモデル編集,서브 모델 편집,Редактировать подмодель,Editar submodelo,Untermodell bearbeiten,Editar submodelo,Edit sub-model,تعديل النموذج الفرعي
+cube.sub_model.alias,别名,別名,Alias,Alias,エイリアス,별칭,Псевдоним,Alias,Alias,Alias,Alias,الاسم المستعار
+cube.sub_model.alias_placeholder,唯一标识，如 orders,唯一標識，如 orders,Unique identifier e.g. orders,Identifiant unique ex. orders,一意識別子（例: orders）,고유 식별자 (예: orders),Уникальный идентификатор (напр. orders),Identificador único ej. orders,Eindeutiger Bezeichner z.B. orders,Identificador único ex. orders,Pengenal unik misal orders,معرّف فريد مثل orders
+cube.sub_model.mappings,映射数,映射數,Mappings,Correspondances,マッピング数,매핑 수,Маппинги,Asignaciones,Zuordnungen,Mapeamentos,Pemetaan,عدد التعيينات
+cube.sub_model.field_mappings,字段映射,字段映射,Field Mappings,Correspondances de champs,フィールドマッピング,필드 매핑,Маппинг полей,Asignación de campos,Feldzuordnungen,Mapeamento de campos,Pemetaan field,تعيين الحقول
+cube.sub_model.mappings_hint,用于筛选与联动,用於篩選與聯動,Used for filtering and linkage,Utilisé pour le filtrage et la liaison,フィルタリングと連動に使用,필터링 및 연동에 사용,Используется для фильтрации и связи,Usado para filtrado y vinculación,Für Filterung und Verknüpfung,Usado para filtragem e vinculação,Digunakan untuk filter dan tautan,يستخدم للتصفية والربط
+cube.sub_model.main_field,主模型字段,主模型字段,Main model field,Champ du modèle principal,メインモデルフィールド,주 모델 필드,Поле основной модели,Campo del modelo principal,Hauptmodellfeld,Campo do modelo principal,Field model utama,حقل النموذج الرئيسي
+cube.sub_model.sub_field,子模型字段,子模型字段,Sub-model field,Champ du sous-modèle,サブモデルフィールド,서브 모델 필드,Поле подмодели,Campo del submodelo,Untermodellfeld,Campo do submodelo,Field sub-model,حقل النموذج الفرعي
+cube.sub_model.add_mapping,添加映射,添加映射,Add Mapping,Ajouter une correspondance,マッピング追加,매핑 추가,Добавить маппинг,Agregar asignación,Zuordnung hinzufügen,Adicionar mapeamento,Tambah pemetaan,إضافة تعيين
