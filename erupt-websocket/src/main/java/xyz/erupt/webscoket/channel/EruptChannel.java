@@ -3,8 +3,8 @@ package xyz.erupt.webscoket.channel;
 import com.google.gson.reflect.TypeToken;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.constant.EruptMutualConst;
@@ -20,20 +20,24 @@ import java.util.List;
  * @author YuePeng
  * date 2024/11/30 23:44
  */
-@Slf4j
 @Component
 @ServerEndpoint("/erupt-websocket")
 public class EruptChannel {
 
-    @SneakyThrows
+    private static final Logger log = LoggerFactory.getLogger(EruptChannel.class);
+
     @OnOpen
     public void open(Session session) {
-        List<String> token = session.getRequestParameterMap().get(EruptMutualConst.TOKEN);
-        if (null == token || !EruptSpringUtil.getBean(EruptTokenService.class).tokenExist(token.get(0))) {
-            session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Token error"));
-            return;
+        try {
+            List<String> token = session.getRequestParameterMap().get(EruptMutualConst.TOKEN);
+            if (null == token || !EruptSpringUtil.getBean(EruptTokenService.class).tokenExist(token.get(0))) {
+                session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Token error"));
+                return;
+            }
+            EruptChannelManager.register(token.get(0), session);
+        } catch (IOException e) {
+            log.error("[websocket] Open error: {}", e.getMessage());
         }
-        EruptChannelManager.register(token.get(0), session);
     }
 
     @OnMessage

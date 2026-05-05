@@ -1,41 +1,34 @@
-package xyz.erupt.webscoket;
+package xyz.erupt.terminal;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import xyz.erupt.core.annotation.EruptScan;
 import xyz.erupt.core.module.EruptModule;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.module.MetaMenu;
 import xyz.erupt.core.module.ModuleInfo;
-import xyz.erupt.upms.prop.EruptAppProp;
+import xyz.erupt.tpl.service.EruptTplService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author YuePeng
- * date 2021/3/28 18:51
  */
 @Configuration
 @ComponentScan
+@EntityScan
+@EruptScan
 @EnableWebSocket
-@EnableConfigurationProperties
-public class EruptWebSocketAutoConfiguration implements EruptModule {
-
-    public static final String ERUPT_WEBSOCKET = "erupt-websocket";
+public class EruptTerminalAutoConfiguration implements EruptModule {
 
     static {
-        EruptModuleInvoke.addEruptModule(EruptWebSocketAutoConfiguration.class);
-    }
-
-    @Resource
-    private EruptAppProp eruptAppProp;
-
-    @PostConstruct
-    public void post() {
-        eruptAppProp.registerProp(ERUPT_WEBSOCKET, true);
+        EruptModuleInvoke.addEruptModule(EruptTerminalAutoConfiguration.class);
     }
 
     @Bean
@@ -46,7 +39,13 @@ public class EruptWebSocketAutoConfiguration implements EruptModule {
 
     @Override
     public ModuleInfo info() {
-        return ModuleInfo.builder().name(ERUPT_WEBSOCKET).build();
+        return ModuleInfo.builder().name("erupt-terminal").description("Erupt server terminal").build();
     }
 
+    @Override
+    public List<MetaMenu> initMenus() {
+        List<MetaMenu> menus = new ArrayList<>();
+        menus.add(MetaMenu.createSimpleMenu("terminal", "Terminal", "terminal.html", null, 999, EruptTplService.TPL));
+        return menus;
+    }
 }

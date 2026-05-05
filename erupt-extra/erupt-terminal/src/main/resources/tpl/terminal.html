@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="${base}/">
+    <title>erupt terminal</title>
+    <link href="terminal/xterm.min.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; height: 100%; background: #1b2027; }
+        #terminal { width: 100%; height: 100%; padding: 8px 12px; }
+        .xterm { height: 100%; }
+        .xterm-viewport { overflow-y: auto !important; }
+    </style>
+</head>
+<body>
+<div id="terminal"></div>
+<script src="terminal/xterm.min.js"></script>
+<script src="terminal/addon-fit.min.js"></script>
+<script>
+    (function () {
+        function getParam(name) {
+            var q = window.location.search.substring(1).split('&');
+            for (var i = 0; i < q.length; i++) {
+                var p = q[i].split('=');
+                if (p[0] === name) return decodeURIComponent(p[1] || '');
+            }
+            return '';
+        }
+
+        var token = getParam('_token');
+        var term = new Terminal({
+            cursorBlink: true,
+            cursorStyle: 'bar',
+            fontSize: 14,
+            fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", Menlo, Monaco, "Courier New", monospace',
+            lineHeight: 1.25,
+            theme: {
+                background:        '#1b2027',
+                foreground:        '#abb2bf',
+                cursor:            '#528bff',
+                cursorAccent:      '#1b2027',
+                selectionBackground: 'rgba(82,139,255,0.25)',
+                black:             '#1b2027',
+                red:               '#e06c75',
+                green:             '#98c379',
+                yellow:            '#e5c07b',
+                blue:              '#61afef',
+                magenta:           '#c678dd',
+                cyan:              '#56b6c2',
+                white:             '#abb2bf',
+                brightBlack:       '#5c6370',
+                brightRed:         '#e06c75',
+                brightGreen:       '#98c379',
+                brightYellow:      '#e5c07b',
+                brightBlue:        '#61afef',
+                brightMagenta:     '#c678dd',
+                brightCyan:        '#56b6c2',
+                brightWhite:       '#ffffff'
+            }
+        });
+        var fitAddon = new FitAddon.FitAddon();
+        term.loadAddon(fitAddon);
+        term.open(document.getElementById('terminal'));
+        fitAddon.fit();
+
+        var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+        var wsUrl = protocol + '://' + location.host + '/erupt-terminal?token=' + encodeURIComponent(token);
+        var ws = new WebSocket(wsUrl);
+
+        ws.onopen = function () {
+            ws.send(JSON.stringify({type: 'resize', cols: term.cols, rows: term.rows}));
+        };
+
+        ws.onmessage = function (e) {
+            term.write(e.data);
+        };
+
+        ws.onclose = function () {
+            term.writeln('\r\n\x1b[38;5;240m── connection closed ──\x1b[0m');
+        };
+
+        ws.onerror = function () {
+            term.writeln('\r\n\x1b[31mconnection error\x1b[0m');
+        };
+
+        term.onData(function (data) {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({type: 'input', data: data}));
+            }
+        });
+
+        new ResizeObserver(function () {
+            fitAddon.fit();
+        }).observe(document.getElementById('terminal'));
+    })();
+</script>
+</body>
+</html>
