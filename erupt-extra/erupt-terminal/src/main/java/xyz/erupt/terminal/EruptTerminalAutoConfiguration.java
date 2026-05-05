@@ -45,7 +45,10 @@ public class EruptTerminalAutoConfiguration implements EruptModule {
     @Override
     public List<MetaMenu> initMenus() {
         List<MetaMenu> menus = new ArrayList<>();
-        menus.add(MetaMenu.createSimpleMenu("terminal", "Terminal", "terminal.html", null, 999, EruptTplService.TPL));
+        MetaMenu metaMenu = MetaMenu.createSimpleMenu("terminal", "Terminal",
+                "terminal.html", null, 120, EruptTplService.TPL);
+        metaMenu.setIcon("fa fa-terminal");
+        menus.add(metaMenu);
         return menus;
     }
 }
