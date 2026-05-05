@@ -13,6 +13,7 @@ import xyz.erupt.core.constant.EruptMutualConst;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.terminal.EruptTerminalAutoConfiguration;
 import xyz.erupt.upms.service.EruptTokenService;
+import xyz.erupt.upms.service.EruptUserService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,8 +77,14 @@ public class TerminalEndpoint {
             session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Unauthorized"));
             return;
         }
+        String token = tokens.get(0);
+        if (EruptSpringUtil.getBean(EruptUserService.class)
+                .getEruptMenuByValue(EruptTerminalAutoConfiguration.TERMINAL_KEY, token) == null) {
+            session.close(new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Forbidden"));
+            return;
+        }
         sessionMap.put(session.getId(), session);
-        pendingTokenMap.put(session.getId(), tokens.get(0));
+        pendingTokenMap.put(session.getId(), token);
     }
 
     @OnMessage
