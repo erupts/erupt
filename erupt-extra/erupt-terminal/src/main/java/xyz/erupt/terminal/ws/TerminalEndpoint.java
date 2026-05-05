@@ -1,5 +1,8 @@
 package xyz.erupt.terminal.ws;
 
+import com.pty4j.PtyProcess;
+import com.pty4j.PtyProcessBuilder;
+import com.pty4j.WinSize;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
@@ -20,9 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
- * WebSocket endpoint — bridges a PTY shell (via system `script` command) to the browser terminal.
+ * WebSocket endpoint — bridges a PTY shell (via pty4j) to the browser terminal.
  *
  * @author YuePeng
  */
@@ -32,9 +38,36 @@ public class TerminalEndpoint {
 
     private static final Logger log = LoggerFactory.getLogger(TerminalEndpoint.class);
 
-    // Session state before shell is started
+    private static final long IDLE_TIMEOUT_MS = 30 * 60 * 1000L;
+
     private static final Map<String, String> pendingTokenMap = new ConcurrentHashMap<>();
-    private static final Map<String, Process> sessionProcessMap = new ConcurrentHashMap<>();
+    private static final Map<String, PtyProcess> sessionProcessMap = new ConcurrentHashMap<>();
+    private static final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
+    private static final Map<String, Long> lastActivityMap = new ConcurrentHashMap<>();
+
+    private static final ScheduledExecutorService idleChecker = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, "erupt-terminal-idle");
+        t.setDaemon(true);
+        return t;
+    });
+
+    static {
+        idleChecker.scheduleAtFixedRate(TerminalEndpoint::checkIdle, 1, 1, TimeUnit.MINUTES);
+    }
+
+    private static void checkIdle() {
+        long now = System.currentTimeMillis();
+        lastActivityMap.forEach((sid, last) -> {
+            if (now - last > IDLE_TIMEOUT_MS) {
+                Session s = sessionMap.get(sid);
+                if (s != null && s.isOpen()) {
+                    try {
+                        s.close(new CloseReason(() -> 4000, "Idle timeout"));
+                    } catch (IOException ignored) {}
+                }
+            }
+        });
+    }
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
@@ -43,7 +76,7 @@ public class TerminalEndpoint {
             session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Unauthorized"));
             return;
         }
-        // Defer shell start until the first resize message so we know the actual terminal size
+        sessionMap.put(session.getId(), session);
         pendingTokenMap.put(session.getId(), tokens.get(0));
     }
 
@@ -54,27 +87,37 @@ public class TerminalEndpoint {
             Map<String, Object> msg = GsonFactory.getGson().fromJson(message, Map.class);
             String type = (String) msg.get("type");
 
-            // First resize message — start the shell with the correct dimensions
-            if ("resize".equals(type) && pendingTokenMap.containsKey(session.getId())) {
-                pendingTokenMap.remove(session.getId());
+            if ("resize".equals(type)) {
                 int cols = ((Number) msg.get("cols")).intValue();
                 int rows = ((Number) msg.get("rows")).intValue();
-                Process process = buildShell(cols, rows);
-                sessionProcessMap.put(session.getId(), process);
-                sendBanner(session);
-                new Thread(() -> pipeOutput(process.getInputStream(), session)).start();
+
+                if (pendingTokenMap.containsKey(session.getId())) {
+                    // First resize — start the shell
+                    pendingTokenMap.remove(session.getId());
+                    PtyProcess pty = buildShell(cols, rows);
+                    sessionProcessMap.put(session.getId(), pty);
+                    lastActivityMap.put(session.getId(), System.currentTimeMillis());
+                    sendBanner(session);
+                    new Thread(() -> pipeOutput(pty.getInputStream(), session)).start();
+                } else {
+                    // Subsequent resize — directly set PTY window size via ioctl
+                    PtyProcess pty = sessionProcessMap.get(session.getId());
+                    if (pty != null && pty.isAlive()) {
+                        pty.setWinSize(new WinSize(cols, rows));
+                    }
+                }
                 return;
             }
 
-            Process process = sessionProcessMap.get(session.getId());
-            if (process == null || !process.isAlive()) return;
+            PtyProcess pty = sessionProcessMap.get(session.getId());
+            if (pty == null || !pty.isAlive()) return;
 
             if ("input".equals(type)) {
-                OutputStream stdin = process.getOutputStream();
+                lastActivityMap.put(session.getId(), System.currentTimeMillis());
+                OutputStream stdin = pty.getOutputStream();
                 stdin.write(((String) msg.get("data")).getBytes(StandardCharsets.UTF_8));
                 stdin.flush();
             }
-            // Subsequent resize events are ignored — `script` owns the PTY fd
         } catch (IOException e) {
             log.warn("[terminal] Write to shell failed: {}", e.getMessage());
         }
@@ -136,36 +179,35 @@ public class TerminalEndpoint {
             if (session.isOpen()) {
                 try {
                     session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Process exited"));
-                } catch (IOException ignored) {
-                }
+                } catch (IOException ignored) {}
             }
         }
     }
 
     private void destroy(String sessionId) {
-        Process process = sessionProcessMap.remove(sessionId);
-        if (process != null && process.isAlive()) {
-            process.destroyForcibly();
+        sessionMap.remove(sessionId);
+        lastActivityMap.remove(sessionId);
+        PtyProcess pty = sessionProcessMap.remove(sessionId);
+        if (pty != null && pty.isAlive()) {
+            pty.destroyForcibly();
         }
     }
 
-    private Process buildShell(int cols, int rows) throws IOException {
+    private PtyProcess buildShell(int cols, int rows) throws IOException {
         Map<String, String> env = new HashMap<>(System.getenv());
         env.put("TERM", "xterm-256color");
         env.put("COLORTERM", "truecolor");
-        env.put("COLUMNS", String.valueOf(cols));
-        env.put("LINES", String.valueOf(rows));
-        String os = System.getProperty("os.name", "").toLowerCase();
-        ProcessBuilder pb;
-        if (os.contains("win")) {
-            pb = new ProcessBuilder("cmd.exe");
-        } else if (os.contains("mac")) {
-            pb = new ProcessBuilder("script", "-q", "/dev/null", "/bin/bash", "-l");
-        } else {
-            pb = new ProcessBuilder("script", "-q", "-f", "-c", "/bin/bash -l", "/dev/null");
-        }
-        pb.environment().putAll(env);
-        pb.redirectErrorStream(true);
-        return pb.start();
+        String shell = isWindows() ? "cmd.exe" : "/bin/bash";
+        return new PtyProcessBuilder()
+                .setCommand(isWindows() ? new String[]{"cmd.exe"} : new String[]{shell, "-l"})
+                .setEnvironment(env)
+                .setInitialColumns(cols)
+                .setInitialRows(rows)
+                .setConsole(false)
+                .start();
+    }
+
+    private static boolean isWindows() {
+        return System.getProperty("os.name", "").toLowerCase().contains("win");
     }
 }
