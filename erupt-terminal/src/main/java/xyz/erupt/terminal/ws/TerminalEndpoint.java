@@ -149,19 +149,13 @@ public class TerminalEndpoint {
             try { hostname = InetAddress.getLocalHost().getHostName(); } catch (Exception ignored) {}
             String version = EruptTerminalAutoConfiguration.class.getPackage().getImplementationVersion();
             String versionSuffix = version != null ? "  \u001b[38;5;240mv" + version + "\u001b[0m" : "";
+            String now = new java.text.SimpleDateFormat("EEE MMM dd HH:mm:ss", java.util.Locale.ENGLISH).format(new java.util.Date());
             String banner =
+                "\r\nLast login: " + now + "\r\n" +
                 "\r\n" +
-                "\u001b[38;5;99m ███████╗██████╗ ██╗   ██╗██████╗ ████████╗\u001b[0m" + versionSuffix + "\r\n" +
-                "\u001b[38;5;99m ██╔════╝██╔══██╗██║   ██║██╔══██╗╚══██╔══╝\u001b[0m\r\n" +
-                "\u001b[38;5;99m █████╗  ██████╔╝██║   ██║██████╔╝   ██║   \u001b[0m\r\n" +
-                "\u001b[38;5;99m ██╔══╝  ██╔══██╗██║   ██║██╔═══╝    ██║   \u001b[0m\r\n" +
-                "\u001b[38;5;99m ███████╗██║  ██║╚██████╔╝██║        ██║   \u001b[0m\r\n" +
-                "\u001b[38;5;99m ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝        ╚═╝   \u001b[0m\r\n" +
-                "\r\n" +
-                " \u001b[38;5;99mLow-Code · Zero-Frontend · Open Source\u001b[0m\r\n" +
-                " Host \u001b[38;5;220m" + hostname + "\u001b[0m" +
-                "  ·  OS \u001b[38;5;220m" + System.getProperty("os.name") + " " + System.getProperty("os.arch") + "\u001b[0m" +
-                "  ·  Java \u001b[38;5;220m" + System.getProperty("java.version") + "\u001b[0m\r\n" +
+                " \u001b[1;38;5;99m▶ ERUPT\u001b[0m" + versionSuffix +
+                "  \u001b[38;5;240mLow-Code · Zero-Frontend · Open Source\u001b[0m\r\n" +
+                " \u001b[38;5;240mHost \u001b[38;5;220m" + hostname + "\u001b[38;5;240m  OS \u001b[38;5;220m" + System.getProperty("os.name") + " " + System.getProperty("os.arch") + "\u001b[38;5;240m  Java \u001b[38;5;220m" + System.getProperty("java.version") + "\u001b[0m\r\n" +
                 "\r\n";
             session.getBasicRemote().sendText(banner);
         } catch (IOException e) {
