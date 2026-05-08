@@ -17,6 +17,27 @@ window.eruptSiteConfig = {
     },
     r_tools: [{
         mobileHidden: true,
+        render: () => {
+            return `<a href="https://start.erupt.xyz" target="_blank" style="
+                display: inline-flex; align-items: center; gap: 5px;
+                margin: 0 6px;
+                padding: 3px 10px;
+                border-radius: 4px;
+                border: 1px solid #3f51b5;
+                color: #3f51b5;
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                text-decoration: none;
+                white-space: nowrap;
+                transition: all .2s;
+            ">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                快速构建
+            </a>`
+        }
+    }, {
+        mobileHidden: true,
         icon: "fa-qq",
         click: function (event) {
             window.open("https://qm.qq.com/q/M3U23bwy6Q")
