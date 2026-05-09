@@ -101,7 +101,15 @@ public class TerminalEndpoint {
                 if (pendingTokenMap.containsKey(session.getId())) {
                     // First resize — start the shell
                     pendingTokenMap.remove(session.getId());
-                    PtyProcess pty = buildShell(cols, rows);
+                    PtyProcess pty;
+                    try {
+                        pty = buildShell(cols, rows);
+                    } catch (Exception e) {
+                        log.error("[terminal] Failed to start shell: {}", e.getMessage(), e);
+                        session.getBasicRemote().sendText("\r\n\u001b[31m[ERROR] Failed to start shell: " + e.getMessage() + "\u001b[0m\r\n");
+                        session.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, "Shell start failed"));
+                        return;
+                    }
                     sessionProcessMap.put(session.getId(), pty);
                     lastActivityMap.put(session.getId(), System.currentTimeMillis());
                     sendBanner(session);
@@ -198,9 +206,11 @@ public class TerminalEndpoint {
         Map<String, String> env = new HashMap<>(System.getenv());
         env.put("TERM", "xterm-256color");
         env.put("COLORTERM", "truecolor");
-        String shell = isWindows() ? "cmd.exe" : "/bin/bash";
+        String envShell = System.getenv("SHELL");
+        String shell = isWindows() ? "cmd.exe"
+                : (envShell != null && !envShell.contains("nologin") && !envShell.contains("false") ? envShell : "/bin/bash");
         return new PtyProcessBuilder()
-                .setCommand(isWindows() ? new String[]{"cmd.exe"} : new String[]{shell, "-l"})
+                .setCommand(isWindows() ? new String[]{"cmd.exe"} : new String[]{shell})
                 .setEnvironment(env)
                 .setInitialColumns(cols)
                 .setInitialRows(rows)
