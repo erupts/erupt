@@ -54,6 +54,17 @@ public class TerminalEndpoint {
 
     static {
         idleChecker.scheduleAtFixedRate(TerminalEndpoint::checkIdle, 1, 1, TimeUnit.MINUTES);
+        idleChecker.scheduleAtFixedRate(TerminalEndpoint::pingAll, 30, 30, TimeUnit.SECONDS);
+    }
+
+    private static void pingAll() {
+        sessionMap.forEach((sid, s) -> {
+            if (s.isOpen()) {
+                try {
+                    s.getBasicRemote().sendPing(java.nio.ByteBuffer.allocate(0));
+                } catch (IOException ignored) {}
+            }
+        });
     }
 
     private static void checkIdle() {

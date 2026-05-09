@@ -159,7 +159,7 @@
 
     var token    = getParam('_token');
     var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-    var wsUrl    = protocol + '://' + location.host + '/erupt-terminal?token=' + encodeURIComponent(token);
+    var wsUrl    = protocol + '://' + location.host + '${base}/erupt-terminal?token=' + encodeURIComponent(token);
 
     var tabs      = [];
     var activeId  = null;
