@@ -26,7 +26,7 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
     <a href="https://www.erupt.xyz" target="_blank"><b>Official Website</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/#!/module" target="_blank">Ecosystem</a> &nbsp; | &nbsp;
     <a href="https://www.erupt.xyz/demo" target="_blank">Online Demo</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/erupts" target="_blank">Documentation</a>
+    <a href="https://docs.erupt.xyz" target="_blank">Documentation</a>
 </p>
 
 <img alt="erupt" src="erupt.svg">
@@ -207,7 +207,7 @@ No need to compile source code. Simply add the following dependencies to your Sp
 >
 > <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
 
-[Detailed Usage Steps](https://www.yuque.com/erupts/erupt/tpq1l9)
+[Detailed Usage Steps](https://docs.erupt.xyz/guide/quick-start)
 
 ## 🌕 Online Demo
 

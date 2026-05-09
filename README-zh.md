@@ -26,7 +26,7 @@
     <a href="https://www.erupt.xyz" target="_blank"><b>官方网站</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/#!/module" target="_blank">框架生态</a> &nbsp; | &nbsp;
     <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/erupts" target="_blank">📕 使用文档</a>
+    <a href="https://docs.erupt.xyz" target="_blank">📕 使用文档</a>
 </p>
 
 <img alt="erupt" src="erupt.svg">
@@ -220,7 +220,7 @@ public void select() {
 >
 > <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
 
-[详细使用步骤](https://www.yuque.com/erupts/erupt/tpq1l9)
+[详细使用步骤](https://docs.erupt.xyz/guide/quick-start)
 
 ## 🌕 在线体验
 
