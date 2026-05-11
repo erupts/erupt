@@ -25,7 +25,7 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
     <a href="https://gitee.com/erupt/erupt">Gitee</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank"><b>Official Website</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/#!/module" target="_blank">Ecosystem</a> &nbsp; | &nbsp;
-    <a href="https://www.erupt.xyz/demo" target="_blank">Online Demo</a> &nbsp; | &nbsp; 
+    <a href="https://demo.erupt.xyz" target="_blank">Online Demo</a> &nbsp; | &nbsp; 
     <a href="https://docs.erupt.xyz" target="_blank">Documentation</a>
 </p>
 
@@ -211,7 +211,7 @@ No need to compile source code. Simply add the following dependencies to your Sp
 
 ## 🌕 Online Demo
 
-Demo URL: [https://www.erupt.xyz/demo](https://www.erupt.xyz/demo)
+Demo URL: [https://demo.erupt.xyz](https://demo.erupt.xyz)
 
 Username/Password: `guest / guest`
 

@@ -25,7 +25,7 @@
     <a href="https://gitee.com/erupt/erupt">Gitee</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank"><b>官方网站</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/#!/module" target="_blank">框架生态</a> &nbsp; | &nbsp;
-    <a href="https://www.erupt.xyz/demo" target="_blank">在线体验</a> &nbsp; | &nbsp; 
+    <a href="https://demo.erupt.xyz" target="_blank">在线体验</a> &nbsp; | &nbsp; 
     <a href="https://docs.erupt.xyz" target="_blank">📕 使用文档</a>
 </p>
 
@@ -224,7 +224,7 @@ public void select() {
 
 ## 🌕 在线体验
 
-演示地址：[https://www.erupt.xyz/demo](https://www.erupt.xyz/demo)
+演示地址：[https://demo.erupt.xyz](https://demo.erupt.xyz)
 
 账号密码：`guest / guest`
 
