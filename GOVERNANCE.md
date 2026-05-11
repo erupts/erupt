@@ -1,0 +1,1 @@
+This project is maintained by YuePeng and contributors. Decisions are made by the maintainer with input from the community via GitHub Discussions.
