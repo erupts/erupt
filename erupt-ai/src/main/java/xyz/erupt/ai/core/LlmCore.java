@@ -1,6 +1,5 @@
 package xyz.erupt.ai.core;
 
-import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.memory.ChatMemory;
@@ -14,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.ai.ask.EruptAiChat;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
+import xyz.erupt.ai.service.LLMRoleConfigService;
 import xyz.erupt.ai.service.McpServerService;
 import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.vo.mcp.McpClientInfo;
@@ -23,10 +23,7 @@ import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.prompt.SystemPromptProvider;
 import xyz.erupt.core.util.EruptSpringUtil;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -85,9 +82,12 @@ public abstract class LlmCore {
         eruptAiServices.systemMessageProvider((id) -> {
             AiProp aiProp = EruptSpringUtil.getBean(AiProp.class);
             StringBuffer systemPrompt = new StringBuffer(aiProp.getSystemPrompt());
-            SystemPromptProvider.getRegisteredProviders().forEach(provider -> {
-                systemPrompt.append("\n\n").append(provider.getPrompt());
-            });
+            SystemPromptProvider.getRegisteredProviders().forEach(provider ->
+                    systemPrompt.append("\n\n").append(provider.getPrompt()));
+            String rolePrompt = EruptSpringUtil.getBean(LLMRoleConfigService.class).getSystemPromptByUid(MetaContext.getUser().getUid());
+            if (rolePrompt != null && !rolePrompt.isBlank()) {
+                systemPrompt.append("\n\n").append(rolePrompt);
+            }
             return systemPrompt.toString();
         });
         if (llmRequest.getAutoCallTool()) {
@@ -103,15 +103,18 @@ public abstract class LlmCore {
     private ToolProvider buildTools() {
         return (request) -> {
             ToolProviderResult.Builder builder = ToolProviderResult.builder();
-            AiToolboxManager.getTools().forEach(obj -> {
-                List<ToolSpecification> specs = ToolSpecifications.toolSpecificationsFrom(obj);
-                for (ToolSpecification spec : specs) {
-                    builder.add(spec, (executionRequest, memoryId) -> {
-                        Object result = AiToolboxManager.invoke(executionRequest);
-                        return null == result ? "" : result.toString();
-                    });
-                }
-            });
+            Set<String> allowedTools = EruptSpringUtil.getBean(LLMRoleConfigService.class)
+                    .getAllowedToolsByUid(MetaContext.getUser().getUid());
+
+            AiToolboxManager.getTools().forEach(obj ->
+                    ToolSpecifications.toolSpecificationsFrom(obj).forEach(spec -> {
+                        if (allowedTools.contains(spec.name())) {
+                            builder.add(spec, (executionRequest, memoryId) -> {
+                                Object result = AiToolboxManager.invoke(executionRequest);
+                                return null == result ? "" : result.toString();
+                            });
+                        }
+                    }));
             for (McpClientInfo value : McpServerService.getMCP_CLIENTS().values()) {
                 if (null != value.getMcpClient()) {
                     value.getMcpClient().listTools().forEach(spec ->
