@@ -376,6 +376,12 @@ ai.chat.quote,引用到输入框,引用到輸入框,Quote to input,Citer dans la
 ai.chat.speak,朗读,朗讀,Read aloud,Lire à voix haute,読み上げる,읽어주기,Прочитать вслух,Leer en voz alta,Vorlesen,Ler em voz alta,Baca keras,قراءة بصوت عالٍ
 ai.chat.speak_stop,停止朗读,停止朗讀,Stop reading,Arrêter la lecture,読み上げ停止,읽기 중지,Остановить чтение,Detener lectura,Vorlesen stoppen,Parar leitura,Hentikan bacaan,إيقاف القراءة
 cube.filter.config.not_null,必填,必填,Required,Obligatoire,必須,필수,Обязательно,Obligatorio,Pflichtfeld,Obrigatório,Wajib diisi,مطلوب
+cube.filter.config.default_type,默认值类型,預設值類型,Default Type,Type par défaut,デフォルト型,기본값 유형,Тип по умолчанию,Tipo por defecto,Standardtyp,Tipo padrão,Tipe default,نوع الافتراضي
+cube.filter.config.relative_absolute,绝对时间,絕對時間,Absolute,Absolu,絶対時間,절대 시간,Абсолютное,Absoluto,Absolut,Absoluto,Absolut,مطلق
+cube.filter.config.relative_relative,相对时间,相對時間,Relative,Relatif,相対時間,상대 시간,Относительное,Relativo,Relativ,Relativo,Relatif,نسبي
+cube.filter.config.relative_past,最近,最近,Last,Dernier,最近,최근,Последние,Últimos,Letzte,Últimos,Terakhir,آخر
+cube.filter.config.relative_future,未来,未來,Next,Prochain,未来,미래,Следующие,Próximos,Nächste,Próximos,Berikutnya,التالية
+cube.filter.config.relative_days,天,天,Days,Jours,日,일,Дней,Días,Tage,Dias,Hari,أيام
 cube.filter.required_hint,请先填写必填筛选项,請先填寫必填篩選項目,Please fill in the required filter options first,Veuillez d'abord remplir les options de filtre obligatoires,必須のフィルター項目を先に入力してください,필수 필터 항목을 먼저 입력해 주세요,"Пожалуйста, сначала заполните обязательные параметры фильтра","Por favor, complete primero las opciones de filtro obligatorias",Bitte füllen Sie zuerst die erforderlichen Filteroptionen aus,"Por favor, preencha primeiro as opções de filtro obrigatórias",Silakan isi opsi filter yang wajib diisi terlebih dahulu,يرجى ملء خيارات التصفية المطلوبة أولاً
 cube.report.config.parameter,参数,參數,Parameter,Paramètre,パラメータ,파라미터,Параметр,Parámetro,Parameter,Parâmetro,Parameter,معامل
 cube.sub_model.manage,子模型管理,子模型管理,Sub-Model Management,Gestion des sous-modèles,サブモデル管理,서브 모델 관리,Управление подмоделями,Gestión de submodelos,Untermodell-Verwaltung,Gestão de submodelos,Manajemen sub-model,إدارة النماذج الفرعية
