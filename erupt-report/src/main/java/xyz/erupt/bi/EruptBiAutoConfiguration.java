@@ -49,7 +49,7 @@ public class EruptBiAutoConfiguration implements EruptModule {
 
     @Override
     public void run() {
-        MenuTypeEnum.addMenuType(new VLModel("bi", "多维报表", "报表编码"));
+        MenuTypeEnum.addMenuType(new VLModel("bi", "可视化报表"));
     }
 
     @Override
