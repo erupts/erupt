@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import xyz.erupt.ai.handler.AiToolFetch;
+import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
@@ -24,13 +24,13 @@ import java.util.Set;
 /**
  * @author YuePeng
  */
-@Erupt(name = "AI Role Config")
+@Erupt(name = "AI Role")
 @Table(name = "e_ai_role_config")
 @Getter
 @Setter
 @Entity
 @EruptI18n
-public class LLMRoleConfig extends MetaModelUpdateVo {
+public class LLMRole extends MetaModelUpdateVo {
 
     @ManyToOne
     @JoinColumn(name = "role_id", unique = true, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
@@ -51,7 +51,7 @@ public class LLMRoleConfig extends MetaModelUpdateVo {
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Tools"),
-            edit = @Edit(title = "Tools", type = EditType.MULTI_CHOICE, multiChoiceType = @MultiChoiceType(fetchHandler = AiToolFetch.class))
+            edit = @Edit(title = "Tools", type = EditType.MULTI_CHOICE, multiChoiceType = @MultiChoiceType(fetchHandler = AiToolboxManager.class))
     )
     private Set<String> tools;
 

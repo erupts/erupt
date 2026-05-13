@@ -16,6 +16,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import xyz.erupt.annotation.ai.AiToolbox;
+import xyz.erupt.annotation.fun.ChoiceFetchHandler;
+import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.config.GsonFactory;
 
 import java.lang.reflect.Method;
@@ -29,7 +31,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 @Order(100)
 @Service
 @Slf4j
-public class AiToolboxManager implements ApplicationRunner {
+public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler {
 
     @Resource
     private ApplicationContext applicationContext;
@@ -98,4 +100,12 @@ public class AiToolboxManager implements ApplicationRunner {
             log.info(sb.toString());
         }
     }
+
+    @Override
+    public List<VLModel> fetch(String[] params) {
+        return AiToolboxManager.getAiMethodMap().keySet().stream()
+                .map(name -> new VLModel(name, name))
+                .toList();
+    }
+
 }
