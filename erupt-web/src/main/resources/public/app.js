@@ -10,8 +10,8 @@ window.eruptSiteConfig = {
     loginLogoPath: null,
     logoText: "Erupt",
     registerPage: null,
-    amapKey: '6ed167be6d22b8f8fa8e0402724df150',
-    amapSecurityJsCode: "ee3e78fcb019e6078fcfc5b53b0a63ec",
+    amapKey: 'da01c124bff9d9be1ad44e04f23aa32e',
+    amapSecurityJsCode: "5bf6c7828a97fe987c8292f00629a6d9",
     theme: {
         primaryColor: '#3f51b5'
     },
