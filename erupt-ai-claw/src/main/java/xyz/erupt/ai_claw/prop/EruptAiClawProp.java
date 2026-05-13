@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("erupt.ai.claw")
 public class EruptAiClawProp {
 
-    private boolean enabled = false;
+    private boolean enabled = true;
 
     private boolean enableExecShell = true;
 
