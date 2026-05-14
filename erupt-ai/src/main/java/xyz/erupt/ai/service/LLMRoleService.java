@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @author YuePeng
  */
 @Service
-public class LLMRoleConfigService {
+public class LLMRoleService {
 
     @Resource
     private EruptDao eruptDao;
@@ -35,7 +35,7 @@ public class LLMRoleConfigService {
         if (Boolean.TRUE.equals(user.getIsAdmin())) return AiToolboxManager.getAiMethodMap().keySet();
         List<String> roleCodes = user.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList());
         if (roleCodes.isEmpty()) return Set.of();
-        List<LLMRole> configs = queryByRoleCodes(roleCodes);
+        List<LLMRole> configs = this.queryByRoleCodes(roleCodes);
         if (configs.isEmpty()) return Set.of();
         return configs.stream()
                 .filter(c -> c.getTools() != null)
@@ -49,7 +49,7 @@ public class LLMRoleConfigService {
         if (user == null) return null;
         List<String> roleCodes = user.getRoles().stream().map(EruptRole::getCode).collect(Collectors.toList());
         if (roleCodes.isEmpty()) return null;
-        return queryByRoleCodes(roleCodes).stream()
+        return this.queryByRoleCodes(roleCodes).stream()
                 .map(LLMRole::getSystemPrompt)
                 .filter(p -> p != null && !p.isBlank())
                 .collect(Collectors.joining("\n\n"));

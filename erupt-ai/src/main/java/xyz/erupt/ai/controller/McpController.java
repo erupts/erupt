@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import xyz.erupt.ai.config.AiMCPProp;
-import xyz.erupt.ai.service.LLMRoleConfigService;
+import xyz.erupt.ai.service.LLMRoleService;
 import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.util.McpUtil;
 import xyz.erupt.ai.vo.mcp.*;
@@ -46,7 +46,7 @@ public class McpController {
     private EruptDao eruptDao;
 
     @Resource
-    private LLMRoleConfigService llmRoleConfigService;
+    private LLMRoleService llmRoleService;
 
     @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @PostMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -138,7 +138,7 @@ public class McpController {
     }
 
     private List<McpTool> mcpTools() {
-        Set<String> allowedTools = llmRoleConfigService.getAllowedToolsByUid(MetaContext.getUser().getUid());
+        Set<String> allowedTools = llmRoleService.getAllowedToolsByUid(MetaContext.getUser().getUid());
         List<McpTool> mcpTools = new ArrayList<>();
         for (Map.Entry<String, Method> entry : AiToolboxManager.getAiMethodMap().entrySet()) {
             if (!allowedTools.contains(entry.getKey())) continue;
@@ -174,7 +174,7 @@ public class McpController {
 
     @SneakyThrows
     private String mcpCall(String code, Map<String, Object> params) {
-        if (!llmRoleConfigService.getAllowedToolsByUid(MetaContext.getUser().getUid()).contains(code)) throw new SecurityException("Tool not permitted: " + code);
+        if (!llmRoleService.getAllowedToolsByUid(MetaContext.getUser().getUid()).contains(code)) throw new SecurityException("Tool not permitted: " + code);
         ToolExecutionRequest request = ToolExecutionRequest.builder()
                 .name(code)
                 .arguments(GsonFactory.getGson().toJson(params))
