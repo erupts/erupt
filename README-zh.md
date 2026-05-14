@@ -2,9 +2,9 @@
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/assets/logo-raw2.png" height="120px" alt="logo"/></p>
 
-<h1 align="center">低代码 + AI & 🦞</h1>
+<h1 align="center">🚀 Erupt · 注解驱动的 Spring Boot 低代码框架 · AI 原生</h1>
 
-<h3 align="center">注解驱动开发，零前端代码，零 CURD，自动建表，实现多维数据管理</h3>
+<h3 align="center">注解定义后台管理 UI · 零前端代码 · 基于 Spring Boot 3 · 内置多租户 · BI · AI Agent 能力</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
 
 ---
@@ -17,12 +17,16 @@
     <a href="https://gitcode.com/erupts/erupt"><img src="https://gitcode.com/erupts/erupt/star/badge.svg" alt="gitcode"></a>
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
+    <a href="https://github.com/erupts/erupt/commits"><img src="https://img.shields.io/github/last-commit/erupts/erupt?color=FF5722&label=last%20commit" alt="last-commit"></a>
+    <a href="https://github.com/erupts/erupt/releases"><img src="https://img.shields.io/github/v/release/erupts/erupt?color=FF5722&label=release" alt="latest-release"></a>
+    <a href="https://github.com/erupts/erupt/discussions"><img src="https://img.shields.io/github/discussions/erupts/erupt?color=FF5722" alt="discussions"></a>
 </p>
 
 <p align="center">
     <a href="https://github.com/erupts/erupt">GitHub</a> &nbsp; | &nbsp;
     <a href="https://gitcode.com/erupts/erupt">GitCode</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">Gitee</a> &nbsp; | &nbsp; 
+    <a href="https://start.erupt.xyz" target="_blank">⚡ 一键创建项目</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank"><b>官方网站</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/#!/module" target="_blank">框架生态</a> &nbsp; | &nbsp;
     <a href="https://demo.erupt.xyz" target="_blank">在线体验</a> &nbsp; | &nbsp; 
@@ -37,15 +41,17 @@
 > @Erupt 注解可实现全场景开箱即用
 
 - 可视化：表 / 树 / 甘特图 / 卡片 + 20+表单组件
-- 数据：全库兼容、API 数据源、自动建表/索引、LambdaQuery 多表查询、动态CURD
+- 数据：全库兼容、API 数据源、自动建表/索引、LambdaQuery 多表查询、动态 CRUD
 - API：OpenAPI 一键暴露、行列权限控制
 - 权限：UPMS / 类 / 行列 / 角色多维管控
-- 扩展：i18n、Cloud 集群、审计 & 事件日志、BI、SaaS、AI 大模型
+- 扩展：i18n、Cloud 集群、审计 & 事件日志、BI、SaaS、**AI Harness**（LLM + MCP + Agent）
 - Form 复用：Flow 流程、自定义节点、自定义按钮
 
-## 🤖 AI 大模型集成
+## 🐴 Erupt AI Harness · Spring Boot 上的生产级 AI Agent 框架
 
-> `erupt-ai` 模块 —— 零样板代码，开箱即用的企业级大模型接入
+> `erupt-ai` 模块 —— Spring Boot 的 **AI Harness**：50+ 大模型 · MCP 原生工具 · 内置 **RBAC** 角色权限 · 角色级 system prompt · 会话历史 —— 全部通过管理界面配置，零样板代码。
+
+**为什么叫「Harness」？** 把 AI 推到生产环境，需要的不只是 SDK，而是 **治理（RBAC）+ 互操作（MCP）+ 可观测（会话/Token 追踪）+ 运维友好（管理界面配置）** 四件事。Erupt AI Harness 一次提供齐全。
 
 ### 支持 50+ 大模型提供商
 
@@ -68,7 +74,7 @@
 - **思考模型支持** —— 原生支持推理模型（DeepSeek、Kimi-K2）
 - **MCP 协议** —— 接入任意 MCP 工具服务器（SSE & STDIO），自动健康检查与重连
 - **AI Toolbox** —— 通过 `@AiToolbox` + `@Tool` 注解将任意 Spring Bean 暴露为 AI 工具
-- **Agent 框架** —— 自定义系统提示词、提示词列表与动态 Prompt 处理器
+- **Agentic AI 框架** —— 自定义 AI Agent 的系统提示词、提示词列表、动态 Prompt 处理器，原生集成 MCP 工具
 - **会话历史** —— 按用户隔离的对话会话，记录 Token 用量，支持软删除
 
 ### AI Toolbox 示例
@@ -101,6 +107,8 @@ Erupt AI Claw 让你通过对话操作注解驱动的数据与业务、执行 Sh
 - **浏览器控制** —— 在 MCP 菜单中添加配置即可与浏览器交互
 - **Skills（70万+）** —— 兼容 [skills.sh](https://skills.sh) 70万+ Skills；AI 根据提示词自动匹配执行；支持通过对话动态创建 Skill
 - **长期记忆** —— 跨会话记忆持久化；AI 自动将重要决策与上下文写入记忆文件，下次会话自动加载
+
+> 🔐 **内置 RBAC**：AI 工具权限通过 `erupt-ai` 的 `LLMRole` 表管控，仅管理员默认拥有全部权限。生产环境启用前请按角色配置工具白名单。
 
 Skills 存放于 `~/.erupt/skills/`，也可在对话中动态创建。
 
@@ -208,7 +216,9 @@ public void select() {
 | **Erupt SaaS** | 多租户基建 | [📖 文档](https://docs.erupt.xyz/modules/pro/erupt-tenant) |
 | **Erupt Cube** | BI 平台（语义层 + 拖拽分析） | [📖 文档](https://docs.erupt.xyz/modules/pro/erupt-cube) |
 
-👉 **[查看定价与购买流程 →](https://www.erupt.xyz/#!/pro)**
+*源码交付 · 一次买断 · 永久使用 · 与开源核心独立演进*
+
+👉 **[查看定价与购买流程 →](https://www.erupt.xyz/?utm_source=gitee&utm_medium=readme&utm_campaign=pro#!/pro)**
 
 ## 🔗 下载使用
 

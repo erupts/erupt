@@ -2,9 +2,9 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 <p align="center"><img src="./erupt-web/src/main/resources/public/assets/logo-raw2.png" height="120px" alt="logo"/></p>
 
-<h1 align="center">Low-Code + AI & 🦞</h1>
+<h1 align="center">🚀 Erupt — Annotation-driven Low-code for Spring Boot · AI Native</h1>
 
-<h3 align="center">MDD & Annotation-driven development, zero front-end code, zero CRUD, multi-dimensional data management</h3>
+<h3 align="center">Generate full admin UI from @Erupt annotations · zero front-end code · Spring Boot 3 · multi-tenant · BI · AI agents built-in</h3>
 <h3 align="center"><a href="https://erupt.xyz" target="_blank">https://www.erupt.xyz</a></h3>
 
 ---
@@ -17,12 +17,16 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
     <a href="https://gitcode.com/erupts/erupt"><img src="https://gitcode.com/erupts/erupt/star/badge.svg" alt="gitcode"></a>
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
     <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
+    <a href="https://github.com/erupts/erupt/commits"><img src="https://img.shields.io/github/last-commit/erupts/erupt?color=FF5722&label=last%20commit" alt="last-commit"></a>
+    <a href="https://github.com/erupts/erupt/releases"><img src="https://img.shields.io/github/v/release/erupts/erupt?color=FF5722&label=release" alt="latest-release"></a>
+    <a href="https://github.com/erupts/erupt/discussions"><img src="https://img.shields.io/github/discussions/erupts/erupt?color=FF5722" alt="discussions"></a>
 </p>
 
 <p align="center">
     <a href="https://github.com/erupts/erupt">GitHub</a> &nbsp; | &nbsp;
     <a href="https://gitcode.com/erupts/erupt">GitCode</a> &nbsp; | &nbsp; 
     <a href="https://gitee.com/erupt/erupt">Gitee</a> &nbsp; | &nbsp; 
+    <a href="https://start.erupt.xyz" target="_blank">⚡ Start Project</a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz" target="_blank"><b>Official Website</b></a> &nbsp; | &nbsp; 
     <a href="https://www.erupt.xyz/#!/module" target="_blank">Ecosystem</a> &nbsp; | &nbsp;
     <a href="https://demo.erupt.xyz" target="_blank">Online Demo</a> &nbsp; | &nbsp; 
@@ -40,12 +44,14 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 - Data: Full database compatibility, API data sources, automatic table/index creation, LambdaQuery multi-table queries, dynamic CRUD
 - API: One-click OpenAPI exposure, row/column permission control
 - Permissions: UPMS / Class / Row/Column / Role multi-dimensional management
-- Extensions: i18n, Cloud clustering, audit & event logs, BI, SaaS, AI large models
+- Extensions: i18n, Cloud clustering, audit & event logs, BI, SaaS, **AI Harness** (LLM + MCP + Agent)
 - Form Reusability: Flow processes, custom nodes, custom buttons
 
-## 🤖 AI Integration
+## 🐴 Erupt AI Harness · Production-grade AI Agents on JVM
 
-> `erupt-ai` module — enterprise-grade LLM integration with zero boilerplate
+> `erupt-ai` module — the **AI Harness** for Spring Boot: 50+ LLM providers · MCP-native tools · built-in **RBAC** · role-aware system prompts · chat history — all configurable through admin UI, zero boilerplate.
+
+**Why "Harness"?** Because shipping AI to production needs more than an SDK — it needs governance (RBAC), interoperability (MCP), observability (chat history + token tracking), and operator-friendly config (admin UI). Erupt AI Harness gives all four out of the box.
 
 ### Supported LLM Providers
 
@@ -68,7 +74,7 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 - **Thinking Models** — native support for reasoning models (DeepSeek, Kimi-K2)
 - **MCP Protocol** — connect any MCP-compatible tool server (SSE & STDIO transports), with auto-reconnect health checks
 - **AI Toolbox** — expose any Spring Bean as an AI tool via `@AiToolbox` + `@Tool` annotations
-- **Agent Framework** — define agents with custom system prompts, hint lists, and dynamic prompt handlers
+- **Agentic AI Framework** — define AI agents with custom system prompts, hint lists, dynamic prompt handlers, and MCP tool integration
 - **Chat History** — per-user conversation sessions with token tracking and soft-delete
 
 LLM providers, MCP servers, and agents are all managed through the built-in admin UI — no restarts required.
@@ -88,7 +94,7 @@ Erupt AI Claw lets you control annotation-driven data & business logic, execute 
 - **Skills (700k+)** — compatible with 700k+ skills from [skills.sh](https://skills.sh); AI auto-matches and executes the right skill based on your prompt; supports dynamic skill creation
 - **Long-term Memory** — cross-session memory persistence; AI automatically stores key decisions and context, reloaded on next session
 
-> ⚠️ **Warning:** Claw has broad system permissions. Do NOT enable in production environments.
+> 🔐 **RBAC built-in:** AI Tool permissions are governed by `erupt-ai`'s `LLMRole` table — only admin users get unrestricted access. Configure role-based tool whitelists before enabling in production.
 
 Skills are stored in `~/.erupt/skills/` and can also be created dynamically through chat.
 
@@ -195,7 +201,9 @@ Beyond the open-source core, 4 enterprise-grade modules are available (source-co
 | **Erupt SaaS** | Multi-tenant infrastructure | [📖 Docs](https://docs.erupt.xyz/modules/pro/erupt-tenant) |
 | **Erupt Cube** | BI platform with semantic layer | [📖 Docs](https://docs.erupt.xyz/modules/pro/erupt-cube) |
 
-👉 **[See pricing and purchase process →](https://www.erupt.xyz/#!/pro)**
+*Source-code delivery · one-time purchase · perpetual use · evolved independently from the open-source core.*
+
+👉 **[See pricing and purchase process →](https://www.erupt.xyz/?utm_source=github&utm_medium=readme&utm_campaign=pro#!/pro)**
 
 ## 🔗 Download and Use
 
