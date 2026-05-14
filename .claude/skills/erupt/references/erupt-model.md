@@ -458,6 +458,53 @@
 ```
 
 #### `@MultiChoiceType`（type=MULTI_CHOICE）
+
+推荐两种存储方式：
+
+**方式一：JSON 存储（推荐，简单场景）**
+```java
+@JdbcTypeCode(SqlTypes.JSON)
+@Column(length = AnnotationConst.CONFIG_LENGTH)
+@EruptField(
+        views = @View(title = "Roles"),
+        edit = @Edit(title = "Roles", type = EditType.MULTI_CHOICE,
+                multiChoiceType = @MultiChoiceType(vl = {
+                        @VL(value = "ADMIN", label = "Admin"),
+                        @VL(value = "USER", label = "User"),
+                        @VL(value = "GUEST", label = "Guest")
+                }))
+)
+private Set<String> roles;
+```
+
+**方式二：一对多中间表存储（需要关联查询的场景）**
+```java
+@ElementCollection(fetch = FetchType.EAGER)
+// 创建中间表 multi_table，id 为当前表的主键，呈一对多关联关系
+@CollectionTable(
+    name = "multi_table",
+    joinColumns = @JoinColumn(name = "id"),
+    foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
+)
+@Column(name = "mid")
+@EruptField(
+    views = @View(title = "多选"),
+    edit = @Edit(
+        title = "多选",
+        type = EditType.MULTI_CHOICE,
+        multiChoiceType = @MultiChoiceType(
+            vl = {
+                @VL(value = "1", label = "A"),
+                @VL(value = "2", label = "B"),
+                @VL(value = "3", label = "C"),
+            }
+        )
+    )
+)
+private Set<Integer> mid;
+```
+
+`@MultiChoiceType` 参数：
 ```java
 @MultiChoiceType(
     type = MultiChoiceType.Type.CHECKBOX,  // SELECT（下拉多选）/ CHECKBOX（复选框）
