@@ -197,6 +197,19 @@ public void select() {
     </tr>
 </table>
 
+## 🔌 商业扩展模块
+
+在开源核心之外，提供 4 个企业级商业模块（源码交付 · 一次买断 · 无 License / 项目数 / 商用限制）：
+
+| 模块 | 用途 | 文档 |
+| --- | --- | --- |
+| **Erupt Chart** | 报表图表 / 数据可视化 | [📖 文档](https://docs.erupt.xyz/modules/pro/erupt-chart) |
+| **Erupt Flow** | 流程引擎 / 审批工作流 | [📖 文档](https://docs.erupt.xyz/modules/pro/erupt-flow) |
+| **Erupt SaaS** | 多租户基建 | [📖 文档](https://docs.erupt.xyz/modules/pro/erupt-tenant) |
+| **Erupt Cube** | BI 平台（语义层 + 拖拽分析） | [📖 文档](https://docs.erupt.xyz/modules/pro/erupt-cube) |
+
+👉 **[查看定价与购买流程 →](https://www.erupt.xyz/#!/pro)**
+
 ## 🔗 下载使用
 
 无需编译源代码，Spring Boot项目添加如下依赖即可

@@ -184,6 +184,19 @@ public void select() {
     </tr>
 </table>
 
+## 🔌 Commercial Extension Modules
+
+Beyond the open-source core, 4 enterprise-grade modules are available (source-code delivery · one-time purchase · no License/project-count/commercial restrictions):
+
+| Module | Use Case | Documentation |
+| --- | --- | --- |
+| **Erupt Chart** | Reports & data visualization | [📖 Docs](https://docs.erupt.xyz/modules/pro/erupt-chart) |
+| **Erupt Flow** | Workflow / approval engine | [📖 Docs](https://docs.erupt.xyz/modules/pro/erupt-flow) |
+| **Erupt SaaS** | Multi-tenant infrastructure | [📖 Docs](https://docs.erupt.xyz/modules/pro/erupt-tenant) |
+| **Erupt Cube** | BI platform with semantic layer | [📖 Docs](https://docs.erupt.xyz/modules/pro/erupt-cube) |
+
+👉 **[See pricing and purchase process →](https://www.erupt.xyz/#!/pro)**
+
 ## 🔗 Download and Use
 
 No need to compile source code. Simply add the following dependencies to your Spring Boot project:
