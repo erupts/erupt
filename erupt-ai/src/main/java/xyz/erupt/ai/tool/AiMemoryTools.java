@@ -39,9 +39,11 @@ public class AiMemoryTools implements SystemPromptProvider {
     public String getPrompt() {
         return """
                 ## Memory
-                Call `listMemories` at the start of each session to restore persisted context.
-                During the session, save newly confirmed preferences, decisions, or important facts via `saveMemory`.
-                Remove outdated entries with `deleteMemory` to keep memory clean and relevant.
+                When the conversation involves user preferences, past decisions, or recurring context,
+                call `listMemories` to restore relevant entries before responding.
+                Save newly confirmed preferences or important facts via `saveMemory`.
+                Use `getMemory` to retrieve full content when a preview is insufficient.
+                Remove stale entries with `deleteMemory` when the user explicitly corrects or supersedes them.
                 """;
     }
 

@@ -37,10 +37,10 @@ public class A2AAgentTools implements SystemPromptProvider {
     public String getPrompt() {
         return """
                 ## A2A Sub-Agents
-                Call `listA2AAgents` to discover available sub-agents and their skills.
-                When a user request matches a sub-agent's capability, delegate it via `invokeA2AAgent`.
-                Pass the user's intent as a clear, self-contained message — include all context the sub-agent needs.
-                Present the sub-agent's response directly to the user without unnecessary wrapping.
+                When a user request requires capabilities beyond your own, call `listA2AAgents` to discover
+                available sub-agents before delegating. Do not delegate tasks you can handle directly.
+                When delegating via `invokeA2AAgent`, pass a clear, self-contained message with all
+                context the sub-agent needs. Present its response directly without unnecessary wrapping.
                 """;
     }
 
