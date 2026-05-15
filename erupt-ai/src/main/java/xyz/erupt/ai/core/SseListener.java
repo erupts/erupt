@@ -31,4 +31,11 @@ public class SseListener {
     private StreamingChatModel streamingChatModel;
 
     private Throwable throwable;
+
+    // Tool call event: name + args = call start; toolResult != null = call completed
+    private String toolName;
+
+    private String toolArgs;
+
+    private String toolResult;
 }
