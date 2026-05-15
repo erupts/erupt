@@ -130,7 +130,7 @@ public class A2AAgentService implements DataProxy<A2AAgent> {
                         .filter(TextPart.class::isInstance).map(p -> ((TextPart) p).getText())
                         .collect(Collectors.joining("\n")));
             }
-        }), err -> future.completeExceptionally(err), null);
+        }), future::completeExceptionally, null);
         return future.get(30, TimeUnit.SECONDS);
     }
 
