@@ -24,12 +24,14 @@ import xyz.erupt.ai.model.LLM;
 import xyz.erupt.ai.model.LLMAgent;
 import xyz.erupt.ai.vo.SseBody;
 import xyz.erupt.ai.vo.SseEvent;
+import xyz.erupt.ai.vo.ToolCallRecord;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.context.MetaContext;
 import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,7 +82,11 @@ public class LLMService {
             if (message.getSenderType() == ChatSenderType.USER) {
                 messages.add(UserMessage.from(message.getContent()));
             } else if (message.getSenderType() == ChatSenderType.MODEL) {
-                messages.add(AiMessage.from(message.getContent()));
+                if (message.getThinkingContent() != null) {
+                    messages.add(AiMessage.builder().text(message.getContent()).thinking(message.getThinkingContent()).build());
+                } else {
+                    messages.add(AiMessage.from(message.getContent()));
+                }
             }
         }
         if (null != llmAgent) {
@@ -107,19 +113,24 @@ public class LLMService {
                 llmAgent.mergeToLLmRequest(llmModel);
             }
             llmRequest.setAutoCallTool(autoToolCall);
-            llm.chatSse(llmRequest,userMessage, chatContext, it -> {
-                if (null != it.getThrowable()) {
+            List<ToolCallRecord> toolCallList = new ArrayList<>();
+            llm.chatSse(llmRequest, userMessage, chatContext, it -> {
+                if (null != it.getToolResult()) {
+                    toolCallList.add(new ToolCallRecord(it.getToolName(), it.getToolArgs(), it.getToolResult(), LocalDateTime.now()));
+                } else if (null != it.getThrowable()) {
                     String message = it.getThrowable().getMessage();
                     this.sendSseMessage(emitter, message);
                     eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(), llmModel.getModel(), ChatSenderType.MODEL, message, 0));
                     this.completeSse(emitter);
                 } else if (it.isFinish()) {
                     String message = it.getAiMessage() != null && it.getAiMessage().text() != null ? it.getAiMessage().text() : "";
+                    String thinking = it.getAiMessage() != null ? it.getAiMessage().thinking() : null;
+                    String toolCalls = toolCallList.isEmpty() ? null : GsonFactory.getGson().toJson(toolCallList);
                     this.sendSseDone(emitter);
                     chatMessage.setTokens(it.getUsage().inputTokenCount());
                     eruptDao.mergeAndFlush(chatMessage);
                     eruptDao.persistAndFlush(AiChatMessage.create(chatMessage.getChatId(), llmModel.getLlm(),
-                            llmModel.getModel(), ChatSenderType.MODEL, message, it.getUsage().outputTokenCount()));
+                            llmModel.getModel(), ChatSenderType.MODEL, message, thinking, toolCalls, it.getUsage().outputTokenCount()));
                     this.completeSse(emitter);
                 } else if (null != it.getCurrMessage()) {
                     this.sendSseMessage(emitter, it.getCurrMessage());
