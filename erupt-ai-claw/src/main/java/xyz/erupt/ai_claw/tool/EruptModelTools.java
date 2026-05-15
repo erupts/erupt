@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import jakarta.annotation.Resource;
-import jakarta.transaction.Transactional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.ai.AiToolbox;
@@ -74,7 +73,6 @@ public class EruptModelTools {
         return GsonFactory.getGson().toJson(result);
     }
 
-    @Transactional
     @Tool("Insert a new record into the specified erupt model. Call eruptSchema first to ensure the data object contains all required fields with correct types.")
     public String insertEruptData(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
@@ -91,7 +89,6 @@ public class EruptModelTools {
     }
 
 
-    @Transactional
     @Tool("Update an existing record in the specified erupt model. It is strongly recommended to call findEruptDataByPk first to retrieve the current record, then modify only the necessary fields before submitting the update. The data object must include the primary key field.")
     public String updateEruptData(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
@@ -101,7 +98,6 @@ public class EruptModelTools {
         return "success";
     }
 
-    @Transactional
     @Tool("Delete one or more records from the specified erupt model by their primary key IDs.")
     public String deleteEruptData(
             @P(ERUPT_NAME_PARAM_HINT) String eruptName,
