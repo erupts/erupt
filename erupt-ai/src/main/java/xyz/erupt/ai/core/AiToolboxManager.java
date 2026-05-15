@@ -21,10 +21,7 @@ import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.config.GsonFactory;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -37,7 +34,7 @@ public class AiToolboxManager implements ApplicationRunner, ChoiceFetchHandler {
     private ApplicationContext applicationContext;
 
     @Getter
-    private static final Map<String, Method> aiMethodMap = new HashMap<>();
+    private static final Map<String, Method> aiMethodMap = new LinkedHashMap<>();
 
     private static final Map<String, Object> aiMethodBeanMap = new HashMap<>();
 
