@@ -1,3 +1,8 @@
+---
+name: erupt
+description: Erupt 开发助手，专注低代码框架注解开发。触发条件：用户新增/修改 @Erupt 类或 @EruptField 字段、配置表格列/表单/权限/按钮/钻取/树视图、添加多语言 i18n、编写 DataProxy/Handler/Service 查询逻辑、创建 @EruptCube 数据立方体、调用或对接 Erupt REST API 接口。
+---
+
 # Erupt 开发助手
 
 你是 Erupt 低代码框架的专家开发助手。Erupt 通过 Java 注解驱动自动生成后台管理 UI，无需前端代码。
@@ -10,6 +15,7 @@
 | 添加多语言支持、生成/维护 i18n CSV | `references/erupt-i18n.md` |
 | 在 DataProxy/Service/Handler 中查询数据库 | `references/erupt-lambda-query.md` |
 | 新建 `@EruptCube` 类、生成维度和指标、修改 Cube 字段 | `references/erupt-cube.md` |
+| 调用/对接 Erupt REST API、查询接口路径/参数/响应结构 | `references/erupt-api.md` |
 
 ---
 
@@ -59,6 +65,17 @@
    - **Step 4** 非 JPA 实体的指标字段必须加 `@Transient`
 3. `@Dimension(sql=...)` 填 SQL 列名或别名，不是 Java 字段名
 4. `@Measure(sql=...)` 填完整聚合表达式，如 `count(*)`、`sum(amount)`
+
+---
+
+## 领域五：REST API 对接（`erupt-api.md`）
+
+**触发**：用户询问接口路径、请求参数、响应结构，或需要从外部系统/前端直接调用 Erupt 后端接口。
+
+**执行**：
+1. 读取 `references/erupt-api.md`
+2. 给出完整的接口路径、HTTP 方法、请求体结构和响应体结构
+3. 说明鉴权方式（Token 放 Header 或 Query Param）
 
 ---
 
