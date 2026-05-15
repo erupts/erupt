@@ -2,8 +2,8 @@ package xyz.erupt.ai.service;
 
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import xyz.erupt.ai.core.AiToolboxManager;
 import xyz.erupt.ai.model.LLMRole;
-import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
