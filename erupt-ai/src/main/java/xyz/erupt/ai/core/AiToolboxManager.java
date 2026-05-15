@@ -1,4 +1,4 @@
-package xyz.erupt.ai.tool;
+package xyz.erupt.ai.core;
 
 import com.google.gson.JsonObject;
 import dev.langchain4j.agent.tool.Tool;
