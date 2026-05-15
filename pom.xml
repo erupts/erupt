@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>17</java.version>
-        <langchain4j.version>1.12.2</langchain4j.version>
+        <langchain4j.version>1.14.1</langchain4j.version>
         <spring.boot.version>3.5.13</spring.boot.version>
     </properties>
 
