@@ -1,44 +1,115 @@
 # Erupt Core REST API 参考
 
-所有接口前缀 `/erupt-api`，鉴权通过 `@EruptRouter` 注解控制（Token 默认放 Header）。
+所有接口前缀 `/erupt-api`。
+
+## 全局鉴权规则
+
+**除以下接口外，所有接口均必须携带 Token，否则返回 401/403：**
+
+| 无需 Token 的接口 | 说明 |
+|-----------------|------|
+| `GET /erupt-api/version` | 版本号 |
+| `GET /erupt-api/login` | 登录获取 Token |
+| `GET /erupt-api/code-img` | 验证码图片 |
+| `GET /erupt-api/open-api/create-token` | Open API 获取 Token |
+
+Token 传递方式（按优先级）：
+1. HTTP Header：`token: <token值>`
+2. URL 参数：`?_token=<token值>`（文件上传接口必须使用此方式）
+
+### Token 的两种来源
+
+| 场景 | 来源 | 获取方式 |
+|-----|------|---------|
+| **服务端/外部系统调用** | Open API | 用 `appid` + `secret` 调用 `/erupt-api/open-api/create-token` 获取 |
+| **嵌入页面（TPL）内调用** | 页面上下文 | Erupt 在渲染嵌入页面时会将当前登录用户的 Token 以 `_token` 参数注入到页面 URL 中，直接从 URL 读取即可 |
+
+**嵌入页面获取 Token 示例（JavaScript）：**
+```javascript
+const token = new URLSearchParams(location.search).get('_token');
+// 之后用于 API 调用
+fetch('/erupt-api/data/table/MyEntity', {
+  method: 'POST',
+  headers: { 'token': token, 'Content-Type': 'application/json' },
+  body: JSON.stringify({ pageIndex: 1, pageSize: 20 })
+});
+```
+
+> 嵌入页面中获取的 Token 即当前登录用户的 Token，调用 API 时权限与该用户完全一致，无需额外鉴权配置。
+
+### 具体模型接口的访问控制
+
+访问 `{erupt}` 相关接口时，框架还会做以下两层权限校验：
+
+| 权限层 | 规则 |
+|-------|------|
+| **超管绕过** | 超级管理员账号拥有所有 Erupt 的全部操作权限，不受菜单和 `@Power` 限制 |
+| **普通用户** | 必须在菜单管理中为该用户/角色分配了对应 Erupt 的访问菜单，且操作类型（新增/编辑/删除/导出等）须在 `@Power` 中开启 |
+
+> 即使接口路径和参数完全正确，普通用户未被授权的 Erupt 模型同样会返回权限错误。Open API 应用继承所绑定 `eruptUser` 的权限，绑定超管则拥有全部权限。
 
 ---
 
-## 路径参数的反射来源
+## 反射约束（核心规则）
 
-接口路径中的 `{erupt}`、`{field}`、`{tabName}`、`{fieldName}` 等参数**不是自由填写的字符串**，必须通过 Erupt 对象模型反射获取，填错会导致 404 或权限校验失败。
+Erupt 的所有接口参数均通过 Java 反射解析，**不接受数据库列名、显示标题或任何自定义字符串**。
 
-| 路径参数 | 来源 | 说明 |
-|---------|------|------|
-| `{erupt}` | `EruptModel.eruptName` | 即 `@Erupt` 所标注的 Java 类的**简单类名**（`Class.getSimpleName()`），如 `EruptUser`、`Order` |
-| `{field}` / `{fieldName}` | `EruptFieldModel.fieldName` | `@EruptField` 所标注的 Java **字段名**（非 `@View.title`、非数据库列名），如 `userType`、`dept` |
-| `{tabName}` | Tab 字段的字段名 | 与 `{fieldName}` 相同，取 `TAB_TABLE_ADD` / `TAB_TABLE_REFER` / `TAB_TREE` 类型字段的 Java 字段名 |
-| `{code}` | `@RowOperation.code` | 行操作注解上显式声明的 `code` 值 |
+### 路径参数
 
-### 获取方式
+| 路径参数 | 反射来源 | 示例 |
+|---------|---------|------|
+| `{erupt}` | `Class.getSimpleName()` — `@Erupt` 所标注类的简单类名 | `EruptUser`、`Order` |
+| `{field}` / `{fieldName}` | Java 字段名 — `@EruptField` 所在字段的声明名 | `userType`、`dept` |
+| `{tabName}` | Java 字段名 — `TAB_TABLE_ADD` / `TAB_TABLE_REFER` / `TAB_TREE` 类型字段名 | `orderItems` |
+| `{code}` | `@RowOperation.code` 显式声明值 | `"resetPwd"` |
 
-前端通过 `/erupt-api/build/{erupt}` 拿到完整模型后，可从中提取所有合法的字段名：
+### 请求体与查询参数的字段键
+
+反射约束**同样适用于请求体内部的字段键**，不仅限于路径：
+
+| 位置 | 规则 |
+|-----|------|
+| Modify 接口 Body 的 JSON key | Java 字段名（非数据库列名） |
+| 关联对象用 `.` 分隔 | `dept.id`（不是 `dept_id`） |
+| `TableQuery.condition[].key` | Java 字段名；跨关联对象用 `.`，如 `dept.name` |
+| `TableQuery.sort[].prop` | Java 字段名 |
+| 响应 `Map<String,Object>` 的 key | Java 字段名（读取时同规则） |
+
+### 从 EruptBuildModel 提取合法值
+
+调用 `/erupt-api/build/{erupt}` 后可从响应中提取所有合法标识：
 
 ```
 EruptBuildModel
   └── eruptModel.eruptFieldModels[]
-        └── fieldName        ← 即接口中的 {field} / {fieldName}
-  └── tabErupts              ← key 即 {tabName}
-  └── operationErupts        ← key 即 {code}（对应 @RowOperation.code）
+        └── fieldName          ← {field} / {fieldName} / body key / condition.key / sort.prop
+  └── tabErupts{}              ← key = {tabName}
+  └── operationErupts{}        ← key = {code}（对应 @RowOperation.code）
+  └── combineErupts{}          ← key = COMBINE 类型字段名
 ```
 
-### 反例
+### 正误对比
 
 ```
-# 错误：用了数据库列名
+# ❌ 用了数据库下划线列名
 POST /erupt-api/data/modify/EruptUser
-body: { "user_name": "tom" }   ❌  应为字段名 "username"
+body: { "user_name": "tom", "dept_id": 1 }
 
-# 错误：用了 @View.title
-GET /erupt-api/comp/choice-item/EruptUser/用户类型  ❌  应为字段名 "userType"
+# ✅ 用 Java 字段名，关联对象用对象引用
+POST /erupt-api/data/modify/EruptUser
+body: { "username": "tom", "dept": { "id": 1 } }
 
-# 正确
-GET /erupt-api/comp/choice-item/EruptUser/userType  ✅
+# ❌ 用了 @View.title 作路径参数
+GET /erupt-api/comp/choice-item/EruptUser/用户类型
+
+# ✅ 用 Java 字段名
+GET /erupt-api/comp/choice-item/EruptUser/userType
+
+# ❌ condition.key 用数据库列名
+condition: [{ "key": "dept_id", "value": "2" }]
+
+# ✅ 跨关联用点分隔
+condition: [{ "key": "dept.id", "value": "2", "conditionType": "EQ" }]
 ```
 
 ---
@@ -407,7 +478,97 @@ power:           PowerObject         // 当前用户权限
 
 ---
 
-## 鉴权说明
+## 鉴权体系
+
+### Token 传递方式
+
+所有需要鉴权的接口从请求中按以下优先级读取 Token（常量来自 `EruptReqHeaderConst`）：
+
+| 方式 | 示例 | 适用场景 |
+|-----|------|---------|
+| HTTP Header `token` | `token: xxxxxxxx` | 推荐，普通 API 调用 |
+| URL Query `_token` | `?_token=xxxxxxxx` | 文件上传/富文本图片上传（必须用此方式） |
+
+---
+
+### 方式一：普通用户登录（交互式）
+
+**`GET /erupt-api/login`**
+
+| 参数 | 必填 | 说明 |
+|-----|------|------|
+| `account` | ✓ | 用户账号 |
+| `pwd` | ✓ | 密码，默认需加密：`md5(md5(pwd) + 当月日期 + account)` |
+| `verifyCode` | — | 验证码（开启时必填） |
+| `verifyCodeMark` | — | 验证码标识 |
+
+> 密码加密可通过 `erupt-app.pwdTransferEncrypt=false` 关闭（不推荐生产环境）
+
+**Response: `LoginModel`**
+```json
+{
+  "pass": true,
+  "token": "xxxxxxxxxxxxxxxx",
+  "expire": "2026-05-15T10:45:00",
+  "reason": "",
+  "resetPwd": false,
+  "useVerifyCode": false
+}
+```
+
+- Token 有效期默认 **100 分钟**（`erupt.upms.expireTimeByLogin`，可配）
+- 无刷新机制，过期后重新登录
+
+---
+
+### 方式二：Open API（外部系统对接，推荐）
+
+适用于服务端程序调用，免去密码加密问题。
+
+#### 前置配置
+
+在管理后台 `Open API 管理` 中创建应用，系统自动生成：
+- `appid` — 以 `es` 开头的 16 位字母数字
+- `secret` — 24 位大写字母数字（可刷新，刷新后旧 secret 立即失效）
+- `expire` — token 有效期（分钟，默认 3600）
+- 绑定 `eruptUser` — 调用时继承该用户的菜单/数据权限
+
+#### 获取 Token
+
+**`GET /erupt-api/open-api/create-token`**
+
+| 参数 | 必填 | 说明 |
+|-----|------|------|
+| `appid` | ✓ | 应用 ID |
+| `secret` | ✓ | 应用密钥 |
+
+**Response: `OpenApiTokenVo`**
+```json
+{
+  "token": "ERxxxxxxxxxxxxxxxxxxxxxxxx",
+  "expireTime": "2026-05-15T10:45:00"
+}
+```
+
+- Open API token 以 `ER` 开头，便于区分普通用户 token
+- 同一 appid 同时只有一个有效 token，重复调用旧 token 自动失效
+- 过期后重新调用此接口获取新 token
+
+---
+
+### 其他鉴权相关接口
+
+| 接口 | 说明 |
+|-----|------|
+| `GET /erupt-api/logout` | 注销当前 token |
+| `GET /erupt-api/userinfo` | 获取当前用户信息 |
+| `GET /erupt-api/menu` | 获取当前用户有权限的菜单列表 |
+| `GET /erupt-api/code-img?mark=xx` | 获取验证码图片（无需鉴权） |
+| `GET /erupt-api/change-pwd?pwd=xx&newPwd=xx&newPwd2=xx` | 修改密码 |
+
+---
+
+### 接口权限级别
 
 | verifyType | 说明 |
 |-----------|------|
@@ -415,6 +576,4 @@ power:           PowerObject         // 当前用户权限
 | `MENU`    | 需要对应菜单权限 |
 | `ERUPT`   | 需要对应 Erupt 实体的操作权限 |
 
-Token 默认放 Request Header（`token: xxx`），文件上传接口可通过 Query Param 传递（`?_token=xxx`）。
-
-写入接口（新增/修改/删除）标记 `highSafe=true`，在高安全模式下会做额外身份校验。
+写入接口（新增/修改/删除）标记 `highSafe=true`，在高安全模式下做额外身份校验。
