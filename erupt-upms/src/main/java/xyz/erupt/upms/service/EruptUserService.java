@@ -161,7 +161,7 @@ public class EruptUserService {
     @Transactional
     public EruptApiModel changePwd(String account, String pwd, String newPwd, String newPwd2) {
         if (!newPwd.equals(newPwd2)) {
-            return EruptApiModel.errorMessageApi("修改失败，新密码与确认密码不匹配");
+            return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.change_pwd_inconsistent"));
         }
         EruptUser eruptUser = findEruptUserByAccount(account);
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
@@ -174,7 +174,7 @@ public class EruptUserService {
         }
         if (eruptUser.getPassword().equals(pwd)) {
             if (newPwd.equals(eruptUser.getPassword())) {
-                return EruptApiModel.errorMessageApi("修改失败，新密码不能和原始密码一样");
+                return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
             }
             eruptUser.setPassword(newPwd);
             eruptUser.setResetPwdTime(new Date());
@@ -184,7 +184,7 @@ public class EruptUserService {
             }
             return EruptApiModel.successApi();
         } else {
-            return EruptApiModel.errorMessageApi("密码错误");
+            return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.pwd_error"));
         }
     }
 
@@ -192,15 +192,19 @@ public class EruptUserService {
         return eruptDao.lambdaQuery(EruptUser.class).eq(EruptUser::getAccount, account).one();
     }
 
-    //获取登录用户名
+    //Get the logged-in account name
     public String getCurrentAccount() {
         Object account = sessionService.get(SessionKey.TOKEN_OLINE + eruptContextService.getCurrentToken());
         return null == account ? null : account.toString();
     }
 
-    //从当前用户菜单中，通过菜单类型值获取菜单
+    //Get a menu from the current user's menu list by menu type value
     public EruptMenu getEruptMenuByValue(String menuValue) {
-        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken(), menuValue.toLowerCase(), EruptMenu.class);
+        return getEruptMenuByValue(menuValue, eruptContextService.getCurrentToken());
+    }
+
+    public EruptMenu getEruptMenuByValue(String menuValue, String token) {
+        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + token, menuValue.toLowerCase(), EruptMenu.class);
     }
 
     public List<String> getEruptMenuValues() {
@@ -211,13 +215,13 @@ public class EruptUserService {
         return getEruptMenuValues().stream().collect(Collectors.toMap(it -> it, it -> true));
     }
 
-    //获取当前用户ID
+    //Get the current user ID
     public Long getCurrentUid() {
         MetaUserinfo metaUserinfo = getSimpleUserInfo();
         return null == metaUserinfo ? null : metaUserinfo.getId();
     }
 
-    //获取当前登录用户基础信息（缓存中查找）
+    //Get basic info of the currently logged-in user (from cache)
     public MetaUserinfo getSimpleUserInfo() {
         Object info = sessionService.get(SessionKey.USER_INFO + eruptContextService.getCurrentToken());
         return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
@@ -228,7 +232,7 @@ public class EruptUserService {
         return null == info ? null : gson.fromJson(info.toString(), MetaUserinfo.class);
     }
 
-    //获取当前登录用户对象(数据库中查找)
+    //Get the current logged-in user object (from database)
     public EruptUser getCurrentEruptUser() {
         Long uid = this.getCurrentUid();
         return null == uid ? null : eruptDao.getEntityManager().find(EruptUser.class, uid);

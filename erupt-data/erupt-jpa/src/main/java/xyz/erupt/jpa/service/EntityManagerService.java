@@ -135,7 +135,7 @@ public class EntityManagerService implements DisposableBean {
         }
     }
 
-    @Comment("必须手动执行 close() 方法")
+    @Comment("The close() method must be called manually")
     public EntityManager findEntityManager(String name) {
         return this.getEntityManagerFactory(name).createEntityManager();
     }

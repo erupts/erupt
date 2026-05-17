@@ -42,6 +42,13 @@ public class AiChatMessage extends BaseModel implements DataProxy<AiChatMessage>
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     private String content;
 
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    private String thinkingContent;
+
+    // JSON array of tool calls: [{"name":"...","args":"...","result":"..."}]
+    @Column(length = AnnotationConst.CONFIG_LENGTH)
+    private String toolCalls;
+
     private LocalDateTime createdAt;
 
     private Long agentId;
@@ -49,12 +56,22 @@ public class AiChatMessage extends BaseModel implements DataProxy<AiChatMessage>
     private Integer tokens;
 
     public static AiChatMessage create(Long chatId, String llm, String model, ChatSenderType senderType, String content, Integer tokens) {
+        return create(chatId, llm, model, senderType, content, null, null, tokens);
+    }
+
+    public static AiChatMessage create(Long chatId, String llm, String model, ChatSenderType senderType, String content, String thinkingContent, Integer tokens) {
+        return create(chatId, llm, model, senderType, content, thinkingContent, null, tokens);
+    }
+
+    public static AiChatMessage create(Long chatId, String llm, String model, ChatSenderType senderType, String content, String thinkingContent, String toolCalls, Integer tokens) {
         AiChatMessage chatMessage = new AiChatMessage();
         chatMessage.setChatId(chatId);
         chatMessage.setLlm(llm);
         chatMessage.setModel(model);
         chatMessage.setSenderType(senderType);
         chatMessage.setContent(content);
+        chatMessage.setThinkingContent(thinkingContent);
+        chatMessage.setToolCalls(toolCalls);
         chatMessage.setCreatedAt(LocalDateTime.now());
         chatMessage.setTokens(tokens);
         return chatMessage;

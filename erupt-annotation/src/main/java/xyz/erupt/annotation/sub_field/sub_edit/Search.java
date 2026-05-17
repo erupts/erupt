@@ -10,10 +10,10 @@ public @interface Search {
 
     boolean value() default true;
 
-    @Comment("高级查询")
+    @Comment("Advanced search")
     boolean vague() default false;
 
-    @Comment("是否必填")
+    @Comment("Whether the field is required")
     boolean notNull() default false;
 
 }

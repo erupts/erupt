@@ -34,6 +34,8 @@ public class EruptUserVo extends BaseModel {
     )
     private String name;
 
+    private Boolean status;
+
     public EruptUserVo() {
     }
 

@@ -2,7 +2,7 @@ window.setTimeout(function () {
     if (!window.eruptWebSuccess) {
         location.reload(true)
     }
-}, 1000 * 10);
+}, 1000 * 12);
 (function (date) {
     var __t__ = '' + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours() + date.getMinutes();
     document.write(
@@ -16,7 +16,7 @@ window.setTimeout(function () {
         } else {
             document.querySelector(".preloader").style.background = "#1890ff";
         }
-    }, 50)
+    }, 120)
 })(new Date())
 
 function SiriWave(opt) {

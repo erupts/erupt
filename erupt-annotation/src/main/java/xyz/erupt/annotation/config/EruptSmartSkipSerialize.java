@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Comment("根据字段覆盖情况智能校验是否需要序列化,目前的算法仅支持字段单次覆盖")
+@Comment("Intelligently checks whether serialization is needed based on field override status; the current algorithm only supports single-level field overrides")
 public @interface EruptSmartSkipSerialize {
 
 }

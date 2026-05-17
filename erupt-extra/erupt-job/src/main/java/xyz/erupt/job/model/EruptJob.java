@@ -3,7 +3,6 @@ package xyz.erupt.job.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,14 +45,14 @@ import xyz.erupt.toolkit.notify.RedisNotifyDataProxy;
 )
 @PreDataProxy(value = RedisNotifyDataProxy.class, params = JobMessageListener.JOB_TOPIC)
 @Entity
-@Table(name = "e_job", uniqueConstraints = @UniqueConstraint(columnNames = "code"))
+@Table(name = "e_job")
 @Component
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
 public class EruptJob extends MetaModelUpdateVo {
 
-    @Column(length = AnnotationConst.CODE_LENGTH)
+    @Column(length = AnnotationConst.CODE_LENGTH, unique = true)
     @EruptField(
             views = @View(title = "Code", width = "100px"),
             edit = @Edit(title = "Code", notNull = true, search = @Search(vague = true), readonly = @Readonly(add = false))

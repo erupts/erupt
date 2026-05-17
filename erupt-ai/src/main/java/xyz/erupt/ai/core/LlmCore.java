@@ -1,6 +1,5 @@
 package xyz.erupt.ai.core;
 
-import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.memory.ChatMemory;
@@ -14,19 +13,16 @@ import lombok.extern.slf4j.Slf4j;
 import xyz.erupt.ai.ask.EruptAiChat;
 import xyz.erupt.ai.config.AiProp;
 import xyz.erupt.ai.model.LLM;
-import xyz.erupt.ai.prompt.SystemPromptProvider;
+import xyz.erupt.ai.service.LLMRoleService;
 import xyz.erupt.ai.service.McpServerService;
-import xyz.erupt.ai.tool.AiToolboxManager;
 import xyz.erupt.ai.vo.mcp.McpClientInfo;
 import xyz.erupt.annotation.fun.ChoiceFetchHandler;
 import xyz.erupt.annotation.fun.VLModel;
 import xyz.erupt.core.context.MetaContext;
+import xyz.erupt.core.prompt.SystemPromptProvider;
 import xyz.erupt.core.util.EruptSpringUtil;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -69,7 +65,7 @@ public abstract class LlmCore {
         ChatMemory chatMemory = creatMemory(historyMessages);
         AiServices<EruptAiChat> eruptAiServices = AiServices.builder(EruptAiChat.class)
                 .chatModel(chatModel).chatMemoryProvider((id) -> chatMemory);
-        return this.buildAiServices(eruptAiServices, llmRequest).chat(userMessage).text();
+        return this.buildAiServices(eruptAiServices, llmRequest, null).chat(userMessage).text();
     }
 
     public void chatSse(LlmRequest llmRequest, String userMessage, List<ChatMessage> chatContext, Consumer<SseListener> listener) {
@@ -78,20 +74,23 @@ public abstract class LlmCore {
         AiServices<EruptAiChat> eruptAiServices = AiServices.builder(EruptAiChat.class)
                 .streamingChatModel(streamingChatModel).chatMemoryProvider((id) -> chatMemory);
         MetaContext metaContext = MetaContext.get();
-        this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest), userMessage, metaContext, listener);
+        this.streamingChat(this.buildAiServices(eruptAiServices, llmRequest, listener), userMessage, metaContext, listener);
     }
 
-    private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest) {
+    private EruptAiChat buildAiServices(AiServices<EruptAiChat> eruptAiServices, LlmRequest llmRequest, Consumer<SseListener> listener) {
         eruptAiServices.systemMessageProvider((id) -> {
             AiProp aiProp = EruptSpringUtil.getBean(AiProp.class);
             StringBuffer systemPrompt = new StringBuffer(aiProp.getSystemPrompt());
-            SystemPromptProvider.getRegisteredProviders().forEach(provider -> {
-                systemPrompt.append("\n\n").append(provider.getPrompt());
-            });
+            SystemPromptProvider.getRegisteredProviders().forEach(provider ->
+                    systemPrompt.append("\n\n").append(provider.getPrompt()));
+            String rolePrompt = EruptSpringUtil.getBean(LLMRoleService.class).getSystemPromptByUid(MetaContext.getUser().getUid());
+            if (rolePrompt != null && !rolePrompt.isBlank()) {
+                systemPrompt.append("\n\n").append(rolePrompt);
+            }
             return systemPrompt.toString();
         });
         if (llmRequest.getAutoCallTool()) {
-            eruptAiServices.toolProvider(buildTools());
+            eruptAiServices.toolProvider(buildTools(listener));
         }
         eruptAiServices.toolExecutionErrorHandler((throwable, e) -> {
             log.error("Tool execution error [{}] e: {}", throwable.getMessage(), e);
@@ -100,23 +99,41 @@ public abstract class LlmCore {
         return eruptAiServices.build();
     }
 
-    private ToolProvider buildTools() {
+    private ToolProvider buildTools(Consumer<SseListener> listener) {
         return (request) -> {
             ToolProviderResult.Builder builder = ToolProviderResult.builder();
-            AiToolboxManager.getTools().forEach(obj -> {
-                List<ToolSpecification> specs = ToolSpecifications.toolSpecificationsFrom(obj);
-                for (ToolSpecification spec : specs) {
-                    builder.add(spec, (executionRequest, memoryId) -> {
-                        Object result = AiToolboxManager.invoke(executionRequest);
-                        return null == result ? "" : result.toString();
-                    });
-                }
-            });
+            Set<String> allowedTools = EruptSpringUtil.getBean(LLMRoleService.class)
+                    .getAllowedToolsByUid(MetaContext.getUser().getUid());
+
+            AiToolboxManager.getTools().forEach(obj ->
+                    ToolSpecifications.toolSpecificationsFrom(obj).forEach(spec -> {
+                        if (allowedTools.contains(spec.name())) {
+                            builder.add(spec, (executionRequest, memoryId) -> {
+                                Object result = AiToolboxManager.invoke(executionRequest);
+                                String resultStr = null == result ? "" : result.toString();
+                                if (listener != null) {
+                                    listener.accept(SseListener.builder()
+                                            .toolName(executionRequest.name())
+                                            .toolArgs(executionRequest.arguments())
+                                            .toolResult(resultStr).build());
+                                }
+                                return resultStr;
+                            });
+                        }
+                    }));
             for (McpClientInfo value : McpServerService.getMCP_CLIENTS().values()) {
                 if (null != value.getMcpClient()) {
                     value.getMcpClient().listTools().forEach(spec ->
-                            builder.add(spec, (executionRequest, memoryId) ->
-                                    value.getMcpClient().executeTool(executionRequest).toString())
+                            builder.add(spec, (executionRequest, memoryId) -> {
+                                String result = value.getMcpClient().executeTool(executionRequest).toString();
+                                if (listener != null) {
+                                    listener.accept(SseListener.builder()
+                                            .toolName(executionRequest.name())
+                                            .toolArgs(executionRequest.arguments())
+                                            .toolResult(result).build());
+                                }
+                                return result;
+                            })
                     );
                 }
             }

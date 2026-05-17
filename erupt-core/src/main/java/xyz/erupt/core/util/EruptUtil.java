@@ -55,7 +55,7 @@ public class EruptUtil {
     // Extract the field marked as "erupt" from the "object" and place it into the "map".
 
     /**
-     * @param valueMapping 是否映射为真实值
+     * @param valueMapping whether to map to the actual value
      */
     @SneakyThrows
     public static Map<String, Object> generateEruptDataMap(EruptModel eruptModel, Object obj, boolean valueMapping) {
@@ -101,8 +101,8 @@ public class EruptUtil {
                         }
                         referMap.put(label, ReflectUtil.findFieldChain(label, value));
                         for (View view : eruptField.views()) {
-                            //修复表格列无法显示子类属性（例如xxx.yyy.zzz这样的列配置）的缺陷，要配合前端的bug修复。
-                            //修复一对多情况下无法显示子类属性的问题 
+                            // Fix the defect where table columns cannot display sub-class properties (e.g. column config like xxx.yyy.zzz), requires a corresponding frontend bug fix.
+                            // Fix the issue where sub-class properties cannot be displayed in one-to-many relationships
                             String columnKey = view.column().replace(EruptConst.DOT, "_");
                             Object columnValue = ReflectUtil.findFieldChain(view.column(), value);
                             referMap.put(columnKey, columnValue);
@@ -381,7 +381,7 @@ public class EruptUtil {
             JsonElement value = jsonObject.get(field.getFieldName());
             Edit edit = field.getEruptField().edit();
             if (null != value && !value.isJsonNull()) {
-                //代码编辑器类型加密传输后解密
+                // Decrypt the encrypted transmission for the code editor type
                 if (edit.type() == EditType.CODE_EDITOR) {
                     jsonObject.addProperty(field.getFieldName(), SecretUtil.decodeSecret(value.getAsString()));
                 } else {

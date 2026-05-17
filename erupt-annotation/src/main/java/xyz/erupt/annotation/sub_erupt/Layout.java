@@ -2,25 +2,25 @@ package xyz.erupt.annotation.sub_erupt;
 
 public @interface Layout {
 
-    //表单大小
+    //Form size
     FormSize formSize() default FormSize.DEFAULT;
 
-    //表格左侧固定列数量
+    //Number of fixed columns on the left side of the table
     int tableLeftFixed() default 0;
 
-    //表格右侧列固定数量
+    //Number of fixed columns on the right side of the table
     int tableRightFixed() default 0;
 
-    //分页方式
+    //Paging mode
     PagingType pagingType() default PagingType.BACKEND;
 
-    //分页大小
+    //Page size
     int pageSize() default 10;
 
-    //可选分页数
+    //Available page size options
     int[] pageSizes() default {10, 20, 30, 50, 100, 300, 500};
 
-    //数据更新时间，单位：毫秒
+    //Data refresh interval in milliseconds
     int refreshTime() default -1;
 
     String tableWidth() default "";
@@ -28,18 +28,18 @@ public @interface Layout {
     String tableOperatorWidth() default "";
 
     enum FormSize {
-        //默认
+        //Default
         DEFAULT,
-        //整行
+        //Full line
         FULL_LINE
     }
 
     enum PagingType {
-        //后端分页
+        //Backend paging
         BACKEND,
-        //前端分页
+        //Frontend paging
         FRONT,
-        //不分页，最多显示：pageSizes[pageSizes.length - 1] * 10 条
+        //No paging; maximum display: pageSizes[pageSizes.length - 1] * 10 records
         NONE
     }
 

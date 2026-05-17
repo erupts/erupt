@@ -2,7 +2,6 @@ package xyz.erupt.ai.cube;
 
 import xyz.erupt.annotation.cube.Dimension;
 import xyz.erupt.annotation.cube.EruptCube;
-import xyz.erupt.annotation.cube.FieldType;
 import xyz.erupt.annotation.cube.Measure;
 
 import java.util.Date;
@@ -23,8 +22,8 @@ import java.util.Date;
                        agent.name          as agent
                 from e_ai_chat_message message
                          inner join e_ai_chat chat on chat.id = message.chat_id
-                         inner join e_upms_user user on chat.user_id = user.id
-                         inner join e_ai_llm_agent agent on agent.id = message.agent_id
+                         left join e_upms_user user on chat.user_id = user.id
+                         left join e_ai_llm_agent agent on agent.id = message.agent_id
                 """
 )
 public class EruptAIChatCube {
@@ -44,7 +43,7 @@ public class EruptAIChatCube {
     @Dimension(title = "Agent")
     private String agent;
 
-    @Dimension(title = "Date", type = FieldType.DATE)
+    @Dimension(title = "Date")
     private Date createdAt;
 
     @Measure(title = "Message Count", sql = "count(*)")

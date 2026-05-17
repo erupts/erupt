@@ -46,7 +46,7 @@ public class EruptModel implements Cloneable {
 
     private List<EruptFieldModel> eruptFieldModels;
 
-    //默认查询条件
+    // Default search condition
     private Map<String, Object> searchCondition;
 
     private boolean extraRow = false;

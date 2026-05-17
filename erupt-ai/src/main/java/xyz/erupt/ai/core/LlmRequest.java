@@ -26,6 +26,8 @@ public class LlmRequest {
 
     private Boolean strictTools = true;
 
+    private boolean thinking = false;
+
     private ResponseFormat responseFormat = ResponseFormat.text;
 
 }

@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * @author YuePeng
  * date 2021/2/13 20:10
  */
-@Comment("自定义登录逻辑，需在spring boot入口类中修饰")
+@Comment("Custom login logic; must annotate the Spring Boot entry class")
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented

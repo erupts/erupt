@@ -17,8 +17,8 @@ public @interface CardView {
     String coverField() default "";
 
     enum CoverEffect {
-        FIT, //适应
-        CLIP, //剪裁
+        FIT, //Fit
+        CLIP, //Clip
     }
 
 }

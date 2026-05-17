@@ -2,8 +2,10 @@ package xyz.erupt.ai_claw.tool;
 
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
+import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import xyz.erupt.ai_claw.prop.EruptAiClawProp;
 import xyz.erupt.annotation.ai.AiToolbox;
 
 import java.io.File;
@@ -14,6 +16,9 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnProperty(name = "erupt.ai.claw.enabled", havingValue = "true")
 public class EruptSystemTools {
 
+    @Resource
+    private EruptAiClawProp eruptAiClawProp;
+
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("win");
 
     @Tool("Execute a shell command on the server. On Windows uses cmd /c, on Unix uses bash -c. " +
@@ -22,6 +27,9 @@ public class EruptSystemTools {
             @P("Shell command to execute.") String command,
             @P("Working directory for the command. Defaults to user home if not specified.") String workdir,
             @P("Timeout in seconds before the command is forcibly terminated. Default is 30.") int timeoutSeconds) {
+        if (!eruptAiClawProp.isEnableExecShell()){
+            return "Shell execution is disabled";
+        }
         try {
             ProcessBuilder pb = IS_WINDOWS
                     ? new ProcessBuilder("cmd", "/c", command)

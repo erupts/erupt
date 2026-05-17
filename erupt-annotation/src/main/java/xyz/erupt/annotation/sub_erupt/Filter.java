@@ -12,14 +12,14 @@ import java.beans.Transient;
 public @interface Filter {
 
     @Transient
-    @Comment("数据过滤表达式")
+    @Comment("Data filter expression")
     String value() default "";
 
     @Transient
-    @Comment("可被conditionHandler获取")
+    @Comment("Can be retrieved by conditionHandler")
     String[] params() default {};
 
     @Transient
-    @Comment("动态处理过滤条件")
+    @Comment("Dynamically process filter conditions")
     Class<? extends FilterHandler> conditionHandler() default FilterHandler.class;
 }

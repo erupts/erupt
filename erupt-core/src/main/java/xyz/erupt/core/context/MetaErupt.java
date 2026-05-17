@@ -13,7 +13,7 @@ public class MetaErupt {
 
     private String name;
 
-    private String menuValue; //当前菜单值
+    private String menuValue; // current menu value
 
     public MetaErupt(String name) {
         this.name = name;

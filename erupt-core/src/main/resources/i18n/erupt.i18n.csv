@@ -33,6 +33,13 @@ Open Link in New Window,新窗口打开链接,新窗口打開鏈接,A new window
 Open Link in Current Window,本窗口打开链接,本窗口打開鏈接,This window opens the link,Cette fenêtre ouvre le lien,このウィンドウはリンクを開きます。,이 창에서 링크를 엽니다,Это окно открывает связь,Esta ventana abre el enlace,Hier öffnen sie den link,Esta janela abre o link,Tautan ke jendela ben,هذه النافذة مفتوحة الرابط
 Full Screen,充满屏幕,充滿屏幕,Fill the screen,Remplissez votre écran,スクリーンいっぱいです,화면 채우기,Полный экран.,Llena la pantalla,Das ist voll.,Encha a tela,Layar penuh,مليئة بالشاشة
 Page Route,页面路由,頁面路由,Page routing,Itinéraire des pages,ページルーティングです,페이지 라우팅,Маршрутизация страницы,Ruta de páginas,Seiten und router,Rota de páginas,Rute halaman,توجيه الصفحة
-Multidimensional Report,多维报表,多維報表,Multidimensional report,Rapports multidimensionnels,多次元レポートです,다웨이 보고서,Многомерный отчет,Informes multidimensionales,Einen multidimensionalen bericht.,Relatórios multidimensionais,Laporan interdimensional,بيانات متعددة الأبعاد
 menu_type_tpl_iframe,自定义页面（iframe）,自定義頁面（iframe）,Custom Page (Iframe),Page Personnalisée (Iframe),カスタムページ（Iframe）,사용자 정의 페이지 (Iframe),Пользовательская страница (Iframe),Pagina Personalizzata (Iframe),"Seiten, Die Eingedefiniert Sind (Iframe)",Página Personalizada (Iframe),Halaman Suai (Iframe),صفحة مخصصة (Iframe)
 menu_type_tpl_micro,自定义页面（微前端）,自定義頁面（微前端）,Custom Page (Micro Frontend),Page Personnalisée (Micro-Frontend),カスタムページ（マイクロフロントエンド）,사용자 정의 페이지 (마이크로 프론트엔드),Пользовательская страница (Микрофронтенд),Pagina Personalizzata (Micro-Frontend),"Seiten Werden Benutzerdefiniert (In Der Vorderseite)",Páginas Personalizadas (Micro Front-End),Halaman Suai (Ujung Mikro),صفحة مخصصة (مقدمة مصغرة)
+
+code,编码,編碼,Code,codage,コード化です,인 코딩,закодирова,codificación,Codes.,A codificação,kode,الترميز
+name,名称,名稱,Title,dénomination,名前です,이름,назван,El nombre,nachname,O nome,nama,اسم
+title,标题,標題,Title,Titre,タイトル,제목,Заголовок,Título,Titel,Título,Judul,العنوان
+status,状态,狀態,Status,Statut,ステータス,상태,Состояние,Estado,Status,Estado,Estado,الحالة
+content,内容,內容,Content,Contenu,内容,내용,Содержание,Contenido,Inhalt,Conteúdo,Konten,المحتوى
+remark,备注,備註,Remark,remarques,備考です,비고,примечан,comentar,bemerkungen,observações,catatan,ملحوظة رقم
+owning_group,所属分组,所屬分組,Owning group,Appartenance au groupe,所属グループです,속한 그룹,Место в группе,Pertenencia al grupo,Und teilen sie sich auf.,Pertença ao grupo,Secara kelompok,مجموعتنا الفرعية

@@ -8,6 +8,6 @@ import xyz.erupt.annotation.config.Comment;
  */
 public interface FilterHandler {
 
-    String filter(@Comment("过滤表达式") String condition, @Comment("注解参数") String[] params);
+    String filter(@Comment("filter expression") String condition, @Comment("annotation parameters") String[] params);
 
 }

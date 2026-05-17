@@ -1,5 +1,6 @@
 package xyz.erupt.cloud.server.service;
 
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import xyz.erupt.cloud.server.config.EruptCloudServerProp;
 import xyz.erupt.cloud.server.model.CloudNode;
@@ -8,7 +9,6 @@ import xyz.erupt.cloud.server.node.NodeManager;
 import xyz.erupt.cloud.server.node.NodeWorker;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import jakarta.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class EruptNodeMicroservice {
 
     public void safeRemoveInstance(String nodeName, String accessToken) {
         this.findNodeByAppName(nodeName, accessToken);
-        nodeWorker.run(); // 轮询nodeName下所有ip节点可用情况
+        nodeWorker.run(); // Poll the availability of all IP instances under the nodeName
     }
 
 }

@@ -14,9 +14,9 @@ import java.lang.annotation.*;
 @Inherited
 public @interface EruptDataProcessor {
 
-    @Comment("1、实现 xyz.erupt.core.service.IEruptDataService 接口")
-    @Comment("2、将实现类通过：DataProcessorManager.register('数据源名称', EruptDataServiceXxx.class); 方法注册")
-    @Comment("3、value值为已注册 '数据源' 名称")
+    @Comment("1. Implement the xyz.erupt.core.service.IEruptDataService interface")
+    @Comment("2. Register the implementation class via: DataProcessorManager.register('dataSourceName', EruptDataServiceXxx.class);")
+    @Comment("3. The value is the name of an already registered 'data source'")
     String value();
 
 }

@@ -11,10 +11,10 @@ import java.util.Map;
  */
 public interface ChoiceFetchHandler {
 
-    @Comment("获取下拉列表")
+    @Comment("Fetch dropdown list")
     List<VLModel> fetch(String[] params);
 
-    @Comment("下拉列表联动过滤，结果要保证包含fetch()的所有选项")
+    @Comment("Linked filtering for dropdown list; result must include all options from fetch()")
     default List<VLModel> fetchFilter(Map<String, Object> value, String[] params) {
         return this.fetch(params);
     }

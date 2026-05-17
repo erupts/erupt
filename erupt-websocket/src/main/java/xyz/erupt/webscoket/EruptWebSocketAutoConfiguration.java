@@ -2,6 +2,7 @@ package xyz.erupt.webscoket;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -38,6 +39,7 @@ public class EruptWebSocketAutoConfiguration implements EruptModule {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
     }

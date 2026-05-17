@@ -32,10 +32,12 @@ public class Page {
 
     private Long total;
 
-    @Comment("Map → value 复杂对象时需做特殊处理，如：{region:{id:1,name:'xxxx'}},则需转换成：region_name 前端才可正常渲染")
+    @Comment("Map → when the value is a complex object, special handling is required. For example: {region:{id:1,name:'xxxx'}} must be converted to region_name for the frontend to render correctly")
     private Collection<Map<String, Object>> list;
 
     private Alert alert;
+
+    private String extraContent;
 
     public void setTotal(Long total) {
         this.total = total;

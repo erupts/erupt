@@ -1,0 +1,4 @@
+key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
+excel.parse_error,Excel解析异常，出错行数：%s，原因：%s,Excel解析異常，出錯行數：%s，原因：%s,Excel parsing failed at row %s: %s,Erreur d'analyse Excel à la ligne %s : %s,Excel解析エラー、エラー行：%s、原因：%s,Excel 파싱 오류 (행 %s): %s,Ошибка разбора Excel в строке %s: %s,Error al parsear Excel en la fila %s: %s,Excel-Parsing-Fehler in Zeile %s: %s,Erro ao analisar Excel na linha %s: %s,Kesalahan parsing Excel di baris %s: %s,خطأ في تحليل Excel في الصف %s: %s
+excel.row_error,第%s行，%s,第%s行，%s,Row %s: %s,Ligne %s : %s,%s行目：%s,%s행: %s,Строка %s: %s,Fila %s: %s,Zeile %s: %s,Linha %s: %s,Baris %s: %s,الصف %s: %s
+excel.import_error,数据导入异常，原因：%s,數據導入異常，原因：%s,Data import failed: %s,Erreur d'importation des données : %s,データインポートエラー：%s,데이터 가져오기 오류: %s,Ошибка импорта данных: %s,Error al importar datos: %s,Fehler beim Datenimport: %s,Erro ao importar dados: %s,Kesalahan impor data: %s,خطأ في استيراد البيانات: %s

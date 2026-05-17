@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 import xyz.erupt.annotation.fun.DataProxy;
@@ -35,6 +36,7 @@ import java.util.List;
 @PreDataProxy(LookerOrg.Comp.class)
 @Getter
 @Setter
+@EruptI18n
 public class LookerOrg extends BaseModel {
 
     @ManyToOne

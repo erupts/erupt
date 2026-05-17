@@ -62,7 +62,7 @@ public class NodeManager {
         redisTemplate.delete(geneKey(nodeName));
     }
 
-    //移除指定实例
+    //Remove the specified instance
     public void removeNodeInstance(String nodeName, String instanceAddress) {
         MetaNode metaNode = getNode(nodeName);
         metaNode.getLocations().removeIf(it -> it.equals(instanceAddress));

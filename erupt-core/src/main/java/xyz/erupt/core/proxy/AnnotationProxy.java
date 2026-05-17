@@ -4,7 +4,7 @@ import lombok.SneakyThrows;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.framework.ProxyFactory;
-import xyz.erupt.linq.lambda.LambdaSee;
+import xyz.erupt.core.util.EruptProxyUtil;
 import xyz.erupt.linq.lambda.SFunction;
 
 import java.lang.annotation.Annotation;
@@ -32,7 +32,7 @@ public abstract class AnnotationProxy<A, PA> {
         return this.newProxy(annotation, null);
     }
 
-    //创建注解注解代理类
+    // Create an annotation proxy class
     public A newProxy(A annotation, AnnotationProxy<PA, ?> parent) {
         this.parent = parent;
         this.rawAnnotation = annotation;
@@ -50,7 +50,7 @@ public abstract class AnnotationProxy<A, PA> {
     }
 
     public <T extends Annotation, R> boolean matchMethod(MethodInvocation invocation, SFunction<T, R> annoLambda) {
-        return invocation.getMethod().getName().equals(LambdaSee.method(annoLambda));
+        return EruptProxyUtil.matchMethod(invocation, annoLambda);
     }
 
 }

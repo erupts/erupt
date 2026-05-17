@@ -12,9 +12,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 @Documented
-@Comment("多数据源注解")
+@Comment("Multiple data source annotation")
 public @interface EruptDataSource {
 
-    @Comment("多数据源名称：erupt.dbs[i].datasource.name")
+    @Comment("Multiple data source name: erupt.dbs[i].datasource.name")
     String value();
 }

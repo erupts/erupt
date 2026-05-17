@@ -14,10 +14,10 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Documented
 @Import({EruptApplication.class})
-@Comment("Erupt项目包扫描核心注解")
+@Comment("Core annotation for Erupt project package scanning")
 public @interface EruptScan {
 
-    @Comment("需要被扫描的包名")
+    @Comment("Package names to be scanned")
     String[] value() default {};
 
 }

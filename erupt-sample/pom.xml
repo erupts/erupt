@@ -6,15 +6,18 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.14.1</version>
+        <version>1.14.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>erupt-sample</artifactId>
-    <name>erupt-sample</name>
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <central.publishing.skip>true</central.publishing.skip>
     </properties>
+
+    <artifactId>erupt-sample</artifactId>
+    <name>erupt-sample</name>
+
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>
@@ -33,7 +36,17 @@
         </dependency>
         <dependency>
             <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-terminal</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
             <artifactId>erupt-ai</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-ai-claw</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
@@ -74,5 +87,24 @@
 <!--            </plugin>-->
 <!--        </plugins>-->
 <!--    </build>-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <executions>
+                    <execution>
+                        <id>injected-central-publishing</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skipPublishing>true</skipPublishing>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

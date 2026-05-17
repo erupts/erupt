@@ -22,7 +22,7 @@ public class CloudServerUtil {
         return null == eruptCloudServer ? null : EruptSpringUtil.getBean(eruptCloudServer.value());
     }
 
-    //Node节点健康检查
+    //Node health check
     public static boolean nodeHealth(String nodeName, String location) {
         try (HttpResponse httpResponse = HttpUtil.createGet(location + CloudRestApiConst.NODE_HEALTH).timeout(1000).execute()) {
             String body = httpResponse.body();
@@ -37,7 +37,7 @@ public class CloudServerUtil {
         }
     }
 
-    //可重试的node节点检查
+    //Retryable node health check
     @SneakyThrows
     public static boolean retryableNodeHealth(String nodeName, String location, int reqNum, int retryableGap) {
         if (reqNum <= 0) {

@@ -1,6 +1,8 @@
 key,zh-CN,zh-TW,en-US,fr-FR,ja-JP,ko-KR,ru-RU,es-ES,de-DE,pt-PT,id-ID,ar-SA
 AI Manager,AI 管理,AI 管理,AI Manager,Gestionnaire d'IA,AIマネージャー,AI 매니저,AI-менеджер,Gestor de IA,KI-Manager,Gestor de IA,Manajer AI,مدير الذكاء الاصطناعي
 Agent,智能体,智能體,Agent,Agent,エージェント,에이전트,Агент,Agente,Agent,Agente,Agen,وكيل
+AI Role,AI 设定,AI 設定,AI Role,Configuration de rôle IA,AI ロール設定,AI 역할 구성,Роль ИИ,Rol IA,KI-Rolle,Papel IA,Peran AI,دور الذكاء الاصطناعي
+System Prompt,系统提示词,系統提示詞,System Prompt,Invite système,システムプロンプト,시스템 프롬프트,Системный запрос,Prompt del sistema,System-Prompt,Prompt do sistema,Prompt Sistem,تلميح النظام
 AI Chat,AI 对话,AI 對話,AI Chat,Discussion IA,AIチャット,AI 채팅,AI-чат,Chat de IA,KI-Chat,Chat de IA,Obrolan AI,دردشة الذكاء الاصطناعي
 Model Test,模型测试,模型測試,Model Test,Test de modèle,モデルテスト,모델 테스트,Тест модели,Prueba del modelo,Modelltest,Teste de modelo,Uji Model,اختبار النموذج
 Default Chat Model,默认对话模型,預設對話模型,Default Chat Model,Modèle de chat par défaut,デフォルトチャットモデル,기본 채팅 모델,Модель чата по умолчанию,Modelo de chat predeterminado,Standard-Chat-Modell,Modelo de chat padrão,Model Chat Default,نموذج الدردشة الافتراضي

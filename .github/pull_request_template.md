@@ -1,10 +1,18 @@
-#### 说明
+### Version Information
 
-1. 请确认你提交的PR是到 'develop' 分支，否则我会手动修改代码并关闭PR。
-2. 请确认没有更改代码风格（如tab缩进）
-3. 新特性添加请确认注释完备，如有必要，请在src/test/java下添加Junit测试用例
+JDK Version: openjdk_8_201
+Erupt Version: 1.X.X (please confirm the issue still exists on the latest version)
 
-### 修改描述(包括说明bug修复或者添加新特性)
+### Issue Description (screenshots included)
 
-1. [bug修复] balabala……
-2. [新特性]  balabala……
+1. Reproduction code
+```java
+@Erupt(name="xxx")
+public class Test {
+
+}
+```
+
+2. Stack trace
+
+3. Related test files (make sure to remove sensitive information)

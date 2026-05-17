@@ -18,9 +18,7 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "erupt-app")
 public class EruptAppProp {
 
-    public static final String DEFAULT_LANG = "zh-CN";
-
-    //是否显示水印
+    //Whether to display a watermark
     private boolean waterMark = true;
 
     //水印是否显示日期
@@ -30,34 +28,35 @@ public class EruptAppProp {
     private String waterMarkContent = "内部数据";
 
     //登录失败几次出现验证码，0表示一直要求输入验证码
+    //Number of login failures before showing a verification code; 0 means always require a verification code
     private Integer verifyCodeCount = 2;
 
-    //登录密码是否加密传输
+    //Whether to encrypt the login password during transmission
     private Boolean pwdTransferEncrypt = true;
 
-    //自定义登录页路径，支持http网络路径
+    //Custom login page path, supports HTTP URL
     private String loginPagePath;
 
-    //多语言配置
+    //Multi-language configuration
     private String[] locales = {
-            DEFAULT_LANG, // 🇨🇳 简体中文
-            "zh-TW",      // 🇭🇰 繁体中文
             "en-US",      // 🇬🇧 English
             "fr-FR",      // 🇫🇷 En français
+            "de-DE",      // 🇩🇪 Deutsch
+            "zh-CN",      // 🇨🇳 简体中文
+            "zh-TW",      // 🇭🇰 繁体中文
             "ja-JP",      // 🇯🇵 日本語
             "ko-KR",      // 🇰🇷 한국어
             "ru-RU",      // 🇷🇺 русск
             "es-ES",      // 🇪🇸 español
-            "de-DE",      // 🇩🇪 Deutsch
             "pt-PT",      // 🇵🇹 Português
             "id-ID",      // 🇮🇩 Bahasa Indonesia
             "ar-SA",      // 🇸🇦 العربية
     };
 
-    //自定义配置
+    //Custom configuration
     private Map<String, Object> properties = new HashMap<>();
 
-    //重置密码功能开关
+    //Toggle for the reset password feature
     private Boolean resetPwd = true;
 
     private Integer hash;
@@ -66,13 +65,13 @@ public class EruptAppProp {
 
     public void setLocales(String[] locales) {
         if (null == locales || locales.length == 0) {
-            this.locales = new String[]{DEFAULT_LANG};
+            this.locales = new String[]{"en-US"};
         } else {
             this.locales = locales;
         }
     }
 
-    //注册自定义属性
+    //Register custom properties
     public void registerProp(String key, Object value) {
         this.properties.put(key, value);
     }

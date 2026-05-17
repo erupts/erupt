@@ -12,20 +12,20 @@ import java.beans.Transient;
  */
 public @interface Tree {
 
-    @Comment("树存储列")
+    @Comment("Tree storage column")
     String id() default AnnotationConst.ID;
 
-    @Comment("树展示列")
+    @Comment("Tree display column")
     String label() default AnnotationConst.LABEL;
 
-    @Comment("父级节点标识列")
+    @Comment("Parent node identifier column")
     String pid() default "";
 
-    @Comment("展开层级数")
+    @Comment("Number of expanded levels")
     int expandLevel() default 999;
 
     @Transient
-    @Comment("标识pid为何特征才是根节点，不配置则默认按照 null 作为根节点，需要与 filter 配合使用")
+    @Comment("Identifies what characteristic of pid marks a root node; defaults to null as the root if not configured; must be used together with filter")
     Expr rootPid() default @Expr;
 
 }

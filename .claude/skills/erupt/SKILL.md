@@ -1,3 +1,8 @@
+---
+name: erupt
+description: Erupt 开发助手，专注低代码框架注解开发。触发条件：用户新增/修改 @Erupt 类或 @EruptField 字段、配置表格列/表单/权限/按钮/钻取/树视图、添加多语言 i18n、编写 DataProxy/Handler/Service 查询逻辑、创建 @EruptCube 数据立方体、调用或对接 Erupt REST API 接口、使用 @Tpl 生成嵌入交互页面或给指定模型生成自定义视图页面。
+---
+
 # Erupt 开发助手
 
 你是 Erupt 低代码框架的专家开发助手。Erupt 通过 Java 注解驱动自动生成后台管理 UI，无需前端代码。
@@ -10,6 +15,8 @@
 | 添加多语言支持、生成/维护 i18n CSV | `references/erupt-i18n.md` |
 | 在 DataProxy/Service/Handler 中查询数据库 | `references/erupt-lambda-query.md` |
 | 新建 `@EruptCube` 类、生成维度和指标、修改 Cube 字段 | `references/erupt-cube.md` |
+| 调用/对接 Erupt REST API、查询接口路径/参数/响应结构 | `references/erupt-api.md` |
+| 生成嵌入交互页面（TPL）、给定模型名生成数据表格/表单页 | `references/erupt-tpl.md` |
 
 ---
 
@@ -59,6 +66,31 @@
    - **Step 4** 非 JPA 实体的指标字段必须加 `@Transient`
 3. `@Dimension(sql=...)` 填 SQL 列名或别名，不是 Java 字段名
 4. `@Measure(sql=...)` 填完整聚合表达式，如 `count(*)`、`sum(amount)`
+
+---
+
+## 领域六：TPL 嵌入交互页面（`erupt-tpl.md`）
+
+**触发**：用户说"生成一个页面"、"给这个模型做个自定义视图"、"嵌入一个交互表格"、"用 TPL 展示数据"等。
+
+**执行**：
+1. 读取 `references/erupt-tpl.md`
+2. 按四步流程：确认字段名 → 选触发方式 → 选 UI 框架 → 生成模板
+3. 模板中 `{erupt}` 用类简名，字段键用 Java 字段名，token 从 URL `_token` 取
+4. 默认使用 Element Plus（Vue 3），除非用户指定其他框架
+
+---
+
+## 领域五：REST API 对接（`erupt-api.md`）
+
+**触发**：用户询问接口路径、请求参数、响应结构，或需要从外部系统/前端直接调用 Erupt 后端接口。
+
+**执行**：
+1. 读取 `references/erupt-api.md`
+2. 给出完整的接口路径、HTTP 方法、请求体结构和响应体结构
+3. 说明鉴权方式（Token 放 Header 或 Query Param）
+4. **反射约束**：路径中的 `{erupt}` = Java 类名，`{field}` = Java 字段名；请求体 JSON key、`condition[].key`、`sort[].prop` 同为 Java 字段名，不是数据库列名或显示标题，关联对象用 `dept.id` 点分隔形式
+5. **Token 必传**：除登录、验证码、版本号三个接口外，所有接口均需携带 Token；具体 Erupt 模型的操作权限还取决于用户是否为超管，或是否通过菜单管理分配了对应权限
 
 ---
 

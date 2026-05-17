@@ -53,12 +53,12 @@ public class MetaContext {
         return threadLocal.get().vars;
     }
 
-    //注册erupt上下文
+    // Register the erupt context
     public static void register(MetaErupt metaErupt) {
         threadLocal.get().setMetaErupt(metaErupt);
     }
 
-    //注册用户上下文
+    // Register the user context
     public static void register(MetaUser metaUser) {
         threadLocal.get().setMetaUser(metaUser);
     }

@@ -33,12 +33,12 @@ public class EruptNoticeService {
     private EruptUserService eruptUserService;
 
     /**
-     * 发送通知
+     * Send notification
      *
-     * @param abstractNoticeChannel 通知渠道
-     * @param scene                 通知场景
-     * @param receiveUsers          接收用户ID列表
-     * @param noticeMessage         通知消息
+     * @param abstractNoticeChannel Notice channel
+     * @param scene                 Notice scene
+     * @param receiveUsers          List of recipient user IDs
+     * @param noticeMessage         Notice message
      */
     @Transactional
     public void send(AbstractNoticeChannel abstractNoticeChannel, String scene, List<Long> receiveUsers, NoticeMessage noticeMessage) {

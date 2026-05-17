@@ -19,52 +19,52 @@ import java.lang.annotation.*;
 @Documented
 public @interface Erupt {
 
-    @Comment("主键列名")
+    @Comment("Primary key column name")
     @Language(value = "java", prefix = "private String ", suffix = ";")
     String primaryKeyCol() default "id";
 
     @Transient
-    @Comment("功能名称")
+    @Comment("Feature name")
     String name();
 
-    @Comment("功能描述")
+    @Comment("Feature description")
     String desc() default "";
 
     @Transient
-    @Comment("访问该功能是否进行校验权限")
+    @Comment("Whether to verify permissions when accessing this feature")
     boolean authVerify() default true;
 
     @Transient
-    @Comment("操作权限配置")
+    @Comment("Operation permission configuration")
     Power power() default @Power;
 
-    @Comment("自定义功能按钮")
+    @Comment("Custom operation buttons")
     RowOperation[] rowOperation() default {};
 
-    @Comment("数据钻取")
+    @Comment("Data drill-down")
     Drill[] drills() default {};
 
     @Transient
-    @Comment("数据过滤表达式")
+    @Comment("Data filter expression")
     Filter[] filter() default {};
 
     @Transient
-    @Comment("排序表达式")
+    @Comment("Sort expression")
     @Language(value = "hql", prefix = "select * from t order by ")
     String orderBy() default "";
 
     @Transient
-    @Comment("数据行为代理接口，对增、删、改、查等行为做逻辑处理")
+    @Comment("Data behavior proxy interface; handles logic for add, delete, update, query, and other operations")
     Class<? extends DataProxy<?>>[] dataProxy() default {};
 
-    @Comment("此值可在dataProxy内被DataProxyContext.get()方法中获取到")
+    @Comment("This value can be retrieved via DataProxyContext.get() inside dataProxy")
     String[] dataProxyParams() default {};
 
-    @Comment("树视图配置")
+    @Comment("Tree view configuration")
     Tree tree() default @Tree;
 
     @Match("#value.field() != ''")
-    @Comment("左树右表配置项")
+    @Comment("Left-tree right-table configuration")
     LinkTree linkTree() default @LinkTree(field = "");
 
     Layout layout() default @Layout;
@@ -74,7 +74,7 @@ public @interface Erupt {
     Vis[] vis() default {};
 
     @ToMap(key = "key")
-    @Comment("自定义扩展参数")
+    @Comment("Custom extension parameters")
     KV[] param() default {};
 
     Class<? extends Annotation>[] extra() default {};
