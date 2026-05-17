@@ -33,26 +33,8 @@ window.eruptSiteConfig = {
                 transition: all .2s;
             ">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                快速构建
+                一键快速构建同款
             </a>`
-        }
-    }, {
-        mobileHidden: true,
-        icon: "fa-qq",
-        click: function (event) {
-            window.open("https://qm.qq.com/q/M3U23bwy6Q")
-        }
-    }, {
-        mobileHidden: true,
-        icon: "fa-github",
-        click: function (event) {
-            window.open("https://github.com/erupts/erupt")
-        }
-    }, {
-        mobileHidden: true,
-        icon: "fa-github-alt",
-        click: function (event) {
-            window.open("https://gitee.com/erupt/erupt")
         }
     }, {
         render: () => {
