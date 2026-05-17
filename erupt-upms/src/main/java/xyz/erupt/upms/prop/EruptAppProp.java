@@ -21,6 +21,13 @@ public class EruptAppProp {
     //Whether to display a watermark
     private boolean waterMark = true;
 
+    //水印是否显示日期
+    private boolean waterMarkDate = false;
+
+    //自定义水印内容
+    private String waterMarkContent = "内部数据";
+
+    //登录失败几次出现验证码，0表示一直要求输入验证码
     //Number of login failures before showing a verification code; 0 means always require a verification code
     private Integer verifyCodeCount = 2;
 
