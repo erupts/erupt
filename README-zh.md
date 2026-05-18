@@ -20,13 +20,13 @@
 ---
 
 <p align="center">
-  <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
+  <a href="https://mvnrepository.com/search?q=erupt" target="_blank"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-blue" alt="license Apache 2.0"></a>
   <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=social" alt="GitHub stars"></a>
   <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/forks/erupts/erupt?style=social" alt="GitHub forks"></a>
-  <a href="https://gitcode.com/erupts/erupt"><img src="https://gitcode.com/erupts/erupt/star/badge.svg" alt="gitcode"></a>
-  <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
-  <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
+  <a href="https://gitcode.com/erupts/erupt" target="_blank"><img src="https://gitcode.com/erupts/erupt/star/badge.svg" alt="gitcode"></a>
+  <a href="https://gitee.com/erupt/erupt" target="_blank"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
+  <a href="https://gitee.com/erupt/erupt" target="_blank"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
   <a href="https://github.com/erupts/erupt/commits"><img src="https://img.shields.io/github/last-commit/erupts/erupt?color=FF5722&label=last%20commit" alt="last-commit"></a>
   <a href="https://github.com/erupts/erupt/releases"><img src="https://img.shields.io/github/v/release/erupts/erupt?color=FF5722&label=release" alt="latest-release"></a>
   <a href="https://github.com/erupts/erupt/discussions"><img src="https://img.shields.io/github/discussions/erupts/erupt?color=FF5722" alt="discussions"></a>
@@ -35,15 +35,15 @@
 ---
 
 <p align="center">
-  <a href="https://demo.erupt.xyz"><img src="https://img.shields.io/badge/%F0%9F%8E%AF_%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C-FF5722?style=for-the-badge&logoColor=white" alt="在线体验"></a>
+  <a href="https://demo.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%8E%AF_%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C-FF5722?style=for-the-badge&logoColor=white" alt="在线体验"></a>
   &nbsp;
-  <a href="https://start.erupt.xyz"><img src="https://img.shields.io/badge/%E2%9A%A1_%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE-28a745?style=for-the-badge&logoColor=white" alt="创建项目"></a>
+  <a href="https://start.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/%E2%9A%A1_%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE-28a745?style=for-the-badge&logoColor=white" alt="创建项目"></a>
   &nbsp;
-  <a href="https://docs.erupt.xyz"><img src="https://img.shields.io/badge/%F0%9F%93%96_%E9%98%85%E8%AF%BB%E6%96%87%E6%A1%A3-444?style=for-the-badge&logoColor=white" alt="阅读文档"></a>
+  <a href="https://docs.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%93%96_%E9%98%85%E8%AF%BB%E6%96%87%E6%A1%A3-444?style=for-the-badge&logoColor=white" alt="阅读文档"></a>
   &nbsp;
-  <a href="https://www.erupt.xyz"><img src="https://img.shields.io/badge/%F0%9F%8C%90_%E5%AE%98%E7%BD%91-2196F3?style=for-the-badge&logoColor=white" alt="官网"></a>
+  <a href="https://www.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%8C%90_%E5%AE%98%E7%BD%91-2196F3?style=for-the-badge&logoColor=white" alt="官网"></a>
   &nbsp;
-  <a href="https://linq.erupt.xyz"><img src="https://img.shields.io/badge/%E2%88%91_Linq.J-9C27B0?style=for-the-badge&logoColor=white" alt="Linq.J"></a>
+  <a href="https://linq.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/%E2%88%91_Linq.J-9C27B0?style=for-the-badge&logoColor=white" alt="Linq.J"></a>
 </p>
 
 ---
@@ -328,5 +328,5 @@ Erupt 是一个免费且开源的项目。我们欢迎任何人为 Erupt 做出�
 Erupt 遵循 [Apache 2.0](./LICENSE) 许可证 —— 源代码开源免费、可商用、可二次开发。
 
 <p align="right">
-  作者：<a href="https://github.com/erupts">YuePeng</a> &nbsp;·&nbsp; <a href="mailto:erupts@126.com">erupts@126.com</a>
+  作者：<a href="https://github.com/erupts" target="_blank">YuePeng</a> &nbsp;·&nbsp; <a href="mailto:erupts@126.com">erupts@126.com</a>
 </p>

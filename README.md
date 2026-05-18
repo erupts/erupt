@@ -20,13 +20,13 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 ---
 
 <p align="center">
-  <a href="https://mvnrepository.com/search?q=erupt"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
+  <a href="https://mvnrepository.com/search?q=erupt" target="_blank"><img src="https://img.shields.io/maven-central/v/xyz.erupt/erupt" alt="maven-central"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202-blue" alt="license Apache 2.0"></a>
   <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/stars/erupts/erupt?style=social" alt="GitHub stars"></a>
   <a href="https://github.com/erupts/erupt"><img src="https://img.shields.io/github/forks/erupts/erupt?style=social" alt="GitHub forks"></a>
-  <a href="https://gitcode.com/erupts/erupt"><img src="https://gitcode.com/erupts/erupt/star/badge.svg" alt="gitcode"></a>
-  <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
-  <a href="https://gitee.com/erupt/erupt"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
+  <a href="https://gitcode.com/erupts/erupt" target="_blank"><img src="https://gitcode.com/erupts/erupt/star/badge.svg" alt="gitcode"></a>
+  <a href="https://gitee.com/erupt/erupt" target="_blank"><img src="https://gitee.com/erupt/erupt/badge/star.svg?theme=dark" alt="Gitee star"></a>
+  <a href="https://gitee.com/erupt/erupt" target="_blank"><img src="https://gitee.com/erupt/erupt/badge/fork.svg?theme=dark" alt="Gitee fork"></a>
   <a href="https://github.com/erupts/erupt/commits"><img src="https://img.shields.io/github/last-commit/erupts/erupt?color=FF5722&label=last%20commit" alt="last-commit"></a>
   <a href="https://github.com/erupts/erupt/releases"><img src="https://img.shields.io/github/v/release/erupts/erupt?color=FF5722&label=release" alt="latest-release"></a>
   <a href="https://github.com/erupts/erupt/discussions"><img src="https://img.shields.io/github/discussions/erupts/erupt?color=FF5722" alt="discussions"></a>
@@ -35,15 +35,13 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 ---
 
 <p align="center">
-  <a href="https://demo.erupt.xyz"><img src="https://img.shields.io/badge/%F0%9F%8E%AF_Try_Live_Demo-FF5722?style=for-the-badge&logoColor=white" alt="Try Live Demo"></a>
+  <a href="https://demo.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%8E%AF_Try_Live_Demo-FF5722?style=for-the-badge&logoColor=white" alt="Try Live Demo"></a>
   &nbsp;
-  <a href="https://start.erupt.xyz"><img src="https://img.shields.io/badge/%E2%9A%A1_Start_Project-28a745?style=for-the-badge&logoColor=white" alt="Start Project"></a>
+  <a href="https://start.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/%E2%9A%A1_Start_Project-28a745?style=for-the-badge&logoColor=white" alt="Start Project"></a>
   &nbsp;
-  <a href="https://docs.erupt.xyz"><img src="https://img.shields.io/badge/%F0%9F%93%96_Read_Docs-444?style=for-the-badge&logoColor=white" alt="Read Docs"></a>
+  <a href="https://docs.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%93%96_Read_Docs-444?style=for-the-badge&logoColor=white" alt="Read Docs"></a>
   &nbsp;
-  <a href="https://www.erupt.xyz"><img src="https://img.shields.io/badge/%F0%9F%8C%90_Website-2196F3?style=for-the-badge&logoColor=white" alt="Website"></a>
-  &nbsp;
-  <a href="https://linq.erupt.xyz"><img src="https://img.shields.io/badge/%E2%88%91_Linq.J-9C27B0?style=for-the-badge&logoColor=white" alt="Linq.J"></a>
+  <a href="https://www.erupt.xyz" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%8C%90_Website-2196F3?style=for-the-badge&logoColor=white" alt="Website"></a>
 </p>
 
 ---
@@ -335,7 +333,7 @@ To contribute code, please read our [contribution guidelines](./CONTRIBUTING.md)
 
 ## ⭐ Star history
 
-<a href="https://www.star-history.com/?repos=erupts%2Ferupt&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=erupts%2Ferupt&type=date&legend=top-left" target="_blank">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=erupts/erupt&type=date&theme=dark&legend=top-left" />
    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=erupts/erupt&type=date&legend=top-left" />
