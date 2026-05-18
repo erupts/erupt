@@ -39,7 +39,8 @@ public abstract class OpenAI extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
-                .returnThinking(llmRequest.isThinking())
+                .returnThinking(returnThinking(llmRequest))
+                .sendThinking(sendThinking(llmRequest))
                 .strictTools(this instanceof ChatGpt)
                 .defaultRequestParameters(OpenAiChatRequestParameters.builder()
                         .customParameters(buildCustomParams(llmRequest.getModel()))
@@ -56,13 +57,22 @@ public abstract class OpenAI extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
-                .returnThinking(llmRequest.isThinking())
+                .returnThinking(returnThinking(llmRequest))
+                .sendThinking(sendThinking(llmRequest))
                 .strictTools(this instanceof ChatGpt)
                 .defaultRequestParameters(OpenAiChatRequestParameters.builder()
                         .customParameters(buildCustomParams(llmRequest.getModel()))
                         .build()
                 )
                 .build();
+    }
+
+    protected boolean returnThinking(LlmRequest llmRequest) {
+        return llmRequest.isThinking();
+    }
+
+    protected boolean sendThinking(LlmRequest llmRequest) {
+        return false;
     }
 
     private Map<String, Object> buildCustomParams(String model) {
