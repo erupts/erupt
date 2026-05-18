@@ -68,13 +68,7 @@ English &nbsp; | &nbsp; [中文](README-zh.md)
 
 ## ⚡ 60-second quickstart
 
-<!--
-  📸 Hero asset placeholder (pick one):
-    Option A · 10–15s GIF: IDE writing @Erupt on the left, browser showing the live admin UI on the right
-    Option B · Single high-impact screenshot: the most complex page (search + table + drawer + chart, etc.)
-  Save to readme/quickstart.gif or readme/quickstart.png, then uncomment the line below.
--->
-<video src="readme/quickstart.webm" controls width="100%"></video>
+<video src="readme/quickstart.mp4" controls width="100%"></video>
 
 ### 1. Add two dependencies
 

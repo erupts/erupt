@@ -68,13 +68,7 @@
 
 ## ⚡ 60 秒上手
 
-<!--
-  📸 主图占位（GIF 或截图二选一）：
-    方案 A · 10~15 秒 GIF：左侧 IDE 写 @Erupt 注解，右侧浏览器实时出现后台
-    方案 B · 单张高冲击截图：最复杂的页面（带搜索 + 表格 + 抽屉 + 图表等）
-  保存到 readme/quickstart.gif 或 readme/quickstart.png 后，取消下一行的注释。
--->
-<!-- <p align="center"><img src="readme/quickstart.gif" alt="Erupt · 60 秒生成完整后台" width="100%"/></p> -->
+<video src="readme/quickstart.mp4" controls width="100%"></video>
 
 ### 1. 加两个依赖
 
