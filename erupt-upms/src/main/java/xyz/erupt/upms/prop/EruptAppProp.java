@@ -21,6 +21,12 @@ public class EruptAppProp {
     //Whether to display a watermark
     private boolean waterMark = true;
 
+    // Whether the watermark displays the date
+    private boolean waterMarkDate = false;
+
+    // Customize the watermark content
+    private String waterMarkContent = null;
+
     //Number of login failures before showing a verification code; 0 means always require a verification code
     private Integer verifyCodeCount = 2;
 

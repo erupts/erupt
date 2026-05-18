@@ -1,6 +1,5 @@
-# UPMS (User Permissions Manager System)
-### Core Features:
-User Management, Menu Management, Role Management, Organization Management, Open API, Operation Logs, Login Logs, Online Users, System Logs
+# erupt-upms
 
-### Robust Security Mechanism
-Including features such as operation auditing, permission verification, and API encryption.
+User & Permission Management System for Erupt.
+
+Provides out-of-the-box: user, role, menu, and organization management; token-based authentication; operation and login audit logs; online user tracking; captcha verification; IP address resolution; and Open API support. `EruptUserService` and `EruptTokenService` are the primary auth APIs consumed by other modules.

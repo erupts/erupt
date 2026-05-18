@@ -1,0 +1,152 @@
+# Proposed workflow — review, then rename to javadoc.yml to activate.
+#
+# Builds the aggregated Javadoc for the whole multi-module project and
+# publishes it to GitHub Pages at https://javadoc.erupt.xyz.
+#
+# Triggers:
+#   - On every push to master   → updates /LATEST
+#   - On every release tag      → also writes to /<tag> (e.g. /1.14.3)
+#
+# One-time setup outside this file (see SETUP NOTES at the bottom):
+#   1. Repo Settings → Pages → Source = "GitHub Actions"
+#   2. Add DNS CNAME:   javadoc.erupt.xyz → erupts.github.io
+#   3. Repo Settings → Pages → Custom domain = javadoc.erupt.xyz (Enforce HTTPS)
+
+name: Publish Javadoc
+
+on:
+  push:
+    branches: [master]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # Resolve the project version so we can publish to /<version>/ as well
+      - name: Read project version
+        id: ver
+        run: echo "version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> "$GITHUB_OUTPUT"
+
+      # Aggregate Javadoc across all modules into one site.
+      # Output lands in ./target/site/apidocs
+      - name: Build aggregated Javadoc
+        run: |
+          mvn -B -DskipTests \
+              -Pdisable-javadoc-doclint \
+              javadoc:aggregate
+
+      - name: Stage site
+        run: |
+          mkdir -p out/LATEST
+          cp -r target/site/apidocs/* out/LATEST/
+
+          # If this run was triggered by a release tag, also publish a versioned copy.
+          if [ "${{ github.event_name }}" = "release" ]; then
+            VER="${{ github.event.release.tag_name }}"
+            VER="${VER#v}"      # strip leading "v" if any
+            mkdir -p "out/${VER}"
+            cp -r target/site/apidocs/* "out/${VER}/"
+          fi
+
+          # Custom domain
+          echo "javadoc.erupt.xyz" > out/CNAME
+
+          # Tiny landing page so / shows a version index
+          cat > out/index.html <<HTML
+          <!doctype html>
+          <meta charset="utf-8">
+          <title>Erupt Javadoc</title>
+          <style>body{font-family:system-ui;max-width:640px;margin:80px auto;padding:0 20px;color:#222}h1{font-size:1.4em}a{color:#FF5722}</style>
+          <h1>Erupt API Reference</h1>
+          <p>Aggregated Javadoc for the open-source <a href="https://github.com/erupts/erupt">Erupt</a> framework.</p>
+          <ul>
+            <li><a href="./LATEST/">LATEST</a> &nbsp;(current master, version ${{ steps.ver.outputs.version }})</li>
+          </ul>
+          <p>Per-artifact Javadoc is also mirrored on
+            <a href="https://javadoc.io/doc/xyz.erupt">javadoc.io/doc/xyz.erupt</a>.</p>
+          HTML
+
+      # Merge with previously-published versions so old /<version>/ dirs are preserved.
+      # (GitHub Pages "deploy-pages" replaces the whole site, so we pull prior artifacts first.)
+      - name: Restore prior published versions
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: prior
+          fetch-depth: 1
+        continue-on-error: true
+
+      - name: Merge prior versions
+        run: |
+          if [ -d prior ]; then
+            # Copy every previously-published /<version>/ folder back into out,
+            # but do not overwrite the freshly built LATEST.
+            for d in prior/*/; do
+              name=$(basename "$d")
+              case "$name" in
+                LATEST|.git) ;;
+                *) [ -d "out/$name" ] || cp -r "$d" "out/$name" ;;
+              esac
+            done
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.dep.outputs.page_url }}
+    steps:
+      - id: dep
+        uses: actions/deploy-pages@v4
+
+# ─── SETUP NOTES (do once) ──────────────────────────────────────────────────
+#
+# 1. GitHub:
+#    Settings → Pages → "Build and deployment" Source = GitHub Actions
+#    Settings → Pages → Custom domain = javadoc.erupt.xyz, tick "Enforce HTTPS"
+#
+# 2. DNS (at your registrar for erupt.xyz):
+#    CNAME  javadoc  →  erupts.github.io.
+#
+# 3. First run:
+#    Push this file (renamed to javadoc.yml) to master, or trigger "Run workflow"
+#    from the Actions tab. Wait 2–3 min for the cert to issue, then visit
+#    https://javadoc.erupt.xyz.
+#
+# 4. Future releases: nothing to do — the "release: published" trigger will
+#    automatically write a new /<version>/ folder alongside /LATEST/.
+#
+# ─── FALLBACK (if you don't want to host yourself) ─────────────────────────
+#
+# Since the existing `release` Maven profile already attaches javadoc.jar to
+# every artifact, https://javadoc.io/doc/xyz.erupt/<module> works for free.
+# You can simply redirect javadoc.erupt.xyz → javadoc.io/doc/xyz.erupt at the
+# DNS/CDN layer (Cloudflare Page Rule, Vercel redirect, etc.) and skip this
+# workflow entirely. Less branded, zero maintenance.

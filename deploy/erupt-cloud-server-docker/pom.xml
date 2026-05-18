@@ -6,7 +6,7 @@
     <parent>
         <groupId>xyz.erupt</groupId>
         <artifactId>erupt</artifactId>
-        <version>1.14.2</version>
+        <version>1.14.3</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -76,6 +76,7 @@
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
                 <executions>
                     <execution>
                         <id>injected-central-publishing</id>
@@ -83,7 +84,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <skip>true</skip>
+                    <skipPublishing>true</skipPublishing>
                 </configuration>
             </plugin>
             <plugin>

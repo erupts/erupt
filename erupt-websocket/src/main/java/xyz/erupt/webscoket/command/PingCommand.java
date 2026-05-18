@@ -1,7 +1,6 @@
 package xyz.erupt.webscoket.command;
 
 import jakarta.websocket.Session;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.webscoket.command.base.SocketCommand;
@@ -13,8 +12,11 @@ import java.util.Collections;
  * date 2024/12/1 12:39
  */
 @Component
-@NoArgsConstructor
 public class PingCommand extends SocketCommand<Void> {
+
+    public PingCommand() {
+        super();
+    }
 
     @Override
     protected String command() {

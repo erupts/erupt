@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.constant.AnnotationConst;
@@ -15,6 +17,9 @@ import xyz.erupt.annotation.sub_field.sub_edit.Search;
 import xyz.erupt.annotation.sub_field.sub_edit.VL;
 import xyz.erupt.jpa.model.BaseModel;
 
+import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -22,6 +27,7 @@ import xyz.erupt.jpa.model.BaseModel;
 public class MultiChoiceModel extends BaseModel {
 
     // 多选框组（默认 CHECKBOX）
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Roles"),
@@ -33,9 +39,10 @@ public class MultiChoiceModel extends BaseModel {
                     }),
                     search = @Search)
     )
-    private String roles;
+    private Set<String> roles;
 
     // 下拉多选（SELECT 布局）
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Tags"),
@@ -49,9 +56,10 @@ public class MultiChoiceModel extends BaseModel {
                                     @VL(value = "RUST", label = "Rust")
                             }))
     )
-    private String tags;
+    private List<String> tags;
 
     // 动态 handler 获取选项
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(length = AnnotationConst.CONFIG_LENGTH)
     @EruptField(
             views = @View(title = "Permissions"),
@@ -60,5 +68,5 @@ public class MultiChoiceModel extends BaseModel {
                             type = MultiChoiceType.Type.SELECT,
                             fetchHandler = {TestChoiceFetchHandler.class}))
     )
-    private String permissions;
+    private List<String> permissions;
 }
