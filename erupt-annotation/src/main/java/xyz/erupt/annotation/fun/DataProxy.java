@@ -96,4 +96,9 @@ public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MOD
         return null;
     }
 
+    @Comment("Custom rendered HTML content; the returned HTML will be displayed in the view")
+    default String extraContent(List<Condition> conditions) {
+        return null;
+    }
+
 }

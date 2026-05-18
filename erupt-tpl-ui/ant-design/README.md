@@ -1,4 +1,5 @@
-### tpl-ui of Ant-Design-Vue
+# erupt-tpl-ui · Ant Design
 
-网址：https://www.antdv.com/docs/vue/introduce-cn/
-版本：1.7.2
+Frontend static assets for Erupt based on **Ant Design Vue** (v1.7.2).
+
+Packages the compiled Ant Design Vue admin UI as a Spring Boot static resource module. Include this dependency to serve the Ant Design-flavored Erupt frontend from your application without any separate frontend build step.

@@ -37,6 +37,8 @@ public class Page {
 
     private Alert alert;
 
+    private String extraContent;
+
     public void setTotal(Long total) {
         this.total = total;
         if (total % pageSize == 0) {

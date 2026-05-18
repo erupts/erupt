@@ -39,8 +39,8 @@ public abstract class OpenAI extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
-                .sendThinking(isThinkingModel(llmRequest.getModel()))
-                .returnThinking(false)
+                .returnThinking(returnThinking(llmRequest))
+                .sendThinking(sendThinking(llmRequest))
                 .strictTools(this instanceof ChatGpt)
                 .defaultRequestParameters(OpenAiChatRequestParameters.builder()
                         .customParameters(buildCustomParams(llmRequest.getModel()))
@@ -57,8 +57,8 @@ public abstract class OpenAI extends LlmCore {
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
-                .sendThinking(isThinkingModel(llmRequest.getModel()))
-                .returnThinking(false)
+                .returnThinking(returnThinking(llmRequest))
+                .sendThinking(sendThinking(llmRequest))
                 .strictTools(this instanceof ChatGpt)
                 .defaultRequestParameters(OpenAiChatRequestParameters.builder()
                         .customParameters(buildCustomParams(llmRequest.getModel()))
@@ -67,12 +67,12 @@ public abstract class OpenAI extends LlmCore {
                 .build();
     }
 
-    private boolean isThinkingModel(String model) {
-        return model != null && (
-                model.contains("deepseek-r") ||
-                        model.contains("deepseek-reasoner") ||
-                        model.contains("k2-thinking")
-        );
+    protected boolean returnThinking(LlmRequest llmRequest) {
+        return llmRequest.isThinking();
+    }
+
+    protected boolean sendThinking(LlmRequest llmRequest) {
+        return false;
     }
 
     private Map<String, Object> buildCustomParams(String model) {

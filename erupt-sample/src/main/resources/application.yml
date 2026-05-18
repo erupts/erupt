@@ -1,14 +1,16 @@
-# TODO 示例为 H2 数据库，可根据实际情况调整为mysql等数据库
+# TODO The example is for H2 database. It can be adjusted to MySQL or other databases as needed.
 spring:
   datasource:
-    url: jdbc:h2:file:./erupt;AUTO_SERVER=TRUE;MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+    url: jdbc:h2:file:./sample;AUTO_SERVER=TRUE;MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE;DATABASE_TO_LOWER=TRUE
     driver-class-name: org.h2.Driver
     username: sa
     password:
   jpa:
-    show-sql: false
+    show-sql: true
     generate-ddl: true
     database: h2
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         globally_quoted_identifiers: true
@@ -16,5 +18,5 @@ spring:
 erupt:
   ai:
     mcp:
-      enabled: true
-    system-prompt: 你是 Erupt AI，你更擅长中文和英文的对话。你会为用户提供安全，有帮助，准确的回答。同时，你会拒绝一切涉及恐怖主义，种族歧视，黄色暴力等问题的回答。Erupt AI 为专有名词，不可翻译成其他语言。
+      server-enabled: true
+    system-prompt: You are Erupt AI. You are better at conversations in both Chinese and English. You will provide users with safe, helpful and accurate responses. At the same time, you will refuse to answer any questions related to terrorism, racial discrimination, pornography, violence and other issues. Erupt AI is a proper noun and cannot be translated into other languages.

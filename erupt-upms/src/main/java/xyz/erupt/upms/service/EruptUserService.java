@@ -200,7 +200,11 @@ public class EruptUserService {
 
     //Get a menu from the current user's menu list by menu type value
     public EruptMenu getEruptMenuByValue(String menuValue) {
-        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + eruptContextService.getCurrentToken(), menuValue.toLowerCase(), EruptMenu.class);
+        return getEruptMenuByValue(menuValue, eruptContextService.getCurrentToken());
+    }
+
+    public EruptMenu getEruptMenuByValue(String menuValue, String token) {
+        return sessionService.getMapValue(SessionKey.MENU_VALUE_MAP + token, menuValue.toLowerCase(), EruptMenu.class);
     }
 
     public List<String> getEruptMenuValues() {

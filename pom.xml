@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.erupt</groupId>
     <artifactId>erupt</artifactId>
-    <version>1.14.2</version>
+    <version>1.14.3</version>
 
     <packaging>pom</packaging>
     <name>erupt</name>
@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
         <java.version>17</java.version>
-        <langchain4j.version>1.12.2</langchain4j.version>
+        <langchain4j.version>1.14.1</langchain4j.version>
         <spring.boot.version>3.5.13</spring.boot.version>
     </properties>
 
@@ -47,6 +47,8 @@
         <module>erupt-notice</module>
         <!-- Print -->
         <module>erupt-print</module>
+        <!-- Terminal Server -->
+        <module>erupt-terminal</module>
         <!-- Front-end Code -->
         <module>erupt-web</module>
 
@@ -133,17 +135,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>utf-8</encoding>
-                    <verbose>true</verbose>
-                    <fork>true</fork>
                     <compilerArgs>
                         <compilerArg>-parameters</compilerArg>
                     </compilerArgs>
-                    <!--<executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_231.jdk/Contents/Home/bin/javac</executable>-->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.44</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <!-- One-click update of sub-module version numbers plugins -> versions -> version:set  -->
@@ -190,16 +196,16 @@
     </developers>
 
     <profiles>
-<!--        <profile>-->
-<!--            &lt;!&ndash; Active by default; skipped automatically when -P release is specified &ndash;&gt;-->
-<!--            <id>dev</id>-->
-<!--            <activation>-->
-<!--                <activeByDefault>true</activeByDefault>-->
-<!--            </activation>-->
-<!--            <modules>-->
-<!--                -->
-<!--            </modules>-->
-<!--        </profile>-->
+        <!--        <profile>-->
+        <!--            &lt;!&ndash; Active by default; skipped automatically when -P release is specified &ndash;&gt;-->
+        <!--            <id>dev</id>-->
+        <!--            <activation>-->
+        <!--                <activeByDefault>true</activeByDefault>-->
+        <!--            </activation>-->
+        <!--            <modules>-->
+        <!--                -->
+        <!--            </modules>-->
+        <!--        </profile>-->
         <profile>
             <id>disable-javadoc-doclint</id>
             <activation>
@@ -260,8 +266,8 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-<!--                            <autoPublish>true</autoPublish>-->
-<!--                            <waitUntil>published</waitUntil>-->
+                            <!--                            <autoPublish>true</autoPublish>-->
+                            <!--                            <waitUntil>published</waitUntil>-->
                         </configuration>
                     </plugin>
                     <plugin>

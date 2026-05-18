@@ -3,7 +3,6 @@ package xyz.erupt.webscoket.channel;
 import com.google.gson.reflect.TypeToken;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import xyz.erupt.core.config.GsonFactory;
@@ -25,15 +24,18 @@ import java.util.List;
 @ServerEndpoint("/erupt-websocket")
 public class EruptChannel {
 
-    @SneakyThrows
     @OnOpen
     public void open(Session session) {
-        List<String> token = session.getRequestParameterMap().get(EruptMutualConst.TOKEN);
-        if (null == token || !EruptSpringUtil.getBean(EruptTokenService.class).tokenExist(token.get(0))) {
-            session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Token error"));
-            return;
+        try {
+            List<String> token = session.getRequestParameterMap().get(EruptMutualConst.TOKEN);
+            if (null == token || !EruptSpringUtil.getBean(EruptTokenService.class).tokenExist(token.get(0))) {
+                session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Token error"));
+                return;
+            }
+            EruptChannelManager.register(token.get(0), session);
+        } catch (IOException e) {
+            log.error("[websocket] Open error: {}", e.getMessage());
         }
-        EruptChannelManager.register(token.get(0), session);
     }
 
     @OnMessage
