@@ -38,11 +38,6 @@
 <!--  </g>-->
 
   <!-- Engineering tick marks on top edge -->
-  <g class="accent-bg">
-    <polygon points="300,28 306,40 294,40"/>
-    <polygon points="600,28 606,40 594,40"/>
-    <polygon points="900,28 906,40 894,40"/>
-  </g>
 
   <!-- Top dot grid band -->
   <rect x="60" y="58" width="1080" height="4" fill="url(#dotgrid)"/>
