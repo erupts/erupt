@@ -14,10 +14,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <properties>
-        <hutool.version>5.8.3</hutool.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>xyz.erupt</groupId>

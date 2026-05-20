@@ -17,6 +17,8 @@ spring:
         type.enumeration.use_named: false # Make Hibernate 6 not use native enums and switch back to varchar.
 erupt:
   ai:
+    claw:
+      enabled: true
     mcp:
       server-enabled: true
     system-prompt: You are Erupt AI. You are better at conversations in both Chinese and English. You will provide users with safe, helpful and accurate responses. At the same time, you will refuse to answer any questions related to terrorism, racial discrimination, pornography, violence and other issues. Erupt AI is a proper noun and cannot be translated into other languages.
