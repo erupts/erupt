@@ -19,71 +19,53 @@
         <spring.boot.version>3.5.13</spring.boot.version>
     </properties>
 
-    <!--
-    When compiling multi-module projects such as Spring Boot, it is often the case that...
-    Non-resolvable parent POM: Could not find artifact
-    Following this is a series of other information. Most of the online solutions involve modifying the 'relativePath' configuration item. However, this is not an elegant approach. Here, we introduce another solution.
-    The solution is as follows: Comment out or delete all the configurations in the 'modules' directory of the parent project, then compile, package, and install. After the prompt indicates success, restore the original commented and deleted configurations, and then compile again to achieve success.
-    -->
     <modules>
+        <!-- Core -->
         <module>erupt-annotation</module>
         <module>erupt-core</module>
         <module>erupt-excel</module>
         <module>erupt-toolkit</module>
 
-        <!-- JPA Data Implementation -->
+        <!-- Data -->
         <module>erupt-data/erupt-jpa</module>
-        <!-- MongoDB Data Implementation -->
         <module>erupt-data/erupt-mongodb</module>
 
-        <!-- User Permission Management -->
+        <!-- UPMS / Security / Web / Misc -->
         <module>erupt-upms</module>
-        <!-- API Interface Security -->
         <module>erupt-security</module>
         <module>erupt-admin</module>
-        <!-- WebSocket -->
         <module>erupt-websocket</module>
-        <!-- Notice -->
         <module>erupt-notice</module>
-        <!-- Print -->
         <module>erupt-print</module>
-        <!-- Terminal Server -->
         <module>erupt-terminal</module>
-        <!-- Front-end Code -->
         <module>erupt-web</module>
 
+        <!-- Template -->
         <module>erupt-tpl</module>
         <module>erupt-tpl-ui/ant-design</module>
         <module>erupt-tpl-ui/element-ui</module>
         <module>erupt-tpl-ui/amis</module>
         <module>erupt-tpl-ui/element-plus</module>
 
+        <!-- AI -->
         <module>erupt-ai</module>
         <module>erupt-ai-claw</module>
-        <!-- Task Scheduling -->
+
+        <!-- Extra -->
         <module>erupt-extra/erupt-job</module>
-        <!-- Code Generation -->
         <module>erupt-extra/erupt-generator</module>
-        <!-- Service Monitoring -->
         <module>erupt-extra/erupt-monitor</module>
-        <!-- magic-api Interface Configuration -->
         <module>erupt-extra/erupt-magic-api</module>
 
-        <!-- erupt cloud -->
+        <!-- Cloud -->
         <module>erupt-cloud/erupt-cloud-common</module>
-        <!-- Main Service Node -->
         <module>erupt-cloud/erupt-cloud-server</module>
-        <!-- Cloud Node -->
         <module>erupt-cloud/erupt-cloud-node</module>
-        <!-- Cloud Node (Aggregated JPA) -->
         <module>erupt-cloud/erupt-cloud-node-jpa</module>
 
-        <!-- unittest -->
+        <!-- Test / Sample / Deploy -->
         <module>erupt-test</module>
-
-        <!-- Sample Project Using H2 as Data Source -->
         <module>erupt-sample</module>
-        <!-- erupt deploy -->
         <module>deploy/erupt-cloud-server-docker</module>
     </modules>
 
@@ -152,11 +134,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>1.8.1</version>
-            </plugin>
         </plugins>
     </build>
 
@@ -190,35 +167,8 @@
     </developers>
 
     <profiles>
-        <!--        <profile>-->
-        <!--            &lt;!&ndash; Active by default; skipped automatically when -P release is specified &ndash;&gt;-->
-        <!--            <id>dev</id>-->
-        <!--            <activation>-->
-        <!--                <activeByDefault>true</activeByDefault>-->
-        <!--            </activation>-->
-        <!--            <modules>-->
-        <!--                -->
-        <!--            </modules>-->
-        <!--        </profile>-->
-        <profile>
-            <id>disable-javadoc-doclint</id>
-            <activation>
-                <jdk>[17,)</jdk>
-            </activation>
-            <properties>
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
-                <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
-            </properties>
-        </profile>
         <profile>
             <id>release</id>
-            <dependencies>
-                <dependency>
-                    <groupId>javax.interceptor</groupId>
-                    <artifactId>javax.interceptor-api</artifactId>
-                    <version>1.2</version>
-                </dependency>
-            </dependencies>
             <build>
                 <plugins>
                     <plugin>
