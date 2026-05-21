@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 #
-# bump-erupt.sh — Bump all xyz.erupt:* dependencies across satellite repos.
+# bump-erupt.sh — Bump erupt's version across the main repo and all satellites.
 #
-# Mechanism: delegates to versions-maven-plugin's use-dep-version goal, which
-# rewrites every dependency matching includes pattern. Works whether the repo
-# declares versions inline or via any property name — no convention required.
+# Strategy:
+#   * Main repo (publishes erupt artifacts) -> `versions:set` updates its own
+#     project version and cascades into all submodules.
+#   * Satellite repos (consume erupt)       -> `versions:use-dep-version`
+#     updates every <dependency>/<parent> matching the erupt groupId, no
+#     matter whether the version is inline, a property reference, or in the
+#     parent declaration.
 #
 # Usage:
 #   ./bump-erupt.sh 1.14.4
@@ -12,18 +16,20 @@
 #   CODE_DIR=/path/to/code ./bump-erupt.sh 1.14.4
 #
 # Env overrides:
-#   CODE_DIR         Parent directory of repos (default: $HOME/code)
-#   ERUPT_GROUP      Maven groupId to bump      (default: xyz.erupt)
-#   VERSIONS_PLUGIN  Plugin coordinate          (default below)
+#   CODE_DIR         Parent directory of repos     (default: $HOME/code)
+#   MAIN_REPO        Which entry in REPOS is main  (default: erupt)
+#   ERUPT_GROUP      Maven groupId to bump         (default: xyz.erupt)
+#   VERSIONS_PLUGIN  Plugin coordinate             (default below)
 
 set -euo pipefail
 
 # ---------- config ----------
 CODE_DIR="${CODE_DIR:-$HOME/code}"
+MAIN_REPO="${MAIN_REPO:-erupt}"
 ERUPT_GROUP="${ERUPT_GROUP:-xyz.erupt}"
 VERSIONS_PLUGIN="${VERSIONS_PLUGIN:-org.codehaus.mojo:versions-maven-plugin:2.16.2}"
 
-# Satellite repos (relative to CODE_DIR). Add/remove freely.
+# Repos to bump (relative to CODE_DIR). Main repo first by convention.
 REPOS=(
     erupt
     erupt-bi
@@ -47,6 +53,7 @@ Options:
 
 Env:
   CODE_DIR         Parent of repos      (default: \$HOME/code)
+  MAIN_REPO        Self-publishing repo (default: erupt)
   ERUPT_GROUP      Maven groupId        (default: xyz.erupt)
   VERSIONS_PLUGIN  Plugin coordinate    (default: $VERSIONS_PLUGIN)
 EOF
@@ -64,10 +71,19 @@ done
 
 [ -z "$NEW_VERSION" ] && usage
 
-# ---------- helper: read all erupt versions currently in a pom ----------
-# Scans <dependency> and <parent> blocks (regardless of formatting),
-# returns literal versions for blocks whose groupId matches ERUPT_GROUP.
-# Property-referenced versions like ${foo} are shown as-is.
+# ---------- helpers ----------
+# The project's own version (top-level <version>, ignoring <parent>).
+project_version() {
+    python3 -c '
+import re, sys
+with open(sys.argv[1]) as f: text = f.read()
+clean = re.sub(r"<parent\b.*?</parent>", "", text, flags=re.DOTALL)
+m = re.search(r"<version>\s*([^<\s]+)\s*</version>", clean)
+print(m.group(1) if m else "")
+' "$1" 2>/dev/null
+}
+
+# All erupt versions referenced in <dependency>/<parent> blocks (uniq).
 current_erupt_versions() {
     python3 -c '
 import re, sys
@@ -84,6 +100,7 @@ for m in re.finditer(r"<(dependency|parent)\b[^>]*>(.*?)</\1>", text, re.DOTALL)
 
 # ---------- run ----------
 echo "Code dir       : $CODE_DIR"
+echo "Main repo      : $MAIN_REPO"
 echo "Erupt groupId  : $ERUPT_GROUP"
 echo "Target version : $NEW_VERSION"
 [ "$DRY_RUN" -eq 1 ] && echo "Mode           : DRY RUN"
@@ -106,6 +123,38 @@ for repo in "${REPOS[@]}"; do
         skipped+=("$repo")
         continue
     fi
+
+    # ----- branch: main repo (set project version) -----
+    if [ "$repo" = "$MAIN_REPO" ]; then
+        current=$(project_version "$dir/pom.xml")
+        [ -z "$current" ] && current="?"
+
+        if [ "$current" = "$NEW_VERSION" ]; then
+            echo "[OK]   $repo  (already at $NEW_VERSION)"
+            ok+=("$repo")
+            continue
+        fi
+
+        if [ "$DRY_RUN" -eq 1 ]; then
+            echo "[PLAN-SET] $repo  project version $current -> $NEW_VERSION"
+            ok+=("$repo")
+            continue
+        fi
+
+        echo "[BUMP-SET] $repo  project version $current -> $NEW_VERSION"
+        if ( cd "$dir" && mvn -q "${VERSIONS_PLUGIN}:set" \
+                -DnewVersion="$NEW_VERSION" \
+                -DprocessAllModules=true \
+                -DgenerateBackupPoms=false ); then
+            ok+=("$repo")
+        else
+            echo "[FAIL] $repo  (mvn versions:set exited non-zero)" >&2
+            failed+=("$repo")
+        fi
+        continue
+    fi
+
+    # ----- branch: satellite repo (bump dep refs) -----
     if ! grep -q "<groupId>$ERUPT_GROUP" "$dir/pom.xml"; then
         echo "[SKIP] $repo  (no $ERUPT_GROUP dependency in pom)"
         skipped+=("$repo")
@@ -113,16 +162,16 @@ for repo in "${REPOS[@]}"; do
     fi
 
     current=$(current_erupt_versions "$dir/pom.xml")
-    current="${current%% }"   # trim trailing space
-    [ -z "$current" ] && current="(uses property — resolved at build)"
+    current="${current%% }"
+    [ -z "$current" ] && current="(no literal version found)"
 
     if [ "$DRY_RUN" -eq 1 ]; then
-        echo "[PLAN] $repo  [$current] -> $NEW_VERSION"
+        echo "[PLAN-DEP] $repo  [$current] -> $NEW_VERSION"
         ok+=("$repo")
         continue
     fi
 
-    echo "[BUMP] $repo  [$current] -> $NEW_VERSION"
+    echo "[BUMP-DEP] $repo  [$current] -> $NEW_VERSION"
     if ( cd "$dir" && mvn -q "${VERSIONS_PLUGIN}:use-dep-version" \
             -Dincludes="$ERUPT_GROUP:*" \
             -DdepVersion="$NEW_VERSION" \
@@ -131,7 +180,7 @@ for repo in "${REPOS[@]}"; do
             -DgenerateBackupPoms=false ); then
         ok+=("$repo")
     else
-        echo "[FAIL] $repo  (mvn exited non-zero)" >&2
+        echo "[FAIL] $repo  (mvn use-dep-version exited non-zero)" >&2
         failed+=("$repo")
     fi
 done
