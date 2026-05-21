@@ -36,3 +36,4 @@ build/
 # project
 .erupt
 */.DS_Store
+*.db
