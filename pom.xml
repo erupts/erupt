@@ -152,12 +152,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <!-- One-click update of sub-module version numbers plugins -> versions -> version:set  -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>2.7</version>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-plugin</artifactId>
