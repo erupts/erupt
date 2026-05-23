@@ -38,6 +38,7 @@ public class Ollama extends LlmCore {
     @Override
     public ChatModel buildChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages) {
         return OllamaChatModel.builder()
+                .baseUrl(llmRequest.getUrl())
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
@@ -47,6 +48,7 @@ public class Ollama extends LlmCore {
     @Override
     public StreamingChatModel buildStreamingChatModel(LlmRequest llmRequest, List<ChatMessage> chatMessages, Consumer<SseListener> listener) {
         return OllamaStreamingChatModel.builder()
+                .baseUrl(llmRequest.getUrl())
                 .modelName(llmRequest.getModel())
                 .topP(llmRequest.getTop_p())
                 .temperature(llmRequest.getTemperature())
