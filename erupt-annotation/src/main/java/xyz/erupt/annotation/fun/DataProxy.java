@@ -101,4 +101,16 @@ public interface DataProxy<@Comment("Erupt object") MODEL> extends MetaProxy<MOD
         return null;
     }
 
+    @Comment("Form view: called before rendering. Load data into model from your own source.")
+    default void formViewBehavior(MODEL model) {
+    }
+
+    @Comment("""
+            Form view: called on save after field validation passes.
+            Persist the model to your own data source.
+            Throw EruptException to abort with a user-visible message.
+            """)
+    default void formSave(MODEL model) throws EruptException {
+    }
+
 }

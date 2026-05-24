@@ -13,6 +13,7 @@ public enum MenuTypeEnum {
 
     TABLE("table", "Table View", "Erupt Class Name"),
     TREE("tree", "Tree View", "Erupt Class Name"),
+    FORM("form", "Form View", "Erupt Class Name"),
     BUTTON("button", "Function Button", null),
     API("api", "Interface Name", null),
     LINK("link", "Open Link in Frame", "URL"),
