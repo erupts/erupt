@@ -10,13 +10,16 @@ window.setTimeout(function () {
         "<script type=\"text/javascript\" src=\"app.js?_=" + __t__ + "\"><\/script>" +
         "<script type=\"module\" src=\"app.module.js?_=" + __t__ + "\" ><\/script>"
     );
-    setTimeout(function () {
-        if (window.eruptSiteConfig?.theme?.primaryColor) {
-            document.querySelector(".preloader").style.background = window.eruptSiteConfig.theme.primaryColor;
-        } else {
-            document.querySelector(".preloader").style.background = "#1890ff";
+    var _preloaderEl = document.querySelector(".preloader");
+    _preloaderEl.style.background = "#1890ff";
+    var _colorCheckTimer = setInterval(function () {
+        if (window.eruptSiteConfig !== undefined) {
+            clearInterval(_colorCheckTimer);
+            if (window.eruptSiteConfig?.theme?.primaryColor) {
+                _preloaderEl.style.background = window.eruptSiteConfig.theme.primaryColor;
+            }
         }
-    }, 120)
+    }, 10);
 })(new Date())
 
 function SiriWave(opt) {
