@@ -208,6 +208,8 @@ List<EruptUser> list = eruptDao.lambdaQuery(EruptUser.class)
 **🦞 AI Claw（`erupt-ai-claw`）**
 用自然语言驱动 Erupt 实体、Shell、文件、浏览器。[→ 详情见下方](#-erupt-ai-claw)
 
+> **该引入哪个？** 要原生 LLM / MCP 能力、自己写 agent，选 **`erupt-ai`**；想直接给 admin 装个开箱即用的 AI 助手，选 **`erupt-ai-claw`**（已传递依赖 `erupt-ai`，只需引这一个）。
+
 **☁️ 集群与多租户**
 `erupt-cloud` 提供分布式配置；商业模块 `erupt-tenant` 提供完整 SaaS 能力。
 

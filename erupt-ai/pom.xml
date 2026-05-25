@@ -5,7 +5,7 @@
 
     <artifactId>erupt-ai</artifactId>
     <name>erupt-ai</name>
-    <description>Erupt AI LLM</description>
+    <description>LLM and MCP unified access layer — foundational AI building block for the Erupt ecosystem. For a turn-key admin agent built on top of this module, see erupt-ai-claw.</description>
 
     <parent>
         <groupId>xyz.erupt</groupId>

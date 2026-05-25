@@ -12,6 +12,7 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
+import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -37,7 +38,8 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
                 @RowOperation(title = "Default Chat Model", icon = "fa fa-magic",
                         ifExpr = "item.defaultLLM === '×'",
                         mode = RowOperation.Mode.SINGLE, operationHandler = LLMDataProxy.class)
-        }
+        },
+        layout = @Layout(tableLeftFixed = 1)
 )
 @Getter
 @Setter
@@ -47,7 +49,7 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 public class LLM extends MetaModelUpdateVo {
 
     @EruptField(
-            views = @View(title = "Model Name"),
+            views = @View(title = "Model Name",width = "150px"),
             edit = @Edit(title = "Model Name", notNull = true, search = @Search(vague = true))
     )
     private String name;

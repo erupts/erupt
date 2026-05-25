@@ -207,6 +207,8 @@ Built-in via `erupt-excel`. Override `excelImport` / `excelExport` on `DataProxy
 **🦞 AI Claw (`erupt-ai-claw`)**
 Drive Erupt entities, the shell, files, and a browser through natural language. [→ details below](#-erupt-ai-claw)
 
+> **Which one do I add?** Pick **`erupt-ai`** if you want raw LLM / MCP access to build your own agent; pick **`erupt-ai-claw`** if you want a turn-key admin agent out of the box (it depends on `erupt-ai`, so you only need this one).
+
 **☁️ Cluster & multi-tenant**
 `erupt-cloud` for distributed config; commercial `erupt-tenant` for full SaaS.
 

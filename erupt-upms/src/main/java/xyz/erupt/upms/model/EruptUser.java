@@ -8,6 +8,7 @@ import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.EruptI18n;
 import xyz.erupt.annotation.constant.AnnotationConst;
 import xyz.erupt.annotation.sub_erupt.Filter;
+import xyz.erupt.annotation.sub_erupt.Layout;
 import xyz.erupt.annotation.sub_erupt.LinkTree;
 import xyz.erupt.annotation.sub_erupt.RowOperation;
 import xyz.erupt.annotation.sub_field.Edit;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
         dataProxy = EruptUserDataProxy.class,
         linkTree = @LinkTree(field = "eruptOrg"),
         orderBy = "EruptUser.id",
+        layout = @Layout(tableLeftFixed = 1),
         rowOperation = @RowOperation(title = "Reset Password",
                 icon = "fa fa-refresh",
                 mode = RowOperation.Mode.SINGLE,
