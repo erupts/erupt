@@ -16,6 +16,7 @@ import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +106,11 @@ public class EruptComponentController {
                                       @PathVariable("field") String field) {
         EruptFieldModel fieldModel = EruptCoreService.getErupt(eruptName).getEruptFieldMap().get(field);
         CodeEditorType codeEditType = fieldModel.getEruptField().edit().codeEditType();
-        return EruptSpringUtil.getBean(codeEditType.hint()).hint(codeEditType.hintParams());
+        List<String> hints = new java.util.ArrayList<>(Arrays.stream(codeEditType.hints()).toList());
+        if (!codeEditType.hintHandler().isInterface()) {
+            hints.addAll(EruptSpringUtil.getBean(codeEditType.hintHandler()).hint(codeEditType.hintParams()));
+        }
+        return hints;
     }
 
 }
