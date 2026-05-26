@@ -182,6 +182,12 @@ public class EruptUser extends LookerSelf {
     )
     private Boolean isMd5 = true;
 
+    @Column(length = 64)
+    private String salt;
+
+    @Column(length = 20)
+    private String encryptType = "MD5"; // MD5, SHA512, etc.
+
     @EruptField(
             views = @View(title = "Account Expiry", sortable = true),
             edit = @Edit(title = "Account Expiry")

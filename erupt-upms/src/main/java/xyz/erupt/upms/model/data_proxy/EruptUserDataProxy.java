@@ -41,11 +41,11 @@ public class EruptUserDataProxy implements DataProxy<EruptUser> {
             throw new EruptApiErrorTip(EruptApiModel.Status.WARNING, I18nTranslate.$translate("upms.pwd_required"), EruptApiModel.PromptWay.MESSAGE);
         }
         if (eruptUser.getPasswordA().equals(eruptUser.getPasswordB())) {
-            if (eruptUser.getIsMd5()) {
-                eruptUser.setPassword(MD5Util.digest(eruptUser.getPasswordA()));
-            } else {
-                eruptUser.setPassword(eruptUser.getPasswordA());
-            }
+            // 使用SHA512+盐进行加密
+            String salt = MD5Util.generateSalt();
+            eruptUser.setSalt(salt);
+            eruptUser.setEncryptType("SHA512");
+            eruptUser.setPassword(MD5Util.digestSHA512Salt(eruptUser.getPasswordA(), salt));
         } else {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("upms.pwd_two_inconsistent"));
         }
