@@ -135,8 +135,8 @@ public class LLMService {
                 } else if (null != it.getCurrMessage()) {
                     this.sendSseMessage(emitter, it.getCurrMessage());
                 }
-                if (null != it.getThink()) {
-                    this.sendSseThinkMessage(emitter, it.getThink());
+                if (null != it.getCall()) {
+                    this.sendSseCallMessage(emitter, it.getCall());
                 }
             });
         } catch (Exception e) {
@@ -152,13 +152,13 @@ public class LLMService {
     }
 
     @SneakyThrows
-    public void sendSseThinkClear(SseEmitter emitter) {
-        this.sendSseBody(emitter, new SseBody(SseEvent.THINK, null));
+    public void sendSseCallClear(SseEmitter emitter) {
+        this.sendSseBody(emitter, new SseBody(SseEvent.CALL, null));
     }
 
     @SneakyThrows
-    public void sendSseThinkMessage(SseEmitter emitter, String llmMessage) {
-        this.sendSseBody(emitter, new SseBody(SseEvent.THINK, llmMessage));
+    public void sendSseCallMessage(SseEmitter emitter, String llmMessage) {
+        this.sendSseBody(emitter, new SseBody(SseEvent.CALL, llmMessage));
     }
 
     @SneakyThrows
@@ -171,7 +171,7 @@ public class LLMService {
     @SneakyThrows
     public void sendSseMessage(SseEmitter emitter, String llmMessage) {
         if (StringUtils.isNotBlank(llmMessage) && llmMessage.length() > aiProp.getMessageChunkSize()) {
-            this.sendSseThinkClear(emitter);
+            this.sendSseCallClear(emitter);
             for (int i = 0; i < llmMessage.length(); i += aiProp.getMessageChunkSize()) {
                 int end = Math.min(i + aiProp.getMessageChunkSize(), llmMessage.length());
                 this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, llmMessage.substring(i, end)));
@@ -181,7 +181,7 @@ public class LLMService {
             }
         } else {
             this.sendSseBody(emitter, new SseBody(SseEvent.TOKEN, llmMessage));
-            this.sendSseThinkClear(emitter);
+            this.sendSseCallClear(emitter);
         }
     }
 

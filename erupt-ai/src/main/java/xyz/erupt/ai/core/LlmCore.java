@@ -163,10 +163,10 @@ public abstract class LlmCore {
                 }).onPartialToolCall(toolCall -> {
                     toolCalling.set(true);
                     MetaContext.set(metaContext);
-                    log.info("Calling {} with arguments: {}", toolCall.name(), toolCall.partialArguments());
-                    listener.accept(SseListener.builder().think("Calling " + toolCall.name()).build());
+                    String callMsg = toolCall.name();
+                    listener.accept(SseListener.builder().call(callMsg).build());
                 }).onPartialThinking(thinking -> {
-                    listener.accept(SseListener.builder().think(thinking.text()).build());
+                    listener.accept(SseListener.builder().currMessage(thinking.text()).build());
                 }).start();
     }
     public ChatMemory creatMemory(List<ChatMessage> chatMessages) {

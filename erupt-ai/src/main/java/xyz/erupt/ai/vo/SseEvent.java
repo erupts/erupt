@@ -2,7 +2,7 @@ package xyz.erupt.ai.vo;
 
 public enum SseEvent {
 
-    THINK,
+    CALL,
     TOKEN,
     DONE
 
