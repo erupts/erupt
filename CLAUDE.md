@@ -33,7 +33,7 @@ mvn clean package -P release
 mvn versions:set -DnewVersion=x.x.x
 ```
 
-Java 17 required. No Maven wrapper — use system `mvn`.
+Java 17 required. Spring Boot 3.x. No Maven wrapper — use system `mvn`.
 
 ## Architecture Overview
 
@@ -46,10 +46,10 @@ The project is a multi-module Maven project (~25 modules):
 | Group | Modules |
 |-------|---------|
 | Core | `erupt-annotation` (annotation declarations), `erupt-core` (runtime engine), `erupt-toolkit` |
-| Data | `erupt-data/erupt-jpa` (default), `erupt-data/erupt-mongodb`|
-| Features | `erupt-upms` (user/permissions), `erupt-security`, `erupt-excel`, `erupt-web` (frontend assets) |
+| Data | `erupt-data/erupt-jpa` (default), `erupt-data/erupt-mongodb` |
+| Features | `erupt-upms` (user/permissions), `erupt-security`, `erupt-excel`, `erupt-web` (frontend assets), `erupt-websocket`, `erupt-notice`, `erupt-print`, `erupt-terminal` |
 | Templates | `erupt-tpl/{ant-design,element-ui,element-plus,amis}` |
-| AI | `erupt-ai` (LLM + MCP integration via langchain4j) |
+| AI | `erupt-ai` (LLM + MCP integration via langchain4j), `erupt-ai-claw` (turn-key admin agent) |
 | Extra | `erupt-extra/{erupt-job,erupt-generator,erupt-monitor,erupt-magic-api}` |
 | Cloud | `erupt-cloud/{erupt-cloud-server,erupt-cloud-node,erupt-cloud-node-jpa}` |
 | Dev | `erupt-test` (JUnit 5 + H2), `erupt-sample` (runnable demo) |
@@ -60,7 +60,7 @@ The project is a multi-module Maven project (~25 modules):
 `@Erupt` on a class + `@EruptField` on fields → auto-generates tables, forms, search, permissions. Sub-annotations `@View`, `@Edit`, `@Search`, `@EditType` control rendering behavior.
 
 **2. Dynamic Proxy Layer**
-`AnnotationProxy<T,R>` converts annotations to JSON for the frontend. Key classes: `EruptProxy`, `EruptFieldProxy`, `AnnotationProxyPool`. Located in `erupt-core/src/main/java/xyz/erupt/core/proxy/`.
+`AnnotationProxy<T,R>` converts annotations to JSON for the frontend using Spring AOP. Key classes: `EruptProxy`, `EruptFieldProxy`, `AnnotationProxyPool`. Located in `erupt-core/.../proxy/`.
 
 **3. Pluggable Module System**
 Every module implements `EruptModule` (defines `info()`, `run()`, `initMenus()`, `initFun()`). Modules self-register via Spring Boot auto-configuration (`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`). `EruptModuleInvoke` orchestrates startup.
@@ -69,11 +69,11 @@ Every module implements `EruptModule` (defines `info()`, `run()`, `initMenus()`,
 `MetaContext` (InheritableThreadLocal) carries per-request user info, token, and erupt entity metadata through the call stack. Located in `erupt-core/.../context/MetaContext.java`.
 
 **5. SpEL Expression Support**
-`@Match` and similar annotations accept Spring Expression Language strings for runtime conditional rendering, visibility, and row-level permission filtering.
+`@Match` and similar annotations accept Spring Expression Language strings for runtime conditional rendering, visibility, and row-level permission filtering. `ExprInvoke` handles evaluation.
 
 ### Data Flow
 
-Request → Spring MVC Controller → `MetaContext` populated → Annotation proxy resolves `@Erupt` model → Data layer (JPA/Mongo/ES) → JSON response to Angular frontend.
+Request → Spring MVC Controller → `MetaContext` populated → `EruptCoreService` resolves `@Erupt` model → Annotation proxy converts to JSON → Data layer (`DataProcessorManager` → JPA/Mongo) → JSON response to Angular frontend.
 
 ### DataProxy Lifecycle Hooks
 
@@ -100,10 +100,15 @@ eruptDao.lambdaQuery(EruptUser.class).like(EruptUser::getName, "e").list()
 
 ### erupt-ai Module (Active Development)
 
-Uses **langchain4j** (1.11.0) and **langchain4j-mcp** (1.12.2-beta22). Key classes:
-- `LlmCore`: Core LLM interaction
-- `McpServer` / `McpServerService`: MCP protocol integration
-- `EruptAiAutoConfiguration`: Module registration
+Uses **langchain4j 1.14.1** and **langchain4j-mcp/langchain4j-agentic-a2a 1.14.1-beta24**. Key classes:
+- `LlmCore` — abstract base; maintains static LLM registry; wires chat memory, tools, SSE streaming
+- `LLMService` — manages provider configs and caches `ChatModel` instances with hot-swap support
+- `AiToolboxManager` — Spring beans annotated with `@AiToolbox` + LangChain4j `@Tool` are auto-exposed as AI-callable tools
+- `McpServerService` — connects/health-checks MCP servers over SSE and STDIO transports
+- `A2AAgentService` — agent-to-agent (A2A) protocol for multi-agent workflows
+- `LLMRoleService` — role-based access control for which tools each user can invoke
+- `ChatController` — `/ai/chat` streaming and non-streaming endpoints
+- 17 built-in LLM adapters in `llm/` package (ChatGPT, Claude, DeepSeek, Gemini, Ollama, Qwen, GLM, etc.)
 
 ### Testing
 
