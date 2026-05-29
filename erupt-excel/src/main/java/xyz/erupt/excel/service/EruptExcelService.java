@@ -3,9 +3,6 @@ package xyz.erupt.excel.service;
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.DVConstraint;
-import org.apache.poi.hssf.usermodel.HSSFDataValidation;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -285,7 +282,7 @@ public class EruptExcelService {
 
     // The format of the template is the same as that of the "edit" input box.
     public Workbook createExcelTemplate(EruptModel eruptModel) {
-        Workbook wb = new HSSFWorkbook();
+        Workbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet(eruptModel.getErupt().name());
         sheet.setZoom(160);
         // Freeze the first line
@@ -303,7 +300,7 @@ public class EruptExcelService {
                 DataValidationHelper dvHelper = sheet.getDataValidationHelper();
                 switch (edit.type()) {
                     case BOOLEAN:
-                        sheet.addValidationData(generateValidation(cellNum, SIMPLE_CELL_ERR, DVConstraint.createExplicitListConstraint(new String[]{edit.boolType().trueText(),
+                        sheet.addValidationData(generateValidation(sheet, cellNum, SIMPLE_CELL_ERR, dvHelper.createExplicitListConstraint(new String[]{edit.boolType().trueText(),
                                 edit.boolType().falseText()})));
                         break;
                     case CHOICE:
@@ -314,7 +311,7 @@ public class EruptExcelService {
                         }
                         break;
                     case SLIDER:
-                        sheet.addValidationData(generateValidation(cellNum,
+                        sheet.addValidationData(generateValidation(sheet, cellNum,
                                 "Select or enter a valid option, range: " + edit.sliderType().min() + " - " + edit.sliderType().max(), dvHelper.createNumericConstraint(
                                         DataValidationConstraint.ValidationType.INTEGER, DataValidationConstraint.OperatorType.BETWEEN,
                                         Integer.toString(edit.sliderType().min()), Integer.toString(edit.sliderType().max()))));
@@ -323,8 +320,8 @@ public class EruptExcelService {
                         if (fieldModel.getFieldReturnName().equals(Date.class.getSimpleName())
                                 || fieldModel.getFieldReturnName().equals(LocalDate.class.getSimpleName())
                                 || fieldModel.getFieldReturnName().equals(LocalDateTime.class.getSimpleName())) {
-                            sheet.addValidationData(generateValidation(cellNum, "Please select or enter the valid time！"
-                                    , dvHelper.createDateConstraint(DVConstraint.OperatorType.BETWEEN
+                            sheet.addValidationData(generateValidation(sheet, cellNum, "Please select or enter the valid time！"
+                                    , dvHelper.createDateConstraint(DataValidationConstraint.OperatorType.BETWEEN
                                             , "1900-01-01", "2999-12-31", "yyyy-MM-dd")));
                         }
                         break;
@@ -353,11 +350,11 @@ public class EruptExcelService {
         return wb;
     }
 
-    private DataValidation generateValidation(int colIndex, String errHint, DataValidationConstraint constraint) {
+    private DataValidation generateValidation(Sheet sheet, int colIndex, String errHint, DataValidationConstraint constraint) {
         // Set where the data validation is loaded.
         // The four parameters are: starting row, ending row, starting column, ending column
         CellRangeAddressList regions = new CellRangeAddressList(1, 1000, colIndex, colIndex);
-        DataValidation dataValidationList = new HSSFDataValidation(regions, constraint);
+        DataValidation dataValidationList = sheet.getDataValidationHelper().createValidation(constraint, regions);
         dataValidationList.createErrorBox("error", errHint);
         return dataValidationList;
     }

@@ -69,7 +69,7 @@ public class EruptExcelController {
         EruptModel eruptModel = EruptCoreService.getErupt(eruptName);
         Erupts.powerLegal(eruptModel, PowerObject::isImportable);
         try (Workbook wb = dataFileService.createExcelTemplate(eruptModel)) {
-            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_template" + EruptExcelService.XLS_FORMAT));
+            wb.write(ExcelUtil.downLoadFile(request, response, eruptModel.getErupt().name() + "_template" + EruptExcelService.XLSX_FORMAT));
         }
     }
 
