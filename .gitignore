@@ -15,8 +15,10 @@ HELP.md
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/*
 !.idea/icon.png
+!.idea/runConfigurations/**
+!.idea/fileTemplates/**
 *.iws
 *.iml
 *.ipr
