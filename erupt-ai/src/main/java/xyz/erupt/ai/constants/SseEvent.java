@@ -1,4 +1,4 @@
-package xyz.erupt.ai.vo;
+package xyz.erupt.ai.constants;
 
 public enum SseEvent {
 
