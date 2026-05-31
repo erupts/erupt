@@ -100,7 +100,7 @@ public class EruptUserService {
                     return new LoginModel(false, "Your IP address does not have the authority to access.");
                 }
             }
-            if (this.checkPwd(eruptUser.getAccount(), eruptUser.getPassword(), eruptUser.getIsMd5(), pwd)) {
+            if (this.checkPwd(eruptUser.getAccount(), eruptUser.getPassword(), eruptUser.getIsMd5(), eruptUser.getSalt(), eruptUser.getEncryptType(), pwd)) {
                 sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
                 return new LoginModel(true, eruptUser);
             }
@@ -119,12 +119,66 @@ public class EruptUserService {
      */
     public boolean checkPwd(String account, String password, boolean isMd5, String inputPwd) {
         if (eruptAppProp.getPwdTransferEncrypt()) {
-            String digestPwd = isMd5 ? password : MD5Util.digest(password);
-            String calcPwd = MD5Util.digest(digestPwd + account);
+            // 传输加密模式下，兼容新旧两种加密方式
+            String calcPwd = null;
+            if (isMd5) {
+                String digestPwd = password;
+                calcPwd = MD5Util.digest(digestPwd + account);
+            } else {
+                // 如果不是MD5，则可能是新加密方式
+                String digestPwd = MD5Util.digest(password);
+                calcPwd = MD5Util.digest(digestPwd + account);
+            }
             return inputPwd.equalsIgnoreCase(calcPwd);
         } else {
-            if (isMd5) inputPwd = MD5Util.digest(inputPwd);
+            // 直接比较模式，支持新旧两种加密方式
+            if (isMd5) {
+                inputPwd = MD5Util.digest(inputPwd);
+            }
             return inputPwd.equals(password);
+        }
+    }
+
+    /**
+     * Verify password with support for SHA512 encryption
+     *
+     * @param account      account
+     * @param password     stored password
+     * @param isMd5        Is it encrypted with MD5
+     * @param salt         salt value
+     * @param encryptType  encryption type (MD5, SHA512, etc.)
+     * @param inputPwd     The password entered at the front end
+     * @return Is the password correct?
+     */
+    public boolean checkPwd(String account, String password, boolean isMd5, String salt, String encryptType, String inputPwd) {
+        if (eruptAppProp.getPwdTransferEncrypt()) {
+            // 传输加密模式
+            String calcPwd = null;
+            if ("SHA512".equalsIgnoreCase(encryptType)) {
+                // SHA512加密方式
+                String digestPwd = MD5Util.digestSHA512Salt(inputPwd, salt);
+                calcPwd = MD5Util.digestSHA512(digestPwd + account);
+            } else {
+                // 传统MD5加密方式
+                String digestPwd = isMd5 ? password : MD5Util.digest(password);
+                calcPwd = MD5Util.digest(digestPwd + account);
+            }
+            return inputPwd.equalsIgnoreCase(calcPwd);
+        } else {
+            // 直接比较模式
+            String checkPwd = null;
+            if ("SHA512".equalsIgnoreCase(encryptType)) {
+                // 使用SHA512+盐验证
+                checkPwd = MD5Util.digestSHA512Salt(inputPwd, salt);
+            } else {
+                // 使用MD5验证
+                if (isMd5) {
+                    checkPwd = MD5Util.digest(inputPwd);
+                } else {
+                    checkPwd = inputPwd;
+                }
+            }
+            return checkPwd.equals(password);
         }
     }
 
@@ -168,15 +222,36 @@ public class EruptUserService {
         if (null != loginProxy) {
             loginProxy.beforeChangePwd(eruptUser, newPwd);
         }
-        if (eruptUser.getIsMd5()) {
-            pwd = MD5Util.digest(pwd);
-            newPwd = MD5Util.digest(newPwd);
-        }
-        if (eruptUser.getPassword().equals(pwd)) {
-            if (newPwd.equals(eruptUser.getPassword())) {
-                return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
+        
+        // 使用对应的加密方式进行验证
+        boolean isValid = checkPwd(account, eruptUser.getPassword(), eruptUser.getIsMd5(), eruptUser.getSalt(), eruptUser.getEncryptType(), pwd);
+        
+        if (isValid) {
+            // 检查新密码是否与当前密码相同
+            String currentEncryptedPassword = eruptUser.getPassword();
+            String newEncryptedPassword = null;
+            
+            if (eruptUser.getEncryptType() != null && eruptUser.getEncryptType().equals("SHA512") && 
+                eruptUser.getSalt() != null) {
+                // 如果用户原来就是SHA512加密，继续使用相同的盐值
+                newEncryptedPassword = MD5Util.digestSHA512Salt(newPwd, eruptUser.getSalt());
+                if (currentEncryptedPassword.equals(newEncryptedPassword)) {
+                    return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
+                }
+                eruptUser.setPassword(newEncryptedPassword);
+            } else {
+                // 如果用户之前是MD5加密，升级到SHA512+新盐值
+                String salt = MD5Util.generateSalt();
+                newEncryptedPassword = MD5Util.digestSHA512Salt(newPwd, salt);
+                if (currentEncryptedPassword.equals(newEncryptedPassword)) {
+                    return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
+                }
+                eruptUser.setSalt(salt);
+                eruptUser.setEncryptType("SHA512");
+                eruptUser.setPassword(newEncryptedPassword);
+                eruptUser.setIsMd5(false); // 设置为false表示不再使用MD5
             }
-            eruptUser.setPassword(newPwd);
+            
             eruptUser.setResetPwdTime(new Date());
             eruptDao.getEntityManager().merge(eruptUser);
             if (null != loginProxy) {

@@ -28,12 +28,12 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
         EruptUser eruptUser = data.get(0);
         if (resetPassword.getPassword().equals(resetPassword.getPassword2())) {
             eruptUser.setResetPwdTime(null);
-            eruptUser.setIsMd5(resetPassword.getIsMd5());
-            if (resetPassword.getIsMd5()) {
-                eruptUser.setPassword(MD5Util.digest(resetPassword.getPassword()));
-            } else {
-                eruptUser.setPassword(resetPassword.getPassword());
-            }
+            // 更新为使用SHA512+盐加密，忽略前端传递的isMd5值
+            String salt = MD5Util.generateSalt();
+            eruptUser.setSalt(salt);
+            eruptUser.setEncryptType("SHA512");
+            eruptUser.setPassword(MD5Util.digestSHA512Salt(resetPassword.getPassword(), salt));
+            eruptUser.setIsMd5(false); // 设置为false表示不再使用MD5
             eruptDao.merge(eruptUser);
         } else {
             throw new EruptWebApiRuntimeException(I18nTranslate.$translate("upms.pwd_two_inconsistent"));

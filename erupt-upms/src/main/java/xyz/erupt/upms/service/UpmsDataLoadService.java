@@ -107,7 +107,10 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     eruptUser.setStatus(true);
                     eruptUser.setCreateTime(new Date());
                     eruptUser.setAccount(eruptUpmsProp.getDefaultAccount());
-                    eruptUser.setPassword(MD5Util.digest(eruptUpmsProp.getDefaultPassword()));
+                    String salt = MD5Util.generateSalt();
+                    eruptUser.setSalt(salt);
+                    eruptUser.setEncryptType("SHA512");
+                    eruptUser.setPassword(MD5Util.digestSHA512Salt(eruptUpmsProp.getDefaultPassword(), salt));
                     eruptUser.setName(eruptUpmsProp.getDefaultAccount());
                     eruptDao.persistIfNotExist(EruptUser.class, eruptUser, LambdaSee.field(EruptUser::getAccount), eruptUser.getAccount());
                 }
