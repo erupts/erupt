@@ -1,8 +1,9 @@
 package xyz.erupt.core.util;
 
+import lombok.SneakyThrows;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
@@ -52,37 +53,34 @@ public class MD5Util {
     }
 
     /**
-     * SHA512加密方法
+     * SHA-512 hash.
      *
-     * @param strObj 待加密字符串
-     * @return 加密后的字符串
+     * @param strObj input string
+     * @return hex-encoded SHA-512 digest
      */
     public static String digestSHA512(String strObj) {
         return digestSHA512(strObj, StandardCharsets.UTF_8.name());
     }
 
     /**
-     * SHA512加密方法
+     * SHA-512 hash with explicit charset.
      *
-     * @param strObj  待加密字符串
-     * @param charset 字符编码
-     * @return 加密后的字符串
+     * @param strObj  input string
+     * @param charset character encoding
+     * @return hex-encoded SHA-512 digest
      */
+    @SneakyThrows
     public static String digestSHA512(String strObj, String charset) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            return byteToString(md.digest(strObj.getBytes(charset)));
-        } catch (Exception ex) {
-            return strObj;
-        }
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        return byteToString(md.digest(strObj.getBytes(charset)));
     }
 
     /**
-     * SHA512加盐加密方法
+     * SHA-512 hash with salt.
      *
-     * @param strObj 待加密字符串
-     * @param salt   盐值
-     * @return 加密后的字符串
+     * @param strObj input string
+     * @param salt   salt value
+     * @return hex-encoded SHA-512 digest of (strObj + salt)
      */
     public static String digestSHA512Salt(String strObj, String salt) {
         if (salt == null || salt.isEmpty()) {
@@ -93,13 +91,13 @@ public class MD5Util {
     }
 
     /**
-     * 生成随机盐值
+     * Generates a cryptographically secure random salt.
      *
-     * @return 随机盐值
+     * @return hex-encoded 256-bit random salt
      */
     public static String generateSalt() {
         SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[32]; // 32字节 = 256位
+        byte[] bytes = new byte[32]; // 32 bytes = 256 bits
         random.nextBytes(bytes);
         return byteToString(bytes);
     }

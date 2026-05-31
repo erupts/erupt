@@ -19,6 +19,7 @@ import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.util.ProjectUtil;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
+import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.enums.EruptFunPermissions;
 import xyz.erupt.upms.model.EruptMenu;
 import xyz.erupt.upms.model.EruptUser;
@@ -109,7 +110,7 @@ public class UpmsDataLoadService implements CommandLineRunner {
                     eruptUser.setAccount(eruptUpmsProp.getDefaultAccount());
                     String salt = MD5Util.generateSalt();
                     eruptUser.setSalt(salt);
-                    eruptUser.setEncryptType("SHA512");
+                    eruptUser.setEncryptType(EncryptType.SHA512);
                     eruptUser.setPassword(MD5Util.digestSHA512Salt(eruptUpmsProp.getDefaultPassword(), salt));
                     eruptUser.setName(eruptUpmsProp.getDefaultAccount());
                     eruptDao.persistIfNotExist(EruptUser.class, eruptUser, LambdaSee.field(EruptUser::getAccount), eruptUser.getAccount());
