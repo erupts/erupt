@@ -3,6 +3,7 @@ package xyz.erupt.ai.vo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import xyz.erupt.ai.constants.SseEvent;
 
 /**
  * @author YuePeng

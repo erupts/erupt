@@ -18,6 +18,7 @@ import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.upms.base.LoginModel;
+import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.constant.SessionKey;
 import xyz.erupt.upms.fun.EruptLogin;
 import xyz.erupt.upms.fun.LoginProxy;
@@ -100,7 +101,7 @@ public class EruptUserService {
                     return new LoginModel(false, "Your IP address does not have the authority to access.");
                 }
             }
-            if (this.checkPwd(eruptUser.getAccount(), eruptUser.getPassword(), eruptUser.getIsMd5(), pwd)) {
+            if (this.checkPwd(eruptUser, pwd)) {
                 sessionService.remove(SessionKey.LOGIN_ERROR + account + ":" + requestIp);
                 return new LoginModel(true, eruptUser);
             }
@@ -108,24 +109,18 @@ public class EruptUserService {
         return new LoginModel(false, I18nTranslate.$translate("upms.account_pwd_error"), loginErrorCountPlus(account, requestIp));
     }
 
-    /**
-     * Verify password
-     *
-     * @param account  account
-     * @param password password
-     * @param isMd5    Is it encrypted
-     * @param inputPwd The password entered at the front end
-     * @return Is the password correct?
-     */
-    public boolean checkPwd(String account, String password, boolean isMd5, String inputPwd) {
-        if (eruptAppProp.getPwdTransferEncrypt()) {
-            String digestPwd = isMd5 ? password : MD5Util.digest(password);
-            String calcPwd = MD5Util.digest(digestPwd + account);
-            return inputPwd.equalsIgnoreCase(calcPwd);
+    public boolean checkPwd(EruptUser eruptUser, String inputPwd) {
+        return checkPwd(eruptUser.getPassword(), eruptUser.getIsMd5(), eruptUser.getSalt(), eruptUser.getEncryptType(), inputPwd);
+    }
+
+    public boolean checkPwd(String storedPassword, Boolean encrypt, String salt, String encryptType, String inputPwd) {
+        String checkPwd;
+        if (EncryptType.SHA512.equalsIgnoreCase(encryptType)) {
+            checkPwd = MD5Util.digestSHA512Salt(inputPwd, salt);
         } else {
-            if (isMd5) inputPwd = MD5Util.digest(inputPwd);
-            return inputPwd.equals(password);
+            checkPwd = encrypt ? MD5Util.digest(inputPwd) : inputPwd;
         }
+        return checkPwd.equals(storedPassword);
     }
 
     public boolean checkVerifyCode(String account, String verifyCode, String verifyCodeMark) {
@@ -168,15 +163,25 @@ public class EruptUserService {
         if (null != loginProxy) {
             loginProxy.beforeChangePwd(eruptUser, newPwd);
         }
-        if (eruptUser.getIsMd5()) {
-            pwd = MD5Util.digest(pwd);
-            newPwd = MD5Util.digest(newPwd);
-        }
-        if (eruptUser.getPassword().equals(pwd)) {
-            if (newPwd.equals(eruptUser.getPassword())) {
+
+        // Verify with the stored encryption type
+        boolean isValid = checkPwd(eruptUser, pwd);
+
+        if (isValid) {
+            if (checkPwd(eruptUser, newPwd)) {
                 return EruptApiModel.errorMessageApi(I18nTranslate.$translate("upms.change_pwd_same_as_old"));
             }
-            eruptUser.setPassword(newPwd);
+            if (eruptUser.getIsMd5()) {
+                String salt = MD5Util.generateSalt();
+                eruptUser.setSalt(salt);
+                eruptUser.setEncryptType(EncryptType.SHA512);
+                eruptUser.setPassword(MD5Util.digestSHA512Salt(newPwd, salt));
+            } else {
+                eruptUser.setSalt(null);
+                eruptUser.setEncryptType(null);
+                eruptUser.setPassword(newPwd);
+            }
+
             eruptUser.setResetPwdTime(new Date());
             eruptDao.getEntityManager().merge(eruptUser);
             if (null != loginProxy) {

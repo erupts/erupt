@@ -174,7 +174,7 @@ public class EruptUser extends LookerSelf {
 
     @EruptField(
             edit = @Edit(
-                    title = "MD5 Encrypt", type = EditType.BOOLEAN, notNull = true,
+                    title = "Encrypt", type = EditType.BOOLEAN, notNull = true,
                     readonly = @Readonly(add = false),
                     boolType = @BoolType(
                             trueText = "Encrypt",
@@ -183,6 +183,12 @@ public class EruptUser extends LookerSelf {
             )
     )
     private Boolean isMd5 = true;
+
+    @Column(length = 64)
+    private String salt;
+
+    @Column(length = 20)
+    private String encryptType;
 
     @EruptField(
             views = @View(title = "Account Expiry", sortable = true),

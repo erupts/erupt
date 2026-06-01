@@ -78,6 +78,9 @@ public class EruptUserController {
         if (!eruptUserService.checkVerifyCode(account, verifyCode, verifyCodeMark)) {
             return new LoginModel(false, I18nTranslate.$translate("upms.verify_code_error"), true);
         }
+        if (eruptAppProp.getPwdTransferEncrypt()) {
+            pwd = SecretUtil.decodeSecret(pwd, 3);
+        }
         LoginProxy loginProxy = EruptUserService.findEruptLogin();
         LoginModel loginModel;
         if (null == loginProxy) {

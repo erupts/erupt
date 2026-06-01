@@ -8,6 +8,7 @@ import xyz.erupt.core.exception.EruptWebApiRuntimeException;
 import xyz.erupt.core.i18n.I18nTranslate;
 import xyz.erupt.core.util.MD5Util;
 import xyz.erupt.jpa.dao.EruptDao;
+import xyz.erupt.upms.constant.EncryptType;
 import xyz.erupt.upms.model.EruptUser;
 
 import java.util.List;
@@ -30,8 +31,13 @@ public class ResetPasswordExec implements OperationHandler<EruptUser, ResetPassw
             eruptUser.setResetPwdTime(null);
             eruptUser.setIsMd5(resetPassword.getIsMd5());
             if (resetPassword.getIsMd5()) {
-                eruptUser.setPassword(MD5Util.digest(resetPassword.getPassword()));
+                String salt = MD5Util.generateSalt();
+                eruptUser.setSalt(salt);
+                eruptUser.setEncryptType(EncryptType.SHA512);
+                eruptUser.setPassword(MD5Util.digestSHA512Salt(resetPassword.getPassword(), salt));
             } else {
+                eruptUser.setSalt(null);
+                eruptUser.setEncryptType(null);
                 eruptUser.setPassword(resetPassword.getPassword());
             }
             eruptDao.merge(eruptUser);

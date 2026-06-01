@@ -417,3 +417,8 @@ cube.report.config.compare.filter_field,日期过滤字段,日期過濾字段,Da
 cube.report.config.compare.filter_placeholder,请选择 BETWEEN 类型的日期过滤器,請選擇 BETWEEN 類型的日期過濾器,Select a date filter (BETWEEN),Sélectionner un filtre de date,日付フィルターを選択,날짜 필터 선택,Выберите фильтр даты,Seleccionar filtro de fecha,Datumsfilter auswählen,Selecionar filtro de data,Pilih filter tanggal,اختر فلتر التاريخ
 cube.report.config.compare.current_label,当期标签,當期標籤,Current Period Label,Étiquette période actuelle,当期ラベル,현재 기간 레이블,Метка текущего периода,Etiqueta período actual,Aktuelle Periodenbezeichnung,Rótulo período atual,Label periode saat ini,تسمية الفترة الحالية
 cube.report.config.compare.compare_label,对比期标签,對比期標籤,Compare Period Label,Étiquette période comparée,比較期ラベル,비교 기간 레이블,Метка периода сравнения,Etiqueta período comparado,Vergleichsperiodenbezeichnung,Rótulo período comparado,Label periode pembanding,تسمية فترة المقارنة
+global.density,密度,密度,Density,Densité,密度,밀도,Плотность,Densidad,Dichte,Densidade,Kepadatan,الكثافة
+global.density.small,紧凑,緊湊,Compact,Compact,コンパクト,컴팩트,Компактный,Compacto,Kompakt,Compacto,Kompak,مضغوط
+global.density.middle,默认,預設,Default,Par défaut,デフォルト,기본,По умолчанию,Por defecto,Standard,Padrão,Default,افتراضي
+global.density.large,宽松,寬鬆,Relaxed,Spacieux,ゆったり,넓게,Просторный,Espacioso,Geräumig,Espaçoso,Longgar,مريح
+setting.table-size,表格密度,表格密度,Table Density,Densité du tableau,テーブル密度,테이블 밀도,Плотность таблицы,Densidad de tabla,Tabellendichte,Densidade da tabela,Kepadatan tabel,كثافة الجدول
