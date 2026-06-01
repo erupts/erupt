@@ -7,6 +7,7 @@ import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.annotation.sub_erupt.Filter;
 import xyz.erupt.annotation.sub_erupt.Sort;
 import xyz.erupt.annotation.sub_erupt.Tpl;
+import xyz.erupt.annotation.vis.BoardView;
 import xyz.erupt.annotation.vis.CardView;
 import xyz.erupt.annotation.vis.GanttView;
 
@@ -40,6 +41,9 @@ public @interface Vis {
     ExprBool show() default @ExprBool;
 
     Type type() default Type.TABLE;
+
+    @Match("#item.type().toString() == 'BOARD'")
+    BoardView boardView() default @BoardView(groupField = "");
 
     @Match("#item.type().toString() == 'CARD'")
     CardView cardView() default @CardView();

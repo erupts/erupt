@@ -8,7 +8,7 @@ import org.intellij.lang.annotations.Language;
  */
 public @interface BoardView {
 
-    @Language(value = "hql", prefix = "select * from t where ")
+    @Language(value = "hql", prefix = "select ", suffix = " from")
     String groupField();
 
 }
